@@ -293,11 +293,11 @@
     setupMethods(web3.shh, shhMethods());
 
     var ethWatch = {
-        changed: 'changed'
+        changed: 'eth_changed'
     };
     setupMethods(ethWatch, ethWatchMethods());
     var shhWatch = {
-        changed: 'shhChanged'
+        changed: 'shh_changed'
     };
     setupMethods(shhWatch, shhWatchMethods());
 
