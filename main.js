@@ -1,3 +1,25 @@
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file main.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
 (function(window) {
     function isPromise(o) {
         return o instanceof Promise
@@ -44,82 +66,83 @@
 
     var ethMethods = function () {
         var blockCall = function (args) {
-            return typeof args[0] === "string" ? "blockByHash" : "blockByNumber";
+            return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
         };
 
         var transactionCall = function (args) {
-            return typeof args[0] === "string" ? 'transactionByHash' : 'transactionByNumber';   
+            return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';   
         };
 
         var uncleCall = function (args) {
-            return typeof args[0] === "string" ? 'uncleByHash' : 'uncleByNumber';       
+            return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';       
         };
 
         var methods = [
-        { name: 'balanceAt', call: 'balanceAt' },
-        { name: 'stateAt', call: 'stateAt' },
-        { name: 'countAt', call: 'countAt'},
-        { name: 'codeAt', call: 'codeAt' },
-        { name: 'transact', call: 'transact' },
-        { name: 'call', call: 'call' },
+        { name: 'balanceAt', call: 'eth_balanceAt' },
+        { name: 'stateAt', call: 'eth_stateAt' },
+        { name: 'countAt', call: 'eth_countAt'},
+        { name: 'codeAt', call: 'eth_codeAt' },
+        { name: 'transact', call: 'eth_transact' },
+        { name: 'call', call: 'eth_call' },
         { name: 'block', call: blockCall },
         { name: 'transaction', call: transactionCall },
         { name: 'uncle', call: uncleCall },
-        { name: 'compile', call: 'compile' }
+        { name: 'compile', call: 'eth_compile' },
+        { name: 'lll', call: 'eth_lll' }
         ];
         return methods;
     };
 
     var ethProperties = function () {
         return [
-        { name: 'coinbase', getter: 'coinbase', setter: 'setCoinbase' },
-        { name: 'listening', getter: 'listening', setter: 'setListening' },
-        { name: 'mining', getter: 'mining', setter: 'setMining' },
-        { name: 'gasPrice', getter: 'gasPrice' },
-        { name: 'account', getter: 'account' },
-        { name: 'accounts', getter: 'accounts' },
-        { name: 'peerCount', getter: 'peerCount' },
-        { name: 'defaultBlock', getter: 'defaultBlock', setter: 'setDefaultBlock' },
-        { name: 'number', getter: 'number'}
+        { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
+        { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
+        { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
+        { name: 'gasPrice', getter: 'eth_gasPrice' },
+        { name: 'account', getter: 'eth_account' },
+        { name: 'accounts', getter: 'eth_accounts' },
+        { name: 'peerCount', getter: 'eth_peerCount' },
+        { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
+        { name: 'number', getter: 'eth_number'}
         ];
     };
 
     var dbMethods = function () {
         return [
-        { name: 'put', call: 'put' },
-        { name: 'get', call: 'get' },
-        { name: 'putString', call: 'putString' },
-        { name: 'getString', call: 'getString' }
+        { name: 'put', call: 'db_put' },
+        { name: 'get', call: 'db_get' },
+        { name: 'putString', call: 'db_putString' },
+        { name: 'getString', call: 'db_getString' }
         ];
     };
 
     var shhMethods = function () {
         return [
-        { name: 'post', call: 'post' },
-        { name: 'newIdentity', call: 'newIdentity' },
-        { name: 'haveIdentity', call: 'haveIdentity' },
-        { name: 'newGroup', call: 'newGroup' },
-        { name: 'addToGroup', call: 'addToGroup' }
+        { name: 'post', call: 'shh_post' },
+        { name: 'newIdentity', call: 'shh_newIdentity' },
+        { name: 'haveIdentity', call: 'shh_haveIdentity' },
+        { name: 'newGroup', call: 'shh_newGroup' },
+        { name: 'addToGroup', call: 'shh_addToGroup' }
         ];
     };
 
     var ethWatchMethods = function () {
         var newFilter = function (args) {
-            return typeof args[0] === 'string' ? 'newFilterString' : 'newFilter';
+            return typeof args[0] === 'string' ? 'eth_newFilterString' : 'eth_newFilter';
         };
 
         return [
         { name: 'newFilter', call: newFilter },
-        { name: 'uninstallFilter', call: 'uninstallFilter' },
-        { name: 'getMessages', call: 'getMessages' }
+        { name: 'uninstallFilter', call: 'eth_uninstallFilter' },
+        { name: 'getMessages', call: 'eth_getMessages' }
         ];
     };
 
     var shhWatchMethods = function () {
         return [
-        { name: 'newFilter', call: 'shhNewFilter' },
-        { name: 'uninstallFilter', call: 'shhUninstallFilter' },
-        { name: 'getMessage', call: 'shhGetMessages' }
+        { name: 'newFilter', call: 'shh_newFilter' },
+        { name: 'uninstallFilter', call: 'shh_uninstallFilter' },
+        { name: 'getMessage', call: 'shh_getMessages' }
         ];
     };
 
@@ -271,11 +294,11 @@
     setupMethods(web3.shh, shhMethods());
 
     var ethWatch = {
-        changed: 'changed'
+        changed: 'eth_changed'
     };
     setupMethods(ethWatch, ethWatchMethods());
     var shhWatch = {
-        changed: 'shhChanged'
+        changed: 'shh_changed'
     };
     setupMethods(shhWatch, shhWatchMethods());
 
