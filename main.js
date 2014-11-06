@@ -87,7 +87,8 @@
         { name: 'block', call: blockCall },
         { name: 'transaction', call: transactionCall },
         { name: 'uncle', call: uncleCall },
-        { name: 'compile', call: 'eth_compile' }
+        { name: 'compile', call: 'eth_compile' },
+        { name: 'lll', call: 'eth_lll' }
         ];
         return methods;
     };
