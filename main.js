@@ -117,11 +117,11 @@
 
     var shhMethods = function () {
         return [
-        { name: 'post', call: 'post' },
-        { name: 'newIdentity', call: 'newIdentity' },
-        { name: 'haveIdentity', call: 'haveIdentity' },
-        { name: 'newGroup', call: 'newGroup' },
-        { name: 'addToGroup', call: 'addToGroup' }
+        { name: 'post', call: 'shh_post' },
+        { name: 'newIdentity', call: 'shh_newIdentity' },
+        { name: 'haveIdentity', call: 'shh_haveIdentity' },
+        { name: 'newGroup', call: 'shh_newGroup' },
+        { name: 'addToGroup', call: 'shh_addToGroup' }
         ];
     };
 
@@ -139,9 +139,9 @@
 
     var shhWatchMethods = function () {
         return [
-        { name: 'newFilter', call: 'shhNewFilter' },
-        { name: 'uninstallFilter', call: 'shhUninstallFilter' },
-        { name: 'getMessage', call: 'shhGetMessages' }
+        { name: 'newFilter', call: 'shh_newFilter' },
+        { name: 'uninstallFilter', call: 'shh_uninstallFilter' },
+        { name: 'getMessage', call: 'shh_getMessages' }
         ];
     };
 
