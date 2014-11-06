@@ -66,43 +66,43 @@
 
     var ethMethods = function () {
         var blockCall = function (args) {
-            return typeof args[0] === "string" ? "blockByHash" : "blockByNumber";
+            return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
         };
 
         var transactionCall = function (args) {
-            return typeof args[0] === "string" ? 'transactionByHash' : 'transactionByNumber';   
+            return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';   
         };
 
         var uncleCall = function (args) {
-            return typeof args[0] === "string" ? 'uncleByHash' : 'uncleByNumber';       
+            return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';       
         };
 
         var methods = [
-        { name: 'balanceAt', call: 'balanceAt' },
-        { name: 'stateAt', call: 'stateAt' },
-        { name: 'countAt', call: 'countAt'},
-        { name: 'codeAt', call: 'codeAt' },
-        { name: 'transact', call: 'transact' },
-        { name: 'call', call: 'call' },
+        { name: 'balanceAt', call: 'eth_balanceAt' },
+        { name: 'stateAt', call: 'eth_stateAt' },
+        { name: 'countAt', call: 'eth_countAt'},
+        { name: 'codeAt', call: 'eth_codeAt' },
+        { name: 'transact', call: 'eth_transact' },
+        { name: 'call', call: 'eth_call' },
         { name: 'block', call: blockCall },
         { name: 'transaction', call: transactionCall },
         { name: 'uncle', call: uncleCall },
-        { name: 'compile', call: 'compile' }
+        { name: 'compile', call: 'eth_compile' }
         ];
         return methods;
     };
 
     var ethProperties = function () {
         return [
-        { name: 'coinbase', getter: 'coinbase', setter: 'setCoinbase' },
-        { name: 'listening', getter: 'listening', setter: 'setListening' },
-        { name: 'mining', getter: 'mining', setter: 'setMining' },
-        { name: 'gasPrice', getter: 'gasPrice' },
-        { name: 'account', getter: 'account' },
-        { name: 'accounts', getter: 'accounts' },
-        { name: 'peerCount', getter: 'peerCount' },
-        { name: 'defaultBlock', getter: 'defaultBlock', setter: 'setDefaultBlock' },
-        { name: 'number', getter: 'number'}
+        { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
+        { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
+        { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
+        { name: 'gasPrice', getter: 'eth_gasPrice' },
+        { name: 'account', getter: 'eth_account' },
+        { name: 'accounts', getter: 'eth_accounts' },
+        { name: 'peerCount', getter: 'eth_peerCount' },
+        { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
+        { name: 'number', getter: 'eth_number'}
         ];
     };
 
@@ -127,13 +127,13 @@
 
     var ethWatchMethods = function () {
         var newFilter = function (args) {
-            return typeof args[0] === 'string' ? 'newFilterString' : 'newFilter';
+            return typeof args[0] === 'string' ? 'eth_newFilterString' : 'eth_newFilter';
         };
 
         return [
         { name: 'newFilter', call: newFilter },
-        { name: 'uninstallFilter', call: 'uninstallFilter' },
-        { name: 'getMessages', call: 'getMessages' }
+        { name: 'uninstallFilter', call: 'eth_uninstallFilter' },
+        { name: 'getMessages', call: 'eth_getMessages' }
         ];
     };
 
