@@ -108,10 +108,10 @@
 
     var dbMethods = function () {
         return [
-        { name: 'put', call: 'put' },
-        { name: 'get', call: 'get' },
-        { name: 'putString', call: 'putString' },
-        { name: 'getString', call: 'getString' }
+        { name: 'put', call: 'db_put' },
+        { name: 'get', call: 'db_get' },
+        { name: 'putString', call: 'db_putString' },
+        { name: 'getString', call: 'db_getString' }
         ];
     };
 
