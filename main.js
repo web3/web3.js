@@ -1,3 +1,25 @@
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file main.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
 (function(window) {
     function isPromise(o) {
         return o instanceof Promise
@@ -195,6 +217,8 @@
             // Find termination
             var str = "";
             var i = 0, l = hex.length;
+            if (hex.substring(0, 2) == '0x')
+                i = 2;
             for(; i < l; i+=2) {
                 var code = hex.charCodeAt(i)
                 if(code == 0) {
@@ -216,7 +240,7 @@
             var hex = this.toHex(str);
             while(hex.length < pad*2)
                 hex += "00";
-            return hex
+            return "0x" + hex;
         },
 
         eth: {
