@@ -32,7 +32,7 @@ Require the library:
 
 Set a provider (QtProvider, WebSocketProvider, HttpRpcProvider)
 
-	var web3.setProvider(new web3.providers.WebSocketProvider('ws://localhost:40404/eth'));
+	web3.setProvider(new web3.providers.WebSocketProvider('ws://localhost:40404/eth'));
 
 There you go, now you can use it:
 
