@@ -141,7 +141,6 @@ var toAbiInput = function (json, methodName, params) {
         return;
     }
 
-    bytes = "0x" + padLeft(index.toString(16), 2);
     var method = json[index];
 
     for (var i = 0; i < method.inputs.length; i++) {
@@ -260,9 +259,22 @@ var outputParser = function (json) {
     return parser;
 };
 
+var methodSignature = function (json, name) {
+    var method = json[findMethodIndex(json, name)];
+    var result = name + '(';
+    var inputTypes = method.inputs.map(function (inp) {
+        return inp.type;
+    });
+    result += inputTypes.join(',');
+    result += ')';
+
+    return web3.sha3(web3.fromAscii(result));
+};
+
 module.exports = {
     inputParser: inputParser,
-    outputParser: outputParser
+    outputParser: outputParser,
+    methodSignature: methodSignature
 };
 
 },{}],2:[function(require,module,exports){
@@ -399,6 +411,9 @@ if ("build" !== 'build') {/*
 
 var abi = require('./abi');
 
+// method signature length in bytes
+var ETH_METHOD_SIGNATURE_LENGTH = 4;
+
 var contract = function (address, desc) {
     var inputParser = abi.inputParser(desc);
     var outputParser = abi.outputParser(desc);
@@ -418,8 +433,10 @@ var contract = function (address, desc) {
                 call: function (extra) {
                     extra = extra || {};
                     extra.to = address;
-                    extra.data = parsed;
-                    return web3.eth.call(extra).then(onSuccess);
+                    return abi.methodSignature(desc, method.name).then(function (signature) {
+                        extra.data = signature.slice(0, 2 + ETH_METHOD_SIGNATURE_LENGTH * 2) + parsed;
+                        return web3.eth.call(extra).then(onSuccess);
+                    });
                 },
                 transact: function (extra) {
                     extra = extra || {};
@@ -838,7 +855,7 @@ var web3 = {
     },
 
     fromAscii: function(str, pad) {
-        pad = pad === undefined ? 32 : pad;
+        pad = pad === undefined ? 0 : pad;
         var hex = this.toHex(str);
         while(hex.length < pad*2)
             hex += "00";
@@ -1087,7 +1104,8 @@ function messageHandler(data) {
     }
 }
 
-module.exports = web3;
+if (typeof(module) !== "undefined")
+    module.exports = web3;
 
 },{}],7:[function(require,module,exports){
 /*
@@ -1166,7 +1184,8 @@ Object.defineProperty(WebSocketProvider.prototype, "onmessage", {
     set: function(provider) { this.onMessage(provider); }
 });
 
-module.exports = WebSocketProvider;
+if (typeof(module) !== "undefined")
+    module.exports = WebSocketProvider;
 
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
