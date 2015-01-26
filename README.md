@@ -28,11 +28,11 @@ Component
 ## Usage
 Require the library:
 
-	var web3 = require('web3');
+	var web3 = require('ethereum.js');
 
 Set a provider (QtProvider, WebSocketProvider, HttpRpcProvider)
 
-	var web3.setProvider(new web3.providers.WebSocketProvider('ws://localhost:40404/eth'));
+	web3.setProvider(new web3.providers.WebSocketProvider('ws://localhost:40404/eth'));
 
 There you go, now you can use it:
 
