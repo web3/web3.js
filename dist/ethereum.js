@@ -1188,11 +1188,11 @@ web3.providers.HttpSyncProvider = require('./lib/httpsync');
 web3.providers.QtSyncProvider = require('./lib/qtsync');
 web3.eth.contract = require('./lib/contract');
 web3.abi = require('./lib/abi');
-
+web3.util = require('ethereumjs-util');
 
 module.exports = web3;
 
-},{"./lib/abi":1,"./lib/contract":2,"./lib/filter":3,"./lib/httpsync":4,"./lib/providermanager":5,"./lib/qtsync":6,"./lib/web3":7}]},{},["web3"])
+},{"./lib/abi":1,"./lib/contract":2,"./lib/filter":3,"./lib/httpsync":4,"./lib/providermanager":5,"./lib/qtsync":6,"./lib/web3":7,"ethereumjs-util":undefined}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map

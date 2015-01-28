@@ -8,9 +8,10 @@
     "lib": "./lib"
   },
   "dependencies": {
+    "bignumber.js": ">=2.0.0",
+    "ethereumjs-util": "0.0.2",
     "ws": "*",
-    "xmlhttprequest": "*",
-    "bignumber.js": ">=2.0.0"
+    "xmlhttprequest": "*"
   },
   "devDependencies": {
     "bower": ">=1.3.0",
