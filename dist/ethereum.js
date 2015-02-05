@@ -1142,108 +1142,6 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file providermanager.js
- * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
- * @date 2014
- */
-
-var jsonrpc = require('./jsonrpc');
-
-/**
- * Provider manager object prototype
- * It's responsible for passing messages to providers
- * If no provider is set it's responsible for queuing requests
- * It's also responsible for polling the ethereum node for incoming messages
- * Default poll timeout is 12 seconds
- * If we are running ethereum.js inside ethereum browser, there are backend based tools responsible for polling,
- * and provider manager polling mechanism is not used
- */
-var ProviderManager = function() {
-    this.polls = [];
-    this.provider = undefined;
-
-    var self = this;
-    var poll = function () {
-        self.polls.forEach(function (data) {
-            var result = self.send(data.data);
-
-            if (!(result instanceof Array) || result.length === 0) {
-                return;
-            }
-
-            data.callback(result);
-        });
-
-        setTimeout(poll, 1000);
-    };
-    poll();
-};
-
-/// sends outgoing requests
-/// @params data - an object with at least 'method' property
-ProviderManager.prototype.send = function(data) {
-    var payload = jsonrpc.toPayload(data.method, data.params);
-
-    if (this.provider === undefined) {
-        console.error('provider is not set');
-        return null; 
-    }
-
-    var result = this.provider.send(payload);
-
-    if (!jsonrpc.isValidResponse(result)) {
-        console.log(result);
-        return null;
-    }
-
-    return result.result;
-};
-
-/// setups provider, which will be used for sending messages
-ProviderManager.prototype.set = function(provider) {
-    this.provider = provider;
-};
-
-/// this method is only used, when we do not have native qt bindings and have to do polling on our own
-/// should be callled, on start watching for eth/shh changes
-ProviderManager.prototype.startPolling = function (data, pollId, callback) {
-    this.polls.push({data: data, id: pollId, callback: callback});
-};
-
-/// should be called to stop polling for certain watch changes
-ProviderManager.prototype.stopPolling = function (pollId) {
-    for (var i = this.polls.length; i--;) {
-        var poll = this.polls[i];
-        if (poll.id === pollId) {
-            this.polls.splice(i, 1);
-        }
-    }
-};
-
-module.exports = ProviderManager;
-
-
-},{"./jsonrpc":10}],12:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
 /** @file qtsync.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -1262,7 +1160,103 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],13:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file requestmanager.js
+ * @authors:
+ *   Jeffrey Wilcke <jeff@ethdev.com>
+ *   Marek Kotewicz <marek@ethdev.com>
+ *   Marian Oancea <marian@ethdev.com>
+ *   Gav Wood <g@ethdev.com>
+ * @date 2014
+ */
+
+var jsonrpc = require('./jsonrpc');
+
+/**
+ * It's responsible for passing messages to providers
+ * It's also responsible for polling the ethereum node for incoming messages
+ * Default poll timeout is 1 second
+ */
+var requestManager = function() {
+    var polls = [];
+    var provider;
+
+    var send = function (data) {
+        var payload = jsonrpc.toPayload(data.method, data.params);
+        
+        if (!provider) {
+            console.error('provider is not set');
+            return null;
+        }
+
+        var result = provider.send(payload);
+
+        if (!jsonrpc.isValidResponse(result)) {
+            console.log(result);
+            return null;
+        }
+        
+        return result.result;
+    };
+
+    var setProvider = function (p) {
+        provider = p;
+    };
+
+    var startPolling = function (data, pollId, callback) {
+        polls.push({data: data, id: pollId, callback: callback});
+    };
+
+    var stopPolling = function (pollId) {
+        for (var i = polls.length; i--;) {
+            var poll = polls[i];
+            if (poll.id === pollId) {
+                polls.splice(i, 1);
+            }
+        }
+    };
+
+    var poll = function () {
+        polls.forEach(function (data) {
+            var result = send(data.data);
+            if (!(result instanceof Array) || result.length === 0) {
+                return;
+            }
+            data.callback(result);
+        });
+        setTimeout(poll, 1000);
+    };
+    
+    poll();
+
+    return {
+        send: send,
+        setProvider: setProvider,
+        startPolling: startPolling,
+        stopPolling: stopPolling  
+    };
+};
+
+module.exports = requestManager;
+
+
+},{"./jsonrpc":10}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1613,7 +1607,7 @@ var shh = require('./shh');
 var watches = require('./watches');
 var filter = require('./filter');
 var utils = require('./utils');
-var ProviderManager = require('./providermanager');
+var requestManager = require('./requestmanager');
 
 /// @returns an array of objects describing web3 api methods
 var web3Methods = function () {
@@ -1629,7 +1623,7 @@ var setupMethods = function (obj, methods) {
         obj[method.name] = function () {
             var args = Array.prototype.slice.call(arguments);
             var call = typeof method.call === 'function' ? method.call(args) : method.call;
-            return web3.provider.send({
+            return web3.manager.send({
                 method: call,
                 params: args
             });
@@ -1643,14 +1637,14 @@ var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
         var proto = {};
         proto.get = function () {
-            return web3.provider.send({
+            return web3.manager.send({
                 method: property.getter
             });
         };
 
         if (property.setter) {
             proto.set = function (val) {
-                return web3.provider.send({
+                return web3.manager.send({
                     method: property.setter,
                     params: [val]
                 });
@@ -1661,14 +1655,14 @@ var setupProperties = function (obj, properties) {
 };
 
 var startPolling = function (method, id, callback) {
-    web3.provider.startPolling({
+    web3.manager.startPolling({
         method: method, 
         params: [id]
     }, id,  callback); 
 };
 
 var stopPolling = function (id) {
-    web3.provider.stopPolling(id);
+    web3.manager.stopPolling(id);
 };
 
 var ethWatch = {
@@ -1683,9 +1677,7 @@ var shhWatch = {
 
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {
-    provider: new ProviderManager(),
-    _callbacks: {},
-    _events: {},
+    manager: requestManager(),
     providers: {},
 
     /// @returns ascii string representation of hex value prefixed with 0x
@@ -1744,7 +1736,7 @@ var web3 = {
         }
     },
     setProvider: function (provider) {
-        web3.provider.set(provider);
+        web3.manager.setProvider(provider);
     }
 };
 
@@ -1760,17 +1752,16 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./db":4,"./eth":5,"./filter":7,"./providermanager":11,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
+},{"./db":4,"./eth":5,"./filter":7,"./requestmanager":12,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpSyncProvider = require('./lib/httpsync');
 web3.providers.QtSyncProvider = require('./lib/qtsync');
 web3.eth.contract = require('./lib/contract');
 web3.abi = require('./lib/abi');
 
-
 module.exports = web3;
 
-},{"./lib/abi":1,"./lib/contract":3,"./lib/httpsync":9,"./lib/qtsync":12,"./lib/web3":17}]},{},["web3"])
+},{"./lib/abi":1,"./lib/contract":3,"./lib/httpsync":9,"./lib/qtsync":11,"./lib/web3":17}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map
