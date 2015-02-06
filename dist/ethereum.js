@@ -264,7 +264,8 @@ module.exports = {
     ETH_PADDING: 32,
     ETH_SIGNATURE_LENGTH: 4,
     ETH_UNITS: ETH_UNITS,
-    ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN }
+    ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
+    ETH_POLLING_TIMEOUT: 1000
 };
 
 
@@ -1187,6 +1188,7 @@ module.exports = QtSyncProvider;
  */
 
 var jsonrpc = require('./jsonrpc');
+var c = require('./const');
 
 /**
  * It's responsible for passing messages to providers
@@ -1240,7 +1242,7 @@ var requestManager = function() {
             }
             data.callback(result);
         });
-        setTimeout(poll, 1000);
+        setTimeout(poll, c.ETH_POLLING_TIMEOUT);
     };
     
     poll();
@@ -1256,7 +1258,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"./jsonrpc":10}],13:[function(require,module,exports){
+},{"./const":2,"./jsonrpc":10}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
