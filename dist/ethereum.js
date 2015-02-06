@@ -826,7 +826,7 @@ var filter = function(options, implementation, formatter) {
         });
     };
 
-    implementation.startPolling(filterId, onMessages);
+    implementation.startPolling(filterId, onMessages, uninstall);
 
     var changed = function (callback) {
         callbacks.push(callback);
@@ -1221,8 +1221,8 @@ var requestManager = function() {
         provider = p;
     };
 
-    var startPolling = function (data, pollId, callback) {
-        polls.push({data: data, id: pollId, callback: callback});
+    var startPolling = function (data, pollId, callback, uninstall) {
+        polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
     };
 
     var stopPolling = function (pollId) {
@@ -1232,6 +1232,13 @@ var requestManager = function() {
                 polls.splice(i, 1);
             }
         }
+    };
+
+    var reset = function () {
+        polls.forEach(function (poll) {
+            poll.uninstall(poll.id); 
+        });
+        polls = [];
     };
 
     var poll = function () {
@@ -1251,7 +1258,8 @@ var requestManager = function() {
         send: send,
         setProvider: setProvider,
         startPolling: startPolling,
-        stopPolling: stopPolling  
+        stopPolling: stopPolling,
+        reset: reset
     };
 };
 
@@ -1656,11 +1664,11 @@ var setupProperties = function (obj, properties) {
     });
 };
 
-var startPolling = function (method, id, callback) {
+var startPolling = function (method, id, callback, uninstall) {
     web3.manager.startPolling({
         method: method, 
         params: [id]
-    }, id,  callback); 
+    }, id,  callback, uninstall); 
 };
 
 var stopPolling = function (id) {
@@ -1739,6 +1747,12 @@ var web3 = {
     },
     setProvider: function (provider) {
         web3.manager.setProvider(provider);
+    },
+    
+    /// Should be called to reset state of web3 object
+    /// Resets everything except manager
+    reset: function () {
+        web3.manager.reset(); 
     }
 };
 
