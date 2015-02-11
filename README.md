@@ -30,9 +30,9 @@ Require the library:
 
 	var web3 = require('web3');
 
-Set a provider (QtProvider, WebSocketProvider, HttpRpcProvider)
+Set a provider (QtSyncProvider, HttpSyncProvider)
 
-	var web3.setProvider(new web3.providers.WebSocketProvider('ws://localhost:40404/eth'));
+	web3.setProvider(new web3.providers.HttpSyncProvider());
 
 There you go, now you can use it:
 
