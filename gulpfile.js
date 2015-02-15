@@ -25,7 +25,7 @@ var build = function(src, dst, ugly) {
       detectGlobals: false,
       bundleExternal: false
     })
-    .require('./' + src + '.js', {expose: 'web3'})
+    .require('./' + src + '.js', {expose: 'ethereum.js'})
     .add('./' + src + '.js')
     .transform('envify', {
       NODE_ENV: 'build'
