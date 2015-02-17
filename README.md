@@ -93,6 +93,6 @@ ethereum -ws -loglevel=4
 [dep-url]: https://david-dm.org/ethereum/ethereum.js
 [dep-dev-image]: https://david-dm.org/ethereum/ethereum.js/dev-status.svg
 [dep-dev-url]: https://david-dm.org/ethereum/ethereum.js#info=devDependencies
-[coveralls-image]: https://coveralls.io/repos/ethereum/ethereum.js/badge.svg?branch=develop
-[coveralls-url]: https://coveralls.io/r/ethereum/ethereum.js?branch=develop
+[coveralls-image]: https://coveralls.io/repos/ethereum/ethereum.js/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/r/ethereum/ethereum.js?branch=master
 
