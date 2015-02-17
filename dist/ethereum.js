@@ -563,6 +563,14 @@ var methods = function () {
         return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
     };
 
+    var transactionCountCall = function (args) {
+        return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
+    };
+
+    var uncleCountCall = function (args) {
+        return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
+    };
+
     return [
     { name: 'balanceAt', call: 'eth_balanceAt' },
     { name: 'stateAt', call: 'eth_stateAt' },
@@ -579,7 +587,9 @@ var methods = function () {
     { name: 'lll', call: 'eth_lll' },
     { name: 'solidity', call: 'eth_solidity' },
     { name: 'serpent', call: 'eth_serpent' },
-    { name: 'logs', call: 'eth_logs' }
+    { name: 'logs', call: 'eth_logs' },
+    { name: 'transactionCount', call: transactionCountCall },
+    { name: 'uncleCount', call: uncleCountCall }
     ];
 };
 
