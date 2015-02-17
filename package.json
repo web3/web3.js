@@ -28,14 +28,15 @@
     "vinyl-source-stream": "^1.0.0",
     "mocha": ">=2.1.0",
     "coveralls": "^2.11.2",
-    "mocha-lcov-reporter": "0.0.1"
+    "mocha-lcov-reporter": "0.0.1",
+    "istanbul": "^0.3.5"
   },
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "gulp lint",
     "test": "mocha",
-    "test-coveralls": "mocha -R mocha-lcov-reporter | coveralls"
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | ./node_modules/.bin/coveralls --verbose"
   },
   "repository": {
     "type": "git",
