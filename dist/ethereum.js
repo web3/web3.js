@@ -549,53 +549,67 @@ module.exports = {
  * @date 2015
  */
 
-/// @returns an array of objects describing web3.eth api methods
-var methods = function () {
-    var blockCall = function (args) {
-        return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
-    };
-
-    var transactionCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
-    };
-
-    var uncleCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
-    };
-
-    var transactionCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
-    };
-
-    var uncleCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
-    };
-
-    return [
-    { name: 'balanceAt', call: 'eth_balanceAt' },
-    { name: 'stateAt', call: 'eth_stateAt' },
-    { name: 'storageAt', call: 'eth_storageAt' },
-    { name: 'countAt', call: 'eth_countAt'},
-    { name: 'codeAt', call: 'eth_codeAt' },
-    { name: 'transact', call: 'eth_transact' },
-    { name: 'call', call: 'eth_call' },
-    { name: 'block', call: blockCall },
-    { name: 'transaction', call: transactionCall },
-    { name: 'uncle', call: uncleCall },
-    { name: 'compilers', call: 'eth_compilers' },
-    { name: 'flush', call: 'eth_flush' },
-    { name: 'lll', call: 'eth_lll' },
-    { name: 'solidity', call: 'eth_solidity' },
-    { name: 'serpent', call: 'eth_serpent' },
-    { name: 'logs', call: 'eth_logs' },
-    { name: 'transactionCount', call: transactionCountCall },
-    { name: 'uncleCount', call: uncleCountCall }
-    ];
+var blockCall = function (args) {
+    return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
 };
 
+var transactionCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
+};
+
+var uncleCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
+};
+
+var transactionCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
+};
+
+var uncleCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
+};
+
+/// @returns an array of objects describing web3.eth api methods
+var methods = [
+    { name: 'getBalance', call: 'eth_balanceAt' },
+    { name: 'getState', call: 'eth_stateAt' },
+    { name: 'getStorage', call: 'eth_storageAt' },
+    { name: 'getTransactionCount', call: 'eth_countAt'},
+    { name: 'getCode', call: 'eth_codeAt' },
+    { name: 'sendTransaction', call: 'eth_transact' },
+    { name: 'call', call: 'eth_call' },
+    { name: 'getBlock', call: blockCall },
+    { name: 'getTransaction', call: transactionCall },
+    { name: 'getUncle', call: uncleCall },
+    { name: 'getCompilers', call: 'eth_compilers' },
+    { name: 'flush', call: 'eth_flush' },
+    { name: 'compile.solidity', call: 'eth_solidity' },
+    { name: 'compile.lll', call: 'eth_lll' },
+    { name: 'compile.serpent', call: 'eth_serpent' },
+    { name: 'logs', call: 'eth_logs' },
+    { name: 'getBlockTransactionCount', call: transactionCountCall },
+    { name: 'getBlockUncleCount', call: uncleCountCall },
+
+    // deprecated methods
+    { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'getBalance' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'getState' },
+    { name: 'storageAt', call: 'eth_storageAt', newMethod: 'getStorage' },
+    { name: 'countAt', call: 'eth_countAt', newMethod: 'getTransactionCount' },
+    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'getCode' },
+    { name: 'transact', call: 'eth_transact', newMethod: 'sendTransaction' },
+    { name: 'block', call: blockCall, newMethod: 'getBlock' },
+    { name: 'transaction', call: transactionCall, newMethod: 'getTransaction' },
+    { name: 'uncle', call: uncleCall, newMethod: 'getUncle' },
+    { name: 'compilers', call: 'eth_compilers', newMethod: 'getCompilers' },
+    { name: 'solidity', call: 'eth_solidity', newMethod: 'compile.solidity' },
+    { name: 'lll', call: 'eth_lll', newMethod: 'compile.lll' },
+    { name: 'serpent', call: 'eth_serpent', newMethod: 'compile.serpent' },
+    { name: 'transactionCount', call: transactionCountCall, newMethod: 'getBlockTransactionCount' },
+    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' }
+];
+
 /// @returns an array of objects describing web3.eth api properties
-var properties = function () {
-    return [
+var properties = [
     { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
     { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
     { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
@@ -603,9 +617,12 @@ var properties = function () {
     { name: 'accounts', getter: 'eth_accounts' },
     { name: 'peerCount', getter: 'eth_peerCount' },
     { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
-    { name: 'number', getter: 'eth_number'}
-    ];
-};
+    { name: 'blockNumber', getter: 'eth_number'},
+
+    // deprecated properties
+    { name: 'number', call: 'eth_number', newProperty: 'blockNumber'}
+];
+
 
 module.exports = {
     methods: methods,
@@ -1643,14 +1660,30 @@ var web3Methods = function () {
 /// setups api calls for these methods
 var setupMethods = function (obj, methods) {
     methods.forEach(function (method) {
-        obj[method.name] = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var call = typeof method.call === 'function' ? method.call(args) : method.call;
-            return web3.manager.send({
-                method: call,
-                params: args
-            });
-        };
+        // allow for object methods 'myObject.method'
+        var objectMethods = method.name.split('.'),
+            callFunction = function () {
+                var args = Array.prototype.slice.call(arguments);
+                var call = typeof method.call === 'function' ? method.call(args) : method.call;
+
+                // show deprecated warning
+                if(method.newMethod)
+                    console.warn('This method is deprecated please use eth.'+ method.newMethod +'() instead.');
+
+                return web3.manager.send({
+                    method: call,
+                    params: args
+                });
+            };
+
+        if(objectMethods.length > 1) {
+            if(!obj[objectMethods[0]])
+                obj[objectMethods[0]] = {};
+
+            obj[objectMethods[0]][objectMethods[1]] = callFunction;
+        } else
+            obj[method.name] = callFunction;
+
     });
 };
 
@@ -1660,6 +1693,12 @@ var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
         var proto = {};
         proto.get = function () {
+
+            // show deprecated warning
+            if(property.newProperty)
+                console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
+
             return web3.manager.send({
                 method: property.getter
             });
@@ -1667,6 +1706,11 @@ var setupProperties = function (obj, properties) {
 
         if (property.setter) {
             proto.set = function (val) {
+
+                // show deprecated warning
+                if(property.newProperty)
+                    console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
                 return web3.manager.send({
                     method: property.setter,
                     params: [val]
@@ -1771,8 +1815,8 @@ var web3 = {
 
 /// setups all api methods
 setupMethods(web3, web3Methods());
-setupMethods(web3.eth, eth.methods());
-setupProperties(web3.eth, eth.properties());
+setupMethods(web3.eth, eth.methods);
+setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods());
 setupMethods(web3.shh, shh.methods());
 setupMethods(ethWatch, watches.eth());

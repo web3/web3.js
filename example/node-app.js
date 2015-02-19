@@ -7,6 +7,6 @@ web3.setProvider(new web3.providers.HttpSyncProvider('http://localhost:8080'));
 var coinbase = web3.eth.coinbase;
 console.log(coinbase);
 
-var balance = web3.eth.balanceAt(coinbase);
+var balance = web3.eth.getBalance(coinbase);
 console.log(balance);
 

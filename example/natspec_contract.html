@@ -44,7 +44,7 @@
         document.getElementById('source').innerText = source;
 
         // create contract
-        var address = web3.eth.transact({code: web3.eth.solidity(source)});
+        var address = web3.eth.sendTransaction({code: web3.eth.solidity(source)});
         contract = web3.eth.contract(address, desc);
         document.getElementById('call').style.visibility = 'visible';
     }
@@ -55,7 +55,7 @@
 
         // transaction does not return any result, cause it's not synchronous and we don't know,
         // when it will be processed
-        contract.transact().multiply(param);
+        contract.sendTransaction().multiply(param);
         document.getElementById('result').innerText = 'transaction made';
     }
 
