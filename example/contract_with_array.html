@@ -43,7 +43,7 @@
         document.getElementById('source').innerText = source;
 
         // create contract
-        var address = web3.eth.transact({code: web3.eth.solidity(source)});
+        var address = web3.eth.sendTransaction({data: web3.eth.compile.solidity(source)});
         contract = web3.eth.contract(address, desc);
         document.getElementById('call').style.visibility = 'visible';
     }

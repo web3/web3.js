@@ -367,7 +367,7 @@ var addFunctionsToContract = function (contract, desc, address) {
                 });
 
                 // transactions do not have any output, cause we do not know, when they will be processed
-                web3.eth.transact(options);
+                web3.eth.sendTransaction(options);
                 return;
             }
             
@@ -549,53 +549,67 @@ module.exports = {
  * @date 2015
  */
 
-/// @returns an array of objects describing web3.eth api methods
-var methods = function () {
-    var blockCall = function (args) {
-        return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
-    };
-
-    var transactionCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
-    };
-
-    var uncleCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
-    };
-
-    var transactionCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
-    };
-
-    var uncleCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
-    };
-
-    return [
-    { name: 'balanceAt', call: 'eth_balanceAt' },
-    { name: 'stateAt', call: 'eth_stateAt' },
-    { name: 'storageAt', call: 'eth_storageAt' },
-    { name: 'countAt', call: 'eth_countAt'},
-    { name: 'codeAt', call: 'eth_codeAt' },
-    { name: 'transact', call: 'eth_transact' },
-    { name: 'call', call: 'eth_call' },
-    { name: 'block', call: blockCall },
-    { name: 'transaction', call: transactionCall },
-    { name: 'uncle', call: uncleCall },
-    { name: 'compilers', call: 'eth_compilers' },
-    { name: 'flush', call: 'eth_flush' },
-    { name: 'lll', call: 'eth_lll' },
-    { name: 'solidity', call: 'eth_solidity' },
-    { name: 'serpent', call: 'eth_serpent' },
-    { name: 'logs', call: 'eth_logs' },
-    { name: 'transactionCount', call: transactionCountCall },
-    { name: 'uncleCount', call: uncleCountCall }
-    ];
+var blockCall = function (args) {
+    return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
 };
 
+var transactionCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
+};
+
+var uncleCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
+};
+
+var transactionCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
+};
+
+var uncleCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
+};
+
+/// @returns an array of objects describing web3.eth api methods
+var methods = [
+    { name: 'getBalance', call: 'eth_balanceAt' },
+    { name: 'getState', call: 'eth_stateAt' },
+    { name: 'getStorage', call: 'eth_storageAt' },
+    { name: 'getTransactionCount', call: 'eth_countAt'},
+    { name: 'getCode', call: 'eth_codeAt' },
+    { name: 'sendTransaction', call: 'eth_transact' },
+    { name: 'call', call: 'eth_call' },
+    { name: 'getBlock', call: blockCall },
+    { name: 'getTransaction', call: transactionCall },
+    { name: 'getUncle', call: uncleCall },
+    { name: 'getCompilers', call: 'eth_compilers' },
+    { name: 'flush', call: 'eth_flush' },
+    { name: 'compile.solidity', call: 'eth_solidity' },
+    { name: 'compile.lll', call: 'eth_lll' },
+    { name: 'compile.serpent', call: 'eth_serpent' },
+    { name: 'getBlockTransactionCount', call: transactionCountCall },
+    { name: 'getBlockUncleCount', call: uncleCountCall },
+
+    // deprecated methods
+    { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'getBalance' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'getState' },
+    { name: 'storageAt', call: 'eth_storageAt', newMethod: 'getStorage' },
+    { name: 'countAt', call: 'eth_countAt', newMethod: 'getTransactionCount' },
+    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'getCode' },
+    { name: 'transact', call: 'eth_transact', newMethod: 'sendTransaction' },
+    { name: 'block', call: blockCall, newMethod: 'getBlock' },
+    { name: 'transaction', call: transactionCall, newMethod: 'getTransaction' },
+    { name: 'uncle', call: uncleCall, newMethod: 'getUncle' },
+    { name: 'compilers', call: 'eth_compilers', newMethod: 'getCompilers' },
+    { name: 'solidity', call: 'eth_solidity', newMethod: 'compile.solidity' },
+    { name: 'lll', call: 'eth_lll', newMethod: 'compile.lll' },
+    { name: 'serpent', call: 'eth_serpent', newMethod: 'compile.serpent' },
+    { name: 'transactionCount', call: transactionCountCall, newMethod: 'getBlockTransactionCount' },
+    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' },
+    { name: 'logs', call: 'eth_logs' }
+];
+
 /// @returns an array of objects describing web3.eth api properties
-var properties = function () {
-    return [
+var properties = [
     { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
     { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
     { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
@@ -603,9 +617,12 @@ var properties = function () {
     { name: 'accounts', getter: 'eth_accounts' },
     { name: 'peerCount', getter: 'eth_peerCount' },
     { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
-    { name: 'number', getter: 'eth_number'}
-    ];
-};
+    { name: 'blockNumber', getter: 'eth_number'},
+
+    // deprecated properties
+    { name: 'number', getter: 'eth_number', newProperty: 'blockNumber'}
+];
+
 
 module.exports = {
     methods: methods,
@@ -1424,6 +1441,10 @@ module.exports = {
 
 var c = require('./const');
 
+if ("build" !== 'build') {/*
+    var BigNumber = require('bignumber.js'); // jshint ignore:line
+*/}
+
 /// Finds first index of array element matching pattern
 /// @param array
 /// @param callback pattern
@@ -1509,6 +1530,9 @@ var filterEvents = function (json) {
 /// TODO: use BigNumber.js to parse int
 /// TODO: add tests for it!
 var toEth = function (str) {
+
+    console.warn('This method is deprecated please use eth.fromWei(number, unit) instead.');
+
     var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str) : str;
     var unit = 0;
     var units = c.ETH_UNITS;
@@ -1531,15 +1555,202 @@ var toEth = function (str) {
     return s + ' ' + units[unit];
 };
 
+var toDecimal = function (val) {
+    // remove 0x and place 0, if it's required
+    val = val.length > 2 ? val.substring(2) : "0";
+    return (new BigNumber(val, 16).toString(10));
+};
+
+
+/**
+Takes a number of wei and converts it to any other ether unit.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method fromWei
+@param {Number|String} number can be a number or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var fromWei = function(number, unit) {
+    var isBigNumber = true;
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0)
+        number = toDecimal(number);
+    
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString()); // toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+
+    unit = unit.toLowerCase();
+
+    switch(unit) {
+        case 'kwei':
+        case 'ada':
+            number = number.dividedBy(1000);
+            break;
+        case 'mwei':
+        case 'babbage':
+            number = number.dividedBy(1000000);
+            break;
+        case 'gwei':
+        case 'schannon':
+            number = number.dividedBy(1000000000);
+            break;
+        case 'szabo':
+            number = number.dividedBy(1000000000000);
+            break;
+        case 'finney':
+            number = number.dividedBy(1000000000000000);
+            break;
+        case 'ether':
+            number = number.dividedBy(1000000000000000000);
+            break;
+        case 'kether':
+        case 'grand':
+        case 'einstein':
+            number = number.dividedBy(1000000000000000000000);
+            break;
+        case 'mether':
+            number = number.dividedBy(1000000000000000000000000);
+            break;
+        case 'gether':
+            number = number.dividedBy(1000000000000000000000000000);
+            break;
+        case 'tether':
+            number = number.dividedBy(1000000000000000000000000000000);
+            break;
+    }
+
+    return (isBigNumber) ? number : number.toNumber();
+};
+
+/**
+Takes a number of a unit and converts it to wei.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method toWei
+@param {Number|String} number can be a number or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var toWei = function(number, unit) {
+    var isBigNumber = true;
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0)
+        number = toDecimal(number);
+
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString());// toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+
+    unit = unit.toLowerCase();
+
+    switch(unit) {
+        case 'kwei':
+        case 'ada':
+            number = number.times(1000);
+            break;
+        case 'mwei':
+        case 'babbage':
+            number = number.times(1000000);
+            break;
+        case 'gwei':
+        case 'schannon':
+            number = number.times(1000000000);
+            break;
+        case 'szabo':
+            number = number.times(1000000000000);
+            break;
+        case 'finney':
+            number = number.times(1000000000000000);
+            break;
+        case 'ether':
+            number = number.times(1000000000000000000);
+            break;
+        case 'kether':
+        case 'grand':
+        case 'einstein':
+            number = number.times(1000000000000000000000);
+            break;
+        case 'mether':
+            number = number.times(1000000000000000000000000);
+            break;
+        case 'gether':
+            number = number.times(1000000000000000000000000000);
+            break;
+        case 'tether':
+            number = number.times(1000000000000000000000000000000);
+            break;
+    }
+
+    return (isBigNumber) ? number : number.toNumber();
+};
+
+
+/**
+Checks if the given string is a valid ethereum HEX address.
+
+@method isAddress
+@param {String} address the given HEX adress
+@return {Boolean}
+*/
+var isAddress = function(address) {
+    if(address.indexOf('0x') === 0 && address.length !== 42)
+        return false;
+    if(address.indexOf('0x') === -1 && address.length !== 40)
+        return false;
+
+    return /^\w+$/.test(address);
+};
+
+
 module.exports = {
     findIndex: findIndex,
+    toDecimal: toDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
     filterFunctions: filterFunctions,
     filterEvents: filterEvents,
-    toEth: toEth
+    toEth: toEth,
+    toWei: toWei,
+    fromWei: fromWei,
+    isAddress: isAddress
 };
 
 
@@ -1643,14 +1854,33 @@ var web3Methods = function () {
 /// setups api calls for these methods
 var setupMethods = function (obj, methods) {
     methods.forEach(function (method) {
-        obj[method.name] = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var call = typeof method.call === 'function' ? method.call(args) : method.call;
-            return web3.manager.send({
-                method: call,
-                params: args
-            });
-        };
+        // allow for object methods 'myObject.method'
+        var objectMethods = method.name.split('.'),
+            callFunction = function () {
+                var args = Array.prototype.slice.call(arguments);
+                var call = typeof method.call === 'function' ? method.call(args) : method.call;
+
+                // show deprecated warning
+                if(method.newMethod)
+                    console.warn('This method is deprecated please use eth.'+ method.newMethod +'() instead.');
+
+                return web3.manager.send({
+                    method: call,
+                    params: args
+                });
+            };
+
+        if(objectMethods.length > 1) {
+            if(!obj[objectMethods[0]])
+                obj[objectMethods[0]] = {};
+
+            obj[objectMethods[0]][objectMethods[1]] = callFunction;
+        
+        } else {
+
+            obj[objectMethods[0]] = callFunction;
+        }
+
     });
 };
 
@@ -1660,6 +1890,12 @@ var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
         var proto = {};
         proto.get = function () {
+
+            // show deprecated warning
+            if(property.newProperty)
+                console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
+
             return web3.manager.send({
                 method: property.getter
             });
@@ -1667,13 +1903,21 @@ var setupProperties = function (obj, properties) {
 
         if (property.setter) {
             proto.set = function (val) {
+
+                // show deprecated warning
+                if(property.newProperty)
+                    console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
                 return web3.manager.send({
                     method: property.setter,
                     params: [val]
                 });
             };
         }
+
+        proto.enumerable = !property.newProperty;
         Object.defineProperty(obj, property.name, proto);
+
     });
 };
 
@@ -1710,11 +1954,7 @@ var web3 = {
     fromAscii: utils.fromAscii,
 
     /// @returns decimal representaton of hex value prefixed by 0x
-    toDecimal: function (val) {
-        // remove 0x and place 0, if it's required
-        val = val.length > 2 ? val.substring(2) : "0";
-        return (new BigNumber(val, 16).toString(10));
-    },
+    toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
     fromDecimal: function (val) {
@@ -1723,6 +1963,11 @@ var web3 = {
 
     /// used to transform value/string to eth string
     toEth: utils.toEth,
+
+    toWei: utils.toWei,
+    fromWei: utils.fromWei,
+    isAddress: utils.isAddress,
+
 
     /// eth object prototype
     eth: {
@@ -1771,8 +2016,8 @@ var web3 = {
 
 /// setups all api methods
 setupMethods(web3, web3Methods());
-setupMethods(web3.eth, eth.methods());
-setupProperties(web3.eth, eth.properties());
+setupMethods(web3.eth, eth.methods);
+setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods());
 setupMethods(web3.shh, shh.methods());
 setupMethods(ethWatch, watches.eth());

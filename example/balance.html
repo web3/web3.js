@@ -13,12 +13,12 @@
         var coinbase = web3.eth.coinbase;
         var originalBalance = 0;
 
-        var balance = web3.eth.balanceAt(coinbase);
+        var balance = web3.eth.getBalance(coinbase);
         var originalBalance = web3.toDecimal(balance);
         document.getElementById('original').innerText = 'original balance: ' + originalBalance + '    watching...';
 
         web3.eth.watch('pending').changed(function() {
-            balance = web3.eth.balanceAt(coinbase)
+            balance = web3.eth.getBalance(coinbase)
             var currentBalance = web3.toDecimal(balance);
             document.getElementById("current").innerText = 'current: ' + currentBalance;
             document.getElementById("diff").innerText = 'diff:    ' + (currentBalance - originalBalance);
