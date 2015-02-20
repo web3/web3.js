@@ -1441,6 +1441,10 @@ module.exports = {
 
 var c = require('./const');
 
+if ("build" !== 'build') {/*
+    var BigNumber = require('bignumber.js'); // jshint ignore:line
+*/}
+
 /// Finds first index of array element matching pattern
 /// @param array
 /// @param callback pattern
@@ -1551,6 +1555,11 @@ var toEth = function (str) {
     return s + ' ' + units[unit];
 };
 
+var toDecimal = function (val) {
+    // remove 0x and place 0, if it's required
+    val = val.length > 2 ? val.substring(2) : "0";
+    return (new BigNumber(val, 16).toString(10));
+};
 
 
 /**
@@ -1581,7 +1590,7 @@ var fromWei = function(number, unit) {
         return number;
 
     if(typeof number === 'string' && number.indexOf('0x') === 0)
-        number = web3.toDecimal(number);
+        number = toDecimal(number);
     
     if(!(number instanceof BigNumber)) {
         isBigNumber = false;
@@ -1660,7 +1669,7 @@ var toWei = function(number, unit) {
         return number;
 
     if(typeof number === 'string' && number.indexOf('0x') === 0)
-        number = web3.toDecimal(number);
+        number = toDecimal(number);
 
     if(!(number instanceof BigNumber)) {
         isBigNumber = false;
@@ -1731,6 +1740,7 @@ var isAddress = function(address) {
 
 module.exports = {
     findIndex: findIndex,
+    toDecimal: toDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
     extractDisplayName: extractDisplayName,
@@ -1950,11 +1960,7 @@ var web3 = {
     fromAscii: utils.fromAscii,
 
     /// @returns decimal representaton of hex value prefixed by 0x
-    toDecimal: function (val) {
-        // remove 0x and place 0, if it's required
-        val = val.length > 2 ? val.substring(2) : "0";
-        return (new BigNumber(val, 16).toString(10));
-    },
+    toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
     fromDecimal: function (val) {
@@ -1963,7 +1969,7 @@ var web3 = {
 
     /// used to transform value/string to eth string
     toEth: utils.toEth,
-    
+
     toWei: utils.toWei,
     fromWei: utils.fromWei,
     isAddress: utils.isAddress,
