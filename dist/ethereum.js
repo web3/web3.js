@@ -367,7 +367,7 @@ var addFunctionsToContract = function (contract, desc, address) {
                 });
 
                 // transactions do not have any output, cause we do not know, when they will be processed
-                web3.eth.transact(options);
+                web3.eth.sendTransaction(options);
                 return;
             }
             
@@ -586,7 +586,6 @@ var methods = [
     { name: 'compile.solidity', call: 'eth_solidity' },
     { name: 'compile.lll', call: 'eth_lll' },
     { name: 'compile.serpent', call: 'eth_serpent' },
-    { name: 'logs', call: 'eth_logs' },
     { name: 'getBlockTransactionCount', call: transactionCountCall },
     { name: 'getBlockUncleCount', call: uncleCountCall },
 
@@ -605,7 +604,8 @@ var methods = [
     { name: 'lll', call: 'eth_lll', newMethod: 'compile.lll' },
     { name: 'serpent', call: 'eth_serpent', newMethod: 'compile.serpent' },
     { name: 'transactionCount', call: transactionCountCall, newMethod: 'getBlockTransactionCount' },
-    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' }
+    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' },
+    { name: 'logs', call: 'eth_logs' }
 ];
 
 /// @returns an array of objects describing web3.eth api properties
@@ -1526,6 +1526,9 @@ var filterEvents = function (json) {
 /// TODO: use BigNumber.js to parse int
 /// TODO: add tests for it!
 var toEth = function (str) {
+
+    console.warn('This method is deprecated please use eth.fromWei(number, unit) instead.');
+
     var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str) : str;
     var unit = 0;
     var units = c.ETH_UNITS;
@@ -1548,6 +1551,184 @@ var toEth = function (str) {
     return s + ' ' + units[unit];
 };
 
+
+
+/**
+Takes a number of wei and converts it to any other ether unit.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method fromWei
+@param {Number|String} number can be a number or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var fromWei = function(number, unit) {
+    var isBigNumber = true;
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0)
+        number = web3.toDecimal(number);
+    
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString()); // toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+
+    unit = unit.toLowerCase();
+
+    switch(unit) {
+        case 'kwei':
+        case 'ada':
+            number = number.dividedBy(1000);
+            break;
+        case 'mwei':
+        case 'babbage':
+            number = number.dividedBy(1000000);
+            break;
+        case 'gwei':
+        case 'schannon':
+            number = number.dividedBy(1000000000);
+            break;
+        case 'szabo':
+            number = number.dividedBy(1000000000000);
+            break;
+        case 'finney':
+            number = number.dividedBy(1000000000000000);
+            break;
+        case 'ether':
+            number = number.dividedBy(1000000000000000000);
+            break;
+        case 'kether':
+        case 'grand':
+        case 'einstein':
+            number = number.dividedBy(1000000000000000000000);
+            break;
+        case 'mether':
+            number = number.dividedBy(1000000000000000000000000);
+            break;
+        case 'gether':
+            number = number.dividedBy(1000000000000000000000000000);
+            break;
+        case 'tether':
+            number = number.dividedBy(1000000000000000000000000000000);
+            break;
+    }
+
+    return (isBigNumber) ? number : number.toNumber();
+};
+
+/**
+Takes a number of a unit and converts it to wei.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method toWei
+@param {Number|String} number can be a number or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var toWei = function(number, unit) {
+    var isBigNumber = true;
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0)
+        number = web3.toDecimal(number);
+
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString());// toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+
+    unit = unit.toLowerCase();
+
+    switch(unit) {
+        case 'kwei':
+        case 'ada':
+            number = number.times(1000);
+            break;
+        case 'mwei':
+        case 'babbage':
+            number = number.times(1000000);
+            break;
+        case 'gwei':
+        case 'schannon':
+            number = number.times(1000000000);
+            break;
+        case 'szabo':
+            number = number.times(1000000000000);
+            break;
+        case 'finney':
+            number = number.times(1000000000000000);
+            break;
+        case 'ether':
+            number = number.times(1000000000000000000);
+            break;
+        case 'kether':
+        case 'grand':
+        case 'einstein':
+            number = number.times(1000000000000000000000);
+            break;
+        case 'mether':
+            number = number.times(1000000000000000000000000);
+            break;
+        case 'gether':
+            number = number.times(1000000000000000000000000000);
+            break;
+        case 'tether':
+            number = number.times(1000000000000000000000000000000);
+            break;
+    }
+
+    return (isBigNumber) ? number : number.toNumber();
+};
+
+
+/**
+Checks if the given string is a valid ethereum HEX address.
+
+@method isAddress
+@param {String} address the given HEX adress
+@return {Boolean}
+*/
+var isAddress = function(address) {
+    if(address.indexOf('0x') === 0 && address.length !== 42)
+        return false;
+    if(address.indexOf('0x') === -1 && address.length !== 40)
+        return false;
+
+    return /^\w+$/.test(address);
+};
+
+
 module.exports = {
     findIndex: findIndex,
     toAscii: toAscii,
@@ -1556,7 +1737,10 @@ module.exports = {
     extractTypeName: extractTypeName,
     filterFunctions: filterFunctions,
     filterEvents: filterEvents,
-    toEth: toEth
+    toEth: toEth,
+    toWei: toWei,
+    fromWei: fromWei,
+    isAddress: isAddress
 };
 
 
@@ -1681,8 +1865,15 @@ var setupMethods = function (obj, methods) {
                 obj[objectMethods[0]] = {};
 
             obj[objectMethods[0]][objectMethods[1]] = callFunction;
-        } else
-            obj[method.name] = callFunction;
+        
+        } else {
+
+            Object.defineProperty(obj, method.name, {
+                enumerable: (method.newMethod) ? false : true,
+                value: callFunction
+            });
+
+        }
 
     });
 };
@@ -1717,7 +1908,12 @@ var setupProperties = function (obj, properties) {
                 });
             };
         }
-        Object.defineProperty(obj, property.name, proto);
+
+        Object.defineProperty(obj, property.name, {
+            enumerable: (property.newProperty) ? false : true,
+            value: proto
+        });
+
     });
 };
 
@@ -1767,6 +1963,11 @@ var web3 = {
 
     /// used to transform value/string to eth string
     toEth: utils.toEth,
+    
+    toWei: utils.toWei,
+    fromWei: utils.fromWei,
+    isAddress: utils.isAddress,
+
 
     /// eth object prototype
     eth: {
