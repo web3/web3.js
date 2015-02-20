@@ -620,7 +620,7 @@ var properties = [
     { name: 'blockNumber', getter: 'eth_number'},
 
     // deprecated properties
-    { name: 'number', call: 'eth_number', newProperty: 'blockNumber'}
+    { name: 'number', getter: 'eth_number', newProperty: 'blockNumber'}
 ];
 
 
@@ -1878,11 +1878,7 @@ var setupMethods = function (obj, methods) {
         
         } else {
 
-            Object.defineProperty(obj, method.name, {
-                enumerable: (method.newMethod) ? false : true,
-                value: callFunction
-            });
-
+            obj[objectMethods[0]] = callFunction;
         }
 
     });
@@ -1919,10 +1915,8 @@ var setupProperties = function (obj, properties) {
             };
         }
 
-        Object.defineProperty(obj, property.name, {
-            enumerable: (property.newProperty) ? false : true,
-            value: proto
-        });
+        proto.enumerable = !property.newProperty;
+        Object.defineProperty(obj, property.name, proto);
 
     });
 };
