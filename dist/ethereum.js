@@ -715,6 +715,7 @@ var outputParser = function (event) {
             args: {}
         };
 
+        output.topics = output.topic; // fallback for go-ethereum
         if (!output.topic) {
             return result;
         }
@@ -829,7 +830,7 @@ var filter = function(options, implementation, formatter) {
     var filterId = implementation.newFilter(options);
     var onMessages = function (messages) {
         messages.forEach(function (message) {
-            messages = formatter ? formatter(message) : message;
+            message = formatter ? formatter(message) : message;
             callbacks.forEach(function (callback) {
                 callback(message);
             });
