@@ -1555,6 +1555,7 @@ var toEth = function (str) {
     return s + ' ' + units[unit];
 };
 
+
 var toDecimal = function (val) {
     // remove 0x and place 0, if it's required
     val = val.length > 2 ? val.substring(2) : "0";
@@ -1579,9 +1580,9 @@ Possible units are:
     - tether
 
 @method fromWei
-@param {Number|String} number can be a number or a HEX of a decimal
+@param {Number|String} number can be a number, number string or a HEX of a decimal
 @param {String} unit the unit to convert to
-@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var fromWei = function(number, unit) {
     var isBigNumber = true;
@@ -1638,7 +1639,7 @@ var fromWei = function(number, unit) {
             break;
     }
 
-    return (isBigNumber) ? number : number.toNumber();
+    return (isBigNumber) ? number : number.toString(10);
 };
 
 /**
@@ -1658,9 +1659,9 @@ Possible units are:
     - tether
 
 @method toWei
-@param {Number|String} number can be a number or a HEX of a decimal
+@param {Number|String} number can be a number, number string or a HEX of a decimal
 @param {String} unit the unit to convert to
-@return {Number|Object} When given a BigNumber object it returns one as well, otherwise a number
+@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var toWei = function(number, unit) {
     var isBigNumber = true;
@@ -1717,7 +1718,7 @@ var toWei = function(number, unit) {
             break;
     }
 
-    return (isBigNumber) ? number : number.toNumber();
+    return (isBigNumber) ? number : number.toString(10);
 };
 
 
