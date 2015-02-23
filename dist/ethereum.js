@@ -549,6 +549,9 @@ module.exports = {
  * @date 2015
  */
 
+var formatters = require('./formatters');
+
+
 var blockCall = function (args) {
     return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
 };
@@ -571,7 +574,7 @@ var uncleCountCall = function (args) {
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
-    { name: 'getBalance', call: 'eth_balanceAt' },
+    { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
     { name: 'getState', call: 'eth_stateAt' },
     { name: 'getStorage', call: 'eth_storageAt' },
     { name: 'getTransactionCount', call: 'eth_countAt'},
@@ -613,7 +616,7 @@ var properties = [
     { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
     { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
     { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
-    { name: 'gasPrice', getter: 'eth_gasPrice' },
+    { name: 'gasPrice', getter: 'eth_gasPrice', outputFormatter: formatters.convertToBigNumber},
     { name: 'accounts', getter: 'eth_accounts' },
     { name: 'peerCount', getter: 'eth_peerCount' },
     { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
@@ -630,7 +633,7 @@ module.exports = {
 };
 
 
-},{}],6:[function(require,module,exports){
+},{"./formatters":8}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -976,7 +979,9 @@ var signedIsNegative = function (value) {
 /// Formats input right-aligned input bytes to int
 /// @returns right-aligned input bytes formatted to int
 var formatOutputInt = function (value) {
+
     value = value || "0";
+
     // check if it's negative number
     // it it is, return two's complement
     if (signedIsNegative(value)) {
@@ -984,6 +989,8 @@ var formatOutputInt = function (value) {
     }
     return new BigNumber(value, 16);
 };
+
+
 
 /// Formats big right-aligned input bytes to uint
 /// @returns right-aligned input bytes formatted to uint
@@ -1023,6 +1030,21 @@ var formatOutputAddress = function (value) {
 };
 
 
+/// Formats the input to a big number
+/// @returns a BigNumber object
+var convertToBigNumber = function (value) {
+
+    // remove the leading 0x
+    if(typeof value === 'string')
+        value = value.replace('0x', '');
+
+    value = value || "0";
+
+    return new BigNumber(value, 16);
+};
+
+
+
 module.exports = {
     formatInputInt: formatInputInt,
     formatInputString: formatInputString,
@@ -1035,7 +1057,8 @@ module.exports = {
     formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
     formatOutputString: formatOutputString,
-    formatOutputAddress: formatOutputAddress
+    formatOutputAddress: formatOutputAddress,
+    convertToBigNumber: convertToBigNumber
 };
 
 
@@ -1241,10 +1264,12 @@ var requestManager = function() {
 
         if (!jsonrpc.isValidResponse(result)) {
             console.log(result);
+            if(typeof result === 'object' && result.error && result.error.message)
+                console.error(result.error.message);
             return null;
         }
         
-        return result.result;
+        return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
     };
 
     var setProvider = function (p) {
@@ -1867,7 +1892,8 @@ var setupMethods = function (obj, methods) {
 
                 return web3.manager.send({
                     method: call,
-                    params: args
+                    params: args,
+                    outputFormatter: method.outputFormatter
                 });
             };
 
@@ -1898,7 +1924,8 @@ var setupProperties = function (obj, properties) {
 
 
             return web3.manager.send({
-                method: property.getter
+                method: property.getter,
+                outputFormatter: property.outputFormatter
             });
         };
 
