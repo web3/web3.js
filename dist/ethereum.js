@@ -422,7 +422,7 @@ var addEventsToContract = function (contract, desc, address) {
                 var parser = eventImpl.outputParser(e);
                 return parser(data);
             };
-            return web3.eth.watch(o, undefined, undefined, outputFormatter);
+            return web3.eth.filter(o, undefined, undefined, outputFormatter);
         };
         
         // this property should be used by eth.filter to check if object is an event
@@ -698,7 +698,7 @@ var indexedParamsToTopics = function (event, indexed) {
 
 var inputParser = function (address, signature, event) {
     
-    // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.watch'
+    // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.filter'
     return function (indexed, options) {
         var o = options || {};
         o.address = address;
@@ -802,7 +802,7 @@ module.exports = {
 var implementationIsValid = function (i) {
     return !!i && 
         typeof i.newFilter === 'function' && 
-        typeof i.getMessages === 'function' && 
+        typeof i.getLogs === 'function' && 
         typeof i.uninstallFilter === 'function' &&
         typeof i.startPolling === 'function' &&
         typeof i.stopPolling === 'function';
@@ -859,27 +859,49 @@ var filter = function(options, implementation, formatter) {
 
     implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
 
-    var changed = function (callback) {
+    var watch = function(callback) {
         callbacks.push(callback);
     };
-
-    var messages = function () {
-        return implementation.getMessages(filterId);
-    };
-    
-    var uninstall = function (callback) {
+    var stopWatching = function() {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
     };
 
+    var get = function () {
+        return implementation.getLogs(filterId);
+    };
+    
     return {
-        changed: changed,
-        arrived: changed,
-        happened: changed,
-        messages: messages,
-        logs: messages,
-        uninstall: uninstall
+        watch: watch,
+        stopWatching: stopWatching,
+        get: get,
+
+        // DEPRECATED methods
+        changed:  function(){
+            console.warn('eth.watch().changed() is deprecated please use eth.filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        arrived:  function(){
+            console.warn('eth.watch().arrived() is deprecated please use eth.filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        happened:  function(){
+            console.warn('eth.watch().happened() is deprecated please use eth.filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        uninstall: function(){
+            console.warn('eth.watch().uninstall() is deprecated please use eth.filter().stopWatching() instead.');
+            return stopWatching.apply(this, arguments);
+        },
+        messages: function(){
+            console.warn('eth.watch().messages() is deprecated please use eth.filter().get() instead.');
+            return get.apply(this, arguments);
+        },
+        logs: function(){
+            console.warn('eth.watch().logs() is deprecated please use eth.filter().get() instead.');
+            return get.apply(this, arguments);
+        }
     };
 };
 
@@ -1349,9 +1371,12 @@ var methods = function () {
     return [
     { name: 'post', call: 'shh_post' },
     { name: 'newIdentity', call: 'shh_newIdentity' },
-    { name: 'haveIdentity', call: 'shh_haveIdentity' },
+    { name: 'hasIdentity', call: 'shh_haveIdentity' },
     { name: 'newGroup', call: 'shh_newGroup' },
-    { name: 'addToGroup', call: 'shh_addToGroup' }
+    { name: 'addToGroup', call: 'shh_addToGroup' },
+
+    // deprecated
+    { name: 'haveIdentity', call: 'shh_haveIdentity', newMethod: 'hasIdentity' },
     ];
 };
 
@@ -1803,7 +1828,7 @@ module.exports = {
  * @date 2015
  */
 
-/// @returns an array of objects describing web3.eth.watch api methods
+/// @returns an array of objects describing web3.eth.filter api methods
 var eth = function () {
     var newFilter = function (args) {
         return typeof args[0] === 'string' ? 'eth_newFilterString' : 'eth_newFilter';
@@ -1812,7 +1837,7 @@ var eth = function () {
     return [
     { name: 'newFilter', call: newFilter },
     { name: 'uninstallFilter', call: 'eth_uninstallFilter' },
-    { name: 'getMessages', call: 'eth_filterLogs' }
+    { name: 'getLogs', call: 'eth_filterLogs' }
     ];
 };
 
@@ -1821,7 +1846,7 @@ var shh = function () {
     return [
     { name: 'newFilter', call: 'shh_newFilter' },
     { name: 'uninstallFilter', call: 'shh_uninstallFilter' },
-    { name: 'getMessages', call: 'shh_getMessages' }
+    { name: 'getLogs', call: 'shh_getMessages' }
     ];
 };
 
@@ -1975,6 +2000,16 @@ var web3 = {
     manager: requestManager(),
     providers: {},
 
+    setProvider: function (provider) {
+        web3.manager.setProvider(provider);
+    },
+    
+    /// Should be called to reset state of web3 object
+    /// Resets everything except manager
+    reset: function () {
+        web3.manager.reset(); 
+    },
+
     /// @returns ascii string representation of hex value prefixed with 0x
     toAscii: utils.toAscii,
 
@@ -2010,14 +2045,21 @@ var web3 = {
         },
 
         /// @param filter may be a string, object or event
-        /// @param indexed is optional, this is an object with optional event indexed params
+        /// @param eventParams is optional, this is an object with optional event eventParams params
         /// @param options is optional, this is an object with optional event options ('max'...)
         /// TODO: fix it, 4 params? no way
-        watch: function (fil, indexed, options, formatter) {
-            if (fil._isEvent) {
-                return fil(indexed, options);
-            }
+        filter: function (fil, eventParams, options, formatter) {
+
+            // if its event, treat it differently
+            if (fil._isEvent)
+                return fil(eventParams, options);
+
             return filter(fil, ethWatch, formatter);
+        },
+        // DEPRECATED
+        watch: function (fil, eventParams, options, formatter) {
+            console.warn('eth.watch() is deprecated please use eth.filter() instead.');
+            return this.filter(fil, eventParams, options, formatter);
         }
     },
 
@@ -2027,18 +2069,14 @@ var web3 = {
     /// shh object prototype
     shh: {
         /// @param filter may be a string, object or event
-        watch: function (fil) {
+        filter: function (fil) {
             return filter(fil, shhWatch);
+        },
+        // DEPRECATED
+        watch: function (fil) {
+            console.warn('shh.watch() is deprecated please use shh.filter() instead.');
+            return this.filter(fil);
         }
-    },
-    setProvider: function (provider) {
-        web3.manager.setProvider(provider);
-    },
-    
-    /// Should be called to reset state of web3 object
-    /// Resets everything except manager
-    reset: function () {
-        web3.manager.reset(); 
     }
 };
 

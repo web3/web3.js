@@ -18,9 +18,10 @@ describe('web3', function() {
         u.methodExists(web3.eth.compile, 'lll');
         u.methodExists(web3.eth.compile, 'solidity');
         u.methodExists(web3.eth.compile, 'serpent');
-        u.methodExists(web3.eth, 'logs');
         u.methodExists(web3.eth, 'getBlockTransactionCount');
         u.methodExists(web3.eth, 'getBlockUncleCount');
+        u.methodExists(web3.eth, 'filter');
+        u.methodExists(web3.eth, 'contract');
 
         u.propertyExists(web3.eth, 'coinbase');
         u.propertyExists(web3.eth, 'listening');
