@@ -1,7 +1,7 @@
 {
   "name": "ethereum.js",
   "namespace": "ethereum",
-  "version": "0.0.16",
+  "version": "0.0.15",
   "description": "Ethereum Compatible JavaScript API",
   "main": [
     "./dist/ethereum.js",
