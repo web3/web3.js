@@ -452,24 +452,42 @@ var addEventsToContract = function (contract, desc, address) {
  *      outputs: [{name: 'd', type: 'string' }]
  * }];  // contract abi
  *
- * var myContract = web3.eth.contract('0x0123123121', abi); // creation of contract object
+ * var MyContract = web3.eth.contract(abi); // creation of contract prototype
  *
- * myContract.myMethod('this is test string param for call'); // myMethod call (implicit, default)
- * myContract.call().myMethod('this is test string param for call'); // myMethod call (explicit)
- * myContract.transact().myMethod('this is test string param for transact'); // myMethod transact
+ * var contractInstance = new MyContract('0x0123123121');
  *
- * @param address - address of the contract, which should be called
- * @param desc - abi json description of the contract, which is being created
+ * contractInstance.myMethod('this is test string param for call'); // myMethod call (implicit, default)
+ * contractInstance.call().myMethod('this is test string param for call'); // myMethod call (explicit)
+ * contractInstance.transact().myMethod('this is test string param for transact'); // myMethod transact
+ *
+ * @param abi - abi json description of the contract, which is being created
  * @returns contract object
  */
+var contract = function (abi) {
 
-var contract = function (address, desc) {
+    // return prototype
+    if(Object.prototype.toString.call(abi) === '[object Array]' && arguments.length === 1) {
+        return Contract.bind(this, abi);
+
+    // depreacted: auto initiate contract
+    } else {
+
+        console.warn('Initiating a contract like this is deprecated please use var Contract = eth.contract(abi); new Contract(address); instead.');
+
+        return new Contract(arguments[1], arguments[0]);
+    }
+
+};
+
+function Contract(abi, address) {
+    console.log('address', address);
+    console.log('abi', abi);
 
     // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
     // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
     // prototype, so we make it so as a workaround.
     // TODO: we may not want to modify input params, maybe use copy instead?
-    desc.forEach(function (method) {
+    abi.forEach(function (method) {
         if (method.name.indexOf('(') === -1) {
             var displayName = method.name;
             var typeName = method.inputs.map(function(i){return i.type; }).join();
@@ -479,12 +497,12 @@ var contract = function (address, desc) {
 
     var result = {};
     addFunctionRelatedPropertiesToContract(result);
-    addFunctionsToContract(result, desc, address);
-    addEventRelatedPropertiesToContract(result, desc, address);
-    addEventsToContract(result, desc, address);
+    addFunctionsToContract(result, abi, address);
+    addEventRelatedPropertiesToContract(result, abi, address);
+    addEventsToContract(result, abi, address);
 
     return result;
-};
+}
 
 module.exports = contract;
 
