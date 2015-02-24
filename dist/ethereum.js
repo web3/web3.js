@@ -310,13 +310,13 @@ var exportNatspecGlobals = function (vars) {
 var addFunctionRelatedPropertiesToContract = function (contract) {
     
     contract.call = function (options) {
-        contract._isTransact = false;
+        contract._isTransaction = false;
         contract._options = options;
         return contract;
     };
 
-    contract.transact = function (options) {
-        contract._isTransact = true;
+    contract.sendTransaction = function (options) {
+        contract._isTransaction = true;
         contract._options = options;
         return contract;
     };
@@ -350,14 +350,14 @@ var addFunctionsToContract = function (contract, desc, address) {
             options.to = address;
             options.data = signature + parsed;
             
-            var isTransact = contract._isTransact === true || (contract._isTransact !== false && !method.constant);
+            var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
             var collapse = options.collapse !== false;
             
             // reset
             contract._options = {};
-            contract._isTransact = null;
+            contract._isTransaction = null;
 
-            if (isTransact) {
+            if (isTransaction) {
                 
                 exportNatspecGlobals({
                     abi: desc,
@@ -458,7 +458,7 @@ var addEventsToContract = function (contract, desc, address) {
  *
  * contractInstance.myMethod('this is test string param for call'); // myMethod call (implicit, default)
  * contractInstance.call().myMethod('this is test string param for call'); // myMethod call (explicit)
- * contractInstance.transact().myMethod('this is test string param for transact'); // myMethod transact
+ * contractInstance.sendTransaction().myMethod('this is test string param for transact'); // myMethod sendTransaction
  *
  * @param abi - abi json description of the contract, which is being created
  * @returns contract object
@@ -595,7 +595,7 @@ var methods = [
     { name: 'getStorage', call: 'eth_storageAt' },
     { name: 'getTransactionCount', call: 'eth_countAt'},
     { name: 'getCode', call: 'eth_codeAt' },
-    { name: 'sendTransaction', call: 'eth_transact' },
+    { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call' },
     { name: 'getBlock', call: blockCall },
     { name: 'getTransaction', call: transactionCall },
@@ -1082,6 +1082,48 @@ var convertToBigNumber = function (value) {
 };
 
 
+/// Formats the input for a transaction and converts all values to HEX
+/// @returns object
+var inputTransactionFormatter = function(options){
+
+    // make code -> data
+    if(options.code) {
+        options.data = options.code;
+        delete options.code;
+    }
+
+    // make endowment -> value
+    if(options.endowment) {
+        options.value = options.endowment;
+        delete options.endowment;
+    }
+
+
+    // format the following options
+    ['gas', 'gasPrice', 'value'].forEach(function(key){
+
+        // if hex or string integer
+        if(typeof options[key] === 'string') {
+
+            // if not hex assume its a number string
+            if(options[key].indexOf('0x') === -1)
+                options[key] = utils.fromDecimal(options[key]);
+
+        // if number
+        } else if(typeof options[key] === 'number') {
+            options[key] = utils.fromDecimal(options[key]);
+
+        // if bignumber
+        } else if(options[key] instanceof BigNumber) {
+            options[key] = '0x'+ options[key].toString(16);
+        }
+    });
+
+
+    return options;
+};
+
+
 
 module.exports = {
     formatInputInt: formatInputInt,
@@ -1096,7 +1138,8 @@ module.exports = {
     formatOutputBool: formatOutputBool,
     formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress,
-    convertToBigNumber: convertToBigNumber
+    convertToBigNumber: convertToBigNumber,
+    inputTransactionFormatter: inputTransactionFormatter
 };
 
 
@@ -1291,6 +1334,16 @@ var requestManager = function() {
     var provider;
 
     var send = function (data) {
+
+
+        // format the input before sending
+        if(typeof data.inputFormatter === 'function') {
+            data.params = Array.prototype.map.call(data.params, function(item){
+                return data.inputFormatter(item);
+            });
+        }
+
+
         var payload = jsonrpc.toPayload(data.method, data.params);
         
         if (!provider) {
@@ -1628,6 +1681,10 @@ var toDecimal = function (val) {
     return (new BigNumber(val, 16).toString(10));
 };
 
+var fromDecimal = function (val) {
+    return "0x" + (new BigNumber(val).toString(16));
+};
+
 
 /**
 Takes a number of wei and converts it to any other ether unit.
@@ -1808,6 +1865,7 @@ var isAddress = function(address) {
 module.exports = {
     findIndex: findIndex,
     toDecimal: toDecimal,
+    fromDecimal: fromDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
     extractDisplayName: extractDisplayName,
@@ -1934,7 +1992,8 @@ var setupMethods = function (obj, methods) {
                 return web3.manager.send({
                     method: call,
                     params: args,
-                    outputFormatter: method.outputFormatter
+                    outputFormatter: method.outputFormatter,
+                    inputFormatter: method.inputFormatter
                 });
             };
 
@@ -1979,7 +2038,8 @@ var setupProperties = function (obj, properties) {
 
                 return web3.manager.send({
                     method: property.setter,
-                    params: [val]
+                    params: [val],
+                    inputFormatter: property.inputFormatter
                 });
             };
         }
@@ -2036,9 +2096,7 @@ var web3 = {
     toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
-    fromDecimal: function (val) {
-        return "0x" + (new BigNumber(val).toString(16));
-    },
+    fromDecimal: utils.fromDecimal,
 
     /// used to transform value/string to eth string
     toEth: utils.toEth,
