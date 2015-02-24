@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "bignumber.js": ">=2.0.0",
-    "ws": "*",
     "xmlhttprequest": "*"
   },
   "devDependencies": {
