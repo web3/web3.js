@@ -472,7 +472,7 @@ var contract = function (abi) {
     // depreacted: auto initiate contract
     } else {
 
-        console.warn('Initiating a contract like this is deprecated please use var Contract = eth.contract(abi); new Contract(address); instead.');
+        console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
 
         return new Contract(arguments[1], arguments[0]);
     }
@@ -480,8 +480,6 @@ var contract = function (abi) {
 };
 
 function Contract(abi, address) {
-    console.log('address', address);
-    console.log('abi', abi);
 
     // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
     // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
@@ -2052,7 +2050,10 @@ var web3 = {
 
     /// eth object prototype
     eth: {
+        // DEPRECATED
         contractFromAbi: function (abi) {
+            console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
+
             return function(addr) {
                 // Default to address of Config. TODO: rremove prior to genesis.
                 addr = addr || '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
