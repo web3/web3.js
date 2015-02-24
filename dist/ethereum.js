@@ -1718,7 +1718,7 @@ var fromWei = function(number, unit) {
     
     if(!(number instanceof BigNumber)) {
         isBigNumber = false;
-        number = new BigNumber(number.toString()); // toString to prevent errors, the user have to handle giving correct bignums themselves
+        number = new BigNumber(number.toString(10), 10); // toString to prevent errors, the user have to handle giving correct bignums themselves
     }
 
 
@@ -1782,7 +1782,7 @@ Possible units are:
     - tether
 
 @method toWei
-@param {Number|String} number can be a number, number string or a HEX of a decimal
+@param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
 @param {String} unit the unit to convert to
 @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
@@ -1792,12 +1792,15 @@ var toWei = function(number, unit) {
     if(!number)
         return number;
 
-    if(typeof number === 'string' && number.indexOf('0x') === 0)
-        number = toDecimal(number);
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0) {
+        isBigNumber = false;
+        number = new BigNumber(number, 16);
+    }
 
     if(!(number instanceof BigNumber)) {
         isBigNumber = false;
-        number = new BigNumber(number.toString());// toString to prevent errors, the user have to handle giving correct bignums themselves
+        number = new BigNumber(number.toString(10), 10);// toString to prevent errors, the user have to handle giving correct bignums themselves
     }
 
 
