@@ -1211,6 +1211,7 @@ var c = require('./const');
  */
 var requestManager = function() {
     var polls = [];
+    var timeout = null;
     var provider;
 
     var send = function (data) {
@@ -1255,6 +1256,12 @@ var requestManager = function() {
             poll.uninstall(poll.id); 
         });
         polls = [];
+
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+        }
+        poll();
     };
 
     var poll = function () {
@@ -1265,7 +1272,7 @@ var requestManager = function() {
             }
             data.callback(result);
         });
-        setTimeout(poll, c.ETH_POLLING_TIMEOUT);
+        timeout = setTimeout(poll, c.ETH_POLLING_TIMEOUT);
     };
     
     poll();
