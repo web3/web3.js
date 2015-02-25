@@ -601,20 +601,20 @@ var methods = [
     { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
     { name: 'getState', call: 'eth_stateAt' },
     { name: 'getStorage', call: 'eth_storageAt' },
-    { name: 'getTransactionCount', call: 'eth_countAt'},
     { name: 'getData', call: 'eth_codeAt' },
+    { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
+    { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
+    { name: 'getCompilers', call: 'eth_compilers' },
+    { name: 'getBlockTransactionCount', call: transactionCountCall },
+    { name: 'getBlockUncleCount', call: uncleCountCall },
+    { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
+    { name: 'getTransactionCount', call: 'eth_countAt'},
     { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call' },
-    { name: 'getBlock', call: blockCall },
-    { name: 'getTransaction', call: transactionCall },
-    { name: 'getUncle', call: uncleCall },
-    { name: 'getCompilers', call: 'eth_compilers' },
-    { name: 'flush', call: 'eth_flush' },
     { name: 'compile.solidity', call: 'eth_solidity' },
     { name: 'compile.lll', call: 'eth_lll' },
     { name: 'compile.serpent', call: 'eth_serpent' },
-    { name: 'getBlockTransactionCount', call: transactionCountCall },
-    { name: 'getBlockUncleCount', call: uncleCountCall },
+    { name: 'flush', call: 'eth_flush' },
 
     // deprecated methods
     { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'getBalance' },
@@ -1090,8 +1090,11 @@ var convertToBigNumber = function (value) {
 };
 
 
-/// Formats the input for a transaction and converts all values to HEX
-/// @returns object
+/**
+Formats the input of a transaction and converts all values to HEX
+
+@returns object
+*/
 var inputTransactionFormatter = function(options){
 
     // make code -> data
@@ -1108,7 +1111,7 @@ var inputTransactionFormatter = function(options){
 
 
     // format the following options
-    ['gas', 'gasPrice', 'value'].forEach(function(key){
+    ['gasPrice', 'value'].forEach(function(key){
 
         // if hex or string integer
         if(typeof options[key] === 'string') {
@@ -1119,7 +1122,7 @@ var inputTransactionFormatter = function(options){
 
         // if number
         } else if(typeof options[key] === 'number') {
-            options[key] = utils.fromDecimal(options[key]);
+            options[key] = String(options[key]);//String(utils.fromDecimal(options[key]);
 
         // if bignumber
         } else if(options[key] instanceof BigNumber) {
@@ -1127,10 +1130,79 @@ var inputTransactionFormatter = function(options){
         }
     });
 
+    // format gas to number
+    options.gas = String(options.gas);//Number(options.gas);
+
 
     return options;
 };
 
+/**
+Formats the output of a transaction to its proper values
+
+@returns object
+*/
+var outputTransactionFormatter = function(tx){
+    // transform to number
+    tx.gas = Number(tx.gas);
+
+    // gasPrice to bignumber
+    if(typeof tx.gasPrice === 'string' && tx.gasPrice.indexOf('0x') === 0)
+        tx.gasPrice = new BigNumber(tx.gasPrice, 16);
+    else
+        tx.gasPrice = new BigNumber(tx.gasPrice.toString(10), 10);
+
+    // value to bignumber
+    if(typeof tx.value === 'string' && tx.value.indexOf('0x') === 0)
+        tx.value = new BigNumber(tx.value, 16);
+    else
+        tx.value = new BigNumber(tx.value.toString(10), 10);
+
+    return tx;
+};
+
+
+/**
+Formats the output of a block to its proper values
+
+@returns object
+*/
+var outputBlockFormatter = function(block){
+    // transform to number
+    block.gasLimit = Number(block.gasLimit);
+    block.gasUsed = Number(block.gasUsed);
+    block.size = Number(block.size);
+    block.timestamp = Number(block.timestamp);
+    block.number = Number(block.number);
+
+    // minGasPrice to bignumber
+    if(block.minGasPrice) {
+        if(typeof block.minGasPrice === 'string' && block.minGasPrice.indexOf('0x') === 0)
+            block.minGasPrice = new BigNumber(block.minGasPrice, 16);
+        else
+            block.minGasPrice = new BigNumber(block.minGasPrice.toString(10), 10);
+    }
+
+
+    // difficulty to bignumber
+    if(block.difficulty) {
+        if(typeof block.difficulty === 'string' && block.difficulty.indexOf('0x') === 0)
+            block.difficulty = new BigNumber(block.difficulty, 16);
+        else
+            block.difficulty = new BigNumber(block.difficulty.toString(10), 10);
+    }
+
+
+    // difficulty to bignumber
+    if(block.totalDifficulty) {
+        if(typeof block.totalDifficulty === 'string' && block.totalDifficulty.indexOf('0x') === 0)
+            block.totalDifficulty = new BigNumber(block.totalDifficulty, 16);
+        else
+            block.totalDifficulty = new BigNumber(block.totalDifficulty.toString(10), 10);
+    }
+
+    return block;
+};
 
 
 module.exports = {
@@ -1147,7 +1219,9 @@ module.exports = {
     formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress,
     convertToBigNumber: convertToBigNumber,
-    inputTransactionFormatter: inputTransactionFormatter
+    inputTransactionFormatter: inputTransactionFormatter,
+    outputTransactionFormatter: outputTransactionFormatter,
+    outputBlockFormatter: outputBlockFormatter
 };
 
 
