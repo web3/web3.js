@@ -474,8 +474,8 @@ var addEventsToContract = function (contract, desc, address) {
 var contract = function (abi) {
 
     // return prototype
-    if(Object.prototype.toString.call(abi) === '[object Array]' && arguments.length === 1) {
-        return Contract.bind(this, abi);
+    if(abi instanceof Array && arguments.length === 1) {
+        return Contract.bind(null, abi);
 
     // deprecated: auto initiate contract
     } else {
@@ -1037,7 +1037,6 @@ var formatOutputInt = function (value) {
 };
 
 
-
 /// Formats big right-aligned input bytes to uint
 /// @returns right-aligned input bytes formatted to uint
 var formatOutputUInt = function (value) {
@@ -1122,7 +1121,7 @@ var inputTransactionFormatter = function(options){
 
         // if number
         } else if(typeof options[key] === 'number') {
-            options[key] = String(options[key]);//String(utils.fromDecimal(options[key]);
+            options[key] = utils.fromDecimal(options[key]);
 
         // if bignumber
         } else if(options[key] instanceof BigNumber) {
@@ -1131,7 +1130,7 @@ var inputTransactionFormatter = function(options){
     });
 
     // format gas to number
-    options.gas = String(options.gas);//Number(options.gas);
+    options.gas = Number(options.gas);
 
 
     return options;
