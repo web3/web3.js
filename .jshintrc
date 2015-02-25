@@ -1,50 +1,19 @@
 {
-    "predef": [
-        "console",
-        "require",
-        "equal",
-        "test",
-        "testBoth",
-        "testWithDefault",
-        "raises",
-        "deepEqual",
-        "start",
-        "stop",
-        "ok",
-        "strictEqual",
-        "module",
-        "expect",
-        "reject",
-        "impl"
-    ],
-
-    "esnext": true,
-    "proto": true,
-    "node" : true,
-    "browser" : true,
-    "browserify" : true,
-
-    "boss" : true,
-    "curly": false,
-    "debug": true,
-    "devel": true,
+    "browserify": true,
+    "bitwise": true,
+    "camelcase": true,
     "eqeqeq": true,
-    "evil": true,
-    "forin": false,
-    "immed": false,
-    "laxbreak": false,
-    "newcap": true,
-    "noarg": true,
-    "noempty": false,
-    "nonew": false,
-    "nomen": false,
-    "onevar": false,
-    "plusplus": false,
-    "regexp": false,
+    "freeze": true,
+    "funcscope": false,
+    "maxcomplexity": 4, /* our target is 3! */
+    "maxdepth": 3,
+    "maxerr": 50,
+    /*"maxlen": 80*/ /*this should be our goal*/
+    "maxparams": 3,
+    "nonew": true,
+    "unused": true,
     "undef": true,
-    "sub": true,
-    "strict": false,
-    "white": false,
-    "shadow": true,
-    "eqnull": true
+    "predef": [
+        "console"
+    ]
 }

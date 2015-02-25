@@ -53,7 +53,6 @@ var inputTypes = types.inputTypes();
 /// @returns bytes representation of input params
 var formatInput = function (inputs, params) {
     var bytes = "";
-    var padding = c.ETH_PADDING * 2;
 
     /// first we iterate in search for dynamic 
     inputs.forEach(function (input, index) {
@@ -110,6 +109,7 @@ var formatOutput = function (outs, output) {
     output = output.slice(dynamicPartLength);
 
     outs.forEach(function (out, i) {
+        /*jshint maxcomplexity:6 */
         var typeMatch = false;
         for (var j = 0; j < outputTypes.length && !typeMatch; j++) {
             typeMatch = outputTypes[j].type(outs[i].type);
@@ -296,7 +296,6 @@ var web3 = require('./web3');
 var abi = require('./abi');
 var utils = require('./utils');
 var eventImpl = require('./event');
-var filter = require('./filter');
 
 var exportNatspecGlobals = function (vars) {
     // it's used byt natspec.js
@@ -342,6 +341,7 @@ var addFunctionsToContract = function (contract, desc, address) {
         var typeName = utils.extractTypeName(method.name);
 
         var impl = function () {
+            /*jshint maxcomplexity:7 */
             var params = Array.prototype.slice.call(arguments);
             var signature = abi.signatureFromAscii(method.name);
             var parsed = inputParser[displayName][typeName].apply(null, params);
@@ -489,7 +489,7 @@ var contract = function (address, desc) {
 module.exports = contract;
 
 
-},{"./abi":1,"./event":6,"./filter":7,"./utils":15,"./web3":17}],4:[function(require,module,exports){
+},{"./abi":1,"./event":6,"./utils":15,"./web3":17}],4:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -697,9 +697,9 @@ var getArgumentsObject = function (inputs, indexed, notIndexed) {
     return inputs.reduce(function (acc, current) {
         var value;
         if (current.indexed)
-            value = indexed.splice(0, 1)[0];
+            value = indexedCopy.splice(0, 1)[0];
         else
-            value = notIndexed.splice(0, 1)[0];
+            value = notIndexedCopy.splice(0, 1)[0];
 
         acc[current.name] = value;
         return acc;
@@ -847,7 +847,7 @@ var filter = function(options, implementation, formatter) {
         return implementation.getMessages(filterId);
     };
     
-    var uninstall = function (callback) {
+    var uninstall = function () {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
@@ -909,6 +909,7 @@ var padLeft = function (string, chars, sign) {
 /// If the value is floating point, round it down
 /// @returns right-aligned byte representation of int
 var formatInputInt = function (value) {
+    /*jshint maxcomplexity:7 */
     var padding = c.ETH_PADDING * 2;
     if (value instanceof BigNumber || typeof value === 'number') {
         if (typeof value === 'number')
@@ -1234,9 +1235,11 @@ var requestManager = function() {
         provider = p;
     };
 
+    /*jshint maxparams:4 */
     var startPolling = function (data, pollId, callback, uninstall) {
         polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
     };
+    /*jshint maxparams:3 */
 
     var stopPolling = function (pollId) {
         for (var i = polls.length; i--;) {
@@ -1509,6 +1512,7 @@ var filterEvents = function (json) {
 /// TODO: use BigNumber.js to parse int
 /// TODO: add tests for it!
 var toEth = function (str) {
+     /*jshint maxcomplexity:7 */
     var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str) : str;
     var unit = 0;
     var units = c.ETH_UNITS;
@@ -1677,12 +1681,14 @@ var setupProperties = function (obj, properties) {
     });
 };
 
+/*jshint maxparams:4 */
 var startPolling = function (method, id, callback, uninstall) {
     web3.manager.startPolling({
         method: method, 
         params: [id]
     }, id,  callback, uninstall); 
 };
+/*jshint maxparams:3 */
 
 var stopPolling = function (id) {
     web3.manager.stopPolling(id);
@@ -1740,12 +1746,14 @@ var web3 = {
         /// @param indexed is optional, this is an object with optional event indexed params
         /// @param options is optional, this is an object with optional event options ('max'...)
         /// TODO: fix it, 4 params? no way
+        /*jshint maxparams:4 */
         watch: function (fil, indexed, options, formatter) {
             if (fil._isEvent) {
                 return fil(indexed, options);
             }
             return filter(fil, ethWatch, formatter);
         }
+        /*jshint maxparams:3 */
     },
 
     /// db object prototype
