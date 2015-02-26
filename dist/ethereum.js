@@ -1143,19 +1143,10 @@ Formats the output of a transaction to its proper values
 */
 var outputTransactionFormatter = function(tx){
     // transform to number
-    tx.gas = Number(tx.gas);
+    tx.gas = utils.toDecimal(tx.gas);
 
-    // gasPrice to bignumber
-    if(typeof tx.gasPrice === 'string' && tx.gasPrice.indexOf('0x') === 0)
-        tx.gasPrice = new BigNumber(tx.gasPrice, 16);
-    else
-        tx.gasPrice = new BigNumber(tx.gasPrice.toString(10), 10);
-
-    // value to bignumber
-    if(typeof tx.value === 'string' && tx.value.indexOf('0x') === 0)
-        tx.value = new BigNumber(tx.value, 16);
-    else
-        tx.value = new BigNumber(tx.value.toString(10), 10);
+    tx.gasPrice = utils.toBigNumber(tx.gasPrice);
+    tx.value = utils.toBigNumber(tx.value);
 
     return tx;
 };
@@ -1169,11 +1160,12 @@ Formats the output of a block to its proper values
 var outputBlockFormatter = function(block){
 
     // transform to number
-    block.gasLimit = Number(block.gasLimit);
-    block.gasUsed = Number(block.gasUsed);
-    block.size = Number(block.size);
-    block.timestamp = Number(block.timestamp);
-    block.number = Number(block.number);
+    block.gasLimit = utils.toDecimal(block.gasLimit);
+    block.gasUsed = utils.toDecimal(block.gasUsed);
+    block.size = utils.toDecimal(block.size);
+    block.timestamp = utils.toDecimal(block.timestamp);
+    block.number = utils.toDecimal(block.number);
+
     block.minGasPrice = utils.toBigNumber(block.minGasPrice);
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
@@ -1757,6 +1749,11 @@ var toEth = function (str) {
 
 
 var toDecimal = function (val) {
+
+    // pass it through is its already a number
+    if(typeof val === 'number' || (typeof val === 'string' && val.indexOf('0x') === -1))
+        return val;
+
     // remove 0x and place 0, if it's required
     val = val.length > 2 ? val.substring(2) : "0";
     return (new BigNumber(val, 16).toString(10));
@@ -2002,10 +1999,6 @@ module.exports = {
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
-
-// if (process.env.NODE_ENV !== 'build') {
-//     var BigNumber = require('bignumber.js');
-// }
 
 var eth = require('./eth');
 var db = require('./db');
