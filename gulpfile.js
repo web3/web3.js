@@ -10,8 +10,6 @@ var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
-var envify = require('envify/custom');
-var unreach = require('unreachable-branch-transform');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
 var bower = require('bower');
@@ -23,7 +21,7 @@ var dst = 'ethereum';
 
 var browserifyOptions = {
     debug: true,
-    insert_global_vars: false,
+    insert_global_vars: false, // jshint ignore:line
     detectGlobals: false,
     bundleExternal: false
 };

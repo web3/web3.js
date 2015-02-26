@@ -3,7 +3,10 @@
   "namespace": "ethereum",
   "version": "0.0.15",
   "description": "Ethereum Compatible JavaScript API",
-  "main": ["./dist/ethereum.js", "./dist/ethereum.min.js"],
+  "main": [
+    "./dist/ethereum.js",
+    "./dist/ethereum.min.js"
+  ],
   "dependencies": {
     "bignumber.js": ">=2.0.0"
   },

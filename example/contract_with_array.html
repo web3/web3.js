@@ -35,7 +35,7 @@
         ]
     }];
 
-    var contract;
+    var myContract;
 
     function createExampleContract() {
         // hide create button
@@ -43,8 +43,10 @@
         document.getElementById('source').innerText = source;
 
         // create contract
-        var address = web3.eth.sendTransaction({data: web3.eth.compile.solidity(source)});
-        contract = web3.eth.contract(address, desc);
+        var address = web3.eth.sendTransaction({data: web3.eth.compile.solidity(source)}),
+            Contract = web3.eth.contract(desc);
+
+        myContract = new Contract(address);
         document.getElementById('call').style.visibility = 'visible';
     }
 
@@ -54,7 +56,7 @@
         var param2 = parseInt(document.getElementById('value2').value);
 
         // call the contract
-        var res = contract.call().multiply([param, param2]);
+        var res = myContract.call().multiply([param, param2]);
         document.getElementById('result').innerText = res.toString(10);
     }
 
