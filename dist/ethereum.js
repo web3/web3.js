@@ -1113,7 +1113,7 @@ var inputTransactionFormatter = function(options){
 
     // format the following options
     /*jshint maxcomplexity:5 */
-    ['gasPrice', 'value'].forEach(function(key){
+    ['gasPrice', 'gas', 'value'].forEach(function(key){
 
         // if hex or string integer
         if(typeof options[key] === 'string') {
@@ -1131,9 +1131,6 @@ var inputTransactionFormatter = function(options){
             options[key] = '0x'+ options[key].toString(16);
         }
     });
-
-    // format gas to number
-    options.gas = Number(options.gas);
 
 
     return options;
@@ -1170,7 +1167,6 @@ Formats the output of a block to its proper values
 @returns object
 */
 var outputBlockFormatter = function(block){
-    /*jshint maxcomplexity:7 */
 
     // transform to number
     block.gasLimit = Number(block.gasLimit);
@@ -1178,32 +1174,9 @@ var outputBlockFormatter = function(block){
     block.size = Number(block.size);
     block.timestamp = Number(block.timestamp);
     block.number = Number(block.number);
-
-    // minGasPrice to bignumber
-    if(block.minGasPrice) {
-        if(typeof block.minGasPrice === 'string' && block.minGasPrice.indexOf('0x') === 0)
-            block.minGasPrice = new BigNumber(block.minGasPrice, 16);
-        else
-            block.minGasPrice = new BigNumber(block.minGasPrice.toString(10), 10);
-    }
-
-
-    // difficulty to bignumber
-    if(block.difficulty) {
-        if(typeof block.difficulty === 'string' && block.difficulty.indexOf('0x') === 0)
-            block.difficulty = new BigNumber(block.difficulty, 16);
-        else
-            block.difficulty = new BigNumber(block.difficulty.toString(10), 10);
-    }
-
-
-    // difficulty to bignumber
-    if(block.totalDifficulty) {
-        if(typeof block.totalDifficulty === 'string' && block.totalDifficulty.indexOf('0x') === 0)
-            block.totalDifficulty = new BigNumber(block.totalDifficulty, 16);
-        else
-            block.totalDifficulty = new BigNumber(block.totalDifficulty.toString(10), 10);
-    }
+    block.minGasPrice = utils.toBigNumber(block.minGasPrice);
+    block.difficulty = utils.toBigNumber(block.difficulty);
+    block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
 
     return block;
 };
@@ -1756,11 +1729,10 @@ var filterEvents = function (json) {
 /// used to transform value/string to eth string
 /// TODO: use BigNumber.js to parse int
 /// TODO: add tests for it!
+// DEPRECATED
 var toEth = function (str) {
-
-    console.warn('This method is deprecated please use eth.fromWei(BigNumberOrNumber, unit) instead.');
-
      /*jshint maxcomplexity:7 */
+
     var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str) : str;
     var unit = 0;
     var units = c.ETH_UNITS;
@@ -1914,6 +1886,28 @@ var isAddress = function(address) {
 };
 
 
+/**
+Takes an input and transforms it into an bignumber
+
+@method toBigNumber
+@param {Number|String|BigNumber} a number, string, HEX string or BigNumber
+@return {Object} BigNumber
+*/
+var toBigNumber = function(number) {
+    if(number instanceof BigNumber)
+        return number;
+
+    if(number) {
+        if(typeof number === 'string' && number.indexOf('0x') === 0)
+            number = new BigNumber(number, 16);
+        else
+            number = new BigNumber(number.toString(10), 10);
+    }
+
+    return number;
+};
+
+
 module.exports = {
     findIndex: findIndex,
     toDecimal: toDecimal,
@@ -1927,6 +1921,7 @@ module.exports = {
     toEth: toEth,
     toWei: toWei,
     fromWei: fromWei,
+    toBigNumber: toBigNumber,
     isAddress: isAddress
 };
 
@@ -2152,8 +2147,17 @@ var web3 = {
     /// @returns hex representation (prefixed by 0x) of decimal value
     fromDecimal: utils.fromDecimal,
 
+    /// @returns a BigNumber object
+    toBigNumber: utils.toBigNumber,
+
+    // DEPRECATED
     /// used to transform value/string to eth string
-    toEth: utils.toEth,
+    toEth: function(str) {
+
+        console.warn('This method is deprecated please use eth.fromWei(BigNumberOrNumber, unit) instead.');
+
+        return utils.toEth(str);
+    },
 
     toWei: utils.toWei,
     fromWei: utils.fromWei,
