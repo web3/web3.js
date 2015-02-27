@@ -383,7 +383,7 @@ describe('abi', function() {
                 );
         });
 
-        it('should parse an int followed by an array', function () {
+        it('should parse an array followed by an int', function () {
 
             // given
             var d = clone(description);
@@ -406,7 +406,7 @@ describe('abi', function() {
                 );
         });
 
-        it('should parse an array followed by an int', function () {
+        it('should parse an int followed by an array', function () {
 
             // given
             var d = clone(description);
