@@ -22,7 +22,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  * @date 2014
  */
 
-var web3 = require('./web3'); 
+var web3 = require('./web3');
 var utils = require('./utils');
 var types = require('./types');
 var c = require('./const');
@@ -41,11 +41,11 @@ var arrayType = function (type) {
 var dynamicTypeBytes = function (type, value) {
     // TODO: decide what to do with array of strings
     if (arrayType(type) || type === 'string')    // only string itself that is dynamic; stringX is static length.
-        return f.formatInputInt(value.length); 
+        return f.formatInputInt(value.length);
     return "";
 };
 
-var inputTypes = types.inputTypes(); 
+var inputTypes = types.inputTypes();
 
 /// Formats input params to bytes
 /// @param abi contract method inputs
@@ -53,8 +53,10 @@ var inputTypes = types.inputTypes();
 /// @returns bytes representation of input params
 var formatInput = function (inputs, params) {
     var bytes = "";
+    var toAppendConstant = "";
+    var toAppendArrayContent = "";
 
-    /// first we iterate in search for dynamic 
+    /// first we iterate in search for dynamic
     inputs.forEach(function (input, index) {
         bytes += dynamicTypeBytes(input.type, params[index]);
     });
@@ -69,17 +71,17 @@ var formatInput = function (inputs, params) {
         }
 
         var formatter = inputTypes[j - 1].format;
-        var toAppend = "";
 
         if (arrayType(inputs[i].type))
-            toAppend = params[i].reduce(function (acc, curr) {
+            toAppendArrayContent += params[i].reduce(function (acc, curr) {
                 return acc + formatter(curr);
             }, "");
         else
-            toAppend = formatter(params[i]);
-
-        bytes += toAppend; 
+            toAppendConstant += formatter(params[i]);
     });
+
+    bytes += toAppendConstant + toAppendArrayContent;
+
     return bytes;
 };
 
@@ -89,14 +91,14 @@ var dynamicBytesLength = function (type) {
     return 0;
 };
 
-var outputTypes = types.outputTypes(); 
+var outputTypes = types.outputTypes();
 
 /// Formats output bytes back to param list
 /// @param contract abi method outputs
-/// @param bytes representtion of output 
-/// @returns array of output params 
+/// @param bytes representtion of output
+/// @returns array of output params
 var formatOutput = function (outs, output) {
-    
+
     output = output.slice(2);
     var result = [];
     var padding = c.ETH_PADDING * 2;
@@ -104,7 +106,7 @@ var formatOutput = function (outs, output) {
     var dynamicPartLength = outs.reduce(function (acc, curr) {
         return acc + dynamicBytesLength(curr.type);
     }, 0);
-    
+
     var dynamicPart = output.slice(0, dynamicPartLength);
     output = output.slice(dynamicPartLength);
 
@@ -125,13 +127,13 @@ var formatOutput = function (outs, output) {
             dynamicPart = dynamicPart.slice(padding);
             var array = [];
             for (var k = 0; k < size; k++) {
-                array.push(formatter(output.slice(0, padding))); 
+                array.push(formatter(output.slice(0, padding)));
                 output = output.slice(padding);
             }
             result.push(array);
         }
         else if (types.prefixedType('string')(outs[i].type)) {
-            dynamicPart = dynamicPart.slice(padding); 
+            dynamicPart = dynamicPart.slice(padding);
             result.push(formatter(output.slice(0, padding)));
             output = output.slice(padding);
         } else {
@@ -149,14 +151,14 @@ var formatOutput = function (outs, output) {
 var inputParser = function (json) {
     var parser = {};
     json.forEach(function (method) {
-        var displayName = utils.extractDisplayName(method.name); 
+        var displayName = utils.extractDisplayName(method.name);
         var typeName = utils.extractTypeName(method.name);
 
         var impl = function () {
             var params = Array.prototype.slice.call(arguments);
             return formatInput(method.inputs, params);
         };
-       
+
         if (parser[displayName] === undefined) {
             parser[displayName] = impl;
         }
@@ -173,7 +175,7 @@ var outputParser = function (json) {
     var parser = {};
     json.forEach(function (method) {
 
-        var displayName = utils.extractDisplayName(method.name); 
+        var displayName = utils.extractDisplayName(method.name);
         var typeName = utils.extractTypeName(method.name);
 
         var impl = function (output) {
@@ -208,7 +210,6 @@ module.exports = {
     signatureFromAscii: signatureFromAscii,
     eventSignatureFromAscii: eventSignatureFromAscii
 };
-
 
 },{"./const":2,"./formatters":8,"./types":14,"./utils":15,"./web3":17}],2:[function(require,module,exports){
 /*

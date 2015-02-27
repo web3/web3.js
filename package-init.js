@@ -1,5 +1,7 @@
-/*jslint browser: true */
+/* jshint ignore:start */
 
-if(typeof window.web3 === 'undefined') {
-    window.web3 = require('web3');
+if(typeof web3 === 'undefined') {
+    web3 = require('web3');
 }
+
+/* jshint ignore:end */
