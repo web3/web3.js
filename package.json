@@ -2,7 +2,7 @@
   "name": "ethereum.js",
   "namespace": "ethereum",
   "version": "0.0.15",
-  "description": "Ethereum Compatible JavaScript API",
+  "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"

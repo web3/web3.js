@@ -7,20 +7,26 @@ which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JS
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
+[Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+
 ## Installation
 
 ### Node.js
 
-    npm install ethereum.js
+    $ npm install ethereum.js
+
+### Meteor.js
+
+    $ meteor add ethereum:js
 
 ### For browser
 Bower
 
-	bower install ethereum.js
+	$ bower install ethereum.js
 
 Component
 
-	component install ethereum/ethereum.js
+	$ component install ethereum/ethereum.js
 
 * Include `ethereum.min.js` in your html file.
 * Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/)
@@ -30,9 +36,9 @@ Require the library:
 
 	var web3 = require('web3');
 
-Set a provider (QtSyncProvider, HttpSyncProvider)
+Set a provider (QtSyncProvider, HttpProvider)
 
-	web3.setProvider(new web3.providers.HttpSyncProvider());
+	web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
 There you go, now you can use it:
 
@@ -43,6 +49,7 @@ var balance = web3.eth.getBalance(coinbase);
 
 
 For another example see `example/index.html`.
+
 
 ## Contribute!
 
