@@ -821,6 +821,8 @@ module.exports = {
  * @date 2014
  */
 
+var utils = require('./utils');
+
 /// Should be called to check if filter implementation is valid
 /// @returns true if it is, otherwise false
 var implementationIsValid = function (i) {
@@ -836,15 +838,24 @@ var implementationIsValid = function (i) {
 /// @param should be string or object
 /// @returns options string or object
 var getOptions = function (options) {
+    /*jshint maxcomplexity:5 */
+
     if (typeof options === 'string') {
         return options;
     } 
 
     options = options || {};
 
-    if (options.topics) {
+    if (options.topics)
         console.warn('"topics" is deprecated, is "topic" instead');
+
+    // make sure topics, get converted to hex
+    if(options.topic instanceof Array) {
+        options.topic = options.topic.map(function(topic){
+            return utils.toHex(topic);
+        });
     }
+
 
     // evaluate lazy properties
     return {
@@ -872,6 +883,8 @@ var filter = function(options, implementation, formatter) {
     options = getOptions(options);
     var callbacks = [];
     var filterId = implementation.newFilter(options);
+
+    // call the callbacks
     var onMessages = function (messages) {
         messages.forEach(function (message) {
             message = formatter ? formatter(message) : message;
@@ -933,7 +946,7 @@ var filter = function(options, implementation, formatter) {
 module.exports = filter;
 
 
-},{}],8:[function(require,module,exports){
+},{"./utils":15}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1173,6 +1186,70 @@ var outputBlockFormatter = function(block){
     return block;
 };
 
+/**
+Formats the output of a log
+
+@returns object
+*/
+var outputLogFormatter = function(log){
+
+    log.number = utils.toDecimal(log.number);
+
+    return log;
+};
+
+
+/**
+Formats the input of a whisper post and converts all values to HEX
+
+@returns object
+*/
+var inputPostFormatter = function(post){
+
+    post.payload = utils.toHex(post.payload);
+    post.ttl = utils.toHex(post.ttl);
+    post.workToProve = utils.toHex(post.workToProve);
+
+    if(!(post.topic instanceof Array))
+        post.topic = [post.topic];
+
+
+    // format the following options
+    post.topic = post.topic.map(function(topic){
+        return utils.toHex(topic);
+    });
+
+    return post;
+};
+
+
+/**
+Formats the output of a received post message
+
+@returns object
+*/
+var outputPostFormatter = function(post){
+
+    post.expiry = utils.toDecimal(post.expiry);
+    post.sent = utils.toDecimal(post.sent);
+    post.ttl = utils.toDecimal(post.ttl);
+    post.payloadRaw = post.payload;
+    post.payload = utils.toAscii(post.payload);
+
+    if(post.payload.indexOf('{') === 0 || post.payload.indexOf('[') === 0) {
+        try {
+            post.payload = JSON.parse(post.payload);
+        } catch (e) { }
+    }
+
+    // format the following options
+    post.topic = post.topic.map(function(topic){
+        return utils.toAscii(topic);
+    });
+
+    return post;
+};
+
 
 module.exports = {
     formatInputInt: formatInputInt,
@@ -1190,7 +1267,10 @@ module.exports = {
     convertToBigNumber: convertToBigNumber,
     inputTransactionFormatter: inputTransactionFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
-    outputBlockFormatter: outputBlockFormatter
+    outputBlockFormatter: outputBlockFormatter,
+    outputLogFormatter: outputLogFormatter,
+    inputPostFormatter: inputPostFormatter,
+    outputPostFormatter: outputPostFormatter
 };
 
 
@@ -1488,10 +1568,12 @@ module.exports = requestManager;
  * @date 2015
  */
 
+var formatters = require('./formatters');
+
 /// @returns an array of objects describing web3.shh api methods
 var methods = function () {
     return [
-    { name: 'post', call: 'shh_post' },
+    { name: 'post', call: 'shh_post', inputFormatter: formatters.inputPostFormatter },
     { name: 'newIdentity', call: 'shh_newIdentity' },
     { name: 'hasIdentity', call: 'shh_haveIdentity' },
     { name: 'newGroup', call: 'shh_newGroup' },
@@ -1507,7 +1589,7 @@ module.exports = {
 };
 
 
-},{}],14:[function(require,module,exports){
+},{"./formatters":8}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1670,7 +1752,7 @@ var toAscii = function(hex) {
     return str;
 };
     
-var toHex = function(str) {
+var toHexNative = function(str) {
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var n = str.charCodeAt(i).toString(16);
@@ -1683,7 +1765,7 @@ var toHex = function(str) {
 /// @returns hex representation (prefixed by 0x) of ascii string
 var fromAscii = function(str, pad) {
     pad = pad === undefined ? 0 : pad;
-    var hex = toHex(str);
+    var hex = toHexNative(str);
     while (hex.length < pad*2)
         hex += "00";
     return "0x" + hex;
@@ -1756,11 +1838,32 @@ var toDecimal = function (val) {
 
     // remove 0x and place 0, if it's required
     val = val.length > 2 ? val.substring(2) : "0";
-    return (new BigNumber(val, 16).toString(10));
+    return new BigNumber(val, 16).toNumber(); //.toString(10));
 };
 
 var fromDecimal = function (val) {
     return "0x" + (new BigNumber(val).toString(16));
+};
+
+
+var toHex = function (val) {
+    /*jshint maxcomplexity:5 */
+
+    // pass it through is its already a number
+    if(typeof val === 'object')
+        return fromAscii(JSON.stringify(val));
+
+    // pass it through is its already a number
+    if(typeof val === 'string' && val.indexOf('0x') === 0)
+        return val;
+
+    if(typeof val === 'string' && !isFinite(val))
+        return fromAscii(val);
+
+    if(isFinite(val))
+        return fromDecimal(val);
+
+    return val;
 };
 
 
@@ -1907,6 +2010,7 @@ var toBigNumber = function(number) {
 
 module.exports = {
     findIndex: findIndex,
+    toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
     toAscii: toAscii,
@@ -2006,6 +2110,7 @@ var shh = require('./shh');
 var watches = require('./watches');
 var filter = require('./filter');
 var utils = require('./utils');
+var formatters = require('./formatters');
 var requestManager = require('./requestmanager');
 
 /// @returns an array of objects describing web3 api methods
@@ -2128,6 +2233,9 @@ var web3 = {
         web3.manager.reset(); 
     },
 
+    /// @returns hex string of the input
+    toHex: utils.toHex,
+
     /// @returns ascii string representation of hex value prefixed with 0x
     toAscii: utils.toAscii,
 
@@ -2175,20 +2283,19 @@ var web3 = {
         /// @param filter may be a string, object or event
         /// @param eventParams is optional, this is an object with optional event eventParams params
         /// @param options is optional, this is an object with optional event options ('max'...)
-        /// TODO: fix it, 4 params? no way
         /*jshint maxparams:4 */
-        filter: function (fil, eventParams, options, formatter) {
+        filter: function (fil, eventParams, options) {
 
             // if its event, treat it differently
             if (fil._isEvent)
                 return fil(eventParams, options);
 
-            return filter(fil, ethWatch, formatter);
+            return filter(fil, ethWatch, formatters.outputLogFormatter);
         },
         // DEPRECATED
-        watch: function (fil, eventParams, options, formatter) {
+        watch: function (fil, eventParams, options) {
             console.warn('eth.watch() is deprecated please use eth.filter() instead.');
-            return this.filter(fil, eventParams, options, formatter);
+            return this.filter(fil, eventParams, options);
         }
         /*jshint maxparams:3 */
     },
@@ -2200,7 +2307,7 @@ var web3 = {
     shh: {
         /// @param filter may be a string, object or event
         filter: function (fil) {
-            return filter(fil, shhWatch);
+            return filter(fil, shhWatch, formatters.outputPostFormatter);
         },
         // DEPRECATED
         watch: function (fil) {
@@ -2222,7 +2329,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./db":4,"./eth":5,"./filter":7,"./requestmanager":12,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
+},{"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./requestmanager":12,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpSyncProvider = require('./lib/httpsync');
 web3.providers.QtSyncProvider = require('./lib/qtsync');

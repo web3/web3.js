@@ -46,6 +46,8 @@
     "lib",
     "node_modules",
     "package.json",
+    "package.js",
+    ".versions",
     ".bowerrc",
     ".editorconfig",
     ".gitignore",

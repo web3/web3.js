@@ -16,6 +16,7 @@ describe('formatters', function () {
                 sent: 1000,
                 ttl: 1000,
                 payload: {test: 'test'},
+                payloadRaw: '0x7b2274657374223a2274657374227d',
                 topic: ['hello','mytopics']
             });
         });

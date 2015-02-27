@@ -1,6 +1,7 @@
+/* jshint ignore:start */
 Package.describe({
   name: 'ethereum:js',
-  version: '0.0.15-rc4',
+  version: '0.0.15-rc6',
   summary: 'Ethereum JavaScript API, middleware to talk to a ethreum node over RPC',
   git: 'https://github.com/ethereum/ethereum.js',
   // By default, Meteor will default to using README.md for documentation.
@@ -25,3 +26,4 @@ Package.onUse(function(api) {
 //   api.use('test');
 //   api.addFiles('test-tests.js');
 // });
+/* jshint ignore:end */
