@@ -45,6 +45,19 @@
   "bugs": {
     "url": "https://github.com/ethereum/ethereum.js/issues"
   },
+  "browserify": {
+    "transform": [
+      [
+        "envify",
+        {
+          "NODE_ENV": "build"
+        }
+      ],
+      [
+        "unreachable-branch-transform"
+      ]
+    ]
+  },
   "keywords": [
     "ethereum",
     "javascript",
