@@ -1559,11 +1559,13 @@ var requestManager = function() {
 
     var poll = function () {
         polls.forEach(function (data) {
-            var result = send(data.data);
-            if (!(result instanceof Array) || result.length === 0) {
-                return;
-            }
-            data.callback(result);
+            // send async
+            send(data.data, function(result){
+                if (!(result instanceof Array) || result.length === 0) {
+                    return;
+                }
+                data.callback(result);
+            });
         });
         setTimeout(poll, c.ETH_POLLING_TIMEOUT);
     };
