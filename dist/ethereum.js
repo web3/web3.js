@@ -214,7 +214,7 @@ module.exports = {
     eventSignatureFromAscii: eventSignatureFromAscii
 };
 
-},{"./const":2,"./formatters":8,"./types":14,"./utils":15,"./web3":17}],2:[function(require,module,exports){
+},{"./const":2,"./formatters":8,"./types":15,"./utils":16,"./web3":18}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -517,7 +517,7 @@ function Contract(abi, address) {
 module.exports = contract;
 
 
-},{"./abi":1,"./event":6,"./utils":15,"./web3":17}],4:[function(require,module,exports){
+},{"./abi":1,"./event":6,"./utils":16,"./web3":18}],4:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -603,8 +603,8 @@ var uncleCountCall = function (args) {
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
     { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
-    { name: 'getState', call: 'eth_stateAt' },
     { name: 'getStorage', call: 'eth_storageAt' },
+    { name: 'getStorageAt', call: 'eth_stateAt' },
     { name: 'getData', call: 'eth_codeAt' },
     { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
@@ -621,37 +621,37 @@ var methods = [
     { name: 'flush', call: 'eth_flush' },
 
     // deprecated methods
-    { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'getBalance' },
-    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'getState' },
-    { name: 'storageAt', call: 'eth_storageAt', newMethod: 'getStorage' },
-    { name: 'countAt', call: 'eth_countAt', newMethod: 'getTransactionCount' },
-    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'getData' },
-    { name: 'transact', call: 'eth_transact', newMethod: 'sendTransaction' },
-    { name: 'block', call: blockCall, newMethod: 'getBlock' },
-    { name: 'transaction', call: transactionCall, newMethod: 'getTransaction' },
-    { name: 'uncle', call: uncleCall, newMethod: 'getUncle' },
-    { name: 'compilers', call: 'eth_compilers', newMethod: 'getCompilers' },
-    { name: 'solidity', call: 'eth_solidity', newMethod: 'compile.solidity' },
-    { name: 'lll', call: 'eth_lll', newMethod: 'compile.lll' },
-    { name: 'serpent', call: 'eth_serpent', newMethod: 'compile.serpent' },
-    { name: 'transactionCount', call: transactionCountCall, newMethod: 'getBlockTransactionCount' },
-    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' },
+    { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'eth.getBalance' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorageAt' },
+    { name: 'storageAt', call: 'eth_storageAt', newMethod: 'eth.getStorage' },
+    { name: 'countAt', call: 'eth_countAt', newMethod: 'eth.getTransactionCount' },
+    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'eth.getData' },
+    { name: 'transact', call: 'eth_transact', newMethod: 'eth.sendTransaction' },
+    { name: 'block', call: blockCall, newMethod: 'eth.getBlock' },
+    { name: 'transaction', call: transactionCall, newMethod: 'eth.getTransaction' },
+    { name: 'uncle', call: uncleCall, newMethod: 'eth.getUncle' },
+    { name: 'compilers', call: 'eth_compilers', newMethod: 'eth.getCompilers' },
+    { name: 'solidity', call: 'eth_solidity', newMethod: 'eth.compile.solidity' },
+    { name: 'lll', call: 'eth_lll', newMethod: 'eth.compile.lll' },
+    { name: 'serpent', call: 'eth_serpent', newMethod: 'eth.compile.serpent' },
+    { name: 'transactionCount', call: transactionCountCall, newMethod: 'eth.getBlockTransactionCount' },
+    { name: 'uncleCount', call: uncleCountCall, newMethod: 'eth.getBlockUncleCount' },
     { name: 'logs', call: 'eth_logs' }
 ];
 
 /// @returns an array of objects describing web3.eth api properties
 var properties = [
     { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
-    { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
     { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
     { name: 'gasPrice', getter: 'eth_gasPrice', outputFormatter: formatters.convertToBigNumber},
     { name: 'accounts', getter: 'eth_accounts' },
-    { name: 'peerCount', getter: 'eth_peerCount' },
     { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
     { name: 'blockNumber', getter: 'eth_number'},
 
     // deprecated properties
-    { name: 'number', getter: 'eth_number', newProperty: 'blockNumber'}
+    { name: 'listening', getter: 'net_listening', setter: 'eth_setListening', newProperty: 'net.listening'},
+    { name: 'peerCount', getter: 'net_peerCount', newProperty: 'net.peerCount'},
+    { name: 'number', getter: 'eth_number', newProperty: 'eth.blockNumber'}
 ];
 
 
@@ -799,7 +799,7 @@ module.exports = {
 };
 
 
-},{"./abi":1,"./utils":15}],7:[function(require,module,exports){
+},{"./abi":1,"./utils":16}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -950,7 +950,7 @@ var filter = function(options, implementation, formatter) {
 module.exports = filter;
 
 
-},{"./utils":15}],8:[function(require,module,exports){
+},{"./utils":16}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1278,7 +1278,7 @@ module.exports = {
 };
 
 
-},{"./const":2,"./utils":15}],9:[function(require,module,exports){
+},{"./const":2,"./utils":16}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1426,6 +1426,49 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** @file eth.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+// var formatters = require('./formatters');
+
+/// @returns an array of objects describing web3.eth api methods
+var methods = [
+    // { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
+];
+
+/// @returns an array of objects describing web3.eth api properties
+var properties = [
+    { name: 'listening', getter: 'net_listening', setter: 'eth_setListening'},
+    { name: 'peerCount', getter: 'net_peerCount'},
+];
+
+
+module.exports = {
+    methods: methods,
+    properties: properties
+};
+
+
+},{}],12:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file qtsync.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -1444,7 +1487,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1584,7 +1627,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"./const":2,"./jsonrpc":10}],13:[function(require,module,exports){
+},{"./const":2,"./jsonrpc":10}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1619,7 +1662,7 @@ var methods = function () {
     { name: 'addToGroup', call: 'shh_addToGroup' },
 
     // deprecated
-    { name: 'haveIdentity', call: 'shh_haveIdentity', newMethod: 'hasIdentity' },
+    { name: 'haveIdentity', call: 'shh_haveIdentity', newMethod: 'shh.hasIdentity' },
     ];
 };
 
@@ -1628,7 +1671,7 @@ module.exports = {
 };
 
 
-},{"./formatters":8}],14:[function(require,module,exports){
+},{"./formatters":8}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1709,7 +1752,7 @@ module.exports = {
 };
 
 
-},{"./formatters":8}],15:[function(require,module,exports){
+},{"./formatters":8}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2066,7 +2109,7 @@ module.exports = {
 };
 
 
-},{"./const":2}],16:[function(require,module,exports){
+},{"./const":2}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2117,7 +2160,7 @@ module.exports = {
 };
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2143,6 +2186,7 @@ module.exports = {
  * @date 2014
  */
 
+var net = require('./net');
 var eth = require('./eth');
 var db = require('./db');
 var shh = require('./shh');
@@ -2178,7 +2222,7 @@ var setupMethods = function (obj, methods) {
 
                 // show deprecated warning
                 if(method.newMethod)
-                    console.warn('This method is deprecated please use eth.'+ method.newMethod +'() instead.');
+                    console.warn('This method is deprecated please use web3.'+ method.newMethod +'() instead.');
 
                 return web3.manager.send({
                     method: call,
@@ -2211,7 +2255,7 @@ var setupProperties = function (obj, properties) {
 
             // show deprecated warning
             if(property.newProperty)
-                console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+                console.warn('This property is deprecated please use web3.'+ property.newProperty +' instead.');
 
 
             return web3.manager.send({
@@ -2225,7 +2269,7 @@ var setupProperties = function (obj, properties) {
 
                 // show deprecated warning
                 if(property.newProperty)
-                    console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+                    console.warn('This property is deprecated please use web3.'+ property.newProperty +' instead.');
 
                 return web3.manager.send({
                     method: property.setter,
@@ -2310,6 +2354,11 @@ var web3 = {
     fromWei: utils.fromWei,
     isAddress: utils.isAddress,
 
+    // provide network information
+    net: {
+        // peerCount: 
+    },
+
 
     /// eth object prototype
     eth: {
@@ -2365,6 +2414,8 @@ var web3 = {
 
 /// setups all api methods
 setupMethods(web3, web3Methods());
+setupMethods(web3.net, net.methods);
+setupProperties(web3.net, net.properties);
 setupMethods(web3.eth, eth.methods);
 setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods());
@@ -2375,7 +2426,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./requestmanager":12,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
+},{"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./net":11,"./requestmanager":13,"./shh":14,"./utils":16,"./watches":17}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/qtsync');
@@ -2384,7 +2435,7 @@ web3.abi = require('./lib/abi');
 
 module.exports = web3;
 
-},{"./lib/abi":1,"./lib/contract":3,"./lib/httpprovider":9,"./lib/qtsync":11,"./lib/web3":17}]},{},["web3"])
+},{"./lib/abi":1,"./lib/contract":3,"./lib/httpprovider":9,"./lib/qtsync":12,"./lib/web3":18}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map
