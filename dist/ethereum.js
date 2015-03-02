@@ -62,6 +62,7 @@ var formatInput = function (inputs, params) {
     });
 
     inputs.forEach(function (input, i) {
+        /*jshint maxcomplexity: 5 */
         var typeMatch = false;
         for (var j = 0; j < inputTypes.length && !typeMatch; j++) {
             typeMatch = inputTypes[j].type(inputs[i].type, params[i]);
@@ -76,6 +77,8 @@ var formatInput = function (inputs, params) {
             toAppendArrayContent += params[i].reduce(function (acc, curr) {
                 return acc + formatter(curr);
             }, "");
+        else if (inputs[i].type === 'string')
+            toAppendArrayContent += formatter(params[i]);
         else
             toAppendConstant += formatter(params[i]);
     });
@@ -1292,7 +1295,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file httpsync.js
+/** @file httpprovider.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
@@ -1303,26 +1306,40 @@ if ("build" !== 'build') {/*
         var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 */}
 
-var HttpSyncProvider = function (host) {
+var HttpProvider = function (host) {
     this.handlers = [];
     this.host = host || 'http://localhost:8080';
 };
 
-HttpSyncProvider.prototype.send = function (payload) {
-    //var data = formatJsonRpcObject(payload);
-
+HttpProvider.prototype.send = function (payload, callback) {
     var request = new XMLHttpRequest();
     request.open('POST', this.host, false);
-    request.send(JSON.stringify(payload));
 
-    var result = request.responseText;
-    // check request.status
-    if(request.status !== 200)
-        return;
-    return JSON.parse(result);
+    // ASYNC
+    if(typeof callback === 'function') {
+        request.onreadystatechange = function() {
+            if(request.readyState === 4 && request.status === 200) {
+                callback(JSON.parse(request.responseText));
+            }
+        };
+
+        request.open('POST', this.host, true);
+        request.send(JSON.stringify(payload));
+
+    // SYNC
+    } else {
+        request.open('POST', this.host, false);
+        request.send(JSON.stringify(payload));
+
+        // check request.status
+        if(request.status !== 200)
+            return;
+        return JSON.parse(request.responseText);
+        
+    }
 };
 
-module.exports = HttpSyncProvider;
+module.exports = HttpProvider;
 
 
 },{}],10:[function(require,module,exports){
@@ -1465,8 +1482,8 @@ var requestManager = function() {
     var polls = [];
     var provider;
 
-    var send = function (data) {
-        /*jshint maxcomplexity: 6 */
+    var send = function (data, callback) {
+        /*jshint maxcomplexity: 7 */
 
         // format the input before sending
         if(typeof data.inputFormatter === 'function') {
@@ -1482,17 +1499,36 @@ var requestManager = function() {
             return null;
         }
 
-        var result = provider.send(payload);
+        // ASYNC (only when callback is given, and it a HttpProvidor)
+        if(typeof callback === 'function' && provider.host){
+            provider.send(payload, function(result){
 
-        if (!jsonrpc.isValidResponse(result)) {
-            console.log(result);
-            if(typeof result === 'object' && result.error && result.error.message)
-                console.error(result.error.message);
-            return null;
+                if (!jsonrpc.isValidResponse(result)) {
+                    console.log(result);
+                    if(typeof result === 'object' && result.error && result.error.message)
+                        console.error(result.error.message);
+                    return null;
+                }
+
+                // format the output
+                callback((typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result);
+            });
+
+        // SYNC
+        } else {
+            var result = provider.send(payload);
+
+            if (!jsonrpc.isValidResponse(result)) {
+                console.log(result);
+                if(typeof result === 'object' && result.error && result.error.message)
+                    console.error(result.error.message);
+                return null;
+            }
+
+            // format the output
+            return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
         }
         
-        // format the output
-        return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
     };
 
     var setProvider = function (p) {
@@ -2128,8 +2164,15 @@ var setupMethods = function (obj, methods) {
         // allow for object methods 'myObject.method'
         var objectMethods = method.name.split('.'),
             callFunction = function () {
-                var args = Array.prototype.slice.call(arguments);
-                var call = typeof method.call === 'function' ? method.call(args) : method.call;
+                var callback = null,
+                    args = Array.prototype.slice.call(arguments),
+                    call = typeof method.call === 'function' ? method.call(args) : method.call;
+
+                // get the callback if one is available
+                if(typeof arguments[arguments.length-1] === 'function'){
+                    callback = arguments[arguments.length-1];
+                    Array.prototype.pop.call(arguments);
+                }
 
                 // show deprecated warning
                 if(method.newMethod)
@@ -2140,7 +2183,7 @@ var setupMethods = function (obj, methods) {
                     params: args,
                     outputFormatter: method.outputFormatter,
                     inputFormatter: method.inputFormatter
-                });
+                }, callback);
             };
 
         if(objectMethods.length > 1) {
@@ -2332,14 +2375,14 @@ module.exports = web3;
 
 },{"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./requestmanager":12,"./shh":13,"./utils":15,"./watches":16}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
-web3.providers.HttpSyncProvider = require('./lib/httpsync');
+web3.providers.HttpProvider = require('./lib/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/qtsync');
 web3.eth.contract = require('./lib/contract');
 web3.abi = require('./lib/abi');
 
 module.exports = web3;
 
-},{"./lib/abi":1,"./lib/contract":3,"./lib/httpsync":9,"./lib/qtsync":11,"./lib/web3":17}]},{},["web3"])
+},{"./lib/abi":1,"./lib/contract":3,"./lib/httpprovider":9,"./lib/qtsync":11,"./lib/web3":17}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map
