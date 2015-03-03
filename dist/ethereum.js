@@ -25,7 +25,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
 var web3 = require('./web3');
 var utils = require('./utils');
 var types = require('./types');
-var c = require('./const');
+var c = require('./config');
 var f = require('./formatters');
 
 var displayTypeError = function (type) {
@@ -214,7 +214,7 @@ module.exports = {
     eventSignatureFromAscii: eventSignatureFromAscii
 };
 
-},{"./const":2,"./formatters":8,"./types":15,"./utils":16,"./web3":18}],2:[function(require,module,exports){
+},{"./config":2,"./formatters":8,"./types":15,"./utils":16,"./web3":18}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -231,7 +231,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file const.js
+/** @file config.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -269,7 +269,8 @@ module.exports = {
     ETH_SIGNATURE_LENGTH: 4,
     ETH_UNITS: ETH_UNITS,
     ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    ETH_POLLING_TIMEOUT: 1000
+    ETH_POLLING_TIMEOUT: 1000,
+    ETH_DEFAULTBLOCK: -1
 };
 
 
@@ -578,6 +579,7 @@ module.exports = {
  */
 
 var formatters = require('./formatters');
+// var utils = require('./utils');
 
 
 var blockCall = function (args) {
@@ -602,17 +604,17 @@ var uncleCountCall = function (args) {
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
-    { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
-    { name: 'getStorage', call: 'eth_storageAt' },
-    { name: 'getStorageAt', call: 'eth_stateAt' },
-    { name: 'getData', call: 'eth_codeAt' },
+    { name: 'getBalance', call: 'eth_balanceAt', addDefaultblock: 2, outputFormatter: formatters.convertToBigNumber},
+    { name: 'getStorage', call: 'eth_storageAt', addDefaultblock: 2},
+    { name: 'getStorageAt', call: 'eth_stateAt', addDefaultblock: 3},
+    { name: 'getData', call: 'eth_codeAt', addDefaultblock: 2},
     { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getCompilers', call: 'eth_compilers' },
     { name: 'getBlockTransactionCount', call: transactionCountCall },
     { name: 'getBlockUncleCount', call: uncleCountCall },
     { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
-    { name: 'getTransactionCount', call: 'eth_countAt'},
+    { name: 'getTransactionCount', call: 'eth_countAt', addDefaultblock: 2},
     { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call' },
     { name: 'compile.solidity', call: 'eth_solidity' },
@@ -641,11 +643,10 @@ var methods = [
 
 /// @returns an array of objects describing web3.eth api properties
 var properties = [
-    { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
-    { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
+    { name: 'coinbase', getter: 'eth_coinbase'},
+    { name: 'mining', getter: 'eth_mining'},
     { name: 'gasPrice', getter: 'eth_gasPrice', outputFormatter: formatters.convertToBigNumber},
     { name: 'accounts', getter: 'eth_accounts' },
-    { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
     { name: 'blockNumber', getter: 'eth_number'},
 
     // deprecated properties
@@ -978,7 +979,7 @@ if ("build" !== 'build') {/*
 */}
 
 var utils = require('./utils');
-var c = require('./const');
+var c = require('./config');
 
 /// @param string string to be padded
 /// @param number of characters that result string should have
@@ -1278,7 +1279,7 @@ module.exports = {
 };
 
 
-},{"./const":2,"./utils":16}],9:[function(require,module,exports){
+},{"./config":2,"./utils":16}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1514,7 +1515,7 @@ module.exports = QtSyncProvider;
  */
 
 var jsonrpc = require('./jsonrpc');
-var c = require('./const');
+var c = require('./config');
 
 /**
  * It's responsible for passing messages to providers
@@ -1627,7 +1628,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"./const":2,"./jsonrpc":10}],14:[function(require,module,exports){
+},{"./config":2,"./jsonrpc":10}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1775,7 +1776,7 @@ module.exports = {
  * @date 2015
  */
 
-var c = require('./const');
+var c = require('./config');
 
 if ("build" !== 'build') {/*
     var BigNumber = require('bignumber.js'); // jshint ignore:line
@@ -2109,7 +2110,7 @@ module.exports = {
 };
 
 
-},{"./const":2}],17:[function(require,module,exports){
+},{"./config":2}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2195,6 +2196,7 @@ var filter = require('./filter');
 var utils = require('./utils');
 var formatters = require('./formatters');
 var requestManager = require('./requestmanager');
+var c = require('./config');
 
 /// @returns an array of objects describing web3 api methods
 var web3Methods = function () {
@@ -2210,15 +2212,21 @@ var setupMethods = function (obj, methods) {
         // allow for object methods 'myObject.method'
         var objectMethods = method.name.split('.'),
             callFunction = function () {
+                /*jshint maxcomplexity:5 */
+                
                 var callback = null,
                     args = Array.prototype.slice.call(arguments),
                     call = typeof method.call === 'function' ? method.call(args) : method.call;
 
                 // get the callback if one is available
-                if(typeof arguments[arguments.length-1] === 'function'){
-                    callback = arguments[arguments.length-1];
-                    Array.prototype.pop.call(arguments);
+                if(typeof args[args.length-1] === 'function'){
+                    callback = args[args.length-1];
+                    Array.prototype.pop.call(args);
                 }
+
+                // add the defaultBlock if not given
+                if(method.addDefaultblock && args.length !== method.addDefaultblock)
+                    Array.prototype.push.call(args, c.ETH_DEFAULTBLOCK);
 
                 // show deprecated warning
                 if(method.newMethod)
@@ -2412,6 +2420,20 @@ var web3 = {
     }
 };
 
+
+// ADD defaultblock
+Object.defineProperty(web3.eth, 'defaultBlock', {
+    get: function () {
+
+        return c.ETH_DEFAULTBLOCK;
+    },
+    set: function (val) {
+        c.ETH_DEFAULTBLOCK = val;
+        return c.ETH_DEFAULTBLOCK;
+    }
+});
+
+
 /// setups all api methods
 setupMethods(web3, web3Methods());
 setupMethods(web3.net, net.methods);
@@ -2426,7 +2448,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./net":11,"./requestmanager":13,"./shh":14,"./utils":16,"./watches":17}],"web3":[function(require,module,exports){
+},{"./config":2,"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./net":11,"./requestmanager":13,"./shh":14,"./utils":16,"./watches":17}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/qtsync');

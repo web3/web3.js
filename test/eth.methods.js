@@ -5,7 +5,7 @@ var u = require('./test.utils.js');
 describe('web3', function() {
     describe('eth', function() {
         u.methodExists(web3.eth, 'getBalance');
-        u.methodExists(web3.eth, 'getState');
+        u.methodExists(web3.eth, 'getStorageAt');
         u.methodExists(web3.eth, 'getStorage');
         u.methodExists(web3.eth, 'getTransactionCount');
         u.methodExists(web3.eth, 'getData');
