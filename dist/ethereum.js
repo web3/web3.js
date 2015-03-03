@@ -22,7 +22,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  * @date 2014
  */
 
-var web3 = require('./web3'); 
 var utils = require('./utils');
 var types = require('./types');
 var c = require('./const');
@@ -190,27 +189,15 @@ var outputParser = function (json) {
     return parser;
 };
 
-/// @param function/event name for which we want to get signature
-/// @returns signature of function/event with given name
-var signatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name)).slice(0, 2 + c.ETH_SIGNATURE_LENGTH * 2);
-};
-
-var eventSignatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name));
-};
-
 module.exports = {
     inputParser: inputParser,
     outputParser: outputParser,
     formatInput: formatInput,
-    formatOutput: formatOutput,
-    signatureFromAscii: signatureFromAscii,
-    eventSignatureFromAscii: eventSignatureFromAscii
+    formatOutput: formatOutput
 };
 
 
-},{"./const":2,"./formatters":8,"./types":15,"./utils":16,"./web3":18}],2:[function(require,module,exports){
+},{"./const":2,"./formatters":8,"./types":15,"./utils":16}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
