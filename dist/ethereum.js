@@ -61,6 +61,7 @@ var formatInput = function (inputs, params) {
     });
 
     inputs.forEach(function (input, i) {
+        /*jshint maxcomplexity:5 */
         var typeMatch = false;
         for (var j = 0; j < inputTypes.length && !typeMatch; j++) {
             typeMatch = inputTypes[j].type(inputs[i].type, params[i]);
