@@ -705,6 +705,7 @@ var outputParser = function (event) {
         var result = {
             event: utils.extractDisplayName(event.name),
             number: output.number,
+            hash: output.hash,
             args: {}
         };
 
