@@ -22,7 +22,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  * @date 2014
  */
 
-var web3 = require('./web3');
 var utils = require('./utils');
 var types = require('./types');
 var c = require('./config');
@@ -62,7 +61,7 @@ var formatInput = function (inputs, params) {
     });
 
     inputs.forEach(function (input, i) {
-        /*jshint maxcomplexity: 5 */
+        /*jshint maxcomplexity:5 */
         var typeMatch = false;
         for (var j = 0; j < inputTypes.length && !typeMatch; j++) {
             typeMatch = inputTypes[j].type(inputs[i].type, params[i]);
@@ -195,26 +194,14 @@ var outputParser = function (json) {
     return parser;
 };
 
-/// @param function/event name for which we want to get signature
-/// @returns signature of function/event with given name
-var signatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name)).slice(0, 2 + c.ETH_SIGNATURE_LENGTH * 2);
-};
-
-var eventSignatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name));
-};
-
 module.exports = {
     inputParser: inputParser,
     outputParser: outputParser,
     formatInput: formatInput,
-    formatOutput: formatOutput,
-    signatureFromAscii: signatureFromAscii,
-    eventSignatureFromAscii: eventSignatureFromAscii
+    formatOutput: formatOutput
 };
 
-},{"./config":2,"./formatters":8,"./types":15,"./utils":16,"./web3":18}],2:[function(require,module,exports){
+},{"./config":2,"./formatters":8,"./types":16,"./utils":17}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -301,6 +288,7 @@ var web3 = require('./web3');
 var abi = require('./abi');
 var utils = require('./utils');
 var eventImpl = require('./event');
+var signature = require('./signature');
 
 var exportNatspecGlobals = function (vars) {
     // it's used byt natspec.js
@@ -356,12 +344,12 @@ var addFunctionsToContract = function (contract, desc, address) {
         var impl = function () {
             /*jshint maxcomplexity:7 */
             var params = Array.prototype.slice.call(arguments);
-            var signature = abi.signatureFromAscii(method.name);
+            var sign = signature.functionSignatureFromAscii(method.name);
             var parsed = inputParser[displayName][typeName].apply(null, params);
 
             var options = contract._options || {};
             options.to = address;
-            options.data = signature + parsed;
+            options.data = sign + parsed;
             
             var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
             var collapse = options.collapse !== false;
@@ -415,7 +403,7 @@ var addEventRelatedPropertiesToContract = function (contract, desc, address) {
     Object.defineProperty(contract, 'topic', {
         get: function() {
             return utils.filterEvents(desc).map(function (e) {
-                return abi.eventSignatureFromAscii(e.name);
+                return signature.eventSignatureFromAscii(e.name);
             });
         }
     });
@@ -428,8 +416,8 @@ var addEventsToContract = function (contract, desc, address) {
 
         var impl = function () {
             var params = Array.prototype.slice.call(arguments);
-            var signature = abi.eventSignatureFromAscii(e.name);
-            var event = eventImpl.inputParser(address, signature, e);
+            var sign = signature.eventSignatureFromAscii(e.name);
+            var event = eventImpl.inputParser(address, sign, e);
             var o = event.apply(null, params);
             var outputFormatter = function (data) {
                 var parser = eventImpl.outputParser(e);
@@ -518,7 +506,7 @@ function Contract(abi, address) {
 module.exports = contract;
 
 
-},{"./abi":1,"./event":6,"./utils":16,"./web3":18}],4:[function(require,module,exports){
+},{"./abi":1,"./event":6,"./signature":15,"./utils":17,"./web3":19}],4:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -616,7 +604,7 @@ var methods = [
     { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
     { name: 'getTransactionCount', call: 'eth_countAt', addDefaultblock: 2},
     { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
-    { name: 'call', call: 'eth_call' },
+    { name: 'call', call: 'eth_call', addDefaultblock: 2},
     { name: 'compile.solidity', call: 'eth_solidity' },
     { name: 'compile.lll', call: 'eth_lll' },
     { name: 'compile.serpent', call: 'eth_serpent' },
@@ -687,6 +675,7 @@ module.exports = {
 
 var abi = require('./abi');
 var utils = require('./utils');
+var signature = require('./signature');
 
 /// filter inputs array && returns only indexed (or not) inputs
 /// @param inputs array
@@ -725,14 +714,14 @@ var indexedParamsToTopics = function (event, indexed) {
     });
 };
 
-var inputParser = function (address, signature, event) {
+var inputParser = function (address, sign, event) {
     
     // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.filter'
     return function (indexed, options) {
         var o = options || {};
         o.address = address;
         o.topic = [];
-        o.topic.push(signature);
+        o.topic.push(sign);
         if (indexed) {
             o.topic = o.topic.concat(indexedParamsToTopics(event, indexed));
         }
@@ -784,8 +773,8 @@ var outputParser = function (event) {
 
 var getMatchingEvent = function (events, payload) {
     for (var i = 0; i < events.length; i++) {
-        var signature = abi.eventSignatureFromAscii(events[i].name); 
-        if (signature === payload.topic[0]) {
+        var sign = signature.eventSignatureFromAscii(events[i].name); 
+        if (sign === payload.topic[0]) {
             return events[i];
         }
     }
@@ -800,7 +789,7 @@ module.exports = {
 };
 
 
-},{"./abi":1,"./utils":16}],7:[function(require,module,exports){
+},{"./abi":1,"./signature":15,"./utils":17}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -951,7 +940,7 @@ var filter = function(options, implementation, formatter) {
 module.exports = filter;
 
 
-},{"./utils":16}],8:[function(require,module,exports){
+},{"./utils":17}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1279,7 +1268,7 @@ module.exports = {
 };
 
 
-},{"./config":2,"./utils":16}],9:[function(require,module,exports){
+},{"./config":2,"./utils":17}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1524,6 +1513,7 @@ var c = require('./config');
  */
 var requestManager = function() {
     var polls = [];
+    var timeout = null;
     var provider;
 
     var send = function (data, callback) {
@@ -1599,6 +1589,12 @@ var requestManager = function() {
             poll.uninstall(poll.id); 
         });
         polls = [];
+
+        if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+        }
+        poll();
     };
 
     var poll = function () {
@@ -1611,7 +1607,7 @@ var requestManager = function() {
                 data.callback(result);
             });
         });
-        setTimeout(poll, c.ETH_POLLING_TIMEOUT);
+        timeout = setTimeout(poll, c.ETH_POLLING_TIMEOUT);
     };
     
     poll();
@@ -1673,6 +1669,50 @@ module.exports = {
 
 
 },{"./formatters":8}],15:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file signature.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var web3 = require('./web3'); 
+var c = require('./config');
+
+/// @param function name for which we want to get signature
+/// @returns signature of function with given name
+var functionSignatureFromAscii = function (name) {
+    return web3.sha3(web3.fromAscii(name)).slice(0, 2 + c.ETH_SIGNATURE_LENGTH * 2);
+};
+
+/// @param event name for which we want to get signature
+/// @returns signature of event with given name
+var eventSignatureFromAscii = function (name) {
+    return web3.sha3(web3.fromAscii(name));
+};
+
+module.exports = {
+    functionSignatureFromAscii: functionSignatureFromAscii,
+    eventSignatureFromAscii: eventSignatureFromAscii
+};
+
+
+},{"./config":2,"./web3":19}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1753,7 +1793,7 @@ module.exports = {
 };
 
 
-},{"./formatters":8}],16:[function(require,module,exports){
+},{"./formatters":8}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2110,7 +2150,7 @@ module.exports = {
 };
 
 
-},{"./config":2}],17:[function(require,module,exports){
+},{"./config":2}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2161,7 +2201,7 @@ module.exports = {
 };
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2448,7 +2488,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./config":2,"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./net":11,"./requestmanager":13,"./shh":14,"./utils":16,"./watches":17}],"web3":[function(require,module,exports){
+},{"./config":2,"./db":4,"./eth":5,"./filter":7,"./formatters":8,"./net":11,"./requestmanager":13,"./shh":14,"./utils":17,"./watches":18}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/qtsync');
@@ -2457,7 +2497,7 @@ web3.abi = require('./lib/abi');
 
 module.exports = web3;
 
-},{"./lib/abi":1,"./lib/contract":3,"./lib/httpprovider":9,"./lib/qtsync":12,"./lib/web3":18}]},{},["web3"])
+},{"./lib/abi":1,"./lib/contract":3,"./lib/httpprovider":9,"./lib/qtsync":12,"./lib/web3":19}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map
