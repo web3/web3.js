@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Thu Feb 19 2015 19:57:47 GMT+0100 (W. Europe Standard Time)
 
-module.exports = function (config) {
+module.exports = function(config) {
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -9,10 +9,12 @@ module.exports = function (config) {
 
         // level of logging
         // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
-        
+
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: true,    logLevel: config.LOG_INFO,
+        singleRun: false,
+        logLevel: config.LOG_INFO,
+
         //singleRun: true,    logLevel: config.LOG_DEBUG,
 
         // frameworks to use
@@ -28,13 +30,12 @@ module.exports = function (config) {
 
 
         // list of files to exclude
-        exclude: [
-        ],
+        exclude: [],
 
         client: {
             mocha: {
                 //ui: 'tdd'
-                timeout: 5000           // especially for the post requests
+                timeout: 5000 // especially for the post requests
             }
         },
         browserify: {
