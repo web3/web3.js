@@ -19,3 +19,20 @@ describe('web3', function() {
     u.propertyExists(web3, 'shh');
 });
 
+describe('web3', function() {
+    it('should convert fromDecimal(-1) into -0x1', function() {
+        assert.equal(web3.fromDecimal(-1), '-0x1');
+    });
+
+    it('should convert fromDecimal(-0) into 0x0', function() {
+        assert.equal(web3.fromDecimal(-0), '0x0');
+    });
+
+    it('should convert fromDecimal(16) into 0x0', function() {
+        assert.equal(web3.fromDecimal(16), '0x10');
+    });
+
+    it('should convert fromDecimal(255) into 0xff', function() {
+        assert.equal(web3.fromDecimal(255), '0xff');
+    });
+});
