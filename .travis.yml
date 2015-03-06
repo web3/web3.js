@@ -9,5 +9,6 @@ script:
    - "jshint *.js lib"
 after_script:
   - npm run-script build
+  - npm run-script karma
   - npm run-script test-coveralls
 
