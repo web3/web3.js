@@ -40,7 +40,7 @@
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "gulp lint",
-    "test": "mocha",
+    "test": "karma start --singleRun --browsers='Chrome,Firefox,Safari'",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {
