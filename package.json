@@ -32,7 +32,7 @@
     "karma-mocha": "^0.1.10",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
-    "unreachable-branch-transform": "^0.2.1",
+    "unreachable-branch-transform": "^0.1.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {
