@@ -50,8 +50,6 @@ For another example see `example/index.html`.
 
 * Node.js
 * npm
-* gulp (build)
-* mocha (tests)
 
 ```bash
 sudo apt-get update
@@ -74,10 +72,11 @@ npm test
 ```
 
 ### Testing (karma)
-Karma allows testing within one or several browser.
+Karma allows testing within one or several browsers.
 
 ```bash
-karma start --singleRun=true --browsers="Chrome,Firefox"
+npm run-script karma # default browsers are Chrome and Firefox
+npm run-script karma -- --browsers="Chrome,Safari" # custom browsers
 ```
 
 

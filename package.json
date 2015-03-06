@@ -41,7 +41,8 @@
     "watch": "gulp watch",
     "lint": "gulp lint",
     "test": "mocha",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Chrome,Firefox\""
   },
   "repository": {
     "type": "git",
