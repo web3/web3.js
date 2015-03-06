@@ -32,7 +32,6 @@
     "karma-mocha": "^0.1.10",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
-    "mocha-lcov-reporter": "0.0.1",
     "unreachable-branch-transform": "^0.1.0",
     "vinyl-source-stream": "^1.0.0"
   },
@@ -40,8 +39,9 @@
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "gulp lint",
-    "test": "karma start --singleRun --browsers='Chrome,Firefox,Safari'",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+    "test": "mocha",
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Chrome,Firefox\""
   },
   "repository": {
     "type": "git",
