@@ -1,5 +1,5 @@
 var assert = require('assert');
-var BigNumber = require('bignumber.js');
+var BigNumber = require('bn.js');
 var abi = require('../lib/abi.js');
 var clone = function (object) { return JSON.parse(JSON.stringify(object)); };
 
@@ -546,3 +546,4 @@ describe('abi', function() {
 
     });
 });
+
