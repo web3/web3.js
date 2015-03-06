@@ -750,6 +750,7 @@ var outputParser = function (event) {
         var result = {
             event: utils.extractDisplayName(event.name),
             number: output.number,
+            hash: output.hash,
             args: {}
         };
 
@@ -1929,8 +1930,7 @@ var filterEvents = function (json) {
 // DEPRECATED
 var toEth = function (str) {
      /*jshint maxcomplexity:7 */
-
-    var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str) : str;
+    var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str.replace(/,/g,'').replace(/ /g,'')) : str;
     var unit = 0;
     var units = c.ETH_UNITS;
     while (val > 3000 && unit < units.length - 1)

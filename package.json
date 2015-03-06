@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "bignumber.js": ">=2.0.0",
+    "envify": "^3.0.0",
+    "unreachable-branch-transform": "^0.1.0",
     "xmlhttprequest": "*"
   },
   "devDependencies": {
@@ -16,7 +18,6 @@
     "browserify": ">=6.0",
     "coveralls": "^2.11.2",
     "del": ">=0.1.1",
-    "envify": "^3.0.0",
     "exorcist": "^0.1.6",
     "gulp": ">=3.4.0",
     "gulp-jshint": ">=1.5.0",
@@ -25,9 +26,13 @@
     "gulp-uglify": ">=1.0.0",
     "istanbul": "^0.3.5",
     "jshint": ">=2.5.0",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
-    "mocha-lcov-reporter": "0.0.1",
-    "unreachable-branch-transform": "^0.1.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {
@@ -35,7 +40,8 @@
     "watch": "gulp watch",
     "lint": "gulp lint",
     "test": "mocha",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Chrome,Firefox\""
   },
   "repository": {
     "type": "git",

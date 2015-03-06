@@ -24,14 +24,15 @@ describe('web3', function() {
         u.methodExists(web3.eth, 'contract');
 
         u.propertyExists(web3.eth, 'coinbase');
-        u.propertyExists(web3.eth, 'listening');
         u.propertyExists(web3.eth, 'mining');
         u.propertyExists(web3.eth, 'gasPrice');
         u.propertyExists(web3.eth, 'accounts');
-        u.propertyExists(web3.eth, 'peerCount');
         u.propertyExists(web3.eth, 'defaultBlock');
         u.propertyExists(web3.eth, 'blockNumber');
     });
 });
+
+
+
 
 
