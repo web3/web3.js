@@ -8,7 +8,7 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "bignumber.js": ">=2.0.0",
+    "bn.js": "^2.0.1",
     "xmlhttprequest": "*"
   },
   "devDependencies": {
