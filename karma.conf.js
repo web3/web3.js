@@ -12,7 +12,7 @@ module.exports = function (config) {
         
         // Continuous Integration mode
         // if true, Karma captures browsers, runs the tests and exits
-        singleRun: false,    logLevel: config.LOG_INFO,
+        singleRun: true,    logLevel: config.LOG_INFO,
         //singleRun: true,    logLevel: config.LOG_DEBUG,
 
         // frameworks to use
