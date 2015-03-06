@@ -78,7 +78,7 @@ module.exports = function (config) {
         browserDisconnectTimeout: 5000,
 
         customLaunchers: {
-            chrome_without_security: {
+            chromeWithoutSecurity: {
                 base: 'Chrome',
                 flags: ['--disable-web-security']
             },
