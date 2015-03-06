@@ -73,6 +73,14 @@ npm run-script build
 npm test
 ```
 
+### Testing (karma)
+Karma allows testing within one or several browser.
+
+```bash
+karma start --singleRun=true --browsers="Chrome,Firefox"
+```
+
+
 **Please note this repo is in it's early stage.**
 
 If you'd like to run a Http ethereum node check out
