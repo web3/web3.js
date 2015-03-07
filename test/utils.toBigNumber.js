@@ -6,7 +6,7 @@ describe('utils', function () {
     describe('toBigNumber', function () {
         it('should return the correct value', function () {
             
-            assert.equal(utils.toBigNumber(100000) instanceof BigNumber, true);
+            assert.equal(utils.isBigNumber(utils.toBigNumber(100000)), true);
             assert.equal(utils.toBigNumber(100000).toString(10),  '100000');
         });
     });
