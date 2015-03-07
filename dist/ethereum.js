@@ -567,47 +567,49 @@ module.exports = {
  */
 
 var formatters = require('./formatters');
-// var utils = require('./utils');
+var utils = require('./utils');
 
 
 var blockCall = function (args) {
-    return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
+    // TODO: now both params might be strings
+    return utils.isString(args[0]) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionCall = function (args) {
-    return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
+    return utils.isString(args[0]) ? 'eth_getTransactionByHash' : 'eth_getTransactionByBlockNumberAndIndex';
+    // eth_getTransactionByBlockHashAndIndex
 };
 
 var uncleCall = function (args) {
-    return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
+    return utils.isString(args[0]) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockHashAndNumber';
 };
 
 var transactionCountCall = function (args) {
-    return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
+    return utils.isString(args[0]) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
+    return utils.isString(args[0]) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
-    { name: 'getBalance', call: 'eth_balanceAt', addDefaultblock: 2, outputFormatter: formatters.convertToBigNumber},
-    { name: 'getStorage', call: 'eth_storageAt', addDefaultblock: 2},
-    { name: 'getStorageAt', call: 'eth_stateAt', addDefaultblock: 3},
-    { name: 'getData', call: 'eth_codeAt', addDefaultblock: 2},
+    { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2, outputFormatter: formatters.convertToBigNumber},
+    { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
+    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3},
+    { name: 'getData', call: 'eth_getData', addDefaultblock: 2},
     { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
-    { name: 'getCompilers', call: 'eth_compilers' },
+    { name: 'getCompilers', call: 'eth_getCompilers' },
     { name: 'getBlockTransactionCount', call: transactionCountCall },
     { name: 'getBlockUncleCount', call: uncleCountCall },
     { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
-    { name: 'getTransactionCount', call: 'eth_countAt', addDefaultblock: 2},
-    { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
+    { name: 'getTransactionCount', call: 'eth_getTransactionCount', addDefaultblock: 2},
+    { name: 'sendTransaction', call: 'eth_sendTransaction', inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call', addDefaultblock: 2},
-    { name: 'compile.solidity', call: 'eth_solidity' },
-    { name: 'compile.lll', call: 'eth_lll' },
-    { name: 'compile.serpent', call: 'eth_serpent' },
+    { name: 'compile.solidity', call: 'eth_compileSolidity' },
+    { name: 'compile.lll', call: 'eth_compileLLL' },
+    { name: 'compile.serpent', call: 'eth_compileSerpent' },
     { name: 'flush', call: 'eth_flush' },
 
     // deprecated methods
@@ -650,7 +652,7 @@ module.exports = {
 };
 
 
-},{"./formatters":8}],6:[function(require,module,exports){
+},{"./formatters":8,"./utils":17}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1434,7 +1436,7 @@ var methods = [
 
 /// @returns an array of objects describing web3.eth api properties
 var properties = [
-    { name: 'listening', getter: 'net_listening', setter: 'eth_setListening'},
+    { name: 'listening', getter: 'net_listening'},
     { name: 'peerCount', getter: 'net_peerCount'},
 ];
 
@@ -1932,7 +1934,7 @@ var toDecimal = function (val) {
 
     // remove 0x and place 0, if it's required
     val = val.length > 2 ? val.substring(2) : "0";
-    return new BigNumber(val, 16).toNumber(); //.toString(10));
+    return new BigNumber(val, 16).toNumber();
 };
 
 var fromDecimal = function (val) {
