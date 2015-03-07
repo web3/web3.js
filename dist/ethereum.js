@@ -972,7 +972,7 @@ var padLeft = function (string, chars, sign) {
 var formatInputInt = function (value) {
     /*jshint maxcomplexity:7 */
     var padding = c.ETH_PADDING * 2;
-    if (value instanceof BigNumber || typeof value === 'number') {
+    if (utils.isBigNumber(value) || typeof value === 'number') {
         if (typeof value === 'number')
             value = new BigNumber(value);
         BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
@@ -982,10 +982,13 @@ var formatInputInt = function (value) {
             value = new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(value).plus(1);
         value = value.toString(16);
     }
-    else if (value.indexOf('0x') === 0)
-        value = value.substr(2);
-    else if (typeof value === 'string')
-        value = formatInputInt(new BigNumber(value));
+    else if (typeof value === 'string') {
+        if (value.indexOf('0x') === 0) {
+            value = value.substr(2);
+        } else {
+            value = formatInputInt(new BigNumber(value));
+        }
+    }
     else
         value = (+value).toString(16);
     return padLeft(value, padding);
@@ -1958,6 +1961,11 @@ var isAddress = function(address) {
     return /^\w+$/.test(address);
 };
 
+var isBigNumber = function (value) {
+    return value instanceof BigNumber ||
+        (value && value.constructor && value.constructor.name === 'BigNumber');
+};
+
 
 module.exports = {
     findIndex: findIndex,
@@ -1972,7 +1980,8 @@ module.exports = {
     toEth: toEth,
     toWei: toWei,
     fromWei: fromWei,
-    isAddress: isAddress
+    isAddress: isAddress,
+    isBigNumber: isBigNumber
 };
 
 
