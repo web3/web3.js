@@ -1659,7 +1659,7 @@ var methods = function () {
     return [
     { name: 'post', call: 'shh_post', inputFormatter: formatters.inputPostFormatter },
     { name: 'newIdentity', call: 'shh_newIdentity' },
-    { name: 'hasIdentity', call: 'shh_haveIdentity' },
+    { name: 'hasIdentity', call: 'shh_hasIdentity' },
     { name: 'newGroup', call: 'shh_newGroup' },
     { name: 'addToGroup', call: 'shh_addToGroup' },
 
@@ -1926,24 +1926,37 @@ var filterEvents = function (json) {
     });
 };
 
-var toDecimal = function (val) {
-
-    // pass it through is its already a number
-    if(typeof val === 'number' || (typeof val === 'string' && val.indexOf('0x') === -1))
-        return val;
-
-    // remove 0x and place 0, if it's required
-    val = val.length > 2 ? val.substring(2) : "0";
-    return new BigNumber(val, 16).toNumber();
+/**
+ * Converts value to it's decimal representation in string
+ *
+ * @method toDecimal
+ * @param {String|Number|BigNumber}
+ * @return {String}
+ */
+var toDecimal = function (value) {
+    return toBigNumber(value).toString(10);
 };
 
-var fromDecimal = function (val) {
-    return "0x" + (new BigNumber(val).toString(16));
+/**
+ * Converts value to it's hex representation
+ *
+ * @method fromDecimal
+ * @param {String|Number|BigNumber}
+ * @return {String}
+ */
+var fromDecimal = function (value) {
+    return toHex(value);
 };
 
-
-var toHex = function (val) {
-    return '0x' + toBigNumber(val).toString(16);
+/**
+ * Converts value to it's hex representation
+ *
+ * @method toHex
+ * @param {String|Number|BigNumber}
+ * @return {String}
+ */
+var toHex = function (value) {
+    return '0x' + toBigNumber(value).toString(16);
 };
 
 /**
@@ -2064,6 +2077,17 @@ var isString = function (object) {
     return typeof object === 'string';
 };
 
+/**
+ * Returns true if object is function, otherwise false
+ *
+ * @method isFunction
+ * @param {Object}
+ * @return {Boolean}
+ */
+var isFunction = function (object) {
+    return typeof object === 'function';
+};
+
 module.exports = {
     findIndex: findIndex,
     toHex: toHex,
@@ -2079,7 +2103,8 @@ module.exports = {
     fromWei: fromWei,
     toBigNumber: toBigNumber,
     isBigNumber: isBigNumber,
-    isAddress: isAddress
+    isAddress: isAddress,
+    isFunction: isFunction
 };
 
 
@@ -2109,13 +2134,13 @@ module.exports = {
 /// @returns an array of objects describing web3.eth.filter api methods
 var eth = function () {
     var newFilter = function (args) {
-        return typeof args[0] === 'string' ? 'eth_newFilterString' : 'eth_newFilter';
+        return typeof args[0] === 'string' ? 'eth_newBlockFilter' : 'eth_newFilter';
     };
 
     return [
     { name: 'newFilter', call: newFilter },
     { name: 'uninstallFilter', call: 'eth_uninstallFilter' },
-    { name: 'getLogs', call: 'eth_filterLogs' }
+    { name: 'getLogs', call: 'eth_getFilterLogs' }
     ];
 };
 
@@ -2280,12 +2305,12 @@ var stopPolling = function (id) {
 };
 
 var ethWatch = {
-    startPolling: startPolling.bind(null, 'eth_changed'), 
+    startPolling: startPolling.bind(null, 'eth_getFilterchanges'), 
     stopPolling: stopPolling
 };
 
 var shhWatch = {
-    startPolling: startPolling.bind(null, 'shh_changed'), 
+    startPolling: startPolling.bind(null, 'shh_getFilterChanges'), 
     stopPolling: stopPolling
 };
 
@@ -2388,7 +2413,6 @@ var web3 = {
 // ADD defaultblock
 Object.defineProperty(web3.eth, 'defaultBlock', {
     get: function () {
-
         return c.ETH_DEFAULTBLOCK;
     },
     set: function (val) {
