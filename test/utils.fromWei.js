@@ -2,7 +2,7 @@ var assert = require('assert');
 var utils = require('../lib/utils.js');
 
 describe('utils', function () {
-    describe('toWei', function () {
+    describe('fromWei', function () {
         it('should return the correct value', function () {
             
             assert.equal(utils.fromWei(1000000000000000000, 'wei'),    '1000000000000000000');

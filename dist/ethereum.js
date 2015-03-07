@@ -1993,75 +1993,55 @@ var toHex = function (val) {
 
 
 /**
-Takes a number of wei and converts it to any other ether unit.
-
-Possible units are:
-
-    - kwei/ada
-    - mwei/babbage
-    - gwei/shannon
-    - szabo
-    - finney
-    - ether
-    - kether/grand/einstein
-    - mether
-    - gether
-    - tether
-
-@method fromWei
-@param {Number|String} number can be a number, number string or a HEX of a decimal
-@param {String} unit the unit to convert to
-@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+ * Takes a number of wei and converts it to any other ether unit.
+ *
+ * Possible units are:
+ * - kwei/ada
+ * - mwei/babbage
+ * - gwei/shannon
+ * - szabo
+ * - finney
+ * - ether
+ * - kether/grand/einstein
+ * - mether
+ * - gether
+ * - tether
+ *
+ * @method fromWei
+ * @param {Number|String} number can be a number, number string or a HEX of a decimal
+ * @param {String} unit the unit to convert to, default ethere
+ * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var fromWei = function(number, unit) {
-    /*jshint maxcomplexity: 6 */
-    unit = unit.toLowerCase();
+    unit = unit ? unit.toLowerCase() : 'ether';
+    var unitValue = unitMap[unit];
 
-    var isBigNumber = true;
-
-    if(!unitMap[unit]) {
-        console.warn('This unit doesn\'t exists, please use the one of the following units' , unitMap);
-        return number;
+    if (unitValue === undefined) {
+        throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(unitMap, null, 2));
     }
 
-    if(!number)
-        return number;
-
-    if(typeof number === 'string' && number.indexOf('0x') === 0) {
-        isBigNumber = false;
-        number = new BigNumber(number, 16);
-    }
-    
-    if(!(number instanceof BigNumber)) {
-        isBigNumber = false;
-        number = new BigNumber(number.toString(10), 10); // toString to prevent errors, the user have to handle giving correct bignums themselves
-    }
-
-    number = number.dividedBy(new BigNumber(unitMap[unit], 10));
-
-    return (isBigNumber) ? number : number.toString(10);
+    return toBigNumber(number).dividedBy(new BigNumber(unitValue, 10)).toString(10);
 };
 
 /**
-Takes a number of a unit and converts it to wei.
-
-Possible units are:
-
-    - kwei/ada
-    - mwei/babbage
-    - gwei/shannon
-    - szabo
-    - finney
-    - ether
-    - kether/grand/einstein
-    - mether
-    - gether
-    - tether
-
-@method toWei
-@param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
-@param {String} unit the unit to convert to
-@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+ * Takes a number of a unit and converts it to wei.
+ *
+ * Possible units are:
+ * - kwei/ada
+ * - mwei/babbage
+ * - gwei/shannon
+ * - szabo
+ * - finney
+ * - ether
+ * - kether/grand/einstein
+ * - mether
+ * - gether
+ * - tether
+ *
+ * @method toWei
+ * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
+ * @param {String} unit the unit to convert to
+ * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var toWei = function(number, unit) {
     /*jshint maxcomplexity: 6 */
@@ -2093,50 +2073,58 @@ var toWei = function(number, unit) {
     return (isBigNumber) ? number : number.toString(10);
 };
 
-
 /**
-Checks if the given string is a valid ethereum HEX address.
-
-@method isAddress
-@param {String} address the given HEX adress
-@return {Boolean}
-*/
-var isAddress = function(address) {
-    if(address.indexOf('0x') === 0 && address.length !== 42)
-        return false;
-    if(address.indexOf('0x') === -1 && address.length !== 40)
-        return false;
-
-    return /^\w+$/.test(address);
-};
-
-var isBigNumber = function (number) {
-    return number instanceof BigNumber ||
-        (number && number.constructor && number.constructor.name === 'BigNumber');
-};
-
-
-/**
-Takes an input and transforms it into an bignumber
-
-@method toBigNumber
-@param {Number|String|BigNumber} a number, string, HEX string or BigNumber
-@return {Object} BigNumber
+ * Takes an input and transforms it into an bignumber
+ *
+ * @method toBigNumber
+ * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
+ * @return {Object} BigNumber
 */
 var toBigNumber = function(number) {
+    number = number || 0;
     if (isBigNumber(number))
         return number;
 
-    if (number) {
-        if(typeof number === 'string' && number.indexOf('0x') === 0)
-            number = new BigNumber(number, 16);
-        else
-            number = new BigNumber(number.toString(10), 10);
-    }
-
-    return number;
+    if (isString(number) && number.indexOf('0x') === 0)
+        return new BigNumber(number, 16);
+      
+    return new BigNumber(number.toString(10), 10);
 };
 
+/**
+ * Checks if the given string has proper length
+ *
+ * @method isAddress
+ * @param {String} address the given HEX adress
+ * @return {Boolean}
+*/
+var isAddress = function(address) {
+    return ((address.indexOf('0x') === 0 && address.length === 42) ||
+            (address.indexOf('0x') === -1 && address.length === 40));
+};
+
+/**
+ * Returns true if object is BigNumber, otherwise false
+ *
+ * @method isBigNumber
+ * @param {Object}
+ * @return {Boolean} 
+ */
+var isBigNumber = function (object) {
+    return object instanceof BigNumber ||
+        (object && object.constructor && object.constructor.name === 'BigNumber');
+};
+
+/**
+ * Returns true if object is string, otherwise false
+ * 
+ * @method isString
+ * @param {Object}
+ * @return {Boolean}
+ */
+var isString = function (object) {
+    return typeof object === 'string';
+};
 
 module.exports = {
     findIndex: findIndex,
@@ -2153,8 +2141,8 @@ module.exports = {
     toWei: toWei,
     fromWei: fromWei,
     toBigNumber: toBigNumber,
-    isAddress: isAddress,
-    isBigNumber: isBigNumber
+    isBigNumber: isBigNumber,
+    isAddress: isAddress
 };
 
 
