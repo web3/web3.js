@@ -1,5 +1,6 @@
-var assert = require('assert');
+var chai = require('chai');
 var formatters = require('../lib/formatters.js');
+var assert = chai.assert;
 
 describe('formatters', function () {
     describe('inputPostFormatter', function () {
@@ -9,7 +10,7 @@ describe('formatters', function () {
             assert.deepEqual(formatters.inputPostFormatter({
                 from: '0x00000',
                 to: '0x00000',
-                payload: {test: 'test'},
+                payload: JSON.stringify({test: 'test'}),
                 ttl: 200,
                 workToProve: 1000,
                 topic: ['hello','mytopics']
