@@ -33,25 +33,25 @@ describe('web3', function() {
     });
 
     // Fail at the moment
-    // describe('eth', function(){
-    //     it('should be a positive balance', function() {
-    //         // when
-    //         var testAddress = '0x50f4ed0e83f9da907017bcfb444e3e25407f59bb';
-    //         var balance = web3.eth.balanceAt(testAddress);
-    //         // then
-    //         assert(balance > 0, 'Balance is ' + balance);
-    //     });
+    describe('eth', function(){
+        it('should be a positive balance', function() {
+            // when
+            var testAddress = '0x50f4ed0e83f9da907017bcfb444e3e25407f59bb';
+            var balance = web3.eth.balanceAt(testAddress);
+            // then
+            assert(balance > 0, 'Balance is ' + balance);
+        });
 
-    //     it('should return a block', function() {
-    //         // when
-    //         var block = web3.eth.block(0);
+        // it('should return a block', function() {
+        //     // when
+        //     var block = web3.eth.block(0);
             
-    //         // then
-    //         assert.notEqual(block, null);
-    //         assert.equal(block.number, 0);
-    //         assert(web3.toDecimal(block.difficulty) > 0);
-    //     });
-    // });
+        //     // then
+        //     assert.notEqual(block, null);
+        //     assert.equal(block.number, 0);
+        //     assert(web3.toDecimal(block.difficulty) > 0);
+        // });
+    });
 });
 
 
