@@ -1,5 +1,5 @@
 var assert = require('assert');
-var formatters = require('../lib/solidity/formatters.js');
+var formatters = require('../lib/web3/formatters.js');
 var BigNumber = require('bignumber.js');
 
 describe('formatters', function () {

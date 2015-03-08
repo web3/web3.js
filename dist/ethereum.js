@@ -337,7 +337,6 @@ var formatInputReal = function (value) {
     return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128))); 
 };
 
-
 /**
  * Check if input value is negative
  *
@@ -367,7 +366,6 @@ var formatOutputInt = function (value) {
     }
     return new BigNumber(value, 16);
 };
-
 
 /**
  * Formats right-aligned output bytes to uint
@@ -447,144 +445,6 @@ var formatOutputAddress = function (value) {
     return "0x" + value.slice(value.length - 40, value.length);
 };
 
-
-/**
- * Should the input to a big number
- * @returns a BigNumber object
- */
-var convertToBigNumber = function (value) {
-
-    // remove the leading 0x
-    if(utils.isString(value))
-        value = value.replace('0x', '');
-
-    value = value || "0";
-
-    return new BigNumber(value, 16);
-};
-
-
-/**
- * Formats the input of a transaction and converts all values to HEX
- *
- * @method inputTransactionFormatter
- * @param {Object} transaction options
- * @returns object
-*/
-var inputTransactionFormatter = function (options){
-
-    // make code -> data
-    if (options.code) {
-        options.data = options.code;
-        delete options.code;
-    }
-
-    ['gasPrice', 'gas', 'value'].forEach(function(key){
-        options[key] = utils.toHex(options[key]);
-    });
-
-    return options;
-};
-
-/**
- * Formats the output of a transaction to its proper values
- * 
- * @returns object
-*/
-var outputTransactionFormatter = function (tx){
-    tx.gas = utils.toDecimal(tx.gas);
-    tx.gasPrice = utils.toBigNumber(tx.gasPrice);
-    tx.value = utils.toBigNumber(tx.value);
-    return tx;
-};
-
-
-/**
- * Formats the output of a block to its proper values
- * 
- * @returns object
-*/
-var outputBlockFormatter = function(block){
-
-    // transform to number
-    block.gasLimit = utils.toDecimal(block.gasLimit);
-    block.gasUsed = utils.toDecimal(block.gasUsed);
-    block.size = utils.toDecimal(block.size);
-    block.timestamp = utils.toDecimal(block.timestamp);
-    block.number = utils.toDecimal(block.number);
-
-    block.minGasPrice = utils.toBigNumber(block.minGasPrice);
-    block.difficulty = utils.toBigNumber(block.difficulty);
-    block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
-
-    return block;
-};
-
-/**
- * Formats the output of a log
- * 
- * @returns object
-*/
-var outputLogFormatter = function(log){
-
-    log.number = utils.toDecimal(log.number);
-
-    return log;
-};
-
-
-/**
- * Formats the input of a whisper post and converts all values to HEX
- *
- * @returns object
-*/
-var inputPostFormatter = function(post){
-
-    post.payload = utils.fromAscii(post.payload);
-    post.ttl = utils.toHex(post.ttl);
-    post.workToProve = utils.toHex(post.workToProve);
-
-    if(!(post.topic instanceof Array))
-        post.topic = [post.topic];
-
-
-    // format the following options
-    post.topic = post.topic.map(function(topic){
-        return utils.fromAscii(topic);
-    });
-
-    return post;
-};
-
-
-/**
- * Formats the output of a received post message
- *
- * @returns object
- */
-var outputPostFormatter = function(post){
-
-    post.expiry = utils.toDecimal(post.expiry);
-    post.sent = utils.toDecimal(post.sent);
-    post.ttl = utils.toDecimal(post.ttl);
-    post.payloadRaw = post.payload;
-    post.payload = utils.toAscii(post.payload);
-
-    if(post.payload.indexOf('{') === 0 || post.payload.indexOf('[') === 0) {
-        try {
-            post.payload = JSON.parse(post.payload);
-        } catch (e) { }
-    }
-
-    // format the following options
-    post.topic = post.topic.map(function(topic){
-        return utils.toAscii(topic);
-    });
-
-    return post;
-};
-
-
 module.exports = {
     formatInputInt: formatInputInt,
     formatInputString: formatInputString,
@@ -597,14 +457,7 @@ module.exports = {
     formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
     formatOutputString: formatOutputString,
-    formatOutputAddress: formatOutputAddress,
-    convertToBigNumber: convertToBigNumber,
-    inputTransactionFormatter: inputTransactionFormatter,
-    outputTransactionFormatter: outputTransactionFormatter,
-    outputBlockFormatter: outputBlockFormatter,
-    outputLogFormatter: outputLogFormatter,
-    inputPostFormatter: inputPostFormatter,
-    outputPostFormatter: outputPostFormatter
+    formatOutputAddress: formatOutputAddress
 };
 
 
@@ -1401,7 +1254,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":14,"./web3/requestmanager":16,"./web3/shh":17,"./web3/watches":19}],7:[function(require,module,exports){
+},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1646,7 +1499,7 @@ function Contract(abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../utils/utils":5,"../web3":6,"./event":10,"./signature":18}],8:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":5,"../web3":6,"./event":10,"./signature":19}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1706,7 +1559,7 @@ module.exports = {
  * @date 2015
  */
 
-var formatters = require('../solidity/formatters');
+var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
 
@@ -1792,7 +1645,7 @@ module.exports = {
 };
 
 
-},{"../solidity/formatters":2,"../utils/utils":5}],10:[function(require,module,exports){
+},{"../utils/utils":5,"./formatters":12}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1932,7 +1785,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":5,"./signature":18}],11:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":5,"./signature":19}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2100,6 +1953,179 @@ module.exports = filter;
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** @file formatters.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var utils = require('../utils/utils');
+
+/**
+ * Should the input to a big number
+ *
+ * @method convertToBigNumber
+ * @param {String|Number|BigNumber}
+ * @returns {BigNumber} object
+ */
+var convertToBigNumber = function (value) {
+    return utils.toBigNumber(value);
+};
+
+/**
+ * Formats the input of a transaction and converts all values to HEX
+ *
+ * @method inputTransactionFormatter
+ * @param {Object} transaction options
+ * @returns object
+*/
+var inputTransactionFormatter = function (options){
+
+    // make code -> data
+    if (options.code) {
+        options.data = options.code;
+        delete options.code;
+    }
+
+    ['gasPrice', 'gas', 'value'].forEach(function(key){
+        options[key] = utils.toHex(options[key]);
+    });
+
+    return options;
+};
+
+/**
+ * Formats the output of a transaction to its proper values
+ * 
+ * @method outputTransactionFormatter
+ * @param {Object} transaction
+ * @returns {Object} transaction
+*/
+var outputTransactionFormatter = function (tx){
+    tx.gas = utils.toDecimal(tx.gas);
+    tx.gasPrice = utils.toBigNumber(tx.gasPrice);
+    tx.value = utils.toBigNumber(tx.value);
+    return tx;
+};
+
+/**
+ * Formats the output of a block to its proper values
+ *
+ * @method outputBlockFormatter
+ * @param {Object} block object 
+ * @returns {Object} block object
+*/
+var outputBlockFormatter = function(block){
+
+    // transform to number
+    block.gasLimit = utils.toDecimal(block.gasLimit);
+    block.gasUsed = utils.toDecimal(block.gasUsed);
+    block.size = utils.toDecimal(block.size);
+    block.timestamp = utils.toDecimal(block.timestamp);
+    block.number = utils.toDecimal(block.number);
+
+    block.minGasPrice = utils.toBigNumber(block.minGasPrice);
+    block.difficulty = utils.toBigNumber(block.difficulty);
+    block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
+
+    return block;
+};
+
+/**
+ * Formats the output of a log
+ * 
+ * @method outputLogFormatter
+ * @param {Object} log object
+ * @returns {Object} log
+*/
+var outputLogFormatter = function(log){
+    log.number = utils.toDecimal(log.number);
+    return log;
+};
+
+/**
+ * Formats the input of a whisper post and converts all values to HEX
+ *
+ * @method inputPostFormatter
+ * @param {Object} transaction object
+ * @returns {Object}
+*/
+var inputPostFormatter = function(post){
+
+    post.payload = utils.fromAscii(post.payload);
+    post.ttl = utils.toHex(post.ttl);
+    post.workToProve = utils.toHex(post.workToProve);
+
+    if(!(post.topic instanceof Array))
+        post.topic = [post.topic];
+
+
+    // format the following options
+    post.topic = post.topic.map(function(topic){
+        return utils.fromAscii(topic);
+    });
+
+    return post;
+};
+
+/**
+ * Formats the output of a received post message
+ *
+ * @method outputPostFormatter
+ * @param {Object}
+ * @returns {Object}
+ */
+var outputPostFormatter = function(post){
+
+    post.expiry = utils.toDecimal(post.expiry);
+    post.sent = utils.toDecimal(post.sent);
+    post.ttl = utils.toDecimal(post.ttl);
+    post.payloadRaw = post.payload;
+    post.payload = utils.toAscii(post.payload);
+
+    if(post.payload.indexOf('{') === 0 || post.payload.indexOf('[') === 0) {
+        try {
+            post.payload = JSON.parse(post.payload);
+        } catch (e) { }
+    }
+
+    // format the following options
+    post.topic = post.topic.map(function(topic){
+        return utils.toAscii(topic);
+    });
+
+    return post;
+};
+
+module.exports = {
+    convertToBigNumber: convertToBigNumber,
+    inputTransactionFormatter: inputTransactionFormatter,
+    outputTransactionFormatter: outputTransactionFormatter,
+    outputBlockFormatter: outputBlockFormatter,
+    outputLogFormatter: outputLogFormatter,
+    inputPostFormatter: inputPostFormatter,
+    outputPostFormatter: outputPostFormatter
+};
+
+
+},{"../utils/utils":5}],13:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file httpprovider.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -2147,7 +2173,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2214,7 +2240,7 @@ module.exports = {
 
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2257,7 +2283,7 @@ module.exports = {
 };
 
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2292,7 +2318,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2439,7 +2465,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"../utils/config":4,"./jsonrpc":13}],17:[function(require,module,exports){
+},{"../utils/config":4,"./jsonrpc":14}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2462,7 +2488,7 @@ module.exports = requestManager;
  * @date 2015
  */
 
-var formatters = require('../solidity/formatters');
+var formatters = require('./formatters');
 
 /// @returns an array of objects describing web3.shh api methods
 var methods = function () {
@@ -2483,7 +2509,7 @@ module.exports = {
 };
 
 
-},{"../solidity/formatters":2}],18:[function(require,module,exports){
+},{"./formatters":12}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2527,7 +2553,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":4,"../web3":6}],19:[function(require,module,exports){
+},{"../utils/config":4,"../web3":6}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2587,7 +2613,7 @@ web3.abi = require('./lib/solidity/abi');
 
 module.exports = web3;
 
-},{"./lib/solidity/abi":1,"./lib/web3":6,"./lib/web3/contract":7,"./lib/web3/httpprovider":12,"./lib/web3/qtsync":15}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":6,"./lib/web3/contract":7,"./lib/web3/httpprovider":13,"./lib/web3/qtsync":16}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map

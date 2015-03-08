@@ -1,5 +1,5 @@
 var chai = require('chai');
-var formatters = require('../lib/solidity/formatters.js');
+var formatters = require('../lib/web3/formatters.js');
 var assert = chai.assert;
 
 describe('formatters', function () {
