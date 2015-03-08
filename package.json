@@ -30,6 +30,7 @@
     "karma-chrome-launcher": "^0.1.7",
     "karma-firefox-launcher": "^0.1.4",
     "karma-mocha": "^0.1.10",
+    "karma-phantomjs-launcher": "^0.1.4",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
     "unreachable-branch-transform": "^0.1.0",
@@ -41,7 +42,7 @@
     "lint": "gulp lint",
     "test": "mocha",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
-    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox\""
+    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox,PhantomJS\""
   },
   "repository": {
     "type": "git",
