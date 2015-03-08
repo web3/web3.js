@@ -1137,6 +1137,7 @@ var formatOutputReal = function (value) {
 /**
  * Formats right-aligned output bytes to ureal
  *
+ * @method formatOutputUReal
  * @param {String}
  * @returns {BigNumber} input bytes formatted to ureal
  */
@@ -1145,8 +1146,9 @@ var formatOutputUReal = function (value) {
 };
 
 /**
- * Formats output hash
+ * Should be used to format output hash
  *
+ * @method formatOutputHash
  * @param {String}
  * @returns {String} right-aligned output bytes formatted to hex
  */
@@ -1154,24 +1156,44 @@ var formatOutputHash = function (value) {
     return "0x" + value;
 };
 
-/// @returns right-aligned input bytes formatted to bool
+/**
+ * Should be used to format output bool
+ *
+ * @method formatOutputBool
+ * @param {String}
+ * @returns {Boolean} right-aligned input bytes formatted to bool
+ */
 var formatOutputBool = function (value) {
     return value === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
 };
 
-/// @returns left-aligned input bytes formatted to ascii string
+/**
+ * Should be used to format output string
+ *
+ * @method formatOutputString
+ * @param {Sttring} left-aligned hex representation of string
+ * @returns {String} ascii string
+ */
 var formatOutputString = function (value) {
     return utils.toAscii(value);
 };
 
-/// @returns right-aligned input bytes formatted to address
+/**
+ * Should be used to format output address
+ *
+ * @method formatOutputAddress
+ * @param {String} right-aligned input bytes
+ * @returns {String} address
+ */
 var formatOutputAddress = function (value) {
     return "0x" + value.slice(value.length - 40, value.length);
 };
 
 
-/// Formats the input to a big number
-/// @returns a BigNumber object
+/**
+ * Should the input to a big number
+ * @returns a BigNumber object
+ */
 var convertToBigNumber = function (value) {
 
     // remove the leading 0x
@@ -1187,9 +1209,11 @@ var convertToBigNumber = function (value) {
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
+ * @method inputTransactionFormatter
+ * @param {Object} transaction options
  * @returns object
 */
-var inputTransactionFormatter = function(options){
+var inputTransactionFormatter = function (options){
 
     // make code -> data
     if (options.code) {
@@ -1197,33 +1221,9 @@ var inputTransactionFormatter = function(options){
         delete options.code;
     }
 
-    // make endowment -> value
-    if (options.endowment) {
-        options.value = options.endowment;
-        delete options.endowment;
-    }
-
-    // format the following options
-    /*jshint maxcomplexity:5 */
     ['gasPrice', 'gas', 'value'].forEach(function(key){
-
-        // if hex or string integer
-        if(typeof options[key] === 'string') {
-
-            // if not hex assume its a number string
-            if (options[key].indexOf('0x') === -1)
-                options[key] = utils.fromDecimal(options[key]);
-
-        // if number
-        } else if (typeof options[key] === 'number') {
-            options[key] = utils.fromDecimal(options[key]);
-
-        // if bignumber
-        } else if (utils.isBigNumber(options[key])) {
-            options[key] = '0x'+ options[key].toString(16);
-        }
+        options[key] = utils.toHex(options[key]);
     });
-
 
     return options;
 };
@@ -1233,13 +1233,10 @@ var inputTransactionFormatter = function(options){
  * 
  * @returns object
 */
-var outputTransactionFormatter = function(tx){
-    // transform to number
+var outputTransactionFormatter = function (tx){
     tx.gas = utils.toDecimal(tx.gas);
-
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
     tx.value = utils.toBigNumber(tx.value);
-
     return tx;
 };
 
