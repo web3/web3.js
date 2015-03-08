@@ -13,7 +13,6 @@ var exorcist   = require('exorcist');
 var bower      = require('bower');
 var streamify  = require('gulp-streamify');
 var jsdoc      = require('gulp-jsdoc');
-var ignore     = require('gulp-ignore');
 var pjson      = require('./package.json');
 
 var DEST       = './dist/';
