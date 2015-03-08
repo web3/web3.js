@@ -28,14 +28,19 @@ var c = require('./config');
 var f = require('./formatters');
 
 /**
- * Displays error about incorrect type
+ * throw incorrect type error
+ *
+ * @method throwTypeError
  * @param {String} type
+ * @throws incorrect type error
  */
-var displayTypeError = function (type) {
-    console.error('parser does not support type: ' + type);
+var throwTypeError = function (type) {
+    throw new Error('parser does not support type: ' + type);
 };
 
 /** This method should be called if we want to check if givent type is an array type
+ *
+ * @method isArrayType
  * @param {String} type name
  * @returns {Boolean} true if it is, otherwise false
  */
@@ -45,6 +50,8 @@ var isArrayType = function (type) {
 
 /**
  * This method should be called to return dynamic type length in hex
+ *
+ * @method dynamicTypeBytes
  * @param {String} type
  * @param {String|Array} dynamic type
  * @return {String} length of dynamic type in hex or empty string if type is not dynamic
@@ -60,6 +67,8 @@ var inputTypes = types.inputTypes();
 
 /**
  * Formats input params to bytes
+ *
+ * @method formatInput
  * @param {Array} abi inputs of method
  * @param {Array} params that will be formatted to bytes
  * @returns bytes representation of input params
@@ -81,7 +90,7 @@ var formatInput = function (inputs, params) {
             typeMatch = inputTypes[j].type(inputs[i].type, params[i]);
         }
         if (!typeMatch) {
-            displayTypeError(inputs[i].type);
+            throwTypeError(inputs[i].type);
         }
 
         var formatter = inputTypes[j - 1].format;
@@ -104,6 +113,7 @@ var formatInput = function (inputs, params) {
 /**
  * This method should be called to predict the length of dynamic type
  *
+ * @method dynamicBytesLength
  * @param {String} type
  * @returns {Number} length of dynamic type, 0 or multiplication of ETH_PADDING (32)
  */
@@ -115,10 +125,14 @@ var dynamicBytesLength = function (type) {
 
 var outputTypes = types.outputTypes();
 
-/// Formats output bytes back to param list
-/// @param contract abi method outputs
-/// @param bytes representtion of output
-/// @returns array of output params
+/** 
+ * Formats output bytes back to param list
+ *
+ * @method formatOutput
+ * @param {Array} abi outputs of method
+ * @param {String} bytes represention of output
+ * @returns {Array} output params
+ */
 var formatOutput = function (outs, output) {
 
     output = output.slice(2);
@@ -140,7 +154,7 @@ var formatOutput = function (outs, output) {
         }
 
         if (!typeMatch) {
-            displayTypeError(outs[i].type);
+            throwTypeError(outs[i].type);
         }
 
         var formatter = outputTypes[j - 1].format;
@@ -167,9 +181,14 @@ var formatOutput = function (outs, output) {
     return result;
 };
 
-/// @param json abi for contract
-/// @returns input parser object for given json abi
-/// TODO: refactor creating the parser, do not double logic from contract
+/**
+ * Should be called to create input parser for contract with given abi
+ *
+ * @method inputParser
+ * @param {Array} contract abi
+ * @returns {Object} input parser object for given json abi
+ * TODO: refactor creating the parser, do not double logic from contract
+ */
 var inputParser = function (json) {
     var parser = {};
     json.forEach(function (method) {
@@ -191,8 +210,13 @@ var inputParser = function (json) {
     return parser;
 };
 
-/// @param json abi for contract
-/// @returns output parser for given json abi
+/**
+ * Should be called to create output parser for contract with given abi
+ *
+ * @method outputParser
+ * @param {Array} contract abi
+ * @returns {Object} output parser for given json abi
+ */
 var outputParser = function (json) {
     var parser = {};
     json.forEach(function (method) {
@@ -2112,6 +2136,10 @@ var toBigNumber = function(number) {
  * @return {Boolean}
 */
 var isAddress = function(address) {
+    if (!isString(address)) {
+        return false;
+    }
+
     return ((address.indexOf('0x') === 0 && address.length === 42) ||
             (address.indexOf('0x') === -1 && address.length === 40));
 };

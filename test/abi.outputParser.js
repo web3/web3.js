@@ -456,6 +456,22 @@ describe('abi', function() {
 
         });
 
+        it('should throw an incorrect type error', function () {
+
+            // given
+            var d = clone(description);
+            d[0].outputs = [
+                { type: 'uin' }
+            ]
+
+            // when
+            var parser = abi.outputParser(d);
+
+            // then
+            assert.throws(function () {parser.test('0x')}, Error);
+
+        });
+
     });
 });
 
