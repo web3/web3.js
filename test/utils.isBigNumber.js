@@ -1,5 +1,5 @@
 var chai = require('chai');
-var utils = require('../lib/utils');
+var utils = require('../lib/utils/utils.js');
 var BigNumber = require('bignumber.js');
 var assert = chai.assert;
 

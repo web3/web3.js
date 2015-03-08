@@ -1,6 +1,6 @@
 var assert = require('assert');
-var event = require('../lib/event.js');
-var f = require('../lib/formatters.js');
+var event = require('../lib/web3/event.js');
+var f = require('../lib/solidity/formatters.js');
 
 describe('event', function () {
     describe('inputParser', function () {

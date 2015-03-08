@@ -1,6 +1,6 @@
 var assert = require('assert');
 var BigNumber = require('bignumber.js');
-var abi = require('../lib/abi.js');
+var abi = require('../lib/solidity/abi.js');
 var clone = function (object) { return JSON.parse(JSON.stringify(object)); };
 
 var description =  [{

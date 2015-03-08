@@ -1,5 +1,5 @@
 var assert = require('assert');
-var filter = require('../lib/filter');
+var filter = require('../lib/web3/filter');
 var u = require('./test.utils.js');
 
 var empty = function () {};

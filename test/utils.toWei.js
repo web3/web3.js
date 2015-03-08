@@ -1,5 +1,5 @@
 var chai = require('chai');
-var utils = require('../lib/utils.js');
+var utils = require('../lib/utils/utils');
 var assert = chai.assert;
 
 describe('utils', function () {
