@@ -2056,9 +2056,7 @@ var toBigNumber = function(number) {
     if (isBigNumber(number))
         return number;
 
-    if (isString(number) && number.indexOf('0x') === 0)
-        return new BigNumber(number, 16);
-      
+    // TODO: check if we need to check for hex here
     return new BigNumber(number.toString(10), 10);
 };
 
@@ -2124,7 +2122,8 @@ module.exports = {
     toBigNumber: toBigNumber,
     isBigNumber: isBigNumber,
     isAddress: isAddress,
-    isFunction: isFunction
+    isFunction: isFunction,
+    isString: isString
 };
 
 
