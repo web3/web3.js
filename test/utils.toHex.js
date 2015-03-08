@@ -1,16 +1,43 @@
-var assert = require('assert');
+var chai = require('chai');
 var utils = require('../lib/utils.js');
+var assert = chai.assert;
+
+var tests = [
+    { value: 1, expected: '0x1' },
+    { value: '1', expected: '0x1' },
+    { value: '0x1', expected: '0x1'},
+    { value: '0x01', expected: '0x1'},
+    { value: 15, expected: '0xf'},
+    { value: '15', expected: '0xf'},
+    { value: '0xf', expected: '0xf'},
+    { value: '0x0f', expected: '0xf'},
+    { value: -1, expected: '-0x1'},
+    { value: '-1', expected: '-0x1'},
+    { value: '-0x1', expected: '-0x1'},
+    { value: '-0x01', expected: '-0x1'},
+    { value: -15, expected: '-0xf'},
+    { value: '-15', expected: '-0xf'},
+    { value: '-0xf', expected: '-0xf'},
+    { value: '-0x0f', expected: '-0xf'},
+    { value: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', expected: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'},
+    { value: '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd', expected: '0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd'},
+    { value: '-0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', expected: '-0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'},
+    { value: '-0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd', expected: '-0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffd'},
+    { value: 0, expected: '0x0'},
+    { value: '0', expected: '0x0'},
+    { value: '0x0', expected: '0x0'},
+    { value: -0, expected: '0x0'},
+    { value: '-0', expected: '0x0'},
+    { value: '-0x0', expected: '0x0'}
+];
 
 describe('utils', function () {
     describe('toHex', function () {
-        it('should return the correct value', function () {
-            
-            assert.equal(utils.toHex(1000),    "0x3e8");
-            assert.equal(utils.toHex('1000'),  "0x3e8");
-            //assert.equal(utils.toHex('hello'), "0x68656c6c6f");
-            //assert.equal(utils.toHex({test: 'test'}), "0x7b2274657374223a2274657374227d");
-            //assert.equal(utils.toHex([1,2,3,{hallo:'test'}]),  '0x5b312c322c332c7b2268616c6c6f223a2274657374227d5d');
-    
+        tests.forEach(function (test) {
+            it('should turn ' + test.value + ' to ' + test.expected, function () {
+                assert.equal(utils.toHex(test.value), test.expected);
+            });
         });
     });
 });
+

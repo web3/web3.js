@@ -1976,7 +1976,12 @@ var fromDecimal = function (value) {
  * @return {String}
  */
 var toHex = function (value) {
-    return '0x' + toBigNumber(value).toString(16);
+    var number = toBigNumber(value);
+    var result = number.toString(16);
+    if (number.lessThan(0)) {
+        return '-0x' + result.substr(1);  
+    }
+    return '0x' + result; 
 };
 
 /**

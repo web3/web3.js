@@ -34,12 +34,6 @@ var tests = [
 
 describe('utils', function () {
     describe('toBigNumber', function () {
-        it('should return the correct value', function () {
-            
-            assert.equal(utils.isBigNumber(utils.toBigNumber(100000)), true);
-            assert.equal(utils.toBigNumber(100000).toString(10), '100000');
-        });
-
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.equal(utils.toBigNumber(test.value).toString(10), test.expected);
