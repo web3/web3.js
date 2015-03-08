@@ -1,5 +1,5 @@
 var chai = require('chai');
-var utils = require('../lib/utils.js');
+var utils = require('../lib/utils');
 var BigNumber = require('bignumber.js');
 var assert = chai.assert;
 
@@ -12,6 +12,7 @@ var tests = [
     { value: '15', expected: '15'},
     { value: '0xf', expected: '15'},
     { value: '0x0f', expected: '15'},
+    { value: new BigNumber('f', 16), expected: '15'},
     { value: -1, expected: '-1'},
     { value: '-1', expected: '-1'},
     { value: '-0x1', expected: '-1'},
@@ -29,7 +30,8 @@ var tests = [
     { value: '0x0', expected: '0'},
     { value: -0, expected: '0'},
     { value: '-0', expected: '0'},
-    { value: '-0x0', expected: '0'}
+    { value: '-0x0', expected: '0'},
+    { value: new BigNumber(0), expected: '0'}
 ];
 
 describe('utils', function () {

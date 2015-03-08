@@ -2097,7 +2097,8 @@ var isBigNumber = function (object) {
  * @return {Boolean}
  */
 var isString = function (object) {
-    return typeof object === 'string';
+    return typeof object === 'string' ||
+        (object && object.constructor && object.constructor.name === 'String');
 };
 
 /**
