@@ -38,7 +38,7 @@ There you go, now you can use it:
 
 ```
 var coinbase = web3.eth.coinbase;
-var balance = web3.eth.balanceAt(coinbase);
+var balance = web3.eth.getBalance(coinbase);
 ```
 
 

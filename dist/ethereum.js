@@ -301,15 +301,23 @@ var exportNatspecGlobals = function (vars) {
 var addFunctionRelatedPropertiesToContract = function (contract) {
     
     contract.call = function (options) {
-        contract._isTransact = false;
+        contract._isTransaction = false;
         contract._options = options;
         return contract;
     };
 
-    contract.transact = function (options) {
-        contract._isTransact = true;
+
+    contract.sendTransaction = function (options) {
+        contract._isTransaction = true;
         contract._options = options;
         return contract;
+    };
+    // DEPRECATED
+    contract.transact = function (options) {
+
+        console.warn('myContract.transact() is deprecated please use myContract.sendTransaction() instead.');
+
+        return contract.sendTransaction(options);
     };
 
     contract._options = {};
@@ -342,14 +350,14 @@ var addFunctionsToContract = function (contract, desc, address) {
             options.to = address;
             options.data = sign + parsed;
             
-            var isTransact = contract._isTransact === true || (contract._isTransact !== false && !method.constant);
+            var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
             var collapse = options.collapse !== false;
             
             // reset
             contract._options = {};
-            contract._isTransact = null;
+            contract._isTransaction = null;
 
-            if (isTransact) {
+            if (isTransaction) {
                 
                 exportNatspecGlobals({
                     abi: desc,
@@ -359,7 +367,7 @@ var addFunctionsToContract = function (contract, desc, address) {
                 });
 
                 // transactions do not have any output, cause we do not know, when they will be processed
-                web3.eth.transact(options);
+                web3.eth.sendTransaction(options);
                 return;
             }
             
@@ -414,7 +422,7 @@ var addEventsToContract = function (contract, desc, address) {
                 var parser = eventImpl.outputParser(e);
                 return parser(data);
             };
-            return web3.eth.watch(o, undefined, undefined, outputFormatter);
+            return web3.eth.filter(o, undefined, undefined, outputFormatter);
         };
         
         // this property should be used by eth.filter to check if object is an event
@@ -444,24 +452,40 @@ var addEventsToContract = function (contract, desc, address) {
  *      outputs: [{name: 'd', type: 'string' }]
  * }];  // contract abi
  *
- * var myContract = web3.eth.contract('0x0123123121', abi); // creation of contract object
+ * var MyContract = web3.eth.contract(abi); // creation of contract prototype
  *
- * myContract.myMethod('this is test string param for call'); // myMethod call (implicit, default)
- * myContract.call().myMethod('this is test string param for call'); // myMethod call (explicit)
- * myContract.transact().myMethod('this is test string param for transact'); // myMethod transact
+ * var contractInstance = new MyContract('0x0123123121');
  *
- * @param address - address of the contract, which should be called
- * @param desc - abi json description of the contract, which is being created
+ * contractInstance.myMethod('this is test string param for call'); // myMethod call (implicit, default)
+ * contractInstance.call().myMethod('this is test string param for call'); // myMethod call (explicit)
+ * contractInstance.sendTransaction().myMethod('this is test string param for transact'); // myMethod sendTransaction
+ *
+ * @param abi - abi json description of the contract, which is being created
  * @returns contract object
  */
+var contract = function (abi) {
 
-var contract = function (address, desc) {
+    // return prototype
+    if(abi instanceof Array && arguments.length === 1) {
+        return Contract.bind(null, abi);
+
+    // deprecated: auto initiate contract
+    } else {
+
+        console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
+
+        return new Contract(arguments[1], arguments[0]);
+    }
+
+};
+
+function Contract(abi, address) {
 
     // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
     // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
     // prototype, so we make it so as a workaround.
     // TODO: we may not want to modify input params, maybe use copy instead?
-    desc.forEach(function (method) {
+    abi.forEach(function (method) {
         if (method.name.indexOf('(') === -1) {
             var displayName = method.name;
             var typeName = method.inputs.map(function(i){return i.type; }).join();
@@ -471,12 +495,12 @@ var contract = function (address, desc) {
 
     var result = {};
     addFunctionRelatedPropertiesToContract(result);
-    addFunctionsToContract(result, desc, address);
-    addEventRelatedPropertiesToContract(result, desc, address);
-    addEventsToContract(result, desc, address);
+    addFunctionsToContract(result, abi, address);
+    addEventRelatedPropertiesToContract(result, abi, address);
+    addEventsToContract(result, abi, address);
 
     return result;
-};
+}
 
 module.exports = contract;
 
@@ -541,63 +565,83 @@ module.exports = {
  * @date 2015
  */
 
-/// @returns an array of objects describing web3.eth api methods
-var methods = function () {
-    var blockCall = function (args) {
-        return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
-    };
+var formatters = require('./formatters');
 
-    var transactionCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
-    };
 
-    var uncleCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
-    };
-
-    var transactionCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
-    };
-
-    var uncleCountCall = function (args) {
-        return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
-    };
-
-    return [
-    { name: 'balanceAt', call: 'eth_balanceAt' },
-    { name: 'stateAt', call: 'eth_stateAt' },
-    { name: 'storageAt', call: 'eth_storageAt' },
-    { name: 'countAt', call: 'eth_countAt'},
-    { name: 'codeAt', call: 'eth_codeAt' },
-    { name: 'transact', call: 'eth_transact' },
-    { name: 'call', call: 'eth_call' },
-    { name: 'block', call: blockCall },
-    { name: 'transaction', call: transactionCall },
-    { name: 'uncle', call: uncleCall },
-    { name: 'compilers', call: 'eth_compilers' },
-    { name: 'flush', call: 'eth_flush' },
-    { name: 'lll', call: 'eth_lll' },
-    { name: 'solidity', call: 'eth_solidity' },
-    { name: 'serpent', call: 'eth_serpent' },
-    { name: 'logs', call: 'eth_logs' },
-    { name: 'transactionCount', call: transactionCountCall },
-    { name: 'uncleCount', call: uncleCountCall }
-    ];
+var blockCall = function (args) {
+    return typeof args[0] === "string" ? "eth_blockByHash" : "eth_blockByNumber";
 };
 
+var transactionCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionByHash' : 'eth_transactionByNumber';
+};
+
+var uncleCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleByHash' : 'eth_uncleByNumber';
+};
+
+var transactionCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_transactionCountByHash' : 'eth_transactionCountByNumber';
+};
+
+var uncleCountCall = function (args) {
+    return typeof args[0] === "string" ? 'eth_uncleCountByHash' : 'eth_uncleCountByNumber';
+};
+
+/// @returns an array of objects describing web3.eth api methods
+var methods = [
+    { name: 'getBalance', call: 'eth_balanceAt', outputFormatter: formatters.convertToBigNumber},
+    { name: 'getState', call: 'eth_stateAt' },
+    { name: 'getStorage', call: 'eth_storageAt' },
+    { name: 'getData', call: 'eth_codeAt' },
+    { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
+    { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
+    { name: 'getCompilers', call: 'eth_compilers' },
+    { name: 'getBlockTransactionCount', call: transactionCountCall },
+    { name: 'getBlockUncleCount', call: uncleCountCall },
+    { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
+    { name: 'getTransactionCount', call: 'eth_countAt'},
+    { name: 'sendTransaction', call: 'eth_transact', inputFormatter: formatters.inputTransactionFormatter },
+    { name: 'call', call: 'eth_call' },
+    { name: 'compile.solidity', call: 'eth_solidity' },
+    { name: 'compile.lll', call: 'eth_lll' },
+    { name: 'compile.serpent', call: 'eth_serpent' },
+    { name: 'flush', call: 'eth_flush' },
+
+    // deprecated methods
+    { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'getBalance' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'getState' },
+    { name: 'storageAt', call: 'eth_storageAt', newMethod: 'getStorage' },
+    { name: 'countAt', call: 'eth_countAt', newMethod: 'getTransactionCount' },
+    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'getData' },
+    { name: 'transact', call: 'eth_transact', newMethod: 'sendTransaction' },
+    { name: 'block', call: blockCall, newMethod: 'getBlock' },
+    { name: 'transaction', call: transactionCall, newMethod: 'getTransaction' },
+    { name: 'uncle', call: uncleCall, newMethod: 'getUncle' },
+    { name: 'compilers', call: 'eth_compilers', newMethod: 'getCompilers' },
+    { name: 'solidity', call: 'eth_solidity', newMethod: 'compile.solidity' },
+    { name: 'lll', call: 'eth_lll', newMethod: 'compile.lll' },
+    { name: 'serpent', call: 'eth_serpent', newMethod: 'compile.serpent' },
+    { name: 'transactionCount', call: transactionCountCall, newMethod: 'getBlockTransactionCount' },
+    { name: 'uncleCount', call: uncleCountCall, newMethod: 'getBlockUncleCount' },
+    { name: 'logs', call: 'eth_logs' }
+];
+
 /// @returns an array of objects describing web3.eth api properties
-var properties = function () {
-    return [
+var properties = [
     { name: 'coinbase', getter: 'eth_coinbase', setter: 'eth_setCoinbase' },
     { name: 'listening', getter: 'eth_listening', setter: 'eth_setListening' },
     { name: 'mining', getter: 'eth_mining', setter: 'eth_setMining' },
-    { name: 'gasPrice', getter: 'eth_gasPrice' },
+    { name: 'gasPrice', getter: 'eth_gasPrice', outputFormatter: formatters.convertToBigNumber},
     { name: 'accounts', getter: 'eth_accounts' },
     { name: 'peerCount', getter: 'eth_peerCount' },
     { name: 'defaultBlock', getter: 'eth_defaultBlock', setter: 'eth_setDefaultBlock' },
-    { name: 'number', getter: 'eth_number'}
-    ];
-};
+    { name: 'blockNumber', getter: 'eth_number'},
+
+    // deprecated properties
+    { name: 'number', getter: 'eth_number', newProperty: 'blockNumber'}
+];
+
 
 module.exports = {
     methods: methods,
@@ -605,7 +649,7 @@ module.exports = {
 };
 
 
-},{}],6:[function(require,module,exports){
+},{"./formatters":8}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -671,7 +715,7 @@ var indexedParamsToTopics = function (event, indexed) {
 
 var inputParser = function (address, sign, event) {
     
-    // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.watch'
+    // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.filter'
     return function (indexed, options) {
         var o = options || {};
         o.address = address;
@@ -776,7 +820,7 @@ module.exports = {
 var implementationIsValid = function (i) {
     return !!i && 
         typeof i.newFilter === 'function' && 
-        typeof i.getMessages === 'function' && 
+        typeof i.getLogs === 'function' && 
         typeof i.uninstallFilter === 'function' &&
         typeof i.startPolling === 'function' &&
         typeof i.stopPolling === 'function';
@@ -833,27 +877,50 @@ var filter = function(options, implementation, formatter) {
 
     implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
 
-    var changed = function (callback) {
+    var watch = function(callback) {
         callbacks.push(callback);
     };
 
-    var messages = function () {
-        return implementation.getMessages(filterId);
-    };
-    
-    var uninstall = function () {
+    var stopWatching = function() {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
     };
 
+    var get = function () {
+        return implementation.getLogs(filterId);
+    };
+    
     return {
-        changed: changed,
-        arrived: changed,
-        happened: changed,
-        messages: messages,
-        logs: messages,
-        uninstall: uninstall
+        watch: watch,
+        stopWatching: stopWatching,
+        get: get,
+
+        // DEPRECATED methods
+        changed:  function(){
+            console.warn('watch().changed() is deprecated please use filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        arrived:  function(){
+            console.warn('watch().arrived() is deprecated please use filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        happened:  function(){
+            console.warn('watch().happened() is deprecated please use filter().watch() instead.');
+            return watch.apply(this, arguments);
+        },
+        uninstall: function(){
+            console.warn('watch().uninstall() is deprecated please use filter().stopWatching() instead.');
+            return stopWatching.apply(this, arguments);
+        },
+        messages: function(){
+            console.warn('watch().messages() is deprecated please use filter().get() instead.');
+            return get.apply(this, arguments);
+        },
+        logs: function(){
+            console.warn('watch().logs() is deprecated please use filter().get() instead.');
+            return get.apply(this, arguments);
+        }
     };
 };
 
@@ -954,7 +1021,9 @@ var signedIsNegative = function (value) {
 /// Formats input right-aligned input bytes to int
 /// @returns right-aligned input bytes formatted to int
 var formatOutputInt = function (value) {
+
     value = value || "0";
+
     // check if it's negative number
     // it it is, return two's complement
     if (signedIsNegative(value)) {
@@ -962,6 +1031,7 @@ var formatOutputInt = function (value) {
     }
     return new BigNumber(value, 16);
 };
+
 
 /// Formats big right-aligned input bytes to uint
 /// @returns right-aligned input bytes formatted to uint
@@ -1001,6 +1071,138 @@ var formatOutputAddress = function (value) {
 };
 
 
+/// Formats the input to a big number
+/// @returns a BigNumber object
+var convertToBigNumber = function (value) {
+
+    // remove the leading 0x
+    if(typeof value === 'string')
+        value = value.replace('0x', '');
+
+    value = value || "0";
+
+    return new BigNumber(value, 16);
+};
+
+
+/**
+Formats the input of a transaction and converts all values to HEX
+
+@returns object
+*/
+var inputTransactionFormatter = function(options){
+
+    // make code -> data
+    if(options.code) {
+        options.data = options.code;
+        delete options.code;
+    }
+
+    // make endowment -> value
+    if(options.endowment) {
+        options.value = options.endowment;
+        delete options.endowment;
+    }
+
+
+    // format the following options
+    /*jshint maxcomplexity:5 */
+    ['gasPrice', 'value'].forEach(function(key){
+
+        // if hex or string integer
+        if(typeof options[key] === 'string') {
+
+            // if not hex assume its a number string
+            if(options[key].indexOf('0x') === -1)
+                options[key] = utils.fromDecimal(options[key]);
+
+        // if number
+        } else if(typeof options[key] === 'number') {
+            options[key] = utils.fromDecimal(options[key]);
+
+        // if bignumber
+        } else if(options[key] instanceof BigNumber) {
+            options[key] = '0x'+ options[key].toString(16);
+        }
+    });
+
+    // format gas to number
+    options.gas = Number(options.gas);
+
+
+    return options;
+};
+
+/**
+Formats the output of a transaction to its proper values
+
+@returns object
+*/
+var outputTransactionFormatter = function(tx){
+    // transform to number
+    tx.gas = Number(tx.gas);
+
+    // gasPrice to bignumber
+    if(typeof tx.gasPrice === 'string' && tx.gasPrice.indexOf('0x') === 0)
+        tx.gasPrice = new BigNumber(tx.gasPrice, 16);
+    else
+        tx.gasPrice = new BigNumber(tx.gasPrice.toString(10), 10);
+
+    // value to bignumber
+    if(typeof tx.value === 'string' && tx.value.indexOf('0x') === 0)
+        tx.value = new BigNumber(tx.value, 16);
+    else
+        tx.value = new BigNumber(tx.value.toString(10), 10);
+
+    return tx;
+};
+
+
+/**
+Formats the output of a block to its proper values
+
+@returns object
+*/
+var outputBlockFormatter = function(block){
+    /*jshint maxcomplexity:7 */
+
+    // transform to number
+    block.gasLimit = Number(block.gasLimit);
+    block.gasUsed = Number(block.gasUsed);
+    block.size = Number(block.size);
+    block.timestamp = Number(block.timestamp);
+    block.number = Number(block.number);
+
+    // minGasPrice to bignumber
+    if(block.minGasPrice) {
+        if(typeof block.minGasPrice === 'string' && block.minGasPrice.indexOf('0x') === 0)
+            block.minGasPrice = new BigNumber(block.minGasPrice, 16);
+        else
+            block.minGasPrice = new BigNumber(block.minGasPrice.toString(10), 10);
+    }
+
+
+    // difficulty to bignumber
+    if(block.difficulty) {
+        if(typeof block.difficulty === 'string' && block.difficulty.indexOf('0x') === 0)
+            block.difficulty = new BigNumber(block.difficulty, 16);
+        else
+            block.difficulty = new BigNumber(block.difficulty.toString(10), 10);
+    }
+
+
+    // difficulty to bignumber
+    if(block.totalDifficulty) {
+        if(typeof block.totalDifficulty === 'string' && block.totalDifficulty.indexOf('0x') === 0)
+            block.totalDifficulty = new BigNumber(block.totalDifficulty, 16);
+        else
+            block.totalDifficulty = new BigNumber(block.totalDifficulty.toString(10), 10);
+    }
+
+    return block;
+};
+
+
 module.exports = {
     formatInputInt: formatInputInt,
     formatInputString: formatInputString,
@@ -1013,7 +1215,11 @@ module.exports = {
     formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
     formatOutputString: formatOutputString,
-    formatOutputAddress: formatOutputAddress
+    formatOutputAddress: formatOutputAddress,
+    convertToBigNumber: convertToBigNumber,
+    inputTransactionFormatter: inputTransactionFormatter,
+    outputTransactionFormatter: outputTransactionFormatter,
+    outputBlockFormatter: outputBlockFormatter
 };
 
 
@@ -1209,6 +1415,15 @@ var requestManager = function() {
     var provider;
 
     var send = function (data) {
+        /*jshint maxcomplexity: 6 */
+
+        // format the input before sending
+        if(typeof data.inputFormatter === 'function') {
+            data.params = Array.prototype.map.call(data.params, function(item){
+                return data.inputFormatter(item);
+            });
+        }
+
         var payload = jsonrpc.toPayload(data.method, data.params);
         
         if (!provider) {
@@ -1220,10 +1435,13 @@ var requestManager = function() {
 
         if (!jsonrpc.isValidResponse(result)) {
             console.log(result);
+            if(typeof result === 'object' && result.error && result.error.message)
+                console.error(result.error.message);
             return null;
         }
         
-        return result.result;
+        // format the output
+        return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
     };
 
     var setProvider = function (p) {
@@ -1311,9 +1529,12 @@ var methods = function () {
     return [
     { name: 'post', call: 'shh_post' },
     { name: 'newIdentity', call: 'shh_newIdentity' },
-    { name: 'haveIdentity', call: 'shh_haveIdentity' },
+    { name: 'hasIdentity', call: 'shh_haveIdentity' },
     { name: 'newGroup', call: 'shh_newGroup' },
-    { name: 'addToGroup', call: 'shh_addToGroup' }
+    { name: 'addToGroup', call: 'shh_addToGroup' },
+
+    // deprecated
+    { name: 'haveIdentity', call: 'shh_haveIdentity', newMethod: 'hasIdentity' },
     ];
 };
 
@@ -1472,6 +1693,30 @@ module.exports = {
 
 var c = require('./const');
 
+if ("build" !== 'build') {/*
+    var BigNumber = require('bignumber.js'); // jshint ignore:line
+*/}
+
+var unitMap = {
+    'wei':      '1',
+    'kwei':     '1000',
+    'ada':      '1000',
+    'mwei':     '1000000',
+    'babbage':  '1000000',
+    'gwei':     '1000000000',
+    'shannon':  '1000000000',
+    'szabo':    '1000000000000',
+    'finney':   '1000000000000000',
+    'ether':    '1000000000000000000',
+    'kether':   '1000000000000000000000',
+    'grand':    '1000000000000000000000',
+    'einstein': '1000000000000000000000',
+    'mether':   '1000000000000000000000000',
+    'gether':   '1000000000000000000000000000',
+    'tether':   '1000000000000000000000000000000'
+};
+
+
 /// Finds first index of array element matching pattern
 /// @param array
 /// @param callback pattern
@@ -1557,6 +1802,9 @@ var filterEvents = function (json) {
 /// TODO: use BigNumber.js to parse int
 /// TODO: add tests for it!
 var toEth = function (str) {
+
+    console.warn('This method is deprecated please use eth.fromWei(BigNumberOrNumber, unit) instead.');
+
      /*jshint maxcomplexity:7 */
     var val = typeof str === "string" ? str.indexOf('0x') === 0 ? parseInt(str.substr(2), 16) : parseInt(str.replace(/,/g,'').replace(/ /g,'')) : str;
     var unit = 0;
@@ -1580,15 +1828,151 @@ var toEth = function (str) {
     return s + ' ' + units[unit];
 };
 
+
+var toDecimal = function (val) {
+    // remove 0x and place 0, if it's required
+    val = val.length > 2 ? val.substring(2) : "0";
+    return (new BigNumber(val, 16).toString(10));
+};
+
+var fromDecimal = function (val) {
+    return "0x" + (new BigNumber(val).toString(16));
+};
+
+
+/**
+Takes a number of wei and converts it to any other ether unit.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method fromWei
+@param {Number|String} number can be a number, number string or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var fromWei = function(number, unit) {
+    /*jshint maxcomplexity: 6 */
+    unit = unit.toLowerCase();
+
+    var isBigNumber = true;
+
+    if(!unitMap[unit]) {
+        console.warn('This unit doesn\'t exists, please use the one of the following units' , unitMap);
+        return number;
+    }
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0) {
+        isBigNumber = false;
+        number = new BigNumber(number, 16);
+    }
+    
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString(10), 10); // toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+    number = number.dividedBy(new BigNumber(unitMap[unit], 10));
+
+    return (isBigNumber) ? number : number.toString(10);
+};
+
+/**
+Takes a number of a unit and converts it to wei.
+
+Possible units are:
+
+    - kwei/ada
+    - mwei/babbage
+    - gwei/shannon
+    - szabo
+    - finney
+    - ether
+    - kether/grand/einstein
+    - mether
+    - gether
+    - tether
+
+@method toWei
+@param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
+@param {String} unit the unit to convert to
+@return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+*/
+var toWei = function(number, unit) {
+    /*jshint maxcomplexity: 6 */
+    unit = unit.toLowerCase();
+
+    var isBigNumber = true;
+
+    if(!unitMap[unit]) {
+        console.warn('This unit doesn\'t exists, please use the one of the following units' , unitMap);
+        return number;
+    }
+
+    if(!number)
+        return number;
+
+    if(typeof number === 'string' && number.indexOf('0x') === 0) {
+        isBigNumber = false;
+        number = new BigNumber(number, 16);
+    }
+
+    if(!(number instanceof BigNumber)) {
+        isBigNumber = false;
+        number = new BigNumber(number.toString(10), 10);// toString to prevent errors, the user have to handle giving correct bignums themselves
+    }
+
+
+    number = number.times(new BigNumber(unitMap[unit], 10));
+
+    return (isBigNumber) ? number : number.toString(10);
+};
+
+
+/**
+Checks if the given string is a valid ethereum HEX address.
+
+@method isAddress
+@param {String} address the given HEX adress
+@return {Boolean}
+*/
+var isAddress = function(address) {
+    if(address.indexOf('0x') === 0 && address.length !== 42)
+        return false;
+    if(address.indexOf('0x') === -1 && address.length !== 40)
+        return false;
+
+    return /^\w+$/.test(address);
+};
+
+
 module.exports = {
     findIndex: findIndex,
+    toDecimal: toDecimal,
+    fromDecimal: fromDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
     filterFunctions: filterFunctions,
     filterEvents: filterEvents,
-    toEth: toEth
+    toEth: toEth,
+    toWei: toWei,
+    fromWei: fromWei,
+    isAddress: isAddress
 };
 
 
@@ -1615,7 +1999,7 @@ module.exports = {
  * @date 2015
  */
 
-/// @returns an array of objects describing web3.eth.watch api methods
+/// @returns an array of objects describing web3.eth.filter api methods
 var eth = function () {
     var newFilter = function (args) {
         return typeof args[0] === 'string' ? 'eth_newFilterString' : 'eth_newFilter';
@@ -1624,7 +2008,7 @@ var eth = function () {
     return [
     { name: 'newFilter', call: newFilter },
     { name: 'uninstallFilter', call: 'eth_uninstallFilter' },
-    { name: 'getMessages', call: 'eth_filterLogs' }
+    { name: 'getLogs', call: 'eth_filterLogs' }
     ];
 };
 
@@ -1633,7 +2017,7 @@ var shh = function () {
     return [
     { name: 'newFilter', call: 'shh_newFilter' },
     { name: 'uninstallFilter', call: 'shh_uninstallFilter' },
-    { name: 'getMessages', call: 'shh_getMessages' }
+    { name: 'getLogs', call: 'shh_getMessages' }
     ];
 };
 
@@ -1669,9 +2053,9 @@ module.exports = {
  * @date 2014
  */
 
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js');
-*/}
+// if (process.env.NODE_ENV !== 'build') {
+//     var BigNumber = require('bignumber.js');
+// }
 
 var eth = require('./eth');
 var db = require('./db');
@@ -1692,14 +2076,35 @@ var web3Methods = function () {
 /// setups api calls for these methods
 var setupMethods = function (obj, methods) {
     methods.forEach(function (method) {
-        obj[method.name] = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var call = typeof method.call === 'function' ? method.call(args) : method.call;
-            return web3.manager.send({
-                method: call,
-                params: args
-            });
-        };
+        // allow for object methods 'myObject.method'
+        var objectMethods = method.name.split('.'),
+            callFunction = function () {
+                var args = Array.prototype.slice.call(arguments);
+                var call = typeof method.call === 'function' ? method.call(args) : method.call;
+
+                // show deprecated warning
+                if(method.newMethod)
+                    console.warn('This method is deprecated please use eth.'+ method.newMethod +'() instead.');
+
+                return web3.manager.send({
+                    method: call,
+                    params: args,
+                    outputFormatter: method.outputFormatter,
+                    inputFormatter: method.inputFormatter
+                });
+            };
+
+        if(objectMethods.length > 1) {
+            if(!obj[objectMethods[0]])
+                obj[objectMethods[0]] = {};
+
+            obj[objectMethods[0]][objectMethods[1]] = callFunction;
+        
+        } else {
+
+            obj[objectMethods[0]] = callFunction;
+        }
+
     });
 };
 
@@ -1709,20 +2114,36 @@ var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
         var proto = {};
         proto.get = function () {
+
+            // show deprecated warning
+            if(property.newProperty)
+                console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
+
             return web3.manager.send({
-                method: property.getter
+                method: property.getter,
+                outputFormatter: property.outputFormatter
             });
         };
 
         if (property.setter) {
             proto.set = function (val) {
+
+                // show deprecated warning
+                if(property.newProperty)
+                    console.warn('This property is deprecated please use eth.'+ property.newProperty +' instead.');
+
                 return web3.manager.send({
                     method: property.setter,
-                    params: [val]
+                    params: [val],
+                    inputFormatter: property.inputFormatter
                 });
             };
         }
+
+        proto.enumerable = !property.newProperty;
         Object.defineProperty(obj, property.name, proto);
+
     });
 };
 
@@ -1754,6 +2175,16 @@ var web3 = {
     manager: requestManager(),
     providers: {},
 
+    setProvider: function (provider) {
+        web3.manager.setProvider(provider);
+    },
+    
+    /// Should be called to reset state of web3 object
+    /// Resets everything except manager
+    reset: function () {
+        web3.manager.reset(); 
+    },
+
     /// @returns ascii string representation of hex value prefixed with 0x
     toAscii: utils.toAscii,
 
@@ -1761,23 +2192,25 @@ var web3 = {
     fromAscii: utils.fromAscii,
 
     /// @returns decimal representaton of hex value prefixed by 0x
-    toDecimal: function (val) {
-        // remove 0x and place 0, if it's required
-        val = val.length > 2 ? val.substring(2) : "0";
-        return (new BigNumber(val, 16).toString(10));
-    },
+    toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
-    fromDecimal: function (val) {
-        return "0x" + (new BigNumber(val).toString(16));
-    },
+    fromDecimal: utils.fromDecimal,
 
     /// used to transform value/string to eth string
     toEth: utils.toEth,
 
+    toWei: utils.toWei,
+    fromWei: utils.fromWei,
+    isAddress: utils.isAddress,
+
+
     /// eth object prototype
     eth: {
+        // DEPRECATED
         contractFromAbi: function (abi) {
+            console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
+
             return function(addr) {
                 // Default to address of Config. TODO: rremove prior to genesis.
                 addr = addr || '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
@@ -1788,15 +2221,22 @@ var web3 = {
         },
 
         /// @param filter may be a string, object or event
-        /// @param indexed is optional, this is an object with optional event indexed params
+        /// @param eventParams is optional, this is an object with optional event eventParams params
         /// @param options is optional, this is an object with optional event options ('max'...)
         /// TODO: fix it, 4 params? no way
         /*jshint maxparams:4 */
-        watch: function (fil, indexed, options, formatter) {
-            if (fil._isEvent) {
-                return fil(indexed, options);
-            }
+        filter: function (fil, eventParams, options, formatter) {
+
+            // if its event, treat it differently
+            if (fil._isEvent)
+                return fil(eventParams, options);
+
             return filter(fil, ethWatch, formatter);
+        },
+        // DEPRECATED
+        watch: function (fil, eventParams, options, formatter) {
+            console.warn('eth.watch() is deprecated please use eth.filter() instead.');
+            return this.filter(fil, eventParams, options, formatter);
         }
         /*jshint maxparams:3 */
     },
@@ -1807,25 +2247,21 @@ var web3 = {
     /// shh object prototype
     shh: {
         /// @param filter may be a string, object or event
-        watch: function (fil) {
+        filter: function (fil) {
             return filter(fil, shhWatch);
+        },
+        // DEPRECATED
+        watch: function (fil) {
+            console.warn('shh.watch() is deprecated please use shh.filter() instead.');
+            return this.filter(fil);
         }
-    },
-    setProvider: function (provider) {
-        web3.manager.setProvider(provider);
-    },
-    
-    /// Should be called to reset state of web3 object
-    /// Resets everything except manager
-    reset: function () {
-        web3.manager.reset(); 
     }
 };
 
 /// setups all api methods
 setupMethods(web3, web3Methods());
-setupMethods(web3.eth, eth.methods());
-setupProperties(web3.eth, eth.properties());
+setupMethods(web3.eth, eth.methods);
+setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods());
 setupMethods(web3.shh, shh.methods());
 setupMethods(ethWatch, watches.eth());

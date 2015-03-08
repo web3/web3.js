@@ -33,6 +33,11 @@
       "name": "Marian Oancea",
       "email": "marian@ethdev.com",
       "homepage": "https://github.com/cubedro"
+    },
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethdev.com",
+      "homepage": "https://github.com/frozeman"
     }
   ],
   "license": "LGPL-3.0",
