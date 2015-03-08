@@ -1017,72 +1017,87 @@ if ("build" !== 'build') {/*
 var utils = require('./utils');
 var c = require('./config');
 
-/// @param string string to be padded
-/// @param number of characters that result string should have
-/// @param sign, by default 0
-/// @returns right aligned string
+/**
+ * Should be called to pad string to expected length
+ *
+ * @method padLeft
+ * @param {String} string to be padded
+ * @param {Number} characters that result string should have
+ * @param {String} sign, by default 0
+ * @returns {String} right aligned string
+ */
 var padLeft = function (string, chars, sign) {
     return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
 };
 
-/// Formats input value to byte representation of int
-/// If value is negative, return it's two's complement
-/// If the value is floating point, round it down
-/// @returns right-aligned byte representation of int
+/**
+ * Formats input value to byte representation of int
+ * If value is negative, return it's two's complement
+ * If the value is floating point, round it down
+ *
+ * @method formatInputInt
+ * @param {String|Number|BigNumber} value that needs to be formatted
+ * @returns {String} right-aligned byte representation of int
+ */
 var formatInputInt = function (value) {
-    /*jshint maxcomplexity:7 */
     var padding = c.ETH_PADDING * 2;
-    if (utils.isBigNumber(value) || typeof value === 'number') {
-        if (typeof value === 'number')
-            value = new BigNumber(value);
-        BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
-        value = value.round();
-
-        if (value.lessThan(0)) 
-            value = new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(value).plus(1);
-        value = value.toString(16);
-    }
-    else if (typeof value === 'string') {
-        if (value.indexOf('0x') === 0) {
-            value = value.substr(2);
-        } else {
-            value = formatInputInt(new BigNumber(value));
-        }
-    }
-    else
-        value = (+value).toString(16);
-    return padLeft(value, padding);
+    BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
+    return padLeft(utils.toTwosComplement(value).round().toString(16), padding);
 };
 
-/// Formats input value to byte representation of string
-/// @returns left-algined byte representation of string
+/**
+ * Formats input value to byte representation of string
+ *
+ * @method formatInputString
+ * @param {String}
+ * @returns {String} left-algined byte representation of string
+ */
 var formatInputString = function (value) {
     return utils.fromAscii(value, c.ETH_PADDING).substr(2);
 };
 
-/// Formats input value to byte representation of bool
-/// @returns right-aligned byte representation bool
+/**
+ * Formats input value to byte representation of bool
+ *
+ * @method formatInputBool
+ * @param {Boolean}
+ * @returns {String} right-aligned byte representation bool
+ */
 var formatInputBool = function (value) {
     return '000000000000000000000000000000000000000000000000000000000000000' + (value ?  '1' : '0');
 };
 
-/// Formats input value to byte representation of real
-/// Values are multiplied by 2^m and encoded as integers
-/// @returns byte representation of real
+/**
+ * Formats input value to byte representation of real
+ * Values are multiplied by 2^m and encoded as integers
+ *
+ * @method formatInputReal
+ * @param {String|Number|BigNumber}
+ * @returns {String} byte representation of real
+ */
 var formatInputReal = function (value) {
     return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128))); 
 };
 
 
-/// Check if input value is negative
-/// @param value is hex format
-/// @returns true if it is negative, otherwise false
+/**
+ * Check if input value is negative
+ *
+ * @method signedIsNegative
+ * @param {String} value is hex format
+ * @returns {Boolean} true if it is negative, otherwise false
+ */
 var signedIsNegative = function (value) {
     return (new BigNumber(value.substr(0, 1), 16).toString(2).substr(0, 1)) === '1';
 };
 
-/// Formats input right-aligned input bytes to int
-/// @returns right-aligned input bytes formatted to int
+/**
+ * Formats right-aligned output bytes to int
+ *
+ * @method formatOutputInt
+ * @param {String} bytes
+ * @returns {BigNumber} right-aligned output bytes formatted to big number
+ */
 var formatOutputInt = function (value) {
 
     value = value || "0";
@@ -1096,24 +1111,45 @@ var formatOutputInt = function (value) {
 };
 
 
-/// Formats big right-aligned input bytes to uint
-/// @returns right-aligned input bytes formatted to uint
+/**
+ * Formats right-aligned output bytes to uint
+ *
+ * @method formatOutputUInt
+ * @param {String} bytes
+ * @returns {BigNumeber} right-aligned output bytes formatted to uint
+ */
 var formatOutputUInt = function (value) {
     value = value || "0";
     return new BigNumber(value, 16);
 };
 
-/// @returns input bytes formatted to real
+/**
+ * Formats right-aligned output bytes to real
+ *
+ * @method formatOutputReal
+ * @param {String}
+ * @returns {BigNumber} input bytes formatted to real
+ */
 var formatOutputReal = function (value) {
     return formatOutputInt(value).dividedBy(new BigNumber(2).pow(128)); 
 };
 
-/// @returns input bytes formatted to ureal
+/**
+ * Formats right-aligned output bytes to ureal
+ *
+ * @param {String}
+ * @returns {BigNumber} input bytes formatted to ureal
+ */
 var formatOutputUReal = function (value) {
     return formatOutputUInt(value).dividedBy(new BigNumber(2).pow(128)); 
 };
 
-/// @returns right-aligned input bytes formatted to hex
+/**
+ * Formats output hash
+ *
+ * @param {String}
+ * @returns {String} right-aligned output bytes formatted to hex
+ */
 var formatOutputHash = function (value) {
     return "0x" + value;
 };
@@ -1139,7 +1175,7 @@ var formatOutputAddress = function (value) {
 var convertToBigNumber = function (value) {
 
     // remove the leading 0x
-    if(typeof value === 'string')
+    if(utils.isString(value))
         value = value.replace('0x', '');
 
     value = value || "0";
@@ -1149,9 +1185,9 @@ var convertToBigNumber = function (value) {
 
 
 /**
-Formats the input of a transaction and converts all values to HEX
-
-@returns object
+ * Formats the input of a transaction and converts all values to HEX
+ *
+ * @returns object
 */
 var inputTransactionFormatter = function(options){
 
@@ -1193,9 +1229,9 @@ var inputTransactionFormatter = function(options){
 };
 
 /**
-Formats the output of a transaction to its proper values
-
-@returns object
+ * Formats the output of a transaction to its proper values
+ * 
+ * @returns object
 */
 var outputTransactionFormatter = function(tx){
     // transform to number
@@ -1209,9 +1245,9 @@ var outputTransactionFormatter = function(tx){
 
 
 /**
-Formats the output of a block to its proper values
-
-@returns object
+ * Formats the output of a block to its proper values
+ * 
+ * @returns object
 */
 var outputBlockFormatter = function(block){
 
@@ -1230,9 +1266,9 @@ var outputBlockFormatter = function(block){
 };
 
 /**
-Formats the output of a log
-
-@returns object
+ * Formats the output of a log
+ * 
+ * @returns object
 */
 var outputLogFormatter = function(log){
 
@@ -1243,9 +1279,9 @@ var outputLogFormatter = function(log){
 
 
 /**
-Formats the input of a whisper post and converts all values to HEX
-
-@returns object
+ * Formats the input of a whisper post and converts all values to HEX
+ *
+ * @returns object
 */
 var inputPostFormatter = function(post){
 
@@ -1267,10 +1303,10 @@ var inputPostFormatter = function(post){
 
 
 /**
-Formats the output of a received post message
-
-@returns object
-*/
+ * Formats the output of a received post message
+ *
+ * @returns object
+ */
 var outputPostFormatter = function(post){
 
     post.expiry = utils.toDecimal(post.expiry);
@@ -2117,15 +2153,31 @@ var toWei = function(number, unit) {
  *
  * @method toBigNumber
  * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
- * @return {Object} BigNumber
+ * @return {BigNumber} BigNumber
 */
 var toBigNumber = function(number) {
     number = number || 0;
-    if (isBigNumber(number))
+    if (isBigNumber(number)) {
         return number;
+    }
 
     // TODO: check if we need to check for hex here
     return new BigNumber(number.toString(10), 10);
+};
+
+/**
+ * Takes and input transforms it into bignumber and if it is negative value, into two's complement
+ *
+ * @method toTwosComplement
+ * @param {Number|String|BigNumber}
+ * @return {BigNumber}
+ */
+var toTwosComplement = function (number) {
+    var bigNumber = toBigNumber(number);
+    if (bigNumber.lessThan(0)) {
+        return new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(bigNumber).plus(1);
+    }
+    return bigNumber;
 };
 
 /**
@@ -2193,6 +2245,7 @@ module.exports = {
     toWei: toWei,
     fromWei: fromWei,
     toBigNumber: toBigNumber,
+    toTwosComplement: toTwosComplement,
     isBigNumber: isBigNumber,
     isAddress: isAddress,
     isFunction: isFunction,
