@@ -777,7 +777,7 @@ var filterEvents = function (json) {
  * @return {String}
  */
 var toDecimal = function (value) {
-    return toBigNumber(value).toString(10);
+    return toBigNumber(value).toNumber();
 };
 
 /**
@@ -881,12 +881,12 @@ var toWei = function(number, unit) {
 */
 var toBigNumber = function(number) {
     number = number || 0;
-    if (isBigNumber(number)) {
+    if (isBigNumber(number))
         return number;
-    }
 
-    // TODO: check if we need to check for hex here
-    return new BigNumber(number.toString(10), 10);
+    return (isString(number) && number.indexOf('0x') === 0)
+        ? new BigNumber(number.replace('0x',''), 16)
+        : new BigNumber(number.toString(10), 10);
 };
 
 /**
@@ -2263,7 +2263,7 @@ module.exports = {
  * @date 2015
  */
 
-// var formatters = require('./formatters');
+var utils = require('../utils/utils');
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
@@ -2273,7 +2273,7 @@ var methods = [
 /// @returns an array of objects describing web3.eth api properties
 var properties = [
     { name: 'listening', getter: 'net_listening'},
-    { name: 'peerCount', getter: 'net_peerCount'},
+    { name: 'peerCount', getter: 'net_peerCount', outputFormatter: utils.toDecimal },
 ];
 
 
@@ -2283,7 +2283,7 @@ module.exports = {
 };
 
 
-},{}],16:[function(require,module,exports){
+},{"../utils/utils":5}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
