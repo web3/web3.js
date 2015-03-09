@@ -21,7 +21,7 @@ You need to run a local ethrereum node to use this library.
 
     $ meteor add ethereum:js
 
-### For browser
+### As Browser module
 Bower
 
 	$ bower install ethereum.js
@@ -30,11 +30,11 @@ Component
 
 	$ component install ethereum/ethereum.js
 
-* Include `ethereum.min.js` in your html file.
-* Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/)
+* Include `ethereum.min.js` in your html file. (not required for the meteor package)
+* Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
-Require the library (not necessary for the meteor package):
+Require the library (not required for the meteor package):
 
 	var web3 = require('web3');
 
