@@ -893,7 +893,10 @@ var getValueOfUnit = function (unit) {
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var fromWei = function(number, unit) {
-    return toBigNumber(number).dividedBy(getValueOfUnit(unit)).toString(10);
+    var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
+
+    return (isBigNumber(number))
+        ? returnValue : returnValue.toString(10); 
 };
 
 /**
@@ -917,7 +920,10 @@ var fromWei = function(number, unit) {
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
 */
 var toWei = function(number, unit) {
-    return toBigNumber(number).times(getValueOfUnit(unit)).toString(10);
+    var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
+
+    return (isBigNumber(number))
+        ? returnValue : returnValue.toString(10); 
 };
 
 /**
@@ -2416,7 +2422,7 @@ var requestManager = function() {
         // format the input before sending
         if(typeof data.inputFormatter === 'function') {
             data.params = Array.prototype.map.call(data.params, function(item, index){
-                // format everything besides the defaultblock
+                // format everything besides the defaultblock, which is already formated
                 return (index+1 < data.addDefaultblock)
                     ? data.inputFormatter(item)
                     : item;
