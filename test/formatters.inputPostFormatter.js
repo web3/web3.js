@@ -10,7 +10,7 @@ describe('formatters', function () {
             assert.deepEqual(formatters.inputPostFormatter({
                 from: '0x00000',
                 to: '0x00000',
-                payload: JSON.stringify({test: 'test'}),
+                payload: {test: 'test'},
                 ttl: 200,
                 workToProve: 1000,
                 topic: ['hello','mytopics']

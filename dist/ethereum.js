@@ -565,6 +565,19 @@ module.exports = {
  * @date 2015
  */
 
+/**
+ * Utils
+ * 
+ * @module utils
+ */
+
+/**
+ * Utility functions
+ * 
+ * @class [utils] config
+ * @constructor
+ */
+
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
 if ("build" !== 'build') {/*
     var BigNumber = require('bignumber.js'); // jshint ignore:line
@@ -598,7 +611,7 @@ module.exports = {
     ETH_UNITS: ETH_UNITS,
     ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
     ETH_POLLING_TIMEOUT: 1000,
-    ETH_DEFAULTBLOCK: -1
+    ETH_DEFAULTBLOCK: 'latest'
 };
 
 
@@ -623,6 +636,19 @@ module.exports = {
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  * @date 2015
+ */
+
+/**
+ * Utils
+ * 
+ * @module utils
+ */
+
+/**
+ * Utility functions
+ * 
+ * @class [utils] utils
+ * @constructor
  */
 
 if ("build" !== 'build') {/*
@@ -788,23 +814,45 @@ var toDecimal = function (value) {
  * @return {String}
  */
 var fromDecimal = function (value) {
-    return toHex(value);
+    var number = toBigNumber(value);
+    var result = number.toString(16);
+
+    return (number.lessThan(0))
+        ? '-0x' + result.substr(1)
+        : '0x' + result;
 };
 
 /**
- * Converts value to it's hex representation
+ * Auto converts any given value into it's hex representation.
+ *
+ * And even stringifys objects before.
  *
  * @method toHex
- * @param {String|Number|BigNumber}
+ * @param {String|Number|BigNumber|Object}
  * @return {String}
  */
-var toHex = function (value) {
-    var number = toBigNumber(value);
-    var result = number.toString(16);
-    if (number.lessThan(0)) {
-        return '-0x' + result.substr(1);  
-    }
-    return '0x' + result; 
+var toHex = function (val) {
+    /*jshint maxcomplexity:5 */
+
+    if(isBigNumber(val))
+        return fromDecimal(val);
+
+    if(typeof val === 'object')
+        return fromAscii(JSON.stringify(val));
+
+    if(isString(val) && val.indexOf('0x') === 0)
+        return val;
+    // if its a negative number, pass it through fromDecimal
+    if(isString(val) && val.indexOf('-0x') === 0)
+        return fromDecimal(val);
+
+    if(isString(val) && !isFinite(val))
+        return fromAscii(val);
+
+    if(isFinite(val))
+        return fromDecimal(val);
+
+    return val;
 };
 
 /**
@@ -884,7 +932,7 @@ var toBigNumber = function(number) {
     if (isBigNumber(number))
         return number;
 
-    return (isString(number) && number.indexOf('0x') === 0)
+    return (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0))
         ? new BigNumber(number.replace('0x',''), 16)
         : new BigNumber(number.toString(10), 10);
 };
@@ -1028,7 +1076,7 @@ var setupMethods = function (obj, methods) {
         // allow for object methods 'myObject.method'
         var objectMethods = method.name.split('.'),
             callFunction = function () {
-                /*jshint maxcomplexity:5 */
+                /*jshint maxcomplexity:8 */
                 
                 var callback = null,
                     args = Array.prototype.slice.call(arguments),
@@ -1041,8 +1089,12 @@ var setupMethods = function (obj, methods) {
                 }
 
                 // add the defaultBlock if not given
-                if(method.addDefaultblock && args.length !== method.addDefaultblock)
-                    Array.prototype.push.call(args, c.ETH_DEFAULTBLOCK);
+                if(method.addDefaultblock) {
+                    if(args.length !== method.addDefaultblock)
+                        Array.prototype.push.call(args, (isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK));
+                    else
+                        args[args.length-1] = isFinite(args[args.length-1]) ? utils.fromDecimal(args[args.length-1]) : args[args.length-1];
+                }
 
                 // show deprecated warning
                 if(method.newMethod)
@@ -1052,7 +1104,8 @@ var setupMethods = function (obj, methods) {
                     method: call,
                     params: args,
                     outputFormatter: method.outputFormatter,
-                    inputFormatter: method.inputFormatter
+                    inputFormatter: method.inputFormatter,
+                    addDefaultblock: method.addDefaultblock
                 }, callback);
             };
 
@@ -1564,39 +1617,38 @@ var utils = require('../utils/utils');
 
 
 var blockCall = function (args) {
-    // TODO: now both params might be strings
-    return utils.isString(args[0]) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (utils.isString(args[0]) && !isFinite(args[0])) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionCall = function (args) {
-    return utils.isString(args[0]) ? 'eth_getTransactionByHash' : 'eth_getTransactionByBlockNumberAndIndex';
-    // eth_getTransactionByBlockHashAndIndex
+    return (utils.isString(args[0]) && !isFinite(args[0])) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return utils.isString(args[0]) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockHashAndNumber';
+    return (utils.isString(args[0]) && !isFinite(args[0])) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockHashAndNumber';
 };
 
 var transactionCountCall = function (args) {
-    return utils.isString(args[0]) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (utils.isString(args[0]) && !isFinite(args[0])) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return utils.isString(args[0]) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (utils.isString(args[0]) && !isFinite(args[0])) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
     { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2, outputFormatter: formatters.convertToBigNumber},
     { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
-    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3},
+    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3, inputFormatter: utils.toHex},
     { name: 'getData', call: 'eth_getData', addDefaultblock: 2},
     { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter},
     { name: 'getCompilers', call: 'eth_getCompilers' },
     { name: 'getBlockTransactionCount', call: transactionCountCall },
     { name: 'getBlockUncleCount', call: uncleCountCall },
-    { name: 'getTransaction', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
+    { name: 'getTransaction', call: 'eth_getTransactionByHash', outputFormatter: formatters.outputTransactionFormatter },
+    { name: 'getTransactionFromBlock', call: transactionCall, outputFormatter: formatters.outputTransactionFormatter },
     { name: 'getTransactionCount', call: 'eth_getTransactionCount', addDefaultblock: 2},
     { name: 'sendTransaction', call: 'eth_sendTransaction', inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call', addDefaultblock: 2},
@@ -1630,7 +1682,7 @@ var properties = [
     { name: 'mining', getter: 'eth_mining'},
     { name: 'gasPrice', getter: 'eth_gasPrice', outputFormatter: formatters.convertToBigNumber},
     { name: 'accounts', getter: 'eth_accounts' },
-    { name: 'blockNumber', getter: 'eth_number'},
+    { name: 'blockNumber', getter: 'eth_blockNumber', outputFormatter: utils.toDecimal},
 
     // deprecated properties
     { name: 'listening', getter: 'net_listening', setter: 'eth_setListening', newProperty: 'net.listening'},
@@ -1989,7 +2041,7 @@ var inputTransactionFormatter = function (options){
     }
 
     ['gasPrice', 'gas', 'value'].forEach(function(key){
-        options[key] = utils.toHex(options[key]);
+        options[key] = utils.fromDecimal(options[key]);
     });
 
     return options;
@@ -2044,6 +2096,7 @@ var outputLogFormatter = function(log){
     return log;
 };
 
+
 /**
  * Formats the input of a whisper post and converts all values to HEX
  *
@@ -2053,9 +2106,9 @@ var outputLogFormatter = function(log){
 */
 var inputPostFormatter = function(post){
 
-    post.payload = utils.fromAscii(post.payload);
-    post.ttl = utils.toHex(post.ttl);
-    post.workToProve = utils.toHex(post.workToProve);
+    post.payload = utils.toHex(post.payload);
+    post.ttl = utils.fromDecimal(post.ttl);
+    post.workToProve = utils.fromDecimal(post.workToProve);
 
     if(!(post.topic instanceof Array))
         post.topic = [post.topic];
@@ -2362,8 +2415,11 @@ var requestManager = function() {
 
         // format the input before sending
         if(typeof data.inputFormatter === 'function') {
-            data.params = Array.prototype.map.call(data.params, function(item){
-                return data.inputFormatter(item);
+            data.params = Array.prototype.map.call(data.params, function(item, index){
+                // format everything besides the defaultblock
+                return (index+1 < data.addDefaultblock)
+                    ? data.inputFormatter(item)
+                    : item;
             });
         }
 
