@@ -31,10 +31,10 @@ describe('event', function () {
             var address = '0x012345';
             var signature = '0x987654';
             var options = {
-                earliest: 1,
-                latest: 2,
+                fromBlock: 1,
+                toBlock: 2,
                 offset: 3,
-                max: 4
+                limit: 4
             };
             var e = {
                 name: 'Event',
@@ -49,10 +49,10 @@ describe('event', function () {
             assert.equal(result.address, address);
             assert.equal(result.topic.length, 1);
             assert.equal(result.topic[0], signature);
-            assert.equal(result.earliest, options.earliest);
-            assert.equal(result.latest, options.latest);
+            assert.equal(result.fromBlock, options.fromBlock);
+            assert.equal(result.toBlock, options.toBlock);
             assert.equal(result.offset, options.offset);
-            assert.equal(result.max, options.max);
+            assert.equal(result.limit, options.limit);
         
         });
 
@@ -62,10 +62,10 @@ describe('event', function () {
             var address = '0x012345';
             var signature = '0x987654';
             var options = {
-                earliest: 1,
-                latest: 2,
+                fromBlock: 1,
+                toBlock: 2,
                 offset: 3,
-                max: 4
+                limit: 4
             };
             var e = {
                 name: 'Event',
@@ -81,10 +81,10 @@ describe('event', function () {
             assert.equal(result.topic.length, 2);
             assert.equal(result.topic[0], signature);
             assert.equal(result.topic[1], f.formatInputInt(4));
-            assert.equal(result.earliest, options.earliest);
-            assert.equal(result.latest, options.latest);
+            assert.equal(result.fromBlock, options.fromBlock);
+            assert.equal(result.toBlock, options.toBlock);
             assert.equal(result.offset, options.offset);
-            assert.equal(result.max, options.max);
+            assert.equal(result.limit, options.limit);
 
         });
 
