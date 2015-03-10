@@ -2,7 +2,7 @@
 
 var web3 = require("../index.js");
 
-web3.setProvider(new web3.providers.HttpSyncProvider('http://localhost:8080'));
+web3.setProvider(new web3.providers.HttpProvider('http://localhost:8080'));
 
 var coinbase = web3.eth.coinbase;
 console.log(coinbase);
