@@ -834,6 +834,9 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:5 */
 
+    if(typeof val === 'boolean')
+        return val;
+
     if(isBigNumber(val))
         return fromDecimal(val);
 
@@ -1618,6 +1621,32 @@ module.exports = {
  * @date 2015
  */
 
+/**
+ * Web3
+ * 
+ * @module web3
+ */
+
+/**
+ * Eth methods and properties
+ *
+ * An example method object can look as follows:
+ *
+ *      {
+ *      name: 'getBlock',
+ *      call: blockCall,
+ *      outputFormatter: formatters.outputBlockFormatter,
+ *      inputFormatter: [ // can be a formatter funciton or an array of functions. Where each item in the array will be used for one parameter
+ *           utils.toHex, // formats paramter 1
+ *           function(param){ if(!param) return false; } // formats paramter 2
+ *         ]
+ *       },
+ *
+ * @class [web3] eth
+ * @constructor
+ */
+
+
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
@@ -1644,20 +1673,36 @@ var uncleCountCall = function (args) {
 
 /// @returns an array of objects describing web3.eth api methods
 var methods = [
-    { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2, outputFormatter: formatters.convertToBigNumber},
+    { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2,
+        outputFormatter: formatters.convertToBigNumber},
     { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
-    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3, inputFormatter: utils.toHex},
+    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3,
+        inputFormatter: utils.toHex},
     { name: 'getData', call: 'eth_getData', addDefaultblock: 2},
-    { name: 'getBlock', call: blockCall, outputFormatter: formatters.outputBlockFormatter, inputFormatter: utils.toHex},
-    { name: 'getUncle', call: uncleCall, outputFormatter: formatters.outputBlockFormatter, inputFormatter: utils.toHex},
+    { name: 'getBlock', call: blockCall,
+        outputFormatter: formatters.outputBlockFormatter,
+        inputFormatter: [utils.toHex, function(param){ return (!param) ? false : true; }]},
+    { name: 'getUncle', call: uncleCall,
+        outputFormatter: formatters.outputBlockFormatter,
+        inputFormatter: [utils.toHex, function(param){ return (!param) ? false : true; }]},
     { name: 'getCompilers', call: 'eth_getCompilers' },
-    { name: 'getBlockTransactionCount', call: getBlockTransactionCountCall,  outputFormatter: utils.toDecimal, inputFormatter: utils.toHex },
-    { name: 'getBlockUncleCount', call: uncleCountCall,  outputFormatter: utils.toDecimal, inputFormatter: utils.toHex },
-    { name: 'getTransaction', call: 'eth_getTransactionByHash', outputFormatter: formatters.outputTransactionFormatter },
-    { name: 'getTransactionFromBlock', call: transactionFromBlockCall, outputFormatter: formatters.outputTransactionFormatter, inputFormatter: utils.toHex },
-    { name: 'getTransactionCount', call: 'eth_getTransactionCount', addDefaultblock: 2, outputFormatter: utils.toDecimal},
-    { name: 'sendTransaction', call: 'eth_sendTransaction', inputFormatter: formatters.inputTransactionFormatter },
-    { name: 'call', call: 'eth_call', addDefaultblock: 2, inputFormatter: formatters.inputCallFormatter },
+    { name: 'getBlockTransactionCount', call: getBlockTransactionCountCall,
+        outputFormatter: utils.toDecimal,
+        inputFormatter: utils.toHex },
+    { name: 'getBlockUncleCount', call: uncleCountCall,
+        outputFormatter: utils.toDecimal,
+        inputFormatter: utils.toHex },
+    { name: 'getTransaction', call: 'eth_getTransactionByHash',
+        outputFormatter: formatters.outputTransactionFormatter },
+    { name: 'getTransactionFromBlock', call: transactionFromBlockCall,
+        outputFormatter: formatters.outputTransactionFormatter,
+        inputFormatter: utils.toHex },
+    { name: 'getTransactionCount', call: 'eth_getTransactionCount', addDefaultblock: 2,
+        outputFormatter: utils.toDecimal},
+    { name: 'sendTransaction', call: 'eth_sendTransaction',
+        inputFormatter: formatters.inputTransactionFormatter },
+    { name: 'call', call: 'eth_call', addDefaultblock: 2,
+        inputFormatter: formatters.inputCallFormatter },
     { name: 'compile.solidity', call: 'eth_compileSolidity' },
     { name: 'compile.lll', call: 'eth_compileLLL' },
     { name: 'compile.serpent', call: 'eth_compileSerpent' },
@@ -2085,6 +2130,7 @@ var inputCallFormatter = function (options){
     return options;
 };
 
+
 /**
  * Formats the output of a block to its proper values
  *
@@ -2104,6 +2150,13 @@ var outputBlockFormatter = function(block){
     block.minGasPrice = utils.toBigNumber(block.minGasPrice);
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
+
+    if(block.transactions instanceof Array) {
+        block.transactions.forEach(function(item){
+            if(!utils.isString(item))
+                return outputTransactionFormatter(item);
+        });
+    }
 
     return block;
 };
@@ -2438,7 +2491,7 @@ var requestManager = function() {
     var send = function (data, callback) {
         /*jshint maxcomplexity: 7 */
 
-        // format the input before sending
+        // FORMAT BASED ON ONE FORMATTER function
         if(typeof data.inputFormatter === 'function') {
             data.params = Array.prototype.map.call(data.params, function(item, index){
                 // format everything besides the defaultblock, which is already formated
@@ -2446,7 +2499,17 @@ var requestManager = function() {
                     ? data.inputFormatter(item)
                     : item;
             });
+
+        // FORMAT BASED ON the input FORMATTER ARRAY
+        } else if(data.inputFormatter instanceof Array) {
+            data.params = Array.prototype.map.call(data.inputFormatter, function(formatter, index){
+                // format everything besides the defaultblock, which is already formated
+                return (!data.addDefaultblock || index+1 < data.addDefaultblock)
+                    ? formatter(data.params[index])
+                    : data.params[index];
+            });
         }
+
 
         var payload = jsonrpc.toPayload(data.method, data.params);
         
