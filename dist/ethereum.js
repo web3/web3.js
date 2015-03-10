@@ -1474,7 +1474,7 @@ var addEventRelatedPropertiesToContract = function (contract, desc, address) {
         return parser(data);
     };
     
-    Object.defineProperty(contract, 'topic', {
+    Object.defineProperty(contract, 'topics', {
         get: function() {
             return utils.filterEvents(desc).map(function (e) {
                 return signature.eventSignatureFromAscii(e.name);
@@ -1837,10 +1837,10 @@ var inputParser = function (address, sign, event) {
     return function (indexed, options) {
         var o = options || {};
         o.address = address;
-        o.topic = [];
-        o.topic.push(sign);
+        o.topics = [];
+        o.topics.push(sign);
         if (indexed) {
-            o.topic = o.topic.concat(indexedParamsToTopics(event, indexed));
+            o.topics = o.topics.concat(indexedParamsToTopics(event, indexed));
         }
         return o;
     };
@@ -1872,12 +1872,12 @@ var outputParser = function (event) {
         };
 
         output.topics = output.topic; // fallback for go-ethereum
-        if (!output.topic) {
+        if (!output.topics) {
             return result;
         }
        
         var indexedOutputs = filterInputs(event.inputs, true);
-        var indexedData = "0x" + output.topic.slice(1, output.topic.length).map(function (topic) { return topic.slice(2); }).join("");
+        var indexedData = "0x" + output.topics.slice(1, output.topics.length).map(function (topics) { return topics.slice(2); }).join("");
         var indexedRes = abi.formatOutput(indexedOutputs, indexedData);
 
         var notIndexedOutputs = filterInputs(event.inputs, false);
@@ -1892,7 +1892,7 @@ var outputParser = function (event) {
 var getMatchingEvent = function (events, payload) {
     for (var i = 0; i < events.length; i++) {
         var sign = signature.eventSignatureFromAscii(events[i].name); 
-        if (sign === payload.topic[0]) {
+        if (sign === payload.topics[0]) {
             return events[i];
         }
     }
@@ -2228,12 +2228,12 @@ var inputPostFormatter = function(post){
     post.ttl = utils.fromDecimal(post.ttl);
     post.workToProve = utils.fromDecimal(post.workToProve);
 
-    if(!(post.topic instanceof Array))
-        post.topic = [post.topic];
+    if(!(post.topics instanceof Array))
+        post.topics = [post.topics];
 
 
     // format the following options
-    post.topic = post.topic.map(function(topic){
+    post.topics = post.topics.map(function(topic){
         return utils.fromAscii(topic);
     });
 
@@ -2262,7 +2262,7 @@ var outputPostFormatter = function(post){
     }
 
     // format the following options
-    post.topic = post.topic.map(function(topic){
+    post.topics = post.topics.map(function(topic){
         return utils.toAscii(topic);
     });
 
