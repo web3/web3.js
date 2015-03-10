@@ -5,7 +5,7 @@
     <script type="text/javascript" src="../dist/ethereum.js"></script>
     <script type="text/javascript">
         var web3 = require('web3');
-        web3.setProvider(new web3.providers.HttpSyncProvider('http://localhost:8080'));
+        web3.setProvider(new web3.providers.HttpProvider('http://localhost:8080'));
 
         var source = "" + 
         "contract Contract { " +
@@ -39,7 +39,7 @@
         };
     
         var createContract = function () {
-            address = web3.eth.transact({code: web3.eth.solidity(source)});
+            address = web3.eth.sendTransaction({data: web3.eth.compile.solidity(source)});
             contract = web3.eth.contract(address, desc); 
             contract.Incremented({odd: true}).changed(update);
             
