@@ -12,14 +12,14 @@ describe('formatters', function () {
                 to: '0x00000',
                 payload: {test: 'test'},
                 ttl: 200,
-                workToProve: 1000,
+                priority: 1000,
                 topics: ['hello','mytopics']
             }), {
                 from: '0x00000',
                 to: '0x00000',
                 payload: '0x7b2274657374223a2274657374227d',
                 ttl: '0xc8',
-                workToProve: '0x3e8',
+                priority: '0x3e8',
                 topics: ['0x68656c6c6f','0x6d79746f70696373']
             });
 

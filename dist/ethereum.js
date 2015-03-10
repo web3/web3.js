@@ -2235,7 +2235,7 @@ var inputPostFormatter = function(post){
 
     post.payload = utils.toHex(post.payload);
     post.ttl = utils.fromDecimal(post.ttl);
-    post.workToProve = utils.fromDecimal(post.workToProve);
+    post.priority = utils.fromDecimal(post.priority);
 
     if(!(post.topics instanceof Array))
         post.topics = [post.topics];
@@ -2261,6 +2261,7 @@ var outputPostFormatter = function(post){
     post.expiry = utils.toDecimal(post.expiry);
     post.sent = utils.toDecimal(post.sent);
     post.ttl = utils.toDecimal(post.ttl);
+    post.workProved = utils.toDecimal(post.workProved);
     post.payloadRaw = post.payload;
     post.payload = utils.toAscii(post.payload);
 
