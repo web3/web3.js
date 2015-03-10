@@ -10,14 +10,14 @@ describe('formatters', function () {
                 sent: '0x3e8',
                 ttl: '0x3e8',
                 payload: '0x7b2274657374223a2274657374227d',
-                topic: ['0x68656c6c6f','0x6d79746f70696373']                
+                topics: ['0x68656c6c6f','0x6d79746f70696373']                
             }), {
                 expiry: 1000,
                 sent: 1000,
                 ttl: 1000,
                 payload: {test: 'test'},
                 payloadRaw: '0x7b2274657374223a2274657374227d',
-                topic: ['hello','mytopics']
+                topics: ['hello','mytopics']
             });
         });
     });
