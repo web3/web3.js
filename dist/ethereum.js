@@ -1182,7 +1182,7 @@ var stopPolling = function (id) {
 };
 
 var ethWatch = {
-    startPolling: startPolling.bind(null, 'eth_getFilterchanges'), 
+    startPolling: startPolling.bind(null, 'eth_getFilterChanges'), 
     stopPolling: stopPolling
 };
 
