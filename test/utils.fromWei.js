@@ -32,7 +32,7 @@ describe('utils', function () {
             assert.throws(function () {
                     utils.fromWei(1000000000000000000, 'yooo')
                 },
-                /Invalid Unit/);
+                /Error: This unit doesn't exists/);
         });
     });
 });
