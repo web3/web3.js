@@ -2609,7 +2609,6 @@ var requestManager = function() {
             var result = provider.send(payload);
 
             if (!jsonrpc.isValidResponse(result)) {
-                console.log(result);
                 if(typeof result === 'object' && result.error && result.error.message)
                     console.error(result.error.message);
                 return null;
