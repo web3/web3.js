@@ -1,38 +1,46 @@
 # Ethereum JavaScript API
 
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
-which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module and also for bower and component as an embeddable js
+which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
 
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url][![Coverage Status][coveralls-image]][coveralls-url]
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
+You need to run a local ethrereum node to use this library.
+
+[Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+
 ## Installation
 
 ### Node.js
 
-    npm install ethereum.js
+    $ npm install ethereum.js
 
-### For browser
+### Meteor.js
+
+    $ meteor add ethereum:js
+
+### As Browser module
 Bower
 
-	bower install ethereum.js
+	$ bower install ethereum.js
 
 Component
 
-	component install ethereum/ethereum.js
+	$ component install ethereum/ethereum.js
 
-* Include `ethereum.min.js` in your html file.
-* Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/)
+* Include `ethereum.min.js` in your html file. (not required for the meteor package)
+* Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
-Require the library:
+Require the library (not required for the meteor package):
 
 	var web3 = require('web3');
 
-Set a provider (QtSyncProvider, HttpSyncProvider)
+Set a provider (QtSyncProvider, HttpProvider)
 
-	web3.setProvider(new web3.providers.HttpSyncProvider());
+	web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
 There you go, now you can use it:
 
@@ -43,6 +51,7 @@ var balance = web3.eth.getBalance(coinbase);
 
 
 For another example see `example/index.html`.
+
 
 ## Contribute!
 

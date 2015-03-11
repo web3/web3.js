@@ -1,5 +1,6 @@
-var assert = require('assert');
-var utils = require('../lib/utils.js');
+var chai = require('chai');
+var utils = require('../lib/utils/utils');
+var assert = chai.assert;
 
 describe('utils', function () {
     describe('toWei', function () {
@@ -17,6 +18,8 @@ describe('utils', function () {
             assert.equal(utils.toWei(1, 'mether'), '1000000000000000000000000');
             assert.equal(utils.toWei(1, 'gether'), '1000000000000000000000000000');
             assert.equal(utils.toWei(1, 'tether'), '1000000000000000000000000000000');
+
+            assert.throws(function () {utils.toWei(1, 'wei1');}, Error);
         });
     });
 });

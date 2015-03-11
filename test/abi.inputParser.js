@@ -1,7 +1,7 @@
 var assert    = require('assert');
-var BigNumber = require('bn.js');
-var abi       = require('../lib/abi.js');
-var clone     = function(object) {
+var BigNumber = require('bignumber.js');
+var abi       = require('../lib/solidity/abi.js');
+var clone     = function (object) {
     return JSON.parse(JSON.stringify(object));
 };
 
@@ -18,9 +18,9 @@ var description = [{
     }]
 }];
 
-describe('abi', function() {
-    describe('inputParser', function() {
-        it('should parse input uint', function() {
+describe('abi', function () {
+    describe('inputParser', function () {
+        it('should parse input uint', function () {
 
             // given
             var d = clone(description);
@@ -40,7 +40,7 @@ describe('abi', function() {
                 "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
             );
 
-            assert.equal(new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).toString(16), 
+            assert.equal(new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).toString(16),
                 "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
 
             assert.equal(
@@ -54,7 +54,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input uint128', function() {
+        it('should parse input uint128', function () {
 
             // given
             var d = clone(description);
@@ -84,7 +84,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input uint256', function() {
+        it('should parse input uint256', function () {
 
             // given
             var d = clone(description);
@@ -114,7 +114,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input int', function() {
+        it('should parse input int', function () {
 
             // given
             var d = clone(description);
@@ -146,7 +146,7 @@ describe('abi', function() {
             assert.equal(parser.test('3.9'), "0000000000000000000000000000000000000000000000000000000000000003");
         });
 
-        it('should parse input int128', function() {
+        it('should parse input int128', function () {
 
             // given
             var d = clone(description);
@@ -179,7 +179,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input int256', function() {
+        it('should parse input int256', function () {
 
             // given
             var d = clone(description);
@@ -212,7 +212,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input bool', function() {
+        it('should parse input bool', function () {
 
             // given
             var d = clone(description);
@@ -230,7 +230,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input hash', function() {
+        it('should parse input hash', function () {
 
             // given
             var d = clone(description);
@@ -247,7 +247,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input hash256', function() {
+        it('should parse input hash256', function () {
 
             // given
             var d = clone(description);
@@ -265,7 +265,7 @@ describe('abi', function() {
         });
 
 
-        it('should parse input hash160', function() {
+        it('should parse input hash160', function () {
             // given
             var d = clone(description);
 
@@ -280,7 +280,7 @@ describe('abi', function() {
             assert.equal(parser.test("0x407d73d8a49eeb85d32cf465507dd71d507100c1"), "000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1");
         });
 
-        it('should parse input address', function() {
+        it('should parse input address', function () {
 
             // given
             var d = clone(description);
@@ -297,7 +297,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input string', function() {
+        it('should parse input string', function () {
 
             // given
             var d = clone(description);
@@ -321,7 +321,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse input int followed by a string', function() {
+        it('should parse input int followed by a string', function () {
 
             // given
             var d = clone(description);
@@ -344,7 +344,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse input string followed by an int', function() {
+        it('should parse input string followed by an int', function () {
 
             // given
             var d = clone(description);
@@ -367,7 +367,7 @@ describe('abi', function() {
             );
         });
 
-        it('should use proper method name', function() {
+        it('should use proper method name', function () {
 
             // given
             var d = clone(description);
@@ -385,7 +385,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse multiple methods', function() {
+        it('should parse multiple methods', function () {
 
             // given
             var d = [{
@@ -420,7 +420,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse input array of ints', function() {
+        it('should parse input array of ints', function () {
 
             // given
             var d = clone(description);
@@ -441,7 +441,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse an array followed by an int', function() {
+        it('should parse an array followed by an int', function () {
 
             // given
             var d = clone(description);
@@ -465,7 +465,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse an int followed by an array', function() {
+        it('should parse an int followed by an array', function () {
 
             // given
             var d = clone(description);
@@ -489,7 +489,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse mixture of arrays and ints', function() {
+        it('should parse mixture of arrays and ints', function () {
 
             // given
             var d = clone(description);
@@ -523,7 +523,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse input real', function() {
+        it('should parse input real', function () {
 
             // given
             var d = clone(description);
@@ -536,14 +536,14 @@ describe('abi', function() {
             var parser = abi.inputParser(d);
 
             // then
-            assert.equal(parser.test([1]),      "0000000000000000000000000000000100000000000000000000000000000000");
-            assert.equal(parser.test([2]),  "0000000000000000000000000000000200000000000000000000000000000000");
-            assert.equal(parser.test([8]),    "0000000000000000000000000000000800000000000000000000000000000000");
-            assert.equal(parser.test([-1]),     "ffffffffffffffffffffffffffffffff00000000000000000000000000000000");
+            assert.equal(parser.test([1]), "0000000000000000000000000000000100000000000000000000000000000000");
+            assert.equal(parser.test([2]), "0000000000000000000000000000000200000000000000000000000000000000");
+            assert.equal(parser.test([8]), "0000000000000000000000000000000800000000000000000000000000000000");
+            assert.equal(parser.test([-1]), "ffffffffffffffffffffffffffffffff00000000000000000000000000000000");
 
         });
 
-        it('should parse input ureal', function() {
+        it('should parse input ureal', function () {
 
             // given
             var d = clone(description);
@@ -559,6 +559,24 @@ describe('abi', function() {
             assert.equal(parser.test([1]), "0000000000000000000000000000000100000000000000000000000000000000");
             assert.equal(parser.test([2]), "0000000000000000000000000000000200000000000000000000000000000000");
             assert.equal(parser.test([8]), "0000000000000000000000000000000800000000000000000000000000000000");
+        });
+
+        it('should throw an incorrect type error', function () {
+
+            // given
+            var d = clone(description);
+            d[0].inputs = [{
+                type: 'uin'
+            }]
+
+            // when
+            var parser = abi.inputParser(d);
+
+            // then
+            assert.throws(function () {
+                parser.test('0x')
+            }, Error);
+
         });
     });
 });

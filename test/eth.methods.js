@@ -5,7 +5,7 @@ var u = require('./test.utils.js');
 describe('web3', function() {
     describe('eth', function() {
         u.methodExists(web3.eth, 'getBalance');
-        u.methodExists(web3.eth, 'getState');
+        u.methodExists(web3.eth, 'getStorageAt');
         u.methodExists(web3.eth, 'getStorage');
         u.methodExists(web3.eth, 'getTransactionCount');
         u.methodExists(web3.eth, 'getData');
@@ -24,11 +24,9 @@ describe('web3', function() {
         u.methodExists(web3.eth, 'contract');
 
         u.propertyExists(web3.eth, 'coinbase');
-        u.propertyExists(web3.eth, 'listening');
         u.propertyExists(web3.eth, 'mining');
         u.propertyExists(web3.eth, 'gasPrice');
         u.propertyExists(web3.eth, 'accounts');
-        u.propertyExists(web3.eth, 'peerCount');
         u.propertyExists(web3.eth, 'defaultBlock');
         u.propertyExists(web3.eth, 'blockNumber');
     });
@@ -54,5 +52,8 @@ describe('web3', function() {
         // });
     });
 });
+
+
+
 
 

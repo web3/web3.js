@@ -1,7 +1,7 @@
-var assert = require('assert');
-var BigNumber = require('bn.js');
-var abi = require('../lib/abi.js');
-var clone = function(object) {
+var assert    = require('assert');
+var BigNumber = require('bignumber.js');
+var abi       = require('../lib/solidity/abi.js');
+var clone     = function (object) {
     return JSON.parse(JSON.stringify(object));
 };
 
@@ -18,9 +18,9 @@ var description = [{
     }]
 }];
 
-describe('abi', function() {
-    describe('outputParser', function() {
-        it('should parse output string', function() {
+describe('abi', function () {
+    describe('outputParser', function () {
+        it('should parse output string', function () {
 
             // given
             var d = clone(description);
@@ -48,7 +48,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse output uint', function() {
+        it('should parse output uint', function () {
 
             // given
             var d = clone(description);
@@ -73,7 +73,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output uint256', function() {
+        it('should parse output uint256', function () {
 
             // given
             var d = clone(description);
@@ -98,7 +98,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output uint128', function() {
+        it('should parse output uint128', function () {
 
             // given
             var d = clone(description);
@@ -123,7 +123,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output int', function() {
+        it('should parse output int', function () {
 
             // given
             var d = clone(description);
@@ -142,7 +142,7 @@ describe('abi', function() {
             assert.equal(parser.test("0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0")[0], -16);
         });
 
-        it('should parse output int256', function() {
+        it('should parse output int256', function () {
 
             // given
             var d = clone(description);
@@ -161,7 +161,7 @@ describe('abi', function() {
             assert.equal(parser.test("0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0")[0], -16);
         });
 
-        it('should parse output int128', function() {
+        it('should parse output int128', function () {
 
             // given
             var d = clone(description);
@@ -180,7 +180,7 @@ describe('abi', function() {
             assert.equal(parser.test("0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0")[0], -16);
         });
 
-        it('should parse output hash', function() {
+        it('should parse output hash', function () {
 
             // given
             var d = clone(description);
@@ -199,7 +199,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output hash256', function() {
+        it('should parse output hash256', function () {
 
             // given
             var d = clone(description);
@@ -218,7 +218,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output hash160', function() {
+        it('should parse output hash160', function () {
 
             // given
             var d = clone(description);
@@ -238,7 +238,7 @@ describe('abi', function() {
             // TODO shouldnt' the expected hash be shorter?
         });
 
-        it('should parse output address', function() {
+        it('should parse output address', function () {
 
             // given
             var d = clone(description);
@@ -257,7 +257,7 @@ describe('abi', function() {
             );
         });
 
-        it('should parse output bool', function() {
+        it('should parse output bool', function () {
 
             // given
             var d = clone(description);
@@ -276,7 +276,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse output real', function() {
+        it('should parse output real', function () {
 
             // given
             var d = clone(description);
@@ -295,7 +295,7 @@ describe('abi', function() {
             assert.equal(parser.test("0xffffffffffffffffffffffffffffffff00000000000000000000000000000000")[0], -1);
         });
 
-        it('should parse output ureal', function() {
+        it('should parse output ureal', function () {
 
             // given
             var d = clone(description);
@@ -315,7 +315,7 @@ describe('abi', function() {
         });
 
 
-        it('should parse multiple output strings', function() {
+        it('should parse multiple output strings', function () {
 
             // given
             var d = clone(description);
@@ -349,7 +349,7 @@ describe('abi', function() {
 
         });
 
-        it('should use proper method name', function() {
+        it('should use proper method name', function () {
 
             // given
             var d = clone(description);
@@ -368,7 +368,7 @@ describe('abi', function() {
         });
 
 
-        it('should parse multiple methods', function() {
+        it('should parse multiple methods', function () {
 
             // given
             var d = [{
@@ -404,7 +404,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse output array', function() {
+        it('should parse output array', function () {
 
             // given
             var d = clone(description);
@@ -431,7 +431,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse 0x value', function() {
+        it('should parse 0x value', function () {
 
             // given
             var d = clone(description);
@@ -447,7 +447,7 @@ describe('abi', function() {
 
         });
 
-        it('should parse 0x value', function() {
+        it('should parse 0x value', function () {
 
             // given
             var d = clone(description);
@@ -463,5 +463,21 @@ describe('abi', function() {
 
         });
 
+        it('should throw an incorrect type error', function () {
+
+            // given
+            var d = clone(description);
+            d[0].outputs = [{
+                type: 'uin'
+            }]
+
+            // when
+            var parser = abi.outputParser(d);
+
+            // then
+            assert.throws(function () {
+                parser.test('0x')
+            }, Error);
+        });
     });
 });

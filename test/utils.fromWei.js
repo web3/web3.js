@@ -1,10 +1,10 @@
-var assert = require('assert');
-var utils = require('../lib/utils.js');
+var assert    = require('assert');
+var utils     = require('../lib/utils/utils.js');
 var BigNumber = require('bn.js');
 
-describe('utils', function() {
-    describe('toWei', function() {
-        it('integers should return the correct value', function() {
+describe('utils', function () {
+    describe('fromWei', function () {
+        it('should return the correct value', function () {
 
             assert.equal(utils.fromWei(1000000000000000000, 'wei'), '1000000000000000000');
             assert.equal(utils.fromWei(1000000000000000000, 'kwei'), '1000000000000000');
@@ -15,10 +15,9 @@ describe('utils', function() {
             assert.equal(utils.fromWei(1000000000000000000, 'ether'), '1');
             assert.equal(utils.fromWei(new BigNumber(1000000000000000000), 'ether'), '1');
             assert.equal(utils.fromWei(111111111111111111111, 'ether'), '111');
-
         });
 
-        it('decimal should return the correct value', function() {
+        it('decimal should return the correct value', function () {
             assert.equal(utils.fromWei(1111111111111111111, 'ether'), '1.1');
 
             assert.equal(utils.fromWei(1100000000000000000, 'ether'), '1.1');
@@ -29,8 +28,8 @@ describe('utils', function() {
             assert.equal(utils.fromWei(1000000000000000000, 'tether'), '0.000000000001');
         });
 
-        it('throws exception for invalid units', function() {
-            assert.throws(function() {
+        it('throws exception for invalid units', function () {
+            assert.throws(function () {
                     utils.fromWei(1000000000000000000, 'yooo')
                 },
                 /Invalid Unit/);
