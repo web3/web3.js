@@ -29,6 +29,7 @@
     "jshint": ">=2.5.0",
     "karma": "^0.12.31",
     "karma-browserify": "^4.0.0",
+    "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.1.7",
     "karma-firefox-launcher": "^0.1.4",
     "karma-mocha": "^0.1.10",

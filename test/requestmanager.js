@@ -1,6 +1,6 @@
 var assert = require('assert');
 var tu = require('./test.utils.js');
-var rm = require('../lib/requestmanager')();
+var rm = require('../lib/web3/requestmanager')();
 
 describe('RequestManager', function () {
     describe('methods', function () {
