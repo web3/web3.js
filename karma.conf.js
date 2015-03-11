@@ -21,7 +21,6 @@ module.exports = function(config) {
         // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
         frameworks: ['browserify', 'mocha', 'chai'],
 
-
         // list of files / patterns to load in the browser
         files: [
             'node_modules/bignumber.js/bignumber.js',
@@ -48,7 +47,7 @@ module.exports = function(config) {
         // preprocess matching files before serving them to the browser
         // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
         preprocessors: {
-            'test/*.js': ['browserify']
+            'test/**/*.js': ['browserify']
         },
 
 
@@ -72,9 +71,7 @@ module.exports = function(config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        // // Chrome
-        // // PhantomJS
-        browsers: ['Chrome', 'Safari', 'Firefox'],
+        browsers: ['PhantomJS'],
         browserNoActivityTimeout: 10000,
         browserDisconnectTimeout: 5000,
 
