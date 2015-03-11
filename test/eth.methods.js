@@ -4,32 +4,31 @@ var u = require('./test.utils.js');
 
 describe('web3', function() {
     describe('eth', function() {
-        u.methodExists(web3.eth, 'balanceAt');
-        u.methodExists(web3.eth, 'stateAt');
-        u.methodExists(web3.eth, 'storageAt');
-        u.methodExists(web3.eth, 'countAt');
-        u.methodExists(web3.eth, 'codeAt');
-        u.methodExists(web3.eth, 'transact');
+        u.methodExists(web3.eth, 'getBalance');
+        u.methodExists(web3.eth, 'getStorageAt');
+        u.methodExists(web3.eth, 'getStorage');
+        u.methodExists(web3.eth, 'getTransactionCount');
+        u.methodExists(web3.eth, 'getData');
+        u.methodExists(web3.eth, 'sendTransaction');
         u.methodExists(web3.eth, 'call');
-        u.methodExists(web3.eth, 'block');
-        u.methodExists(web3.eth, 'transaction');
-        u.methodExists(web3.eth, 'uncle');
-        u.methodExists(web3.eth, 'compilers');
-        u.methodExists(web3.eth, 'lll');
-        u.methodExists(web3.eth, 'solidity');
-        u.methodExists(web3.eth, 'serpent');
-        u.methodExists(web3.eth, 'logs');
-        u.methodExists(web3.eth, 'transactionCount');
-        u.methodExists(web3.eth, 'uncleCount');
+        u.methodExists(web3.eth, 'getBlock');
+        u.methodExists(web3.eth, 'getTransaction');
+        u.methodExists(web3.eth, 'getUncle');
+        u.methodExists(web3.eth, 'getCompilers');
+        u.methodExists(web3.eth.compile, 'lll');
+        u.methodExists(web3.eth.compile, 'solidity');
+        u.methodExists(web3.eth.compile, 'serpent');
+        u.methodExists(web3.eth, 'getBlockTransactionCount');
+        u.methodExists(web3.eth, 'getBlockUncleCount');
+        u.methodExists(web3.eth, 'filter');
+        u.methodExists(web3.eth, 'contract');
 
         u.propertyExists(web3.eth, 'coinbase');
-        u.propertyExists(web3.eth, 'listening');
         u.propertyExists(web3.eth, 'mining');
         u.propertyExists(web3.eth, 'gasPrice');
         u.propertyExists(web3.eth, 'accounts');
-        u.propertyExists(web3.eth, 'peerCount');
         u.propertyExists(web3.eth, 'defaultBlock');
-        u.propertyExists(web3.eth, 'number');
+        u.propertyExists(web3.eth, 'blockNumber');
     });
 
     // Fail at the moment
@@ -53,5 +52,8 @@ describe('web3', function() {
     //     });
     // });
 });
+
+
+
 
 

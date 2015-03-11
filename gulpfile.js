@@ -70,10 +70,6 @@ gulp.task('build', ['clean'], function() {
             expose: 'web3'
         })
         .add('./' + src + '.js')
-        .transform('envify', {
-            NODE_ENV: 'build'
-        })
-        .transform('unreachable-branch-transform')
         .bundle()
         .pipe(exorcist(path.join(DEST, dst + '.js.map')))
         .pipe(source(dst + '.js'))
