@@ -817,9 +817,7 @@ var fromDecimal = function (value) {
     var number = toBigNumber(value);
     var result = number.toString(16);
 
-    return (number.lessThan(0))
-        ? '-0x' + result.substr(1)
-        : '0x' + result;
+    return number.lessThan(0) ? '-0x' + result.substr(1) : '0x' + result;
 };
 
 /**
@@ -832,6 +830,7 @@ var fromDecimal = function (value) {
  * @return {String}
  */
 var toHex = function (val) {
+    /*jshint maxcomplexity:7 */
 
     if(isBoolean(val))
         return val;
@@ -893,8 +892,7 @@ var getValueOfUnit = function (unit) {
 var fromWei = function(number, unit) {
     var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
 
-    return (isBigNumber(number))
-        ? returnValue : returnValue.toString(10); 
+    return isBigNumber(number) ? returnValue : returnValue.toString(10); 
 };
 
 /**
@@ -920,8 +918,7 @@ var fromWei = function(number, unit) {
 var toWei = function(number, unit) {
     var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
 
-    return (isBigNumber(number))
-        ? returnValue : returnValue.toString(10); 
+    return isBigNumber(number) ? returnValue : returnValue.toString(10); 
 };
 
 /**
@@ -932,13 +929,16 @@ var toWei = function(number, unit) {
  * @return {BigNumber} BigNumber
 */
 var toBigNumber = function(number) {
+    /*jshint maxcomplexity:5 */
     number = number || 0;
     if (isBigNumber(number))
         return number;
 
-    return (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0))
-        ? new BigNumber(number.replace('0x',''), 16)
-        : new BigNumber(number.toString(10), 10);
+    if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
+        return new BigNumber(number.replace('0x',''), 16);
+    }
+   
+    return new BigNumber(number.toString(10), 10);
 };
 
 /**
@@ -1029,6 +1029,17 @@ var isBoolean = function (object) {
     return typeof object === 'boolean';
 };
 
+/**
+ * Returns true if object is array, otherwise false
+ *
+ * @method isArray
+ * @param {Object}
+ * @return {Boolean}
+ */
+var isArray = function (object) {
+    return object instanceof Array; 
+};
+
 module.exports = {
     findIndex: findIndex,
     toHex: toHex,
@@ -1049,7 +1060,8 @@ module.exports = {
     isFunction: isFunction,
     isString: isString,
     isObject: isObject,
-    isBoolean: isBoolean
+    isBoolean: isBoolean,
+    isArray: isArray
 };
 
 
@@ -1950,7 +1962,7 @@ var implementationIsValid = function (i) {
 /// @param should be string or object
 /// @returns options string or object
 var getOptions = function (options) {
-    /*jshint maxcomplexity:5 */
+    /*jshint maxcomplexity:9 */
 
     if (typeof options === 'string') {
         return options;
@@ -2043,11 +2055,9 @@ var filter = function(options, implementation, formatter) {
     var get = function () {
         var results = implementation.getLogs(filterId);
 
-        return (results instanceof Array)
-            ? results.map(function(message){
+        return utils.isArray(results) ? results.map(function(message){
                 return formatter ? formatter(message) : message;
-            })
-            : results;
+            }) : results;
     };
     
     return {
@@ -2335,7 +2345,7 @@ HttpProvider.prototype.send = function (payload, callback) {
             if(request.readyState === 4) {
                 var result = '';
                 try {
-                    result = JSON.parse(request.responseText)
+                    result = JSON.parse(request.responseText);
                 } catch(error) {
                     result = error;
                 }
@@ -2547,24 +2557,20 @@ var requestManager = function() {
     var provider;
 
     var send = function (data, callback) {
-        /*jshint maxcomplexity: 7 */
+        /*jshint maxcomplexity: 8 */
 
         // FORMAT BASED ON ONE FORMATTER function
         if(typeof data.inputFormatter === 'function') {
             data.params = Array.prototype.map.call(data.params, function(item, index){
                 // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock)
-                    ? data.inputFormatter(item)
-                    : item;
+                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? data.inputFormatter(item) : item;
             });
 
         // FORMAT BASED ON the input FORMATTER ARRAY
         } else if(data.inputFormatter instanceof Array) {
             data.params = Array.prototype.map.call(data.inputFormatter, function(formatter, index){
                 // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock)
-                    ? formatter(data.params[index])
-                    : data.params[index];
+                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? formatter(data.params[index]) : data.params[index];
             });
         }
 
@@ -2650,7 +2656,7 @@ var requestManager = function() {
     var poll = function () {
         polls.forEach(function (data) {
             // send async
-            send(data.data, function(result){
+            send(data.data, function(error, result){
                 if (!(result instanceof Array) || result.length === 0) {
                     return;
                 }

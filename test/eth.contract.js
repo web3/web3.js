@@ -52,7 +52,7 @@ describe('contract', function() {
         // when
         var Con = contract(description);
         var myCon = new Con(null);
-
+        
         // then
         assert.equal('function', typeof myCon.test); 
         assert.equal('function', typeof myCon.test['uint256']);
