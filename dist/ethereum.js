@@ -1105,7 +1105,7 @@ var c = require('./utils/config');
 /// @returns an array of objects describing web3 api methods
 var web3Methods = function () {
     return [
-    { name: 'sha3', call: 'web3_sha3' }
+    { name: 'sha3', call: 'web3_sha3', inputFormatter: utils.toHex }
     ];
 };
 
