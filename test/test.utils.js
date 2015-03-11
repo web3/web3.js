@@ -1,4 +1,5 @@
-var assert = require('assert');
+var chai   = require('chai');
+var assert = chai.assert;
 
 var methodExists = function (object, method) {
     it('should have method ' + method + ' implemented', function() {
