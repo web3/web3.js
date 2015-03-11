@@ -2656,7 +2656,7 @@ var requestManager = function() {
     var poll = function () {
         polls.forEach(function (data) {
             // send async
-            send(data.data, function(result){
+            send(data.data, function(error, result){
                 if (!(result instanceof Array) || result.length === 0) {
                     return;
                 }
