@@ -1,7 +1,8 @@
 
-var assert = require('assert');
-var web3 = require('../index.js');
-var u = require('./test.utils.js');
+var chai   = require('chai');
+var assert = chai.assert;
+var web3   = require('../index.js');
+var u      = require('./test.utils.js');
 
 describe('web3', function() {
     describe('db', function() {
