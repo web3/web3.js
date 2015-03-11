@@ -44,8 +44,8 @@
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "jshint *.js lib",
-    "test": "mocha",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "test": "mocha test/**/*.js",
+    "test-coveralls": "istanbul cover _mocha test/**/*.js -- -R spec && cat coverage/lcov.info | coveralls --verbose",
     "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox,PhantomJS\""
   },
   "repository": {
