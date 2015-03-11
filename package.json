@@ -1,7 +1,7 @@
 {
   "name": "ethereum.js",
   "namespace": "ethereum",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -39,7 +39,7 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
-    "lint": "gulp lint",
+    "lint": "jshint *.js lib",
     "test": "mocha",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
     "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox\""
