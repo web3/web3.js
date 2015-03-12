@@ -1092,7 +1092,7 @@ module.exports = {
  * @date 2014
  */
 
-var packagejson = require('../package.json');
+var version = require('../version.json');
 var net = require('./web3/net');
 var eth = require('./web3/eth');
 var db = require('./web3/db');
@@ -1246,7 +1246,7 @@ var shhWatch = {
 var web3 = {
 
     version: {
-        api: packagejson.version
+        api: version.version
     },
 
     manager: requestManager(),
@@ -1370,7 +1370,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"../package.json":21,"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
+},{"../version.json":21,"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2848,103 +2848,8 @@ module.exports = {
 
 },{}],21:[function(require,module,exports){
 module.exports={
-  "name": "ethereum.js",
-  "namespace": "ethereum",
-  "version": "0.1.3",
-  "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
-  "main": "./index.js",
-  "directories": {
-    "lib": "./lib"
-  },
-  "dependencies": {
-    "bignumber.js": ">=2.0.0",
-    "envify": "^3.0.0",
-    "unreachable-branch-transform": "^0.1.0",
-    "xmlhttprequest": "*"
-  },
-  "devDependencies": {
-    "bower": ">=1.3.0",
-    "browserify": ">=6.0",
-    "chai": "^2.1.1",
-    "coveralls": "^2.11.2",
-    "del": ">=0.1.1",
-    "exorcist": "^0.1.6",
-    "gulp": ">=3.4.0",
-    "gulp-jshint": ">=1.5.0",
-    "gulp-rename": ">=1.2.0",
-    "gulp-streamify": "0.0.5",
-    "gulp-uglify": ">=1.0.0",
-    "istanbul": "^0.3.5",
-    "jshint": ">=2.5.0",
-    "karma": "^0.12.31",
-    "karma-browserify": "^4.0.0",
-    "karma-chrome-launcher": "^0.1.7",
-    "karma-firefox-launcher": "^0.1.4",
-    "karma-mocha": "^0.1.10",
-    "karma-safari-launcher": "^0.1.1",
-    "mocha": ">=2.1.0",
-    "vinyl-source-stream": "^1.0.0"
-  },
-  "scripts": {
-    "build": "gulp",
-    "watch": "gulp watch",
-    "lint": "jshint *.js lib",
-    "test": "mocha",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
-    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox\""
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ethereum/ethereum.js.git"
-  },
-  "homepage": "https://github.com/ethereum/ethereum.js",
-  "bugs": {
-    "url": "https://github.com/ethereum/ethereum.js/issues"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "envify",
-        {
-          "NODE_ENV": "build"
-        }
-      ],
-      [
-        "unreachable-branch-transform"
-      ]
-    ]
-  },
-  "keywords": [
-    "ethereum",
-    "javascript",
-    "API"
-  ],
-  "author": "ethdev.com",
-  "authors": [
-    {
-      "name": "Jeffery Wilcke",
-      "email": "jeff@ethdev.com",
-      "url": "https://github.com/obscuren"
-    },
-    {
-      "name": "Marek Kotewicz",
-      "email": "marek@ethdev.com",
-      "url": "https://github.com/debris"
-    },
-    {
-      "name": "Marian Oancea",
-      "email": "marian@ethdev.com",
-      "url": "https://github.com/cubedro"
-    },
-    {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@ethdev.com",
-      "homepage": "https://github.com/frozeman"
-    }
-  ],
-  "license": "LGPL-3.0"
+    "version": "0.1.3"
 }
-
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
