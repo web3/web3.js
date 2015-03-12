@@ -1635,7 +1635,6 @@ module.exports = contract;
  * @date 2015
  */
 
-var utils = require('../utils/utils');
 
 /// @returns an array of objects describing web3.db api methods
 var methods = function () {
@@ -1651,7 +1650,7 @@ module.exports = {
     methods: methods
 };
 
-},{"../utils/utils":5}],9:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
