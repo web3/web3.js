@@ -2850,7 +2850,7 @@ module.exports = {
 module.exports={
   "name": "ethereum.js",
   "namespace": "ethereum",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
   "main": "./index.js",
   "directories": {
