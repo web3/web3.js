@@ -1087,10 +1087,12 @@ module.exports = {
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
 
+var packagejson = require('../package.json');
 var net = require('./web3/net');
 var eth = require('./web3/eth');
 var db = require('./web3/db');
@@ -1103,11 +1105,14 @@ var requestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 
 /// @returns an array of objects describing web3 api methods
-var web3Methods = function () {
-    return [
-    { name: 'sha3', call: 'web3_sha3' }
-    ];
-};
+var web3Methods = [
+    { name: 'sha3', call: 'web3_sha3', inputFormatter: utils.toHex },
+];
+var web3Properties = [
+    { name: 'version.client', getter: 'web3_clientVersion' },
+    { name: 'version.network', getter: 'net_version' }
+];
+
 
 /// creates methods in a given object based on method description on input
 /// setups api calls for these methods
@@ -1167,7 +1172,8 @@ var setupMethods = function (obj, methods) {
 /// setups api calls for these properties
 var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
-        var proto = {};
+        var objectProperties = property.name.split('.'),
+            proto = {};
         proto.get = function () {
 
             // show deprecated warning
@@ -1197,7 +1203,18 @@ var setupProperties = function (obj, properties) {
         }
 
         proto.enumerable = !property.newProperty;
-        Object.defineProperty(obj, property.name, proto);
+
+        if(objectProperties.length > 1) {
+            if(!obj[objectProperties[0]])
+                obj[objectProperties[0]] = {};
+
+            Object.defineProperty(obj[objectProperties[0]], objectProperties[1], proto);
+            // obj[objectProperties[0]][objectProperties[1]] = callFunction;
+        
+        } else {
+
+            Object.defineProperty(obj, property.name, proto);
+        }
 
     });
 };
@@ -1227,6 +1244,11 @@ var shhWatch = {
 
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {
+
+    version: {
+        api: packagejson.version
+    },
+
     manager: requestManager(),
     providers: {},
 
@@ -1334,7 +1356,8 @@ Object.defineProperty(web3.eth, 'defaultBlock', {
 
 
 /// setups all api methods
-setupMethods(web3, web3Methods());
+setupMethods(web3, web3Methods);
+setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
 setupProperties(web3.net, net.properties);
 setupMethods(web3.eth, eth.methods);
@@ -1347,7 +1370,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
+},{"../package.json":21,"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1615,13 +1638,15 @@ module.exports = contract;
  * @date 2015
  */
 
+var utils = require('../utils/utils');
+
 /// @returns an array of objects describing web3.db api methods
 var methods = function () {
     return [
-    { name: 'put', call: 'db_put' },
-    { name: 'get', call: 'db_get' },
-    { name: 'putString', call: 'db_putString' },
-    { name: 'getString', call: 'db_getString' }
+    { name: 'putString', call: 'db_putString'},
+    { name: 'getString', call: 'db_getString'},
+    { name: 'putHex', call: 'db_putHex'},
+    { name: 'getHex', call: 'db_getHex'}
     ];
 };
 
@@ -1629,7 +1654,7 @@ module.exports = {
     methods: methods
 };
 
-},{}],9:[function(require,module,exports){
+},{"../utils/utils":5}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1649,6 +1674,7 @@ module.exports = {
 /** @file eth.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
  */
 
@@ -1734,7 +1760,7 @@ var methods = [
         inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call', addDefaultblock: 2,
         inputFormatter: formatters.inputCallFormatter },
-    { name: 'compile.solidity', call: 'eth_compileSolidity', inputFormatter: utils.toHex },
+    { name: 'compile.solidity', call: 'eth_compileSolidity' },
     { name: 'compile.lll', call: 'eth_compileLLL', inputFormatter: utils.toHex },
     { name: 'compile.serpent', call: 'eth_compileSerpent', inputFormatter: utils.toHex },
     { name: 'flush', call: 'eth_flush' },
@@ -1941,6 +1967,7 @@ module.exports = {
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
@@ -2322,6 +2349,7 @@ module.exports = {
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2014
  */
 
@@ -2337,7 +2365,6 @@ var HttpProvider = function (host) {
 
 HttpProvider.prototype.send = function (payload, callback) {
     var request = new XMLHttpRequest();
-    request.open('POST', this.host, false);
 
     // ASYNC
     if(typeof callback === 'function') {
@@ -2539,6 +2566,7 @@ module.exports = QtSyncProvider;
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
@@ -2609,7 +2637,6 @@ var requestManager = function() {
             var result = provider.send(payload);
 
             if (!jsonrpc.isValidResponse(result)) {
-                console.log(result);
                 if(typeof result === 'object' && result.error && result.error.message)
                     console.error(result.error.message);
                 return null;
@@ -2818,6 +2845,105 @@ module.exports = {
     shh: shh
 };
 
+
+},{}],21:[function(require,module,exports){
+module.exports={
+  "name": "ethereum.js",
+  "namespace": "ethereum",
+  "version": "0.1.2",
+  "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
+  "main": "./index.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "bignumber.js": ">=2.0.0",
+    "envify": "^3.0.0",
+    "unreachable-branch-transform": "^0.1.0",
+    "xmlhttprequest": "*"
+  },
+  "devDependencies": {
+    "bower": ">=1.3.0",
+    "browserify": ">=6.0",
+    "chai": "^2.1.1",
+    "coveralls": "^2.11.2",
+    "del": ">=0.1.1",
+    "exorcist": "^0.1.6",
+    "gulp": ">=3.4.0",
+    "gulp-jshint": ">=1.5.0",
+    "gulp-rename": ">=1.2.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": ">=1.0.0",
+    "istanbul": "^0.3.5",
+    "jshint": ">=2.5.0",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.10",
+    "karma-safari-launcher": "^0.1.1",
+    "mocha": ">=2.1.0",
+    "vinyl-source-stream": "^1.0.0"
+  },
+  "scripts": {
+    "build": "gulp",
+    "watch": "gulp watch",
+    "lint": "jshint *.js lib",
+    "test": "mocha",
+    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ethereum/ethereum.js.git"
+  },
+  "homepage": "https://github.com/ethereum/ethereum.js",
+  "bugs": {
+    "url": "https://github.com/ethereum/ethereum.js/issues"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "envify",
+        {
+          "NODE_ENV": "build"
+        }
+      ],
+      [
+        "unreachable-branch-transform"
+      ]
+    ]
+  },
+  "keywords": [
+    "ethereum",
+    "javascript",
+    "API"
+  ],
+  "author": "ethdev.com",
+  "authors": [
+    {
+      "name": "Jeffery Wilcke",
+      "email": "jeff@ethdev.com",
+      "url": "https://github.com/obscuren"
+    },
+    {
+      "name": "Marek Kotewicz",
+      "email": "marek@ethdev.com",
+      "url": "https://github.com/debris"
+    },
+    {
+      "name": "Marian Oancea",
+      "email": "marian@ethdev.com",
+      "url": "https://github.com/cubedro"
+    },
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethdev.com",
+      "homepage": "https://github.com/frozeman"
+    }
+  ],
+  "license": "LGPL-3.0"
+}
 
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
