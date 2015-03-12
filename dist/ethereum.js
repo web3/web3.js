@@ -1174,6 +1174,7 @@ var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
         var objectProperties = property.name.split('.'),
             proto = {};
+
         proto.get = function () {
 
             // show deprecated warning
@@ -1208,13 +1209,9 @@ var setupProperties = function (obj, properties) {
             if(!obj[objectProperties[0]])
                 obj[objectProperties[0]] = {};
 
-            Object.defineProperty(obj[objectProperties[0]], objectProperties[1], proto);
-            // obj[objectProperties[0]][objectProperties[1]] = callFunction;
-        
-        } else {
-
+            Object.defineProperty(obj[objectProperties[0]], objectProperties[1], proto);        
+        } else
             Object.defineProperty(obj, property.name, proto);
-        }
 
     });
 };
