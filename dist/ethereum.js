@@ -58,7 +58,7 @@ var isArrayType = function (type) {
  */
 var dynamicTypeBytes = function (type, value) {
     // TODO: decide what to do with array of strings
-    if (isArrayType(type) || type === 'string')    // only string itself that is dynamic; stringX is static length.
+    if (isArrayType(type) || type === 'bytes')
         return f.formatInputInt(value.length);
     return "";
 };
@@ -99,7 +99,7 @@ var formatInput = function (inputs, params) {
             toAppendArrayContent += params[i].reduce(function (acc, curr) {
                 return acc + formatter(curr);
             }, "");
-        else if (inputs[i].type === 'string')
+        else if (inputs[i].type === 'bytes')
             toAppendArrayContent += formatter(params[i]);
         else
             toAppendConstant += formatter(params[i]);
@@ -118,7 +118,7 @@ var formatInput = function (inputs, params) {
  * @returns {Number} length of dynamic type, 0 or multiplication of ETH_PADDING (32)
  */
 var dynamicBytesLength = function (type) {
-    if (isArrayType(type) || type === 'string')   // only string itself that is dynamic; stringX is static length.
+    if (isArrayType(type) || type === 'bytes')
         return c.ETH_PADDING * 2;
     return 0;
 };
@@ -168,7 +168,7 @@ var formatOutput = function (outs, output) {
             }
             result.push(array);
         }
-        else if (types.prefixedType('string')(outs[i].type)) {
+        else if (types.prefixedType('bytes')(outs[i].type)) {
             dynamicPart = dynamicPart.slice(padding);
             result.push(formatter(output.slice(0, padding)));
             output = output.slice(padding);
@@ -509,8 +509,7 @@ var inputTypes = function () {
     return [
         { type: prefixedType('uint'), format: f.formatInputInt },
         { type: prefixedType('int'), format: f.formatInputInt },
-        { type: prefixedType('hash'), format: f.formatInputInt },
-        { type: prefixedType('string'), format: f.formatInputString }, 
+        { type: prefixedType('bytes'), format: f.formatInputString }, 
         { type: prefixedType('real'), format: f.formatInputReal },
         { type: prefixedType('ureal'), format: f.formatInputReal },
         { type: namedType('address'), format: f.formatInputInt },
@@ -525,8 +524,7 @@ var outputTypes = function () {
     return [
         { type: prefixedType('uint'), format: f.formatOutputUInt },
         { type: prefixedType('int'), format: f.formatOutputInt },
-        { type: prefixedType('hash'), format: f.formatOutputHash },
-        { type: prefixedType('string'), format: f.formatOutputString },
+        { type: prefixedType('bytes'), format: f.formatOutputString },
         { type: prefixedType('real'), format: f.formatOutputReal },
         { type: prefixedType('ureal'), format: f.formatOutputUReal },
         { type: namedType('address'), format: f.formatOutputAddress },
