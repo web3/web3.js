@@ -80,7 +80,7 @@ gulp.task('build', ['clean'], function() {
 });
 
 gulp.task('watch', function() {
-    gulp.watch(['./lib/*.js'], ['lint', 'build']);
+    gulp.watch(['./lib/**/*.js'], ['lint', 'build']);
 });
 
 gulp.task('doc', ['jsdoc']);
