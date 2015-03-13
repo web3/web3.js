@@ -1,12 +1,12 @@
-var assert   = require('assert');
-//var assert = chai.assert;
+var assert     = require('chai');
+var expect     = chai.expect;
 var formatters = require('../../lib/web3/formatters.js');
-var BigNumber = require('bignumber.js');
+var BigNumber  = require('bignumber.js');
+var assert     = require('assert');
 
 describe('formatters', function () {
     describe('outputBlockFormatter', function () {
         it('should return the correct value', function () {
-            
             assert.deepEqual(formatters.outputBlockFormatter({
                 hash: '0x34234kjh23kj4234',
                 parentHash: '0x34234kjh23kj4234',
