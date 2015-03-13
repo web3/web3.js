@@ -11,13 +11,8 @@ describe('web3', function () {
         tu.methodExists(web3, 'reset');
     });
 
-	describe('properties', function () {
+    describe('properties', function () {
         tu.propertyExists(web3, 'db');
         tu.propertyExists(web3, 'shh');
     });
-
-	// describe('methods', function () {
- 	//    it('placeholder', function(){    	
- 	//    });
- 	// });
 });
