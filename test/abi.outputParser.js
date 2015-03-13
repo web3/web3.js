@@ -27,7 +27,7 @@ describe('abi', function() {
             var d = clone(description);
 
             d[0].outputs = [
-                { type: "bytes32" }
+                { type: "bytes" }
             ];
 
             // when
@@ -265,8 +265,8 @@ describe('abi', function() {
             var d = clone(description);
 
             d[0].outputs = [
-                { type: "bytes32" },
-                { type: "bytes32" }
+                { type: "bytes" },
+                { type: "bytes" }
             ];
 
             // when
@@ -322,8 +322,8 @@ describe('abi', function() {
             },{
                 name: "test2",
                 type: "function",
-                inputs: [{ type: "bytes32" }],
-                outputs: [{ type: "bytes32" }]
+                inputs: [{ type: "bytes" }],
+                outputs: [{ type: "bytes" }]
             }];
 
             // when
