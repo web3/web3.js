@@ -60,7 +60,7 @@ gulp.task('jsdoc', ['clean-doc'], function() {
         inverseNav: false
     };
 
-    gulp.src(['./lib/*.js', 'README.md', './package.json'])
+    gulp.src(['./lib/**/*.js', 'README.md', './package.json'])
         .pipe(jsdoc('./doc', template));
 });
 
