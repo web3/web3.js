@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/chevdor/ethereum.js.png?label=ready&title=Ready)](https://waffle.io/chevdor/ethereum.js)
 # Ethereum JavaScript API
 
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
