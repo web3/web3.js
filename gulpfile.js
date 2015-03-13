@@ -38,7 +38,7 @@ gulp.task('clean', ['lint'], function(cb) {
 });
 
 gulp.task('lint', function() {
-    return gulp.src(['./*.js', './lib/*.js'])
+    return gulp.src(['./*.js', './lib/**/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
