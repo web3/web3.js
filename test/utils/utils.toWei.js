@@ -2,6 +2,8 @@ var chai   = require('chai');
 var assert = chai.assert;
 var utils = require('../../lib/utils/utils');
 
+/* globals describe, it */
+
 describe('utils', function () {
     describe('toWei', function () {
         it('should return the correct value', function () {

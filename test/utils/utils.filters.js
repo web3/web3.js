@@ -2,6 +2,8 @@ var chai   = require('chai');
 var utils  = require('../../lib/utils/utils.js');
 var assert = chai.assert;
 
+/* globals describe, it */
+
 describe('utils', function() {
     it('should filter functions and events from input array properly', function () {
 

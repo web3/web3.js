@@ -2,6 +2,8 @@ var chai   = require('chai');
 var assert = chai.assert;
 var utils = require('../../lib/utils/utils.js');
 
+/* globals describe, it */
+
 describe('utils', function () {
     describe('extractTypeName', function () {
         it('should extract type name from method with no params', function () {

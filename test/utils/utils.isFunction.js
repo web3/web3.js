@@ -2,6 +2,8 @@ var chai   = require('chai');
 var assert = chai.assert;
 var utils = require('../../lib/utils/utils.js');
 
+/* globals describe, it */
+
 var tests = [
     { func: function () {}, is: true},
     { func: new Function(), is: true},

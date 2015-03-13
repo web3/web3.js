@@ -2,6 +2,8 @@ var chai   = require('chai');
 var assert = chai.assert;
 var event  = require('../../lib/web3/event.js');
 
+/* globals describe, it */
+
 describe('event', function () {
     describe('outputParser', function () {
         it('should parse basic event output object', function () {

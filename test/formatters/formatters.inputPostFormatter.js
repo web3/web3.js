@@ -2,6 +2,8 @@ var chai   = require('chai');
 var assert = chai.assert;
 var formatters = require('../../lib/web3/formatters.js');
 
+/* globals describe, it */
+
 describe('formatters', function () {
     describe('inputPostFormatter', function () {
         it('should return the correct value', function () {

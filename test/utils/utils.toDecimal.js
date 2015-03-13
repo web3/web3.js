@@ -1,6 +1,8 @@
 var chai   = require('chai');
 var assert = chai.assert;
-var utils = require('../../lib/utils/utils.js');
+var utils  = require('../../lib/utils/utils.js');
+
+/* globals describe, it */
 
 describe('utils', function () {
     describe('toDecimal', function () {

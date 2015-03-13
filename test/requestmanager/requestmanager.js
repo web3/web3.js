@@ -1,7 +1,7 @@
-var chai   = require('chai');
-var assert = chai.assert;
-var tu     = require('../test.utils.js');
-var rm     = require('../../lib/web3/requestmanager')();
+var tu = require('../test.utils.js');
+var rm = require('../../lib/web3/requestmanager')();
+
+/* globals describe */
 
 describe('RequestManager', function () {
     describe('methods', function () {

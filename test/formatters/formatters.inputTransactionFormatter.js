@@ -3,6 +3,8 @@ var expect     = chai.expect;
 var formatters = require('../../lib/web3/formatters.js');
 var BigNumber  = require('bignumber.js');
 
+/* globals describe, it */
+
 describe('formatters', function () {
     describe('inputTransactionFormatter', function () {
         it('should return the correct value', function () {

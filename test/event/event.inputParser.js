@@ -1,7 +1,9 @@
 var chai   = require('chai');
-var assert = chai.assert;require('assert');
+var assert = chai.assert;
 var event  = require('../../lib/web3/event.js');
 var f      = require('../../lib/solidity/formatters.js');
+
+/* globals describe, it */
 
 describe('event', function () {
     describe('inputParser', function () {

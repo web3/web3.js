@@ -1,6 +1,5 @@
 var chai = require('chai');
-var assert = chai.assert;
-//var expect = chai.expect;
+var expect = chai.expect;
 var httpProvider = require('../../lib/web3/httpprovider');
 var u = require('../test.utils.js');
 
@@ -19,10 +18,10 @@ describe('httpprovider', function () {
         });
 
         it('constructs properly', function () {
-            assert.equal(h.name, 'HTTP');
-            assert.equal(h.host, 'http://localhost:8080');
-            assert.property(h, 'handlers');
-            assert.isArray(h.handlers);
+            expect(h.name).equal('HTTP');
+            expect(h.host).equal('http://localhost:8080');
+            expect(h).has.property('handlers');
+            expect(h.handlers).is.an('Array');
         });
     });
 });

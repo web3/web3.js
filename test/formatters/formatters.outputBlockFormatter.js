@@ -4,6 +4,8 @@ var formatters = require('../../lib/web3/formatters.js');
 var BigNumber  = require('bignumber.js');
 var assert     = require('assert');
 
+/* globals describe, it */
+
 describe('formatters', function () {
     describe('outputBlockFormatter', function () {
         it('should return the correct value', function () {

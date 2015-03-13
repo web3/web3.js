@@ -1,9 +1,7 @@
-var chai   = require('chai');
-var expect = chai.expect;
 var tu     = require('../test.utils.js');
 var types  = require('../../lib/solidity/types.js');
 
-/* globals describe, it */
+/* globals describe */
 
 describe('types', function () {
     describe('methods', function () {

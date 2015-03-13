@@ -3,6 +3,8 @@ var assert = chai.assert;
 var utils = require('../../lib/utils/utils.js');
 var BigNumber = require('bignumber.js');
 
+/* globals describe, it */
+
 var tests = [
     { value: function () {}, is: false},
     { value: new Function(), is: false},

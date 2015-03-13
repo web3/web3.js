@@ -1,7 +1,9 @@
-var chai   = require('chai');
-var assert = chai.assert;
-var utils = require('../../lib/utils/utils');
+var chai      = require('chai');
+var assert    = chai.assert;
+var utils     = require('../../lib/utils/utils');
 var BigNumber = require('bignumber.js');
+
+/* globals describe, it */
 
 var tests = [
     { value: 1, expected: '0x1' },

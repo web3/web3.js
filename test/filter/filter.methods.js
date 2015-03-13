@@ -3,6 +3,8 @@ var assert = chai.assert;
 var filter = require('../../lib/web3/filter');
 var u = require('../test.utils.js');
 
+/* globals describe, it */
+
 var empty = function () {};
 var implementation = {
     newFilter: empty,

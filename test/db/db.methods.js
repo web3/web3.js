@@ -1,7 +1,7 @@
-var chai   = require('chai');
-var assert = chai.assert; require('chai');
 var web3   = require('../../index.js');
 var u      = require('../test.utils.js');
+
+/* globals describe */
 
 describe('web3', function() {
     describe('db', function() {
