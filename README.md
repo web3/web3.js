@@ -8,7 +8,9 @@ which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JS
 [![Build Status][travis-image]][travis-url] 
 [![dependency status][dep-image]][dep-url] 
 [![dev dependency status][dep-dev-image]][dep-dev-url] 
-[![Coverage Status][coveralls-image]][coveralls-url]
+
+[![Coverage Status][coveralls-image]][coveralls-url] 
+[![Inline docs](http://inch-ci.org/github/chevdor/ethereum.js.svg)](http://inch-ci.org/github/chevdor/ethereum.js)
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
