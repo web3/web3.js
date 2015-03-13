@@ -1,10 +1,14 @@
-[![Stories in Ready](https://badge.waffle.io/chevdor/ethereum.js.png?label=ready&title=Ready)](https://waffle.io/chevdor/ethereum.js)
 # Ethereum JavaScript API
 
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
 which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url][![Coverage Status][coveralls-image]][coveralls-url]
+[![Stories in Ready](https://badge.waffle.io/chevdor/ethereum.js.png?label=ready&title=Ready)](https://waffle.io/chevdor/ethereum.js) 
+[![NPM version][npm-image]][npm-url] 
+[![Build Status][travis-image]][travis-url] 
+[![dependency status][dep-image]][dep-url] 
+[![dev dependency status][dep-dev-image]][dep-dev-url] 
+[![Coverage Status][coveralls-image]][coveralls-url]
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
