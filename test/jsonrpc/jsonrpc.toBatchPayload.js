@@ -1,6 +1,8 @@
 var chai    = require('chai');
-var assert  = chai.assert;
+var expect  = chai.expect;
 var jsonrpc = require('../../lib/web3/jsonrpc');
+
+/* globals describe, it */
 
 describe('jsonrpc', function () {
     describe('toBatchPayload', function () {
@@ -18,18 +20,18 @@ describe('jsonrpc', function () {
             var payload = jsonrpc.toBatchPayload(messages);
 
             // then
-            assert.equal(payload instanceof Array, true);
-            assert.equal(payload.length, 2);
-            assert.equal(payload[0].jsonrpc, '2.0');
-            assert.equal(payload[1].jsonrpc, '2.0');
-            assert.equal(payload[0].method, 'helloworld');
-            assert.equal(payload[1].method, 'test2');
-            assert.equal(payload[0].params instanceof Array, true);
-            assert.equal(payload[1].params.length, 1);
-            assert.equal(payload[1].params[0], 1);
-            assert.equal(typeof payload[0].id, 'number');
-            assert.equal(typeof payload[1].id, 'number');
-            assert.equal(payload[0].id + 1, payload[1].id);
+            expect(payload).is.an('Array');
+            expect(payload.length).equal(2);
+            expect(payload[0].jsonrpc).equal('2.0');
+            expect(payload[1].jsonrpc).equal('2.0');
+            expect(payload[0].method).equal('helloworld');
+            expect(payload[1].method).equal('test2');
+            expect(payload[0].params).is.an('Array');
+            expect(payload[1].params).length(1);
+            expect(payload[1].params[0]).equal(1);
+            expect(payload[0].id).is.a('number');
+            expect(payload[1].id).is.a('number');
+            expect(payload[0].id + 1).equal(payload[1].id);
         });
         
         it('should create batch payload for empty input array', function () {
@@ -41,8 +43,8 @@ describe('jsonrpc', function () {
             var payload = jsonrpc.toBatchPayload(messages);
 
             // then
-            assert.equal(payload instanceof Array, true);
-            assert.equal(payload.length, 0);
+            expect(payload).is.an('Array');
+            expect(payload).length(0);
         });
     });
 });
