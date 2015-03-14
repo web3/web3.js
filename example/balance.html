@@ -10,12 +10,21 @@
     web3.setProvider(new web3.providers.HttpProvider());
 
     function watchBalance() {
+
+        // we first retrive our address
         var coinbase = web3.eth.coinbase;
 
-        var originalBalance = web3.eth.getBalance(coinbase).toNumber();
+        // and display it on the page
         document.getElementById('coinbase').innerText = 'coinbase: ' + coinbase;
+        
+        // we get the balance for our address
+        var originalBalance = web3.eth.getBalance(coinbase).toNumber();
+        
+        // and display it
         document.getElementById('original').innerText = ' original balance: ' + originalBalance + '    watching...';
 
+        // we listen to the pending transaction to see if something new comes in
+        // if so, we check our balance again
         web3.eth.filter('pending').watch(function() {
             var currentBalance = web3.eth.getBalance(coinbase).toNumber();
             document.getElementById("current").innerText = 'current: ' + currentBalance;
