@@ -2,7 +2,7 @@
 
 'use strict';
 
-var version = require('./version.json');
+var version = require('./lib/version.json');
 var path = require('path');
 
 var del = require('del');

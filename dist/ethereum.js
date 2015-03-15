@@ -1064,6 +1064,10 @@ module.exports = {
 
 
 },{}],6:[function(require,module,exports){
+module.exports={
+    "version": "0.1.3"
+}
+},{}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1090,7 +1094,7 @@ module.exports = {
  * @date 2014
  */
 
-var version = require('../version.json');
+var version = require('./version.json');
 var net = require('./web3/net');
 var eth = require('./web3/eth');
 var db = require('./web3/db');
@@ -1365,7 +1369,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"../version.json":21,"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
+},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./version.json":6,"./web3/db":9,"./web3/eth":10,"./web3/filter":12,"./web3/net":16,"./web3/requestmanager":18,"./web3/shh":19,"./web3/watches":21}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1610,7 +1614,7 @@ function Contract(abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../utils/utils":5,"../web3":6,"./event":10,"./signature":19}],8:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":5,"../web3":7,"./event":11,"./signature":20}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1648,7 +1652,7 @@ module.exports = {
     methods: methods
 };
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1799,7 +1803,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":5,"./formatters":12}],10:[function(require,module,exports){
+},{"../utils/utils":5,"./formatters":13}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1939,7 +1943,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":5,"./signature":19}],11:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":5,"./signature":20}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2117,7 +2121,7 @@ var filter = function(options, implementation, formatter) {
 module.exports = filter;
 
 
-},{"../utils/utils":5}],12:[function(require,module,exports){
+},{"../utils/utils":5}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2322,7 +2326,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":5}],13:[function(require,module,exports){
+},{"../utils/utils":5}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2393,7 +2397,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2460,7 +2464,7 @@ module.exports = {
 
 
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2503,7 +2507,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":5}],16:[function(require,module,exports){
+},{"../utils/utils":5}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2538,7 +2542,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2701,7 +2705,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"../utils/config":4,"./jsonrpc":14}],18:[function(require,module,exports){
+},{"../utils/config":4,"./jsonrpc":15}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2745,7 +2749,7 @@ module.exports = {
 };
 
 
-},{"./formatters":12}],19:[function(require,module,exports){
+},{"./formatters":13}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2789,7 +2793,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":4,"../web3":6}],20:[function(require,module,exports){
+},{"../utils/config":4,"../web3":7}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2840,10 +2844,6 @@ module.exports = {
 };
 
 
-},{}],21:[function(require,module,exports){
-module.exports={
-    "version": "0.1.3"
-}
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
@@ -2853,7 +2853,7 @@ web3.abi = require('./lib/solidity/abi');
 
 module.exports = web3;
 
-},{"./lib/solidity/abi":1,"./lib/web3":6,"./lib/web3/contract":7,"./lib/web3/httpprovider":13,"./lib/web3/qtsync":16}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":7,"./lib/web3/contract":8,"./lib/web3/httpprovider":14,"./lib/web3/qtsync":17}]},{},["web3"])
 
 
 //# sourceMappingURL=ethereum.js.map
