@@ -268,10 +268,7 @@ module.exports = {
  * @date 2015
  */
 
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
-
+var BigNumber = require('bignumber.js');
 var utils = require('../utils/utils');
 var c = require('../utils/config');
 
@@ -461,7 +458,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":4,"../utils/utils":5}],3:[function(require,module,exports){
+},{"../utils/config":4,"../utils/utils":5,"bignumber.js":undefined}],3:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -579,9 +576,7 @@ module.exports = {
  */
 
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
+var BigNumber = require('bignumber.js');
 
 var ETH_UNITS = [ 
     'wei', 
@@ -615,7 +610,7 @@ module.exports = {
 };
 
 
-},{}],5:[function(require,module,exports){
+},{"bignumber.js":undefined}],5:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -651,9 +646,7 @@ module.exports = {
  * @constructor
  */
 
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
+var BigNumber = require('bignumber.js');
 
 var unitMap = {
     'wei':      '1',
@@ -1065,7 +1058,7 @@ module.exports = {
 };
 
 
-},{}],6:[function(require,module,exports){
+},{"bignumber.js":undefined}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2325,9 +2318,7 @@ module.exports = {
  * @date 2014
  */
 
-if ("build" !== 'build') {/*
-        var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
-*/}
+var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 
 var HttpProvider = function (host) {
     this.name  = 'HTTP';
@@ -2372,7 +2363,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{}],14:[function(require,module,exports){
+},{"xmlhttprequest":undefined}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
