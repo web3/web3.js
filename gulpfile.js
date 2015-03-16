@@ -25,7 +25,7 @@ var browserifyOptions = {
     debug: true,
     insert_global_vars: false, // jshint ignore:line
     detectGlobals: false,
-    bundleExternal: false
+    bundleExternal: true
 };
 
 gulp.task('versionReplace', function(){
@@ -58,6 +58,7 @@ gulp.task('build', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .add('./' + src + '.js')
+        .ignore('crypto')
         .bundle()
         .pipe(exorcist(path.join( DEST, dst + '.js.map')))
         .pipe(source(dst + '.js'))
