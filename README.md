@@ -36,7 +36,7 @@ Component
 ## Usage
 Require the library (not required for the meteor package):
 
-	var web3 = require('web3');
+	var web3 = require('ethereum.js');
 
 Set a provider (QtSyncProvider, HttpProvider)
 
