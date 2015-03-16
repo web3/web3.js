@@ -246,32 +246,6 @@ module.exports = {
 };
 
 },{"../utils/config":4,"../utils/utils":5,"./formatters":2,"./types":3}],2:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file formatters.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
-
 var utils = require('../utils/utils');
 var c = require('../utils/config');
 
@@ -543,46 +517,6 @@ module.exports = {
 
 
 },{"./formatters":2}],4:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file config.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-/**
- * Utils
- * 
- * @module utils
- */
-
-/**
- * Utility functions
- * 
- * @class [utils] config
- * @constructor
- */
-
-/// required to define ETH_BIGNUMBER_ROUNDING_MODE
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
-
 var ETH_UNITS = [ 
     'wei', 
     'Kwei', 
@@ -616,45 +550,6 @@ module.exports = {
 
 
 },{}],5:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file utils.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-/**
- * Utils
- * 
- * @module utils
- */
-
-/**
- * Utility functions
- * 
- * @class [utils] utils
- * @constructor
- */
-
-if ("build" !== 'build') {/*
-    var BigNumber = require('bignumber.js'); // jshint ignore:line
-*/}
-
 var unitMap = {
     'wei':      '1',
     'kwei':     '1000',
@@ -716,7 +611,7 @@ var toAscii = function(hex) {
 
     return str;
 };
-    
+
 /**
  * Shold be called to get hex representation (prefixed by 0x) of ascii string 
  *
@@ -1709,7 +1604,7 @@ var methods = [
     { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
     { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3,
         inputFormatter: utils.toHex},
-    { name: 'getData', call: 'eth_getData', addDefaultblock: 2},
+    { name: 'getCode', call: 'eth_getCode', addDefaultblock: 2},
     { name: 'getBlock', call: blockCall,
         outputFormatter: formatters.outputBlockFormatter,
         inputFormatter: [utils.toHex, function(param){ return (!param) ? false : true; }]},
@@ -1744,7 +1639,7 @@ var methods = [
     { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorageAt' },
     { name: 'storageAt', call: 'eth_storageAt', newMethod: 'eth.getStorage' },
     { name: 'countAt', call: 'eth_countAt', newMethod: 'eth.getTransactionCount' },
-    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'eth.getData' },
+    { name: 'codeAt', call: 'eth_codeAt', newMethod: 'eth.getCode' },
     { name: 'transact', call: 'eth_transact', newMethod: 'eth.sendTransaction' },
     { name: 'block', call: blockCall, newMethod: 'eth.getBlock' },
     { name: 'transaction', call: transactionFromBlockCall, newMethod: 'eth.getTransaction' },
@@ -2302,33 +2197,6 @@ module.exports = {
 
 
 },{"../utils/utils":5}],13:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file httpprovider.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- * @date 2014
- */
-
-if ("build" !== 'build') {/*
-        var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
-*/}
-
 var HttpProvider = function (host) {
     this.name  = 'HTTP';
     this.handlers = [];
