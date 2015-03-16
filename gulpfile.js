@@ -57,6 +57,7 @@ gulp.task('lint', function(){
 gulp.task('build', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'ethereum.js'})
+        .require('bignumber.js') // expose it to dapp users
         .add('./' + src + '.js')
         .ignore('crypto')
         .bundle()

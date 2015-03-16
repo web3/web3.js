@@ -458,7 +458,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":6,"bignumber.js":23}],3:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -613,7 +613,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":23}],6:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1061,7 +1061,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":23}],7:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
     "version": "0.1.3"
 }
@@ -2840,6 +2840,8 @@ module.exports = {
 
 
 },{}],23:[function(require,module,exports){
+
+},{}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.3 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
@@ -5510,9 +5512,7 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":24}],24:[function(require,module,exports){
-
-},{}],"ethereum.js":[function(require,module,exports){
+},{"crypto":23}],"ethereum.js":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
