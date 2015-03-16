@@ -5512,7 +5512,7 @@ module.exports = {
 
 },{"crypto":24}],24:[function(require,module,exports){
 
-},{}],"web3":[function(require,module,exports){
+},{}],"ethereum.js":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
@@ -5521,7 +5521,7 @@ web3.abi = require('./lib/solidity/abi');
 
 module.exports = web3;
 
-},{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":15,"./lib/web3/qtsync":18}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":15,"./lib/web3/qtsync":18}]},{},["ethereum.js"])
 
 
 //# sourceMappingURL=ethereum.js.map

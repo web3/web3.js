@@ -56,7 +56,7 @@ gulp.task('lint', function(){
 
 gulp.task('build', ['clean'], function () {
     return browserify(browserifyOptions)
-        .require('./' + src + '.js', {expose: 'web3'})
+        .require('./' + src + '.js', {expose: 'ethereum.js'})
         .add('./' + src + '.js')
         .ignore('crypto')
         .bundle()
