@@ -58,7 +58,7 @@ var isArrayType = function (type) {
  */
 var dynamicTypeBytes = function (type, value) {
     // TODO: decide what to do with array of strings
-    if (isArrayType(type) || type === 'string')    // only string itself that is dynamic; stringX is static length.
+    if (isArrayType(type) || type === 'bytes')
         return f.formatInputInt(value.length);
     return "";
 };
@@ -99,7 +99,7 @@ var formatInput = function (inputs, params) {
             toAppendArrayContent += params[i].reduce(function (acc, curr) {
                 return acc + formatter(curr);
             }, "");
-        else if (inputs[i].type === 'string')
+        else if (inputs[i].type === 'bytes')
             toAppendArrayContent += formatter(params[i]);
         else
             toAppendConstant += formatter(params[i]);
@@ -118,7 +118,7 @@ var formatInput = function (inputs, params) {
  * @returns {Number} length of dynamic type, 0 or multiplication of ETH_PADDING (32)
  */
 var dynamicBytesLength = function (type) {
-    if (isArrayType(type) || type === 'string')   // only string itself that is dynamic; stringX is static length.
+    if (isArrayType(type) || type === 'bytes')
         return c.ETH_PADDING * 2;
     return 0;
 };
@@ -168,7 +168,7 @@ var formatOutput = function (outs, output) {
             }
             result.push(array);
         }
-        else if (types.prefixedType('string')(outs[i].type)) {
+        else if (types.prefixedType('bytes')(outs[i].type)) {
             dynamicPart = dynamicPart.slice(padding);
             result.push(formatter(output.slice(0, padding)));
             output = output.slice(padding);
@@ -509,8 +509,7 @@ var inputTypes = function () {
     return [
         { type: prefixedType('uint'), format: f.formatInputInt },
         { type: prefixedType('int'), format: f.formatInputInt },
-        { type: prefixedType('hash'), format: f.formatInputInt },
-        { type: prefixedType('string'), format: f.formatInputString }, 
+        { type: prefixedType('bytes'), format: f.formatInputString }, 
         { type: prefixedType('real'), format: f.formatInputReal },
         { type: prefixedType('ureal'), format: f.formatInputReal },
         { type: namedType('address'), format: f.formatInputInt },
@@ -525,8 +524,7 @@ var outputTypes = function () {
     return [
         { type: prefixedType('uint'), format: f.formatOutputUInt },
         { type: prefixedType('int'), format: f.formatOutputInt },
-        { type: prefixedType('hash'), format: f.formatOutputHash },
-        { type: prefixedType('string'), format: f.formatOutputString },
+        { type: prefixedType('bytes'), format: f.formatOutputString },
         { type: prefixedType('real'), format: f.formatOutputReal },
         { type: prefixedType('ureal'), format: f.formatOutputUReal },
         { type: namedType('address'), format: f.formatOutputAddress },
@@ -1087,10 +1085,12 @@ module.exports = {
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
 
+var version = require('../version.json');
 var net = require('./web3/net');
 var eth = require('./web3/eth');
 var db = require('./web3/db');
@@ -1103,11 +1103,14 @@ var requestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 
 /// @returns an array of objects describing web3 api methods
-var web3Methods = function () {
-    return [
-    { name: 'sha3', call: 'web3_sha3' }
-    ];
-};
+var web3Methods = [
+    { name: 'sha3', call: 'web3_sha3', inputFormatter: utils.toHex },
+];
+var web3Properties = [
+    { name: 'version.client', getter: 'web3_clientVersion' },
+    { name: 'version.network', getter: 'net_version' }
+];
+
 
 /// creates methods in a given object based on method description on input
 /// setups api calls for these methods
@@ -1167,7 +1170,9 @@ var setupMethods = function (obj, methods) {
 /// setups api calls for these properties
 var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
-        var proto = {};
+        var objectProperties = property.name.split('.'),
+            proto = {};
+
         proto.get = function () {
 
             // show deprecated warning
@@ -1197,7 +1202,14 @@ var setupProperties = function (obj, properties) {
         }
 
         proto.enumerable = !property.newProperty;
-        Object.defineProperty(obj, property.name, proto);
+
+        if(objectProperties.length > 1) {
+            if(!obj[objectProperties[0]])
+                obj[objectProperties[0]] = {};
+
+            Object.defineProperty(obj[objectProperties[0]], objectProperties[1], proto);        
+        } else
+            Object.defineProperty(obj, property.name, proto);
 
     });
 };
@@ -1227,6 +1239,11 @@ var shhWatch = {
 
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {
+
+    version: {
+        api: version.version
+    },
+
     manager: requestManager(),
     providers: {},
 
@@ -1334,7 +1351,8 @@ Object.defineProperty(web3.eth, 'defaultBlock', {
 
 
 /// setups all api methods
-setupMethods(web3, web3Methods());
+setupMethods(web3, web3Methods);
+setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
 setupProperties(web3.net, net.properties);
 setupMethods(web3.eth, eth.methods);
@@ -1347,7 +1365,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
+},{"../version.json":21,"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1615,13 +1633,14 @@ module.exports = contract;
  * @date 2015
  */
 
+
 /// @returns an array of objects describing web3.db api methods
 var methods = function () {
     return [
-    { name: 'put', call: 'db_put' },
-    { name: 'get', call: 'db_get' },
-    { name: 'putString', call: 'db_putString' },
-    { name: 'getString', call: 'db_getString' }
+    { name: 'putString', call: 'db_putString'},
+    { name: 'getString', call: 'db_getString'},
+    { name: 'putHex', call: 'db_putHex'},
+    { name: 'getHex', call: 'db_getHex'}
     ];
 };
 
@@ -1649,6 +1668,7 @@ module.exports = {
 /** @file eth.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
  */
 
@@ -1734,7 +1754,7 @@ var methods = [
         inputFormatter: formatters.inputTransactionFormatter },
     { name: 'call', call: 'eth_call', addDefaultblock: 2,
         inputFormatter: formatters.inputCallFormatter },
-    { name: 'compile.solidity', call: 'eth_compileSolidity', inputFormatter: utils.toHex },
+    { name: 'compile.solidity', call: 'eth_compileSolidity' },
     { name: 'compile.lll', call: 'eth_compileLLL', inputFormatter: utils.toHex },
     { name: 'compile.serpent', call: 'eth_compileSerpent', inputFormatter: utils.toHex },
     { name: 'flush', call: 'eth_flush' },
@@ -1941,6 +1961,7 @@ module.exports = {
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
@@ -2322,6 +2343,7 @@ module.exports = {
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2014
  */
 
@@ -2337,7 +2359,6 @@ var HttpProvider = function (host) {
 
 HttpProvider.prototype.send = function (payload, callback) {
     var request = new XMLHttpRequest();
-    request.open('POST', this.host, false);
 
     // ASYNC
     if(typeof callback === 'function') {
@@ -2539,6 +2560,7 @@ module.exports = QtSyncProvider;
  *   Jeffrey Wilcke <jeff@ethdev.com>
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
  *   Gav Wood <g@ethdev.com>
  * @date 2014
  */
@@ -2609,7 +2631,6 @@ var requestManager = function() {
             var result = provider.send(payload);
 
             if (!jsonrpc.isValidResponse(result)) {
-                console.log(result);
                 if(typeof result === 'object' && result.error && result.error.message)
                     console.error(result.error.message);
                 return null;
@@ -2819,6 +2840,10 @@ module.exports = {
 };
 
 
+},{}],21:[function(require,module,exports){
+module.exports={
+    "version": "0.1.3"
+}
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
