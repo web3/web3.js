@@ -2357,7 +2357,6 @@ if ("build" !== 'build') {/*
 
 var HttpProvider = function (host) {
     this.name  = 'HTTP';
-    this.handlers = [];
     this.host = host || 'http://localhost:8080';
 };
 
