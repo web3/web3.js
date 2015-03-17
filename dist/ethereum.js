@@ -1728,7 +1728,6 @@ var uncleCountCall = function (args) {
 var methods = [
     { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2,
         outputFormatter: formatters.convertToBigNumber},
-    { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
     { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3,
         inputFormatter: utils.toHex},
     { name: 'getCode', call: 'eth_getCode', addDefaultblock: 2},
@@ -1763,7 +1762,7 @@ var methods = [
 
     // deprecated methods
     { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'eth.getBalance' },
-    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorageAt' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorage' },
     { name: 'storageAt', call: 'eth_storageAt', newMethod: 'eth.getStorage' },
     { name: 'countAt', call: 'eth_countAt', newMethod: 'eth.getTransactionCount' },
     { name: 'codeAt', call: 'eth_codeAt', newMethod: 'eth.getCode' },
