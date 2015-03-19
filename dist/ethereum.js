@@ -2619,7 +2619,7 @@ var requestManager = function() {
                     callback(new Error({
                         status: status,
                         error: result,
-                        message: 'Didn\'t repsond with an array of method responses'
+                        message: 'RPC didn\'t repsond with an array of method responses'
                     }));
                 }
 
@@ -2634,7 +2634,7 @@ var requestManager = function() {
                             callback(new Error({
                                 status: status,
                                 error: item,
-                                message: 'Bad Request'
+                                message: 'RPC Bad Request'
                             }));
                         }
                         return null;
@@ -2648,6 +2648,14 @@ var requestManager = function() {
         // SYNC
         } else {
             var result = provider.send(payload);
+
+            if(!utils.isArray(data)) {
+                callback(new Error({
+                    status: status,
+                    error: result,
+                    message: 'RPC didn\'t repsond with an array of method responses'
+                }));
+            }
 
             result = result.map(function(item, index){
 
