@@ -2351,7 +2351,7 @@ module.exports = {
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 
 var HttpProvider = function (host) {
-    this.name  = 'HTTP';
+    this.name  = 'RPC over HTTP';
     this.host = host || 'http://localhost:8080';
 };
 
@@ -2526,6 +2526,7 @@ module.exports = {
  */
 
 var QtSyncProvider = function () {
+    this.name  = 'QT';
 };
 
 QtSyncProvider.prototype.send = function (payload) {
@@ -2612,14 +2613,14 @@ var requestManager = function() {
         }
 
         // HTTP ASYNC (only when callback is given, and it a HttpProvidor)
-        if(typeof callback === 'function' && provider.name === 'HTTP'){
+        if(typeof callback === 'function' && provider.name === 'RPC over HTTP'){
             provider.send(payload, function(result, status){
 
                 if(!utils.isArray(data)) {
                     callback(new Error({
                         status: status,
                         error: result,
-                        message: 'RPC didn\'t repsond with an array of method responses'
+                        message: provider.name +' didn\'t repsond with an array of method responses'
                     }));
                 }
 
@@ -2634,7 +2635,7 @@ var requestManager = function() {
                             callback(new Error({
                                 status: status,
                                 error: item,
-                                message: 'RPC Bad Request'
+                                message: provider.name +' Bad Request'
                             }));
                         }
                         return null;
@@ -2653,7 +2654,7 @@ var requestManager = function() {
                 callback(new Error({
                     status: status,
                     error: result,
-                    message: 'RPC didn\'t repsond with an array of method responses'
+                    message: provider.name +' didn\'t repsond with an array of method responses'
                 }));
             }
 
