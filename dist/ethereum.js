@@ -2622,8 +2622,8 @@ var requestManager = function() {
                         error: result,
                         message: provider.name +' didn\'t repsond with an array of method responses'
                     }));
+                    return;
                 }
-
 
                 result.forEach(function(item, index){
 
@@ -2656,6 +2656,7 @@ var requestManager = function() {
                     error: result,
                     message: provider.name +' didn\'t repsond with an array of method responses'
                 }));
+                return;
             }
 
             result = result.map(function(item, index){
@@ -2670,7 +2671,7 @@ var requestManager = function() {
                 return (typeof data[index].outputFormatter === 'function') ? data[index].outputFormatter(item.result) : item.result;
             });
 
-            return (result.length > 0) ? result[0] : result;
+            return (result.length === 1) ? result[0] : result;
         }
         
     };
