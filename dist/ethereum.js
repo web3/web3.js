@@ -2192,13 +2192,18 @@ var filter = function(options, implementation, formatter) {
         });
     };
 
-    implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
 
     var watch = function(callback) {
+        implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
         callbacks.push(callback);
     };
 
     var stopWatching = function() {
+        implementation.stopPolling(filterId);
+        callbacks = [];
+    };
+
+    var uninstall = function() {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
@@ -2216,6 +2221,7 @@ var filter = function(options, implementation, formatter) {
         watch: watch,
         stopWatching: stopWatching,
         get: get,
+        uninstall: uninstall,
 
         // DEPRECATED methods
         changed:  function(){
@@ -2229,10 +2235,6 @@ var filter = function(options, implementation, formatter) {
         happened:  function(){
             console.warn('watch().happened() is deprecated please use filter().watch() instead.');
             return watch.apply(this, arguments);
-        },
-        uninstall: function(){
-            console.warn('watch().uninstall() is deprecated please use filter().stopWatching() instead.');
-            return stopWatching.apply(this, arguments);
         },
         messages: function(){
             console.warn('watch().messages() is deprecated please use filter().get() instead.');
