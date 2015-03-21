@@ -36,6 +36,7 @@
     "karma-mocha": "^0.1.10",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
+    "sandboxed-module": "^2.0.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {

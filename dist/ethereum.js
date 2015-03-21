@@ -1119,31 +1119,34 @@ var web3Properties = [
 var setupMethods = function (obj, methods) {
     methods.forEach(function (method) {
         // allow for object methods 'myObject.method'
-        var objectMethods = method.name.split('.'),
-            callFunction = function () {
+
+        var callFunction = function () {
                 /*jshint maxcomplexity:8 */
                 
-                var callback = null,
-                    args = Array.prototype.slice.call(arguments),
-                    call = typeof method.call === 'function' ? method.call(args) : method.call;
+                // show deprecated warning
+                if (method.newMethod)
+                    console.warn('This method is deprecated please use web3.'+ method.newMethod +'() instead.');
+                
+                var callback = null;
+                var args = Array.prototype.slice.call(arguments);
+                var call = utils.isFunction(method.call) ? method.call(args) : method.call;
 
                 // get the callback if one is available
-                if(typeof args[args.length-1] === 'function'){
-                    callback = args[args.length-1];
-                    Array.prototype.pop.call(args);
+                if (utils.isFunction(args[args.length - 1])) {
+                    callback = args[args.length - 1];
+                    args.pop();
                 }
 
                 // add the defaultBlock if not given
-                if(method.addDefaultblock) {
-                    if(args.length !== method.addDefaultblock)
-                        Array.prototype.push.call(args, (isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK));
-                    else
+                // TODO: having this here is REALLY BAD. We should not have separate logic only for default block
+                // it should be handled by formatter
+                if (method.addDefaultblock) {
+                    if (args.length !== method.addDefaultblock) {
+                        args.push(isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK);
+                    } else {
                         args[args.length-1] = isFinite(args[args.length-1]) ? utils.fromDecimal(args[args.length-1]) : args[args.length-1];
+                    }
                 }
-
-                // show deprecated warning
-                if(method.newMethod)
-                    console.warn('This method is deprecated please use web3.'+ method.newMethod +'() instead.');
 
                 return web3.manager.send({
                     method: call,
@@ -1154,15 +1157,12 @@ var setupMethods = function (obj, methods) {
                 }, callback);
             };
 
-        if(objectMethods.length > 1) {
-            if(!obj[objectMethods[0]])
-                obj[objectMethods[0]] = {};
-
-            obj[objectMethods[0]][objectMethods[1]] = callFunction;
-        
+        var name = method.name.split('.');
+        if (name.length > 1) {
+            obj[name[0]] = obj[name[0]] || {};
+            obj[name[0]][name[1]] = callFunction;
         } else {
-
-            obj[objectMethods[0]] = callFunction;
+            obj[name[0]] = callFunction;
         }
 
     });
@@ -2349,44 +2349,39 @@ module.exports = {
  * @date 2014
  */
 
+"use strict";
+
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 
 var HttpProvider = function (host) {
-    this.name  = 'HTTP';
     this.host = host || 'http://localhost:8080';
 };
 
-HttpProvider.prototype.send = function (payload, callback) {
+HttpProvider.prototype.send = function (payload) {
     var request = new XMLHttpRequest();
 
-    // ASYNC
-    if(typeof callback === 'function') {
-        request.onreadystatechange = function() {
-            if(request.readyState === 4) {
-                var result = '';
-                try {
-                    result = JSON.parse(request.responseText);
-                } catch(error) {
-                    result = error;
-                }
-                callback(result, request.status);
-            }
-        };
+    request.open('POST', this.host, false);
+    request.send(JSON.stringify(payload));
 
-        request.open('POST', this.host, true);
-        request.send(JSON.stringify(payload));
+    // check request.status
+    // TODO: throw an error here! it cannot silently fail!!!
+    //if (request.status !== 200) {
+        //return;
+    //}
+    return JSON.parse(request.responseText);
+};
 
-    // SYNC
-    } else {
-        request.open('POST', this.host, false);
-        request.send(JSON.stringify(payload));
+HttpProvider.prototype.sendAsync = function (payload, callback) {
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+        if (request.readyState === 4) {
+            // TODO: handle the error properly here!!!
+            callback(null, JSON.parse(request.responseText));
+        }
+    };
 
-        // check request.status
-        if(request.status !== 200)
-            return;
-        return JSON.parse(request.responseText);
-        
-    }
+    request.open('POST', this.host, true);
+    request.send(JSON.stringify(payload));
 };
 
 module.exports = HttpProvider;
