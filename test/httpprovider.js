@@ -10,17 +10,22 @@ var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
 
 describe('httpprovider', function () {
     describe('send', function () {
-        var provider = new HttpProvider();
-        var result = provider.send({});
+        it('should send basic request', function () {
+            var provider = new HttpProvider();
+            var result = provider.send({});
 
-        assert.equal(typeof result, "object");
+            assert.equal(typeof result, 'object');
+        });
     });
 
-    describe('sendAsync', function (done) {
-        var provider = new HttpProvider();
+    describe('sendAsync', function () {
+        it('should send basic async request', function (done) {
+            var provider = new HttpProvider();
 
-        provider.send({}, function (err, result) {
-            assert.equal(typeof result, "string");
+            provider.sendAsync({}, function (err, result) {
+                assert.equal(typeof result, 'object');
+                done();
+            });
         }); 
     });
 });
