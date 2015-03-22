@@ -581,6 +581,11 @@ exports.XMLHttpRequest = window.XMLHttpRequest;
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
+/**
+ * Ethereum units.
+ * @readonly
+ * @enum {string}
+ */
 var ETH_UNITS = [ 
     'wei', 
     'Kwei', 
@@ -638,13 +643,13 @@ module.exports = {
 
 /**
  * Utils
- * 
+ *
  * @module utils
  */
 
 /**
  * Utility functions
- * 
+ *
  * @class [utils] utils
  * @constructor
  */
@@ -652,22 +657,22 @@ module.exports = {
 var BigNumber = require('bignumber.js');
 
 var unitMap = {
-    'wei':      '1',
-    'kwei':     '1000',
-    'ada':      '1000',
-    'mwei':     '1000000',
-    'babbage':  '1000000',
-    'gwei':     '1000000000',
-    'shannon':  '1000000000',
-    'szabo':    '1000000000000',
-    'finney':   '1000000000000000',
-    'ether':    '1000000000000000000',
-    'kether':   '1000000000000000000000',
-    'grand':    '1000000000000000000000',
+    'wei': '1',
+    'kwei': '1000',
+    'ada': '1000',
+    'mwei': '1000000',
+    'babbage': '1000000',
+    'gwei': '1000000000',
+    'shannon': '1000000000',
+    'szabo': '1000000000000',
+    'finney': '1000000000000000',
+    'ether': '1000000000000000000',
+    'kether': '1000000000000000000000',
+    'grand': '1000000000000000000000',
     'einstein': '1000000000000000000000',
-    'mether':   '1000000000000000000000000',
-    'gether':   '1000000000000000000000000000',
-    'tether':   '1000000000000000000000000000000'
+    'mether': '1000000000000000000000000',
+    'gether': '1000000000000000000000000000',
+    'tether': '1000000000000000000000000000000'
 };
 
 
@@ -694,14 +699,15 @@ var findIndex = function (array, callback) {
  * @param {String} string in hex
  * @returns {String} ascii string representation of hex value
  */
-var toAscii = function(hex) {
-// Find termination
+var toAscii = function (hex) {
+    // Find termination
     var str = "";
-    var i = 0, l = hex.length;
+    var i = 0,
+        l = hex.length;
     if (hex.substring(0, 2) === '0x') {
         i = 2;
     }
-    for (; i < l; i+=2) {
+    for (; i < l; i += 2) {
         var code = parseInt(hex.substr(i, 2), 16);
         if (code === 0) {
             break;
@@ -712,17 +718,17 @@ var toAscii = function(hex) {
 
     return str;
 };
-    
+
 /**
- * Shold be called to get hex representation (prefixed by 0x) of ascii string 
+ * Shold be called to get hex representation (prefixed by 0x) of ascii string
  *
  * @method fromAscii
  * @param {String} string
  * @returns {String} hex representation of input string
  */
-var toHexNative = function(str) {
+var toHexNative = function (str) {
     var hex = "";
-    for(var i = 0; i < str.length; i++) {
+    for (var i = 0; i < str.length; i++) {
         var n = str.charCodeAt(i).toString(16);
         hex += n.length < 2 ? '0' + n : n;
     }
@@ -731,30 +737,30 @@ var toHexNative = function(str) {
 };
 
 /**
- * Shold be called to get hex representation (prefixed by 0x) of ascii string 
+ * Shold be called to get hex representation (prefixed by 0x) of ascii string
  *
  * @method fromAscii
  * @param {String} string
  * @param {Number} optional padding
  * @returns {String} hex representation of input string
  */
-var fromAscii = function(str, pad) {
+var fromAscii = function (str, pad) {
     pad = pad === undefined ? 0 : pad;
     var hex = toHexNative(str);
-    while (hex.length < pad*2)
+    while (hex.length < pad * 2)
         hex += "00";
     return "0x" + hex;
 };
 
 /**
  * Should be called to get display name of contract function
- * 
+ *
  * @method extractDisplayName
  * @param {String} name of function/event
  * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
  */
 var extractDisplayName = function (name) {
-    var length = name.indexOf('('); 
+    var length = name.indexOf('(');
     return length !== -1 ? name.substr(0, length) : name;
 };
 
@@ -774,8 +780,8 @@ var extractTypeName = function (name) {
  */
 var filterFunctions = function (json) {
     return json.filter(function (current) {
-        return current.type === 'function'; 
-    }); 
+        return current.type === 'function';
+    });
 };
 
 /**
@@ -828,19 +834,19 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
-    if(isBoolean(val))
+    if (isBoolean(val))
         return val;
 
-    if(isBigNumber(val))
+    if (isBigNumber(val))
         return fromDecimal(val);
 
-    if(isObject(val))
+    if (isObject(val))
         return fromAscii(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
     if (isString(val)) {
         if (val.indexOf('-0x') === 0)
-           return fromDecimal(val);
+            return fromDecimal(val);
         else if (!isFinite(val))
             return fromAscii(val);
     }
@@ -884,11 +890,11 @@ var getValueOfUnit = function (unit) {
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
-*/
-var fromWei = function(number, unit) {
+ */
+var fromWei = function (number, unit) {
     var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
 
-    return isBigNumber(number) ? returnValue : returnValue.toString(10); 
+    return isBigNumber(number) ? returnValue : returnValue.toString(10);
 };
 
 /**
@@ -910,11 +916,11 @@ var fromWei = function(number, unit) {
  * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
-*/
-var toWei = function(number, unit) {
+ */
+var toWei = function (number, unit) {
     var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
 
-    return isBigNumber(number) ? returnValue : returnValue.toString(10); 
+    return isBigNumber(number) ? returnValue : returnValue.toString(10);
 };
 
 /**
@@ -923,17 +929,17 @@ var toWei = function(number, unit) {
  * @method toBigNumber
  * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
  * @return {BigNumber} BigNumber
-*/
-var toBigNumber = function(number) {
+ */
+var toBigNumber = function (number) {
     /*jshint maxcomplexity:5 */
     number = number || 0;
     if (isBigNumber(number))
         return number;
 
     if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
-        return new BigNumber(number.replace('0x',''), 16);
+        return new BigNumber(number.replace('0x', ''), 16);
     }
-   
+
     return new BigNumber(number.toString(10), 10);
 };
 
@@ -958,14 +964,14 @@ var toTwosComplement = function (number) {
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
-var isAddress = function(address) {
+ */
+var isAddress = function (address) {
     if (!isString(address)) {
         return false;
     }
 
     return ((address.indexOf('0x') === 0 && address.length === 42) ||
-            (address.indexOf('0x') === -1 && address.length === 40));
+        (address.indexOf('0x') === -1 && address.length === 40));
 };
 
 /**
@@ -973,7 +979,7 @@ var isAddress = function(address) {
  *
  * @method isBigNumber
  * @param {Object}
- * @return {Boolean} 
+ * @return {Boolean}
  */
 var isBigNumber = function (object) {
     return object instanceof BigNumber ||
@@ -982,7 +988,7 @@ var isBigNumber = function (object) {
 
 /**
  * Returns true if object is string, otherwise false
- * 
+ *
  * @method isString
  * @param {Object}
  * @return {Boolean}
@@ -1033,7 +1039,36 @@ var isBoolean = function (object) {
  * @return {Boolean}
  */
 var isArray = function (object) {
-    return object instanceof Array; 
+    return object instanceof Array;
+};
+
+/** The following is a fix to be able to test as well using PhantomJS
+ * PhantomJS doesn't support bind yet: https://github.com/ariya/phantomjs/issues/10522
+ * As of PhantomJS 1.9.8, this is still required.
+ * @method phantomjsFix
+ */
+var phantomjsFix = function () {
+    if (!Function.prototype.bind) {
+        Function.prototype.bind = function (oThis) {                // jshint ignore:line
+            if (typeof this !== "function") {
+                // closest thing possible to the ECMAScript 5 internal IsCallable function
+                throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+            }
+
+            var aArgs = Array.prototype.slice.call(arguments, 1),
+                fToBind = this,
+                fNOP = function () {},
+                fBound = function () {
+                    return fToBind.apply(this instanceof fNOP && oThis ? this : oThis,
+                        aArgs.concat(Array.prototype.slice.call(arguments)));
+                };
+
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
+
+            return fBound;
+        };
+    }
 };
 
 module.exports = {
@@ -1057,15 +1092,20 @@ module.exports = {
     isString: isString,
     isObject: isObject,
     isBoolean: isBoolean,
-    isArray: isArray
+    isArray: isArray,
+    phantomjsFix: phantomjsFix
 };
 
+<<<<<<< HEAD
 
 },{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
     "version": "0.1.3"
 }
 },{}],8:[function(require,module,exports){
+=======
+},{}],6:[function(require,module,exports){
+>>>>>>> master
 /*
     This file is part of ethereum.js.
 
@@ -1105,6 +1145,7 @@ var requestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 
 /// @returns an array of objects describing web3 api methods
+<<<<<<< HEAD
 var web3Methods = [
     { name: 'sha3', call: 'web3_sha3', inputFormatter: utils.toHex },
 ];
@@ -1113,6 +1154,16 @@ var web3Properties = [
     { name: 'version.network', getter: 'net_version' }
 ];
 
+=======
+var web3Methods = function () {
+    return [{
+        name: 'sha3',
+        call: 'web3_sha3'
+    }];
+};
+>>>>>>> master
+
+utils.phantomjsFix();
 
 /// creates methods in a given object based on method description on input
 /// setups api calls for these methods
@@ -1122,28 +1173,28 @@ var setupMethods = function (obj, methods) {
         var objectMethods = method.name.split('.'),
             callFunction = function () {
                 /*jshint maxcomplexity:8 */
-                
+
                 var callback = null,
                     args = Array.prototype.slice.call(arguments),
                     call = typeof method.call === 'function' ? method.call(args) : method.call;
 
                 // get the callback if one is available
-                if(typeof args[args.length-1] === 'function'){
-                    callback = args[args.length-1];
+                if (typeof args[args.length - 1] === 'function') {
+                    callback = args[args.length - 1];
                     Array.prototype.pop.call(args);
                 }
 
                 // add the defaultBlock if not given
-                if(method.addDefaultblock) {
-                    if(args.length !== method.addDefaultblock)
+                if (method.addDefaultblock) {
+                    if (args.length !== method.addDefaultblock)
                         Array.prototype.push.call(args, (isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK));
                     else
-                        args[args.length-1] = isFinite(args[args.length-1]) ? utils.fromDecimal(args[args.length-1]) : args[args.length-1];
+                        args[args.length - 1] = isFinite(args[args.length - 1]) ? utils.fromDecimal(args[args.length - 1]) : args[args.length - 1];
                 }
 
                 // show deprecated warning
-                if(method.newMethod)
-                    console.warn('This method is deprecated please use web3.'+ method.newMethod +'() instead.');
+                if (method.newMethod)
+                    console.warn('This method is deprecated please use web3.' + method.newMethod + '() instead.');
 
                 return web3.manager.send({
                     method: call,
@@ -1154,17 +1205,16 @@ var setupMethods = function (obj, methods) {
                 }, callback);
             };
 
-        if(objectMethods.length > 1) {
-            if(!obj[objectMethods[0]])
+        if (objectMethods.length > 1) {
+            if (!obj[objectMethods[0]])
                 obj[objectMethods[0]] = {};
 
             obj[objectMethods[0]][objectMethods[1]] = callFunction;
-        
+
         } else {
 
             obj[objectMethods[0]] = callFunction;
         }
-
     });
 };
 
@@ -1178,9 +1228,8 @@ var setupProperties = function (obj, properties) {
         proto.get = function () {
 
             // show deprecated warning
-            if(property.newProperty)
-                console.warn('This property is deprecated please use web3.'+ property.newProperty +' instead.');
-
+            if (property.newProperty)
+                console.warn('This property is deprecated please use web3.' + property.newProperty + ' instead.');
 
             return web3.manager.send({
                 method: property.getter,
@@ -1192,8 +1241,8 @@ var setupProperties = function (obj, properties) {
             proto.set = function (val) {
 
                 // show deprecated warning
-                if(property.newProperty)
-                    console.warn('This property is deprecated please use web3.'+ property.newProperty +' instead.');
+                if (property.newProperty)
+                    console.warn('This property is deprecated please use web3.' + property.newProperty + ' instead.');
 
                 return web3.manager.send({
                     method: property.setter,
@@ -1219,9 +1268,9 @@ var setupProperties = function (obj, properties) {
 /*jshint maxparams:4 */
 var startPolling = function (method, id, callback, uninstall) {
     web3.manager.startPolling({
-        method: method, 
+        method: method,
         params: [id]
-    }, id,  callback, uninstall); 
+    }, id, callback, uninstall);
 };
 /*jshint maxparams:3 */
 
@@ -1230,16 +1279,19 @@ var stopPolling = function (id) {
 };
 
 var ethWatch = {
-    startPolling: startPolling.bind(null, 'eth_getFilterChanges'), 
+    startPolling: startPolling.bind(null, 'eth_getFilterChanges'),
     stopPolling: stopPolling
 };
 
 var shhWatch = {
-    startPolling: startPolling.bind(null, 'shh_getFilterChanges'), 
+    startPolling: startPolling.bind(null, 'shh_getFilterChanges'),
     stopPolling: stopPolling
 };
 
-/// setups web3 object, and it's in-browser executed methods
+/**
+ * setups web3 object, and it's in-browser executed methods
+ * @class web3
+ */
 var web3 = {
 
     version: {
@@ -1252,11 +1304,11 @@ var web3 = {
     setProvider: function (provider) {
         web3.manager.setProvider(provider);
     },
-    
+
     /// Should be called to reset state of web3 object
     /// Resets everything except manager
     reset: function () {
-        web3.manager.reset(); 
+        web3.manager.reset();
     },
 
     /// @returns hex string of the input
@@ -1265,10 +1317,11 @@ var web3 = {
     /// @returns ascii string representation of hex value prefixed with 0x
     toAscii: utils.toAscii,
 
-    /// @returns hex representation (prefixed by 0x) of ascii string
+    /** @returns hex representation (prefixed by 0x) of ascii string */
     fromAscii: utils.fromAscii,
 
     /// @returns decimal representaton of hex value prefixed by 0x
+
     toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
@@ -1286,14 +1339,16 @@ var web3 = {
         // peerCount: 
     },
 
-
-    /// eth object prototype
+    /** 
+     * eth object prototype
+     * @see eth
+     */
     eth: {
         // DEPRECATED
         contractFromAbi: function (abi) {
             console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
 
-            return function(addr) {
+            return function (addr) {
                 // Default to address of Config. TODO: rremove prior to genesis.
                 addr = addr || '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
                 var ret = web3.eth.contract(addr, abi);
@@ -1316,10 +1371,10 @@ var web3 = {
         },
         // DEPRECATED
         watch: function (fil, eventParams, options) {
-            console.warn('eth.watch() is deprecated please use eth.filter() instead.');
-            return this.filter(fil, eventParams, options);
-        }
-        /*jshint maxparams:3 */
+                console.warn('eth.watch() is deprecated please use eth.filter() instead.');
+                return this.filter(fil, eventParams, options);
+            }
+            /*jshint maxparams:3 */
     },
 
     /// db object prototype
@@ -1364,10 +1419,18 @@ setupMethods(web3.shh, shh.methods());
 setupMethods(ethWatch, watches.eth());
 setupMethods(shhWatch, watches.shh());
 
+/**
+ * The main entry point: web3 module.
+ * @exports web3
+ */
 module.exports = web3;
 
+<<<<<<< HEAD
 
 },{"./solidity/formatters":2,"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":11,"./web3/filter":13,"./web3/net":17,"./web3/requestmanager":19,"./web3/shh":20,"./web3/watches":22}],9:[function(require,module,exports){
+=======
+},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
+>>>>>>> master
 /*
     This file is part of ethereum.js.
 
@@ -1551,8 +1614,8 @@ var addEventsToContract = function (contract, desc, address) {
 /**
  * This method should be called when we want to call / transact some solidity method from javascript
  * it returns an object which has same methods available as solidity contract description
- * usage example: 
- *
+ * 
+ * @example 
  * var abi = [{
  *      name: 'myMethod',
  *      inputs: [{ name: 'a', type: 'string' }],

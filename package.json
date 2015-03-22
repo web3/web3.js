@@ -22,6 +22,7 @@
     "del": ">=0.1.1",
     "exorcist": "^0.1.6",
     "gulp": ">=3.4.0",
+    "gulp-jsdoc": "^0.1.4",
     "gulp-jshint": ">=1.5.0",
     "gulp-rename": ">=1.2.0",
     "gulp-replace": "^0.5.3",
@@ -35,17 +36,19 @@
     "karma-chrome-launcher": "^0.1.7",
     "karma-firefox-launcher": "^0.1.4",
     "karma-mocha": "^0.1.10",
+    "karma-opera-launcher": "^0.1.0",
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
+    "nock": "^1.1.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "jshint *.js lib",
-    "test": "mocha",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose",
+    "test": "mocha test/**/*.js",
+    "test-coveralls": "istanbul cover _mocha test/**/*.js -- -R spec && cat coverage/lcov.info | coveralls --verbose",
     "karma": "./node_modules/karma/bin/karma start --singleRun=true --browsers=\"Firefox,PhantomJS\""
   },
   "repository": {
