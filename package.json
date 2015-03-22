@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "bignumber.js": ">=2.0.0",
-    "envify": "^3.0.0",
-    "unreachable-branch-transform": "^0.2.2",
     "xmlhttprequest": "*"
+  },
+  "browser": {
+    "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "devDependencies": {
     "bower": ">=1.3.0",
@@ -54,19 +55,6 @@
   "homepage": "https://github.com/ethereum/ethereum.js",
   "bugs": {
     "url": "https://github.com/ethereum/ethereum.js/issues"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "envify",
-        {
-          "NODE_ENV": "build"
-        }
-      ],
-      [
-        "unreachable-branch-transform"
-      ]
-    ]
   },
   "keywords": [
     "ethereum",

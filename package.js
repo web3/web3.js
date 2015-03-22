@@ -12,7 +12,7 @@ Package.describe({
 Package.onUse(function(api) {
   api.versionsFrom('1.0.3.2');
 
-  api.use('3stack:bignumber@2.0.0', 'client');
+  // api.use('3stack:bignumber@2.0.0', 'client');
 
   api.export('BigNumber', 'client');
   api.export('web3', 'client');
