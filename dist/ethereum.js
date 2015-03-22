@@ -2637,6 +2637,7 @@ var Jsonrpc = require('./jsonrpc');
 var utils = require('../utils/utils');
 var c = require('../utils/config');
 
+var InvalidProvider = new Error('provider is not set or invalid');
 var InvalidResponse = new Error('jsonrpc response is not valid');
 
 /**
@@ -2644,12 +2645,11 @@ var InvalidResponse = new Error('jsonrpc response is not valid');
  * It's also responsible for polling the ethereum node for incoming messages
  * Default poll timeout is 1 second
  */
-var RequestManager = function() {
+var RequestManager = function(provider) {
     this.jsonrpc = new Jsonrpc();
+    this.provider = provider;
     this.polls = [];
     this.timeout = null;
-    this.provider;
-   
     this.poll();
 };
 
@@ -2662,11 +2662,11 @@ var RequestManager = function() {
  */
 RequestManager.prototype.send = function (data) {
     if (!this.provider) {
-        console.error('provider not implemented');
+        console.error(InvalidProvider);
         return null;
     }
 
-    var payload = utils.isArray(data) ? this.jsonrpc.toBatchPayload(data) : this.jsonrpc.toPayload(data.method, data.params);
+    var payload = this.jsonrpc.toPayload(data.method, data.params);
     var result = this.provider.send(payload);
 
     if (!this.jsonrpc.isValidResponse(result)) {
@@ -2684,7 +2684,11 @@ RequestManager.prototype.send = function (data) {
  * @param {Function} callback
  */
 RequestManager.prototype.sendAsync = function (data, callback) {
-    var payload = utils.isArray(data) ? this.jsonrpc.toBatchPayload(data) : this.jsonrpc.toPayload(data.method, data.params);
+    if (!this.provider) {
+        return callback(InvalidProvider);
+    }
+
+    var payload = this.jsonrpc.toPayload(data.method, data.params);
     var self = this;
     this.provider.sendAsync(payload, function (err, result) {
         if (err) {
@@ -2753,9 +2757,9 @@ RequestManager.prototype.reset = function () {
     });
     this.polls = [];
 
-    if (timeout) {
-        clearTimeout(timeout);
-        timeout = null;
+    if (this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
     }
     this.poll();
 };
@@ -2766,17 +2770,43 @@ RequestManager.prototype.reset = function () {
  * @method poll
  */
 RequestManager.prototype.poll = function () {
-    this.polls.forEach(function (data) {
-        // send async
-        sendAsync(data.data, function(error, result){
-            if (error || !(isArray(result)) || result.length === 0) {
-                return;
-            }
+    this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
 
-            data.callback(result);
+    if (!this.provider) {
+        console.error(InvalidProvider);
+        return;
+    }
+
+    var payload = this.jsonrpc.toBatchPayload(this.polls.map(function (data) {
+        return data.data;
+    }));
+
+    var self = this;
+    this.provider.sendAsync(payload, function (error, results) {
+        // TODO: console log?
+        if (error) {
+            return;
+        }
+            
+        if (!utils.isArray(results)) {
+            return console.error(InvalidResponse);
+        }
+
+        results.map(function (result, index) {
+            result.callback = self.polls[index].callback;
+            return result;
+        }).filter(function (result) {
+            var valid = self.jsonrpc.isValidResponse(result);
+            if (!valid) {
+                result.callback(InvalidResponse);
+            }
+            return valid;
+        }).filter(function (result) {
+            return utils.isArray(result.result) && result.result.length > 0;
+        }).forEach(function (result) {
+            result.callback(null, result);
         });
     });
-    timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
 };
 
 module.exports = RequestManager;
