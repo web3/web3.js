@@ -40,7 +40,6 @@
     "karma-phantomjs-launcher": "^0.1.4",
     "karma-safari-launcher": "^0.1.1",
     "mocha": ">=2.1.0",
-    "nock": "^1.1.0",
     "vinyl-source-stream": "^1.0.0"
   },
   "scripts": {

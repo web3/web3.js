@@ -23,31 +23,6 @@ var description = [{
 
 describe('abi', function () {
     describe('outputParser', function () {
-        it('should parse output string', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].outputs = [{
-                type: "string"
-            }];
-
-            // when
-            var parser = abi.outputParser(d);
-
-            // then
-            expect(parser.test("0x" +
-                    "0000000000000000000000000000000000000000000000000000000000000005" +
-                    "68656c6c6f000000000000000000000000000000000000000000000000000000")[0].toString())
-                .equal('hello');
-
-            expect(parser.test("0x" +
-                    "0000000000000000000000000000000000000000000000000000000000000005" +
-                    "776f726c64000000000000000000000000000000000000000000000000000000")[0].toString())
-                .equal('world');
-
-        });
-
         it('should parse output uint', function () {
 
             // given
@@ -207,64 +182,6 @@ describe('abi', function () {
 
         });
 
-        it('should parse output hash', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].outputs = [{
-                type: 'hash'
-            }];
-
-            // when
-            var parser = abi.outputParser(d);
-
-            // then
-            expect(parser.test("0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1")[0])
-                .equal(
-                    "0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1"
-
-                );
-        });
-
-        it('should parse output hash256', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].outputs = [{
-                type: 'hash256'
-            }];
-
-            // when
-            var parser = abi.outputParser(d);
-
-            // then
-            expect(parser.test("0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1")[0])
-                .equal(
-                    "0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1"
-                );
-        });
-
-        it('should parse output hash160', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].outputs = [{
-                type: 'hash160'
-            }];
-
-            // when
-            var parser = abi.outputParser(d);
-
-            // then
-            expect(parser.test("0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1")[0])
-                .equal(
-                    "0x000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1");
-            // TODO shouldnt' the expected hash be shorter?
-        });
-
         it('should parse output address', function () {
 
             // given
@@ -354,41 +271,6 @@ describe('abi', function () {
         });
 
 
-        it('should parse multiple output strings', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].outputs = [{
-                type: "string"
-            }, {
-                type: "string"
-            }];
-
-            // when
-            var parser = abi.outputParser(d);
-
-            // then
-            expect(
-                    parser.test("0x" +
-                        "0000000000000000000000000000000000000000000000000000000000000005" +
-                        "0000000000000000000000000000000000000000000000000000000000000005" +
-                        "68656c6c6f000000000000000000000000000000000000000000000000000000" +
-                        "776f726c64000000000000000000000000000000000000000000000000000000")[0])
-                .equal('hello');
-
-
-            expect(
-                    parser.test("0x" +
-                        "0000000000000000000000000000000000000000000000000000000000000005" +
-                        "0000000000000000000000000000000000000000000000000000000000000005" +
-                        "68656c6c6f000000000000000000000000000000000000000000000000000000" +
-                        "776f726c64000000000000000000000000000000000000000000000000000000")[1])
-                .equal('world');
-
-
-        });
-
         it('should use proper method name', function () {
 
             // given
@@ -428,10 +310,10 @@ describe('abi', function () {
                 name: "test2",
                 type: "function",
                 inputs: [{
-                    type: "string"
+                    type: "bytes"
                 }],
                 outputs: [{
-                    type: "string"
+                    type: "bytes"
                 }]
             }];
 

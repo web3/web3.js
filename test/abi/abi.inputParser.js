@@ -2,7 +2,7 @@ var chai      = require('chai');
 var expect    = chai.expect;
 var BigNumber = require('bignumber.js');
 var abi       = require('../../lib/solidity/abi.js');
-var clone     = function (object) {
+var clone     = function(object) {
     return JSON.parse(JSON.stringify(object));
 };
 
@@ -21,9 +21,9 @@ var description = [{
     }]
 }];
 
-describe('abi', function () {
-    describe('inputParser', function () {
-        it('should parse input uint', function () {
+describe('abi', function() {
+    describe('inputParser', function() {
+        it('should parse input uint', function() {
 
             // given
             var d = clone(description);
@@ -55,7 +55,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse input uint128', function () {
+        it('should parse input uint128', function() {
 
             // given
             var d = clone(description);
@@ -86,7 +86,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse input uint256', function () {
+        it('should parse input uint256', function() {
 
             // given
             var d = clone(description);
@@ -117,7 +117,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse input int', function () {
+        it('should parse input int', function() {
 
             // given
             var d = clone(description);
@@ -150,7 +150,7 @@ describe('abi', function () {
             expect(parser.test('3.9')).equal("0000000000000000000000000000000000000000000000000000000000000003");
         });
 
-        it('should parse input int128', function () {
+        it('should parse input int128', function() {
 
             // given
             var d = clone(description);
@@ -183,7 +183,7 @@ describe('abi', function () {
             expect(parser.test('3.9')).equal("0000000000000000000000000000000000000000000000000000000000000003");
         });
 
-        it('should parse input int256', function () {
+        it('should parse input int256', function() {
 
             // given
             var d = clone(description);
@@ -216,7 +216,7 @@ describe('abi', function () {
             expect(parser.test('3.9')).equal("0000000000000000000000000000000000000000000000000000000000000003");
         });
 
-        it('should parse input bool', function () {
+        it('should parse input bool', function() {
 
             // given
             var d = clone(description);
@@ -233,7 +233,7 @@ describe('abi', function () {
             expect(parser.test(false)).equal("0000000000000000000000000000000000000000000000000000000000000000");
         });
 
-        it('should parse input address', function () {
+        it('should parse input address', function() {
 
             // given
             var d = clone(description);
@@ -250,76 +250,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse input fixed bytes type', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].inputs = [
-                { type: "bytes" }
-            ];
-
-            // when
-            var parser = abi.inputParser(d);
-
-            // then
-            expect(
-                parser.test('hello')).equal(
-                "0000000000000000000000000000000000000000000000000000000000000005" +
-                "68656c6c6f000000000000000000000000000000000000000000000000000000"
-            );
-
-            expect(
-                parser.test('world')).equal(
-                "0000000000000000000000000000000000000000000000000000000000000005776f726c64000000000000000000000000000000000000000000000000000000"
-            );
-        });
-
-        it('should parse input int followed by a fixed bytes type', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].inputs = [
-                { type: "int" },
-                { type: "bytes" }
-            ];
-
-            // when
-            var parser = abi.inputParser(d);
-
-            // then
-            expect(
-                parser.test(9, 'hello')).equal(
-                "0000000000000000000000000000000000000000000000000000000000000005" +
-                "0000000000000000000000000000000000000000000000000000000000000009" +
-                "68656c6c6f000000000000000000000000000000000000000000000000000000"
-            );
-        });
-
-        it('should parse input fixed bytes type followed by an int', function () {
-
-            // given
-            var d = clone(description);
-
-            d[0].inputs = [
-                { type: "bytes" },
-                { type: "int" }
-            ];
-
-            // when
-            var parser = abi.inputParser(d);
-
-            // then
-            expect(
-                parser.test('hello', 9)).equal(
-                "0000000000000000000000000000000000000000000000000000000000000005" +
-                "0000000000000000000000000000000000000000000000000000000000000009" +
-                "68656c6c6f000000000000000000000000000000000000000000000000000000"
-            );
-        });
-
-        it('should use proper method name', function () {
+        it('should use proper method name', function() {
 
             // given
             var d = clone(description);
@@ -337,7 +268,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse multiple methods', function () {
+        it('should parse multiple methods', function() {
 
             // given
             var d = [{
@@ -352,8 +283,12 @@ describe('abi', function () {
             }, {
                 name: "test2",
                 type: "function",
-                inputs: [{ type: "bytes" }],
-                outputs: [{ type: "bytes" }]
+                inputs: [{
+                    type: "bytes"
+                }],
+                outputs: [{
+                    type: "bytes"
+                }]
             }];
 
             // when
@@ -368,7 +303,7 @@ describe('abi', function () {
 
         });
 
-        it('should parse input array of ints', function () {
+        it('should parse input array of ints', function() {
 
             // given
             var d = clone(description);
@@ -389,7 +324,7 @@ describe('abi', function () {
             );
         });
 
-        it('should parse an array followed by an int', function () {
+        it('should parse an array followed by an int', function() {
 
             // given
             var d = clone(description);
@@ -413,7 +348,7 @@ describe('abi', function () {
             );
         });
 
-        it('should parse an int followed by an array', function () {
+        it('should parse an int followed by an array', function() {
 
             // given
             var d = clone(description);
@@ -437,7 +372,7 @@ describe('abi', function () {
             );
         });
 
-        it('should parse mixture of arrays and ints', function () {
+        it('should parse mixture of arrays and ints', function() {
 
             // given
             var d = clone(description);
@@ -471,7 +406,7 @@ describe('abi', function () {
             );
         });
 
-        it('should parse input real', function () {
+        it('should parse input real', function() {
 
             // given
             var d = clone(description);
@@ -490,7 +425,7 @@ describe('abi', function () {
             expect(parser.test([-1]), "ffffffffffffffffffffffffffffffff00000000000000000000000000000000");
         });
 
-        it('should parse input ureal', function () {
+        it('should parse input ureal', function() {
 
             // given
             var d = clone(description);
@@ -508,7 +443,7 @@ describe('abi', function () {
             expect(parser.test([8.5])).equal("0000000000000000000000000000000880000000000000000000000000000000");
         });
 
-        it('should throw an incorrect type error', function () {
+        it('should throw an incorrect type error', function() {
 
             // given
             var d = clone(description);
@@ -520,7 +455,7 @@ describe('abi', function () {
             var parser = abi.inputParser(d);
 
             // then
-            expect(function () {
+            expect(function() {
                 parser.test('0x')
             }).to.throw(/parser does not support type/);
         });

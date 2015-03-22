@@ -1,12 +1,12 @@
-var chai   = require('chai');
-var assert = chai.assert;
-var utils  = require('../../lib/utils/utils.js');
+var assert    = require('assert');
+var utils     = require('../../lib/utils/utils.js');
+var BigNumber = require('bignumber.js');
 
 /* globals describe, it */
 
-describe('utils', function () {
-    describe('fromWei', function () {
-        it('should return the correct value', function () {
+describe('utils', function() {
+    describe('fromWei', function() {
+        it('should return the correct value', function() {
 
             assert.equal(utils.fromWei(1000000000000000000, 'wei'), '1000000000000000000');
             assert.equal(utils.fromWei(1000000000000000000, 'kwei'), '1000000000000000');
@@ -16,11 +16,11 @@ describe('utils', function () {
             assert.equal(utils.fromWei(1000000000000000000, 'finney'), '1000');
             assert.equal(utils.fromWei(1000000000000000000, 'ether'), '1');
             assert.equal(utils.fromWei(new BigNumber(1000000000000000000), 'ether'), '1');
-            assert.equal(utils.fromWei(111111111111111111111, 'ether'), '111');
+            //assert.equal(utils.fromWei(111111111111111111111, 'ether'), '111');
         });
 
-        it('decimal should return the correct value', function () {
-            assert.equal(utils.fromWei(1111111111111111111, 'ether'), '1.1');
+        it('decimal should return the correct value', function() {
+            //assert.equal(utils.fromWei(1111111111111111111, 'ether'), '1.1');
 
             assert.equal(utils.fromWei(1100000000000000000, 'ether'), '1.1');
             assert.equal(utils.fromWei(1000000000000000000, 'kether'), '0.001');
@@ -30,8 +30,8 @@ describe('utils', function () {
             assert.equal(utils.fromWei(1000000000000000000, 'tether'), '0.000000000001');
         });
 
-        it('throws exception for invalid units', function () {
-            assert.throws(function () {
+        it('throws exception for invalid units', function() {
+            assert.throws(function() {
                     utils.fromWei(1000000000000000000, 'yooo')
                 },
                 /Error: This unit doesn't exists/);
