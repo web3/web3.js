@@ -2647,10 +2647,24 @@ var Method = function (options) {
     this.outputFormatter = options.outputFormatter;
 };
 
+/**
+ * Should be used to determine name of the jsonrpc method based on arguments
+ *
+ * @method getCall
+ * @param {Array} arguments
+ * @return {String} name of jsonrpc method
+ */
 Method.prototype.getCall = function (args) {
     return utils.isFunction(this.call) ? this.call(args) : this.call;
 };
 
+/**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
 Method.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
@@ -2658,20 +2672,48 @@ Method.prototype.extractCallback = function (args) {
     return null;
 };
 
+/**
+ * Should be called to check if the number of arguments is correct
+ * 
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
         throw errors.InvalidNumberOfParams;
     }
 };
 
+/**
+ * Should be called to format input args of method
+ * 
+ * @method formatInput
+ * @param {Array}
+ * @return {Array}
+ */
 Method.prototype.formatInput = function (args) {
     return this.inputFormatter ? this.inputFormatter(args) : args;
 };
 
+/**
+ * Should be called to format output(result) of method
+ *
+ * @method formatOutput
+ * @param {Object}
+ * @return {Object}
+ */
 Method.prototype.formatOutput = function (result) {
-    return this.outputFormatter && result ? this.outputFormatter(result) : result;
+    return this.outputFormatter && !!result ? this.outputFormatter(result) : result;
 };
 
+/**
+ * Should attach function to method
+ * 
+ * @method attachToObject
+ * @param {Object}
+ * @param {Function}
+ */
 Method.prototype.attachToObject = function (obj, func) {
     var name = this.name.split('.');
     if (name.length > 1) {
@@ -2812,7 +2854,7 @@ var RequestManager = function(provider) {
  * Should be used to synchronously send request
  *
  * @method send
- * @param {Object|Array} data
+ * @param {Object} data
  * @return {Object}
  */
 RequestManager.prototype.send = function (data) {
@@ -2835,7 +2877,7 @@ RequestManager.prototype.send = function (data) {
  * Should be used to asynchronously send request
  *
  * @method sendAsync
- * @param {Object|Array} data
+ * @param {Object} data
  * @param {Function} callback
  */
 RequestManager.prototype.sendAsync = function (data, callback) {
@@ -2874,10 +2916,10 @@ RequestManager.prototype.setProvider = function (p) {
  * Should be used to start polling
  *
  * @method startPolling
- * @param data
- * @param pollId
- * @param callback
- * @param uninstall
+ * @param {Object} data
+ * @param {Number} pollId
+ * @param {Function} callback
+ * @param {Function} uninstall
  *
  * @todo cleanup number of params
  */
@@ -2890,7 +2932,7 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
  * Should be used to stop polling for filter with given id
  *
  * @method stopPolling
- * @param pollId
+ * @param {Number} pollId
  */
 RequestManager.prototype.stopPolling = function (pollId) {
     for (var i = this.polls.length; i--;) {
