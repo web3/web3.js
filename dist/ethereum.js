@@ -1036,6 +1036,22 @@ var isArray = function (object) {
     return object instanceof Array; 
 };
 
+/**
+ * Returns true if given string is valid json object
+ * 
+ * @method isJson
+ * @param {String}
+ * @return {Boolean}
+ */
+var isJson = function (str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+};
+
 module.exports = {
     findIndex: findIndex,
     toHex: toHex,
@@ -1057,7 +1073,8 @@ module.exports = {
     isString: isString,
     isObject: isObject,
     isBoolean: isBoolean,
-    isArray: isArray
+    isArray: isArray,
+    isJson: isJson
 };
 
 
@@ -1101,7 +1118,7 @@ var watches = require('./web3/watches');
 var filter = require('./web3/filter');
 var utils = require('./utils/utils');
 var formatters = require('./solidity/formatters');
-var requestManager = require('./web3/requestmanager');
+var RequestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 
 /// @returns an array of objects describing web3 api methods
@@ -1140,20 +1157,20 @@ var setupMethods = function (obj, methods) {
                 // add the defaultBlock if not given
                 // TODO: having this here is REALLY BAD. We should not have separate logic only for default block
                 // it should be handled by formatter
-                if (method.addDefaultblock) {
-                    if (args.length !== method.addDefaultblock) {
-                        args.push(isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK);
-                    } else {
-                        args[args.length-1] = isFinite(args[args.length-1]) ? utils.fromDecimal(args[args.length-1]) : args[args.length-1];
-                    }
-                }
+                //if (method.addDefaultblock) {
+                    //if (args.length !== method.addDefaultblock) {
+                        //args.push(isFinite(c.ETH_DEFAULTBLOCK) ? utils.fromDecimal(c.ETH_DEFAULTBLOCK) : c.ETH_DEFAULTBLOCK);
+                    //} else {
+                        //args[args.length-1] = isFinite(args[args.length-1]) ? utils.fromDecimal(args[args.length-1]) : args[args.length-1];
+                    //}
+                //}
 
                 return web3.manager.send({
                     method: call,
                     params: args,
-                    outputFormatter: method.outputFormatter,
-                    inputFormatter: method.inputFormatter,
-                    addDefaultblock: method.addDefaultblock
+                    //outputFormatter: method.outputFormatter,
+                    //inputFormatter: method.inputFormatter,
+                    //addDefaultblock: method.addDefaultblock
                 }, callback);
             };
 
@@ -1246,7 +1263,7 @@ var web3 = {
         api: version.version
     },
 
-    manager: requestManager(),
+    manager: new RequestManager(),
     providers: {},
 
     setProvider: function (provider) {
@@ -1699,6 +1716,7 @@ module.exports = {
  * @constructor
  */
 
+"use strict";
 
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
@@ -1725,41 +1743,85 @@ var uncleCountCall = function (args) {
 };
 
 /// @returns an array of objects describing web3.eth api methods
-var methods = [
-    { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2,
-        outputFormatter: formatters.convertToBigNumber},
-    { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
-    { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3,
-        inputFormatter: utils.toHex},
-    { name: 'getCode', call: 'eth_getCode', addDefaultblock: 2},
-    { name: 'getBlock', call: blockCall,
-        outputFormatter: formatters.outputBlockFormatter,
-        inputFormatter: [utils.toHex, function(param){ return (!param) ? false : true; }]},
-    { name: 'getUncle', call: uncleCall,
-        outputFormatter: formatters.outputBlockFormatter,
-        inputFormatter: [utils.toHex, utils.toHex, function(param){ return (!param) ? false : true; }]},
-    { name: 'getCompilers', call: 'eth_getCompilers' },
-    { name: 'getBlockTransactionCount', call: getBlockTransactionCountCall,
-        outputFormatter: utils.toDecimal,
-        inputFormatter: utils.toHex },
-    { name: 'getBlockUncleCount', call: uncleCountCall,
-        outputFormatter: utils.toDecimal,
-        inputFormatter: utils.toHex },
-    { name: 'getTransaction', call: 'eth_getTransactionByHash',
-        outputFormatter: formatters.outputTransactionFormatter },
-    { name: 'getTransactionFromBlock', call: transactionFromBlockCall,
-        outputFormatter: formatters.outputTransactionFormatter,
-        inputFormatter: utils.toHex },
-    { name: 'getTransactionCount', call: 'eth_getTransactionCount', addDefaultblock: 2,
-        outputFormatter: utils.toDecimal},
-    { name: 'sendTransaction', call: 'eth_sendTransaction',
-        inputFormatter: formatters.inputTransactionFormatter },
-    { name: 'call', call: 'eth_call', addDefaultblock: 2,
-        inputFormatter: formatters.inputCallFormatter },
-    { name: 'compile.solidity', call: 'eth_compileSolidity' },
-    { name: 'compile.lll', call: 'eth_compileLLL', inputFormatter: utils.toHex },
-    { name: 'compile.serpent', call: 'eth_compileSerpent', inputFormatter: utils.toHex },
-    { name: 'flush', call: 'eth_flush' },
+var methods = [{ 
+    name: 'getBalance', 
+    call: 'eth_getBalance', 
+    addDefaultblock: 2,
+    outputFormatter: formatters.convertToBigNumber
+}, { 
+    name: 'getStorage', 
+    call: 'eth_getStorage', 
+    addDefaultblock: 2
+}, { 
+    name: 'getStorageAt',
+    call: 'eth_getStorageAt',
+    addDefaultblock: 3,
+    inputFormatter: utils.toHex
+}, { 
+    name: 'getCode',
+    call: 'eth_getCode',
+    addDefaultblock: 2
+}, { 
+    name: 'getBlock', 
+    call: blockCall,
+    outputFormatter: formatters.outputBlockFormatter,
+    inputFormatter: [utils.toHex, function(param){ return (!param) ? false : true; }]
+}, {
+    name: 'getUncle',
+    call: uncleCall,
+    outputFormatter: formatters.outputBlockFormatter,
+    inputFormatter: [utils.toHex, utils.toHex, function(param){ return (!param) ? false : true; }]
+}, {
+    name: 'getCompilers',
+    call: 'eth_getCompilers'
+}, { 
+    name: 'getBlockTransactionCount',
+    call: getBlockTransactionCountCall,
+    outputFormatter: utils.toDecimal,
+    inputFormatter: utils.toHex 
+}, { 
+    name: 'getBlockUncleCount',
+    call: uncleCountCall,
+    outputFormatter: utils.toDecimal,
+    inputFormatter: utils.toHex
+}, { 
+    name: 'getTransaction',
+    call: 'eth_getTransactionByHash',
+    outputFormatter: formatters.outputTransactionFormatter
+}, {
+    name: 'getTransactionFromBlock',
+    call: transactionFromBlockCall,
+    outputFormatter: formatters.outputTransactionFormatter,
+    inputFormatter: utils.toHex
+}, {
+    name: 'getTransactionCount',
+    call: 'eth_getTransactionCount',
+    addDefaultblock: 2,
+    outputFormatter: utils.toDecimal
+}, { 
+    name: 'sendTransaction',
+    call: 'eth_sendTransaction',
+    inputFormatter: formatters.inputTransactionFormatter 
+}, { 
+    name: 'call',
+    call: 'eth_call',
+    addDefaultblock: 2,
+    inputFormatter: formatters.inputCallFormatter
+}, {
+    name: 'compile.solidity',
+    call: 'eth_compileSolidity'
+}, {
+    name: 'compile.lll',
+    call: 'eth_compileLLL',
+    inputFormatter: utils.toHex
+}, {
+    name: 'compile.serpent',
+    call: 'eth_compileSerpent',
+    inputFormatter: utils.toHex
+}, {
+    name: 'flush',
+    call: 'eth_flush'
+},
 
     // deprecated methods
     { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'eth.getBalance' },
@@ -2410,13 +2472,19 @@ module.exports = HttpProvider;
  * @date 2015
  */
 
-var messageId = 1;
+var Jsonrpc = function () {
+    this.messageId = 1;
+};
 
-/// Should be called to valid json create payload object
-/// @param method of jsonrpc call, required
-/// @param params, an array of method params, optional
-/// @returns valid jsonrpc payload object
-var toPayload = function (method, params) {
+/**
+ * Should be called to valid json create payload object
+ *
+ * @method toPayload
+ * @param {Function} method of jsonrpc call, required
+ * @param {Array} params, an array of method params, optional
+ * @returns {Object} valid jsonrpc payload object
+ */
+Jsonrpc.prototype.toPayload = function (method, params) {
     if (!method)
         console.error('jsonrpc method should be specified!');
 
@@ -2424,13 +2492,18 @@ var toPayload = function (method, params) {
         jsonrpc: '2.0',
         method: method,
         params: params || [],
-        id: messageId++
+        id: this.messageId++
     }; 
 };
 
-/// Should be called to check if jsonrpc response is valid
-/// @returns true if response is valid, otherwise false 
-var isValidResponse = function (response) {
+/**
+ * Should be called to check if jsonrpc response is valid
+ *
+ * @method isValidResponse
+ * @param {Object}
+ * @returns {Boolean} true if response is valid, otherwise false 
+ */
+Jsonrpc.prototype.isValidResponse = function (response) {
     return !!response &&
         !response.error &&
         response.jsonrpc === '2.0' &&
@@ -2438,20 +2511,21 @@ var isValidResponse = function (response) {
         response.result !== undefined; // only undefined is not valid json object
 };
 
-/// Should be called to create batch payload object
-/// @param messages, an array of objects with method (required) and params (optional) fields
-var toBatchPayload = function (messages) {
+/**
+ * Should be called to create batch payload object
+ *
+ * @method toBatchPayload
+ * @param {Array} messages, an array of objects with method (required) and params (optional) fields
+ * @returns {Array} batch payload
+ */
+Jsonrpc.prototype.toBatchPayload = function (messages) {
+    var self = this;
     return messages.map(function (message) {
-        return toPayload(message.method, message.params);
+        return self.toPayload(message.method, message.params);
     }); 
 };
 
-module.exports = {
-    toPayload: toPayload,
-    isValidResponse: isValidResponse,
-    toBatchPayload: toBatchPayload
-};
-
+module.exports = Jsonrpc;
 
 
 },{}],17:[function(require,module,exports){
@@ -2559,143 +2633,156 @@ module.exports = QtSyncProvider;
  * @date 2014
  */
 
-var jsonrpc = require('./jsonrpc');
+var Jsonrpc = require('./jsonrpc');
+var utils = require('../utils/utils');
 var c = require('../utils/config');
+
+var InvalidResponse = new Error('jsonrpc response is not valid');
 
 /**
  * It's responsible for passing messages to providers
  * It's also responsible for polling the ethereum node for incoming messages
  * Default poll timeout is 1 second
  */
-var requestManager = function() {
-    var polls = [];
-    var timeout = null;
-    var provider;
-
-    var send = function (data, callback) {
-        /*jshint maxcomplexity: 8 */
-
-        // FORMAT BASED ON ONE FORMATTER function
-        if(typeof data.inputFormatter === 'function') {
-            data.params = Array.prototype.map.call(data.params, function(item, index){
-                // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? data.inputFormatter(item) : item;
-            });
-
-        // FORMAT BASED ON the input FORMATTER ARRAY
-        } else if(data.inputFormatter instanceof Array) {
-            data.params = Array.prototype.map.call(data.inputFormatter, function(formatter, index){
-                // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? formatter(data.params[index]) : data.params[index];
-            });
-        }
-
-
-        var payload = jsonrpc.toPayload(data.method, data.params);
-        
-        if (!provider) {
-            console.error('provider is not set');
-            return null;
-        }
-
-        // HTTP ASYNC (only when callback is given, and it a HttpProvidor)
-        if(typeof callback === 'function' && provider.name === 'HTTP'){
-            provider.send(payload, function(result, status){
-
-                if (!jsonrpc.isValidResponse(result)) {
-                    if(typeof result === 'object' && result.error && result.error.message) {
-                        console.error(result.error.message);
-                        callback(result.error);
-                    } else {
-                        callback(new Error({
-                            status: status,
-                            error: result,
-                            message: 'Bad Request'
-                        }));
-                    }
-                    return null;
-                }
-
-                // format the output
-                callback(null, (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result);
-            });
-
-        // SYNC
-        } else {
-            var result = provider.send(payload);
-
-            if (!jsonrpc.isValidResponse(result)) {
-                if(typeof result === 'object' && result.error && result.error.message)
-                    console.error(result.error.message);
-                return null;
-            }
-
-            // format the output
-            return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
-        }
-        
-    };
-
-    var setProvider = function (p) {
-        provider = p;
-    };
-
-    /*jshint maxparams:4 */
-    var startPolling = function (data, pollId, callback, uninstall) {
-        polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
-    };
-    /*jshint maxparams:3 */
-
-    var stopPolling = function (pollId) {
-        for (var i = polls.length; i--;) {
-            var poll = polls[i];
-            if (poll.id === pollId) {
-                polls.splice(i, 1);
-            }
-        }
-    };
-
-    var reset = function () {
-        polls.forEach(function (poll) {
-            poll.uninstall(poll.id); 
-        });
-        polls = [];
-
-        if (timeout) {
-            clearTimeout(timeout);
-            timeout = null;
-        }
-        poll();
-    };
-
-    var poll = function () {
-        polls.forEach(function (data) {
-            // send async
-            send(data.data, function(error, result){
-                if (!(result instanceof Array) || result.length === 0) {
-                    return;
-                }
-                data.callback(result);
-            });
-        });
-        timeout = setTimeout(poll, c.ETH_POLLING_TIMEOUT);
-    };
-    
-    poll();
-
-    return {
-        send: send,
-        setProvider: setProvider,
-        startPolling: startPolling,
-        stopPolling: stopPolling,
-        reset: reset
-    };
+var RequestManager = function() {
+    this.jsonrpc = new Jsonrpc();
+    this.polls = [];
+    this.timeout = null;
+    this.provider;
+   
+    this.poll();
 };
 
-module.exports = requestManager;
+/**
+ * Should be used to synchronously send request
+ *
+ * @method send
+ * @param {Object|Array} data
+ * @return {Object}
+ */
+RequestManager.prototype.send = function (data) {
+    if (!this.provider) {
+        console.error('provider not implemented');
+        return null;
+    }
+
+    var payload = utils.isArray(data) ? this.jsonrpc.toBatchPayload(data) : this.jsonrpc.toPayload(data.method, data.params);
+    var result = this.provider.send(payload);
+
+    if (!this.jsonrpc.isValidResponse(result)) {
+        throw InvalidResponse;
+    }
+
+    return result.result;
+};
+
+/**
+ * Should be used to asynchronously send request
+ *
+ * @method sendAsync
+ * @param {Object|Array} data
+ * @param {Function} callback
+ */
+RequestManager.prototype.sendAsync = function (data, callback) {
+    var payload = utils.isArray(data) ? this.jsonrpc.toBatchPayload(data) : this.jsonrpc.toPayload(data.method, data.params);
+    var self = this;
+    this.provider.sendAsync(payload, function (err, result) {
+        if (err) {
+            return callback(err);
+        }
+        
+        if (!self.jsonrpc.isValidResponse(result)) {
+            return callback(InvalidResponse);
+        }
+
+        callback(null, result.result);
+    });
+};
+
+/**
+ * Should be used to set provider of request manager
+ *
+ * @method setProvider
+ * @param {Object}
+ */
+RequestManager.prototype.setProvider = function (p) {
+    this.provider = p;
+};
+
+/*jshint maxparams:4 */
+
+/**
+ * Should be used to start polling
+ *
+ * @method startPolling
+ * @param data
+ * @param pollId
+ * @param callback
+ * @param uninstall
+ *
+ * @todo cleanup number of params
+ */
+RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
+    this.polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
+};
+/*jshint maxparams:3 */
+
+/**
+ * Should be used to stop polling for filter with given id
+ *
+ * @method stopPolling
+ * @param pollId
+ */
+RequestManager.prototype.stopPolling = function (pollId) {
+    for (var i = this.polls.length; i--;) {
+        var poll = this.polls[i];
+        if (poll.id === pollId) {
+            this.polls.splice(i, 1);
+        }
+    }
+};
+
+/**
+ * Should be called to reset polling mechanism of request manager
+ *
+ * @method reset
+ */
+RequestManager.prototype.reset = function () {
+    this.polls.forEach(function (poll) {
+        poll.uninstall(poll.id); 
+    });
+    this.polls = [];
+
+    if (timeout) {
+        clearTimeout(timeout);
+        timeout = null;
+    }
+    this.poll();
+};
+
+/**
+ * Should be called to poll for changes on filter with given id
+ *
+ * @method poll
+ */
+RequestManager.prototype.poll = function () {
+    this.polls.forEach(function (data) {
+        // send async
+        sendAsync(data.data, function(error, result){
+            if (error || !(isArray(result)) || result.length === 0) {
+                return;
+            }
+
+            data.callback(result);
+        });
+    });
+    timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
+};
+
+module.exports = RequestManager;
 
 
-},{"../utils/config":5,"./jsonrpc":16}],20:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"./jsonrpc":16}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
