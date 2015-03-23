@@ -15,7 +15,7 @@ var tests = [
 describe('utils', function () {
     describe('isString', function () {
         tests.forEach(function (test) {
-            it('shoud test if value ' + test.func + ' is string: ' + test.is, function () {
+            it('should test if value ' + test.func + ' is string: ' + test.is, function () {
                 assert.equal(utils.isString(test.value), test.is);
             });
         });   
