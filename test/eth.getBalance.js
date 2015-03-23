@@ -10,25 +10,25 @@ var tests = [{
     formattedArgs: ['0x12d', '0x2'],
     result: '0x31981',
     formattedResult: '0x31981',
-    call: 'eth_getBalance'
+    call: 'eth_'+ method
 },{
     args: ['0x12d', '0x1'],
     formattedArgs: ['0x12d', '0x1'],
     result: '0x31981',
     formattedResult: '0x31981',
-    call: 'eth_getBalance'
+    call: 'eth_'+ method
 }, {
     args: [0x12d, 0x1],
     formattedArgs: ['0x12d', '0x1'],
     result: '0x31981',
     formattedResult: '0x31981',
-    call: 'eth_getBalance'
+    call: 'eth_'+ method
 }, {
     args: [0x12d],
     formattedArgs: ['0x12d', web3.eth.defaultBlock],
     result: '0x31981',
     formattedResult: '0x31981',
-    call: 'eth_getBalance'
+    call: 'eth_'+ method
 }];
 
 describe('eth', function () {
