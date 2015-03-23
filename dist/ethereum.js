@@ -541,7 +541,11 @@ module.exports = {
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
-exports.XMLHttpRequest = typeof XMLHttpRequest === undefined ? {} : XMLHttpRequest; // jshint ignore:line
+if (typeof XMLHttpRequest === undefined) {
+    exports.XMLHttpRequest = {};
+} else {
+    exports.XMLHttpRequest = XMLHttpRequest; // jshint ignore:line
+}
 
 
 },{}],5:[function(require,module,exports){
