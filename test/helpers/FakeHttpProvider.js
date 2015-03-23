@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = require('assert');
-var utils = require('../lib/utils/utils');
+var utils = require('../../lib/utils/utils');
 
 var getResponseStub = function () {
     return {

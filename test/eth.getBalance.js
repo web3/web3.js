@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var web3 = require('../index');
-var FakeHttpProvider = require('./FakeHttpProvider');
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var method = 'getBalance';
 

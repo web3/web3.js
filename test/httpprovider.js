@@ -5,7 +5,7 @@ var SandboxedModule = require('sandboxed-module');
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
     requires: {
-        'xmlhttprequest': require('./FakeXMLHttpRequest')
+        'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     }
 });
 
