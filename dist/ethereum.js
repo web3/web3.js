@@ -1128,7 +1128,7 @@ var web3Methods = function () {
         name: 'sha3',
         call: 'web3_sha3',
         params: 1,
-        inputFormatter: function (args) { return [utils.toHex(args[0])]; }
+        inputFormatter:[utils.toHex]
     });
 
     return [sha3];
@@ -1775,6 +1775,7 @@ var getBalance = new Method({
     name: 'getBalance', 
     call: 'eth_getBalance', 
     params: 2,
+    inputFormatter: [null, formatters.inputBlockNumberFormatter],
     outputFormatter: formatters.inputNumberFormatter
 });
 
@@ -2277,15 +2278,18 @@ module.exports = filter;
 var utils = require('../utils/utils');
 
 /**
- * Should the input to a big number
+ * Should the format output to a big number
  *
- * @method inputNumberFormatter
+ * @method outputNumberFormatter
  * @param {String|Number|BigNumber}
  * @returns {BigNumber} object
  */
-var inputNumberFormatter = function (args) {
-    args[0] = utils.toBigNumber(args[0]);
-    return args;
+var outputNumberFormatter = function (number) {
+    return utils.toBigNumber(number);
+};
+
+var inputBlockNumberFormatter = function (blockNumber) {
+    return blockNumber === null ? -1 : blockNumber;
 };
 
 /**
@@ -2295,8 +2299,7 @@ var inputNumberFormatter = function (args) {
  * @param {Object} transaction options
  * @returns object
 */
-var inputTransactionFormatter = function (args){
-    var options = args[0];
+var inputTransactionFormatter = function (options){
 
     // make code -> data
     if (options.code) {
@@ -2308,7 +2311,7 @@ var inputTransactionFormatter = function (args){
         options[key] = utils.fromDecimal(options[key]);
     });
 
-    return args;
+    return options; 
 };
 
 /**
@@ -2332,16 +2335,15 @@ var outputTransactionFormatter = function (tx){
  * @param {Object} transaction options
  * @returns object
 */
-var inputCallFormatter = function (args){
-    var options = args[0];
-
+var inputCallFormatter = function (options){
+    
     // make code -> data
     if (options.code) {
         options.data = options.code;
         delete options.code;
     }
 
-    return args;
+    return options; 
 };
 
 var inputBlockFormatter = function (args) {
@@ -2410,8 +2412,7 @@ var outputLogFormatter = function(log){
  * @param {Object} transaction object
  * @returns {Object}
 */
-var inputPostFormatter = function(args){
-    var post = args[0];
+var inputPostFormatter = function(post){
 
     post.payload = utils.toHex(post.payload);
     post.ttl = utils.fromDecimal(post.ttl);
@@ -2426,7 +2427,7 @@ var inputPostFormatter = function(args){
         return utils.fromAscii(topic);
     });
 
-    return args;
+    return post; 
 };
 
 /**
@@ -2460,12 +2461,13 @@ var outputPostFormatter = function(post){
 };
 
 module.exports = {
-    inputNumberFormatter: inputNumberFormatter,
+    inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
     inputCallFormatter: inputCallFormatter,
     inputPostFormatter: inputPostFormatter,
     inputBlockFormatter: inputBlockFormatter,
     inputUncleFormatter: inputUncleFormatter,
+    outputNumberFormatter: outputNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputBlockFormatter: outputBlockFormatter,
     outputLogFormatter: outputLogFormatter,
@@ -2695,7 +2697,13 @@ Method.prototype.validateArgs = function (args) {
  * @return {Array}
  */
 Method.prototype.formatInput = function (args) {
-    return this.inputFormatter ? this.inputFormatter(args) : args;
+    if (!this.inputFormatter) {
+        return args;
+    }
+
+    return this.inputFormatter.map(function (formatter, index) {
+        return formatter ? formatter(args[index]) : args[index];
+    });
 };
 
 /**
@@ -2706,7 +2714,7 @@ Method.prototype.formatInput = function (args) {
  * @return {Object}
  */
 Method.prototype.formatOutput = function (result) {
-    return this.outputFormatter && !!result ? this.outputFormatter(result) : result;
+    return this.outputFormatter && result !== null ? this.outputFormatter(result) : result;
 };
 
 /**

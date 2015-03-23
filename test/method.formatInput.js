@@ -7,14 +7,12 @@ describe('method', function () {
         it('should format plain input', function () {
             
             // given
-            var formatter = function (args) {
-                return args.map(function (arg) {
-                    return arg + '*';
-                });
+            var star = function (arg) {
+                return arg + '*';
             };
             
             var method = new Method({
-                inputFormatter: formatter
+                inputFormatter: [star, star, star]
             });
             var args = ['1','2','3'];
             var expectedArgs = ['1*', '2*', '3*'];
