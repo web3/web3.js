@@ -1155,7 +1155,7 @@ var setupMethods = function (obj, methods) {
                 params: params
             };
 
-            if (callback) {
+            if (callback && web3.manager.sendAsync) {
                 return web3.manager.sendAsync(payload, function (err, result) {
                     callback(null, method.formatOutput(result));
                 });
@@ -1880,15 +1880,13 @@ var compileSolidity = new Method({
 var compileLLL = new Method({
     name: 'compile.lll',
     call: 'eth_compileLLL',
-    params: 1,
-    inputFormatter: utils.toHex
+    params: 1
 });
 
 var compileSerpent = new Method({
     name: 'compile.serpent',
     call: 'eth_compileSerpent',
-    params: 1,
-    inputFormatter: utils.toHex
+    params: 1
 });
 
 var flush = new Method({
@@ -2282,6 +2280,7 @@ module.exports = filter;
  */
 
 var utils = require('../utils/utils');
+var config = require('../utils/config');
 
 /**
  * Should the format output to a big number
@@ -2295,7 +2294,7 @@ var outputBigNumberFormatter = function (number) {
 };
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    return blockNumber === undefined ? "latest" : utils.toHex(blockNumber); // instead use default block number here
+    return blockNumber === undefined ? config.ETH_DEFAULTBLOCK : utils.toHex(blockNumber); // instead use default block number here
 };
 
 /**
@@ -2464,7 +2463,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6}],16:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 

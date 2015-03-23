@@ -25,7 +25,7 @@ var tests = [{
     call: 'eth_getBalance'
 }, {
     args: [0x12d],
-    formattedArgs: ['0x12d', 'latest'], // here we might want to get current defaultBlock
+    formattedArgs: ['0x12d', web3.eth.defaultBlock],
     result: '0x31981',
     formattedResult: '0x31981',
     call: 'eth_getBalance'
