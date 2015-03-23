@@ -1147,11 +1147,12 @@ var setupMethods = function (obj, methods) {
             var args = Array.prototype.slice.call(arguments);
             var call = method.getCall(args); 
             var callback = method.extractCallback(args);
-            method.validateArgs(args);
+            var params = method.formatInput(args);
+            method.validateArgs(params);
             
             var payload = {
                 method: call,
-                params: method.formatInput(args)
+                params: params
             };
 
             if (callback) {
@@ -1775,7 +1776,7 @@ var getBalance = new Method({
     name: 'getBalance', 
     call: 'eth_getBalance', 
     params: 2,
-    inputFormatter: [null, formatters.inputBlockNumberFormatter],
+    inputFormatter: [utils.toHex, formatters.inputBlockNumberFormatter],
     outputFormatter: formatters.inputNumberFormatter
 });
 
@@ -2289,7 +2290,7 @@ var outputNumberFormatter = function (number) {
 };
 
 var inputBlockNumberFormatter = function (blockNumber) {
-    return blockNumber === null ? -1 : blockNumber;
+    return blockNumber === undefined ? "pending" : utils.toHex(blockNumber); // instead use default block number here
 };
 
 /**

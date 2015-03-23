@@ -11,12 +11,24 @@ var tests = [{
     result: '0x31981',
     formattedResult: '0x31981',
     call: 'eth_getBalance'
+}, {
+    args: [0x12d, 0x1],
+    formattedArgs: ['0x12d', '0x1'],
+    result: '0x31981',
+    formattedResult: '0x31981',
+    call: 'eth_getBalance'
+}, {
+    args: [0x12d],
+    formattedArgs: ['0x12d', 'pending'], // here we might want to get current defaultBlock
+    result: '0x31981',
+    formattedResult: '0x31981',
+    call: 'eth_getBalance'
 }];
 
 describe('eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
-            it('sync test:' + index, function () {
+            it('sync test: ' + index, function () {
                 
                 // given
                 var provider = new FakeHttpProvider();
