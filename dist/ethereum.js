@@ -1117,7 +1117,7 @@ var shh = require('./web3/shh');
 var watches = require('./web3/watches');
 var filter = require('./web3/filter');
 var utils = require('./utils/utils');
-var formatters = require('./solidity/formatters');
+var formatters = require('./web3/formatters');
 var RequestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 var Method = require('./web3/method');
@@ -1128,7 +1128,7 @@ var web3Methods = function () {
         name: 'sha3',
         call: 'web3_sha3',
         params: 1,
-        inputFormatter: utils.toHex
+        inputFormatter: function (args) { return [utils.toHex(args[0])]; }
     });
 
     return [sha3];
@@ -1362,7 +1362,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./solidity/formatters":2,"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":12,"./web3/filter":14,"./web3/method":18,"./web3/net":19,"./web3/requestmanager":21,"./web3/shh":22,"./web3/watches":24}],9:[function(require,module,exports){
+},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":12,"./web3/filter":14,"./web3/formatters":15,"./web3/method":18,"./web3/net":19,"./web3/requestmanager":21,"./web3/shh":22,"./web3/watches":24}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
