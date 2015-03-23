@@ -23,9 +23,9 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  */
 
 var utils = require('../utils/utils');
-var c = require('../utils/config');
+var c     = require('../utils/config');
 var types = require('./types');
-var f = require('./formatters');
+var f     = require('./formatters');
 
 /**
  * throw incorrect type error
@@ -96,6 +96,7 @@ var formatInput = function (inputs, params) {
         var formatter = inputTypes[j - 1].format;
 
         if (isArrayType(inputs[i].type))
+
             toAppendArrayContent += params[i].reduce(function (acc, curr) {
                 return acc + formatter(curr);
             }, "");
@@ -134,7 +135,6 @@ var outputTypes = types.outputTypes();
  * @returns {Array} output params
  */
 var formatOutput = function (outs, output) {
-
     output = output.slice(2);
     var result = [];
     var padding = c.ETH_PADDING * 2;
@@ -206,7 +206,6 @@ var inputParser = function (json) {
 
         parser[displayName][typeName] = impl;
     });
-
     return parser;
 };
 
@@ -536,11 +535,16 @@ module.exports = {
     outputTypes: outputTypes
 };
 
-
 },{"./formatters":2}],4:[function(require,module,exports){
 'use strict';
 
-exports.XMLHttpRequest = window.XMLHttpRequest;
+// go env doesn't have and need XMLHttpRequest
+if (typeof XMLHttpRequest === 'undefined') {
+    exports.XMLHttpRequest = {};
+} else {
+    exports.XMLHttpRequest = XMLHttpRequest; // jshint ignore:line
+}
+
 
 },{}],5:[function(require,module,exports){
 /*
@@ -579,7 +583,9 @@ exports.XMLHttpRequest = window.XMLHttpRequest;
  */
 
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
-var BigNumber = require('bignumber.js');
+if (process.env.NODE_ENV !== 'build') {
+    var BigNumber = require('bignumber.js'); // jshint ignore:line
+}
 
 /**
  * Ethereum units.
@@ -616,7 +622,6 @@ module.exports = {
     ETH_POLLING_TIMEOUT: 1000,
     ETH_DEFAULTBLOCK: 'latest'
 };
-
 
 },{"bignumber.js":"bignumber.js"}],6:[function(require,module,exports){
 /*
@@ -696,7 +701,7 @@ var findIndex = function (array, callback) {
  * Should be called to get sting from it's hex representation
  *
  * @method toAscii
- * @param {String} string in hex
+ * @param {String} string in hex (ie '0x546869734973412054657374203837232b2a24255f2d3f')
  * @returns {String} ascii string representation of hex value
  */
 var toAscii = function (hex) {
@@ -707,6 +712,7 @@ var toAscii = function (hex) {
     if (hex.substring(0, 2) === '0x') {
         i = 2;
     }
+
     for (; i < l; i += 2) {
         var code = parseInt(hex.substr(i, 2), 16);
         if (code === 0) {
@@ -1049,7 +1055,7 @@ var isArray = function (object) {
  */
 var phantomjsFix = function () {
     if (!Function.prototype.bind) {
-        Function.prototype.bind = function (oThis) {                // jshint ignore:line
+        Function.prototype.bind = function (oThis) { // jshint ignore:line
             if (typeof this !== "function") {
                 // closest thing possible to the ECMAScript 5 internal IsCallable function
                 throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
@@ -1096,16 +1102,11 @@ module.exports = {
     phantomjsFix: phantomjsFix
 };
 
-<<<<<<< HEAD
-
 },{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
     "version": "0.1.3"
 }
 },{}],8:[function(require,module,exports){
-=======
-},{}],6:[function(require,module,exports){
->>>>>>> master
 /*
     This file is part of ethereum.js.
 
@@ -1132,20 +1133,19 @@ module.exports={
  * @date 2014
  */
 
-var version = require('./version.json');
-var net = require('./web3/net');
-var eth = require('./web3/eth');
-var db = require('./web3/db');
-var shh = require('./web3/shh');
-var watches = require('./web3/watches');
-var filter = require('./web3/filter');
-var utils = require('./utils/utils');
-var formatters = require('./solidity/formatters');
+var version        = require('./version.json');
+var net            = require('./web3/net');
+var eth            = require('./web3/eth');
+var db             = require('./web3/db');
+var shh            = require('./web3/shh');
+var watches        = require('./web3/watches');
+var filter         = require('./web3/filter');
+var utils          = require('./utils/utils');
+var formatters     = require('./solidity/formatters');
 var requestManager = require('./web3/requestmanager');
-var c = require('./utils/config');
+var c              = require('./utils/config');
 
 /// @returns an array of objects describing web3 api methods
-<<<<<<< HEAD
 var web3Methods = [
     { name: 'sha3', call: 'web3_sha3', inputFormatter: utils.toHex },
 ];
@@ -1154,15 +1154,9 @@ var web3Properties = [
     { name: 'version.network', getter: 'net_version' }
 ];
 
-=======
-var web3Methods = function () {
-    return [{
-        name: 'sha3',
-        call: 'web3_sha3'
-    }];
-};
->>>>>>> master
 
+// PhantomJS doesn't support bind yet: https://github.com/ariya/phantomjs/issues/10522
+// See details in the description of the function
 utils.phantomjsFix();
 
 /// creates methods in a given object based on method description on input
@@ -1261,7 +1255,6 @@ var setupProperties = function (obj, properties) {
             Object.defineProperty(obj[objectProperties[0]], objectProperties[1], proto);        
         } else
             Object.defineProperty(obj, property.name, proto);
-
     });
 };
 
@@ -1321,7 +1314,6 @@ var web3 = {
     fromAscii: utils.fromAscii,
 
     /// @returns decimal representaton of hex value prefixed by 0x
-
     toDecimal: utils.toDecimal,
 
     /// @returns hex representation (prefixed by 0x) of decimal value
@@ -1366,15 +1358,15 @@ var web3 = {
             // if its event, treat it differently
             if (fil._isEvent)
                 return fil(eventParams, options);
-
+            
             return filter(fil, ethWatch, formatters.outputLogFormatter);
         },
         // DEPRECATED
         watch: function (fil, eventParams, options) {
-                console.warn('eth.watch() is deprecated please use eth.filter() instead.');
-                return this.filter(fil, eventParams, options);
-            }
-            /*jshint maxparams:3 */
+            console.warn('eth.watch() is deprecated please use eth.filter() instead.');
+            return this.filter(fil, eventParams, options);
+        }
+        /*jshint maxparams:3 */
     },
 
     /// db object prototype
@@ -1425,12 +1417,7 @@ setupMethods(shhWatch, watches.shh());
  */
 module.exports = web3;
 
-<<<<<<< HEAD
-
 },{"./solidity/formatters":2,"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":11,"./web3/filter":13,"./web3/net":17,"./web3/requestmanager":19,"./web3/shh":20,"./web3/watches":22}],9:[function(require,module,exports){
-=======
-},{"./solidity/formatters":2,"./utils/config":4,"./utils/utils":5,"./web3/db":8,"./web3/eth":9,"./web3/filter":11,"./web3/net":15,"./web3/requestmanager":17,"./web3/shh":18,"./web3/watches":20}],7:[function(require,module,exports){
->>>>>>> master
 /*
     This file is part of ethereum.js.
 
@@ -2036,12 +2023,12 @@ var utils = require('../utils/utils');
 /// Should be called to check if filter implementation is valid
 /// @returns true if it is, otherwise false
 var implementationIsValid = function (i) {
-    return !!i && 
-        typeof i.newFilter === 'function' && 
-        typeof i.getLogs === 'function' && 
+    return !!i &&
+        typeof i.newFilter       === 'function' &&
+        typeof i.getLogs         === 'function' &&
         typeof i.uninstallFilter === 'function' &&
-        typeof i.startPolling === 'function' &&
-        typeof i.stopPolling === 'function';
+        typeof i.startPolling    === 'function' &&
+        typeof i.stopPolling     === 'function';
 };
 
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
@@ -2052,7 +2039,7 @@ var getOptions = function (options) {
 
     if (typeof options === 'string') {
         return options;
-    } 
+    }
 
     options = options || {};
 
@@ -2082,8 +2069,8 @@ var getOptions = function (options) {
     }
 
     // make sure topics, get converted to hex
-    if(options.topics instanceof Array) {
-        options.topics = options.topics.map(function(topic){
+    if (options.topics instanceof Array) {
+        options.topics = options.topics.map(function (topic) {
             return utils.toHex(topic);
         });
     }
@@ -2106,7 +2093,7 @@ var getOptions = function (options) {
 /// @param options are filter options
 /// @param implementation, an abstract polling implementation
 /// @param formatter (optional), callback function which formats output before 'real' callback 
-var filter = function(options, implementation, formatter) {
+var filter = function (options, implementation, formatter) {
     if (!implementationIsValid(implementation)) {
         console.error('filter implemenation is invalid');
         return;
@@ -2128,11 +2115,11 @@ var filter = function(options, implementation, formatter) {
 
     implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
 
-    var watch = function(callback) {
+    var watch = function (callback) {
         callbacks.push(callback);
     };
 
-    var stopWatching = function() {
+    var stopWatching = function () {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
@@ -2145,34 +2132,34 @@ var filter = function(options, implementation, formatter) {
                 return formatter ? formatter(message) : message;
             }) : results;
     };
-    
+
     return {
         watch: watch,
         stopWatching: stopWatching,
         get: get,
 
         // DEPRECATED methods
-        changed:  function(){
+        changed: function () {
             console.warn('watch().changed() is deprecated please use filter().watch() instead.');
             return watch.apply(this, arguments);
         },
-        arrived:  function(){
+        arrived: function () {
             console.warn('watch().arrived() is deprecated please use filter().watch() instead.');
             return watch.apply(this, arguments);
         },
-        happened:  function(){
+        happened: function () {
             console.warn('watch().happened() is deprecated please use filter().watch() instead.');
             return watch.apply(this, arguments);
         },
-        uninstall: function(){
+        uninstall: function () {
             console.warn('watch().uninstall() is deprecated please use filter().stopWatching() instead.');
             return stopWatching.apply(this, arguments);
         },
-        messages: function(){
+        messages: function () {
             console.warn('watch().messages() is deprecated please use filter().get() instead.');
             return get.apply(this, arguments);
         },
-        logs: function(){
+        logs: function () {
             console.warn('watch().logs() is deprecated please use filter().get() instead.');
             return get.apply(this, arguments);
         }
@@ -2180,7 +2167,6 @@ var filter = function(options, implementation, formatter) {
 };
 
 module.exports = filter;
-
 
 },{"../utils/utils":6}],14:[function(require,module,exports){
 /*
@@ -2408,28 +2394,31 @@ module.exports = {
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2014
  */
 
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
+if (process.env.NODE_ENV !== 'build') {
+    var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
+}
 
-var HttpProvider = function (host) {
-    this.name  = 'HTTP';
+var HttpProvider = function(host) {
+    this.name = 'HTTP';
+    this.handlers = [];
     this.host = host || 'http://localhost:8080';
 };
 
-HttpProvider.prototype.send = function (payload, callback) {
+HttpProvider.prototype.send = function(payload, callback) {
     var request = new XMLHttpRequest();
+    request.open('POST', this.host, false);
 
     // ASYNC
-    if(typeof callback === 'function') {
+    if (typeof callback === 'function') {
         request.onreadystatechange = function() {
-            if(request.readyState === 4) {
+            if (request.readyState === 4) {
                 var result = '';
                 try {
                     result = JSON.parse(request.responseText);
-                } catch(error) {
+                } catch (error) {
                     result = error;
                 }
                 callback(result, request.status);
@@ -2439,21 +2428,20 @@ HttpProvider.prototype.send = function (payload, callback) {
         request.open('POST', this.host, true);
         request.send(JSON.stringify(payload));
 
-    // SYNC
+        // SYNC
     } else {
         request.open('POST', this.host, false);
         request.send(JSON.stringify(payload));
 
         // check request.status
-        if(request.status !== 200)
+        if (request.status !== 200)
             return;
         return JSON.parse(request.responseText);
-        
+
     }
 };
 
 module.exports = HttpProvider;
-
 
 },{"xmlhttprequest":4}],16:[function(require,module,exports){
 /*
