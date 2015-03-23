@@ -540,7 +540,7 @@ module.exports = {
 },{"./formatters":2}],4:[function(require,module,exports){
 'use strict';
 
-exports.XMLHttpRequest = window.XMLHttpRequest;
+exports.XMLHttpRequest = XMLHttpRequest;
 
 },{}],5:[function(require,module,exports){
 /*
@@ -2844,7 +2844,7 @@ module.exports = {
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
-module.exports = window.BigNumber;
+module.exports = BigNumber;
 
 
 },{}],"ethereum.js":[function(require,module,exports){
@@ -2859,4 +2859,4 @@ module.exports = web3;
 },{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":15,"./lib/web3/qtsync":18}]},{},["ethereum.js"])
 
 
-//# sourceMappingURL=ethereum.js.map
+//# sourceMappingURL=ethereum-light.js.map

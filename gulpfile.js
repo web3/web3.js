@@ -18,9 +18,9 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
 var DEST = './dist/';
-var DEST2 = './dist/light/'; // jshint ignore:line
 var src = 'index';
 var dst = 'ethereum';
+var lightDst = 'ethereum-light';
 
 var browserifyOptions = {
     debug: true,
@@ -55,19 +55,19 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('buildNormal', ['clean'], function () {
+gulp.task('buildLight', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'ethereum.js'})
         .ignore('bignumber.js')
         .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
         .add('./' + src + '.js')
         .bundle()
-        .pipe(exorcist(path.join( DEST2, dst + '.js.map')))
-        .pipe(source(dst + '.js'))
-        .pipe(gulp.dest( DEST2 ))
+        .pipe(exorcist(path.join( DEST, lightDst + '.js.map')))
+        .pipe(source(lightDst + '.js'))
+        .pipe(gulp.dest( DEST ))
         .pipe(streamify(uglify()))
-        .pipe(rename(dst + '.min.js'))
-        .pipe(gulp.dest( DEST2 ));
+        .pipe(rename(lightDst + '.min.js'))
+        .pipe(gulp.dest( DEST ));
 });
 
 gulp.task('buildStandalone', ['clean'], function () {
@@ -89,9 +89,9 @@ gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('normal', ['versionReplace','bower', 'lint', 'buildNormal']);
+gulp.task('light', ['versionReplace','bower', 'lint', 'buildLight']);
 gulp.task('standalone', ['versionReplace','bower', 'lint', 'buildStandalone']);
-gulp.task('default', ['normal', 'standalone']);
+gulp.task('default', ['light', 'standalone']);
 
 
 gulp.task('version', ['versionReplace']);

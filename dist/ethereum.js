@@ -540,7 +540,7 @@ module.exports = {
 },{"./formatters":2}],4:[function(require,module,exports){
 'use strict';
 
-exports.XMLHttpRequest = window.XMLHttpRequest;
+exports.XMLHttpRequest = XMLHttpRequest;
 
 },{}],5:[function(require,module,exports){
 /*
