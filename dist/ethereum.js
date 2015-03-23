@@ -828,13 +828,13 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
-    if(isBoolean(val))
-        return val;
+    if (isBoolean(val))
+        return fromDecimal(+val);
 
-    if(isBigNumber(val))
+    if (isBigNumber(val))
         return fromDecimal(val);
 
-    if(isObject(val))
+    if (isObject(val))
         return fromAscii(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
@@ -1783,29 +1783,33 @@ var getBalance = new Method({
 var getStorageAt = new Method({
     name: 'getStorageAt', 
     call: 'eth_getStorageAt', 
-    params: 3
+    params: 3,
+    inputFormatter: [null, null, formatters.inputBlockNumberFormatter]
 });
 
 var getCode = new Method({
     name: 'getCode',
     call: 'eth_getCode',
-    params: 2
+    params: 2,
+    inputFormatter: [null, formatters.inputBlockNumberFormatter]
 });
 
 var getBlock = new Method({
     name: 'getBlock', 
     call: blockCall,
-    params: 1,
-    outputFormatter: formatters.outputBlockFormatter,
-    inputFormatter: formatters.inputBlockFormatter
+    params: 2,
+    inputFormatter: [utils.toHex, function (val) { return !!val; }],
+    outputFormatter: formatters.outputBlockFormatter
+
 });
 
 var getUncle = new Method({
     name: 'getUncle',
     call: uncleCall,
-    params: 1,
+    params: 2,
+    inputFormatter: [utils.toHex, utils.toHex],
     outputFormatter: formatters.outputBlockFormatter,
-    inputFormatter: formatters.inputUncleFormatter
+
 });
 
 var getCompilers = new Method({
@@ -2347,19 +2351,6 @@ var inputCallFormatter = function (options){
     return options; 
 };
 
-var inputBlockFormatter = function (args) {
-    args[0] = utils.toHex(args[0]);
-    args[1] = !!args[1];
-    return args;
-};
-
-var inputUncleFormatter = function (args) {
-    args[0] = utils.toHex(args[0]);
-    args[1] = utils.toHex(args[1]);
-    args[2] = !!args[2];
-    return args;
-};
-
 /**
  * Formats the output of a block to its proper values
  *
@@ -2380,7 +2371,7 @@ var outputBlockFormatter = function(block) {
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
 
-    if(block.transactions instanceof Array) {
+    if (utils.isArray(block.transactions)) {
         block.transactions.forEach(function(item){
             if(!utils.isString(item))
                 return outputTransactionFormatter(item);
@@ -2419,9 +2410,9 @@ var inputPostFormatter = function(post){
     post.ttl = utils.fromDecimal(post.ttl);
     post.priority = utils.fromDecimal(post.priority);
 
-    if(!(post.topics instanceof Array))
+    if(!utils.isArray(post.topics)) {
         post.topics = [post.topics];
-
+    }
 
     // format the following options
     post.topics = post.topics.map(function(topic){
@@ -2447,10 +2438,8 @@ var outputPostFormatter = function(post){
     post.payloadRaw = post.payload;
     post.payload = utils.toAscii(post.payload);
 
-    if(post.payload.indexOf('{') === 0 || post.payload.indexOf('[') === 0) {
-        try {
-            post.payload = JSON.parse(post.payload);
-        } catch (e) { }
+    if (utils.isJson(post.payload)) {
+        post.payload = JSON.parse(post.payload);
     }
 
     // format the following options
@@ -2466,8 +2455,6 @@ module.exports = {
     inputTransactionFormatter: inputTransactionFormatter,
     inputCallFormatter: inputCallFormatter,
     inputPostFormatter: inputPostFormatter,
-    inputBlockFormatter: inputBlockFormatter,
-    inputUncleFormatter: inputUncleFormatter,
     outputNumberFormatter: outputNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputBlockFormatter: outputBlockFormatter,
@@ -2979,6 +2966,10 @@ RequestManager.prototype.reset = function () {
  */
 RequestManager.prototype.poll = function () {
     this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
+
+    if (!this.polls.length) {
+        return;
+    }
 
     if (!this.provider) {
         console.error(errors.InvalidProvider);
