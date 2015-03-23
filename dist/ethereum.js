@@ -540,7 +540,9 @@ module.exports = {
 },{"./formatters":2}],4:[function(require,module,exports){
 'use strict';
 
-exports.XMLHttpRequest = XMLHttpRequest;
+// go env doesn't have and need XMLHttpRequest
+exports.XMLHttpRequest = typeof XMLHttpRequest === undefined ? {} : XMLHttpRequest; // jshint ignore:line
+
 
 },{}],5:[function(require,module,exports){
 /*
