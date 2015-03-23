@@ -1733,10 +1733,11 @@ module.exports = {
  *      {
  *      name: 'getBlock',
  *      call: blockCall,
+ *      params: 2,
  *      outputFormatter: formatters.outputBlockFormatter,
  *      inputFormatter: [ // can be a formatter funciton or an array of functions. Where each item in the array will be used for one parameter
  *           utils.toHex, // formats paramter 1
- *           function(param){ if(!param) return false; } // formats paramter 2
+ *           function(param){ return !!param; } // formats paramter 2
  *         ]
  *       },
  *
@@ -1776,22 +1777,22 @@ var getBalance = new Method({
     name: 'getBalance', 
     call: 'eth_getBalance', 
     params: 2,
-    inputFormatter: [utils.toHex, formatters.inputBlockNumberFormatter],
-    outputFormatter: formatters.inputNumberFormatter
+    inputFormatter: [utils.toHex, formatters.inputDefaultBlockNumberFormatter],
+    outputFormatter: formatters.outputBigNumberFormatter
 });
 
 var getStorageAt = new Method({
     name: 'getStorageAt', 
     call: 'eth_getStorageAt', 
     params: 3,
-    inputFormatter: [null, null, formatters.inputBlockNumberFormatter]
+    inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var getCode = new Method({
     name: 'getCode',
     call: 'eth_getCode',
     params: 2,
-    inputFormatter: [null, formatters.inputBlockNumberFormatter]
+    inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var getBlock = new Method({
@@ -1800,14 +1801,13 @@ var getBlock = new Method({
     params: 2,
     inputFormatter: [utils.toHex, function (val) { return !!val; }],
     outputFormatter: formatters.outputBlockFormatter
-
 });
 
 var getUncle = new Method({
     name: 'getUncle',
     call: uncleCall,
     params: 2,
-    inputFormatter: [utils.toHex, utils.toHex],
+    inputFormatter: [utils.toHex, utils.toHex, function (val) { return !!val; }],
     outputFormatter: formatters.outputBlockFormatter,
 
 });
@@ -1822,16 +1822,16 @@ var getBlockTransactounCount = new Method({
     name: 'getBlockTransactionCount',
     call: getBlockTransactionCountCall,
     params: 1,
-    outputFormatter: utils.toDecimal,
-    inputFormatter: utils.toHex 
+    inputFormatter: [utils.toHex],
+    outputFormatter: utils.toDecimal
 });
 
 var getBlockUncleCount = new Method({
     name: 'getBlockUncleCount',
     call: uncleCountCall,
     params: 1,
-    outputFormatter: utils.toDecimal,
-    inputFormatter: utils.toHex
+    inputFormatter: [utils.toHex],
+    outputFormatter: utils.toDecimal
 });
 
 var getTransaction = new Method({
@@ -1845,14 +1845,15 @@ var getTransactionFromBlock = new Method({
     name: 'getTransactionFromBlock',
     call: transactionFromBlockCall,
     params: 2,
-    outputFormatter: formatters.outputTransactionFormatter,
-    inputFormatter: utils.toHex // HERE!!!
+    inputFormatter: [utils.toHex, utils.toHex],
+    outputFormatter: formatters.outputTransactionFormatter
 });
 
 var getTransactionCount = new Method({
     name: 'getTransactionCount',
     call: 'eth_getTransactionCount',
     params: 2,
+    inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
     outputFormatter: utils.toDecimal
 });
 
@@ -1860,14 +1861,14 @@ var sendTransaction = new Method({
     name: 'sendTransaction',
     call: 'eth_sendTransaction',
     params: 1,
-    inputFormatter: formatters.inputTransactionFormatter 
+    inputFormatter: [formatters.inputTransactionFormatter]
 });
 
 var call = new Method({
     name: 'call',
     call: 'eth_call',
     params: 2,
-    inputFormatter: formatters.inputCallFormatter
+    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var compileSolidity = new Method({
@@ -2285,16 +2286,16 @@ var utils = require('../utils/utils');
 /**
  * Should the format output to a big number
  *
- * @method outputNumberFormatter
+ * @method outputBigNumberFormatter
  * @param {String|Number|BigNumber}
  * @returns {BigNumber} object
  */
-var outputNumberFormatter = function (number) {
+var outputBigNumberFormatter = function (number) {
     return utils.toBigNumber(number);
 };
 
-var inputBlockNumberFormatter = function (blockNumber) {
-    return blockNumber === undefined ? "pending" : utils.toHex(blockNumber); // instead use default block number here
+var inputDefaultBlockNumberFormatter = function (blockNumber) {
+    return blockNumber === undefined ? "latest" : utils.toHex(blockNumber); // instead use default block number here
 };
 
 /**
@@ -2451,11 +2452,11 @@ var outputPostFormatter = function(post){
 };
 
 module.exports = {
-    inputBlockNumberFormatter: inputBlockNumberFormatter,
+    inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
     inputCallFormatter: inputCallFormatter,
     inputPostFormatter: inputPostFormatter,
-    outputNumberFormatter: outputNumberFormatter,
+    outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputBlockFormatter: outputBlockFormatter,
     outputLogFormatter: outputLogFormatter,

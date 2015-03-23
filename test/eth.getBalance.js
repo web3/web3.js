@@ -19,7 +19,7 @@ var tests = [{
     call: 'eth_getBalance'
 }, {
     args: [0x12d],
-    formattedArgs: ['0x12d', 'pending'], // here we might want to get current defaultBlock
+    formattedArgs: ['0x12d', 'latest'], // here we might want to get current defaultBlock
     result: '0x31981',
     formattedResult: '0x31981',
     call: 'eth_getBalance'
@@ -45,7 +45,7 @@ describe('eth', function () {
                 var result = web3.eth[method].apply(null, test.args.slice(0));
                 
                 // then 
-                assert.equal(test.formattedResult, result);
+                assert.equal(+test.formattedResult, result.toNumber());
             });
             
             it('async test: ' + index, function (done) {
@@ -61,7 +61,7 @@ describe('eth', function () {
                 };
                 provider.injectValidation(validation);
                 var callback = function (err, result) {
-                    assert.equal(test.formattedResult, result);
+                    assert.equal(+test.formattedResult, result.toNumber());
                     done();
                 };
 
