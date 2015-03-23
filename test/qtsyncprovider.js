@@ -2,6 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var SandboxedModule = require('sandboxed-module');
 
+SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var QtSyncProvider = SandboxedModule.require('../lib/web3/qtsync', {
     globals: {
         navigator: require('./FakeQtNavigator')
