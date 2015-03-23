@@ -1728,7 +1728,6 @@ var uncleCountCall = function (args) {
 var methods = [
     { name: 'getBalance', call: 'eth_getBalance', addDefaultblock: 2,
         outputFormatter: formatters.convertToBigNumber},
-    { name: 'getStorage', call: 'eth_getStorage', addDefaultblock: 2},
     { name: 'getStorageAt', call: 'eth_getStorageAt', addDefaultblock: 3,
         inputFormatter: utils.toHex},
     { name: 'getCode', call: 'eth_getCode', addDefaultblock: 2},
@@ -1763,7 +1762,7 @@ var methods = [
 
     // deprecated methods
     { name: 'balanceAt', call: 'eth_balanceAt', newMethod: 'eth.getBalance' },
-    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorageAt' },
+    { name: 'stateAt', call: 'eth_stateAt', newMethod: 'eth.getStorage' },
     { name: 'storageAt', call: 'eth_storageAt', newMethod: 'eth.getStorage' },
     { name: 'countAt', call: 'eth_countAt', newMethod: 'eth.getTransactionCount' },
     { name: 'codeAt', call: 'eth_codeAt', newMethod: 'eth.getCode' },
@@ -2063,13 +2062,18 @@ var filter = function(options, implementation, formatter) {
         });
     };
 
-    implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
 
     var watch = function(callback) {
+        implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
         callbacks.push(callback);
     };
 
     var stopWatching = function() {
+        implementation.stopPolling(filterId);
+        callbacks = [];
+    };
+
+    var uninstall = function() {
         implementation.stopPolling(filterId);
         implementation.uninstallFilter(filterId);
         callbacks = [];
@@ -2087,6 +2091,7 @@ var filter = function(options, implementation, formatter) {
         watch: watch,
         stopWatching: stopWatching,
         get: get,
+        uninstall: uninstall,
 
         // DEPRECATED methods
         changed:  function(){
@@ -2100,10 +2105,6 @@ var filter = function(options, implementation, formatter) {
         happened:  function(){
             console.warn('watch().happened() is deprecated please use filter().watch() instead.');
             return watch.apply(this, arguments);
-        },
-        uninstall: function(){
-            console.warn('watch().uninstall() is deprecated please use filter().stopWatching() instead.');
-            return stopWatching.apply(this, arguments);
         },
         messages: function(){
             console.warn('watch().messages() is deprecated please use filter().get() instead.');
@@ -2352,7 +2353,7 @@ module.exports = {
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 
 var HttpProvider = function (host) {
-    this.name  = 'HTTP';
+    this.name  = 'RPC over HTTP';
     this.host = host || 'http://localhost:8080';
 };
 
@@ -2527,6 +2528,7 @@ module.exports = {
  */
 
 var QtSyncProvider = function () {
+    this.name  = 'QT';
 };
 
 QtSyncProvider.prototype.send = function (payload) {
@@ -2566,6 +2568,7 @@ module.exports = QtSyncProvider;
 
 var jsonrpc = require('./jsonrpc');
 var c = require('../utils/config');
+var utils = require('../utils/utils');
 
 /**
  * It's responsible for passing messages to providers
@@ -2580,23 +2583,31 @@ var requestManager = function() {
     var send = function (data, callback) {
         /*jshint maxcomplexity: 8 */
 
-        // FORMAT BASED ON ONE FORMATTER function
-        if(typeof data.inputFormatter === 'function') {
-            data.params = Array.prototype.map.call(data.params, function(item, index){
-                // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? data.inputFormatter(item) : item;
-            });
+        if(!utils.isArray(data))
+            data = [data];
 
-        // FORMAT BASED ON the input FORMATTER ARRAY
-        } else if(data.inputFormatter instanceof Array) {
-            data.params = Array.prototype.map.call(data.inputFormatter, function(formatter, index){
-                // format everything besides the defaultblock, which is already formated
-                return (!data.addDefaultblock || index+1 < data.addDefaultblock) ? formatter(data.params[index]) : data.params[index];
-            });
-        }
+        var payload = [];
 
 
-        var payload = jsonrpc.toPayload(data.method, data.params);
+        data.forEach(function(item){
+            // FORMAT BASED ON ONE FORMATTER function
+            if(typeof item.inputFormatter === 'function') {
+                item.params = Array.prototype.map.call(item.params, function(param, index){
+                    // format everything besides the defaultblock, which is already formated
+                    return (!item.addDefaultblock || index+1 < item.addDefaultblock) ? item.inputFormatter(param) : param;
+                });
+
+            // FORMAT BASED ON the input FORMATTER ARRAY
+            } else if(item.inputFormatter instanceof Array) {
+                item.params = Array.prototype.map.call(item.inputFormatter, function(formatter, index){
+                    // format everything besides the defaultblock, which is already formated
+                    return (!item.addDefaultblock || index+1 < item.addDefaultblock) ? formatter(item.params[index]) : item.params[index];
+                });
+            }
+
+            payload.push(jsonrpc.toPayload(item.method, item.params));
+        });
+
         
         if (!provider) {
             console.error('provider is not set');
@@ -2604,39 +2615,65 @@ var requestManager = function() {
         }
 
         // HTTP ASYNC (only when callback is given, and it a HttpProvidor)
-        if(typeof callback === 'function' && provider.name === 'HTTP'){
+        if(typeof callback === 'function' && provider.name === 'RPC over HTTP'){
             provider.send(payload, function(result, status){
 
-                if (!jsonrpc.isValidResponse(result)) {
-                    if(typeof result === 'object' && result.error && result.error.message) {
-                        console.error(result.error.message);
-                        callback(result.error);
-                    } else {
-                        callback(new Error({
-                            status: status,
-                            error: result,
-                            message: 'Bad Request'
-                        }));
-                    }
-                    return null;
+                if(!utils.isArray(data)) {
+                    callback(new Error({
+                        status: status,
+                        error: result,
+                        message: provider.name +' didn\'t repsond with an array of method responses'
+                    }));
+                    return;
                 }
 
-                // format the output
-                callback(null, (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result);
+                result.forEach(function(item, index){
+
+                    if (!jsonrpc.isValidResponse(item)) {
+                        if(typeof item === 'object' && item.error && item.error.message) {
+                            console.error(item.error.message);
+                            callback(item.error);
+                        } else {
+                            callback(new Error({
+                                status: status,
+                                error: item,
+                                message: provider.name +' Bad Request'
+                            }));
+                        }
+                        return null;
+                    }
+
+                    // format the output
+                    callback(null, (typeof data[index].outputFormatter === 'function') ? data[index].outputFormatter(item.result) : item.result, index);
+                });
             });
 
         // SYNC
         } else {
             var result = provider.send(payload);
 
-            if (!jsonrpc.isValidResponse(result)) {
-                if(typeof result === 'object' && result.error && result.error.message)
-                    console.error(result.error.message);
-                return null;
+            if(!utils.isArray(data)) {
+                callback(new Error({
+                    status: status,
+                    error: result,
+                    message: provider.name +' didn\'t repsond with an array of method responses'
+                }));
+                return;
             }
 
-            // format the output
-            return (typeof data.outputFormatter === 'function') ? data.outputFormatter(result.result) : result.result;
+            result = result.map(function(item, index){
+
+                if (!jsonrpc.isValidResponse(item)) {
+                    if(typeof item === 'object' && item.error && item.error.message)
+                        console.error(item.error.message);
+                    return null;
+                }
+
+                // format the output
+                return (typeof data[index].outputFormatter === 'function') ? data[index].outputFormatter(item.result) : item.result;
+            });
+
+            return (result.length === 1) ? result[0] : result;
         }
         
     };
@@ -2674,15 +2711,20 @@ var requestManager = function() {
     };
 
     var poll = function () {
-        polls.forEach(function (data) {
+        if(polls.length > 0) {
+            var data = [];
+            polls.forEach(function (item) {
+                data.push(item.data);
+            });
+
             // send async
-            send(data.data, function(error, result){
+            send(data, function(error, result, index){
                 if (!(result instanceof Array) || result.length === 0) {
                     return;
                 }
-                data.callback(result);
+                polls[index].callback(result);
             });
-        });
+        }
         timeout = setTimeout(poll, c.ETH_POLLING_TIMEOUT);
     };
     
@@ -2700,7 +2742,7 @@ var requestManager = function() {
 module.exports = requestManager;
 
 
-},{"../utils/config":5,"./jsonrpc":16}],20:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"./jsonrpc":16}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
