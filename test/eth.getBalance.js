@@ -6,6 +6,12 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var method = 'getBalance';
 
 var tests = [{
+    args: [301, 2],
+    formattedArgs: ['0x12d', '0x2'],
+    result: '0x31981',
+    formattedResult: '0x31981',
+    call: 'eth_getBalance'
+},{
     args: ['0x12d', '0x1'],
     formattedArgs: ['0x12d', '0x1'],
     result: '0x31981',
@@ -34,12 +40,11 @@ describe('eth', function () {
                 var provider = new FakeHttpProvider();
                 web3.setProvider(provider);
                 provider.injectResult(test.result);
-                var validation = function (payload) {
+                provider.injectValidation(function (payload) {
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, test.call);
                     assert.deepEqual(payload.params, test.formattedArgs);
-                };
-                provider.injectValidation(validation);
+                });
 
                 // when 
                 var result = web3.eth[method].apply(null, test.args.slice(0));
@@ -54,12 +59,11 @@ describe('eth', function () {
                 var provider = new FakeHttpProvider();
                 web3.setProvider(provider);
                 provider.injectResult(test.result);
-                var validation = function (payload) {
+                provider.injectValidation(function (payload) {
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, test.call);
                     assert.deepEqual(payload.params, test.formattedArgs);
-                };
-                provider.injectValidation(validation);
+                });
                 var callback = function (err, result) {
                     assert.equal(+test.formattedResult, result.toNumber());
                     done();
