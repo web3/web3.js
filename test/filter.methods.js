@@ -1,6 +1,7 @@
-var assert = require('assert');
+var chai = require('chai');
+var assert = chai.assert;
 var filter = require('../lib/web3/filter');
-var u = require('./test.utils.js');
+var u = require('./helpers/test.utils.js');
 
 var empty = function () {};
 var implementation = {
