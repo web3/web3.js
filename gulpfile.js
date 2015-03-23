@@ -18,6 +18,7 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
 var DEST = './dist/';
+var DEST2 = './dist/light/'; // jshint ignore:line
 var src = 'index';
 var dst = 'ethereum';
 
@@ -54,7 +55,22 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('build', ['clean'], function () {
+gulp.task('buildNormal', ['clean'], function () {
+    return browserify(browserifyOptions)
+        .require('./' + src + '.js', {expose: 'ethereum.js'})
+        .ignore('bignumber.js')
+        .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
+        .add('./' + src + '.js')
+        .bundle()
+        .pipe(exorcist(path.join( DEST2, dst + '.js.map')))
+        .pipe(source(dst + '.js'))
+        .pipe(gulp.dest( DEST2 ))
+        .pipe(streamify(uglify()))
+        .pipe(rename(dst + '.min.js'))
+        .pipe(gulp.dest( DEST2 ));
+});
+
+gulp.task('buildStandalone', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'ethereum.js'})
         .require('bignumber.js') // expose it to dapp users
@@ -73,8 +89,9 @@ gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('dev', ['versionReplace','bower', 'lint', 'build']);
-gulp.task('default', ['dev']);
+gulp.task('normal', ['versionReplace','bower', 'lint', 'buildNormal']);
+gulp.task('standalone', ['versionReplace','bower', 'lint', 'buildStandalone']);
+gulp.task('default', ['normal', 'standalone']);
 
 
 gulp.task('version', ['versionReplace']);
