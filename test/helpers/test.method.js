@@ -20,8 +20,10 @@ var runTests = function (obj, method, tests) {
                         assert.deepEqual(payload.params, test.formattedArgs);
                     });
 
-                    // when 
-                    var result = web3[obj][method].apply(null, test.args.slice(0));
+                    // when
+                    var result = (obj)
+                        ? web3[obj][method].apply(null, test.args.slice(0))
+                        : web3[method].apply(null, test.args.slice(0));
                     
                     // then 
                     assert.deepEqual(test.formattedResult, result);
@@ -38,16 +40,19 @@ var runTests = function (obj, method, tests) {
                         assert.equal(payload.method, test.call);
                         assert.deepEqual(payload.params, test.formattedArgs);
                     });
-                    var callback = function (err, result) {
-                        assert.deepEqual(test.formattedResult, result);
-                        done();
-                    };
 
                     var args = test.args.slice(0);
-                    args.push(callback);
+                    // add callback
+                    args.push(function (err, result) {
+                        assert.deepEqual(test.formattedResult, result);
+                        done();
+                    });
 
                     // when
-                    web3[obj][method].apply(null, args);
+                    if(obj)
+                        web3[obj][method].apply(null, args);
+                    else
+                        web3[method].apply(null, args);
                 });
             });
         });
