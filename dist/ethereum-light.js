@@ -1810,7 +1810,7 @@ var getBlock = new Method({
 var getUncle = new Method({
     name: 'getUncle',
     call: uncleCall,
-    params: 2,
+    params: 3,
     inputFormatter: [utils.toHex, utils.toHex, function (val) { return !!val; }],
     outputFormatter: formatters.outputBlockFormatter,
 
@@ -1822,7 +1822,7 @@ var getCompilers = new Method({
     params: 0
 });
 
-var getBlockTransactounCount = new Method({
+var getBlockTransactionCount = new Method({
     name: 'getBlockTransactionCount',
     call: getBlockTransactionCountCall,
     params: 1,
@@ -1906,7 +1906,7 @@ var methods = [
     getBlock,
     getUncle,
     getCompilers,
-    getBlockTransactounCount,
+    getBlockTransactionCount,
     getBlockUncleCount,
     getTransaction,
     getTransactionFromBlock,
@@ -2138,7 +2138,6 @@ var implementationIsValid = function (i) {
 /// @param should be string or object
 /// @returns options string or object
 var getOptions = function (options) {
-    /*jshint maxcomplexity:9 */
 
     if (typeof options === 'string') {
         return options;
@@ -2179,16 +2178,24 @@ var getOptions = function (options) {
     }
 
 
-    // evaluate lazy properties
-    return {
-        fromBlock: utils.toHex(options.fromBlock),
-        toBlock: utils.toHex(options.toBlock),
-        limit: utils.toHex(options.limit),
-        offset: utils.toHex(options.offset),
-        to: options.to,
-        address: options.address,
-        topics: options.topics
-    };
+    var filterOptions = {};
+
+    if(options.topics)
+        filterOptions.topics = options.topics;
+
+    if(options.to)
+        filterOptions.to = options.to;
+
+    if(options.address)
+        filterOptions.address = options.address;
+
+    if(typeof options.fromBlock !== 'undefined')
+        filterOptions.fromBlock = utils.toHex(options.fromBlock);
+
+    if(typeof options.toBlock !== 'undefined')
+        filterOptions.toBlock = utils.toHex(options.toBlock);
+
+    return filterOptions;
 };
 
 /// Should be used when we want to watch something

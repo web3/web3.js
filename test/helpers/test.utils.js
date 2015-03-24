@@ -2,6 +2,8 @@ var chai = require('chai');
 var assert = chai.assert; 
 var web3 = require('../../index');
 
+var FakeHttpProvider = require('./FakeHttpProvider');
+
 var methodExists = function (object, method) {
     it('should have method ' + method + ' implemented', function() {
         web3.setProvider(null);
@@ -11,7 +13,8 @@ var methodExists = function (object, method) {
 
 var propertyExists = function (object, property) {
     it('should have property ' + property + ' implemented', function() {
-        web3.setProvider(null);
+        // set dummy providor, to prevent error
+        web3.setProvider(new FakeHttpProvider());
         assert.notEqual('undefined', typeof object[property], 'property ' + property + ' is not implemented');
     });
 };
