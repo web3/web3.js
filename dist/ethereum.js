@@ -540,7 +540,13 @@ module.exports = {
 },{"./formatters":2}],4:[function(require,module,exports){
 'use strict';
 
-exports.XMLHttpRequest = window.XMLHttpRequest;
+// go env doesn't have and need XMLHttpRequest
+if (typeof XMLHttpRequest === 'undefined') {
+    exports.XMLHttpRequest = {};
+} else {
+    exports.XMLHttpRequest = XMLHttpRequest; // jshint ignore:line
+}
+
 
 },{}],5:[function(require,module,exports){
 /*
@@ -1190,7 +1196,7 @@ var setupProperties = function (obj, properties) {
             proto.set = function (val) {
                 return web3.manager.send({
                     method: property.setter,
-                    params: [method.formatInput(val)]
+                    params: [property.formatInput(val)]
                 });
             };
         }
@@ -2340,6 +2346,8 @@ var inputTransactionFormatter = function (options){
  * @returns {Object} transaction
 */
 var outputTransactionFormatter = function (tx){
+    tx.blockNumber = utils.toDecimal(tx.blockNumber);
+    tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
     tx.value = utils.toBigNumber(tx.value);
@@ -2806,7 +2814,7 @@ module.exports = {
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file method.js
+ * @file property.js
  * @author Fabian Vogelsteller <fabian@frozeman.de>
  * @date 2015
  */

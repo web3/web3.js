@@ -1,5 +1,6 @@
-var web3 = require('../index');
-var assert = require('assert');
+var chai = require('chai');
+var assert = chai.assert; 
+var web3 = require('../../index');
 
 var methodExists = function (object, method) {
     it('should have method ' + method + ' implemented', function() {

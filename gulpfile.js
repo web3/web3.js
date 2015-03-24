@@ -20,6 +20,7 @@ var replace = require('gulp-replace');
 var DEST = './dist/';
 var src = 'index';
 var dst = 'ethereum';
+var lightDst = 'ethereum-light';
 
 var browserifyOptions = {
     debug: true,
@@ -54,7 +55,22 @@ gulp.task('lint', function(){
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('build', ['clean'], function () {
+gulp.task('buildLight', ['clean'], function () {
+    return browserify(browserifyOptions)
+        .require('./' + src + '.js', {expose: 'ethereum.js'})
+        .ignore('bignumber.js')
+        .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
+        .add('./' + src + '.js')
+        .bundle()
+        .pipe(exorcist(path.join( DEST, lightDst + '.js.map')))
+        .pipe(source(lightDst + '.js'))
+        .pipe(gulp.dest( DEST ))
+        .pipe(streamify(uglify()))
+        .pipe(rename(lightDst + '.min.js'))
+        .pipe(gulp.dest( DEST ));
+});
+
+gulp.task('buildStandalone', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'ethereum.js'})
         .require('bignumber.js') // expose it to dapp users
@@ -73,8 +89,9 @@ gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('dev', ['versionReplace','bower', 'lint', 'build']);
-gulp.task('default', ['dev']);
+gulp.task('light', ['versionReplace','bower', 'lint', 'buildLight']);
+gulp.task('standalone', ['versionReplace','bower', 'lint', 'buildStandalone']);
+gulp.task('default', ['light', 'standalone']);
 
 
 gulp.task('version', ['versionReplace']);
