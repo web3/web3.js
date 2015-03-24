@@ -3,9 +3,9 @@ var assert = chai.assert;
 var web3 = require('../../index');
 var FakeHttpProvider = require('./FakeHttpProvider');
 
-var runTests = function (method, tests) {
+var runTests = function (obj, method, tests) {
 
-    describe('eth', function () {
+    describe(obj, function () {
         describe(method, function () {
             tests.forEach(function (test, index) {
                 it('sync test: ' + index, function () {
@@ -21,7 +21,7 @@ var runTests = function (method, tests) {
                     });
 
                     // when 
-                    var result = web3.eth[method].apply(null, test.args.slice(0));
+                    var result = web3[obj][method].apply(null, test.args.slice(0));
                     
                     // then 
                     assert.deepEqual(test.formattedResult, result);
@@ -47,7 +47,7 @@ var runTests = function (method, tests) {
                     args.push(callback);
 
                     // when
-                    web3.eth[method].apply(null, args);
+                    web3[obj][method].apply(null, args);
                 });
             });
         });

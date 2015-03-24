@@ -135,5 +135,5 @@ var tests = [{
     call: 'eth_'+ method + 'ByNumber'
 }];
 
-testMethod.runTests(method, tests);
+testMethod.runTests('eth', method, tests);
 
