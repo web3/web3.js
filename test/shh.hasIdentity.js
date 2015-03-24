@@ -1,6 +1,5 @@
 var chai = require('chai');
 var web3 = require('../index');
-var BigNumber = require('bignumber.js');
 var testMethod = require('./helpers/test.method.js');
 
 var method = 'hasIdentity';
