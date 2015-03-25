@@ -5,7 +5,7 @@ var FakeHttpProvider = require('./FakeHttpProvider');
 
 var runTests = function (obj, method, tests) {
 
-    describe(obj, function () {
+    describe(obj ? obj : 'web3', function () {
         describe(method, function () {
             tests.forEach(function (test, index) {
                 it('sync test: ' + index, function () {
