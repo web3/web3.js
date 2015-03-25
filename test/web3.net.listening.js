@@ -11,7 +11,7 @@ var tests = [{
     call: 'net_'+ method
 }];
 
-describe('net', function () {
+describe('web3.net', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {
