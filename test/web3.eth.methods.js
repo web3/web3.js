@@ -3,8 +3,8 @@ var assert = chai.assert;
 var web3 = require('../index.js');
 var u = require('./helpers/test.utils.js');
 
-describe('web3', function() {
-    describe('eth', function() {
+describe('web3.eth', function() {
+    describe('methods', function() {
         u.methodExists(web3.eth, 'getBalance');
         u.methodExists(web3.eth, 'getStorageAt');
         u.methodExists(web3.eth, 'getTransactionCount');

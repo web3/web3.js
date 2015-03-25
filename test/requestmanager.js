@@ -6,7 +6,7 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 // TODO: handling errors!
 // TODO: validation of params!
 
-describe('requestmanager', function () {
+describe('lib/web3/requestmanager', function () {
     describe('send', function () {
         it('should return expected result synchronously', function () {
             var provider = new FakeHttpProvider();

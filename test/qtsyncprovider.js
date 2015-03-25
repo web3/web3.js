@@ -9,7 +9,7 @@ var QtSyncProvider = SandboxedModule.require('../lib/web3/qtsync', {
     }
 });
 
-describe('qtprovider', function () {
+describe('/lib/web3/qtsyncprovider', function () {
     describe('send', function () {
         it('should send basic request', function () {
             var provider = new QtSyncProvider();

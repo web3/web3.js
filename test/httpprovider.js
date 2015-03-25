@@ -9,7 +9,7 @@ var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
     }
 });
 
-describe('httpprovider', function () {
+describe('lib/web3/httpprovider', function () {
     describe('send', function () {
         it('should send basic request', function () {
             var provider = new HttpProvider();

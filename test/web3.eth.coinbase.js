@@ -11,7 +11,7 @@ var tests = [{
     call: 'eth_'+ method
 }];
 
-describe('eth', function () {
+describe('web3.eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {

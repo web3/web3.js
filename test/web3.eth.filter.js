@@ -28,7 +28,7 @@ var tests = [{
     call: 'eth_newBlockFilter'
 }];
 
-describe('eth', function () {
+describe('web3.eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {

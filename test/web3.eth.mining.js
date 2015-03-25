@@ -3,15 +3,15 @@ var assert = chai.assert;
 var web3 = require('../index');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
-var method = 'blockNumber';
+var method = 'mining';
 
 var tests = [{
-    result: '0xb',
-    formattedResult: 11,
+    result: true,
+    formattedResult: true,
     call: 'eth_'+ method
 }];
 
-describe('eth', function () {
+describe('web3.eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {
@@ -30,7 +30,7 @@ describe('eth', function () {
                 var result = web3.eth[method];
                 
                 // then
-                assert.strictEqual(test.formattedResult, result);
+                assert.deepEqual(test.formattedResult, result);
             });
         });
     });

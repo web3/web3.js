@@ -12,14 +12,12 @@ var implementation = {
     stopPolling: empty,
 };
 
-describe('web3', function () {
-    describe('eth', function () {
-        describe('filter', function () {
-            var f = filter({}, implementation);
+describe('web3.eth.filter', function () {
+    describe('methods', function () {
+        var f = filter({}, implementation);
 
-            u.methodExists(f, 'watch');
-            u.methodExists(f, 'stopWatching');
-            u.methodExists(f, 'get');
-        });
+        u.methodExists(f, 'watch');
+        u.methodExists(f, 'stopWatching');
+        u.methodExists(f, 'get');
     });
 });
