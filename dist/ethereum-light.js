@@ -2145,53 +2145,31 @@ var getOptions = function (options) {
 
     options = options || {};
 
-    if (options.topic) {
-        console.warn('"topic" is deprecated, is "topics" instead');
-        options.topics = options.topic;
-    }
-
-    if (options.earliest) {
-        console.warn('"earliest" is deprecated, is "fromBlock" instead');
-        options.fromBlock = options.earliest;
-    }
-
-    if (options.latest) {
-        console.warn('"latest" is deprecated, is "toBlock" instead');
-        options.toBlock = options.latest;
-    }
-
     // make sure topics, get converted to hex
-    if(options.topics instanceof Array) {
+    if (utils.isArray(options.topics)) {
         options.topics = options.topics.map(function(topic){
             return utils.toHex(topic);
         });
     }
 
     var asBlockNumber = function (n) {
+        if (typeof n === 'undefined') {
+            return undefined;
+        }
         if (n === 'latest' || n === 'pending') {
            return n; 
         }
         return utils.toHex(n);
     };
 
-    var filterOptions = {};
-
-    if (options.topics)
-        filterOptions.topics = options.topics;
-
-    if (options.to)
-        filterOptions.to = options.to;
-
-    if (options.address)
-        filterOptions.address = options.address;
-
-    if (typeof options.fromBlock !== 'undefined')
-        filterOptions.fromBlock = asBlockNumber(options.fromBlock);
-
-    if (typeof options.toBlock !== 'undefined')
-        filterOptions.toBlock = asBlockNumber(options.toBlock);
-
-    return filterOptions;
+    // lazy load
+    return {
+        topics: options.topics,
+        to: options.to,
+        address: options.address,
+        fromBlock: asBlockNumber(options.fromBlock),
+        toBlock: asBlockNumber(options.toBlock) 
+    }; 
 };
 
 /// Should be used when we want to watch something
@@ -2212,7 +2190,9 @@ var filter = function(options, implementation, formatter) {
     // call the callbacks
     var onMessages = function (error, messages) {
         if (error) {
-            return callback(error);
+            callbacks.forEach(function (callback) {
+                callback(error);
+            });
         }
 
         messages.forEach(function (message) {
@@ -2252,29 +2232,7 @@ var filter = function(options, implementation, formatter) {
         watch: watch,
         stopWatching: stopWatching,
         get: get,
-        uninstall: uninstall,
-
-        // DEPRECATED methods
-        changed:  function(){
-            console.warn('watch().changed() is deprecated please use filter().watch() instead.');
-            return watch.apply(this, arguments);
-        },
-        arrived:  function(){
-            console.warn('watch().arrived() is deprecated please use filter().watch() instead.');
-            return watch.apply(this, arguments);
-        },
-        happened:  function(){
-            console.warn('watch().happened() is deprecated please use filter().watch() instead.');
-            return watch.apply(this, arguments);
-        },
-        messages: function(){
-            console.warn('watch().messages() is deprecated please use filter().get() instead.');
-            return get.apply(this, arguments);
-        },
-        logs: function(){
-            console.warn('watch().logs() is deprecated please use filter().get() instead.');
-            return get.apply(this, arguments);
-        }
+        uninstall: uninstall
     };
 };
 
@@ -2826,9 +2784,6 @@ module.exports = {
  * @date 2015
  */
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
-
 var Property = function (options) {
     this.name = options.name;
     this.getter = options.getter;
@@ -2880,7 +2835,7 @@ Property.prototype.attachToObject = function (obj, proto) {
 module.exports = Property;
 
 
-},{"../utils/utils":6,"./errors":11}],21:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 

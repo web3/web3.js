@@ -23,7 +23,8 @@ FakeHttpProvider.prototype.send = function (payload) {
         throw this.error;
     } 
     if (this.validation) {
-        this.validation(payload);
+        // imitate plain json object
+        this.validation(JSON.parse(JSON.stringify(payload)));
     }
     return this.response;
 };
@@ -32,7 +33,8 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
     if (this.validation) {
-        this.validation(payload, callback);
+        // imitate plain json object
+        this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
     callback(this.error, this.response);
 };
