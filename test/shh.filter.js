@@ -5,7 +5,6 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var method = 'filter';
 
-
 var tests = [{
     args: [{
         to: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',

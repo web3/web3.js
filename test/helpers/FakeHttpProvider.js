@@ -46,6 +46,14 @@ FakeHttpProvider.prototype.injectResult = function (result) {
     this.response.result = result;
 };
 
+FakeHttpProvider.prototype.injectBatchResults = function (results) {
+    this.response = results.map(function (r) {
+        var response = getResponseStub();
+        response.result = r;
+        return response;
+    }); 
+};
+
 FakeHttpProvider.prototype.injectError = function (error) {
     this.error = error;
 };
