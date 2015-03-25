@@ -1134,8 +1134,7 @@ var web3Methods = function () {
     var sha3 = new Method({
         name: 'sha3',
         call: 'web3_sha3',
-        params: 1,
-        inputFormatter:[utils.toHex]
+        params: 1
     });
 
     return [sha3];
@@ -1632,16 +1631,17 @@ var putString = new Method({
     params: 3
 });
 
-var putHex = new Method({
-    name: 'putHex',
-    call: 'db_putHex',
-    params: 3
-});
 
 var getString = new Method({
     name: 'getString',
     call: 'db_getString',
     params: 2
+});
+
+var putHex = new Method({
+    name: 'putHex',
+    call: 'db_putHex',
+    params: 3
 });
 
 var getHex = new Method({
@@ -1651,7 +1651,7 @@ var getHex = new Method({
 });
 
 var methods = [
-    putString, putHex, getString, getHex
+    putString, getString, putHex, getHex
 ];
 
 module.exports = {
@@ -2160,16 +2160,6 @@ var getOptions = function (options) {
         options.toBlock = options.latest;
     }
 
-    if (options.skip) {
-        console.warn('"skip" is deprecated, is "offset" instead');
-        options.offset = options.skip;
-    }
-
-    if (options.max) {
-        console.warn('"max" is deprecated, is "limit" instead');
-        options.limit = options.max;
-    }
-
     // make sure topics, get converted to hex
     if(options.topics instanceof Array) {
         options.topics = options.topics.map(function(topic){
@@ -2177,23 +2167,29 @@ var getOptions = function (options) {
         });
     }
 
+    var asBlockNumber = function (n) {
+        if (n === 'latest' || n === 'pending') {
+           return n; 
+        }
+        return utils.toHex(n);
+    };
 
     var filterOptions = {};
 
-    if(options.topics)
+    if (options.topics)
         filterOptions.topics = options.topics;
 
-    if(options.to)
+    if (options.to)
         filterOptions.to = options.to;
 
-    if(options.address)
+    if (options.address)
         filterOptions.address = options.address;
 
-    if(typeof options.fromBlock !== 'undefined')
-        filterOptions.fromBlock = utils.toHex(options.fromBlock);
+    if (typeof options.fromBlock !== 'undefined')
+        filterOptions.fromBlock = asBlockNumber(options.fromBlock);
 
-    if(typeof options.toBlock !== 'undefined')
-        filterOptions.toBlock = utils.toHex(options.toBlock);
+    if (typeof options.toBlock !== 'undefined')
+        filterOptions.toBlock = asBlockNumber(options.toBlock);
 
     return filterOptions;
 };
@@ -2214,11 +2210,15 @@ var filter = function(options, implementation, formatter) {
     var filterId = implementation.newFilter(options);
 
     // call the callbacks
-    var onMessages = function (messages) {
+    var onMessages = function (error, messages) {
+        if (error) {
+            return callback(error);
+        }
+
         messages.forEach(function (message) {
             message = formatter ? formatter(message) : message;
             callbacks.forEach(function (callback) {
-                callback(message);
+                callback(null, message);
             });
         });
     };
@@ -3115,7 +3115,7 @@ RequestManager.prototype.poll = function () {
         }).filter(function (result) {
             return utils.isArray(result.result) && result.result.length > 0;
         }).forEach(function (result) {
-            result.callback(null, result);
+            result.callback(null, result.result);
         });
     });
 };
