@@ -2,7 +2,7 @@ var assert = require('assert');
 var event = require('../lib/web3/event.js');
 var f = require('../lib/solidity/formatters.js');
 
-describe('event', function () {
+describe('lib/web3/event', function () {
     describe('inputParser', function () {
         it('should create basic filter input object', function () {
             

@@ -1,7 +1,7 @@
 var assert = require('assert');
 var event = require('../lib/web3/event.js');
 
-describe('event', function () {
+describe('lib/web3/event', function () {
     describe('outputParser', function () {
         it('should parse basic event output object', function () {
             

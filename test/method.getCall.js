@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var Method = require('../lib/web3/method');
 
-describe('method', function () {
+describe('lib/web3/method', function () {
     describe('getCall', function () {
         it('should return call name', function () {
             

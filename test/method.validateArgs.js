@@ -3,7 +3,7 @@ var assert = chai.assert;
 var Method = require('../lib/web3/method');
 var errors = require('../lib/web3/errors');
 
-describe('method', function () {
+describe('lib/web3/method', function () {
     describe('validateArgs', function () {
         it('should pass', function () {
             

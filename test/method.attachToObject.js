@@ -3,7 +3,7 @@ var assert = chai.assert;
 var Method = require('../lib/web3/method');
 var utils = require('../lib/utils/utils');
 
-describe('method', function () {
+describe('lib/web3/method', function () {
     describe('attachToObject', function () {
         it('attach simple function to an object', function () {
             

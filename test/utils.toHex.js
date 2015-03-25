@@ -32,7 +32,7 @@ var tests = [
     { value: false, expected: '0x0'}
 ];
 
-describe('utils', function () {
+describe('lib/utils/utils', function () {
     describe('toHex', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
