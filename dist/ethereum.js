@@ -1997,7 +1997,7 @@ var indexedParamsToTopics = function (event, indexed) {
                 return abi.formatInput(inputs, [v]);
             }); 
         }
-        return abi.formatInput(inputs, [value]);
+        return '0x' + abi.formatInput(inputs, [value]);
     });
 };
 
