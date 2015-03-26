@@ -1129,15 +1129,13 @@ var Method = require('./web3/method');
 var Property = require('./web3/property');
 
 /// @returns an array of objects describing web3 api methods
-var web3Methods = function () {
-    var sha3 = new Method({
+var web3Methods = [
+    new Method({
         name: 'sha3',
         call: 'web3_sha3',
         params: 1
-    });
-
-    return [sha3];
-};
+    })
+];
 
 var web3Properties = [
     new Property({
@@ -1166,105 +1164,45 @@ var setupProperties = function (obj, properties) {
     });
 };
 
-/*jshint maxparams:4 */
-//var startPolling = function (method, id, callback, uninstall) {
-    //RequestManager.getInstance().startPolling({
-        //method: method, 
-        //params: [id]
-    //}, id,  callback, uninstall); 
-//};
-//[>jshint maxparams:3 <]
-
-//var stopPolling = function (id) {
-    //RequestManager.getInstance().stopPolling(id);
-//};
-
-//var ethWatch = {
-    //startPolling: startPolling.bind(null, 'eth_getFilterChanges'), 
-    //stopPolling: stopPolling
-//};
-
-//var shhWatch = {
-    //startPolling: startPolling.bind(null, 'shh_getFilterChanges'), 
-    //stopPolling: stopPolling
-//};
-
 /// setups web3 object, and it's in-browser executed methods
-var web3 = {
+var web3 = {};
+web3.providers = {};
+web3.version = {};
+web3.version.api = version.version;
+web3.eth = {};
+web3.eth.filter = function (fil, eventParams, options) {
 
-    version: {
-        api: version.version
-    },
-
-    providers: {},
-
-    setProvider: function (provider) {
-        RequestManager.getInstance().setProvider(provider);
-    },
-    
-    /// Should be called to reset state of web3 object
-    /// Resets everything except manager
-    reset: function () {
-        RequestManager.getInstance().reset(); 
-    },
-
-    /// @returns hex string of the input
-    toHex: utils.toHex,
-
-    /// @returns ascii string representation of hex value prefixed with 0x
-    toAscii: utils.toAscii,
-
-    /// @returns hex representation (prefixed by 0x) of ascii string
-    fromAscii: utils.fromAscii,
-
-    /// @returns decimal representaton of hex value prefixed by 0x
-    toDecimal: utils.toDecimal,
-
-    /// @returns hex representation (prefixed by 0x) of decimal value
-    fromDecimal: utils.fromDecimal,
-
-    /// @returns a BigNumber object
-    toBigNumber: utils.toBigNumber,
-
-    toWei: utils.toWei,
-    fromWei: utils.fromWei,
-    isAddress: utils.isAddress,
-
-    // provide network information
-    net: {
-        // peerCount: 
-    },
-
-
-    /// eth object prototype
-    eth: {
-        /// @param filter may be a string, object or event
-        /// @param eventParams is optional, this is an object with optional event eventParams params
-        /// @param options is optional, this is an object with optional event options ('max'...)
-        /*jshint maxparams:4 */
-        filter: function (fil, eventParams, options) {
-
-            // if its event, treat it differently
-            if (fil._isEvent)
-                return fil(eventParams, options);
-
-            return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
-        },
-        /*jshint maxparams:3 */
-    },
-
-    /// db object prototype
-    db: {},
-
-    /// shh object prototype
-    shh: {
-        /// @param filter may be a string, object or event
-        filter: function (fil) {
-            return new Filter(fil, watches.shh(), formatters.outputPostFormatter);
-        },
+    // if its event, treat it differently
+    // TODO: simplify and remove
+    if (fil._isEvent) {
+        return fil(eventParams, options);
     }
+
+    // what outputLogFormatter? that's wrong
+    return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
 };
 
+web3.shh = {};
+web3.shh.filter = function (fil) {
+    return new Filter(fil, watches.shh(), formatters.outputPostFormatter);
+};
+web3.net = {};
+web3.db = {};
+web3.setProvider = function (provider) {
+    RequestManager.getInstance().setProvider(provider);
+};
+web3.reset = function () {
+    RequestManager.getInstance().reset();
+};
+web3.toHex = utils.toHex;
+web3.toAscii = utils.toAscii;
+web3.fromAscii = utils.fromAscii;
+web3.toDecimal = utils.toDecimal;
+web3.fromDecimal = utils.fromDecimal;
+web3.toBigNumber = utils.toBigNumber;
+web3.toWei = utils.toWei;
+web3.fromWei = utils.fromWei;
+web3.isAddress = utils.isAddress;
 
 // ADD defaultblock
 Object.defineProperty(web3.eth, 'defaultBlock', {
@@ -1279,7 +1217,7 @@ Object.defineProperty(web3.eth, 'defaultBlock', {
 
 
 /// setups all api methods
-setupMethods(web3, web3Methods());
+setupMethods(web3, web3Methods);
 setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
 setupProperties(web3.net, net.properties);
@@ -1287,8 +1225,6 @@ setupMethods(web3.eth, eth.methods);
 setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods);
 setupMethods(web3.shh, shh.methods);
-//setupMethods(ethWatch, watches.eth());
-//setupMethods(shhWatch, watches.shh());
 
 module.exports = web3;
 
