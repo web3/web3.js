@@ -2,6 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var web3 = require('../index');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var utils = require('../lib/utils/utils');
 
 var tests = [{
     protocol: 'eth',
@@ -37,7 +38,7 @@ var testPolling = function (tests) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.firstPayload.method);
                         assert.deepEqual(payload.params, test.firstPayload.params);
-                    } else if (step === 1) {
+                    } else if (step === 1 && utils.isArray(payload)) {
                         var r = payload.filter(function (p) {
                             return p.jsonrpc === '2.0' && p.method === test.secondPayload.method && p.params[0] === test.firstResult;
                         });

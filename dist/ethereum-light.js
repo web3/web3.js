@@ -1233,7 +1233,7 @@ var web3 = {
         api: version.version
     },
 
-    manager: new RequestManager(),
+    manager: RequestManager.getInstance(),
     providers: {},
 
     setProvider: function (provider) {
@@ -2110,11 +2110,11 @@ var utils = require('../utils/utils');
 /// @returns true if it is, otherwise false
 var implementationIsValid = function (i) {
     return !!i && 
-        typeof i.newFilter === 'function' && 
-        typeof i.getLogs === 'function' && 
-        typeof i.uninstallFilter === 'function' &&
-        typeof i.startPolling === 'function' &&
-        typeof i.stopPolling === 'function';
+        utils.isFunction(i.newFilter) && 
+        utils.isFunction(i.getLogs) && 
+        utils.isFunction(i.uninstallFilter) &&
+        utils.isFunction(i.startPolling) &&
+        utils.isFunction(i.stopPolling);
 };
 
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
@@ -2122,18 +2122,17 @@ var implementationIsValid = function (i) {
 /// @returns options string or object
 var getOptions = function (options) {
 
-    if (typeof options === 'string') {
+    if (utils.isString(options)) {
         return options;
     } 
 
     options = options || {};
 
     // make sure topics, get converted to hex
-    if (utils.isArray(options.topics)) {
-        options.topics = options.topics.map(function(topic){
-            return utils.toHex(topic);
-        });
-    }
+    options.topics = options.topics || [];
+    options.topics = options.topics.map(function(topic){
+        return utils.toHex(topic);
+    });
 
     var asBlockNumber = function (n) {
         if (typeof n === 'undefined') {
@@ -2218,6 +2217,15 @@ var filter = function(options, implementation, formatter) {
         uninstall: uninstall
     };
 };
+
+//var Filter = function (options, methods) {
+    //this.options = options;
+    //var implementation = {};
+    //methods.forEach(function (method) {
+        //method.attachToObject(implementation);
+    //});
+    //this.implementation = implementation;
+//};
 
 module.exports = filter;
 
@@ -2519,7 +2527,19 @@ module.exports = HttpProvider;
  */
 
 var Jsonrpc = function () {
+    // singleton pattern
+    if (arguments.callee._singletonInstance) {
+        return arguments.callee._singletonInstance;
+    }
     this.messageId = 1;
+};
+
+/**
+ * @return {Jsonrpc} singleton
+ */
+Jsonrpc.getInstance = function () {
+    var instance = new Jsonrpc();
+    return instance;
 };
 
 /**
@@ -2889,13 +2909,27 @@ var errors = require('./errors');
  * It's responsible for passing messages to providers
  * It's also responsible for polling the ethereum node for incoming messages
  * Default poll timeout is 1 second
+ * Singleton
  */
-var RequestManager = function(provider) {
-    this.jsonrpc = new Jsonrpc();
+var RequestManager = function (provider) {
+    // singleton pattern
+    if (arguments.callee._singletonInstance) {
+        return arguments.callee._singletonInstance;
+    }
+    arguments.callee._singletonInstance = this;
+
     this.provider = provider;
     this.polls = [];
     this.timeout = null;
     this.poll();
+};
+
+/**
+ * @return {RequestManager} singleton
+ */
+RequestManager.getInstance = function () {
+    var instance = new RequestManager();
+    return instance;
 };
 
 /**
@@ -2911,10 +2945,10 @@ RequestManager.prototype.send = function (data) {
         return null;
     }
 
-    var payload = this.jsonrpc.toPayload(data.method, data.params);
+    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
     var result = this.provider.send(payload);
 
-    if (!this.jsonrpc.isValidResponse(result)) {
+    if (!Jsonrpc.getInstance().isValidResponse(result)) {
         throw errors.InvalidResponse(result);
     }
 
@@ -2933,14 +2967,13 @@ RequestManager.prototype.sendAsync = function (data, callback) {
         return callback(errors.InvalidProvider);
     }
 
-    var payload = this.jsonrpc.toPayload(data.method, data.params);
-    var self = this;
+    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
     this.provider.sendAsync(payload, function (err, result) {
         if (err) {
             return callback(err);
         }
         
-        if (!self.jsonrpc.isValidResponse(result)) {
+        if (!Jsonrpc.getInstance().isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
 
@@ -3026,7 +3059,7 @@ RequestManager.prototype.poll = function () {
         return;
     }
 
-    var payload = this.jsonrpc.toBatchPayload(this.polls.map(function (data) {
+    var payload = Jsonrpc.getInstance().toBatchPayload(this.polls.map(function (data) {
         return data.data;
     }));
 
@@ -3045,7 +3078,7 @@ RequestManager.prototype.poll = function () {
             result.callback = self.polls[index].callback;
             return result;
         }).filter(function (result) {
-            var valid = self.jsonrpc.isValidResponse(result);
+            var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
                 result.callback(errors.InvalidResponse(result));
             }
@@ -3224,10 +3257,17 @@ var eth = function () {
         params: 1
     });
 
+    var poll = new Method({
+        name: 'poll',
+        call: 'eth_getFilterChanges',
+        params: 1
+    });
+
     return [
         newFilter,
         uninstallFilter,
-        getLogs
+        getLogs,
+        poll
     ];
 };
 
@@ -3251,10 +3291,17 @@ var shh = function () {
         params: 1
     });
 
+    var poll = new Method({
+        name: 'poll',
+        call: 'shh_getFilterChanges',
+        params: 1
+    });
+
     return [
         newFilter,
         uninstallFilter,
-        getLogs
+        getLogs,
+        poll
     ];
 };
 

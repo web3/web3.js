@@ -16,6 +16,7 @@ var tests = [{
         fromBlock: '0x0',
         toBlock: '0xa',
         address: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
+        topics: []
     }],
     result: '0xf',
     formattedResult: '0xf',
