@@ -1106,7 +1106,7 @@ var shh = require('./web3/shh');
 var watches = require('./web3/watches');
 var filter = require('./web3/filter');
 var utils = require('./utils/utils');
-var formatters = require('./solidity/formatters');
+var formatters = require('./web3/formatters');
 var requestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 
@@ -1373,7 +1373,7 @@ setupMethods(shhWatch, watches.shh());
 module.exports = web3;
 
 
-},{"./solidity/formatters":2,"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":11,"./web3/filter":13,"./web3/net":17,"./web3/requestmanager":19,"./web3/shh":20,"./web3/watches":22}],9:[function(require,module,exports){
+},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":11,"./web3/filter":13,"./web3/formatters":14,"./web3/net":17,"./web3/requestmanager":19,"./web3/shh":20,"./web3/watches":22}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1867,7 +1867,7 @@ var indexedParamsToTopics = function (event, indexed) {
                 return abi.formatInput(inputs, [v]);
             }); 
         }
-        return abi.formatInput(inputs, [value]);
+        return '0x' + abi.formatInput(inputs, [value]);
     });
 };
 
@@ -2022,7 +2022,7 @@ var getOptions = function (options) {
     }
 
     var asBlockNumber = function (n) {
-        if (n === null) {
+        if (n === null || typeof n === 'undefined') {
             return null;
         } else if (n === 'latest' || n === 'pending') {
            return n; 
