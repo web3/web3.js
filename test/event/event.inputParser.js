@@ -83,7 +83,7 @@ describe('event', function () {
             assert.equal(result.address, address);
             assert.equal(result.topics.length, 2);
             assert.equal(result.topics[0], signature);
-            assert.equal(result.topics[1], f.formatInputInt(4));
+            assert.equal(result.topics[1], '0x' + f.formatInputInt(4));
             assert.equal(result.fromBlock, options.fromBlock);
             assert.equal(result.toBlock, options.toBlock);
             assert.equal(result.offset, options.offset);
