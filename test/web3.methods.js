@@ -15,7 +15,6 @@ describe('web3', function() {
         u.methodExists(web3, 'setProvider');
         u.methodExists(web3, 'reset');
 
-        u.propertyExists(web3, 'manager');
         u.propertyExists(web3, 'providers');
         u.propertyExists(web3, 'eth');
         u.propertyExists(web3, 'db');

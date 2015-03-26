@@ -1120,7 +1120,7 @@ var eth = require('./web3/eth');
 var db = require('./web3/db');
 var shh = require('./web3/shh');
 var watches = require('./web3/watches');
-var filter = require('./web3/filter');
+var Filter = require('./web3/filter');
 var utils = require('./utils/utils');
 var formatters = require('./web3/formatters');
 var RequestManager = require('./web3/requestmanager');
@@ -1154,27 +1154,7 @@ var web3Properties = [
 /// setups api calls for these methods
 var setupMethods = function (obj, methods) {
     methods.forEach(function (method) {
-        var func = function () {
-            var args = Array.prototype.slice.call(arguments);
-            var call = method.getCall(args); 
-            var callback = method.extractCallback(args);
-            var params = method.formatInput(args);
-            method.validateArgs(params);
-            
-            var payload = {
-                method: call,
-                params: params
-            };
-
-            if (callback && web3.manager.sendAsync) {
-                return web3.manager.sendAsync(payload, function (err, result) {
-                    callback(null, method.formatOutput(result));
-                });
-            }
-
-            return method.formatOutput(web3.manager.send(payload));
-        };
-        method.attachToObject(obj, func);
+        method.attachToObject(obj);
     });
 };
 
@@ -1182,49 +1162,32 @@ var setupMethods = function (obj, methods) {
 /// setups api calls for these properties
 var setupProperties = function (obj, properties) {
     properties.forEach(function (property) {
-        var proto = {};
-
-        proto.get = function () {
-            return property.formatOutput(web3.manager.send({
-                method: property.getter
-            }));
-        };
-
-        if (property.setter) {
-            proto.set = function (val) {
-                return web3.manager.send({
-                    method: property.setter,
-                    params: [property.formatInput(val)]
-                });
-            };
-        }
-
-        property.attachToObject(obj, proto);
+        property.attachToObject(obj);
     });
 };
 
 /*jshint maxparams:4 */
-var startPolling = function (method, id, callback, uninstall) {
-    web3.manager.startPolling({
-        method: method, 
-        params: [id]
-    }, id,  callback, uninstall); 
-};
-/*jshint maxparams:3 */
+//var startPolling = function (method, id, callback, uninstall) {
+    //RequestManager.getInstance().startPolling({
+        //method: method, 
+        //params: [id]
+    //}, id,  callback, uninstall); 
+//};
+//[>jshint maxparams:3 <]
 
-var stopPolling = function (id) {
-    web3.manager.stopPolling(id);
-};
+//var stopPolling = function (id) {
+    //RequestManager.getInstance().stopPolling(id);
+//};
 
-var ethWatch = {
-    startPolling: startPolling.bind(null, 'eth_getFilterChanges'), 
-    stopPolling: stopPolling
-};
+//var ethWatch = {
+    //startPolling: startPolling.bind(null, 'eth_getFilterChanges'), 
+    //stopPolling: stopPolling
+//};
 
-var shhWatch = {
-    startPolling: startPolling.bind(null, 'shh_getFilterChanges'), 
-    stopPolling: stopPolling
-};
+//var shhWatch = {
+    //startPolling: startPolling.bind(null, 'shh_getFilterChanges'), 
+    //stopPolling: stopPolling
+//};
 
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {
@@ -1233,17 +1196,16 @@ var web3 = {
         api: version.version
     },
 
-    manager: RequestManager.getInstance(),
     providers: {},
 
     setProvider: function (provider) {
-        web3.manager.setProvider(provider);
+        RequestManager.getInstance().setProvider(provider);
     },
     
     /// Should be called to reset state of web3 object
     /// Resets everything except manager
     reset: function () {
-        web3.manager.reset(); 
+        RequestManager.getInstance().reset(); 
     },
 
     /// @returns hex string of the input
@@ -1276,19 +1238,6 @@ var web3 = {
 
     /// eth object prototype
     eth: {
-        // DEPRECATED
-        contractFromAbi: function (abi) {
-            console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
-
-            return function(addr) {
-                // Default to address of Config. TODO: rremove prior to genesis.
-                addr = addr || '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
-                var ret = web3.eth.contract(addr, abi);
-                ret.address = addr;
-                return ret;
-            };
-        },
-
         /// @param filter may be a string, object or event
         /// @param eventParams is optional, this is an object with optional event eventParams params
         /// @param options is optional, this is an object with optional event options ('max'...)
@@ -1299,13 +1248,8 @@ var web3 = {
             if (fil._isEvent)
                 return fil(eventParams, options);
 
-            return filter(fil, ethWatch, formatters.outputLogFormatter);
+            return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
         },
-        // DEPRECATED
-        watch: function (fil, eventParams, options) {
-            console.warn('eth.watch() is deprecated please use eth.filter() instead.');
-            return this.filter(fil, eventParams, options);
-        }
         /*jshint maxparams:3 */
     },
 
@@ -1316,13 +1260,8 @@ var web3 = {
     shh: {
         /// @param filter may be a string, object or event
         filter: function (fil) {
-            return filter(fil, shhWatch, formatters.outputPostFormatter);
+            return new Filter(fil, watches.shh(), formatters.outputPostFormatter);
         },
-        // DEPRECATED
-        watch: function (fil) {
-            console.warn('shh.watch() is deprecated please use shh.filter() instead.');
-            return this.filter(fil);
-        }
     }
 };
 
@@ -1348,8 +1287,8 @@ setupMethods(web3.eth, eth.methods);
 setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods);
 setupMethods(web3.shh, shh.methods);
-setupMethods(ethWatch, watches.eth());
-setupMethods(shhWatch, watches.shh());
+//setupMethods(ethWatch, watches.eth());
+//setupMethods(shhWatch, watches.shh());
 
 module.exports = web3;
 
@@ -2104,18 +2043,8 @@ module.exports = {
  * @date 2014
  */
 
+var RequestManager = require('./requestmanager');
 var utils = require('../utils/utils');
-
-/// Should be called to check if filter implementation is valid
-/// @returns true if it is, otherwise false
-var implementationIsValid = function (i) {
-    return !!i && 
-        utils.isFunction(i.newFilter) && 
-        utils.isFunction(i.getLogs) && 
-        utils.isFunction(i.uninstallFilter) &&
-        utils.isFunction(i.startPolling) &&
-        utils.isFunction(i.stopPolling);
-};
 
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
 /// @param should be string or object
@@ -2154,83 +2083,61 @@ var getOptions = function (options) {
     }; 
 };
 
-/// Should be used when we want to watch something
-/// it's using inner polling mechanism and is notified about changes
-/// @param options are filter options
-/// @param implementation, an abstract polling implementation
-/// @param formatter (optional), callback function which formats output before 'real' callback 
-var filter = function(options, implementation, formatter) {
-    if (!implementationIsValid(implementation)) {
-        console.error('filter implemenation is invalid');
-        return;
-    }
+var Filter = function (options, methods, formatter) {
+    var implementation = {};
+    methods.forEach(function (method) {
+        method.attachToObject(implementation);
+    });
+    this.options = getOptions(options);
+    this.implementation = implementation;
+    this.callbacks = [];
+    this.formatter = formatter;
+    this.filterId = this.implementation.newFilter(this.options);
+};
 
-    options = getOptions(options);
-    var callbacks = [];
-    var filterId = implementation.newFilter(options);
+Filter.prototype.watch = function (callback) {
+    this.callbacks.push(callback);
+    var self = this;
 
-    // call the callbacks
-    var onMessages = function (error, messages) {
+    var onMessage = function (error, messages) {
         if (error) {
-            callbacks.forEach(function (callback) {
+            return self.callbacks.forEach(function (callback) {
                 callback(error);
             });
         }
 
         messages.forEach(function (message) {
-            message = formatter ? formatter(message) : message;
-            callbacks.forEach(function (callback) {
+            message = self.formatter ? self.formatter(message) : message;
+            self.callbacks.forEach(function (callback) {
                 callback(null, message);
             });
         });
     };
 
-
-    var watch = function(callback) {
-        implementation.startPolling(filterId, onMessages, implementation.uninstallFilter);
-        callbacks.push(callback);
-    };
-
-    var stopWatching = function() {
-        implementation.stopPolling(filterId);
-        callbacks = [];
-    };
-
-    var uninstall = function() {
-        implementation.stopPolling(filterId);
-        implementation.uninstallFilter(filterId);
-        callbacks = [];
-    };
-
-    var get = function () {
-        var results = implementation.getLogs(filterId);
-
-        return utils.isArray(results) ? results.map(function(message){
-                return formatter ? formatter(message) : message;
-            }) : results;
-    };
-    
-    return {
-        watch: watch,
-        stopWatching: stopWatching,
-        get: get,
-        uninstall: uninstall
-    };
+    RequestManager.getInstance().startPolling({
+        method: this.implementation.poll.call,
+        params: [this.filterId],
+    }, this.filterId, onMessage, this.stopWatching.bind(this));
 };
 
-//var Filter = function (options, methods) {
-    //this.options = options;
-    //var implementation = {};
-    //methods.forEach(function (method) {
-        //method.attachToObject(implementation);
-    //});
-    //this.implementation = implementation;
-//};
+Filter.prototype.stopWatching = function () {
+    RequestManager.getInstance().stopPolling(this.filterId);
+    this.implementation.uninstallFilter(this.filterId);
+    this.callbacks = [];
+};
 
-module.exports = filter;
+Filter.prototype.get = function () {
+    var logs = this.implementation.getLogs(this.filterId);
+    var self = this;
+    return logs.map(function (log) {
+        return self.formatter ? self.formatter(log) : log;
+    });
+};
+
+module.exports = Filter;
 
 
-},{"../utils/utils":6}],15:[function(require,module,exports){
+},{"../utils/utils":6,"./requestmanager":22}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2617,6 +2524,7 @@ module.exports = Jsonrpc;
  * @date 2015
  */
 
+var RequestManager = require('./requestmanager');
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
@@ -2701,7 +2609,9 @@ Method.prototype.formatOutput = function (result) {
  * @param {Object}
  * @param {Function}
  */
-Method.prototype.attachToObject = function (obj, func) {
+Method.prototype.attachToObject = function (obj) {
+    var func = this.send.bind(this);
+    func.call = this.call; // that's ugly. filter.js uses it
     var name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
@@ -2711,10 +2621,48 @@ Method.prototype.attachToObject = function (obj, func) {
     }
 };
 
+/**
+ * Should create payload from given input args
+ *
+ * @method toPayload
+ * @param {Array} args
+ * @return {Object}
+ */
+Method.prototype.toPayload = function (args) {
+    var call = this.getCall(args);
+    var callback = this.extractCallback(args);
+    var params = this.formatInput(args);
+    this.validateArgs(params);
+
+    return {
+        method: call,
+        params: params,
+        callback: callback
+    };
+};
+
+/**
+ * Should send request to the API
+ *
+ * @method send
+ * @param list of params
+ * @return result
+ */
+Method.prototype.send = function () {
+    var payload = this.toPayload(Array.prototype.slice.call(arguments));
+    if (payload.callback) {
+        var self = this;
+        return RequestManager.getInstance().sendAsync(payload, function (err, result) {
+            payload.callback(null, self.formatOutput(result));
+        });
+    }
+    return this.formatOutput(RequestManager.getInstance().send(payload));
+};
+
 module.exports = Method;
 
 
-},{"../utils/utils":6,"./errors":11}],19:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":11,"./requestmanager":22}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2784,8 +2732,11 @@ module.exports = {
 /**
  * @file property.js
  * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
+
+var RequestManager = require('./requestmanager');
 
 var Property = function (options) {
     this.name = options.name;
@@ -2824,21 +2775,50 @@ Property.prototype.formatOutput = function (result) {
  * @param {Object}
  * @param {Function}
  */
-Property.prototype.attachToObject = function (obj, proto) {
+Property.prototype.attachToObject = function (obj) {
+    var proto = {
+        get: this.get.bind(this),
+        set: this.set.bind(this)
+    };
+
     var name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
-
         Object.defineProperty(obj[name[0]], name[1], proto); 
     } else {
         Object.defineProperty(obj, name[0], proto);
     }
 };
 
+/**
+ * Should be used to get value of the property
+ *
+ * @method get
+ * @return {Object} value of the property
+ */
+Property.prototype.get = function () {
+    return this.formatOutput(RequestManager.getInstance().send({
+        method: this.getter
+    }));
+};
+
+/**
+ * Should be used to set value of the property
+ *
+ * @method set
+ * @param {Object} new value of the property
+ */
+Property.prototype.set = function (value) {
+    return RequestManager.getInstance().send({
+        method: this.setter,
+        params: [this.formatInput(value)]
+    });
+};
+
 module.exports = Property;
 
 
-},{}],21:[function(require,module,exports){
+},{"./requestmanager":22}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
