@@ -2023,7 +2023,7 @@ var getOptions = function (options) {
 
     var asBlockNumber = function (n) {
         if (n === null || typeof n === 'undefined') {
-            return null;
+            return undefined;
         } else if (n === 'latest' || n === 'pending') {
            return n; 
         }
