@@ -1192,7 +1192,7 @@ web3.eth.filter = function (fil, eventParams, options, formatter) {
 
     // what outputLogFormatter? that's wrong
     //return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
-    return new Filter(fil, watches.eth(), formatter);
+    return new Filter(fil, watches.eth(), formatter || formatters.outputLogFormatter);
 };
 /*jshint maxparams:3 */
 
@@ -2229,7 +2229,6 @@ var outputLogFormatter = function(log){
 
     return log;
 };
-
 
 /**
  * Formats the input of a whisper post and converts all values to HEX
