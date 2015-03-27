@@ -33,6 +33,9 @@ gulp.task('versionReplace', function(){
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"(.{5})\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
+  gulp.src(['./bower.json'])
+    .pipe(replace(/\"version\"\: \"(.{5})\"/, '"version": "'+ version.version + '"'))
+    .pipe(gulp.dest('./'));
   gulp.src(['./package.js'])
     .pipe(replace(/version\: \'(.{5})\'/, "version: '"+ version.version + "'"))
     .pipe(gulp.dest('./'));

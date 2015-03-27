@@ -1085,8 +1085,9 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
-    "version": "0.1.3"
+    "version": "0.2.0"
 }
+
 },{}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
