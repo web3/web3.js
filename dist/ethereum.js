@@ -1745,7 +1745,7 @@ var call = new Method({
     name: 'call',
     call: 'eth_call',
     params: 2,
-    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+    inputFormatter: [formatters.inputTransactionFormatter, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var compileSolidity = new Method({
@@ -2169,24 +2169,6 @@ var outputTransactionFormatter = function (tx){
 };
 
 /**
- * Formats the input of a call and converts all values to HEX
- *
- * @method inputCallFormatter
- * @param {Object} transaction options
- * @returns object
-*/
-var inputCallFormatter = function (options){
-    
-    // make code -> data
-    if (options.code) {
-        options.data = options.code;
-        delete options.code;
-    }
-
-    return options; 
-};
-
-/**
  * Formats the output of a block to its proper values
  *
  * @method outputBlockFormatter
@@ -2287,7 +2269,6 @@ var outputPostFormatter = function(post){
 module.exports = {
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
-    inputCallFormatter: inputCallFormatter,
     inputPostFormatter: inputPostFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
