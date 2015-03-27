@@ -14,8 +14,8 @@ Package.onUse(function(api) {
 
   // api.use('3stack:bignumber@2.0.0', 'client');
 
-  api.export('BigNumber', 'client');
-  api.export('web3', 'client');
+  // api.export('BigNumber', 'client');
+  api.export(['web3', 'BigNumber'], 'client');
 
   api.addFiles('dist/ethereum.js', 'client');
   api.addFiles('package-init.js', 'client');
