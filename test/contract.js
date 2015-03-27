@@ -33,6 +33,8 @@ var desc = [{
     "inputs": [
         {"name":"from","type":"address","indexed":true},
         {"name":"amount","type":"uint256","indexed":true},
+        {"name":"t1","type":"uint256","indexed":false},
+        {"name":"t2","type":"uint256","indexed":false}
     ],
 }];
 
@@ -52,7 +54,7 @@ describe('web3.eth.contract', function () {
                     step = 1;
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, 'web3_sha3');
-                    assert.equal(payload.params[0], web3.fromAscii('Changed(address,uint256)'));
+                    assert.equal(payload.params[0], web3.fromAscii('Changed(address,uint256,uint256,uint256)'));
                 } else if (step === 1) {
                     step = 2;
                     provider.injectResult(3);
@@ -73,7 +75,9 @@ describe('web3.eth.contract', function () {
                             '0x0000000000000000000000001234567890123456789012345678901234567890',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
-                        number: 2
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
                     }]]);
                     var r = payload.filter(function (p) {
                         return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === 3;
@@ -88,6 +92,8 @@ describe('web3.eth.contract', function () {
             contract.Changed({from: address}).watch(function(err, result) {
                 assert.equal(result.args.from, address); 
                 assert.equal(result.args.amount, 1);
+                assert.equal(result.args.t1, 1);
+                assert.equal(result.args.t2, 8);
                 done();
             });
         });

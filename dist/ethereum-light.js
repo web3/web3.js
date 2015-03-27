@@ -1128,7 +1128,6 @@ var c = require('./utils/config');
 var Method = require('./web3/method');
 var Property = require('./web3/property');
 
-/// @returns an array of objects describing web3 api methods
 var web3Methods = [
     new Method({
         name: 'sha3',
@@ -1170,7 +1169,9 @@ web3.providers = {};
 web3.version = {};
 web3.version.api = version.version;
 web3.eth = {};
-web3.eth.filter = function (fil, eventParams, options) {
+
+/*jshint maxparams:4 */
+web3.eth.filter = function (fil, eventParams, options, formatter) {
 
     // if its event, treat it differently
     // TODO: simplify and remove
@@ -1179,8 +1180,10 @@ web3.eth.filter = function (fil, eventParams, options) {
     }
 
     // what outputLogFormatter? that's wrong
-    return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
+    //return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
+    return new Filter(fil, watches.eth(), formatter || formatters.outputLogFormatter);
 };
+/*jshint maxparams:3 */
 
 web3.shh = {};
 web3.shh.filter = function (fil) {
@@ -1916,10 +1919,10 @@ var outputParser = function (event) {
             args: {}
         };
 
-        output.topics = output.topic; // fallback for go-ethereum
         if (!output.topics) {
             return result;
         }
+        output.data = output.data || '';
        
         var indexedOutputs = filterInputs(event.inputs, true);
         var indexedData = "0x" + output.topics.slice(1, output.topics.length).map(function (topics) { return topics.slice(2); }).join("");
@@ -2215,7 +2218,6 @@ var outputLogFormatter = function(log){
 
     return log;
 };
-
 
 /**
  * Formats the input of a whisper post and converts all values to HEX
