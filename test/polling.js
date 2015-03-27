@@ -30,8 +30,9 @@ var testPolling = function (tests) {
                 // given
                 var provider = new FakeHttpProvider(); 
                 web3.setProvider(provider);
+                web3.reset();
                 provider.injectResult(test.firstResult);
-                var step = 0 
+                var step = 0;
                 provider.injectValidation(function (payload) {
                     if (step === 0) {
                         step = 1;
