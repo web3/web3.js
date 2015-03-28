@@ -2127,7 +2127,12 @@ var outputBigNumberFormatter = function (number) {
 };
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    return blockNumber === undefined ? config.ETH_DEFAULTBLOCK : utils.toHex(blockNumber); // instead use default block number here
+    if (blockNumber === undefined) {
+        return config.ETH_DEFAULTBLOCK;
+    } else if (blockNumber === 'latest' || blockNumber === 'pending') {
+        return blockNumber;
+    }
+    return utils.toHex(blockNumber);
 };
 
 /**
