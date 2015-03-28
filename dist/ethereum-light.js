@@ -2418,7 +2418,7 @@ Jsonrpc.prototype.toPayload = function (method, params) {
         method: method,
         params: params || [],
         id: this.messageId++
-    }; 
+    };
 };
 
 /**
@@ -2426,7 +2426,7 @@ Jsonrpc.prototype.toPayload = function (method, params) {
  *
  * @method isValidResponse
  * @param {Object}
- * @returns {Boolean} true if response is valid, otherwise false 
+ * @returns {Boolean} true if response is valid, otherwise false
  */
 Jsonrpc.prototype.isValidResponse = function (response) {
     return !!response &&
@@ -2447,7 +2447,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
     var self = this;
     return messages.map(function (message) {
         return self.toPayload(message.method, message.params);
-    }); 
+    });
 };
 
 module.exports = Jsonrpc;
