@@ -14,7 +14,7 @@ var tests = [{
             "pending"
         ]
     },
-    secondResult: [2],
+    secondResult: [null],
     secondPayload: {
         method: "eth_getFilterChanges"
     }
