@@ -28,6 +28,24 @@ var tests = [{
     result: '0x31981',
     formattedResult: new BigNumber('0x31981', 16),
     call: 'eth_'+ method
+}, {
+    args: ['0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6', 0x1],
+    formattedArgs: ['0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6', '0x1'],
+    result: '0x31981',
+    formattedResult: new BigNumber('0x31981', 16),
+    call: 'eth_'+ method
+}, {
+    args: ['1255171934823351805979544608257289442498956485798', 0x1],
+    formattedArgs: ['0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6', '0x1'],
+    result: '0x31981',
+    formattedResult: new BigNumber('0x31981', 16),
+    call: 'eth_'+ method
+}, {
+    args: ['1255171934823351805979544608257289442498956485798'],
+    formattedArgs: ['0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6', 'latest'],
+    result: '0x31981',
+    formattedResult: new BigNumber('0x31981', 16),
+    call: 'eth_'+ method
 }];
 
 testMethod.runTests('eth', method, tests);
