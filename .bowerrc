@@ -1,5 +1,5 @@
 {
-  "directory": "example/js/",
+  "directory": "bower",
   "cwd": "./",
   "analytics": false
 }
