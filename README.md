@@ -5,7 +5,7 @@
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
 which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url][![Coverage Status][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url][![Coverage Status][coveralls-image]][coveralls-url][![Stories in Ready][waffle-image]][waffle-url]
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
@@ -112,4 +112,6 @@ eth -j
 [dep-dev-url]: https://david-dm.org/ethereum/ethereum.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/ethereum.js/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/ethereum/ethereum.js?branch=master
+[waffle-image]: https://badge.waffle.io/ethereum/ethereum.js.svg?label=ready&title=Ready
+[waffle-url]: http://waffle.io/ethereum/ethereum.js
 
