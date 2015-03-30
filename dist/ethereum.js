@@ -1434,17 +1434,7 @@ var addEventsToContract = function (contract, desc, address) {
 var contract = function (abi) {
 
     // return prototype
-    if(abi instanceof Array && arguments.length === 1) {
-        return Contract.bind(null, abi);
-
-    // deprecated: auto initiate contract
-    } else {
-
-        console.warn('Initiating a contract like this is deprecated please use var MyContract = eth.contract(abi); new MyContract(address); instead.');
-
-        return new Contract(arguments[1], arguments[0]);
-    }
-
+    return Contract.bind(null, abi);
 };
 
 function Contract(abi, address) {
