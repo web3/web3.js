@@ -1995,6 +1995,7 @@ module.exports = {
  */
 
 var RequestManager = require('./requestmanager');
+var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
@@ -2014,23 +2015,13 @@ var getOptions = function (options) {
         return utils.toHex(topic);
     });
 
-    var asBlockNumber = function (n) {
-        if (typeof n === 'undefined') {
-            return undefined;
-        }
-        if (n === 'latest' || n === 'pending') {
-           return n; 
-        }
-        return utils.toHex(n);
-    };
-
     // lazy load
     return {
         topics: options.topics,
         to: options.to,
         address: options.address,
-        fromBlock: asBlockNumber(options.fromBlock),
-        toBlock: asBlockNumber(options.toBlock) 
+        fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
+        toBlock: formatters.inputBlockNumberFormatter(options.toBlock) 
     }; 
 };
 
@@ -2088,7 +2079,7 @@ Filter.prototype.get = function () {
 module.exports = Filter;
 
 
-},{"../utils/utils":6,"./requestmanager":22}],15:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":15,"./requestmanager":22}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2133,6 +2124,13 @@ var isPredefinedBlockNumber = function (blockNumber) {
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
         return config.ETH_DEFAULTBLOCK;
+    }
+    return inputBlockNumberFormatter(blockNumber);
+};
+
+var inputBlockNumberFormatter = function (blockNumber) {
+    if (blockNumber === undefined) {
+        return undefined;
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
@@ -2281,6 +2279,7 @@ var outputPostFormatter = function(post){
 
 module.exports = {
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
+    inputBlockNumberFormatter: inputBlockNumberFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
     inputPostFormatter: inputPostFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
