@@ -2142,7 +2142,9 @@ var inputTransactionFormatter = function (options){
         delete options.code;
     }
 
-    ['gasPrice', 'gas', 'value'].forEach(function(key){
+    ['gasPrice', 'gas', 'value'].filter(function (key) {
+        return options[key] !== undefined;
+    }).forEach(function(key){
         options[key] = utils.fromDecimal(options[key]);
     });
 
