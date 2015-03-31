@@ -127,7 +127,7 @@ describe('web3.eth.contract', function () {
             contract.balance(address);
         });
 
-        it('should transact to normal function', function () {
+        it('should sendTransaction to contract function', function () {
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
             web3.reset();
@@ -157,5 +157,39 @@ describe('web3.eth.contract', function () {
 
             contract.send(address, 17);
         });
+
+        it('should make a call with optional params', function () {
+           
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            var sha3 = '0x5131231231231231231231';
+            var address = '0x1234567890123456789012345678901234567890';
+            provider.injectResult(sha3);
+            var step = 0;
+            provider.injectValidation(function (payload) {
+                if (step === 0) {
+                    step = 1;
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'web3_sha3');
+                    assert.equal(payload.params[0], web3.fromAscii('balance(address)'));
+                } else if (step === 1) {
+                    assert.equal(payload.method, 'eth_call');
+                    assert.deepEqual(payload.params, [{
+                        data: sha3.slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567890',
+                        to: address,
+                        from: address,
+                        gas: '0xc350'
+                    }, 'latest']);
+                }
+            });
+
+            var Contract = web3.eth.contract(desc);
+            var contract = new Contract(address);
+
+            contract.call({from: address, gas: 50000}).balance(address);
+
+        });
+
     });
 });
