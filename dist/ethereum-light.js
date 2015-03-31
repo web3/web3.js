@@ -1281,7 +1281,6 @@ var addFunctionRelatedPropertiesToContract = function (contract) {
         return contract;
     };
 
-
     contract.sendTransaction = function (options) {
         contract._isTransaction = true;
         contract._options = options;
