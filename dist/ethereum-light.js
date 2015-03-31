@@ -2012,7 +2012,8 @@ var Filter = function (options, methods, formatter) {
 
 Filter.prototype.watch = function (callback) {
     this.callbacks.push(callback);
-    var self = this;
+    var self = this,
+        requestmanager = RequestManager.getInstance();
 
     var onMessage = function (error, messages) {
         if (error) {
@@ -2029,7 +2030,12 @@ Filter.prototype.watch = function (callback) {
         });
     };
 
-    RequestManager.getInstance().startPolling({
+    // call getFilterLogs on start
+    if (!utils.isString(this.options)) {
+        this.get(onMessage);
+    }
+
+    requestmanager.startPolling({
         method: this.implementation.poll.call,
         params: [this.filterId],
     }, this.filterId, onMessage, this.stopWatching.bind(this));
@@ -2041,12 +2047,23 @@ Filter.prototype.stopWatching = function () {
     this.callbacks = [];
 };
 
-Filter.prototype.get = function () {
-    var logs = this.implementation.getLogs(this.filterId);
+Filter.prototype.get = function (callback) {
     var self = this;
-    return logs.map(function (log) {
-        return self.formatter ? self.formatter(log) : log;
-    });
+    if(utils.isFunction(callback)) {
+        this.implementation.getLogs(this.filterId, function(err, res){
+            if(!err) {
+                callback(null, res.map(function (log) {
+                    return self.formatter ? self.formatter(log) : log;
+                }));
+            } else
+                callback(err);
+        });
+    } else {
+        var logs = this.implementation.getLogs(this.filterId);
+        return logs.map(function (log) {
+            return self.formatter ? self.formatter(log) : log;
+        });
+    }
 };
 
 module.exports = Filter;
