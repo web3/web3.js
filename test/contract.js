@@ -191,5 +191,39 @@ describe('web3.eth.contract', function () {
 
         });
 
+        it('should sendTransaction with optional params', function () {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            var sha3 = '0x5131231231231231231231';
+            var address = '0x1234567890123456789012345678901234567890';
+            provider.injectResult(sha3);
+            var step = 0;
+            provider.injectValidation(function (payload) {
+                if (step === 0) {
+                    step = 1;
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'web3_sha3');
+                    assert.equal(payload.params[0], web3.fromAscii('send(address,uint256)'));
+                } else if (step === 1) {
+                    assert.equal(payload.method, 'eth_sendTransaction');
+                    assert.deepEqual(payload.params, [{
+                        data: sha3.slice(0, 10) + 
+                            '0000000000000000000000001234567890123456789012345678901234567890' + 
+                            '0000000000000000000000000000000000000000000000000000000000000011' ,
+                        to: address,
+                        from: address,
+                        gas: '0xc350',
+                        gasPrice: '0xbb8',
+                        value: '0x2710'
+                    }]);
+                }
+            });
+
+            var Contract = web3.eth.contract(desc);
+            var contract = new Contract(address);
+
+            contract.sendTransaction({from: address, gas: 50000, gasPrice: 3000, value: 10000}).send(address, 17);
+        });
     });
 });

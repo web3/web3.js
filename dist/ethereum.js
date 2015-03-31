@@ -1287,22 +1287,6 @@ var addFunctionRelatedPropertiesToContract = function (contract) {
         contract._options = options;
         return contract;
     };
-    // DEPRECATED
-    contract.transact = function (options) {
-
-        console.warn('myContract.transact() is deprecated please use myContract.sendTransaction() instead.');
-
-        return contract.sendTransaction(options);
-    };
-
-    contract._options = {};
-    ['gas', 'gasPrice', 'value', 'from'].forEach(function(p) {
-        contract[p] = function (v) {
-            contract._options[p] = v;
-            return contract;
-        };
-    });
-
 };
 
 var addFunctionsToContract = function (contract, desc, address) {
