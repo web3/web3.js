@@ -1531,6 +1531,9 @@ var utils = require('../utils/utils');
 
 module.exports = {
     InvalidNumberOfParams: new Error('Invalid number of input parameters'),
+    NoConnection: function(host){
+        return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +', is it running?');
+    },
     InvalidProvider: new Error('Providor not set or invalid'),
     InvalidResponse: function(result){
         var message = 'Invalid JSON RPC response';
@@ -2310,6 +2313,7 @@ module.exports = {
 "use strict";
 
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
+var errors = require('./errors');
 
 var HttpProvider = function (host) {
     this.host = host || 'http://localhost:8080';
@@ -2319,7 +2323,13 @@ HttpProvider.prototype.send = function (payload) {
     var request = new XMLHttpRequest();
 
     request.open('POST', this.host, false);
-    request.send(JSON.stringify(payload));
+    
+    try {
+        request.send(JSON.stringify(payload));
+    } catch(error) {
+        throw errors.NoConnection(this.host);
+    }
+
 
     // check request.status
     // TODO: throw an error here! it cannot silently fail!!!
@@ -2339,13 +2349,18 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     };
 
     request.open('POST', this.host, true);
-    request.send(JSON.stringify(payload));
+
+    try {
+        request.send(JSON.stringify(payload));
+    } catch(error) {
+        throw errors.NoConnection(this.host);
+    }
 };
 
 module.exports = HttpProvider;
 
 
-},{"xmlhttprequest":4}],17:[function(require,module,exports){
+},{"./errors":11,"xmlhttprequest":4}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
