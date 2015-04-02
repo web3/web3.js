@@ -1149,7 +1149,7 @@ var web3Properties = [
     }),
     new Property({
         name: 'version.ethereum',
-        getter: 'eth_version',
+        getter: 'eth_protocolVersion',
         inputFormatter: utils.toDecimal
     }),
     new Property({
