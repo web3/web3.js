@@ -17,6 +17,12 @@ var tests = [{
     result: '0xb',
     formattedResult: 11,
     call: 'eth_getBlockTransactionCountByNumber'
+},{
+    args: ['pending'],
+    formattedArgs: ['pending'],
+    result: '0xb',
+    formattedResult: 11,
+    call: 'eth_getBlockTransactionCountByNumber'
 }];
 
 testMethod.runTests('eth', method, tests);

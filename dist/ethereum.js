@@ -1687,7 +1687,7 @@ var getBlockTransactionCount = new Method({
     name: 'getBlockTransactionCount',
     call: getBlockTransactionCountCall,
     params: 1,
-    inputFormatter: [utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter],
     outputFormatter: utils.toDecimal
 });
 
@@ -1695,7 +1695,7 @@ var getBlockUncleCount = new Method({
     name: 'getBlockUncleCount',
     call: uncleCountCall,
     params: 1,
-    inputFormatter: [utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter],
     outputFormatter: utils.toDecimal
 });
 
