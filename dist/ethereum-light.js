@@ -273,19 +273,6 @@ var utils = require('../utils/utils');
 var c = require('../utils/config');
 
 /**
- * Should be called to pad string to expected length
- *
- * @method padLeft
- * @param {String} string to be padded
- * @param {Number} characters that result string should have
- * @param {String} sign, by default 0
- * @returns {String} right aligned string
- */
-var padLeft = function (string, chars, sign) {
-    return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
-};
-
-/**
  * Formats input value to byte representation of int
  * If value is negative, return it's two's complement
  * If the value is floating point, round it down
@@ -297,7 +284,7 @@ var padLeft = function (string, chars, sign) {
 var formatInputInt = function (value) {
     var padding = c.ETH_PADDING * 2;
     BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
-    return padLeft(utils.toTwosComplement(value).round().toString(16), padding);
+    return utils.padLeft(utils.toTwosComplement(value).round().toString(16), padding);
 };
 
 /**
@@ -676,6 +663,18 @@ var unitMap = {
     'tether':   '1000000000000000000000000000000'
 };
 
+/**
+ * Should be called to pad string to expected length
+ *
+ * @method padLeft
+ * @param {String} string to be padded
+ * @param {Number} characters that result string should have
+ * @param {String} sign, by default 0
+ * @returns {String} right aligned string
+ */
+var padLeft = function (string, chars, sign) {
+    return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
+};
 
 /** Finds first index of array element matching pattern
  *
@@ -965,13 +964,27 @@ var toTwosComplement = function (number) {
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
-var isAddress = function(address) {
-    if (!isString(address)) {
-        return false;
+var isAddress = function (address) {
+    return /^0x[0-9a-f]{40}$/.test(address);
+};
+
+/**
+ * Transforms given string to valid 20 bytes-length addres with 0x prefix
+ *
+ * @method toAddress
+ * @param {String} address
+ * @return {String} formatted address
+ */
+var toAddress = function (address) {
+    if (isAddress(address)) {
+        return address;
+    }
+    
+    if (/^[0-9a-f]{40}$/.test(address)) {
+        return '0x' + address;
     }
 
-    return ((address.indexOf('0x') === 0 && address.length === 42) ||
-            (address.indexOf('0x') === -1 && address.length === 40));
+    return '0x' + padLeft(toHex(address).substr(2), 40);
 };
 
 /**
@@ -1058,6 +1071,7 @@ var isJson = function (str) {
 };
 
 module.exports = {
+    padLeft: padLeft,
     findIndex: findIndex,
     toHex: toHex,
     toDecimal: toDecimal,
@@ -1072,6 +1086,7 @@ module.exports = {
     fromWei: fromWei,
     toBigNumber: toBigNumber,
     toTwosComplement: toTwosComplement,
+    toAddress: toAddress,
     isBigNumber: isBigNumber,
     isAddress: isAddress,
     isFunction: isFunction,
@@ -1085,7 +1100,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
-    "version": "0.2.1"
+    "version": "0.2.4"
 }
 
 },{}],8:[function(require,module,exports){
@@ -1630,7 +1645,7 @@ var getBalance = new Method({
     name: 'getBalance', 
     call: 'eth_getBalance', 
     params: 2,
-    inputFormatter: [utils.toHex, formatters.inputDefaultBlockNumberFormatter],
+    inputFormatter: [utils.toAddress, formatters.inputDefaultBlockNumberFormatter],
     outputFormatter: formatters.outputBigNumberFormatter
 });
 
@@ -1645,7 +1660,7 @@ var getCode = new Method({
     name: 'getCode',
     call: 'eth_getCode',
     params: 2,
-    inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter]
+    inputFormatter: [utils.toAddress, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var getBlock = new Method({
@@ -1675,7 +1690,7 @@ var getBlockTransactionCount = new Method({
     name: 'getBlockTransactionCount',
     call: getBlockTransactionCountCall,
     params: 1,
-    inputFormatter: [utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter],
     outputFormatter: utils.toDecimal
 });
 
@@ -1683,7 +1698,7 @@ var getBlockUncleCount = new Method({
     name: 'getBlockUncleCount',
     call: uncleCountCall,
     params: 1,
-    inputFormatter: [utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter],
     outputFormatter: utils.toDecimal
 });
 

@@ -16,6 +16,12 @@ var tests = [{
     result: '0xb',
     formattedResult: 11,
     call: 'eth_getUncleCountByBlockNumber'
+},{
+    args: ['pending'],
+    formattedArgs: ['pending'],
+    result: '0xb',
+    formattedResult: 11,
+    call: 'eth_getUncleCountByBlockNumber'
 }];
 
 testMethod.runTests('eth', method, tests);

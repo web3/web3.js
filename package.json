@@ -1,8 +1,8 @@
 {
   "name": "ethereum.js",
   "namespace": "ethereum",
-  "version": "0.2.1",
-  "description": "Ethereum JavaScript API, middleware to talk to a ethreum node over RPC",
+  "version": "0.2.4",
+  "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
