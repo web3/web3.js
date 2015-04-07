@@ -1100,7 +1100,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
-    "version": "0.2.4"
+    "version": "0.2.5"
 }
 
 },{}],8:[function(require,module,exports){
@@ -3234,16 +3234,23 @@ module.exports = {
 module.exports = BigNumber; // jshint ignore:line
 
 
-},{}],"ethereum.js":[function(require,module,exports){
-var web3 = require('./lib/web3');
+},{}],"web3":[function(require,module,exports){
+// dont override global variable
+if (typeof web3 !== 'undefined') {
+    var web3;
+}
+
+web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.eth.contract = require('./lib/web3/contract');
 web3.abi = require('./lib/solidity/abi');
 
+
+
 module.exports = web3;
 
-},{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":16,"./lib/web3/qtsync":21}]},{},["ethereum.js"])
+},{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":16,"./lib/web3/qtsync":21}]},{},["web3"])
 
 
-//# sourceMappingURL=ethereum-light.js.map
+//# sourceMappingURL=web3-light.js.map
