@@ -1799,7 +1799,7 @@ var properties = [
     new Property({
         name: 'gasPrice',
         getter: 'eth_gasPrice',
-        outputFormatter: formatters.inputNumberFormatter
+        outputFormatter: formatters.outputBigNumberFormatter
     }),
     new Property({
         name: 'accounts',
