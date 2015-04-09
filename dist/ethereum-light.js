@@ -1525,7 +1525,7 @@ function Contract(abi, options) {
         var code = options;
         var args = Array.prototype.slice.call(arguments, 2);
         var bytes = solAbi.formatConstructorParams(abi, args);
-        address = web3.eth.sendTransaction({data: code + args});
+        address = web3.eth.sendTransaction({data: code + bytes});
     }
 
     var result = {};

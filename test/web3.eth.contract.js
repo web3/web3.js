@@ -1,5 +1,7 @@
 var assert = require('assert');
 var contract = require('../lib/web3/contract.js');
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var web3 = require('../index');
 
 describe('web3.eth.contract', function() {
     it('should create simple contract with one method from abi with explicit type name', function () {
@@ -207,5 +209,32 @@ describe('web3.eth.contract', function() {
 
     });
 
+    it('should create contract with nondefault constructor', function (done) {
+        var provider = new FakeHttpProvider();
+        web3.setProvider(provider);
+        web3.reset(); // reset different polls
+        var address = '0x1234567890123456789012345678901234567890';
+        var code = '0x31241231231123123123123121cf121212i123123123123123512312412512111111';
+        var description =  [{
+            "name": "test",
+            "type": "constructor",
+            "inputs": [{
+                "name": "a",
+                "type": "uint256"
+            }
+            ]
+        }];
+
+        provider.injectResult(address);
+        provider.injectValidation(function (payload) {
+            assert.equal(payload.jsonrpc, '2.0');
+            assert.equal(payload.method, 'eth_sendTransaction');
+            assert.equal(payload.params[0].data, code + '0000000000000000000000000000000000000000000000000000000000000002');
+            done();
+        });
+        
+        var Con = contract(description);
+        var myCon = new Con(code, 2);
+    });
 });
 
