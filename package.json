@@ -49,11 +49,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ethereum/ethereum.js.git"
+    "url": "https://github.com/ethereum/web3.js.git"
   },
-  "homepage": "https://github.com/ethereum/ethereum.js",
+  "homepage": "https://github.com/ethereum/web3.js",
   "bugs": {
-    "url": "https://github.com/ethereum/ethereum.js/issues"
+    "url": "https://github.com/ethereum/web3.js/issues"
   },
   "keywords": [
     "ethereum",
