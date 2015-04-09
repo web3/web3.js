@@ -15,10 +15,10 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file abi.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Gav Wood <g@ethdev.com>
+/** 
+ * @file abi.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Gav Wood <g@ethdev.com>
  * @date 2014
  */
 
@@ -26,6 +26,7 @@ var utils = require('../utils/utils');
 var c = require('../utils/config');
 var types = require('./types');
 var f = require('./formatters');
+var solUtils = require('./utils');
 
 /**
  * throw incorrect type error
@@ -238,14 +239,26 @@ var outputParser = function (json) {
     return parser;
 };
 
+var formatConstructorParams = function (abi, params) {
+    var constructor = solUtils.getConstructor(abi, params.length);
+    if (!constructor) {
+        if (params.length > 0) {
+            console.warn("didn't found matching constructor, using default one");
+        }
+        return '';
+    }
+    return formatInput(constructor.inputs, params);
+};
+
 module.exports = {
     inputParser: inputParser,
     outputParser: outputParser,
     formatInput: formatInput,
-    formatOutput: formatOutput
+    formatOutput: formatOutput,
+    formatConstructorParams: formatConstructorParams
 };
 
-},{"../utils/config":5,"../utils/utils":6,"./formatters":2,"./types":3}],2:[function(require,module,exports){
+},{"../utils/config":6,"../utils/utils":7,"./formatters":2,"./types":3,"./utils":4}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -445,7 +458,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":6,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
+},{"../utils/config":6,"../utils/utils":7,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -525,6 +538,76 @@ module.exports = {
 
 
 },{"./formatters":2}],4:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file utils.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+/**
+ * Returns the contstructor with matching number of arguments
+ *
+ * @method getConstructor
+ * @param {Array} abi
+ * @param {Number} numberOfArgs
+ * @returns {Object} constructor function abi
+ */
+var getConstructor = function (abi, numberOfArgs) {
+    return abi.filter(function (f) {
+        return f.type === 'constructor' && f.inputs.length === numberOfArgs;
+    })[0];
+};
+
+/**
+ * Filters all functions from input abi
+ *
+ * @method filterFunctions
+ * @param {Array} abi
+ * @returns {Array} abi array with filtered objects of type 'function'
+ */
+var filterFunctions = function (json) {
+    return json.filter(function (current) {
+        return current.type === 'function'; 
+    }); 
+};
+
+/**
+ * Filters all events from input abi
+ *
+ * @method filterEvents
+ * @param {Array} abi
+ * @returns {Array} abi array with filtered objects of type 'event'
+ */
+var filterEvents = function (json) {
+    return json.filter(function (current) {
+        return current.type === 'event';
+    });
+};
+
+module.exports = {
+    getConstructor: getConstructor,
+    filterFunctions: filterFunctions,
+    filterEvents: filterEvents
+};
+
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -535,7 +618,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -606,7 +689,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],6:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -771,32 +854,6 @@ var extractTypeName = function (name) {
 };
 
 /**
- * Filters all functions from input abi
- *
- * @method filterFunctions
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'function'
- */
-var filterFunctions = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'function'; 
-    }); 
-};
-
-/**
- * Filters all events from input abi
- *
- * @method filterEvents
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'event'
- */
-var filterEvents = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'event';
-    });
-};
-
-/**
  * Converts value to it's decimal representation in string
  *
  * @method toDecimal
@@ -958,14 +1015,25 @@ var toTwosComplement = function (number) {
 };
 
 /**
- * Checks if the given string has proper length
+ * Checks if the given string is strictly an address
+ *
+ * @method isStrictAddress
+ * @param {String} address the given HEX adress
+ * @return {Boolean}
+*/
+var isStrictAddress = function (address) {
+    return /^0x[0-9a-f]{40}$/.test(address);
+};
+
+/**
+ * Checks if the given string is an address
  *
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
 */
 var isAddress = function (address) {
-    return /^0x[0-9a-f]{40}$/.test(address);
+    return /^(0x)?[0-9a-f]{40}$/.test(address);
 };
 
 /**
@@ -976,7 +1044,7 @@ var isAddress = function (address) {
  * @return {String} formatted address
  */
 var toAddress = function (address) {
-    if (isAddress(address)) {
+    if (isStrictAddress(address)) {
         return address;
     }
     
@@ -1080,14 +1148,13 @@ module.exports = {
     fromAscii: fromAscii,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
-    filterFunctions: filterFunctions,
-    filterEvents: filterEvents,
     toWei: toWei,
     fromWei: fromWei,
     toBigNumber: toBigNumber,
     toTwosComplement: toTwosComplement,
     toAddress: toAddress,
     isBigNumber: isBigNumber,
+    isStrictAddress: isStrictAddress,
     isAddress: isAddress,
     isFunction: isFunction,
     isString: isString,
@@ -1098,12 +1165,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 module.exports={
     "version": "0.2.4"
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1259,7 +1326,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":12,"./web3/filter":14,"./web3/formatters":15,"./web3/method":18,"./web3/net":19,"./web3/property":20,"./web3/requestmanager":22,"./web3/shh":23,"./web3/watches":25}],9:[function(require,module,exports){
+},{"./utils/config":6,"./utils/utils":7,"./version.json":8,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":19,"./web3/net":20,"./web3/property":21,"./web3/requestmanager":23,"./web3/shh":24,"./web3/watches":26}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1283,8 +1350,9 @@ module.exports = web3;
  */
 
 var web3 = require('../web3'); 
-var abi = require('../solidity/abi');
+var solAbi = require('../solidity/abi');
 var utils = require('../utils/utils');
+var solUtils = require('../solidity/utils');
 var eventImpl = require('./event');
 var signature = require('./signature');
 
@@ -1304,11 +1372,11 @@ var addFunctionRelatedPropertiesToContract = function (contract) {
 };
 
 var addFunctionsToContract = function (contract, desc, address) {
-    var inputParser = abi.inputParser(desc);
-    var outputParser = abi.outputParser(desc);
+    var inputParser = solAbi.inputParser(desc);
+    var outputParser = solAbi.outputParser(desc);
 
     // create contract functions
-    utils.filterFunctions(desc).forEach(function (method) {
+    solUtils.filterFunctions(desc).forEach(function (method) {
 
         var displayName = utils.extractDisplayName(method.name);
         var typeName = utils.extractTypeName(method.name);
@@ -1360,14 +1428,14 @@ var addFunctionsToContract = function (contract, desc, address) {
 var addEventRelatedPropertiesToContract = function (contract, desc, address) {
     contract.address = address;
     contract._onWatchEventResult = function (data) {
-        var matchingEvent = event.getMatchingEvent(utils.filterEvents(desc));
+        var matchingEvent = event.getMatchingEvent(solUtils.filterEvents(desc));
         var parser = eventImpl.outputParser(matchingEvent);
         return parser(data);
     };
     
     Object.defineProperty(contract, 'topics', {
         get: function() {
-            return utils.filterEvents(desc).map(function (e) {
+            return solUtils.filterEvents(desc).map(function (e) {
                 return signature.eventSignatureFromAscii(e.name);
             });
         }
@@ -1377,7 +1445,7 @@ var addEventRelatedPropertiesToContract = function (contract, desc, address) {
 
 var addEventsToContract = function (contract, desc, address) {
     // create contract events
-    utils.filterEvents(desc).forEach(function (e) {
+    solUtils.filterEvents(desc).forEach(function (e) {
 
         var impl = function () {
             var params = Array.prototype.slice.call(arguments);
@@ -1435,7 +1503,7 @@ var contract = function (abi) {
     return Contract.bind(null, abi);
 };
 
-function Contract(abi, address) {
+function Contract(abi, options) {
 
     // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
     // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
@@ -1449,6 +1517,17 @@ function Contract(abi, address) {
         }
     });
 
+    var address = '';
+    if (utils.isAddress(options)) {
+        address = options;
+    } else { // is a source code!
+        // TODO, parse the rest of the args
+        var code = options;
+        var args = Array.prototype.slice.call(arguments, 2);
+        var bytes = solAbi.formatConstructorParams(abi, args);
+        address = web3.eth.sendTransaction({data: code + args});
+    }
+
     var result = {};
     addFunctionRelatedPropertiesToContract(result);
     addFunctionsToContract(result, abi, address);
@@ -1461,7 +1540,7 @@ function Contract(abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../utils/utils":6,"../web3":8,"./event":13,"./signature":24}],10:[function(require,module,exports){
+},{"../solidity/abi":1,"../solidity/utils":4,"../utils/utils":7,"../web3":9,"./event":14,"./signature":25}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1519,7 +1598,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":18}],11:[function(require,module,exports){
+},{"./method":19}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1559,7 +1638,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6}],12:[function(require,module,exports){
+},{"../utils/utils":7}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1815,7 +1894,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./formatters":15,"./method":18,"./property":20}],13:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":16,"./method":19,"./property":21}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1955,7 +2034,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":6,"./signature":24}],14:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":7,"./signature":25}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2067,7 +2146,7 @@ Filter.prototype.get = function () {
 module.exports = Filter;
 
 
-},{"../utils/utils":6,"./formatters":15,"./requestmanager":22}],15:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":16,"./requestmanager":23}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2280,7 +2359,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":6}],16:[function(require,module,exports){
+},{"../utils/config":6,"../utils/utils":7}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2343,7 +2422,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"xmlhttprequest":4}],17:[function(require,module,exports){
+},{"xmlhttprequest":5}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2436,7 +2515,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2597,7 +2676,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":6,"./errors":11,"./requestmanager":22}],19:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":12,"./requestmanager":23}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2647,7 +2726,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./property":20}],20:[function(require,module,exports){
+},{"../utils/utils":7,"./property":21}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2753,7 +2832,7 @@ Property.prototype.set = function (value) {
 module.exports = Property;
 
 
-},{"./requestmanager":22}],21:[function(require,module,exports){
+},{"./requestmanager":23}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2788,7 +2867,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3009,7 +3088,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":6,"./errors":11,"./jsonrpc":17}],23:[function(require,module,exports){
+},{"../utils/config":6,"../utils/utils":7,"./errors":12,"./jsonrpc":18}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3079,7 +3158,7 @@ module.exports = {
 };
 
 
-},{"./formatters":15,"./method":18}],24:[function(require,module,exports){
+},{"./formatters":16,"./method":19}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3123,7 +3202,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../web3":8}],25:[function(require,module,exports){
+},{"../utils/config":6,"../web3":9}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3226,7 +3305,7 @@ module.exports = {
 };
 
 
-},{"./method":18}],26:[function(require,module,exports){
+},{"./method":19}],27:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
@@ -3243,7 +3322,7 @@ web3.abi = require('./lib/solidity/abi');
 
 module.exports = web3;
 
-},{"./lib/solidity/abi":1,"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":16,"./lib/web3/qtsync":21}]},{},["ethereum.js"])
+},{"./lib/solidity/abi":1,"./lib/web3":9,"./lib/web3/contract":10,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["ethereum.js"])
 
 
 //# sourceMappingURL=ethereum-light.js.map

@@ -20,10 +20,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
+        var address = '0x1234567890123456789012345678901234567890';
     
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -48,10 +49,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
+        var address = '0x1234567890123456789012345678901234567890';
 
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -90,10 +92,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
+        var address = '0x1234567890123456789012345678901234567890';
         
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -134,10 +137,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
+        var address = '0x1234567890123456789012345678901234567890';
         
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -162,11 +166,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-
+        var address = '0x1234567890123456789012345678901234567890';
 
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('undefined', typeof myCon.test); 
@@ -191,11 +195,11 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-
+        var address = '0x1234567890123456789012345678901234567890';
 
         // when
         var Con = contract(description);
-        var myCon = new Con(null);
+        var myCon = new Con(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
