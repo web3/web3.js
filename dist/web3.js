@@ -5979,20 +5979,19 @@ module.exports = {
 })(this);
 
 },{"crypto":27}],"web3":[function(require,module,exports){
-// dont override global variable
-if (typeof web3 !== 'undefined') {
-    var web3;
-}
-
-web3 = require('./lib/web3');
+var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.eth.contract = require('./lib/web3/contract');
 web3.abi = require('./lib/solidity/abi');
 
-
+// dont override global variable
+if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
+    window.web3 = web3;
+}
 
 module.exports = web3;
+
 
 },{"./lib/solidity/abi":1,"./lib/web3":9,"./lib/web3/contract":10,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["web3"])
 
