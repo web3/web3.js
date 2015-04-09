@@ -17,7 +17,7 @@ You need to run a local ethrereum node to use this library.
 
 ### Node.js
 
-    $ npm install ethereum.js
+    $ npm install web3
 
 ### Meteor.js
 
@@ -26,19 +26,23 @@ You need to run a local ethrereum node to use this library.
 ### As Browser module
 Bower
 
-	$ bower install ethereum.js
+	$ bower install web3
 
 Component
 
-	$ component install ethereum/ethereum.js
+	$ component install ethereum/web3.js
 
 * Include `ethereum.min.js` in your html file. (not required for the meteor package)
 * Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
-Require the library (not required for the meteor package):
+You can require the library (not required for the meteor package):
 
 	var web3 = require('ethereum.js');
+
+Or use it directly from global namespace:
+
+	console.log(web3); // {eth: .., shh: ...} // it's here!
 
 Set a provider (QtSyncProvider, HttpProvider)
 
