@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Ethereum Compatible JavaScript API",
   "main": [
     "./dist/ethereum.js",
