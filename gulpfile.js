@@ -19,8 +19,8 @@ var replace = require('gulp-replace');
 
 var DEST = './dist/';
 var src = 'index';
-var dst = 'ethereum';
-var lightDst = 'ethereum-light';
+var dst = 'web3';
+var lightDst = 'web3-light';
 
 var browserifyOptions = {
     debug: true,
@@ -60,7 +60,7 @@ gulp.task('lint', function(){
 
 gulp.task('buildLight', ['clean'], function () {
     return browserify(browserifyOptions)
-        .require('./' + src + '.js', {expose: 'ethereum.js'})
+        .require('./' + src + '.js', {expose: 'web3'})
         .ignore('bignumber.js')
         .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
         .add('./' + src + '.js')
@@ -75,7 +75,7 @@ gulp.task('buildLight', ['clean'], function () {
 
 gulp.task('buildStandalone', ['clean'], function () {
     return browserify(browserifyOptions)
-        .require('./' + src + '.js', {expose: 'ethereum.js'})
+        .require('./' + src + '.js', {expose: 'web3'})
         .require('bignumber.js') // expose it to dapp users
         .add('./' + src + '.js')
         .ignore('crypto')
