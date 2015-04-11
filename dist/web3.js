@@ -4438,11 +4438,11 @@ module.exports = {
 
         // Handle values that fail the validity test in BigNumber.
         parseNumeric = (function () {
-            var basePrefix=/^(-?)0([xbo])/i,
-                dotAfter=/^([^.]+)\.$/,
-                dotBefore=/^\.([^.]+)$/,
-                isInfinityOrNaN=/^-?(Infinity|NaN)$/,
-                whitespaceOrPlus=/^\s*\+|^\s+|\s+$/g;
+            var basePrefix = /^(-?)0([xbo])/i,
+                dotAfter = /^([^.]+)\.$/,
+                dotBefore = /^\.([^.]+)$/,
+                isInfinityOrNaN = /^-?(Infinity|NaN)$/,
+                whitespaceOrPlus = /^\s*\+|^\s+|\s+$/g;
 
             return function ( x, str, num, b ) {
                 var base,
