@@ -21,7 +21,7 @@ You need to run a local ethrereum node to use this library.
 
 ### Meteor.js
 
-    $ meteor add ethereum:js
+    $ meteor add ethereum:web3
 
 ### As Browser module
 Bower
@@ -36,11 +36,7 @@ Component
 * Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
-You can require the library (not required for the meteor package):
-
-	var web3 = require('ethereum.js');
-
-Or use it directly from global namespace:
+Use the `web3` object directly from global namespace:
 
 	console.log(web3); // {eth: .., shh: ...} // it's here!
 
