@@ -17,7 +17,7 @@ You need to run a local ethrereum node to use this library.
 
 ### Node.js
 
-    $ npm install ethereum.js
+    $ npm install web3
 
 ### Meteor.js
 
@@ -26,19 +26,23 @@ You need to run a local ethrereum node to use this library.
 ### As Browser module
 Bower
 
-	$ bower install ethereum.js
+	$ bower install web3
 
 Component
 
-	$ component install ethereum/ethereum.js
+	$ component install ethereum/web3.js
 
 * Include `ethereum.min.js` in your html file. (not required for the meteor package)
 * Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
-Require the library (not required for the meteor package):
+You can require the library (not required for the meteor package):
 
 	var web3 = require('ethereum.js');
+
+Or use it directly from global namespace:
+
+	console.log(web3); // {eth: .., shh: ...} // it's here!
 
 Set a provider (QtSyncProvider, HttpProvider)
 
@@ -102,16 +106,16 @@ Install ethereum and spawn a node:
 eth -j
 ```
 
-[npm-image]: https://badge.fury.io/js/ethereum.js.png
-[npm-url]: https://npmjs.org/package/ethereum.js
-[travis-image]: https://travis-ci.org/ethereum/ethereum.js.svg
-[travis-url]: https://travis-ci.org/ethereum/ethereum.js
-[dep-image]: https://david-dm.org/ethereum/ethereum.js.svg
-[dep-url]: https://david-dm.org/ethereum/ethereum.js
-[dep-dev-image]: https://david-dm.org/ethereum/ethereum.js/dev-status.svg
-[dep-dev-url]: https://david-dm.org/ethereum/ethereum.js#info=devDependencies
-[coveralls-image]: https://coveralls.io/repos/ethereum/ethereum.js/badge.svg?branch=master
-[coveralls-url]: https://coveralls.io/r/ethereum/ethereum.js?branch=master
-[waffle-image]: https://badge.waffle.io/ethereum/ethereum.js.svg?label=ready&title=Ready
-[waffle-url]: http://waffle.io/ethereum/ethereum.js
+[npm-image]: https://badge.fury.io/js/web3.png
+[npm-url]: https://npmjs.org/package/web3
+[travis-image]: https://travis-ci.org/ethereum/web3.js.svg
+[travis-url]: https://travis-ci.org/ethereum/web3.js
+[dep-image]: https://david-dm.org/ethereum/web3.js.svg
+[dep-url]: https://david-dm.org/ethereum/web3.js
+[dep-dev-image]: https://david-dm.org/ethereum/web.js/dev-status.svg
+[dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
+[coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
+[coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
+[waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
+[waffle-url]: http://waffle.io/ethereum/web3.js
 
