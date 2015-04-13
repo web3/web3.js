@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 
 if(typeof web3 === 'undefined') {
-    web3 = require('ethereum.js');
+    web3 = require('web3');
     BigNumber = require('bignumber.js');
 }
 
