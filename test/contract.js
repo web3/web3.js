@@ -67,7 +67,22 @@ describe('web3.eth.contract', function () {
                         ],
                         address: '0x1234567890123456789012345678901234567890'
                     });
-                } else if (step === 2 && utils.isArray(payload)) {
+                } else if (step === 2) {
+                    step = 3;
+                    provider.injectResult([{
+                        address: address,
+                        topics: [
+                            sha3,
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }]);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_getFilterLogs');
+                } else if (step === 3 && utils.isArray(payload)) {
                     provider.injectBatchResults([[{
                         address: address,
                         topics: [
@@ -89,12 +104,16 @@ describe('web3.eth.contract', function () {
             var Contract = web3.eth.contract(desc);
             var contract = new Contract(address);
 
+            var res = 0;
             contract.Changed({from: address}).watch(function(err, result) {
                 assert.equal(result.args.from, address); 
                 assert.equal(result.args.amount, 1);
                 assert.equal(result.args.t1, 1);
                 assert.equal(result.args.t2, 8);
-                done();
+                res++;
+                if (res === 2) {
+                    done();
+                }
             });
         });
 
