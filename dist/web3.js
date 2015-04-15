@@ -2456,7 +2456,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
-        throw errors.NoConnection(this.host);
+        callback(errors.NoConnection(this.host));
     }
 };
 
