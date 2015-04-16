@@ -1621,27 +1621,24 @@ module.exports = {
  * @date 2015
  */
 
-var utils = require('../utils/utils');
-
 module.exports = {
-    InvalidNumberOfParams: new Error('Invalid number of input parameters'),
-    NoConnection: function(host){
+    InvalidNumberOfParams: function () {
+        return new Error('Invalid number of input parameters');
+    },
+    InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +', is it running?');
     },
-    InvalidProvider: new Error('Providor not set or invalid'),
-    InvalidResponse: function(result){
-        var message = 'Invalid JSON RPC response';
-
-        if(utils.isObject(result) && result.error && result.error.message) {
-            message = result.error.message;
-        }
-
+    InvalidProvider: function () {
+        return new Error('Providor not set or invalid');
+    },
+    InvalidResponse: function (result){
+        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response';
         return new Error(message);
     }
 };
 
 
-},{"../utils/utils":7}],13:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2430,7 +2427,7 @@ HttpProvider.prototype.send = function (payload) {
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
-        throw errors.NoConnection(this.host);
+        throw errors.InvalidConnection(this.host);
     }
 
 
@@ -2456,7 +2453,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
-        callback(errors.NoConnection(this.host));
+        callback(errors.InvalidConnection(this.host));
     }
 };
 
@@ -2625,7 +2622,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfParams;
+        throw errors.InvalidNumberOfParams();
     }
 };
 
@@ -2976,7 +2973,7 @@ RequestManager.getInstance = function () {
  */
 RequestManager.prototype.send = function (data) {
     if (!this.provider) {
-        console.error(errors.InvalidProvider);
+        console.error(errors.InvalidProvider());
         return null;
     }
 
@@ -2999,7 +2996,7 @@ RequestManager.prototype.send = function (data) {
  */
 RequestManager.prototype.sendAsync = function (data, callback) {
     if (!this.provider) {
-        return callback(errors.InvalidProvider);
+        return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
@@ -3090,7 +3087,7 @@ RequestManager.prototype.poll = function () {
     }
 
     if (!this.provider) {
-        console.error(errors.InvalidProvider);
+        console.error(errors.InvalidProvider());
         return;
     }
 
@@ -3349,13 +3346,13 @@ module.exports = {
 },{"./method":19}],27:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
-/*! bignumber.js v2.0.3 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
     'use strict';
 
     /*
-      bignumber.js v2.0.3
+      bignumber.js v2.0.7
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2015 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -4187,10 +4184,12 @@ module.exports = {
                     i = 0;
                     s += 2;
 
-                    // Normalise xc and yc so highest order digit of yc is >= base/2
+                    // Normalise xc and yc so highest order digit of yc is >= base / 2.
 
                     n = mathfloor( base / ( yc[0] + 1 ) );
 
+                    // Not necessary, but to handle odd bases where yc[0] == ( base / 2 ) - 1.
+                    // if ( n > 1 || n++ == 1 && yc[0] < base / 2 ) {
                     if ( n > 1 ) {
                         yc = multiply( yc, n, base );
                         xc = multiply( xc, n, base );
@@ -4208,6 +4207,8 @@ module.exports = {
                     yz.unshift(0);
                     yc0 = yc[0];
                     if ( yc[1] >= base / 2 ) yc0++;
+                    // Not necessary, but to prevent trial digit n > base, when using base 3.
+                    // else if ( base == 3 && yc0 == 1 ) yc0 = 1 + 1e-15;
 
                     do {
                         n = 0;
@@ -4235,7 +4236,9 @@ module.exports = {
                             //    6. If remainder > divisor: remainder -= divisor, n++
 
                             if ( n > 1 ) {
-                                if ( n >= base ) n = base - 1;
+
+                                // n may be > base only when base is 3.
+                                if (n >= base) n = base - 1;
 
                                 // product = divisor * trial digit.
                                 prod = multiply( yc, n, base );
@@ -4243,58 +4246,66 @@ module.exports = {
                                 remL = rem.length;
 
                                 // Compare product and remainder.
-                                cmp = compare( prod, rem, prodL, remL );
-
-                                // product > remainder.
-                                if ( cmp == 1 ) {
+                                // If product > remainder.
+                                // Trial digit n too high.
+                                // n is 1 too high about 5% of the time, and is not known to have
+                                // ever been more than 1 too high.
+                                while ( compare( prod, rem, prodL, remL ) == 1 ) {
                                     n--;
 
                                     // Subtract divisor from product.
                                     subtract( prod, yL < prodL ? yz : yc, prodL, base );
+                                    prodL = prod.length;
+                                    cmp = 1;
                                 }
                             } else {
 
-                                // cmp is -1.
-                                // If n is 0, there is no need to compare yc and rem again
-                                // below, so change cmp to 1 to avoid it.
-                                // If n is 1, compare yc and rem again below.
-                                if ( n == 0 ) cmp = n = 1;
+                                // n is 0 or 1, cmp is -1.
+                                // If n is 0, there is no need to compare yc and rem again below,
+                                // so change cmp to 1 to avoid it.
+                                // If n is 1, leave cmp as -1, so yc and rem are compared again.
+                                if ( n == 0 ) {
+
+                                    // divisor < remainder, so n must be at least 1.
+                                    cmp = n = 1;
+                                }
+
+                                // product = divisor
                                 prod = yc.slice();
+                                prodL = prod.length;
                             }
 
-                            prodL = prod.length;
                             if ( prodL < remL ) prod.unshift(0);
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
+                            remL = rem.length;
 
-                            // If product was < previous remainder.
+                             // If product was < remainder.
                             if ( cmp == -1 ) {
-                                remL = rem.length;
 
                                 // Compare divisor and new remainder.
-                                cmp = compare( yc, rem, yL, remL );
-
                                 // If divisor < new remainder, subtract divisor from remainder.
-                                if ( cmp < 1 ) {
+                                // Trial digit n too low.
+                                // n is 1 too low about 5% of the time, and very rarely 2 too low.
+                                while ( compare( yc, rem, yL, remL ) < 1 ) {
                                     n++;
 
                                     // Subtract divisor from remainder.
                                     subtract( rem, yL < remL ? yz : yc, remL, base );
+                                    remL = rem.length;
                                 }
                             }
-                            remL = rem.length;
                         } else if ( cmp === 0 ) {
                             n++;
                             rem = [0];
-                        }
-                        // if cmp === 1, n will be 0
+                        } // else cmp === 1 and n will be 0
 
                         // Add the next digit, n, to the result array.
                         qc[i++] = n;
 
                         // Update the remainder.
-                        if ( cmp && rem[0] ) {
+                        if ( rem[0] ) {
                             rem[remL++] = xc[xi] || 0;
                         } else {
                             rem = [ xc[xi] ];
@@ -4465,11 +4476,11 @@ module.exports = {
 
         // Handle values that fail the validity test in BigNumber.
         parseNumeric = (function () {
-            var basePrefix = /^(-?)0([xbo])(?=\w[\w.]*$)/i,
+            var basePrefix = /^(-?)0([xbo])/i,
                 dotAfter = /^([^.]+)\.$/,
                 dotBefore = /^\.([^.]+)$/,
                 isInfinityOrNaN = /^-?(Infinity|NaN)$/,
-                whitespaceOrPlus = /^\s*\+(?=[\w.])|^\s+|\s+$/g;
+                whitespaceOrPlus = /^\s*\+|^\s+|\s+$/g;
 
             return function ( x, str, num, b ) {
                 var base,

@@ -1621,27 +1621,24 @@ module.exports = {
  * @date 2015
  */
 
-var utils = require('../utils/utils');
-
 module.exports = {
-    InvalidNumberOfParams: new Error('Invalid number of input parameters'),
-    NoConnection: function(host){
+    InvalidNumberOfParams: function () {
+        return new Error('Invalid number of input parameters');
+    },
+    InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +', is it running?');
     },
-    InvalidProvider: new Error('Providor not set or invalid'),
-    InvalidResponse: function(result){
-        var message = 'Invalid JSON RPC response';
-
-        if(utils.isObject(result) && result.error && result.error.message) {
-            message = result.error.message;
-        }
-
+    InvalidProvider: function () {
+        return new Error('Providor not set or invalid');
+    },
+    InvalidResponse: function (result){
+        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response';
         return new Error(message);
     }
 };
 
 
-},{"../utils/utils":7}],13:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2430,7 +2427,7 @@ HttpProvider.prototype.send = function (payload) {
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
-        throw errors.NoConnection(this.host);
+        throw errors.InvalidConnection(this.host);
     }
 
 
@@ -2456,7 +2453,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
-        callback(errors.NoConnection(this.host));
+        callback(errors.InvalidConnection(this.host));
     }
 };
 
@@ -2625,7 +2622,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfParams;
+        throw errors.InvalidNumberOfParams();
     }
 };
 
@@ -2976,7 +2973,7 @@ RequestManager.getInstance = function () {
  */
 RequestManager.prototype.send = function (data) {
     if (!this.provider) {
-        console.error(errors.InvalidProvider);
+        console.error(errors.InvalidProvider());
         return null;
     }
 
@@ -2999,7 +2996,7 @@ RequestManager.prototype.send = function (data) {
  */
 RequestManager.prototype.sendAsync = function (data, callback) {
     if (!this.provider) {
-        return callback(errors.InvalidProvider);
+        return callback(errors.InvalidProvider());
     }
 
     var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
@@ -3090,7 +3087,7 @@ RequestManager.prototype.poll = function () {
     }
 
     if (!this.provider) {
-        console.error(errors.InvalidProvider);
+        console.error(errors.InvalidProvider());
         return;
     }
 
