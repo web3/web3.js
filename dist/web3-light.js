@@ -804,7 +804,7 @@ var toAscii = function(hex) {
 /**
  * Shold be called to get hex representation (prefixed by 0x) of ascii string 
  *
- * @method fromAscii
+ * @method toHexNative
  * @param {String} string
  * @returns {String} hex representation of input string
  */
@@ -2304,9 +2304,11 @@ var inputPostFormatter = function(post) {
 
     post.payload = utils.toHex(post.payload);
     post.ttl = utils.fromDecimal(post.ttl);
+    post.workToProve = utils.fromDecimal(post.workToProve);
     post.priority = utils.fromDecimal(post.priority);
 
-    if(!utils.isArray(post.topics)) {
+    // fallback
+    if (!utils.isArray(post.topics)) {
         post.topics = [post.topics];
     }
 
@@ -3118,7 +3120,7 @@ var post = new Method({
     name: 'post', 
     call: 'shh_post', 
     params: 1,
-    inputFormatter: formatters.inputPostFormatter
+    inputFormatter: [formatters.inputPostFormatter]
 });
 
 var newIdentity = new Method({
