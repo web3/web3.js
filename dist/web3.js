@@ -2335,7 +2335,7 @@ var inputPostFormatter = function(post) {
 
     // fallback
     if (!utils.isArray(post.topics)) {
-        post.topics = [post.topics];
+        post.topics = post.topics ? [post.topics] : [];
     }
 
     // format the following options
@@ -2367,6 +2367,9 @@ var outputPostFormatter = function(post){
     }
 
     // format the following options
+    if (!post.topics) {
+        post.topics = [];
+    }
     post.topics = post.topics.map(function(topic){
         return utils.toAscii(topic);
     });
