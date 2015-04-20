@@ -1581,7 +1581,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":20,"./web3/net":21,"./web3/property":22,"./web3/requestmanager":24,"./web3/shh":25,"./web3/watches":27}],11:[function(require,module,exports){
+},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":21,"./web3/net":22,"./web3/property":23,"./web3/requestmanager":25,"./web3/shh":26,"./web3/watches":28}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1610,6 +1610,7 @@ var utils = require('../utils/utils');
 var solUtils = require('../solidity/utils');
 var eventImpl = require('./event');
 var signature = require('./signature');
+var SolidityFunction = require('./function');
 
 var addFunctionRelatedPropertiesToContract = function (contract) {
     
@@ -1627,53 +1628,16 @@ var addFunctionRelatedPropertiesToContract = function (contract) {
 };
 
 var addFunctionsToContract = function (contract, desc, address) {
-    var inputParser = solAbi.inputParser(desc);
-    var outputParser = solAbi.outputParser(desc);
-
-    // create contract functions
-    solUtils.filterFunctions(desc).forEach(function (method) {
-
-        var displayName = utils.extractDisplayName(method.name);
-        var typeName = utils.extractTypeName(method.name);
-
-        var impl = function () {
-            /*jshint maxcomplexity:7 */
-            var params = Array.prototype.slice.call(arguments);
-            var sign = signature.functionSignatureFromAscii(method.name);
-            var parsed = inputParser[displayName][typeName].apply(null, params);
-
-            var options = contract._options || {};
-            options.to = address;
-            options.data = sign + parsed;
-            
-            var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
-            
-            // reset
-            contract._options = {};
-            contract._isTransaction = null;
-
-            if (isTransaction) {
-                
-                // transactions do not have any output, cause we do not know, when they will be processed
-                web3.eth.sendTransaction(options);
-                return;
-            }
-            
-            var output = web3.eth.call(options);
-            var ret = outputParser[displayName][typeName](output);
-            return ret.length === 1 ? ret[0] : ret;
-        };
-
-        if (contract[displayName] === undefined) {
-            contract[displayName] = impl;
-        }
-
-        contract[displayName][typeName] = impl;
+    desc.filter(function (json) {
+        return json.type === 'function';
+    }).map(function (json) {
+        return new SolidityFunction(json);
+    }).forEach(function (f) {
+        f.attachToContract(contract);
     });
 };
 
 var addEventRelatedPropertiesToContract = function (contract, desc, address) {
-    contract.address = address;
     contract._onWatchEventResult = function (data) {
         var matchingEvent = event.getMatchingEvent(solUtils.filterEvents(desc));
         var parser = eventImpl.outputParser(matchingEvent);
@@ -1750,7 +1714,7 @@ var contract = function (abi) {
     return Contract.bind(null, abi);
 };
 
-function Contract(abi, options) {
+var Contract = function (abi, options) {
 
     // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
     // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
@@ -1764,31 +1728,28 @@ function Contract(abi, options) {
         }
     });
 
-    var address = '';
+    this.address = '';
     if (utils.isAddress(options)) {
-        address = options;
+        this.address = options;
     } else { // is an object!
         // TODO, parse the rest of the args
         options = options || {};
         var args = Array.prototype.slice.call(arguments, 2);
         var bytes = solAbi.formatConstructorParams(abi, args);
         options.data += bytes;
-        address = web3.eth.sendTransaction(options);
+        this.address = web3.eth.sendTransaction(options);
     }
 
-    var result = {};
-    addFunctionRelatedPropertiesToContract(result);
-    addFunctionsToContract(result, abi, address);
-    addEventRelatedPropertiesToContract(result, abi, address);
-    addEventsToContract(result, abi, address);
-
-    return result;
-}
+    addFunctionRelatedPropertiesToContract(this);
+    addFunctionsToContract(this, abi, this.address);
+    addEventRelatedPropertiesToContract(this, abi, this.address);
+    addEventsToContract(this, abi, this.address);
+};
 
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../solidity/utils":5,"../utils/utils":8,"../web3":10,"./event":15,"./signature":26}],12:[function(require,module,exports){
+},{"../solidity/abi":1,"../solidity/utils":5,"../utils/utils":8,"../web3":10,"./event":15,"./function":18,"./signature":27}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1846,7 +1807,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":20}],13:[function(require,module,exports){
+},{"./method":21}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2142,7 +2103,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./formatters":17,"./method":20,"./property":22}],15:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./method":21,"./property":23}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2282,7 +2243,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":8,"./signature":26}],16:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":8,"./signature":27}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2420,7 +2381,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":8,"./formatters":17,"./requestmanager":24}],17:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./requestmanager":25}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2641,6 +2602,76 @@ module.exports = {
 
 
 },{"../utils/config":7,"../utils/utils":8}],18:[function(require,module,exports){
+
+var web3 = require('../web3');
+var coder = require('../solidity/coder');
+var utils = require('../utils/utils');
+
+var SolidityFunction = function (json) {
+    this._inputTypes = json.inputs.map(function (i) {
+        return i.type;
+    });
+    this._outputTypes = json.outputs.map(function (i) {
+        return i.type;
+    });
+    this._constant = json.constant;
+    this._name = json.name;
+};
+
+SolidityFunction.prototype.signature = function () {
+    return web3.sha3(web3.fromAscii(this._name)).slice(2, 10);
+};
+
+SolidityFunction.prototype.call = function (options) {
+    return web3.eth.call(options);
+};
+
+SolidityFunction.prototype.sendTransaction = function (options) {
+    web3.eth.sendTransaction(options);
+};
+
+SolidityFunction.prototype.displayName = function () {
+    return utils.extractDisplayName(this._name);
+};
+
+SolidityFunction.prototype.typeName = function () {
+    return utils.extractTypeName(this._name);
+};
+
+SolidityFunction.prototype.execute = function (contract) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    var options = contract._options || {};
+    options.to = contract.address;
+    options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
+    var transaction = contract._isTransaction === true || (contract._isTransaction !== false && !this._constant);
+
+    //reset
+    contract._options = {};
+    contract._isTransaction = null;
+
+    // send transaction
+    if (transaction) {
+        return this.sendTransaction(options);
+    }
+
+    // call
+    var output = this.call(options); 
+    return coder.decodeParams(this._outputTypes, output);
+};
+
+SolidityFunction.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this, contract);
+    var displayName = this.displayName();
+    if (!contract[displayName]) {
+        contract[displayName] = execute;
+    }
+    contract[displayName][this.typeName()] = this.execute.bind(this, contract);
+};
+
+module.exports = SolidityFunction;
+
+
+},{"../solidity/coder":2,"../utils/utils":8,"../web3":10}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2715,7 +2746,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":13,"xmlhttprequest":6}],19:[function(require,module,exports){
+},{"./errors":13,"xmlhttprequest":6}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2808,7 +2839,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2969,7 +3000,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":8,"./errors":13,"./requestmanager":24}],21:[function(require,module,exports){
+},{"../utils/utils":8,"./errors":13,"./requestmanager":25}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3019,7 +3050,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./property":22}],22:[function(require,module,exports){
+},{"../utils/utils":8,"./property":23}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3125,7 +3156,7 @@ Property.prototype.set = function (value) {
 module.exports = Property;
 
 
-},{"./requestmanager":24}],23:[function(require,module,exports){
+},{"./requestmanager":25}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3160,7 +3191,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3381,7 +3412,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":19}],25:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":20}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3451,7 +3482,7 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":20}],26:[function(require,module,exports){
+},{"./formatters":17,"./method":21}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3495,7 +3526,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":7,"../web3":10}],27:[function(require,module,exports){
+},{"../utils/config":7,"../web3":10}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3598,7 +3629,7 @@ module.exports = {
 };
 
 
-},{"./method":20}],28:[function(require,module,exports){
+},{"./method":21}],29:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
@@ -3621,7 +3652,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":18,"./lib/web3/qtsync":23}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/qtsync":24}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
