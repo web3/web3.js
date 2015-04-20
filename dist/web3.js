@@ -2446,6 +2446,7 @@ var inputTransactionFormatter = function (options){
 var outputTransactionFormatter = function (tx){
     tx.blockNumber = utils.toDecimal(tx.blockNumber);
     tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+    tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
     tx.value = utils.toBigNumber(tx.value);
@@ -2468,7 +2469,6 @@ var outputBlockFormatter = function(block) {
     block.timestamp = utils.toDecimal(block.timestamp);
     block.number = utils.toDecimal(block.number);
 
-    block.minGasPrice = utils.toBigNumber(block.minGasPrice);
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
 
