@@ -74,7 +74,7 @@ describe('lib/web3/event', function () {
             assert.equal(result.address, address);
             assert.equal(result.topics.length, 2);
             assert.equal(result.topics[0], signature);
-            assert.equal(result.topics[1], '0x' + f.formatInputInt(4));
+            assert.equal(result.topics[1], '0x' + f.formatInputInt(4).encode());
             assert.equal(result.fromBlock, options.fromBlock);
             assert.equal(result.toBlock, options.toBlock);
 
@@ -102,8 +102,8 @@ describe('lib/web3/event', function () {
             assert.equal(result.address, address);
             assert.equal(result.topics.length, 2);
             assert.equal(result.topics[0], signature);
-            assert.equal(result.topics[1][0], f.formatInputInt(4));
-            assert.equal(result.topics[1][1], f.formatInputInt(69));
+            assert.equal(result.topics[1][0], f.formatInputInt(4).encode());
+            assert.equal(result.topics[1][1], f.formatInputInt(69).encode());
             assert.equal(result.fromBlock, options.fromBlock);
             assert.equal(result.toBlock, options.toBlock);
 
