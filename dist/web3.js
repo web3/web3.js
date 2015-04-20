@@ -817,36 +817,8 @@ var getConstructor = function (abi, numberOfArgs) {
     })[0];
 };
 
-/**
- * Filters all functions from input abi
- *
- * @method filterFunctions
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'function'
- */
-var filterFunctions = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'function'; 
-    }); 
-};
-
-/**
- * Filters all events from input abi
- *
- * @method filterEvents
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'event'
- */
-var filterEvents = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'event';
-    });
-};
-
 module.exports = {
-    getConstructor: getConstructor,
-    filterFunctions: filterFunctions,
-    filterEvents: filterEvents
+    getConstructor: getConstructor
 };
 
 
@@ -950,9 +922,9 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file utils.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file utils.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
@@ -1076,6 +1048,22 @@ var fromAscii = function(str, pad) {
     while (hex.length < pad*2)
         hex += "00";
     return "0x" + hex;
+};
+
+/**
+ * Should be used to create full function/event name from json abi
+ *
+ * @method transformToFullName
+ * @param {Object} json-abi
+ * @return {String} full fnction/event name
+ */
+var transformToFullName = function (json) {
+    if (json.name.indexOf('(') !== -1) {
+        return json.name;
+    }
+
+    var typeName = json.inputs.map(function(i){return i.type; }).join();
+    return json.name + '(' + typeName + ')';
 };
 
 /**
@@ -1390,6 +1378,7 @@ module.exports = {
     fromDecimal: fromDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
+    transformToFullName: transformToFullName,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
     toWei: toWei,
@@ -1659,18 +1648,6 @@ var contract = function (abi) {
 };
 
 var Contract = function (abi, options) {
-
-    // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
-    // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
-    // prototype, so we make it so as a workaround.
-    // TODO: we may not want to modify input params, maybe use copy instead?
-    abi.forEach(function (method) {
-        if (method.name.indexOf('(') === -1) {
-            var displayName = method.name;
-            var typeName = method.inputs.map(function(i){return i.type; }).join();
-            method.name = displayName + '(' + typeName + ')';
-        }
-    });
 
     this.address = '';
     this._isTransaction = null;
@@ -2091,7 +2068,7 @@ var web3 = require('../web3');
  */
 var SolidityEvent = function (json, address) {
     this._params = json.inputs;
-    this._name = json.name;
+    this._name = utils.transformToFullName(json);
     this._address = address;
 };
 
@@ -2633,7 +2610,7 @@ var SolidityFunction = function (json) {
         return i.type;
     });
     this._constant = json.constant;
-    this._name = json.name;
+    this._name = utils.transformToFullName(json);
 };
 
 /**
