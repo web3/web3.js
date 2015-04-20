@@ -2076,9 +2076,9 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file event.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file event.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2014
  */
 
@@ -2086,12 +2086,22 @@ var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var web3 = require('../web3');
 
+/**
+ * This prototype should be used to create event filters
+ */
 var SolidityEvent = function (json, address) {
     this._params = json.inputs;
     this._name = json.name;
     this._address = address;
 };
 
+/**
+ * Should be used to get filtered param types
+ *
+ * @method types
+ * @param {Bool} decide if returned typed should be indexed
+ * @return {Array} array of types
+ */
 SolidityEvent.prototype.types = function (indexed) {
     return this._params.filter(function (i) {
         return i.indexed === indexed;
@@ -2100,18 +2110,44 @@ SolidityEvent.prototype.types = function (indexed) {
     });
 };
 
+/**
+ * Should be used to get event display name
+ *
+ * @method displayName
+ * @return {String} event display name
+ */
 SolidityEvent.prototype.displayName = function () {
     return utils.extractDisplayName(this._name);
 };
 
+/**
+ * Should be used to get event type name
+ *
+ * @method typeName
+ * @return {String} event type name
+ */
 SolidityEvent.prototype.typeName = function () {
     return utils.extractTypeName(this._name);
 };
 
+/**
+ * Should be used to get event signature
+ *
+ * @method signature
+ * @return {String} event signature
+ */
 SolidityEvent.prototype.signature = function () {
     return web3.sha3(web3.fromAscii(this._name)).slice(2);
 };
 
+/**
+ * Should be used to encode indexed params and options to one final object
+ * 
+ * @method encode
+ * @param {Object} indexed
+ * @param {Object} options
+ * @return {Object} everything combined together and encoded
+ */
 SolidityEvent.prototype.encode = function (indexed, options) {
     indexed = indexed || {};
     options = options || {};
@@ -2135,6 +2171,13 @@ SolidityEvent.prototype.encode = function (indexed, options) {
     return options;
 };
 
+/**
+ * Should be used to decode indexed params and options
+ *
+ * @method decode
+ * @param {Object} data
+ * @return {Object} result object with decoded indexed && not indexed params
+ */
 SolidityEvent.prototype.decode = function (data) {
     var result = {
         event: this.displayName(),
@@ -2159,12 +2202,26 @@ SolidityEvent.prototype.decode = function (data) {
     return result;
 };
 
+/**
+ * Should be used to create new filter object from event
+ *
+ * @method execute
+ * @param {Object} indexed
+ * @param {Object} options
+ * @return {Object} filter object
+ */
 SolidityEvent.prototype.execute = function (indexed, options) {
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
     return web3.eth.filter(o, undefined, undefined, formatter);
 };
 
+/**
+ * Should be used to attach event to contract object
+ *
+ * @method attachToContract
+ * @param {Contract}
+ */
 SolidityEvent.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this);
     var displayName = this.displayName();
@@ -2539,11 +2596,35 @@ module.exports = {
 
 
 },{"../utils/config":7,"../utils/utils":8}],18:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file function.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
 
 var web3 = require('../web3');
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
 
+/**
+ * This prototype should be used to call/sendTransaction to solidity functions
+ */
 var SolidityFunction = function (json) {
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
@@ -2555,26 +2636,62 @@ var SolidityFunction = function (json) {
     this._name = json.name;
 };
 
+/**
+ * Should be used to get function signature
+ *
+ * @method signature
+ * @return {String} function signature
+ */
 SolidityFunction.prototype.signature = function () {
     return web3.sha3(web3.fromAscii(this._name)).slice(2, 10);
 };
 
+/**
+ * Should be used to call function
+ * 
+ * @method call
+ * @param {Object} options
+ * @return {String} output bytes
+ */
 SolidityFunction.prototype.call = function (options) {
     return web3.eth.call(options);
 };
 
+/**
+ * Should be used to sendTransaction to solidity function
+ *
+ * @method sendTransaction
+ * @param {Object} options
+ */
 SolidityFunction.prototype.sendTransaction = function (options) {
     web3.eth.sendTransaction(options);
 };
 
+/**
+ * Should be used to get function display name
+ *
+ * @method displayName
+ * @return {String} display name of the function
+ */
 SolidityFunction.prototype.displayName = function () {
     return utils.extractDisplayName(this._name);
 };
 
+/**
+ * Should be used to get function type name
+ * 
+ * @method typeName
+ * @return {String} type name of the function
+ */
 SolidityFunction.prototype.typeName = function () {
     return utils.extractTypeName(this._name);
 };
 
+/**
+ * Should be called to execute function
+ *
+ * @method execute
+ */
 SolidityFunction.prototype.execute = function (contract) {
     var args = Array.prototype.slice.call(arguments, 1);
     var options = contract._options || {};
@@ -2596,6 +2713,12 @@ SolidityFunction.prototype.execute = function (contract) {
     return coder.decodeParams(this._outputTypes, output);
 };
 
+/**
+ * Should be called to attach function to contract
+ *
+ * @method attachToContract
+ * @param {Contract}
+ */
 SolidityFunction.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this, contract);
     var displayName = this.displayName();
