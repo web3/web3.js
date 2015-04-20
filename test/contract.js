@@ -63,7 +63,8 @@ describe('web3.eth.contract', function () {
                     assert.deepEqual(payload.params[0], {
                         topics: [
                             sha3,
-                            '0x1234567890123456789012345678901234567890'
+                            '0x1234567890123456789012345678901234567890',
+                            null
                         ],
                         address: '0x1234567890123456789012345678901234567890'
                     });
