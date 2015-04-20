@@ -52,7 +52,7 @@
             // let's assume that we have a private key to coinbase ;)
             web3.eth.defaultAccount = web3.eth.coinbase;
             var Contract = web3.eth.contract(desc); 
-            contract = new Contract(source);
+            contract = new Contract({data: source});
             contract.Incremented({odd: true}).watch(update);
             
         };
