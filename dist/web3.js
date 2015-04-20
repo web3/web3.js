@@ -23,9 +23,7 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  */
 
 var utils = require('../utils/utils');
-var c = require('../utils/config');
 var coder = require('./coder');
-var f = require('./formatters');
 var solUtils = require('./utils');
 
 /**
@@ -137,7 +135,7 @@ module.exports = {
     formatConstructorParams: formatConstructorParams
 };
 
-},{"../utils/config":6,"../utils/utils":7,"./coder":2,"./formatters":3,"./utils":4}],2:[function(require,module,exports){
+},{"../utils/utils":8,"./coder":2,"./utils":5}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -163,7 +161,7 @@ module.exports = {
 var BigNumber = require('bignumber.js');
 var utils = require('../utils/utils');
 var f = require('./formatters');
-var SolidityParam = f.SolidityParam;
+var SolidityParam = require('./param');
 
 var isArrayType = function (type) {
     return type.slice(-2) === '[]';
@@ -183,7 +181,7 @@ SolidityType.prototype.isType = function (name) {
     } else if (this._match === 'prefix') {
         // TODO better type detection!
         return name.indexOf(this._name) === 0;
-    };
+    }
 };
 
 SolidityType.prototype.formatInput = function (param, arrayType) {
@@ -192,9 +190,7 @@ SolidityType.prototype.formatInput = function (param, arrayType) {
         return param.map(function (p) {
             return self._inputFormatter(p);
         }).reduce(function (acc, current) {
-            acc.suffix += current.value;
-            acc.prefix += current.prefix;
-            // TODO: suffix not supported = it's required for nested arrays;
+            acc.appendArrayElement(current);
             return acc;
         }, new SolidityParam('', f.formatInputInt(param.length).value));
     } 
@@ -208,7 +204,7 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
         var length = new BigNumber(param.prefix, 16);
         for (var i = 0; i < length * 64; i += 64) {
             result.push(this._outputFormatter(new SolidityParam(param.suffix.slice(i, i + 64))));
-        };
+        }
         return result;
     }
     return this._outputFormatter(param);
@@ -349,7 +345,7 @@ var coder = new SolidityCoder([
 module.exports = coder;
 
 
-},{"../utils/utils":7,"./formatters":3,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":3,"./param":4,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -366,53 +362,17 @@ module.exports = coder;
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file formatters.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file formatters.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
 var BigNumber = require('bignumber.js');
 var utils = require('../utils/utils');
 var c = require('../utils/config');
+var SolidityParam = require('./param');
 
-var SolidityParam = function (value, prefix, suffix) {
-    this.prefix = prefix || '';
-    this.value = value || '';
-    this.suffix = suffix || '';
-};
-
-SolidityParam.prototype.append = function (param) {
-    this.prefix += param.prefix;
-    this.value += param.value;
-    this.suffix += param.suffix;
-};
-
-SolidityParam.prototype.encode = function () {
-    return this.prefix + this.value + this.suffix;
-};
-
-SolidityParam.prototype.shiftValue = function () {
-    var value = this.value.slice(0, 64);
-    this.value = this.value.slice(64);
-    return new SolidityParam(value);
-};
-
-SolidityParam.prototype.shiftBytes = function () {
-    return this.shiftArray(1);   
-};
-
-SolidityParam.prototype.shiftArray = function (length) {
-    var prefix = this.prefix.slice(0, 64);
-    this.prefix = this.value.slice(64);
-    var suffix = this.suffix.slice(0, 64 * length);
-    this.suffix = this.suffix.slice(64 * length);
-    return new SolidityParam('', prefix, suffix);
-};
-
-SolidityParam.prototype.empty = function () {
-    return !this.value.length && !this.prefix.length && !this.suffix.length;
-};
 
 /**
  * Formats input value to byte representation of int
@@ -421,7 +381,7 @@ SolidityParam.prototype.empty = function () {
  *
  * @method formatInputInt
  * @param {String|Number|BigNumber} value that needs to be formatted
- * @returns {String} right-aligned byte representation of int
+ * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
     var padding = c.ETH_PADDING * 2;
@@ -435,7 +395,7 @@ var formatInputInt = function (value) {
  *
  * @method formatInputString
  * @param {String}
- * @returns {String} left-algined byte representation of string
+ * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
@@ -447,7 +407,7 @@ var formatInputString = function (value) {
  *
  * @method formatInputBool
  * @param {Boolean}
- * @returns {String} right-aligned byte representation bool
+ * @returns {SolidityParam}
  */
 var formatInputBool = function (value) {
     var result = '000000000000000000000000000000000000000000000000000000000000000' + (value ?  '1' : '0');
@@ -460,7 +420,7 @@ var formatInputBool = function (value) {
  *
  * @method formatInputReal
  * @param {String|Number|BigNumber}
- * @returns {String} byte representation of real
+ * @returns {SolidityParam}
  */
 var formatInputReal = function (value) {
     return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128)));
@@ -481,7 +441,7 @@ var signedIsNegative = function (value) {
  * Formats right-aligned output bytes to int
  *
  * @method formatOutputInt
- * @param {String} bytes
+ * @param {SolidityParam} param
  * @returns {BigNumber} right-aligned output bytes formatted to big number
  */
 var formatOutputInt = function (param) {
@@ -499,7 +459,7 @@ var formatOutputInt = function (param) {
  * Formats right-aligned output bytes to uint
  *
  * @method formatOutputUInt
- * @param {String} bytes
+ * @param {SolidityParam}
  * @returns {BigNumeber} right-aligned output bytes formatted to uint
  */
 var formatOutputUInt = function (param) {
@@ -511,7 +471,7 @@ var formatOutputUInt = function (param) {
  * Formats right-aligned output bytes to real
  *
  * @method formatOutputReal
- * @param {String}
+ * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to real
  */
 var formatOutputReal = function (param) {
@@ -522,7 +482,7 @@ var formatOutputReal = function (param) {
  * Formats right-aligned output bytes to ureal
  *
  * @method formatOutputUReal
- * @param {String}
+ * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to ureal
  */
 var formatOutputUReal = function (param) {
@@ -533,7 +493,7 @@ var formatOutputUReal = function (param) {
  * Should be used to format output hash
  *
  * @method formatOutputHash
- * @param {String}
+ * @param {SolidityParam}
  * @returns {String} right-aligned output bytes formatted to hex
  */
 var formatOutputHash = function (param) {
@@ -544,7 +504,7 @@ var formatOutputHash = function (param) {
  * Should be used to format output bool
  *
  * @method formatOutputBool
- * @param {String}
+ * @param {SolidityParam}
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
 var formatOutputBool = function (param) {
@@ -555,7 +515,7 @@ var formatOutputBool = function (param) {
  * Should be used to format output string
  *
  * @method formatOutputString
- * @param {Sttring} left-aligned hex representation of string
+ * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
 var formatOutputString = function (param) {
@@ -567,7 +527,7 @@ var formatOutputString = function (param) {
  * Should be used to format output address
  *
  * @method formatOutputAddress
- * @param {String} right-aligned input bytes
+ * @param {SolidityParam} right-aligned input bytes
  * @returns {String} address
  */
 var formatOutputAddress = function (param) {
@@ -587,12 +547,128 @@ module.exports = {
     formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
     formatOutputString: formatOutputString,
-    formatOutputAddress: formatOutputAddress,
-    SolidityParam: SolidityParam
+    formatOutputAddress: formatOutputAddress
 };
 
 
-},{"../utils/config":6,"../utils/utils":7,"bignumber.js":"bignumber.js"}],4:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./param":4,"bignumber.js":"bignumber.js"}],4:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file param.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+/**
+ * SolidityParam object prototype.
+ * Should be used when encoding, decoding solidity bytes
+ */
+var SolidityParam = function (value, prefix, suffix) {
+    this.prefix = prefix || '';
+    this.value = value || '';
+    this.suffix = suffix || '';
+};
+
+/**
+ * This method should be used to encode two params one after another
+ *
+ * @method append
+ * @param {SolidityParam} param that it appended after this
+ */
+SolidityParam.prototype.append = function (param) {
+    this.prefix += param.prefix;
+    this.value += param.value;
+    this.suffix += param.suffix;
+};
+
+/**
+ * This method should be used to encode next param in an array
+ *
+ * @method appendArrayElement
+ * @param {SolidityParam} param that is appended to an array
+ */
+SolidityParam.prototype.appendArrayElement = function (param) {
+    this.suffix += param.value;
+    this.prefix += param.prefix;
+    // TODO: suffix not supported = it's required for nested arrays;
+};
+
+/**
+ * This method should be used to create bytearrays from param
+ *
+ * @method encode
+ * @return {String} encoded param(s)
+ */
+SolidityParam.prototype.encode = function () {
+    return this.prefix + this.value + this.suffix;
+};
+
+/**
+ * This method should be used to shift first param from group of params
+ *
+ * @method shiftValue
+ * @return {SolidityParam} first value param
+ */
+SolidityParam.prototype.shiftValue = function () {
+    var value = this.value.slice(0, 64);
+    this.value = this.value.slice(64);
+    return new SolidityParam(value);
+};
+
+/**
+ * This method should be used to first bytes param from group of params
+ *
+ * @method shiftBytes
+ * @return {SolidityParam} first bytes param
+ */
+SolidityParam.prototype.shiftBytes = function () {
+    return this.shiftArray(1);   
+};
+
+/**
+ * This method should be used to shift an array from group of params 
+ * 
+ * @method shiftArray
+ * @param {Number} size of an array to shift
+ * @return {SolidityParam} first array param
+ */
+SolidityParam.prototype.shiftArray = function (length) {
+    var prefix = this.prefix.slice(0, 64);
+    this.prefix = this.value.slice(64);
+    var suffix = this.suffix.slice(0, 64 * length);
+    this.suffix = this.suffix.slice(64 * length);
+    return new SolidityParam('', prefix, suffix);
+};
+
+/**
+ * This method should be used to check if param is empty
+ *
+ * @method empty
+ * @return {Bool} true if is empty, otherwise false
+ */
+SolidityParam.prototype.empty = function () {
+    return !this.value.length && !this.prefix.length && !this.suffix.length;
+};
+
+module.exports = SolidityParam;
+
+
+},{}],5:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -662,7 +738,7 @@ module.exports = {
 };
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -673,7 +749,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -744,7 +820,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1220,12 +1296,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
 module.exports={
     "version": "0.2.8"
 }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1381,7 +1457,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":6,"./utils/utils":7,"./version.json":8,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":19,"./web3/net":20,"./web3/property":21,"./web3/requestmanager":23,"./web3/shh":24,"./web3/watches":26}],10:[function(require,module,exports){
+},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":20,"./web3/net":21,"./web3/property":22,"./web3/requestmanager":24,"./web3/shh":25,"./web3/watches":27}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1587,7 +1663,7 @@ function Contract(abi, options) {
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../solidity/utils":4,"../utils/utils":7,"../web3":9,"./event":14,"./signature":25}],11:[function(require,module,exports){
+},{"../solidity/abi":1,"../solidity/utils":5,"../utils/utils":8,"../web3":10,"./event":15,"./signature":26}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1645,7 +1721,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":19}],12:[function(require,module,exports){
+},{"./method":20}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1685,7 +1761,7 @@ module.exports = {
 };
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1941,7 +2017,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./formatters":16,"./method":19,"./property":21}],14:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./method":20,"./property":22}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2081,7 +2157,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":7,"./signature":25}],15:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":8,"./signature":26}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2219,7 +2295,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":16,"./requestmanager":23}],16:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./requestmanager":24}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2434,7 +2510,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":6,"../utils/utils":7}],17:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2509,7 +2585,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":12,"xmlhttprequest":5}],18:[function(require,module,exports){
+},{"./errors":13,"xmlhttprequest":6}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2602,7 +2678,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2763,7 +2839,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":12,"./requestmanager":23}],20:[function(require,module,exports){
+},{"../utils/utils":8,"./errors":13,"./requestmanager":24}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2813,7 +2889,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./property":21}],21:[function(require,module,exports){
+},{"../utils/utils":8,"./property":22}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2919,7 +2995,7 @@ Property.prototype.set = function (value) {
 module.exports = Property;
 
 
-},{"./requestmanager":23}],22:[function(require,module,exports){
+},{"./requestmanager":24}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2954,7 +3030,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3175,7 +3251,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":6,"../utils/utils":7,"./errors":12,"./jsonrpc":18}],24:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":19}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3245,7 +3321,7 @@ module.exports = {
 };
 
 
-},{"./formatters":16,"./method":19}],25:[function(require,module,exports){
+},{"./formatters":17,"./method":20}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3289,7 +3365,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":6,"../web3":9}],26:[function(require,module,exports){
+},{"../utils/config":7,"../web3":10}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3392,7 +3468,7 @@ module.exports = {
 };
 
 
-},{"./method":19}],27:[function(require,module,exports){
+},{"./method":20}],28:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -6079,7 +6155,7 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":27}],"web3":[function(require,module,exports){
+},{"crypto":28}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
@@ -6094,7 +6170,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/solidity/abi":1,"./lib/web3":9,"./lib/web3/contract":10,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":18,"./lib/web3/qtsync":23}]},{},["web3"])
 
 
 //# sourceMappingURL=web3.js.map
