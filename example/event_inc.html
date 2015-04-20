@@ -4,48 +4,61 @@
     <script type="text/javascript" src="../dist/web3.js"></script>
     <script type="text/javascript">
         var web3 = require('web3');
-        web3.setProvider(new web3.providers.HttpProvider('http://localhost:8080'));
+        web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
-        var source = "" + 
-        "contract Contract { " +
-        "   event Incremented(bool indexed odd, uint x); " +
-        "   function Contract() { " +
-        "        x = 69; " +
-        "    } " +
-        "    function inc() { " +
-        "        ++x; " +
-        "        Incremented(x % 2 == 1, x); " +
-        "    } " +
-        "    uint x; " +
-        "}";
+        /*var source = "" + */
+        /*"contract Contract { " +*/
+        /*"   event Incremented(bool indexed odd, uint x); " +*/
+        /*"   function Contract() { " +*/
+        /*"        x = 69; " +*/
+        /*"    } " +*/
+        /*"    function inc() { " +*/
+        /*"        ++x; " +*/
+        /*"        Incremented(x % 2 == 1, x); " +*/
+        /*"    } " +*/
+        /*"    uint x; " +*/
+        /*"}";*/
+        var source = "5b60456000600050819055505b608c8060196000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063371303c014602e57005b6034603a565b60006000f35b6000600081815054600101919050819055506001600260006000505406147f6e61ef44ac2747ff8b84d353a908eb8bd5c3fb118334d57698c5cfc7041196ad600060006000505481526020016000a25b56";
 
         var desc = [{
-            "type":"event",
-            "name":"Incremented",
-            "inputs": [{"name":"odd","type":"bool","indexed":true},{"name":"x","type":"uint","indexed":false}],
+            "constant" : false,
+            "inputs" : [],
+            "name" : "inc",
+            "outputs" : [],
+            "type" : "function"
         }, {
-            "type":"function",
-            "name":"inc",
-            "inputs": [],
-            "outputs": []
+            "anonymous" : false,
+            "inputs" : [{
+                "indexed" : true,
+                "name" : "odd",
+                "type" : "bool"
+            }, {
+                "indexed" : false,
+                "name" : "x",
+                "type" : "uint256"
+            }],
+            "name" : "Incremented",
+            "type" : "event"
         }];
 
         var address;
         var contract;
 
-        var update = function (x) {
+        var update = function (err, x) {
             document.getElementById('result').innerText = JSON.stringify(x);
         };
     
         var createContract = function () {
-            address = web3.eth.sendTransaction({data: web3.eth.compile.solidity(source)});
-            contract = web3.eth.contract(address, desc); 
-            contract.Incremented({odd: true}).changed(update);
+            // let's assume that we have a private key to coinbase ;)
+            address = web3.eth.sendTransaction({from: web3.eth.coinbase, data: source});
+            var Contract = web3.eth.contract(desc); 
+            contract = new Contract(address);
+            contract.Incremented({odd: true}).watch(update);
             
         };
 
         var callContract = function () {
-            contract.call().inc();
+            contract.sendTransaction({from: web3.eth.coinbase}).inc();
         };
 
 
