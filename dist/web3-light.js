@@ -50,8 +50,6 @@ var formatInput = function (inputs, params) {
  * @returns {Array} output params
  */
 var formatOutput = function (outs, bytes) {
-    //var bytes = bytes.slice(2);
-
     var o = outs.map(function (out) {
         return out.type;
     });
@@ -163,10 +161,20 @@ var utils = require('../utils/utils');
 var f = require('./formatters');
 var SolidityParam = require('./param');
 
+/**
+ * Should be used to check if a type is an array type
+ *
+ * @method isArrayType
+ * @param {String} type
+ * @return {Bool} true is the type is an array, otherwise false
+ */
 var isArrayType = function (type) {
     return type.slice(-2) === '[]';
 };
 
+/**
+ * SolidityType prototype is used to encode/decode solidity params of certain type
+ */
 var SolidityType = function (config) {
     this._name = config.name;
     this._match = config.match;
@@ -175,6 +183,13 @@ var SolidityType = function (config) {
     this._outputFormatter = config.outputFormatter;
 };
 
+/**
+ * Should be used to determine if this SolidityType do match given type
+ *
+ * @method isType
+ * @param {String} name
+ * @return {Bool} true if type match this SolidityType, otherwise false
+ */
 SolidityType.prototype.isType = function (name) {
     if (this._match === 'strict') {
         return this._name === name || (name.indexOf(this._name) === 0 && name.slice(this._name.length) === '[]');
@@ -184,6 +199,14 @@ SolidityType.prototype.isType = function (name) {
     }
 };
 
+/**
+ * Should be used to transform plain param to SolidityParam object
+ *
+ * @method formatInput
+ * @param {Object} param - plain object, or an array of objects
+ * @param {Bool} arrayType - true if a param should be encoded as an array
+ * @return {SolidityParam} encoded param wrapped in SolidityParam object 
+ */
 SolidityType.prototype.formatInput = function (param, arrayType) {
     if (utils.isArray(param) && arrayType) { // TODO: should fail if this two are not the same
         var self = this;
@@ -197,6 +220,14 @@ SolidityType.prototype.formatInput = function (param, arrayType) {
     return this._inputFormatter(param);
 };
 
+/**
+ * Should be used to transoform SolidityParam to plain param
+ *
+ * @method formatOutput
+ * @param {SolidityParam} byteArray
+ * @param {Bool} arrayType - true if a param should be decoded as an array
+ * @return {Object} plain decoded param
+ */
 SolidityType.prototype.formatOutput = function (param, arrayType) {
     if (arrayType) {
         // let's assume, that we solidity will never return long arrays :P 
@@ -210,10 +241,24 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
     return this._outputFormatter(param);
 };
 
+/**
+ * Should be used to check if a type is variadic
+ *
+ * @method isVariadicType
+ * @param {String} type
+ * @returns {Bool} true if the type is variadic
+ */
 SolidityType.prototype.isVariadicType = function (type) {
     return isArrayType(type) || this._mode === 'bytes';
 };
 
+/**
+ * Should be used to shift param from params group
+ *
+ * @method shiftParam
+ * @param {String} type
+ * @returns {SolidityParam} shifted param
+ */
 SolidityType.prototype.shiftParam = function (type, param) {
     if (this._mode === 'bytes') {
         return param.shiftBytes();
@@ -224,10 +269,21 @@ SolidityType.prototype.shiftParam = function (type, param) {
     return param.shiftValue();
 };
 
+/**
+ * SolidityCoder prototype should be used to encode/decode solidity params of any type
+ */
 var SolidityCoder = function (types) {
     this._types = types;
 };
 
+/**
+ * This method should be used to transform type to SolidityType
+ *
+ * @method _requireType
+ * @param {String} type
+ * @returns {SolidityType} 
+ * @throws {Error} throws if no matching type is found
+ */
 SolidityCoder.prototype._requireType = function (type) {
     var solidityType = this._types.filter(function (t) {
         return t.isType(type);
@@ -240,6 +296,14 @@ SolidityCoder.prototype._requireType = function (type) {
     return solidityType;
 };
 
+/**
+ * Should be used to transform plain bytes to SolidityParam object
+ *
+ * @method _bytesToParam
+ * @param {Array} types of params
+ * @param {String} bytes to be transformed to SolidityParam
+ * @return {SolidityParam} SolidityParam for this group of params
+ */
 SolidityCoder.prototype._bytesToParam = function (types, bytes) {
     var self = this;
     var prefixTypes = types.reduce(function (acc, type) {
@@ -254,14 +318,38 @@ SolidityCoder.prototype._bytesToParam = function (types, bytes) {
     return new SolidityParam(value, prefix, suffix); 
 };
 
+/**
+ * Should be used to transform plain param of given type to SolidityParam
+ *
+ * @method _formatInput
+ * @param {String} type of param
+ * @param {Object} plain param
+ * @return {SolidityParam}
+ */
 SolidityCoder.prototype._formatInput = function (type, param) {
     return this._requireType(type).formatInput(param, isArrayType(type));
 };
 
+/**
+ * Should be used to encode plain param
+ *
+ * @method encodeParam
+ * @param {String} type
+ * @param {Object} plain param
+ * @return {String} encoded plain param
+ */
 SolidityCoder.prototype.encodeParam = function (type, param) {
     return this._formatInput(type, param).encode();
 };
 
+/**
+ * Should be used to encode list of params
+ *
+ * @method encodeParams
+ * @param {Array} types
+ * @param {Array} params
+ * @return {String} encoded list of params
+ */
 SolidityCoder.prototype.encodeParams = function (types, params) {
     var self = this;
     return types.map(function (type, index) {
@@ -272,14 +360,38 @@ SolidityCoder.prototype.encodeParams = function (types, params) {
     }, new SolidityParam()).encode();
 };
 
+/**
+ * Should be used to transform SolidityParam to plain param
+ *
+ * @method _formatOutput
+ * @param {String} type
+ * @param {SolidityParam} param
+ * @return {Object} plain param
+ */
 SolidityCoder.prototype._formatOutput = function (type, param) {
     return this._requireType(type).formatOutput(param, isArrayType(type));
 };
 
+/**
+ * Should be used to decode bytes to plain param
+ *
+ * @method decodeParam
+ * @param {String} type
+ * @param {String} bytes
+ * @return {Object} plain param
+ */
 SolidityCoder.prototype.decodeParam = function (type, bytes) {
     return this._formatOutput(type, this._bytesToParam([type], bytes));
 };
 
+/**
+ * Should be used to decode list of params
+ *
+ * @method decodeParam
+ * @param {Array} types
+ * @param {String} bytes
+ * @return {Array} array of plain params
+ */
 SolidityCoder.prototype.decodeParams = function (types, bytes) {
     var self = this;
     var param = this._bytesToParam(types, bytes);
