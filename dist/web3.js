@@ -928,7 +928,8 @@ module.exports = {
     ETH_UNITS: ETH_UNITS,
     ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
     ETH_POLLING_TIMEOUT: 1000,
-    ETH_DEFAULTBLOCK: 'latest'
+    defaultBlock: 'latest',
+    defaultAccount: undefined
 };
 
 
@@ -1533,6 +1534,8 @@ web3.setProvider = function (provider) {
 };
 web3.reset = function () {
     RequestManager.getInstance().reset();
+    c.defaultBlock = 'latest';
+    c.defaultAccount = undefined;
 };
 web3.toHex = utils.toHex;
 web3.toAscii = utils.toAscii;
@@ -1547,14 +1550,23 @@ web3.isAddress = utils.isAddress;
 // ADD defaultblock
 Object.defineProperty(web3.eth, 'defaultBlock', {
     get: function () {
-        return c.ETH_DEFAULTBLOCK;
+        return c.defaultBlock;
     },
     set: function (val) {
-        c.ETH_DEFAULTBLOCK = val;
-        return c.ETH_DEFAULTBLOCK;
+        c.defaultBlock = val;
+        return val;
     }
 });
 
+Object.defineProperty(web3.eth, 'defaultAccount', {
+    get: function () {
+        return c.defaultAccount;
+    },
+    set: function (val) {
+        c.defaultAccount = val;
+        return val;
+    }
+});
 
 /// setups all api methods
 setupMethods(web3, web3Methods);
@@ -1755,12 +1767,13 @@ function Contract(abi, options) {
     var address = '';
     if (utils.isAddress(options)) {
         address = options;
-    } else { // is a source code!
+    } else { // is an object!
         // TODO, parse the rest of the args
-        var code = options;
+        options = options || {};
         var args = Array.prototype.slice.call(arguments, 2);
         var bytes = solAbi.formatConstructorParams(abi, args);
-        address = web3.eth.sendTransaction({data: code + bytes});
+        options.data += bytes;
+        address = web3.eth.sendTransaction(options);
     }
 
     var result = {};
@@ -2451,7 +2464,7 @@ var isPredefinedBlockNumber = function (blockNumber) {
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined) {
-        return config.ETH_DEFAULTBLOCK;
+        return config.defaultBlock;
     }
     return inputBlockNumberFormatter(blockNumber);
 };
@@ -2473,6 +2486,8 @@ var inputBlockNumberFormatter = function (blockNumber) {
  * @returns object
 */
 var inputTransactionFormatter = function (options){
+
+    options.from = options.from || config.defaultAccount;
 
     // make code -> data
     if (options.code) {
