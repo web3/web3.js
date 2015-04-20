@@ -50,15 +50,15 @@
     
         var createContract = function () {
             // let's assume that we have a private key to coinbase ;)
-            address = web3.eth.sendTransaction({from: web3.eth.coinbase, data: source});
+            web3.eth.defaultAccount = web3.eth.coinbase;
             var Contract = web3.eth.contract(desc); 
-            contract = new Contract(address);
+            contract = new Contract(source);
             contract.Incremented({odd: true}).watch(update);
             
         };
 
         var callContract = function () {
-            contract.sendTransaction({from: web3.eth.coinbase}).inc();
+            contract.inc();
         };
 
 
