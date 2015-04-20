@@ -2514,6 +2514,7 @@ var inputTransactionFormatter = function (options){
 var outputTransactionFormatter = function (tx){
     tx.blockNumber = utils.toDecimal(tx.blockNumber);
     tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+    tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
     tx.value = utils.toBigNumber(tx.value);
