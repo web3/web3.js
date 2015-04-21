@@ -4,6 +4,7 @@ var BigNumber = require('bignumber.js');
 var assert = chai.assert;
 
 var tests = [
+    { value: null, expected: null },
     { value: 1, expected: '0x1' },
     { value: '1', expected: '0x1' },
     { value: '0x1', expected: '0x1'},

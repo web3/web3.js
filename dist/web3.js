@@ -1134,6 +1134,9 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
+    if(val === null || typeof val === 'undefined')
+        return val;
+
     if (isBoolean(val))
         return fromDecimal(+val);
 
@@ -2320,7 +2323,9 @@ var getOptions = function (options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic){
-        return utils.toHex(topic);
+        return  (utils.isArray(topic))
+            ? topic.map(utils.toHex)
+            : utils.toHex(topic);
     });
 
     // lazy load
