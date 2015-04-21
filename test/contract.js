@@ -207,7 +207,7 @@ describe('web3.eth.contract', function () {
             var Contract = web3.eth.contract(desc);
             var contract = new Contract(address);
 
-            contract.call({from: address, gas: 50000}).balance(address);
+            contract.balance(address, {from: address, gas: 50000});
 
         });
 
@@ -243,7 +243,7 @@ describe('web3.eth.contract', function () {
             var Contract = web3.eth.contract(desc);
             var contract = new Contract(address);
 
-            contract.sendTransaction({from: address, gas: 50000, gasPrice: 3000, value: 10000}).send(address, 17);
+            contract.send(address, 17, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
     });
 });

@@ -1603,17 +1603,17 @@ var addFunctionsToContract = function (contract, desc) {
     desc.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(json);
+        return new SolidityFunction(json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
 };
 
-var addEventsToContract = function (contract, desc, address) {
+var addEventsToContract = function (contract, desc) {
     desc.filter(function (json) {
         return json.type === 'event';
     }).map(function (json) {
-        return new SolidityEvent(json, address);
+        return new SolidityEvent(json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -1650,8 +1650,6 @@ var contract = function (abi) {
 var Contract = function (abi, options) {
 
     this.address = '';
-    this._isTransaction = null;
-    this._options = {};
     if (utils.isAddress(options)) {
         this.address = options;
     } else { // is an object!
@@ -1664,18 +1662,16 @@ var Contract = function (abi, options) {
     }
 
     addFunctionsToContract(this, abi);
-    addEventsToContract(this, abi, this.address);
+    addEventsToContract(this, abi);
 };
 
-Contract.prototype.call = function (options) {
-    this._isTransaction = false;
-    this._options = options;
+Contract.prototype.call = function () {
+    console.error('contract.call is deprecated');
     return this;
 };
 
-Contract.prototype.sendTransaction = function (options) {
-    this._isTransaction = true;
-    this._options = options;
+Contract.prototype.sendTransaction = function () {
+    console.error('contract.sendTransact is deprecated');
     return this;
 };
 
@@ -2599,7 +2595,7 @@ var utils = require('../utils/utils');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (json) {
+var SolidityFunction = function (json, address) {
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -2608,6 +2604,7 @@ var SolidityFunction = function (json) {
     });
     this._constant = json.constant;
     this._name = utils.transformToFullName(json);
+    this._address = address;
 };
 
 /**
@@ -2666,17 +2663,16 @@ SolidityFunction.prototype.typeName = function () {
  *
  * @method execute
  */
-SolidityFunction.prototype.execute = function (contract) {
-    var args = Array.prototype.slice.call(arguments, 1);
-    var options = contract._options || {};
-    options.to = contract.address;
+SolidityFunction.prototype.execute = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var options = {};
+    if (utils.isObject(args[args.length -1])) {
+        options = args.pop();
+    }
+    options.to = this._address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
-    var transaction = contract._isTransaction === true || (contract._isTransaction !== false && !this._constant);
-
-    //reset
-    contract._options = {};
-    contract._isTransaction = null;
-
+    var transaction = !this._constant;
+    
     // send transaction
     if (transaction) {
         return this.sendTransaction(options);
@@ -2694,12 +2690,12 @@ SolidityFunction.prototype.execute = function (contract) {
  * @param {Contract}
  */
 SolidityFunction.prototype.attachToContract = function (contract) {
-    var execute = this.execute.bind(this, contract);
+    var execute = this.execute.bind(this);
     var displayName = this.displayName();
     if (!contract[displayName]) {
         contract[displayName] = execute;
     }
-    contract[displayName][this.typeName()] = this.execute.bind(this, contract);
+    contract[displayName][this.typeName()] = this.execute.bind(this);
 };
 
 module.exports = SolidityFunction;
