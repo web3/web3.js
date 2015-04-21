@@ -1975,12 +1975,6 @@ var compileSerpent = new Method({
     params: 1
 });
 
-var flush = new Method({
-    name: 'flush',
-    call: 'eth_flush',
-    params: 0
-});
-
 var methods = [
     getBalance,
     getStorageAt,
@@ -1998,7 +1992,6 @@ var methods = [
     compileSolidity,
     compileLLL,
     compileSerpent,
-    flush
 ];
 
 /// @returns an array of objects describing web3.eth api properties
@@ -2739,7 +2732,7 @@ var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:
 var errors = require('./errors');
 
 var HttpProvider = function (host) {
-    this.host = host || 'http://localhost:8080';
+    this.host = host || 'http://localhost:8545';
 };
 
 HttpProvider.prototype.send = function (payload) {
