@@ -143,6 +143,25 @@ var tests = [{
             '0x0000000000000000000000000000000000000000000000000000000000000001'
         ]
     }
+}, {
+    abi: {
+        name: 'event1',
+        inputs: [{
+            type: 'int',
+            name: 'a',
+            indexed: true
+        }],
+        anonymous: true
+    },
+    indexed: {
+        a: 1
+    },
+    options: {},
+    expected: {
+        topics: [
+            '0x0000000000000000000000000000000000000000000000000000000000000001'
+        ]
+    }
 }];
 
 describe('lib/web3/event', function () {

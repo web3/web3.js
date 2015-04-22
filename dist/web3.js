@@ -2020,6 +2020,7 @@ var SolidityEvent = function (json, address) {
     this._params = json.inputs;
     this._name = utils.transformToFullName(json);
     this._address = address;
+    this._anonymous = json.anonymous;
 };
 
 /**
@@ -2086,9 +2087,12 @@ SolidityEvent.prototype.encode = function (indexed, options) {
         result[f] = utils.toHex(options[f]);
     });
 
-    result.address = this._address;
     result.topics = [];
-    result.topics.push('0x' + this.signature());
+
+    if (!this._anonymous) {
+        result.address = this._address;
+        result.topics.push('0x' + this.signature());
+    }
 
     var indexedTopics = this._params.filter(function (i) {
         return i.indexed === true;
