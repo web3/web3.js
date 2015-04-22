@@ -1134,9 +1134,6 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
-    if(val === null || typeof val === 'undefined')
-        return val;
-
     if (isBoolean(val))
         return fromDecimal(+val);
 
@@ -2309,6 +2306,25 @@ var RequestManager = require('./requestmanager');
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
+/**
+* Converts a given topic to a hex string, but also allows null values.
+*
+* @param {Mixed} value
+* @return {String}
+*/
+var toTopic = function(value){
+
+    if(value === null || typeof value === 'undefined')
+        return null;
+
+    value = String(value);
+
+    if(value.indexOf('0x') === 0)
+        return value;
+    else
+        return utils.fromAscii(value);
+};
+
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
 /// @param should be string or object
 /// @returns options string or object
@@ -2323,9 +2339,7 @@ var getOptions = function (options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic){
-        return  (utils.isArray(topic))
-            ? topic.map(utils.toHex)
-            : utils.toHex(topic);
+        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     // lazy load
