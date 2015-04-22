@@ -1110,6 +1110,9 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
+    if(val === null || typeof val === 'undefined')
+        return val;
+
     if (isBoolean(val))
         return fromDecimal(+val);
 
@@ -2241,9 +2244,11 @@ var getOptions = function (options) {
 
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
-    options.topics = options.topics.map(function(topic){
+    options.topics = options.topics.map(function(topic) {
         if (topic === null) {
             return null;
+        } else if (utils.isArray) {
+            topic = topic.map(utils.toHex);
         }
         return utils.toHex(topic);
     });
