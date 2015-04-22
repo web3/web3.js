@@ -435,8 +435,8 @@ var coder = new SolidityCoder([
         name: 'bytes',
         match: 'prefix',
         mode: 'bytes',
-        inputFormatter: f.formatInputString,
-        outputFormatter: f.formatOutputString
+        inputFormatter: f.formatInputBytes,
+        outputFormatter: f.formatOutputBytes
     }),
     new SolidityType({
         name: 'real',
@@ -505,11 +505,11 @@ var formatInputInt = function (value) {
 /**
  * Formats input value to byte representation of string
  *
- * @method formatInputString
+ * @method formatInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
-var formatInputString = function (value) {
+var formatInputBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
     return new SolidityParam('', formatInputInt(value.length).value, result);
 };
@@ -602,17 +602,6 @@ var formatOutputUReal = function (param) {
 };
 
 /**
- * Should be used to format output hash
- *
- * @method formatOutputHash
- * @param {SolidityParam}
- * @returns {String} right-aligned output bytes formatted to hex
- */
-var formatOutputHash = function (param) {
-    return "0x" + param.value;
-};
-
-/**
  * Should be used to format output bool
  *
  * @method formatOutputBool
@@ -626,11 +615,11 @@ var formatOutputBool = function (param) {
 /**
  * Should be used to format output string
  *
- * @method formatOutputString
+ * @method formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
-var formatOutputString = function (param) {
+var formatOutputBytes = function (param) {
     // length might also be important!
     return utils.toAscii(param.suffix);
 };
@@ -649,16 +638,15 @@ var formatOutputAddress = function (param) {
 
 module.exports = {
     formatInputInt: formatInputInt,
-    formatInputString: formatInputString,
+    formatInputBytes: formatInputBytes,
     formatInputBool: formatInputBool,
     formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
     formatOutputUInt: formatOutputUInt,
     formatOutputReal: formatOutputReal,
     formatOutputUReal: formatOutputUReal,
-    formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
-    formatOutputString: formatOutputString,
+    formatOutputBytes: formatOutputBytes,
     formatOutputAddress: formatOutputAddress
 };
 
