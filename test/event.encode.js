@@ -2,19 +2,20 @@ var chai = require('chai');
 var assert = chai.assert;
 var SolidityEvent = require('../lib/web3/event');
 
+var address = '0x1234567890123456789012345678901234567890';
+var signature = '0xffff';
+
 var tests = [{
     abi: {
         name: 'event1',
         inputs: []
     },
-    address: '0x1234567890123456789012345678901234567890',
-    signature: 'ffff',
     indexed: {},
     options: {},
     expected: {
-        address: '0x1234567890123456789012345678901234567890',
+        address: address,
         topics: [
-            '0xffff'
+            signature
         ]
     }
 }, {
@@ -26,16 +27,14 @@ var tests = [{
             indexed: true
         }]
     },
-    address: '0x1234567890123456789012345678901234567890',
-    signature: 'ffff',
     indexed: {
         a: 16
     },
     options: {},
     expected: {
-        address: '0x1234567890123456789012345678901234567890',
+        address: address,
         topics: [
-            '0xffff',
+            signature,
             '0x0000000000000000000000000000000000000000000000000000000000000010'
         ]
     }
@@ -60,16 +59,14 @@ var tests = [{
             indexed: true
         }]
     },
-    address: '0x1234567890123456789012345678901234567890',
-    signature: 'ffff',
     indexed: {
         b: 4
     },
     options: {},
     expected: {
-        address: '0x1234567890123456789012345678901234567890',
+        address: address,
         topics: [
-            '0xffff', // signature
+            signature, // signature
             null, // a
             '0x0000000000000000000000000000000000000000000000000000000000000004', // b
             null // d
@@ -88,17 +85,15 @@ var tests = [{
             indexed: true
         }]
     },
-    address: '0x1234567890123456789012345678901234567890',
-    signature: 'ffff',
     indexed: {
         a: [16, 1],
         b: 2
     },
     options: {},
     expected: {
-        address: '0x1234567890123456789012345678901234567890',
+        address: address,
         topics: [
-            '0xffff',
+            signature,
             ['0x0000000000000000000000000000000000000000000000000000000000000010', '0x0000000000000000000000000000000000000000000000000000000000000001'],
             '0x0000000000000000000000000000000000000000000000000000000000000002'
         ]
@@ -112,16 +107,14 @@ var tests = [{
             indexed: true
         }]
     },
-    address: '0x1234567890123456789012345678901234567890',
-    signature: 'ffff',
     indexed: {
         a: null
     },
     options: {},
     expected: {
-        address: '0x1234567890123456789012345678901234567890',
+        address: address,
         topics: [
-            '0xffff',
+            signature,
             null
         ]
     }
@@ -131,9 +124,9 @@ describe('lib/web3/event', function () {
     describe('encode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var event = new SolidityEvent(test.abi, test.address);
+                var event = new SolidityEvent(test.abi, address);
                 event.signature = function () { // inject signature
-                    return test.signature;
+                    return signature.slice(2);
                 };
 
                 var result = event.encode(test.indexed, test.options);
