@@ -435,8 +435,8 @@ var coder = new SolidityCoder([
         name: 'bytes',
         match: 'prefix',
         mode: 'bytes',
-        inputFormatter: f.formatInputString,
-        outputFormatter: f.formatOutputString
+        inputFormatter: f.formatInputBytes,
+        outputFormatter: f.formatOutputBytes
     }),
     new SolidityType({
         name: 'real',
@@ -505,11 +505,11 @@ var formatInputInt = function (value) {
 /**
  * Formats input value to byte representation of string
  *
- * @method formatInputString
+ * @method formatInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
-var formatInputString = function (value) {
+var formatInputBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
     return new SolidityParam('', formatInputInt(value.length).value, result);
 };
@@ -602,17 +602,6 @@ var formatOutputUReal = function (param) {
 };
 
 /**
- * Should be used to format output hash
- *
- * @method formatOutputHash
- * @param {SolidityParam}
- * @returns {String} right-aligned output bytes formatted to hex
- */
-var formatOutputHash = function (param) {
-    return "0x" + param.value;
-};
-
-/**
  * Should be used to format output bool
  *
  * @method formatOutputBool
@@ -626,11 +615,11 @@ var formatOutputBool = function (param) {
 /**
  * Should be used to format output string
  *
- * @method formatOutputString
+ * @method formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
-var formatOutputString = function (param) {
+var formatOutputBytes = function (param) {
     // length might also be important!
     return utils.toAscii(param.suffix);
 };
@@ -649,16 +638,15 @@ var formatOutputAddress = function (param) {
 
 module.exports = {
     formatInputInt: formatInputInt,
-    formatInputString: formatInputString,
+    formatInputBytes: formatInputBytes,
     formatInputBool: formatInputBool,
     formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
     formatOutputUInt: formatOutputUInt,
     formatOutputReal: formatOutputReal,
     formatOutputUReal: formatOutputUReal,
-    formatOutputHash: formatOutputHash,
     formatOutputBool: formatOutputBool,
-    formatOutputString: formatOutputString,
+    formatOutputBytes: formatOutputBytes,
     formatOutputAddress: formatOutputAddress
 };
 
@@ -767,16 +755,6 @@ SolidityParam.prototype.shiftArray = function (length) {
     return new SolidityParam('', prefix, suffix);
 };
 
-/**
- * This method should be used to check if param is empty
- *
- * @method empty
- * @return {Bool} true if is empty, otherwise false
- */
-SolidityParam.prototype.empty = function () {
-    return !this.value.length && !this.prefix.length && !this.suffix.length;
-};
-
 module.exports = SolidityParam;
 
 
@@ -817,36 +795,8 @@ var getConstructor = function (abi, numberOfArgs) {
     })[0];
 };
 
-/**
- * Filters all functions from input abi
- *
- * @method filterFunctions
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'function'
- */
-var filterFunctions = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'function'; 
-    }); 
-};
-
-/**
- * Filters all events from input abi
- *
- * @method filterEvents
- * @param {Array} abi
- * @returns {Array} abi array with filtered objects of type 'event'
- */
-var filterEvents = function (json) {
-    return json.filter(function (current) {
-        return current.type === 'event';
-    });
-};
-
 module.exports = {
-    getConstructor: getConstructor,
-    filterFunctions: filterFunctions,
-    filterEvents: filterEvents
+    getConstructor: getConstructor
 };
 
 
@@ -950,9 +900,9 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file utils.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file utils.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
@@ -1001,22 +951,6 @@ var unitMap = {
  */
 var padLeft = function (string, chars, sign) {
     return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
-};
-
-/** Finds first index of array element matching pattern
- *
- * @method findIndex
- * @param {Array}
- * @param {Function} pattern
- * @returns {Number} index of element
- */
-var findIndex = function (array, callback) {
-    var end = false;
-    var i = 0;
-    for (; i < array.length && !end; i++) {
-        end = callback(array[i]);
-    }
-    return end ? i - 1 : -1;
 };
 
 /** 
@@ -1076,6 +1010,22 @@ var fromAscii = function(str, pad) {
     while (hex.length < pad*2)
         hex += "00";
     return "0x" + hex;
+};
+
+/**
+ * Should be used to create full function/event name from json abi
+ *
+ * @method transformToFullName
+ * @param {Object} json-abi
+ * @return {String} full fnction/event name
+ */
+var transformToFullName = function (json) {
+    if (json.name.indexOf('(') !== -1) {
+        return json.name;
+    }
+
+    var typeName = json.inputs.map(function(i){return i.type; }).join();
+    return json.name + '(' + typeName + ')';
 };
 
 /**
@@ -1384,12 +1334,12 @@ var isJson = function (str) {
 
 module.exports = {
     padLeft: padLeft,
-    findIndex: findIndex,
     toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
     toAscii: toAscii,
     fromAscii: fromAscii,
+    transformToFullName: transformToFullName,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
     toWei: toWei,
@@ -1581,7 +1531,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":20,"./web3/net":21,"./web3/property":22,"./web3/requestmanager":24,"./web3/shh":25,"./web3/watches":27}],11:[function(require,module,exports){
+},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":21,"./web3/net":22,"./web3/property":23,"./web3/requestmanager":25,"./web3/shh":26,"./web3/watches":27}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1598,129 +1548,37 @@ module.exports = web3;
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file contract.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file contract.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2014
  */
 
 var web3 = require('../web3'); 
 var solAbi = require('../solidity/abi');
 var utils = require('../utils/utils');
-var solUtils = require('../solidity/utils');
-var eventImpl = require('./event');
-var signature = require('./signature');
+var SolidityEvent = require('./event');
+var SolidityFunction = require('./function');
 
-var addFunctionRelatedPropertiesToContract = function (contract) {
-    
-    contract.call = function (options) {
-        contract._isTransaction = false;
-        contract._options = options;
-        return contract;
-    };
-
-    contract.sendTransaction = function (options) {
-        contract._isTransaction = true;
-        contract._options = options;
-        return contract;
-    };
-};
-
-var addFunctionsToContract = function (contract, desc, address) {
-    var inputParser = solAbi.inputParser(desc);
-    var outputParser = solAbi.outputParser(desc);
-
-    // create contract functions
-    solUtils.filterFunctions(desc).forEach(function (method) {
-
-        var displayName = utils.extractDisplayName(method.name);
-        var typeName = utils.extractTypeName(method.name);
-
-        var impl = function () {
-            /*jshint maxcomplexity:7 */
-            var params = Array.prototype.slice.call(arguments);
-            var sign = signature.functionSignatureFromAscii(method.name);
-            var parsed = inputParser[displayName][typeName].apply(null, params);
-
-            var options = contract._options || {};
-            options.to = address;
-            options.data = sign + parsed;
-            
-            var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
-            
-            // reset
-            contract._options = {};
-            contract._isTransaction = null;
-
-            if (isTransaction) {
-                
-                // transactions do not have any output, cause we do not know, when they will be processed
-                web3.eth.sendTransaction(options);
-                return;
-            }
-            
-            var output = web3.eth.call(options);
-            var ret = outputParser[displayName][typeName](output);
-            return ret.length === 1 ? ret[0] : ret;
-        };
-
-        if (contract[displayName] === undefined) {
-            contract[displayName] = impl;
-        }
-
-        contract[displayName][typeName] = impl;
+var addFunctionsToContract = function (contract, desc) {
+    desc.filter(function (json) {
+        return json.type === 'function';
+    }).map(function (json) {
+        return new SolidityFunction(json, contract.address);
+    }).forEach(function (f) {
+        f.attachToContract(contract);
     });
 };
 
-var addEventRelatedPropertiesToContract = function (contract, desc, address) {
-    contract.address = address;
-    contract._onWatchEventResult = function (data) {
-        var matchingEvent = event.getMatchingEvent(solUtils.filterEvents(desc));
-        var parser = eventImpl.outputParser(matchingEvent);
-        return parser(data);
-    };
-    
-    Object.defineProperty(contract, 'topics', {
-        get: function() {
-            return solUtils.filterEvents(desc).map(function (e) {
-                return signature.eventSignatureFromAscii(e.name);
-            });
-        }
-    });
-
-};
-
-var addEventsToContract = function (contract, desc, address) {
-    // create contract events
-    solUtils.filterEvents(desc).forEach(function (e) {
-
-        var impl = function () {
-            var params = Array.prototype.slice.call(arguments);
-            var sign = signature.eventSignatureFromAscii(e.name);
-            var event = eventImpl.inputParser(address, sign, e);
-            var o = event.apply(null, params);
-            var outputFormatter = function (data) {
-                var parser = eventImpl.outputParser(e);
-                return parser(data);
-            };
-            return web3.eth.filter(o, undefined, undefined, outputFormatter);
-        };
-        
-        // this property should be used by eth.filter to check if object is an event
-        impl._isEvent = true;
-
-        var displayName = utils.extractDisplayName(e.name);
-        var typeName = utils.extractTypeName(e.name);
-
-        if (contract[displayName] === undefined) {
-            contract[displayName] = impl;
-        }
-
-        contract[displayName][typeName] = impl;
-
+var addEventsToContract = function (contract, desc) {
+    desc.filter(function (json) {
+        return json.type === 'event';
+    }).map(function (json) {
+        return new SolidityEvent(json, contract.address);
+    }).forEach(function (e) {
+        e.attachToContract(contract);
     });
 };
-
 
 /**
  * This method should be called when we want to call / transact some solidity method from javascript
@@ -1750,45 +1608,38 @@ var contract = function (abi) {
     return Contract.bind(null, abi);
 };
 
-function Contract(abi, options) {
+var Contract = function (abi, options) {
 
-    // workaround for invalid assumption that method.name is the full anonymous prototype of the method.
-    // it's not. it's just the name. the rest of the code assumes it's actually the anonymous
-    // prototype, so we make it so as a workaround.
-    // TODO: we may not want to modify input params, maybe use copy instead?
-    abi.forEach(function (method) {
-        if (method.name.indexOf('(') === -1) {
-            var displayName = method.name;
-            var typeName = method.inputs.map(function(i){return i.type; }).join();
-            method.name = displayName + '(' + typeName + ')';
-        }
-    });
-
-    var address = '';
+    this.address = '';
     if (utils.isAddress(options)) {
-        address = options;
+        this.address = options;
     } else { // is an object!
         // TODO, parse the rest of the args
         options = options || {};
         var args = Array.prototype.slice.call(arguments, 2);
         var bytes = solAbi.formatConstructorParams(abi, args);
         options.data += bytes;
-        address = web3.eth.sendTransaction(options);
+        this.address = web3.eth.sendTransaction(options);
     }
 
-    var result = {};
-    addFunctionRelatedPropertiesToContract(result);
-    addFunctionsToContract(result, abi, address);
-    addEventRelatedPropertiesToContract(result, abi, address);
-    addEventsToContract(result, abi, address);
+    addFunctionsToContract(this, abi);
+    addEventsToContract(this, abi);
+};
 
-    return result;
-}
+Contract.prototype.call = function () {
+    console.error('contract.call is deprecated');
+    return this;
+};
+
+Contract.prototype.sendTransaction = function () {
+    console.error('contract.sendTransact is deprecated');
+    return this;
+};
 
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../solidity/utils":5,"../utils/utils":8,"../web3":10,"./event":15,"./signature":26}],12:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":8,"../web3":10,"./event":15,"./function":18}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1846,7 +1697,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":20}],13:[function(require,module,exports){
+},{"./method":21}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2135,7 +1986,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./formatters":17,"./method":20,"./property":22}],15:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./method":21,"./property":23}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2152,130 +2003,188 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file event.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file event.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2014
  */
 
-var abi = require('../solidity/abi');
 var utils = require('../utils/utils');
-var signature = require('./signature');
+var coder = require('../solidity/coder');
+var web3 = require('../web3');
 
-/// filter inputs array && returns only indexed (or not) inputs
-/// @param inputs array
-/// @param bool if result should be an array of indexed params on not
-/// @returns array of (not?) indexed params
-var filterInputs = function (inputs, indexed) {
-    return inputs.filter(function (current) {
-        return current.indexed === indexed;
+/**
+ * This prototype should be used to create event filters
+ */
+var SolidityEvent = function (json, address) {
+    this._params = json.inputs;
+    this._name = utils.transformToFullName(json);
+    this._address = address;
+    this._anonymous = json.anonymous;
+};
+
+/**
+ * Should be used to get filtered param types
+ *
+ * @method types
+ * @param {Bool} decide if returned typed should be indexed
+ * @return {Array} array of types
+ */
+SolidityEvent.prototype.types = function (indexed) {
+    return this._params.filter(function (i) {
+        return i.indexed === indexed;
+    }).map(function (i) {
+        return i.type;
     });
 };
 
-var inputWithName = function (inputs, name) {
-    var index = utils.findIndex(inputs, function (input) {
-        return input.name === name;
+/**
+ * Should be used to get event display name
+ *
+ * @method displayName
+ * @return {String} event display name
+ */
+SolidityEvent.prototype.displayName = function () {
+    return utils.extractDisplayName(this._name);
+};
+
+/**
+ * Should be used to get event type name
+ *
+ * @method typeName
+ * @return {String} event type name
+ */
+SolidityEvent.prototype.typeName = function () {
+    return utils.extractTypeName(this._name);
+};
+
+/**
+ * Should be used to get event signature
+ *
+ * @method signature
+ * @return {String} event signature
+ */
+SolidityEvent.prototype.signature = function () {
+    return web3.sha3(web3.fromAscii(this._name)).slice(2);
+};
+
+/**
+ * Should be used to encode indexed params and options to one final object
+ * 
+ * @method encode
+ * @param {Object} indexed
+ * @param {Object} options
+ * @return {Object} everything combined together and encoded
+ */
+SolidityEvent.prototype.encode = function (indexed, options) {
+    indexed = indexed || {};
+    options = options || {};
+    var result = {};
+
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = utils.toHex(options[f]);
     });
-    
-    if (index === -1) {
-        console.error('indexed param with name ' + name + ' not found');
-        return undefined;
+
+    result.topics = [];
+
+    if (!this._anonymous) {
+        result.address = this._address;
+        result.topics.push('0x' + this.signature());
     }
-    return inputs[index];
-};
 
-var indexedParamsToTopics = function (event, indexed) {
-    // sort keys?
-    return Object.keys(indexed).map(function (key) {
-        var inputs = [inputWithName(filterInputs(event.inputs, true), key)];
-
-        var value = indexed[key];
-        if (value instanceof Array) {
+    var indexedTopics = this._params.filter(function (i) {
+        return i.indexed === true;
+    }).map(function (i) {
+        var value = indexed[i.name];
+        if (value === undefined || value === null) {
+            return null;
+        }
+        
+        if (utils.isArray(value)) {
             return value.map(function (v) {
-                return abi.formatInput(inputs, [v]);
-            }); 
+                return '0x' + coder.encodeParam(i.type, v);
+            });
         }
-        return '0x' + abi.formatInput(inputs, [value]);
+        return '0x' + coder.encodeParam(i.type, value);
     });
+
+    result.topics = result.topics.concat(indexedTopics);
+
+    return result;
 };
 
-var inputParser = function (address, sign, event) {
-    
-    // valid options are 'earliest', 'latest', 'offset' and 'max', as defined for 'eth.filter'
-    return function (indexed, options) {
-        var o = options || {};
-        o.address = address;
-        o.topics = [];
-        o.topics.push(sign);
-        if (indexed) {
-            o.topics = o.topics.concat(indexedParamsToTopics(event, indexed));
-        }
-        return o;
+/**
+ * Should be used to decode indexed params and options
+ *
+ * @method decode
+ * @param {Object} data
+ * @return {Object} result object with decoded indexed && not indexed params
+ */
+SolidityEvent.prototype.decode = function (data) {
+    var result = {
+        event: this.displayName(),
+        args: {},
+        logIndex: utils.toDecimal(data.logIndex),
+        transactionIndex: utils.toDecimal(data.transactionIndex),
+        transactionHash: data.transactionHash,
+        address: data.address,
+        blockHash: data.blockHash,
+        blockNumber: utils.toDecimal(data.blockNumber)
     };
-};
 
-var getArgumentsObject = function (inputs, indexed, notIndexed) {
-    var indexedCopy = indexed.slice();
-    var notIndexedCopy = notIndexed.slice();
-    return inputs.reduce(function (acc, current) {
-        var value;
-        if (current.indexed)
-            value = indexedCopy.splice(0, 1)[0];
-        else
-            value = notIndexedCopy.splice(0, 1)[0];
+    data.data = data.data || '';
+    data.topics = data.topics || [];
 
-        acc[current.name] = value;
+    var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
+    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
+    var indexedParams = coder.decodeParams(this.types(true), indexedData); 
+
+    var notIndexedData = data.data.slice(2);
+    var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
+
+    result.args = this._params.reduce(function (acc, current) {
+        acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
-    }, {}); 
-};
- 
-var outputParser = function (event) {
-    
-    return function (output) {
-        var result = {
-            event: utils.extractDisplayName(event.name),
-            number: output.number,
-            hash: output.hash,
-            args: {}
-        };
+    }, {});
 
-        if (!output.topics) {
-            return result;
-        }
-        output.data = output.data || '';
-       
-        var indexedOutputs = filterInputs(event.inputs, true);
-        var indexedData = output.topics.slice(1).map(function (topics) { return topics.slice(2); }).join("");
-        var indexedRes = abi.formatOutput(indexedOutputs, indexedData);
-
-        var notIndexedOutputs = filterInputs(event.inputs, false);
-        var notIndexedRes = abi.formatOutput(notIndexedOutputs, output.data.slice(2));
-
-        result.args = getArgumentsObject(event.inputs, indexedRes, notIndexedRes);
-
-        return result;
-    };
+    return result;
 };
 
-var getMatchingEvent = function (events, payload) {
-    for (var i = 0; i < events.length; i++) {
-        var sign = signature.eventSignatureFromAscii(events[i].name); 
-        if (sign === payload.topics[0]) {
-            return events[i];
-        }
+/**
+ * Should be used to create new filter object from event
+ *
+ * @method execute
+ * @param {Object} indexed
+ * @param {Object} options
+ * @return {Object} filter object
+ */
+SolidityEvent.prototype.execute = function (indexed, options) {
+    var o = this.encode(indexed, options);
+    var formatter = this.decode.bind(this);
+    return web3.eth.filter(o, undefined, undefined, formatter);
+};
+
+/**
+ * Should be used to attach event to contract object
+ *
+ * @method attachToContract
+ * @param {Contract}
+ */
+SolidityEvent.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    var displayName = this.displayName();
+    if (!contract[displayName]) {
+        contract[displayName] = execute;
     }
-    return undefined;
+    contract[displayName][this.typeName()] = this.execute.bind(this, contract);
 };
 
-
-module.exports = {
-    inputParser: inputParser,
-    outputParser: outputParser,
-    getMatchingEvent: getMatchingEvent
-};
+module.exports = SolidityEvent;
 
 
-},{"../solidity/abi":1,"../utils/utils":8,"./signature":26}],16:[function(require,module,exports){
+},{"../solidity/coder":2,"../utils/utils":8,"../web3":10}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2432,7 +2341,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":8,"./formatters":17,"./requestmanager":24}],17:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./requestmanager":25}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2669,6 +2578,157 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** 
+ * @file function.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var web3 = require('../web3');
+var coder = require('../solidity/coder');
+var utils = require('../utils/utils');
+
+/**
+ * This prototype should be used to call/sendTransaction to solidity functions
+ */
+var SolidityFunction = function (json, address) {
+    this._inputTypes = json.inputs.map(function (i) {
+        return i.type;
+    });
+    this._outputTypes = json.outputs.map(function (i) {
+        return i.type;
+    });
+    this._constant = json.constant;
+    this._name = utils.transformToFullName(json);
+    this._address = address;
+};
+
+/**
+ * Should be used to create payload from arguments
+ *
+ * @method toPayload
+ * @param {...} solidity function params
+ * @param {Object} optional payload options
+ */
+SolidityFunction.prototype.toPayload = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var options = {};
+    if (utils.isObject(args[args.length -1])) {
+        options = args.pop();
+    }
+    options.to = this._address;
+    options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
+    return options;
+};
+
+/**
+ * Should be used to get function signature
+ *
+ * @method signature
+ * @return {String} function signature
+ */
+SolidityFunction.prototype.signature = function () {
+    return web3.sha3(web3.fromAscii(this._name)).slice(2, 10);
+};
+
+/**
+ * Should be used to call function
+ * 
+ * @method call
+ * @param {Object} options
+ * @return {String} output bytes
+ */
+SolidityFunction.prototype.call = function () {
+    var payload = this.toPayload.apply(this, Array.prototype.slice.call(arguments));
+    var output = web3.eth.call(payload);
+    return coder.decodeParams(this._outputTypes, output);
+};
+
+/**
+ * Should be used to sendTransaction to solidity function
+ *
+ * @method sendTransaction
+ * @param {Object} options
+ */
+SolidityFunction.prototype.sendTransaction = function () {
+    var payload = this.toPayload.apply(this, Array.prototype.slice.call(arguments));
+    web3.eth.sendTransaction(payload);
+};
+
+/**
+ * Should be used to get function display name
+ *
+ * @method displayName
+ * @return {String} display name of the function
+ */
+SolidityFunction.prototype.displayName = function () {
+    return utils.extractDisplayName(this._name);
+};
+
+/**
+ * Should be used to get function type name
+ * 
+ * @method typeName
+ * @return {String} type name of the function
+ */
+SolidityFunction.prototype.typeName = function () {
+    return utils.extractTypeName(this._name);
+};
+
+/**
+ * Should be called to execute function
+ *
+ * @method execute
+ */
+SolidityFunction.prototype.execute = function () {
+    var transaction = !this._constant;
+    
+    // send transaction
+    if (transaction) {
+        return this.sendTransaction.apply(this, Array.prototype.slice.call(arguments));
+    }
+
+    // call
+    return this.call.apply(this, Array.prototype.slice.call(arguments));
+};
+
+/**
+ * Should be called to attach function to contract
+ *
+ * @method attachToContract
+ * @param {Contract}
+ */
+SolidityFunction.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    execute.call = this.call.bind(this);
+    execute.sendTransaction = this.sendTransaction.bind(this);
+    var displayName = this.displayName();
+    if (!contract[displayName]) {
+        contract[displayName] = execute;
+    }
+    contract[displayName][this.typeName()] = execute; // circular!!!!
+};
+
+module.exports = SolidityFunction;
+
+
+},{"../solidity/coder":2,"../utils/utils":8,"../web3":10}],19:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file httpprovider.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -2727,7 +2787,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":13,"xmlhttprequest":6}],19:[function(require,module,exports){
+},{"./errors":13,"xmlhttprequest":6}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2820,7 +2880,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2981,7 +3041,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":8,"./errors":13,"./requestmanager":24}],21:[function(require,module,exports){
+},{"../utils/utils":8,"./errors":13,"./requestmanager":25}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3031,7 +3091,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./property":22}],22:[function(require,module,exports){
+},{"../utils/utils":8,"./property":23}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3137,7 +3197,7 @@ Property.prototype.set = function (value) {
 module.exports = Property;
 
 
-},{"./requestmanager":24}],23:[function(require,module,exports){
+},{"./requestmanager":25}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3172,7 +3232,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3393,7 +3453,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":19}],25:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":20}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3463,51 +3523,7 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":20}],26:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file signature.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var web3 = require('../web3'); 
-var c = require('../utils/config');
-
-/// @param function name for which we want to get signature
-/// @returns signature of function with given name
-var functionSignatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name)).slice(0, 2 + c.ETH_SIGNATURE_LENGTH * 2);
-};
-
-/// @param event name for which we want to get signature
-/// @returns signature of event with given name
-var eventSignatureFromAscii = function (name) {
-    return web3.sha3(web3.fromAscii(name));
-};
-
-module.exports = {
-    functionSignatureFromAscii: functionSignatureFromAscii,
-    eventSignatureFromAscii: eventSignatureFromAscii
-};
-
-
-},{"../utils/config":7,"../web3":10}],27:[function(require,module,exports){
+},{"./formatters":17,"./method":21}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3610,7 +3626,7 @@ module.exports = {
 };
 
 
-},{"./method":20}],28:[function(require,module,exports){
+},{"./method":21}],28:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -6312,7 +6328,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":18,"./lib/web3/qtsync":23}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/qtsync":24}]},{},["web3"])
 
 
 //# sourceMappingURL=web3.js.map

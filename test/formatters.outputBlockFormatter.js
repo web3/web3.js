@@ -1,4 +1,5 @@
-var assert = require('assert');
+var chai = require('chai');
+var assert = chai.assert; 
 var formatters = require('../lib/web3/formatters.js');
 var BigNumber = require('bignumber.js');
 
