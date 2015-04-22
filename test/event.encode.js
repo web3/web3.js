@@ -118,6 +118,31 @@ var tests = [{
             null
         ]
     }
+}, {
+    abi: {
+        name: 'event1',
+        inputs: [{
+            type: 'int',
+            name: 'a',
+            indexed: true
+        }]
+    },
+    indexed: {
+        a: 1
+    },
+    options: {
+        fromBlock: 4,
+        toBlock: 10
+    },
+    expected: {
+        address: address,
+        fromBlock: '0x4',
+        toBlock: '0xa',
+        topics: [
+            signature,
+            '0x0000000000000000000000000000000000000000000000000000000000000001'
+        ]
+    }
 }];
 
 describe('lib/web3/event', function () {

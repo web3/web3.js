@@ -1334,7 +1334,6 @@ var isJson = function (str) {
 
 module.exports = {
     padLeft: padLeft,
-    findIndex: findIndex,
     toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
@@ -2079,10 +2078,17 @@ SolidityEvent.prototype.signature = function () {
 SolidityEvent.prototype.encode = function (indexed, options) {
     indexed = indexed || {};
     options = options || {};
+    var result = {};
 
-    options.address = this._address;
-    options.topics = options.topics || [];
-    options.topics.push('0x' + this.signature());
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = utils.toHex(options[f]);
+    });
+
+    result.address = this._address;
+    result.topics = [];
+    result.topics.push('0x' + this.signature());
 
     var indexedTopics = this._params.filter(function (i) {
         return i.indexed === true;
@@ -2100,9 +2106,9 @@ SolidityEvent.prototype.encode = function (indexed, options) {
         return '0x' + coder.encodeParam(i.type, value);
     });
 
-    options.topics = options.topics.concat(indexedTopics);
+    result.topics = result.topics.concat(indexedTopics);
 
-    return options;
+    return result;
 };
 
 /**
