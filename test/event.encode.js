@@ -75,7 +75,56 @@ var tests = [{
             null // d
         ]
     }
-
+}, {
+    abi: {
+        name: 'event1',
+        inputs: [{
+            type: 'int',
+            name: 'a',
+            indexed: true
+        }, {
+            type: 'int',
+            name: 'b',
+            indexed: true
+        }]
+    },
+    address: '0x1234567890123456789012345678901234567890',
+    signature: 'ffff',
+    indexed: {
+        a: [16, 1],
+        b: 2
+    },
+    options: {},
+    expected: {
+        address: '0x1234567890123456789012345678901234567890',
+        topics: [
+            '0xffff',
+            ['0x0000000000000000000000000000000000000000000000000000000000000010', '0x0000000000000000000000000000000000000000000000000000000000000001'],
+            '0x0000000000000000000000000000000000000000000000000000000000000002'
+        ]
+    }
+}, {
+    abi: {
+        name: 'event1',
+        inputs: [{
+            type: 'int',
+            name: 'a',
+            indexed: true
+        }]
+    },
+    address: '0x1234567890123456789012345678901234567890',
+    signature: 'ffff',
+    indexed: {
+        a: null
+    },
+    options: {},
+    expected: {
+        address: '0x1234567890123456789012345678901234567890',
+        topics: [
+            '0xffff',
+            null
+        ]
+    }
 }];
 
 describe('lib/web3/event', function () {

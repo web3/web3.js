@@ -1110,9 +1110,6 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity:7 */
 
-    if(val === null || typeof val === 'undefined')
-        return val;
-
     if (isBoolean(val))
         return fromDecimal(+val);
 
@@ -2117,15 +2114,16 @@ SolidityEvent.prototype.encode = function (indexed, options) {
         return i.indexed === true;
     }).map(function (i) {
         var value = indexed[i.name];
-        if (value !== undefined) {
-            if (utils.isArray(value)) {
-                return value.map(function (v) {
-                    return '0x' + coder.encodeParam(i.type, v);
-                });
-            }
-            return '0x' + coder.encodeParam(i.type, value);
-        } 
-        return null;
+        if (value === undefined || value === null) {
+            return null;
+        }
+        
+        if (utils.isArray(value)) {
+            return value.map(function (v) {
+                return '0x' + coder.encodeParam(i.type, v);
+            });
+        }
+        return '0x' + coder.encodeParam(i.type, value);
     });
 
     options.topics = options.topics.concat(indexedTopics);
@@ -2245,9 +2243,9 @@ var getOptions = function (options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic) {
-        if (topic === null) {
+        if (topic === null || topic === undefined) {
             return null;
-        } else if (utils.isArray) {
+        } else if (utils.isArray(topic)) {
             topic = topic.map(utils.toHex);
         }
         return utils.toHex(topic);
