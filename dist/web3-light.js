@@ -755,16 +755,6 @@ SolidityParam.prototype.shiftArray = function (length) {
     return new SolidityParam('', prefix, suffix);
 };
 
-/**
- * This method should be used to check if param is empty
- *
- * @method empty
- * @return {Bool} true if is empty, otherwise false
- */
-SolidityParam.prototype.empty = function () {
-    return !this.value.length && !this.prefix.length && !this.suffix.length;
-};
-
 module.exports = SolidityParam;
 
 
