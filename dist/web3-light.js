@@ -23,48 +23,8 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  */
 
 var utils = require('../utils/utils');
-var c = require('../utils/config');
-var types = require('./types');
-var f = require('./formatters');
+var coder = require('./coder');
 var solUtils = require('./utils');
-
-/**
- * throw incorrect type error
- *
- * @method throwTypeError
- * @param {String} type
- * @throws incorrect type error
- */
-var throwTypeError = function (type) {
-    throw new Error('parser does not support type: ' + type);
-};
-
-/** This method should be called if we want to check if givent type is an array type
- *
- * @method isArrayType
- * @param {String} type name
- * @returns {Boolean} true if it is, otherwise false
- */
-var isArrayType = function (type) {
-    return type.slice(-2) === '[]';
-};
-
-/**
- * This method should be called to return dynamic type length in hex
- *
- * @method dynamicTypeBytes
- * @param {String} type
- * @param {String|Array} dynamic type
- * @return {String} length of dynamic type in hex or empty string if type is not dynamic
- */
-var dynamicTypeBytes = function (type, value) {
-    // TODO: decide what to do with array of strings
-    if (isArrayType(type) || type === 'bytes')
-        return f.formatInputInt(value.length);
-    return "";
-};
-
-var inputTypes = types.inputTypes();
 
 /**
  * Formats input params to bytes
@@ -75,56 +35,11 @@ var inputTypes = types.inputTypes();
  * @returns bytes representation of input params
  */
 var formatInput = function (inputs, params) {
-    var bytes = "";
-    var toAppendConstant = "";
-    var toAppendArrayContent = "";
-
-    /// first we iterate in search for dynamic
-    inputs.forEach(function (input, index) {
-        bytes += dynamicTypeBytes(input.type, params[index]);
+    var i = inputs.map(function (input) {
+        return input.type;
     });
-
-    inputs.forEach(function (input, i) {
-        /*jshint maxcomplexity:5 */
-        var typeMatch = false;
-        for (var j = 0; j < inputTypes.length && !typeMatch; j++) {
-            typeMatch = inputTypes[j].type(inputs[i].type, params[i]);
-        }
-        if (!typeMatch) {
-            throwTypeError(inputs[i].type);
-        }
-
-        var formatter = inputTypes[j - 1].format;
-
-        if (isArrayType(inputs[i].type))
-            toAppendArrayContent += params[i].reduce(function (acc, curr) {
-                return acc + formatter(curr);
-            }, "");
-        else if (inputs[i].type === 'bytes')
-            toAppendArrayContent += formatter(params[i]);
-        else
-            toAppendConstant += formatter(params[i]);
-    });
-
-    bytes += toAppendConstant + toAppendArrayContent;
-
-    return bytes;
+    return coder.encodeParams(i, params);
 };
-
-/**
- * This method should be called to predict the length of dynamic type
- *
- * @method dynamicBytesLength
- * @param {String} type
- * @returns {Number} length of dynamic type, 0 or multiplication of ETH_PADDING (32)
- */
-var dynamicBytesLength = function (type) {
-    if (isArrayType(type) || type === 'bytes')
-        return c.ETH_PADDING * 2;
-    return 0;
-};
-
-var outputTypes = types.outputTypes();
 
 /** 
  * Formats output bytes back to param list
@@ -134,52 +49,12 @@ var outputTypes = types.outputTypes();
  * @param {String} bytes represention of output
  * @returns {Array} output params
  */
-var formatOutput = function (outs, output) {
-
-    output = output.slice(2);
-    var result = [];
-    var padding = c.ETH_PADDING * 2;
-
-    var dynamicPartLength = outs.reduce(function (acc, curr) {
-        return acc + dynamicBytesLength(curr.type);
-    }, 0);
-
-    var dynamicPart = output.slice(0, dynamicPartLength);
-    output = output.slice(dynamicPartLength);
-
-    outs.forEach(function (out, i) {
-        /*jshint maxcomplexity:6 */
-        var typeMatch = false;
-        for (var j = 0; j < outputTypes.length && !typeMatch; j++) {
-            typeMatch = outputTypes[j].type(outs[i].type);
-        }
-
-        if (!typeMatch) {
-            throwTypeError(outs[i].type);
-        }
-
-        var formatter = outputTypes[j - 1].format;
-        if (isArrayType(outs[i].type)) {
-            var size = f.formatOutputUInt(dynamicPart.slice(0, padding));
-            dynamicPart = dynamicPart.slice(padding);
-            var array = [];
-            for (var k = 0; k < size; k++) {
-                array.push(formatter(output.slice(0, padding)));
-                output = output.slice(padding);
-            }
-            result.push(array);
-        }
-        else if (types.prefixedType('bytes')(outs[i].type)) {
-            dynamicPart = dynamicPart.slice(padding);
-            result.push(formatter(output.slice(0, padding)));
-            output = output.slice(padding);
-        } else {
-            result.push(formatter(output.slice(0, padding)));
-            output = output.slice(padding);
-        }
+var formatOutput = function (outs, bytes) {
+    var o = outs.map(function (out) {
+        return out.type;
     });
-
-    return result;
+    
+    return coder.decodeParams(o, bytes); 
 };
 
 /**
@@ -258,7 +133,7 @@ module.exports = {
     formatConstructorParams: formatConstructorParams
 };
 
-},{"../utils/config":6,"../utils/utils":7,"./formatters":2,"./types":3,"./utils":4}],2:[function(require,module,exports){
+},{"../utils/utils":8,"./coder":2,"./utils":5}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -275,15 +150,341 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file formatters.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file coder.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var BigNumber = require('bignumber.js');
+var utils = require('../utils/utils');
+var f = require('./formatters');
+var SolidityParam = require('./param');
+
+/**
+ * Should be used to check if a type is an array type
+ *
+ * @method isArrayType
+ * @param {String} type
+ * @return {Bool} true is the type is an array, otherwise false
+ */
+var isArrayType = function (type) {
+    return type.slice(-2) === '[]';
+};
+
+/**
+ * SolidityType prototype is used to encode/decode solidity params of certain type
+ */
+var SolidityType = function (config) {
+    this._name = config.name;
+    this._match = config.match;
+    this._mode = config.mode;
+    this._inputFormatter = config.inputFormatter;
+    this._outputFormatter = config.outputFormatter;
+};
+
+/**
+ * Should be used to determine if this SolidityType do match given type
+ *
+ * @method isType
+ * @param {String} name
+ * @return {Bool} true if type match this SolidityType, otherwise false
+ */
+SolidityType.prototype.isType = function (name) {
+    if (this._match === 'strict') {
+        return this._name === name || (name.indexOf(this._name) === 0 && name.slice(this._name.length) === '[]');
+    } else if (this._match === 'prefix') {
+        // TODO better type detection!
+        return name.indexOf(this._name) === 0;
+    }
+};
+
+/**
+ * Should be used to transform plain param to SolidityParam object
+ *
+ * @method formatInput
+ * @param {Object} param - plain object, or an array of objects
+ * @param {Bool} arrayType - true if a param should be encoded as an array
+ * @return {SolidityParam} encoded param wrapped in SolidityParam object 
+ */
+SolidityType.prototype.formatInput = function (param, arrayType) {
+    if (utils.isArray(param) && arrayType) { // TODO: should fail if this two are not the same
+        var self = this;
+        return param.map(function (p) {
+            return self._inputFormatter(p);
+        }).reduce(function (acc, current) {
+            acc.appendArrayElement(current);
+            return acc;
+        }, new SolidityParam('', f.formatInputInt(param.length).value));
+    } 
+    return this._inputFormatter(param);
+};
+
+/**
+ * Should be used to transoform SolidityParam to plain param
+ *
+ * @method formatOutput
+ * @param {SolidityParam} byteArray
+ * @param {Bool} arrayType - true if a param should be decoded as an array
+ * @return {Object} plain decoded param
+ */
+SolidityType.prototype.formatOutput = function (param, arrayType) {
+    if (arrayType) {
+        // let's assume, that we solidity will never return long arrays :P 
+        var result = [];
+        var length = new BigNumber(param.prefix, 16);
+        for (var i = 0; i < length * 64; i += 64) {
+            result.push(this._outputFormatter(new SolidityParam(param.suffix.slice(i, i + 64))));
+        }
+        return result;
+    }
+    return this._outputFormatter(param);
+};
+
+/**
+ * Should be used to check if a type is variadic
+ *
+ * @method isVariadicType
+ * @param {String} type
+ * @returns {Bool} true if the type is variadic
+ */
+SolidityType.prototype.isVariadicType = function (type) {
+    return isArrayType(type) || this._mode === 'bytes';
+};
+
+/**
+ * Should be used to shift param from params group
+ *
+ * @method shiftParam
+ * @param {String} type
+ * @returns {SolidityParam} shifted param
+ */
+SolidityType.prototype.shiftParam = function (type, param) {
+    if (this._mode === 'bytes') {
+        return param.shiftBytes();
+    } else if (isArrayType(type)) {
+        var length = new BigNumber(param.prefix.slice(0, 64), 16);
+        return param.shiftArray(length);
+    }
+    return param.shiftValue();
+};
+
+/**
+ * SolidityCoder prototype should be used to encode/decode solidity params of any type
+ */
+var SolidityCoder = function (types) {
+    this._types = types;
+};
+
+/**
+ * This method should be used to transform type to SolidityType
+ *
+ * @method _requireType
+ * @param {String} type
+ * @returns {SolidityType} 
+ * @throws {Error} throws if no matching type is found
+ */
+SolidityCoder.prototype._requireType = function (type) {
+    var solidityType = this._types.filter(function (t) {
+        return t.isType(type);
+    })[0];
+
+    if (!solidityType) {
+        throw Error('invalid solidity type!: ' + type);
+    }
+
+    return solidityType;
+};
+
+/**
+ * Should be used to transform plain bytes to SolidityParam object
+ *
+ * @method _bytesToParam
+ * @param {Array} types of params
+ * @param {String} bytes to be transformed to SolidityParam
+ * @return {SolidityParam} SolidityParam for this group of params
+ */
+SolidityCoder.prototype._bytesToParam = function (types, bytes) {
+    var self = this;
+    var prefixTypes = types.reduce(function (acc, type) {
+        return self._requireType(type).isVariadicType(type) ? acc + 1 : acc;
+    }, 0);
+    var valueTypes = types.length - prefixTypes;
+
+    var prefix = bytes.slice(0, prefixTypes * 64);
+    bytes = bytes.slice(prefixTypes * 64);
+    var value = bytes.slice(0, valueTypes * 64);
+    var suffix = bytes.slice(valueTypes * 64);
+    return new SolidityParam(value, prefix, suffix); 
+};
+
+/**
+ * Should be used to transform plain param of given type to SolidityParam
+ *
+ * @method _formatInput
+ * @param {String} type of param
+ * @param {Object} plain param
+ * @return {SolidityParam}
+ */
+SolidityCoder.prototype._formatInput = function (type, param) {
+    return this._requireType(type).formatInput(param, isArrayType(type));
+};
+
+/**
+ * Should be used to encode plain param
+ *
+ * @method encodeParam
+ * @param {String} type
+ * @param {Object} plain param
+ * @return {String} encoded plain param
+ */
+SolidityCoder.prototype.encodeParam = function (type, param) {
+    return this._formatInput(type, param).encode();
+};
+
+/**
+ * Should be used to encode list of params
+ *
+ * @method encodeParams
+ * @param {Array} types
+ * @param {Array} params
+ * @return {String} encoded list of params
+ */
+SolidityCoder.prototype.encodeParams = function (types, params) {
+    var self = this;
+    return types.map(function (type, index) {
+        return self._formatInput(type, params[index]);
+    }).reduce(function (acc, solidityParam) {
+        acc.append(solidityParam);
+        return acc;
+    }, new SolidityParam()).encode();
+};
+
+/**
+ * Should be used to transform SolidityParam to plain param
+ *
+ * @method _formatOutput
+ * @param {String} type
+ * @param {SolidityParam} param
+ * @return {Object} plain param
+ */
+SolidityCoder.prototype._formatOutput = function (type, param) {
+    return this._requireType(type).formatOutput(param, isArrayType(type));
+};
+
+/**
+ * Should be used to decode bytes to plain param
+ *
+ * @method decodeParam
+ * @param {String} type
+ * @param {String} bytes
+ * @return {Object} plain param
+ */
+SolidityCoder.prototype.decodeParam = function (type, bytes) {
+    return this._formatOutput(type, this._bytesToParam([type], bytes));
+};
+
+/**
+ * Should be used to decode list of params
+ *
+ * @method decodeParam
+ * @param {Array} types
+ * @param {String} bytes
+ * @return {Array} array of plain params
+ */
+SolidityCoder.prototype.decodeParams = function (types, bytes) {
+    var self = this;
+    var param = this._bytesToParam(types, bytes);
+    return types.map(function (type) {
+        var solidityType = self._requireType(type);
+        var p = solidityType.shiftParam(type, param);
+        return solidityType.formatOutput(p, isArrayType(type));
+    });
+};
+
+var coder = new SolidityCoder([
+    new SolidityType({
+        name: 'address',
+        match: 'strict',
+        mode: 'value',
+        inputFormatter: f.formatInputInt,
+        outputFormatter: f.formatOutputAddress
+    }),
+    new SolidityType({
+        name: 'bool',
+        match: 'strict',
+        mode: 'value',
+        inputFormatter: f.formatInputBool,
+        outputFormatter: f.formatOutputBool
+    }),
+    new SolidityType({
+        name: 'int',
+        match: 'prefix',
+        mode: 'value',
+        inputFormatter: f.formatInputInt,
+        outputFormatter: f.formatOutputInt,
+    }),
+    new SolidityType({
+        name: 'uint',
+        match: 'prefix',
+        mode: 'value',
+        inputFormatter: f.formatInputInt,
+        outputFormatter: f.formatOutputUInt
+    }),
+    new SolidityType({
+        name: 'bytes',
+        match: 'prefix',
+        mode: 'bytes',
+        inputFormatter: f.formatInputString,
+        outputFormatter: f.formatOutputString
+    }),
+    new SolidityType({
+        name: 'real',
+        match: 'prefix',
+        mode: 'value',
+        inputFormatter: f.formatInputReal,
+        outputFormatter: f.formatOutputReal
+    }),
+    new SolidityType({
+        name: 'ureal',
+        match: 'prefix',
+        mode: 'value',
+        inputFormatter: f.formatInputReal,
+        outputFormatter: f.formatOutputUReal
+    })
+]);
+
+module.exports = coder;
+
+
+},{"../utils/utils":8,"./formatters":3,"./param":4,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file formatters.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
 var BigNumber = require('bignumber.js');
 var utils = require('../utils/utils');
 var c = require('../utils/config');
+var SolidityParam = require('./param');
+
 
 /**
  * Formats input value to byte representation of int
@@ -292,12 +493,13 @@ var c = require('../utils/config');
  *
  * @method formatInputInt
  * @param {String|Number|BigNumber} value that needs to be formatted
- * @returns {String} right-aligned byte representation of int
+ * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
     var padding = c.ETH_PADDING * 2;
     BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
-    return utils.padLeft(utils.toTwosComplement(value).round().toString(16), padding);
+    var result = utils.padLeft(utils.toTwosComplement(value).round().toString(16), padding);
+    return new SolidityParam(result);
 };
 
 /**
@@ -305,10 +507,11 @@ var formatInputInt = function (value) {
  *
  * @method formatInputString
  * @param {String}
- * @returns {String} left-algined byte representation of string
+ * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
-    return utils.fromAscii(value, c.ETH_PADDING).substr(2);
+    var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
+    return new SolidityParam('', formatInputInt(value.length).value, result);
 };
 
 /**
@@ -316,10 +519,11 @@ var formatInputString = function (value) {
  *
  * @method formatInputBool
  * @param {Boolean}
- * @returns {String} right-aligned byte representation bool
+ * @returns {SolidityParam}
  */
 var formatInputBool = function (value) {
-    return '000000000000000000000000000000000000000000000000000000000000000' + (value ?  '1' : '0');
+    var result = '000000000000000000000000000000000000000000000000000000000000000' + (value ?  '1' : '0');
+    return new SolidityParam(result);
 };
 
 /**
@@ -328,10 +532,10 @@ var formatInputBool = function (value) {
  *
  * @method formatInputReal
  * @param {String|Number|BigNumber}
- * @returns {String} byte representation of real
+ * @returns {SolidityParam}
  */
 var formatInputReal = function (value) {
-    return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128))); 
+    return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128)));
 };
 
 /**
@@ -349,12 +553,11 @@ var signedIsNegative = function (value) {
  * Formats right-aligned output bytes to int
  *
  * @method formatOutputInt
- * @param {String} bytes
+ * @param {SolidityParam} param
  * @returns {BigNumber} right-aligned output bytes formatted to big number
  */
-var formatOutputInt = function (value) {
-
-    value = value || "0";
+var formatOutputInt = function (param) {
+    var value = param.value || "0";
 
     // check if it's negative number
     // it it is, return two's complement
@@ -368,11 +571,11 @@ var formatOutputInt = function (value) {
  * Formats right-aligned output bytes to uint
  *
  * @method formatOutputUInt
- * @param {String} bytes
+ * @param {SolidityParam}
  * @returns {BigNumeber} right-aligned output bytes formatted to uint
  */
-var formatOutputUInt = function (value) {
-    value = value || "0";
+var formatOutputUInt = function (param) {
+    var value = param.value || "0";
     return new BigNumber(value, 16);
 };
 
@@ -380,65 +583,67 @@ var formatOutputUInt = function (value) {
  * Formats right-aligned output bytes to real
  *
  * @method formatOutputReal
- * @param {String}
+ * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to real
  */
-var formatOutputReal = function (value) {
-    return formatOutputInt(value).dividedBy(new BigNumber(2).pow(128)); 
+var formatOutputReal = function (param) {
+    return formatOutputInt(param).dividedBy(new BigNumber(2).pow(128)); 
 };
 
 /**
  * Formats right-aligned output bytes to ureal
  *
  * @method formatOutputUReal
- * @param {String}
+ * @param {SolidityParam}
  * @returns {BigNumber} input bytes formatted to ureal
  */
-var formatOutputUReal = function (value) {
-    return formatOutputUInt(value).dividedBy(new BigNumber(2).pow(128)); 
+var formatOutputUReal = function (param) {
+    return formatOutputUInt(param).dividedBy(new BigNumber(2).pow(128)); 
 };
 
 /**
  * Should be used to format output hash
  *
  * @method formatOutputHash
- * @param {String}
+ * @param {SolidityParam}
  * @returns {String} right-aligned output bytes formatted to hex
  */
-var formatOutputHash = function (value) {
-    return "0x" + value;
+var formatOutputHash = function (param) {
+    return "0x" + param.value;
 };
 
 /**
  * Should be used to format output bool
  *
  * @method formatOutputBool
- * @param {String}
+ * @param {SolidityParam}
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
-var formatOutputBool = function (value) {
-    return value === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
+var formatOutputBool = function (param) {
+    return param.value === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
 };
 
 /**
  * Should be used to format output string
  *
  * @method formatOutputString
- * @param {Sttring} left-aligned hex representation of string
+ * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
-var formatOutputString = function (value) {
-    return utils.toAscii(value);
+var formatOutputString = function (param) {
+    // length might also be important!
+    return utils.toAscii(param.suffix);
 };
 
 /**
  * Should be used to format output address
  *
  * @method formatOutputAddress
- * @param {String} right-aligned input bytes
+ * @param {SolidityParam} right-aligned input bytes
  * @returns {String} address
  */
-var formatOutputAddress = function (value) {
+var formatOutputAddress = function (param) {
+    var value = param.value;
     return "0x" + value.slice(value.length - 40, value.length);
 };
 
@@ -458,7 +663,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":6,"../utils/utils":7,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./param":4,"bignumber.js":"bignumber.js"}],4:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -475,69 +680,107 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file types.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
+/** 
+ * @file param.js
+ * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
-var f = require('./formatters');
-
-/// @param expected type prefix (string)
-/// @returns function which checks if type has matching prefix. if yes, returns true, otherwise false
-var prefixedType = function (prefix) {
-    return function (type) {
-        return type.indexOf(prefix) === 0;
-    };
+/**
+ * SolidityParam object prototype.
+ * Should be used when encoding, decoding solidity bytes
+ */
+var SolidityParam = function (value, prefix, suffix) {
+    this.prefix = prefix || '';
+    this.value = value || '';
+    this.suffix = suffix || '';
 };
 
-/// @param expected type name (string)
-/// @returns function which checks if type is matching expected one. if yes, returns true, otherwise false
-var namedType = function (name) {
-    return function (type) {
-        return name === type;
-    };
+/**
+ * This method should be used to encode two params one after another
+ *
+ * @method append
+ * @param {SolidityParam} param that it appended after this
+ */
+SolidityParam.prototype.append = function (param) {
+    this.prefix += param.prefix;
+    this.value += param.value;
+    this.suffix += param.suffix;
 };
 
-/// Setups input formatters for solidity types
-/// @returns an array of input formatters 
-var inputTypes = function () {
-    
-    return [
-        { type: prefixedType('uint'), format: f.formatInputInt },
-        { type: prefixedType('int'), format: f.formatInputInt },
-        { type: prefixedType('bytes'), format: f.formatInputString }, 
-        { type: prefixedType('real'), format: f.formatInputReal },
-        { type: prefixedType('ureal'), format: f.formatInputReal },
-        { type: namedType('address'), format: f.formatInputInt },
-        { type: namedType('bool'), format: f.formatInputBool }
-    ];
+/**
+ * This method should be used to encode next param in an array
+ *
+ * @method appendArrayElement
+ * @param {SolidityParam} param that is appended to an array
+ */
+SolidityParam.prototype.appendArrayElement = function (param) {
+    this.suffix += param.value;
+    this.prefix += param.prefix;
+    // TODO: suffix not supported = it's required for nested arrays;
 };
 
-/// Setups output formaters for solidity types
-/// @returns an array of output formatters
-var outputTypes = function () {
-
-    return [
-        { type: prefixedType('uint'), format: f.formatOutputUInt },
-        { type: prefixedType('int'), format: f.formatOutputInt },
-        { type: prefixedType('bytes'), format: f.formatOutputString },
-        { type: prefixedType('real'), format: f.formatOutputReal },
-        { type: prefixedType('ureal'), format: f.formatOutputUReal },
-        { type: namedType('address'), format: f.formatOutputAddress },
-        { type: namedType('bool'), format: f.formatOutputBool }
-    ];
+/**
+ * This method should be used to create bytearrays from param
+ *
+ * @method encode
+ * @return {String} encoded param(s)
+ */
+SolidityParam.prototype.encode = function () {
+    return this.prefix + this.value + this.suffix;
 };
 
-module.exports = {
-    prefixedType: prefixedType,
-    namedType: namedType,
-    inputTypes: inputTypes,
-    outputTypes: outputTypes
+/**
+ * This method should be used to shift first param from group of params
+ *
+ * @method shiftValue
+ * @return {SolidityParam} first value param
+ */
+SolidityParam.prototype.shiftValue = function () {
+    var value = this.value.slice(0, 64);
+    this.value = this.value.slice(64);
+    return new SolidityParam(value);
 };
 
+/**
+ * This method should be used to first bytes param from group of params
+ *
+ * @method shiftBytes
+ * @return {SolidityParam} first bytes param
+ */
+SolidityParam.prototype.shiftBytes = function () {
+    return this.shiftArray(1);   
+};
 
-},{"./formatters":2}],4:[function(require,module,exports){
+/**
+ * This method should be used to shift an array from group of params 
+ * 
+ * @method shiftArray
+ * @param {Number} size of an array to shift
+ * @return {SolidityParam} first array param
+ */
+SolidityParam.prototype.shiftArray = function (length) {
+    var prefix = this.prefix.slice(0, 64);
+    this.prefix = this.value.slice(64);
+    var suffix = this.suffix.slice(0, 64 * length);
+    this.suffix = this.suffix.slice(64 * length);
+    return new SolidityParam('', prefix, suffix);
+};
+
+/**
+ * This method should be used to check if param is empty
+ *
+ * @method empty
+ * @return {Bool} true if is empty, otherwise false
+ */
+SolidityParam.prototype.empty = function () {
+    return !this.value.length && !this.prefix.length && !this.suffix.length;
+};
+
+module.exports = SolidityParam;
+
+
+},{}],5:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -607,7 +850,7 @@ module.exports = {
 };
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -618,7 +861,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -690,7 +933,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1166,12 +1409,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
 module.exports={
     "version": "0.2.8"
 }
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1338,7 +1581,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":6,"./utils/utils":7,"./version.json":8,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":19,"./web3/net":20,"./web3/property":21,"./web3/requestmanager":23,"./web3/shh":24,"./web3/watches":26}],10:[function(require,module,exports){
+},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":20,"./web3/net":21,"./web3/property":22,"./web3/requestmanager":24,"./web3/shh":25,"./web3/watches":27}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1404,7 +1647,6 @@ var addFunctionsToContract = function (contract, desc, address) {
             options.data = sign + parsed;
             
             var isTransaction = contract._isTransaction === true || (contract._isTransaction !== false && !method.constant);
-            var collapse = options.collapse !== false;
             
             // reset
             contract._options = {};
@@ -1419,14 +1661,7 @@ var addFunctionsToContract = function (contract, desc, address) {
             
             var output = web3.eth.call(options);
             var ret = outputParser[displayName][typeName](output);
-            if (collapse)
-            {
-                if (ret.length === 1)
-                    ret = ret[0];
-                else if (ret.length === 0)
-                    ret = null;
-            }
-            return ret;
+            return ret.length === 1 ? ret[0] : ret;
         };
 
         if (contract[displayName] === undefined) {
@@ -1553,7 +1788,7 @@ function Contract(abi, options) {
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../solidity/utils":4,"../utils/utils":7,"../web3":9,"./event":14,"./signature":25}],11:[function(require,module,exports){
+},{"../solidity/abi":1,"../solidity/utils":5,"../utils/utils":8,"../web3":10,"./event":15,"./signature":26}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1611,7 +1846,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":19}],12:[function(require,module,exports){
+},{"./method":20}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1651,7 +1886,7 @@ module.exports = {
 };
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1846,12 +2081,6 @@ var compileSerpent = new Method({
     params: 1
 });
 
-var flush = new Method({
-    name: 'flush',
-    call: 'eth_flush',
-    params: 0
-});
-
 var methods = [
     getBalance,
     getStorageAt,
@@ -1869,7 +2098,6 @@ var methods = [
     compileSolidity,
     compileLLL,
     compileSerpent,
-    flush
 ];
 
 /// @returns an array of objects describing web3.eth api properties
@@ -1907,7 +2135,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./formatters":16,"./method":19,"./property":21}],14:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./method":20,"./property":22}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2017,11 +2245,11 @@ var outputParser = function (event) {
         output.data = output.data || '';
        
         var indexedOutputs = filterInputs(event.inputs, true);
-        var indexedData = "0x" + output.topics.slice(1, output.topics.length).map(function (topics) { return topics.slice(2); }).join("");
+        var indexedData = output.topics.slice(1).map(function (topics) { return topics.slice(2); }).join("");
         var indexedRes = abi.formatOutput(indexedOutputs, indexedData);
 
         var notIndexedOutputs = filterInputs(event.inputs, false);
-        var notIndexedRes = abi.formatOutput(notIndexedOutputs, output.data);
+        var notIndexedRes = abi.formatOutput(notIndexedOutputs, output.data.slice(2));
 
         result.args = getArgumentsObject(event.inputs, indexedRes, notIndexedRes);
 
@@ -2047,7 +2275,7 @@ module.exports = {
 };
 
 
-},{"../solidity/abi":1,"../utils/utils":7,"./signature":25}],15:[function(require,module,exports){
+},{"../solidity/abi":1,"../utils/utils":8,"./signature":26}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2078,6 +2306,25 @@ var RequestManager = require('./requestmanager');
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
+/**
+* Converts a given topic to a hex string, but also allows null values.
+*
+* @param {Mixed} value
+* @return {String}
+*/
+var toTopic = function(value){
+
+    if(value === null || typeof value === 'undefined')
+        return null;
+
+    value = String(value);
+
+    if(value.indexOf('0x') === 0)
+        return value;
+    else
+        return utils.fromAscii(value);
+};
+
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
 /// @param should be string or object
 /// @returns options string or object
@@ -2092,7 +2339,7 @@ var getOptions = function (options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic){
-        return utils.toHex(topic);
+        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     // lazy load
@@ -2185,7 +2432,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":16,"./requestmanager":23}],16:[function(require,module,exports){
+},{"../utils/utils":8,"./formatters":17,"./requestmanager":24}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2279,6 +2526,7 @@ var inputTransactionFormatter = function (options){
 var outputTransactionFormatter = function (tx){
     tx.blockNumber = utils.toDecimal(tx.blockNumber);
     tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+    tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
     tx.value = utils.toBigNumber(tx.value);
@@ -2301,7 +2549,6 @@ var outputBlockFormatter = function(block) {
     block.timestamp = utils.toDecimal(block.timestamp);
     block.number = utils.toDecimal(block.number);
 
-    block.minGasPrice = utils.toBigNumber(block.minGasPrice);
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
 
@@ -2405,7 +2652,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":6,"../utils/utils":7}],17:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2436,7 +2683,7 @@ var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:
 var errors = require('./errors');
 
 var HttpProvider = function (host) {
-    this.host = host || 'http://localhost:8080';
+    this.host = host || 'http://localhost:8545';
 };
 
 HttpProvider.prototype.send = function (payload) {
@@ -2480,7 +2727,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":12,"xmlhttprequest":5}],18:[function(require,module,exports){
+},{"./errors":13,"xmlhttprequest":6}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2573,7 +2820,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2734,7 +2981,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":12,"./requestmanager":23}],20:[function(require,module,exports){
+},{"../utils/utils":8,"./errors":13,"./requestmanager":24}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2784,7 +3031,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./property":21}],21:[function(require,module,exports){
+},{"../utils/utils":8,"./property":22}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2890,7 +3137,7 @@ Property.prototype.set = function (value) {
 module.exports = Property;
 
 
-},{"./requestmanager":23}],22:[function(require,module,exports){
+},{"./requestmanager":24}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2925,7 +3172,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3146,7 +3393,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":6,"../utils/utils":7,"./errors":12,"./jsonrpc":18}],24:[function(require,module,exports){
+},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":19}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3216,7 +3463,7 @@ module.exports = {
 };
 
 
-},{"./formatters":16,"./method":19}],25:[function(require,module,exports){
+},{"./formatters":17,"./method":20}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3260,7 +3507,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":6,"../web3":9}],26:[function(require,module,exports){
+},{"../utils/config":7,"../web3":10}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3363,7 +3610,7 @@ module.exports = {
 };
 
 
-},{"./method":19}],27:[function(require,module,exports){
+},{"./method":20}],28:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
@@ -3386,7 +3633,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/solidity/abi":1,"./lib/web3":9,"./lib/web3/contract":10,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["web3"])
+},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":18,"./lib/web3/qtsync":23}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
