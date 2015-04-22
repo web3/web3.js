@@ -9,7 +9,7 @@ var tests = [
 ];
 
 describe('lib/solidity/coder', function () {
-    describe('encodeParam', function () {
+    describe('decodeParam', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.equal(coder.decodeParam(test.type, test.value), test.expected);
