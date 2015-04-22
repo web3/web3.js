@@ -2135,8 +2135,10 @@ SolidityEvent.prototype.decode = function (data) {
     };
 
     data.data = data.data || '';
+    data.topics = data.topics || [];
 
-    var indexedData = data.topics.slice(1).map(function (topics) { return topics.slice(2); }).join("");
+    var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
+    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
     var indexedParams = coder.decodeParams(this.types(true), indexedData); 
 
     var notIndexedData = data.data.slice(2);
