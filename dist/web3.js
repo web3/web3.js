@@ -2012,6 +2012,7 @@ module.exports = {
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var web3 = require('../web3');
+var formatters = require('./formatters');
 
 /**
  * This prototype should be used to create event filters
@@ -2123,17 +2124,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
  * @return {Object} result object with decoded indexed && not indexed params
  */
 SolidityEvent.prototype.decode = function (data) {
-    var result = {
-        event: this.displayName(),
-        args: {},
-        logIndex: utils.toDecimal(data.logIndex),
-        transactionIndex: utils.toDecimal(data.transactionIndex),
-        transactionHash: data.transactionHash,
-        address: data.address,
-        blockHash: data.blockHash,
-        blockNumber: utils.toDecimal(data.blockNumber)
-    };
-
+ 
     data.data = data.data || '';
     data.topics = data.topics || [];
 
@@ -2143,11 +2134,18 @@ SolidityEvent.prototype.decode = function (data) {
 
     var notIndexedData = data.data.slice(2);
     var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
+    
+    var result = formatters.outputLogFormatter(data);
+    result.event = this.displayName();
+    result.address = data.address;
 
     result.args = this._params.reduce(function (acc, current) {
         acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
     }, {});
+
+    delete result.data;
+    delete result.topics;
 
     return result;
 };
@@ -2184,7 +2182,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":2,"../utils/utils":8,"../web3":10}],16:[function(require,module,exports){
+},{"../solidity/coder":2,"../utils/utils":8,"../web3":10,"./formatters":17}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
