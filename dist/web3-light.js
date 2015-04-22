@@ -953,22 +953,6 @@ var padLeft = function (string, chars, sign) {
     return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
 };
 
-/** Finds first index of array element matching pattern
- *
- * @method findIndex
- * @param {Array}
- * @param {Function} pattern
- * @returns {Number} index of element
- */
-var findIndex = function (array, callback) {
-    var end = false;
-    var i = 0;
-    for (; i < array.length && !end; i++) {
-        end = callback(array[i]);
-    }
-    return end ? i - 1 : -1;
-};
-
 /** 
  * Should be called to get sting from it's hex representation
  *
