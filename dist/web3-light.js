@@ -1842,7 +1842,7 @@ var getBlock = new Method({
     name: 'getBlock', 
     call: blockCall,
     params: 2,
-    inputFormatter: [utils.toHex, function (val) { return !!val; }],
+    inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
     outputFormatter: formatters.outputBlockFormatter
 });
 
