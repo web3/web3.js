@@ -1850,7 +1850,7 @@ var getUncle = new Method({
     name: 'getUncle',
     call: uncleCall,
     params: 2,
-    inputFormatter: [utils.toHex, utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
     outputFormatter: formatters.outputBlockFormatter,
 
 });
@@ -1888,7 +1888,7 @@ var getTransactionFromBlock = new Method({
     name: 'getTransactionFromBlock',
     call: transactionFromBlockCall,
     params: 2,
-    inputFormatter: [utils.toHex, utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
     outputFormatter: formatters.outputTransactionFormatter
 });
 
