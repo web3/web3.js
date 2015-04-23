@@ -1361,7 +1361,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
 module.exports={
-    "version": "0.3.0"
+    "version": "0.3.1"
 }
 
 },{}],10:[function(require,module,exports){
