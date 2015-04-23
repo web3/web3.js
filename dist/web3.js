@@ -1361,7 +1361,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
 module.exports={
-    "version": "0.3.0"
+    "version": "0.3.1"
 }
 
 },{}],10:[function(require,module,exports){
@@ -1842,7 +1842,7 @@ var getBlock = new Method({
     name: 'getBlock', 
     call: blockCall,
     params: 2,
-    inputFormatter: [utils.toHex, function (val) { return !!val; }],
+    inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
     outputFormatter: formatters.outputBlockFormatter
 });
 
@@ -1850,7 +1850,7 @@ var getUncle = new Method({
     name: 'getUncle',
     call: uncleCall,
     params: 2,
-    inputFormatter: [utils.toHex, utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
     outputFormatter: formatters.outputBlockFormatter,
 
 });
@@ -1888,7 +1888,7 @@ var getTransactionFromBlock = new Method({
     name: 'getTransactionFromBlock',
     call: transactionFromBlockCall,
     params: 2,
-    inputFormatter: [utils.toHex, utils.toHex],
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
     outputFormatter: formatters.outputTransactionFormatter
 });
 
