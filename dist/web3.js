@@ -433,8 +433,15 @@ var coder = new SolidityCoder([
     }),
     new SolidityType({
         name: 'bytes',
-        match: 'prefix',
+        match: 'strict',
         mode: 'bytes',
+        inputFormatter: f.formatInputDynamicBytes,
+        outputFormatter: f.formatOutputDynamicBytes
+    }),
+    new SolidityType({
+        name: 'bytes',
+        match: 'prefix',
+        mode: 'value',
         inputFormatter: f.formatInputBytes,
         outputFormatter: f.formatOutputBytes
     }),
@@ -510,6 +517,18 @@ var formatInputInt = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
+    var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
+    return new SolidityParam(result);
+};
+
+/**
+ * Formats input value to byte representation of string
+ *
+ * @method formatInputDynamicBytes
+ * @param {String}
+ * @returns {SolidityParam}
+ */
+var formatInputDynamicBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
     return new SolidityParam('', formatInputInt(value.length).value, result);
 };
@@ -621,6 +640,18 @@ var formatOutputBool = function (param) {
  */
 var formatOutputBytes = function (param) {
     // length might also be important!
+    return utils.toAscii(param.value);
+};
+
+/**
+ * Should be used to format output string
+ *
+ * @method formatOutputDynamicBytes
+ * @param {SolidityParam} left-aligned hex representation of string
+ * @returns {String} ascii string
+ */
+var formatOutputDynamicBytes = function (param) {
+    // length might also be important!
     return utils.toAscii(param.suffix);
 };
 
@@ -639,6 +670,7 @@ var formatOutputAddress = function (param) {
 module.exports = {
     formatInputInt: formatInputInt,
     formatInputBytes: formatInputBytes,
+    formatInputDynamicBytes: formatInputDynamicBytes,
     formatInputBool: formatInputBool,
     formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
@@ -647,6 +679,7 @@ module.exports = {
     formatOutputUReal: formatOutputUReal,
     formatOutputBool: formatOutputBool,
     formatOutputBytes: formatOutputBytes,
+    formatOutputDynamicBytes: formatOutputDynamicBytes,
     formatOutputAddress: formatOutputAddress
 };
 
