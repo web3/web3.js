@@ -2672,7 +2672,9 @@ SolidityFunction.prototype.signature = function () {
 SolidityFunction.prototype.call = function () {
     var payload = this.toPayload.apply(this, Array.prototype.slice.call(arguments));
     var output = web3.eth.call(payload);
-    return coder.decodeParams(this._outputTypes, output);
+    output = output.length > 2 ? output.slice(2) : output;
+    var result = coder.decodeParams(this._outputTypes, output);
+    return result.length === 1 ? result[0] : result;
 };
 
 /**

@@ -4,6 +4,7 @@ var web3 = require('../index');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 var utils = require('../lib/utils/utils');
+var BigNumber = require('bignumber.js');
 
 var desc = [{
     "name": "balance(address)",
@@ -357,7 +358,9 @@ describe('web3.eth.contract', function () {
             var Contract = web3.eth.contract(desc);
             var contract = new Contract(address);
 
-            contract.testArr([3]);
+            var result = contract.testArr([3]);
+
+            assert.deepEqual(new BigNumber(5), result);
         });
     });
 });
