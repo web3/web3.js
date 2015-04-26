@@ -2644,7 +2644,7 @@ var SolidityFunction = function (json, address) {
 SolidityFunction.prototype.toPayload = function () {
     var args = Array.prototype.slice.call(arguments);
     var options = {};
-    if (utils.isObject(args[args.length -1])) {
+    if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
         options = args.pop();
     }
     options.to = this._address;
