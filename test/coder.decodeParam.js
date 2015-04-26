@@ -38,7 +38,7 @@ describe('lib/solidity/coder', function () {
 describe('lib/solidity/coder', function () {
     describe('decodeParams', function () {
         var test = function (t) {
-            it('should turn ' + t.value + ' to ' + t.expected, function () {
+            it('should turn ' + t.values + ' to ' + t.expected, function () {
                 assert.deepEqual(coder.decodeParams(t.types, t.values), t.expected);
             });
         };

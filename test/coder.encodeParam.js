@@ -36,7 +36,7 @@ describe('lib/solidity/coder', function () {
 describe('lib/solidity/coder', function () {
     describe('encodeParams', function () {
         var test = function (t) {
-            it('should turn ' + t.value + ' to ' + t.expected, function () {
+            it('should turn ' + t.values + ' to ' + t.expected, function () {
                 assert.equal(coder.encodeParams(t.types, t.values), t.expected);
             });
         };
