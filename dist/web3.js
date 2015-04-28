@@ -2118,7 +2118,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
     ['fromBlock', 'toBlock'].filter(function (f) {
         return options[f] !== undefined;
     }).forEach(function (f) {
-        result[f] = utils.toHex(options[f]);
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
     });
 
     result.topics = [];
