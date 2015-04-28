@@ -215,7 +215,7 @@ SolidityType.prototype.formatInput = function (param, arrayType) {
         }).reduce(function (acc, current) {
             acc.appendArrayElement(current);
             return acc;
-        }, new SolidityParam('', f.formatInputInt(param.length).value));
+        }, new SolidityParam(f.formatInputInt(param.length).value));
     } 
     return this._inputFormatter(param);
 };
@@ -232,7 +232,7 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
     if (arrayType) {
         // let's assume, that we solidity will never return long arrays :P 
         var result = [];
-        var length = new BigNumber(param.prefix, 16);
+        var length = new BigNumber(param.value, 16);
         for (var i = 0; i < length * 64; i += 64) {
             result.push(this._outputFormatter(new SolidityParam(param.suffix.slice(i, i + 64))));
         }
@@ -263,7 +263,7 @@ SolidityType.prototype.shiftParam = function (type, param) {
     if (this._mode === 'bytes') {
         return param.shiftBytes();
     } else if (isArrayType(type)) {
-        var length = new BigNumber(param.prefix.slice(0, 64), 16);
+        var length = new BigNumber(param.value.slice(0, 64), 16);
         return param.shiftArray(length);
     }
     return param.shiftValue();
@@ -305,17 +305,9 @@ SolidityCoder.prototype._requireType = function (type) {
  * @return {SolidityParam} SolidityParam for this group of params
  */
 SolidityCoder.prototype._bytesToParam = function (types, bytes) {
-    var self = this;
-    var prefixTypes = types.reduce(function (acc, type) {
-        return self._requireType(type).isVariadicType(type) ? acc + 1 : acc;
-    }, 0);
-    var valueTypes = types.length - prefixTypes;
-
-    var prefix = bytes.slice(0, prefixTypes * 64);
-    bytes = bytes.slice(prefixTypes * 64);
-    var value = bytes.slice(0, valueTypes * 64);
-    var suffix = bytes.slice(valueTypes * 64);
-    return new SolidityParam(value, prefix, suffix); 
+    var value = bytes.slice(0, types.length * 64);
+    var suffix = bytes.slice(types.length * 64);
+    return new SolidityParam(value, suffix); 
 };
 
 /**
@@ -530,7 +522,7 @@ var formatInputBytes = function (value) {
  */
 var formatInputDynamicBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
-    return new SolidityParam('', formatInputInt(value.length).value, result);
+    return new SolidityParam(formatInputInt(value.length).value, result);
 };
 
 /**
@@ -711,8 +703,7 @@ module.exports = {
  * SolidityParam object prototype.
  * Should be used when encoding, decoding solidity bytes
  */
-var SolidityParam = function (value, prefix, suffix) {
-    this.prefix = prefix || '';
+var SolidityParam = function (value, suffix) {
     this.value = value || '';
     this.suffix = suffix || '';
 };
@@ -724,7 +715,6 @@ var SolidityParam = function (value, prefix, suffix) {
  * @param {SolidityParam} param that it appended after this
  */
 SolidityParam.prototype.append = function (param) {
-    this.prefix += param.prefix;
     this.value += param.value;
     this.suffix += param.suffix;
 };
@@ -737,8 +727,7 @@ SolidityParam.prototype.append = function (param) {
  */
 SolidityParam.prototype.appendArrayElement = function (param) {
     this.suffix += param.value;
-    this.prefix += param.prefix;
-    // TODO: suffix not supported = it's required for nested arrays;
+    //this.suffix += param.suffix; // we do not support nested dynamic types
 };
 
 /**
@@ -748,7 +737,7 @@ SolidityParam.prototype.appendArrayElement = function (param) {
  * @return {String} encoded param(s)
  */
 SolidityParam.prototype.encode = function () {
-    return this.prefix + this.value + this.suffix;
+    return this.value + this.suffix;
 };
 
 /**
@@ -781,11 +770,11 @@ SolidityParam.prototype.shiftBytes = function () {
  * @return {SolidityParam} first array param
  */
 SolidityParam.prototype.shiftArray = function (length) {
-    var prefix = this.prefix.slice(0, 64);
-    this.prefix = this.value.slice(64);
+    var value = this.value.slice(0, 64);
+    this.value = this.value.slice(64);
     var suffix = this.suffix.slice(0, 64 * length);
     this.suffix = this.suffix.slice(64 * length);
-    return new SolidityParam('', prefix, suffix);
+    return new SolidityParam(value, suffix);
 };
 
 module.exports = SolidityParam;
