@@ -1383,7 +1383,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
 module.exports={
-    "version": "0.3.3"
+    "version": "0.3.4"
 }
 
 },{}],10:[function(require,module,exports){
@@ -1785,7 +1785,7 @@ module.exports = {
 
 /**
  * Web3
- * 
+ *
  * @module web3
  */
 
@@ -1839,16 +1839,16 @@ var uncleCountCall = function (args) {
 /// @returns an array of objects describing web3.eth api methods
 
 var getBalance = new Method({
-    name: 'getBalance', 
-    call: 'eth_getBalance', 
+    name: 'getBalance',
+    call: 'eth_getBalance',
     params: 2,
     inputFormatter: [utils.toAddress, formatters.inputDefaultBlockNumberFormatter],
     outputFormatter: formatters.outputBigNumberFormatter
 });
 
 var getStorageAt = new Method({
-    name: 'getStorageAt', 
-    call: 'eth_getStorageAt', 
+    name: 'getStorageAt',
+    call: 'eth_getStorageAt',
     params: 3,
     inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
 });
@@ -1861,7 +1861,7 @@ var getCode = new Method({
 });
 
 var getBlock = new Method({
-    name: 'getBlock', 
+    name: 'getBlock',
     call: blockCall,
     params: 2,
     inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
@@ -1987,6 +1987,11 @@ var properties = [
         getter: 'eth_mining'
     }),
     new Property({
+        name: 'hashrate',
+        getter: 'eth_hashrate',
+        outputFormatter: utils.toDecimal
+    }),
+    new Property({
         name: 'gasPrice',
         getter: 'eth_gasPrice',
         outputFormatter: formatters.outputBigNumberFormatter
@@ -2107,7 +2112,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
     ['fromBlock', 'toBlock'].filter(function (f) {
         return options[f] !== undefined;
     }).forEach(function (f) {
-        result[f] = utils.toHex(options[f]);
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
     });
 
     result.topics = [];

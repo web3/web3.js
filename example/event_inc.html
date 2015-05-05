@@ -45,7 +45,7 @@
         var contract;
 
         var update = function (err, x) {
-            document.getElementById('result').innerText = JSON.stringify(x, null, 2);
+            document.getElementById('result').textContent = JSON.stringify(x, null, 2);
         };
     
         var createContract = function () {
