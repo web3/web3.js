@@ -2441,7 +2441,7 @@ var inputTransactionFormatter = function (options){
         delete options.code;
     }
 
-    ['gasPrice', 'gas', 'value'].filter(function (key) {
+    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
         options[key] = utils.fromDecimal(options[key]);
@@ -3578,7 +3578,20 @@ var Method = require('./method');
 /// @returns an array of objects describing web3.eth.filter api methods
 var eth = function () {
     var newFilterCall = function (args) {
-        return typeof args[0] === 'string' ? 'eth_newBlockFilter' : 'eth_newFilter';
+        var type = args[0];
+
+        switch(type) {
+            case 'latest':
+                args.pop();
+                this.params = 0;
+                return 'eth_newBlockFilter';
+            case 'pending':
+                args.pop();
+                this.params = 0;
+                return 'eth_newPendingTransactionFilter';
+            default:
+                return 'eth_newFilter';
+        }
     };
 
     var newFilter = new Method({
