@@ -142,9 +142,9 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
     if (arrayType) {
         // let's assume, that we solidity will never return long arrays :P 
         var result = [];
-        var length = new BigNumber(param.prefix, 16);
+        var length = new BigNumber(param.dynamicPart().slice(0, 64), 16);
         for (var i = 0; i < length * 64; i += 64) {
-            result.push(this._outputFormatter(new SolidityParam('', param.suffix.slice(i, i + 64))));
+            result.push(this._outputFormatter(new SolidityParam(param.dynamicPart().substr(i + 64, 64))));
         }
         return result;
     }
@@ -169,14 +169,13 @@ SolidityType.prototype.isVariadicType = function (type) {
  * @param {String} type
  * @returns {SolidityParam} shifted param
  */
-SolidityType.prototype.shiftParam = function (type, param) {
+SolidityType.prototype.sliceParam = function (bytes, index, type) {
     if (this._mode === 'bytes') {
-        return param.shiftBytes();
+        return SolidityParam.decodeBytes(bytes, index);
     } else if (isArrayType(type)) {
-        var length = new BigNumber(param.prefix.slice(0, 64), 16);
-        return param.shiftArray(length);
+        return SolidityParam.decodeArray(bytes, index);
     }
-    return param.shiftValue();
+    return SolidityParam.decodeParam(bytes, index);
 };
 
 /**
@@ -214,16 +213,16 @@ SolidityCoder.prototype._requireType = function (type) {
  * @param {String} bytes to be transformed to SolidityParam
  * @return {SolidityParam} SolidityParam for this group of params
  */
-SolidityCoder.prototype._bytesToParam = function (types, bytes) {
-    var self = this;
-    var prefixLength = types.filter(function (type) {
-        return self._requireType(type).isVariadicType(type); 
-    }).length;
+//SolidityCoder.prototype._bytesToParam = function (types, bytes) {
+    //var self = this;
+    //var prefixLength = types.filter(function (type) {
+        //return self._requireType(type).isVariadicType(type); 
+    //}).length;
 
-    var prefix = bytes.slice(0, prefixLength * 64);
-    var suffix = bytes.slice(prefixLength * 64);
-    return new SolidityParam(prefix, suffix); 
-};
+    //var prefix = bytes.slice(0, prefixLength * 64);
+    //var suffix = bytes.slice(prefixLength * 64);
+    //return new SolidityParam(prefix, suffix); 
+//};
 
 /**
  * Should be used to transform plain param of given type to SolidityParam
@@ -287,7 +286,8 @@ SolidityCoder.prototype._formatOutput = function (type, param) {
  * @return {Object} plain param
  */
 SolidityCoder.prototype.decodeParam = function (type, bytes) {
-    return this._formatOutput(type, this._bytesToParam([type], bytes));
+    //return this._formatOutput(type, this._bytesToParam([type], bytes));
+    return this.decodeParams([type], bytes)[0];
 };
 
 /**
@@ -300,10 +300,9 @@ SolidityCoder.prototype.decodeParam = function (type, bytes) {
  */
 SolidityCoder.prototype.decodeParams = function (types, bytes) {
     var self = this;
-    var param = this._bytesToParam(types, bytes);
-    return types.map(function (type) {
+    return types.map(function (type, index) {
         var solidityType = self._requireType(type);
-        var p = solidityType.shiftParam(type, param);
+        var p = solidityType.sliceParam(bytes, index, type);
         return solidityType.formatOutput(p, isArrayType(type));
     });
 };
@@ -482,7 +481,7 @@ var signedIsNegative = function (value) {
  * @returns {BigNumber} right-aligned output bytes formatted to big number
  */
 var formatOutputInt = function (param) {
-    var value = param.suffix || "0";
+    var value = param.staticPart() || "0";
 
     // check if it's negative number
     // it it is, return two's complement
@@ -500,7 +499,7 @@ var formatOutputInt = function (param) {
  * @returns {BigNumeber} right-aligned output bytes formatted to uint
  */
 var formatOutputUInt = function (param) {
-    var value = param.suffix || "0";
+    var value = param.staticPart() || "0";
     return new BigNumber(value, 16);
 };
 
@@ -534,7 +533,7 @@ var formatOutputUReal = function (param) {
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
 var formatOutputBool = function (param) {
-    return param.suffix === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
+    return param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
 };
 
 /**
@@ -546,7 +545,7 @@ var formatOutputBool = function (param) {
  */
 var formatOutputBytes = function (param) {
     // length might also be important!
-    return utils.toAscii(param.suffix);
+    return utils.toAscii(param.staticPart());
 };
 
 /**
@@ -558,7 +557,7 @@ var formatOutputBytes = function (param) {
  */
 var formatOutputDynamicBytes = function (param) {
     // length might also be important!
-    return utils.toAscii(param.suffix);
+    return utils.toAscii(param.dynamicPart().slice(64));
 };
 
 /**
@@ -569,7 +568,7 @@ var formatOutputDynamicBytes = function (param) {
  * @returns {String} address
  */
 var formatOutputAddress = function (param) {
-    var value = param.suffix;
+    var value = param.staticPart();
     return "0x" + value.slice(value.length - 40, value.length);
 };
 
@@ -637,7 +636,7 @@ SolidityParam.prototype.combine = function (param) {
 };
 
 SolidityParam.prototype.isDynamic = function () {
-    return !!this.offset;
+    return this.value.length > 64;
 };
 
 SolidityParam.prototype.offsetAsBytes = function () {
@@ -681,6 +680,34 @@ SolidityParam.encodeList = function (params) {
     }, offsetParams.reduce(function (result, param) {
         return result + param.staticPart();
     }, ''));
+};
+
+SolidityParam.decodeParam = function (bytes, index) {
+    index = index || 0;
+    return new SolidityParam(bytes.substr(index * 64, 64)); 
+};
+
+var getOffset = function (bytes, index) {
+    // we can do this cause offset is rather small
+    return parseInt('0x' + bytes.substr(index * 64, 64));
+};
+
+SolidityParam.decodeBytes = function (bytes, index) {
+    index = index || 0;
+    //TODO add support for strings longer than 32 bytes
+    //var length = parseInt('0x' + bytes.substr(offset * 64, 64));
+
+    var offset = getOffset(bytes, index);
+
+    // 2 * , cause we also parse length
+    return new SolidityParam(bytes.substr(offset * 2, 2 * 64));
+};
+
+SolidityParam.decodeArray = function (bytes, index) {
+    index = index || 0;
+    var offset = getOffset(bytes, index)
+    var length = parseInt('0x' + bytes.substr(offset * 2, 64));
+    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64));
 };
 
 /**
