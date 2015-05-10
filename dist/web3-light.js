@@ -152,17 +152,6 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
 };
 
 /**
- * Should be used to check if a type is variadic
- *
- * @method isVariadicType
- * @param {String} type
- * @returns {Bool} true if the type is variadic
- */
-SolidityType.prototype.isVariadicType = function (type) {
-    return isArrayType(type) || this._mode === 'bytes';
-};
-
-/**
  * Should be used to slice single param from bytes
  *
  * @method sliceParam
@@ -249,18 +238,6 @@ SolidityCoder.prototype.encodeParams = function (types, params) {
 };
 
 /**
- * Should be used to transform SolidityParam to plain param
- *
- * @method _formatOutput
- * @param {String} type
- * @param {SolidityParam} param
- * @return {Object} plain param
- */
-SolidityCoder.prototype._formatOutput = function (type, param) {
-    return this._requireType(type).formatOutput(param, isArrayType(type));
-};
-
-/**
  * Should be used to decode bytes to plain param
  *
  * @method decodeParam
@@ -269,7 +246,6 @@ SolidityCoder.prototype._formatOutput = function (type, param) {
  * @return {Object} plain param
  */
 SolidityCoder.prototype.decodeParam = function (type, bytes) {
-    //return this._formatOutput(type, this._bytesToParam([type], bytes));
     return this.decodeParams([type], bytes)[0];
 };
 
