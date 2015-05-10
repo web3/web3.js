@@ -22,118 +22,29 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
  * @date 2014
  */
 
-var utils = require('../utils/utils');
 var coder = require('./coder');
-var solUtils = require('./utils');
-
-/**
- * Formats input params to bytes
- *
- * @method formatInput
- * @param {Array} abi inputs of method
- * @param {Array} params that will be formatted to bytes
- * @returns bytes representation of input params
- */
-var formatInput = function (inputs, params) {
-    var i = inputs.map(function (input) {
-        return input.type;
-    });
-    return coder.encodeParams(i, params);
-};
-
-/** 
- * Formats output bytes back to param list
- *
- * @method formatOutput
- * @param {Array} abi outputs of method
- * @param {String} bytes represention of output
- * @returns {Array} output params
- */
-var formatOutput = function (outs, bytes) {
-    var o = outs.map(function (out) {
-        return out.type;
-    });
-    
-    return coder.decodeParams(o, bytes); 
-};
-
-/**
- * Should be called to create input parser for contract with given abi
- *
- * @method inputParser
- * @param {Array} contract abi
- * @returns {Object} input parser object for given json abi
- * TODO: refactor creating the parser, do not double logic from contract
- */
-var inputParser = function (json) {
-    var parser = {};
-    json.forEach(function (method) {
-        var displayName = utils.extractDisplayName(method.name);
-        var typeName = utils.extractTypeName(method.name);
-
-        var impl = function () {
-            var params = Array.prototype.slice.call(arguments);
-            return formatInput(method.inputs, params);
-        };
-
-        if (parser[displayName] === undefined) {
-            parser[displayName] = impl;
-        }
-
-        parser[displayName][typeName] = impl;
-    });
-
-    return parser;
-};
-
-/**
- * Should be called to create output parser for contract with given abi
- *
- * @method outputParser
- * @param {Array} contract abi
- * @returns {Object} output parser for given json abi
- */
-var outputParser = function (json) {
-    var parser = {};
-    json.forEach(function (method) {
-
-        var displayName = utils.extractDisplayName(method.name);
-        var typeName = utils.extractTypeName(method.name);
-
-        var impl = function (output) {
-            return formatOutput(method.outputs, output);
-        };
-
-        if (parser[displayName] === undefined) {
-            parser[displayName] = impl;
-        }
-
-        parser[displayName][typeName] = impl;
-    });
-
-    return parser;
-};
+var utils = require('./utils');
 
 var formatConstructorParams = function (abi, params) {
-    var constructor = solUtils.getConstructor(abi, params.length);
+    var constructor = utils.getConstructor(abi, params.length);
     if (!constructor) {
         if (params.length > 0) {
             console.warn("didn't found matching constructor, using default one");
         }
         return '';
     }
-    return formatInput(constructor.inputs, params);
+
+    return coder.encodeParams(constructor.inputs.map(function (input) {
+        return input.type;
+    }), params);
 };
 
 module.exports = {
-    inputParser: inputParser,
-    outputParser: outputParser,
-    formatInput: formatInput,
-    formatOutput: formatOutput,
     formatConstructorParams: formatConstructorParams
 };
 
-},{"../utils/utils":8,"./coder":2,"./utils":5}],2:[function(require,module,exports){
+
+},{"./coder":2,"./utils":5}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -213,9 +124,8 @@ SolidityType.prototype.formatInput = function (param, arrayType) {
         return param.map(function (p) {
             return self._inputFormatter(p);
         }).reduce(function (acc, current) {
-            acc.appendArrayElement(current);
-            return acc;
-        }, f.formatInputInt(param.length).swap());
+            return acc.combine(current);
+        }, f.formatInputInt(param.length)).withOffset(32);
     } 
     return this._inputFormatter(param);
 };
@@ -232,9 +142,9 @@ SolidityType.prototype.formatOutput = function (param, arrayType) {
     if (arrayType) {
         // let's assume, that we solidity will never return long arrays :P 
         var result = [];
-        var length = new BigNumber(param.prefix, 16);
+        var length = new BigNumber(param.dynamicPart().slice(0, 64), 16);
         for (var i = 0; i < length * 64; i += 64) {
-            result.push(this._outputFormatter(new SolidityParam('', param.suffix.slice(i, i + 64))));
+            result.push(this._outputFormatter(new SolidityParam(param.dynamicPart().substr(i + 64, 64))));
         }
         return result;
     }
@@ -253,20 +163,21 @@ SolidityType.prototype.isVariadicType = function (type) {
 };
 
 /**
- * Should be used to shift param from params group
+ * Should be used to slice single param from bytes
  *
- * @method shiftParam
+ * @method sliceParam
+ * @param {String} bytes
+ * @param {Number} index of param to slice
  * @param {String} type
- * @returns {SolidityParam} shifted param
+ * @returns {SolidityParam} param
  */
-SolidityType.prototype.shiftParam = function (type, param) {
+SolidityType.prototype.sliceParam = function (bytes, index, type) {
     if (this._mode === 'bytes') {
-        return param.shiftBytes();
+        return SolidityParam.decodeBytes(bytes, index);
     } else if (isArrayType(type)) {
-        var length = new BigNumber(param.prefix.slice(0, 64), 16);
-        return param.shiftArray(length);
+        return SolidityParam.decodeArray(bytes, index);
     }
-    return param.shiftValue();
+    return SolidityParam.decodeParam(bytes, index);
 };
 
 /**
@@ -294,25 +205,6 @@ SolidityCoder.prototype._requireType = function (type) {
     }
 
     return solidityType;
-};
-
-/**
- * Should be used to transform plain bytes to SolidityParam object
- *
- * @method _bytesToParam
- * @param {Array} types of params
- * @param {String} bytes to be transformed to SolidityParam
- * @return {SolidityParam} SolidityParam for this group of params
- */
-SolidityCoder.prototype._bytesToParam = function (types, bytes) {
-    var self = this;
-    var prefixLength = types.filter(function (type) {
-        return self._requireType(type).isVariadicType(type); 
-    }).length;
-
-    var prefix = bytes.slice(0, prefixLength * 64);
-    var suffix = bytes.slice(prefixLength * 64);
-    return new SolidityParam(prefix, suffix); 
 };
 
 /**
@@ -349,12 +241,11 @@ SolidityCoder.prototype.encodeParam = function (type, param) {
  */
 SolidityCoder.prototype.encodeParams = function (types, params) {
     var self = this;
-    return types.map(function (type, index) {
+    var solidityParams = types.map(function (type, index) {
         return self._formatInput(type, params[index]);
-    }).reduce(function (acc, solidityParam) {
-        acc.append(solidityParam);
-        return acc;
-    }, new SolidityParam()).encode();
+    });
+
+    return SolidityParam.encodeList(solidityParams);
 };
 
 /**
@@ -378,7 +269,8 @@ SolidityCoder.prototype._formatOutput = function (type, param) {
  * @return {Object} plain param
  */
 SolidityCoder.prototype.decodeParam = function (type, bytes) {
-    return this._formatOutput(type, this._bytesToParam([type], bytes));
+    //return this._formatOutput(type, this._bytesToParam([type], bytes));
+    return this.decodeParams([type], bytes)[0];
 };
 
 /**
@@ -391,10 +283,9 @@ SolidityCoder.prototype.decodeParam = function (type, bytes) {
  */
 SolidityCoder.prototype.decodeParams = function (types, bytes) {
     var self = this;
-    var param = this._bytesToParam(types, bytes);
-    return types.map(function (type) {
+    return types.map(function (type, index) {
         var solidityType = self._requireType(type);
-        var p = solidityType.shiftParam(type, param);
+        var p = solidityType.sliceParam(bytes, index, type);
         return solidityType.formatOutput(p, isArrayType(type));
     });
 };
@@ -503,7 +394,7 @@ var formatInputInt = function (value) {
     var padding = c.ETH_PADDING * 2;
     BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
     var result = utils.padLeft(utils.toTwosComplement(value).round().toString(16), padding);
-    return new SolidityParam('', result);
+    return new SolidityParam(result);
 };
 
 /**
@@ -515,7 +406,7 @@ var formatInputInt = function (value) {
  */
 var formatInputBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
-    return new SolidityParam('', result);
+    return new SolidityParam(result);
 };
 
 /**
@@ -527,7 +418,7 @@ var formatInputBytes = function (value) {
  */
 var formatInputDynamicBytes = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
-    return new SolidityParam(formatInputInt(value.length).suffix, result);
+    return new SolidityParam(formatInputInt(value.length).value + result, 32);
 };
 
 /**
@@ -539,7 +430,7 @@ var formatInputDynamicBytes = function (value) {
  */
 var formatInputBool = function (value) {
     var result = '000000000000000000000000000000000000000000000000000000000000000' + (value ?  '1' : '0');
-    return new SolidityParam('', result);
+    return new SolidityParam(result);
 };
 
 /**
@@ -573,7 +464,7 @@ var signedIsNegative = function (value) {
  * @returns {BigNumber} right-aligned output bytes formatted to big number
  */
 var formatOutputInt = function (param) {
-    var value = param.suffix || "0";
+    var value = param.staticPart() || "0";
 
     // check if it's negative number
     // it it is, return two's complement
@@ -591,7 +482,7 @@ var formatOutputInt = function (param) {
  * @returns {BigNumeber} right-aligned output bytes formatted to uint
  */
 var formatOutputUInt = function (param) {
-    var value = param.suffix || "0";
+    var value = param.staticPart() || "0";
     return new BigNumber(value, 16);
 };
 
@@ -625,7 +516,7 @@ var formatOutputUReal = function (param) {
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
 var formatOutputBool = function (param) {
-    return param.suffix === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
+    return param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
 };
 
 /**
@@ -637,7 +528,7 @@ var formatOutputBool = function (param) {
  */
 var formatOutputBytes = function (param) {
     // length might also be important!
-    return utils.toAscii(param.suffix);
+    return utils.toAscii(param.staticPart());
 };
 
 /**
@@ -649,7 +540,7 @@ var formatOutputBytes = function (param) {
  */
 var formatOutputDynamicBytes = function (param) {
     // length might also be important!
-    return utils.toAscii(param.suffix);
+    return utils.toAscii(param.dynamicPart().slice(64));
 };
 
 /**
@@ -660,7 +551,7 @@ var formatOutputDynamicBytes = function (param) {
  * @returns {String} address
  */
 var formatOutputAddress = function (param) {
-    var value = param.suffix;
+    var value = param.staticPart();
     return "0x" + value.slice(value.length - 40, value.length);
 };
 
@@ -704,98 +595,199 @@ module.exports = {
  * @date 2015
  */
 
+var utils = require('../utils/utils');
+
 /**
  * SolidityParam object prototype.
  * Should be used when encoding, decoding solidity bytes
  */
-var SolidityParam = function (prefix, suffix) {
-    this.prefix = prefix || '';
-    this.suffix = suffix || '';
+var SolidityParam = function (value, offset) {
+    this.value = value || '';
+    this.offset = offset; // offset in bytes
 };
 
 /**
- * This method should be used to encode two params one after another
- *
- * @method append
- * @param {SolidityParam} param that it appended after this
+ * This method should be used to get length of params's dynamic part
+ * 
+ * @method dynamicPartLength
+ * @returns {Number} length of dynamic part (in bytes)
  */
-SolidityParam.prototype.append = function (param) {
-    this.prefix += param.prefix;
-    this.suffix += param.suffix;
+SolidityParam.prototype.dynamicPartLength = function () {
+    return this.dynamicPart().length / 2;
 };
 
 /**
- * This method should be used to encode next param in an array
+ * This method should be used to create copy of solidity param with different offset
  *
- * @method appendArrayElement
- * @param {SolidityParam} param that is appended to an array
+ * @method withOffset
+ * @param {Number} offset length in bytes
+ * @returns {SolidityParam} new solidity param with applied offset
  */
-SolidityParam.prototype.appendArrayElement = function (param) {
-    this.suffix += param.suffix;
-    //this.prefix += param.prefix; // we do not support nested dynamic types
+SolidityParam.prototype.withOffset = function (offset) {
+    return new SolidityParam(this.value, offset);
 };
 
 /**
- * This method should be used to create bytearrays from param
+ * This method should be used to combine solidity params together
+ * eg. when appending an array
+ *
+ * @method combine
+ * @param {SolidityParam} param with which we should combine
+ * @param {SolidityParam} result of combination
+ */
+SolidityParam.prototype.combine = function (param) {
+    return new SolidityParam(this.value + param.value); 
+};
+
+/**
+ * This method should be called to check if param has dynamic size.
+ * If it has, it returns true, otherwise false
+ *
+ * @method isDynamic
+ * @returns {Boolean}
+ */
+SolidityParam.prototype.isDynamic = function () {
+    return this.value.length > 64;
+};
+
+/**
+ * This method should be called to transform offset to bytes
+ *
+ * @method offsetAsBytes
+ * @returns {String} bytes representation of offset
+ */
+SolidityParam.prototype.offsetAsBytes = function () {
+    if (!this.isDynamic()) {
+        return '';
+    }
+    return utils.padLeft(utils.toTwosComplement(this.offset).toString(16), 64);
+};
+
+/**
+ * This method should be called to get static part of param
+ *
+ * @method staticPart
+ * @returns {String} offset if it is a dynamic param, otherwise value
+ */
+SolidityParam.prototype.staticPart = function () {
+    if (!this.isDynamic()) {
+        return this.value; 
+    } 
+    return this.offsetAsBytes();
+};
+
+/**
+ * This method should be called to get dynamic part of param
+ *
+ * @method dynamicPart
+ * @returns {String} returns a value if it is a dynamic param, otherwise empty string
+ */
+SolidityParam.prototype.dynamicPart = function () {
+    return this.isDynamic() ? this.value : '';
+};
+
+/**
+ * This method should be called to encode param
  *
  * @method encode
- * @return {String} encoded param(s)
+ * @returns {String}
  */
 SolidityParam.prototype.encode = function () {
-    return this.prefix + this.suffix;
+    return this.staticPart() + this.dynamicPart();
 };
 
 /**
- * This method should be used to shift first param from group of params
+ * This method should be called to encode array of params
  *
- * @method shiftValue
- * @return {SolidityParam} first prefix param
+ * @method encodeList
+ * @param {Array[SolidityParam]} params
+ * @returns {String}
  */
-SolidityParam.prototype.shiftValue = function () {
-    var suffix = this.suffix.slice(0, 64);
-    this.suffix = this.suffix.slice(64);
-    return new SolidityParam('', suffix);
+SolidityParam.encodeList = function (params) {
+    
+    // updating offsets
+    var totalOffset = params.length * 32;
+    var offsetParams = params.map(function (param) {
+        if (!param.isDynamic()) {
+            return param;
+        }
+        var offset = totalOffset;
+        totalOffset += param.dynamicPartLength();
+        return param.withOffset(offset);
+    });
+
+    // encode everything!
+    return offsetParams.reduce(function (result, param) {
+        return result + param.dynamicPart();
+    }, offsetParams.reduce(function (result, param) {
+        return result + param.staticPart();
+    }, ''));
 };
 
 /**
- * This method should be used to first bytes param from group of params
+ * This method should be used to decode plain (static) solidity param at given index
  *
- * @method shiftBytes
- * @return {SolidityParam} first bytes param
+ * @method decodeParam
+ * @param {String} bytes
+ * @param {Number} index
+ * @returns {SolidityParam}
  */
-SolidityParam.prototype.shiftBytes = function () {
-    return this.shiftArray(1);   
+SolidityParam.decodeParam = function (bytes, index) {
+    index = index || 0;
+    return new SolidityParam(bytes.substr(index * 64, 64)); 
 };
 
 /**
- * This method should be used to shift an array from group of params 
- * 
- * @method shiftArray
- * @param {Number} size of an array to shift
- * @return {SolidityParam} first array param
- */
-SolidityParam.prototype.shiftArray = function (length) {
-    var prefix = this.prefix.slice(0, 64);
-    this.prefix = this.prefix.slice(64);
-    var suffix = this.suffix.slice(0, 64 * length);
-    this.suffix = this.suffix.slice(64 * length);
-    return new SolidityParam(prefix, suffix);
-};
-
-/**
- * This method should be used to create new parram by swapping it's prefix and suffix
+ * This method should be called to get offset value from bytes at given index
  *
- * @method swap
- * @return {SolidityParam} param with swaped bytes
+ * @method getOffset
+ * @param {String} bytes
+ * @param {Number} index
+ * @returns {Number} offset as number
  */
-SolidityParam.prototype.swap = function () {
-    return new SolidityParam(this.suffix, this.prefix);
+var getOffset = function (bytes, index) {
+    // we can do this cause offset is rather small
+    return parseInt('0x' + bytes.substr(index * 64, 64));
+};
+
+/**
+ * This method should be called to decode solidity bytes param at given index
+ *
+ * @method decodeBytes
+ * @param {String} bytes
+ * @param {Number} index
+ * @returns {SolidityParam}
+ */
+SolidityParam.decodeBytes = function (bytes, index) {
+    index = index || 0;
+    //TODO add support for strings longer than 32 bytes
+    //var length = parseInt('0x' + bytes.substr(offset * 64, 64));
+
+    var offset = getOffset(bytes, index);
+
+    // 2 * , cause we also parse length
+    return new SolidityParam(bytes.substr(offset * 2, 2 * 64));
+};
+
+/**
+ * This method should be used to decode solidity array at given index
+ *
+ * @method decodeArray
+ * @param {String} bytes
+ * @param {Number} index
+ * @returns {SolidityParam}
+ */
+SolidityParam.decodeArray = function (bytes, index) {
+    index = index || 0;
+    var offset = getOffset(bytes, index);
+    var length = parseInt('0x' + bytes.substr(offset * 2, 64));
+    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64));
 };
 
 module.exports = SolidityParam;
 
 
-},{}],5:[function(require,module,exports){
+},{"../utils/utils":8}],5:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -831,6 +823,11 @@ var getConstructor = function (abi, numberOfArgs) {
         return f.type === 'constructor' && f.inputs.length === numberOfArgs;
     })[0];
 };
+
+//var getSupremeType = function (type) {
+    //return type.substr(0, type.indexOf('[')) + ']';
+//};
+
 
 module.exports = {
     getConstructor: getConstructor
