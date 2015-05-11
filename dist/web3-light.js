@@ -2680,7 +2680,7 @@ SolidityFunction.prototype.sendTransaction = function () {
         return;
     }
 
-    web3.eth.call(payload, callback);
+    web3.eth.sendTransaction(payload, callback);
 };
 
 /**
