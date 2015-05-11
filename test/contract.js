@@ -116,8 +116,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             var res = 0;
             contract.Changed({from: address}).watch(function(err, result) {
@@ -155,8 +154,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.balance(address);
         });
@@ -186,8 +184,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.send(address, 17);
         });
@@ -218,8 +215,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.balance(address, {from: address, gas: 50000});
 
@@ -251,8 +247,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.balance.call(address, {from: address, gas: 50000});
 
@@ -287,8 +282,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.send(address, 17, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
@@ -322,8 +316,7 @@ describe('web3.eth.contract', function () {
                 }
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             contract.send.sendTransaction(address, 17, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
@@ -356,8 +349,7 @@ describe('web3.eth.contract', function () {
                 step++;
             });
 
-            var Contract = web3.eth.contract(desc);
-            var contract = new Contract(address);
+            var contract = web3.eth.contract(desc).at(address);
 
             var result = contract.testArr([3]);
 
