@@ -3186,7 +3186,6 @@ Property.prototype.formatOutput = function (result) {
 Property.prototype.attachToObject = function (obj) {
     var proto = {
         get: this.get.bind(this),
-        set: this.set.bind(this)
     };
 
     var names = this.name.split('.');
@@ -3203,13 +3202,7 @@ Property.prototype.attachToObject = function (obj) {
         return prefix + name.charAt(0).toUpperCase() + name.slice(1);
     };
 
-    if (this.getter) {
-        obj[toAsyncName('get', name)] = this.asyncGet.bind(this);
-    } 
-
-    if (this.setter) {
-        obj[toAsyncName('set', name)] = this.asyncSet.bind(this);
-    } 
+    obj[toAsyncName('get', name)] = this.asyncGet.bind(this);
 };
 
 /**
@@ -3222,19 +3215,6 @@ Property.prototype.get = function () {
     return this.formatOutput(RequestManager.getInstance().send({
         method: this.getter
     }));
-};
-
-/**
- * Should be used to set value of the property
- *
- * @method set
- * @param {Object} new value of the property
- */
-Property.prototype.set = function (value) {
-    return RequestManager.getInstance().send({
-        method: this.setter,
-        params: [this.formatInput(value)]
-    });
 };
 
 /**
@@ -3253,17 +3233,6 @@ Property.prototype.asyncGet = function (callback) {
         }
         callback(err, self.formatOutput(result));
     });
-};
-
-/**
- * Should be used to asynchronously set value of property
- *
- * @method asyncSet
- * @param {Any} new value
- * @param {Function} callback
- */
-Property.prototype.asyncSet = function (value, callback) {
-    RequestManager.getInstance().sendAsync(this.formatInput(value), callback);
 };
 
 module.exports = Property;
