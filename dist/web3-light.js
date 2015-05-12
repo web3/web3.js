@@ -16,52 +16,6 @@ require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof requ
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /** 
- * @file abi.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Gav Wood <g@ethdev.com>
- * @date 2014
- */
-
-var coder = require('./coder');
-var utils = require('./utils');
-
-var formatConstructorParams = function (abi, params) {
-    var constructor = utils.getConstructor(abi, params.length);
-    if (!constructor) {
-        if (params.length > 0) {
-            console.warn("didn't found matching constructor, using default one");
-        }
-        return '';
-    }
-
-    return coder.encodeParams(constructor.inputs.map(function (input) {
-        return input.type;
-    }), params);
-};
-
-module.exports = {
-    formatConstructorParams: formatConstructorParams
-};
-
-
-},{"./coder":2,"./utils":5}],2:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** 
  * @file coder.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -328,7 +282,7 @@ var coder = new SolidityCoder([
 module.exports = coder;
 
 
-},{"../utils/utils":8,"./formatters":3,"./param":4,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":2,"./param":3,"bignumber.js":"bignumber.js"}],2:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -548,7 +502,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":7,"../utils/utils":8,"./param":4,"bignumber.js":"bignumber.js"}],4:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"./param":3,"bignumber.js":"bignumber.js"}],3:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -760,54 +714,7 @@ SolidityParam.decodeArray = function (bytes, index) {
 module.exports = SolidityParam;
 
 
-},{"../utils/utils":8}],5:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/**
- * @file utils.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-/**
- * Returns the contstructor with matching number of arguments
- *
- * @method getConstructor
- * @param {Array} abi
- * @param {Number} numberOfArgs
- * @returns {Object} constructor function abi
- */
-var getConstructor = function (abi, numberOfArgs) {
-    return abi.filter(function (f) {
-        return f.type === 'constructor' && f.inputs.length === numberOfArgs;
-    })[0];
-};
-
-//var getSupremeType = function (type) {
-    //return type.substr(0, type.indexOf('[')) + ']';
-//};
-
-
-module.exports = {
-    getConstructor: getConstructor
-};
-
-
-},{}],6:[function(require,module,exports){
+},{"../utils/utils":6}],4:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -818,7 +725,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -890,7 +797,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1366,12 +1273,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],9:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 module.exports={
     "version": "0.3.6"
 }
 
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1538,7 +1445,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":7,"./utils/utils":8,"./version.json":9,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":21,"./web3/net":22,"./web3/property":23,"./web3/requestmanager":25,"./web3/shh":26,"./web3/watches":27}],11:[function(require,module,exports){
+},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":12,"./web3/filter":14,"./web3/formatters":15,"./web3/method":19,"./web3/net":20,"./web3/property":21,"./web3/requestmanager":23,"./web3/shh":24,"./web3/watches":25}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1562,13 +1469,39 @@ module.exports = web3;
  */
 
 var web3 = require('../web3'); 
-var solAbi = require('../solidity/abi');
 var utils = require('../utils/utils');
+var coder = require('../solidity/coder');
 var SolidityEvent = require('./event');
 var SolidityFunction = require('./function');
 
-var addFunctionsToContract = function (contract, desc) {
-    desc.filter(function (json) {
+/**
+ * Should be called to encode constructor params
+ *
+ * @method encodeConstructorParams
+ * @param {Array} abi
+ * @param {Array} constructor params
+ */
+var encodeConstructorParams = function (abi, params) {
+    return abi.filter(function (json) {
+        return json.type === 'constructor' && json.inputs.length === params.length;
+    }).map(function (json) {
+        return json.inputs.map(function (input) {
+            return input.type;
+        });
+    }).map(function (types) {
+        return coder.encodeParams(types, params);
+    })[0];
+};
+
+/**
+ * Should be called to add functions to contract object
+ *
+ * @method addFunctionsToContract
+ * @param {Contract} contract
+ * @param {Array} abi
+ */
+var addFunctionsToContract = function (contract, abi) {
+    abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
         return new SolidityFunction(json, contract.address);
@@ -1577,8 +1510,15 @@ var addFunctionsToContract = function (contract, desc) {
     });
 };
 
-var addEventsToContract = function (contract, desc) {
-    desc.filter(function (json) {
+/**
+ * Should be called to add events to contract object
+ *
+ * @method addEventsToContract
+ * @param {Contract} contract
+ * @param {Array} abi
+ */
+var addEventsToContract = function (contract, abi) {
+    abi.filter(function (json) {
         return json.type === 'event';
     }).map(function (json) {
         return new SolidityEvent(json, contract.address);
@@ -1588,65 +1528,106 @@ var addEventsToContract = function (contract, desc) {
 };
 
 /**
- * This method should be called when we want to call / transact some solidity method from javascript
- * it returns an object which has same methods available as solidity contract description
- * usage example: 
+ * Should be called to create new ContractFactory
  *
- * var abi = [{
- *      name: 'myMethod',
- *      inputs: [{ name: 'a', type: 'string' }],
- *      outputs: [{name: 'd', type: 'string' }]
- * }];  // contract abi
- *
- * var MyContract = web3.eth.contract(abi); // creation of contract prototype
- *
- * var contractInstance = new MyContract('0x0123123121');
- *
- * contractInstance.myMethod('this is test string param for call'); // myMethod call (implicit, default)
- * contractInstance.call().myMethod('this is test string param for call'); // myMethod call (explicit)
- * contractInstance.sendTransaction().myMethod('this is test string param for transact'); // myMethod sendTransaction
- *
- * @param abi - abi json description of the contract, which is being created
- * @returns contract object
+ * @method contract
+ * @param {Array} abi
+ * @returns {ContractFactory} new contract factory
  */
 var contract = function (abi) {
-
-    // return prototype
-    return Contract.bind(null, abi);
+    return new ContractFactory(abi);
 };
 
-var Contract = function (abi, options) {
+/**
+ * Should be called to create new ContractFactory instance
+ *
+ * @method ContractFactory
+ * @param {Array} abi
+ */
+var ContractFactory = function (abi) {
+    this.abi = abi;
+};
 
-    this.address = '';
-    if (utils.isAddress(options)) {
-        this.address = options;
-    } else { // is an object!
-        // TODO, parse the rest of the args
-        options = options || {};
-        var args = Array.prototype.slice.call(arguments, 2);
-        var bytes = solAbi.formatConstructorParams(abi, args);
-        options.data += bytes;
-        this.address = web3.eth.sendTransaction(options);
+/**
+ * Should be called to create new contract on a blockchain
+ * 
+ * @method new
+ * @param {Any} contract constructor param1 (optional)
+ * @param {Any} contract constructor param2 (optional)
+ * @param {Object} contract transaction object (required)
+ * @param {Function} callback
+ * @returns {Contract} returns contract if no callback was passed,
+ * otherwise calls callback function (err, contract)
+ */
+ContractFactory.prototype.new = function () {
+    // parse arguments
+    var options = {}; // required!
+    var callback;
+
+    var args = Array.prototype.slice.call(arguments);
+    if (utils.isFunction(args[args.length - 1])) {
+        callback = args.pop();
     }
 
+    var last = args[args.length - 1];
+    if (utils.isObject(last) && !utils.isArray(last)) {
+        options = args.pop();
+    }
+
+    // throw an error if there are no options
+
+    var bytes = encodeConstructorParams(this.abi, args);
+    options.data += bytes;
+
+    if (!callback) {
+        var address = web3.eth.sendTransaction(options);
+        return this.at(address);
+    }
+  
+    var self = this;
+    web3.eth.sendTransaction(options, function (err, address) {
+        if (err) {
+            callback(err);
+        }
+        self.at(address, callback); 
+    }); 
+};
+
+/**
+ * Should be called to get access to existing contract on a blockchain
+ *
+ * @method at
+ * @param {Address} contract address (required)
+ * @param {Function} callback {optional)
+ * @returns {Contract} returns contract if no callback was passed,
+ * otherwise calls callback function (err, contract)
+ */
+ContractFactory.prototype.at = function (address, callback) {
+    // TODO: address is required
+    
+    if (callback) {
+        callback(null, new Contract(this.abi, address));
+    } 
+    return new Contract(this.abi, address);
+};
+
+/**
+ * Should be called to create new contract instance
+ *
+ * @method Contract
+ * @param {Array} abi
+ * @param {Address} contract address
+ */
+var Contract = function (abi, address) {
+    this.address = address;
     addFunctionsToContract(this, abi);
     addEventsToContract(this, abi);
-};
-
-Contract.prototype.call = function () {
-    console.error('contract.call is deprecated');
-    return this;
-};
-
-Contract.prototype.sendTransaction = function () {
-    console.error('contract.sendTransact is deprecated');
-    return this;
 };
 
 module.exports = contract;
 
 
-},{"../solidity/abi":1,"../utils/utils":8,"../web3":10,"./event":15,"./function":18}],12:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./event":13,"./function":16}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1704,7 +1685,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":21}],13:[function(require,module,exports){
+},{"./method":19}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1744,7 +1725,7 @@ module.exports = {
 };
 
 
-},{}],14:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1998,7 +1979,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./formatters":17,"./method":21,"./property":23}],15:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":15,"./method":19,"./property":21}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2194,7 +2175,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":2,"../utils/utils":8,"../web3":10,"./formatters":17}],16:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./formatters":15}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2351,7 +2332,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":8,"./formatters":17,"./requestmanager":25}],17:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":15,"./requestmanager":23}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2571,7 +2552,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":7,"../utils/utils":8}],18:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2588,7 +2569,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file function.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -2613,18 +2594,23 @@ var SolidityFunction = function (json, address) {
     this._address = address;
 };
 
+SolidityFunction.prototype.extractCallback = function (args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
+
 /**
  * Should be used to create payload from arguments
  *
  * @method toPayload
- * @param {...} solidity function params
+ * @param {Array} solidity function params
  * @param {Object} optional payload options
  */
-SolidityFunction.prototype.toPayload = function () {
-    var args = Array.prototype.slice.call(arguments);
+SolidityFunction.prototype.toPayload = function (args) {
     var options = {};
     if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
-        options = args.pop();
+        options = args[args.length - 1];
     }
     options.to = this._address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
@@ -2641,19 +2627,41 @@ SolidityFunction.prototype.signature = function () {
     return web3.sha3(web3.fromAscii(this._name)).slice(2, 10);
 };
 
-/**
- * Should be used to call function
- * 
- * @method call
- * @param {Object} options
- * @return {String} output bytes
- */
-SolidityFunction.prototype.call = function () {
-    var payload = this.toPayload.apply(this, Array.prototype.slice.call(arguments));
-    var output = web3.eth.call(payload);
+
+SolidityFunction.prototype.unpackOutput = function (output) {
+    if (output === null) {
+        return;
+    }
+
     output = output.length >= 2 ? output.slice(2) : output;
     var result = coder.decodeParams(this._outputTypes, output);
     return result.length === 1 ? result[0] : result;
+};
+
+/**
+ * Calls a contract function.
+ *
+ * @method call
+ * @param {...Object} Contract function arguments
+ * @param {function} If the last argument is a function, the contract function
+ *   call will be asynchronous, and the callback will be passed the
+ *   error and result.
+ * @return {String} output bytes
+ */
+SolidityFunction.prototype.call = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var callback = this.extractCallback(args);
+    var payload = this.toPayload(args);
+
+    if (!callback) {
+        var output = web3.eth.call(payload);
+        return this.unpackOutput(output);
+    } 
+        
+    var self = this;
+    web3.eth.call(payload, function (error, output) {
+        callback(error, self.unpackOutput(output));
+    });
 };
 
 /**
@@ -2663,8 +2671,16 @@ SolidityFunction.prototype.call = function () {
  * @param {Object} options
  */
 SolidityFunction.prototype.sendTransaction = function () {
-    var payload = this.toPayload.apply(this, Array.prototype.slice.call(arguments));
-    web3.eth.sendTransaction(payload);
+    var args = Array.prototype.slice.call(arguments);
+    var callback = this.extractCallback(args);
+    var payload = this.toPayload(args);
+
+    if (!callback) {
+        web3.eth.sendTransaction(payload);
+        return;
+    }
+
+    web3.eth.sendTransaction(payload, callback);
 };
 
 /**
@@ -2679,7 +2695,7 @@ SolidityFunction.prototype.displayName = function () {
 
 /**
  * Should be used to get function type name
- * 
+ *
  * @method typeName
  * @return {String} type name of the function
  */
@@ -2694,7 +2710,7 @@ SolidityFunction.prototype.typeName = function () {
  */
 SolidityFunction.prototype.execute = function () {
     var transaction = !this._constant;
-    
+
     // send transaction
     if (transaction) {
         return this.sendTransaction.apply(this, Array.prototype.slice.call(arguments));
@@ -2724,7 +2740,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":2,"../utils/utils":8,"../web3":10}],19:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2816,7 +2832,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":13,"xmlhttprequest":6}],20:[function(require,module,exports){
+},{"./errors":11,"xmlhttprequest":4}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2909,7 +2925,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],21:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2966,7 +2982,6 @@ Method.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
-    return null;
 };
 
 /**
@@ -3070,7 +3085,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":8,"./errors":13,"./requestmanager":25}],22:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":11,"./requestmanager":23}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3120,7 +3135,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":8,"./property":23}],23:[function(require,module,exports){
+},{"../utils/utils":6,"./property":21}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3238,7 +3253,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":25}],24:[function(require,module,exports){
+},{"./requestmanager":23}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3273,7 +3288,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],25:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3494,7 +3509,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":7,"../utils/utils":8,"./errors":13,"./jsonrpc":20}],26:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"./errors":11,"./jsonrpc":18}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3564,7 +3579,7 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":21}],27:[function(require,module,exports){
+},{"./formatters":15,"./method":19}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3680,7 +3695,7 @@ module.exports = {
 };
 
 
-},{"./method":21}],28:[function(require,module,exports){
+},{"./method":19}],26:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
@@ -3693,7 +3708,6 @@ var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.eth.contract = require('./lib/web3/contract');
-web3.abi = require('./lib/solidity/abi');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
@@ -3703,7 +3717,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/solidity/abi":1,"./lib/web3":10,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/qtsync":24}]},{},["web3"])
+},{"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
