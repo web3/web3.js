@@ -1318,6 +1318,7 @@ var RequestManager = require('./web3/requestmanager');
 var c = require('./utils/config');
 var Method = require('./web3/method');
 var Property = require('./web3/property');
+var Batch = require('./web3/batch');
 
 var web3Methods = [
     new Method({
@@ -1410,6 +1411,9 @@ web3.toBigNumber = utils.toBigNumber;
 web3.toWei = utils.toWei;
 web3.fromWei = utils.fromWei;
 web3.isAddress = utils.isAddress;
+web3.createBatch = function () {
+    return new Batch();
+};
 
 // ADD defaultblock
 Object.defineProperty(web3.eth, 'defaultBlock', {
@@ -1445,7 +1449,70 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/db":10,"./web3/eth":12,"./web3/filter":14,"./web3/formatters":15,"./web3/method":19,"./web3/net":20,"./web3/property":21,"./web3/requestmanager":23,"./web3/shh":24,"./web3/watches":25}],9:[function(require,module,exports){
+},{"./utils/config":5,"./utils/utils":6,"./version.json":7,"./web3/batch":9,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":20,"./web3/net":21,"./web3/property":22,"./web3/requestmanager":24,"./web3/shh":25,"./web3/watches":26}],9:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file batch.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var RequestManager = require('./requestmanager');
+
+var Batch = function () {
+    this.requests = [];
+};
+
+/**
+ * Should be called to add create new request to batch request
+ *
+ * @method add
+ * @param {Object} jsonrpc requet object
+ */
+Batch.prototype.add = function (request) {
+    this.requests.push(request);
+};
+
+/**
+ * Should be called to execute batch request
+ *
+ * @method execute
+ */
+Batch.prototype.execute = function () {
+    var requests = this.requests;
+    RequestManager.getInstance().sendBatch(requests, function (err, results) {
+        results = results || [];
+        requests.map(function (request, index) {
+            return results[index] || {};
+        }).map(function (result, index) {
+            return requests[index].format ? requests[index].format(result.result) : result.result;
+        }).forEach(function (result, index) {
+            if (requests[index].callback) {
+                requests[index].callback(err, result);
+            }
+        });
+    }); 
+};
+
+module.exports = Batch;
+
+
+},{"./requestmanager":24}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1627,7 +1694,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./event":13,"./function":16}],10:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./event":14,"./function":17}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1685,7 +1752,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":19}],11:[function(require,module,exports){
+},{"./method":20}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1725,7 +1792,7 @@ module.exports = {
 };
 
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1979,7 +2046,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./formatters":15,"./method":19,"./property":21}],13:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":16,"./method":20,"./property":22}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2175,7 +2242,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./formatters":15}],14:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./formatters":16}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2332,7 +2399,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":6,"./formatters":15,"./requestmanager":23}],15:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":16,"./requestmanager":24}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2552,7 +2619,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":6}],16:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2704,6 +2771,25 @@ SolidityFunction.prototype.typeName = function () {
 };
 
 /**
+ * Should be called to get rpc requests from solidity function
+ *
+ * @method request
+ * @returns {Object}
+ */
+SolidityFunction.prototype.request = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var callback = this.extractCallback(args);
+    var payload = this.toPayload(args);
+    var format = this.unpackOutput.bind(this);
+    
+    return {
+        callback: callback,
+        payload: payload, 
+        format: format
+    };
+};
+
+/**
  * Should be called to execute function
  *
  * @method execute
@@ -2728,6 +2814,7 @@ SolidityFunction.prototype.execute = function () {
  */
 SolidityFunction.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this);
+    execute.request = this.request.bind(this);
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
     var displayName = this.displayName();
@@ -2740,7 +2827,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/utils":6,"../web3":8}],17:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2832,7 +2919,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":11,"xmlhttprequest":4}],18:[function(require,module,exports){
+},{"./errors":12,"xmlhttprequest":4}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2925,7 +3012,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3034,6 +3121,7 @@ Method.prototype.formatOutput = function (result) {
  */
 Method.prototype.attachToObject = function (obj) {
     var func = this.send.bind(this);
+    func.request = this.request.bind(this);
     func.call = this.call; // that's ugly. filter.js uses it
     var name = this.name.split('.');
     if (name.length > 1) {
@@ -3065,6 +3153,19 @@ Method.prototype.toPayload = function (args) {
 };
 
 /**
+ * Should be called to create pure JSONRPC request which can be used in batch request
+ *
+ * @method request
+ * @param {...} params
+ * @return {Object} jsonrpc request
+ */
+Method.prototype.request = function () {
+    var payload = this.toPayload(Array.prototype.slice.call(arguments));
+    payload.format = this.formatOutput.bind(this);
+    return payload;
+};
+
+/**
  * Should send request to the API
  *
  * @method send
@@ -3085,7 +3186,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":6,"./errors":11,"./requestmanager":23}],20:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":12,"./requestmanager":24}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3135,7 +3236,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./property":21}],21:[function(require,module,exports){
+},{"../utils/utils":6,"./property":22}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3253,7 +3354,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":23}],22:[function(require,module,exports){
+},{"./requestmanager":24}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3288,7 +3389,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3394,6 +3495,33 @@ RequestManager.prototype.sendAsync = function (data, callback) {
 
         callback(null, result.result);
     });
+};
+
+/**
+ * Should be called to asynchronously send batch request
+ *
+ * @method sendBatch
+ * @param {Array} batch data
+ * @param {Function} callback
+ */
+RequestManager.prototype.sendBatch = function (data, callback) {
+    if (!this.provider) {
+        return callback(errors.InvalidProvider());
+    }
+
+    var payload = Jsonrpc.getInstance().toBatchPayload(data);
+
+    this.provider.sendAsync(payload, function (err, results) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!utils.isArray(results)) {
+            return callback(errors.InvalidResponse(results));
+        }
+
+        callback(err, results);
+    }); 
 };
 
 /**
@@ -3509,7 +3637,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":6,"./errors":11,"./jsonrpc":18}],24:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":6,"./errors":12,"./jsonrpc":19}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3579,7 +3707,7 @@ module.exports = {
 };
 
 
-},{"./formatters":15,"./method":19}],25:[function(require,module,exports){
+},{"./formatters":16,"./method":20}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3695,7 +3823,7 @@ module.exports = {
 };
 
 
-},{"./method":19}],26:[function(require,module,exports){
+},{"./method":20}],27:[function(require,module,exports){
 
 },{}],"bignumber.js":[function(require,module,exports){
 'use strict';
@@ -3717,7 +3845,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":8,"./lib/web3/contract":9,"./lib/web3/httpprovider":17,"./lib/web3/qtsync":22}]},{},["web3"])
+},{"./lib/web3":8,"./lib/web3/contract":10,"./lib/web3/httpprovider":18,"./lib/web3/qtsync":23}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
