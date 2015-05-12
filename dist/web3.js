@@ -1163,6 +1163,7 @@ var toAddress = function (address) {
     return '0x' + padLeft(toHex(address).substr(2), 40);
 };
 
+
 /**
  * Returns true if object is BigNumber, otherwise false
  *
@@ -1987,6 +1988,18 @@ var compileSerpent = new Method({
     params: 1
 });
 
+var submitWork = new Method({
+    name: 'submitWork',
+    call: 'eth_submitWork',
+    params: 3
+});
+
+var getWork = new Method({
+    name: 'getWork',
+    call: 'eth_getWork',
+    params: 0
+});
+
 var methods = [
     getBalance,
     getStorageAt,
@@ -2004,6 +2017,8 @@ var methods = [
     compileSolidity,
     compileLLL,
     compileSerpent,
+    submitWork,
+    getWork
 ];
 
 /// @returns an array of objects describing web3.eth api properties
