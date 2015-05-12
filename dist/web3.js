@@ -1581,7 +1581,7 @@ ContractFactory.prototype.new = function () {
 
     if (!callback) {
         var address = web3.eth.sendTransaction(options);
-        return this.at(address, callback);
+        return this.at(address);
     }
   
     var self = this;
@@ -2654,7 +2654,7 @@ SolidityFunction.prototype.call = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        var output = web3.eth.call(payload, callback);
+        var output = web3.eth.call(payload);
         return this.unpackOutput(output);
     } 
         
