@@ -3202,7 +3202,7 @@ Property.prototype.attachToObject = function (obj) {
         return prefix + name.charAt(0).toUpperCase() + name.slice(1);
     };
 
-    obj[toAsyncName('get', name)] = this.asyncGet.bind(this);
+    obj[toAsyncName('get', name)] = this.getAsync.bind(this);
 };
 
 /**
@@ -3220,10 +3220,10 @@ Property.prototype.get = function () {
 /**
  * Should be used to asynchrounously get value of property
  *
- * @method asyncGet
+ * @method getAsync
  * @param {Function}
  */
-Property.prototype.asyncGet = function (callback) {
+Property.prototype.getAsync = function (callback) {
     var self = this;
     RequestManager.getInstance().sendAsync({
         method: this.getter
