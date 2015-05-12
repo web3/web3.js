@@ -3189,13 +3189,27 @@ Property.prototype.attachToObject = function (obj) {
         set: this.set.bind(this)
     };
 
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        Object.defineProperty(obj[name[0]], name[1], proto); 
-    } else {
-        Object.defineProperty(obj, name[0], proto);
+    var names = this.name.split('.');
+    var name = names[0];
+    if (names.length > 1) {
+        obj[names[0]] = obj[names[0]] || {};
+        obj = obj[names[0]];
+        name = names[1];
     }
+    
+    Object.defineProperty(obj, name, proto);
+
+    var toAsyncName = function (prefix, name) {
+        return prefix + name.charAt(0).toUpperCase() + name.slice(1);
+    };
+
+    if (this.getter) {
+        obj[toAsyncName('get', name)] = this.asyncGet.bind(this);
+    } 
+
+    if (this.setter) {
+        obj[toAsyncName('set', name)] = this.asyncSet.bind(this);
+    } 
 };
 
 /**
@@ -3221,6 +3235,35 @@ Property.prototype.set = function (value) {
         method: this.setter,
         params: [this.formatInput(value)]
     });
+};
+
+/**
+ * Should be used to asynchrounously get value of property
+ *
+ * @method asyncGet
+ * @param {Function}
+ */
+Property.prototype.asyncGet = function (callback) {
+    var self = this;
+    RequestManager.getInstance().sendAsync({
+        method: this.getter
+    }, function (err, result) {
+        if (err) {
+            return callback(err);
+        }
+        callback(err, self.formatOutput(result));
+    });
+};
+
+/**
+ * Should be used to asynchronously set value of property
+ *
+ * @method asyncSet
+ * @param {Any} new value
+ * @param {Function} callback
+ */
+Property.prototype.asyncSet = function (value, callback) {
+    RequestManager.getInstance().sendAsync(this.formatInput(value), callback);
 };
 
 module.exports = Property;
