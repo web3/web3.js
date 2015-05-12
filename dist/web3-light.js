@@ -1970,6 +1970,14 @@ var call = new Method({
     inputFormatter: [formatters.inputTransactionFormatter, formatters.inputDefaultBlockNumberFormatter]
 });
 
+var estimateGas = new Method({
+    name: 'estimateGas',
+    call: 'eth_estimateGas',
+    params: 1,
+    inputFormatter: [formatters.inputTransactionFormatter],
+    outputFormatter: utils.toDecimal
+});
+
 var compileSolidity = new Method({
     name: 'compile.solidity',
     call: 'eth_compileSolidity',
@@ -2013,6 +2021,7 @@ var methods = [
     getTransactionFromBlock,
     getTransactionCount,
     call,
+    estimateGas,
     sendTransaction,
     compileSolidity,
     compileLLL,
