@@ -1499,8 +1499,12 @@ Batch.prototype.execute = function () {
         results = results || [];
         requests.map(function (request, index) {
             return results[index] || {};
+        }).map(function (result, index) {
+            return requests[index].format ? requests[index].format(result.result) : result.result;
         }).forEach(function (result, index) {
-            requests[index].callback(err, result.result); 
+            if (requests[index].callback) {
+                requests[index].callback(err, result);
+            }
         });
     }); 
 };
@@ -2767,6 +2771,25 @@ SolidityFunction.prototype.typeName = function () {
 };
 
 /**
+ * Should be called to get rpc requests from solidity function
+ *
+ * @method request
+ * @returns {Object}
+ */
+SolidityFunction.prototype.request = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var callback = this.extractCallback(args);
+    var payload = this.toPayload(args);
+    var format = this.unpackOutput.bind(this);
+    
+    return {
+        callback: callback,
+        payload: payload, 
+        format: format
+    };
+};
+
+/**
  * Should be called to execute function
  *
  * @method execute
@@ -2791,6 +2814,7 @@ SolidityFunction.prototype.execute = function () {
  */
 SolidityFunction.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this);
+    execute.request = this.request.bind(this);
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
     var displayName = this.displayName();
@@ -3137,6 +3161,7 @@ Method.prototype.toPayload = function (args) {
  */
 Method.prototype.request = function () {
     var payload = this.toPayload(Array.prototype.slice.call(arguments));
+    payload.format = this.formatOutput.bind(this);
     return payload;
 };
 
