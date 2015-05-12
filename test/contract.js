@@ -430,3 +430,4 @@ describe('web3.eth.contract', function () {
         });
     });
 });
+
