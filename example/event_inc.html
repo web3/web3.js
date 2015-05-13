@@ -6,19 +6,20 @@
         var web3 = require('web3');
         web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
-        /*var source = "" + */
-        /*"contract Contract { " +*/
-        /*"   event Incremented(bool indexed odd, uint x); " +*/
-        /*"   function Contract() { " +*/
-        /*"        x = 69; " +*/
-        /*"    } " +*/
-        /*"    function inc() { " +*/
-        /*"        ++x; " +*/
-        /*"        Incremented(x % 2 == 1, x); " +*/
-        /*"    } " +*/
-        /*"    uint x; " +*/
-        /*"}";*/
-        var source = "5b60456000600050819055505b608c8060196000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063371303c014602e57005b6034603a565b60006000f35b6000600081815054600101919050819055506001600260006000505406147f6e61ef44ac2747ff8b84d353a908eb8bd5c3fb118334d57698c5cfc7041196ad600060006000505481526020016000a25b56";
+        var source = "" +
+        "contract Contract { " +
+        "   event Incremented(bool indexed odd, uint x); " +
+        "   function Contract() { " +
+        "        x = 69; " +
+        "    } " +
+        "    function inc() { " +
+        "        ++x; " +
+        "        Incremented(x % 2 == 1, x); " +
+        "    } " +
+        "    uint x; " +
+        "}";
+        var code = web3.eth.compile.solidity(source).code;
+        /*var code = "5b60456000600050819055505b608c8060196000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063371303c014602e57005b6034603a565b60006000f35b6000600081815054600101919050819055506001600260006000505406147f6e61ef44ac2747ff8b84d353a908eb8bd5c3fb118334d57698c5cfc7041196ad600060006000505481526020016000a25b56";*/
 
         var desc = [{
             "constant" : false,
@@ -51,8 +52,7 @@
         var createContract = function () {
             // let's assume that we have a private key to coinbase ;)
             web3.eth.defaultAccount = web3.eth.coinbase;
-            var Contract = web3.eth.contract(desc); 
-            contract = new Contract({data: source});
+            contract = web3.eth.contract(desc).new({data: code});
             contract.Incremented({odd: true}).watch(update);
             
         };
