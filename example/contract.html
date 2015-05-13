@@ -49,7 +49,7 @@
         // create contract
         myContract = web3.eth.contract(desc).new({data: code});
         console.log('address: ' + myContract.address);
-        document.getElementById('status').innerText = "transaction send, waiting for confirmation";
+        document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
         watch.watch(function (err, hash) {
             var block = web3.eth.getBlock(hash, true); 
             var contractMined = block.transactions.reduce(function (mined, th) {
