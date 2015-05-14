@@ -1558,7 +1558,7 @@ var encodeConstructorParams = function (abi, params) {
         });
     }).map(function (types) {
         return coder.encodeParams(types, params);
-    })[0];
+    })[0] || '';
 };
 
 /**
@@ -1644,7 +1644,7 @@ ContractFactory.prototype.new = function () {
 
     // throw an error if there are no options
 
-    var bytes = encodeConstructorParams(this.abi, args) || '';
+    var bytes = encodeConstructorParams(this.abi, args);
     options.data += bytes;
 
     if (!callback) {
