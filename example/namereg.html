@@ -1,0 +1,41 @@
+<!doctype>
+<html>
+
+<head>
+<script type="text/javascript" src="../dist/web3.js"></script>
+<script type="text/javascript">
+
+    var web3 = require('web3');
+    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+
+    function onAddressKeyUp() {
+        var address = document.getElementById('address').value;
+        document.getElementById('nameOf').innerText = web3.eth.namereg.nameOf(address);
+    };
+    
+    function onNameKeyUp() {
+        var name = document.getElementById('name').value;
+        document.getElementById('addressOf').innerText = web3.eth.namereg.addressOf(name);
+    };
+
+</script>
+</head>
+<body>
+    <h1>Namereg</h1>
+    <h3>Search for name</h3>
+    <div>
+        <text>Address: </text>
+        <input type="text" id="address" onkeyup='onAddressKeyUp()'></input>
+        <text>Name: </text>
+        <text id="nameOf"></text>
+    </div>
+    <h3>Search for address</h3>
+    <div>
+        <text>Name: </text>
+        <input type="text" id="name" onkeyup='onNameKeyUp()'></input>
+        <text>Address: </text>
+        <text id="addressOf"></text>
+    </div>
+
+</body>
+</html>
