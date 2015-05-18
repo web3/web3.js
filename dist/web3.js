@@ -3392,6 +3392,7 @@ module.exports = Method;
 var contract = require('./contract');
 
 var address = '0xb9b5002e4d93944eb47050a16512bc576c7508c0';
+//var address = '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
 var abi = [
     {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"getName","outputs":[{"name":"o_name","type":"bytes32"}],"type":"function"},
     {"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"register","outputs":[],"type":"function"},
@@ -3953,7 +3954,17 @@ module.exports = {
 var web3 = require('../web3');
 var ICAP = require('./icap');
 var namereg = require('./namereg');
+var contract = require('./contract');
 
+/**
+ * Should be used to make ICAP transfer
+ *
+ * @method transfer
+ * @param {String} iban number
+ * @param {String} from (address)
+ * @param {Value} value to be tranfered
+ * @param {Function} callback, callback
+ */
 var transfer = function (iban, from, value, callback) {
     var icap = new ICAP(iban); 
     if (!icap.isValid()) {
@@ -3965,21 +3976,30 @@ var transfer = function (iban, from, value, callback) {
     }
 
     if (icap.isDirect()) {
-        return transferToAddress(icap.address(), from, value, null, callback);
+        return transferToAddress(icap.address(), from, value, callback);
     }
     
     if (!callback) {
         var address = namereg.addressOf(icap.insitution());
-        return transferToAddress(address, from, value, icap.client());
+        return deposit(address, from, value, icap.client());
     }
 
     namereg.addressOf(icap.insitution(), function (err, address) {
-        return transferToAddress(address, from, value, icap.client(), callback);
+        return deposit(address, from, value, icap.client(), callback);
     });
     
 };
 
-var transferToAddress = function (address, from, value, data, callback) {
+/**
+ * Should be used to transfer funds to certain address
+ *
+ * @method transferToAddress
+ * @param {String} address
+ * @param {String} from (address)
+ * @param {Value} value to be tranfered
+ * @param {Function} callback, callback
+ */
+var transferToAddress = function (address, from, value, callback) {
     return web3.eth.sendTransaction({
         address: address,
         from: from,
@@ -3988,10 +4008,28 @@ var transferToAddress = function (address, from, value, data, callback) {
     }, callback);
 };
 
+/**
+ * Should be used to deposit funds in ClientReceipt contract
+ *
+ * @method deposit
+ * @param {String} address
+ * @param {String} from (address)
+ * @param {Value} value to be tranfered
+ * @param {String} client unique identifier
+ * @param {Function} callback, callback
+ */
+var deposit = function (address, from, value, client, callback) {
+    var abi = [{"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"deposit","outputs":[],"type":"function"}];
+    return contract(abi).at(address).deposit(client, {
+        from: from,
+        value: value
+    }, callback);
+};
+
 module.exports = transfer;
 
 
-},{"../web3":9,"./icap":20,"./namereg":23}],30:[function(require,module,exports){
+},{"../web3":9,"./contract":11,"./icap":20,"./namereg":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
