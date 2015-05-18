@@ -829,7 +829,7 @@ module.exports = function (str) {
 };
 
 
-},{"crypto-js/sha3":30}],7:[function(require,module,exports){
+},{"crypto-js/sha3":33}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1474,7 +1474,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/net":22,"./web3/property":23,"./web3/requestmanager":25,"./web3/shh":26,"./web3/watches":27}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1537,7 +1537,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":25}],11:[function(require,module,exports){
+},{"./requestmanager":27}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1777,7 +1777,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":21}],13:[function(require,module,exports){
+},{"./method":22}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2094,7 +2094,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./formatters":17,"./method":21,"./property":23}],15:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":17,"./method":22,"./property":25}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2448,7 +2448,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":17,"./requestmanager":25}],17:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":17,"./requestmanager":27}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2986,6 +2986,136 @@ module.exports = HttpProvider;
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** 
+ * @file icap.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+/**
+ * This prototype should be used to extract necessary information from iban address
+ *
+ * @param {String} iban
+ */
+var ICAP = function (iban) {
+    this._iban = iban;
+};
+
+/**
+ * Should be called to check if icap is correct
+ *
+ * @method isValid
+ * @returns {Boolean} true if it is, otherwise false
+ */
+ICAP.prototype.isValid = function () {
+    return true;
+};
+
+/**
+ * Should be called to check if iban number is direct
+ *
+ * @method isDirect
+ * @returns {Boolean} true if it is, otherwise false
+ */
+ICAP.prototype.isDirect = function () {
+    return this._iban.length === 34;
+};
+
+/**
+ * Should be called to check if iban number if indirect
+ *
+ * @method isIndirect
+ * @returns {Boolean} true if it is, otherwise false
+ */
+ICAP.prototype.isIndirect = function () {
+    return this._iban.length === 20;
+};
+
+/**
+ * Should return iban country code
+ * For ethereum it should always XE
+ *
+ * @method countryCode
+ * @returns {String} countryCode
+ */
+ICAP.prototype.countryCode = function () {
+    return this._iban.substr(0, 2);
+};
+
+/**
+ * Should be called to get iban checksum
+ * Uses the mod-97-10 checksumming protocol (ISO/IEC 7064:2003)
+ *
+ * @method checksum
+ * @returns {String} checksum
+ */
+ICAP.prototype.checksum = function () {
+    return this._iban.substr(2, 2);
+};
+
+/**
+ * Asset identifier 
+ * For ethereum based contracts ETH is the only valid identifier
+ *
+ * @method asset
+ * @returns {String} asset indetifier
+ */
+ICAP.prototype.asset = function () {
+    return this.isIndirect() ? this._iban.substr(4, 3) : '';
+};
+
+/**
+ * Should be called to get institution identifier
+ * eg. XREG
+ *
+ * @method institution
+ * @returns {String} institution identifier
+ */
+ICAP.prototype.institution = function () {
+    return this.isIndirect() ? this._iban.substr(7, 4) : '';
+};
+
+/**
+ * Should be called to get client identifier within institution
+ * eg. GAVOFYORK
+ *
+ * @method client
+ * @returns {String} client identifier
+ */
+ICAP.prototype.client = function () {
+    return this.isIndirect() ? this._iban.substr(11) : '';
+};
+
+/**
+ * Should be called to get client direct address
+ *
+ * @method address
+ * @returns {String} client direct address
+ */
+ICAP.prototype.address = function () {
+    return this.isDirect() ? this._iban.substr(4) : '';
+};
+
+module.exports = ICAP;
+
+
+},{}],21:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file jsonrpc.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -3062,7 +3192,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3236,7 +3366,47 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":13,"./requestmanager":25}],22:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":13,"./requestmanager":27}],23:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file namereg.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var contract = require('./contract');
+
+var address = '0xb9b5002e4d93944eb47050a16512bc576c7508c0';
+var abi = [
+    {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"getName","outputs":[{"name":"o_name","type":"bytes32"}],"type":"function"},
+    {"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"register","outputs":[],"type":"function"},
+    {"constant":true,"inputs":[{"name":"name","type":"bytes32"}],"name":"addressOf","outputs":[{"name":"addr","type":"address"}],"type":"function"},
+    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"getAddress","outputs":[{"name":"o_owner","type":"address"}],"type":"function"},
+    {"constant":false,"inputs":[],"name":"unregister","outputs":[],"type":"function"},
+    {"constant":true,"inputs":[{"name":"addr","type":"address"}],"name":"nameOf","outputs":[{"name":"name","type":"bytes32"}],"type":"function"},
+    {"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"AddressRegistered","type":"event"},
+    {"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"AddressDeregistered","type":"event"}
+];
+
+module.exports = contract(abi).at(address);
+
+
+},{"./contract":11}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3286,7 +3456,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./property":23}],23:[function(require,module,exports){
+},{"../utils/utils":7,"./property":25}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3404,7 +3574,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":25}],24:[function(require,module,exports){
+},{"./requestmanager":27}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3439,7 +3609,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],25:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3687,7 +3857,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":7,"./errors":13,"./jsonrpc":20}],26:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7,"./errors":13,"./jsonrpc":21}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3757,7 +3927,71 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":21}],27:[function(require,module,exports){
+},{"./formatters":17,"./method":22}],29:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file transfer.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var web3 = require('../web3');
+var ICAP = require('./icap');
+var namereg = require('./namereg');
+
+var transfer = function (iban, from, value, callback) {
+    var icap = new ICAP(iban); 
+    if (!icap.isValid()) {
+        var err = new Error('invalid');
+        if (callback) {
+            return callback(err);
+        }
+        throw err;
+    }
+
+    if (icap.isDirect()) {
+        return transferToAddress(icap.address(), from, value, null, callback);
+    }
+    
+    if (!callback) {
+        var address = namereg.addressOf(icap.insitution());
+        return transferToAddress(address, from, value, icap.client());
+    }
+
+    namereg.addressOf(icap.insitution(), function (err, address) {
+        return transferToAddress(address, from, value, icap.client(), callback);
+    });
+    
+};
+
+var transferToAddress = function (address, from, value, data, callback) {
+    return web3.eth.sendTransaction({
+        address: address,
+        from: from,
+        value: value,
+        data: data
+    }, callback);
+};
+
+module.exports = transfer;
+
+
+},{"../web3":9,"./icap":20,"./namereg":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3873,9 +4107,9 @@ module.exports = {
 };
 
 
-},{"./method":21}],28:[function(require,module,exports){
+},{"./method":22}],31:[function(require,module,exports){
 
-},{}],29:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4621,7 +4855,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],30:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -4945,7 +5179,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":29,"./x64-core":31}],31:[function(require,module,exports){
+},{"./core":32,"./x64-core":34}],34:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5250,7 +5484,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":29}],"bignumber.js":[function(require,module,exports){
+},{"./core":32}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -5261,6 +5495,8 @@ var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.eth.contract = require('./lib/web3/contract');
+web3.eth.namereg = require('./lib/web3/namereg');
+web3.eth.icapTransfer = require('./lib/web3/transfer');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
@@ -5270,7 +5506,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":9,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/qtsync":24}]},{},["web3"])
+},{"./lib/web3":9,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
