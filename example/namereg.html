@@ -7,6 +7,32 @@
 
     var web3 = require('web3');
     web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    var from = web3.eth.coinbase;
+    web3.eth.defaultAccount = from;
+
+    window.onload = function () {
+        document.getElementById('yourName').innerText = web3.eth.namereg.nameOf(web3.eth.coinbase);
+        var filter = web3.eth.namereg.AddressRegistered();
+        filter.watch(function (err, event) {
+            // live update all fields
+            document.getElementById('yourName').innerText = web3.eth.namereg.nameOf(web3.eth.coinbase);
+            if (from === event.args.account) {
+                document.getElementById('progress').innerText = 'name changed!';
+            }
+
+            var name = document.getElementById('name').value;
+            var address = document.getElementById('address').value;
+            document.getElementById('addressOf').innerText = web3.eth.namereg.addressOf(name);
+            document.getElementById('nameOf').innerText = web3.eth.namereg.nameOf(address);
+
+        });
+    };
+
+    function changeName() {
+        var name = document.getElementById('newName').value;
+        web3.eth.namereg.register(name);
+        document.getElementById('progress').innerText = 'changing name in progress, please wait...';
+    };
 
     function onAddressKeyUp() {
         var address = document.getElementById('address').value;
@@ -22,6 +48,17 @@
 </head>
 <body>
     <h1>Namereg</h1>
+    <h3>Register name</h3>
+    <div>
+        <text>Your current name is: </text>
+        <text id="yourName"></text>
+    </div>
+    <div>
+        <text>Change name: </text>
+        <input type="text" id="newName"></input>
+        <button id="changeName" type="button" onClick="changeName()">Change!</button>
+        <text id="progress"></text>
+    </div>
     <h3>Search for name</h3>
     <div>
         <text>Address: </text>
