@@ -1279,6 +1279,18 @@ var isJson = function (str) {
     }
 };
 
+/**
+ * This method should be called to check if string is valid ethereum IBAN number
+ * Supports direct and indirect IBANs
+ *
+ * @method isIBAN
+ * @param {String}
+ * @return {Boolean}
+ */
+var isIBAN = function (iban) {
+    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30})$/.test(iban);
+};
+
 module.exports = {
     padLeft: padLeft,
     toHex: toHex,
@@ -1302,7 +1314,8 @@ module.exports = {
     isObject: isObject,
     isBoolean: isBoolean,
     isArray: isArray,
-    isJson: isJson
+    isJson: isJson,
+    isIBAN: isIBAN
 };
 
 
@@ -1436,6 +1449,7 @@ web3.toBigNumber = utils.toBigNumber;
 web3.toWei = utils.toWei;
 web3.fromWei = utils.fromWei;
 web3.isAddress = utils.isAddress;
+web3.isIBAN = utils.isIBAN;
 web3.sha3 = sha3;
 web3.createBatch = function () {
     return new Batch();
@@ -2766,7 +2780,7 @@ SolidityFunction.prototype.unpackOutput = function (output) {
  * @return {String} output bytes
  */
 SolidityFunction.prototype.call = function () {
-    var args = Array.prototype.slice.call(arguments);
+    var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
     var callback = this.extractCallback(args);
     var payload = this.toPayload(args);
 
@@ -2788,7 +2802,7 @@ SolidityFunction.prototype.call = function () {
  * @param {Object} options
  */
 SolidityFunction.prototype.sendTransaction = function () {
-    var args = Array.prototype.slice.call(arguments);
+    var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
     var callback = this.extractCallback(args);
     var payload = this.toPayload(args);
 
@@ -2992,6 +3006,8 @@ module.exports = HttpProvider;
  * @date 2015
  */
 
+var utils = require('../utils/utils');
+
 /**
  * This prototype should be used to extract necessary information from iban address
  *
@@ -3008,7 +3024,7 @@ var ICAP = function (iban) {
  * @returns {Boolean} true if it is, otherwise false
  */
 ICAP.prototype.isValid = function () {
-    return true;
+    return utils.isIBAN(this._iban);
 };
 
 /**
@@ -3032,17 +3048,6 @@ ICAP.prototype.isIndirect = function () {
 };
 
 /**
- * Should return iban country code
- * For ethereum it should always XE
- *
- * @method countryCode
- * @returns {String} countryCode
- */
-ICAP.prototype.countryCode = function () {
-    return this._iban.substr(0, 2);
-};
-
-/**
  * Should be called to get iban checksum
  * Uses the mod-97-10 checksumming protocol (ISO/IEC 7064:2003)
  *
@@ -3051,17 +3056,6 @@ ICAP.prototype.countryCode = function () {
  */
 ICAP.prototype.checksum = function () {
     return this._iban.substr(2, 2);
-};
-
-/**
- * Asset identifier 
- * For ethereum based contracts ETH is the only valid identifier
- *
- * @method asset
- * @returns {String} asset indetifier
- */
-ICAP.prototype.asset = function () {
-    return this.isIndirect() ? this._iban.substr(4, 3) : '';
 };
 
 /**
@@ -3099,7 +3093,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{}],21:[function(require,module,exports){
+},{"../utils/utils":7}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3980,7 +3974,7 @@ var transfer = function (iban, from, value, callback) {
     }
     
     if (!callback) {
-        var address = namereg.addressOf(icap.insitution());
+        var address = namereg.addressOf(icap.institution());
         return deposit(address, from, value, icap.client());
     }
 
