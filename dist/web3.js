@@ -577,7 +577,7 @@ SolidityParam.prototype.combine = function (param) {
  * @returns {Boolean}
  */
 SolidityParam.prototype.isDynamic = function () {
-    return this.value.length > 64 || this.offset;
+    return this.value.length > 64 || this.offset !== undefined;
 };
 
 /**
@@ -693,7 +693,7 @@ SolidityParam.decodeBytes = function (bytes, index) {
     var offset = getOffset(bytes, index);
 
     // 2 * , cause we also parse length
-    return new SolidityParam(bytes.substr(offset * 2, 2 * 64));
+    return new SolidityParam(bytes.substr(offset * 2, 2 * 64), 0);
 };
 
 /**
@@ -708,7 +708,7 @@ SolidityParam.decodeArray = function (bytes, index) {
     index = index || 0;
     var offset = getOffset(bytes, index);
     var length = parseInt('0x' + bytes.substr(offset * 2, 64));
-    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64));
+    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64), 0);
 };
 
 module.exports = SolidityParam;
