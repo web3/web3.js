@@ -2793,7 +2793,7 @@ SolidityFunction.prototype.sendTransaction = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return web3.eth.sendTransaction(payload);;
+        return web3.eth.sendTransaction(payload);
     }
 
     web3.eth.sendTransaction(payload, callback);
