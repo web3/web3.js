@@ -296,6 +296,31 @@ describe('web3.eth.contract', function () {
             });
         });
 
+        it('should explicitly estimateGas with optional params', function () {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            var signature = 'send(address,uint256)';
+            var address = '0x1234567890123456789012345678901234567890';
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_estimateGas');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + 
+                        '0000000000000000000000001234567890123456789012345678901234567890' + 
+                        '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    to: address,
+                    from: address,
+                    gas: '0xc350',
+                    gasPrice: '0xbb8',
+                    value: '0x2710'
+                }]);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            contract.send.estimateGas(address, 17, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
+        });
+
         it('should call testArr method and properly parse result', function () {
             var provider = new FakeHttpProvider2();
             web3.setProvider(provider);
