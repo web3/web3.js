@@ -577,7 +577,7 @@ SolidityParam.prototype.combine = function (param) {
  * @returns {Boolean}
  */
 SolidityParam.prototype.isDynamic = function () {
-    return this.value.length > 64;
+    return this.value.length > 64 || this.offset !== undefined;
 };
 
 /**
@@ -693,7 +693,7 @@ SolidityParam.decodeBytes = function (bytes, index) {
     var offset = getOffset(bytes, index);
 
     // 2 * , cause we also parse length
-    return new SolidityParam(bytes.substr(offset * 2, 2 * 64));
+    return new SolidityParam(bytes.substr(offset * 2, 2 * 64), 0);
 };
 
 /**
@@ -708,7 +708,7 @@ SolidityParam.decodeArray = function (bytes, index) {
     index = index || 0;
     var offset = getOffset(bytes, index);
     var length = parseInt('0x' + bytes.substr(offset * 2, 64));
-    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64));
+    return new SolidityParam(bytes.substr(offset * 2, (length + 1) * 64), 0);
 };
 
 module.exports = SolidityParam;
@@ -1321,7 +1321,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 module.exports={
-    "version": "0.4.2"
+    "version": "0.4.3"
 }
 
 },{}],9:[function(require,module,exports){
@@ -2807,11 +2807,28 @@ SolidityFunction.prototype.sendTransaction = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        web3.eth.sendTransaction(payload);
-        return;
+        return web3.eth.sendTransaction(payload);
     }
 
     web3.eth.sendTransaction(payload, callback);
+};
+
+/**
+ * Should be used to estimateGas of solidity function
+ *
+ * @method estimateGas
+ * @param {Object} options
+ */
+SolidityFunction.prototype.estimateGas = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var callback = this.extractCallback(args);
+    var payload = this.toPayload(args);
+
+    if (!callback) {
+        return web3.eth.estimateGas(payload);
+    }
+
+    web3.eth.estimateGas(payload, callback);
 };
 
 /**
@@ -2881,6 +2898,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
     execute.request = this.request.bind(this);
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
+    execute.estimateGas = this.estimateGas.bind(this);
     var displayName = this.displayName();
     if (!contract[displayName]) {
         contract[displayName] = execute;
