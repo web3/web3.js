@@ -18,29 +18,10 @@
         "    } " +
         "    uint x; " +
         "}";
-        var code = web3.eth.compile.solidity(source).code;
-        /*var code = "5b60456000600050819055505b608c8060196000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063371303c014602e57005b6034603a565b60006000f35b6000600081815054600101919050819055506001600260006000505406147f6e61ef44ac2747ff8b84d353a908eb8bd5c3fb118334d57698c5cfc7041196ad600060006000505481526020016000a25b56";*/
 
-        var desc = [{
-            "constant" : false,
-            "inputs" : [],
-            "name" : "inc",
-            "outputs" : [],
-            "type" : "function"
-        }, {
-            "anonymous" : false,
-            "inputs" : [{
-                "indexed" : true,
-                "name" : "odd",
-                "type" : "bool"
-            }, {
-                "indexed" : false,
-                "name" : "x",
-                "type" : "uint256"
-            }],
-            "name" : "Incremented",
-            "type" : "event"
-        }];
+        var compiled = web3.eth.compile.solidity(source);
+        var code = compiled.Contract.code;
+        var abi = compiled.Contract.info.abiDefinition;
 
         var address;
         var contract;
@@ -55,7 +36,7 @@
             
             var watch = web3.eth.filter('latest');
 
-            contract = web3.eth.contract(desc).new({data: code});
+            contract = web3.eth.contract(abi).new({data: code});
             
             console.log('address: ' + contract.address);
 
