@@ -577,7 +577,7 @@ SolidityParam.prototype.combine = function (param) {
  * @returns {Boolean}
  */
 SolidityParam.prototype.isDynamic = function () {
-    return this.value.length > 64;
+    return this.value.length > 64 || this.offset;
 };
 
 /**
