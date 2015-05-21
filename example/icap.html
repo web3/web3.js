@@ -35,7 +35,7 @@
             "type" : "event"
         }];
 
-        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addressOf('XREG'));
+        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addr('XREG'));
         var filter = ExchangeInterface.Deposit({}, {fromBlock: 0});
         filter.watch(function (err, event) {
             console.log(event);
@@ -66,7 +66,7 @@
             return document.getElementById('ibanValidation').innerText = 'IBAN number is incorrect';
         }
         var institution = iban.substr(7, 4);
-        var address = web3.eth.namereg.addressOf(institution);
+        var address = web3.eth.namereg.addr(institution);
         document.getElementById('ibanValidation').innerText = 'IBAN number correct, exchange address: ' + address;
     };
 
