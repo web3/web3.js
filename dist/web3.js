@@ -3984,7 +3984,7 @@ var contract = require('./contract');
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transfer = function (iban, from, value, callback) {
+var transfer = function (from, iban, value, callback) {
     var icap = new ICAP(iban); 
     if (!icap.isValid()) {
         var err = new Error('invalid');
@@ -3995,16 +3995,16 @@ var transfer = function (iban, from, value, callback) {
     }
 
     if (icap.isDirect()) {
-        return transferToAddress(icap.address(), from, value, callback);
+        return transferToAddress(from, icap.address(), value, callback);
     }
     
     if (!callback) {
         var address = namereg.addr(icap.institution());
-        return deposit(address, from, value, icap.client());
+        return deposit(from, address, value, icap.client());
     }
 
     namereg.addr(icap.insitution(), function (err, address) {
-        return deposit(address, from, value, icap.client(), callback);
+        return deposit(from, address, value, icap.client(), callback);
     });
     
 };
@@ -4018,7 +4018,7 @@ var transfer = function (iban, from, value, callback) {
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (address, from, value, callback) {
+var transferToAddress = function (from, address, value, callback) {
     return web3.eth.sendTransaction({
         address: address,
         from: from,
@@ -4037,7 +4037,7 @@ var transferToAddress = function (address, from, value, callback) {
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (address, from, value, client, callback) {
+var deposit = function (from, address, value, client, callback) {
     var abi = [{"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"deposit","outputs":[],"type":"function"}];
     return contract(abi).at(address).deposit(client, {
         from: from,
@@ -8232,7 +8232,7 @@ web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.eth.contract = require('./lib/web3/contract');
 web3.eth.namereg = require('./lib/web3/namereg');
-web3.eth.icapTransfer = require('./lib/web3/transfer');
+web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {

@@ -73,7 +73,7 @@
     function transfer() {
         var value = new BigNumber(document.getElementById('value').value);
         var iban = document.getElementById('iban').value;
-        web3.eth.icapTransfer(iban, from, value);
+        web3.eth.sendIBANTransaction(from, iban, value);
     };
     
 </script>

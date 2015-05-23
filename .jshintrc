@@ -9,7 +9,7 @@
     "maxdepth": 3,
     "maxerr": 50,
     /*"maxlen": 80*/ /*this should be our goal*/
-    "maxparams": 3,
+    /*"maxparams": 3,*/
     "nonew": true,
     "unused": true,
     "undef": true,
