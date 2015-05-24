@@ -2760,7 +2760,7 @@ SolidityFunction.prototype.signature = function () {
 
 
 SolidityFunction.prototype.unpackOutput = function (output) {
-    if (output === null) {
+    if (!output) {
         return;
     }
 
