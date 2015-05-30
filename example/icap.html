@@ -11,6 +11,7 @@
     var from = web3.eth.coinbase;
     web3.eth.defaultAccount = from;
 
+    /*
     window.onload = function () {
         var abi = [{
                 "anonymous" : false,
@@ -35,13 +36,14 @@
             "type" : "event"
         }];
 
-        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addr('XREG'));
+        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addr('XROO'));
         var filter = ExchangeInterface.Deposit({}, {fromBlock: 0});
         filter.watch(function (err, event) {
             console.log(event);
             displayDeposit("block: " + event.blockNumber + " user: " + event.args._id + "\nvalue : " + event.args._value.toString(10));
         });
     };
+    */
 
     function displayDeposit(text) {
         var node = document.createElement('li');
@@ -82,7 +84,7 @@
     <h1>ICAP</h1>
     <h3>Transfer</h3>
     <div>
-        <text>Destination IBAN (eg. XE81ETHXREGGAVOFYORK): </text>
+        <text>Destination IBAN (eg. XE81ETHXROOGAVOFYORK): </text>
         <input type="text" id="iban" onkeyup='validateIBAN()'></input>
         <text id="ibanValidation"></text>
     </div>
@@ -94,7 +96,7 @@
     <div>
         <button id="transfer" type="button" onClick="transfer()">Transfer!</button>
     </div>
-    <h3>"XREG" Exchange deposits</h3>
-    <ul id="deposits"></ul>
+    <h3 style="visibility: hidden;">"XREG" Exchange deposits</h3>
+    <ul style="visibility: hidden;" id="deposits"></ul>
 </body>
 </html>
