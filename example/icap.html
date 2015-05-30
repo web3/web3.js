@@ -1,0 +1,102 @@
+<!doctype>
+<html>
+
+<head>
+<script type="text/javascript" src="../dist/web3.js"></script>
+<script type="text/javascript">
+
+    var web3 = require('web3');
+    var BigNumber = require('bignumber.js');
+    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    var from = web3.eth.coinbase;
+    web3.eth.defaultAccount = from;
+
+    /*
+    window.onload = function () {
+        var abi = [{
+                "anonymous" : false,
+                "inputs" : [
+                {
+                    "indexed" : true,
+                    "name" : "from",
+                    "type" : "address"
+                },
+                {
+                    "indexed" : true,
+                    "name" : "to",
+                    "type" : "bytes32"
+                },
+                {
+                    "indexed" : false,
+                    "name" : "value",
+                    "type" : "uint256"
+                }
+            ],
+            "name" : "Deposit",
+            "type" : "event"
+        }];
+
+        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addr('XROO'));
+        var filter = ExchangeInterface.Deposit({}, {fromBlock: 0});
+        filter.watch(function (err, event) {
+            console.log(event);
+            displayDeposit("block: " + event.blockNumber + " user: " + event.args._id + "\nvalue : " + event.args._value.toString(10));
+        });
+    };
+    */
+
+    function displayDeposit(text) {
+        var node = document.createElement('li');
+        var textnode = document.createTextNode(text);
+        node.appendChild(textnode);
+        document.getElementById('deposits').appendChild(node);
+    }
+
+    function validateValue() {
+        try {
+            var value = document.getElementById('value').value;
+            var bnValue = new BigNumber(value);
+            document.getElementById('valueValidation').innerText = bnValue.toString(10);
+        } catch (err) {
+            document.getElementById('valueValidation').innerText = 'Value is incorrect, cannot parse';
+        }
+    };
+
+    function validateIBAN() {
+        var iban = document.getElementById('iban').value;
+        if (!web3.isIBAN(iban)) {
+            return document.getElementById('ibanValidation').innerText = 'IBAN number is incorrect';
+        }
+        var institution = iban.substr(7, 4);
+        var address = web3.eth.namereg.addr(institution);
+        document.getElementById('ibanValidation').innerText = 'IBAN number correct, exchange address: ' + address;
+    };
+
+    function transfer() {
+        var value = new BigNumber(document.getElementById('value').value);
+        var iban = document.getElementById('iban').value;
+        web3.eth.sendIBANTransaction(from, iban, value);
+    };
+    
+</script>
+</head>
+<body>
+    <h1>ICAP</h1>
+    <h3>Transfer</h3>
+    <div>
+        <text>Destination IBAN (eg. XE81ETHXROOGAVOFYORK): </text>
+        <input type="text" id="iban" onkeyup='validateIBAN()'></input>
+        <text id="ibanValidation"></text>
+    </div>
+    <div>
+        <text>Value: </text>
+        <input type="text" id="value" onkeyup='validateValue()'></input>
+        <text id="valueValidation"></text>
+    </div>
+    <div>
+        <button id="transfer" type="button" onClick="transfer()">Transfer!</button>
+    </div>
+    <h3 style="visibility: hidden;">"XREG" Exchange deposits</h3>
+    <ul style="visibility: hidden;" id="deposits"></ul>
+</body>
+</html>
