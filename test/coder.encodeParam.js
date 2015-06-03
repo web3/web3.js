@@ -24,6 +24,8 @@ describe('lib/solidity/coder', function () {
                                                     expected: '6761766f66796f726b0000000000000000000000000000000000000000000000'});
         test({ type: 'bytes32', value: '0x731a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b', 
                                                     expected: '731a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'});
+        test({ type: 'bytes32', value: '0x02838654a83c213dae3698391eabbd54a5b6e1fb3452bc7fa4ea0dd5c8ce7e29', 
+                                                    expected: '02838654a83c213dae3698391eabbd54a5b6e1fb3452bc7fa4ea0dd5c8ce7e29'});
         test({ type: 'bytes', value: '0x6761766f66796f726b',   
                                                     expected: '0000000000000000000000000000000000000000000000000000000000000020' +
                                                               '0000000000000000000000000000000000000000000000000000000000000009' +
