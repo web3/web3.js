@@ -2479,7 +2479,7 @@ Filter.prototype.watch = function (callback) {
 
 Filter.prototype.stopWatching = function () {
     RequestManager.getInstance().stopPolling(this.filterId);
-    // remove async
+    // remove filter async
     this.implementation.uninstallFilter(this.filterId, function(){});
     this.callbacks = [];
 };
@@ -2753,6 +2753,7 @@ module.exports = {
 var web3 = require('../web3');
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 
 /**
@@ -2773,6 +2774,12 @@ var SolidityFunction = function (json, address) {
 SolidityFunction.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
+    }
+};
+
+SolidityFunction.prototype.extractDefaultBlock = function (args) {
+    if (args.length > this._inputTypes.length && !utils.isObject(args[args.length -1])) {
+        return formatters.inputDefaultBlockNumberFormatter(args.pop()); // modify the args array!
     }
 };
 
@@ -2827,15 +2834,17 @@ SolidityFunction.prototype.unpackOutput = function (output) {
 SolidityFunction.prototype.call = function () {
     var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
     var callback = this.extractCallback(args);
+    var defaultBlock = this.extractDefaultBlock(args);
     var payload = this.toPayload(args);
 
+
     if (!callback) {
-        var output = web3.eth.call(payload);
+        var output = web3.eth.call(payload, defaultBlock);
         return this.unpackOutput(output);
     } 
         
     var self = this;
-    web3.eth.call(payload, function (error, output) {
+    web3.eth.call(payload, defaultBlock, function (error, output) {
         callback(error, self.unpackOutput(output));
     });
 };
@@ -2954,7 +2963,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9}],19:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":17}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 

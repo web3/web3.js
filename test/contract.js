@@ -133,6 +133,7 @@ describe('web3.eth.contract', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
             var address = '0x1234567890123456789012345678901234567890';
+            
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
@@ -144,6 +145,28 @@ describe('web3.eth.contract', function () {
             var contract = web3.eth.contract(desc).at(address);
 
             var r = contract.balance(address);
+            assert.deepEqual(new BigNumber(0x32), r);
+        });
+
+        it('should call constant function with default block', function () {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+            var signature = 'balance(address)'
+            var address = '0x1234567890123456789012345678901234567890';
+            
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    to: address
+                }, '0xb']);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var r = contract.balance(address, 11);
             assert.deepEqual(new BigNumber(0x32), r);
         });
 
@@ -214,6 +237,31 @@ describe('web3.eth.contract', function () {
             var contract = web3.eth.contract(desc).at(address);
 
             var r = contract.balance.call(address, {from: address, gas: 50000});
+            assert.deepEqual(new BigNumber(0x32), r);
+
+        });
+
+        it('should explicitly make a call with optional params and defaultBlock', function () {
+           
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+            var signature = 'balance(address)';
+            var address = '0x1234567890123456789012345678901234567890';
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    to: address,
+                    from: address,
+                    gas: '0xc350'
+                }, '0xb']);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var r = contract.balance.call(address, {from: address, gas: 50000}, 11);
             assert.deepEqual(new BigNumber(0x32), r);
 
         });
