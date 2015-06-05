@@ -2435,8 +2435,8 @@ Filter.prototype.watch = function (callback) {
         if(self.filterId || self.filterError)
             clearInterval(intervalId);
 
-        if(self.filterError || !self.filterId)
-            return; 
+        if(!self.filterId)
+            return;
 
         self.callbacks.push(callback);
 
@@ -3903,9 +3903,16 @@ RequestManager.prototype.poll = function () {
         }
 
         results.map(function (result, index) {
-            result.callback = self.polls[index].callback;
-            return result;
+            // make sure the filter is still installed after arrival of the request
+            if(self.polls[index]) {
+                result.callback = self.polls[index].callback;
+                return result;
+            } else
+                return false;
         }).filter(function (result) {
+            if(!result)
+                return false;
+
             var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
                 result.callback(errors.InvalidResponse(result));
