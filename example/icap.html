@@ -7,96 +7,198 @@
 
     var web3 = require('web3');
     var BigNumber = require('bignumber.js');
-    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8101"));
+    /*web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));*/
     var from = web3.eth.coinbase;
     web3.eth.defaultAccount = from;
 
-    /*
-    window.onload = function () {
-        var abi = [{
-                "anonymous" : false,
-                "inputs" : [
-                {
-                    "indexed" : true,
-                    "name" : "from",
-                    "type" : "address"
-                },
-                {
-                    "indexed" : true,
-                    "name" : "to",
-                    "type" : "bytes32"
-                },
-                {
-                    "indexed" : false,
-                    "name" : "value",
-                    "type" : "uint256"
-                }
-            ],
-            "name" : "Deposit",
-            "type" : "event"
-        }];
+    var nameregAbi = [
+        {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"name","outputs":[{"name":"o_name","type":"bytes32"}],"type":"function"},
+        {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"type":"function"},
+        {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"type":"function"},
+        {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"reserve","outputs":[],"type":"function"},
+        {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"subRegistrar","outputs":[{"name":"o_subRegistrar","type":"address"}],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_newOwner","type":"address"}],"name":"transfer","outputs":[],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_registrar","type":"address"}],"name":"setSubRegistrar","outputs":[],"type":"function"},
+        {"constant":false,"inputs":[],"name":"Registrar","outputs":[],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_a","type":"address"},{"name":"_primary","type":"bool"}],"name":"setAddress","outputs":[],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_content","type":"bytes32"}],"name":"setContent","outputs":[],"type":"function"},
+        {"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"disown","outputs":[],"type":"function"},
+        {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"register","outputs":[{"name":"","type":"address"}],"type":"function"},
+        {"anonymous":false,"inputs":[{"indexed":true,"name":"name","type":"bytes32"}],"name":"Changed","type":"event"},
+        {"anonymous":false,"inputs":[{"indexed":true,"name":"name","type":"bytes32"},{"indexed":true,"name":"addr","type":"address"}],"name":"PrimaryChanged","type":"event"}
+    ];
 
-        var ExchangeInterface = web3.eth.contract(abi).at(web3.eth.namereg.addr('XROO'));
-        var filter = ExchangeInterface.Deposit({}, {fromBlock: 0});
-        filter.watch(function (err, event) {
-            console.log(event);
-            displayDeposit("block: " + event.blockNumber + " user: " + event.args._id + "\nvalue : " + event.args._value.toString(10));
-        });
+    var depositAbi = [{"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"deposit","outputs":[],"type":"function"}];
+
+    var Namereg = web3.eth.contract(nameregAbi);
+    var Deposit = web3.eth.contract(depositAbi);
+
+    var namereg = web3.eth.namereg;
+    var deposit; 
+    var iban;
+
+    function validateNamereg() {
+        var address = document.getElementById('namereg').value;
+        var ok = /^(0x)?[0-9a-f]{40}$/.test(address) || address === 'default';
+        if (ok) {
+            namereg = address === 'default' ? web3.eth.namereg : Namereg.at(address);
+            document.getElementById('nameregValidation').innerText = 'ok!';
+        } else {
+            document.getElementById('nameregValidation').innerText = 'namereg address is incorrect!';
+        }
+        return ok;
     };
-    */
 
-    function displayDeposit(text) {
-        var node = document.createElement('li');
-        var textnode = document.createTextNode(text);
-        node.appendChild(textnode);
-        document.getElementById('deposits').appendChild(node);
-    }
+    function onNameregKeyUp() {
+        updateIBAN(validateNamereg());
+        onExchangeKeyUp();
+    };
+    
+    function validateExchange() {
+        var exchange = document.getElementById('exchange').value;
+        var ok = /^[0-9A-Z]{4}$/.test(exchange);
+        if (ok) {
+            var address = namereg.addr(exchange);
+            deposit = Deposit.at(address);
+            document.getElementById('exchangeValidation').innerText = 'ok! address of exchange: ' + address;
+        } else {
+            document.getElementById('exchangeValidation').innerText = 'exchange id is incorrect';
+        }
+        return ok;
+    };
+
+    function onExchangeKeyUp() {
+        updateIBAN(validateExchange());
+    };
+
+    function validateClient() {
+        var client = document.getElementById('client').value;
+        var ok = /^[0-9A-Z]{9}$/.test(client);
+        if (ok) {
+            document.getElementById('clientValidation').innerText = 'ok!';
+        } else {
+            document.getElementById('clientValidation').innerText = 'client id is incorrect';
+        }
+        return ok;
+    };
+
+    function onClientKeyUp() {
+        updateIBAN(validateClient());
+    };
 
     function validateValue() {
         try {
             var value = document.getElementById('value').value;
             var bnValue = new BigNumber(value);
             document.getElementById('valueValidation').innerText = bnValue.toString(10);
+            return true;
         } catch (err) {
             document.getElementById('valueValidation').innerText = 'Value is incorrect, cannot parse';
+            return false;
         }
     };
 
+    function onValueKeyUp() {
+        validateValue();
+    };
+
     function validateIBAN() {
-        var iban = document.getElementById('iban').value;
         if (!web3.isIBAN(iban)) {
-            return document.getElementById('ibanValidation').innerText = 'IBAN number is incorrect';
+            return document.getElementById('ibanValidation').innerText = ' - IBAN number is incorrect';
         }
-        var institution = iban.substr(7, 4);
-        var address = web3.eth.namereg.addr(institution);
-        document.getElementById('ibanValidation').innerText = 'IBAN number correct, exchange address: ' + address;
+        document.getElementById('ibanValidation').innerText = ' - IBAN number correct';
+    };
+
+    function updateIBAN(ok) {
+        var exchangeId = document.getElementById('exchange').value;
+        var clientId = document.getElementById('client').value; 
+        iban = 'XE' + '00' + 'ETH' + exchangeId + clientId;
+        document.getElementById('iban').innerText = iban;
+        validateIBAN();
     };
 
     function transfer() {
         var value = new BigNumber(document.getElementById('value').value);
-        var iban = document.getElementById('iban').value;
-        web3.eth.sendIBANTransaction(from, iban, value);
+        var exchange = document.getElementById('exchange').value;
+        var client = document.getElementById('client').value;
+        deposit.deposit(client, {value: value});
+        displayTransfer("deposited client's " + client + " funds " + value.toString(10) + " to exchange " + exchange);
     };
+
+    function displayTransfer(text) {
+        var node = document.createElement('li');
+        var textnode = document.createTextNode(text);
+        node.appendChild(textnode);
+        document.getElementById('transfers').appendChild(node);
+    }
     
 </script>
 </head>
 <body>
-    <h1>ICAP</h1>
-    <h3>Transfer</h3>
+    <h1>ICAP transfer</h1>
     <div>
-        <text>Destination IBAN (eg. XE81ETHXROOGAVOFYORK): </text>
-        <input type="text" id="iban" onkeyup='validateIBAN()'></input>
-        <text id="ibanValidation"></text>
+        <h4>namereg address</h4>
     </div>
     <div>
-        <text>Value: </text>
-        <input type="text" id="value" onkeyup='validateValue()'></input>
+        <text>eg. 0xee817813d866678124dc559d19b4504d815b296e or 'default')</text>
+    </div>
+    <div>
+        <input type="text" id="namereg" onkeyup='onNameregKeyUp()' value="default"></input>
+        <text id="nameregValidation"></text>
+    </div>
+
+    <div>
+        <h4>exchange identifier</h4>
+    </div>
+    <div>
+        <text>eg. XROG</text>
+    </div>
+    <div>
+        <input type="text" id="exchange" onkeyup='onExchangeKeyUp()'></input>
+        <text id="exchangeValidation"></text>
+    </div>
+
+    <div>
+        <h4>client identifier</h4>
+    </div>
+    <div>
+        <text>eg. GAVOFYORK</text>
+    </div>
+    <div>
+        <input type="text" id="client" onkeyup='onClientKeyUp()'></input>
+        <text id="clientValidation"></text>
+    </div>
+
+    <div>
+        <h4>value</h4>
+    </div>
+    <div>
+        <text>eg. 100</text>
+    </div>
+    <div>
+        <input type="text" id="value" onkeyup='onValueKeyUp()'></input>
         <text id="valueValidation"></text>
     </div>
+
+    <div>&nbsp;</div>
+    <div>
+        <text>IBAN: </text>
+        <text id="iban"></text>
+        <text id="ibanValidation"></text>
+    </div>
+    <div>&nbsp;</div>
     <div>
         <button id="transfer" type="button" onClick="transfer()">Transfer!</button>
+        <text id="transferValidation"></text>
     </div>
-    <h3 style="visibility: hidden;">"XREG" Exchange deposits</h3>
-    <ul style="visibility: hidden;" id="deposits"></ul>
+   
+    <div>
+        <h4>transfers</h4>
+    </div>
+    <div>
+        <ul id='transfers'></ul>
+    </div>
 </body>
 </html>
