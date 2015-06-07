@@ -7,8 +7,7 @@
 
     var web3 = require('web3');
     var BigNumber = require('bignumber.js');
-    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8101"));
-    /*web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));*/
+    web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
     var from = web3.eth.coinbase;
     web3.eth.defaultAccount = from;
 
@@ -142,7 +141,7 @@
         <h4>namereg address</h4>
     </div>
     <div>
-        <text>eg. 0xee817813d866678124dc559d19b4504d815b296e or 'default')</text>
+        <text>eg. 0x436474facc88948696b371052a1befb801f003ca or 'default')</text>
     </div>
     <div>
         <input type="text" id="namereg" onkeyup='onNameregKeyUp()' value="default"></input>
@@ -153,7 +152,7 @@
         <h4>exchange identifier</h4>
     </div>
     <div>
-        <text>eg. XROG</text>
+        <text>eg. WYWY</text>
     </div>
     <div>
         <input type="text" id="exchange" onkeyup='onExchangeKeyUp()'></input>
