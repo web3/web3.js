@@ -1503,6 +1503,23 @@ Object.defineProperty(web3.eth, 'defaultAccount', {
     }
 });
 
+
+// EXTEND
+web3._extend = function(extension){
+    /*jshint maxcomplexity: 6 */
+
+    if(extension.property && !web3[extension.property])
+        web3[extension.property] = {};
+
+    setupMethods(web3[extension.property] || web3, extension.methods || []);
+    setupProperties(web3[extension.property] || web3, extension.properties || []);
+};
+web3._extend.formatters = formatters;
+web3._extend.utils = utils;
+web3._extend.Method = require('./web3/method');
+web3._extend.Property = require('./web3/property');
+
+
 /// setups all api methods
 setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
@@ -1515,7 +1532,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":22,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2581,7 +2598,7 @@ var inputTransactionFormatter = function (options){
  * @returns {Object} transaction
 */
 var outputTransactionFormatter = function (tx){
-    if(tx.number !== null)
+    if(tx.blockNumber !== null)
         tx.blockNumber = utils.toDecimal(tx.blockNumber);
     if(tx.transactionIndex !== null)
         tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
