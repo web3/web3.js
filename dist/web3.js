@@ -1505,7 +1505,7 @@ Object.defineProperty(web3.eth, 'defaultAccount', {
 
 
 // EXTEND
-web3.extend = function(extension){
+web3._extend = function(extension){
     /*jshint maxcomplexity: 6 */
 
     if(extension.property && !web3[extension.property])
@@ -1514,10 +1514,10 @@ web3.extend = function(extension){
     setupMethods(web3[extension.property] || web3, extension.methods || []);
     setupProperties(web3[extension.property] || web3, extension.properties || []);
 };
-web3.extend.formatters = formatters;
-web3.extend.utils = utils;
-web3.extend.Method = require('./web3/method');
-web3.extend.Property = require('./web3/property');
+web3._extend.formatters = formatters;
+web3._extend.utils = utils;
+web3._extend.Method = require('./web3/method');
+web3._extend.Property = require('./web3/property');
 
 
 /// setups all api methods

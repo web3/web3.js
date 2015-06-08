@@ -5,40 +5,40 @@ var web3 = require('../lib/web3');
 
 
 var tests = [{
-    properties: [new web3.extend.Property({
+    properties: [new web3._extend.Property({
         name: 'gasPrice',
         getter: 'eth_gasPrice',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+        outputFormatter: web3._extend.formatters.outputBigNumberFormatter
     })]
 },{
-    methods: [new web3.extend.Method({
+    methods: [new web3._extend.Method({
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+        inputFormatter: [web3._extend.utils.toAddress, web3._extend.formatters.inputDefaultBlockNumberFormatter],
+        outputFormatter: web3._extend.formatters.outputBigNumberFormatter
     })]
 },{
     property: 'admin',
-    properties: [new web3.extend.Property({
+    properties: [new web3._extend.Property({
         name: 'gasPrice',
         getter: 'eth_gasPrice',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+        outputFormatter: web3._extend.formatters.outputBigNumberFormatter
     })],
-    methods: [new web3.extend.Method({
+    methods: [new web3._extend.Method({
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+        inputFormatter: [web3._extend.utils.toAddress, web3._extend.formatters.inputDefaultBlockNumberFormatter],
+        outputFormatter: web3._extend.formatters.outputBigNumberFormatter
     })]
 }];
 
 describe('web3', function () {
-    describe('extend', function () {
+    describe('_extend', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                web3.extend(test);
+                web3._extend(test);
 
 
                 if(test.properties)
