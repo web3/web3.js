@@ -798,26 +798,34 @@ if (typeof XMLHttpRequest === 'undefined') {
 /// required to define ETH_BIGNUMBER_ROUNDING_MODE
 var BigNumber = require('bignumber.js');
 
-var ETH_UNITS = [ 
-    'wei', 
-    'Kwei', 
-    'Mwei', 
-    'Gwei', 
-    'szabo', 
-    'finney', 
-    'ether', 
-    'grand', 
-    'Mether', 
-    'Gether', 
-    'Tether', 
-    'Pether', 
-    'Eether', 
-    'Zether', 
-    'Yether', 
-    'Nether', 
-    'Dether', 
-    'Vether', 
-    'Uether' 
+var ETH_UNITS = [
+    'wei',
+    'kwei',
+    'Mwei',
+    'Gwei',
+    'szabo',
+    'finney',
+    'femtoether',
+    'picoether',
+    'nanoether',
+    'microether',
+    'milliether',
+    'nano',
+    'micro',
+    'milli',
+    'ether',
+    'grand',
+    'Mether',
+    'Gether',
+    'Tether',
+    'Pether',
+    'Eether',
+    'Zether',
+    'Yether',
+    'Nether',
+    'Dether',
+    'Vether',
+    'Uether'
 ];
 
 module.exports = {
@@ -825,7 +833,7 @@ module.exports = {
     ETH_SIGNATURE_LENGTH: 4,
     ETH_UNITS: ETH_UNITS,
     ETH_BIGNUMBER_ROUNDING_MODE: { ROUNDING_MODE: BigNumber.ROUND_DOWN },
-    ETH_POLLING_TIMEOUT: 1000,
+    ETH_POLLING_TIMEOUT: 1000/2,
     defaultBlock: 'latest',
     defaultAccount: undefined
 };
@@ -911,22 +919,30 @@ module.exports = function (str, isNew) {
 var BigNumber = require('bignumber.js');
 
 var unitMap = {
-    'wei':      '1',
-    'kwei':     '1000',
-    'ada':      '1000',
-    'mwei':     '1000000',
-    'babbage':  '1000000',
-    'gwei':     '1000000000',
-    'shannon':  '1000000000',
-    'szabo':    '1000000000000',
-    'finney':   '1000000000000000',
-    'ether':    '1000000000000000000',
-    'kether':   '1000000000000000000000',
-    'grand':    '1000000000000000000000',
-    'einstein': '1000000000000000000000',
-    'mether':   '1000000000000000000000000',
-    'gether':   '1000000000000000000000000000',
-    'tether':   '1000000000000000000000000000000'
+    'wei':          '1',
+    'kwei':         '1000',
+    'ada':          '1000',
+    'femtoether':   '1000',
+    'mwei':         '1000000',
+    'babbage':      '1000000',
+    'picoether':    '1000000',
+    'gwei':         '1000000000',
+    'shannon':      '1000000000',
+    'nanoether':    '1000000000',
+    'nano':         '1000000000',
+    'szabo':        '1000000000000',
+    'microether':   '1000000000000',
+    'micro':        '1000000000000',
+    'finney':       '1000000000000000',
+    'milliether':    '1000000000000000',
+    'milli':         '1000000000000000',
+    'ether':        '1000000000000000000',
+    'kether':       '1000000000000000000000',
+    'grand':        '1000000000000000000000',
+    'einstein':     '1000000000000000000000',
+    'mether':       '1000000000000000000000000',
+    'gether':       '1000000000000000000000000000',
+    'tether':       '1000000000000000000000000000000'
 };
 
 /**
@@ -1125,13 +1141,14 @@ var getValueOfUnit = function (unit) {
  * Takes a number of wei and converts it to any other ether unit.
  *
  * Possible units are:
- * - kwei/ada
- * - mwei/babbage
- * - gwei/shannon
- * - szabo
- * - finney
- * - ether
- * - kether/grand/einstein
+ *   SI Short   SI Full        Effigy       Other
+ * - kwei       femtoether     ada
+ * - mwei       picoether      babbage
+ * - gwei       nanoether      shannon      nano
+ * - --         microether     szabo        micro
+ * - --         milliether     finney       milli
+ * - ether      --             --
+ * - kether                    einstein     grand 
  * - mether
  * - gether
  * - tether
@@ -1151,13 +1168,14 @@ var fromWei = function(number, unit) {
  * Takes a number of a unit and converts it to wei.
  *
  * Possible units are:
- * - kwei/ada
- * - mwei/babbage
- * - gwei/shannon
- * - szabo
- * - finney
- * - ether
- * - kether/grand/einstein
+ *   SI Short   SI Full        Effigy       Other
+ * - kwei       femtoether     ada
+ * - mwei       picoether      babbage       
+ * - gwei       nanoether      shannon      nano
+ * - --         microether     szabo        micro
+ * - --         milliether     finney       milli
+ * - ether      --             --
+ * - kether                    einstein     grand 
  * - mether
  * - gether
  * - tether
@@ -1475,8 +1493,7 @@ web3.eth.filter = function (fil, eventParams, options, formatter) {
         return fil(eventParams, options);
     }
 
-    // what outputLogFormatter? that's wrong
-    //return new Filter(fil, watches.eth(), formatters.outputLogFormatter);
+    // output logs works for blockFilter and pendingTransaction filters?
     return new Filter(fil, watches.eth(), formatter || formatters.outputLogFormatter);
 };
 /*jshint maxparams:3 */
@@ -1531,6 +1548,23 @@ Object.defineProperty(web3.eth, 'defaultAccount', {
     }
 });
 
+
+// EXTEND
+web3._extend = function(extension){
+    /*jshint maxcomplexity: 6 */
+
+    if(extension.property && !web3[extension.property])
+        web3[extension.property] = {};
+
+    setupMethods(web3[extension.property] || web3, extension.methods || []);
+    setupProperties(web3[extension.property] || web3, extension.properties || []);
+};
+web3._extend.formatters = formatters;
+web3._extend.utils = utils;
+web3._extend.Method = require('./web3/method');
+web3._extend.Property = require('./web3/property');
+
+
 /// setups all api methods
 setupProperties(web3, web3Properties);
 setupMethods(web3.net, net.methods);
@@ -1543,7 +1577,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":22,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2437,21 +2471,36 @@ var getOptions = function (options) {
     }; 
 };
 
-var Filter = function (options, methods, formatter) {
-    var implementation = {};
-    methods.forEach(function (method) {
-        method.attachToObject(implementation);
-    });
-    this.options = getOptions(options);
-    this.implementation = implementation;
-    this.callbacks = [];
-    this.formatter = formatter;
-    this.filterId = this.implementation.newFilter(this.options);
+/**
+Adds the callback and sets up the methods, to iterate over the results.
+
+@method getLogsAtStart
+@param {Object} self
+@param {funciton} 
+*/
+var getLogsAtStart = function(self, callback){
+    // call getFilterLogs for the first watch callback start
+    if (!utils.isString(self.options)) {
+        self.get(function (err, messages) {
+            // don't send all the responses to all the watches again... just to self one
+            if (err) {
+                callback(err);
+            }
+
+            messages.forEach(function (message) {
+                callback(null, message);
+            });
+        });
+    }
 };
 
-Filter.prototype.watch = function (callback) {
-    this.callbacks.push(callback);
-    var self = this;
+/**
+Adds the callback and sets up the methods, to iterate over the results.
+
+@method pollFilter
+@param {Object} self
+*/
+var pollFilter = function(self) {
 
     var onMessage = function (error, messages) {
         if (error) {
@@ -2468,29 +2517,55 @@ Filter.prototype.watch = function (callback) {
         });
     };
 
-    // call getFilterLogs on start
-    if (!utils.isString(this.options)) {
-        this.get(function (err, messages) {
-            // don't send all the responses to all the watches again... just to this one
-            if (err) {
-                callback(err);
-            }
+    RequestManager.getInstance().startPolling({
+        method: self.implementation.poll.call,
+        params: [self.filterId],
+    }, self.filterId, onMessage, self.stopWatching.bind(self));
 
-            messages.forEach(function (message) {
-                callback(null, message);
+};
+
+var Filter = function (options, methods, formatter) {
+    var self = this;
+    var implementation = {};
+    methods.forEach(function (method) {
+        method.attachToObject(implementation);
+    });
+    this.options = getOptions(options);
+    this.implementation = implementation;
+    this.callbacks = [];
+    this.pollFilters = [];
+    this.formatter = formatter;
+    this.implementation.newFilter(this.options, function(error, id){
+        if(error) {
+            self.callbacks.forEach(function(callback){
+                callback(error);
             });
-        });
+        } else {
+            self.filterId = id;
+            // get filter logs at start
+            self.callbacks.forEach(function(callback){
+                getLogsAtStart(self, callback);
+            });
+            pollFilter(self);
+        }
+    });
+};
+
+Filter.prototype.watch = function (callback) {
+    this.callbacks.push(callback);
+
+    if(this.filterId) {
+        getLogsAtStart(this, callback);
+        pollFilter(this);
     }
 
-    RequestManager.getInstance().startPolling({
-        method: this.implementation.poll.call,
-        params: [this.filterId],
-    }, this.filterId, onMessage, this.stopWatching.bind(this));
+    return this;
 };
 
 Filter.prototype.stopWatching = function () {
     RequestManager.getInstance().stopPolling(this.filterId);
-    this.implementation.uninstallFilter(this.filterId);
+    // remove filter async
+    this.implementation.uninstallFilter(this.filterId, function(){});
     this.callbacks = [];
 };
 
@@ -2512,6 +2587,8 @@ Filter.prototype.get = function (callback) {
             return self.formatter ? self.formatter(log) : log;
         });
     }
+
+    return this;
 };
 
 module.exports = Filter;
@@ -2609,8 +2686,10 @@ var inputTransactionFormatter = function (options){
  * @returns {Object} transaction
 */
 var outputTransactionFormatter = function (tx){
-    tx.blockNumber = utils.toDecimal(tx.blockNumber);
-    tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
+    if(tx.blockNumber !== null)
+        tx.blockNumber = utils.toDecimal(tx.blockNumber);
+    if(tx.transactionIndex !== null)
+        tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
     tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
     tx.gasPrice = utils.toBigNumber(tx.gasPrice);
@@ -2632,7 +2711,8 @@ var outputBlockFormatter = function(block) {
     block.gasUsed = utils.toDecimal(block.gasUsed);
     block.size = utils.toDecimal(block.size);
     block.timestamp = utils.toDecimal(block.timestamp);
-    block.number = utils.toDecimal(block.number);
+    if(block.number !== null)
+        block.number = utils.toDecimal(block.number);
 
     block.difficulty = utils.toBigNumber(block.difficulty);
     block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
@@ -2659,9 +2739,12 @@ var outputLogFormatter = function(log) {
         return null;
     }
 
-    log.blockNumber = utils.toDecimal(log.blockNumber);
-    log.transactionIndex = utils.toDecimal(log.transactionIndex);
-    log.logIndex = utils.toDecimal(log.logIndex);
+    if(log.blockNumber !== null)
+        log.blockNumber = utils.toDecimal(log.blockNumber);
+    if(log.transactionIndex !== null)
+        log.transactionIndex = utils.toDecimal(log.transactionIndex);
+    if(log.logIndex !== null)
+        log.logIndex = utils.toDecimal(log.logIndex);
 
     return log;
 };
@@ -2763,6 +2846,7 @@ module.exports = {
 var web3 = require('../web3');
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 
 /**
@@ -2783,6 +2867,12 @@ var SolidityFunction = function (json, address) {
 SolidityFunction.prototype.extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
+    }
+};
+
+SolidityFunction.prototype.extractDefaultBlock = function (args) {
+    if (args.length > this._inputTypes.length && !utils.isObject(args[args.length -1])) {
+        return formatters.inputDefaultBlockNumberFormatter(args.pop()); // modify the args array!
     }
 };
 
@@ -2837,15 +2927,17 @@ SolidityFunction.prototype.unpackOutput = function (output) {
 SolidityFunction.prototype.call = function () {
     var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
     var callback = this.extractCallback(args);
+    var defaultBlock = this.extractDefaultBlock(args);
     var payload = this.toPayload(args);
 
+
     if (!callback) {
-        var output = web3.eth.call(payload);
+        var output = web3.eth.call(payload, defaultBlock);
         return this.unpackOutput(output);
     } 
         
     var self = this;
-    web3.eth.call(payload, function (error, output) {
+    web3.eth.call(payload, defaultBlock, function (error, output) {
         callback(error, self.unpackOutput(output));
     });
 };
@@ -2964,7 +3056,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9}],19:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":17}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3002,6 +3094,7 @@ HttpProvider.prototype.send = function (payload) {
     var request = new XMLHttpRequest();
 
     request.open('POST', this.host, false);
+    request.setRequestHeader('Content-type','application/json');
     
     try {
         request.send(JSON.stringify(payload));
@@ -3045,7 +3138,8 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     };
 
     request.open('POST', this.host, true);
-
+    request.setRequestHeader('Content-type','application/json');
+    
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
@@ -3730,9 +3824,9 @@ var RequestManager = function (provider) {
     arguments.callee._singletonInstance = this;
 
     this.provider = provider;
-    this.polls = [];
+    this.polls = {};
     this.timeout = null;
-    this.poll();
+    this.isPolling = false;
 };
 
 /**
@@ -3827,6 +3921,11 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  */
 RequestManager.prototype.setProvider = function (p) {
     this.provider = p;
+
+    if(this.provider && !this.isPolling) {
+        this.poll();
+        this.isPolling = true;
+    }
 };
 
 /*jshint maxparams:4 */
@@ -3843,7 +3942,7 @@ RequestManager.prototype.setProvider = function (p) {
  * @todo cleanup number of params
  */
 RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls.push({data: data, id: pollId, callback: callback, uninstall: uninstall});
+    this.polls['poll_'+ pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
 };
 /*jshint maxparams:3 */
 
@@ -3854,24 +3953,21 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
  * @param {Number} pollId
  */
 RequestManager.prototype.stopPolling = function (pollId) {
-    for (var i = this.polls.length; i--;) {
-        var poll = this.polls[i];
-        if (poll.id === pollId) {
-            this.polls.splice(i, 1);
-        }
-    }
+    delete this.polls['poll_'+ pollId];
 };
 
 /**
- * Should be called to reset polling mechanism of request manager
+ * Should be called to reset the polling mechanism of the request manager
  *
  * @method reset
  */
 RequestManager.prototype.reset = function () {
-    this.polls.forEach(function (poll) {
-        poll.uninstall(poll.id); 
-    });
-    this.polls = [];
+    for (var key in this.polls) {
+        if (this.polls.hasOwnProperty(key)) {
+            this.polls[key].uninstall();
+        }
+    }
+    this.polls = {};
 
     if (this.timeout) {
         clearTimeout(this.timeout);
@@ -3886,9 +3982,10 @@ RequestManager.prototype.reset = function () {
  * @method poll
  */
 RequestManager.prototype.poll = function () {
+    /*jshint maxcomplexity: 6 */
     this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
 
-    if (!this.polls.length) {
+    if (this.polls === {}) {
         return;
     }
 
@@ -3897,9 +3994,20 @@ RequestManager.prototype.poll = function () {
         return;
     }
 
-    var payload = Jsonrpc.getInstance().toBatchPayload(this.polls.map(function (data) {
-        return data.data;
-    }));
+    var pollsData = [];
+    var pollsKeys = [];
+    for (var key in this.polls) {
+        if (this.polls.hasOwnProperty(key)) {
+            pollsData.push(this.polls[key].data);
+            pollsKeys.push(key);
+        }
+    }
+
+    if (pollsData.length === 0) {
+        return;
+    }
+
+    var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
 
     var self = this;
     this.provider.sendAsync(payload, function (error, results) {
@@ -3907,14 +4015,21 @@ RequestManager.prototype.poll = function () {
         if (error) {
             return;
         }
-            
+
         if (!utils.isArray(results)) {
             throw errors.InvalidResponse(results);
         }
 
         results.map(function (result, index) {
-            result.callback = self.polls[index].callback;
-            return result;
+            var key = pollsKeys[index];
+            // make sure the filter is still installed after arrival of the request
+            if(self.polls[key]) {
+                result.callback = self.polls[key].callback;
+                return result;
+            } else
+                return false;
+        }).filter(function (result) {
+            return (!result) ? false : true;
         }).filter(function (result) {
             var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
@@ -4130,11 +4245,11 @@ var eth = function () {
 
         switch(type) {
             case 'latest':
-                args.pop();
+                args.shift();
                 this.params = 0;
                 return 'eth_newBlockFilter';
             case 'pending':
-                args.pop();
+                args.shift();
                 this.params = 0;
                 return 'eth_newPendingTransactionFilter';
             default:
