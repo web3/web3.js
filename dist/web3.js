@@ -2689,10 +2689,6 @@ var outputBlockFormatter = function(block) {
  * @returns {Object} log
 */
 var outputLogFormatter = function(log) {
-    if (log === null) { // 'pending' && 'latest' filters are nulls
-        return null;
-    }
-
     if(log.blockNumber !== null)
         log.blockNumber = utils.toDecimal(log.blockNumber);
     if(log.transactionIndex !== null)
