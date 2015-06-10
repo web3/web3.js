@@ -4513,14 +4513,11 @@ module.exports = {
 	                    var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
 	                    thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
 	                }
-	            } else if (thatWords.length > 0xffff) {
+	            } else {
 	                // Copy one word at a time
 	                for (var i = 0; i < thatSigBytes; i += 4) {
 	                    thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
 	                }
-	            } else {
-	                // Copy all words at once
-	                thisWords.push.apply(thisWords, thatWords);
 	            }
 	            this.sigBytes += thatSigBytes;
 
@@ -5683,6 +5680,4 @@ module.exports = web3;
 
 
 },{"./lib/web3":9,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
-
-
 //# sourceMappingURL=web3-light.js.map

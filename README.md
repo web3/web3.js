@@ -108,7 +108,7 @@ eth -j
 [travis-url]: https://travis-ci.org/ethereum/web3.js
 [dep-image]: https://david-dm.org/ethereum/web3.js.svg
 [dep-url]: https://david-dm.org/ethereum/web3.js
-[dep-dev-image]: https://david-dm.org/ethereum/web.js/dev-status.svg
+[dep-dev-image]: https://david-dm.org/ethereum/web3.js/dev-status.svg
 [dep-dev-url]: https://david-dm.org/ethereum/web3.js#info=devDependencies
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
