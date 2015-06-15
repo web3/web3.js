@@ -3872,7 +3872,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
 RequestManager.prototype.setProvider = function (p) {
     this.provider = p;
 
-    if(this.provider && !this.isPolling) {
+    if (this.provider && !this.isPolling) {
         this.poll();
         this.isPolling = true;
     }
@@ -3913,9 +3913,7 @@ RequestManager.prototype.stopPolling = function (pollId) {
  */
 RequestManager.prototype.reset = function () {
     for (var key in this.polls) {
-        if (this.polls.hasOwnProperty(key)) {
-            this.polls[key].uninstall();
-        }
+        this.polls[key].uninstall();
     }
     this.polls = {};
 
@@ -3935,7 +3933,7 @@ RequestManager.prototype.poll = function () {
     /*jshint maxcomplexity: 6 */
     this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
 
-    if (this.polls === {}) {
+    if (Object.keys(this.polls).length === 0) {
         return;
     }
 
@@ -3947,10 +3945,8 @@ RequestManager.prototype.poll = function () {
     var pollsData = [];
     var pollsKeys = [];
     for (var key in this.polls) {
-        if (this.polls.hasOwnProperty(key)) {
-            pollsData.push(this.polls[key].data);
-            pollsKeys.push(key);
-        }
+        pollsData.push(this.polls[key].data);
+        pollsKeys.push(key);
     }
 
     if (pollsData.length === 0) {
@@ -3973,13 +3969,13 @@ RequestManager.prototype.poll = function () {
         results.map(function (result, index) {
             var key = pollsKeys[index];
             // make sure the filter is still installed after arrival of the request
-            if(self.polls[key]) {
+            if (self.polls[key]) {
                 result.callback = self.polls[key].callback;
                 return result;
             } else
                 return false;
         }).filter(function (result) {
-            return (!result) ? false : true;
+            return !!result; 
         }).filter(function (result) {
             var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
