@@ -3,26 +3,15 @@
 
 // Browser environment
 if(typeof window !== 'undefined') {
-
-    if(typeof window.web3 === 'undefined') {
-        web3 = require('web3');
-        BigNumber = require('bignumber.js');
-    } else {
-        web3 = window.web3;
-        BigNumber = window.BigNumber
-    }
+    web3 = (typeof window.web3 !== 'undefined') ? window.web3 : require('web3');
+    BigNumber = (typeof window.BigNumber !== 'undefined') ? window.BigNumber : require('bignumber.js');
 }
 
 
 // Node environment
 if(typeof global !== 'undefined') {
-    if(typeof global.web3 === 'undefined') {
-        web3 = require('web3');
-        BigNumber = require('bignumber.js');
-    } else {
-        web3 = global.web3;
-        BigNumber = global.BigNumber
-    }
+    web3 = (typeof global.web3 !== 'undefined') ? global.web3 : require('web3');
+    BigNumber = (typeof global.BigNumber !== 'undefined') ? global.BigNumber : require('bignumber.js');
 }
 
 /* jshint ignore:end */
