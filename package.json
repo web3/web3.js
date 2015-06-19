@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "bower": ">=1.3.0",
-    "browserify": ">=6.0",
+    "browserify": ">=10.0",
     "chai": "^2.1.1",
     "coveralls": "^2.11.2",
     "del": ">=0.1.1",
-    "exorcist": "^0.1.6",
+    "exorcist": "^0.4.0",
     "gulp": ">=3.4.0",
     "gulp-jshint": ">=1.5.0",
     "gulp-rename": ">=1.2.0",
