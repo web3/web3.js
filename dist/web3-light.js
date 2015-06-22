@@ -354,9 +354,9 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
-    var value = utils.toHex(value);
+    value = utils.toHex(value);
     var result = utils.padRight((value).substr(2), 64);
-    var length = (value.length / 2 - 1) | 0;
+    var length = (value.length / 2 - 1) || 0;
     return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
@@ -1096,7 +1096,7 @@ var fromDecimal = function (value) {
  * @return {String}
  */
 var toHex = function (val) {
-    /*jshint maxcomplexity:7 */
+    /*jshint maxcomplexity: 8 */
 
     if (isBoolean(val))
         return fromDecimal(+val);
