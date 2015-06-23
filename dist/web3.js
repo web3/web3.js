@@ -1434,6 +1434,7 @@ var setupProperties = function (obj, properties) {
 /// setups web3 object, and it's in-browser executed methods
 var web3 = {};
 web3.providers = {};
+web3.currentProvider = null;
 web3.version = {};
 web3.version.api = version.version;
 web3.eth = {};
@@ -1459,6 +1460,7 @@ web3.shh.filter = function (fil) {
 web3.net = {};
 web3.db = {};
 web3.setProvider = function (provider) {
+    this.currentProvider = provider;
     RequestManager.getInstance().setProvider(provider);
 };
 web3.reset = function () {
@@ -3041,7 +3043,8 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
+// resolves the problem for electron/atom shell environments, which use node integration, but have no process variable available
+var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
 var HttpProvider = function (host) {

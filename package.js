@@ -14,7 +14,7 @@ Package.onUse(function(api) {
 
   // api.use('3stack:bignumber@2.0.0', 'client');
 
-  api.export(['web3', 'BigNumber'], 'client');
+  api.export(['web3', 'BigNumber'], ['client', 'server']);
 
   api.addFiles('dist/web3.js', 'client');
   api.addFiles('package-init.js', 'client');
