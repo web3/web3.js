@@ -2037,6 +2037,13 @@ var getTransactionCount = new Method({
     outputFormatter: utils.toDecimal
 });
 
+var sendRawTransaction = new Method({
+    name: 'sendRawTransaction',
+    call: 'eth_sendRawTransaction',
+    params: 1,
+    inputFormatter: []
+});
+
 var sendTransaction = new Method({
     name: 'sendTransaction',
     call: 'eth_sendTransaction',
@@ -2103,6 +2110,7 @@ var methods = [
     getTransactionCount,
     call,
     estimateGas,
+    sendRawTransaction,
     sendTransaction,
     compileSolidity,
     compileLLL,
