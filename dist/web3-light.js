@@ -3391,7 +3391,7 @@ var IpcProvider = function (path, net) {
             throw errors.InvalidResponse(result);                
         }
 
-        var id = result.id || result[0].id;
+        var id;
 
         // get the id which matches the returned id
         if(utils.isArray(result)) {
