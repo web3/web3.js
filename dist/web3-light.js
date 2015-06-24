@@ -2320,7 +2320,12 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
 
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
-        options = null;
+        if(arguments.length === 2)
+            options = null;
+        if(arguments.length === 1) {
+            options = null;
+            indexed = {};
+        }
     }
     
     var o = this.encode(indexed, options);
