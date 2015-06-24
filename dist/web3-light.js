@@ -1429,22 +1429,26 @@ web3.version.api = version.version;
 web3.eth = {};
 
 /*jshint maxparams:4 */
-web3.eth.filter = function (fil, eventParams, options, formatter) {
+web3.eth.filter = function (fil, eventParams, options, callback) {
+
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+        callback = arguments[arguments.length - 1];
+    }
 
     // if its event, treat it differently
     // TODO: simplify and remove
     if (fil._isEvent) {
-        return fil(eventParams, options);
+        return fil(eventParams, options, callback);
     }
 
     // output logs works for blockFilter and pendingTransaction filters?
-    return new Filter(fil, watches.eth(), formatter || formatters.outputLogFormatter);
+    return new Filter(fil, watches.eth(), callback, formatters.outputLogFormatter);
 };
 /*jshint maxparams:3 */
 
 web3.shh = {};
-web3.shh.filter = function (fil) {
-    return new Filter(fil, watches.shh(), formatters.outputPostFormatter);
+web3.shh.filter = function (fil, callback) {
+    return new Filter(fil, watches.shh(), callback, formatters.outputPostFormatter);
 };
 web3.net = {};
 web3.db = {};
@@ -2178,6 +2182,8 @@ var coder = require('../solidity/coder');
 var web3 = require('../web3');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
+var Filter = require('./filter');
+var watches = require('./watches');
 
 /**
  * This prototype should be used to create event filters
@@ -2323,10 +2329,15 @@ SolidityEvent.prototype.decode = function (data) {
  * @param {Object} options
  * @return {Object} filter object
  */
-SolidityEvent.prototype.execute = function (indexed, options) {
+SolidityEvent.prototype.execute = function (indexed, options, callback) {
+
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+        callback = arguments[arguments.length - 1];
+    }
+    
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return web3.eth.filter(o, undefined, undefined, formatter);
+    return new Filter(o, watches.eth(), callback, formatter);
 };
 
 /**
@@ -2347,7 +2358,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"../web3":8,"./formatters":16}],15:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"../web3":8,"./filter":15,"./formatters":16,"./watches":29}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2477,7 +2488,7 @@ var pollFilter = function(self) {
 
 };
 
-var Filter = function (options, methods, formatter) {
+var Filter = function (options, methods, callback, formatter) {
     var self = this;
     var implementation = {};
     methods.forEach(function (method) {
@@ -2490,18 +2501,25 @@ var Filter = function (options, methods, formatter) {
     this.formatter = formatter;
     this.implementation.newFilter(this.options, function(error, id){
         if(error) {
-            self.callbacks.forEach(function(callback){
-                callback(error);
+            self.callbacks.forEach(function(cb){
+                cb(error);
             });
         } else {
             self.filterId = id;
             // get filter logs at start
-            self.callbacks.forEach(function(callback){
-                getLogsAtStart(self, callback);
+            self.callbacks.forEach(function(cb){
+                getLogsAtStart(self, cb);
             });
             pollFilter(self);
+
+
+            // start to watch immediately
+            if(callback) {
+                return self.watch(callback);
+            }
         }
     });
+
 };
 
 Filter.prototype.watch = function (callback) {
