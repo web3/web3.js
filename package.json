@@ -13,7 +13,6 @@
     "xmlhttprequest": "*"
   },
   "browser": {
-    "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "devDependencies": {
     "bower": ">=1.3.0",
