@@ -1429,26 +1429,14 @@ web3.version.api = version.version;
 web3.eth = {};
 
 /*jshint maxparams:4 */
-web3.eth.filter = function (fil, eventParams, options, callback) {
-
-    if (utils.isFunction(arguments[arguments.length - 1])) {
-        callback = arguments[arguments.length - 1];
-    }
-
-    // if its event, treat it differently
-    // TODO: simplify and remove
-    if (fil._isEvent) {
-        return fil(eventParams, options, callback);
-    }
-
-    // output logs works for blockFilter and pendingTransaction filters?
-    return new Filter(fil, watches.eth(), callback, formatters.outputLogFormatter);
+web3.eth.filter = function (fil, callback) {
+    return new Filter(fil, watches.eth(), formatters.outputLogFormatter, callback);
 };
 /*jshint maxparams:3 */
 
 web3.shh = {};
 web3.shh.filter = function (fil, callback) {
-    return new Filter(fil, watches.shh(), callback, formatters.outputPostFormatter);
+    return new Filter(fil, watches.shh(), formatters.outputPostFormatter, callback);
 };
 web3.net = {};
 web3.db = {};
@@ -2179,7 +2167,6 @@ module.exports = {
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
-var web3 = require('../web3');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 var Filter = require('./filter');
@@ -2333,11 +2320,12 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
 
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
+        options = null;
     }
     
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, watches.eth(), callback, formatter);
+    return new Filter(o, watches.eth(), formatter, callback);
 };
 
 /**
@@ -2358,7 +2346,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"../web3":8,"./filter":15,"./formatters":16,"./watches":29}],15:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"./filter":15,"./formatters":16,"./watches":29}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2488,7 +2476,7 @@ var pollFilter = function(self) {
 
 };
 
-var Filter = function (options, methods, callback, formatter) {
+var Filter = function (options, methods, formatter, callback) {
     var self = this;
     var implementation = {};
     methods.forEach(function (method) {
