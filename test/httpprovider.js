@@ -29,5 +29,13 @@ describe('lib/web3/httpprovider', function () {
             });
         }); 
     });
+
+    describe('isConnected', function () {
+        it('should return a boolean', function () {
+            var provider = new HttpProvider();
+
+            assert.isBoolean(provider.isConnected());
+        }); 
+    });
 });
 

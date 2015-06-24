@@ -3374,9 +3374,9 @@ var IpcProvider = function (path, net) {
         throw errors.InvalidConnection(path);
     }
 
-    this.connection.on('error', function(e){
-        throw errors.InvalidConnection(path);
-    }); 
+    // this.connection.on('error', function(e){
+    //     throw errors.InvalidConnection(path);
+    // }); 
 
 
 
@@ -3385,7 +3385,7 @@ var IpcProvider = function (path, net) {
         result = result.toString();
 
         try {
-            var result = JSON.parse(result);
+            result = JSON.parse(result);
 
         } catch(e) {
             throw errors.InvalidResponse(result);                
@@ -3435,7 +3435,26 @@ IpcProvider.prototype.isConnected = function() {
 };
 
 IpcProvider.prototype.send = function (payload) {
-    throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
+
+    if(this.connection.writeSync) {
+
+        // try reconnect, when connection is gone
+        if(!this.connection._handle)
+            this.connection.connect({path: this.path});
+
+        var result = this.connection.writeSync(JSON.stringify(payload));
+
+        try {
+            result = JSON.parse(result);
+        } catch(e) {
+            throw errors.InvalidResponse(result);                
+        }
+
+        return result;
+
+    } else {
+        throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
+    }
 };
 
 IpcProvider.prototype.sendAsync = function (payload, callback) {
