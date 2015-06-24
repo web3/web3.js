@@ -846,7 +846,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":7,"crypto-js/sha3":33}],7:[function(require,module,exports){
+},{"./utils":7,"crypto-js/sha3":34}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1533,7 +1533,89 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":22,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":11,"./web3/db":13,"./web3/eth":15,"./web3/filter":17,"./web3/formatters":18,"./web3/method":23,"./web3/net":25,"./web3/property":26,"./web3/requestmanager":28,"./web3/shh":29,"./web3/watches":31}],10:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file allevents.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
+var web3 = require('../web3');
+var sha3 = require('../utils/sha3');
+var SolidityEvent = require('./event');
+var formatters = require('./formatters');
+var utils = require('../utils/utils');
+
+var AllSolidityEvents = function (json, address) {
+    this._json = json;
+    this._address = address;
+};
+
+AllSolidityEvents.prototype.encode = function (options) {
+    options = options || {};
+    var result = {};
+
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
+    });
+
+    result.topics = [null, null, null, null, null]; // match all topics
+    result.address = this._address;
+
+    return result;
+};
+
+AllSolidityEvents.prototype.decode = function (data) {
+    data.data = data.data || '';
+    data.topics = data.topics || [];
+
+    var eventTopic = data.topics[0].slice(2);
+    var match = this._json.filter(function (j) {
+        return eventTopic === sha3(utils.transformToFullName(j));
+    })[0];
+
+    if (!match) { // cannot find matching event?
+        console.warn('cannot find event for log');
+        return data;
+    }
+
+    var event = new SolidityEvent(match, this._address);
+    return event.decode(data);
+};
+
+AllSolidityEvents.prototype.execute = function (options) {
+    var o = this.encode(options);
+    var formatter = this.decode.bind(this);
+    return web3.eth.filter(o, undefined, undefined, formatter);
+};
+
+AllSolidityEvents.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    contract.allEvents = execute;
+};
+
+module.exports = AllSolidityEvents;
+
+
+},{"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./event":16,"./formatters":18}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1596,7 +1678,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":27}],11:[function(require,module,exports){
+},{"./requestmanager":28}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1624,6 +1706,7 @@ var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var SolidityEvent = require('./event');
 var SolidityFunction = require('./function');
+var AllEvents = require('./allevents');
 
 /**
  * Should be called to encode constructor params
@@ -1669,9 +1752,14 @@ var addFunctionsToContract = function (contract, abi) {
  * @param {Array} abi
  */
 var addEventsToContract = function (contract, abi) {
-    abi.filter(function (json) {
+    var events = abi.filter(function (json) {
         return json.type === 'event';
-    }).map(function (json) {
+    });
+
+    var All = new AllEvents(events, contract.address);
+    All.attachToContract(contract);
+    
+    events.map(function (json) {
         return new SolidityEvent(json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
@@ -1778,7 +1866,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":1,"../utils/utils":7,"../web3":9,"./event":15,"./function":18}],12:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":7,"../web3":9,"./allevents":10,"./event":16,"./function":19}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1836,7 +1924,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":22}],13:[function(require,module,exports){
+},{"./method":23}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1876,7 +1964,7 @@ module.exports = {
 };
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2161,7 +2249,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./formatters":17,"./method":22,"./property":25}],15:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":18,"./method":23,"./property":26}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2358,7 +2446,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":17}],16:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":18}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2558,7 +2646,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":17,"./requestmanager":27}],17:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":18,"./requestmanager":28}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2780,7 +2868,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":5,"../utils/utils":7}],18:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3016,7 +3104,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":17}],19:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"../web3":9,"./formatters":18}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3111,7 +3199,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":13,"xmlhttprequest":4}],20:[function(require,module,exports){
+},{"./errors":14,"xmlhttprequest":4}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3221,7 +3309,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":7}],21:[function(require,module,exports){
+},{"../utils/utils":7}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3314,7 +3402,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3488,7 +3576,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":13,"./requestmanager":27}],23:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":14,"./requestmanager":28}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3536,7 +3624,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":11}],24:[function(require,module,exports){
+},{"./contract":12}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3586,7 +3674,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":7,"./property":25}],25:[function(require,module,exports){
+},{"../utils/utils":7,"./property":26}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3704,7 +3792,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":27}],26:[function(require,module,exports){
+},{"./requestmanager":28}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3739,7 +3827,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4004,7 +4092,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":7,"./errors":13,"./jsonrpc":21}],28:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7,"./errors":14,"./jsonrpc":22}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4074,7 +4162,7 @@ module.exports = {
 };
 
 
-},{"./formatters":17,"./method":22}],29:[function(require,module,exports){
+},{"./formatters":18,"./method":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4170,7 +4258,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":9,"./contract":11,"./icap":20,"./namereg":23}],30:[function(require,module,exports){
+},{"../web3":9,"./contract":12,"./icap":21,"./namereg":24}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4286,9 +4374,9 @@ module.exports = {
 };
 
 
-},{"./method":22}],31:[function(require,module,exports){
+},{"./method":23}],32:[function(require,module,exports){
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5031,7 +5119,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5355,7 +5443,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":32,"./x64-core":34}],34:[function(require,module,exports){
+},{"./core":33,"./x64-core":35}],35:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5660,7 +5748,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":32}],"bignumber.js":[function(require,module,exports){
+},{"./core":33}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
@@ -8345,7 +8433,7 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":31}],"web3":[function(require,module,exports){
+},{"crypto":32}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
@@ -8361,5 +8449,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":9,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
+},{"./lib/web3":9,"./lib/web3/contract":12,"./lib/web3/httpprovider":20,"./lib/web3/namereg":24,"./lib/web3/qtsync":27,"./lib/web3/transfer":30}]},{},["web3"])
 //# sourceMappingURL=web3.js.map
