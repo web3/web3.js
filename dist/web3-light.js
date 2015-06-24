@@ -835,7 +835,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":6,"crypto-js/sha3":66}],6:[function(require,module,exports){
+},{"./utils":6,"crypto-js/sha3":67}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1517,7 +1517,90 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":4,"./utils/sha3":5,"./utils/utils":6,"./version.json":7,"./web3/batch":9,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":22,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],9:[function(require,module,exports){
+},{"./utils/config":4,"./utils/sha3":5,"./utils/utils":6,"./version.json":7,"./web3/batch":10,"./web3/db":12,"./web3/eth":14,"./web3/filter":16,"./web3/formatters":17,"./web3/method":23,"./web3/net":25,"./web3/property":26,"./web3/requestmanager":28,"./web3/shh":29,"./web3/watches":31}],9:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file allevents.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
+var sha3 = require('../utils/sha3');
+var SolidityEvent = require('./event');
+var formatters = require('./formatters');
+var utils = require('../utils/utils');
+var Filter = require('./filter');
+var watches = require('./watches');
+
+var AllSolidityEvents = function (json, address) {
+    this._json = json;
+    this._address = address;
+};
+
+AllSolidityEvents.prototype.encode = function (options) {
+    options = options || {};
+    var result = {};
+
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
+    });
+
+    result.topics = [null, null, null, null, null]; // match all topics
+    result.address = this._address;
+
+    return result;
+};
+
+AllSolidityEvents.prototype.decode = function (data) {
+    data.data = data.data || '';
+    data.topics = data.topics || [];
+
+    var eventTopic = data.topics[0].slice(2);
+    var match = this._json.filter(function (j) {
+        return eventTopic === sha3(utils.transformToFullName(j));
+    })[0];
+
+    if (!match) { // cannot find matching event?
+        console.warn('cannot find event for log');
+        return data;
+    }
+
+    var event = new SolidityEvent(match, this._address);
+    return event.decode(data);
+};
+
+AllSolidityEvents.prototype.execute = function (options, callback) {
+    var o = this.encode(options);
+    var formatter = this.decode.bind(this);
+    return new Filter(o, watches.eth(), formatter, callback);
+};
+
+AllSolidityEvents.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    contract.allEvents = execute;
+};
+
+module.exports = AllSolidityEvents;
+
+
+},{"../utils/sha3":5,"../utils/utils":6,"./event":15,"./filter":16,"./formatters":17,"./watches":31}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1580,7 +1663,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":27}],10:[function(require,module,exports){
+},{"./requestmanager":28}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1608,6 +1691,7 @@ var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var SolidityEvent = require('./event');
 var SolidityFunction = require('./function');
+var AllEvents = require('./allevents');
 
 /**
  * Should be called to encode constructor params
@@ -1653,9 +1737,14 @@ var addFunctionsToContract = function (contract, abi) {
  * @param {Array} abi
  */
 var addEventsToContract = function (contract, abi) {
-    abi.filter(function (json) {
+    var events = abi.filter(function (json) {
         return json.type === 'event';
-    }).map(function (json) {
+    });
+
+    var All = new AllEvents(events, contract.address);
+    All.attachToContract(contract);
+    
+    events.map(function (json) {
         return new SolidityEvent(json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
@@ -1762,7 +1851,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./event":14,"./function":17}],11:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/utils":6,"../web3":8,"./allevents":9,"./event":15,"./function":18}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1820,7 +1909,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":22}],12:[function(require,module,exports){
+},{"./method":23}],13:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1860,7 +1949,7 @@ module.exports = {
 };
 
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2145,7 +2234,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./formatters":16,"./method":22,"./property":25}],14:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":17,"./method":23,"./property":26}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2354,7 +2443,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"./filter":15,"./formatters":16,"./watches":30}],15:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"./filter":16,"./formatters":17,"./watches":31}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2561,7 +2650,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":6,"./formatters":16,"./requestmanager":27}],16:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":17,"./requestmanager":28}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2783,7 +2872,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":4,"../utils/utils":6}],17:[function(require,module,exports){
+},{"../utils/config":4,"../utils/utils":6}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3019,7 +3108,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"../web3":8,"./formatters":16}],18:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"../web3":8,"./formatters":17}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3132,7 +3221,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":12,"xmlhttprequest":68}],19:[function(require,module,exports){
+},{"./errors":13,"xmlhttprequest":69}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3242,7 +3331,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":6}],20:[function(require,module,exports){
+},{"../utils/utils":6}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3281,7 +3370,6 @@ var IpcProvider = function (path, net) {
 
     try {
         this.connection = net.connect({path: this.path});
-
     } catch(error) {
         throw errors.InvalidConnection(path);
     }
@@ -3363,7 +3451,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":6,"./errors":12,"net":31}],21:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":13,"net":32}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3456,7 +3544,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3630,7 +3718,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":6,"./errors":12,"./requestmanager":27}],23:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":13,"./requestmanager":28}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3678,7 +3766,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":10}],24:[function(require,module,exports){
+},{"./contract":11}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3728,7 +3816,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./property":25}],25:[function(require,module,exports){
+},{"../utils/utils":6,"./property":26}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3846,7 +3934,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":27}],26:[function(require,module,exports){
+},{"./requestmanager":28}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3881,7 +3969,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4146,7 +4234,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":4,"../utils/utils":6,"./errors":12,"./jsonrpc":21}],28:[function(require,module,exports){
+},{"../utils/config":4,"../utils/utils":6,"./errors":13,"./jsonrpc":22}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4216,7 +4304,7 @@ module.exports = {
 };
 
 
-},{"./formatters":16,"./method":22}],29:[function(require,module,exports){
+},{"./formatters":17,"./method":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4312,7 +4400,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":8,"./contract":10,"./icap":19,"./namereg":23}],30:[function(require,module,exports){
+},{"../web3":8,"./contract":11,"./icap":20,"./namereg":24}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4428,11 +4516,11 @@ module.exports = {
 };
 
 
-},{"./method":22}],31:[function(require,module,exports){
+},{"./method":23}],32:[function(require,module,exports){
 
-},{}],32:[function(require,module,exports){
-arguments[4][31][0].apply(exports,arguments)
-},{"dup":31}],33:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
+arguments[4][32][0].apply(exports,arguments)
+},{"dup":32}],34:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -5765,7 +5853,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":34,"ieee754":35,"is-array":36}],34:[function(require,module,exports){
+},{"base64-js":35,"ieee754":36,"is-array":37}],35:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -5891,7 +5979,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -5977,7 +6065,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 
 /**
  * isArray
@@ -6012,7 +6100,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6315,7 +6403,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 var http = module.exports;
 var EventEmitter = require('events').EventEmitter;
 var Request = require('./lib/request');
@@ -6461,7 +6549,7 @@ http.STATUS_CODES = {
     510 : 'Not Extended',               // RFC 2774
     511 : 'Network Authentication Required' // RFC 6585
 };
-},{"./lib/request":39,"events":37,"url":62}],39:[function(require,module,exports){
+},{"./lib/request":40,"events":38,"url":63}],40:[function(require,module,exports){
 var Stream = require('stream');
 var Response = require('./response');
 var Base64 = require('Base64');
@@ -6672,7 +6760,7 @@ var isXHR2Compatible = function (obj) {
     if (typeof FormData !== 'undefined' && obj instanceof FormData) return true;
 };
 
-},{"./response":40,"Base64":41,"inherits":43,"stream":60}],40:[function(require,module,exports){
+},{"./response":41,"Base64":42,"inherits":44,"stream":61}],41:[function(require,module,exports){
 var Stream = require('stream');
 var util = require('util');
 
@@ -6794,7 +6882,7 @@ var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{"stream":60,"util":64}],41:[function(require,module,exports){
+},{"stream":61,"util":65}],42:[function(require,module,exports){
 ;(function () {
 
   var object = typeof exports != 'undefined' ? exports : this; // #8: web workers
@@ -6856,7 +6944,7 @@ var isArray = Array.isArray || function (xs) {
 
 }());
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 var http = require('http');
 
 var https = module.exports;
@@ -6871,7 +6959,7 @@ https.request = function (params, cb) {
     return http.request.call(this, params, cb);
 }
 
-},{"http":38}],43:[function(require,module,exports){
+},{"http":39}],44:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -6896,12 +6984,12 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 /*! http://mths.be/punycode v1.2.4 by @mathias */
 ;(function(root) {
 
@@ -7410,7 +7498,7 @@ module.exports = Array.isArray || function (arr) {
 
 }(this));
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7496,7 +7584,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7583,16 +7671,16 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":46,"./encode":47}],49:[function(require,module,exports){
+},{"./decode":47,"./encode":48}],50:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":50}],50:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":51}],51:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7683,7 +7771,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":52,"./_stream_writable":54,"core-util-is":55,"inherits":43}],51:[function(require,module,exports){
+},{"./_stream_readable":53,"./_stream_writable":55,"core-util-is":56,"inherits":44}],52:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7731,7 +7819,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":53,"core-util-is":55,"inherits":43}],52:[function(require,module,exports){
+},{"./_stream_transform":54,"core-util-is":56,"inherits":44}],53:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8684,7 +8772,7 @@ function indexOf (xs, x) {
   return -1;
 }
 
-},{"./_stream_duplex":50,"buffer":33,"core-util-is":55,"events":37,"inherits":43,"isarray":44,"stream":60,"string_decoder/":61,"util":32}],53:[function(require,module,exports){
+},{"./_stream_duplex":51,"buffer":34,"core-util-is":56,"events":38,"inherits":44,"isarray":45,"stream":61,"string_decoder/":62,"util":33}],54:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8895,7 +8983,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":50,"core-util-is":55,"inherits":43}],54:[function(require,module,exports){
+},{"./_stream_duplex":51,"core-util-is":56,"inherits":44}],55:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9374,7 +9462,7 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":50,"buffer":33,"core-util-is":55,"inherits":43,"stream":60}],55:[function(require,module,exports){
+},{"./_stream_duplex":51,"buffer":34,"core-util-is":56,"inherits":44,"stream":61}],56:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9482,10 +9570,10 @@ exports.isBuffer = isBuffer;
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":51}],57:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":52}],58:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -9494,13 +9582,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":50,"./lib/_stream_passthrough.js":51,"./lib/_stream_readable.js":52,"./lib/_stream_transform.js":53,"./lib/_stream_writable.js":54,"stream":60}],58:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":51,"./lib/_stream_passthrough.js":52,"./lib/_stream_readable.js":53,"./lib/_stream_transform.js":54,"./lib/_stream_writable.js":55,"stream":61}],59:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":53}],59:[function(require,module,exports){
+},{"./lib/_stream_transform.js":54}],60:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":54}],60:[function(require,module,exports){
+},{"./lib/_stream_writable.js":55}],61:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9629,7 +9717,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":37,"inherits":43,"readable-stream/duplex.js":49,"readable-stream/passthrough.js":56,"readable-stream/readable.js":57,"readable-stream/transform.js":58,"readable-stream/writable.js":59}],61:[function(require,module,exports){
+},{"events":38,"inherits":44,"readable-stream/duplex.js":50,"readable-stream/passthrough.js":57,"readable-stream/readable.js":58,"readable-stream/transform.js":59,"readable-stream/writable.js":60}],62:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9852,7 +9940,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":33}],62:[function(require,module,exports){
+},{"buffer":34}],63:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -10561,14 +10649,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":45,"querystring":48}],63:[function(require,module,exports){
+},{"punycode":46,"querystring":49}],64:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -11156,7 +11244,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-},{"./support/isBuffer":63,"inherits":43}],65:[function(require,module,exports){
+},{"./support/isBuffer":64,"inherits":44}],66:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11902,7 +11990,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS;
 
 }));
-},{}],66:[function(require,module,exports){
+},{}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12226,7 +12314,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":65,"./x64-core":67}],67:[function(require,module,exports){
+},{"./core":66,"./x64-core":68}],68:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12531,7 +12619,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS;
 
 }));
-},{"./core":65}],68:[function(require,module,exports){
+},{"./core":66}],69:[function(require,module,exports){
 /**
  * Wrapper for built-in http.js to emulate the browser XMLHttpRequest object.
  *
@@ -13134,7 +13222,7 @@ exports.XMLHttpRequest = function() {
   };
 };
 
-},{"child_process":31,"fs":31,"http":38,"https":42,"url":62}],"bignumber.js":[function(require,module,exports){
+},{"child_process":32,"fs":32,"http":39,"https":43,"url":63}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -13159,7 +13247,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":8,"./lib/web3/contract":10,"./lib/web3/httpprovider":18,"./lib/web3/ipcprovider":20,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
+},{"./lib/web3":8,"./lib/web3/contract":11,"./lib/web3/httpprovider":19,"./lib/web3/ipcprovider":21,"./lib/web3/namereg":24,"./lib/web3/qtsync":27,"./lib/web3/transfer":30}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
