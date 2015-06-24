@@ -63,8 +63,6 @@ var testPolling = function (tests) {
                 var filter = web3[test.protocol].filter.apply(null, test.args);
                 provider.injectBatchResults([test.secondResult]);
                 filter.watch(function (err, result) {
-                    console.log(err, result);
-
                     if (test.err) {
                         // todo
                     } else {

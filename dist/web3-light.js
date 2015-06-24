@@ -835,7 +835,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":6,"crypto-js/sha3":65}],6:[function(require,module,exports){
+},{"./utils":6,"crypto-js/sha3":66}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1444,6 +1444,9 @@ web3.setProvider = function (provider) {
     this.currentProvider = provider;
     RequestManager.getInstance().setProvider(provider);
 };
+web3.isConnected = function(){
+     return (this.currentProvider && this.currentProvider.isConnected());
+};
 web3.reset = function () {
     RequestManager.getInstance().reset();
     c.defaultBlock = 'latest';
@@ -1514,7 +1517,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":4,"./utils/sha3":5,"./utils/utils":6,"./version.json":7,"./web3/batch":9,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":21,"./web3/net":23,"./web3/property":24,"./web3/requestmanager":26,"./web3/shh":27,"./web3/watches":29}],9:[function(require,module,exports){
+},{"./utils/config":4,"./utils/sha3":5,"./utils/utils":6,"./version.json":7,"./web3/batch":9,"./web3/db":11,"./web3/eth":13,"./web3/filter":15,"./web3/formatters":16,"./web3/method":22,"./web3/net":24,"./web3/property":25,"./web3/requestmanager":27,"./web3/shh":28,"./web3/watches":30}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1577,7 +1580,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":26}],10:[function(require,module,exports){
+},{"./requestmanager":27}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1817,7 +1820,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":21}],12:[function(require,module,exports){
+},{"./method":22}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2142,7 +2145,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./formatters":16,"./method":21,"./property":24}],14:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":16,"./method":22,"./property":25}],14:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2351,7 +2354,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"./filter":15,"./formatters":16,"./watches":29}],15:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":5,"../utils/utils":6,"./filter":15,"./formatters":16,"./watches":30}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2558,7 +2561,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":6,"./formatters":16,"./requestmanager":26}],16:[function(require,module,exports){
+},{"../utils/utils":6,"./formatters":16,"./requestmanager":27}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3038,17 +3041,35 @@ module.exports = SolidityFunction;
  *   Marek Kotewicz <marek@ethdev.com>
  *   Marian Oancea <marian@ethdev.com>
  *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2014
+ * @date 2015
  */
 
 "use strict";
 
-// resolves the problem for electron/atom shell environments, which use node integration, but have no process variable available
 var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
 var HttpProvider = function (host) {
     this.host = host || 'http://localhost:8545';
+};
+
+HttpProvider.prototype.isConnected = function() {
+    var request = new XMLHttpRequest();
+
+    request.open('POST', this.host, false);
+    request.setRequestHeader('Content-type','application/json');
+    
+    try {
+        request.send(JSON.stringify({
+            id: 9999999999,
+            jsonrpc: '2.0',
+            method: 'net_listening',
+            params: []
+        }));
+        return true;
+    } catch(e) {
+        return false;
+    }
 };
 
 HttpProvider.prototype.send = function (payload) {
@@ -3111,7 +3132,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":12,"xmlhttprequest":67}],19:[function(require,module,exports){
+},{"./errors":12,"xmlhttprequest":68}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3238,6 +3259,127 @@ module.exports = ICAP;
     You should have received a copy of the GNU Lesser General Public License
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** @file ipcprovider.js
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+"use strict";
+
+var utils = require('../utils/utils');
+var errors = require('./errors');
+
+
+var IpcProvider = function (path, net) {
+    var _this = this;
+    this.responseCallbacks = {};
+    this.path = path;
+    
+    net = net || require('net');
+
+
+    try {
+        this.connection = net.connect({path: this.path});
+
+    } catch(error) {
+        throw errors.InvalidConnection(path);
+    }
+
+    this.connection.on('error', function(e){
+        throw errors.InvalidConnection(path);
+    }); 
+
+
+
+    // LISTEN FOR CONNECTION RESPONSES
+    this.connection.on('data', function(result) {
+        result = result.toString();
+
+        try {
+            var result = JSON.parse(result);
+
+        } catch(e) {
+            throw errors.InvalidResponse(result);                
+        }
+
+        var id = result.id || result[0].id;
+
+        // get the id which matches the returned id
+        if(utils.isArray(result)) {
+            result.forEach(function(load){
+                if(_this.responseCallbacks[load.id])
+                    id = load.id;
+            });
+        } else {
+            id = result.id;
+        }
+
+
+        // fire the callback
+        if(_this.responseCallbacks[id]) {
+            _this.responseCallbacks[id](null, result);
+            delete _this.responseCallbacks[id];
+        }
+
+    });
+};
+
+/**
+Get the adds a callback to the responseCallbacks object,
+which will be called if a response matching the response Id will arrive.
+
+@method _getResponse
+*/
+IpcProvider.prototype._getResponse = function(payload, callback) {
+    var id = payload.id || payload[0].id;
+
+    this.responseCallbacks[id] = callback;
+};
+
+
+IpcProvider.prototype.isConnected = function() {
+    // try reconnect, when connection is gone
+    if(!this.connection._handle)
+        this.connection.connect({path: this.path});
+
+    return !!this.connection._handle;
+};
+
+IpcProvider.prototype.send = function (payload) {
+    throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
+};
+
+IpcProvider.prototype.sendAsync = function (payload, callback) {
+    // try reconnect, when connection is gone
+    if(!this.connection._handle)
+        this.connection.connect({path: this.path});
+
+
+    this.connection.write(JSON.stringify(payload));
+    this._getResponse(payload, callback);
+};
+
+module.exports = IpcProvider;
+
+
+},{"../utils/utils":6,"./errors":12,"net":31}],21:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file jsonrpc.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
@@ -3314,7 +3456,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],21:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3488,7 +3630,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":6,"./errors":12,"./requestmanager":26}],22:[function(require,module,exports){
+},{"../utils/utils":6,"./errors":12,"./requestmanager":27}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3536,7 +3678,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":10}],23:[function(require,module,exports){
+},{"./contract":10}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3586,7 +3728,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":6,"./property":24}],24:[function(require,module,exports){
+},{"../utils/utils":6,"./property":25}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3704,7 +3846,7 @@ Property.prototype.getAsync = function (callback) {
 module.exports = Property;
 
 
-},{"./requestmanager":26}],25:[function(require,module,exports){
+},{"./requestmanager":27}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3739,7 +3881,7 @@ QtSyncProvider.prototype.send = function (payload) {
 module.exports = QtSyncProvider;
 
 
-},{}],26:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4004,7 +4146,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":4,"../utils/utils":6,"./errors":12,"./jsonrpc":20}],27:[function(require,module,exports){
+},{"../utils/config":4,"../utils/utils":6,"./errors":12,"./jsonrpc":21}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4074,7 +4216,7 @@ module.exports = {
 };
 
 
-},{"./formatters":16,"./method":21}],28:[function(require,module,exports){
+},{"./formatters":16,"./method":22}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4170,7 +4312,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":8,"./contract":10,"./icap":19,"./namereg":22}],29:[function(require,module,exports){
+},{"../web3":8,"./contract":10,"./icap":19,"./namereg":23}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4286,11 +4428,11 @@ module.exports = {
 };
 
 
-},{"./method":21}],30:[function(require,module,exports){
+},{"./method":22}],31:[function(require,module,exports){
 
-},{}],31:[function(require,module,exports){
-arguments[4][30][0].apply(exports,arguments)
-},{"dup":30}],32:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
+arguments[4][31][0].apply(exports,arguments)
+},{"dup":31}],33:[function(require,module,exports){
 /*!
  * The buffer module from node.js, for the browser.
  *
@@ -5623,7 +5765,7 @@ function decodeUtf8Char (str) {
   }
 }
 
-},{"base64-js":33,"ieee754":34,"is-array":35}],33:[function(require,module,exports){
+},{"base64-js":34,"ieee754":35,"is-array":36}],34:[function(require,module,exports){
 var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
 ;(function (exports) {
@@ -5749,7 +5891,7 @@ var lookup = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 	exports.fromByteArray = uint8ToBase64
 }(typeof exports === 'undefined' ? (this.base64js = {}) : exports))
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 exports.read = function(buffer, offset, isLE, mLen, nBytes) {
   var e, m,
       eLen = nBytes * 8 - mLen - 1,
@@ -5835,7 +5977,7 @@ exports.write = function(buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128;
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 
 /**
  * isArray
@@ -5870,7 +6012,7 @@ module.exports = isArray || function (val) {
   return !! val && '[object Array]' == str.call(val);
 };
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6173,7 +6315,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 var http = module.exports;
 var EventEmitter = require('events').EventEmitter;
 var Request = require('./lib/request');
@@ -6319,7 +6461,7 @@ http.STATUS_CODES = {
     510 : 'Not Extended',               // RFC 2774
     511 : 'Network Authentication Required' // RFC 6585
 };
-},{"./lib/request":38,"events":36,"url":61}],38:[function(require,module,exports){
+},{"./lib/request":39,"events":37,"url":62}],39:[function(require,module,exports){
 var Stream = require('stream');
 var Response = require('./response');
 var Base64 = require('Base64');
@@ -6530,7 +6672,7 @@ var isXHR2Compatible = function (obj) {
     if (typeof FormData !== 'undefined' && obj instanceof FormData) return true;
 };
 
-},{"./response":39,"Base64":40,"inherits":42,"stream":59}],39:[function(require,module,exports){
+},{"./response":40,"Base64":41,"inherits":43,"stream":60}],40:[function(require,module,exports){
 var Stream = require('stream');
 var util = require('util');
 
@@ -6652,7 +6794,7 @@ var isArray = Array.isArray || function (xs) {
     return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{"stream":59,"util":63}],40:[function(require,module,exports){
+},{"stream":60,"util":64}],41:[function(require,module,exports){
 ;(function () {
 
   var object = typeof exports != 'undefined' ? exports : this; // #8: web workers
@@ -6714,7 +6856,7 @@ var isArray = Array.isArray || function (xs) {
 
 }());
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 var http = require('http');
 
 var https = module.exports;
@@ -6729,7 +6871,7 @@ https.request = function (params, cb) {
     return http.request.call(this, params, cb);
 }
 
-},{"http":37}],42:[function(require,module,exports){
+},{"http":38}],43:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -6754,12 +6896,12 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 /*! http://mths.be/punycode v1.2.4 by @mathias */
 ;(function(root) {
 
@@ -7268,7 +7410,7 @@ module.exports = Array.isArray || function (arr) {
 
 }(this));
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7354,7 +7496,7 @@ var isArray = Array.isArray || function (xs) {
   return Object.prototype.toString.call(xs) === '[object Array]';
 };
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7441,16 +7583,16 @@ var objectKeys = Object.keys || function (obj) {
   return res;
 };
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 exports.decode = exports.parse = require('./decode');
 exports.encode = exports.stringify = require('./encode');
 
-},{"./decode":45,"./encode":46}],48:[function(require,module,exports){
+},{"./decode":46,"./encode":47}],49:[function(require,module,exports){
 module.exports = require("./lib/_stream_duplex.js")
 
-},{"./lib/_stream_duplex.js":49}],49:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":50}],50:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7541,7 +7683,7 @@ function forEach (xs, f) {
   }
 }
 
-},{"./_stream_readable":51,"./_stream_writable":53,"core-util-is":54,"inherits":42}],50:[function(require,module,exports){
+},{"./_stream_readable":52,"./_stream_writable":54,"core-util-is":55,"inherits":43}],51:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7589,7 +7731,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":52,"core-util-is":54,"inherits":42}],51:[function(require,module,exports){
+},{"./_stream_transform":53,"core-util-is":55,"inherits":43}],52:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8542,7 +8684,7 @@ function indexOf (xs, x) {
   return -1;
 }
 
-},{"./_stream_duplex":49,"buffer":32,"core-util-is":54,"events":36,"inherits":42,"isarray":43,"stream":59,"string_decoder/":60,"util":31}],52:[function(require,module,exports){
+},{"./_stream_duplex":50,"buffer":33,"core-util-is":55,"events":37,"inherits":43,"isarray":44,"stream":60,"string_decoder/":61,"util":32}],53:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8753,7 +8895,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":49,"core-util-is":54,"inherits":42}],53:[function(require,module,exports){
+},{"./_stream_duplex":50,"core-util-is":55,"inherits":43}],54:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9232,7 +9374,7 @@ function endWritable(stream, state, cb) {
   state.ended = true;
 }
 
-},{"./_stream_duplex":49,"buffer":32,"core-util-is":54,"inherits":42,"stream":59}],54:[function(require,module,exports){
+},{"./_stream_duplex":50,"buffer":33,"core-util-is":55,"inherits":43,"stream":60}],55:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9340,10 +9482,10 @@ exports.isBuffer = isBuffer;
 function objectToString(o) {
   return Object.prototype.toString.call(o);
 }
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 module.exports = require("./lib/_stream_passthrough.js")
 
-},{"./lib/_stream_passthrough.js":50}],56:[function(require,module,exports){
+},{"./lib/_stream_passthrough.js":51}],57:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
 exports.Readable = exports;
@@ -9352,13 +9494,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":49,"./lib/_stream_passthrough.js":50,"./lib/_stream_readable.js":51,"./lib/_stream_transform.js":52,"./lib/_stream_writable.js":53,"stream":59}],57:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":50,"./lib/_stream_passthrough.js":51,"./lib/_stream_readable.js":52,"./lib/_stream_transform.js":53,"./lib/_stream_writable.js":54,"stream":60}],58:[function(require,module,exports){
 module.exports = require("./lib/_stream_transform.js")
 
-},{"./lib/_stream_transform.js":52}],58:[function(require,module,exports){
+},{"./lib/_stream_transform.js":53}],59:[function(require,module,exports){
 module.exports = require("./lib/_stream_writable.js")
 
-},{"./lib/_stream_writable.js":53}],59:[function(require,module,exports){
+},{"./lib/_stream_writable.js":54}],60:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9487,7 +9629,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":36,"inherits":42,"readable-stream/duplex.js":48,"readable-stream/passthrough.js":55,"readable-stream/readable.js":56,"readable-stream/transform.js":57,"readable-stream/writable.js":58}],60:[function(require,module,exports){
+},{"events":37,"inherits":43,"readable-stream/duplex.js":49,"readable-stream/passthrough.js":56,"readable-stream/readable.js":57,"readable-stream/transform.js":58,"readable-stream/writable.js":59}],61:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9710,7 +9852,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":32}],61:[function(require,module,exports){
+},{"buffer":33}],62:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -10419,14 +10561,14 @@ function isNullOrUndefined(arg) {
   return  arg == null;
 }
 
-},{"punycode":44,"querystring":47}],62:[function(require,module,exports){
+},{"punycode":45,"querystring":48}],63:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -11014,7 +11156,7 @@ function hasOwnProperty(obj, prop) {
   return Object.prototype.hasOwnProperty.call(obj, prop);
 }
 
-},{"./support/isBuffer":62,"inherits":42}],64:[function(require,module,exports){
+},{"./support/isBuffer":63,"inherits":43}],65:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11760,7 +11902,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS;
 
 }));
-},{}],65:[function(require,module,exports){
+},{}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12084,7 +12226,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":64,"./x64-core":66}],66:[function(require,module,exports){
+},{"./core":65,"./x64-core":67}],67:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12389,7 +12531,7 @@ function hasOwnProperty(obj, prop) {
 	return CryptoJS;
 
 }));
-},{"./core":64}],67:[function(require,module,exports){
+},{"./core":65}],68:[function(require,module,exports){
 /**
  * Wrapper for built-in http.js to emulate the browser XMLHttpRequest object.
  *
@@ -12992,7 +13134,7 @@ exports.XMLHttpRequest = function() {
   };
 };
 
-},{"child_process":30,"fs":30,"http":37,"https":41,"url":61}],"bignumber.js":[function(require,module,exports){
+},{"child_process":31,"fs":31,"http":38,"https":42,"url":62}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -13000,8 +13142,11 @@ module.exports = BigNumber; // jshint ignore:line
 
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
+
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
+web3.providers.IpcProvider = require('./lib/web3/ipcprovider');
+
 web3.eth.contract = require('./lib/web3/contract');
 web3.eth.namereg = require('./lib/web3/namereg');
 web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
@@ -13014,7 +13159,7 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":8,"./lib/web3/contract":10,"./lib/web3/httpprovider":18,"./lib/web3/namereg":22,"./lib/web3/qtsync":25,"./lib/web3/transfer":28}]},{},["web3"])
+},{"./lib/web3":8,"./lib/web3/contract":10,"./lib/web3/httpprovider":18,"./lib/web3/ipcprovider":20,"./lib/web3/namereg":23,"./lib/web3/qtsync":26,"./lib/web3/transfer":29}]},{},["web3"])
 
 
 //# sourceMappingURL=web3-light.js.map
