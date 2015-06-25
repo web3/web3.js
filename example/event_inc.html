@@ -25,6 +25,7 @@
 
         var address;
         var contract;
+        var inc;
 
         var update = function (err, x) {
             document.getElementById('result').textContent = JSON.stringify(x, null, 2);
@@ -55,8 +56,8 @@
                 }
             });
 
-            contract.Incremented({odd: true}).watch(update);
-            
+            inc = contract.Incremented({odd: true});
+            inc.watch(update);
         };
 
         var counter = 0;

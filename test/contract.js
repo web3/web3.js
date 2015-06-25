@@ -66,7 +66,7 @@ describe('web3.eth.contract', function () {
             provider.injectValidation(function (payload) {
                 if (step === 0) {
                     step = 1;
-                    provider.injectResult(3);
+                    provider.injectResult('0x3');
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, 'eth_newFilter');
                     assert.deepEqual(payload.params[0], {
@@ -105,7 +105,7 @@ describe('web3.eth.contract', function () {
                                 '0000000000000000000000000000000000000000000000000000000000000008' 
                     }]]);
                     var r = payload.filter(function (p) {
-                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === 3;
+                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
                     });
                     assert.equal(r.length > 0, true);
                 }
@@ -114,7 +114,149 @@ describe('web3.eth.contract', function () {
             var contract = web3.eth.contract(desc).at(address);
 
             var res = 0;
-            contract.Changed({from: address}).watch(function(err, result) {
+            var event = contract.Changed({from: address});
+            event.watch(function(err, result) {
+                assert.equal(result.args.from, address); 
+                assert.equal(result.args.amount, 1);
+                assert.equal(result.args.t1, 1);
+                assert.equal(result.args.t2, 8);
+                res++;
+                if (res === 2) {
+                    done();
+                }
+            });
+        });
+
+        it('should create event filter and watch immediately', function (done) {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset(); // reset different polls
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+            var step = 0;
+            provider.injectValidation(function (payload) {
+                if (step === 0) {
+                    step = 1;
+                    provider.injectResult('0x3');
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_newFilter');
+                    assert.deepEqual(payload.params[0], {
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            null
+                        ],
+                        address: '0x1234567890123456789012345678901234567890'
+                    });
+                } else if (step === 1) {
+                    step = 2;
+                    provider.injectResult([{
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }]);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_getFilterLogs');
+                } else if (step === 2 && utils.isArray(payload)) {
+                    provider.injectBatchResults([[{
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }]]);
+                    var r = payload.filter(function (p) {
+                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
+                    });
+                    assert.equal(r.length > 0, true);
+                }
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var res = 0;
+            var event = contract.Changed({from: address}, function(err, result) {
+                assert.equal(result.args.from, address); 
+                assert.equal(result.args.amount, 1);
+                assert.equal(result.args.t1, 1);
+                assert.equal(result.args.t2, 8);
+                res++;
+                if (res === 2) {
+                    done();
+                }
+            });
+        });
+
+        it('should create all event filter', function (done) {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset(); // reset different polls
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+            var step = 0;
+            provider.injectValidation(function (payload) {
+                if (step === 0) {
+                    step = 1;
+                    provider.injectResult('0x3');
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_newFilter');
+                    assert.deepEqual(payload.params[0], {
+                        topics: [
+                            null,
+                            null,
+                            null,
+                            null,
+                            null
+                        ],
+                        address: '0x1234567890123456789012345678901234567890'
+                    });
+                } else if (step === 1) {
+                    step = 2;
+                    provider.injectResult([{
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }]);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_getFilterLogs');
+                } else if (step === 2 && utils.isArray(payload)) {
+                    provider.injectBatchResults([[{
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }]]);
+                    var r = payload.filter(function (p) {
+                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
+                    });
+                    assert.equal(r.length > 0, true);
+                }
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var res = 0;
+            var event = contract.allEvents();
+            event.watch(function(err, result) {
                 assert.equal(result.args.from, address); 
                 assert.equal(result.args.amount, 1);
                 assert.equal(result.args.t1, 1);
@@ -133,6 +275,7 @@ describe('web3.eth.contract', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
             var address = '0x1234567890123456789012345678901234567890';
+            
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
@@ -144,6 +287,28 @@ describe('web3.eth.contract', function () {
             var contract = web3.eth.contract(desc).at(address);
 
             var r = contract.balance(address);
+            assert.deepEqual(new BigNumber(0x32), r);
+        });
+
+        it('should call constant function with default block', function () {
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+            var signature = 'balance(address)'
+            var address = '0x1234567890123456789012345678901234567890';
+            
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    to: address
+                }, '0xb']);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var r = contract.balance(address, 11);
             assert.deepEqual(new BigNumber(0x32), r);
         });
 
@@ -214,6 +379,31 @@ describe('web3.eth.contract', function () {
             var contract = web3.eth.contract(desc).at(address);
 
             var r = contract.balance.call(address, {from: address, gas: 50000});
+            assert.deepEqual(new BigNumber(0x32), r);
+
+        });
+
+        it('should explicitly make a call with optional params and defaultBlock', function () {
+           
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+            var signature = 'balance(address)';
+            var address = '0x1234567890123456789012345678901234567890';
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    to: address,
+                    from: address,
+                    gas: '0xc350'
+                }, '0xb']);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var r = contract.balance.call(address, {from: address, gas: 50000}, 11);
             assert.deepEqual(new BigNumber(0x32), r);
 
         });
