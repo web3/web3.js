@@ -264,6 +264,13 @@ var coder = new SolidityCoder([
         outputFormatter: f.formatOutputBytes
     }),
     new SolidityType({
+        name: 'string',
+        match: 'strict',
+        mode: 'bytes',
+        inputFormatter: f.formatInputString,
+        outputFormatter: f.formatOutputString
+    }),
+    new SolidityType({
         name: 'real',
         match: 'prefix',
         mode: 'value',
@@ -328,25 +335,39 @@ var formatInputInt = function (value) {
 };
 
 /**
- * Formats input value to byte representation of string
+ * Formats input bytes
  *
  * @method formatInputBytes
  * @param {String}
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
-    var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
+    var result = utils.padRight(utils.toHex(value).substr(2), 64);
     return new SolidityParam(result);
+};
+
+/**
+ * Formats input bytes
+ *
+ * @method formatDynamicInputBytes
+ * @param {String}
+ * @returns {SolidityParam}
+ */
+var formatInputDynamicBytes = function (value) {
+    value = utils.toHex(value);
+    var result = utils.padRight((value).substr(2), 64);
+    var length = Math.floor(value.length / 2 - 1);
+    return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
 /**
  * Formats input value to byte representation of string
  *
- * @method formatInputDynamicBytes
+ * @method formatInputString
  * @param {String}
  * @returns {SolidityParam}
  */
-var formatInputDynamicBytes = function (value) {
+var formatInputString = function (value) {
     var result = utils.fromAscii(value, c.ETH_PADDING).substr(2);
     return new SolidityParam(formatInputInt(value.length).value + result, 32);
 };
@@ -450,27 +471,38 @@ var formatOutputBool = function (param) {
 };
 
 /**
- * Should be used to format output string
+ * Should be used to format output bytes
  *
  * @method formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
- * @returns {String} ascii string
+ * @returns {String} hex string
  */
 var formatOutputBytes = function (param) {
-    // length might also be important!
-    return utils.toAscii(param.staticPart());
+    return '0x' + param.staticPart();
+};
+
+/**
+ * Should be used to format output bytes
+ *
+ * @method formatOutputDynamicBytes
+ * @param {SolidityParam} left-aligned hex representation of string
+ * @returns {String} hex string
+ */
+var formatOutputDynamicBytes = function (param) {
+    var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
+    return '0x' + param.dynamicPart().substr(64, length);
 };
 
 /**
  * Should be used to format output string
  *
- * @method formatOutputDynamicBytes
+ * @method formatOutputString
  * @param {SolidityParam} left-aligned hex representation of string
  * @returns {String} ascii string
  */
-var formatOutputDynamicBytes = function (param) {
-    // length might also be important!
-    return utils.toAscii(param.dynamicPart().slice(64));
+var formatOutputString = function (param) {
+    var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
+    return utils.toAscii(param.dynamicPart().substr(64, length));
 };
 
 /**
@@ -489,6 +521,7 @@ module.exports = {
     formatInputInt: formatInputInt,
     formatInputBytes: formatInputBytes,
     formatInputDynamicBytes: formatInputDynamicBytes,
+    formatInputString: formatInputString,
     formatInputBool: formatInputBool,
     formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
@@ -498,6 +531,7 @@ module.exports = {
     formatOutputBool: formatOutputBool,
     formatOutputBytes: formatOutputBytes,
     formatOutputDynamicBytes: formatOutputDynamicBytes,
+    formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress
 };
 
@@ -913,6 +947,19 @@ var padLeft = function (string, chars, sign) {
     return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
 };
 
+/**
+ * Should be called to pad string to expected length
+ *
+ * @method padRight
+ * @param {String} string to be padded
+ * @param {Number} characters that result string should have
+ * @param {String} sign, by default 0
+ * @returns {String} right aligned string
+ */
+var padRight = function (string, chars, sign) {
+    return string + (new Array(chars - string.length + 1).join(sign ? sign : "0"));
+};
+
 /** 
  * Should be called to get sting from it's hex representation
  *
@@ -929,10 +976,6 @@ var toAscii = function(hex) {
     }
     for (; i < l; i+=2) {
         var code = parseInt(hex.substr(i, 2), 16);
-        if (code === 0) {
-            break;
-        }
-
         str += String.fromCharCode(code);
     }
 
@@ -1042,7 +1085,7 @@ var fromDecimal = function (value) {
  * @return {String}
  */
 var toHex = function (val) {
-    /*jshint maxcomplexity:7 */
+    /*jshint maxcomplexity: 8 */
 
     if (isBoolean(val))
         return fromDecimal(+val);
@@ -1056,9 +1099,11 @@ var toHex = function (val) {
     // if its a negative number, pass it through fromDecimal
     if (isString(val)) {
         if (val.indexOf('-0x') === 0)
-           return fromDecimal(val);
+            return fromDecimal(val);
         else if (!isFinite(val))
             return fromAscii(val);
+        else if(val.indexOf('0x') === 0)
+            return val;
     }
 
     return fromDecimal(val);
@@ -1309,6 +1354,7 @@ var isIBAN = function (iban) {
 
 module.exports = {
     padLeft: padLeft,
+    padRight: padRight,
     toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
