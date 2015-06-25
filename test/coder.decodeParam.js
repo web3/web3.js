@@ -20,6 +20,10 @@ describe('lib/solidity/coder', function () {
         test({ type: 'int256', expected: new bn(1),         value: '0000000000000000000000000000000000000000000000000000000000000001'});
         test({ type: 'int256', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
         test({ type: 'int256', expected: new bn(-1),        value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ type: 'int8', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'int32', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'int64', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'int128', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
         test({ type: 'bytes32', expected: '0x6761766f66796f726b0000000000000000000000000000000000000000000000',      
                                                             value: '6761766f66796f726b0000000000000000000000000000000000000000000000'});
         test({ type: 'bytes', expected: '0x6761766f66796f726b',       
