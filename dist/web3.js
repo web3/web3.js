@@ -2635,6 +2635,7 @@ var Filter = function (options, methods, formatter, callback) {
     });
     this.options = getOptions(options);
     this.implementation = implementation;
+    this.filterId = null;
     this.callbacks = [];
     this.pollFilters = [];
     this.formatter = formatter;
@@ -2645,12 +2646,13 @@ var Filter = function (options, methods, formatter, callback) {
             });
         } else {
             self.filterId = id;
-            // get filter logs at start
+
+            // get filter logs for the already existing watch calls
             self.callbacks.forEach(function(cb){
                 getLogsAtStart(self, cb);
             });
-            pollFilter(self);
-
+            if(self.callbacks.length > 0)
+                pollFilter(self);
 
             // start to watch immediately
             if(callback) {
