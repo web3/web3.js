@@ -3191,6 +3191,7 @@ HttpProvider.prototype.send = function (payload) {
 
     request.open('POST', this.host, false);
     request.setRequestHeader('Content-type','application/json');
+    request.setRequestHeader('Connection','Keep-Alive');
     
     try {
         request.send(JSON.stringify(payload));
