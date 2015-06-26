@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -13,6 +13,7 @@
     "xmlhttprequest": "*"
   },
   "browser": {
+    "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "devDependencies": {
     "bower": ">=1.4.1",
