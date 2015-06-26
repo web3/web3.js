@@ -40,7 +40,7 @@ describe('lib/web3/ipcprovider', function () {
         it('should return false', function () {
             var provider = new IpcProvider();
 
-            provider.connection._handle = null;
+            provider.connection.writable = false;
 
             assert.isFalse(provider.isConnected());
         });
@@ -48,7 +48,7 @@ describe('lib/web3/ipcprovider', function () {
         it('should return true, when a net handle is set', function () {
             var provider = new IpcProvider();
 
-            provider.connection._handle = {fd: true};
+            provider.connection.writable = true;
 
             assert.isTrue(provider.isConnected());
         }); 
