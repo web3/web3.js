@@ -3417,6 +3417,8 @@ module.exports = ICAP;
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
+var errorTimeout = '{"jsonrpc": "2.0", "error": {"code": -32603, "message": "FRONTEND Request timed out for method  \'__method__\'"}, "id": "__id__"}';
+
 
 var IpcProvider = function (path, net) {
     var _this = this;
@@ -3425,17 +3427,17 @@ var IpcProvider = function (path, net) {
     
     net = net || require('net');
 
+    this.connection = net.connect({path: this.path});
 
-    try {
-        this.connection = net.connect({path: this.path});
-    } catch(error) {
-        throw errors.InvalidConnection(path);
-    }
+    this.connection.on('error', function(e){
+        console.error('IPC Connection error', e);
+        _this._timeout();
+    });
 
-    // this.connection.on('error', function(e){
-    //     throw errors.InvalidConnection(path);
-    // }); 
-
+    this.connection.on('end', function(e){
+        console.error('IPC Connection ended', e);
+        _this._timeout();
+    }); 
 
 
     // LISTEN FOR CONNECTION RESPONSES
@@ -3461,7 +3463,6 @@ var IpcProvider = function (path, net) {
             id = result.id;
         }
 
-
         // fire the callback
         if(_this.responseCallbacks[id]) {
             _this.responseCallbacks[id](null, result);
@@ -3479,11 +3480,31 @@ which will be called if a response matching the response Id will arrive.
 */
 IpcProvider.prototype._getResponse = function(payload, callback) {
     var id = payload.id || payload[0].id;
+    var method = payload.method || payload[0].method;
 
     this.responseCallbacks[id] = callback;
+    this.responseCallbacks[id].method = method;
+};
+
+/**
+Timeout all requests when the end/error event is fired
+
+@method _timeout
+*/
+IpcProvider.prototype._timeout = function() {
+    for(key in this.responseCallbacks) {
+        if(this.responseCallback.hasOwnProperty(key)){
+            this.responseCallbacks[key](errorTimeout.replace('__id__', key).replace('__method__', this.responseCallbacks[key].method));
+        }
+    }
 };
 
 
+/**
+Check if the current connection is still valid.
+
+@method isConnected
+*/
 IpcProvider.prototype.isConnected = function() {
     // try reconnect, when connection is gone
     if(!this.connection.writable)
