@@ -92,6 +92,11 @@ describe('lib/solidity/coder', function () {
         test({ type: 'ureal', expected: new bn(8.5),        value: '0000000000000000000000000000000880000000000000000000000000000000'});
         test({ type: 'address', expected: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',          
                                                             value: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'});
+        test({ type: 'string', expected: 'welcome to ethereum. welcome to ethereum. welcome to ethereum.',
+                                                            value: '0000000000000000000000000000000000000000000000000000000000000020' + 
+                                                                    '000000000000000000000000000000000000000000000000000000000000003e' + 
+                                                                    '77656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20' + 
+                                                                    '657468657265756d2e2077656c636f6d6520746f20657468657265756d2e0000'});
     });
 });
 
