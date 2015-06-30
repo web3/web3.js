@@ -354,9 +354,10 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
-    value = utils.toHex(value);
-    var result = utils.padRight((value).substr(2), 64);
-    var length = Math.floor(value.length / 2 - 1);
+    value = utils.toHex(value).substr(2);
+    var l = Math.floor((value.length + 63) / 64);
+    var result = utils.padRight(value, l * 64);
+    var length = Math.floor(value.length / 2);
     return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
@@ -721,13 +722,14 @@ var getOffset = function (bytes, index) {
  */
 SolidityParam.decodeBytes = function (bytes, index) {
     index = index || 0;
-    //TODO add support for strings longer than 32 bytes
-    //var length = parseInt('0x' + bytes.substr(offset * 64, 64));
 
     var offset = getOffset(bytes, index);
 
-    // 2 * , cause we also parse length
-    return new SolidityParam(bytes.substr(offset * 2, 2 * 64), 0);
+    var l = parseInt('0x' + bytes.substr(offset * 2, 64));
+    l = Math.floor((l + 31) / 32);
+
+    // (1 + l) * , cause we also parse length
+    return new SolidityParam(bytes.substr(offset * 2, (1 + l) * 64), 0);
 };
 
 /**
