@@ -6,7 +6,6 @@ var testMethod = require('./helpers/test.method.js');
 var method = 'getTransaction';
 
 var txResult = {
-    "status": "mined",
     "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
     "nonce":"0x5",
     "blockHash": "0x6fd9e2a26ab",
@@ -20,7 +19,6 @@ var txResult = {
     "input":"0x603880600c6000396000f30060"
 };
 var formattedTxResult = {
-    "status": "mined",
     "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
     "nonce":5,
     "blockHash": "0x6fd9e2a26ab",
