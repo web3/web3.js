@@ -35,14 +35,12 @@
             // let's assume that we have a private key to coinbase ;)
             web3.eth.defaultAccount = web3.eth.coinbase;
             
-            var watch = web3.eth.filter('latest');
-
             document.getElementById('create').style.visibility = 'hidden';
             document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
 
             web3.eth.contract(abi).new({data: code}, function (err, c) {
                 if (err) {
-                    console.error('contract creation failed!');
+                    console.error(err);
                     return;
                 }
 

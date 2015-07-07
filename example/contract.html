@@ -37,7 +37,7 @@
         document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
         web3.eth.contract(abi).new({data: code}, function (err, contract) {
             if (err) {
-                console.error('contract creation failed!');
+                console.error(err);
                 return;
             }
             myContract = contract;
