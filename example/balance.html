@@ -16,7 +16,7 @@
         document.getElementById('coinbase').innerText = 'coinbase: ' + coinbase;
         document.getElementById('original').innerText = ' original balance: ' + originalBalance + '    watching...';
 
-        web3.eth.filter('pending').watch(function() {
+        web3.eth.filter('latest').watch(function() {
             var currentBalance = web3.eth.getBalance(coinbase).toNumber();
             document.getElementById("current").innerText = 'current: ' + currentBalance;
             document.getElementById("diff").innerText = 'diff:    ' + (currentBalance - originalBalance);

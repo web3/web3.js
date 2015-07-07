@@ -34,22 +34,27 @@
         var watch = web3.eth.filter('latest');
 
         // create contract
-        myContract = web3.eth.contract(abi).new({data: code});
-        console.log('address: ' + myContract.address);
-        document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
-        watch.watch(function (err, hash) {
-            var block = web3.eth.getBlock(hash, true); 
-            var contractMined = block.transactions.reduce(function (mined, th) {
-                // TODO: compiled code do not have 0x prefix
-                return mined || (th.from === web3.eth.defaultAccount && th.input.indexOf(code) !== -1);
-            }, false);
-
-            if (contractMined) {
-                document.getElementById('status').innerText = 'Mined!';
-                document.getElementById('call').style.visibility = 'visible';
+        web3.eth.contract(abi).new({data: code}, function (err, contract) {
+            if (err) {
+                console.error('contract creation failed!');
+                return;
             }
-        });
+            myContract = contract;
+            console.log('address: ' + myContract.address);
+            document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
+            watch.watch(function (err, hash) {
+                var block = web3.eth.getBlock(hash, true); 
+                var contractMined = block.transactions.reduce(function (mined, th) {
+                    // TODO: compiled code do not have 0x prefix
+                    return mined || (th.from === web3.eth.defaultAccount && th.input.indexOf(code) !== -1);
+                }, false);
 
+                if (contractMined) {
+                    document.getElementById('status').innerText = 'Mined!';
+                    document.getElementById('call').style.visibility = 'visible';
+                }
+            });
+        });
     }
 
     function callExampleContract() {
