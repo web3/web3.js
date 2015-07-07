@@ -1398,7 +1398,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 module.exports={
-    "version": "0.7.1"
+    "version": "0.8.0"
 }
 
 },{}],9:[function(require,module,exports){
@@ -1853,11 +1853,10 @@ var checkForContractAddress = function(contract, callback){
 
                                 contract.address = receipt.contractAddress;
 
-                                if(callback) {
+                                if(callback)
                                     callback(null, contract);
-                                }
 
-                            } else {
+                            } else if(callback) {
                                 callback(new Error('The contract code couldn\'t be stored'));
                             }
 
