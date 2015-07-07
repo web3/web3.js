@@ -31,8 +31,6 @@
         // let's assume that coinbase is our account
         web3.eth.defaultAccount = web3.eth.coinbase;
 
-        var watch = web3.eth.filter('latest');
-
         // create contract
         document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
         web3.eth.contract(abi).new({data: code}, function (err, contract) {
