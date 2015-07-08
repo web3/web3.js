@@ -1605,9 +1605,9 @@ var utils = require('../utils/utils');
 var Filter = require('./filter');
 var watches = require('./watches');
 
-var AllSolidityEvents = function (json, address) {
+var AllSolidityEvents = function (json, contract) {
     this._json = json;
-    this._address = address;
+    this._contract = contract;
 };
 
 AllSolidityEvents.prototype.encode = function (options) {
@@ -1621,7 +1621,7 @@ AllSolidityEvents.prototype.encode = function (options) {
     });
 
     result.topics = [null, null, null, null, null]; // match all topics
-    result.address = this._address;
+    result.address = this._contract.address;
 
     return result;
 };
@@ -1640,7 +1640,7 @@ AllSolidityEvents.prototype.decode = function (data) {
         return data;
     }
 
-    var event = new SolidityEvent(match, this._address);
+    var event = new SolidityEvent(match, this._contract);
     return event.decode(data);
 };
 
@@ -1781,7 +1781,7 @@ var addFunctionsToContract = function (contract, abi) {
     abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(json, contract.address);
+        return new SolidityFunction(json, contract);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -1799,11 +1799,11 @@ var addEventsToContract = function (contract, abi) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(events, contract.address);
+    var All = new AllEvents(events, contract);
     All.attachToContract(contract);
     
     events.map(function (json) {
-        return new SolidityEvent(json, contract.address);
+        return new SolidityEvent(json, contract);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2392,10 +2392,10 @@ var watches = require('./watches');
 /**
  * This prototype should be used to create event filters
  */
-var SolidityEvent = function (json, address) {
+var SolidityEvent = function (json, contract) {
     this._params = json.inputs;
     this._name = utils.transformToFullName(json);
-    this._address = address;
+    this._contract = contract;
     this._anonymous = json.anonymous;
 };
 
@@ -2466,7 +2466,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
     result.topics = [];
 
     if (!this._anonymous) {
-        result.address = this._address;
+        result.address = this._contract.address;
         result.topics.push('0x' + this.signature());
     }
 
@@ -3056,7 +3056,7 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (json, address) {
+var SolidityFunction = function (json, contract) {
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -3065,7 +3065,7 @@ var SolidityFunction = function (json, address) {
     });
     this._constant = json.constant;
     this._name = utils.transformToFullName(json);
-    this._address = address;
+    this._contract = contract;
 };
 
 SolidityFunction.prototype.extractCallback = function (args) {
@@ -3092,7 +3092,7 @@ SolidityFunction.prototype.toPayload = function (args) {
     if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
         options = args[args.length - 1];
     }
-    options.to = this._address;
+    options.to = this._contract.address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
     return options;
 };

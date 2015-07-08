@@ -218,7 +218,7 @@ describe('lib/web3/event', function () {
     describe('encode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var event = new SolidityEvent(test.abi, address);
+                var event = new SolidityEvent(test.abi, {address: address});
                 event.signature = function () { // inject signature
                     return signature.slice(2);
                 };
