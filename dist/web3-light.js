@@ -1836,6 +1836,8 @@ var checkForContractAddress = function(contract, callback){
         if(!e) {
             count++;
 
+            // console.log('Checking for contract address', count);
+
             // stop watching after 50 blocks (timeout)
             if(count > 50) {
                 if(callback)
@@ -1850,6 +1852,8 @@ var checkForContractAddress = function(contract, callback){
 
                         web3.eth.getCode(receipt.contractAddress, function(e, code){
                             if(code.length > 2) {
+
+                                // console.log('Contract code deployed!');
 
                                 contract.address = receipt.contractAddress;
 
