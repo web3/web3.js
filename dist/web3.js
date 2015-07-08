@@ -1605,9 +1605,9 @@ var utils = require('../utils/utils');
 var Filter = require('./filter');
 var watches = require('./watches');
 
-var AllSolidityEvents = function (json, contract) {
+var AllSolidityEvents = function (json, address) {
     this._json = json;
-    this._contract = contract;
+    this._address = address;
 };
 
 AllSolidityEvents.prototype.encode = function (options) {
@@ -1621,7 +1621,7 @@ AllSolidityEvents.prototype.encode = function (options) {
     });
 
     result.topics = [null, null, null, null, null]; // match all topics
-    result.address = this._contract.address;
+    result.address = this._address;
 
     return result;
 };
@@ -1640,7 +1640,7 @@ AllSolidityEvents.prototype.decode = function (data) {
         return data;
     }
 
-    var event = new SolidityEvent(match, this._contract);
+    var event = new SolidityEvent(match, this._address);
     return event.decode(data);
 };
 
@@ -1781,7 +1781,7 @@ var addFunctionsToContract = function (contract, abi) {
     abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(json, contract);
+        return new SolidityFunction(json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -1799,11 +1799,11 @@ var addEventsToContract = function (contract, abi) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(events, contract);
+    var All = new AllEvents(events, contract.address);
     All.attachToContract(contract);
     
     events.map(function (json) {
-        return new SolidityEvent(json, contract);
+        return new SolidityEvent(json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -1821,14 +1821,14 @@ var contract = function (abi) {
 };
 
 /**
- * Should be called to create new ContractFactory
+ * Should be called to check if the contract gets properly deployed on the blockchain.
  *
  * @method checkForContractAddress
  * @param {Object} contract
  * @param {Function} callback
  * @returns {Undefined}
  */
-var checkForContractAddress = function(contract, callback){
+var checkForContractAddress = function(contract, abi, callback){
     var count = 0;
 
     // wait for receipt
@@ -1856,6 +1856,10 @@ var checkForContractAddress = function(contract, callback){
                                 // console.log('Contract code deployed!');
 
                                 contract.address = receipt.contractAddress;
+
+                                // attach events and methods
+                                addFunctionsToContract(contract, abi);
+                                addEventsToContract(contract, abi);
 
                                 if(callback)
                                     callback(null, contract);
@@ -1894,6 +1898,7 @@ var ContractFactory = function (abi) {
  * @returns {Contract} returns contract instance
  */
 ContractFactory.prototype.new = function () {
+    var _this = this;
     var contract = new Contract(this.abi);
 
     // parse arguments
@@ -1925,14 +1930,14 @@ ContractFactory.prototype.new = function () {
             } else {
                 // add the transaction hash
                 contract.transactionHash = hash;
-                checkForContractAddress(contract, callback);
+                checkForContractAddress(contract, _this.abi, callback);
             }
         });
     } else {
         var hash = web3.eth.sendTransaction(options);
         // add the transaction hash
         contract.transactionHash = hash;
-        checkForContractAddress(contract);
+        checkForContractAddress(contract, _this.abi);
     }
 
     return contract;
@@ -1948,12 +1953,17 @@ ContractFactory.prototype.new = function () {
  * otherwise calls callback function (err, contract)
  */
 ContractFactory.prototype.at = function (address, callback) {
+    var contract = new Contract(this.abi, address);
     // TODO: address is required
+
+    // attach functions
+    addFunctionsToContract(contract, this.abi);
+    addEventsToContract(contract, this.abi);
     
     if (callback) {
-        callback(null, new Contract(this.abi, address));
+        callback(null, contract);
     } 
-    return new Contract(this.abi, address);
+    return contract;
 };
 
 /**
@@ -1965,8 +1975,6 @@ ContractFactory.prototype.at = function (address, callback) {
  */
 var Contract = function (abi, address) {
     this.address = address;
-    addFunctionsToContract(this, abi);
-    addEventsToContract(this, abi);
 };
 
 module.exports = contract;
@@ -2396,10 +2404,10 @@ var watches = require('./watches');
 /**
  * This prototype should be used to create event filters
  */
-var SolidityEvent = function (json, contract) {
+var SolidityEvent = function (json, address) {
     this._params = json.inputs;
     this._name = utils.transformToFullName(json);
-    this._contract = contract;
+    this._address = address;
     this._anonymous = json.anonymous;
 };
 
@@ -2470,7 +2478,7 @@ SolidityEvent.prototype.encode = function (indexed, options) {
     result.topics = [];
 
     if (!this._anonymous) {
-        result.address = this._contract.address;
+        result.address = this._address;
         result.topics.push('0x' + this.signature());
     }
 
@@ -3060,7 +3068,7 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (json, contract) {
+var SolidityFunction = function (json, address) {
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -3069,7 +3077,7 @@ var SolidityFunction = function (json, contract) {
     });
     this._constant = json.constant;
     this._name = utils.transformToFullName(json);
-    this._contract = contract;
+    this._address = address;
 };
 
 SolidityFunction.prototype.extractCallback = function (args) {
@@ -3096,7 +3104,7 @@ SolidityFunction.prototype.toPayload = function (args) {
     if (args.length > this._inputTypes.length && utils.isObject(args[args.length -1])) {
         options = args[args.length - 1];
     }
-    options.to = this._contract.address;
+    options.to = this._address;
     options.data = '0x' + this.signature() + coder.encodeParams(this._inputTypes, args);
     return options;
 };
