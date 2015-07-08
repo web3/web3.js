@@ -49,8 +49,7 @@
                 document.getElementById('status').innerText = 'Mined!';
                 document.getElementById('call').style.visibility = 'visible';
 
-                inc = contract.Incremented({odd: true});
-                inc.watch(update);
+                inc = contract.Incremented({odd: true}, update);
             });
         };
 
