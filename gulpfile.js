@@ -17,7 +17,7 @@ var bower = require('bower');
 var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
-var DEST = './dist/';
+var DEST = path.join(__dirname, 'dist/');
 var src = 'index';
 var dst = 'web3';
 var lightDst = 'web3-light';
@@ -29,7 +29,7 @@ var browserifyOptions = {
     bundleExternal: true
 };
 
-gulp.task('versionReplace', function(){
+gulp.task('version', function(){
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"(.{5})\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
@@ -41,24 +41,24 @@ gulp.task('versionReplace', function(){
     .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', function(cb){
+gulp.task('bower', ['version'], function(cb){
     bower.commands.install().on('end', function (installed){
         console.log(installed);
         cb();
     });
 });
 
-gulp.task('clean', ['lint'], function(cb) {
-    del([ DEST ], cb);
-});
-
-gulp.task('lint', function(){
+gulp.task('lint', ['bower'], function(){
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('buildLight', ['clean'], function () {
+gulp.task('clean', ['lint'], function(cb) {
+    del([ DEST ], cb);
+});
+
+gulp.task('light', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .ignore('bignumber.js')
@@ -73,7 +73,7 @@ gulp.task('buildLight', ['clean'], function () {
         .pipe(gulp.dest( DEST ));
 });
 
-gulp.task('buildStandalone', ['clean'], function () {
+gulp.task('standalone', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .require('bignumber.js') // expose it to dapp users
@@ -92,10 +92,5 @@ gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('light', ['versionReplace','bower', 'lint', 'buildLight']);
-gulp.task('standalone', ['versionReplace','bower', 'lint', 'buildStandalone']);
-gulp.task('default', ['light', 'standalone']);
-
-
-gulp.task('version', ['versionReplace']);
+gulp.task('default', ['version', 'bower', 'lint', 'clean', 'light', 'standalone']);
 

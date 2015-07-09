@@ -219,15 +219,27 @@ describe('web3.eth.contract', function() {
             ]
         }];
 
+        var steps = 1;
+
         provider.injectResult(address);
         provider.injectValidation(function (payload) {
-            assert.equal(payload.jsonrpc, '2.0');
-            assert.equal(payload.method, 'eth_sendTransaction');
-            assert.equal(payload.params[0].data, code + '0000000000000000000000000000000000000000000000000000000000000002');
-            done();
+            if(steps === 1) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.equal(payload.params[0].data, code + '0000000000000000000000000000000000000000000000000000000000000002');
+                steps++;
+
+            } else if(steps === 2) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_newBlockFilter');
+
+                done();
+            }
         });
         
-        var myCon = contract(description).new(2, {data: code});
+        contract(description).new(2, {data: code}, function(e, myCon){
+
+        });
     });
 });
 

@@ -11,8 +11,8 @@
     // solidity code code
     var source = "" +
     "contract test {\n" +
-    "   function multiply(uint a) constant returns(uint d) {\n" +
-    "       return a * 7;\n" +
+    "   function take(uint[] a, uint b) constant returns(uint d) {\n" +
+    "       return a[b];\n" +
     "   }\n" +
     "}\n";
 
@@ -40,6 +40,7 @@
             }
             myContract = contract;
             console.log('address: ' + myContract.address);
+
             document.getElementById('status').innerText = 'Mined!';
             document.getElementById('call').style.visibility = 'visible';
         });
@@ -50,7 +51,7 @@
         var param = parseInt(document.getElementById('value').value);
 
         // call the contract
-        var res = myContract.multiply(param);
+        var res = myContract.take([0,6,5,2,1,5,6], param);
         document.getElementById('result').innerText = res.toString(10);
     }
 
@@ -64,7 +65,11 @@
         <button type="button" onClick="createExampleContract();">create example contract</button>
     </div>
     <div id='call' style='visibility: hidden;'>
-        <input type="number" id="value" onkeyup='callExampleContract()'></input>
+        <div>var array = [0,6,5,2,1,5,6];</div>
+        <div>var x = array[
+            <input type="number" id="value" onkeyup='callExampleContract()'></input>
+        ];
+        </div>
     </div>
     <div id="result"></div>
 </body>

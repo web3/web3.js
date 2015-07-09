@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.6.1",
+  "version": "0.8.1",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -13,6 +13,7 @@
     "xmlhttprequest": "*"
   },
   "browser": {
+    "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "devDependencies": {
     "bower": ">=1.4.1",
@@ -56,14 +57,14 @@
   "author": "ethdev.com",
   "authors": [
     {
-      "name": "Jeffery Wilcke",
-      "email": "jeff@ethdev.com",
-      "url": "https://github.com/obscuren"
-    },
-    {
       "name": "Marek Kotewicz",
       "email": "marek@ethdev.com",
       "url": "https://github.com/debris"
+    },
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethdev.com",
+      "homepage": "http://frozeman.de"
     },
     {
       "name": "Marian Oancea",
@@ -71,14 +72,14 @@
       "url": "https://github.com/cubedro"
     },
     {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@frozeman.de",
-      "homepage": "http://frozeman.de"
-    },
-    {
       "name": "Gav Wood",
       "email": "g@ethdev.com",
       "homepage": "http://gavwood.com"
+    },
+    {
+      "name": "Jeffery Wilcke",
+      "email": "jeff@ethdev.com",
+      "url": "https://github.com/obscuren"
     }
   ],
   "license": "LGPL-3.0"
