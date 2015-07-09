@@ -184,6 +184,7 @@ var tests = [{
     },
     options: {},
     expected: {
+        address: address,
         topics: [
             '0x0000000000000000000000000000000000000000000000000000000000000001'
         ]
@@ -207,6 +208,7 @@ var tests = [{
     },
     options: {},
     expected: {
+        address: address,
         topics: [
             null,
             '0x0000000000000000000000000000000000000000000000000000000000000001'
