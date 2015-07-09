@@ -3527,6 +3527,8 @@ module.exports = ICAP;
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
+var errorTimeout = '{"jsonrpc": "2.0", "error": {"code": -32603, "message": "IPC Request timed out for method  \'__method__\'"}, "id": "__id__"}';
+
 
 var IpcProvider = function (path, net) {
     var _this = this;
@@ -3535,49 +3537,78 @@ var IpcProvider = function (path, net) {
     
     net = net || require('net');
 
+    this.connection = net.connect({path: this.path});
 
-    try {
-        this.connection = net.connect({path: this.path});
-    } catch(error) {
-        throw errors.InvalidConnection(path);
-    }
+    this.connection.on('error', function(e){
+        console.error('IPC Connection Error', e);
+        _this._timeout();
+    });
 
-    // this.connection.on('error', function(e){
-    //     throw errors.InvalidConnection(path);
-    // }); 
-
+    this.connection.on('end', function(){
+        _this._timeout();
+    }); 
 
 
     // LISTEN FOR CONNECTION RESPONSES
-    this.connection.on('data', function(result) {
-        result = result.toString();
+    this.connection.on('data', function(data) {
+        /*jshint maxcomplexity: 6 */
+        data = data.toString();
 
-        try {
-            result = JSON.parse(result);
-
-        } catch(e) {
-            throw errors.InvalidResponse(result);                
-        }
-
-        var id;
-
-        // get the id which matches the returned id
-        if(utils.isArray(result)) {
-            result.forEach(function(load){
-                if(_this.responseCallbacks[load.id])
-                    id = load.id;
-            });
-        } else {
-            id = result.id;
-        }
+        // DE-CHUNKER
+        var dechunkedData = data
+            .replace(/\}\{/g,'}|--|{') // }{
+            .replace(/\}\]\[\{/g,'}]|--|[{') // }][{
+            .replace(/\}\[\{/g,'}|--|[{') // }[{
+            .replace(/\}\]\{/g,'}]|--|{') // }]{
+            .split('|--|');
 
 
-        // fire the callback
-        if(_this.responseCallbacks[id]) {
-            _this.responseCallbacks[id](null, result);
-            delete _this.responseCallbacks[id];
-        }
+        dechunkedData.forEach(function(data){
 
+            // prepend the last chunk
+            if(_this.lastChunk)
+                data = _this.lastChunk + data;
+
+            var result = data,
+                id = null;
+
+            try {
+                result = JSON.parse(result);
+
+            } catch(e) {
+
+                _this.lastChunk = data;
+
+                // start timeout to cancel all requests
+                clearTimeout(_this.lastChunkTimeout);
+                _this.lastChunkTimeout = setTimeout(function(){
+                    _this.timeout();
+                    throw errors.InvalidResponse(result);        
+                }, 1000 * 15);
+
+                return;
+            }
+
+            // cancel timeout and set chunk to null
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunk = null;
+
+            // get the id which matches the returned id
+            if(utils.isArray(result)) {
+                result.forEach(function(load){
+                    if(_this.responseCallbacks[load.id])
+                        id = load.id;
+                });
+            } else {
+                id = result.id;
+            }
+
+            // fire the callback
+            if(_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](null, result);
+                delete _this.responseCallbacks[id];
+            }
+        });
     });
 };
 
@@ -3589,17 +3620,42 @@ which will be called if a response matching the response Id will arrive.
 */
 IpcProvider.prototype._getResponse = function(payload, callback) {
     var id = payload.id || payload[0].id;
+    var method = payload.method || payload[0].method;
 
     this.responseCallbacks[id] = callback;
+    this.responseCallbacks[id].method = method;
+};
+
+/**
+Timeout all requests when the end/error event is fired
+
+@method _timeout
+*/
+IpcProvider.prototype._timeout = function() {
+    for(var key in this.responseCallbacks) {
+        if(this.responseCallbacks.hasOwnProperty(key)){
+            this.responseCallbacks[key](errorTimeout.replace('__id__', key).replace('__method__', this.responseCallbacks[key].method));
+            delete this.responseCallbacks[key];
+        }
+    }
 };
 
 
-IpcProvider.prototype.isConnected = function() {
-    // try reconnect, when connection is gone
-    if(!this.connection._handle)
-        this.connection.connect({path: this.path});
+/**
+Check if the current connection is still valid.
 
-    return !!this.connection._handle;
+@method isConnected
+*/
+IpcProvider.prototype.isConnected = function() {
+    var _this = this;
+
+    // try reconnect, when connection is gone
+    setTimeout(function(){
+        if(!_this.connection.writable)
+            _this.connection.connect({path: _this.path});
+    }, 0);
+
+    return !!this.connection.writable;
 };
 
 IpcProvider.prototype.send = function (payload) {
@@ -3607,7 +3663,7 @@ IpcProvider.prototype.send = function (payload) {
     if(this.connection.writeSync) {
 
         // try reconnect, when connection is gone
-        if(!this.connection._handle)
+        if(!this.connection.writable)
             this.connection.connect({path: this.path});
 
         var result = this.connection.writeSync(JSON.stringify(payload));
@@ -3627,7 +3683,7 @@ IpcProvider.prototype.send = function (payload) {
 
 IpcProvider.prototype.sendAsync = function (payload, callback) {
     // try reconnect, when connection is gone
-    if(!this.connection._handle)
+    if(!this.connection.writable)
         this.connection.connect({path: this.path});
 
 
@@ -3828,7 +3884,7 @@ Method.prototype.formatInput = function (args) {
  * @return {Object}
  */
 Method.prototype.formatOutput = function (result) {
-    return this.outputFormatter && result !== null ? this.outputFormatter(result) : result;
+    return this.outputFormatter && result ? this.outputFormatter(result) : result;
 };
 
 /**

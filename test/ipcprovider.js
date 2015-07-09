@@ -13,9 +13,9 @@ describe('lib/web3/ipcprovider', function () {
     describe('send', function () {
         it('should send basic request', function () {
             var provider = new IpcProvider();
-            var result = provider.send({});
+            var result = provider.send({id: 1, method: 'eth_test'});
 
-            assert.equal(typeof result, 'object');
+            assert.isObject(result);
         });
     });
 
@@ -23,8 +23,8 @@ describe('lib/web3/ipcprovider', function () {
         it('should send basic async request', function (done) {
             var provider = new IpcProvider();
 
-            provider.sendAsync({id: 1}, function (err, result) {
-                assert.equal(typeof result, 'object');
+            provider.sendAsync({id: 1, method: 'eth_test'}, function (err, result) {
+                assert.isObject(result);
                 done();
             });
         }); 
@@ -40,7 +40,7 @@ describe('lib/web3/ipcprovider', function () {
         it('should return false', function () {
             var provider = new IpcProvider();
 
-            provider.connection._handle = null;
+            provider.connection.writable = false;
 
             assert.isFalse(provider.isConnected());
         });
@@ -48,7 +48,7 @@ describe('lib/web3/ipcprovider', function () {
         it('should return true, when a net handle is set', function () {
             var provider = new IpcProvider();
 
-            provider.connection._handle = {fd: true};
+            provider.connection.writable = true;
 
             assert.isTrue(provider.isConnected());
         }); 
