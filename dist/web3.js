@@ -2075,7 +2075,7 @@ module.exports = {
         return new Error('Providor not set or invalid');
     },
     InvalidResponse: function (result){
-        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response';
+        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: '+ result;
         return new Error(message);
     }
 };
@@ -3353,7 +3353,7 @@ HttpProvider.prototype.send = function (payload) {
     try {
         result = JSON.parse(result);
     } catch(e) {
-        throw errors.InvalidResponse(result);                
+        throw errors.InvalidResponse(request.responseText);                
     }
 
     return result;
@@ -3369,7 +3369,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
             try {
                 result = JSON.parse(result);
             } catch(e) {
-                error = errors.InvalidResponse(result);                
+                error = errors.InvalidResponse(request.responseText);                
             }
 
             callback(error, result);
@@ -3583,7 +3583,7 @@ var IpcProvider = function (path, net) {
                 clearTimeout(_this.lastChunkTimeout);
                 _this.lastChunkTimeout = setTimeout(function(){
                     _this.timeout();
-                    throw errors.InvalidResponse(result);        
+                    throw errors.InvalidResponse(data);        
                 }, 1000 * 15);
 
                 return;
@@ -3666,12 +3666,12 @@ IpcProvider.prototype.send = function (payload) {
         if(!this.connection.writable)
             this.connection.connect({path: this.path});
 
-        var result = this.connection.writeSync(JSON.stringify(payload));
+        var data = this.connection.writeSync(JSON.stringify(payload));
 
         try {
-            result = JSON.parse(result);
+            result = JSON.parse(data);
         } catch(e) {
-            throw errors.InvalidResponse(result);                
+            throw errors.InvalidResponse(data);                
         }
 
         return result;
