@@ -33,14 +33,13 @@ Component
 	$ component install ethereum/web3.js
 
 * Include `ethereum.min.js` in your html file. (not required for the meteor package)
-* Include [bignumber.js](https://github.com/MikeMcl/bignumber.js/) (not required for the meteor package)
 
 ## Usage
 Use the `web3` object directly from global namespace:
 
 	console.log(web3); // {eth: .., shh: ...} // it's here!
 
-Set a provider (QtSyncProvider, HttpProvider)
+Set a provider (HttpProvider)
 
 	web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
@@ -50,7 +49,6 @@ There you go, now you can use it:
 var coinbase = web3.eth.coinbase;
 var balance = web3.eth.getBalance(coinbase);
 ```
-
 
 For another example see `example/index.html`.
 
@@ -80,26 +78,6 @@ npm run-script build
 
 ```bash
 npm test
-```
-
-### Testing (karma)
-Karma allows testing within one or several browsers.
-
-```bash
-npm run-script karma # default browsers are Chrome and Firefox
-npm run-script karma -- --browsers="Chrome,Safari" # custom browsers
-```
-
-
-**Please note this repo is in it's early stage.**
-
-If you'd like to run a Http ethereum node check out
-[cpp-ethereum](https://github.com/ethereum/cpp-ethereum).
-
-Install ethereum and spawn a node:
-
-```
-eth -j
 ```
 
 [npm-image]: https://badge.fury.io/js/web3.png
