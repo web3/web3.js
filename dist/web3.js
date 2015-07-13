@@ -1840,10 +1840,14 @@ var checkForContractAddress = function(contract, abi, callback){
 
             // stop watching after 50 blocks (timeout)
             if(count > 50) {
-                if(callback)
-                    callback(new Error('Contract couldn\'t be deployed'));
-
+                
                 filter.stopWatching();
+
+                if(callback)
+                    callback(new Error('Contract transaction couldn\'t be found after 50 blocks'));
+                else
+                    throw new Error('Contract transaction couldn\'t be found after 50 blocks');
+
 
             } else {
 
@@ -1851,6 +1855,9 @@ var checkForContractAddress = function(contract, abi, callback){
                     if(receipt) {
 
                         web3.eth.getCode(receipt.contractAddress, function(e, code){
+                            
+                            filter.stopWatching();
+
                             if(code.length > 2) {
 
                                 // console.log('Contract code deployed!');
@@ -1864,11 +1871,12 @@ var checkForContractAddress = function(contract, abi, callback){
                                 if(callback)
                                     callback(null, contract);
 
-                            } else if(callback) {
-                                callback(new Error('The contract code couldn\'t be stored'));
+                            } else {
+                                if(callback)
+                                    callback(new Error('The contract code couldn\'t be stored, please check your gas amount.'));
+                                else
+                                    throw new Error('The contract code couldn\'t be stored, please check your gas amount.');
                             }
-
-                            filter.stopWatching();
                         });
                     }
                 });
@@ -2252,7 +2260,7 @@ var sendRawTransaction = new Method({
     name: 'sendRawTransaction',
     call: 'eth_sendRawTransaction',
     params: 1,
-    inputFormatter: []
+    inputFormatter: [null]
 });
 
 var sendTransaction = new Method({
