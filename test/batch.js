@@ -44,7 +44,45 @@ describe('lib/web3/batch', function () {
             batch.execute();
         });
         
-        it('should execute batch request', function (done) {
+        it('should execute batch request for async properties', function (done) {
+            
+            var provider = new FakeHttpProvider();
+            web3.setProvider(provider);
+            web3.reset();
+
+            var result = [];
+            var result2 = '0xb';
+            provider.injectBatchResults([result, result2]);
+
+            var counter = 0;
+            var callback = function (err, r) {
+                counter++;
+                assert.isArray(result, r);
+            };
+
+            var callback2 = function (err, r) {
+                assert.equal(counter, 1);
+                assert.equal(r, 11);
+                done();
+            };
+
+            provider.injectValidation(function (payload) {
+                var first = payload[0];
+                var second = payload[1];
+
+                assert.equal(first.method, 'eth_accounts');
+                assert.deepEqual(first.params, []);
+                assert.equal(second.method, 'net_peerCount');
+                assert.deepEqual(second.params, []);
+            });
+
+            var batch = web3.createBatch(); 
+            batch.add(web3.eth.getAccounts.request(callback));
+            batch.add(web3.net.getPeerCount.request(callback2));
+            batch.execute();
+        });
+
+        it('should execute batch request with contract', function (done) {
             
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
