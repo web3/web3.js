@@ -10,6 +10,17 @@ var getResponseStub = function () {
     };
 };
 
+var getErrorStub = function () {
+    return {
+        jsonrpc: '2.0',
+        id: 1,
+        error: {
+            code: 1234,
+            message: ''
+        }
+    };
+};
+
 var FakeHttpProvider = function () {
     this.response = getResponseStub();
     this.error = null;
@@ -48,10 +59,15 @@ FakeHttpProvider.prototype.injectResult = function (result) {
     this.response.result = result;
 };
 
-FakeHttpProvider.prototype.injectBatchResults = function (results) {
+FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     this.response = results.map(function (r) {
-        var response = getResponseStub();
-        response.result = r;
+        if(error) {
+            var response = getErrorStub();
+            response.error.message = r;
+        } else {
+            var response = getResponseStub();
+            response.result = r;
+        }
         return response;
     }); 
 };
