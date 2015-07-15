@@ -1682,6 +1682,8 @@ module.exports = AllSolidityEvents;
  */
 
 var RequestManager = require('./requestmanager');
+var Jsonrpc = require('./jsonrpc');
+var errors = require('./errors');
 
 var Batch = function () {
     this.requests = [];
@@ -1708,11 +1710,14 @@ Batch.prototype.execute = function () {
         results = results || [];
         requests.map(function (request, index) {
             return results[index] || {};
-        }).map(function (result, index) {
-            return requests[index].format ? requests[index].format(result.result) : result.result;
         }).forEach(function (result, index) {
             if (requests[index].callback) {
-                requests[index].callback(err, result);
+
+                if (!Jsonrpc.getInstance().isValidResponse(result)) {
+                    return requests[index].callback(errors.InvalidResponse(result));
+                }
+
+                requests[index].callback(null, (requests[index].format ? requests[index].format(result.result) : result.result));
             }
         });
     }); 
@@ -1721,7 +1726,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./requestmanager":28}],12:[function(require,module,exports){
+},{"./errors":14,"./jsonrpc":22,"./requestmanager":28}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3882,6 +3887,7 @@ module.exports = {
  */
 
 var RequestManager = require('./requestmanager');
+var utils = require('../utils/utils');
 
 var Property = function (options) {
     this.name = options.name;
@@ -3914,6 +3920,19 @@ Property.prototype.formatOutput = function (result) {
 };
 
 /**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
+Property.prototype.extractCallback = function (args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
+
+/**
  * Should attach function to method
  * 
  * @method attachToObject
@@ -3939,7 +3958,10 @@ Property.prototype.attachToObject = function (obj) {
         return prefix + name.charAt(0).toUpperCase() + name.slice(1);
     };
 
-    obj[toAsyncName('get', name)] = this.getAsync.bind(this);
+    var func = this.getAsync.bind(this);
+    func.request = this.request.bind(this);
+
+    obj[toAsyncName('get', name)] = func;
 };
 
 /**
@@ -3972,10 +3994,27 @@ Property.prototype.getAsync = function (callback) {
     });
 };
 
+/**
+ * Should be called to create pure JSONRPC request which can be used in batch request
+ *
+ * @method request
+ * @param {...} params
+ * @return {Object} jsonrpc request
+ */
+Property.prototype.request = function () {
+    var payload = {
+        method: this.getter,
+        params: [],
+        callback: this.extractCallback(Array.prototype.slice.call(arguments))
+    };
+    payload.format = this.formatOutput.bind(this);
+    return payload;
+};
+
 module.exports = Property;
 
 
-},{"./requestmanager":28}],27:[function(require,module,exports){
+},{"../utils/utils":7,"./requestmanager":28}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
