@@ -884,7 +884,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":7,"crypto-js/sha3":35}],7:[function(require,module,exports){
+},{"./utils":7,"crypto-js/sha3":34}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1578,7 +1578,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":11,"./web3/db":13,"./web3/eth":15,"./web3/filter":17,"./web3/formatters":18,"./web3/method":24,"./web3/net":26,"./web3/property":27,"./web3/requestmanager":29,"./web3/shh":30,"./web3/watches":32}],10:[function(require,module,exports){
+},{"./utils/config":5,"./utils/sha3":6,"./utils/utils":7,"./version.json":8,"./web3/batch":11,"./web3/db":13,"./web3/eth":15,"./web3/filter":17,"./web3/formatters":18,"./web3/method":24,"./web3/net":26,"./web3/property":27,"./web3/requestmanager":28,"./web3/shh":29,"./web3/watches":31}],10:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1661,7 +1661,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":6,"../utils/utils":7,"./event":16,"./filter":17,"./formatters":18,"./watches":32}],11:[function(require,module,exports){
+},{"../utils/sha3":6,"../utils/utils":7,"./event":16,"./filter":17,"./formatters":18,"./watches":31}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1729,7 +1729,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":14,"./jsonrpc":23,"./requestmanager":29}],12:[function(require,module,exports){
+},{"./errors":14,"./jsonrpc":23,"./requestmanager":28}],12:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2602,7 +2602,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"./filter":17,"./formatters":18,"./watches":32}],17:[function(require,module,exports){
+},{"../solidity/coder":1,"../utils/sha3":6,"../utils/utils":7,"./filter":17,"./formatters":18,"./watches":31}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2811,7 +2811,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":7,"./formatters":18,"./requestmanager":29}],18:[function(require,module,exports){
+},{"../utils/utils":7,"./formatters":18,"./requestmanager":28}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3571,46 +3571,10 @@ var IpcProvider = function (path, net) {
     // LISTEN FOR CONNECTION RESPONSES
     this.connection.on('data', function(data) {
         /*jshint maxcomplexity: 6 */
-        data = data.toString();
 
-        // DE-CHUNKER
-        var dechunkedData = data
-            .replace(/\}\{/g,'}|--|{') // }{
-            .replace(/\}\]\[\{/g,'}]|--|[{') // }][{
-            .replace(/\}\[\{/g,'}|--|[{') // }[{
-            .replace(/\}\]\{/g,'}]|--|{') // }]{
-            .split('|--|');
+        _this._parseResponse(data.toString()).forEach(function(result){
 
-
-        dechunkedData.forEach(function(data){
-
-            // prepend the last chunk
-            if(_this.lastChunk)
-                data = _this.lastChunk + data;
-
-            var result = data,
-                id = null;
-
-            try {
-                result = JSON.parse(result);
-
-            } catch(e) {
-
-                _this.lastChunk = data;
-
-                // start timeout to cancel all requests
-                clearTimeout(_this.lastChunkTimeout);
-                _this.lastChunkTimeout = setTimeout(function(){
-                    _this.timeout();
-                    throw errors.InvalidResponse(data);        
-                }, 1000 * 15);
-
-                return;
-            }
-
-            // cancel timeout and set chunk to null
-            clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunk = null;
+            var id = null;
 
             // get the id which matches the returned id
             if(utils.isArray(result)) {
@@ -3632,12 +3596,67 @@ var IpcProvider = function (path, net) {
 };
 
 /**
+Will parse the response and make an array out of it.
+
+@method _parseResponse
+@param {String} data
+*/
+IpcProvider.prototype._parseResponse = function(data) {
+    var _this = this,
+        returnValues = [];
+    
+    // DE-CHUNKER
+    var dechunkedData = data
+        .replace(/\}\{/g,'}|--|{') // }{
+        .replace(/\}\]\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\]\{/g,'}]|--|{') // }]{
+        .split('|--|');
+
+    dechunkedData.forEach(function(data){
+
+        // prepend the last chunk
+        if(_this.lastChunk)
+            data = _this.lastChunk + data;
+
+        var result = null;
+
+        try {
+            result = JSON.parse(data);
+
+        } catch(e) {
+
+            _this.lastChunk = data;
+
+            // start timeout to cancel all requests
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunkTimeout = setTimeout(function(){
+                _this.timeout();
+                throw errors.InvalidResponse(data);
+            }, 1000 * 15);
+
+            return;
+        }
+
+        // cancel timeout and set chunk to null
+        clearTimeout(_this.lastChunkTimeout);
+        _this.lastChunk = null;
+
+        if(result)
+            returnValues.push(result);
+    });
+
+    return returnValues;
+};
+
+
+/**
 Get the adds a callback to the responseCallbacks object,
 which will be called if a response matching the response Id will arrive.
 
-@method _getResponse
+@method _addResponseCallback
 */
-IpcProvider.prototype._getResponse = function(payload, callback) {
+IpcProvider.prototype._addResponseCallback = function(payload, callback) {
     var id = payload.id || payload[0].id;
     var method = payload.method || payload[0].method;
 
@@ -3669,10 +3688,8 @@ IpcProvider.prototype.isConnected = function() {
     var _this = this;
 
     // try reconnect, when connection is gone
-    setTimeout(function(){
-        if(!_this.connection.writable)
-            _this.connection.connect({path: _this.path});
-    }, 0);
+    if(!_this.connection.writable)
+        _this.connection.connect({path: _this.path});
 
     return !!this.connection.writable;
 };
@@ -3708,13 +3725,13 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 
 
     this.connection.write(JSON.stringify(payload));
-    this._getResponse(payload, callback);
+    this._addResponseCallback(payload, callback);
 };
 
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":7,"./errors":14,"net":33}],23:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":14,"net":32}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3981,7 +3998,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":7,"./errors":14,"./requestmanager":29}],25:[function(require,module,exports){
+},{"../utils/utils":7,"./errors":14,"./requestmanager":28}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4231,42 +4248,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":7,"./requestmanager":29}],28:[function(require,module,exports){
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file qtsync.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- * @date 2014
- */
-
-var QtSyncProvider = function () {
-};
-
-QtSyncProvider.prototype.send = function (payload) {
-    var result = navigator.qt.callMethod(JSON.stringify(payload));
-    return JSON.parse(result);
-};
-
-module.exports = QtSyncProvider;
-
-
-},{}],29:[function(require,module,exports){
+},{"../utils/utils":7,"./requestmanager":28}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4531,7 +4513,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":5,"../utils/utils":7,"./errors":14,"./jsonrpc":23}],30:[function(require,module,exports){
+},{"../utils/config":5,"../utils/utils":7,"./errors":14,"./jsonrpc":23}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4601,7 +4583,7 @@ module.exports = {
 };
 
 
-},{"./formatters":18,"./method":24}],31:[function(require,module,exports){
+},{"./formatters":18,"./method":24}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4697,7 +4679,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":9,"./contract":12,"./icap":21,"./namereg":25}],32:[function(require,module,exports){
+},{"../web3":9,"./contract":12,"./icap":21,"./namereg":25}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4813,9 +4795,9 @@ module.exports = {
 };
 
 
-},{"./method":24}],33:[function(require,module,exports){
+},{"./method":24}],32:[function(require,module,exports){
 
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5558,7 +5540,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -5882,7 +5864,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":34,"./x64-core":36}],36:[function(require,module,exports){
+},{"./core":33,"./x64-core":35}],35:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6187,7 +6169,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":34}],"bignumber.js":[function(require,module,exports){
+},{"./core":33}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
@@ -8872,11 +8854,10 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":33}],"web3":[function(require,module,exports){
+},{"crypto":32}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
-web3.providers.QtSyncProvider = require('./lib/web3/qtsync');
 web3.providers.IpcProvider = require('./lib/web3/ipcprovider');
 
 web3.eth.contract = require('./lib/web3/contract');
@@ -8891,5 +8872,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":9,"./lib/web3/contract":12,"./lib/web3/httpprovider":20,"./lib/web3/ipcprovider":22,"./lib/web3/namereg":25,"./lib/web3/qtsync":28,"./lib/web3/transfer":31}]},{},["web3"])
+},{"./lib/web3":9,"./lib/web3/contract":12,"./lib/web3/httpprovider":20,"./lib/web3/ipcprovider":22,"./lib/web3/namereg":25,"./lib/web3/transfer":30}]},{},["web3"])
 //# sourceMappingURL=web3.js.map
