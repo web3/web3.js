@@ -37,12 +37,16 @@
             if (err) {
                 console.error(err);
                 return;
-            }
-            myContract = contract;
-            console.log('address: ' + myContract.address);
 
-            document.getElementById('status').innerText = 'Mined!';
-            document.getElementById('call').style.visibility = 'visible';
+            // callback fires twice, we only want the second call when the contract is deployed
+            } else if(contract.address){
+
+                myContract = contract;
+                console.log('address: ' + myContract.address);
+
+                document.getElementById('status').innerText = 'Mined!';
+                document.getElementById('call').style.visibility = 'visible';
+            }
         });
     }
 
