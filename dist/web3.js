@@ -1865,6 +1865,7 @@ var checkForContractAddress = function(contract, abi, callback){
                     if(receipt && !callbackFired) {
 
                         web3.eth.getCode(receipt.contractAddress, function(e, code){
+                            /*jshint maxcomplexity: 5 */
 
                             if(callbackFired)
                                 return;
