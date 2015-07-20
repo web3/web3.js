@@ -1623,7 +1623,6 @@ AllSolidityEvents.prototype.encode = function (options) {
         result[f] = formatters.inputBlockNumberFormatter(options[f]);
     });
 
-    result.topics = [null, null, null, null, null]; // match all topics
     result.address = this._address;
 
     return result;
@@ -1883,6 +1882,7 @@ var checkForContractAddress = function(contract, abi, callback){
                                 addFunctionsToContract(contract, abi);
                                 addEventsToContract(contract, abi);
 
+                                // call callback for the second time
                                 if(callback)
                                     callback(null, contract);
 
@@ -1953,6 +1953,10 @@ ContractFactory.prototype.new = function () {
             } else {
                 // add the transaction hash
                 contract.transactionHash = hash;
+
+                // call callback for the first time
+                callback(null, contract);
+
                 checkForContractAddress(contract, _this.abi, callback);
             }
         });
