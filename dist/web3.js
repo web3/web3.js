@@ -354,10 +354,10 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
-    value = utils.toHex(value).substr(2);
-    var l = Math.floor((value.length + 63) / 64);
-    var result = utils.padRight(value, l * 64);
-    var length = Math.floor(value.length / 2);
+    var result = utils.toHex(value).substr(2);
+    var length = result.length / 2;
+    var l = Math.floor((result.length + 63) / 64);
+    var result = utils.padRight(result, l * 64);
     return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
@@ -370,9 +370,10 @@ var formatInputDynamicBytes = function (value) {
  */
 var formatInputString = function (value) {
     var result = utils.fromAscii(value).substr(2);
+    var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
-    return new SolidityParam(formatInputInt(value.length).value + result, 32);
+    return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
 /**
@@ -977,6 +978,7 @@ var padRight = function (string, chars, sign) {
 
 /** 
  * Should be called to get sting from it's hex representation
+ * TODO: it should be called toUTF8
  *
  * @method toAscii
  * @param {String} string in hex
@@ -994,7 +996,7 @@ var toAscii = function(hex) {
         str += String.fromCharCode(code);
     }
 
-    return str;
+    return decodeURIComponent(escape(str));
 };
     
 /**
@@ -1005,6 +1007,7 @@ var toAscii = function(hex) {
  * @returns {String} hex representation of input string
  */
 var toHexNative = function(str) {
+    str = unescape(encodeURIComponent(str));
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var n = str.charCodeAt(i).toString(16);
