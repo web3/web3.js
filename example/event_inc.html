@@ -42,14 +42,17 @@
                 if (err) {
                     console.error(err);
                     return;
+
+                // callback fires twice, we only want the second call when the contract is deployed
+                } else if(contract.address){
+
+                    contract = c;
+                    console.log('address: ' + contract.address);
+                    document.getElementById('status').innerText = 'Mined!';
+                    document.getElementById('call').style.visibility = 'visible';
+
+                    inc = contract.Incremented({odd: true}, update);
                 }
-
-                contract = c;
-                console.log('address: ' + contract.address);
-                document.getElementById('status').innerText = 'Mined!';
-                document.getElementById('call').style.visibility = 'visible';
-
-                inc = contract.Incremented({odd: true}, update);
             });
         };
 
