@@ -357,7 +357,7 @@ var formatInputDynamicBytes = function (value) {
     var result = utils.toHex(value).substr(2);
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
-    var result = utils.padRight(result, l * 64);
+    result = utils.padRight(result, l * 64);
     return new SolidityParam(formatInputInt(length).value + result, 32);
 };
 
@@ -1650,6 +1650,13 @@ AllSolidityEvents.prototype.decode = function (data) {
 };
 
 AllSolidityEvents.prototype.execute = function (options, callback) {
+
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+        callback = arguments[arguments.length - 1];
+        if(arguments.length === 1)
+            options = null;
+    }
+
     var o = this.encode(options);
     var formatter = this.decode.bind(this);
     return new Filter(o, watches.eth(), formatter, callback);
