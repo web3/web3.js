@@ -2783,6 +2783,7 @@ var Filter = function (options, methods, formatter, callback) {
         }
     });
 
+    return this;
 };
 
 Filter.prototype.watch = function (callback) {
