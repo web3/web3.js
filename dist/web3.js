@@ -1118,10 +1118,10 @@ var toHex = function (val) {
     if (isString(val)) {
         if (val.indexOf('-0x') === 0)
             return fromDecimal(val);
-        else if (!isFinite(val))
-            return fromAscii(val);
         else if(val.indexOf('0x') === 0)
             return val;
+        else if (!isFinite(val))
+            return fromAscii(val);
     }
 
     return fromDecimal(val);
@@ -1401,7 +1401,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],8:[function(require,module,exports){
 module.exports={
-    "version": "0.9.1"
+    "version": "0.9.2"
 }
 
 },{}],9:[function(require,module,exports){
@@ -3343,7 +3343,7 @@ HttpProvider.prototype.isConnected = function() {
     var request = new XMLHttpRequest();
 
     request.open('POST', this.host, false);
-    request.setRequestHeader('Content-type','application/json');
+    request.setRequestHeader('Content-Type','application/json');
     
     try {
         request.send(JSON.stringify({
@@ -3362,7 +3362,7 @@ HttpProvider.prototype.send = function (payload) {
     var request = new XMLHttpRequest();
 
     request.open('POST', this.host, false);
-    request.setRequestHeader('Content-type','application/json');
+    request.setRequestHeader('Content-Type','application/json');
     
     try {
         request.send(JSON.stringify(payload));
@@ -3406,7 +3406,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     };
 
     request.open('POST', this.host, true);
-    request.setRequestHeader('Content-type','application/json');
+    request.setRequestHeader('Content-Type','application/json');
     
     try {
         request.send(JSON.stringify(payload));
