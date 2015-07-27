@@ -117,6 +117,9 @@ describe('lib/solidity/coder', function () {
         };
 
          
+        test({ types: ['address', 'address'], values: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1', '0x407d73d8a49eeb85d32cf465507dd71d507100c3'],          
+                                                            expected: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1' + 
+                                                                      '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c3'});
         //test({ types: ['int'], values: [1],                 expected: '0000000000000000000000000000000000000000000000000000000000000001'});
         //test({ types: ['int'], values: [16],                expected: '0000000000000000000000000000000000000000000000000000000000000010'});
         //test({ types: ['int'], values: [-1],                expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
