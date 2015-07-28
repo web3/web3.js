@@ -74,14 +74,14 @@ describe('lib/solidity/coder', function () {
                                                               '0000000000000000000000000000000000000000000000000000000000000001' + 
                                                               '0000000000000000000000000000000000000000000000000000000000000000'});
 
-        //test({ type: 'int', value: 1,               expected: '0000000000000000000000000000000000000000000000000000000000000001'});
-        //test({ type: 'int', value: 16,              expected: '0000000000000000000000000000000000000000000000000000000000000010'});
-        //test({ type: 'int', value: -1,              expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
-        //test({ type: 'int', value: 0.1,             expected: '0000000000000000000000000000000000000000000000000000000000000000'});
-        //test({ type: 'int', value: 3.9,             expected: '0000000000000000000000000000000000000000000000000000000000000003'});
-        //test({ type: 'int256', value: 1,            expected: '0000000000000000000000000000000000000000000000000000000000000001'});
-        //test({ type: 'int256', value: 16,           expected: '0000000000000000000000000000000000000000000000000000000000000010'});
-        //test({ type: 'int256', value: -1,           expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ type: 'int', value: 1,               expected: '0000000000000000000000000000000000000000000000000000000000000001'});
+        test({ type: 'int', value: 16,              expected: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'int', value: -1,              expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ type: 'int', value: 0.1,             expected: '0000000000000000000000000000000000000000000000000000000000000000'});
+        test({ type: 'int', value: 3.9,             expected: '0000000000000000000000000000000000000000000000000000000000000003'});
+        test({ type: 'int256', value: 1,            expected: '0000000000000000000000000000000000000000000000000000000000000001'});
+        test({ type: 'int256', value: 16,           expected: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'int256', value: -1,           expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
         //test({ type: 'bytes32', value: '0x6761766f66796f726b',
                                                     //expected: '6761766f66796f726b0000000000000000000000000000000000000000000000'});
         //test({ type: 'bytes32', value: '0x731a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b', 
@@ -185,12 +185,12 @@ describe('lib/solidity/coder', function () {
                                                               '0000000000000000000000000000000000000000000000000000000000000000' + 
                                                               '0000000000000000000000000000000000000000000000000000000000000000' + 
                                                               '0000000000000000000000000000000000000000000000000000000000000001'});
-        //test({ types: ['int'], values: [1],                 expected: '0000000000000000000000000000000000000000000000000000000000000001'});
-        //test({ types: ['int'], values: [16],                expected: '0000000000000000000000000000000000000000000000000000000000000010'});
-        //test({ types: ['int'], values: [-1],                expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
-        //test({ types: ['int256'], values: [1],              expected: '0000000000000000000000000000000000000000000000000000000000000001'});
-        //test({ types: ['int256'], values: [16],             expected: '0000000000000000000000000000000000000000000000000000000000000010'});
-        //test({ types: ['int256'], values: [-1],             expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ types: ['int'], values: [1],                 expected: '0000000000000000000000000000000000000000000000000000000000000001'});
+        test({ types: ['int'], values: [16],                expected: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ types: ['int'], values: [-1],                expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ types: ['int256'], values: [1],              expected: '0000000000000000000000000000000000000000000000000000000000000001'});
+        test({ types: ['int256'], values: [16],             expected: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ types: ['int256'], values: [-1],             expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
         //test({ types: ['bytes32'], values: ['0x6761766f66796f726b'],   
                                                             //expected: '6761766f66796f726b0000000000000000000000000000000000000000000000'});
         //test({ types: ['string'], values: ['gavofyork'],    expected: '0000000000000000000000000000000000000000000000000000000000000020' +
