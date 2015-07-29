@@ -28,31 +28,10 @@ SolidityTypeAddress.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeAddress.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/address(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[1] && !matches[2];
-};
-
-SolidityTypeAddress.prototype.isStaticArray = function (name) {
-    var matches = name.match(/address(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[1] && !!matches[2];
-};
-
-SolidityTypeAddress.prototype.staticArrayLength = function (name) {
-    return name.match(/address(\[([0-9]*)\])?/)[2] || 1;
-};
-
-SolidityTypeAddress.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeAddress;
 
 
-},{"./formatters":5,"./type":10}],2:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],2:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -75,37 +54,56 @@ SolidityTypeBool.prototype = new SolidityType({});
 SolidityTypeBool.prototype.constructor = SolidityTypeBool;
 
 SolidityTypeBool.prototype.isType = function (name) {
-    return !!name.match(/bool(\[([0-9]*)\])?/);
+    return !!name.match(/^bool(\[([0-9]*)\])*$/);
 };
 
 SolidityTypeBool.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeBool.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/bool(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[1] && !matches[2];
-};
-
-SolidityTypeBool.prototype.isStaticArray = function (name) {
-    var matches = name.match(/bool(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[1] && !!matches[2];
-};
-
-SolidityTypeBool.prototype.staticArrayLength = function (name) {
-    return name.match(/bool(\[([0-9]*)\])?/)[2] || 1;
-};
-
-SolidityTypeBool.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeBool;
 
-},{"./formatters":5,"./type":10}],3:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],3:[function(require,module,exports){
+var f = require('./formatters');
+var SolidityType = require('./type');
+
+/**
+ * SolidityTypeBytes is a prootype that represents bytes type
+ * It matches:
+ * bytes
+ * bytes[]
+ * bytes[4]
+ * bytes[][]
+ * bytes[3][]
+ * bytes[][6][], ...
+ * bytes32
+ * bytes64[]
+ * bytes8[4]
+ * bytes256[][]
+ * bytes[3][]
+ * bytes64[][6][], ...
+ */
+var SolidityTypeBytes = function () {
+    this._inputFormatter = f.formatInputBytes;
+    this._outputFormatter = f.formatOutputBytes;
+};
+
+SolidityTypeBytes.prototype = new SolidityType({});
+SolidityTypeBytes.prototype.constructor = SolidityTypeBytes;
+
+SolidityTypeBytes.prototype.isType = function (name) {
+    return !!name.match(/^bytes([0-9]{1,})(\[([0-9]*)\])*$/);
+};
+
+SolidityTypeBytes.prototype.staticPartLength = function (name) {
+    var matches = name.match(/^bytes([0-9]*)/);
+    var size = parseInt(matches[1]);
+    return size * this.staticArrayLength(name);
+};
+
+module.exports = SolidityTypeBytes;
+
+},{"./formatters":6,"./type":11}],4:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -128,12 +126,8 @@ module.exports = SolidityTypeBool;
  * @date 2015
  */
 
-var BigNumber = require('bignumber.js');
-var utils = require('../utils/utils');
-var SolidityParam = require('./param');
 var f = require('./formatters');
 
-var SolidityType = require('./type');
 var SolidityTypeAddress = require('./address');
 var SolidityTypeBool = require('./bool');
 var SolidityTypeInt = require('./int');
@@ -142,6 +136,7 @@ var SolidityTypeDynamicBytes = require('./dynamicbytes');
 var SolidityTypeString = require('./string');
 var SolidityTypeReal = require('./real');
 var SolidityTypeUReal = require('./ureal');
+var SolidityTypeBytes = require('./bytes');
 
 /**
  * SolidityCoder prototype should be used to encode/decode solidity params of any type
@@ -208,32 +203,32 @@ SolidityCoder.prototype.encodeParams = function (types, params) {
 
 SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, encodeds, dynamicOffset) {
     var result = "";
+    var self = this;
 
     var isDynamic = function (i) {
        return solidityTypes[i].isDynamicArray(types[i]) || solidityTypes[i].isDynamicType(types[i]);
-    }
+    };
 
-    for (var i = 0; i < types.length; i++) {
+    types.forEach(function (type, i) {
         if (isDynamic(i)) {
             result += f.formatInputInt(dynamicOffset).encode();
-            var e = this.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
+            var e = self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
             dynamicOffset += e.length / 2;
         } else {
-            var e = this.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-            //dynamicOffset += e.length / 2; // don't add this. it's already counted
-            result += e;
+            // don't add length to dynamicOffset. it's already counted
+            result += self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
         }
 
         // TODO: figure out nested arrays
-    }
+    });
     
-    for (var i = 0; i < types.length; i++) {
+    types.forEach(function (type, i) {
         if (isDynamic(i)) {
-            var e = this.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
+            var e = self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
             dynamicOffset += e.length / 2;
             result += e;
         }
-    }
+    });
     return result;
 };
 
@@ -318,7 +313,7 @@ SolidityCoder.prototype.getOffsets = function (types, solidityTypes) {
     var lengths =  solidityTypes.map(function (solidityType, index) {
         return solidityType.staticPartLength(types[index]); 
         // get length
-    })
+    });
     
     for (var i = 0; i < lengths.length; i++) {
          // sum with length of previous element
@@ -339,24 +334,6 @@ SolidityCoder.prototype.getSolidityTypes = function (types) {
     });
 };
 
-
-
-var SolidityTypeBytes = function () {
-    this._inputFormatter = f.formatInputBytes;
-    this._outputFormatter = f.formatOutputBytes;
-};
-
-SolidityTypeBytes.prototype = new SolidityType({});
-SolidityTypeBytes.prototype.constructor = SolidityTypeBytes;
-
-SolidityTypeBytes.prototype.isType = function (name) {
-    return !!name.match(/^bytes([0-9]{1,3})/);
-};
-
-SolidityTypeBytes.prototype.staticPartLength = function (name) {
-    return parseInt(name.match(/^bytes([0-9]{1,3})/)[1]);
-};
-
 var coder = new SolidityCoder([
     new SolidityTypeAddress(),
     new SolidityTypeBool(),
@@ -372,7 +349,7 @@ var coder = new SolidityCoder([
 module.exports = coder;
 
 
-},{"../utils/utils":16,"./address":1,"./bool":2,"./dynamicbytes":4,"./formatters":5,"./int":6,"./param":7,"./real":8,"./string":9,"./type":10,"./uint":11,"./ureal":12,"bignumber.js":"bignumber.js"}],4:[function(require,module,exports){
+},{"./address":1,"./bool":2,"./bytes":3,"./dynamicbytes":5,"./formatters":6,"./int":7,"./real":9,"./string":10,"./uint":12,"./ureal":13}],5:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -384,43 +361,22 @@ var SolidityTypeDynamicBytes = function () {
 SolidityTypeDynamicBytes.prototype = new SolidityType({});
 SolidityTypeDynamicBytes.prototype.constructor = SolidityTypeDynamicBytes;
 
+SolidityTypeDynamicBytes.prototype.isType = function (name) {
+    return !!name.match(/^bytes(\[([0-9]*)\])*$/);
+};
+
 SolidityTypeDynamicBytes.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeDynamicBytes.prototype.isType = function (name) {
-    return !!name.match(/bytes(\[([0-9]*)\])?/);
-};
-
-SolidityTypeDynamicBytes.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/bytes(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[1] && !matches[2];
-};
-
-SolidityTypeDynamicBytes.prototype.isStaticArray = function (name) {
-    var matches = name.match(/bytes(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[1] && !!matches[2];
-};
-
-SolidityTypeDynamicBytes.prototype.staticArrayLength = function (name) {
-    return name.match(/bytes(\[([0-9]*)\])?/)[2] || 1;
-};
-
-SolidityTypeDynamicBytes.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
-SolidityTypeDynamicBytes.prototype.isDynamicType = function (name) {
+SolidityTypeDynamicBytes.prototype.isDynamicType = function () {
     return true;
 };
 
 module.exports = SolidityTypeDynamicBytes;
 
 
-},{"./formatters":5,"./type":10}],5:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],6:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -490,7 +446,6 @@ var formatInputDynamicBytes = function (value) {
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
-    //return new SolidityParam(formatInputInt(length).value + result, 32);
     return new SolidityParam(formatInputInt(length).value + result);
 };
 
@@ -506,7 +461,6 @@ var formatInputString = function (value) {
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
-    //return new SolidityParam(formatInputInt(length).value + result, 32);
     return new SolidityParam(formatInputInt(length).value + result);
 };
 
@@ -674,7 +628,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16,"./param":7,"bignumber.js":"bignumber.js"}],6:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17,"./param":8,"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -703,37 +657,16 @@ SolidityTypeInt.prototype = new SolidityType({});
 SolidityTypeInt.prototype.constructor = SolidityTypeInt;
 
 SolidityTypeInt.prototype.isType = function (name) {
-    return !!name.match(/int([0-9]*)?(\[([0-9]*)\])?/);
+    return !!name.match(/^int([0-9]*)?(\[([0-9]*)\])*$/);
 };
 
 SolidityTypeInt.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeInt.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/int([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[2] && !matches[3];
-};
-
-SolidityTypeInt.prototype.isStaticArray = function (name) {
-    var matches = name.match(/int([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[2] && !!matches[3];
-};
-
-SolidityTypeInt.prototype.staticArrayLength = function (name) {
-    return name.match(/int([0-9]*)?(\[([0-9]*)\])?/)[3] || 1;
-};
-
-SolidityTypeInt.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeInt;
 
-},{"./formatters":5,"./type":10}],7:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],8:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -887,7 +820,7 @@ SolidityParam.encodeList = function (params) {
 module.exports = SolidityParam;
 
 
-},{"../utils/utils":16}],8:[function(require,module,exports){
+},{"../utils/utils":17}],9:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -923,30 +856,9 @@ SolidityTypeReal.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeReal.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/real([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[2] && !matches[3];
-};
-
-SolidityTypeReal.prototype.isStaticArray = function (name) {
-    var matches = name.match(/real([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[2] && !!matches[3];
-};
-
-SolidityTypeReal.prototype.staticArrayLength = function (name) {
-    return name.match(/real([0-9]*)?(\[([0-9]*)\])?/)[3] || 1;
-};
-
-SolidityTypeReal.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeReal;
 
-},{"./formatters":5,"./type":10}],9:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],10:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -958,43 +870,22 @@ var SolidityTypeString = function () {
 SolidityTypeString.prototype = new SolidityType({});
 SolidityTypeString.prototype.constructor = SolidityTypeString;
 
+SolidityTypeString.prototype.isType = function (name) {
+    return !!name.match(/^string(\[([0-9]*)\])*$/);
+};
+
 SolidityTypeString.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeString.prototype.isType = function (name) {
-    return !!name.match(/string(\[([0-9]*)\])?/);
-};
-
-SolidityTypeString.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/string(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[1] && !matches[2];
-};
-
-SolidityTypeString.prototype.isStaticArray = function (name) {
-    var matches = name.match(/string(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[1] && !!matches[2];
-};
-
-SolidityTypeString.prototype.staticArrayLength = function (name) {
-    return name.match(/string(\[([0-9]*)\])?/)[2] || 1;
-};
-
-SolidityTypeString.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
-SolidityTypeString.prototype.isDynamicType = function (name) {
+SolidityTypeString.prototype.isDynamicType = function () {
     return true;
 };
 
 module.exports = SolidityTypeString;
 
 
-},{"./formatters":5,"./type":10}],10:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],11:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityParam = require('./param');
 
@@ -1014,7 +905,7 @@ var SolidityType = function (config) {
  * @return {Bool} true if type match this SolidityType, otherwise false
  */
 SolidityType.prototype.isType = function (name) {
-    throw "this method should be overrwritten!";
+    throw "this method should be overrwritten for type " + name;
 };
 
 /**
@@ -1025,7 +916,7 @@ SolidityType.prototype.isType = function (name) {
  * @return {Number} length of static part in bytes
  */
 SolidityType.prototype.staticPartLength = function (name) {
-    throw "this method should be overrwritten!";
+    throw "this method should be overrwritten for type: " + name;
 };
 
 /**
@@ -1039,7 +930,8 @@ SolidityType.prototype.staticPartLength = function (name) {
  * @return {Bool} true if the type is dynamic array 
  */
 SolidityType.prototype.isDynamicArray = function (name) {
-    throw "this method should be overrwritten!";
+    var nestedTypes = this.nestedTypes(name);
+    return !!nestedTypes && !nestedTypes[nestedTypes.length - 1].match(/[0-9]{1,}/g);
 };
 
 /**
@@ -1053,11 +945,81 @@ SolidityType.prototype.isDynamicArray = function (name) {
  * @return {Bool} true if the type is static array 
  */
 SolidityType.prototype.isStaticArray = function (name) {
-    throw "this method should be overrwritten!";
+    var nestedTypes = this.nestedTypes(name);
+    return !!nestedTypes && !!nestedTypes[nestedTypes.length - 1].match(/[0-9]{1,}/g);
 };
 
-SolidityType.prototype.isDynamicType = function (name) {
+/**
+ * Should return length of static array
+ * eg. 
+ * "int[32]" => 32
+ * "int256[14]" => 14
+ * "int[2][3]" => 3
+ * "int" => 1
+ * "int[1]" => 1
+ * "int[]" => 1
+ *
+ * @method staticArrayLength
+ * @param {String} name
+ * @return {Number} static array length
+ */
+SolidityType.prototype.staticArrayLength = function (name) {
+    var nestedTypes = this.nestedTypes(name);
+    if (nestedTypes) {
+       return parseInt(nestedTypes[nestedTypes.length - 1].match(/[0-9]{1,}/g) || 1);
+    }
+    return 1;
+};
+
+/**
+ * Should return nested type
+ * eg.
+ * "int[32]" => "int"
+ * "int256[14]" => "int256"
+ * "int[2][3]" => "int[2]"
+ * "int" => "int"
+ * "int[]" => "int"
+ *
+ * @method nestedName
+ * @param {String} name
+ * @return {String} nested name
+ */
+SolidityType.prototype.nestedName = function (name) {
+    // remove last [] in name
+    var nestedTypes = this.nestedTypes(name);
+    if (!nestedTypes) {
+        return name;
+    }
+
+    return name.substr(0, name.length - nestedTypes[nestedTypes.length - 1].length);
+};
+
+/**
+ * Should return true if type has dynamic size by default
+ * such types are "string", "bytes"
+ *
+ * @method isDynamicType
+ * @param {String} name
+ * @return {Bool} true if is dynamic, otherwise false
+ */
+SolidityType.prototype.isDynamicType = function () {
     return false;
+};
+
+/**
+ * Should return array of nested types
+ * eg.
+ * "int[2][3][]" => ["[2]", "[3]", "[]"]
+ * "int[] => ["[]"]
+ * "int" => null
+ *
+ * @method nestedTypes
+ * @param {String} name
+ * @return {Array} array of nested types
+ */
+SolidityType.prototype.nestedTypes = function (name) {
+    // return list of strings eg. "[]", "[3]", "[]", "[2]"
+    return name.match(/(\[[0-9]*\])/g);
 };
 
 /**
@@ -1148,7 +1110,7 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
 
 module.exports = SolidityType;
 
-},{"./formatters":5,"./param":7}],11:[function(require,module,exports){
+},{"./formatters":6,"./param":8}],12:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1177,37 +1139,16 @@ SolidityTypeUInt.prototype = new SolidityType({});
 SolidityTypeUInt.prototype.constructor = SolidityTypeUInt;
 
 SolidityTypeUInt.prototype.isType = function (name) {
-    return !!name.match(/uint([0-9]*)?(\[([0-9]*)\])?/);
+    return !!name.match(/^uint([0-9]*)?(\[([0-9]*)\])*$/);
 };
 
 SolidityTypeUInt.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeUInt.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/uint([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[2] && !matches[3];
-};
-
-SolidityTypeUInt.prototype.isStaticArray = function (name) {
-    var matches = name.match(/uint([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[2] && !!matches[3];
-};
-
-SolidityTypeUInt.prototype.staticArrayLength = function (name) {
-    return name.match(/uint([0-9]*)?(\[([0-9]*)\])?/)[3] || 1;
-};
-
-SolidityTypeUInt.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeUInt;
 
-},{"./formatters":5,"./type":10}],12:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],13:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1236,37 +1177,16 @@ SolidityTypeUReal.prototype = new SolidityType({});
 SolidityTypeUReal.prototype.constructor = SolidityTypeUReal;
 
 SolidityTypeUReal.prototype.isType = function (name) {
-    return !!name.match(/ureal([0-9]*)?(\[([0-9]*)\])?/);
+    return !!name.match(/^ureal([0-9]*)?(\[([0-9]*)\])*$/);
 };
 
 SolidityTypeUReal.prototype.staticPartLength = function (name) {
     return 32 * this.staticArrayLength(name);
 };
 
-SolidityTypeUReal.prototype.isDynamicArray = function (name) {
-    var matches = name.match(/ureal([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && doesn't have length specified
-    return !!matches[2] && !matches[3];
-};
-
-SolidityTypeUReal.prototype.isStaticArray = function (name) {
-    var matches = name.match(/ureal([0-9]*)?(\[([0-9]*)\])?/);
-    // is array && have length specified
-    return !!matches[2] && !!matches[3];
-};
-
-SolidityTypeUReal.prototype.staticArrayLength = function (name) {
-    return name.match(/ureal([0-9]*)?(\[([0-9]*)\])?/)[3] || 1;
-};
-
-SolidityTypeUReal.prototype.nestedName = function (name) {
-    // removes first [] in name
-    return name.replace(/\[([0-9])*\]/, '');
-};
-
 module.exports = SolidityTypeUReal;
 
-},{"./formatters":5,"./type":10}],13:[function(require,module,exports){
+},{"./formatters":6,"./type":11}],14:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -1277,7 +1197,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1357,7 +1277,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],15:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1398,7 +1318,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":16,"crypto-js/sha3":43}],16:[function(require,module,exports){
+},{"./utils":17,"crypto-js/sha3":44}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1912,12 +1832,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],17:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],18:[function(require,module,exports){
 module.exports={
     "version": "0.9.2"
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2094,7 +2014,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":14,"./utils/sha3":15,"./utils/utils":16,"./version.json":17,"./web3/batch":20,"./web3/db":22,"./web3/eth":24,"./web3/filter":26,"./web3/formatters":27,"./web3/method":33,"./web3/net":35,"./web3/property":36,"./web3/requestmanager":37,"./web3/shh":38,"./web3/watches":40}],19:[function(require,module,exports){
+},{"./utils/config":15,"./utils/sha3":16,"./utils/utils":17,"./version.json":18,"./web3/batch":21,"./web3/db":23,"./web3/eth":25,"./web3/filter":27,"./web3/formatters":28,"./web3/method":34,"./web3/net":36,"./web3/property":37,"./web3/requestmanager":38,"./web3/shh":39,"./web3/watches":41}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2183,7 +2103,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":15,"../utils/utils":16,"./event":25,"./filter":26,"./formatters":27,"./watches":40}],20:[function(require,module,exports){
+},{"../utils/sha3":16,"../utils/utils":17,"./event":26,"./filter":27,"./formatters":28,"./watches":41}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2251,7 +2171,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":23,"./jsonrpc":32,"./requestmanager":37}],21:[function(require,module,exports){
+},{"./errors":24,"./jsonrpc":33,"./requestmanager":38}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2530,7 +2450,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":3,"../utils/utils":16,"../web3":18,"./allevents":19,"./event":25,"./function":28}],22:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/utils":17,"../web3":19,"./allevents":20,"./event":26,"./function":29}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2588,7 +2508,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":33}],23:[function(require,module,exports){
+},{"./method":34}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2628,7 +2548,7 @@ module.exports = {
 };
 
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2921,7 +2841,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./formatters":27,"./method":33,"./property":36}],25:[function(require,module,exports){
+},{"../utils/utils":17,"./formatters":28,"./method":34,"./property":37}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3130,7 +3050,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":3,"../utils/sha3":15,"../utils/utils":16,"./filter":26,"./formatters":27,"./watches":40}],26:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"./filter":27,"./formatters":28,"./watches":41}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3342,7 +3262,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":16,"./formatters":27,"./requestmanager":37}],27:[function(require,module,exports){
+},{"../utils/utils":17,"./formatters":28,"./requestmanager":38}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3589,7 +3509,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16}],28:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3826,7 +3746,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":3,"../utils/sha3":15,"../utils/utils":16,"../web3":18,"./formatters":27}],29:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"../web3":19,"./formatters":28}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3939,7 +3859,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":23,"xmlhttprequest":13}],30:[function(require,module,exports){
+},{"./errors":24,"xmlhttprequest":14}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4049,7 +3969,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":16}],31:[function(require,module,exports){
+},{"../utils/utils":17}],32:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4262,7 +4182,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":16,"./errors":23,"net":41}],32:[function(require,module,exports){
+},{"../utils/utils":17,"./errors":24,"net":42}],33:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4355,7 +4275,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4529,7 +4449,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":16,"./errors":23,"./requestmanager":37}],34:[function(require,module,exports){
+},{"../utils/utils":17,"./errors":24,"./requestmanager":38}],35:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4577,7 +4497,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":21}],35:[function(require,module,exports){
+},{"./contract":22}],36:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4627,7 +4547,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./property":36}],36:[function(require,module,exports){
+},{"../utils/utils":17,"./property":37}],37:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4779,7 +4699,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":16,"./requestmanager":37}],37:[function(require,module,exports){
+},{"../utils/utils":17,"./requestmanager":38}],38:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5044,7 +4964,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":14,"../utils/utils":16,"./errors":23,"./jsonrpc":32}],38:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17,"./errors":24,"./jsonrpc":33}],39:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5114,7 +5034,7 @@ module.exports = {
 };
 
 
-},{"./formatters":27,"./method":33}],39:[function(require,module,exports){
+},{"./formatters":28,"./method":34}],40:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5210,7 +5130,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":18,"./contract":21,"./icap":30,"./namereg":34}],40:[function(require,module,exports){
+},{"../web3":19,"./contract":22,"./icap":31,"./namereg":35}],41:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5326,9 +5246,9 @@ module.exports = {
 };
 
 
-},{"./method":33}],41:[function(require,module,exports){
+},{"./method":34}],42:[function(require,module,exports){
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6071,7 +5991,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6395,7 +6315,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":42,"./x64-core":44}],44:[function(require,module,exports){
+},{"./core":43,"./x64-core":45}],45:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6700,7 +6620,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":42}],"bignumber.js":[function(require,module,exports){
+},{"./core":43}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (global) {
@@ -9385,7 +9305,7 @@ module.exports = {
     }
 })(this);
 
-},{"crypto":41}],"web3":[function(require,module,exports){
+},{"crypto":42}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
 
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
@@ -9403,5 +9323,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":18,"./lib/web3/contract":21,"./lib/web3/httpprovider":29,"./lib/web3/ipcprovider":31,"./lib/web3/namereg":34,"./lib/web3/transfer":39}]},{},["web3"])
+},{"./lib/web3":19,"./lib/web3/contract":22,"./lib/web3/httpprovider":30,"./lib/web3/ipcprovider":32,"./lib/web3/namereg":35,"./lib/web3/transfer":40}]},{},["web3"])
 //# sourceMappingURL=web3.js.map
