@@ -16,8 +16,8 @@ Package.onUse(function(api) {
 
   api.export(['web3', 'BigNumber'], ['client', 'server']);
 
-  api.addFiles('dist/web3.js', 'client');
-  api.addFiles('package-init.js', 'client');
+  api.addFiles('dist/web3.js', ['client', 'server']);
+  api.addFiles('package-init.js', ['client', 'server']);
 });
 
 // Package.onTest(function(api) {
