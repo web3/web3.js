@@ -1860,7 +1860,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],17:[function(require,module,exports){
 module.exports={
-    "version": "0.9.2"
+    "version": "0.10.0"
 }
 
 },{}],18:[function(require,module,exports){
