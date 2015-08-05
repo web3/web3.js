@@ -1,4 +1,610 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports=[
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_a",
+        "type": "address"
+      }
+    ],
+    "name": "setAddr",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "addr",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "subRegistrar",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "reserve",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_refund",
+        "type": "address"
+      }
+    ],
+    "name": "disown",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_registrar",
+        "type": "address"
+      }
+    ],
+    "name": "setSubRegistrar",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "content",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      }
+    ],
+    "name": "record",
+    "outputs": [
+      {
+        "name": "o_addr",
+        "type": "address"
+      },
+      {
+        "name": "o_subRegistrar",
+        "type": "address"
+      },
+      {
+        "name": "o_content",
+        "type": "bytes32"
+      },
+      {
+        "name": "o_owner",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "name": "_content",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setContent",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "name",
+        "type": "string"
+      }
+    ],
+    "name": "Changed",
+    "type": "event"
+  }
+]
+},{}],2:[function(require,module,exports){
+module.exports=[
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_owner",
+        "type": "address"
+      }
+    ],
+    "name": "name",
+    "outputs": [
+      {
+        "name": "o_name",
+        "type": "bytes32"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "content",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "addr",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "reserve",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "subRegistrar",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "name": "_newOwner",
+        "type": "address"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "name": "_registrar",
+        "type": "address"
+      }
+    ],
+    "name": "setSubRegistrar",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "Registrar",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "name": "_a",
+        "type": "address"
+      },
+      {
+        "name": "_primary",
+        "type": "bool"
+      }
+    ],
+    "name": "setAddress",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "name": "_content",
+        "type": "bytes32"
+      }
+    ],
+    "name": "setContent",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "_name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "disown",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "_winner",
+        "type": "address"
+      }
+    ],
+    "name": "AuctionEnded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "_name",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "_bidder",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "_value",
+        "type": "uint256"
+      }
+    ],
+    "name": "NewBid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "name",
+        "type": "bytes32"
+      }
+    ],
+    "name": "Changed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "name",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "name": "addr",
+        "type": "address"
+      }
+    ],
+    "name": "PrimaryChanged",
+    "type": "event"
+  }
+]
+},{}],3:[function(require,module,exports){
+module.exports=[
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "from",
+        "type": "bytes32"
+      },
+      {
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "transfer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "from",
+        "type": "bytes32"
+      },
+      {
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "name": "indirectId",
+        "type": "bytes32"
+      },
+      {
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "icapTransfer",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "to",
+        "type": "bytes32"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "AnonymousDeposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "to",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "Deposit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "from",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "name": "from",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "indirectId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "value",
+        "type": "uint256"
+      }
+    ],
+    "name": "IcapTransfer",
+    "type": "event"
+  }
+]
+},{}],4:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -31,7 +637,7 @@ SolidityTypeAddress.prototype.staticPartLength = function (name) {
 module.exports = SolidityTypeAddress;
 
 
-},{"./formatters":6,"./type":11}],2:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],5:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -63,7 +669,7 @@ SolidityTypeBool.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeBool;
 
-},{"./formatters":6,"./type":11}],3:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],6:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -103,7 +709,7 @@ SolidityTypeBytes.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeBytes;
 
-},{"./formatters":6,"./type":11}],4:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],7:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -363,7 +969,7 @@ var coder = new SolidityCoder([
 module.exports = coder;
 
 
-},{"./address":1,"./bool":2,"./bytes":3,"./dynamicbytes":5,"./formatters":6,"./int":7,"./real":9,"./string":10,"./uint":12,"./ureal":13}],5:[function(require,module,exports){
+},{"./address":4,"./bool":5,"./bytes":6,"./dynamicbytes":8,"./formatters":9,"./int":10,"./real":12,"./string":13,"./uint":15,"./ureal":16}],8:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -390,7 +996,7 @@ SolidityTypeDynamicBytes.prototype.isDynamicType = function () {
 module.exports = SolidityTypeDynamicBytes;
 
 
-},{"./formatters":6,"./type":11}],6:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],9:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -642,7 +1248,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16,"./param":8,"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
+},{"../utils/config":17,"../utils/utils":19,"./param":11,"bignumber.js":"bignumber.js"}],10:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -680,7 +1286,7 @@ SolidityTypeInt.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeInt;
 
-},{"./formatters":6,"./type":11}],8:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],11:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -834,7 +1440,7 @@ SolidityParam.encodeList = function (params) {
 module.exports = SolidityParam;
 
 
-},{"../utils/utils":16}],9:[function(require,module,exports){
+},{"../utils/utils":19}],12:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -872,7 +1478,7 @@ SolidityTypeReal.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeReal;
 
-},{"./formatters":6,"./type":11}],10:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],13:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -899,7 +1505,7 @@ SolidityTypeString.prototype.isDynamicType = function () {
 module.exports = SolidityTypeString;
 
 
-},{"./formatters":6,"./type":11}],11:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],14:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityParam = require('./param');
 
@@ -1144,7 +1750,7 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
 
 module.exports = SolidityType;
 
-},{"./formatters":6,"./param":8}],12:[function(require,module,exports){
+},{"./formatters":9,"./param":11}],15:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1182,7 +1788,7 @@ SolidityTypeUInt.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeUInt;
 
-},{"./formatters":6,"./type":11}],13:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],16:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1220,7 +1826,7 @@ SolidityTypeUReal.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeUReal;
 
-},{"./formatters":6,"./type":11}],14:[function(require,module,exports){
+},{"./formatters":9,"./type":14}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1301,7 +1907,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],15:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1343,7 +1949,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":16,"crypto-js/sha3":43}],16:[function(require,module,exports){
+},{"./utils":19,"crypto-js/sha3":46}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1858,12 +2464,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],17:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],20:[function(require,module,exports){
 module.exports={
     "version": "0.10.0"
 }
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2040,7 +2646,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":14,"./utils/sha3":15,"./utils/utils":16,"./version.json":17,"./web3/batch":20,"./web3/db":22,"./web3/eth":24,"./web3/filter":26,"./web3/formatters":27,"./web3/method":33,"./web3/net":35,"./web3/property":36,"./web3/requestmanager":37,"./web3/shh":38,"./web3/watches":40}],19:[function(require,module,exports){
+},{"./utils/config":17,"./utils/sha3":18,"./utils/utils":19,"./version.json":20,"./web3/batch":23,"./web3/db":25,"./web3/eth":27,"./web3/filter":29,"./web3/formatters":30,"./web3/method":36,"./web3/net":38,"./web3/property":39,"./web3/requestmanager":40,"./web3/shh":41,"./web3/watches":43}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2129,7 +2735,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":15,"../utils/utils":16,"./event":25,"./filter":26,"./formatters":27,"./watches":40}],20:[function(require,module,exports){
+},{"../utils/sha3":18,"../utils/utils":19,"./event":28,"./filter":29,"./formatters":30,"./watches":43}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2197,7 +2803,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":23,"./jsonrpc":32,"./requestmanager":37}],21:[function(require,module,exports){
+},{"./errors":26,"./jsonrpc":35,"./requestmanager":40}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2476,7 +3082,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":4,"../utils/utils":16,"../web3":18,"./allevents":19,"./event":25,"./function":28}],22:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/utils":19,"../web3":21,"./allevents":22,"./event":28,"./function":31}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2534,7 +3140,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":33}],23:[function(require,module,exports){
+},{"./method":36}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2574,7 +3180,7 @@ module.exports = {
 };
 
 
-},{}],24:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2867,7 +3473,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./formatters":27,"./method":33,"./property":36}],25:[function(require,module,exports){
+},{"../utils/utils":19,"./formatters":30,"./method":36,"./property":39}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3076,7 +3682,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":4,"../utils/sha3":15,"../utils/utils":16,"./filter":26,"./formatters":27,"./watches":40}],26:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":18,"../utils/utils":19,"./filter":29,"./formatters":30,"./watches":43}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3288,7 +3894,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":16,"./formatters":27,"./requestmanager":37}],27:[function(require,module,exports){
+},{"../utils/utils":19,"./formatters":30,"./requestmanager":40}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3535,7 +4141,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16}],28:[function(require,module,exports){
+},{"../utils/config":17,"../utils/utils":19}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3772,7 +4378,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":4,"../utils/sha3":15,"../utils/utils":16,"../web3":18,"./formatters":27}],29:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":18,"../utils/utils":19,"../web3":21,"./formatters":30}],32:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3799,8 +4405,8 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require;
-
+// workaround to use httpprovider in meteor on server side
+var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require; // jshint ignore:line
 var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : npmRequire('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
@@ -3887,7 +4493,7 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = HttpProvider;
 
 
-},{"./errors":23}],30:[function(require,module,exports){
+},{"./errors":26}],33:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3997,7 +4603,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":16}],31:[function(require,module,exports){
+},{"../utils/utils":19}],34:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4210,7 +4816,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":16,"./errors":23,"net":41}],32:[function(require,module,exports){
+},{"../utils/utils":19,"./errors":26,"net":44}],35:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4303,7 +4909,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],33:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4477,7 +5083,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":16,"./errors":23,"./requestmanager":37}],34:[function(require,module,exports){
+},{"../utils/utils":19,"./errors":26,"./requestmanager":40}],37:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4501,31 +5107,19 @@ module.exports = Method;
  */
 
 var contract = require('./contract');
+var globalRegistrarAbi = require('../contracts/GlobalRegistrar.json');
+var fixedFeeRegistrarAbi = require('../contracts/FixedFeeRegistrar.json');
 
-var address = '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
+var globalNameregAddress = '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
+var ibanNameregAddress = '0xc6d9d2cd449a754c494264e1809c50e34d64562b';
 
-var abi = [
-    {"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"name","outputs":[{"name":"o_name","type":"bytes32"}],"type":"function"},
-    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"owner","outputs":[{"name":"","type":"address"}],"type":"function"},
-    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"content","outputs":[{"name":"","type":"bytes32"}],"type":"function"},
-    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"addr","outputs":[{"name":"","type":"address"}],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"reserve","outputs":[],"type":"function"},
-    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"subRegistrar","outputs":[{"name":"o_subRegistrar","type":"address"}],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_newOwner","type":"address"}],"name":"transfer","outputs":[],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_registrar","type":"address"}],"name":"setSubRegistrar","outputs":[],"type":"function"},
-    {"constant":false,"inputs":[],"name":"Registrar","outputs":[],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_a","type":"address"},{"name":"_primary","type":"bool"}],"name":"setAddress","outputs":[],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"},{"name":"_content","type":"bytes32"}],"name":"setContent","outputs":[],"type":"function"},
-    {"constant":false,"inputs":[{"name":"_name","type":"bytes32"}],"name":"disown","outputs":[],"type":"function"},
-    {"constant":true,"inputs":[{"name":"_name","type":"bytes32"}],"name":"register","outputs":[{"name":"","type":"address"}],"type":"function"},
-    {"anonymous":false,"inputs":[{"indexed":true,"name":"name","type":"bytes32"}],"name":"Changed","type":"event"},
-    {"anonymous":false,"inputs":[{"indexed":true,"name":"name","type":"bytes32"},{"indexed":true,"name":"addr","type":"address"}],"name":"PrimaryChanged","type":"event"}
-];
-
-module.exports = contract(abi).at(address);
+module.exports = {
+    namereg: contract(globalRegistrarAbi).at(globalNameregAddress),
+    ibanNamereg: contract(fixedFeeRegistrarAbi).at(ibanNameregAddress)
+};
 
 
-},{"./contract":21}],35:[function(require,module,exports){
+},{"../contracts/FixedFeeRegistrar.json":1,"../contracts/GlobalRegistrar.json":2,"./contract":24}],38:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4575,7 +5169,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./property":36}],36:[function(require,module,exports){
+},{"../utils/utils":19,"./property":39}],39:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4727,7 +5321,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":16,"./requestmanager":37}],37:[function(require,module,exports){
+},{"../utils/utils":19,"./requestmanager":40}],40:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4992,7 +5586,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":14,"../utils/utils":16,"./errors":23,"./jsonrpc":32}],38:[function(require,module,exports){
+},{"../utils/config":17,"../utils/utils":19,"./errors":26,"./jsonrpc":35}],41:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5062,7 +5656,7 @@ module.exports = {
 };
 
 
-},{"./formatters":27,"./method":33}],39:[function(require,module,exports){
+},{"./formatters":30,"./method":36}],42:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5087,8 +5681,9 @@ module.exports = {
 
 var web3 = require('../web3');
 var ICAP = require('./icap');
-var namereg = require('./namereg');
+var namereg = require('./namereg').ibanNamereg;
 var contract = require('./contract');
+var exchangeAbi = require('../contracts/SmartExchange.json');
 
 /**
  * Should be used to make ICAP transfer
@@ -5114,7 +5709,7 @@ var transfer = function (from, iban, value, callback) {
         return deposit(from, address, value, icap.client());
     }
 
-    namereg.addr(icap.insitution(), function (err, address) {
+    namereg.addr(icap.institution(), function (err, address) {
         return deposit(from, address, value, icap.client(), callback);
     });
     
@@ -5148,7 +5743,7 @@ var transferToAddress = function (from, address, value, callback) {
  * @param {Function} callback, callback
  */
 var deposit = function (from, address, value, client, callback) {
-    var abi = [{"constant":false,"inputs":[{"name":"name","type":"bytes32"}],"name":"deposit","outputs":[],"type":"function"}];
+    var abi = exchangeAbi;
     return contract(abi).at(address).deposit(client, {
         from: from,
         value: value
@@ -5158,7 +5753,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":18,"./contract":21,"./icap":30,"./namereg":34}],40:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"../web3":21,"./contract":24,"./icap":33,"./namereg":37}],43:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5274,9 +5869,9 @@ module.exports = {
 };
 
 
-},{"./method":33}],41:[function(require,module,exports){
+},{"./method":36}],44:[function(require,module,exports){
 
-},{}],42:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6019,7 +6614,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],43:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6343,7 +6938,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":42,"./x64-core":44}],44:[function(require,module,exports){
+},{"./core":45,"./x64-core":47}],47:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6648,7 +7243,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":42}],"bignumber.js":[function(require,module,exports){
+},{"./core":45}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -6656,12 +7251,14 @@ module.exports = BigNumber; // jshint ignore:line
 
 },{}],"web3":[function(require,module,exports){
 var web3 = require('./lib/web3');
+var namereg = require('./lib/web3/namereg');
 
 web3.providers.HttpProvider = require('./lib/web3/httpprovider');
 web3.providers.IpcProvider = require('./lib/web3/ipcprovider');
 
 web3.eth.contract = require('./lib/web3/contract');
-web3.eth.namereg = require('./lib/web3/namereg');
+web3.eth.namereg = namereg.namereg;
+web3.eth.ibanNamereg = namereg.ibanNamereg;
 web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
 
 // dont override global variable
@@ -6672,5 +7269,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":18,"./lib/web3/contract":21,"./lib/web3/httpprovider":29,"./lib/web3/ipcprovider":31,"./lib/web3/namereg":34,"./lib/web3/transfer":39}]},{},["web3"])
+},{"./lib/web3":21,"./lib/web3/contract":24,"./lib/web3/httpprovider":32,"./lib/web3/ipcprovider":34,"./lib/web3/namereg":37,"./lib/web3/transfer":42}]},{},["web3"])
 //# sourceMappingURL=web3-light.js.map
