@@ -5689,13 +5689,13 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * Should be used to make ICAP transfer
  *
  * @method transfer
- * @param {String} iban number
- * @param {String} from (address)
+ * @param {String} from
+ * @param {String} to iban
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transfer = function (from, iban, value, callback) {
-    var icap = new ICAP(iban); 
+var transfer = function (from, to, value, callback) {
+    var icap = new ICAP(to); 
     if (!icap.isValid()) {
         throw new Error('invalid iban address');
     }
@@ -5719,14 +5719,14 @@ var transfer = function (from, iban, value, callback) {
  * Should be used to transfer funds to certain address
  *
  * @method transferToAddress
- * @param {String} address
- * @param {String} from (address)
+ * @param {String} from
+ * @param {String} to
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (from, address, value, callback) {
+var transferToAddress = function (from, to, value, callback) {
     return web3.eth.sendTransaction({
-        address: address,
+        address: to,
         from: from,
         value: value
     }, callback);
@@ -5736,15 +5736,15 @@ var transferToAddress = function (from, address, value, callback) {
  * Should be used to deposit funds to generic Exchange contract (must implement deposit(bytes32) method!)
  *
  * @method deposit
- * @param {String} address
- * @param {String} from (address)
- * @param {Value} value to be tranfered
+ * @param {String} from
+ * @param {String} to
+ * @param {Value} value to be transfered
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (from, address, value, client, callback) {
+var deposit = function (from, to, value, client, callback) {
     var abi = exchangeAbi;
-    return contract(abi).at(address).deposit(client, {
+    return contract(abi).at(to).deposit(client, {
         from: from,
         value: value
     }, callback);
