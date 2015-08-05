@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
 var web3 = require('../index');
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 
 describe('web3.eth.sendIBANTransaction', function () {
@@ -27,7 +26,7 @@ describe('web3.eth.sendIBANTransaction', function () {
                 step++;
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                   data: '0x3b3b57de5852454700000000000000000000000000000000000000000000000000000000',
+                   data: "0x511b1df9000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000045852454700000000000000000000000000000000000000000000000000000000",
                    to: web3.eth.namereg.address
                 }, "latest"]);
 
