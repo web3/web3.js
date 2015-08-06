@@ -642,7 +642,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16,"./param":8,"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17,"./param":8,"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -834,7 +834,7 @@ SolidityParam.encodeList = function (params) {
 module.exports = SolidityParam;
 
 
-},{"../utils/utils":16}],9:[function(require,module,exports){
+},{"../utils/utils":17}],9:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1221,6 +1221,17 @@ SolidityTypeUReal.prototype.staticPartLength = function (name) {
 module.exports = SolidityTypeUReal;
 
 },{"./formatters":6,"./type":11}],14:[function(require,module,exports){
+'use strict';
+
+// go env doesn't have and need XMLHttpRequest
+if (typeof XMLHttpRequest === 'undefined') {
+    exports.XMLHttpRequest = {};
+} else {
+    exports.XMLHttpRequest = XMLHttpRequest; // jshint ignore:line
+}
+
+
+},{}],15:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1301,7 +1312,7 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],15:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],16:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1343,7 +1354,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":16,"crypto-js/sha3":43}],16:[function(require,module,exports){
+},{"./utils":17,"crypto-js/sha3":44}],17:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1858,12 +1869,12 @@ module.exports = {
 };
 
 
-},{"bignumber.js":"bignumber.js"}],17:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],18:[function(require,module,exports){
 module.exports={
     "version": "0.10.0"
 }
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2040,7 +2051,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":14,"./utils/sha3":15,"./utils/utils":16,"./version.json":17,"./web3/batch":20,"./web3/db":22,"./web3/eth":24,"./web3/filter":26,"./web3/formatters":27,"./web3/method":33,"./web3/net":35,"./web3/property":36,"./web3/requestmanager":37,"./web3/shh":38,"./web3/watches":40}],19:[function(require,module,exports){
+},{"./utils/config":15,"./utils/sha3":16,"./utils/utils":17,"./version.json":18,"./web3/batch":21,"./web3/db":23,"./web3/eth":25,"./web3/filter":27,"./web3/formatters":28,"./web3/method":34,"./web3/net":36,"./web3/property":37,"./web3/requestmanager":38,"./web3/shh":39,"./web3/watches":41}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2129,7 +2140,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":15,"../utils/utils":16,"./event":25,"./filter":26,"./formatters":27,"./watches":40}],20:[function(require,module,exports){
+},{"../utils/sha3":16,"../utils/utils":17,"./event":26,"./filter":27,"./formatters":28,"./watches":41}],21:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2197,7 +2208,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":23,"./jsonrpc":32,"./requestmanager":37}],21:[function(require,module,exports){
+},{"./errors":24,"./jsonrpc":33,"./requestmanager":38}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2476,7 +2487,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-},{"../solidity/coder":4,"../utils/utils":16,"../web3":18,"./allevents":19,"./event":25,"./function":28}],22:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/utils":17,"../web3":19,"./allevents":20,"./event":26,"./function":29}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2534,7 +2545,7 @@ module.exports = {
     methods: methods
 };
 
-},{"./method":33}],23:[function(require,module,exports){
+},{"./method":34}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2574,7 +2585,7 @@ module.exports = {
 };
 
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2867,7 +2878,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./formatters":27,"./method":33,"./property":36}],25:[function(require,module,exports){
+},{"../utils/utils":17,"./formatters":28,"./method":34,"./property":37}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3076,7 +3087,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":4,"../utils/sha3":15,"../utils/utils":16,"./filter":26,"./formatters":27,"./watches":40}],26:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"./filter":27,"./formatters":28,"./watches":41}],27:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3288,7 +3299,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-},{"../utils/utils":16,"./formatters":27,"./requestmanager":37}],27:[function(require,module,exports){
+},{"../utils/utils":17,"./formatters":28,"./requestmanager":38}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3535,7 +3546,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":14,"../utils/utils":16}],28:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3772,7 +3783,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":4,"../utils/sha3":15,"../utils/utils":16,"../web3":18,"./formatters":27}],29:[function(require,module,exports){
+},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"../web3":19,"./formatters":28}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3799,52 +3810,60 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require;
-
-var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : npmRequire('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
+// workaround to use httpprovider in different envs
+var XMLHttpRequest;
+
+// meteor server environment
+if (typeof Meteor !== 'undefined' && Meteor.isServer) {
+    XMLHttpRequest = Npm.require('xmlhttprequest').XMLHttpRequest;
+
+// browser
+} else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
+    XMLHttpRequest = windows.XMLHttpRequest;
+
+// node
+} else {
+    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+}
+
+/**
+ * HttpProvider should be used to send rpc calls over http
+ */
 var HttpProvider = function (host) {
     this.host = host || 'http://localhost:8545';
 };
 
-HttpProvider.prototype.isConnected = function() {
+/**
+ * Should be called to prepare new XMLHttpRequest
+ *
+ * @method prepareRequest
+ * @param {Boolean} true if request should be async
+ * @return {XMLHttpRequest} object
+ */
+HttpProvider.prototype.prepareRequest = function (async) {
     var request = new XMLHttpRequest();
-
-    request.open('POST', this.host, false);
+    request.open('POST', this.host, async);
     request.setRequestHeader('Content-Type','application/json');
-    
-    try {
-        request.send(JSON.stringify({
-            id: 9999999999,
-            jsonrpc: '2.0',
-            method: 'net_listening',
-            params: []
-        }));
-        return true;
-    } catch(e) {
-        return false;
-    }
+    return request;
 };
 
+/**
+ * Should be called to make sync request
+ *
+ * @method send
+ * @param {Object} payload
+ * @return {Object} result
+ */
 HttpProvider.prototype.send = function (payload) {
-    var request = new XMLHttpRequest();
+    var request = this.prepareRequest(false);
 
-    request.open('POST', this.host, false);
-    request.setRequestHeader('Content-Type','application/json');
-    
     try {
         request.send(JSON.stringify(payload));
     } catch(error) {
         throw errors.InvalidConnection(this.host);
     }
-
-
-    // check request.status
-    // TODO: throw an error here! it cannot silently fail!!!
-    //if (request.status !== 200) {
-        //return;
-    //}
 
     var result = request.responseText;
 
@@ -3857,8 +3876,16 @@ HttpProvider.prototype.send = function (payload) {
     return result;
 };
 
+/**
+ * Should be used to make async request
+ *
+ * @method sendAsync
+ * @param {Object} payload
+ * @param {Function} callback triggered on end with (err, result)
+ */
 HttpProvider.prototype.sendAsync = function (payload, callback) {
-    var request = new XMLHttpRequest();
+    var request = this.prepareRequest(true); 
+
     request.onreadystatechange = function() {
         if (request.readyState === 4) {
             var result = request.responseText;
@@ -3873,9 +3900,6 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
             callback(error, result);
         }
     };
-
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type','application/json');
     
     try {
         request.send(JSON.stringify(payload));
@@ -3884,10 +3908,30 @@ HttpProvider.prototype.sendAsync = function (payload, callback) {
     }
 };
 
+/**
+ * Synchronously tries to make Http request
+ *
+ * @method isConnected
+ * @return {Boolean} returns true if request haven't failed. Otherwise false
+ */
+HttpProvider.prototype.isConnected = function() {
+    try {
+        this.send({
+            id: 9999999999,
+            jsonrpc: '2.0',
+            method: 'net_listening',
+            params: []
+        });
+        return true;
+    } catch(e) {
+        return false;
+    }
+};
+
 module.exports = HttpProvider;
 
 
-},{"./errors":23}],30:[function(require,module,exports){
+},{"./errors":24,"xmlhttprequest":14}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3997,7 +4041,7 @@ ICAP.prototype.address = function () {
 module.exports = ICAP;
 
 
-},{"../utils/utils":16}],31:[function(require,module,exports){
+},{"../utils/utils":17}],32:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4210,7 +4254,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":16,"./errors":23,"net":41}],32:[function(require,module,exports){
+},{"../utils/utils":17,"./errors":24,"net":42}],33:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4303,7 +4347,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4477,7 +4521,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":16,"./errors":23,"./requestmanager":37}],34:[function(require,module,exports){
+},{"../utils/utils":17,"./errors":24,"./requestmanager":38}],35:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4525,7 +4569,7 @@ var abi = [
 module.exports = contract(abi).at(address);
 
 
-},{"./contract":21}],35:[function(require,module,exports){
+},{"./contract":22}],36:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4575,7 +4619,7 @@ module.exports = {
 };
 
 
-},{"../utils/utils":16,"./property":36}],36:[function(require,module,exports){
+},{"../utils/utils":17,"./property":37}],37:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4727,7 +4771,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":16,"./requestmanager":37}],37:[function(require,module,exports){
+},{"../utils/utils":17,"./requestmanager":38}],38:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4992,7 +5036,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":14,"../utils/utils":16,"./errors":23,"./jsonrpc":32}],38:[function(require,module,exports){
+},{"../utils/config":15,"../utils/utils":17,"./errors":24,"./jsonrpc":33}],39:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5062,7 +5106,7 @@ module.exports = {
 };
 
 
-},{"./formatters":27,"./method":33}],39:[function(require,module,exports){
+},{"./formatters":28,"./method":34}],40:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5158,7 +5202,7 @@ var deposit = function (from, address, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../web3":18,"./contract":21,"./icap":30,"./namereg":34}],40:[function(require,module,exports){
+},{"../web3":19,"./contract":22,"./icap":31,"./namereg":35}],41:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5274,9 +5318,9 @@ module.exports = {
 };
 
 
-},{"./method":33}],41:[function(require,module,exports){
+},{"./method":34}],42:[function(require,module,exports){
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6019,7 +6063,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6343,7 +6387,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":42,"./x64-core":44}],44:[function(require,module,exports){
+},{"./core":43,"./x64-core":45}],45:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6648,7 +6692,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":42}],"bignumber.js":[function(require,module,exports){
+},{"./core":43}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -6672,5 +6716,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":18,"./lib/web3/contract":21,"./lib/web3/httpprovider":29,"./lib/web3/ipcprovider":31,"./lib/web3/namereg":34,"./lib/web3/transfer":39}]},{},["web3"])
+},{"./lib/web3":19,"./lib/web3/contract":22,"./lib/web3/httpprovider":30,"./lib/web3/ipcprovider":32,"./lib/web3/namereg":35,"./lib/web3/transfer":40}]},{},["web3"])
 //# sourceMappingURL=web3-light.js.map
