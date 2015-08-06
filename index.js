@@ -8,6 +8,7 @@ web3.eth.contract = require('./lib/web3/contract');
 web3.eth.namereg = namereg.namereg;
 web3.eth.ibanNamereg = namereg.ibanNamereg;
 web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
+web3.eth.iban = require('./lib/web3/iban');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
