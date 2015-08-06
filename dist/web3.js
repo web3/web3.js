@@ -3813,19 +3813,19 @@ module.exports = SolidityFunction;
 var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
-var XMLHttpRequest;
+var XMLHttpRequest; // jshint ignore: line
 
 // meteor server environment
-if (typeof Meteor !== 'undefined' && Meteor.isServer) {
-    XMLHttpRequest = Npm.require('xmlhttprequest').XMLHttpRequest;
+if (typeof Meteor !== 'undefined' && Meteor.isServer) { // jshint ignore: line
+    XMLHttpRequest = Npm.require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 
 // browser
 } else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-    XMLHttpRequest = windows.XMLHttpRequest;
+    XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 
 // node
 } else {
-    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
+    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
 /**
