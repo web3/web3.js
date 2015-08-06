@@ -2423,18 +2423,6 @@ var isJson = function (str) {
     }
 };
 
-/**
- * This method should be called to check if string is valid ethereum IBAN number
- * Supports direct and indirect IBANs
- *
- * @method isIBAN
- * @param {String}
- * @return {Boolean}
- */
-var isIBAN = function (iban) {
-    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30})$/.test(iban);
-};
-
 module.exports = {
     padLeft: padLeft,
     padRight: padRight,
@@ -2459,8 +2447,7 @@ module.exports = {
     isObject: isObject,
     isBoolean: isBoolean,
     isArray: isArray,
-    isJson: isJson,
-    isIBAN: isIBAN
+    isJson: isJson
 };
 
 
@@ -4511,30 +4498,139 @@ module.exports = HttpProvider;
     along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /** 
- * @file icap.js
+ * @file iban.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
-var utils = require('../utils/utils');
+var BigNumber = require('bignumber.js');
+
+var padLeft = function (string, bytes) {
+    var result = string;
+    while (result.length < bytes * 2) {
+        result = '00' + result;
+    }
+    return result;
+};
 
 /**
- * This prototype should be used to extract necessary information from iban address
+ * Prepare an IBAN for mod 97 computation by moving the first 4 chars to the end and transforming the letters to
+ * numbers (A = 10, B = 11, ..., Z = 35), as specified in ISO13616.
+ *
+ * @method iso13616Prepare
+ * @param {String} iban the IBAN
+ * @returns {String} the prepared IBAN
+ */
+var iso13616Prepare = function (iban) {
+    var A = 'A'.charCodeAt(0);
+    var Z = 'Z'.charCodeAt(0);
+
+    iban = iban.toUpperCase();
+    iban = iban.substr(4) + iban.substr(0,4);
+
+    return iban.split('').map(function(n){
+        var code = n.charCodeAt(0);
+        if (code >= A && code <= Z){
+            // A = 10, B = 11, ... Z = 35
+            return code - A + 10;
+        } else {
+            return n;
+        }
+    }).join('');
+};
+
+/**
+ * Calculates the MOD 97 10 of the passed IBAN as specified in ISO7064.
+ *
+ * @method mod9710
+ * @param {String} iban
+ * @returns {Number}
+ */
+var mod9710 = function (iban) {
+    var remainder = iban,
+        block;
+
+    while (remainder.length > 2){
+        block = remainder.slice(0, 9);
+        remainder = parseInt(block, 10) % 97 + remainder.slice(block.length);
+    }
+
+    return parseInt(remainder, 10) % 97;
+};
+
+/**
+ * This prototype should be used to create iban object from iban correct string
  *
  * @param {String} iban
  */
-var ICAP = function (iban) {
+var Iban = function (iban) {
     this._iban = iban;
 };
 
 /**
- * Should be called to check if icap is correct
+ * This method should be used to create iban object from ethereum address
+ *
+ * @method fromAddress
+ * @param {String} address
+ * @return {Iban} the IBAN object
+ */
+Iban.fromAddress = function (address) {
+    var asBn = new BigNumber(address, 16);
+    var base36 = asBn.toString(36);
+    var padded = padLeft(base36, 15);
+    return Iban.fromBban(padded.toUpperCase());
+};
+
+/**
+ * Convert the passed BBAN to an IBAN for this country specification.
+ * Please note that <i>"generation of the IBAN shall be the exclusive responsibility of the bank/branch servicing the account"</i>.
+ * This method implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
+ *
+ * @method fromBban
+ * @param {String} bban the BBAN to convert to IBAN
+ * @returns {Iban} the IBAN object
+ */
+Iban.fromBban = function (bban) {
+    var countryCode = 'XE';
+
+    var remainder = mod9710(iso13616Prepare(countryCode + '00' + bban));
+    var checkDigit = ('0' + (98 - remainder)).slice(-2);
+
+    return new Iban(countryCode + checkDigit + bban);
+};
+
+/**
+ * Should be used to create IBAN object for given institution and identifier
+ *
+ * @method createIndirect
+ * @param {Object} options, required options are "institution" and "identifier"
+ * @return {Iban} the IBAN object
+ */
+Iban.createIndirect = function (options) {
+    return Iban.fromBban('ETH' + options.institution + options.identifier);
+};
+
+/**
+ * Thos method should be used to check if given string is valid iban object
+ *
+ * @method isValid
+ * @param {String} iban string
+ * @return {Boolean} true if it is valid IBAN
+ */
+Iban.isValid = function (iban) {
+    var i = new Iban(iban);
+    return i.isValid();
+};
+
+/**
+ * Should be called to check if iban is correct
  *
  * @method isValid
  * @returns {Boolean} true if it is, otherwise false
  */
-ICAP.prototype.isValid = function () {
-    return utils.isIBAN(this._iban);
+Iban.prototype.isValid = function () {
+    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30})$/.test(this._iban) &&
+        mod9710(iso13616Prepare(this._iban)) === 1;
 };
 
 /**
@@ -4543,7 +4639,7 @@ ICAP.prototype.isValid = function () {
  * @method isDirect
  * @returns {Boolean} true if it is, otherwise false
  */
-ICAP.prototype.isDirect = function () {
+Iban.prototype.isDirect = function () {
     return this._iban.length === 34;
 };
 
@@ -4553,7 +4649,7 @@ ICAP.prototype.isDirect = function () {
  * @method isIndirect
  * @returns {Boolean} true if it is, otherwise false
  */
-ICAP.prototype.isIndirect = function () {
+Iban.prototype.isIndirect = function () {
     return this._iban.length === 20;
 };
 
@@ -4564,7 +4660,7 @@ ICAP.prototype.isIndirect = function () {
  * @method checksum
  * @returns {String} checksum
  */
-ICAP.prototype.checksum = function () {
+Iban.prototype.checksum = function () {
     return this._iban.substr(2, 2);
 };
 
@@ -4575,7 +4671,7 @@ ICAP.prototype.checksum = function () {
  * @method institution
  * @returns {String} institution identifier
  */
-ICAP.prototype.institution = function () {
+Iban.prototype.institution = function () {
     return this.isIndirect() ? this._iban.substr(7, 4) : '';
 };
 
@@ -4586,7 +4682,7 @@ ICAP.prototype.institution = function () {
  * @method client
  * @returns {String} client identifier
  */
-ICAP.prototype.client = function () {
+Iban.prototype.client = function () {
     return this.isIndirect() ? this._iban.substr(11) : '';
 };
 
@@ -4596,14 +4692,20 @@ ICAP.prototype.client = function () {
  * @method address
  * @returns {String} client direct address
  */
-ICAP.prototype.address = function () {
-    return this.isDirect() ? this._iban.substr(4) : '';
+Iban.prototype.address = function () {
+    if (this.isDirect()) {
+        var base36 = this._iban.substr(4);
+        var asBn = new BigNumber(base36, 36);
+        return padLeft(asBn.toString(16), 20);
+    } 
+
+    return '';
 };
 
-module.exports = ICAP;
+module.exports = Iban;
 
 
-},{"../utils/utils":19}],34:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],34:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5680,13 +5782,13 @@ module.exports = {
  */
 
 var web3 = require('../web3');
-var ICAP = require('./icap');
+var Iban = require('./iban');
 var namereg = require('./namereg').ibanNamereg;
 var contract = require('./contract');
 var exchangeAbi = require('../contracts/SmartExchange.json');
 
 /**
- * Should be used to make ICAP transfer
+ * Should be used to make Iban transfer
  *
  * @method transfer
  * @param {String} from
@@ -5695,22 +5797,22 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Function} callback, callback
  */
 var transfer = function (from, to, value, callback) {
-    var icap = new ICAP(to); 
-    if (!icap.isValid()) {
+    var iban = new Iban(to); 
+    if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
 
-    if (icap.isDirect()) {
-        return transferToAddress(from, icap.address(), value, callback);
+    if (iban.isDirect()) {
+        return transferToAddress(from, iban.address(), value, callback);
     }
     
     if (!callback) {
-        var address = namereg.addr(icap.institution());
-        return deposit(from, address, value, icap.client());
+        var address = namereg.addr(iban.institution());
+        return deposit(from, address, value, iban.client());
     }
 
-    namereg.addr(icap.institution(), function (err, address) {
-        return deposit(from, address, value, icap.client(), callback);
+    namereg.addr(iban.institution(), function (err, address) {
+        return deposit(from, address, value, iban.client(), callback);
     });
     
 };
@@ -5753,7 +5855,7 @@ var deposit = function (from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"../web3":21,"./contract":24,"./icap":33,"./namereg":37}],43:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"../web3":21,"./contract":24,"./iban":33,"./namereg":37}],43:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -9939,6 +10041,7 @@ web3.eth.contract = require('./lib/web3/contract');
 web3.eth.namereg = namereg.namereg;
 web3.eth.ibanNamereg = namereg.ibanNamereg;
 web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
+web3.eth.iban = require('./lib/web3/iban');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
@@ -9948,5 +10051,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":21,"./lib/web3/contract":24,"./lib/web3/httpprovider":32,"./lib/web3/ipcprovider":34,"./lib/web3/namereg":37,"./lib/web3/transfer":42}]},{},["web3"])
+},{"./lib/web3":21,"./lib/web3/contract":24,"./lib/web3/httpprovider":32,"./lib/web3/iban":33,"./lib/web3/ipcprovider":34,"./lib/web3/namereg":37,"./lib/web3/transfer":42}]},{},["web3"])
 //# sourceMappingURL=web3.js.map
