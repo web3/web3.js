@@ -4069,16 +4069,23 @@ module.exports = ICAP;
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
-var errorTimeout = '{"jsonrpc": "2.0", "error": {"code": -32603, "message": "IPC Request timed out for method  \'__method__\'"}, "id": "__id__"}';
-
+var errorTimeout = function (method, id) {
+    var err = {
+        "jsonrpc": "2.0",
+        "error": {
+            "code": -32603, 
+            "message": "IPC Request timed out for method  \'" + method + "\'"
+        }, 
+        "id": id
+    };
+    return JSON.stringify(err);
+};
 
 var IpcProvider = function (path, net) {
     var _this = this;
     this.responseCallbacks = {};
     this.path = path;
     
-    net = net || require('net');
-
     this.connection = net.connect({path: this.path});
 
     this.connection.on('error', function(e){
@@ -4195,7 +4202,7 @@ Timeout all requests when the end/error event is fired
 IpcProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
         if(this.responseCallbacks.hasOwnProperty(key)){
-            this.responseCallbacks[key](errorTimeout.replace('__id__', key).replace('__method__', this.responseCallbacks[key].method));
+            this.responseCallbacks[key](errorTimeout(this.responseCallbacks[key].method, key));
             delete this.responseCallbacks[key];
         }
     }
@@ -4254,7 +4261,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":17,"./errors":24,"net":42}],33:[function(require,module,exports){
+},{"../utils/utils":17,"./errors":24}],33:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
