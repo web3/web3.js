@@ -43,9 +43,9 @@
 
     function validateNamereg() {
         var address = document.getElementById('namereg').value;
-        var ok = /^(0x)?[0-9a-f]{40}$/.test(address) || address === 'default';
+        var ok = web3.isAddress(address) || address === 'default';
         if (ok) {
-            namereg = address === 'default' ? web3.eth.namereg : Namereg.at(address);
+            namereg = address === 'default' ? web3.eth.ibanNamereg : Namereg.at(address);
             document.getElementById('nameregValidation').innerText = 'ok!';
         } else {
             document.getElementById('nameregValidation').innerText = 'namereg address is incorrect!';
