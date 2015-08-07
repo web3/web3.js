@@ -269,16 +269,17 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
             var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
             var result = "";
 
-            (function () {
-                var previousLength = 0; // in int
-                if (solidityType.isDynamicArray(nestedName)) {
+
+            if (solidityType.isDynamicArray(nestedName)) {
+                (function () {
+                    var previousLength = 0; // in int
                     for (var i = 0; i < encoded.length; i++) {
                         // calculate length of previous item
-                        previousLength += +(encoded[i - 1] || [])[0] || 0;
+                        previousLength += +(encoded[i - 1] || [])[0] || 0; 
                         result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
                     }
-                }
-            })();
+                })();
+            }
 
             (function () {
                 for (var i = 0; i < encoded.length; i++) {
@@ -1455,7 +1456,7 @@ var toAscii = function(hex) {
         str += String.fromCharCode(code);
     }
 
-    return decodeURIComponent(escape(str));
+    return decodeURIComponent(escape(str)); // jshint ignore:line
 };
     
 /**
@@ -1466,7 +1467,7 @@ var toAscii = function(hex) {
  * @returns {String} hex representation of input string
  */
 var toHexNative = function(str) {
-    str = unescape(encodeURIComponent(str));
+    str = unescape(encodeURIComponent(str)); // jshint ignore:line
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var n = str.charCodeAt(i).toString(16);
@@ -3799,8 +3800,8 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require;
-
+// workaround to use httpprovider in meteor on server side
+var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require; // jshint ignore:line
 var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : npmRequire('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
 var errors = require('./errors');
 
