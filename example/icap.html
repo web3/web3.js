@@ -37,13 +37,13 @@
     var Namereg = web3.eth.contract(nameregAbi);
     var Deposit = web3.eth.contract(depositAbi);
 
-    var namereg = web3.eth.namereg;
+    var namereg = web3.eth.ibanNamereg;
     var deposit; 
     var iban;
 
     function validateNamereg() {
         var address = document.getElementById('namereg').value;
-        <!--var ok = /^(0x)?[0-9a-f]{40}$/.test(address) || address === 'default';-->
+        var ok = /^(0x)?[0-9a-f]{40}$/.test(address) || address === 'default';
         if (ok) {
             namereg = address === 'default' ? web3.eth.namereg : Namereg.at(address);
             document.getElementById('nameregValidation').innerText = 'ok!';
