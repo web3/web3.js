@@ -4702,6 +4702,10 @@ Iban.prototype.address = function () {
     return '';
 };
 
+Iban.prototype.toString = function () {
+    return this._iban;
+};
+
 module.exports = Iban;
 
 
