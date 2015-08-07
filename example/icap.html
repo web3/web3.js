@@ -2,6 +2,9 @@
 <html>
 
 <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../dist/web3.js"></script>
 <script type="text/javascript">
 
@@ -34,15 +37,15 @@
     var Namereg = web3.eth.contract(nameregAbi);
     var Deposit = web3.eth.contract(depositAbi);
 
-    var namereg = web3.eth.namereg;
+    var namereg = web3.eth.ibanNamereg;
     var deposit; 
     var iban;
 
     function validateNamereg() {
         var address = document.getElementById('namereg').value;
-        var ok = /^(0x)?[0-9a-f]{40}$/.test(address) || address === 'default';
+        var ok = web3.isAddress(address) || address === 'default';
         if (ok) {
-            namereg = address === 'default' ? web3.eth.namereg : Namereg.at(address);
+            namereg = address === 'default' ? web3.eth.ibanNamereg : Namereg.at(address);
             document.getElementById('nameregValidation').innerText = 'ok!';
         } else {
             document.getElementById('nameregValidation').innerText = 'namereg address is incorrect!';
@@ -104,7 +107,7 @@
     };
 
     function validateIBAN() {
-        if (!web3.isIBAN(iban)) {
+        if (!iban.isValid()) {
             return document.getElementById('ibanValidation').innerText = ' - IBAN number is incorrect';
         }
         document.getElementById('ibanValidation').innerText = ' - IBAN number correct';
@@ -113,8 +116,11 @@
     function updateIBAN(ok) {
         var exchangeId = document.getElementById('exchange').value;
         var clientId = document.getElementById('client').value; 
-        iban = 'XE' + '00' + 'ETH' + exchangeId + clientId;
-        document.getElementById('iban').innerText = iban;
+        iban = web3.eth.iban.createIndirect({
+            institution: exchangeId,
+            identifier: clientId
+        });
+        document.getElementById('iban').innerText = iban.toString();
         validateIBAN();
     };
 
@@ -136,68 +142,63 @@
 </script>
 </head>
 <body>
-    <h1>ICAP transfer</h1>
-    <div>
-        <h4>namereg address</h4>
-    </div>
-    <div>
-        <text>eg. 0x436474facc88948696b371052a1befb801f003ca or 'default')</text>
-    </div>
-    <div>
-        <input type="text" id="namereg" onkeyup='onNameregKeyUp()' value="default"></input>
-        <text id="nameregValidation"></text>
-    </div>
+    <div class="col-lg-12">
+        <i>This page expects geth with JSON-RPC running at port 8545</i>
+        <div class="page-header">
+            <h1>ICAP transfer</h1>
+        </div>
+        <div class="col-lg-6">
+            <div class="well">
+                <legend class="lead">namereg address</legend>
+                <small>eg. 0x436474facc88948696b371052a1befb801f003ca or 'default')</small>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="namereg" onkeyup='onNameregKeyUp()' value="default"></input>
+                    <text id="nameregValidation"></text>
+                </div>
 
-    <div>
-        <h4>exchange identifier</h4>
-    </div>
-    <div>
-        <text>eg. WYWY</text>
-    </div>
-    <div>
-        <input type="text" id="exchange" onkeyup='onExchangeKeyUp()'></input>
-        <text id="exchangeValidation"></text>
-    </div>
+                <legend class="lead">exchange identifier</legend>
+                <small>eg. WYWY</small>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="exchange" onkeyup='onExchangeKeyUp()'></input>
+                    <text id="exchangeValidation"></text>
+                </div>
 
-    <div>
-        <h4>client identifier</h4>
-    </div>
-    <div>
-        <text>eg. GAVOFYORK</text>
-    </div>
-    <div>
-        <input type="text" id="client" onkeyup='onClientKeyUp()'></input>
-        <text id="clientValidation"></text>
-    </div>
+                <legend class="lead">client identifier</legend>
+                <small>eg. GAVOFYORK</small>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="client" onkeyup='onClientKeyUp()'></input>
+                    <text id="clientValidation"></text>
+                </div>
 
-    <div>
-        <h4>value</h4>
-    </div>
-    <div>
-        <text>eg. 100</text>
-    </div>
-    <div>
-        <input type="text" id="value" onkeyup='onValueKeyUp()'></input>
-        <text id="valueValidation"></text>
-    </div>
+                <legend class="lead">value</legend>
+                <small>eg. 100</small>
+                <div class="form-group">
+                    <input class="form-control" type="text" id="value" onkeyup='onValueKeyUp()'></input>
+                    <text id="valueValidation"></text>
+                </div>
 
-    <div>&nbsp;</div>
-    <div>
-        <text>IBAN: </text>
-        <text id="iban"></text>
-        <text id="ibanValidation"></text>
-    </div>
-    <div>&nbsp;</div>
-    <div>
-        <button id="transfer" type="button" onClick="transfer()">Transfer!</button>
-        <text id="transferValidation"></text>
-    </div>
-   
-    <div>
-        <h4>transfers</h4>
-    </div>
-    <div>
-        <ul id='transfers'></ul>
+                <legend class="lead">IBAN: </legend>
+                <div class="form-group">
+
+                    <text id="iban"></text>
+                    <text id="ibanValidation"></text>
+                </div>
+                <div>
+                    <button class="btn btn-default" id="transfer" type="button" onClick="transfer()">Transfer!</button>
+                    <text id="transferValidation"></text>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="well">
+                <div>
+                    <legend class="lead">transfers</legend>
+                </div>
+                <div>
+                    <ul id='transfers'></ul>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
