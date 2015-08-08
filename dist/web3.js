@@ -2359,7 +2359,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],20:[function(require,module,exports){
 module.exports={
-    "version": "0.11.0"
+    "version": "0.12.0"
 }
 
 },{}],21:[function(require,module,exports){
@@ -4063,7 +4063,7 @@ var inputAddressFormatter = function (address) {
 module.exports = {
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
-    inputCallFormatter: inputTransactionFormatter,
+    inputCallFormatter: inputCallFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
     inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
