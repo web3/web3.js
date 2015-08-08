@@ -55,7 +55,7 @@ var desc = [{
 
 var address = '0x1234567890123456789012345678901234567890';
 
-describe('web3.eth.contract', function () {
+describe('contract', function () {
     describe('event', function () {
         it('should create event filter', function (done) {
             var provider = new FakeHttpProvider();
@@ -318,13 +318,14 @@ describe('web3.eth.contract', function () {
                     data: '0x' + sha3(signature).slice(0, 8) + 
                     '0000000000000000000000001234567890123456789012345678901234567890' + 
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    from: address,
                     to: address
                 }]);
             });
 
             var contract = web3.eth.contract(desc).at(address);
 
-            contract.send(address, 17);
+            contract.send(address, 17, {from: address});
         });
 
         it('should make a call with optional params', function () {

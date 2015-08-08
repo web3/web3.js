@@ -7,6 +7,14 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var method = 'sendTransaction';
 
 var tests = [{
+    input: {
+        'from': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS',
+        'to': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
+    },
+    formattedInput: {
+        'from': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8',
+        'to': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8'
+    },
     result: '0xb',
     formattedResult: '0xb',
     call: 'eth_'+ method
@@ -23,11 +31,11 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [{}]);
+                assert.deepEqual(payload.params, [test.formattedInput]);
             });
 
             // when 
-            web3.eth[method]({}, function(error, result){
+            web3.eth[method](test.input, function(error, result){
 
                 // then
                 assert.isNull(error);
@@ -50,11 +58,11 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [{}]);
+                assert.deepEqual(payload.params, [test.formattedInput]);
             });
 
             // when 
-            web3.eth[method]({}, function(error, result){
+            web3.eth[method](test.input, function(error, result){
 
                 // then
                 assert.isUndefined(result);

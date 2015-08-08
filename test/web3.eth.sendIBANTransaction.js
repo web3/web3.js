@@ -7,7 +7,7 @@ describe('web3.eth.sendIBANTransaction', function () {
     it('should send transaction', function () {
 
         var iban = 'XE81ETHXREGGAVOFYORK';
-        var address = '0x1234567890123456789012345678901234500000';
+        var address =   '0x1234567890123456789012345678901234500000';
         var exAddress = '0x1234567890123456789012345678901234567890'
 
         var provider = new FakeHttpProvider2();

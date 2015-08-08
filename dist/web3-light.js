@@ -3156,7 +3156,7 @@ var getBalance = new Method({
     name: 'getBalance',
     call: 'eth_getBalance',
     params: 2,
-    inputFormatter: [utils.toAddress, formatters.inputDefaultBlockNumberFormatter],
+    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
     outputFormatter: formatters.outputBigNumberFormatter
 });
 
@@ -3171,7 +3171,7 @@ var getCode = new Method({
     name: 'getCode',
     call: 'eth_getCode',
     params: 2,
-    inputFormatter: [utils.toAddress, formatters.inputDefaultBlockNumberFormatter]
+    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var getBlock = new Method({
@@ -3261,14 +3261,14 @@ var call = new Method({
     name: 'call',
     call: 'eth_call',
     params: 2,
-    inputFormatter: [formatters.inputTransactionFormatter, formatters.inputDefaultBlockNumberFormatter]
+    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
 });
 
 var estimateGas = new Method({
     name: 'estimateGas',
     call: 'eth_estimateGas',
     params: 1,
-    inputFormatter: [formatters.inputTransactionFormatter],
+    inputFormatter: [formatters.inputCallFormatter],
     outputFormatter: utils.toDecimal
 });
 
@@ -3813,6 +3813,7 @@ module.exports = Filter;
 
 var utils = require('../utils/utils');
 var config = require('../utils/config');
+var Iban = require('./iban');
 
 /**
  * Should the format output to a big number
@@ -3848,6 +3849,34 @@ var inputBlockNumberFormatter = function (blockNumber) {
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
+ * @method inputCallFormatter
+ * @param {Object} transaction options
+ * @returns object
+*/
+var inputCallFormatter = function (options){
+
+    options.from = options.from || config.defaultAccount;
+
+    if (options.from) {
+        options.from = inputAddressFormatter(options.from);
+    }
+
+    if (options.to) { // it might be contract creation
+        options.to = inputAddressFormatter(options.to);
+    }
+
+    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
+        return options[key] !== undefined;
+    }).forEach(function(key){
+        options[key] = utils.fromDecimal(options[key]);
+    });
+
+    return options; 
+};
+
+/**
+ * Formats the input of a transaction and converts all values to HEX
+ *
  * @method inputTransactionFormatter
  * @param {Object} transaction options
  * @returns object
@@ -3855,11 +3884,10 @@ var inputBlockNumberFormatter = function (blockNumber) {
 var inputTransactionFormatter = function (options){
 
     options.from = options.from || config.defaultAccount;
+    options.from = inputAddressFormatter(options.from);
 
-    // make code -> data
-    if (options.code) {
-        options.data = options.code;
-        delete options.code;
+    if (options.to) { // it might be contract creation
+        options.to = inputAddressFormatter(options.to);
     }
 
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
@@ -4020,10 +4048,24 @@ var outputPostFormatter = function(post){
     return post;
 };
 
+var inputAddressFormatter = function (address) {
+    var iban = new Iban(address);
+    if (iban.isValid() && iban.isDirect()) {
+        return '0x' + iban.address();
+    } else if (utils.isStrictAddress(address)) {
+        return address;
+    } else if (utils.isAddress(address)) {
+        return '0x' + address;
+    }
+    throw 'invalid address';
+};
+
 module.exports = {
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
+    inputCallFormatter: inputTransactionFormatter,
     inputTransactionFormatter: inputTransactionFormatter,
+    inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
@@ -4034,7 +4076,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":17,"../utils/utils":19}],31:[function(require,module,exports){
+},{"../utils/config":17,"../utils/utils":19,"./iban":33}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4546,7 +4588,7 @@ Iban.prototype.isValid = function () {
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isDirect = function () {
-    return this._iban.length === 34;
+    return this._iban.length === 34 || this._iban.length === 35;
 };
 
 /**

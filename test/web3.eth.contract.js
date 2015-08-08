@@ -237,7 +237,7 @@ describe('web3.eth.contract', function() {
             }
         });
         
-        contract(description).new(2, {data: code}, function(e, myCon){
+        contract(description).new(2, {from: address, data: code}, function(e, myCon){
 
         });
     });
