@@ -2370,7 +2370,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js"}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.12.0"
+    "version": "0.12.1"
 }
 
 },{}],22:[function(require,module,exports){
