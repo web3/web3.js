@@ -1154,11 +1154,7 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
-},{"../utils/config":17,"../utils/utils":19,"./param":11,"bignumber.js":"bignumber.js"}],10:[function(require,module,exports){
-=======
-},{"../utils/config":15,"../utils/utils":17,"./param":8,"bignumber.js":"bignumber.js"}],7:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/config":18,"../utils/utils":20,"./param":11,"bignumber.js":"bignumber.js"}],10:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1350,11 +1346,7 @@ SolidityParam.encodeList = function (params) {
 module.exports = SolidityParam;
 
 
-<<<<<<< HEAD
-},{"../utils/utils":19}],12:[function(require,module,exports){
-=======
-},{"../utils/utils":17}],9:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/utils":20}],12:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
 
@@ -1740,10 +1732,7 @@ SolidityTypeUReal.prototype.staticPartLength = function (name) {
 
 module.exports = SolidityTypeUReal;
 
-<<<<<<< HEAD
 },{"./formatters":9,"./type":14}],17:[function(require,module,exports){
-=======
-},{"./formatters":6,"./type":11}],14:[function(require,module,exports){
 'use strict';
 
 // go env doesn't have and need XMLHttpRequest
@@ -1754,8 +1743,7 @@ if (typeof XMLHttpRequest === 'undefined') {
 }
 
 
-},{}],15:[function(require,module,exports){
->>>>>>> cleanup
+},{}],18:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1836,11 +1824,7 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
-},{"bignumber.js":"bignumber.js"}],18:[function(require,module,exports){
-=======
-},{"bignumber.js":"bignumber.js"}],16:[function(require,module,exports){
->>>>>>> cleanup
+},{"bignumber.js":"bignumber.js"}],19:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -1882,11 +1866,7 @@ module.exports = function (str, isNew) {
 };
 
 
-<<<<<<< HEAD
-},{"./utils":19,"crypto-js/sha3":46}],19:[function(require,module,exports){
-=======
-},{"./utils":17,"crypto-js/sha3":44}],17:[function(require,module,exports){
->>>>>>> cleanup
+},{"./utils":20,"crypto-js/sha3":47}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2388,20 +2368,12 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
-},{"bignumber.js":"bignumber.js"}],20:[function(require,module,exports){
-=======
-},{"bignumber.js":"bignumber.js"}],18:[function(require,module,exports){
->>>>>>> cleanup
+},{"bignumber.js":"bignumber.js"}],21:[function(require,module,exports){
 module.exports={
     "version": "0.12.0"
 }
 
-<<<<<<< HEAD
-},{}],21:[function(require,module,exports){
-=======
-},{}],19:[function(require,module,exports){
->>>>>>> cleanup
+},{}],22:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2429,11 +2401,11 @@ module.exports={
  */
 
 var version = require('./version.json');
-var net = require('./web3/net');
-var eth = require('./web3/eth');
-var db = require('./web3/db');
-var shh = require('./web3/shh');
-var watches = require('./web3/watches');
+var net = require('./web3/methods/net');
+var eth = require('./web3/methods/eth');
+var db = require('./web3/methods/db');
+var shh = require('./web3/methods/shh');
+var watches = require('./web3/methods/watches');
 var Filter = require('./web3/filter');
 var utils = require('./utils/utils');
 var formatters = require('./web3/formatters');
@@ -2578,11 +2550,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-<<<<<<< HEAD
-},{"./utils/config":17,"./utils/sha3":18,"./utils/utils":19,"./version.json":20,"./web3/batch":23,"./web3/db":25,"./web3/eth":27,"./web3/filter":29,"./web3/formatters":30,"./web3/method":36,"./web3/net":38,"./web3/property":39,"./web3/requestmanager":40,"./web3/shh":41,"./web3/watches":43}],22:[function(require,module,exports){
-=======
-},{"./utils/config":15,"./utils/sha3":16,"./utils/utils":17,"./version.json":18,"./web3/batch":21,"./web3/db":23,"./web3/eth":25,"./web3/filter":27,"./web3/formatters":28,"./web3/method":34,"./web3/net":36,"./web3/property":37,"./web3/requestmanager":38,"./web3/shh":39,"./web3/watches":41}],20:[function(require,module,exports){
->>>>>>> cleanup
+},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2610,7 +2578,7 @@ var SolidityEvent = require('./event');
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 var Filter = require('./filter');
-var watches = require('./watches');
+var watches = require('./methods/watches');
 
 var AllSolidityEvents = function (json, address) {
     this._json = json;
@@ -2671,11 +2639,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-<<<<<<< HEAD
-},{"../utils/sha3":18,"../utils/utils":19,"./event":28,"./filter":29,"./formatters":30,"./watches":43}],23:[function(require,module,exports){
-=======
-},{"../utils/sha3":16,"../utils/utils":17,"./event":26,"./filter":27,"./formatters":28,"./watches":41}],21:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":28,"./formatters":29,"./methods/watches":40}],24:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2743,11 +2707,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-<<<<<<< HEAD
-},{"./errors":26,"./jsonrpc":35,"./requestmanager":40}],24:[function(require,module,exports){
-=======
-},{"./errors":24,"./jsonrpc":33,"./requestmanager":38}],22:[function(require,module,exports){
->>>>>>> cleanup
+},{"./errors":26,"./jsonrpc":34,"./requestmanager":43}],25:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3026,73 +2986,7 @@ var Contract = function (abi, address) {
 module.exports = contract;
 
 
-<<<<<<< HEAD
-},{"../solidity/coder":7,"../utils/utils":19,"../web3":21,"./allevents":22,"./event":28,"./function":31}],25:[function(require,module,exports){
-=======
-},{"../solidity/coder":4,"../utils/utils":17,"../web3":19,"./allevents":20,"./event":26,"./function":29}],23:[function(require,module,exports){
->>>>>>> cleanup
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file db.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var Method = require('./method');
-
-var putString = new Method({
-    name: 'putString',
-    call: 'db_putString',
-    params: 3
-});
-
-
-var getString = new Method({
-    name: 'getString',
-    call: 'db_getString',
-    params: 2
-});
-
-var putHex = new Method({
-    name: 'putHex',
-    call: 'db_putHex',
-    params: 3
-});
-
-var getHex = new Method({
-    name: 'getHex',
-    call: 'db_getHex',
-    params: 2
-});
-
-var methods = [
-    putString, getString, putHex, getHex
-];
-
-module.exports = {
-    methods: methods
-};
-
-<<<<<<< HEAD
-},{"./method":36}],26:[function(require,module,exports){
-=======
-},{"./method":34}],24:[function(require,module,exports){
->>>>>>> cleanup
+},{"../solidity/coder":7,"../utils/utils":20,"../web3":22,"./allevents":23,"./event":27,"./function":30}],26:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3132,308 +3026,7 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
 },{}],27:[function(require,module,exports){
-=======
-},{}],25:[function(require,module,exports){
->>>>>>> cleanup
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/**
- * @file eth.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
- */
-
-/**
- * Web3
- *
- * @module web3
- */
-
-/**
- * Eth methods and properties
- *
- * An example method object can look as follows:
- *
- *      {
- *      name: 'getBlock',
- *      call: blockCall,
- *      params: 2,
- *      outputFormatter: formatters.outputBlockFormatter,
- *      inputFormatter: [ // can be a formatter funciton or an array of functions. Where each item in the array will be used for one parameter
- *           utils.toHex, // formats paramter 1
- *           function(param){ return !!param; } // formats paramter 2
- *         ]
- *       },
- *
- * @class [web3] eth
- * @constructor
- */
-
-"use strict";
-
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-var Method = require('./method');
-var Property = require('./property');
-
-var blockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
-};
-
-var transactionFromBlockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
-};
-
-var uncleCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
-};
-
-var getBlockTransactionCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
-};
-
-var uncleCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
-};
-
-/// @returns an array of objects describing web3.eth api methods
-
-var getBalance = new Method({
-    name: 'getBalance',
-    call: 'eth_getBalance',
-    params: 2,
-    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
-    outputFormatter: formatters.outputBigNumberFormatter
-});
-
-var getStorageAt = new Method({
-    name: 'getStorageAt',
-    call: 'eth_getStorageAt',
-    params: 3,
-    inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
-});
-
-var getCode = new Method({
-    name: 'getCode',
-    call: 'eth_getCode',
-    params: 2,
-    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
-});
-
-var getBlock = new Method({
-    name: 'getBlock',
-    call: blockCall,
-    params: 2,
-    inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
-    outputFormatter: formatters.outputBlockFormatter
-});
-
-var getUncle = new Method({
-    name: 'getUncle',
-    call: uncleCall,
-    params: 2,
-    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
-    outputFormatter: formatters.outputBlockFormatter,
-
-});
-
-var getCompilers = new Method({
-    name: 'getCompilers',
-    call: 'eth_getCompilers',
-    params: 0
-});
-
-var getBlockTransactionCount = new Method({
-    name: 'getBlockTransactionCount',
-    call: getBlockTransactionCountCall,
-    params: 1,
-    inputFormatter: [formatters.inputBlockNumberFormatter],
-    outputFormatter: utils.toDecimal
-});
-
-var getBlockUncleCount = new Method({
-    name: 'getBlockUncleCount',
-    call: uncleCountCall,
-    params: 1,
-    inputFormatter: [formatters.inputBlockNumberFormatter],
-    outputFormatter: utils.toDecimal
-});
-
-var getTransaction = new Method({
-    name: 'getTransaction',
-    call: 'eth_getTransactionByHash',
-    params: 1,
-    outputFormatter: formatters.outputTransactionFormatter
-});
-
-var getTransactionFromBlock = new Method({
-    name: 'getTransactionFromBlock',
-    call: transactionFromBlockCall,
-    params: 2,
-    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
-    outputFormatter: formatters.outputTransactionFormatter
-});
-
-var getTransactionReceipt = new Method({
-    name: 'getTransactionReceipt',
-    call: 'eth_getTransactionReceipt',
-    params: 1,
-    outputFormatter: formatters.outputTransactionReceiptFormatter
-});
-
-var getTransactionCount = new Method({
-    name: 'getTransactionCount',
-    call: 'eth_getTransactionCount',
-    params: 2,
-    inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
-    outputFormatter: utils.toDecimal
-});
-
-var sendRawTransaction = new Method({
-    name: 'sendRawTransaction',
-    call: 'eth_sendRawTransaction',
-    params: 1,
-    inputFormatter: [null]
-});
-
-var sendTransaction = new Method({
-    name: 'sendTransaction',
-    call: 'eth_sendTransaction',
-    params: 1,
-    inputFormatter: [formatters.inputTransactionFormatter]
-});
-
-var call = new Method({
-    name: 'call',
-    call: 'eth_call',
-    params: 2,
-    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
-});
-
-var estimateGas = new Method({
-    name: 'estimateGas',
-    call: 'eth_estimateGas',
-    params: 1,
-    inputFormatter: [formatters.inputCallFormatter],
-    outputFormatter: utils.toDecimal
-});
-
-var compileSolidity = new Method({
-    name: 'compile.solidity',
-    call: 'eth_compileSolidity',
-    params: 1
-});
-
-var compileLLL = new Method({
-    name: 'compile.lll',
-    call: 'eth_compileLLL',
-    params: 1
-});
-
-var compileSerpent = new Method({
-    name: 'compile.serpent',
-    call: 'eth_compileSerpent',
-    params: 1
-});
-
-var submitWork = new Method({
-    name: 'submitWork',
-    call: 'eth_submitWork',
-    params: 3
-});
-
-var getWork = new Method({
-    name: 'getWork',
-    call: 'eth_getWork',
-    params: 0
-});
-
-var methods = [
-    getBalance,
-    getStorageAt,
-    getCode,
-    getBlock,
-    getUncle,
-    getCompilers,
-    getBlockTransactionCount,
-    getBlockUncleCount,
-    getTransaction,
-    getTransactionFromBlock,
-    getTransactionReceipt,
-    getTransactionCount,
-    call,
-    estimateGas,
-    sendRawTransaction,
-    sendTransaction,
-    compileSolidity,
-    compileLLL,
-    compileSerpent,
-    submitWork,
-    getWork
-];
-
-/// @returns an array of objects describing web3.eth api properties
-
-
-
-var properties = [
-    new Property({
-        name: 'coinbase',
-        getter: 'eth_coinbase'
-    }),
-    new Property({
-        name: 'mining',
-        getter: 'eth_mining'
-    }),
-    new Property({
-        name: 'hashrate',
-        getter: 'eth_hashrate',
-        outputFormatter: utils.toDecimal
-    }),
-    new Property({
-        name: 'gasPrice',
-        getter: 'eth_gasPrice',
-        outputFormatter: formatters.outputBigNumberFormatter
-    }),
-    new Property({
-        name: 'accounts',
-        getter: 'eth_accounts'
-    }),
-    new Property({
-        name: 'blockNumber',
-        getter: 'eth_blockNumber',
-        outputFormatter: utils.toDecimal
-    })
-];
-
-module.exports = {
-    methods: methods,
-    properties: properties
-};
-
-
-<<<<<<< HEAD
-},{"../utils/utils":19,"./formatters":30,"./method":36,"./property":39}],28:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./formatters":28,"./method":34,"./property":37}],26:[function(require,module,exports){
->>>>>>> cleanup
 /*
     This file is part of ethereum.js.
 
@@ -3461,7 +3054,7 @@ var coder = require('../solidity/coder');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
 var Filter = require('./filter');
-var watches = require('./watches');
+var watches = require('./methods/watches');
 
 /**
  * This prototype should be used to create event filters
@@ -3642,11 +3235,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-<<<<<<< HEAD
-},{"../solidity/coder":7,"../utils/sha3":18,"../utils/utils":19,"./filter":29,"./formatters":30,"./watches":43}],29:[function(require,module,exports){
-=======
-},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"./filter":27,"./formatters":28,"./watches":41}],27:[function(require,module,exports){
->>>>>>> cleanup
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":28,"./formatters":29,"./methods/watches":40}],28:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3858,11 +3447,7 @@ Filter.prototype.get = function (callback) {
 module.exports = Filter;
 
 
-<<<<<<< HEAD
-},{"../utils/utils":19,"./formatters":30,"./requestmanager":40}],30:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./formatters":28,"./requestmanager":38}],28:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/utils":20,"./formatters":29,"./requestmanager":43}],29:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4151,11 +3736,7 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
-},{"../utils/config":17,"../utils/utils":19,"./iban":33}],31:[function(require,module,exports){
-=======
-},{"../utils/config":15,"../utils/utils":17}],29:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/config":18,"../utils/utils":20,"./iban":32}],30:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4392,11 +3973,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-<<<<<<< HEAD
-},{"../solidity/coder":7,"../utils/sha3":18,"../utils/utils":19,"../web3":21,"./formatters":30}],32:[function(require,module,exports){
-=======
-},{"../solidity/coder":4,"../utils/sha3":16,"../utils/utils":17,"../web3":19,"./formatters":28}],30:[function(require,module,exports){
->>>>>>> cleanup
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"../web3":22,"./formatters":29}],31:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4423,12 +4000,6 @@ module.exports = SolidityFunction;
 
 "use strict";
 
-<<<<<<< HEAD
-// workaround to use httpprovider in meteor on server side
-var npmRequire = (typeof Meteor !== 'undefined' && Meteor.isServer) ? Npm.require : require; // jshint ignore:line
-var XMLHttpRequest = (typeof window !== 'undefined' && window.XMLHttpRequest) ? window.XMLHttpRequest : npmRequire('xmlhttprequest').XMLHttpRequest; // jshint ignore:line
-=======
->>>>>>> cleanup
 var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
@@ -4550,11 +4121,7 @@ HttpProvider.prototype.isConnected = function() {
 module.exports = HttpProvider;
 
 
-<<<<<<< HEAD
-},{"./errors":26}],33:[function(require,module,exports){
-=======
-},{"./errors":24,"xmlhttprequest":14}],31:[function(require,module,exports){
->>>>>>> cleanup
+},{"./errors":26,"xmlhttprequest":17}],32:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4783,11 +4350,7 @@ Iban.prototype.toString = function () {
 module.exports = Iban;
 
 
-<<<<<<< HEAD
-},{"bignumber.js":"bignumber.js"}],34:[function(require,module,exports){
-=======
-},{"../utils/utils":17}],32:[function(require,module,exports){
->>>>>>> cleanup
+},{"bignumber.js":"bignumber.js"}],33:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5007,11 +4570,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 module.exports = IpcProvider;
 
 
-<<<<<<< HEAD
-},{"../utils/utils":19,"./errors":26,"net":44}],35:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./errors":24}],33:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/utils":20,"./errors":26}],34:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5104,11 +4663,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-<<<<<<< HEAD
-},{}],36:[function(require,module,exports){
-=======
-},{}],34:[function(require,module,exports){
->>>>>>> cleanup
+},{}],35:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5282,11 +4837,594 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-<<<<<<< HEAD
-},{"../utils/utils":19,"./errors":26,"./requestmanager":40}],37:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./errors":24,"./requestmanager":38}],35:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/utils":20,"./errors":26,"./requestmanager":43}],36:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file db.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var Method = require('../method');
+
+var putString = new Method({
+    name: 'putString',
+    call: 'db_putString',
+    params: 3
+});
+
+
+var getString = new Method({
+    name: 'getString',
+    call: 'db_getString',
+    params: 2
+});
+
+var putHex = new Method({
+    name: 'putHex',
+    call: 'db_putHex',
+    params: 3
+});
+
+var getHex = new Method({
+    name: 'getHex',
+    call: 'db_getHex',
+    params: 2
+});
+
+var methods = [
+    putString, getString, putHex, getHex
+];
+
+module.exports = {
+    methods: methods
+};
+
+},{"../method":35}],37:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file eth.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+/**
+ * Web3
+ *
+ * @module web3
+ */
+
+/**
+ * Eth methods and properties
+ *
+ * An example method object can look as follows:
+ *
+ *      {
+ *      name: 'getBlock',
+ *      call: blockCall,
+ *      params: 2,
+ *      outputFormatter: formatters.outputBlockFormatter,
+ *      inputFormatter: [ // can be a formatter funciton or an array of functions. Where each item in the array will be used for one parameter
+ *           utils.toHex, // formats paramter 1
+ *           function(param){ return !!param; } // formats paramter 2
+ *         ]
+ *       },
+ *
+ * @class [web3] eth
+ * @constructor
+ */
+
+"use strict";
+
+var formatters = require('../formatters');
+var utils = require('../../utils/utils');
+var Method = require('../method');
+var Property = require('../property');
+
+var blockCall = function (args) {
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+};
+
+var transactionFromBlockCall = function (args) {
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+};
+
+var uncleCall = function (args) {
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+};
+
+var getBlockTransactionCountCall = function (args) {
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+};
+
+var uncleCountCall = function (args) {
+    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+};
+
+/// @returns an array of objects describing web3.eth api methods
+
+var getBalance = new Method({
+    name: 'getBalance',
+    call: 'eth_getBalance',
+    params: 2,
+    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
+    outputFormatter: formatters.outputBigNumberFormatter
+});
+
+var getStorageAt = new Method({
+    name: 'getStorageAt',
+    call: 'eth_getStorageAt',
+    params: 3,
+    inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
+});
+
+var getCode = new Method({
+    name: 'getCode',
+    call: 'eth_getCode',
+    params: 2,
+    inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
+});
+
+var getBlock = new Method({
+    name: 'getBlock',
+    call: blockCall,
+    params: 2,
+    inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
+    outputFormatter: formatters.outputBlockFormatter
+});
+
+var getUncle = new Method({
+    name: 'getUncle',
+    call: uncleCall,
+    params: 2,
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+    outputFormatter: formatters.outputBlockFormatter,
+
+});
+
+var getCompilers = new Method({
+    name: 'getCompilers',
+    call: 'eth_getCompilers',
+    params: 0
+});
+
+var getBlockTransactionCount = new Method({
+    name: 'getBlockTransactionCount',
+    call: getBlockTransactionCountCall,
+    params: 1,
+    inputFormatter: [formatters.inputBlockNumberFormatter],
+    outputFormatter: utils.toDecimal
+});
+
+var getBlockUncleCount = new Method({
+    name: 'getBlockUncleCount',
+    call: uncleCountCall,
+    params: 1,
+    inputFormatter: [formatters.inputBlockNumberFormatter],
+    outputFormatter: utils.toDecimal
+});
+
+var getTransaction = new Method({
+    name: 'getTransaction',
+    call: 'eth_getTransactionByHash',
+    params: 1,
+    outputFormatter: formatters.outputTransactionFormatter
+});
+
+var getTransactionFromBlock = new Method({
+    name: 'getTransactionFromBlock',
+    call: transactionFromBlockCall,
+    params: 2,
+    inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+    outputFormatter: formatters.outputTransactionFormatter
+});
+
+var getTransactionReceipt = new Method({
+    name: 'getTransactionReceipt',
+    call: 'eth_getTransactionReceipt',
+    params: 1,
+    outputFormatter: formatters.outputTransactionReceiptFormatter
+});
+
+var getTransactionCount = new Method({
+    name: 'getTransactionCount',
+    call: 'eth_getTransactionCount',
+    params: 2,
+    inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
+    outputFormatter: utils.toDecimal
+});
+
+var sendRawTransaction = new Method({
+    name: 'sendRawTransaction',
+    call: 'eth_sendRawTransaction',
+    params: 1,
+    inputFormatter: [null]
+});
+
+var sendTransaction = new Method({
+    name: 'sendTransaction',
+    call: 'eth_sendTransaction',
+    params: 1,
+    inputFormatter: [formatters.inputTransactionFormatter]
+});
+
+var call = new Method({
+    name: 'call',
+    call: 'eth_call',
+    params: 2,
+    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+});
+
+var estimateGas = new Method({
+    name: 'estimateGas',
+    call: 'eth_estimateGas',
+    params: 1,
+    inputFormatter: [formatters.inputCallFormatter],
+    outputFormatter: utils.toDecimal
+});
+
+var compileSolidity = new Method({
+    name: 'compile.solidity',
+    call: 'eth_compileSolidity',
+    params: 1
+});
+
+var compileLLL = new Method({
+    name: 'compile.lll',
+    call: 'eth_compileLLL',
+    params: 1
+});
+
+var compileSerpent = new Method({
+    name: 'compile.serpent',
+    call: 'eth_compileSerpent',
+    params: 1
+});
+
+var submitWork = new Method({
+    name: 'submitWork',
+    call: 'eth_submitWork',
+    params: 3
+});
+
+var getWork = new Method({
+    name: 'getWork',
+    call: 'eth_getWork',
+    params: 0
+});
+
+var methods = [
+    getBalance,
+    getStorageAt,
+    getCode,
+    getBlock,
+    getUncle,
+    getCompilers,
+    getBlockTransactionCount,
+    getBlockUncleCount,
+    getTransaction,
+    getTransactionFromBlock,
+    getTransactionReceipt,
+    getTransactionCount,
+    call,
+    estimateGas,
+    sendRawTransaction,
+    sendTransaction,
+    compileSolidity,
+    compileLLL,
+    compileSerpent,
+    submitWork,
+    getWork
+];
+
+/// @returns an array of objects describing web3.eth api properties
+
+
+
+var properties = [
+    new Property({
+        name: 'coinbase',
+        getter: 'eth_coinbase'
+    }),
+    new Property({
+        name: 'mining',
+        getter: 'eth_mining'
+    }),
+    new Property({
+        name: 'hashrate',
+        getter: 'eth_hashrate',
+        outputFormatter: utils.toDecimal
+    }),
+    new Property({
+        name: 'gasPrice',
+        getter: 'eth_gasPrice',
+        outputFormatter: formatters.outputBigNumberFormatter
+    }),
+    new Property({
+        name: 'accounts',
+        getter: 'eth_accounts'
+    }),
+    new Property({
+        name: 'blockNumber',
+        getter: 'eth_blockNumber',
+        outputFormatter: utils.toDecimal
+    })
+];
+
+module.exports = {
+    methods: methods,
+    properties: properties
+};
+
+
+},{"../../utils/utils":20,"../formatters":29,"../method":35,"../property":42}],38:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file eth.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var utils = require('../../utils/utils');
+var Property = require('../property');
+
+/// @returns an array of objects describing web3.eth api methods
+var methods = [
+];
+
+/// @returns an array of objects describing web3.eth api properties
+var properties = [
+    new Property({
+        name: 'listening',
+        getter: 'net_listening'
+    }),
+    new Property({
+        name: 'peerCount',
+        getter: 'net_peerCount',
+        outputFormatter: utils.toDecimal
+    })
+];
+
+
+module.exports = {
+    methods: methods,
+    properties: properties
+};
+
+
+},{"../../utils/utils":20,"../property":42}],39:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file shh.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var Method = require('../method');
+var formatters = require('../formatters');
+
+var post = new Method({
+    name: 'post', 
+    call: 'shh_post', 
+    params: 1,
+    inputFormatter: [formatters.inputPostFormatter]
+});
+
+var newIdentity = new Method({
+    name: 'newIdentity',
+    call: 'shh_newIdentity',
+    params: 0
+});
+
+var hasIdentity = new Method({
+    name: 'hasIdentity',
+    call: 'shh_hasIdentity',
+    params: 1
+});
+
+var newGroup = new Method({
+    name: 'newGroup',
+    call: 'shh_newGroup',
+    params: 0
+});
+
+var addToGroup = new Method({
+    name: 'addToGroup',
+    call: 'shh_addToGroup',
+    params: 0
+});
+
+var methods = [
+    post,
+    newIdentity,
+    hasIdentity,
+    newGroup,
+    addToGroup
+];
+
+module.exports = {
+    methods: methods
+};
+
+
+},{"../formatters":29,"../method":35}],40:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file watches.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var Method = require('../method');
+
+/// @returns an array of objects describing web3.eth.filter api methods
+var eth = function () {
+    var newFilterCall = function (args) {
+        var type = args[0];
+
+        switch(type) {
+            case 'latest':
+                args.shift();
+                this.params = 0;
+                return 'eth_newBlockFilter';
+            case 'pending':
+                args.shift();
+                this.params = 0;
+                return 'eth_newPendingTransactionFilter';
+            default:
+                return 'eth_newFilter';
+        }
+    };
+
+    var newFilter = new Method({
+        name: 'newFilter',
+        call: newFilterCall,
+        params: 1
+    });
+
+    var uninstallFilter = new Method({
+        name: 'uninstallFilter',
+        call: 'eth_uninstallFilter',
+        params: 1
+    });
+
+    var getLogs = new Method({
+        name: 'getLogs',
+        call: 'eth_getFilterLogs',
+        params: 1
+    });
+
+    var poll = new Method({
+        name: 'poll',
+        call: 'eth_getFilterChanges',
+        params: 1
+    });
+
+    return [
+        newFilter,
+        uninstallFilter,
+        getLogs,
+        poll
+    ];
+};
+
+/// @returns an array of objects describing web3.shh.watch api methods
+var shh = function () {
+    var newFilter = new Method({
+        name: 'newFilter',
+        call: 'shh_newFilter',
+        params: 1
+    });
+
+    var uninstallFilter = new Method({
+        name: 'uninstallFilter',
+        call: 'shh_uninstallFilter',
+        params: 1
+    });
+
+    var getLogs = new Method({
+        name: 'getLogs',
+        call: 'shh_getMessages',
+        params: 1
+    });
+
+    var poll = new Method({
+        name: 'poll',
+        call: 'shh_getFilterChanges',
+        params: 1
+    });
+
+    return [
+        newFilter,
+        uninstallFilter,
+        getLogs,
+        poll
+    ];
+};
+
+module.exports = {
+    eth: eth,
+    shh: shh
+};
+
+
+},{"../method":35}],41:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5322,65 +5460,7 @@ module.exports = {
 };
 
 
-<<<<<<< HEAD
-},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2,"./contract":24}],38:[function(require,module,exports){
-=======
-},{"./contract":22}],36:[function(require,module,exports){
->>>>>>> cleanup
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file eth.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var utils = require('../utils/utils');
-var Property = require('./property');
-
-/// @returns an array of objects describing web3.eth api methods
-var methods = [
-];
-
-/// @returns an array of objects describing web3.eth api properties
-var properties = [
-    new Property({
-        name: 'listening',
-        getter: 'net_listening'
-    }),
-    new Property({
-        name: 'peerCount',
-        getter: 'net_peerCount',
-        outputFormatter: utils.toDecimal
-    })
-];
-
-
-module.exports = {
-    methods: methods,
-    properties: properties
-};
-
-
-<<<<<<< HEAD
-},{"../utils/utils":19,"./property":39}],39:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./property":37}],37:[function(require,module,exports){
->>>>>>> cleanup
+},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2,"./contract":25}],42:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5532,11 +5612,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-<<<<<<< HEAD
-},{"../utils/utils":19,"./requestmanager":40}],40:[function(require,module,exports){
-=======
-},{"../utils/utils":17,"./requestmanager":38}],38:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/utils":20,"./requestmanager":43}],43:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5686,8 +5762,6 @@ RequestManager.prototype.setProvider = function (p) {
     }
 };
 
-/*jshint maxparams:4 */
-
 /**
  * Should be used to start polling
  *
@@ -5700,9 +5774,8 @@ RequestManager.prototype.setProvider = function (p) {
  * @todo cleanup number of params
  */
 RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls['poll_'+ pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
+    this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
 };
-/*jshint maxparams:3 */
 
 /**
  * Should be used to stop polling for filter with given id
@@ -5711,7 +5784,7 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
  * @param {Number} pollId
  */
 RequestManager.prototype.stopPolling = function (pollId) {
-    delete this.polls['poll_'+ pollId];
+    delete this.polls[pollId];
 };
 
 /**
@@ -5801,85 +5874,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-<<<<<<< HEAD
-},{"../utils/config":17,"../utils/utils":19,"./errors":26,"./jsonrpc":35}],41:[function(require,module,exports){
-=======
-},{"../utils/config":15,"../utils/utils":17,"./errors":24,"./jsonrpc":33}],39:[function(require,module,exports){
->>>>>>> cleanup
-/*
-    This file is part of ethereum.js.
-
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file shh.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var Method = require('./method');
-var formatters = require('./formatters');
-
-var post = new Method({
-    name: 'post', 
-    call: 'shh_post', 
-    params: 1,
-    inputFormatter: [formatters.inputPostFormatter]
-});
-
-var newIdentity = new Method({
-    name: 'newIdentity',
-    call: 'shh_newIdentity',
-    params: 0
-});
-
-var hasIdentity = new Method({
-    name: 'hasIdentity',
-    call: 'shh_hasIdentity',
-    params: 1
-});
-
-var newGroup = new Method({
-    name: 'newGroup',
-    call: 'shh_newGroup',
-    params: 0
-});
-
-var addToGroup = new Method({
-    name: 'addToGroup',
-    call: 'shh_addToGroup',
-    params: 0
-});
-
-var methods = [
-    post,
-    newIdentity,
-    hasIdentity,
-    newGroup,
-    addToGroup
-];
-
-module.exports = {
-    methods: methods
-};
-
-
-<<<<<<< HEAD
-},{"./formatters":30,"./method":36}],42:[function(require,module,exports){
-=======
-},{"./formatters":28,"./method":34}],40:[function(require,module,exports){
->>>>>>> cleanup
+},{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":34}],44:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -5976,135 +5971,9 @@ var deposit = function (from, to, value, client, callback) {
 module.exports = transfer;
 
 
-<<<<<<< HEAD
-},{"../contracts/SmartExchange.json":3,"../web3":21,"./contract":24,"./iban":33,"./namereg":37}],43:[function(require,module,exports){
-=======
-},{"../web3":19,"./contract":22,"./icap":31,"./namereg":35}],41:[function(require,module,exports){
->>>>>>> cleanup
-/*
-    This file is part of ethereum.js.
+},{"../contracts/SmartExchange.json":3,"../web3":22,"./contract":25,"./iban":32,"./namereg":41}],45:[function(require,module,exports){
 
-    ethereum.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    ethereum.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file watches.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var Method = require('./method');
-
-/// @returns an array of objects describing web3.eth.filter api methods
-var eth = function () {
-    var newFilterCall = function (args) {
-        var type = args[0];
-
-        switch(type) {
-            case 'latest':
-                args.shift();
-                this.params = 0;
-                return 'eth_newBlockFilter';
-            case 'pending':
-                args.shift();
-                this.params = 0;
-                return 'eth_newPendingTransactionFilter';
-            default:
-                return 'eth_newFilter';
-        }
-    };
-
-    var newFilter = new Method({
-        name: 'newFilter',
-        call: newFilterCall,
-        params: 1
-    });
-
-    var uninstallFilter = new Method({
-        name: 'uninstallFilter',
-        call: 'eth_uninstallFilter',
-        params: 1
-    });
-
-    var getLogs = new Method({
-        name: 'getLogs',
-        call: 'eth_getFilterLogs',
-        params: 1
-    });
-
-    var poll = new Method({
-        name: 'poll',
-        call: 'eth_getFilterChanges',
-        params: 1
-    });
-
-    return [
-        newFilter,
-        uninstallFilter,
-        getLogs,
-        poll
-    ];
-};
-
-/// @returns an array of objects describing web3.shh.watch api methods
-var shh = function () {
-    var newFilter = new Method({
-        name: 'newFilter',
-        call: 'shh_newFilter',
-        params: 1
-    });
-
-    var uninstallFilter = new Method({
-        name: 'uninstallFilter',
-        call: 'shh_uninstallFilter',
-        params: 1
-    });
-
-    var getLogs = new Method({
-        name: 'getLogs',
-        call: 'shh_getMessages',
-        params: 1
-    });
-
-    var poll = new Method({
-        name: 'poll',
-        call: 'shh_getFilterChanges',
-        params: 1
-    });
-
-    return [
-        newFilter,
-        uninstallFilter,
-        getLogs,
-        poll
-    ];
-};
-
-module.exports = {
-    eth: eth,
-    shh: shh
-};
-
-
-<<<<<<< HEAD
-},{"./method":36}],44:[function(require,module,exports){
-
-},{}],45:[function(require,module,exports){
-=======
-},{"./method":34}],42:[function(require,module,exports){
-
-},{}],43:[function(require,module,exports){
->>>>>>> cleanup
+},{}],46:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6847,11 +6716,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-<<<<<<< HEAD
-},{}],46:[function(require,module,exports){
-=======
-},{}],44:[function(require,module,exports){
->>>>>>> cleanup
+},{}],47:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7175,11 +7040,7 @@ module.exports = {
 	return CryptoJS.SHA3;
 
 }));
-<<<<<<< HEAD
-},{"./core":45,"./x64-core":47}],47:[function(require,module,exports){
-=======
-},{"./core":43,"./x64-core":45}],45:[function(require,module,exports){
->>>>>>> cleanup
+},{"./core":46,"./x64-core":48}],48:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7484,11 +7345,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-<<<<<<< HEAD
-},{"./core":45}],"bignumber.js":[function(require,module,exports){
-=======
-},{"./core":43}],"bignumber.js":[function(require,module,exports){
->>>>>>> cleanup
+},{"./core":46}],"bignumber.js":[function(require,module,exports){
 'use strict';
 
 module.exports = BigNumber; // jshint ignore:line
@@ -7515,9 +7372,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-<<<<<<< HEAD
-},{"./lib/web3":21,"./lib/web3/contract":24,"./lib/web3/httpprovider":32,"./lib/web3/iban":33,"./lib/web3/ipcprovider":34,"./lib/web3/namereg":37,"./lib/web3/transfer":42}]},{},["web3"])
-=======
-},{"./lib/web3":19,"./lib/web3/contract":22,"./lib/web3/httpprovider":30,"./lib/web3/ipcprovider":32,"./lib/web3/namereg":35,"./lib/web3/transfer":40}]},{},["web3"])
->>>>>>> cleanup
+},{"./lib/web3":22,"./lib/web3/contract":25,"./lib/web3/httpprovider":31,"./lib/web3/iban":32,"./lib/web3/ipcprovider":33,"./lib/web3/namereg":41,"./lib/web3/transfer":44}]},{},["web3"])
 //# sourceMappingURL=web3-light.js.map
