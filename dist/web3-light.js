@@ -983,7 +983,7 @@ var formatInputDynamicBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
-    var result = utils.fromAscii(value).substr(2);
+    var result = utils.fromUtf8(value).substr(2);
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
@@ -1120,7 +1120,7 @@ var formatOutputDynamicBytes = function (param) {
  */
 var formatOutputString = function (param) {
     var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
-    return utils.toAscii(param.dynamicPart().substr(64, length));
+    return utils.toUtf8(param.dynamicPart().substr(64, length));
 };
 
 /**
@@ -1857,7 +1857,7 @@ module.exports = function (str, isNew) {
         console.warn('new usage: \'web3.sha3("hello")\'');
         console.warn('see https://github.com/ethereum/web3.js/pull/205');
         console.warn('if you need to hash hex value, you can do \'sha3("0xfff", true)\'');
-        str = utils.toAscii(str);
+        str = utils.toUtf8(str);
     }
 
     return sha3(str, {
@@ -1961,13 +1961,12 @@ var padRight = function (string, chars, sign) {
 
 /** 
  * Should be called to get sting from it's hex representation
- * TODO: it should be called toUTF8
  *
- * @method toAscii
+ * @method toUtf8
  * @param {String} string in hex
  * @returns {String} ascii string representation of hex value
  */
-var toAscii = function(hex) {
+var toUtf8 = function(hex) {
 // Find termination
     var str = "";
     var i = 0, l = hex.length;
@@ -1985,12 +1984,12 @@ var toAscii = function(hex) {
 /**
  * Shold be called to get hex representation (prefixed by 0x) of ascii string 
  *
- * @method fromAscii
+ * @method fromUtf8
  * @param {String} string
  * @param {Number} optional padding
  * @returns {String} hex representation of input string
  */
-var fromAscii = function(str) {
+var fromUtf8 = function(str) {
     str = utf8.encode(str);
     var hex = "";
     for(var i = 0; i < str.length; i++) {
@@ -2080,7 +2079,7 @@ var toHex = function (val) {
         return fromDecimal(val);
 
     if (isObject(val))
-        return fromAscii(JSON.stringify(val));
+        return fromUtf8(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
     if (isString(val)) {
@@ -2089,7 +2088,7 @@ var toHex = function (val) {
         else if(val.indexOf('0x') === 0)
             return val;
         else if (!isFinite(val))
-            return fromAscii(val);
+            return fromUtf8(val);
     }
 
     return fromDecimal(val);
@@ -2332,8 +2331,8 @@ module.exports = {
     toHex: toHex,
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
-    toAscii: toAscii,
-    fromAscii: fromAscii,
+    toUtf8: toUtf8,
+    fromUtf8: fromUtf8,
     transformToFullName: transformToFullName,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
@@ -2472,10 +2471,10 @@ web3.reset = function () {
     c.defaultAccount = undefined;
 };
 web3.toHex = utils.toHex;
-web3.toAscii = utils.toAscii;
-web3.toUtf8 = utils.toAscii;
-web3.fromAscii = utils.fromAscii;
-web3.fromUtf8 = utils.fromAscii;
+web3.toAscii = utils.toUtf8;
+web3.toUtf8 = utils.toUtf8;
+web3.fromAscii = utils.fromUtf8;
+web3.fromUtf8 = utils.fromUtf8;
 web3.toDecimal = utils.toDecimal;
 web3.fromDecimal = utils.fromDecimal;
 web3.toBigNumber = utils.toBigNumber;
@@ -3270,7 +3269,7 @@ var toTopic = function(value){
     if(value.indexOf('0x') === 0)
         return value;
     else
-        return utils.fromAscii(value);
+        return utils.fromUtf8(value);
 };
 
 /// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
@@ -3659,7 +3658,7 @@ var inputPostFormatter = function(post) {
 
     // format the following options
     post.topics = post.topics.map(function(topic){
-        return utils.fromAscii(topic);
+        return utils.fromUtf8(topic);
     });
 
     return post; 
@@ -3679,7 +3678,7 @@ var outputPostFormatter = function(post){
     post.ttl = utils.toDecimal(post.ttl);
     post.workProved = utils.toDecimal(post.workProved);
     post.payloadRaw = post.payload;
-    post.payload = utils.toAscii(post.payload);
+    post.payload = utils.toUtf8(post.payload);
 
     if (utils.isJson(post.payload)) {
         post.payload = JSON.parse(post.payload);
@@ -3690,7 +3689,7 @@ var outputPostFormatter = function(post){
         post.topics = [];
     }
     post.topics = post.topics.map(function(topic){
-        return utils.toAscii(topic);
+        return utils.toUtf8(topic);
     });
 
     return post;
