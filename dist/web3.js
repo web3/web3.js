@@ -1960,7 +1960,7 @@ var padRight = function (string, chars, sign) {
 };
 
 /** 
- * Should be called to get sting from it's hex representation
+ * Should be called to get utf8 from it's hex representation
  *
  * @method toUtf8
  * @param {String} string in hex
@@ -1980,9 +1980,34 @@ var toUtf8 = function(hex) {
 
     return utf8.decode(str);
 };
-    
+   
+/** 
+ * Should be called to get ascii from it's hex representation
+ *
+ * @method toAscii
+ * @param {String} string in hex
+ * @returns {String} ascii string representation of hex value
+ */
+var toAscii = function(hex) {
+// Find termination
+    var str = "";
+    var i = 0, l = hex.length;
+    if (hex.substring(0, 2) === '0x') {
+        i = 2;
+    }
+    for (; i < l; i+=2) {
+        var code = parseInt(hex.substr(i, 2), 16);
+        if (code === 0) {
+            break;
+        }
+        str += String.fromCharCode(code);
+    }
+
+    return str;
+};
+
 /**
- * Shold be called to get hex representation (prefixed by 0x) of ascii string 
+ * Shold be called to get hex representation (prefixed by 0x) of utf8 string 
  *
  * @method fromUtf8
  * @param {String} string
@@ -1994,6 +2019,28 @@ var fromUtf8 = function(str) {
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var n = str.charCodeAt(i).toString(16);
+        hex += n.length < 2 ? '0' + n : n;
+    }
+
+    return "0x" + hex;
+};
+
+/**
+ * Shold be called to get hex representation (prefixed by 0x) of ascii string 
+ *
+ * @method fromAscii
+ * @param {String} string
+ * @param {Number} optional padding
+ * @returns {String} hex representation of input string
+ */
+var fromAscii = function(str) {
+    var hex = "";
+    for(var i = 0; i < str.length; i++) {
+        var code = str.charCodeAt(i);
+        if (code === 0) {
+            break;
+        }
+        var n = code.toString(16);
         hex += n.length < 2 ? '0' + n : n;
     }
 
@@ -2332,7 +2379,9 @@ module.exports = {
     toDecimal: toDecimal,
     fromDecimal: fromDecimal,
     toUtf8: toUtf8,
+    toAscii: toAscii,
     fromUtf8: fromUtf8,
+    fromAscii: fromAscii,
     transformToFullName: transformToFullName,
     extractDisplayName: extractDisplayName,
     extractTypeName: extractTypeName,
@@ -2471,9 +2520,9 @@ web3.reset = function () {
     c.defaultAccount = undefined;
 };
 web3.toHex = utils.toHex;
-web3.toAscii = utils.toUtf8;
+web3.toAscii = utils.toAscii;
 web3.toUtf8 = utils.toUtf8;
-web3.fromAscii = utils.fromUtf8;
+web3.fromAscii = utils.fromAscii;
 web3.fromUtf8 = utils.fromUtf8;
 web3.toDecimal = utils.toDecimal;
 web3.fromDecimal = utils.fromDecimal;
