@@ -128,7 +128,7 @@
         var value = new BigNumber(document.getElementById('value').value);
         var exchange = document.getElementById('exchange').value;
         var client = document.getElementById('client').value;
-        deposit.deposit(client, {value: value});
+        deposit.deposit(web3.fromAscii(client), {value: value});
         displayTransfer("deposited client's " + client + " funds " + value.toString(10) + " to exchange " + exchange);
     };
 
