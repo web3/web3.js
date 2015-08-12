@@ -92,6 +92,8 @@ describe('lib/solidity/coder', function () {
         test({ type: 'uint', value: 3.9,             expected: '0000000000000000000000000000000000000000000000000000000000000003'});
         test({ type: 'uint256', value: 1,            expected: '0000000000000000000000000000000000000000000000000000000000000001'});
         test({ type: 'uint256', value: 16,           expected: '0000000000000000000000000000000000000000000000000000000000000010'});
+        test({ type: 'uint256', value: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',           
+                                                    expected: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
         test({ type: 'bytes32', value: '0x6761766f66796f726b',
                                                     expected: '6761766f66796f726b0000000000000000000000000000000000000000000000'});
         test({ type: 'bytes32', value: '0x731a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b', 

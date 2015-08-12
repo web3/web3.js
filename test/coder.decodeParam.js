@@ -104,10 +104,10 @@ describe('lib/solidity/coder', function () {
         test({ type: 'uint', expected: new bn(1),           value: '0000000000000000000000000000000000000000000000000000000000000001'});
         test({ type: 'uint', expected: new bn(1),           value: '0000000000000000000000000000000000000000000000000000000000000001'});
         test({ type: 'uint', expected: new bn(16),          value: '0000000000000000000000000000000000000000000000000000000000000010'});
-        test({ type: 'uint', expected: new bn(-1),          value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
+        test({ type: 'uint', expected: new bn('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'),          
+                                                            value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
         test({ type: 'uint256', expected: new bn(1),        value: '0000000000000000000000000000000000000000000000000000000000000001'});
         test({ type: 'uint256', expected: new bn(16),       value: '0000000000000000000000000000000000000000000000000000000000000010'});
-        test({ type: 'uint256', expected: new bn(-1),       value: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'});
         test({ type: 'uint8', expected: new bn(16),         value: '0000000000000000000000000000000000000000000000000000000000000010'});
         test({ type: 'uint32', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
         test({ type: 'uint64', expected: new bn(16),        value: '0000000000000000000000000000000000000000000000000000000000000010'});
