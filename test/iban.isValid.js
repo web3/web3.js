@@ -19,7 +19,8 @@ var tests = [
     { obj: 'XE81ETHXREGGaVOFYORK', is: false},
     { obj: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', is: true},
     { obj: 'XE7438O073KYGTWWZN0F2WZ0R8PX5ZPPZS', is: false}, // control number is invalid
-    { obj: 'XD7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', is: false}
+    { obj: 'XD7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', is: false},
+    { obj: 'XE1222Q908LN1QBBU6XUQSO1OHWJIOS46OO', is: true}
 ];
 
 describe('lib/web3/iban', function () {
