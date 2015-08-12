@@ -1678,7 +1678,7 @@ var SolidityType = require('./type');
  */
 var SolidityTypeUInt = function () {
     this._inputFormatter = f.formatInputInt;
-    this._outputFormatter = f.formatOutputInt;
+    this._outputFormatter = f.formatOutputUInt;
 };
 
 SolidityTypeUInt.prototype = new SolidityType({});
