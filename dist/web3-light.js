@@ -2397,7 +2397,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js","utf8":49}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.12.1"
+    "version": "0.12.2"
 }
 
 },{}],22:[function(require,module,exports){
@@ -4299,7 +4299,7 @@ Iban.isValid = function (iban) {
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isValid = function () {
-    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30})$/.test(this._iban) &&
+    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
         mod9710(iso13616Prepare(this._iban)) === 1;
 };
 
