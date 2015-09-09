@@ -122,6 +122,7 @@ describe('contract', function () {
                 assert.equal(result.args.t2, 8);
                 res++;
                 if (res === 2) {
+                    event.stopWatching();
                     done();
                 }
             });
@@ -191,6 +192,7 @@ describe('contract', function () {
                 assert.equal(result.args.t2, 8);
                 res++;
                 if (res === 2) {
+                    event.stopWatching();
                     done();
                 }
             });
@@ -257,6 +259,7 @@ describe('contract', function () {
                 assert.equal(result.args.t2, 8);
                 res++;
                 if (res === 2) {
+                    event.stopWatching();
                     done();
                 }
             });
