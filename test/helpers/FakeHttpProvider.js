@@ -41,13 +41,18 @@ FakeHttpProvider.prototype.send = function (payload) {
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
+
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
     if (this.validation) {
         // imitate plain json object
         this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
-    callback(this.error, this.getResponse());
+    var response = this.getResponse();
+    var error = this.error;
+    setTimeout(function(){
+        callback(error, response);
+    });
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
