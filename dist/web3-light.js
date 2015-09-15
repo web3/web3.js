@@ -1866,7 +1866,7 @@ module.exports = function (str, isNew) {
 };
 
 
-},{"./utils":20,"crypto-js/sha3":47}],20:[function(require,module,exports){
+},{"./utils":20,"crypto-js/sha3":48}],20:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -2249,7 +2249,7 @@ var toTwosComplement = function (number) {
  * @return {Boolean}
 */
 var isStrictAddress = function (address) {
-    return /^0x[0-9a-f]{40}$/.test(address);
+    return /^0x[0-9a-f]{40}$/i.test(address);
 };
 
 /**
@@ -2260,7 +2260,7 @@ var isStrictAddress = function (address) {
  * @return {Boolean}
 */
 var isAddress = function (address) {
-    return /^(0x)?[0-9a-f]{40}$/.test(address);
+    return /^(0x)?[0-9a-f]{40}$/i.test(address);
 };
 
 /**
@@ -2395,9 +2395,9 @@ module.exports = {
     isJson: isJson
 };
 
-},{"bignumber.js":"bignumber.js","utf8":49}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":50}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.12.2"
+    "version": "0.13.0"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2434,6 +2434,7 @@ var db = require('./web3/methods/db');
 var shh = require('./web3/methods/shh');
 var watches = require('./web3/methods/watches');
 var Filter = require('./web3/filter');
+var IsSyncing = require('./web3/syncing');
 var utils = require('./utils/utils');
 var formatters = require('./web3/formatters');
 var RequestManager = require('./web3/requestmanager');
@@ -2488,6 +2489,10 @@ web3.version = {};
 web3.version.api = version.version;
 web3.eth = {};
 
+web3.eth.isSyncing = function (callback) {
+    return new IsSyncing(callback);
+};
+
 /*jshint maxparams:4 */
 web3.eth.filter = function (fil, callback) {
     return new Filter(fil, watches.eth(), formatters.outputLogFormatter, callback);
@@ -2507,8 +2512,8 @@ web3.setProvider = function (provider) {
 web3.isConnected = function(){
      return (this.currentProvider && this.currentProvider.isConnected());
 };
-web3.reset = function () {
-    RequestManager.getInstance().reset();
+web3.reset = function (keepIsSyncing) {
+    RequestManager.getInstance().reset(keepIsSyncing);
     c.defaultBlock = 'latest';
     c.defaultAccount = undefined;
 };
@@ -2579,7 +2584,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43}],23:[function(require,module,exports){
+},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43,"./web3/syncing":44}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -3381,12 +3386,14 @@ var pollFilter = function(self) {
             });
         }
 
-        messages.forEach(function (message) {
-            message = self.formatter ? self.formatter(message) : message;
-            self.callbacks.forEach(function (callback) {
-                callback(null, message);
+        if(utils.isArray(messages)) {
+            messages.forEach(function (message) {
+                message = self.formatter ? self.formatter(message) : message;
+                self.callbacks.forEach(function (callback) {
+                    callback(null, message);
+                });
             });
-        });
+        }
     };
 
     RequestManager.getInstance().startPolling({
@@ -3406,6 +3413,7 @@ var Filter = function (options, methods, formatter, callback) {
     this.implementation = implementation;
     this.filterId = null;
     this.callbacks = [];
+    this.getLogsCallbacks = [];
     this.pollFilters = [];
     this.formatter = formatter;
     this.implementation.newFilter(this.options, function(error, id){
@@ -3415,6 +3423,13 @@ var Filter = function (options, methods, formatter, callback) {
             });
         } else {
             self.filterId = id;
+
+            // check if there are get pending callbacks as a consequence
+            // of calling get() with filterId unassigned.
+            self.getLogsCallbacks.forEach(function (cb){
+                self.get(cb);
+            });
+            self.getLogsCallbacks = [];
 
             // get filter logs for the already existing watch calls
             self.callbacks.forEach(function(cb){
@@ -3454,16 +3469,25 @@ Filter.prototype.stopWatching = function () {
 Filter.prototype.get = function (callback) {
     var self = this;
     if (utils.isFunction(callback)) {
-        this.implementation.getLogs(this.filterId, function(err, res){
-            if (err) {
-                callback(err);
-            } else {
-                callback(null, res.map(function (log) {
-                    return self.formatter ? self.formatter(log) : log;
-                }));
-            }
-        });
+        if (this.filterId === null) {
+            // If filterId is not set yet, call it back
+            // when newFilter() assigns it.
+            this.getLogsCallbacks.push(callback);
+        } else {
+            this.implementation.getLogs(this.filterId, function(err, res){
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, res.map(function (log) {
+                        return self.formatter ? self.formatter(log) : log;
+                    }));
+                }
+            });
+        }
     } else {
+        if (this.filterId === null) {
+            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() method.');
+        }
         var logs = this.implementation.getLogs(this.filterId);
         return logs.map(function (log) {
             return self.formatter ? self.formatter(log) : log;
@@ -3749,6 +3773,16 @@ var inputAddressFormatter = function (address) {
     throw 'invalid address';
 };
 
+
+var outputSyncingFormatter = function(result) {
+
+    result.startingBlock = utils.toDecimal(result.startingBlock);
+    result.currentBlock = utils.toDecimal(result.currentBlock);
+    result.highestBlock = utils.toDecimal(result.highestBlock);
+
+    return result;
+};
+
 module.exports = {
     inputDefaultBlockNumberFormatter: inputDefaultBlockNumberFormatter,
     inputBlockNumberFormatter: inputBlockNumberFormatter,
@@ -3761,7 +3795,8 @@ module.exports = {
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
     outputBlockFormatter: outputBlockFormatter,
     outputLogFormatter: outputLogFormatter,
-    outputPostFormatter: outputPostFormatter
+    outputPostFormatter: outputPostFormatter,
+    outputSyncingFormatter: outputSyncingFormatter
 };
 
 
@@ -5196,6 +5231,11 @@ var properties = [
         outputFormatter: utils.toDecimal
     }),
     new Property({
+        name: 'syncing',
+        getter: 'eth_syncing',
+        outputFormatter: formatters.outputSyncingFormatter
+    }),
+    new Property({
         name: 'gasPrice',
         getter: 'eth_gasPrice',
         outputFormatter: formatters.outputBigNumberFormatter
@@ -5821,11 +5861,15 @@ RequestManager.prototype.stopPolling = function (pollId) {
  *
  * @method reset
  */
-RequestManager.prototype.reset = function () {
+RequestManager.prototype.reset = function (keepIsSyncing) {
     for (var key in this.polls) {
-        this.polls[key].uninstall();
+        // remove all polls, except sync polls,
+        // they need to be removed manually by calling syncing.stopWatching()
+        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
+            this.polls[key].uninstall();
+            delete this.polls[key];
+        }
     }
-    this.polls = {};
 
     if (this.timeout) {
         clearTimeout(this.timeout);
@@ -5853,10 +5897,10 @@ RequestManager.prototype.poll = function () {
     }
 
     var pollsData = [];
-    var pollsKeys = [];
+    var pollsIds = [];
     for (var key in this.polls) {
         pollsData.push(this.polls[key].data);
-        pollsKeys.push(key);
+        pollsIds.push(key);
     }
 
     if (pollsData.length === 0) {
@@ -5864,9 +5908,18 @@ RequestManager.prototype.poll = function () {
     }
 
     var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
+    
+    // map the request id to they poll id
+    var pollsIdMap = {};
+    payload.forEach(function(load, index){
+        pollsIdMap[load.id] = pollsIds[index];
+    });
+
 
     var self = this;
     this.provider.sendAsync(payload, function (error, results) {
+
+
         // TODO: console log?
         if (error) {
             return;
@@ -5875,12 +5928,12 @@ RequestManager.prototype.poll = function () {
         if (!utils.isArray(results)) {
             throw errors.InvalidResponse(results);
         }
+        results.map(function (result) {
+            var id = pollsIdMap[result.id];
 
-        results.map(function (result, index) {
-            var key = pollsKeys[index];
             // make sure the filter is still installed after arrival of the request
-            if (self.polls[key]) {
-                result.callback = self.polls[key].callback;
+            if (self.polls[id]) {
+                result.callback = self.polls[id].callback;
                 return result;
             } else
                 return false;
@@ -5892,8 +5945,6 @@ RequestManager.prototype.poll = function () {
                 result.callback(errors.InvalidResponse(result));
             }
             return valid;
-        }).filter(function (result) {
-            return utils.isArray(result.result) && result.result.length > 0;
         }).forEach(function (result) {
             result.callback(null, result.result);
         });
@@ -5904,6 +5955,109 @@ module.exports = RequestManager;
 
 
 },{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":34}],44:[function(require,module,exports){
+/*
+    This file is part of ethereum.js.
+
+    ethereum.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    ethereum.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file syncing.js
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var RequestManager = require('./requestmanager');
+var Method = require('./method');
+var formatters = require('./formatters');
+var utils = require('../utils/utils');
+
+
+
+/**
+Adds the callback and sets up the methods, to iterate over the results.
+
+@method pollSyncing
+@param {Object} self
+*/
+var pollSyncing = function(self) {
+    var lastSyncState = false;
+
+    var onMessage = function (error, sync) {
+        if (error) {
+            return self.callbacks.forEach(function (callback) {
+                callback(error);
+            });
+        }
+
+        if(utils.isObject(sync))
+            sync = self.implementation.outputFormatter(sync);
+
+        self.callbacks.forEach(function (callback) {
+            if(lastSyncState !== sync) {
+                
+                // call the callback with true first so the app can stop anything, before receiving the sync data
+                if(!lastSyncState && utils.isObject(sync))
+                    callback(null, true);
+                
+                // call on the next CPU cycle, so the actions of the sync stop can be processes first
+                setTimeout(function() {
+                    callback(null, sync);
+                }, 1);
+                
+                lastSyncState = sync;
+            }
+        });
+    };
+
+    RequestManager.getInstance().startPolling({
+        method: self.implementation.call,
+        params: [],
+    }, self.pollId, onMessage, self.stopWatching.bind(self));
+
+};
+
+var IsSyncing = function (callback) {
+    this.pollId = 'syncPoll_'+ Math.floor(Math.random() * 1000);
+    this.callbacks = [];
+    this.implementation = new Method({
+        name: 'isSyncing',
+        call: 'eth_syncing',
+        params: 0,
+        outputFormatter: formatters.outputSyncingFormatter
+    });
+
+    this.addCallback(callback);
+    pollSyncing(this);
+
+    return this;
+};
+
+IsSyncing.prototype.addCallback = function (callback) {
+    if(callback)
+        this.callbacks.push(callback);
+    return this;
+};
+
+IsSyncing.prototype.stopWatching = function () {
+    RequestManager.getInstance().stopPolling(this.pollId);
+    this.callbacks = [];
+};
+
+module.exports = IsSyncing;
+
+
+},{"../utils/utils":20,"./formatters":29,"./method":35,"./requestmanager":43}],45:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -6000,9 +6154,9 @@ var deposit = function (from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"../web3":22,"./contract":25,"./iban":32,"./namereg":41}],45:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"../web3":22,"./contract":25,"./iban":32,"./namereg":41}],46:[function(require,module,exports){
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6745,7 +6899,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7069,7 +7223,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":46,"./x64-core":48}],48:[function(require,module,exports){
+},{"./core":47,"./x64-core":49}],49:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7374,7 +7528,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":46}],49:[function(require,module,exports){
+},{"./core":47}],50:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
@@ -7647,5 +7801,5 @@ if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
 module.exports = web3;
 
 
-},{"./lib/web3":22,"./lib/web3/contract":25,"./lib/web3/httpprovider":31,"./lib/web3/iban":32,"./lib/web3/ipcprovider":33,"./lib/web3/namereg":41,"./lib/web3/transfer":44}]},{},["web3"])
+},{"./lib/web3":22,"./lib/web3/contract":25,"./lib/web3/httpprovider":31,"./lib/web3/iban":32,"./lib/web3/ipcprovider":33,"./lib/web3/namereg":41,"./lib/web3/transfer":45}]},{},["web3"])
 //# sourceMappingURL=web3-light.js.map

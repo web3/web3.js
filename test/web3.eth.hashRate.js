@@ -31,6 +31,10 @@ describe('web3.eth', function () {
 
                 // then
                 assert.strictEqual(test.formattedResult, result);
+
+                // clear the validation
+                provider.injectValidation(function () {});
+                web3.reset();
             });
         });
     });
