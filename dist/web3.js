@@ -2397,7 +2397,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js","utf8":50}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.12.2"
+    "version": "0.13.0"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2512,8 +2512,8 @@ web3.setProvider = function (provider) {
 web3.isConnected = function(){
      return (this.currentProvider && this.currentProvider.isConnected());
 };
-web3.reset = function () {
-    RequestManager.getInstance().reset();
+web3.reset = function (keepIsSyncing) {
+    RequestManager.getInstance().reset(keepIsSyncing);
     c.defaultBlock = 'latest';
     c.defaultAccount = undefined;
 };
@@ -5861,11 +5861,11 @@ RequestManager.prototype.stopPolling = function (pollId) {
  *
  * @method reset
  */
-RequestManager.prototype.reset = function () {
+RequestManager.prototype.reset = function (keepIsSyncing) {
     for (var key in this.polls) {
         // remove all polls, except sync polls,
         // they need to be removed manually by calling syncing.stopWatching()
-        if(key.indexOf('syncPoll_') === -1) {
+        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
             this.polls[key].uninstall();
             delete this.polls[key];
         }
