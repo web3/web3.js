@@ -2249,7 +2249,7 @@ var toTwosComplement = function (number) {
  * @return {Boolean}
 */
 var isStrictAddress = function (address) {
-    return /^0x[0-9a-f]{40}$/.test(address);
+    return /^0x[0-9a-f]{40}$/i.test(address);
 };
 
 /**
@@ -2260,7 +2260,7 @@ var isStrictAddress = function (address) {
  * @return {Boolean}
 */
 var isAddress = function (address) {
-    return /^(0x)?[0-9a-f]{40}$/.test(address);
+    return /^(0x)?[0-9a-f]{40}$/i.test(address);
 };
 
 /**
@@ -5911,7 +5911,7 @@ RequestManager.prototype.poll = function () {
         if (!utils.isArray(results)) {
             throw errors.InvalidResponse(results);
         }
-        results.map(function (result, index) {
+        results.map(function (result) {
             var id = pollsIdMap[result.id];
 
             // make sure the filter is still installed after arrival of the request
