@@ -68,6 +68,7 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
+                    filter.stopWatching();
                     done();
 
                 });
@@ -102,6 +103,7 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
+                    filter.stopWatching();
                     done();
 
                 });

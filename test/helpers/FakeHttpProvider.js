@@ -2,21 +2,23 @@ var chai = require('chai');
 var assert = require('assert');
 var utils = require('../../lib/utils/utils');
 
+countId = 1;
+
 var getResponseStub = function () {
     return {
         jsonrpc: '2.0',
-        id: 1,
-        result: 0
+        id: countId++,
+        result: null
     };
 };
 
 var getErrorStub = function () {
     return {
         jsonrpc: '2.0',
-        id: 1,
+        countId: countId++,
         error: {
             code: 1234,
-            message: ''
+            message: 'Stub error'
         }
     };
 };
@@ -37,22 +39,23 @@ FakeHttpProvider.prototype.send = function (payload) {
         // imitate plain json object
         this.validation(JSON.parse(JSON.stringify(payload)));
     }
-    return this.getResponse();
+
+    return this.getResponse(payload);
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
-
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
     if (this.validation) {
         // imitate plain json object
         this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
+
     var response = this.getResponse(payload);
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
-    });
+    },1);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
@@ -77,7 +80,18 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     }); 
 };
 
-FakeHttpProvider.prototype.getResponse = function () {
+FakeHttpProvider.prototype.getResponse = function (payload) {
+
+    if(this.response) {
+        if(utils.isArray(this.response)) {
+            this.response = this.response.map(function(response, index) {
+                response.id = payload[index] ? payload[index].id : countId++;
+                return response;
+            });
+        } else
+            this.response.id = payload.id;
+    }
+
     return this.response;
 };
 
