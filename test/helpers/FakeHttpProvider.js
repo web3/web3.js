@@ -8,7 +8,7 @@ var getResponseStub = function () {
     return {
         jsonrpc: '2.0',
         id: countId++,
-        result: 0
+        result: null
     };
 };
 
@@ -18,7 +18,7 @@ var getErrorStub = function () {
         countId: countId++,
         error: {
             code: 1234,
-            message: ''
+            message: 'Stub error'
         }
     };
 };
@@ -44,7 +44,6 @@ FakeHttpProvider.prototype.send = function (payload) {
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
-
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
     if (this.validation) {
@@ -52,11 +51,11 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
         this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
 
-    var response = this.getResponse();
+    var response = this.getResponse(payload);
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
-    });
+    },1);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
