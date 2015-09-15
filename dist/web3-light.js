@@ -5846,9 +5846,13 @@ RequestManager.prototype.stopPolling = function (pollId) {
  */
 RequestManager.prototype.reset = function () {
     for (var key in this.polls) {
-        this.polls[key].uninstall();
+        // remove all polls, except sync polls,
+        // they need to be removed manually by calling syncing.stopWatching()
+        if(key.indexOf('syncPoll_') === -1) {
+            this.polls[key].uninstall();
+            delete this.polls[key];
+        }
     }
-    this.polls = {};
 
     if (this.timeout) {
         clearTimeout(this.timeout);
