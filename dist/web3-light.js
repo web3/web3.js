@@ -3413,6 +3413,7 @@ var Filter = function (options, methods, formatter, callback) {
     this.implementation = implementation;
     this.filterId = null;
     this.callbacks = [];
+    this.getLogsCallbacks = [];
     this.pollFilters = [];
     this.formatter = formatter;
     this.implementation.newFilter(this.options, function(error, id){
@@ -3422,6 +3423,13 @@ var Filter = function (options, methods, formatter, callback) {
             });
         } else {
             self.filterId = id;
+
+            // check if there are get pending callbacks as a consequence
+            // of calling get() with filterId unassigned.
+            self.getLogsCallbacks.forEach(function (cb){
+                self.get(cb);
+            });
+            self.getLogsCallbacks = [];
 
             // get filter logs for the already existing watch calls
             self.callbacks.forEach(function(cb){
@@ -3461,16 +3469,25 @@ Filter.prototype.stopWatching = function () {
 Filter.prototype.get = function (callback) {
     var self = this;
     if (utils.isFunction(callback)) {
-        this.implementation.getLogs(this.filterId, function(err, res){
-            if (err) {
-                callback(err);
-            } else {
-                callback(null, res.map(function (log) {
-                    return self.formatter ? self.formatter(log) : log;
-                }));
-            }
-        });
+        if (this.filterId === null) {
+            // If filterId is not set yet, call it back
+            // when newFilter() assigns it.
+            this.getLogsCallbacks.push(callback);
+        } else {
+            this.implementation.getLogs(this.filterId, function(err, res){
+                if (err) {
+                    callback(err);
+                } else {
+                    callback(null, res.map(function (log) {
+                        return self.formatter ? self.formatter(log) : log;
+                    }));
+                }
+            });
+        }
     } else {
+        if (this.filterId === null) {
+            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() method.');
+        }
         var logs = this.implementation.getLogs(this.filterId);
         return logs.map(function (log) {
             return self.formatter ? self.formatter(log) : log;

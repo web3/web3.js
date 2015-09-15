@@ -54,23 +54,46 @@ describe('web3.eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {
-                
-                // given
-                var provider = new FakeHttpProvider();
-                web3.setProvider(provider);
-                provider.injectResult(test.result);
-                provider.injectValidation(function (payload) {
-                    assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, test.call);
-                    assert.deepEqual(payload.params, test.formattedArgs);
-                });
 
-                // call
-                web3.eth[method].apply(null, test.args);
-                
+                // given
+               var provider = new FakeHttpProvider();
+               web3.setProvider(provider);
+               provider.injectResult(test.result);
+               provider.injectValidation(function (payload) {
+                   assert.equal(payload.jsonrpc, '2.0');
+                   assert.equal(payload.method, test.call);
+                   assert.deepEqual(payload.params, test.formattedArgs);
+               });
+
+               // call
+               var filter = web3.eth[method].apply(null, test.args);
+
+               // test filter.get
+               if(typeof test.args === 'object') {
+
+                   var logs = [{data: '0xb'}, {data: '0x11'}];
+
+                   provider.injectResult(logs);
+                   provider.injectValidation(function (payload) {
+                       assert.equal(payload.jsonrpc, '2.0');
+                       assert.equal(payload.method, 'eth_getFilterLogs');
+                       assert.deepEqual(payload.params, [test.formattedResult]);
+                   });
+
+                   // sync should throw an error
+                   try {
+                       assert.throws(filter.get());
+                   } catch(e){
+                       assert.instanceOf(e, Error);
+                   }
+
+                   // async should get the fake logs
+                   filter.get(function(e, res){
+                       assert.equal(logs, res);
+                       done();
+                   });
+               }
             });
         });
     });
 });
-
-
