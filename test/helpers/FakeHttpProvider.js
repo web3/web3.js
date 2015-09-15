@@ -48,7 +48,7 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
         // imitate plain json object
         this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
-    var response = this.getResponse();
+    var response = this.getResponse(payload);
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
