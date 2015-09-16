@@ -1,19 +1,18 @@
-var web3 = require('./lib/web3');
+var Web3 = require('./lib/web3');
 var namereg = require('./lib/web3/namereg');
 
-web3.providers.HttpProvider = require('./lib/web3/httpprovider');
-web3.providers.IpcProvider = require('./lib/web3/ipcprovider');
+Web3.prototype.providers.HttpProvider = require('./lib/web3/httpprovider');
+Web3.prototype.providers.IpcProvider = require('./lib/web3/ipcprovider');
 
-web3.eth.contract = require('./lib/web3/contract');
-web3.eth.namereg = namereg.namereg;
-web3.eth.ibanNamereg = namereg.ibanNamereg;
-web3.eth.sendIBANTransaction = require('./lib/web3/transfer');
-web3.eth.iban = require('./lib/web3/iban');
+Web3.prototype.eth.contract = require('./lib/web3/contract');
+Web3.prototype.eth.namereg = namereg.namereg;
+Web3.prototype.eth.ibanNamereg = namereg.ibanNamereg;
+Web3.prototype.eth.sendIBANTransaction = require('./lib/web3/transfer');
+Web3.prototype.eth.iban = require('./lib/web3/iban');
 
 // dont override global variable
 if (typeof window !== 'undefined' && typeof window.web3 === 'undefined') {
-    window.web3 = web3;
+    window.Web3 = Web3;
 }
 
-module.exports = web3;
-
+module.exports = Web3;
