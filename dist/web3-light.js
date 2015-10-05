@@ -2283,7 +2283,6 @@ var toAddress = function (address) {
     return '0x' + padLeft(toHex(address).substr(2), 40);
 };
 
-
 /**
  * Returns true if object is BigNumber, otherwise false
  *
@@ -2443,6 +2442,7 @@ var c = require('./utils/config');
 var Property = require('./web3/property');
 var Batch = require('./web3/batch');
 var sha3 = require('./utils/sha3');
+var Iban = require('./web3/iban');
 
 var web3Properties = [
     new Property({
@@ -2535,6 +2535,14 @@ web3.createBatch = function () {
     return new Batch();
 };
 
+/**
+ * Transforms direct icap to address
+ */
+web3.fromICAP = function (icap) {
+    var iban = new Iban(icap);
+    return iban.address();
+};
+
 // ADD defaultblock
 Object.defineProperty(web3.eth, 'defaultBlock', {
     get: function () {
@@ -2585,7 +2593,7 @@ setupMethods(web3.shh, shh.methods);
 module.exports = web3;
 
 
-},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43,"./web3/syncing":44}],23:[function(require,module,exports){
+},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/iban":32,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43,"./web3/syncing":44}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
