@@ -704,7 +704,9 @@ SolidityCoder.prototype.encodeParams = function (types, params) {
     });
 
     var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
-        return acc + solidityType.staticPartLength(types[index]);
+        var staticPartLength = solidityType.staticPartLength(types[index]);
+        var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
+        return acc + roundedStaticPartLength;
     }, 0);
 
     var result = this.encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset); 
