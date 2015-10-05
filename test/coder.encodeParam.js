@@ -108,6 +108,18 @@ describe('lib/solidity/coder', function () {
                                                     expected: '0000000000000000000000000000000000000000000000000000000000000020' +
                                                               '0000000000000000000000000000000000000000000000000000000000000020' +
                                                               '731a3afc00d1b1e3461b955e53fc866dcf303b3eb9f4c16f89e388930f48134b'});
+        test({ type: 'bytes', value: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                       'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                       'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                       'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                       'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1',   
+                                                    expected: '0000000000000000000000000000000000000000000000000000000000000020' +
+                                                              '000000000000000000000000000000000000000000000000000000000000009f' +
+                                                              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                              'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                              'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff100'});
         test({ type: 'string', value: 'gavofyork',  expected: '0000000000000000000000000000000000000000000000000000000000000020' +
                                                               '0000000000000000000000000000000000000000000000000000000000000009' +
                                                               '6761766f66796f726b0000000000000000000000000000000000000000000000'});

@@ -242,6 +242,18 @@ describe('lib/solidity/coder', function () {
                                                                     '000000000000000000000000000000000000000000000000000000000000003e' + 
                                                                     '77656c636f6d6520746f20657468657265756d2e2077656c636f6d6520746f20' + 
                                                                     '657468657265756d2e2077656c636f6d6520746f20657468657265756d2e0000'});
+        test({ type: 'bytes', expected: '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                          'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' + 
+                                          'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1',   
+                                                            value: '0000000000000000000000000000000000000000000000000000000000000020' +
+                                                                   '000000000000000000000000000000000000000000000000000000000000009f' +
+                                                                   'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                                   'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                                   'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                                   'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff' +
+                                                                   'fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff100'});
     });
 });
 
