@@ -837,19 +837,18 @@ SolidityCoder.prototype.decodeParams = function (types, bytes) {
 
 SolidityCoder.prototype.getOffsets = function (types, solidityTypes) {
     var lengths =  solidityTypes.map(function (solidityType, index) {
-        return solidityType.staticPartLength(types[index]); 
-        // get length
+        return solidityType.staticPartLength(types[index]);
     });
     
-    for (var i = 0; i < lengths.length; i++) {
+    for (var i = 1; i < lengths.length; i++) {
          // sum with length of previous element
-        var previous = (lengths[i - 1] || 0);
-        lengths[i] += previous;
+        lengths[i] += lengths[i - 1]; 
     }
 
     return lengths.map(function (length, index) {
         // remove the current length, so the length is sum of previous elements
-        return length - solidityTypes[index].staticPartLength(types[index]);
+        var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
+        return length - staticPartLength; 
     });
 };
 
@@ -1614,9 +1613,10 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
 
             var nestedName = self.nestedName(name);
             var nestedStaticPartLength = self.staticPartLength(nestedName);  // in bytes
+            var roundedNestedStaticPartLength = Math.floor((nestedStaticPartLength + 31) / 32) * 32;
             var result = [];
 
-            for (var i = 0; i < length * nestedStaticPartLength; i += nestedStaticPartLength) {
+            for (var i = 0; i < length * roundedNestedStaticPartLength; i += roundedNestedStaticPartLength) {
                 result.push(self.decode(bytes, arrayStart + i, nestedName));
             }
 
@@ -1631,9 +1631,10 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
 
             var nestedName = self.nestedName(name);
             var nestedStaticPartLength = self.staticPartLength(nestedName); // in bytes
+            var roundedNestedStaticPartLength = Math.floor((nestedStaticPartLength + 31) / 32) * 32;
             var result = [];
 
-            for (var i = 0; i < length * nestedStaticPartLength; i += nestedStaticPartLength) {
+            for (var i = 0; i < length * roundedNestedStaticPartLength; i += roundedNestedStaticPartLength) {
                 result.push(self.decode(bytes, arrayStart + i, nestedName));
             }
 
@@ -3051,7 +3052,7 @@ module.exports = {
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +', is it running?');
     },
     InvalidProvider: function () {
-        return new Error('Providor not set or invalid');
+        return new Error('Provider not set or invalid');
     },
     InvalidResponse: function (result){
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: '+ result;
