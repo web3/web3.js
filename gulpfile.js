@@ -48,14 +48,14 @@ gulp.task('bower', ['version'], function(cb){
     });
 });
 
-gulp.task('lint', ['bower'], function(){
+gulp.task('lint', [], function(){
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
 gulp.task('clean', ['lint'], function(cb) {
-    del([ DEST ], cb);
+    del([ DEST ]).then(cb.bind(null, null));
 });
 
 gulp.task('light', ['clean'], function () {
@@ -92,5 +92,5 @@ gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('default', ['version', 'bower', 'lint', 'clean', 'light', 'standalone']);
+gulp.task('default', ['version', 'lint', 'clean', 'light', 'standalone']);
 
