@@ -5,7 +5,8 @@ var assert = chai.assert;
 
 var tests = [
     { value: '0x6d79537472696e67', expected: 'myString'},
-    { value: '0x6d79537472696e6700', expected: 'myString\x00'},
+    { value: '0x6d79537472696e6700', expected: 'myString'},
+    { value: '0x65787065637465642076616c7565000000000000000000000000000000000000', expected: 'expected value'}
 ];
 
 describe('lib/utils/utils', function () {
@@ -17,4 +18,3 @@ describe('lib/utils/utils', function () {
         });
     });
 });
-
