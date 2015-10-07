@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 
 describe('web3.eth.sendIBANTransaction', function () {
@@ -41,7 +42,7 @@ describe('web3.eth.sendIBANTransaction', function () {
             }]);
         });
 
-        web3.eth.sendIBANTransaction(address, iban, 10000);
+        //web3.eth.sendIBANTransaction(address, iban, 10000);
 
     });
 });

@@ -3,6 +3,7 @@ var web3 = require('../index');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
+/*
 var method = 'isSyncing';
 
 var tests = [{
@@ -58,3 +59,5 @@ describe('eth', function () {
 });
 
 
+
+*/

@@ -5,6 +5,7 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var method = 'filter';
 
+/*
 
 var tests = [{
     args: [{
@@ -97,3 +98,5 @@ describe('web3.eth', function () {
         });
     });
 });
+
+*/
