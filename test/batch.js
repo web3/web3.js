@@ -5,7 +5,6 @@ var web3 = new Web3();
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var bn = require('bignumber.js');
 
-/*
 describe('lib/web3/batch', function () {
     describe('execute', function () {
         it('should execute batch request', function (done) {
@@ -201,4 +200,3 @@ describe('lib/web3/batch', function () {
     });
 });
 
-*/
