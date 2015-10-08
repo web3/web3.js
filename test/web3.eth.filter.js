@@ -1,11 +1,10 @@
 var chai = require('chai');
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var method = 'filter';
-
-/*
 
 var tests = [{
     args: [{
@@ -67,7 +66,7 @@ describe('web3.eth', function () {
                });
 
                // call
-               var filter = web3.eth[method].apply(null, test.args);
+               var filter = web3.eth[method].apply(web3.eth, test.args);
 
                // test filter.get
                if(typeof test.args === 'object') {
@@ -99,4 +98,3 @@ describe('web3.eth', function () {
     });
 });
 
-*/

@@ -1,9 +1,8 @@
 var assert = require('assert');
-var contract = require('../lib/web3/contract.js');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 
-/*
 describe('web3.eth.contract', function() {
     it('should create simple contract with one method from abi with explicit type name', function () {
         
@@ -26,7 +25,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
     
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -54,7 +53,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
 
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -96,7 +95,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
         
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -140,7 +139,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
         
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -168,7 +167,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
 
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('undefined', typeof myCon.test); 
@@ -196,7 +195,7 @@ describe('web3.eth.contract', function() {
         var address = '0x1234567890123456789012345678901234567890';
 
         // when
-        var myCon = contract(description).at(address);
+        var myCon = web3.eth.contract(description).at(address);
 
         // then
         assert.equal('function', typeof myCon.test); 
@@ -238,10 +237,9 @@ describe('web3.eth.contract', function() {
             }
         });
         
-        contract(description).new(2, {from: address, data: code}, function(e, myCon){
+        web3.eth.contract(description).new(2, {from: address, data: code}, function(e, myCon){
 
         });
     });
 });
 
-*/

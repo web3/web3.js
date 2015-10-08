@@ -8,7 +8,7 @@ var utils = require('../lib/utils/utils');
 var BigNumber = require('bignumber.js');
 var sha3 = require('../lib/utils/sha3');
 
-/*
+
 var desc = [{
     "name": "balance(address)",
     "type": "function",
@@ -573,4 +573,3 @@ describe('contract', function () {
     });
 });
 
-*/

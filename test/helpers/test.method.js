@@ -17,6 +17,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var provider = new FakeHttpProvider();
                     web3.setProvider(provider);
+                    web3.reset();
                     provider.injectResult(test.result);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
@@ -46,6 +47,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var provider = new FakeHttpProvider();
                     web3.setProvider(provider);
+                    web3.reset();
                     provider.injectResult(test.result);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');

@@ -1,9 +1,9 @@
 var chai = require('chai');
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
-/*
 var method = 'isSyncing';
 
 var tests = [{
@@ -22,42 +22,40 @@ var tests = [{
     call: 'eth_syncing'
 }];
 
-describe('eth', function () {
-    describe(method, function () {
-        tests.forEach(function (test, index) {
-            it('property test: ' + index, function (done) {
+//describe('eth', function () {
+    //describe(method, function () {
+        //tests.forEach(function (test, index) {
+            //it('property test: ' + index, function (done) {
                 
-                // given
-                var provider = new FakeHttpProvider();
-                web3.setProvider(provider);
-                provider.injectBatchResults(test.result);
-                provider.injectValidation(function (payload) {
-                    assert.equal(payload[0].jsonrpc, '2.0');
-                    assert.equal(payload[0].method, test.call);
-                    assert.deepEqual(payload[0].params, test.formattedArgs);
-                });
+                //// given
+                //var provider = new FakeHttpProvider();
+                //web3.setProvider(provider);
+                //web3.reset();
+                //provider.injectBatchResults(test.result);
+                //provider.injectValidation(function (payload) {
+                    //assert.equal(payload[0].jsonrpc, '2.0');
+                    //assert.equal(payload[0].method, test.call);
+                    //assert.deepEqual(payload[0].params, test.formattedArgs);
+                //});
 
-                var count = 1;
+                //var count = 1;
 
-                // TODO results seem to be overwritten
+                //// TODO results seem to be overwritten
 
-                // call
-                var syncing = web3.eth[method](function(e, res){
-                    if(count === 1) {
-                        assert.isTrue(res);
-                        count++;
-                    } else {
-                        assert.deepEqual(res, test.formattedResult);
-                        syncing.stopWatching();
-                        done();
-                    }
-                });
+                //// call
+                //var syncing = web3.eth[method](function(e, res){
+                    //if(count === 1) {
+                        //assert.isTrue(res);
+                        //count++;
+                    //} else {
+                        //assert.deepEqual(res, test.formattedResult);
+                        //syncing.stopWatching();
+                        //done();
+                    //}
+                //});
                 
-            });
-        });
-    });
-});
+            //});
+        //});
+    //});
+//});
 
-
-
-*/
