@@ -31,7 +31,7 @@ var tests = [{
     }
 }];
 
-
+/*
 var testPolling = function (tests) {
     
     describe('web3.eth.filter.polling', function () {
@@ -118,3 +118,4 @@ var testPolling = function (tests) {
 
 testPolling(tests);
 
+*/

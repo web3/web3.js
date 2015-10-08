@@ -1,7 +1,8 @@
 var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var web3 = require('../lib/web3');
+var Web3 = require('../lib/web3');
+var web3 = new Web3();
 
 
 var tests = [{

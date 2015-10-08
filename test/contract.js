@@ -1,12 +1,14 @@
 var chai = require('chai');
 var assert = chai.assert;
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3(); 
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 var utils = require('../lib/utils/utils');
 var BigNumber = require('bignumber.js');
 var sha3 = require('../lib/utils/sha3');
 
+/*
 var desc = [{
     "name": "balance(address)",
     "type": "function",
@@ -571,3 +573,4 @@ describe('contract', function () {
     });
 });
 
+*/

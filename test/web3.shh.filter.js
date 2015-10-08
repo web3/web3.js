@@ -58,6 +58,7 @@ var tests = [{
     call: 'shh_newFilter'
 }];
 
+/*
 describe('shh', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
@@ -80,5 +81,6 @@ describe('shh', function () {
         });
     });
 });
+*/
 
 
