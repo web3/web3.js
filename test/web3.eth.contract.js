@@ -204,9 +204,9 @@ describe('web3.eth.contract', function() {
     });
 
     it('should create contract with nondefault constructor', function (done) {
+        web3.reset(); // reset different polls
         var provider = new FakeHttpProvider();
         web3.setProvider(provider);
-        web3.reset(); // reset different polls
         var address = '0x1234567890123456789012345678901234567890';
         var code = '0x31241231231123123123123121cf121212i123123123123123512312412512111111';
         var description =  [{

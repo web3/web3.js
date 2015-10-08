@@ -27,10 +27,11 @@ describe('eth', function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function (done) {
 
+
                 // given
+                web3.reset();
                 var provider = new FakeHttpProvider();
                 web3.setProvider(provider);
-                web3.reset();
                 provider.injectBatchResults(test.result);
                 provider.injectValidation(function(payload) {
                     assert.equal(payload[0].jsonrpc, '2.0', 'failed');
@@ -41,6 +42,7 @@ describe('eth', function () {
                 var count = 1;
 
                 // TODO results seem to be overwritten
+
 
                 // call
                 var syncing = web3.eth[method](function(e, res){
