@@ -22,40 +22,40 @@ var tests = [{
     call: 'eth_syncing'
 }];
 
-//describe('eth', function () {
-    //describe(method, function () {
-        //tests.forEach(function (test, index) {
-            //it('property test: ' + index, function (done) {
+describe('eth', function () {
+    describe(method, function () {
+        tests.forEach(function (test, index) {
+            it('property test: ' + index, function (done) {
+
+                // given
+                var provider = new FakeHttpProvider();
+                web3.setProvider(provider);
+                web3.reset();
+                provider.injectBatchResults(test.result);
+                provider.injectValidation(function(payload) {
+                    assert.equal(payload[0].jsonrpc, '2.0', 'failed');
+                    assert.equal(payload[0].method, test.call);
+                    assert.deepEqual(payload[0].params, test.formattedArgs);
+                });
+
+                var count = 1;
+
+                // TODO results seem to be overwritten
+
+                // call
+                var syncing = web3.eth[method](function(e, res){
+                    if(count === 1) {
+                        assert.isTrue(res);
+                        count++;
+                    } else {
+                        assert.deepEqual(res, test.formattedResult);
+                        syncing.stopWatching();
+                        done();
+                    }
+                });
                 
-                //// given
-                //var provider = new FakeHttpProvider();
-                //web3.setProvider(provider);
-                //web3.reset();
-                //provider.injectBatchResults(test.result);
-                //provider.injectValidation(function (payload) {
-                    //assert.equal(payload[0].jsonrpc, '2.0');
-                    //assert.equal(payload[0].method, test.call);
-                    //assert.deepEqual(payload[0].params, test.formattedArgs);
-                //});
-
-                //var count = 1;
-
-                //// TODO results seem to be overwritten
-
-                //// call
-                //var syncing = web3.eth[method](function(e, res){
-                    //if(count === 1) {
-                        //assert.isTrue(res);
-                        //count++;
-                    //} else {
-                        //assert.deepEqual(res, test.formattedResult);
-                        //syncing.stopWatching();
-                        //done();
-                    //}
-                //});
-                
-            //});
-        //});
-    //});
-//});
+            });
+        });
+    });
+});
 
