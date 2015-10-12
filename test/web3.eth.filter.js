@@ -57,6 +57,7 @@ describe('web3.eth', function () {
 
                 // given
                var provider = new FakeHttpProvider();
+               web3.reset();
                web3.setProvider(provider);
                provider.injectResult(test.result);
                provider.injectValidation(function (payload) {
@@ -90,6 +91,7 @@ describe('web3.eth', function () {
                    // async should get the fake logs
                    filter.get(function(e, res){
                        assert.equal(logs, res);
+                       web3.reset();
                        done();
                    });
                }

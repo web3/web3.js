@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
 var Web3 = require('../index');
-var web3 = new Web3(); 
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 var utils = require('../lib/utils/utils');
@@ -61,8 +60,7 @@ describe('contract', function () {
     describe('event', function () {
         it('should create event filter', function (done) {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset(); // reset different polls
+            var web3 = new Web3(provider); 
             var signature = 'Changed(address,uint256,uint256,uint256)';
             var step = 0;
             provider.injectValidation(function (payload) {
@@ -95,6 +93,7 @@ describe('contract', function () {
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, 'eth_getFilterLogs');
                 } else if (step === 2 && utils.isArray(payload)) {
+                    step++;
                     provider.injectBatchResults([[{
                         address: address,
                         topics: [
@@ -132,8 +131,7 @@ describe('contract', function () {
 
         it('should create event filter and watch immediately', function (done) {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset(); // reset different polls
+            var web3 = new Web3(provider); 
             var signature = 'Changed(address,uint256,uint256,uint256)';
             var step = 0;
             provider.injectValidation(function (payload) {
@@ -166,6 +164,7 @@ describe('contract', function () {
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, 'eth_getFilterLogs');
                 } else if (step === 2 && utils.isArray(payload)) {
+                    step++;
                     provider.injectBatchResults([[{
                         address: address,
                         topics: [
@@ -202,8 +201,7 @@ describe('contract', function () {
 
         it('should create all event filter', function (done) {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset(); // reset different polls
+            var web3 = new Web3(provider); 
             var signature = 'Changed(address,uint256,uint256,uint256)';
             var step = 0;
             provider.injectValidation(function (payload) {
@@ -232,6 +230,7 @@ describe('contract', function () {
                     assert.equal(payload.jsonrpc, '2.0');
                     assert.equal(payload.method, 'eth_getFilterLogs');
                 } else if (step === 2 && utils.isArray(payload)) {
+                    step++;
                     provider.injectBatchResults([[{
                         address: address,
                         topics: [
@@ -269,8 +268,7 @@ describe('contract', function () {
 
         it('should call constant function', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
             var address = '0x1234567890123456789012345678901234567890';
@@ -291,8 +289,7 @@ describe('contract', function () {
 
         it('should call constant function with default block', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
             var address = '0x1234567890123456789012345678901234567890';
@@ -313,8 +310,7 @@ describe('contract', function () {
 
         it('should sendTransaction to contract function', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectValidation(function (payload) {
@@ -334,10 +330,8 @@ describe('contract', function () {
         });
 
         it('should make a call with optional params', function () {
-           
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
             var address = '0x1234567890123456789012345678901234567890';
@@ -359,10 +353,8 @@ describe('contract', function () {
         });
 
         it('should explicitly make a call with optional params', function () {
-           
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
             var address = '0x1234567890123456789012345678901234567890';
@@ -384,10 +376,8 @@ describe('contract', function () {
         });
 
         it('should explicitly make a call with optional params and defaultBlock', function () {
-           
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
             var address = '0x1234567890123456789012345678901234567890';
@@ -410,8 +400,7 @@ describe('contract', function () {
 
         it('should sendTransaction with optional params', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectValidation(function (payload) {
@@ -435,8 +424,7 @@ describe('contract', function () {
 
         it('should explicitly sendTransaction with optional params', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectValidation(function (payload) {
@@ -460,8 +448,7 @@ describe('contract', function () {
 
         it('should explicitly sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var address = '0x1234567890123456789012345678901234567890';
             var signature = 'send(address,uint256)';
             provider.injectValidation(function (payload) {
@@ -488,8 +475,7 @@ describe('contract', function () {
 
         it('should explicitly estimateGas with optional params', function () {
             var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectValidation(function (payload) {
@@ -513,8 +499,7 @@ describe('contract', function () {
 
         it('should call testArr method and properly parse result', function () {
             var provider = new FakeHttpProvider2();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'testArr(int[])';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectResultList([{
@@ -542,8 +527,7 @@ describe('contract', function () {
         
         it('should call testArr method, properly parse result and return the result async', function (done) {
             var provider = new FakeHttpProvider2();
-            web3.setProvider(provider);
-            web3.reset();
+            var web3 = new Web3(provider); 
             var signature = 'testArr(int[])';
             var address = '0x1234567890123456789012345678901234567890';
             provider.injectResultList([{

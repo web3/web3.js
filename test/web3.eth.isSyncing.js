@@ -1,6 +1,5 @@
 var chai = require('chai');
 var Web3 = require('../index');
-var web3 = new Web3();
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
@@ -26,12 +25,9 @@ describe('eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function (done) {
-
-
                 // given
-                web3.reset();
                 var provider = new FakeHttpProvider();
-                web3.setProvider(provider);
+                var web3 = new Web3(provider);
                 provider.injectBatchResults(test.result);
                 provider.injectValidation(function(payload) {
                     assert.equal(payload[0].jsonrpc, '2.0', 'failed');

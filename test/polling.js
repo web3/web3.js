@@ -51,6 +51,7 @@ var testPolling = function (tests) {
                         assert.equal(payload.method, test.firstPayload.method);
                         assert.deepEqual(payload.params, test.firstPayload.params);
                     } else if (step === 1 && utils.isArray(payload)) {
+                        step++;
                         var r = payload.filter(function (p) {
                             return p.jsonrpc === '2.0' && p.method === test.secondPayload.method && p.params[0] === test.firstResult;
                         });
@@ -88,6 +89,7 @@ var testPolling = function (tests) {
                         assert.equal(payload.method, test.firstPayload.method);
                         assert.deepEqual(payload.params, test.firstPayload.params);
                     } else if (step === 1 && utils.isArray(payload)) {
+                        step++;
                         var r = payload.filter(function (p) {
                             return p.jsonrpc === '2.0' && p.method === test.secondPayload.method && p.params[0] === test.firstResult;
                         });
