@@ -1976,6 +1976,8 @@ var toUtf8 = function(hex) {
     }
     for (; i < l; i+=2) {
         var code = parseInt(hex.substr(i, 2), 16);
+        if (code === 0)
+            break;
         str += String.fromCharCode(code);
     }
 
@@ -2005,7 +2007,7 @@ var toAscii = function(hex) {
 };
 
 /**
- * Shold be called to get hex representation (prefixed by 0x) of utf8 string
+ * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
  * @method fromUtf8
  * @param {String} string
@@ -2016,7 +2018,10 @@ var fromUtf8 = function(str) {
     str = utf8.encode(str);
     var hex = "";
     for(var i = 0; i < str.length; i++) {
-        var n = str.charCodeAt(i).toString(16);
+        var code = str.charCodeAt(i);
+        if (code === 0)
+            break;
+        var n = code.toString(16);
         hex += n.length < 2 ? '0' + n : n;
     }
 
@@ -2024,7 +2029,7 @@ var fromUtf8 = function(str) {
 };
 
 /**
- * Shold be called to get hex representation (prefixed by 0x) of ascii string
+ * Should be called to get hex representation (prefixed by 0x) of ascii string
  *
  * @method fromAscii
  * @param {String} string
@@ -2431,7 +2436,6 @@ var version = require('./version.json');
 var net = require('./web3/methods/net');
 var eth = require('./web3/methods/eth');
 var db = require('./web3/methods/db');
-var bzz = require('./web3/methods/bzz');
 var shh = require('./web3/methods/shh');
 var watches = require('./web3/methods/watches');
 var Filter = require('./web3/filter');
@@ -2507,7 +2511,6 @@ web3.shh.filter = function (fil, callback) {
 };
 web3.net = {};
 web3.db = {};
-web3.bzz = {};
 web3.setProvider = function (provider) {
     this.currentProvider = provider;
     RequestManager.getInstance().setProvider(provider);
@@ -2591,12 +2594,11 @@ setupMethods(web3.eth, eth.methods);
 setupProperties(web3.eth, eth.properties);
 setupMethods(web3.db, db.methods);
 setupMethods(web3.shh, shh.methods);
-setupMethods(web3.bzz, bzz.methods);
 
 module.exports = web3;
 
 
-},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/iban":32,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/bzz":96,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43,"./web3/syncing":44}],23:[function(require,module,exports){
+},{"./utils/config":18,"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/filter":28,"./web3/formatters":29,"./web3/iban":32,"./web3/method":35,"./web3/methods/db":36,"./web3/methods/eth":37,"./web3/methods/net":38,"./web3/methods/shh":39,"./web3/methods/watches":40,"./web3/property":42,"./web3/requestmanager":43,"./web3/syncing":44}],23:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
@@ -4913,53 +4915,7 @@ Method.prototype.send = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":20,"./errors":26,"./requestmanager":43}],96:[function(require,module,exports){
-/*
-	This file is part of ethereum.js.
-
-	ethereum.js is free software: you can redistribute it and/or modify
-	it under the terms of the GNU Lesser General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	(at your option) any later version.
-
-	ethereum.js is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU Lesser General Public License for more details.
-
-	You should have received a copy of the GNU Lesser General Public License
-	along with ethereum.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file bzz.js
- * @authors:
- *   Gav Wood <g@ethdev.com>
- * @date 2015
- */
-
-var Method = require('../method');
-
-var put = new Method({
-	name: 'put',
-	call: 'bzz_put',
-	params: 1
-});
-
-
-var get = new Method({
-	name: 'get',
-	call: 'bzz_get',
-	params: 1
-});
-
-var methods = [
-	put, get
-];
-
-module.exports = {
-	methods: methods
-};
-
-},{"../method":35}],36:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":26,"./requestmanager":43}],36:[function(require,module,exports){
 /*
     This file is part of ethereum.js.
 
