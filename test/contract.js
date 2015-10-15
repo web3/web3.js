@@ -54,7 +54,7 @@ var desc = [{
     ],
 }];
 
-var address = '0x1234567890123456789012345678901234567890';
+var address = '0x1234567890123456789012345678901234567891';
 
 describe('contract', function () {
     describe('event', function () {
@@ -72,10 +72,10 @@ describe('contract', function () {
                     assert.deepEqual(payload.params[0], {
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             null
                         ],
-                        address: '0x1234567890123456789012345678901234567890'
+                        address: '0x1234567890123456789012345678901234567891'
                     });
                 } else if (step === 1) {
                     step = 2;
@@ -83,7 +83,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -98,7 +98,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -143,10 +143,10 @@ describe('contract', function () {
                     assert.deepEqual(payload.params[0], {
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             null
                         ],
-                        address: '0x1234567890123456789012345678901234567890'
+                        address: '0x1234567890123456789012345678901234567891'
                     });
                 } else if (step === 1) {
                     step = 2;
@@ -154,7 +154,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -169,7 +169,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -212,7 +212,7 @@ describe('contract', function () {
                     assert.equal(payload.method, 'eth_newFilter');
                     assert.deepEqual(payload.params[0], {
                         topics: [],
-                        address: '0x1234567890123456789012345678901234567890'
+                        address: '0x1234567890123456789012345678901234567891'
                     });
                 } else if (step === 1) {
                     step = 2;
@@ -220,7 +220,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -235,7 +235,7 @@ describe('contract', function () {
                         address: address,
                         topics: [
                             '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567890',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         number: 2,
@@ -271,12 +271,12 @@ describe('contract', function () {
             var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address
                 }, 'latest']);
             });
@@ -292,12 +292,12 @@ describe('contract', function () {
             var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)'
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address
                 }, '0xb']);
             });
@@ -312,12 +312,12 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x' + sha3(signature).slice(0, 8) + 
-                    '0000000000000000000000001234567890123456789012345678901234567890' + 
+                    '0000000000000000000000001234567890123456789012345678901234567891' + 
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: address,
                     to: address
@@ -334,11 +334,11 @@ describe('contract', function () {
             var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -357,11 +357,11 @@ describe('contract', function () {
             var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -380,11 +380,11 @@ describe('contract', function () {
             var web3 = new Web3(provider); 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
             var signature = 'balance(address)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567890',
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -402,12 +402,12 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x' + sha3(signature).slice(0, 8) + 
-                        '0000000000000000000000001234567890123456789012345678901234567890' + 
+                        '0000000000000000000000001234567890123456789012345678901234567891' + 
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
                     from: address,
@@ -426,12 +426,12 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x' + sha3(signature).slice(0, 8) + 
-                        '0000000000000000000000001234567890123456789012345678901234567890' + 
+                        '0000000000000000000000001234567890123456789012345678901234567891' + 
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
                     from: address,
@@ -449,13 +449,13 @@ describe('contract', function () {
         it('should explicitly sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             var signature = 'send(address,uint256)';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x' + sha3(signature).slice(0, 8) + 
-                        '0000000000000000000000001234567890123456789012345678901234567890' + 
+                        '0000000000000000000000001234567890123456789012345678901234567891' + 
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
                     from: address,
@@ -477,12 +477,12 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
             var signature = 'send(address,uint256)';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
                     data: '0x' + sha3(signature).slice(0, 8) + 
-                        '0000000000000000000000001234567890123456789012345678901234567890' + 
+                        '0000000000000000000000001234567890123456789012345678901234567891' + 
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
                     from: address,
@@ -501,7 +501,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider2();
             var web3 = new Web3(provider); 
             var signature = 'testArr(int[])';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectResultList([{
                 result: '0x0000000000000000000000000000000000000000000000000000000000000005'
             }]);
@@ -529,7 +529,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider2();
             var web3 = new Web3(provider); 
             var signature = 'testArr(int[])';
-            var address = '0x1234567890123456789012345678901234567890';
+            var address = '0x1234567890123456789012345678901234567891';
             provider.injectResultList([{
                 result: '0x0000000000000000000000000000000000000000000000000000000000000005'
             }]);

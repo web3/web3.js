@@ -1,7 +1,7 @@
 var assert = require('assert');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../index');
-var web3 = new Web3();
+
 
 describe('web3.eth.contract', function() {
     it('should create simple contract with one method from abi with explicit type name', function () {
@@ -22,9 +22,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
     
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -50,9 +51,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
 
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -92,9 +94,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
         
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -136,9 +139,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
         
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -164,9 +168,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
 
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -192,9 +197,10 @@ describe('web3.eth.contract', function() {
             }
             ]
         }];
-        var address = '0x1234567890123456789012345678901234567890';
+        var address = '0x1234567890123456789012345678901234567892';
 
         // when
+        var web3 = new Web3();
         var myCon = web3.eth.contract(description).at(address);
 
         // then
@@ -204,10 +210,9 @@ describe('web3.eth.contract', function() {
     });
 
     it('should create contract with nondefault constructor', function (done) {
-        web3.reset(); // reset different polls
         var provider = new FakeHttpProvider();
-        web3.setProvider(provider);
-        var address = '0x1234567890123456789012345678901234567890';
+        var web3 = new Web3(provider);
+        var address = '0x1234567890123456789012345678901234567894';
         var code = '0x31241231231123123123123121cf121212i123123123123123512312412512111111';
         var description =  [{
             "name": "test",
@@ -233,12 +238,12 @@ describe('web3.eth.contract', function() {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_newBlockFilter');
                 steps++;
-                done();
             }
         });
         
         web3.eth.contract(description).new(2, {from: address, data: code}, function(e, myCon){
-
+                done();
+                web3.stopWatching();
         });
     });
 });

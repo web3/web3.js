@@ -3,7 +3,6 @@ var assert = chai.assert;
 var BigNumber = require('bignumber.js');
 var SolidityEvent = require('../lib/web3/event');
 var Web3 = require('../index');
-var web3 = new Web3();
 
 
 var name = 'event1';
@@ -172,6 +171,7 @@ describe('lib/web3/event', function () {
     describe('decode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
+                var web3 = new Web3();
                 var event = new SolidityEvent(web3, test.abi, address);
 
                 var result = event.decode(test.data);
