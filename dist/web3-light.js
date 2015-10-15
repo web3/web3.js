@@ -2761,8 +2761,8 @@ var encodeConstructorParams = function (abi, params) {
  * @param {Contract} contract
  * @param {Array} abi
  */
-var addFunctionsToContract = function (contract, abi) {
-    abi.filter(function (json) {
+var addFunctionsToContract = function (contract) {
+    contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
         return new SolidityFunction(contract._web3, json, contract.address);
@@ -2778,8 +2778,8 @@ var addFunctionsToContract = function (contract, abi) {
  * @param {Contract} contract
  * @param {Array} abi
  */
-var addEventsToContract = function (contract, abi) {
-    var events = abi.filter(function (json) {
+var addEventsToContract = function (contract) {
+    var events = contract.abi.filter(function (json) {
         return json.type === 'event';
     });
 
@@ -2842,6 +2842,10 @@ var checkForContractAddress = function(contract, callback){
                                 // console.log('Contract code deployed!');
 
                                 contract.address = receipt.contractAddress;
+
+                                // attach events and methods again after we have
+                                addFunctionsToContract(contract);
+                                addEventsToContract(contract);
 
                                 // call callback for the second time
                                 if(callback)
@@ -2950,6 +2954,11 @@ ContractFactory.prototype.new = function () {
  */
 ContractFactory.prototype.at = function (address, callback) {
     var contract = new Contract(this.web3, this.abi, address);
+
+    // this functions are not part of prototype, 
+    // because we dont want to spoil the interface
+    addFunctionsToContract(contract);
+    addEventsToContract(contract);
     
     if (callback) {
         callback(null, contract);
@@ -2968,11 +2977,7 @@ var Contract = function (web3, abi, address) {
     this._web3 = web3;
     this.transactionHash = null;
     this.address = address;
-
-    // this functions are not part of prototype, 
-    // because we dont want to spoil the interface
-    addFunctionsToContract(this, abi);
-    addEventsToContract(this, abi);
+    this.abi = abi;
 };
 
 module.exports = ContractFactory;
@@ -5879,6 +5884,7 @@ RequestManager.prototype.setProvider = function (p) {
 RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
     this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
 
+
     // start polling
     if (!this.timeout) {
         this.poll();
@@ -5918,7 +5924,8 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
         }
     }
 
-    if (this.timeout) {
+    // stop polling
+    if(Object.keys(this.polls).length === 0 && this.timeout) {
         clearTimeout(this.timeout);
         this.timeout = null;
     }
@@ -6067,7 +6074,7 @@ var pollSyncing = function(self) {
                 // call on the next CPU cycle, so the actions of the sync stop can be processes first
                 setTimeout(function() {
                     callback(null, sync);
-                }, 1);
+                }, 0);
                 
                 self.lastSyncState = sync;
             }
