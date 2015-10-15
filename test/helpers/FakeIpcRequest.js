@@ -22,7 +22,6 @@ FakeIpcRequest.prototype.on = function(name, callback) {
 
 FakeIpcRequest.prototype.writeSync = function (payload) {
     assert.equal(typeof payload, 'string');
-
     return payload;
 };
 
@@ -37,5 +36,5 @@ FakeIpcRequest.prototype.write = function (payload) {
 
 };
 
-module.exports = new FakeIpcRequest();
+module.exports = FakeIpcRequest;
 

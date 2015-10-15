@@ -1,5 +1,6 @@
 var chai = require('chai');
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var testMethod = require('./helpers/test.method.js');
 
 var method = 'getCode';

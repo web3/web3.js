@@ -1,6 +1,6 @@
 var chai = require('chai');
 var BigNumber = require('bignumber.js');
-var web3 = require('../index');
+var utils = require('../lib/utils/utils.js');
 var assert = chai.assert;
 
 var tests = [
@@ -14,7 +14,7 @@ describe('lib/utils/utils', function () {
     describe('toAscii', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.strictEqual(web3.toAscii(test.value), test.expected);
+                assert.strictEqual(utils.toAscii(test.value), test.expected);
             });
         });
     });

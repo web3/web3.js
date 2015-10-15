@@ -2,6 +2,8 @@ var chai = require('chai');
 var assert = chai.assert;
 var BigNumber = require('bignumber.js');
 var SolidityEvent = require('../lib/web3/event');
+var Web3 = require('../index');
+
 
 var name = 'event1';
 var address = '0x1234567890123456789012345678901234567890';
@@ -169,7 +171,8 @@ describe('lib/web3/event', function () {
     describe('decode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var event = new SolidityEvent(test.abi, address);
+                var web3 = new Web3();
+                var event = new SolidityEvent(web3, test.abi, address);
 
                 var result = event.decode(test.data);
                 assert.deepEqual(result, test.expected);

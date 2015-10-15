@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var web3 = require('../../index');
+var Web3 = require('../../index');
+
 var FakeHttpProvider = require('./FakeHttpProvider');
 var clone = function (object) { return JSON.parse(JSON.stringify(object)); };
 
@@ -15,7 +16,7 @@ var runTests = function (obj, method, tests) {
                     
                     // given
                     var provider = new FakeHttpProvider();
-                    web3.setProvider(provider);
+                    var web3 = new Web3(provider);
                     provider.injectResult(test.result);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
@@ -27,9 +28,9 @@ var runTests = function (obj, method, tests) {
 
                     // when
                     if (obj) {
-                        var result = web3[obj][method].apply(null, args);
+                        var result = web3[obj][method].apply(web3[obj], args);
                     } else {
-                        var result = web3[method].apply(null, args);
+                        var result = web3[method].apply(web3, args);
                     }
                     // when
                     //var result = (obj)
@@ -44,7 +45,7 @@ var runTests = function (obj, method, tests) {
                     
                     // given
                     var provider = new FakeHttpProvider();
-                    web3.setProvider(provider);
+                    var web3 = new Web3(provider);
                     provider.injectResult(test.result);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
@@ -62,9 +63,9 @@ var runTests = function (obj, method, tests) {
 
                     // when
                     if (obj) {
-                        web3[obj][method].apply(null, args);
+                        web3[obj][method].apply(web3[obj], args);
                     } else {
-                        web3[method].apply(null, args);
+                        web3[method].apply(web3, args);
                     }
                 });
             });

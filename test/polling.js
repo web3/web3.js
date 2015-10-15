@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var utils = require('../lib/utils/utils');
 
@@ -31,7 +32,6 @@ var tests = [{
     }
 }];
 
-
 var testPolling = function (tests) {
     
     describe('web3.eth.filter.polling', function () {
@@ -51,6 +51,7 @@ var testPolling = function (tests) {
                         assert.equal(payload.method, test.firstPayload.method);
                         assert.deepEqual(payload.params, test.firstPayload.params);
                     } else if (step === 1 && utils.isArray(payload)) {
+                        step++;
                         var r = payload.filter(function (p) {
                             return p.jsonrpc === '2.0' && p.method === test.secondPayload.method && p.params[0] === test.firstResult;
                         });
@@ -60,7 +61,7 @@ var testPolling = function (tests) {
                 });
 
                 // when
-                var filter = web3[test.protocol].filter.apply(null, test.args);
+                var filter = web3[test.protocol].filter.apply(web3[test.protocol], test.args);
                 provider.injectBatchResults([test.secondResult]);
                 filter.watch(function (err, result) {
                     if (test.err) {
@@ -88,6 +89,7 @@ var testPolling = function (tests) {
                         assert.equal(payload.method, test.firstPayload.method);
                         assert.deepEqual(payload.params, test.firstPayload.params);
                     } else if (step === 1 && utils.isArray(payload)) {
+                        step++;
                         var r = payload.filter(function (p) {
                             return p.jsonrpc === '2.0' && p.method === test.secondPayload.method && p.params[0] === test.firstResult;
                         });
@@ -109,7 +111,7 @@ var testPolling = function (tests) {
                 });
 
                 // when
-                var filter = web3[test.protocol].filter.apply(null, test.args);
+                var filter = web3[test.protocol].filter.apply(web3[test.protocol], test.args);
                 provider.injectBatchResults([test.secondResult]);
             });
         }); 
@@ -117,4 +119,3 @@ var testPolling = function (tests) {
 };
 
 testPolling(tests);
-

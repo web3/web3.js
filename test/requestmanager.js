@@ -10,8 +10,7 @@ describe('lib/web3/requestmanager', function () {
     describe('send', function () {
         it('should return expected result synchronously', function () {
             var provider = new FakeHttpProvider();
-            var manager = RequestManager.getInstance();
-            manager.setProvider(provider);
+            var manager = new RequestManager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
             
@@ -25,8 +24,7 @@ describe('lib/web3/requestmanager', function () {
 
         it('should return expected result asynchronously', function (done) {
             var provider = new FakeHttpProvider();
-            var manager = RequestManager.getInstance();
-            manager.setProvider(provider);
+            var manager = new RequestManager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
             

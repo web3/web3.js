@@ -1,6 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var web3 = require('../index');
+var Web3 = require('../index');
+var web3 = new Web3();
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 var method = 'coinbase';
