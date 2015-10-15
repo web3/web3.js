@@ -3006,7 +3006,7 @@ module.exports = {
         return new Error('Invalid number of input parameters');
     },
     InvalidConnection: function (host){
-        return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +', is it running?');
+        return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
     },
     InvalidProvider: function () {
         return new Error('Provider not set or invalid');
@@ -3237,6 +3237,7 @@ var Property = require('./property');
 // TODO: refactor, so the input params are not altered.
 // it's necessary to make same 'extension' work with multiple providers
 var extend = function (web3) {
+    /* jshint maxcomplexity:5 */
     var ex = function (extension) {
 
         var extendedObject;
@@ -4451,17 +4452,6 @@ module.exports = Iban;
 var utils = require('../utils/utils');
 var errors = require('./errors');
 
-var errorTimeout = function (method, id) {
-    var err = {
-        "jsonrpc": "2.0",
-        "error": {
-            "code": -32603, 
-            "message": "IPC Request timed out for method  \'" + method + "\'"
-        }, 
-        "id": id
-    };
-    return JSON.stringify(err);
-};
 
 var IpcProvider = function (path, net) {
     var _this = this;
@@ -4584,7 +4574,7 @@ Timeout all requests when the end/error event is fired
 IpcProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
         if(this.responseCallbacks.hasOwnProperty(key)){
-            this.responseCallbacks[key](errorTimeout(this.responseCallbacks[key].method, key));
+            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
             delete this.responseCallbacks[key];
         }
     }
@@ -5787,11 +5777,6 @@ var RequestManager = function (provider) {
     this.provider = provider;
     this.polls = {};
     this.timeout = null;
-
-    if(this.provider) {
-        this.poll();
-        this.isPolling = true;
-    }
 };
 
 /**
@@ -5878,16 +5863,6 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  */
 RequestManager.prototype.setProvider = function (p) {
     this.provider = p;
-
-    if (this.provider && !this.isPolling) {
-        if (this.timeout) {
-            clearTimeout(this.timeout);
-            this.timeout = null;
-        }
-        
-        this.poll();
-        this.isPolling = true;
-    }
 };
 
 /**
@@ -5903,6 +5878,11 @@ RequestManager.prototype.setProvider = function (p) {
  */
 RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
     this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
+
+    // start polling
+    if (!this.timeout) {
+        this.poll();
+    }
 };
 
 /**
@@ -5913,6 +5893,12 @@ RequestManager.prototype.startPolling = function (data, pollId, callback, uninst
  */
 RequestManager.prototype.stopPolling = function (pollId) {
     delete this.polls[pollId];
+
+    // stop polling
+    if(Object.keys(this.polls).length === 0 && this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+    }
 };
 
 /**
@@ -5921,6 +5907,8 @@ RequestManager.prototype.stopPolling = function (pollId) {
  * @method reset
  */
 RequestManager.prototype.reset = function (keepIsSyncing) {
+    /*jshint maxcomplexity:5 */
+
     for (var key in this.polls) {
         // remove all polls, except sync polls,
         // they need to be removed manually by calling syncing.stopWatching()
@@ -5934,7 +5922,6 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
         clearTimeout(this.timeout);
         this.timeout = null;
     }
-    this.poll();
 };
 
 /**
@@ -6050,6 +6037,8 @@ module.exports = Settings;
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
 
+var count = 1;
+
 /**
 Adds the callback and sets up the methods, to iterate over the results.
 
@@ -6057,7 +6046,6 @@ Adds the callback and sets up the methods, to iterate over the results.
 @param {Object} self
 */
 var pollSyncing = function(self) {
-    var lastSyncState = false;
 
     var onMessage = function (error, sync) {
         if (error) {
@@ -6070,10 +6058,10 @@ var pollSyncing = function(self) {
             sync = formatters.outputSyncingFormatter(sync);
 
         self.callbacks.forEach(function (callback) {
-            if (lastSyncState !== sync) {
+            if (self.lastSyncState !== sync) {
                 
                 // call the callback with true first so the app can stop anything, before receiving the sync data
-                if(!lastSyncState && utils.isObject(sync))
+                if(!self.lastSyncState && utils.isObject(sync))
                     callback(null, true);
                 
                 // call on the next CPU cycle, so the actions of the sync stop can be processes first
@@ -6081,7 +6069,7 @@ var pollSyncing = function(self) {
                     callback(null, sync);
                 }, 1);
                 
-                lastSyncState = sync;
+                self.lastSyncState = sync;
             }
         });
     };
@@ -6096,9 +6084,10 @@ var pollSyncing = function(self) {
 var IsSyncing = function (web3, callback) {
     this._web3 = web3;
     this.requestManager = web3._requestManager;
-    this.pollId = 'syncPoll_'+ Math.floor(Math.random() * 1000);
+    this.pollId = 'syncPoll_'+ count++;
     this.callbacks = [];
     this.addCallback(callback);
+    this.lastSyncState = false;
     pollSyncing(this);
 
     return this;
