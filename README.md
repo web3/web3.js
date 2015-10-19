@@ -1,3 +1,15 @@
+# Migration 0.13.0 -> 0.14.0
+
+web3.js version 0.14.0 supports [multiple instances of web3](https://github.com/ethereum/web3.js/issues/297) object.
+To migrate to this version, please follow the guide:
+
+```diff
+-var web3 = require('web3');
++var Web3 = require('web3');
++var web3 = new Web3();
+```
+
+
 # Ethereum JavaScript API
 
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
