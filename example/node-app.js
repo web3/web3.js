@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-var web3 = require("../index.js");
+var Web3 = require('../index.js');
+var web3 = new Web3();
 
 web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 

@@ -6,7 +6,8 @@
 <script type="text/javascript" src="../dist/web3-light.js"></script>
 <script type="text/javascript">
    
-    var web3 = require('web3');
+    var Web3 = require('web3');
+    var web3 = new Web3();
     web3.setProvider(new web3.providers.HttpProvider());
 
     function watchBalance() {
