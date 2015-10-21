@@ -28,7 +28,7 @@ describe('web3.eth.sendIBANTransaction', function () {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
                    data: "0x3b3b57de5852454700000000000000000000000000000000000000000000000000000000",
-                   to: web3.eth.icapNamereg.address
+                   to: web3.eth.icapNamereg().address
                 }, "latest"]);
 
                 return;

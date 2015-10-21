@@ -2578,8 +2578,8 @@ var utils = require('../utils/utils');
 var Filter = require('./filter');
 var watches = require('./methods/watches');
 
-var AllSolidityEvents = function (web3, json, address) {
-    this._web3 = web3;
+var AllSolidityEvents = function (requestManager, json, address) {
+    this._requestManager = requestManager;
     this._json = json;
     this._address = address;
 };
@@ -2613,7 +2613,7 @@ AllSolidityEvents.prototype.decode = function (data) {
         return data;
     }
 
-    var event = new SolidityEvent(this._web3, match, this._address);
+    var event = new SolidityEvent(this._requestManager, match, this._address);
     return event.decode(data);
 };
 
@@ -2627,7 +2627,7 @@ AllSolidityEvents.prototype.execute = function (options, callback) {
 
     var o = this.encode(options);
     var formatter = this.decode.bind(this);
-    return new Filter(this._web3, o, watches.eth(), formatter, callback);
+    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
 };
 
 AllSolidityEvents.prototype.attachToContract = function (contract) {
@@ -2765,7 +2765,7 @@ var addFunctionsToContract = function (contract) {
     contract.abi.filter(function (json) {
         return json.type === 'function';
     }).map(function (json) {
-        return new SolidityFunction(contract._web3, json, contract.address);
+        return new SolidityFunction(contract._eth, json, contract.address);
     }).forEach(function (f) {
         f.attachToContract(contract);
     });
@@ -2783,11 +2783,11 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._web3, events, contract.address);
+    var All = new AllEvents(contract._eth._requestManager, events, contract.address);
     All.attachToContract(contract);
     
     events.map(function (json) {
-        return new SolidityEvent(contract._web3, json, contract.address);
+        return new SolidityEvent(contract._eth._requestManager, json, contract.address);
     }).forEach(function (e) {
         e.attachToContract(contract);
     });
@@ -2807,7 +2807,7 @@ var checkForContractAddress = function(contract, callback){
         callbackFired = false;
 
     // wait for receipt
-    var filter = contract._web3.eth.filter('latest', function(e){
+    var filter = contract._eth.filter('latest', function(e){
         if (!e && !callbackFired) {
             count++;
 
@@ -2825,10 +2825,10 @@ var checkForContractAddress = function(contract, callback){
 
             } else {
 
-                contract._web3.eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
+                contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
-                        contract._web3.eth.getCode(receipt.contractAddress, function(e, code){
+                        contract._eth.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 5 */
 
                             if(callbackFired)
@@ -2871,8 +2871,8 @@ var checkForContractAddress = function(contract, callback){
  * @method ContractFactory
  * @param {Array} abi
  */
-var ContractFactory = function (web3, abi) {
-    this.web3 = web3;
+var ContractFactory = function (eth, abi) {
+    this.eth = eth;
     this.abi = abi;
 };
 
@@ -2898,7 +2898,7 @@ var ContractFactory = function (web3, abi) {
  * @returns {Contract} returns contract instance
  */
 ContractFactory.prototype.new = function () {
-    var contract = new Contract(this.web3, this.abi);
+    var contract = new Contract(this.eth, this.abi);
 
     // parse arguments
     var options = {}; // required!
@@ -2920,7 +2920,7 @@ ContractFactory.prototype.new = function () {
     if (callback) {
 
         // wait for the contract address adn check if the code was deployed
-        this.web3.eth.sendTransaction(options, function (err, hash) {
+        this.eth.sendTransaction(options, function (err, hash) {
             if (err) {
                 callback(err);
             } else {
@@ -2934,7 +2934,7 @@ ContractFactory.prototype.new = function () {
             }
         });
     } else {
-        var hash = this.web3.eth.sendTransaction(options);
+        var hash = this.eth.sendTransaction(options);
         // add the transaction hash
         contract.transactionHash = hash;
         checkForContractAddress(contract);
@@ -2953,7 +2953,7 @@ ContractFactory.prototype.new = function () {
  * otherwise calls callback function (err, contract)
  */
 ContractFactory.prototype.at = function (address, callback) {
-    var contract = new Contract(this.web3, this.abi, address);
+    var contract = new Contract(this.eth, this.abi, address);
 
     // this functions are not part of prototype, 
     // because we dont want to spoil the interface
@@ -2973,8 +2973,8 @@ ContractFactory.prototype.at = function (address, callback) {
  * @param {Array} abi
  * @param {Address} contract address
  */
-var Contract = function (web3, abi, address) {
-    this._web3 = web3;
+var Contract = function (eth, abi, address) {
+    this._eth = eth;
     this.transactionHash = null;
     this.address = address;
     this.abi = abi;
@@ -3056,8 +3056,8 @@ var watches = require('./methods/watches');
 /**
  * This prototype should be used to create event filters
  */
-var SolidityEvent = function (web3, json, address) {
-    this._web3 = web3;
+var SolidityEvent = function (requestManager, json, address) {
+    this._requestManager = requestManager;
     this._params = json.inputs;
     this._name = utils.transformToFullName(json);
     this._address = address;
@@ -3212,7 +3212,7 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
     
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(this._web3, o, watches.eth(), formatter, callback);
+    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
 };
 
 /**
@@ -3416,14 +3416,14 @@ var pollFilter = function(self) {
 
 };
 
-var Filter = function (web3, options, methods, formatter, callback) {
+var Filter = function (requestManager, options, methods, formatter, callback) {
     var self = this;
     var implementation = {};
     methods.forEach(function (method) {
-        method.setRequestManager(web3._requestManager);
+        method.setRequestManager(requestManager);
         method.attachToObject(implementation);
     });
-    this.requestManager = web3._requestManager;
+    this.requestManager = requestManager;
     this.options = getOptions(options);
     this.implementation = implementation;
     this.filterId = null;
@@ -3846,8 +3846,8 @@ var sha3 = require('../utils/sha3');
 /**
  * This prototype should be used to call/sendTransaction to solidity functions
  */
-var SolidityFunction = function (web3, json, address) {
-    this._web3 = web3;
+var SolidityFunction = function (eth, json, address) {
+    this._eth = eth;
     this._inputTypes = json.inputs.map(function (i) {
         return i.type;
     });
@@ -3927,12 +3927,13 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        var output = this._web3.eth.call(payload, defaultBlock);
+        console.log(this);
+        var output = this._eth.call(payload, defaultBlock);
         return this.unpackOutput(output);
     } 
         
     var self = this;
-    this._web3.eth.call(payload, defaultBlock, function (error, output) {
+    this._eth.call(payload, defaultBlock, function (error, output) {
         callback(error, self.unpackOutput(output));
     });
 };
@@ -3949,10 +3950,10 @@ SolidityFunction.prototype.sendTransaction = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._web3.eth.sendTransaction(payload);
+        return this._eth.sendTransaction(payload);
     }
 
-    this._web3.eth.sendTransaction(payload, callback);
+    this._eth.sendTransaction(payload, callback);
 };
 
 /**
@@ -3967,10 +3968,10 @@ SolidityFunction.prototype.estimateGas = function () {
     var payload = this.toPayload(args);
 
     if (!callback) {
-        return this._web3.eth.estimateGas(payload);
+        return this._eth.estimateGas(payload);
     }
 
-    this._web3.eth.estimateGas(payload, callback);
+    this._eth.estimateGas(payload, callback);
 };
 
 /**
@@ -5026,24 +5027,23 @@ var uncleCountCall = function (args) {
 };
 
 function Eth(web3) {
-    this.web3 = web3;
+    this._requestManager = web3._requestManager;
 
     var self = this;
 
     methods().forEach(function(method) { 
         method.attachToObject(self);
-        method.setRequestManager(web3._requestManager);
+        method.setRequestManager(self._requestManager);
     });
 
     properties().forEach(function(p) { 
         p.attachToObject(self);
-        p.setRequestManager(web3._requestManager);
+        p.setRequestManager(self._requestManager);
     });
 
-    this.namereg = this.contract(namereg.global.abi).at(namereg.global.address);
-    this.icapNamereg = this.contract(namereg.icap.abi).at(namereg.icap.address);
+
     this.iban = Iban;
-    this.sendIBANTransaction = transfer.bind(null, web3);
+    this.sendIBANTransaction = transfer.bind(null, this);
 }
 
 Object.defineProperty(Eth.prototype, 'defaultBlock', {
@@ -5281,16 +5281,24 @@ var properties = function () {
 };
 
 Eth.prototype.contract = function (abi) {
-    var factory = new Contract(this.web3, abi);
+    var factory = new Contract(this, abi);
     return factory;
 };
 
 Eth.prototype.filter = function (fil, callback) {
-    return new Filter(this.web3, fil, watches.eth(), formatters.outputLogFormatter, callback);
+    return new Filter(this._requestManager, fil, watches.eth(), formatters.outputLogFormatter, callback);
+};
+
+Eth.prototype.namereg = function () {
+    return this.contract(namereg.global.abi).at(namereg.global.address);
+};
+
+Eth.prototype.icapNamereg = function () {
+    return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
 Eth.prototype.isSyncing = function (callback) {
-    return new IsSyncing(this.web3, callback);
+    return new IsSyncing(this._requestManager, callback);
 };
 
 module.exports = Eth;
@@ -5379,18 +5387,18 @@ var Filter = require('../filter');
 var watches = require('./watches');
 
 var Shh = function (web3) {
-    this.web3 = web3;
+    this._requestManager = web3._requestManager;
 
     var self = this;
 
     methods().forEach(function(method) { 
         method.attachToObject(self);
-        method.setRequestManager(web3._requestManager);
+        method.setRequestManager(self._requestManager);
     });
 };
 
 Shh.prototype.filter = function (fil, callback) {
-    return new Filter(this.web3, fil, watches.shh(), formatters.outputPostFormatter, callback);
+    return new Filter(this._requestManager, fil, watches.shh(), formatters.outputPostFormatter, callback);
 };
 
 var methods = function () { 
@@ -6088,9 +6096,8 @@ var pollSyncing = function(self) {
 
 };
 
-var IsSyncing = function (web3, callback) {
-    this._web3 = web3;
-    this.requestManager = web3._requestManager;
+var IsSyncing = function (requestManager, callback) {
+    this.requestManager = requestManager;
     this.pollId = 'syncPoll_'+ count++;
     this.callbacks = [];
     this.addCallback(callback);
@@ -6107,7 +6114,7 @@ IsSyncing.prototype.addCallback = function (callback) {
 };
 
 IsSyncing.prototype.stopWatching = function () {
-    this._web3._requestManager.stopPolling(this.pollId);
+    this.requestManager.stopPolling(this.pollId);
     this.callbacks = [];
 };
 
@@ -6149,23 +6156,23 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transfer = function (web3, from, to, value, callback) {
+var transfer = function (eth, from, to, value, callback) {
     var iban = new Iban(to); 
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
 
     if (iban.isDirect()) {
-        return transferToAddress(web3, from, iban.address(), value, callback);
+        return transferToAddress(eth, from, iban.address(), value, callback);
     }
     
     if (!callback) {
-        var address = web3.eth.icapNamereg.addr(iban.institution());
-        return deposit(web3, from, address, value, iban.client());
+        var address = eth.icapNamereg().addr(iban.institution());
+        return deposit(eth, from, address, value, iban.client());
     }
 
-    web3.eth.icapNamereg.addr(iban.institution(), function (err, address) {
-        return deposit(web3, from, address, value, iban.client(), callback);
+    eth.icapNamereg().addr(iban.institution(), function (err, address) {
+        return deposit(eth, from, address, value, iban.client(), callback);
     });
     
 };
@@ -6179,8 +6186,8 @@ var transfer = function (web3, from, to, value, callback) {
  * @param {Value} value to be tranfered
  * @param {Function} callback, callback
  */
-var transferToAddress = function (web3, from, to, value, callback) {
-    return web3.eth.sendTransaction({
+var transferToAddress = function (eth, from, to, value, callback) {
+    return eth.sendTransaction({
         address: to,
         from: from,
         value: value
@@ -6197,9 +6204,9 @@ var transferToAddress = function (web3, from, to, value, callback) {
  * @param {String} client unique identifier
  * @param {Function} callback, callback
  */
-var deposit = function (web3, from, to, value, client, callback) {
+var deposit = function (eth, from, to, value, client, callback) {
     var abi = exchangeAbi;
-    return web3.eth.contract(abi).at(to).deposit(client, {
+    return eth.contract(abi).at(to).deposit(client, {
         from: from,
         value: value
     }, callback);
