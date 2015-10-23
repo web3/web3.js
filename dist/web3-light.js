@@ -2831,7 +2831,7 @@ var checkForContractAddress = function(contract, callback){
                         contract._eth.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 5 */
 
-                            if(callbackFired)
+                            if(callbackFired || !code)
                                 return;
                             
                             filter.stopWatching();
@@ -3941,7 +3941,6 @@ SolidityFunction.prototype.call = function () {
  * Should be used to sendTransaction to solidity function
  *
  * @method sendTransaction
- * @param {Object} options
  */
 SolidityFunction.prototype.sendTransaction = function () {
     var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
@@ -3959,7 +3958,6 @@ SolidityFunction.prototype.sendTransaction = function () {
  * Should be used to estimateGas of solidity function
  *
  * @method estimateGas
- * @param {Object} options
  */
 SolidityFunction.prototype.estimateGas = function () {
     var args = Array.prototype.slice.call(arguments);
@@ -3971,6 +3969,19 @@ SolidityFunction.prototype.estimateGas = function () {
     }
 
     this._eth.estimateGas(payload, callback);
+};
+
+/**
+ * Return the encoded data of the call
+ *
+ * @method callData
+ * @return {String} the encoded data
+ */
+SolidityFunction.prototype.callData = function () {
+    var args = Array.prototype.slice.call(arguments);
+    var payload = this.toPayload(args);
+
+    return payload.data;
 };
 
 /**
@@ -4042,6 +4053,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
     execute.estimateGas = this.estimateGas.bind(this);
+    execute.callData = this.callData.bind(this);
     var displayName = this.displayName();
     if (!contract[displayName]) {
         contract[displayName] = execute;
