@@ -3974,10 +3974,10 @@ SolidityFunction.prototype.estimateGas = function () {
 /**
  * Return the encoded data of the call
  *
- * @method callData
+ * @method getData
  * @return {String} the encoded data
  */
-SolidityFunction.prototype.callData = function () {
+SolidityFunction.prototype.getData = function () {
     var args = Array.prototype.slice.call(arguments);
     var payload = this.toPayload(args);
 
@@ -4053,7 +4053,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
     execute.estimateGas = this.estimateGas.bind(this);
-    execute.callData = this.callData.bind(this);
+    execute.getData = this.getData.bind(this);
     var displayName = this.displayName();
     if (!contract[displayName]) {
         contract[displayName] = execute;
