@@ -3927,7 +3927,6 @@ SolidityFunction.prototype.call = function () {
 
 
     if (!callback) {
-        console.log(this);
         var output = this._eth.call(payload, defaultBlock);
         return this.unpackOutput(output);
     } 
