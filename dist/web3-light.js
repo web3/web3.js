@@ -2405,7 +2405,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.14.1"
+    "version": "0.15.0"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2829,7 +2829,7 @@ var checkForContractAddress = function(contract, callback){
                     if(receipt && !callbackFired) {
 
                         contract._eth.getCode(receipt.contractAddress, function(e, code){
-                            /*jshint maxcomplexity: 5 */
+                            /*jshint maxcomplexity: 6 */
 
                             if(callbackFired || !code)
                                 return;
