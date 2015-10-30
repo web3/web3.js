@@ -2874,6 +2874,8 @@ var checkForContractAddress = function(contract, callback){
 var ContractFactory = function (eth, abi) {
     this.eth = eth;
     this.abi = abi;
+
+    this.new.getData = this.getData.bind(this);
 };
 
 /**
@@ -2964,6 +2966,26 @@ ContractFactory.prototype.at = function (address, callback) {
         callback(null, contract);
     } 
     return contract;
+};
+
+/**
+ * Gets the data, which is data to deploy plus constructor params
+ *
+ * @method getData
+ */
+ContractFactory.prototype.getData = function () {
+    var options = {}; // required!
+    var args = Array.prototype.slice.call(arguments);
+
+    var last = args[args.length - 1];
+    if (utils.isObject(last) && !utils.isArray(last)) {
+        options = args.pop();
+    }
+
+    var bytes = encodeConstructorParams(this.abi, args);
+    options.data += bytes;
+
+    return options.data;
 };
 
 /**
