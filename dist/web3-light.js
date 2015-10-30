@@ -2405,7 +2405,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.15.0"
+    "version": "0.15.1"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2463,7 +2463,7 @@ function Web3 (provider) {
     this.net = new Net(this);
     this.settings = new Settings();
     this.version = {
-        version: version.version
+        api: version.version
     };
     this.providers = {
         HttpProvider: HttpProvider,
@@ -2516,7 +2516,7 @@ Web3.prototype.fromICAP = function (icap) {
 var properties = function () {
     return [
         new Property({
-            name: 'version.client',
+            name: 'version.node',
             getter: 'web3_clientVersion'
         }),
         new Property({
