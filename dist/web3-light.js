@@ -3781,7 +3781,7 @@ var outputPostFormatter = function(post){
     post.ttl = utils.toDecimal(post.ttl);
     post.workProved = utils.toDecimal(post.workProved);
     post.payloadRaw = post.payload;
-    post.payload = utils.toUtf8(post.payload);
+    post.payload = utils.toAscii(post.payload);
 
     if (utils.isJson(post.payload)) {
         post.payload = JSON.parse(post.payload);
@@ -3792,7 +3792,7 @@ var outputPostFormatter = function(post){
         post.topics = [];
     }
     post.topics = post.topics.map(function(topic){
-        return utils.toUtf8(topic);
+        return utils.toAscii(topic);
     });
 
     return post;
