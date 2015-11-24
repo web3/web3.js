@@ -3760,9 +3760,9 @@ var inputPostFormatter = function(post) {
     }
 
     // format the following options
-    post.topics = post.topics.map(function(topic){
-        return utils.fromUtf8(topic);
-    });
+    // post.topics = post.topics.map(function(topic){
+    //     return utils.fromUtf8(topic);
+    // });
 
     return post; 
 };
@@ -3791,9 +3791,9 @@ var outputPostFormatter = function(post){
     if (!post.topics) {
         post.topics = [];
     }
-    post.topics = post.topics.map(function(topic){
-        return utils.toAscii(topic);
-    });
+    // post.topics = post.topics.map(function(topic){
+    //     return utils.toAscii(topic);
+    // });
 
     return post;
 };
