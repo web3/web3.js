@@ -21,7 +21,7 @@ which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JS
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
-You need to run a local ethrereum node to use this library.
+You need to run a local Ethereum node to use this library.
 
 [Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
 
