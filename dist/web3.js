@@ -1870,7 +1870,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":57,"crypto-js/sha3":78}],20:[function(require,module,exports){
+},{"crypto-js":58,"crypto-js/sha3":79}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2403,7 +2403,7 @@ module.exports = {
     isJson: isJson
 };
 
-},{"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
 module.exports={
     "version": "0.15.1"
 }
@@ -4496,6 +4496,7 @@ var errors = require('./errors');
 var IpcProvider = function (path, net) {
     var _this = this;
     this.responseCallbacks = {};
+    this.notificationCallbacks = [];
     this.path = path;
     
     this.connection = net.connect({path: this.path});
@@ -4528,8 +4529,17 @@ var IpcProvider = function (path, net) {
                 id = result.id;
             }
 
+            console.log(result);
+
+            // notification
+            if(!id && result.method === 'eth_subscription') {
+                _this.notificationCallbacks.forEach(function(callback){
+                    if(utils.isFunction(callback))
+                        callback(null, result);
+                });
+
             // fire the callback
-            if(_this.responseCallbacks[id]) {
+            } else if(_this.responseCallbacks[id]) {
                 _this.responseCallbacks[id](null, result);
                 delete _this.responseCallbacks[id];
             }
@@ -4668,6 +4678,19 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 
     this.connection.write(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);
+};
+
+IpcProvider.prototype.onNotification = function (callback) {
+    this.notificationCallbacks.push(callback);
+};
+
+/**
+Resetes the providers, clears all callbacks
+
+*/
+IpcProvider.prototype.reset = function (callback) {
+    this.timeout();
+    this.notificationCallbacks = [];
 };
 
 module.exports = IpcProvider;
@@ -5030,6 +5053,7 @@ module.exports = DB;
 var formatters = require('../formatters');
 var utils = require('../../utils/utils');
 var Method = require('../method');
+var Subscriptions = require('../subscriptions');
 var Property = require('../property');
 var c = require('../../utils/config');
 var Contract = require('../contract');
@@ -5206,6 +5230,13 @@ var methods = function () {
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
+    var sign = new Method({
+        name: 'sign',
+        call: 'eth_sign',
+        params: 2,
+        inputFormatter: [formatters.inputAddressFormatter, null]
+    });
+
     var call = new Method({
         name: 'call',
         call: 'eth_call',
@@ -5251,6 +5282,22 @@ var methods = function () {
         params: 0
     });
 
+
+
+    // subscriptions
+    var subscribe = new Subscriptions({
+        name: 'subscribe',
+        subscribe: 'eth_subscribe',
+        unsubscribe: 'eth_unsubscribe',
+        subscriptions: {
+            'newBlocks': {
+                params: 1,
+                outputFormatter: formatters.outputBlockFormatter
+            }
+        }
+    });
+
+
     return [
         getBalance,
         getStorageAt,
@@ -5268,11 +5315,13 @@ var methods = function () {
         estimateGas,
         sendRawTransaction,
         sendTransaction,
+        sign,
         compileSolidity,
         compileLLL,
         compileSerpent,
         submitWork,
-        getWork
+        getWork,
+        subscribe
     ];
 };
 
@@ -5338,7 +5387,7 @@ Eth.prototype.isSyncing = function (callback) {
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":42,"../property":43,"../syncing":46,"../transfer":47,"./watches":41}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":42,"../property":43,"../subscriptions":46,"../syncing":47,"../transfer":48,"./watches":41}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5821,7 +5870,8 @@ var errors = require('./errors');
  * Singleton
  */
 var RequestManager = function (provider) {
-    this.provider = provider;
+    this.setProvider(provider);
+    this.subscriptions = {};
     this.polls = {};
     this.timeout = null;
 };
@@ -5902,6 +5952,34 @@ RequestManager.prototype.sendBatch = function (data, callback) {
     }); 
 };
 
+
+/**
+ * Waits for notifications
+ *
+ * @method addSubscription
+ * @param {String} id           the subscription id
+ * @param {Function} callback   the callback to call for incoming notifications
+ */
+RequestManager.prototype.addSubscription = function (id, callback) {
+    if(this.provider.onNotification) {
+        this.subscriptions[id] = callback;
+        
+    } else {
+        throw new Error('This provider doesn\'t support subscriptions', this.provider);
+    }
+};
+
+/**
+ * Waits for notifications
+ *
+ * @method removeSubscription
+ * @param {String} id           the subscription id
+ */
+RequestManager.prototype.removeSubscription = function (id) {
+    if(this.subscriptions[id])
+        delete this.subscriptions[id];
+}
+
 /**
  * Should be used to set provider of request manager
  *
@@ -5909,8 +5987,51 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {Object}
  */
 RequestManager.prototype.setProvider = function (p) {
+    var _this = this;
+
+    // reset the old one before changing
+    if(this.provider)
+        this.reset();
+
     this.provider = p;
+
+    // listen to incoming notifications
+    if(this.provider.onNotification) {
+        this.provider.onNotification(function(err, result){
+            if(!err) {
+                if(_this.subscriptions[result.params.subscription])
+                    _this.subscriptions[result.params.subscription](null, result.params.result);
+            }
+        });
+    }
 };
+
+/**
+ * Should be called to reset the polling mechanism of the request manager
+ *
+ * @method reset
+ */
+RequestManager.prototype.reset = function (keepIsSyncing) {
+
+    for (var key in this.polls) {
+        // remove all polls, except sync polls,
+        // they need to be removed manually by calling syncing.stopWatching()
+        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
+            this.polls[key].uninstall();
+            delete this.polls[key];
+        }
+    }
+
+    if(this.provider.reset)
+        this.provider.reset();
+
+    // stop polling
+    if(Object.keys(this.polls).length === 0 && this.timeout) {
+        clearTimeout(this.timeout);
+        this.timeout = null;
+    }
+};
+
 
 /**
  * Should be used to start polling
@@ -5949,29 +6070,6 @@ RequestManager.prototype.stopPolling = function (pollId) {
     }
 };
 
-/**
- * Should be called to reset the polling mechanism of the request manager
- *
- * @method reset
- */
-RequestManager.prototype.reset = function (keepIsSyncing) {
-    /*jshint maxcomplexity:5 */
-
-    for (var key in this.polls) {
-        // remove all polls, except sync polls,
-        // they need to be removed manually by calling syncing.stopWatching()
-        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
-            this.polls[key].uninstall();
-            delete this.polls[key];
-        }
-    }
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-};
 
 /**
  * Should be called to poll for changes on filter with given id
@@ -6077,6 +6175,212 @@ module.exports = Settings;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** @file subscription.js
+ *
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var utils = require('../utils/utils');
+var errors = require('./errors');
+
+
+Subscriptions = function (options) {
+    this.name = options.name;
+    this.subscribe = options.subscribe;
+    this.unsubscribe = options.unsubscribe;
+    this.subscriptions = options.subscriptions || {};
+    this.requestManager = null;
+};
+
+
+Subscriptions.prototype.setRequestManager = function (rm) {
+    this.requestManager = rm;
+};
+
+
+/**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
+
+Subscriptions.prototype.extractCallback = function (args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
+
+/**
+ * Should be called to check if the number of arguments is correct
+ * 
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
+
+Subscriptions.prototype.validateArgs = function (args) {
+    var subscription = this.subscriptions[args[0]];
+
+    if(!subscription)
+        subscription = {};
+
+    if(!subscription.params)
+        subscription.params = 0;
+
+    if (args.length !== subscription.params + 1) {
+        throw errors.InvalidNumberOfParams();
+    }
+};
+
+/**
+ * Should be called to format input args of method
+ * 
+ * @method formatInput
+ * @param {Array}
+ * @return {Array}
+ */
+
+Subscriptions.prototype.formatInput = function (args) {
+    var subscription = this.subscriptions[args[0]];
+
+    if (!subscription || !subscription.inputFormatter) {
+        return args;
+    }
+
+    return subscription.inputFormatter.map(function (formatter, index) {
+        return formatter ? formatter(args[index+1]) : args[index+1];
+    });
+};
+
+/**
+ * Should be called to format output(result) of method
+ *
+ * @method formatOutput
+ * @param {Object}
+ * @return {Object}
+ */
+
+Subscriptions.prototype.formatOutput = function (subscription, result) {
+    var subscription = this.subscriptions[subscription];
+
+    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
+};
+
+/**
+ * Should create payload from given input args
+ *
+ * @method toPayload
+ * @param {Array} args
+ * @return {Object}
+ */
+Subscriptions.prototype.toPayload = function (args) {
+    var callback = this.extractCallback(args);
+    var params = this.formatInput(args);
+    this.validateArgs(params);
+
+    return {
+        method: this.subscribe,
+        params: params,
+        callback: callback
+    };
+};
+
+
+Subscriptions.prototype.attachToObject = function (obj) {
+    var func = this.buildCall();
+    func.call = this.call; // TODO!!! that's ugly. filter.js uses it
+    var name = this.name.split('.');
+    if (name.length > 1) {
+        obj[name[0]] = obj[name[0]] || {};
+        obj[name[0]][name[1]] = func;
+    } else {
+        obj[name[0]] = func; 
+    }
+};
+
+/**
+ * Creates the subscription and calls the callback when data arrives.
+ *
+ * @method createSubscription
+ * @return {Object}
+ */
+Subscriptions.prototype.createSubscription = function() {
+    var _this = this;
+    var payload = this.toPayload(Array.prototype.slice.call(arguments));
+
+    // throw error, if provider doesnt support subscriptions
+    if(!this.requestManager.provider.onNotification)
+        throw new Error('The current provider doesn\'t support subscriptions', this.requestManager.provider);
+
+    if (payload.callback) {
+        var subscription = {
+            id: null, 
+            unsubscribe: function(callback){
+                return _this.requestManager.sendAsync({
+                    method: _this.unsubscribe,
+                    params: [this.id]
+                }, function(err, result){
+
+                    if(!err)
+                        _this.requestManager.removeSubscription(subscription.id);
+
+                    if(utils.isFunction())
+                        callback(err, result);
+                });
+            }
+        };
+
+
+        this.requestManager.sendAsync(payload, function (err, result) {
+            if(!err && result) {
+                subscription.id = result;
+                
+                // call callback on notifications
+                _this.requestManager.addSubscription(subscription.id, function(err, result){
+                    payload.callback(err, _this.formatOutput(payload.params[0], result), subscription);
+                });
+            } else {
+                payload.callback(err);
+            }
+        });
+
+        // return an object to cancel the subscription
+        return subscription;
+
+    } else
+        throw new Error('Subscriptions require a callback as the last parameter!');
+};
+
+Subscriptions.prototype.buildCall = function() {
+    var _this = this;
+    var createSubscription = this.createSubscription.bind(this);
+    return createSubscription;
+};
+
+module.exports = Subscriptions;
+
+
+},{"../utils/utils":20,"./errors":26}],47:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /** @file syncing.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethdev.com>
@@ -6155,7 +6459,7 @@ IsSyncing.prototype.stopWatching = function () {
 module.exports = IsSyncing;
 
 
-},{"../utils/utils":20,"./formatters":30}],47:[function(require,module,exports){
+},{"../utils/utils":20,"./formatters":30}],48:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6249,9 +6553,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":33}],48:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":33}],49:[function(require,module,exports){
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6479,7 +6783,7 @@ module.exports = transfer;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],50:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7355,7 +7659,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":51}],51:[function(require,module,exports){
+},{"./core":52}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8098,7 +8402,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8222,7 +8526,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":51}],53:[function(require,module,exports){
+},{"./core":52}],54:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8372,7 +8676,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":51}],54:[function(require,module,exports){
+},{"./core":52}],55:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8505,7 +8809,7 @@ module.exports = transfer;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":51,"./hmac":56,"./sha1":75}],55:[function(require,module,exports){
+},{"./core":52,"./hmac":57,"./sha1":76}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8572,7 +8876,7 @@ module.exports = transfer;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":50,"./core":51}],56:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8716,7 +9020,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":51}],57:[function(require,module,exports){
+},{"./core":52}],58:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8735,7 +9039,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./aes":49,"./cipher-core":50,"./core":51,"./enc-base64":52,"./enc-utf16":53,"./evpkdf":54,"./format-hex":55,"./hmac":56,"./lib-typedarrays":58,"./md5":59,"./mode-cfb":60,"./mode-ctr":62,"./mode-ctr-gladman":61,"./mode-ecb":63,"./mode-ofb":64,"./pad-ansix923":65,"./pad-iso10126":66,"./pad-iso97971":67,"./pad-nopadding":68,"./pad-zeropadding":69,"./pbkdf2":70,"./rabbit":72,"./rabbit-legacy":71,"./rc4":73,"./ripemd160":74,"./sha1":75,"./sha224":76,"./sha256":77,"./sha3":78,"./sha384":79,"./sha512":80,"./tripledes":81,"./x64-core":82}],58:[function(require,module,exports){
+},{"./aes":50,"./cipher-core":51,"./core":52,"./enc-base64":53,"./enc-utf16":54,"./evpkdf":55,"./format-hex":56,"./hmac":57,"./lib-typedarrays":59,"./md5":60,"./mode-cfb":61,"./mode-ctr":63,"./mode-ctr-gladman":62,"./mode-ecb":64,"./mode-ofb":65,"./pad-ansix923":66,"./pad-iso10126":67,"./pad-iso97971":68,"./pad-nopadding":69,"./pad-zeropadding":70,"./pbkdf2":71,"./rabbit":73,"./rabbit-legacy":72,"./rc4":74,"./ripemd160":75,"./sha1":76,"./sha224":77,"./sha256":78,"./sha3":79,"./sha384":80,"./sha512":81,"./tripledes":82,"./x64-core":83}],59:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8812,7 +9116,7 @@ module.exports = transfer;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":51}],59:[function(require,module,exports){
+},{"./core":52}],60:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9081,7 +9385,7 @@ module.exports = transfer;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":51}],60:[function(require,module,exports){
+},{"./core":52}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9160,7 +9464,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":50,"./core":51}],61:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9277,7 +9581,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":50,"./core":51}],62:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9336,7 +9640,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":50,"./core":51}],63:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9377,7 +9681,7 @@ module.exports = transfer;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":50,"./core":51}],64:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9432,7 +9736,7 @@ module.exports = transfer;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":50,"./core":51}],65:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9482,7 +9786,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":50,"./core":51}],66:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9527,7 +9831,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":50,"./core":51}],67:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9568,7 +9872,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":50,"./core":51}],68:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9599,7 +9903,7 @@ module.exports = transfer;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":50,"./core":51}],69:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9645,7 +9949,7 @@ module.exports = transfer;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":50,"./core":51}],70:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9791,7 +10095,7 @@ module.exports = transfer;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":51,"./hmac":56,"./sha1":75}],71:[function(require,module,exports){
+},{"./core":52,"./hmac":57,"./sha1":76}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9982,7 +10286,7 @@ module.exports = transfer;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],72:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],73:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10175,7 +10479,7 @@ module.exports = transfer;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],73:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],74:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10315,7 +10619,7 @@ module.exports = transfer;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],74:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],75:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10583,7 +10887,7 @@ module.exports = transfer;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":51}],75:[function(require,module,exports){
+},{"./core":52}],76:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10734,7 +11038,7 @@ module.exports = transfer;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":51}],76:[function(require,module,exports){
+},{"./core":52}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10815,7 +11119,7 @@ module.exports = transfer;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":51,"./sha256":77}],77:[function(require,module,exports){
+},{"./core":52,"./sha256":78}],78:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11015,7 +11319,7 @@ module.exports = transfer;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":51}],78:[function(require,module,exports){
+},{"./core":52}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11339,7 +11643,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":51,"./x64-core":82}],79:[function(require,module,exports){
+},{"./core":52,"./x64-core":83}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11423,7 +11727,7 @@ module.exports = transfer;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":51,"./sha512":80,"./x64-core":82}],80:[function(require,module,exports){
+},{"./core":52,"./sha512":81,"./x64-core":83}],81:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11747,7 +12051,7 @@ module.exports = transfer;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":51,"./x64-core":82}],81:[function(require,module,exports){
+},{"./core":52,"./x64-core":83}],82:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12518,7 +12822,7 @@ module.exports = transfer;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],82:[function(require,module,exports){
+},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],83:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12823,7 +13127,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":51}],83:[function(require,module,exports){
+},{"./core":52}],84:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
@@ -15754,7 +16058,7 @@ module.exports = transfer;
     }
 })(this);
 
-},{"crypto":48}],"web3":[function(require,module,exports){
+},{"crypto":49}],"web3":[function(require,module,exports){
 var Web3 = require('./lib/web3');
 
 // dont override global variable
