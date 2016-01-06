@@ -3723,6 +3723,41 @@ var outputBlockFormatter = function(block) {
 };
 
 /**
+ * Formats the input of a log
+ * 
+ * @method inputLogFormatter
+ * @param {Object} log object
+ * @returns {Object} log
+*/
+var inputLogFormatter = function(options) {
+    var toTopic = function(value){
+
+        if(value === null || typeof value === 'undefined')
+            return null;
+
+        value = String(value);
+
+        if(value.indexOf('0x') === 0)
+            return value;
+        else
+            return utils.fromUtf8(value);
+    };
+
+    // make sure topics, get converted to hex
+    options.topics = options.topics || [];
+    options.topics = options.topics.map(function(topic){
+        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+    });
+
+    toTopic = null;
+
+    if(options.address && !utils.isAddress(options.address))
+        throw new Error('The given address is not valid!');
+
+    return options;
+};
+
+/**
  * Formats the output of a log
  * 
  * @method outputLogFormatter
@@ -4529,8 +4564,6 @@ var IpcProvider = function (path, net) {
                 id = result.id;
             }
 
-            console.log(result);
-
             // notification
             if(!id && result.method === 'eth_subscription') {
                 _this.notificationCallbacks.forEach(function(callback){
@@ -4689,7 +4722,7 @@ Resetes the providers, clears all callbacks
 
 */
 IpcProvider.prototype.reset = function (callback) {
-    this.timeout();
+    this._timeout();
     this.notificationCallbacks = [];
 };
 
@@ -5293,6 +5326,18 @@ var methods = function () {
             'newBlocks': {
                 params: 1,
                 outputFormatter: formatters.outputBlockFormatter
+            },
+            'pendingTransactions': {
+                params: 0,
+                outputFormatter: formatters.outputTransactionFormatter
+            },
+            'logs': {
+                params: 1,
+                inputFormatter: [formatters.inputLogFormatter]
+            },
+            'syncing': {
+                params: 0,
+                outputFormatter: formatters.outputSyncingFormatter
             }
         }
     });
@@ -5960,9 +6005,12 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {String} id           the subscription id
  * @param {Function} callback   the callback to call for incoming notifications
  */
-RequestManager.prototype.addSubscription = function (id, callback) {
+RequestManager.prototype.addSubscription = function (type, id, callback) {
     if(this.provider.onNotification) {
-        this.subscriptions[id] = callback;
+        this.subscriptions[id] = {
+            callback: callback,
+            type: type
+        };
         
     } else {
         throw new Error('This provider doesn\'t support subscriptions', this.provider);
@@ -5974,10 +6022,27 @@ RequestManager.prototype.addSubscription = function (id, callback) {
  *
  * @method removeSubscription
  * @param {String} id           the subscription id
+ * @param {Function} callback   fired once the subscription is removed
  */
-RequestManager.prototype.removeSubscription = function (id) {
-    if(this.subscriptions[id])
-        delete this.subscriptions[id];
+RequestManager.prototype.removeSubscription = function (id, callback) {
+    var _this = this;
+
+    if(this.subscriptions[id]) {
+
+        this.sendAsync({
+            method: this.subscriptions[id].type + '_unsubscribe',
+            params: [id]
+        }, function(err, result){
+
+            if(!err) {
+                delete _this.subscriptions[id];
+            }
+
+            if(utils.isFunction(callback))
+                callback(err, result);
+        });
+
+    }
 }
 
 /**
@@ -5999,8 +6064,8 @@ RequestManager.prototype.setProvider = function (p) {
     if(this.provider.onNotification) {
         this.provider.onNotification(function(err, result){
             if(!err) {
-                if(_this.subscriptions[result.params.subscription])
-                    _this.subscriptions[result.params.subscription](null, result.params.result);
+                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
+                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
     }
@@ -6012,6 +6077,7 @@ RequestManager.prototype.setProvider = function (p) {
  * @method reset
  */
 RequestManager.prototype.reset = function (keepIsSyncing) {
+    var _this = this;
 
     for (var key in this.polls) {
         // remove all polls, except sync polls,
@@ -6022,14 +6088,22 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
         }
     }
 
-    if(this.provider.reset)
-        this.provider.reset();
-
     // stop polling
     if(Object.keys(this.polls).length === 0 && this.timeout) {
         clearTimeout(this.timeout);
         this.timeout = null;
     }
+
+
+    // uninstall all subscriptions
+    Object.keys(this.subscriptions).forEach(function(id){
+        _this.removeSubscription(id);
+    });
+
+
+    //  reset notification callbacks etc.
+    if(this.provider.reset)
+        this.provider.reset();
 };
 
 
@@ -6320,17 +6394,7 @@ Subscriptions.prototype.createSubscription = function() {
         var subscription = {
             id: null, 
             unsubscribe: function(callback){
-                return _this.requestManager.sendAsync({
-                    method: _this.unsubscribe,
-                    params: [this.id]
-                }, function(err, result){
-
-                    if(!err)
-                        _this.requestManager.removeSubscription(subscription.id);
-
-                    if(utils.isFunction())
-                        callback(err, result);
-                });
+                return _this.requestManager.removeSubscription(subscription.id, callback);
             }
         };
 
@@ -6340,7 +6404,7 @@ Subscriptions.prototype.createSubscription = function() {
                 subscription.id = result;
                 
                 // call callback on notifications
-                _this.requestManager.addSubscription(subscription.id, function(err, result){
+                _this.requestManager.addSubscription('eth', subscription.id, function(err, result){
                     payload.callback(err, _this.formatOutput(payload.params[0], result), subscription);
                 });
             } else {
