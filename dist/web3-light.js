@@ -1870,7 +1870,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":58,"crypto-js/sha3":79}],20:[function(require,module,exports){
+},{"crypto-js":59,"crypto-js/sha3":80}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2403,7 +2403,7 @@ module.exports = {
     isJson: isJson
 };
 
-},{"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
     "version": "0.15.1"
 }
@@ -3863,6 +3863,7 @@ module.exports = {
     inputTransactionFormatter: inputTransactionFormatter,
     inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
+    inputLogFormatter: inputLogFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
@@ -4536,14 +4537,7 @@ var IpcProvider = function (path, net) {
     
     this.connection = net.connect({path: this.path});
 
-    this.connection.on('error', function(e){
-        console.error('IPC Connection Error', e);
-        _this._timeout();
-    });
-
-    this.connection.on('end', function(){
-        _this._timeout();
-    }); 
+    this.addDefaultEvents();
 
 
     // LISTEN FOR CONNECTION RESPONSES
@@ -4578,6 +4572,27 @@ var IpcProvider = function (path, net) {
             }
         });
     });
+};
+
+/**
+Will add the error and end event to timeout existing calls
+
+@method addDefaultEvents
+*/
+IpcProvider.prototype.addDefaultEvents = function(){
+    var _this = this;
+
+    this.connection.on('error', function(e){
+        _this._timeout();
+    });
+
+    this.connection.on('end', function(){
+        _this._timeout();
+    });
+
+    this.connection.on('timeout', function(){
+        _this._timeout();
+    }); 
 };
 
 /**
@@ -4713,17 +4728,84 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
     this._addResponseCallback(payload, callback);
 };
 
-IpcProvider.prototype.onNotification = function (callback) {
-    this.notificationCallbacks.push(callback);
+/**
+Subscribes to provider events.provider
+
+@method on
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.on = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.push(callback);
+            break;
+
+        default:
+            this.connection.on(type, callback);
+            break;
+    }
+};
+
+/**
+Removes event listener
+
+@method removeListener
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.removeListener = function (type, callback) {
+    var _this = this;
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.forEach(function(cb, index){
+                if(cb === callback)
+                    _this.notificationCallbacks.splice(index, 1);
+            });
+            break;
+
+        default:
+            this.connection.removeListener(type, callback);
+            break;
+    }
+};
+
+/**
+Removes all event listeners
+
+@method removeAllListeners
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+*/
+IpcProvider.prototype.removeAllListeners = function (type) {
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks = [];
+            break;
+
+        default:
+            this.connection.removeAllListeners(type);
+            break;
+    }
 };
 
 /**
 Resetes the providers, clears all callbacks
 
+@method reset
 */
 IpcProvider.prototype.reset = function (callback) {
     this._timeout();
     this.notificationCallbacks = [];
+
+    this.connection.removeAllListeners('error');
+    this.connection.removeAllListeners('end');
+
+    this.addDefaultEvents();
 };
 
 module.exports = IpcProvider;
@@ -5333,7 +5415,8 @@ var methods = function () {
             },
             'logs': {
                 params: 1,
-                inputFormatter: [formatters.inputLogFormatter]
+                inputFormatter: [formatters.inputLogFormatter],
+                outputFormatter: formatters.outputLogFormatter
             },
             'syncing': {
                 params: 0,
@@ -5432,7 +5515,7 @@ Eth.prototype.isSyncing = function (callback) {
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":42,"../property":43,"../subscriptions":46,"../syncing":47,"../transfer":48,"./watches":41}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":42,"../property":43,"../subscriptions":47,"../syncing":48,"../transfer":49,"./watches":41}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5815,7 +5898,8 @@ Property.prototype.extractCallback = function (args) {
  */
 Property.prototype.attachToObject = function (obj) {
     var proto = {
-        get: this.buildGet() 
+        get: this.buildGet(),
+        enumerable: true 
     };
 
     var names = this.name.split('.');
@@ -5955,13 +6039,12 @@ RequestManager.prototype.sendAsync = function (data, callback) {
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
-
     var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
-    this.provider.sendAsync(payload, function (err, result) {
+    this.provider.sendAsync(payload, function (err, result) {        
         if (err) {
             return callback(err);
         }
-        
+
         if (!Jsonrpc.getInstance().isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
@@ -5983,7 +6066,6 @@ RequestManager.prototype.sendBatch = function (data, callback) {
     }
 
     var payload = Jsonrpc.getInstance().toBatchPayload(data);
-
     this.provider.sendAsync(payload, function (err, results) {
         if (err) {
             return callback(err);
@@ -6006,7 +6088,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {Function} callback   the callback to call for incoming notifications
  */
 RequestManager.prototype.addSubscription = function (type, id, callback) {
-    if(this.provider.onNotification) {
+    if(this.provider.on) {
         this.subscriptions[id] = {
             callback: callback,
             type: type
@@ -6061,8 +6143,8 @@ RequestManager.prototype.setProvider = function (p) {
     this.provider = p;
 
     // listen to incoming notifications
-    if(this.provider.onNotification) {
-        this.provider.onNotification(function(err, result){
+    if(this.provider.on) {
+        this.provider.on('notification', function(err, result){
             if(!err) {
                 if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
                     _this.subscriptions[result.params.subscription].callback(null, result.params.result);
@@ -6260,17 +6342,16 @@ var utils = require('../utils/utils');
 var errors = require('./errors');
 
 
-Subscriptions = function (options) {
-    this.name = options.name;
-    this.subscribe = options.subscribe;
-    this.unsubscribe = options.unsubscribe;
-    this.subscriptions = options.subscriptions || {};
-    this.requestManager = null;
-};
+Subscription = function (options) {
+    this.id = null;
+    this.callback = null;
 
-
-Subscriptions.prototype.setRequestManager = function (rm) {
-    this.requestManager = rm;
+    this.options = {
+        subscription: options.subscription,
+        subscribeMethod: options.subscribeMethod,
+        unsubscribeMethod: options.unsubscribeMethod,
+        requestManager: options.requestManager
+    }
 };
 
 
@@ -6282,7 +6363,7 @@ Subscriptions.prototype.setRequestManager = function (rm) {
  * @return {Function|Null} callback, if exists
  */
 
-Subscriptions.prototype.extractCallback = function (args) {
+Subscription.prototype._extractCallback = function (args) {
     if (utils.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
@@ -6296,8 +6377,8 @@ Subscriptions.prototype.extractCallback = function (args) {
  * @throws {Error} if it is not
  */
 
-Subscriptions.prototype.validateArgs = function (args) {
-    var subscription = this.subscriptions[args[0]];
+Subscription.prototype._validateArgs = function (args) {
+    var subscription = this.options.subscription;
 
     if(!subscription)
         subscription = {};
@@ -6318,16 +6399,19 @@ Subscriptions.prototype.validateArgs = function (args) {
  * @return {Array}
  */
 
-Subscriptions.prototype.formatInput = function (args) {
-    var subscription = this.subscriptions[args[0]];
+Subscription.prototype._formatInput = function (args) {
+    var subscription = this.options.subscription;
 
     if (!subscription || !subscription.inputFormatter) {
         return args;
     }
 
-    return subscription.inputFormatter.map(function (formatter, index) {
+    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
         return formatter ? formatter(args[index+1]) : args[index+1];
     });
+    formattedArgs.unshift(args[0]);
+
+    return formattedArgs;
 };
 
 /**
@@ -6338,8 +6422,8 @@ Subscriptions.prototype.formatInput = function (args) {
  * @return {Object}
  */
 
-Subscriptions.prototype.formatOutput = function (subscription, result) {
-    var subscription = this.subscriptions[subscription];
+Subscription.prototype._formatOutput = function (result) {
+    var subscription = this.options.subscription;
 
     return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
 };
@@ -6351,16 +6435,123 @@ Subscriptions.prototype.formatOutput = function (subscription, result) {
  * @param {Array} args
  * @return {Object}
  */
-Subscriptions.prototype.toPayload = function (args) {
-    var callback = this.extractCallback(args);
-    var params = this.formatInput(args);
-    this.validateArgs(params);
+Subscription.prototype._toPayload = function (args) {
+    this.callback = this._extractCallback(args);
+    var params = this._formatInput(args);
+    this._validateArgs(params);
 
     return {
-        method: this.subscribe,
-        params: params,
-        callback: callback
+        method: this.options.subscribeMethod,
+        params: params
     };
+};
+
+/**
+ * Unsubscribes and clears callbacks
+ *
+ * @method unsubscribe
+ * @return {Object}
+ */
+Subscription.prototype.unsubscribe = function(callback) {
+    return this.options.requestManager.removeSubscription(this.id, callback);
+};
+
+/**
+ * Subscribes and watches for changes
+ *
+ * @method subscribe
+ * @return {Object}
+ */
+Subscription.prototype.subscribe = function() {
+    var _this = this;
+    var payload = this._toPayload(Array.prototype.slice.call(arguments));
+
+    // throw error, if provider doesnt support subscriptions
+    if(!this.options.requestManager.provider.on)
+        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
+
+    // get past logs, if fromBlock is available
+    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+        this.options.requestManager.sendAsync({
+            method: 'eth_getLogs',
+            params: [payload.params[1]]
+        }, function (err, logs) {
+            if(!err) {
+                logs.forEach(function(log){
+                    _this.callback(null, _this._formatOutput(log));
+                });
+            } else {
+                _this.callback(err);
+            }
+        });
+
+    }
+
+    // create subscription
+    if (_this.callback) {
+
+        this.options.requestManager.sendAsync(payload, function (err, result) {
+            if(!err && result) {
+                _this.id = result;
+                
+                // call callback on notifications
+                _this.options.requestManager.addSubscription('eth', _this.id, function(err, result){
+                    _this.callback(err, _this._formatOutput(result), _this);
+                });
+            } else {
+                _this.callback(err);
+            }
+        });
+
+        // return an object to cancel the subscription
+        return this;
+
+    } else
+        throw new Error('Subscriptions require a callback as the last parameter!');
+};
+
+module.exports = Subscription;
+},{"../utils/utils":20,"./errors":26}],47:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file subscriptions.js
+ *
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var utils = require('../utils/utils');
+var errors = require('./errors');
+var Subscription = require('./subscription.js');
+
+
+
+Subscriptions = function (options) {
+    this.name = options.name;
+    this.subscribe = options.subscribe;
+    this.unsubscribe = options.unsubscribe;
+    this.subscriptions = options.subscriptions || {};
+    this.requestManager = null;
+};
+
+
+Subscriptions.prototype.setRequestManager = function (rm) {
+    this.requestManager = rm;
 };
 
 
@@ -6376,59 +6567,26 @@ Subscriptions.prototype.attachToObject = function (obj) {
     }
 };
 
-/**
- * Creates the subscription and calls the callback when data arrives.
- *
- * @method createSubscription
- * @return {Object}
- */
-Subscriptions.prototype.createSubscription = function() {
-    var _this = this;
-    var payload = this.toPayload(Array.prototype.slice.call(arguments));
-
-    // throw error, if provider doesnt support subscriptions
-    if(!this.requestManager.provider.onNotification)
-        throw new Error('The current provider doesn\'t support subscriptions', this.requestManager.provider);
-
-    if (payload.callback) {
-        var subscription = {
-            id: null, 
-            unsubscribe: function(callback){
-                return _this.requestManager.removeSubscription(subscription.id, callback);
-            }
-        };
-
-
-        this.requestManager.sendAsync(payload, function (err, result) {
-            if(!err && result) {
-                subscription.id = result;
-                
-                // call callback on notifications
-                _this.requestManager.addSubscription('eth', subscription.id, function(err, result){
-                    payload.callback(err, _this.formatOutput(payload.params[0], result), subscription);
-                });
-            } else {
-                payload.callback(err);
-            }
-        });
-
-        // return an object to cancel the subscription
-        return subscription;
-
-    } else
-        throw new Error('Subscriptions require a callback as the last parameter!');
-};
 
 Subscriptions.prototype.buildCall = function() {
     var _this = this;
-    var createSubscription = this.createSubscription.bind(this);
-    return createSubscription;
+
+    return function(){
+        var subscription = new Subscription({
+            subscription: _this.subscriptions[arguments[0]],
+            subscribeMethod: _this.subscribe,
+            unsubscribeMethod: _this.unsubscribe,
+            requestManager: _this.requestManager
+        });
+
+        return subscription.subscribe.apply(subscription, arguments);
+    };
 };
 
 module.exports = Subscriptions;
 
 
-},{"../utils/utils":20,"./errors":26}],47:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":26,"./subscription.js":46}],48:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6523,7 +6681,7 @@ IsSyncing.prototype.stopWatching = function () {
 module.exports = IsSyncing;
 
 
-},{"../utils/utils":20,"./formatters":30}],48:[function(require,module,exports){
+},{"../utils/utils":20,"./formatters":30}],49:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6617,9 +6775,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":33}],49:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":33}],50:[function(require,module,exports){
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6847,7 +7005,7 @@ module.exports = transfer;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],51:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7723,7 +7881,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":52}],52:[function(require,module,exports){
+},{"./core":53}],53:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8466,7 +8624,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8590,7 +8748,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":52}],54:[function(require,module,exports){
+},{"./core":53}],55:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8740,7 +8898,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":52}],55:[function(require,module,exports){
+},{"./core":53}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8873,7 +9031,7 @@ module.exports = transfer;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":52,"./hmac":57,"./sha1":76}],56:[function(require,module,exports){
+},{"./core":53,"./hmac":58,"./sha1":77}],57:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8940,7 +9098,7 @@ module.exports = transfer;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":51,"./core":52}],57:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],58:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9084,7 +9242,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":52}],58:[function(require,module,exports){
+},{"./core":53}],59:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9103,7 +9261,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./aes":50,"./cipher-core":51,"./core":52,"./enc-base64":53,"./enc-utf16":54,"./evpkdf":55,"./format-hex":56,"./hmac":57,"./lib-typedarrays":59,"./md5":60,"./mode-cfb":61,"./mode-ctr":63,"./mode-ctr-gladman":62,"./mode-ecb":64,"./mode-ofb":65,"./pad-ansix923":66,"./pad-iso10126":67,"./pad-iso97971":68,"./pad-nopadding":69,"./pad-zeropadding":70,"./pbkdf2":71,"./rabbit":73,"./rabbit-legacy":72,"./rc4":74,"./ripemd160":75,"./sha1":76,"./sha224":77,"./sha256":78,"./sha3":79,"./sha384":80,"./sha512":81,"./tripledes":82,"./x64-core":83}],59:[function(require,module,exports){
+},{"./aes":51,"./cipher-core":52,"./core":53,"./enc-base64":54,"./enc-utf16":55,"./evpkdf":56,"./format-hex":57,"./hmac":58,"./lib-typedarrays":60,"./md5":61,"./mode-cfb":62,"./mode-ctr":64,"./mode-ctr-gladman":63,"./mode-ecb":65,"./mode-ofb":66,"./pad-ansix923":67,"./pad-iso10126":68,"./pad-iso97971":69,"./pad-nopadding":70,"./pad-zeropadding":71,"./pbkdf2":72,"./rabbit":74,"./rabbit-legacy":73,"./rc4":75,"./ripemd160":76,"./sha1":77,"./sha224":78,"./sha256":79,"./sha3":80,"./sha384":81,"./sha512":82,"./tripledes":83,"./x64-core":84}],60:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9180,7 +9338,7 @@ module.exports = transfer;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":52}],60:[function(require,module,exports){
+},{"./core":53}],61:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9449,7 +9607,7 @@ module.exports = transfer;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":52}],61:[function(require,module,exports){
+},{"./core":53}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9528,7 +9686,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":51,"./core":52}],62:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9645,7 +9803,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":51,"./core":52}],63:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9704,7 +9862,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":51,"./core":52}],64:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9745,7 +9903,7 @@ module.exports = transfer;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":51,"./core":52}],65:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9800,7 +9958,7 @@ module.exports = transfer;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":51,"./core":52}],66:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9850,7 +10008,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":51,"./core":52}],67:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9895,7 +10053,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":51,"./core":52}],68:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9936,7 +10094,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":51,"./core":52}],69:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9967,7 +10125,7 @@ module.exports = transfer;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":51,"./core":52}],70:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10013,7 +10171,7 @@ module.exports = transfer;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":51,"./core":52}],71:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10159,7 +10317,7 @@ module.exports = transfer;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":52,"./hmac":57,"./sha1":76}],72:[function(require,module,exports){
+},{"./core":53,"./hmac":58,"./sha1":77}],73:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10350,7 +10508,7 @@ module.exports = transfer;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],73:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],74:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10543,7 +10701,7 @@ module.exports = transfer;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],74:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],75:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10683,7 +10841,7 @@ module.exports = transfer;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],75:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],76:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10951,7 +11109,7 @@ module.exports = transfer;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":52}],76:[function(require,module,exports){
+},{"./core":53}],77:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11102,7 +11260,7 @@ module.exports = transfer;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":52}],77:[function(require,module,exports){
+},{"./core":53}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11183,7 +11341,7 @@ module.exports = transfer;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":52,"./sha256":78}],78:[function(require,module,exports){
+},{"./core":53,"./sha256":79}],79:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11383,7 +11541,7 @@ module.exports = transfer;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":52}],79:[function(require,module,exports){
+},{"./core":53}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11707,7 +11865,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":52,"./x64-core":83}],80:[function(require,module,exports){
+},{"./core":53,"./x64-core":84}],81:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11791,7 +11949,7 @@ module.exports = transfer;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":52,"./sha512":81,"./x64-core":83}],81:[function(require,module,exports){
+},{"./core":53,"./sha512":82,"./x64-core":84}],82:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12115,7 +12273,7 @@ module.exports = transfer;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":52,"./x64-core":83}],82:[function(require,module,exports){
+},{"./core":53,"./x64-core":84}],83:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12886,7 +13044,7 @@ module.exports = transfer;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],83:[function(require,module,exports){
+},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],84:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13191,7 +13349,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":52}],84:[function(require,module,exports){
+},{"./core":53}],85:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
