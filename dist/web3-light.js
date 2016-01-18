@@ -3175,13 +3175,12 @@ var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
-var Filter = require('./filter');
-var watches = require('./methods/watches');
+var Subscription = require('./subscription');
 
 /**
  * This prototype should be used to create event filters
  */
-var SolidityEvent = function (requestManager, json, address) {
+var ContractEvent = function (requestManager, json, address) {
     this._requestManager = requestManager;
     this._params = json.inputs;
     this._name = utils.transformToFullName(json);
@@ -3196,7 +3195,7 @@ var SolidityEvent = function (requestManager, json, address) {
  * @param {Bool} decide if returned typed should be indexed
  * @return {Array} array of types
  */
-SolidityEvent.prototype.types = function (indexed) {
+ContractEvent.prototype.types = function (indexed) {
     return this._params.filter(function (i) {
         return i.indexed === indexed;
     }).map(function (i) {
@@ -3210,7 +3209,7 @@ SolidityEvent.prototype.types = function (indexed) {
  * @method displayName
  * @return {String} event display name
  */
-SolidityEvent.prototype.displayName = function () {
+ContractEvent.prototype.displayName = function () {
     return utils.extractDisplayName(this._name);
 };
 
@@ -3220,7 +3219,7 @@ SolidityEvent.prototype.displayName = function () {
  * @method typeName
  * @return {String} event type name
  */
-SolidityEvent.prototype.typeName = function () {
+ContractEvent.prototype.typeName = function () {
     return utils.extractTypeName(this._name);
 };
 
@@ -3230,7 +3229,7 @@ SolidityEvent.prototype.typeName = function () {
  * @method signature
  * @return {String} event signature
  */
-SolidityEvent.prototype.signature = function () {
+ContractEvent.prototype.signature = function () {
     return sha3(this._name);
 };
 
@@ -3242,7 +3241,7 @@ SolidityEvent.prototype.signature = function () {
  * @param {Object} options
  * @return {Object} everything combined together and encoded
  */
-SolidityEvent.prototype.encode = function (indexed, options) {
+ContractEvent.prototype.encode = function (indexed, options) {
     indexed = indexed || {};
     options = options || {};
     var result = {};
@@ -3288,8 +3287,8 @@ SolidityEvent.prototype.encode = function (indexed, options) {
  * @param {Object} data
  * @return {Object} result object with decoded indexed && not indexed params
  */
-SolidityEvent.prototype.decode = function (data) {
-
+ContractEvent.prototype.decode = function (data) {
+ 
     data.data = data.data || '';
     data.topics = data.topics || [];
 
@@ -3305,7 +3304,7 @@ SolidityEvent.prototype.decode = function (data) {
     result.event = this.displayName();
     result.address = data.address;
 
-    result.args = this._params.reduce(function (acc, current) {
+    result.returnValues = this._params.reduce(function (acc, current) {
         acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
     }, {});
@@ -3317,15 +3316,15 @@ SolidityEvent.prototype.decode = function (data) {
 };
 
 /**
- * Should be used to create new filter object from event
+ * Get the arguments of the function call
  *
- * @method execute
+ * @method getArgs
  * @param {Object} indexed
  * @param {Object} options
+ * @param {Function} callback
  * @return {Object} filter object
  */
-SolidityEvent.prototype.execute = function (indexed, options, callback) {
-
+ContractEvent.prototype.getArgs = function (indexed, options, callback) {
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
         if(arguments.length === 2)
@@ -3338,7 +3337,72 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
 
     var o = this.encode(indexed, options);
     var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
+
+    return {
+        options: this.encode(indexed, options),
+        formatter: this.decode.bind(this),
+        callback: callback
+    };
+};
+
+/**
+ * Should be used to create new filter object from event
+ *
+ * @method execute
+ * @param {Object} indexed
+ * @param {Object} options
+ * @param {Function} callback
+ * @return {Object} filter object
+ */
+ContractEvent.prototype.execute = function (indexed, options, callback) {
+
+    var args = this.getArgs.apply(this, arguments);
+    var subscription = new Subscription({
+        subscription: {
+            params: 1,
+            inputFormatter: [formatters.inputLogFormatter],
+            outputFormatter: args.formatter
+        },
+        subscribeMethod: 'eth_subscribe',
+        unsubscribeMethod: 'eth_unsubscribe',
+        requestManager: this._requestManager
+    });
+
+    return subscription.subscribe.apply(subscription, ['logs', args.options, args.callback]);
+};
+
+// TODO: put indexed args into the options object
+
+/**
+ * Get past logs for this event
+ *
+ * @method getPastEvents
+ * @param {Object} indexed
+ * @param {Object} options
+ * @param {Function} callback
+ * @param {Contract}
+ */
+ContractEvent.prototype.getPastEvents = function(indexed, options, callback){
+
+    var args = this.getArgs.apply(this, arguments);
+
+    if (utils.isFunction(callback)) {
+        this._requestManager.sendAsync({
+            method: 'eth_getLogs',
+            params: [args.options]
+        }, function(error, logs){
+            if(!error) {
+                args.callback(null, logs.map(args.formatter));
+            } else {
+                args.callback(error);
+            }
+        });
+    }
+
+    return this._requestManager.send({
+        method: 'eth_getLogs',
+        params: [args.options]
+    }).map(args.formatter);
 };
 
 /**
@@ -3347,8 +3411,12 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
  * @method attachToContract
  * @param {Contract}
  */
-SolidityEvent.prototype.attachToContract = function (contract) {
+ContractEvent.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this);
+
+    // attach past logs
+    execute.getPastEvents = this.getPastEvents.bind(this);
+
     var displayName = this.displayName();
     if (!contract[displayName]) {
         contract[displayName] = execute;
@@ -3356,10 +3424,10 @@ SolidityEvent.prototype.attachToContract = function (contract) {
     contract[displayName][this.typeName()] = this.execute.bind(this, contract);
 };
 
-module.exports = SolidityEvent;
+module.exports = ContractEvent;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./methods/watches":43}],28:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":30,"./subscription":46}],28:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
 var Method = require('./method');
@@ -5185,7 +5253,15 @@ Method.prototype.formatInput = function (args) {
  * @return {Object}
  */
 Method.prototype.formatOutput = function (result) {
-    return this.outputFormatter && result ? this.outputFormatter(result) : result;
+    var _this = this;
+
+    if(utils.isArray(result)) {
+        return result.map(function(res){
+            return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
+        });
+    } else {
+        return this.outputFormatter && result ? this.outputFormatter(result) : result;
+    }
 };
 
 /**
@@ -5458,12 +5534,6 @@ var methods = function () {
 
     });
 
-    var getCompilers = new Method({
-        name: 'getCompilers',
-        call: 'eth_getCompilers',
-        params: 0
-    });
-
     var getBlockTransactionCount = new Method({
         name: 'getBlockTransactionCount',
         call: getBlockTransactionCountCall,
@@ -5546,6 +5616,12 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
+    var getCompilers = new Method({
+        name: 'getCompilers',
+        call: 'eth_getCompilers',
+        params: 0
+    });
+
     var compileSolidity = new Method({
         name: 'compile.solidity',
         call: 'eth_compileSolidity',
@@ -5576,6 +5652,13 @@ var methods = function () {
         params: 0
     });
 
+    var getPastLogs = new Method({
+        name: 'getPastLogs',
+        call: 'eth_getLogs',
+        params: 1,
+        inputFormatter: [formatters.inputLogFormatter],
+        outputFormatter: formatters.outputLogFormatter
+    });
 
 
     // subscriptions
@@ -5629,7 +5712,8 @@ var methods = function () {
         compileSerpent,
         submitWork,
         getWork,
-        subscribe
+        subscribe,
+        getPastLogs
     ];
 };
 
@@ -6969,6 +7053,7 @@ Subscription.prototype.subscribe = function() {
     if(!this.options.requestManager.provider.on)
         throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
 
+
     // get past logs, if fromBlock is available
     if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         this.options.requestManager.sendAsync({
@@ -6983,7 +7068,6 @@ Subscription.prototype.subscribe = function() {
                 _this.callback(err);
             }
         });
-
     }
 
     // create subscription
