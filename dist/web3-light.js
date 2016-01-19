@@ -1826,7 +1826,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":59,"crypto-js/sha3":80}],20:[function(require,module,exports){
+},{"crypto-js":56,"crypto-js/sha3":77}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2469,7 +2469,7 @@ module.exports = {
     isTopic: isTopic,
 };
 
-},{"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":82}],21:[function(require,module,exports){
 module.exports={
     "version": "0.20.7"
 }
@@ -2634,96 +2634,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/methods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/**
- * @file allevents.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2014
- */
-
-var sha3 = require('../utils/sha3');
-var SolidityEvent = require('./event');
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-var Filter = require('./filter');
-var watches = require('./methods/watches');
-
-var AllSolidityEvents = function (requestManager, json, address) {
-    this._requestManager = requestManager;
-    this._json = json;
-    this._address = address;
-};
-
-AllSolidityEvents.prototype.encode = function (options) {
-    options = options || {};
-    var result = {};
-
-    ['fromBlock', 'toBlock'].filter(function (f) {
-        return options[f] !== undefined;
-    }).forEach(function (f) {
-        result[f] = formatters.inputBlockNumberFormatter(options[f]);
-    });
-
-    result.address = this._address;
-
-    return result;
-};
-
-AllSolidityEvents.prototype.decode = function (data) {
-    data.data = data.data || '';
-
-
-    var eventTopic = (utils.isArray(data.topics) && utils.isString(data.topics[0])) ? data.topics[0].slice(2) : '';
-    var match = this._json.filter(function (j) {
-        return eventTopic === sha3(utils.transformToFullName(j));
-    })[0];
-
-    if (!match) { // cannot find matching event?
-        return formatters.outputLogFormatter(data);
-    }
-
-    var event = new SolidityEvent(this._requestManager, match, this._address);
-    return event.decode(data);
-};
-
-AllSolidityEvents.prototype.execute = function (options, callback) {
-
-    if (utils.isFunction(arguments[arguments.length - 1])) {
-        callback = arguments[arguments.length - 1];
-        if(arguments.length === 1)
-            options = null;
-    }
-
-    var o = this.encode(options);
-    var formatter = this.decode.bind(this);
-    return new Filter(o, 'eth', this._requestManager, watches.eth(), formatter, callback);
-};
-
-AllSolidityEvents.prototype.attachToContract = function (contract) {
-    var execute = this.execute.bind(this);
-    contract.allEvents = execute;
-};
-
-module.exports = AllSolidityEvents;
-
-
-},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":43}],24:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":30,"./web3/iban":31,"./web3/ipcprovider":32,"./web3/methods/db":35,"./web3/methods/eth":36,"./web3/methods/net":37,"./web3/methods/shh":38,"./web3/property":40,"./web3/requestmanager":41,"./web3/settings":42}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2791,7 +2702,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":26,"./jsonrpc":35}],25:[function(require,module,exports){
+},{"./errors":25,"./jsonrpc":33}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2816,9 +2727,8 @@ module.exports = Batch;
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
-var SolidityEvent = require('./event');
+var ContractEvent = require('./event');
 var SolidityFunction = require('./function');
-var AllEvents = require('./allevents');
 
 /**
  * Should be called to encode constructor params
@@ -2868,13 +2778,12 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._eth._requestManager, events, contract.address);
-    All.attachToContract(contract);
-
+    var allEvents = new ContractEvent(contract._eth._requestManager, events, contract.address, true);
+    allEvents.attachToContract(contract);
+    
     events.map(function (json) {
-        return new SolidityEvent(contract._eth._requestManager, json, contract.address);
-    }).forEach(function (e) {
-        e.attachToContract(contract);
+        var ev = new ContractEvent(contract._eth._requestManager, json, contract.address);
+        ev.attachToContract(contract);
     });
 };
 
@@ -3103,7 +3012,8 @@ var Contract = function (eth, abi, address) {
 
 module.exports = ContractFactory;
 
-},{"../solidity/coder":7,"../utils/utils":20,"./allevents":23,"./event":27,"./function":31}],26:[function(require,module,exports){
+
+},{"../solidity/coder":7,"../utils/utils":20,"./event":26,"./function":29}],25:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3148,7 +3058,8 @@ module.exports = {
     }
 };
 
-},{}],27:[function(require,module,exports){
+
+},{}],26:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3168,7 +3079,8 @@ module.exports = {
 /**
  * @file event.js
  * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2014
+ * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @date 2016
  */
 
 var utils = require('../utils/utils');
@@ -3180,12 +3092,14 @@ var Subscription = require('./subscription');
 /**
  * This prototype should be used to create event filters
  */
-var ContractEvent = function (requestManager, json, address) {
+var ContractEvent = function (requestManager, json, address, allEvents) {
     this._requestManager = requestManager;
-    this._params = json.inputs;
-    this._name = utils.transformToFullName(json);
     this._address = address;
+    this._json = json;
+    this._name = json.inputs ? utils.transformToFullName(json) : null;
+    this._params = json.inputs;
     this._anonymous = json.anonymous;
+    this._allEvents = !!allEvents;
 };
 
 /**
@@ -3193,10 +3107,11 @@ var ContractEvent = function (requestManager, json, address) {
  *
  * @method types
  * @param {Bool} decide if returned typed should be indexed
+ * @param {Object} params the parameters of the event
  * @return {Array} array of types
  */
-ContractEvent.prototype.types = function (indexed) {
-    return this._params.filter(function (i) {
+ContractEvent.prototype.types = function (indexed, params) {
+    return params.filter(function (i) {
         return i.indexed === indexed;
     }).map(function (i) {
         return i.type;
@@ -3207,10 +3122,11 @@ ContractEvent.prototype.types = function (indexed) {
  * Should be used to get event display name
  *
  * @method displayName
+ * @param {String} name (optional) the events name
  * @return {String} event display name
  */
-ContractEvent.prototype.displayName = function () {
-    return utils.extractDisplayName(this._name);
+ContractEvent.prototype.displayName = function (name) {
+    return utils.extractDisplayName(name || this._name);
 };
 
 /**
@@ -3237,14 +3153,14 @@ ContractEvent.prototype.signature = function () {
  * Should be used to encode indexed params and options to one final object
  *
  * @method encode
- * @param {Object} indexed
  * @param {Object} options
  * @return {Object} everything combined together and encoded
  */
-ContractEvent.prototype.encode = function (indexed, options) {
-    indexed = indexed || {};
+ContractEvent.prototype.encode = function (options) {
     options = options || {};
+    indexed = options.filter || {};
     var result = {};
+
 
     ['fromBlock', 'toBlock'].filter(function (f) {
         return options[f] !== undefined;
@@ -3254,28 +3170,33 @@ ContractEvent.prototype.encode = function (indexed, options) {
 
     result.topics = [];
 
-    result.address = this._address;
-    if (!this._anonymous) {
-        result.topics.push('0x' + this.signature());
+    // single events
+    if(!this._allEvents) {
+        
+        if (!this._anonymous) {
+            result.topics.push('0x' + this.signature());
+        }
+
+        var indexedTopics = this._params.filter(function (i) {
+            return i.indexed === true;
+        }).map(function (i) {
+            var value = indexed[i.name];
+            if (value === undefined || value === null) {
+                return null;
+            }
+            
+            if (utils.isArray(value)) {
+                return value.map(function (v) {
+                    return '0x' + coder.encodeParam(i.type, v);
+                });
+            }
+            return '0x' + coder.encodeParam(i.type, value);
+        });
+
+        result.topics = result.topics.concat(indexedTopics);
     }
 
-    var indexedTopics = this._params.filter(function (i) {
-        return i.indexed === true;
-    }).map(function (i) {
-        var value = indexed[i.name];
-        if (value === undefined || value === null) {
-            return null;
-        }
-
-        if (utils.isArray(value)) {
-            return value.map(function (v) {
-                return '0x' + coder.encodeParam(i.type, v);
-            });
-        }
-        return '0x' + coder.encodeParam(i.type, value);
-    });
-
-    result.topics = result.topics.concat(indexedTopics);
+    result.address = this._address;
 
     return result;
 };
@@ -3288,23 +3209,46 @@ ContractEvent.prototype.encode = function (indexed, options) {
  * @return {Object} result object with decoded indexed && not indexed params
  */
 ContractEvent.prototype.decode = function (data) {
- 
+    var name = params = anonymous = null;
     data.data = data.data || '';
     data.topics = data.topics || [];
 
+    // all events
+    if(this._allEvents) {
 
-    var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
+        var eventTopic = data.topics[0].slice(2);
+        var match = this._json.filter(function (j) {
+            return eventTopic === sha3(utils.transformToFullName(j));
+        })[0];
+
+        if (!match) { // cannot find matching event?
+            console.warn('Can\'t find event for log');
+            return data;
+        }
+
+        name = utils.transformToFullName(match);
+        params = match.inputs;
+        anonymous = match.anonymous;
+
+    // single event
+    } else {
+        name = this._name;
+        params = this._params;
+        anonymous = this._anonymous;
+    }
+
+    var argTopics = anonymous ? data.topics : data.topics.slice(1);
     var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
-    var indexedParams = coder.decodeParams(this.types(true), indexedData);
+    var indexedParams = coder.decodeParams(this.types(true, params), indexedData); 
 
     var notIndexedData = data.data.slice(2);
-    var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
-
+    var notIndexedParams = coder.decodeParams(this.types(false, params), notIndexedData);
+    
     var result = formatters.outputLogFormatter(data);
-    result.event = this.displayName();
+    result.event = this.displayName(name);
     result.address = data.address;
 
-    result.returnValues = this._params.reduce(function (acc, current) {
+    result.returnValues = params.reduce(function (acc, current) {
         acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
     }, {});
@@ -3319,27 +3263,22 @@ ContractEvent.prototype.decode = function (data) {
  * Get the arguments of the function call
  *
  * @method getArgs
- * @param {Object} indexed
  * @param {Object} options
  * @param {Function} callback
  * @return {Object} filter object
  */
-ContractEvent.prototype.getArgs = function (indexed, options, callback) {
+ContractEvent.prototype.getArgs = function (options, callback) {
+
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
-        if(arguments.length === 2)
-            options = null;
+
         if(arguments.length === 1) {
             options = null;
-            indexed = {};
         }
     }
-
-    var o = this.encode(indexed, options);
-    var formatter = this.decode.bind(this);
-
+    
     return {
-        options: this.encode(indexed, options),
+        options: this.encode(options),
         formatter: this.decode.bind(this),
         callback: callback
     };
@@ -3349,12 +3288,11 @@ ContractEvent.prototype.getArgs = function (indexed, options, callback) {
  * Should be used to create new filter object from event
  *
  * @method execute
- * @param {Object} indexed
  * @param {Object} options
  * @param {Function} callback
  * @return {Object} filter object
  */
-ContractEvent.prototype.execute = function (indexed, options, callback) {
+ContractEvent.prototype.execute = function (options, callback) {
 
     var args = this.getArgs.apply(this, arguments);
     var subscription = new Subscription({
@@ -3377,12 +3315,11 @@ ContractEvent.prototype.execute = function (indexed, options, callback) {
  * Get past logs for this event
  *
  * @method getPastEvents
- * @param {Object} indexed
  * @param {Object} options
  * @param {Function} callback
  * @param {Contract}
  */
-ContractEvent.prototype.getPastEvents = function(indexed, options, callback){
+ContractEvent.prototype.getPastEvents = function(options, callback){
 
     var args = this.getArgs.apply(this, arguments);
 
@@ -3417,17 +3354,26 @@ ContractEvent.prototype.attachToContract = function (contract) {
     // attach past logs
     execute.getPastEvents = this.getPastEvents.bind(this);
 
-    var displayName = this.displayName();
-    if (!contract[displayName]) {
-        contract[displayName] = execute;
+    // all events
+    if(this._allEvents) {
+        contract.allEvents = execute;
+    
+    // single event
+    } else {
+
+        var displayName = this.displayName();
+        if (!contract[displayName]) {
+            contract[displayName] = execute;
+        }
+        contract[displayName][this.typeName()] = this.execute.bind(this, contract);
     }
-    contract[displayName][this.typeName()] = this.execute.bind(this, contract);
+
 };
 
 module.exports = ContractEvent;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":30,"./subscription":46}],28:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":28,"./subscription":43}],27:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
 var Method = require('./method');
@@ -3477,254 +3423,7 @@ var extend = function (web3) {
 module.exports = extend;
 
 
-},{"./../utils/utils":20,"./formatters":30,"./method":36,"./property":45}],29:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file filter.js
- * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
- * @date 2014
- */
-
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-
-/**
-* Converts a given topic to a hex string, but also allows null values.
-*
-* @param {Mixed} value
-* @return {String}
-*/
-var toTopic = function(value){
-
-    if(value === null || typeof value === 'undefined')
-        return null;
-
-    value = String(value);
-
-    if(value.indexOf('0x') === 0)
-        return value;
-    else
-        return utils.fromUtf8(value);
-};
-
-/// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
-/// @param should be string or object
-/// @returns options string or object
-var getOptions = function (options, type) {
-    /*jshint maxcomplexity: 6 */
-
-    if (utils.isString(options)) {
-        return options;
-    }
-
-    options = options || {};
-
-
-    switch(type) {
-        case 'eth':
-
-            // make sure topics, get converted to hex
-            options.topics = options.topics || [];
-            options.topics = options.topics.map(function(topic){
-                return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
-            });
-
-            return {
-                topics: options.topics,
-                from: options.from,
-                to: options.to,
-                address: options.address,
-                fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
-                toBlock: formatters.inputBlockNumberFormatter(options.toBlock)
-            };
-        case 'shh':
-            return options;
-    }
-};
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method getLogsAtStart
-@param {Object} self
-@param {function} callback
-*/
-var getLogsAtStart = function(self, callback){
-    // call getFilterLogs for the first watch callback start
-    if (!utils.isString(self.options)) {
-        self.get(function (err, messages) {
-            // don't send all the responses to all the watches again... just to self one
-            if (err) {
-                callback(err);
-            }
-
-            if(utils.isArray(messages)) {
-                messages.forEach(function (message) {
-                    callback(null, message);
-                });
-            }
-        });
-    }
-};
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method pollFilter
-@param {Object} self
-*/
-var pollFilter = function(self) {
-
-    var onMessage = function (error, messages) {
-        if (error) {
-            return self.callbacks.forEach(function (callback) {
-                callback(error);
-            });
-        }
-
-        if(utils.isArray(messages)) {
-            messages.forEach(function (message) {
-                message = self.formatter ? self.formatter(message) : message;
-                self.callbacks.forEach(function (callback) {
-                    callback(null, message);
-                });
-            });
-        }
-    };
-
-    self.requestManager.startPolling({
-        method: self.implementation.poll.call,
-        params: [self.filterId],
-    }, self.filterId, onMessage, self.stopWatching.bind(self));
-
-};
-
-var Filter = function (options, type, requestManager, methods, formatter, callback, filterCreationErrorCallback) {
-    var self = this;
-    var implementation = {};
-    methods.forEach(function (method) {
-        method.setRequestManager(requestManager);
-        method.attachToObject(implementation);
-    });
-    this.requestManager = requestManager;
-    this.options = getOptions(options, type);
-    this.implementation = implementation;
-    this.filterId = null;
-    this.callbacks = [];
-    this.getLogsCallbacks = [];
-    this.pollFilters = [];
-    this.formatter = formatter;
-    this.implementation.newFilter(this.options, function(error, id){
-        if(error) {
-            self.callbacks.forEach(function(cb){
-                cb(error);
-            });
-            if (typeof filterCreationErrorCallback === 'function') {
-              filterCreationErrorCallback(error);
-            }
-        } else {
-            self.filterId = id;
-
-            // check if there are get pending callbacks as a consequence
-            // of calling get() with filterId unassigned.
-            self.getLogsCallbacks.forEach(function (cb){
-                self.get(cb);
-            });
-            self.getLogsCallbacks = [];
-
-            // get filter logs for the already existing watch calls
-            self.callbacks.forEach(function(cb){
-                getLogsAtStart(self, cb);
-            });
-            if(self.callbacks.length > 0)
-                pollFilter(self);
-
-            // start to watch immediately
-            if(typeof callback === 'function') {
-                return self.watch(callback);
-            }
-        }
-    });
-
-    return this;
-};
-
-Filter.prototype.watch = function (callback) {
-    this.callbacks.push(callback);
-
-    if(this.filterId) {
-        getLogsAtStart(this, callback);
-        pollFilter(this);
-    }
-
-    return this;
-};
-
-Filter.prototype.stopWatching = function (callback) {
-    this.requestManager.stopPolling(this.filterId);
-    this.callbacks = [];
-    // remove filter async
-    if (callback) {
-        this.implementation.uninstallFilter(this.filterId, callback);
-    } else {
-        return this.implementation.uninstallFilter(this.filterId);
-    }
-};
-
-Filter.prototype.get = function (callback) {
-    var self = this;
-    if (utils.isFunction(callback)) {
-        if (this.filterId === null) {
-            // If filterId is not set yet, call it back
-            // when newFilter() assigns it.
-            this.getLogsCallbacks.push(callback);
-        } else {
-            this.implementation.getLogs(this.filterId, function(err, res){
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, res.map(function (log) {
-                        return self.formatter ? self.formatter(log) : log;
-                    }));
-                }
-            });
-        }
-    } else {
-        if (this.filterId === null) {
-            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() method.');
-        }
-        var logs = this.implementation.getLogs(this.filterId);
-        return logs.map(function (log) {
-            return self.formatter ? self.formatter(log) : log;
-        });
-    }
-
-    return this;
-};
-
-module.exports = Filter;
-
-
-},{"../utils/utils":20,"./formatters":30}],30:[function(require,module,exports){
+},{"./../utils/utils":20,"./formatters":28,"./method":34,"./property":40}],28:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4071,7 +3770,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":18,"../utils/utils":20,"./iban":33}],31:[function(require,module,exports){
+},{"../utils/config":18,"../utils/utils":20,"./iban":31}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4356,8 +4055,8 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 
 module.exports = SolidityFunction;
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./errors":26,"./formatters":30}],32:[function(require,module,exports){
-(function (Buffer){
+
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":28}],30:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4525,7 +4224,7 @@ module.exports = HttpProvider;
 
 }).call(this,require("buffer").Buffer)
 
-},{"./errors":26,"buffer":53,"xhr2-cookies":126,"xmlhttprequest":17}],33:[function(require,module,exports){
+},{"./errors":25,"xmlhttprequest":17}],31:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4754,7 +4453,7 @@ Iban.prototype.toString = function () {
 module.exports = Iban;
 
 
-},{"bignumber.js":"bignumber.js"}],34:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],32:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5065,7 +4764,7 @@ IpcProvider.prototype.reset = function (callback) {
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":20,"./errors":26}],35:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25}],33:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5152,7 +4851,7 @@ Jsonrpc.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],36:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5326,7 +5025,8 @@ Method.prototype.request = function () {
 
 module.exports = Method;
 
-},{"../utils/utils":20,"./errors":26}],37:[function(require,module,exports){
+
+},{"../utils/utils":20,"./errors":25}],35:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5394,7 +5094,7 @@ var methods = function () {
 
 module.exports = DB;
 
-},{"../method":36}],38:[function(require,module,exports){
+},{"../method":34}],36:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5422,13 +5122,11 @@ module.exports = DB;
 
 var formatters = require('../formatters');
 var utils = require('../../utils/utils');
-var Method = require('../method');
-var Subscriptions = require('../subscriptions');
-var Property = require('../property');
 var c = require('../../utils/config');
+var Method = require('../method');
+var Property = require('../property');
+var Subscriptions = require('../subscriptions');
 var Contract = require('../contract');
-var watches = require('./watches');
-var Filter = require('../filter');
 var IsSyncing = require('../syncing');
 var namereg = require('../namereg');
 var Iban = require('../iban');
@@ -5764,10 +5462,6 @@ Eth.prototype.contract = function (abi) {
     return factory;
 };
 
-Eth.prototype.filter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'eth', this._requestManager, watches.eth(), formatters.outputLogFormatter, callback, filterCreationErrorCallback);
-};
-
 Eth.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
@@ -5783,7 +5477,7 @@ Eth.prototype.isSyncing = function (callback) {
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":42,"../property":43,"../subscriptions":47,"../syncing":48,"../transfer":49,"./watches":41}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":39,"../property":40,"../subscriptions":44,"../syncing":45,"../transfer":46}],37:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5837,7 +5531,7 @@ var properties = function () {
 
 module.exports = Net;
 
-},{"../../utils/utils":20,"../property":45}],40:[function(require,module,exports){
+},{"../../utils/utils":20,"../property":40}],38:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5866,6 +5560,8 @@ module.exports = Net;
 var Method = require('../method');
 var Property = require('../property');
 var formatters = require('../formatters');
+var Subscriptions = require('../subscriptions');
+
 
 function Personal(web3) {
     this._requestManager = web3._requestManager;
@@ -5876,6 +5572,8 @@ function Personal(web3) {
         method.attachToObject(self);
         method.setRequestManager(self._requestManager);
     });
+};
+
 
     properties().forEach(function(p) {
         p.attachToObject(self);
@@ -5931,176 +5629,42 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter]
     });
 
-    return [
-        newAccount,
-        importRawKey,
-        unlockAccount,
-        ecRecover,
-        sign,
-        sendTransaction,
-        lockAccount
-    ];
-};
-
-var properties = function () {
-    return [
-        new Property({
-            name: 'listAccounts',
-            getter: 'personal_listAccounts'
-        })
-    ];
-};
-
-
-module.exports = Personal;
-
-},{"../formatters":30,"../method":36,"../property":45}],41:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file shh.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Marek Kotewicz <marek@ethcore.io>
- * @date 2017
- */
-
-var Method = require('../method');
-var Filter = require('../filter');
-var watches = require('./watches');
-
-var Shh = function (web3) {
-    this._requestManager = web3._requestManager;
-
-    var self = this;
-
-    methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+    var getPastLogs = new Method({
+        name: 'getPastMessages',
+        call: 'shh_getMessages',
+        params: 1,
+        inputFormatter: [formatters.inputLogFormatter],
+        outputFormatter: formatters.outputPostFormatter
     });
-};
 
-Shh.prototype.newMessageFilter = function (options, callback, filterCreationErrorCallback) {
-    return new Filter(options, 'shh', this._requestManager, watches.shh(), null, callback, filterCreationErrorCallback);
-};
-
-var methods = function () {
+    // subscriptions
+    var subscribe = new Subscriptions({
+        name: 'subscribe',
+        subscribe: 'shh_subscribe',
+        unsubscribe: 'shh_unsubscribe',
+        subscriptions: {
+            'messages': {
+                params: 1,
+                inputFormatter: [formatters.inputLogFormatter],
+                outputFormatter: formatters.outputPostFormatter
+            }
+        }
+    });
 
     return [
-        new Method({
-            name: 'version',
-            call: 'shh_version',
-            params: 0
-        }),
-        new Method({
-            name: 'info',
-            call: 'shh_info',
-            params: 0
-        }),
-        new Method({
-            name: 'setMaxMessageSize',
-            call: 'shh_setMaxMessageSize',
-            params: 1
-        }),
-        new Method({
-            name: 'setMinPoW',
-            call: 'shh_setMinPoW',
-            params: 1
-        }),
-        new Method({
-            name: 'markTrustedPeer',
-            call: 'shh_markTrustedPeer',
-            params: 1
-        }),
-        new Method({
-            name: 'newKeyPair',
-            call: 'shh_newKeyPair',
-            params: 0
-        }),
-        new Method({
-            name: 'addPrivateKey',
-            call: 'shh_addPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteKeyPair',
-            call: 'shh_deleteKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'hasKeyPair',
-            call: 'shh_hasKeyPair',
-            params: 1
-        }),
-        new Method({
-            name: 'getPublicKey',
-            call: 'shh_getPublicKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getPrivateKey',
-            call: 'shh_getPrivateKey',
-            params: 1
-        }),
-        new Method({
-            name: 'newSymKey',
-            call: 'shh_newSymKey',
-            params: 0
-        }),
-        new Method({
-            name: 'addSymKey',
-            call: 'shh_addSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'generateSymKeyFromPassword',
-            call: 'shh_generateSymKeyFromPassword',
-            params: 1
-        }),
-        new Method({
-            name: 'hasSymKey',
-            call: 'shh_hasSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'getSymKey',
-            call: 'shh_getSymKey',
-            params: 1
-        }),
-        new Method({
-            name: 'deleteSymKey',
-            call: 'shh_deleteSymKey',
-            params: 1
-        }),
-
-        // subscribe and unsubscribe missing
-
-        new Method({
-            name: 'post',
-            call: 'shh_post',
-            params: 1,
-            inputFormatter: [null]
-        })
+        post,
+        newIdentity,
+        hasIdentity,
+        newGroup,
+        addToGroup,
+        subscribe
     ];
 };
 
 module.exports = Shh;
 
 
-},{"../filter":29,"../method":36,"./watches":43}],42:[function(require,module,exports){
+},{"../formatters":28,"../method":34,"../subscriptions":44}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6397,7 +5961,7 @@ module.exports = {
 };
 
 
-},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],45:[function(require,module,exports){
+},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],40:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6543,7 +6107,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":20}],46:[function(require,module,exports){
+},{"../utils/utils":20}],41:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6886,7 +6450,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":35}],47:[function(require,module,exports){
+},{"../utils/config":18,"../utils/utils":20,"./errors":25,"./jsonrpc":33}],42:[function(require,module,exports){
 
 
 var Settings = function () {
@@ -6897,7 +6461,7 @@ var Settings = function () {
 module.exports = Settings;
 
 
-},{}],48:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7094,7 +6658,7 @@ Subscription.prototype.subscribe = function() {
 };
 
 module.exports = Subscription;
-},{"../utils/utils":20,"./errors":26}],47:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25}],44:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7169,7 +6733,7 @@ Subscriptions.prototype.buildCall = function() {
 module.exports = Subscriptions;
 
 
-},{"../utils/utils":20,"./errors":26,"./subscription.js":46}],48:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"./subscription.js":43}],45:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7264,7 +6828,7 @@ IsSyncing.prototype.stopWatching = function () {
 module.exports = IsSyncing;
 
 
-},{"../utils/utils":20,"./formatters":30}],49:[function(require,module,exports){
+},{"../utils/utils":20,"./formatters":28}],46:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7358,9 +6922,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":33}],50:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":31}],47:[function(require,module,exports){
 
-},{}],51:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7652,7 +7216,7 @@ function from (value, encodingOrOffset, length) {
   }
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],52:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],49:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8400,7 +7964,7 @@ Buffer.prototype.write = function write (string, offset, length, encoding) {
         return asciiWrite(this, string, offset, length)
 
 }));
-},{"./core":53}],53:[function(require,module,exports){
+},{"./core":50}],50:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8931,7 +8495,7 @@ Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, no
 }
 
 }));
-},{}],54:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9074,7 +8638,7 @@ Buffer.prototype.copy = function copy (target, targetStart, start, end) {
   }
 
 }));
-},{"./core":53}],55:[function(require,module,exports){
+},{"./core":50}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9264,7 +8828,7 @@ function utf8ToBytes (string, units) {
 }
 
 }));
-},{"./core":53}],56:[function(require,module,exports){
+},{"./core":50}],53:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9473,7 +9037,7 @@ module.exports = {
             }
 
 }));
-},{"./core":53,"./hmac":58,"./sha1":77}],57:[function(require,module,exports){
+},{"./core":50,"./hmac":55,"./sha1":74}],54:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9536,7 +9100,7 @@ module.exports = {
 	            var x8 = d[x4];
 
 }));
-},{"./cipher-core":52,"./core":53}],58:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],55:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9887,7 +9451,7 @@ module.exports = {
 	        keySize: 128/32,
 
 }));
-},{"./core":53}],59:[function(require,module,exports){
+},{"./core":50}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9906,7 +9470,7 @@ module.exports = {
 	        _ENC_XFORM_MODE: 1,
 
 }));
-},{"./aes":51,"./cipher-core":52,"./core":53,"./enc-base64":54,"./enc-utf16":55,"./evpkdf":56,"./format-hex":57,"./hmac":58,"./lib-typedarrays":60,"./md5":61,"./mode-cfb":62,"./mode-ctr":64,"./mode-ctr-gladman":63,"./mode-ecb":65,"./mode-ofb":66,"./pad-ansix923":67,"./pad-iso10126":68,"./pad-iso97971":69,"./pad-nopadding":70,"./pad-zeropadding":71,"./pbkdf2":72,"./rabbit":74,"./rabbit-legacy":73,"./rc4":75,"./ripemd160":76,"./sha1":77,"./sha224":78,"./sha256":79,"./sha3":80,"./sha384":81,"./sha512":82,"./tripledes":83,"./x64-core":84}],60:[function(require,module,exports){
+},{"./aes":48,"./cipher-core":49,"./core":50,"./enc-base64":51,"./enc-utf16":52,"./evpkdf":53,"./format-hex":54,"./hmac":55,"./lib-typedarrays":57,"./md5":58,"./mode-cfb":59,"./mode-ctr":61,"./mode-ctr-gladman":60,"./mode-ecb":62,"./mode-ofb":63,"./pad-ansix923":64,"./pad-iso10126":65,"./pad-iso97971":66,"./pad-nopadding":67,"./pad-zeropadding":68,"./pbkdf2":69,"./rabbit":71,"./rabbit-legacy":70,"./rc4":72,"./ripemd160":73,"./sha1":74,"./sha224":75,"./sha256":76,"./sha3":77,"./sha384":78,"./sha512":79,"./tripledes":80,"./x64-core":81}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10064,7 +9628,7 @@ module.exports = {
 	                cipher.encryptBlock(words, offset);
 
 }));
-},{"./core":53}],61:[function(require,module,exports){
+},{"./core":50}],58:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10355,7 +9919,7 @@ module.exports = {
 	            }
 
 }));
-},{"./core":53}],62:[function(require,module,exports){
+},{"./core":50}],59:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10520,7 +10084,7 @@ module.exports = {
 	    var C_kdf = C.kdf = {};
 
 }));
-},{"./cipher-core":52,"./core":53}],63:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],60:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10638,7 +10202,7 @@ module.exports = {
 
 
 }));
-},{"./cipher-core":52,"./core":53}],64:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10688,7 +10252,7 @@ module.exports = {
 	    var C_lib = C.lib = {};
 
 }));
-},{"./cipher-core":52,"./core":53}],65:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10747,7 +10311,7 @@ module.exports = {
 	                subtype.$super = this;
 
 }));
-},{"./cipher-core":52,"./core":53}],66:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10901,7 +10465,7 @@ module.exports = {
 	            var thatSigBytes = wordArray.sigBytes;
 
 }));
-},{"./cipher-core":52,"./core":53}],67:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10975,7 +10539,7 @@ module.exports = {
 	        },
 
 }));
-},{"./cipher-core":52,"./core":53}],68:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11037,7 +10601,7 @@ module.exports = {
 	    });
 
 }));
-},{"./cipher-core":52,"./core":53}],69:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11114,7 +10678,7 @@ module.exports = {
 	    };
 
 }));
-},{"./cipher-core":52,"./core":53}],70:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11145,7 +10709,7 @@ module.exports = {
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":52,"./core":53}],71:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11192,7 +10756,7 @@ module.exports = {
 	    };
 
 }));
-},{"./cipher-core":52,"./core":53}],72:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11487,7 +11051,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":53,"./hmac":58,"./sha1":77}],73:[function(require,module,exports){
+},{"./core":50,"./hmac":55,"./sha1":74}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11623,7 +11187,7 @@ module.exports = {
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],74:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11773,7 +11337,7 @@ module.exports = {
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],75:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11973,7 +11537,7 @@ module.exports = {
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],76:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],73:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12117,7 +11681,7 @@ module.exports = {
 
 
 }));
-},{"./core":53}],77:[function(require,module,exports){
+},{"./core":50}],74:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12136,7 +11700,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":53}],78:[function(require,module,exports){
+},{"./core":50}],75:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12213,7 +11777,7 @@ module.exports = {
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":53,"./sha256":79}],79:[function(require,module,exports){
+},{"./core":50,"./sha256":76}],76:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12482,7 +12046,7 @@ module.exports = {
 	return CryptoJS.MD5;
 
 }));
-},{"./core":53}],80:[function(require,module,exports){
+},{"./core":50}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12737,7 +12301,7 @@ module.exports = {
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./core":53,"./x64-core":84}],81:[function(require,module,exports){
+},{"./core":50,"./x64-core":81}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12778,7 +12342,7 @@ module.exports = {
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./core":53,"./sha512":82,"./x64-core":84}],82:[function(require,module,exports){
+},{"./core":50,"./sha512":79,"./x64-core":81}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13000,7 +12564,7 @@ module.exports = {
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./core":53,"./x64-core":84}],83:[function(require,module,exports){
+},{"./core":50,"./x64-core":81}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -21791,7 +21355,7 @@ Url.prototype.format = function() {
   }
 
 }));
-},{"./cipher-core":52,"./core":53,"./enc-base64":54,"./evpkdf":56,"./md5":61}],84:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],81:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -22135,7 +21699,7 @@ Url.prototype.parseHost = function() {
 };
 
 }));
-},{"./core":53}],85:[function(require,module,exports){
+},{"./core":50}],82:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 

@@ -25,7 +25,11 @@ describe('web3.shh', function() {
         u.methodExists(web3.shh, 'deleteSymKey');
         u.methodExists(web3.shh, 'newMessageFilter');
         u.methodExists(web3.shh, 'post');
-
+        u.methodExists(web3.shh, 'newIdentity');
+        u.methodExists(web3.shh, 'hasIdentity');
+        u.methodExists(web3.shh, 'newGroup');
+        u.methodExists(web3.shh, 'addToGroup');
+        u.methodExists(web3.shh, 'subscribe');
     });
 });
 
