@@ -7,10 +7,28 @@ describe('lib/web3/method', function () {
         it('should format plain output', function () {
             
             // given
-            var formatter = function (args) {
-                return args.map(function (arg) {
-                    return arg + '*';
-                });
+            var formatter = function (arg) {
+                return arg + '*';
+            };
+            
+            var method = new Method({
+                outputFormatter: formatter
+            });
+            var args = '1';
+            var expectedArgs = '1*';
+
+            // when
+            var result = method.formatOutput(args);
+
+            // then
+            assert.deepEqual(result, expectedArgs);
+        });
+
+        it('should format output arrays with the same formatter', function () {
+            
+            // given
+            var formatter = function (arg) {
+                return arg + '*';
             };
             
             var method = new Method({

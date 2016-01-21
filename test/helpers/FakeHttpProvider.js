@@ -27,6 +27,7 @@ var FakeHttpProvider = function () {
     this.response = getResponseStub();
     this.error = null;
     this.validation = null;
+    this.notificationCallbacks = [];
 };
 
 FakeHttpProvider.prototype.send = function (payload) {
@@ -55,6 +56,21 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
+    }, 1);
+};
+
+FakeHttpProvider.prototype.on = function (type, callback) {
+    if(type === 'notification') {
+        this.notificationCallbacks.push(callback);
+    }
+};
+
+FakeHttpProvider.prototype.injectNotification = function (notification) {
+    var _this = this;
+    setTimeout(function(){
+        _this.notificationCallbacks.forEach(function(cb){
+            cb(null, notification);
+        });
     }, 1);
 };
 

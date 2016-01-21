@@ -23,7 +23,7 @@ var tests = [{
     },
     expected: {
         event: name,
-        args: {},
+        returnValues: {},
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
@@ -51,7 +51,7 @@ var tests = [{
     },
     expected: {
         event: name,
-        args: {
+        returnValues: {
             a: new BigNumber(1)
         },
         logIndex: 1,
@@ -100,7 +100,7 @@ var tests = [{
     },
     expected: {
         event: name,
-        args: {
+        returnValues: {
             a: new BigNumber(1),
             b: new BigNumber(10),
             c: new BigNumber(4),
@@ -152,7 +152,7 @@ var tests = [{
     },
     expected: {
         event: name,
-        args: {
+        returnValues: {
             a: new BigNumber(1),
             b: new BigNumber(10),
             c: new BigNumber(4),

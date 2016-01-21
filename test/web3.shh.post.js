@@ -7,9 +7,8 @@ var method = 'post';
 
 var tests = [{
     args: [{
-        symKeyID: '123123123ff',
-        sig: '44ffdd55',
-        topic: '0xffdd11',
+        from: '0x123123123',
+        topics: ['hello_world'],
         payload: web3.toHex('12345'),
         ttl: 100,
         minPow: 0.5,
