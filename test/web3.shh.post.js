@@ -9,7 +9,7 @@ var tests = [{
     args: [{
         from: '0x123123123',
         topics: ['hello_world'],
-        payload: '12345',
+        payload: web3.toHex('12345'),
         ttl: 100,
         workToProve: 101
     }],

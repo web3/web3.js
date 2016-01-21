@@ -12,7 +12,6 @@ var tests = [{
         name: 'event1',
         inputs: []
     },
-    indexed: {},
     options: {},
     expected: {
         address: address,
@@ -29,10 +28,11 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        a: 16
+    options: {
+        filter: {
+            a: 16
+        },
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -61,10 +61,11 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        b: 4
+    options: {
+        filter: {
+            b: 4
+        }
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -87,11 +88,12 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        a: [16, 1],
-        b: 2
+    options: {
+        filter: {
+            a: [16, 1],
+            b: 2
+        }
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -109,10 +111,11 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        a: null
+    options: {
+        filter: {
+            a: null
+        }
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -129,10 +132,10 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        a: 1
-    },
     options: {
+        filter: {
+            a: 1
+        },
         fromBlock: 'latest',
         toBlock: 'pending'
     },
@@ -155,10 +158,10 @@ var tests = [{
             indexed: true
         }]
     },
-    indexed: {
-        a: 1
-    },
     options: {
+        filter: {
+            a: 1
+        },
         fromBlock: 4,
         toBlock: 10
     },
@@ -181,10 +184,11 @@ var tests = [{
         }],
         anonymous: true
     },
-    indexed: {
-        a: 1
+    options: {
+        filter: {
+            a: 1
+        }
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -205,10 +209,11 @@ var tests = [{
         }],
         anonymous: true
     },
-    indexed: {
-        b: 1
+    options: {
+        filter: {
+            b: 1
+        }
     },
-    options: {},
     expected: {
         address: address,
         topics: [
@@ -228,7 +233,7 @@ describe('lib/web3/event', function () {
                     return signature.slice(2);
                 };
 
-                var result = event.encode(test.indexed, test.options);
+                var result = event.encode(test.options);
                 assert.deepEqual(result, test.expected);
             });
         });
