@@ -28,10 +28,6 @@
         var address;
         var contract;
         var inc;
-
-        var update = function (err, x) {
-            document.getElementById('result').textContent = JSON.stringify(x, null, 2);
-        };
     
         var createContract = function () {
             // let's assume that we have a private key to coinbase ;)
@@ -53,7 +49,9 @@
                     document.getElementById('status').innerText = 'Mined!';
                     document.getElementById('call').style.visibility = 'visible';
 
-                    inc = contract.Incremented({odd: true}, update);
+                    inc = contract.Incremented({filter: {odd: true}, fromBlock: 0}, function (err, x) {
+                        document.getElementById('result').textContent = JSON.stringify(x, null, 2);
+                    });
                 }
             });
         };
