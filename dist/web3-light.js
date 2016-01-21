@@ -1826,7 +1826,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":56,"crypto-js/sha3":77}],20:[function(require,module,exports){
+},{"crypto-js":55,"crypto-js/sha3":76}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2469,7 +2469,7 @@ module.exports = {
     isTopic: isTopic,
 };
 
-},{"bignumber.js":"bignumber.js","utf8":82}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":81}],21:[function(require,module,exports){
 module.exports={
     "version": "0.20.7"
 }
@@ -5127,7 +5127,6 @@ var Method = require('../method');
 var Property = require('../property');
 var Subscriptions = require('../subscriptions');
 var Contract = require('../contract');
-var IsSyncing = require('../syncing');
 var namereg = require('../namereg');
 var Iban = require('../iban');
 var transfer = require('../transfer');
@@ -5470,14 +5469,11 @@ Eth.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
-    return new IsSyncing(this._requestManager, callback);
-};
 
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":39,"../property":40,"../subscriptions":44,"../syncing":45,"../transfer":46}],37:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":39,"../property":40,"../subscriptions":44,"../transfer":45}],37:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6148,8 +6144,6 @@ var errors = require('./errors');
 var RequestManager = function (provider) {
     this.setProvider(provider);
     this.subscriptions = {};
-    this.polls = {};
-    this.timeout = null;
 };
 
 /**
@@ -6308,21 +6302,6 @@ RequestManager.prototype.setProvider = function (p) {
 RequestManager.prototype.reset = function (keepIsSyncing) {
     var _this = this;
 
-    for (var key in this.polls) {
-        // remove all polls, except sync polls,
-        // they need to be removed manually by calling syncing.stopWatching()
-        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
-            this.polls[key].uninstall();
-            delete this.polls[key];
-        }
-    }
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-
 
     // uninstall all subscriptions
     Object.keys(this.subscriptions).forEach(function(id){
@@ -6335,120 +6314,7 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
         this.provider.reset();
 };
 
-
-/**
- * Should be used to start polling
- *
- * @method startPolling
- * @param {Object} data
- * @param {Number} pollId
- * @param {Function} callback
- * @param {Function} uninstall
- *
- * @todo cleanup number of params
- */
-RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
-
-
-    // start polling
-    if (!this.timeout) {
-        this.poll();
-    }
-};
-
-/**
- * Should be used to stop polling for filter with given id
- *
- * @method stopPolling
- * @param {Number} pollId
- */
-RequestManager.prototype.stopPolling = function (pollId) {
-    delete this.polls[pollId];
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-};
-
-
-/**
- * Should be called to poll for changes on filter with given id
- *
- * @method poll
- */
-RequestManager.prototype.poll = function () {
-    /*jshint maxcomplexity: 6 */
-    this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
-
-    if (Object.keys(this.polls).length === 0) {
-        return;
-    }
-
-    if (!this.provider) {
-        console.error(errors.InvalidProvider());
-        return;
-    }
-
-    var pollsData = [];
-    var pollsIds = [];
-    for (var key in this.polls) {
-        pollsData.push(this.polls[key].data);
-        pollsIds.push(key);
-    }
-
-    if (pollsData.length === 0) {
-        return;
-    }
-
-    var payload = Jsonrpc.toBatchPayload(pollsData);
-    
-    // map the request id to they poll id
-    var pollsIdMap = {};
-    payload.forEach(function(load, index){
-        pollsIdMap[load.id] = pollsIds[index];
-    });
-
-
-    var self = this;
-    this.provider.sendAsync(payload, function (error, results) {
-
-
-        // TODO: console log?
-        if (error) {
-            return;
-        }
-
-        if (!utils.isArray(results)) {
-            throw errors.InvalidResponse(results);
-        }
-        results.map(function (result) {
-            var id = pollsIdMap[result.id];
-
-            // make sure the filter is still installed after arrival of the request
-            if (self.polls[id]) {
-                result.callback = self.polls[id].callback;
-                return result;
-            } else
-                return false;
-        }).filter(function (result) {
-            return !!result; 
-        }).filter(function (result) {
-            var valid = Jsonrpc.isValidResponse(result);
-            if (!valid) {
-                result.callback(errors.InvalidResponse(result));
-            }
-            return valid;
-        }).forEach(function (result) {
-            result.callback(null, result.result);
-        });
-    });
-};
-
 module.exports = RequestManager;
-
 
 },{"../utils/config":18,"../utils/utils":20,"./errors":25,"./jsonrpc":33}],42:[function(require,module,exports){
 
@@ -6750,101 +6616,6 @@ module.exports = Subscriptions;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file syncing.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
- */
-
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-
-var count = 1;
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method pollSyncing
-@param {Object} self
-*/
-var pollSyncing = function(self) {
-
-    var onMessage = function (error, sync) {
-        if (error) {
-            return self.callbacks.forEach(function (callback) {
-                callback(error);
-            });
-        }
-
-        if(utils.isObject(sync) && sync.startingBlock)
-            sync = formatters.outputSyncingFormatter(sync);
-
-        self.callbacks.forEach(function (callback) {
-            if (self.lastSyncState !== sync) {
-                
-                // call the callback with true first so the app can stop anything, before receiving the sync data
-                if(!self.lastSyncState && utils.isObject(sync))
-                    callback(null, true);
-                
-                // call on the next CPU cycle, so the actions of the sync stop can be processes first
-                setTimeout(function() {
-                    callback(null, sync);
-                }, 0);
-                
-                self.lastSyncState = sync;
-            }
-        });
-    };
-
-    self.requestManager.startPolling({
-        method: 'eth_syncing',
-        params: [],
-    }, self.pollId, onMessage, self.stopWatching.bind(self));
-
-};
-
-var IsSyncing = function (requestManager, callback) {
-    this.requestManager = requestManager;
-    this.pollId = 'syncPoll_'+ count++;
-    this.callbacks = [];
-    this.addCallback(callback);
-    this.lastSyncState = false;
-    pollSyncing(this);
-
-    return this;
-};
-
-IsSyncing.prototype.addCallback = function (callback) {
-    if(callback)
-        this.callbacks.push(callback);
-    return this;
-};
-
-IsSyncing.prototype.stopWatching = function () {
-    this.requestManager.stopPolling(this.pollId);
-    this.callbacks = [];
-};
-
-module.exports = IsSyncing;
-
-
-},{"../utils/utils":20,"./formatters":28}],46:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
 /** 
  * @file transfer.js
  * @author Marek Kotewicz <marek@ethdev.com>
@@ -6922,9 +6693,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":31}],47:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":31}],46:[function(require,module,exports){
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7216,7 +6987,7 @@ function from (value, encodingOrOffset, length) {
   }
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],49:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],48:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7964,7 +7735,7 @@ Buffer.prototype.write = function write (string, offset, length, encoding) {
         return asciiWrite(this, string, offset, length)
 
 }));
-},{"./core":50}],50:[function(require,module,exports){
+},{"./core":49}],49:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8495,7 +8266,7 @@ Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, no
 }
 
 }));
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8638,7 +8409,7 @@ Buffer.prototype.copy = function copy (target, targetStart, start, end) {
   }
 
 }));
-},{"./core":50}],52:[function(require,module,exports){
+},{"./core":49}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8828,7 +8599,7 @@ function utf8ToBytes (string, units) {
 }
 
 }));
-},{"./core":50}],53:[function(require,module,exports){
+},{"./core":49}],52:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9037,7 +8808,7 @@ module.exports = {
             }
 
 }));
-},{"./core":50,"./hmac":55,"./sha1":74}],54:[function(require,module,exports){
+},{"./core":49,"./hmac":54,"./sha1":73}],53:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9100,7 +8871,7 @@ module.exports = {
 	            var x8 = d[x4];
 
 }));
-},{"./cipher-core":49,"./core":50}],55:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],54:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9207,19 +8978,41 @@ module.exports = {
 	            this._doCryptBlock(M, offset, this._keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX);
 	        },
 
-	        decryptBlock: function (M, offset) {
-	            // Swap 2nd and 4th rows
-	            var t = M[offset + 1];
-	            M[offset + 1] = M[offset + 3];
-	            M[offset + 3] = t;
+}));
+},{"./core":49}],55:[function(require,module,exports){
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./x64-core"), require("./lib-typedarrays"), require("./enc-utf16"), require("./enc-base64"), require("./md5"), require("./sha1"), require("./sha256"), require("./sha224"), require("./sha512"), require("./sha384"), require("./sha3"), require("./ripemd160"), require("./hmac"), require("./pbkdf2"), require("./evpkdf"), require("./cipher-core"), require("./mode-cfb"), require("./mode-ctr"), require("./mode-ctr-gladman"), require("./mode-ofb"), require("./mode-ecb"), require("./pad-ansix923"), require("./pad-iso10126"), require("./pad-iso97971"), require("./pad-zeropadding"), require("./pad-nopadding"), require("./format-hex"), require("./aes"), require("./tripledes"), require("./rc4"), require("./rabbit"), require("./rabbit-legacy"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./x64-core", "./lib-typedarrays", "./enc-utf16", "./enc-base64", "./md5", "./sha1", "./sha256", "./sha224", "./sha512", "./sha384", "./sha3", "./ripemd160", "./hmac", "./pbkdf2", "./evpkdf", "./cipher-core", "./mode-cfb", "./mode-ctr", "./mode-ctr-gladman", "./mode-ofb", "./mode-ecb", "./pad-ansix923", "./pad-iso10126", "./pad-iso97971", "./pad-zeropadding", "./pad-nopadding", "./format-hex", "./aes", "./tripledes", "./rc4", "./rabbit", "./rabbit-legacy"], factory);
+	}
+	else {
+		// Global (browser)
+		root.CryptoJS = factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
 	            this._doCryptBlock(M, offset, this._invKeySchedule, INV_SUB_MIX_0, INV_SUB_MIX_1, INV_SUB_MIX_2, INV_SUB_MIX_3, INV_SBOX);
 
-	            // Inv swap 2nd and 4th rows
-	            var t = M[offset + 1];
-	            M[offset + 1] = M[offset + 3];
-	            M[offset + 3] = t;
-	        },
+}));
+},{"./aes":47,"./cipher-core":48,"./core":49,"./enc-base64":50,"./enc-utf16":51,"./evpkdf":52,"./format-hex":53,"./hmac":54,"./lib-typedarrays":56,"./md5":57,"./mode-cfb":58,"./mode-ctr":60,"./mode-ctr-gladman":59,"./mode-ecb":61,"./mode-ofb":62,"./pad-ansix923":63,"./pad-iso10126":64,"./pad-iso97971":65,"./pad-nopadding":66,"./pad-zeropadding":67,"./pbkdf2":68,"./rabbit":70,"./rabbit-legacy":69,"./rc4":71,"./ripemd160":72,"./sha1":73,"./sha224":74,"./sha256":75,"./sha3":76,"./sha384":77,"./sha512":78,"./tripledes":79,"./x64-core":80}],56:[function(require,module,exports){
+;(function (root, factory) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
 	        _doCryptBlock: function (M, offset, keySchedule, SUB_MIX_0, SUB_MIX_1, SUB_MIX_2, SUB_MIX_3, SBOX) {
 	            // Shortcut
@@ -9280,7 +9073,7 @@ module.exports = {
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":51,"./core":52}],57:[function(require,module,exports){
+},{"./core":49}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9628,8 +9421,8 @@ module.exports = {
 	                cipher.encryptBlock(words, offset);
 
 }));
-},{"./core":50}],58:[function(require,module,exports){
-;(function (root, factory) {
+},{"./core":49}],58:[function(require,module,exports){
+;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -9729,12 +9522,22 @@ module.exports = {
 	            // Create padding word
 	            var paddingWord = (nPaddingBytes << 24) | (nPaddingBytes << 16) | (nPaddingBytes << 8) | nPaddingBytes;
 
-	            // Create padding
-	            var paddingWords = [];
-	            for (var i = 0; i < nPaddingBytes; i += 4) {
-	                paddingWords.push(paddingWord);
-	            }
-	            var padding = WordArray.create(paddingWords, nPaddingBytes);
+}));
+},{"./cipher-core":48,"./core":49}],59:[function(require,module,exports){
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
 	            // Add padding
 	            data.concat(padding);
@@ -9827,42 +9630,49 @@ module.exports = {
 	        blockSize: 128/32
 	    });
 
-	    /**
-	     * A collection of cipher parameters.
-	     *
-	     * @property {WordArray} ciphertext The raw ciphertext.
-	     * @property {WordArray} key The key to this ciphertext.
-	     * @property {WordArray} iv The IV used in the ciphering operation.
-	     * @property {WordArray} salt The salt used with a key derivation function.
-	     * @property {Cipher} algorithm The cipher algorithm.
-	     * @property {Mode} mode The block mode used in the ciphering operation.
-	     * @property {Padding} padding The padding scheme used in the ciphering operation.
-	     * @property {number} blockSize The block size of the cipher.
-	     * @property {Format} formatter The default formatting strategy to convert this cipher params object to a string.
-	     */
-	    var CipherParams = C_lib.CipherParams = Base.extend({
-	        /**
-	         * Initializes a newly created cipher params object.
-	         *
-	         * @param {Object} cipherParams An object with any of the possible cipher parameters.
-	         *
-	         * @example
-	         *
-	         *     var cipherParams = CryptoJS.lib.CipherParams.create({
-	         *         ciphertext: ciphertextWordArray,
-	         *         key: keyWordArray,
-	         *         iv: ivWordArray,
-	         *         salt: saltWordArray,
-	         *         algorithm: CryptoJS.algo.AES,
-	         *         mode: CryptoJS.mode.CBC,
-	         *         padding: CryptoJS.pad.PKCS7,
-	         *         blockSize: 4,
-	         *         formatter: CryptoJS.format.OpenSSL
-	         *     });
-	         */
-	        init: function (cipherParams) {
-	            this.mixIn(cipherParams);
-	        },
+}));
+},{"./cipher-core":48,"./core":49}],60:[function(require,module,exports){
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
+
+	/**
+	 * Counter block mode.
+	 */
+	CryptoJS.mode.CTR = (function () {
+	    var CTR = CryptoJS.lib.BlockCipherMode.extend();
+
+	    var Encryptor = CTR.Encryptor = CTR.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var counter = this._counter;
+
+	            // Generate keystream
+	            if (iv) {
+	                counter = this._counter = iv.slice(0);
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+	            var keystream = counter.slice(0);
+	            cipher.encryptBlock(keystream, 0);
+
+	            // Increment counter
+	            counter[blockSize - 1] = (counter[blockSize - 1] + 1) | 0
 
 	        /**
 	         * Converts this cipher params object to a string.
@@ -9919,7 +9729,7 @@ module.exports = {
 	            }
 
 }));
-},{"./core":50}],59:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9969,18 +9779,22 @@ module.exports = {
 	        }
 	    };
 
-	    /**
-	     * A cipher wrapper that returns ciphertext as a serializable cipher params object.
-	     */
-	    var SerializableCipher = C_lib.SerializableCipher = Base.extend({
-	        /**
-	         * Configuration options.
-	         *
-	         * @property {Formatter} format The formatting strategy to convert cipher param objects to and from a string. Default: OpenSSL
-	         */
-	        cfg: Base.extend({
-	            format: OpenSSLFormatter
-	        }),
+}));
+},{"./cipher-core":48,"./core":49}],62:[function(require,module,exports){
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
 
 	        /**
 	         * Encrypts a message.
@@ -10084,7 +9898,7 @@ module.exports = {
 	    var C_kdf = C.kdf = {};
 
 }));
-},{"./cipher-core":49,"./core":50}],60:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10202,7 +10016,7 @@ module.exports = {
 
 
 }));
-},{"./cipher-core":49,"./core":50}],61:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10252,7 +10066,7 @@ module.exports = {
 	    var C_lib = C.lib = {};
 
 }));
-},{"./cipher-core":49,"./core":50}],62:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10311,7 +10125,7 @@ module.exports = {
 	                subtype.$super = this;
 
 }));
-},{"./cipher-core":49,"./core":50}],63:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10465,7 +10279,7 @@ module.exports = {
 	            var thatSigBytes = wordArray.sigBytes;
 
 }));
-},{"./cipher-core":49,"./core":50}],64:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10539,7 +10353,7 @@ module.exports = {
 	        },
 
 }));
-},{"./cipher-core":49,"./core":50}],65:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10678,7 +10492,7 @@ module.exports = {
 	    };
 
 }));
-},{"./cipher-core":49,"./core":50}],67:[function(require,module,exports){
+},{"./core":49,"./hmac":54,"./sha1":73}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10756,7 +10570,7 @@ module.exports = {
 	    };
 
 }));
-},{"./cipher-core":49,"./core":50}],69:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10998,68 +10812,16 @@ module.exports = {
 	            return hash;
 	        },
 
-	        blockSize: 512/32,
-
-	        /**
-	         * Creates a shortcut function to a hasher's object interface.
-	         *
-	         * @param {Hasher} hasher The hasher to create a helper for.
-	         *
-	         * @return {Function} The shortcut function.
-	         *
-	         * @static
-	         *
-	         * @example
-	         *
-	         *     var SHA256 = CryptoJS.lib.Hasher._createHelper(CryptoJS.algo.SHA256);
-	         */
-	        _createHelper: function (hasher) {
-	            return function (message, cfg) {
-	                return new hasher.init(cfg).finalize(message);
-	            };
-	        },
-
-	        /**
-	         * Creates a shortcut function to the HMAC's object interface.
-	         *
-	         * @param {Hasher} hasher The hasher to use in this HMAC helper.
-	         *
-	         * @return {Function} The shortcut function.
-	         *
-	         * @static
-	         *
-	         * @example
-	         *
-	         *     var HmacSHA256 = CryptoJS.lib.Hasher._createHmacHelper(CryptoJS.algo.SHA256);
-	         */
-	        _createHmacHelper: function (hasher) {
-	            return function (message, key) {
-	                return new C_algo.HMAC.init(hasher, key).finalize(message);
-	            };
-	        }
-	    });
-
-	    /**
-	     * Algorithm namespace.
-	     */
-	    var C_algo = C.algo = {};
-
-	    return C;
-	}(Math));
-
-
-	return CryptoJS;
-
 }));
-},{"./core":50,"./hmac":55,"./sha1":74}],70:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
-		module.exports = exports = factory(require("./core"));
+		module.exports = exports = factory(require("./core"), require("./enc-base64"), require("./md5"), require("./evpkdf"), require("./cipher-core"));
 	}
 	else if (typeof define === "function" && define.amd) {
 		// AMD
-		define(["./core"], factory);
+		define(["./core", "./enc-base64", "./md5", "./evpkdf", "./cipher-core"], factory);
 	}
 	else {
 		// Global (browser)
@@ -11187,8 +10949,8 @@ module.exports = {
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],71:[function(require,module,exports){
-;(function (root, factory, undef) {
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],72:[function(require,module,exports){
+;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -11337,8 +11099,8 @@ module.exports = {
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],72:[function(require,module,exports){
-;(function (root, factory, undef) {
+},{"./core":49}],73:[function(require,module,exports){
+;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"), require("./sha1"), require("./hmac"));
@@ -11470,7 +11232,7 @@ module.exports = {
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":59,"./hmac":64,"./sha1":83}],63:[function(require,module,exports){
+},{"./core":49}],74:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11537,7 +11299,7 @@ module.exports = {
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],73:[function(require,module,exports){
+},{"./core":49,"./sha256":75}],75:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11777,8 +11539,8 @@ module.exports = {
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":50,"./sha256":76}],76:[function(require,module,exports){
-;(function (root, factory) {
+},{"./core":49}],76:[function(require,module,exports){
+;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -12046,7 +11808,7 @@ module.exports = {
 	return CryptoJS.MD5;
 
 }));
-},{"./core":50}],77:[function(require,module,exports){
+},{"./core":49,"./x64-core":80}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12125,8 +11887,8 @@ module.exports = {
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./core":52,"./sha256":78}],78:[function(require,module,exports){
-;(function (root, factory) {
+},{"./core":49,"./sha512":78,"./x64-core":80}],78:[function(require,module,exports){
+;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"), require("./cipher-core"));
@@ -12342,7 +12104,7 @@ module.exports = {
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./core":50,"./sha512":79,"./x64-core":81}],79:[function(require,module,exports){
+},{"./core":49,"./x64-core":80}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -21355,7 +21117,7 @@ Url.prototype.format = function() {
   }
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],81:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],80:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -21699,7 +21461,7 @@ Url.prototype.parseHost = function() {
 };
 
 }));
-},{"./core":50}],82:[function(require,module,exports){
+},{"./core":49}],81:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 

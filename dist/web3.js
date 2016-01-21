@@ -1826,7 +1826,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":56,"crypto-js/sha3":77}],20:[function(require,module,exports){
+},{"crypto-js":55,"crypto-js/sha3":76}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2469,7 +2469,7 @@ module.exports = {
     isTopic: isTopic,
 };
 
-},{"bignumber.js":"bignumber.js","utf8":82}],21:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js","utf8":81}],21:[function(require,module,exports){
 module.exports={
     "version": "0.20.7"
 }
@@ -5127,7 +5127,6 @@ var Method = require('../method');
 var Property = require('../property');
 var Subscriptions = require('../subscriptions');
 var Contract = require('../contract');
-var IsSyncing = require('../syncing');
 var namereg = require('../namereg');
 var Iban = require('../iban');
 var transfer = require('../transfer');
@@ -5470,14 +5469,11 @@ Eth.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
-    return new IsSyncing(this._requestManager, callback);
-};
 
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":39,"../property":40,"../subscriptions":44,"../syncing":45,"../transfer":46}],37:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":39,"../property":40,"../subscriptions":44,"../transfer":45}],37:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5892,8 +5888,6 @@ var errors = require('./errors');
 var RequestManager = function (provider) {
     this.setProvider(provider);
     this.subscriptions = {};
-    this.polls = {};
-    this.timeout = null;
 };
 
 /**
@@ -6052,21 +6046,6 @@ RequestManager.prototype.setProvider = function (p) {
 RequestManager.prototype.reset = function (keepIsSyncing) {
     var _this = this;
 
-    for (var key in this.polls) {
-        // remove all polls, except sync polls,
-        // they need to be removed manually by calling syncing.stopWatching()
-        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
-            this.polls[key].uninstall();
-            delete this.polls[key];
-        }
-    }
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-
 
     // uninstall all subscriptions
     Object.keys(this.subscriptions).forEach(function(id){
@@ -6079,120 +6058,7 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
         this.provider.reset();
 };
 
-
-/**
- * Should be used to start polling
- *
- * @method startPolling
- * @param {Object} data
- * @param {Number} pollId
- * @param {Function} callback
- * @param {Function} uninstall
- *
- * @todo cleanup number of params
- */
-RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
-
-
-    // start polling
-    if (!this.timeout) {
-        this.poll();
-    }
-};
-
-/**
- * Should be used to stop polling for filter with given id
- *
- * @method stopPolling
- * @param {Number} pollId
- */
-RequestManager.prototype.stopPolling = function (pollId) {
-    delete this.polls[pollId];
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-};
-
-
-/**
- * Should be called to poll for changes on filter with given id
- *
- * @method poll
- */
-RequestManager.prototype.poll = function () {
-    /*jshint maxcomplexity: 6 */
-    this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
-
-    if (Object.keys(this.polls).length === 0) {
-        return;
-    }
-
-    if (!this.provider) {
-        console.error(errors.InvalidProvider());
-        return;
-    }
-
-    var pollsData = [];
-    var pollsIds = [];
-    for (var key in this.polls) {
-        pollsData.push(this.polls[key].data);
-        pollsIds.push(key);
-    }
-
-    if (pollsData.length === 0) {
-        return;
-    }
-
-    var payload = Jsonrpc.toBatchPayload(pollsData);
-    
-    // map the request id to they poll id
-    var pollsIdMap = {};
-    payload.forEach(function(load, index){
-        pollsIdMap[load.id] = pollsIds[index];
-    });
-
-
-    var self = this;
-    this.provider.sendAsync(payload, function (error, results) {
-
-
-        // TODO: console log?
-        if (error) {
-            return;
-        }
-
-        if (!utils.isArray(results)) {
-            throw errors.InvalidResponse(results);
-        }
-        results.map(function (result) {
-            var id = pollsIdMap[result.id];
-
-            // make sure the filter is still installed after arrival of the request
-            if (self.polls[id]) {
-                result.callback = self.polls[id].callback;
-                return result;
-            } else
-                return false;
-        }).filter(function (result) {
-            return !!result; 
-        }).filter(function (result) {
-            var valid = Jsonrpc.isValidResponse(result);
-            if (!valid) {
-                result.callback(errors.InvalidResponse(result));
-            }
-            return valid;
-        }).forEach(function (result) {
-            result.callback(null, result.result);
-        });
-    });
-};
-
 module.exports = RequestManager;
-
 
 },{"../utils/config":18,"../utils/utils":20,"./errors":25,"./jsonrpc":33}],42:[function(require,module,exports){
 
@@ -6494,101 +6360,6 @@ module.exports = Subscriptions;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file syncing.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
- */
-
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-
-var count = 1;
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method pollSyncing
-@param {Object} self
-*/
-var pollSyncing = function(self) {
-
-    var onMessage = function (error, sync) {
-        if (error) {
-            return self.callbacks.forEach(function (callback) {
-                callback(error);
-            });
-        }
-
-        if(utils.isObject(sync) && sync.startingBlock)
-            sync = formatters.outputSyncingFormatter(sync);
-
-        self.callbacks.forEach(function (callback) {
-            if (self.lastSyncState !== sync) {
-                
-                // call the callback with true first so the app can stop anything, before receiving the sync data
-                if(!self.lastSyncState && utils.isObject(sync))
-                    callback(null, true);
-                
-                // call on the next CPU cycle, so the actions of the sync stop can be processes first
-                setTimeout(function() {
-                    callback(null, sync);
-                }, 0);
-                
-                self.lastSyncState = sync;
-            }
-        });
-    };
-
-    self.requestManager.startPolling({
-        method: 'eth_syncing',
-        params: [],
-    }, self.pollId, onMessage, self.stopWatching.bind(self));
-
-};
-
-var IsSyncing = function (requestManager, callback) {
-    this.requestManager = requestManager;
-    this.pollId = 'syncPoll_'+ count++;
-    this.callbacks = [];
-    this.addCallback(callback);
-    this.lastSyncState = false;
-    pollSyncing(this);
-
-    return this;
-};
-
-IsSyncing.prototype.addCallback = function (callback) {
-    if(callback)
-        this.callbacks.push(callback);
-    return this;
-};
-
-IsSyncing.prototype.stopWatching = function () {
-    this.requestManager.stopPolling(this.pollId);
-    this.callbacks = [];
-};
-
-module.exports = IsSyncing;
-
-
-},{"../utils/utils":20,"./formatters":28}],46:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
 /** 
  * @file transfer.js
  * @author Marek Kotewicz <marek@ethdev.com>
@@ -6666,9 +6437,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":31}],47:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":31}],46:[function(require,module,exports){
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6960,7 +6731,7 @@ function from (value, encodingOrOffset, length) {
   }
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],49:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],48:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7708,7 +7479,7 @@ Buffer.prototype.write = function write (string, offset, length, encoding) {
         return asciiWrite(this, string, offset, length)
 
 }));
-},{"./core":50}],50:[function(require,module,exports){
+},{"./core":49}],49:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8239,7 +8010,7 @@ Buffer.prototype.writeIntBE = function writeIntBE (value, offset, byteLength, no
 }
 
 }));
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8382,7 +8153,7 @@ Buffer.prototype.copy = function copy (target, targetStart, start, end) {
   }
 
 }));
-},{"./core":50}],52:[function(require,module,exports){
+},{"./core":49}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8572,7 +8343,7 @@ function utf8ToBytes (string, units) {
 }
 
 }));
-},{"./core":50}],53:[function(require,module,exports){
+},{"./core":49}],52:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8781,7 +8552,7 @@ module.exports = {
             }
 
 }));
-},{"./core":50,"./hmac":55,"./sha1":74}],54:[function(require,module,exports){
+},{"./core":49,"./hmac":54,"./sha1":73}],53:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8844,7 +8615,7 @@ module.exports = {
 	            var x8 = d[x4];
 
 }));
-},{"./cipher-core":49,"./core":50}],55:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],54:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8969,7 +8740,7 @@ module.exports = {
 
 
 }));
-},{"./core":50}],56:[function(require,module,exports){
+},{"./core":49}],55:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8988,7 +8759,7 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./aes":48,"./cipher-core":49,"./core":50,"./enc-base64":51,"./enc-utf16":52,"./evpkdf":53,"./format-hex":54,"./hmac":55,"./lib-typedarrays":57,"./md5":58,"./mode-cfb":59,"./mode-ctr":61,"./mode-ctr-gladman":60,"./mode-ecb":62,"./mode-ofb":63,"./pad-ansix923":64,"./pad-iso10126":65,"./pad-iso97971":66,"./pad-nopadding":67,"./pad-zeropadding":68,"./pbkdf2":69,"./rabbit":71,"./rabbit-legacy":70,"./rc4":72,"./ripemd160":73,"./sha1":74,"./sha224":75,"./sha256":76,"./sha3":77,"./sha384":78,"./sha512":79,"./tripledes":80,"./x64-core":81}],57:[function(require,module,exports){
+},{"./aes":47,"./cipher-core":48,"./core":49,"./enc-base64":50,"./enc-utf16":51,"./evpkdf":52,"./format-hex":53,"./hmac":54,"./lib-typedarrays":56,"./md5":57,"./mode-cfb":58,"./mode-ctr":60,"./mode-ctr-gladman":59,"./mode-ecb":61,"./mode-ofb":62,"./pad-ansix923":63,"./pad-iso10126":64,"./pad-iso97971":65,"./pad-nopadding":66,"./pad-zeropadding":67,"./pbkdf2":68,"./rabbit":70,"./rabbit-legacy":69,"./rc4":71,"./ripemd160":72,"./sha1":73,"./sha224":74,"./sha256":75,"./sha3":76,"./sha384":77,"./sha512":78,"./tripledes":79,"./x64-core":80}],56:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9063,7 +8834,7 @@ module.exports = {
 	return CryptoJS.AES;
 
 }));
-},{"./core":50}],58:[function(require,module,exports){
+},{"./core":49}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9411,7 +9182,7 @@ module.exports = {
 	                cipher.encryptBlock(words, offset);
 
 }));
-},{"./cipher-core":49,"./core":50}],60:[function(require,module,exports){
+},{"./core":49}],58:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9520,7 +9291,7 @@ module.exports = {
 	            var padding = WordArray.create(paddingWords, nPaddingBytes);
 
 }));
-},{"./cipher-core":49,"./core":50}],61:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],59:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9602,13 +9373,84 @@ module.exports = {
 	            // Shortcut
 	            var padding = this.cfg.padding;
 
-	            // Finalize
-	            if (this._xformMode == this._ENC_XFORM_MODE) {
-	                // Pad data
-	                padding.pad(this._data, this.blockSize);
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
+
+	    CTRGladman.Decryptor = Encryptor;
+
+	    return CTRGladman;
+	}());
+
+
+
+
+	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":49,"./core":50}],62:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],60:[function(require,module,exports){
+;(function (root, factory, undef) {
+	if (typeof exports === "object") {
+		// CommonJS
+		module.exports = exports = factory(require("./core"), require("./cipher-core"));
+	}
+	else if (typeof define === "function" && define.amd) {
+		// AMD
+		define(["./core", "./cipher-core"], factory);
+	}
+	else {
+		// Global (browser)
+		factory(root.CryptoJS);
+	}
+}(this, function (CryptoJS) {
+
+	/**
+	 * Counter block mode.
+	 */
+	CryptoJS.mode.CTR = (function () {
+	    var CTR = CryptoJS.lib.BlockCipherMode.extend();
+
+	    var Encryptor = CTR.Encryptor = CTR.extend({
+	        processBlock: function (words, offset) {
+	            // Shortcuts
+	            var cipher = this._cipher
+	            var blockSize = cipher.blockSize;
+	            var iv = this._iv;
+	            var counter = this._counter;
+
+	            // Generate keystream
+	            if (iv) {
+	                counter = this._counter = iv.slice(0);
+
+	                // Remove IV for subsequent blocks
+	                this._iv = undefined;
+	            }
+	            var keystream = counter.slice(0);
+	            cipher.encryptBlock(keystream, 0);
+
+	            // Increment counter
+	            counter[blockSize - 1] = (counter[blockSize - 1] + 1) | 0
+
+	            // Encrypt
+	            for (var i = 0; i < blockSize; i++) {
+	                words[offset + i] ^= keystream[i];
+	            }
+	        }
+	    });
+
+	    CTR.Decryptor = Encryptor;
+
+	    return CTR;
+	}());
+
+
+	return CryptoJS.mode.CTR;
+
+}));
+},{"./cipher-core":48,"./core":49}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9641,7 +9483,7 @@ module.exports = {
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":49,"./core":50}],63:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9735,7 +9577,7 @@ module.exports = {
 	            }
 
 }));
-},{"./cipher-core":49,"./core":50}],64:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9821,7 +9663,7 @@ module.exports = {
 	            cfg = this.cfg.extend(cfg);
 
 }));
-},{"./cipher-core":49,"./core":50}],65:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9913,7 +9755,7 @@ module.exports = {
 	    var C_kdf = C.kdf = {};
 
 }));
-},{"./cipher-core":49,"./core":50}],66:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9980,7 +9822,7 @@ module.exports = {
 	            var derivedParams = cfg.kdf.execute(password, cipher.keySize, cipher.ivSize);
 
 }));
-},{"./cipher-core":49,"./core":50}],67:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10045,7 +9887,7 @@ module.exports = {
 
 
 }));
-},{"./cipher-core":49,"./core":50}],68:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10100,7 +9942,7 @@ module.exports = {
 	    var Base = C_lib.Base = (function () {
 
 }));
-},{"./cipher-core":49,"./core":50}],69:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10299,7 +10141,7 @@ module.exports = {
 	            var thatSigBytes = wordArray.sigBytes;
 
 }));
-},{"./cipher-core":52,"./core":53}],67:[function(require,module,exports){
+},{"./core":49,"./hmac":54,"./sha1":73}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10435,7 +10277,7 @@ module.exports = {
 	    });
 
 }));
-},{"./cipher-core":52,"./core":53}],69:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10543,7 +10385,7 @@ module.exports = {
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":52,"./core":53}],71:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10590,8 +10432,8 @@ module.exports = {
 	    };
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],71:[function(require,module,exports){
-;(function (root, factory, undef) {
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],72:[function(require,module,exports){
+;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"), require("./sha1"), require("./hmac"));
@@ -10883,8 +10725,8 @@ module.exports = {
 
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],72:[function(require,module,exports){
-;(function (root, factory, undef) {
+},{"./core":49}],73:[function(require,module,exports){
+;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -11019,8 +10861,8 @@ module.exports = {
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],73:[function(require,module,exports){
-;(function (root, factory) {
+},{"./core":49}],74:[function(require,module,exports){
+;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -11221,7 +11063,7 @@ module.exports = {
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":50}],74:[function(require,module,exports){
+},{"./core":49,"./sha256":75}],75:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11338,7 +11180,7 @@ module.exports = {
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":50}],75:[function(require,module,exports){
+},{"./core":49}],76:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11568,8 +11410,8 @@ module.exports = {
 	return CryptoJS;
 
 }));
-},{"./core":53}],77:[function(require,module,exports){
-;(function (root, factory) {
+},{"./core":49,"./x64-core":80}],77:[function(require,module,exports){
+;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
 		module.exports = exports = factory(require("./core"));
@@ -11645,7 +11487,7 @@ module.exports = {
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":50}],77:[function(require,module,exports){
+},{"./core":49,"./sha512":78,"./x64-core":80}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11894,7 +11736,7 @@ module.exports = {
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":50,"./x64-core":81}],78:[function(require,module,exports){
+},{"./core":49,"./x64-core":80}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -21290,7 +21132,7 @@ Url.prototype.format = function() {
   }
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],81:[function(require,module,exports){
+},{"./cipher-core":48,"./core":49,"./enc-base64":50,"./evpkdf":52,"./md5":57}],80:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -21634,7 +21476,7 @@ Url.prototype.parseHost = function() {
 };
 
 }));
-},{"./core":50}],82:[function(require,module,exports){
+},{"./core":49}],81:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
@@ -25307,7 +25149,7 @@ function extend() {
     }
 })(this);
 
-},{"crypto":47}],"web3":[function(require,module,exports){
+},{"crypto":46}],"web3":[function(require,module,exports){
 var Web3 = require('./lib/web3');
 
 // dont override global variable
