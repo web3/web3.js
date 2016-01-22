@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var BigNumber = require('bignumber.js');
-var SolidityEvent = require('../lib/web3/event');
+var SolidityEvent = require('../lib/web3/events');
 var Web3 = require('../index');
 
 
