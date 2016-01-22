@@ -2641,7 +2641,7 @@ module.exports = Batch;
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
-var ContractEvent = require('./event');
+var ContractEvent = require('./events');
 var SolidityFunction = require('./function');
 
 /**
@@ -2913,7 +2913,7 @@ var Contract = function (eth, abi, address) {
 module.exports = ContractFactory;
 
 
-},{"../solidity/coder":7,"../utils/utils":20,"./event":26,"./function":29}],25:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/utils":20,"./events":26,"./function":29}],25:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3052,8 +3052,8 @@ ContractEvent.prototype.signature = function () {
  */
 ContractEvent.prototype.encode = function (options) {
     options = options || {};
-    indexed = options.filter || {};
-    var result = {};
+    var indexed = options.filter || {},
+        result = {};
 
 
     ['fromBlock', 'toBlock'].filter(function (f) {
@@ -3103,7 +3103,9 @@ ContractEvent.prototype.encode = function (options) {
  * @return {Object} result object with decoded indexed && not indexed params
  */
 ContractEvent.prototype.decode = function (data) {
-    var name = params = anonymous = null;
+    var name = null,
+        params = null,
+        anonymous = null;
     data.data = data.data || '';
     data.topics = data.topics || [];
 
@@ -3162,7 +3164,6 @@ ContractEvent.prototype.decode = function (data) {
  * @return {Object} filter object
  */
 ContractEvent.prototype.getArgs = function (options, callback) {
-
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
 
@@ -3186,7 +3187,7 @@ ContractEvent.prototype.getArgs = function (options, callback) {
  * @param {Function} callback
  * @return {Object} filter object
  */
-ContractEvent.prototype.execute = function (options, callback) {
+ContractEvent.prototype.execute = function () {
 
     var args = this.getArgs.apply(this, arguments);
     var subscription = new Subscription({
@@ -3213,11 +3214,11 @@ ContractEvent.prototype.execute = function (options, callback) {
  * @param {Function} callback
  * @param {Contract}
  */
-ContractEvent.prototype.getPastEvents = function(options, callback){
+ContractEvent.prototype.getPastEvents = function(){
 
     var args = this.getArgs.apply(this, arguments);
 
-    if (utils.isFunction(callback)) {
+    if (utils.isFunction(args.callback)) {
         this._requestManager.sendAsync({
             method: 'eth_getLogs',
             params: [args.options]
@@ -4362,7 +4363,7 @@ Will add the error and end event to timeout existing calls
 IpcProvider.prototype.addDefaultEvents = function(){
     var _this = this;
 
-    this.connection.on('error', function(e){
+    this.connection.on('error', function(){
         _this._timeout();
     });
 
@@ -4578,7 +4579,7 @@ Resetes the providers, clears all callbacks
 
 @method reset
 */
-IpcProvider.prototype.reset = function (callback) {
+IpcProvider.prototype.reset = function () {
     this._timeout();
     this.notificationCallbacks = [];
 
@@ -5428,7 +5429,7 @@ var methods = function () {
         params: 0
     });
 
-    var getPastLogs = new Method({
+    var getPastMessages = new Method({
         name: 'getPastMessages',
         call: 'shh_getMessages',
         params: 1,
@@ -5456,6 +5457,7 @@ var methods = function () {
         hasIdentity,
         newGroup,
         addToGroup,
+        getPastMessages,
         subscribe
     ];
 };
@@ -5679,7 +5681,6 @@ module.exports = Property;
 
 var Jsonrpc = require('./jsonrpc');
 var utils = require('../utils/utils');
-var c = require('../utils/config');
 var errors = require('./errors');
 
 /**
@@ -5775,13 +5776,14 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {String} id           the subscription id
  * @param {Function} callback   the callback to call for incoming notifications
  */
-RequestManager.prototype.addSubscription = function (type, id, callback) {
+RequestManager.prototype.addSubscription = function (name, type, id, callback) {
     if(this.provider.on) {
         this.subscriptions[id] = {
             callback: callback,
-            type: type
+            type: type,
+            name: name
         };
-        
+
     } else {
         throw new Error('This provider doesn\'t support subscriptions', this.provider);
     }
@@ -5813,7 +5815,7 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
         });
 
     }
-}
+};
 
 /**
  * Should be used to set provider of request manager
@@ -5852,7 +5854,8 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
 
     // uninstall all subscriptions
     Object.keys(this.subscriptions).forEach(function(id){
-        _this.removeSubscription(id);
+        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+            _this.removeSubscription(id);
     });
 
 
@@ -5863,7 +5866,7 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
 
 module.exports = RequestManager;
 
-},{"../utils/config":18,"../utils/utils":20,"./errors":25,"./jsonrpc":33}],42:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"./jsonrpc":33}],42:[function(require,module,exports){
 
 
 var Settings = function () {
@@ -5902,7 +5905,7 @@ var utils = require('../utils/utils');
 var errors = require('./errors');
 
 
-Subscription = function (options) {
+var Subscription = function (options) {
     this.id = null;
     this.callback = null;
 
@@ -5911,7 +5914,7 @@ Subscription = function (options) {
         subscribeMethod: options.subscribeMethod,
         unsubscribeMethod: options.unsubscribeMethod,
         requestManager: options.requestManager
-    }
+    };
 };
 
 
@@ -6055,7 +6058,7 @@ Subscription.prototype.subscribe = function() {
                 _this.id = result;
                 
                 // call callback on notifications
-                _this.options.requestManager.addSubscription('eth', _this.id, function(err, result){
+                _this.options.requestManager.addSubscription(payload.params[0] ,'eth', _this.id, function(err, result){
                     _this.callback(err, _this._formatOutput(result), _this);
                 });
             } else {
@@ -6095,13 +6098,10 @@ module.exports = Subscription;
  * @date 2015
  */
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
 var Subscription = require('./subscription.js');
 
 
-
-Subscriptions = function (options) {
+var Subscriptions = function (options) {
     this.name = options.name;
     this.subscribe = options.subscribe;
     this.unsubscribe = options.unsubscribe;
@@ -6146,7 +6146,7 @@ Subscriptions.prototype.buildCall = function() {
 module.exports = Subscriptions;
 
 
-},{"../utils/utils":20,"./errors":25,"./subscription.js":43}],45:[function(require,module,exports){
+},{"./subscription.js":43}],45:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
