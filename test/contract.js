@@ -58,18 +58,17 @@ var address = '0x1234567890123456789012345678901234567891';
 
 describe('contract', function () {
     describe('event', function () {
-        it('should create event filter', function (done) {
+        it('should create event subscription', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
             var signature = 'Changed(address,uint256,uint256,uint256)';
             var step = 0;
             provider.injectValidation(function (payload) {
                 if (step === 0) {
-                    step = 1;
-                    provider.injectResult('0x3');
+                    provider.injectResult('0x123');
                     assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_newFilter');
-                    assert.deepEqual(payload.params[0], {
+                    assert.equal(payload.method, 'eth_subscribe');
+                    assert.deepEqual(payload.params[1], {
                         topics: [
                             '0x' + sha3(signature),
                             '0x0000000000000000000000001234567890123456789012345678901234567891',
@@ -77,54 +76,44 @@ describe('contract', function () {
                         ],
                         address: '0x1234567890123456789012345678901234567891'
                     });
-                } else if (step === 1) {
-                    step = 2;
-                    provider.injectResult([{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]);
-                    assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_getFilterLogs');
-                } else if (step === 2 && utils.isArray(payload)) {
                     step++;
-                    provider.injectBatchResults([[{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]]);
-                    var r = payload.filter(function (p) {
-                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
-                    });
-                    assert.equal(r.length > 0, true);
+                } else if (step === 1) {
+                    provider.injectResult(true);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_unsubscribe');
                 }
             });
 
             var contract = web3.eth.contract(desc).at(address);
 
             var res = 0;
-            var event = contract.Changed({from: address});
-            event.watch(function(err, result) {
-                assert.equal(result.args.from, address); 
-                assert.equal(result.args.amount, 1);
-                assert.equal(result.args.t1, 1);
-                assert.equal(result.args.t2, 8);
+            var event = contract.Changed({filter: {from: address}}, function(err, result) {
+                assert.equal(result.returnValues.from, address); 
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
                 res++;
-                if (res === 2) {
-                    event.stopWatching();
+                if (res === 1) {
+                    event.unsubscribe();
                     done();
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x123',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }
                 }
             });
         });
@@ -136,11 +125,10 @@ describe('contract', function () {
             var step = 0;
             provider.injectValidation(function (payload) {
                 if (step === 0) {
-                    step = 1;
-                    provider.injectResult('0x3');
+                    provider.injectResult('0x321');
                     assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_newFilter');
-                    assert.deepEqual(payload.params[0], {
+                    assert.equal(payload.method, 'eth_subscribe');
+                    assert.deepEqual(payload.params[1], {
                         topics: [
                             '0x' + sha3(signature),
                             '0x0000000000000000000000001234567890123456789012345678901234567891',
@@ -148,53 +136,62 @@ describe('contract', function () {
                         ],
                         address: '0x1234567890123456789012345678901234567891'
                     });
-                } else if (step === 1) {
-                    step = 2;
-                    provider.injectResult([{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]);
-                    assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_getFilterLogs');
-                } else if (step === 2 && utils.isArray(payload)) {
                     step++;
-                    provider.injectBatchResults([[{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]]);
-                    var r = payload.filter(function (p) {
-                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
-                    });
-                    assert.equal(r.length > 0, true);
+                } else if (step === 1) {
+                    provider.injectResult(true);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_unsubscribe');
                 }
             });
 
             var contract = web3.eth.contract(desc).at(address);
 
             var res = 0;
-            var event = contract.Changed({from: address}, function(err, result) {
-                assert.equal(result.args.from, address); 
-                assert.equal(result.args.amount, 1);
-                assert.equal(result.args.t1, 1);
-                assert.equal(result.args.t2, 8);
+            var event = contract.Changed({filter: {from: address}}, function(err, result) {
+                assert.equal(result.returnValues.from, address); 
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
                 res++;
                 if (res === 2) {
-                    event.stopWatching();
+                    event.unsubscribe();
                     done();
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }
                 }
             });
         });
@@ -206,62 +203,52 @@ describe('contract', function () {
             var step = 0;
             provider.injectValidation(function (payload) {
                 if (step === 0) {
-                    step = 1;
-                    provider.injectResult('0x3');
+                    provider.injectResult('0x333');
                     assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_newFilter');
-                    assert.deepEqual(payload.params[0], {
+                    assert.equal(payload.method, 'eth_subscribe');
+                    assert.deepEqual(payload.params[1], {
                         topics: [],
                         address: '0x1234567890123456789012345678901234567891'
                     });
-                } else if (step === 1) {
-                    step = 2;
-                    provider.injectResult([{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]);
-                    assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, 'eth_getFilterLogs');
-                } else if (step === 2 && utils.isArray(payload)) {
                     step++;
-                    provider.injectBatchResults([[{
-                        address: address,
-                        topics: [
-                            '0x' + sha3(signature),
-                            '0x0000000000000000000000001234567890123456789012345678901234567891',
-                            '0x0000000000000000000000000000000000000000000000000000000000000001'
-                        ],
-                        number: 2,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                                '0000000000000000000000000000000000000000000000000000000000000008' 
-                    }]]);
-                    var r = payload.filter(function (p) {
-                        return p.jsonrpc === '2.0' && p.method === 'eth_getFilterChanges' && p.params[0] === '0x3';
-                    });
-                    assert.equal(r.length > 0, true);
+                } else if (step === 1) {
+                    provider.injectResult(true);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_unsubscribe');
                 }
             });
 
             var contract = web3.eth.contract(desc).at(address);
 
             var res = 0;
-            var event = contract.allEvents();
-            event.watch(function(err, result) {
-                assert.equal(result.args.from, address); 
-                assert.equal(result.args.amount, 1);
-                assert.equal(result.args.t1, 1);
-                assert.equal(result.args.t2, 8);
+            var event = contract.allEvents(function(err, result) {
+                assert.equal(result.returnValues.from, address); 
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
                 res++;
-                if (res === 2) {
-                    event.stopWatching();
+                if (res === 1) {
+                    event.unsubscribe();
                     done();
+                }
+            });
+
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x333',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        number: 2,
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008' 
+                    }
                 }
             });
         });
