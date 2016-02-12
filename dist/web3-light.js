@@ -3361,7 +3361,7 @@ var getOptions = function (options) {
 
     if (utils.isString(options)) {
         return options;
-    } 
+    }
 
     options = options || {};
 
@@ -3377,8 +3377,8 @@ var getOptions = function (options) {
         to: options.to,
         address: options.address,
         fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
-        toBlock: formatters.inputBlockNumberFormatter(options.toBlock) 
-    }; 
+        toBlock: formatters.inputBlockNumberFormatter(options.toBlock)
+    };
 };
 
 /**
@@ -3386,7 +3386,7 @@ Adds the callback and sets up the methods, to iterate over the results.
 
 @method getLogsAtStart
 @param {Object} self
-@param {funciton} 
+@param {funciton}
 */
 var getLogsAtStart = function(self, callback){
     // call getFilterLogs for the first watch callback start
@@ -3476,7 +3476,7 @@ var Filter = function (requestManager, options, methods, formatter, callback) {
                 pollFilter(self);
 
             // start to watch immediately
-            if(callback) {
+            if(typeof callback === 'function') {
                 return self.watch(callback);
             }
         }
@@ -4573,7 +4573,7 @@ IpcProvider.prototype._parseResponse = function(data) {
             // start timeout to cancel all requests
             clearTimeout(_this.lastChunkTimeout);
             _this.lastChunkTimeout = setTimeout(function(){
-                _this.timeout();
+                _this._timeout();
                 throw errors.InvalidResponse(data);
             }, 1000 * 15);
 
@@ -5206,6 +5206,13 @@ var methods = function () {
         inputFormatter: [formatters.inputTransactionFormatter]
     });
 
+    var sign = new Method({
+        name: 'sign',
+        call: 'eth_sign',
+        params: 2,
+        inputFormatter: [formatters.inputAddressFormatter, null]
+    });
+
     var call = new Method({
         name: 'call',
         call: 'eth_call',
@@ -5268,6 +5275,7 @@ var methods = function () {
         estimateGas,
         sendRawTransaction,
         sendTransaction,
+        sign,
         compileSolidity,
         compileLLL,
         compileSerpent,
@@ -5721,7 +5729,8 @@ Property.prototype.extractCallback = function (args) {
  */
 Property.prototype.attachToObject = function (obj) {
     var proto = {
-        get: this.buildGet() 
+        get: this.buildGet(),
+        enumerable: true 
     };
 
     var names = this.name.split('.');
