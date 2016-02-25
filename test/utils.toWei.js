@@ -8,8 +8,14 @@ describe('lib/utils/utils', function () {
             
             assert.equal(utils.toWei(1, 'wei'),    '1');
             assert.equal(utils.toWei(1, 'kwei'),   '1000');
+            assert.equal(utils.toWei(1, 'Kwei'),   '1000');
+            assert.equal(utils.toWei(1, 'babbage'),   '1000');
             assert.equal(utils.toWei(1, 'mwei'),   '1000000');
+            assert.equal(utils.toWei(1, 'Mwei'),   '1000000');
+            assert.equal(utils.toWei(1, 'lovelace'),   '1000000');
             assert.equal(utils.toWei(1, 'gwei'),   '1000000000');
+            assert.equal(utils.toWei(1, 'Gwei'),   '1000000000');
+            assert.equal(utils.toWei(1, 'shannon'),   '1000000000');
             assert.equal(utils.toWei(1, 'szabo'),  '1000000000000');
             assert.equal(utils.toWei(1, 'finney'), '1000000000000000');
             assert.equal(utils.toWei(1, 'ether'),  '1000000000000000000');
