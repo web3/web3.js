@@ -13,6 +13,7 @@
   "dependencies": {
     "bignumber.js": "debris/bignumber.js#master",
     "crypto-js": "^3.1.4",
+    "eventemitter3": "^1.1.1",
     "utf8": "^2.1.1",
     "xmlhttprequest": "*"
   },
