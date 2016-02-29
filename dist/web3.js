@@ -1908,17 +1908,22 @@ module.exports = function (value, options) {
 
 
 var BigNumber = require('bignumber.js');
+var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
 
 var unitMap = {
+    'noether':      '0',    
     'wei':          '1',
     'kwei':         '1000',
-    'ada':          '1000',
+    'Kwei':         '1000',
+    'babbage':      '1000',
     'femtoether':   '1000',
     'mwei':         '1000000',
-    'babbage':      '1000000',
+    'Mwei':         '1000000',
+    'lovelace':     '1000000',
     'picoether':    '1000000',
     'gwei':         '1000000000',
+    'Gwei':         '1000000000',
     'shannon':      '1000000000',
     'nanoether':    '1000000000',
     'nano':         '1000000000',
@@ -1931,7 +1936,6 @@ var unitMap = {
     'ether':        '1000000000000000000',
     'kether':       '1000000000000000000000',
     'grand':        '1000000000000000000000',
-    'einstein':     '1000000000000000000000',
     'mether':       '1000000000000000000000000',
     'gether':       '1000000000000000000000000000',
     'tether':       '1000000000000000000000000000000'
@@ -2010,7 +2014,7 @@ var toAscii = function(hex) {
 };
 
 /**
- * Should be called to get hex representation (prefixed by 0x) of utf8 a string
+ * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
  * @method fromUtf8
  * @param {String} string
@@ -2166,13 +2170,13 @@ var getValueOfUnit = function (unit) {
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     ada
- * - mwei       picoether      babbage
+ * - kwei       femtoether     babbage
+ * - mwei       picoether      lovelace
  * - gwei       nanoether      shannon      nano
  * - --         microether     szabo        micro
  * - --         milliether     finney       milli
  * - ether      --             --
- * - kether                    einstein     grand
+ * - kether                    --           grand
  * - mether
  * - gether
  * - tether
@@ -2193,13 +2197,14 @@ var fromWei = function(number, unit) {
  *
  * Possible units are:
  *   SI Short   SI Full        Effigy       Other
- * - kwei       femtoether     ada
- * - mwei       picoether      babbage
+ * - kwei       femtoether     babbage
+ * - mwei       picoether      lovelace
  * - gwei       nanoether      shannon      nano
+ * - --         microether     szabo        micro
  * - --         microether     szabo        micro
  * - --         milliether     finney       milli
  * - ether      --             --
- * - kether                    einstein     grand
+ * - kether                    --           grand
  * - mether
  * - gether
  * - tether
@@ -2269,7 +2274,66 @@ var isStrictAddress = function (address) {
  * @return {Boolean}
 */
 var isAddress = function (address) {
-    return /^(0x)?[0-9a-f]{40}$/i.test(address);
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+        // check if it has the basic requirements of an address
+        return false;
+    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+        // If it's all small caps or all all caps, return true
+        return true;
+    } else {
+        // Otherwise check each case
+        return isChecksumAddress(address);
+    }
+};
+
+
+
+/**
+ * Checks if the given string is a checksummed address
+ *
+ * @method isChecksumAddress
+ * @param {String} address the given HEX adress
+ * @return {Boolean}
+*/
+var isChecksumAddress = function (address) {    
+    // Check each case
+    address = address.replace('0x','');
+    var addressHash = sha3(address.toLowerCase());
+
+    for (var i = 0; i < 40; i++ ) { 
+        // the nth letter should be uppercase if the nth digit of casemap is 1
+        if ((parseInt(addressHash[i], 16) > 7 && address[i].toUpperCase() !== address[i]) || (parseInt(addressHash[i], 16) <= 7 && address[i].toLowerCase() !== address[i])) {
+            return false;
+        }
+    }
+    return true;    
+};
+
+
+
+/**
+ * Makes a checksum address
+ *
+ * @method toChecksumAddress
+ * @param {String} address the given HEX adress
+ * @return {String}
+*/
+var toChecksumAddress = function (address) { 
+    if (typeof address === 'undefined') return '';
+
+    address = address.toLowerCase().replace('0x','');
+    var addressHash = sha3(address);
+    var checksumAddress = '0x';
+
+    for (var i = 0; i < address.length; i++ ) { 
+        // If ith character is 9 to f then make it uppercase 
+        if (parseInt(addressHash[i], 16) > 7) {
+          checksumAddress += address[i].toUpperCase();
+        } else {
+            checksumAddress += address[i];
+        }
+    }
+    return checksumAddress;
 };
 
 /**
@@ -2395,6 +2459,8 @@ module.exports = {
     isBigNumber: isBigNumber,
     isStrictAddress: isStrictAddress,
     isAddress: isAddress,
+    isChecksumAddress: isChecksumAddress,
+    toChecksumAddress: toChecksumAddress,
     isFunction: isFunction,
     isString: isString,
     isObject: isObject,
@@ -2403,9 +2469,9 @@ module.exports = {
     isJson: isJson
 };
 
-},{"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
+},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.15.2"
+    "version": "0.15.3"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2502,6 +2568,8 @@ Web3.prototype.toBigNumber = utils.toBigNumber;
 Web3.prototype.toWei = utils.toWei;
 Web3.prototype.fromWei = utils.fromWei;
 Web3.prototype.isAddress = utils.isAddress;
+Web3.prototype.isChecksumAddress = utils.isChecksumAddress;
+Web3.prototype.toChecksumAddress = utils.toChecksumAddress;
 Web3.prototype.isIBAN = utils.isIBAN;
 Web3.prototype.sha3 = sha3;
 
@@ -4550,10 +4618,10 @@ IpcProvider.prototype._parseResponse = function(data) {
     
     // DE-CHUNKER
     var dechunkedData = data
-        .replace(/\}\{/g,'}|--|{') // }{
-        .replace(/\}\]\[\{/g,'}]|--|[{') // }][{
-        .replace(/\}\[\{/g,'}|--|[{') // }[{
-        .replace(/\}\]\{/g,'}]|--|{') // }]{
+        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
         .split('|--|');
 
     dechunkedData.forEach(function(data){
