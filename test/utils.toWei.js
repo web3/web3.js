@@ -8,8 +8,14 @@ describe('lib/utils/utils', function () {
             
             assert.equal(utils.toWei(1, 'wei'),    '1');
             assert.equal(utils.toWei(1, 'kwei'),   '1000');
+            assert.equal(utils.toWei(1, 'Kwei'),   '1000');
+            assert.equal(utils.toWei(1, 'babbage'),   '1000');
             assert.equal(utils.toWei(1, 'mwei'),   '1000000');
+            assert.equal(utils.toWei(1, 'Mwei'),   '1000000');
+            assert.equal(utils.toWei(1, 'lovelace'),   '1000000');
             assert.equal(utils.toWei(1, 'gwei'),   '1000000000');
+            assert.equal(utils.toWei(1, 'Gwei'),   '1000000000');
+            assert.equal(utils.toWei(1, 'shannon'),   '1000000000');
             assert.equal(utils.toWei(1, 'szabo'),  '1000000000000');
             assert.equal(utils.toWei(1, 'finney'), '1000000000000000');
             assert.equal(utils.toWei(1, 'ether'),  '1000000000000000000');
@@ -20,8 +26,6 @@ describe('lib/utils/utils', function () {
             assert.equal(utils.toWei(1, 'tether'), '1000000000000000000000000000000');
 
             assert.equal(utils.toWei(1, 'kwei'),    utils.toWei(1, 'femtoether'));
-            assert.equal(utils.toWei(1, 'babbage'), utils.toWei(1, 'picoether'));
-            assert.equal(utils.toWei(1, 'shannon'), utils.toWei(1, 'nanoether'));
             assert.equal(utils.toWei(1, 'szabo'),   utils.toWei(1, 'microether'));
             assert.equal(utils.toWei(1, 'finney'),  utils.toWei(1, 'milliether'));
             assert.equal(utils.toWei(1, 'milli'),    utils.toWei(1, 'milliether'));
