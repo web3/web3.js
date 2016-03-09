@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -11,8 +11,8 @@
     "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "dependencies": {
-    "bignumber.js": "debris/bignumber.js#master",
     "bluebird": "^3.3.1",
+    "bignumber.js": "git+https://github.com/debris/bignumber.js#master",
     "crypto-js": "^3.1.4",
     "eventemitter3": "^1.1.1",
     "utf8": "^2.1.1",
