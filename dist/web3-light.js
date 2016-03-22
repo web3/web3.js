@@ -5545,7 +5545,8 @@ var methods = function () {
 
     return [
         newAccount,
-        unlockAccount
+        unlockAccount,
+        lockAccount
     ];
 };
 
