@@ -2573,7 +2573,11 @@ Web3.prototype.isAddress = utils.isAddress;
 Web3.prototype.isChecksumAddress = utils.isChecksumAddress;
 Web3.prototype.toChecksumAddress = utils.toChecksumAddress;
 Web3.prototype.isIBAN = utils.isIBAN;
-Web3.prototype.sha3 = sha3;
+
+
+Web3.prototype.sha3 = function(string, options) {
+    return '0x' + sha3(string, options);
+};
 
 /**
  * Transforms direct icap to address
@@ -3879,7 +3883,7 @@ var inputAddressFormatter = function (address) {
     } else if (utils.isAddress(address)) {
         return '0x' + address;
     }
-    throw 'invalid address';
+    throw new Error('invalid address');
 };
 
 
@@ -5499,6 +5503,7 @@ module.exports = Net;
 
 var Method = require('../method');
 var Property = require('../property');
+var formatters = require('../formatters');
 
 function Personal(web3) {
     this._requestManager = web3._requestManager;
@@ -5528,7 +5533,14 @@ var methods = function () {
         name: 'unlockAccount',
         call: 'personal_unlockAccount',
         params: 3,
-        inputFormatter: [null, null, null]
+        inputFormatter: [formatters.inputAddressFormatter, null, null]
+    });
+
+    var lockAccount = new Method({
+        name: 'lockAccount',
+        call: 'personal_lockAccount',
+        params: 1,
+        inputFormatter: [formatters.inputAddressFormatter]
     });
 
     return [
@@ -5549,7 +5561,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../method":36,"../property":44}],41:[function(require,module,exports){
+},{"../formatters":30,"../method":36,"../property":44}],41:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
