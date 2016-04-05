@@ -17,8 +17,8 @@ describe('formatters', function () {
                 sent: 1000,
                 ttl: 1000,
                 workProved: 1000,
-                payload: '0x7b2274657374223a2274657374227d',//{test: 'test'},
-                //payloadRaw: '0x7b2274657374223a2274657374227d',
+                payload: '0x7b2274657374223a2274657374227d', //{test: 'test'},
+                // payloadRaw: '0x7b2274657374223a2274657374227d',
                 topics: ['hello','mytopics']
             });
         });

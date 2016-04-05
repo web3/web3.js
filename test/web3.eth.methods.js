@@ -21,7 +21,7 @@ describe('web3.eth', function() {
         u.methodExists(web3.eth.compile, 'serpent');
         u.methodExists(web3.eth, 'getBlockTransactionCount');
         u.methodExists(web3.eth, 'getBlockUncleCount');
-        u.methodExists(web3.eth, 'filter');
+        u.methodExists(web3.eth, 'subscribe');
         u.methodExists(web3.eth, 'contract');
 
         u.propertyExists(web3.eth, 'coinbase');

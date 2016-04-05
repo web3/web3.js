@@ -11,7 +11,7 @@ describe('web3.shh', function() {
         u.methodExists(web3.shh, 'hasIdentity');
         u.methodExists(web3.shh, 'newGroup');
         u.methodExists(web3.shh, 'addToGroup');
-        u.methodExists(web3.shh, 'filter');
+        u.methodExists(web3.shh, 'subscribe');
     });
 });
 

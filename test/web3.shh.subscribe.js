@@ -4,7 +4,7 @@ var web3 = new Web3();
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
-var method = 'filter';
+var method = 'subscribe';
 
 var tests = [{
     args: [{
@@ -17,7 +17,7 @@ var tests = [{
     }],
     result: '0xf',
     formattedResult: '0xf',
-    call: 'shh_newFilter'
+    call: 'shh_subscribe'
 },
 {
     args: [{
@@ -30,7 +30,7 @@ var tests = [{
     }],
     result: '0xf',
     formattedResult: '0xf',
-    call: 'shh_newFilter'
+    call: 'shh_subscribe'
 },
 {
     args: [{
@@ -43,7 +43,7 @@ var tests = [{
     }],
     result: '0xf',
     formattedResult: '0xf',
-    call: 'shh_newFilter'
+    call: 'shh_subscribe'
 },
 {
     args: [{
@@ -56,7 +56,7 @@ var tests = [{
     }],
     result: '0xf',
     formattedResult: '0xf',
-    call: 'shh_newFilter'
+    call: 'shh_subscribe'
 }];
 
 describe('shh', function () {
@@ -69,11 +69,18 @@ describe('shh', function () {
                 web3.setProvider(provider);
                 web3.reset();
                 provider.injectResult(test.result);
+                var step = 0;
                 provider.injectValidation(function (payload) {
-                    assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, test.call);
-                    assert.deepEqual(payload.params, test.formattedArgs);
+                    if(step) {
+                        assert.equal(payload.jsonrpc, '2.0');
+                        assert.equal(payload.method, test.call);
+                        assert.deepEqual(payload.params, test.formattedArgs);
+
+                        step++;
+                    }
                 });
+
+                test.args.push(function(err, res){});
 
                 // call
                 web3.shh[method].apply(web3.shh, test.args);

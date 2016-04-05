@@ -1870,7 +1870,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":58,"crypto-js/sha3":79}],20:[function(require,module,exports){
+},{"crypto-js":56,"crypto-js/sha3":77}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2469,7 +2469,7 @@ module.exports = {
     isJson: isJson
 };
 
-},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
+},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
 module.exports={
     "version": "0.15.3"
 }
@@ -2622,97 +2622,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/property":44,"./web3/requestmanager":45,"./web3/settings":46}],23:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** 
- * @file allevents.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2014
- */
-
-var sha3 = require('../utils/sha3');
-var SolidityEvent = require('./event');
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-var Filter = require('./filter');
-var watches = require('./methods/watches');
-
-var AllSolidityEvents = function (requestManager, json, address) {
-    this._requestManager = requestManager;
-    this._json = json;
-    this._address = address;
-};
-
-AllSolidityEvents.prototype.encode = function (options) {
-    options = options || {};
-    var result = {};
-
-    ['fromBlock', 'toBlock'].filter(function (f) {
-        return options[f] !== undefined;
-    }).forEach(function (f) {
-        result[f] = formatters.inputBlockNumberFormatter(options[f]);
-    });
-
-    result.address = this._address;
-
-    return result;
-};
-
-AllSolidityEvents.prototype.decode = function (data) {
-    data.data = data.data || '';
-    data.topics = data.topics || [];
-
-    var eventTopic = data.topics[0].slice(2);
-    var match = this._json.filter(function (j) {
-        return eventTopic === sha3(utils.transformToFullName(j));
-    })[0];
-
-    if (!match) { // cannot find matching event?
-        console.warn('cannot find event for log');
-        return data;
-    }
-
-    var event = new SolidityEvent(this._requestManager, match, this._address);
-    return event.decode(data);
-};
-
-AllSolidityEvents.prototype.execute = function (options, callback) {
-
-    if (utils.isFunction(arguments[arguments.length - 1])) {
-        callback = arguments[arguments.length - 1];
-        if(arguments.length === 1)
-            options = null;
-    }
-
-    var o = this.encode(options);
-    var formatter = this.decode.bind(this);
-    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
-};
-
-AllSolidityEvents.prototype.attachToContract = function (contract) {
-    var execute = this.execute.bind(this);
-    contract.allEvents = execute;
-};
-
-module.exports = AllSolidityEvents;
-
-
-},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":42}],24:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":30,"./web3/iban":31,"./web3/ipcprovider":32,"./web3/methods/db":35,"./web3/methods/eth":36,"./web3/methods/net":37,"./web3/methods/personal":38,"./web3/methods/shh":39,"./web3/property":41,"./web3/requestmanager":42,"./web3/settings":43}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2780,7 +2690,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":26,"./jsonrpc":35}],25:[function(require,module,exports){
+},{"./errors":25,"./jsonrpc":33}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2805,9 +2715,8 @@ module.exports = Batch;
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
-var SolidityEvent = require('./event');
+var ContractEvent = require('./events');
 var SolidityFunction = require('./function');
-var AllEvents = require('./allevents');
 
 /**
  * Should be called to encode constructor params
@@ -2857,13 +2766,12 @@ var addEventsToContract = function (contract) {
         return json.type === 'event';
     });
 
-    var All = new AllEvents(contract._eth._requestManager, events, contract.address);
-    All.attachToContract(contract);
-
+    var allEvents = new ContractEvent(contract._eth._requestManager, events, contract.address, true);
+    allEvents.attachToContract(contract);
+    
     events.map(function (json) {
-        return new SolidityEvent(contract._eth._requestManager, json, contract.address);
-    }).forEach(function (e) {
-        e.attachToContract(contract);
+        var ev = new ContractEvent(contract._eth._requestManager, json, contract.address);
+        ev.attachToContract(contract);
     });
 };
 
@@ -3080,7 +2988,7 @@ var Contract = function (eth, abi, address) {
 
 module.exports = ContractFactory;
 
-},{"../solidity/coder":7,"../utils/utils":20,"./allevents":23,"./event":27,"./function":31}],26:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/utils":20,"./events":26,"./function":29}],25:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3120,7 +3028,7 @@ module.exports = {
 };
 
 
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3140,25 +3048,27 @@ module.exports = {
 /** 
  * @file event.js
  * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2014
+ * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @date 2016
  */
 
 var utils = require('../utils/utils');
 var coder = require('../solidity/coder');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
-var Filter = require('./filter');
-var watches = require('./methods/watches');
+var Subscription = require('./subscription');
 
 /**
  * This prototype should be used to create event filters
  */
-var SolidityEvent = function (requestManager, json, address) {
+var ContractEvent = function (requestManager, json, address, allEvents) {
     this._requestManager = requestManager;
-    this._params = json.inputs;
-    this._name = utils.transformToFullName(json);
     this._address = address;
+    this._json = json;
+    this._name = json.inputs ? utils.transformToFullName(json) : null;
+    this._params = json.inputs;
     this._anonymous = json.anonymous;
+    this._allEvents = !!allEvents;
 };
 
 /**
@@ -3166,10 +3076,11 @@ var SolidityEvent = function (requestManager, json, address) {
  *
  * @method types
  * @param {Bool} decide if returned typed should be indexed
+ * @param {Object} params the parameters of the event
  * @return {Array} array of types
  */
-SolidityEvent.prototype.types = function (indexed) {
-    return this._params.filter(function (i) {
+ContractEvent.prototype.types = function (indexed, params) {
+    return params.filter(function (i) {
         return i.indexed === indexed;
     }).map(function (i) {
         return i.type;
@@ -3180,10 +3091,11 @@ SolidityEvent.prototype.types = function (indexed) {
  * Should be used to get event display name
  *
  * @method displayName
+ * @param {String} name (optional) the events name
  * @return {String} event display name
  */
-SolidityEvent.prototype.displayName = function () {
-    return utils.extractDisplayName(this._name);
+ContractEvent.prototype.displayName = function (name) {
+    return utils.extractDisplayName(name || this._name);
 };
 
 /**
@@ -3192,7 +3104,7 @@ SolidityEvent.prototype.displayName = function () {
  * @method typeName
  * @return {String} event type name
  */
-SolidityEvent.prototype.typeName = function () {
+ContractEvent.prototype.typeName = function () {
     return utils.extractTypeName(this._name);
 };
 
@@ -3202,7 +3114,7 @@ SolidityEvent.prototype.typeName = function () {
  * @method signature
  * @return {String} event signature
  */
-SolidityEvent.prototype.signature = function () {
+ContractEvent.prototype.signature = function () {
     return sha3(this._name);
 };
 
@@ -3210,14 +3122,14 @@ SolidityEvent.prototype.signature = function () {
  * Should be used to encode indexed params and options to one final object
  * 
  * @method encode
- * @param {Object} indexed
  * @param {Object} options
  * @return {Object} everything combined together and encoded
  */
-SolidityEvent.prototype.encode = function (indexed, options) {
-    indexed = indexed || {};
+ContractEvent.prototype.encode = function (options) {
     options = options || {};
-    var result = {};
+    var indexed = options.filter || {},
+        result = {};
+
 
     ['fromBlock', 'toBlock'].filter(function (f) {
         return options[f] !== undefined;
@@ -3227,28 +3139,33 @@ SolidityEvent.prototype.encode = function (indexed, options) {
 
     result.topics = [];
 
-    result.address = this._address;
-    if (!this._anonymous) {
-        result.topics.push('0x' + this.signature());
+    // single events
+    if(!this._allEvents) {
+        
+        if (!this._anonymous) {
+            result.topics.push('0x' + this.signature());
+        }
+
+        var indexedTopics = this._params.filter(function (i) {
+            return i.indexed === true;
+        }).map(function (i) {
+            var value = indexed[i.name];
+            if (value === undefined || value === null) {
+                return null;
+            }
+            
+            if (utils.isArray(value)) {
+                return value.map(function (v) {
+                    return '0x' + coder.encodeParam(i.type, v);
+                });
+            }
+            return '0x' + coder.encodeParam(i.type, value);
+        });
+
+        result.topics = result.topics.concat(indexedTopics);
     }
 
-    var indexedTopics = this._params.filter(function (i) {
-        return i.indexed === true;
-    }).map(function (i) {
-        var value = indexed[i.name];
-        if (value === undefined || value === null) {
-            return null;
-        }
-        
-        if (utils.isArray(value)) {
-            return value.map(function (v) {
-                return '0x' + coder.encodeParam(i.type, v);
-            });
-        }
-        return '0x' + coder.encodeParam(i.type, value);
-    });
-
-    result.topics = result.topics.concat(indexedTopics);
+    result.address = this._address;
 
     return result;
 };
@@ -3260,23 +3177,49 @@ SolidityEvent.prototype.encode = function (indexed, options) {
  * @param {Object} data
  * @return {Object} result object with decoded indexed && not indexed params
  */
-SolidityEvent.prototype.decode = function (data) {
- 
+ContractEvent.prototype.decode = function (data) {
+    var name = null,
+        params = null,
+        anonymous = null;
     data.data = data.data || '';
     data.topics = data.topics || [];
 
-    var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
+    // all events
+    if(this._allEvents) {
+
+        var eventTopic = data.topics[0].slice(2);
+        var match = this._json.filter(function (j) {
+            return eventTopic === sha3(utils.transformToFullName(j));
+        })[0];
+
+        if (!match) { // cannot find matching event?
+            console.warn('Can\'t find event for log');
+            return data;
+        }
+
+        name = utils.transformToFullName(match);
+        params = match.inputs;
+        anonymous = match.anonymous;
+
+    // single event
+    } else {
+        name = this._name;
+        params = this._params;
+        anonymous = this._anonymous;
+    }
+
+    var argTopics = anonymous ? data.topics : data.topics.slice(1);
     var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
-    var indexedParams = coder.decodeParams(this.types(true), indexedData); 
+    var indexedParams = coder.decodeParams(this.types(true, params), indexedData); 
 
     var notIndexedData = data.data.slice(2);
-    var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
+    var notIndexedParams = coder.decodeParams(this.types(false, params), notIndexedData);
     
     var result = formatters.outputLogFormatter(data);
-    result.event = this.displayName();
+    result.event = this.displayName(name);
     result.address = data.address;
 
-    result.args = this._params.reduce(function (acc, current) {
+    result.returnValues = params.reduce(function (acc, current) {
         acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
     }, {});
@@ -3288,28 +3231,85 @@ SolidityEvent.prototype.decode = function (data) {
 };
 
 /**
- * Should be used to create new filter object from event
+ * Get the arguments of the function call
  *
- * @method execute
- * @param {Object} indexed
+ * @method getArgs
  * @param {Object} options
+ * @param {Function} callback
  * @return {Object} filter object
  */
-SolidityEvent.prototype.execute = function (indexed, options, callback) {
-
+ContractEvent.prototype.getArgs = function (options, callback) {
     if (utils.isFunction(arguments[arguments.length - 1])) {
         callback = arguments[arguments.length - 1];
-        if(arguments.length === 2)
-            options = null;
+
         if(arguments.length === 1) {
             options = null;
-            indexed = {};
         }
     }
     
-    var o = this.encode(indexed, options);
-    var formatter = this.decode.bind(this);
-    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
+    return {
+        options: this.encode(options),
+        formatter: this.decode.bind(this),
+        callback: callback
+    };
+};
+
+/**
+ * Should be used to create new filter object from event
+ *
+ * @method execute
+ * @param {Object} options
+ * @param {Function} callback
+ * @return {Object} filter object
+ */
+ContractEvent.prototype.execute = function () {
+
+    var args = this.getArgs.apply(this, arguments);
+    var subscription = new Subscription({
+        subscription: {
+            params: 1,
+            inputFormatter: [formatters.inputLogFormatter],
+            outputFormatter: args.formatter
+        },
+        subscribeMethod: 'eth_subscribe',
+        unsubscribeMethod: 'eth_unsubscribe',
+        requestManager: this._requestManager
+    });
+
+    return subscription.subscribe.apply(subscription, ['logs', args.options, args.callback]);
+};
+
+// TODO: put indexed args into the options object
+
+/**
+ * Get past logs for this event
+ *
+ * @method getPastEvents
+ * @param {Object} options
+ * @param {Function} callback
+ * @param {Contract}
+ */
+ContractEvent.prototype.getPastEvents = function(){
+
+    var args = this.getArgs.apply(this, arguments);
+
+    if (utils.isFunction(args.callback)) {
+        this._requestManager.sendAsync({
+            method: 'eth_getLogs',
+            params: [args.options]
+        }, function(error, logs){
+            if(!error) {
+                args.callback(null, logs.map(args.formatter));
+            } else {
+                args.callback(error);
+            }
+        });
+    }
+
+    return this._requestManager.send({
+        method: 'eth_getLogs',
+        params: [args.options]
+    }).map(args.formatter);
 };
 
 /**
@@ -3318,19 +3318,32 @@ SolidityEvent.prototype.execute = function (indexed, options, callback) {
  * @method attachToContract
  * @param {Contract}
  */
-SolidityEvent.prototype.attachToContract = function (contract) {
+ContractEvent.prototype.attachToContract = function (contract) {
     var execute = this.execute.bind(this);
-    var displayName = this.displayName();
-    if (!contract[displayName]) {
-        contract[displayName] = execute;
+
+    // attach past logs
+    execute.getPastEvents = this.getPastEvents.bind(this);
+
+    // all events
+    if(this._allEvents) {
+        contract.allEvents = execute;
+    
+    // single event
+    } else {
+
+        var displayName = this.displayName();
+        if (!contract[displayName]) {
+            contract[displayName] = execute;
+        }
+        contract[displayName][this.typeName()] = this.execute.bind(this, contract);
     }
-    contract[displayName][this.typeName()] = this.execute.bind(this, contract);
+
 };
 
-module.exports = SolidityEvent;
+module.exports = ContractEvent;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./methods/watches":42}],28:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":28,"./subscription":44}],27:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
 var Method = require('./method');
@@ -3380,239 +3393,7 @@ var extend = function (web3) {
 module.exports = extend;
 
 
-},{"./../utils/utils":20,"./formatters":30,"./method":36,"./property":44}],29:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file filter.js
- * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
- * @date 2014
- */
-
-var formatters = require('./formatters');
-var utils = require('../utils/utils');
-
-/**
-* Converts a given topic to a hex string, but also allows null values.
-*
-* @param {Mixed} value
-* @return {String}
-*/
-var toTopic = function(value){
-
-    if(value === null || typeof value === 'undefined')
-        return null;
-
-    value = String(value);
-
-    if(value.indexOf('0x') === 0)
-        return value;
-    else
-        return utils.fromUtf8(value);
-};
-
-/// This method should be called on options object, to verify deprecated properties && lazy load dynamic ones
-/// @param should be string or object
-/// @returns options string or object
-var getOptions = function (options) {
-
-    if (utils.isString(options)) {
-        return options;
-    }
-
-    options = options || {};
-
-    // make sure topics, get converted to hex
-    options.topics = options.topics || [];
-    options.topics = options.topics.map(function(topic){
-        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
-    });
-
-    return {
-        topics: options.topics,
-        from: options.from,
-        to: options.to,
-        address: options.address,
-        fromBlock: formatters.inputBlockNumberFormatter(options.fromBlock),
-        toBlock: formatters.inputBlockNumberFormatter(options.toBlock)
-    };
-};
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method getLogsAtStart
-@param {Object} self
-@param {funciton}
-*/
-var getLogsAtStart = function(self, callback){
-    // call getFilterLogs for the first watch callback start
-    if (!utils.isString(self.options)) {
-        self.get(function (err, messages) {
-            // don't send all the responses to all the watches again... just to self one
-            if (err) {
-                callback(err);
-            }
-
-            if(utils.isArray(messages)) {
-                messages.forEach(function (message) {
-                    callback(null, message);
-                });
-            }
-        });
-    }
-};
-
-/**
-Adds the callback and sets up the methods, to iterate over the results.
-
-@method pollFilter
-@param {Object} self
-*/
-var pollFilter = function(self) {
-
-    var onMessage = function (error, messages) {
-        if (error) {
-            return self.callbacks.forEach(function (callback) {
-                callback(error);
-            });
-        }
-
-        if(utils.isArray(messages)) {
-            messages.forEach(function (message) {
-                message = self.formatter ? self.formatter(message) : message;
-                self.callbacks.forEach(function (callback) {
-                    callback(null, message);
-                });
-            });
-        }
-    };
-
-    self.requestManager.startPolling({
-        method: self.implementation.poll.call,
-        params: [self.filterId],
-    }, self.filterId, onMessage, self.stopWatching.bind(self));
-
-};
-
-var Filter = function (requestManager, options, methods, formatter, callback) {
-    var self = this;
-    var implementation = {};
-    methods.forEach(function (method) {
-        method.setRequestManager(requestManager);
-        method.attachToObject(implementation);
-    });
-    this.requestManager = requestManager;
-    this.options = getOptions(options);
-    this.implementation = implementation;
-    this.filterId = null;
-    this.callbacks = [];
-    this.getLogsCallbacks = [];
-    this.pollFilters = [];
-    this.formatter = formatter;
-    this.implementation.newFilter(this.options, function(error, id){
-        if(error) {
-            self.callbacks.forEach(function(cb){
-                cb(error);
-            });
-        } else {
-            self.filterId = id;
-
-            // check if there are get pending callbacks as a consequence
-            // of calling get() with filterId unassigned.
-            self.getLogsCallbacks.forEach(function (cb){
-                self.get(cb);
-            });
-            self.getLogsCallbacks = [];
-
-            // get filter logs for the already existing watch calls
-            self.callbacks.forEach(function(cb){
-                getLogsAtStart(self, cb);
-            });
-            if(self.callbacks.length > 0)
-                pollFilter(self);
-
-            // start to watch immediately
-            if(typeof callback === 'function') {
-                return self.watch(callback);
-            }
-        }
-    });
-
-    return this;
-};
-
-Filter.prototype.watch = function (callback) {
-    this.callbacks.push(callback);
-
-    if(this.filterId) {
-        getLogsAtStart(this, callback);
-        pollFilter(this);
-    }
-
-    return this;
-};
-
-Filter.prototype.stopWatching = function () {
-    this.requestManager.stopPolling(this.filterId);
-    // remove filter async
-    this.implementation.uninstallFilter(this.filterId, function(){});
-    this.callbacks = [];
-};
-
-Filter.prototype.get = function (callback) {
-    var self = this;
-    if (utils.isFunction(callback)) {
-        if (this.filterId === null) {
-            // If filterId is not set yet, call it back
-            // when newFilter() assigns it.
-            this.getLogsCallbacks.push(callback);
-        } else {
-            this.implementation.getLogs(this.filterId, function(err, res){
-                if (err) {
-                    callback(err);
-                } else {
-                    callback(null, res.map(function (log) {
-                        return self.formatter ? self.formatter(log) : log;
-                    }));
-                }
-            });
-        }
-    } else {
-        if (this.filterId === null) {
-            throw new Error('Filter ID Error: filter().get() can\'t be chained synchronous, please provide a callback for the get() method.');
-        }
-        var logs = this.implementation.getLogs(this.filterId);
-        return logs.map(function (log) {
-            return self.formatter ? self.formatter(log) : log;
-        });
-    }
-
-    return this;
-};
-
-module.exports = Filter;
-
-
-},{"../utils/utils":20,"./formatters":30}],30:[function(require,module,exports){
+},{"./../utils/utils":20,"./formatters":28,"./method":34,"./property":41}],28:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3798,6 +3579,41 @@ var outputBlockFormatter = function(block) {
 };
 
 /**
+ * Formats the input of a log
+ * 
+ * @method inputLogFormatter
+ * @param {Object} log object
+ * @returns {Object} log
+*/
+var inputLogFormatter = function(options) {
+    var toTopic = function(value){
+
+        if(value === null || typeof value === 'undefined')
+            return null;
+
+        value = String(value);
+
+        if(value.indexOf('0x') === 0)
+            return value;
+        else
+            return utils.fromUtf8(value);
+    };
+
+    // make sure topics, get converted to hex
+    options.topics = options.topics || [];
+    options.topics = options.topics.map(function(topic){
+        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+    });
+
+    toTopic = null;
+
+    if(options.address && !utils.isAddress(options.address))
+        throw new Error('The given address is not valid!');
+
+    return options;
+};
+
+/**
  * Formats the output of a log
  * 
  * @method outputLogFormatter
@@ -3903,6 +3719,7 @@ module.exports = {
     inputTransactionFormatter: inputTransactionFormatter,
     inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
+    inputLogFormatter: inputLogFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
@@ -3913,7 +3730,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":18,"../utils/utils":20,"./iban":33}],31:[function(require,module,exports){
+},{"../utils/config":18,"../utils/utils":20,"./iban":31}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4162,7 +3979,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
 module.exports = SolidityFunction;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":30}],32:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./formatters":28}],30:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4310,7 +4127,7 @@ HttpProvider.prototype.isConnected = function() {
 module.exports = HttpProvider;
 
 
-},{"./errors":26,"xmlhttprequest":17}],33:[function(require,module,exports){
+},{"./errors":25,"xmlhttprequest":17}],31:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4539,7 +4356,7 @@ Iban.prototype.toString = function () {
 module.exports = Iban;
 
 
-},{"bignumber.js":"bignumber.js"}],34:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],32:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4571,18 +4388,12 @@ var errors = require('./errors');
 var IpcProvider = function (path, net) {
     var _this = this;
     this.responseCallbacks = {};
+    this.notificationCallbacks = [];
     this.path = path;
     
     this.connection = net.connect({path: this.path});
 
-    this.connection.on('error', function(e){
-        console.error('IPC Connection Error', e);
-        _this._timeout();
-    });
-
-    this.connection.on('end', function(){
-        _this._timeout();
-    }); 
+    this.addDefaultEvents();
 
 
     // LISTEN FOR CONNECTION RESPONSES
@@ -4603,13 +4414,41 @@ var IpcProvider = function (path, net) {
                 id = result.id;
             }
 
+            // notification
+            if(!id && result.method === 'eth_subscription') {
+                _this.notificationCallbacks.forEach(function(callback){
+                    if(utils.isFunction(callback))
+                        callback(null, result);
+                });
+
             // fire the callback
-            if(_this.responseCallbacks[id]) {
+            } else if(_this.responseCallbacks[id]) {
                 _this.responseCallbacks[id](null, result);
                 delete _this.responseCallbacks[id];
             }
         });
     });
+};
+
+/**
+Will add the error and end event to timeout existing calls
+
+@method addDefaultEvents
+*/
+IpcProvider.prototype.addDefaultEvents = function(){
+    var _this = this;
+
+    this.connection.on('error', function(){
+        _this._timeout();
+    });
+
+    this.connection.on('end', function(){
+        _this._timeout();
+    });
+
+    this.connection.on('timeout', function(){
+        _this._timeout();
+    }); 
 };
 
 /**
@@ -4745,10 +4584,90 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
     this._addResponseCallback(payload, callback);
 };
 
+/**
+Subscribes to provider events.provider
+
+@method on
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.on = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.push(callback);
+            break;
+
+        default:
+            this.connection.on(type, callback);
+            break;
+    }
+};
+
+/**
+Removes event listener
+
+@method removeListener
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.removeListener = function (type, callback) {
+    var _this = this;
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.forEach(function(cb, index){
+                if(cb === callback)
+                    _this.notificationCallbacks.splice(index, 1);
+            });
+            break;
+
+        default:
+            this.connection.removeListener(type, callback);
+            break;
+    }
+};
+
+/**
+Removes all event listeners
+
+@method removeAllListeners
+@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+*/
+IpcProvider.prototype.removeAllListeners = function (type) {
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks = [];
+            break;
+
+        default:
+            this.connection.removeAllListeners(type);
+            break;
+    }
+};
+
+/**
+Resetes the providers, clears all callbacks
+
+@method reset
+*/
+IpcProvider.prototype.reset = function () {
+    this._timeout();
+    this.notificationCallbacks = [];
+
+    this.connection.removeAllListeners('error');
+    this.connection.removeAllListeners('end');
+
+    this.addDefaultEvents();
+};
+
 module.exports = IpcProvider;
 
 
-},{"../utils/utils":20,"./errors":26}],35:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25}],33:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4841,7 +4760,7 @@ Jsonrpc.prototype.toBatchPayload = function (messages) {
 module.exports = Jsonrpc;
 
 
-},{}],36:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4942,7 +4861,15 @@ Method.prototype.formatInput = function (args) {
  * @return {Object}
  */
 Method.prototype.formatOutput = function (result) {
-    return this.outputFormatter && result ? this.outputFormatter(result) : result;
+    var _this = this;
+
+    if(utils.isArray(result)) {
+        return result.map(function(res){
+            return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
+        });
+    } else {
+        return this.outputFormatter && result ? this.outputFormatter(result) : result;
+    }
 };
 
 /**
@@ -5008,7 +4935,7 @@ Method.prototype.request = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":20,"./errors":26}],37:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25}],35:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5076,7 +5003,7 @@ var methods = function () {
 
 module.exports = DB;
 
-},{"../method":36}],38:[function(require,module,exports){
+},{"../method":34}],36:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5104,13 +5031,11 @@ module.exports = DB;
 
 var formatters = require('../formatters');
 var utils = require('../../utils/utils');
+var c = require('../../utils/config');
 var Method = require('../method');
 var Property = require('../property');
-var c = require('../../utils/config');
+var Subscriptions = require('../subscriptions');
 var Contract = require('../contract');
-var watches = require('./watches');
-var Filter = require('../filter');
-var IsSyncing = require('../syncing');
 var namereg = require('../namereg');
 var Iban = require('../iban');
 var transfer = require('../transfer');
@@ -5215,12 +5140,6 @@ var methods = function () {
 
     });
 
-    var getCompilers = new Method({
-        name: 'getCompilers',
-        call: 'eth_getCompilers',
-        params: 0
-    });
-
     var getBlockTransactionCount = new Method({
         name: 'getBlockTransactionCount',
         call: getBlockTransactionCountCall,
@@ -5303,6 +5222,12 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
+    var getCompilers = new Method({
+        name: 'getCompilers',
+        call: 'eth_getCompilers',
+        params: 0
+    });
+
     var compileSolidity = new Method({
         name: 'compile.solidity',
         call: 'eth_compileSolidity',
@@ -5333,6 +5258,42 @@ var methods = function () {
         params: 0
     });
 
+    var getPastLogs = new Method({
+        name: 'getPastLogs',
+        call: 'eth_getLogs',
+        params: 1,
+        inputFormatter: [formatters.inputLogFormatter],
+        outputFormatter: formatters.outputLogFormatter
+    });
+
+
+    // subscriptions
+    var subscribe = new Subscriptions({
+        name: 'subscribe',
+        subscribe: 'eth_subscribe',
+        unsubscribe: 'eth_unsubscribe',
+        subscriptions: {
+            'newBlocks': {
+                params: 1,
+                outputFormatter: formatters.outputBlockFormatter
+            },
+            'pendingTransactions': {
+                params: 0,
+                outputFormatter: formatters.outputTransactionFormatter
+            },
+            'logs': {
+                params: 1,
+                inputFormatter: [formatters.inputLogFormatter],
+                outputFormatter: formatters.outputLogFormatter
+            },
+            'syncing': {
+                params: 0,
+                outputFormatter: formatters.outputSyncingFormatter
+            }
+        }
+    });
+
+
     return [
         getBalance,
         getStorageAt,
@@ -5355,7 +5316,9 @@ var methods = function () {
         compileLLL,
         compileSerpent,
         submitWork,
-        getWork
+        getWork,
+        subscribe,
+        getPastLogs
     ];
 };
 
@@ -5402,10 +5365,6 @@ Eth.prototype.contract = function (abi) {
     return factory;
 };
 
-Eth.prototype.filter = function (fil, callback) {
-    return new Filter(this._requestManager, fil, watches.eth(), formatters.outputLogFormatter, callback);
-};
-
 Eth.prototype.namereg = function () {
     return this.contract(namereg.global.abi).at(namereg.global.address);
 };
@@ -5414,14 +5373,11 @@ Eth.prototype.icapNamereg = function () {
     return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
-Eth.prototype.isSyncing = function (callback) {
-    return new IsSyncing(this._requestManager, callback);
-};
 
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":43,"../property":44,"../syncing":47,"../transfer":48,"./watches":42}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":31,"../method":34,"../namereg":40,"../property":41,"../subscriptions":45,"../transfer":46}],37:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5475,7 +5431,7 @@ var properties = function () {
 
 module.exports = Net;
 
-},{"../../utils/utils":20,"../property":44}],40:[function(require,module,exports){
+},{"../../utils/utils":20,"../property":41}],38:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5562,7 +5518,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../formatters":30,"../method":36,"../property":44}],41:[function(require,module,exports){
+},{"../formatters":28,"../method":34,"../property":41}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5587,8 +5543,8 @@ module.exports = Personal;
 
 var Method = require('../method');
 var formatters = require('../formatters');
-var Filter = require('../filter');
-var watches = require('./watches');
+var Subscriptions = require('../subscriptions');
+
 
 var Shh = function (web3) {
     this._requestManager = web3._requestManager;
@@ -5601,9 +5557,6 @@ var Shh = function (web3) {
     });
 };
 
-Shh.prototype.filter = function (fil, callback) {
-    return new Filter(this._requestManager, fil, watches.shh(), formatters.outputPostFormatter, callback);
-};
 
 var methods = function () { 
 
@@ -5638,135 +5591,43 @@ var methods = function () {
         params: 0
     });
 
+    var getPastMessages = new Method({
+        name: 'getPastMessages',
+        call: 'shh_getMessages',
+        params: 1,
+        inputFormatter: [formatters.inputLogFormatter],
+        outputFormatter: formatters.outputPostFormatter
+    });
+
+    // subscriptions
+    var subscribe = new Subscriptions({
+        name: 'subscribe',
+        subscribe: 'shh_subscribe',
+        unsubscribe: 'shh_unsubscribe',
+        subscriptions: {
+            'messages': {
+                params: 1,
+                inputFormatter: [formatters.inputLogFormatter],
+                outputFormatter: formatters.outputPostFormatter
+            }
+        }
+    });
+
     return [
         post,
         newIdentity,
         hasIdentity,
         newGroup,
-        addToGroup
+        addToGroup,
+        getPastMessages,
+        subscribe
     ];
 };
 
 module.exports = Shh;
 
 
-},{"../filter":29,"../formatters":30,"../method":36,"./watches":42}],42:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file watches.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
-
-var Method = require('../method');
-
-/// @returns an array of objects describing web3.eth.filter api methods
-var eth = function () {
-    var newFilterCall = function (args) {
-        var type = args[0];
-
-        switch(type) {
-            case 'latest':
-                args.shift();
-                this.params = 0;
-                return 'eth_newBlockFilter';
-            case 'pending':
-                args.shift();
-                this.params = 0;
-                return 'eth_newPendingTransactionFilter';
-            default:
-                return 'eth_newFilter';
-        }
-    };
-
-    var newFilter = new Method({
-        name: 'newFilter',
-        call: newFilterCall,
-        params: 1
-    });
-
-    var uninstallFilter = new Method({
-        name: 'uninstallFilter',
-        call: 'eth_uninstallFilter',
-        params: 1
-    });
-
-    var getLogs = new Method({
-        name: 'getLogs',
-        call: 'eth_getFilterLogs',
-        params: 1
-    });
-
-    var poll = new Method({
-        name: 'poll',
-        call: 'eth_getFilterChanges',
-        params: 1
-    });
-
-    return [
-        newFilter,
-        uninstallFilter,
-        getLogs,
-        poll
-    ];
-};
-
-/// @returns an array of objects describing web3.shh.watch api methods
-var shh = function () {
-    var newFilter = new Method({
-        name: 'newFilter',
-        call: 'shh_newFilter',
-        params: 1
-    });
-
-    var uninstallFilter = new Method({
-        name: 'uninstallFilter',
-        call: 'shh_uninstallFilter',
-        params: 1
-    });
-
-    var getLogs = new Method({
-        name: 'getLogs',
-        call: 'shh_getMessages',
-        params: 1
-    });
-
-    var poll = new Method({
-        name: 'poll',
-        call: 'shh_getFilterChanges',
-        params: 1
-    });
-
-    return [
-        newFilter,
-        uninstallFilter,
-        getLogs,
-        poll
-    ];
-};
-
-module.exports = {
-    eth: eth,
-    shh: shh
-};
-
-
-},{"../method":36}],43:[function(require,module,exports){
+},{"../formatters":28,"../method":34,"../subscriptions":45}],40:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5807,7 +5668,7 @@ module.exports = {
 };
 
 
-},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],44:[function(require,module,exports){
+},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],41:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5953,7 +5814,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":20}],45:[function(require,module,exports){
+},{"../utils/utils":20}],42:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5982,7 +5843,6 @@ module.exports = Property;
 
 var Jsonrpc = require('./jsonrpc');
 var utils = require('../utils/utils');
-var c = require('../utils/config');
 var errors = require('./errors');
 
 /**
@@ -5992,9 +5852,8 @@ var errors = require('./errors');
  * Singleton
  */
 var RequestManager = function (provider) {
-    this.provider = provider;
-    this.polls = {};
-    this.timeout = null;
+    this.setProvider(provider);
+    this.subscriptions = {};
 };
 
 /**
@@ -6031,13 +5890,12 @@ RequestManager.prototype.sendAsync = function (data, callback) {
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
-
     var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
-    this.provider.sendAsync(payload, function (err, result) {
+    this.provider.sendAsync(payload, function (err, result) {        
         if (err) {
             return callback(err);
         }
-        
+
         if (!Jsonrpc.getInstance().isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
@@ -6059,7 +5917,6 @@ RequestManager.prototype.sendBatch = function (data, callback) {
     }
 
     var payload = Jsonrpc.getInstance().toBatchPayload(data);
-
     this.provider.sendAsync(payload, function (err, results) {
         if (err) {
             return callback(err);
@@ -6073,6 +5930,55 @@ RequestManager.prototype.sendBatch = function (data, callback) {
     }); 
 };
 
+
+/**
+ * Waits for notifications
+ *
+ * @method addSubscription
+ * @param {String} id           the subscription id
+ * @param {Function} callback   the callback to call for incoming notifications
+ */
+RequestManager.prototype.addSubscription = function (name, type, id, callback) {
+    if(this.provider.on) {
+        this.subscriptions[id] = {
+            callback: callback,
+            type: type,
+            name: name
+        };
+
+    } else {
+        throw new Error('This provider doesn\'t support subscriptions', this.provider);
+    }
+};
+
+/**
+ * Waits for notifications
+ *
+ * @method removeSubscription
+ * @param {String} id           the subscription id
+ * @param {Function} callback   fired once the subscription is removed
+ */
+RequestManager.prototype.removeSubscription = function (id, callback) {
+    var _this = this;
+
+    if(this.subscriptions[id]) {
+
+        this.sendAsync({
+            method: this.subscriptions[id].type + '_unsubscribe',
+            params: [id]
+        }, function(err, result){
+
+            if(!err) {
+                delete _this.subscriptions[id];
+            }
+
+            if(utils.isFunction(callback))
+                callback(err, result);
+        });
+
+    }
+};
+
 /**
  * Should be used to set provider of request manager
  *
@@ -6080,43 +5986,22 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {Object}
  */
 RequestManager.prototype.setProvider = function (p) {
+    var _this = this;
+
+    // reset the old one before changing
+    if(this.provider)
+        this.reset();
+
     this.provider = p;
-};
 
-/**
- * Should be used to start polling
- *
- * @method startPolling
- * @param {Object} data
- * @param {Number} pollId
- * @param {Function} callback
- * @param {Function} uninstall
- *
- * @todo cleanup number of params
- */
-RequestManager.prototype.startPolling = function (data, pollId, callback, uninstall) {
-    this.polls[pollId] = {data: data, id: pollId, callback: callback, uninstall: uninstall};
-
-
-    // start polling
-    if (!this.timeout) {
-        this.poll();
-    }
-};
-
-/**
- * Should be used to stop polling for filter with given id
- *
- * @method stopPolling
- * @param {Number} pollId
- */
-RequestManager.prototype.stopPolling = function (pollId) {
-    delete this.polls[pollId];
-
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
+    // listen to incoming notifications
+    if(this.provider && this.provider.on) {
+        this.provider.on('notification', function(err, result){
+            if(!err) {
+                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
+                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
+            }
+        });
     }
 };
 
@@ -6126,101 +6011,24 @@ RequestManager.prototype.stopPolling = function (pollId) {
  * @method reset
  */
 RequestManager.prototype.reset = function (keepIsSyncing) {
-    /*jshint maxcomplexity:5 */
+    var _this = this;
 
-    for (var key in this.polls) {
-        // remove all polls, except sync polls,
-        // they need to be removed manually by calling syncing.stopWatching()
-        if(!keepIsSyncing || key.indexOf('syncPoll_') === -1) {
-            this.polls[key].uninstall();
-            delete this.polls[key];
-        }
-    }
 
-    // stop polling
-    if(Object.keys(this.polls).length === 0 && this.timeout) {
-        clearTimeout(this.timeout);
-        this.timeout = null;
-    }
-};
-
-/**
- * Should be called to poll for changes on filter with given id
- *
- * @method poll
- */
-RequestManager.prototype.poll = function () {
-    /*jshint maxcomplexity: 6 */
-    this.timeout = setTimeout(this.poll.bind(this), c.ETH_POLLING_TIMEOUT);
-
-    if (Object.keys(this.polls).length === 0) {
-        return;
-    }
-
-    if (!this.provider) {
-        console.error(errors.InvalidProvider());
-        return;
-    }
-
-    var pollsData = [];
-    var pollsIds = [];
-    for (var key in this.polls) {
-        pollsData.push(this.polls[key].data);
-        pollsIds.push(key);
-    }
-
-    if (pollsData.length === 0) {
-        return;
-    }
-
-    var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
-    
-    // map the request id to they poll id
-    var pollsIdMap = {};
-    payload.forEach(function(load, index){
-        pollsIdMap[load.id] = pollsIds[index];
+    // uninstall all subscriptions
+    Object.keys(this.subscriptions).forEach(function(id){
+        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+            _this.removeSubscription(id);
     });
 
 
-    var self = this;
-    this.provider.sendAsync(payload, function (error, results) {
-
-
-        // TODO: console log?
-        if (error) {
-            return;
-        }
-
-        if (!utils.isArray(results)) {
-            throw errors.InvalidResponse(results);
-        }
-        results.map(function (result) {
-            var id = pollsIdMap[result.id];
-
-            // make sure the filter is still installed after arrival of the request
-            if (self.polls[id]) {
-                result.callback = self.polls[id].callback;
-                return result;
-            } else
-                return false;
-        }).filter(function (result) {
-            return !!result; 
-        }).filter(function (result) {
-            var valid = Jsonrpc.getInstance().isValidResponse(result);
-            if (!valid) {
-                result.callback(errors.InvalidResponse(result));
-            }
-            return valid;
-        }).forEach(function (result) {
-            result.callback(null, result.result);
-        });
-    });
+    //  reset notification callbacks etc.
+    if(this.provider.reset)
+        this.provider.reset();
 };
 
 module.exports = RequestManager;
 
-
-},{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":35}],46:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"./jsonrpc":33}],43:[function(require,module,exports){
 
 
 var Settings = function () {
@@ -6231,7 +6039,7 @@ var Settings = function () {
 module.exports = Settings;
 
 
-},{}],47:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6248,85 +6056,305 @@ module.exports = Settings;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file syncing.js
+/** @file subscription.js
+ *
  * @authors:
  *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
  */
 
-var formatters = require('./formatters');
 var utils = require('../utils/utils');
+var errors = require('./errors');
+var EventEmitter = require('eventemitter3');
 
-var count = 1;
 
-/**
-Adds the callback and sets up the methods, to iterate over the results.
+var Subscription = function (options) {
+    var emitter = new EventEmitter();
+    this.id = null;
+    this.callback = null;
 
-@method pollSyncing
-@param {Object} self
-*/
-var pollSyncing = function(self) {
-
-    var onMessage = function (error, sync) {
-        if (error) {
-            return self.callbacks.forEach(function (callback) {
-                callback(error);
-            });
-        }
-
-        if(utils.isObject(sync) && sync.startingBlock)
-            sync = formatters.outputSyncingFormatter(sync);
-
-        self.callbacks.forEach(function (callback) {
-            if (self.lastSyncState !== sync) {
-                
-                // call the callback with true first so the app can stop anything, before receiving the sync data
-                if(!self.lastSyncState && utils.isObject(sync))
-                    callback(null, true);
-                
-                // call on the next CPU cycle, so the actions of the sync stop can be processes first
-                setTimeout(function() {
-                    callback(null, sync);
-                }, 0);
-                
-                self.lastSyncState = sync;
-            }
-        });
+    this.options = {
+        subscription: options.subscription,
+        subscribeMethod: options.subscribeMethod,
+        unsubscribeMethod: options.unsubscribeMethod,
+        requestManager: options.requestManager
     };
 
-    self.requestManager.startPolling({
-        method: 'eth_syncing',
-        params: [],
-    }, self.pollId, onMessage, self.stopWatching.bind(self));
 
+    // attach event emitter functions
+    this.emit = emitter.emit;
+    this.on = emitter.on;
+    this.once = emitter.once;
+    this.off = emitter.off;
+    this.listeners = emitter.listeners;
+    this.listenerCount = emitter.listenerCount;
+    this.addListener = emitter.addListener;
+    this.removeListener = emitter.removeListener;
+    this.removeAllListeners = emitter.removeAllListeners;
+    this.setMaxListeners = emitter.setMaxListeners;
+    this.getMaxListeners = emitter.getMaxListeners;
+
+    // wait for events to be added
+    //this._subscriptions = {};
+    //
+    //var checkListener = function(type, event, func){
+    //    if(event === type) {
+    //        _this.removeListener(type, func);
+    //        throw new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
+    //    }
+    //};
+    //this.on('removeListener', function(event, func){
+    //    checkListener('removeListener', event, func);
+    //    console.log('REMOVE', event, func);
+    //});
+    //this.on('newListener', function(event, func){
+    //    checkListener('newListener', event, func);
+    //    console.log('ADDED', event, func);
+    //});
 };
 
-var IsSyncing = function (requestManager, callback) {
-    this.requestManager = requestManager;
-    this.pollId = 'syncPoll_'+ count++;
-    this.callbacks = [];
-    this.addCallback(callback);
-    this.lastSyncState = false;
-    pollSyncing(this);
 
-    return this;
+/**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
+
+Subscription.prototype._extractCallback = function (args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
 };
 
-IsSyncing.prototype.addCallback = function (callback) {
-    if(callback)
-        this.callbacks.push(callback);
-    return this;
+/**
+ * Should be called to check if the number of arguments is correct
+ *
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
+
+Subscription.prototype._validateArgs = function (args) {
+    var subscription = this.options.subscription;
+
+    if(!subscription)
+        subscription = {};
+
+    if(!subscription.params)
+        subscription.params = 0;
+
+    if (args.length !== subscription.params + 1) {
+        throw errors.InvalidNumberOfParams();
+    }
 };
 
-IsSyncing.prototype.stopWatching = function () {
-    this.requestManager.stopPolling(this.pollId);
-    this.callbacks = [];
+/**
+ * Should be called to format input args of method
+ *
+ * @method formatInput
+ * @param {Array}
+ * @return {Array}
+ */
+
+Subscription.prototype._formatInput = function (args) {
+    var subscription = this.options.subscription;
+
+    if (!subscription || !subscription.inputFormatter) {
+        return args;
+    }
+
+    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
+        return formatter ? formatter(args[index+1]) : args[index+1];
+    });
+    formattedArgs.unshift(args[0]);
+
+    return formattedArgs;
 };
 
-module.exports = IsSyncing;
+/**
+ * Should be called to format output(result) of method
+ *
+ * @method formatOutput
+ * @param {Object}
+ * @return {Object}
+ */
+
+Subscription.prototype._formatOutput = function (result) {
+    var subscription = this.options.subscription;
+
+    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
+};
+
+/**
+ * Should create payload from given input args
+ *
+ * @method toPayload
+ * @param {Array} args
+ * @return {Object}
+ */
+Subscription.prototype._toPayload = function (args) {
+    this.callback = this._extractCallback(args);
+    var params = this._formatInput(args);
+    this._validateArgs(params);
+
+    return {
+        method: this.options.subscribeMethod,
+        params: params
+    };
+};
+
+/**
+ * Unsubscribes and clears callbacks
+ *
+ * @method unsubscribe
+ * @return {Object}
+ */
+Subscription.prototype.unsubscribe = function(callback) {
+    return this.options.requestManager.removeSubscription(this.id, callback);
+};
+
+/**
+ * Subscribes and watches for changes
+ *
+ * @method subscribe
+ * @return {Object}
+ */
+Subscription.prototype.subscribe = function() {
+    var _this = this;
+    var payload = this._toPayload(Array.prototype.slice.call(arguments));
+
+    // throw error, if provider doesnt support subscriptions
+    if(!this.options.requestManager.provider.on)
+        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
 
 
-},{"../utils/utils":20,"./formatters":30}],48:[function(require,module,exports){
+    // get past logs, if fromBlock is available
+    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+        this.options.requestManager.sendAsync({
+            method: 'eth_getLogs',
+            params: [payload.params[1]]
+        }, function (err, logs) {
+            if(!err) {
+                logs.forEach(function(log){
+                    var output = _this._formatOutput(log);
+                    _this.callback(null, output);
+                    _this.emit('log', output);
+                });
+            } else {
+                _this.callback(err);
+                _this.emit('error', err);
+            }
+        });
+    }
+
+    // create subscription
+    if (_this.callback) {
+
+        this.options.requestManager.sendAsync(payload, function (err, result) {
+            if(!err && result) {
+                _this.id = result;
+
+                // call callback on notifications
+                _this.options.requestManager.addSubscription(payload.params[0] ,'eth', _this.id, function(err, result) {
+                    var output = _this._formatOutput(result);
+                    _this.callback(err, output, _this);
+                    if (!err) {
+                        // TODO add reverted log
+                        _this.emit('log', output);
+                    } else {
+                        _this.emit('error', err);
+                    }
+
+                });
+            } else {
+                _this.callback(err);
+            }
+        });
+
+        // return an object to cancel the subscription
+        return this;
+
+    } else
+        throw new Error('Subscriptions require a callback as the last parameter!');
+};
+
+module.exports = Subscription;
+
+},{"../utils/utils":20,"./errors":25,"eventemitter3":82}],45:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file subscriptions.js
+ *
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var Subscription = require('./subscription.js');
+
+
+var Subscriptions = function (options) {
+    this.name = options.name;
+    this.subscribe = options.subscribe;
+    this.unsubscribe = options.unsubscribe;
+    this.subscriptions = options.subscriptions || {};
+    this.requestManager = null;
+};
+
+
+Subscriptions.prototype.setRequestManager = function (rm) {
+    this.requestManager = rm;
+};
+
+
+Subscriptions.prototype.attachToObject = function (obj) {
+    var func = this.buildCall();
+    func.call = this.call; // TODO!!! that's ugly. filter.js uses it
+    var name = this.name.split('.');
+    if (name.length > 1) {
+        obj[name[0]] = obj[name[0]] || {};
+        obj[name[0]][name[1]] = func;
+    } else {
+        obj[name[0]] = func; 
+    }
+};
+
+
+Subscriptions.prototype.buildCall = function() {
+    var _this = this;
+
+    return function(){
+        var subscription = new Subscription({
+            subscription: _this.subscriptions[arguments[0]],
+            subscribeMethod: _this.subscribe,
+            unsubscribeMethod: _this.unsubscribe,
+            requestManager: _this.requestManager
+        });
+
+        return subscription.subscribe.apply(subscription, arguments);
+    };
+};
+
+module.exports = Subscriptions;
+
+
+},{"./subscription.js":44}],46:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6420,9 +6448,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":33}],49:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":31}],47:[function(require,module,exports){
 
-},{}],50:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -6650,7 +6678,7 @@ module.exports = transfer;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],51:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],49:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7526,7 +7554,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":52}],52:[function(require,module,exports){
+},{"./core":50}],50:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8269,7 +8297,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],53:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8393,7 +8421,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":52}],54:[function(require,module,exports){
+},{"./core":50}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8543,7 +8571,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":52}],55:[function(require,module,exports){
+},{"./core":50}],53:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8676,7 +8704,7 @@ module.exports = transfer;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":52,"./hmac":57,"./sha1":76}],56:[function(require,module,exports){
+},{"./core":50,"./hmac":55,"./sha1":74}],54:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8743,7 +8771,7 @@ module.exports = transfer;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":51,"./core":52}],57:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],55:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8887,7 +8915,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":52}],58:[function(require,module,exports){
+},{"./core":50}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8906,7 +8934,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./aes":50,"./cipher-core":51,"./core":52,"./enc-base64":53,"./enc-utf16":54,"./evpkdf":55,"./format-hex":56,"./hmac":57,"./lib-typedarrays":59,"./md5":60,"./mode-cfb":61,"./mode-ctr":63,"./mode-ctr-gladman":62,"./mode-ecb":64,"./mode-ofb":65,"./pad-ansix923":66,"./pad-iso10126":67,"./pad-iso97971":68,"./pad-nopadding":69,"./pad-zeropadding":70,"./pbkdf2":71,"./rabbit":73,"./rabbit-legacy":72,"./rc4":74,"./ripemd160":75,"./sha1":76,"./sha224":77,"./sha256":78,"./sha3":79,"./sha384":80,"./sha512":81,"./tripledes":82,"./x64-core":83}],59:[function(require,module,exports){
+},{"./aes":48,"./cipher-core":49,"./core":50,"./enc-base64":51,"./enc-utf16":52,"./evpkdf":53,"./format-hex":54,"./hmac":55,"./lib-typedarrays":57,"./md5":58,"./mode-cfb":59,"./mode-ctr":61,"./mode-ctr-gladman":60,"./mode-ecb":62,"./mode-ofb":63,"./pad-ansix923":64,"./pad-iso10126":65,"./pad-iso97971":66,"./pad-nopadding":67,"./pad-zeropadding":68,"./pbkdf2":69,"./rabbit":71,"./rabbit-legacy":70,"./rc4":72,"./ripemd160":73,"./sha1":74,"./sha224":75,"./sha256":76,"./sha3":77,"./sha384":78,"./sha512":79,"./tripledes":80,"./x64-core":81}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8983,7 +9011,7 @@ module.exports = transfer;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":52}],60:[function(require,module,exports){
+},{"./core":50}],58:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9252,7 +9280,7 @@ module.exports = transfer;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":52}],61:[function(require,module,exports){
+},{"./core":50}],59:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9331,7 +9359,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":51,"./core":52}],62:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],60:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9448,7 +9476,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":51,"./core":52}],63:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9507,7 +9535,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":51,"./core":52}],64:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9548,7 +9576,7 @@ module.exports = transfer;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":51,"./core":52}],65:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9603,7 +9631,7 @@ module.exports = transfer;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":51,"./core":52}],66:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9653,7 +9681,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":51,"./core":52}],67:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9698,7 +9726,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":51,"./core":52}],68:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9739,7 +9767,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":51,"./core":52}],69:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9770,7 +9798,7 @@ module.exports = transfer;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":51,"./core":52}],70:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9816,7 +9844,7 @@ module.exports = transfer;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":51,"./core":52}],71:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9962,7 +9990,7 @@ module.exports = transfer;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":52,"./hmac":57,"./sha1":76}],72:[function(require,module,exports){
+},{"./core":50,"./hmac":55,"./sha1":74}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10153,7 +10181,7 @@ module.exports = transfer;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],73:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10346,7 +10374,7 @@ module.exports = transfer;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],74:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10486,7 +10514,7 @@ module.exports = transfer;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],75:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],73:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10754,7 +10782,7 @@ module.exports = transfer;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":52}],76:[function(require,module,exports){
+},{"./core":50}],74:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10905,7 +10933,7 @@ module.exports = transfer;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":52}],77:[function(require,module,exports){
+},{"./core":50}],75:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10986,7 +11014,7 @@ module.exports = transfer;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":52,"./sha256":78}],78:[function(require,module,exports){
+},{"./core":50,"./sha256":76}],76:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11186,7 +11214,7 @@ module.exports = transfer;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":52}],79:[function(require,module,exports){
+},{"./core":50}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11510,7 +11538,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":52,"./x64-core":83}],80:[function(require,module,exports){
+},{"./core":50,"./x64-core":81}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11594,7 +11622,7 @@ module.exports = transfer;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":52,"./sha512":81,"./x64-core":83}],81:[function(require,module,exports){
+},{"./core":50,"./sha512":79,"./x64-core":81}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11918,7 +11946,7 @@ module.exports = transfer;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":52,"./x64-core":83}],82:[function(require,module,exports){
+},{"./core":50,"./x64-core":81}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12689,7 +12717,7 @@ module.exports = transfer;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":51,"./core":52,"./enc-base64":53,"./evpkdf":55,"./md5":60}],83:[function(require,module,exports){
+},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],81:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12994,7 +13022,271 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":52}],84:[function(require,module,exports){
+},{"./core":50}],82:[function(require,module,exports){
+'use strict';
+
+//
+// We store our EE objects in a plain object whose properties are event names.
+// If `Object.create(null)` is not supported we prefix the event names with a
+// `~` to make sure that the built-in object properties are not overridden or
+// used as an attack vector.
+// We also assume that `Object.create(null)` is available when the event name
+// is an ES6 Symbol.
+//
+var prefix = typeof Object.create !== 'function' ? '~' : false;
+
+/**
+ * Representation of a single EventEmitter function.
+ *
+ * @param {Function} fn Event handler to be called.
+ * @param {Mixed} context Context for function execution.
+ * @param {Boolean} once Only emit once
+ * @api private
+ */
+function EE(fn, context, once) {
+  this.fn = fn;
+  this.context = context;
+  this.once = once || false;
+}
+
+/**
+ * Minimal EventEmitter interface that is molded against the Node.js
+ * EventEmitter interface.
+ *
+ * @constructor
+ * @api public
+ */
+function EventEmitter() { /* Nothing to set */ }
+
+/**
+ * Holds the assigned EventEmitters by name.
+ *
+ * @type {Object}
+ * @private
+ */
+EventEmitter.prototype._events = undefined;
+
+/**
+ * Return a list of assigned event listeners.
+ *
+ * @param {String} event The events that should be listed.
+ * @param {Boolean} exists We only need to know if there are listeners.
+ * @returns {Array|Boolean}
+ * @api public
+ */
+EventEmitter.prototype.listeners = function listeners(event, exists) {
+  var evt = prefix ? prefix + event : event
+    , available = this._events && this._events[evt];
+
+  if (exists) return !!available;
+  if (!available) return [];
+  if (available.fn) return [available.fn];
+
+  for (var i = 0, l = available.length, ee = new Array(l); i < l; i++) {
+    ee[i] = available[i].fn;
+  }
+
+  return ee;
+};
+
+/**
+ * Emit an event to all registered event listeners.
+ *
+ * @param {String} event The name of the event.
+ * @returns {Boolean} Indication if we've emitted an event.
+ * @api public
+ */
+EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events || !this._events[evt]) return false;
+
+  var listeners = this._events[evt]
+    , len = arguments.length
+    , args
+    , i;
+
+  if ('function' === typeof listeners.fn) {
+    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+
+    switch (len) {
+      case 1: return listeners.fn.call(listeners.context), true;
+      case 2: return listeners.fn.call(listeners.context, a1), true;
+      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+    }
+
+    for (i = 1, args = new Array(len -1); i < len; i++) {
+      args[i - 1] = arguments[i];
+    }
+
+    listeners.fn.apply(listeners.context, args);
+  } else {
+    var length = listeners.length
+      , j;
+
+    for (i = 0; i < length; i++) {
+      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+
+      switch (len) {
+        case 1: listeners[i].fn.call(listeners[i].context); break;
+        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
+        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+        default:
+          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
+            args[j - 1] = arguments[j];
+          }
+
+          listeners[i].fn.apply(listeners[i].context, args);
+      }
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Register a new EventListener for the given event.
+ *
+ * @param {String} event Name of the event.
+ * @param {Functon} fn Callback function.
+ * @param {Mixed} context The context of the function.
+ * @api public
+ */
+EventEmitter.prototype.on = function on(event, fn, context) {
+  var listener = new EE(fn, context || this)
+    , evt = prefix ? prefix + event : event;
+
+  if (!this._events) this._events = prefix ? {} : Object.create(null);
+  if (!this._events[evt]) this._events[evt] = listener;
+  else {
+    if (!this._events[evt].fn) this._events[evt].push(listener);
+    else this._events[evt] = [
+      this._events[evt], listener
+    ];
+  }
+
+  return this;
+};
+
+/**
+ * Add an EventListener that's only called once.
+ *
+ * @param {String} event Name of the event.
+ * @param {Function} fn Callback function.
+ * @param {Mixed} context The context of the function.
+ * @api public
+ */
+EventEmitter.prototype.once = function once(event, fn, context) {
+  var listener = new EE(fn, context || this, true)
+    , evt = prefix ? prefix + event : event;
+
+  if (!this._events) this._events = prefix ? {} : Object.create(null);
+  if (!this._events[evt]) this._events[evt] = listener;
+  else {
+    if (!this._events[evt].fn) this._events[evt].push(listener);
+    else this._events[evt] = [
+      this._events[evt], listener
+    ];
+  }
+
+  return this;
+};
+
+/**
+ * Remove event listeners.
+ *
+ * @param {String} event The event we want to remove.
+ * @param {Function} fn The listener that we need to find.
+ * @param {Mixed} context Only remove listeners matching this context.
+ * @param {Boolean} once Only remove once listeners.
+ * @api public
+ */
+EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events || !this._events[evt]) return this;
+
+  var listeners = this._events[evt]
+    , events = [];
+
+  if (fn) {
+    if (listeners.fn) {
+      if (
+           listeners.fn !== fn
+        || (once && !listeners.once)
+        || (context && listeners.context !== context)
+      ) {
+        events.push(listeners);
+      }
+    } else {
+      for (var i = 0, length = listeners.length; i < length; i++) {
+        if (
+             listeners[i].fn !== fn
+          || (once && !listeners[i].once)
+          || (context && listeners[i].context !== context)
+        ) {
+          events.push(listeners[i]);
+        }
+      }
+    }
+  }
+
+  //
+  // Reset the array, or remove it completely if we have no more listeners.
+  //
+  if (events.length) {
+    this._events[evt] = events.length === 1 ? events[0] : events;
+  } else {
+    delete this._events[evt];
+  }
+
+  return this;
+};
+
+/**
+ * Remove all listeners or only the listeners for the specified event.
+ *
+ * @param {String} event The event want to remove all listeners for.
+ * @api public
+ */
+EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+  if (!this._events) return this;
+
+  if (event) delete this._events[prefix ? prefix + event : event];
+  else this._events = prefix ? {} : Object.create(null);
+
+  return this;
+};
+
+//
+// Alias methods names because people roll like that.
+//
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+//
+// This function doesn't apply anymore.
+//
+EventEmitter.prototype.setMaxListeners = function setMaxListeners() {
+  return this;
+};
+
+//
+// Expose the prefix.
+//
+EventEmitter.prefixed = prefix;
+
+//
+// Expose the module.
+//
+if ('undefined' !== typeof module) {
+  module.exports = EventEmitter;
+}
+
+},{}],83:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
