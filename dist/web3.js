@@ -923,7 +923,7 @@ module.exports = SolidityTypeDynamicBytes;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file formatters.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -1067,7 +1067,7 @@ var formatOutputUInt = function (param) {
  * @returns {BigNumber} input bytes formatted to real
  */
 var formatOutputReal = function (param) {
-    return formatOutputInt(param).dividedBy(new BigNumber(2).pow(128)); 
+    return formatOutputInt(param).dividedBy(new BigNumber(2).pow(128));
 };
 
 /**
@@ -1078,7 +1078,7 @@ var formatOutputReal = function (param) {
  * @returns {BigNumber} input bytes formatted to ureal
  */
 var formatOutputUReal = function (param) {
-    return formatOutputUInt(param).dividedBy(new BigNumber(2).pow(128)); 
+    return formatOutputUInt(param).dividedBy(new BigNumber(2).pow(128));
 };
 
 /**
@@ -1123,8 +1123,13 @@ var formatOutputDynamicBytes = function (param) {
  * @returns {String} ascii string
  */
 var formatOutputString = function (param) {
-    var length = (new BigNumber(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
-    return utils.toUtf8(param.dynamicPart().substr(64, length));
+    var hex = param.dynamicPart().slice(0, 64);
+    if(hex) {
+        var length = (new BigNumber(hex, 16)).toNumber() * 2;
+        return utils.toUtf8(param.dynamicPart().substr(64, length));
+    } else {
+        return "ERROR: Strings are not yet supported as return values";
+    }
 };
 
 /**
@@ -2759,7 +2764,7 @@ var Contract = function(jsonInterface, address, options) {
     this._methods = {};
     this._jsonInterface = [];
 
-    this.address = address;
+    this.address = address.toLowerCase();
 
 
     // add method and event signatures, when the jsonInterface gets set
@@ -2768,7 +2773,7 @@ var Contract = function(jsonInterface, address, options) {
             _this._jsonInterface = value.map(function(method) {
                 // function
                 if (method.type === 'function') {
-                    method.signature = sha3(utils.transformToFullName(method)).slice(0, 8);
+                    method.signature = '0x'+ sha3(utils.transformToFullName(method)).slice(0, 8);
                     method.outputTypes = method.outputs.map(function (i) {
                         return i.type;
                     });
@@ -2787,7 +2792,7 @@ var Contract = function(jsonInterface, address, options) {
 
                     // event
                 } else if (method.type === 'event') {
-                    method.signature = sha3(utils.transformToFullName(method));
+                    method.signature = '0x'+ sha3(utils.transformToFullName(method));
                 }
 
 
@@ -2871,28 +2876,34 @@ Contract.prototype._encodeEventABI = function (event, options) {
     result.topics = [];
 
     // add event signature
-    if(event && !event.anonymous) {
-        result.topics.push('0x' + event.signature);
+    if (event && !event.anonymous && event.name !== 'ALLEVENTS') {
+        result.topics.push(event.signature);
     }
 
     // add event topics (indexed arguments)
-    var indexedTopics = event.inputs.filter(function (i) {
-        return i.indexed === true;
-    }).map(function (i) {
-        var value = filter[i.name];
-        if (!value) {
-            return null;
-        }
+    if (event.name !== 'ALLEVENTS') {
+        var indexedTopics = event.inputs.filter(function (i) {
+            return i.indexed === true;
+        }).map(function (i) {
+            var value = filter[i.name];
+            if (!value) {
+                return null;
+            }
 
-        if (utils.isArray(value)) {
-            return value.map(function (v) {
-                return '0x' + coder.encodeParam(i.type, v);
-            });
-        }
-        return '0x' + coder.encodeParam(i.type, value);
-    });
+            if (utils.isArray(value)) {
+                return value.map(function (v) {
+                    return '0x' + coder.encodeParam(i.type, v);
+                });
+            }
+            return '0x' + coder.encodeParam(i.type, value);
+        });
 
-    result.topics = result.topics.concat(indexedTopics);
+        result.topics = result.topics.concat(indexedTopics);
+    }
+
+    if(!result.topics.length)
+        delete result.topics;
+
     result.address = this.address;
 
     return result;
@@ -2906,54 +2917,53 @@ Contract.prototype._encodeEventABI = function (event, options) {
  * @return {Object} result object with decoded indexed && not indexed params
  */
 Contract.prototype._decodeEventABI = function (data) {
-    var name = null,
-        params = null,
-        anonymous = null;
+    var event = this;
     data.data = data.data || '';
     data.topics = data.topics || [];
+    var result = formatters.outputLogFormatter(data);
 
-    // all events
-    if(this._allEvents) {
-
-        var eventTopic = data.topics[0].slice(2);
-        var match = this._json.filter(function (j) {
-            return eventTopic === sha3(utils.transformToFullName(j));
-        })[0];
-
-        if (!match) { // cannot find matching event?
-            console.warn('Can\'t find event for log');
-            return data;
-        }
-
-        name = utils.transformToFullName(match);
-        params = match.inputs;
-        anonymous = match.anonymous;
-
-    // single event
-    } else {
-        name = this._name;
-        params = this._params;
-        anonymous = this._anonymous;
+    // if allEvents get the right event
+    if(event.name === 'ALLEVENTS') {
+        event = event.jsonInterface.find(function (interface) {
+            return (interface.signature === data.topics[0]);
+        }) || {anonymous: true};
     }
 
-    var argTopics = anonymous ? data.topics : data.topics.slice(1);
-    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
-    var indexedParams = coder.decodeParams(this.types(true, params), indexedData);
+    // create empty inputs if none are present (e.g. anonymous events on allEvents)
+    event.inputs = event.inputs || [];
 
-    var notIndexedData = data.data.slice(2);
-    var notIndexedParams = coder.decodeParams(this.types(false, params), notIndexedData);
 
-    var result = formatters.outputLogFormatter(data);
-    result.event = this.displayName(name);
-    result.address = data.address;
+    var argTopics = event.anonymous ? data.topics : data.topics.slice(1);
+    var indexedTypes = event.inputs.filter(function (i) {
+        return i.indexed === true;
+    }).map(function (i) {
+        return i.type;
+    });
+    var notIndexedTypes = event.inputs.filter(function (i) {
+        return i.indexed === false;
+    }).map(function (i) {
+        return i.type;
+    });
 
-    result.returnValues = params.reduce(function (acc, current) {
-        acc[current.name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
+    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join('');
+    console.log('INDEXED', indexedTypes, indexedData);
+    var indexedParams = coder.decodeParams(indexedTypes, indexedData);
+
+    console.log('NOY INDEXED', notIndexedTypes, data.data.slice(2));
+    var notIndexedParams = coder.decodeParams(notIndexedTypes, data.data.slice(2));
+
+
+    var count = 0;
+    result.returnValues = event.inputs.reduce(function (acc, current) {
+        var name = current.name || count++;
+        acc[name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
         return acc;
     }, {});
 
-    delete result.data;
-    delete result.topics;
+    result.event = event.name;
+
+    //delete result.data;
+    //delete result.topics;
 
     return result;
 };
@@ -2971,7 +2981,7 @@ Contract.prototype._encodeMethodABI = function (method, params) {
     var signature = false,
         paramsABI = this.jsonInterface.filter(function (json) {
         return ((method === 'constructor' && json.type === method) ||
-            ((json.signature === method || json.name === method) && json.type === 'function')) &&
+            ((json.signature === method || json.signature === '0x'+ method || json.name === method) && json.type === 'function')) &&
             json.inputs.length === params.length;
     }).map(function (json) {
         if(json.type === 'function') {
@@ -2991,10 +3001,11 @@ Contract.prototype._encodeMethodABI = function (method, params) {
  * Decode method return values
  *
  * @method _decodeMethodReturn
- * @param {Array} abi
- * @param {Array} constructor params
+ * @param {Array} outputTypes
+ * @param {String} returnValues
+ * @param {Array} decoded output return values
  */
-Contract.prototype._decodeMethodReturn = function (returnValues, outputTypes) {
+Contract.prototype._decodeMethodReturn = function (outputTypes, returnValues) {
     if (!returnValues) {
         return;
     }
@@ -3148,7 +3159,7 @@ Contract.prototype.deploy = function(options, callback){
  * @param {Object} options
  */
 Contract.prototype.encodeABI = function(options){
-    var bytes = '0x';
+    var bytes = '';
     options = options || {};
 
     options.arguments = options.arguments || [];
@@ -3159,8 +3170,8 @@ Contract.prototype.encodeABI = function(options){
 
     if(options.method === 'constructor') {
         bytes = options.data || bytes;
+        bytes = '0x'+ bytes.replace(/^0x/,'');
     }
-
 
     // remove 0x
     options.method = options.method.replace(/^0x/,'');
@@ -3183,7 +3194,10 @@ Contract.prototype.encodeABI = function(options){
  */
 Contract.prototype.on = function(event, options, func){
     var args = Array.prototype.slice.call(arguments),
-        event = this.jsonInterface.find(function(json){
+        event = (event.toLowerCase() === 'allevents') ? {
+            name: 'ALLEVENTS',
+            jsonInterface: this.jsonInterface
+        } : this.jsonInterface.find(function(json){
             return (json.type === 'event' && json.name === event);
         });
 
@@ -3192,7 +3206,7 @@ Contract.prototype.on = function(event, options, func){
     }
 
     if(!utils.isAddress(this.address)) {
-        throw new Error('This contract object doesn\'t have address set yet, please set first an address.');
+        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
     }
 
     if (utils.isFunction(args[args.length - 1])) {
@@ -3207,14 +3221,12 @@ Contract.prototype.on = function(event, options, func){
 
     console.log(subscriptionParams);
 
-    var formatters = {};
-
     // create new subscription
     var subscription = new Subscription({
         subscription: {
             params: 1,
             inputFormatter: [formatters.inputLogFormatter],
-            outputFormatter: formatters.outputLogFormatter
+            outputFormatter: this._decodeEventABI.bind(event)
         },
         subscribeMethod: 'eth_subscribe',
         unsubscribeMethod: 'eth_unsubscribe',
@@ -3341,10 +3353,16 @@ Contract.prototype._executeMethod = function(){
     // TODO remove once we switched everywhere to gasLimit
     this.options.gas = this.options.gasLimit;
 
+    // add contract address
+    if(!utils.isAddress(this.parent.address)) {
+        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+    }
+
+    this.options.to = this.parent.address.toLowerCase();
 
     // create the callback method
     var methodReturnCallback = function(err, returnValues) {
-        var decodedReturnValues = (_this.type === 'estimateGas') ? returnValues : _this.parent._decodeMethodReturn(returnValues, _this.method.outputTypes);
+        var decodedReturnValues = (_this.type === 'estimateGas') ? returnValues : _this.parent._decodeMethodReturn(_this.method.outputTypes, returnValues);
 
         if (utils.isFunction(callback)) {
             callback(err, decodedReturnValues);
@@ -3565,7 +3583,7 @@ module.exports = extend;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file formatters.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @author Fabian Vogelsteller <fabian@ethdev.com>
@@ -3575,6 +3593,7 @@ module.exports = extend;
 var utils = require('../utils/utils');
 var config = require('../utils/config');
 var Iban = require('./iban');
+var sha3 = require('../utils/sha3');
 
 /**
  * Should the format output to a big number
@@ -3632,7 +3651,7 @@ var inputCallFormatter = function (options){
         options[key] = utils.fromDecimal(options[key]);
     });
 
-    return options; 
+    return options;
 };
 
 /**
@@ -3657,12 +3676,12 @@ var inputTransactionFormatter = function (options){
         options[key] = utils.fromDecimal(options[key]);
     });
 
-    return options; 
+    return options;
 };
 
 /**
  * Formats the output of a transaction to its proper values
- * 
+ *
  * @method outputTransactionFormatter
  * @param {Object} tx
  * @returns {Object}
@@ -3681,7 +3700,7 @@ var outputTransactionFormatter = function (tx){
 
 /**
  * Formats the output of a transaction receipt to its proper values
- * 
+ *
  * @method outputTransactionReceiptFormatter
  * @param {Object} receipt
  * @returns {Object}
@@ -3707,7 +3726,7 @@ var outputTransactionReceiptFormatter = function (receipt){
  * Formats the output of a block to its proper values
  *
  * @method outputBlockFormatter
- * @param {Object} block 
+ * @param {Object} block
  * @returns {Object}
 */
 var outputBlockFormatter = function(block) {
@@ -3735,7 +3754,7 @@ var outputBlockFormatter = function(block) {
 
 /**
  * Formats the input of a log
- * 
+ *
  * @method inputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
@@ -3770,12 +3789,16 @@ var inputLogFormatter = function(options) {
 
 /**
  * Formats the output of a log
- * 
+ *
  * @method outputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
 */
 var outputLogFormatter = function(log) {
+
+    // generate a custom log id
+    log.id = 'log_'+ sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x','')).substr(0,8);
+
     if(log.blockNumber !== null)
         log.blockNumber = utils.toDecimal(log.blockNumber);
     if(log.transactionIndex !== null)
@@ -3811,7 +3834,7 @@ var inputPostFormatter = function(post) {
         return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
     });
 
-    return post; 
+    return post;
 };
 
 /**
@@ -3885,7 +3908,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":18,"../utils/utils":20,"./iban":30}],29:[function(require,module,exports){
+},{"../utils/config":18,"../utils/sha3":19,"../utils/utils":20,"./iban":30}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5366,6 +5389,7 @@ module.exports = Net;
 
 var Method = require('../method');
 var Property = require('../property');
+var formatters = require('../formatters');
 
 function Personal(web3) {
     this._requestManager = web3._requestManager;
@@ -5395,12 +5419,20 @@ var methods = function () {
         name: 'unlockAccount',
         call: 'personal_unlockAccount',
         params: 3,
-        inputFormatter: [null, null, null]
+        inputFormatter: [formatters.inputAddressFormatter, null, null]
+    });
+
+    var lockAccount = new Method({
+        name: 'lockAccount',
+        call: 'personal_lockAccount',
+        params: 1,
+        inputFormatter: [formatters.inputAddressFormatter]
     });
 
     return [
         newAccount,
-        unlockAccount
+        unlockAccount,
+        lockAccount
     ];
 };
 
@@ -5416,7 +5448,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../method":33,"../property":40}],38:[function(require,module,exports){
+},{"../formatters":28,"../method":33,"../property":40}],38:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6136,12 +6168,15 @@ Subscription.prototype.subscribe = function() {
     // create subscription
     if (_this.callback) {
 
+        console.log(payload);
+
         this.options.requestManager.sendAsync(payload, function (err, result) {
             if(!err && result) {
                 _this.id = result;
 
                 // call callback on notifications
                 _this.options.requestManager.addSubscription(payload.params[0] ,'eth', _this.id, function(err, result) {
+                    console.log(JSON.stringify(result));
                     var output = _this._formatOutput(result);
                     _this.callback(err, output, _this);
                     if (!err) {
