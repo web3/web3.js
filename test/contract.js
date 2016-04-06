@@ -499,7 +499,7 @@ describe('contract', function () {
 
         it('should call testArr method and properly parse result', function () {
             var provider = new FakeHttpProvider2();
-            var web3 = new Web3(provider); 
+            var web3 = new Web3(provider);
             var signature = 'testArr(int[])';
             var address = '0x1234567890123456789012345678901234567891';
             provider.injectResultList([{
@@ -516,7 +516,7 @@ describe('contract', function () {
                     to: address
                 },
                     'latest'
-                    ]);
+                ]);
             });
 
             var contract = web3.eth.contract(desc).at(address);
@@ -527,7 +527,7 @@ describe('contract', function () {
         
         it('should call testArr method, properly parse result and return the result async', function (done) {
             var provider = new FakeHttpProvider2();
-            var web3 = new Web3(provider); 
+            var web3 = new Web3(provider);
             var signature = 'testArr(int[])';
             var address = '0x1234567890123456789012345678901234567891';
             provider.injectResultList([{
@@ -552,8 +552,35 @@ describe('contract', function () {
                 assert.deepEqual(new BigNumber(5), result);
                 done();
             });
+        });
 
+        it('should call contract with provided data in context of testArr method and properly parse result', function () {
+            var provider = new FakeHttpProvider2();
+            var web3 = new Web3(provider);
+            var signature = 'testArr(int[])';
+            var address = '0x1234567890123456789012345678901234567891';
+            var data = '0x' + sha3(signature).slice(0, 8) + 
+                '0000000000000000000000000000000000000000000000000000000000000020' + 
+                '0000000000000000000000000000000000000000000000000000000000000001' + 
+                '0000000000000000000000000000000000000000000000000000000000000003';
+            provider.injectResultList([{
+                result: '0x0000000000000000000000000000000000000000000000000000000000000005'
+            }]);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: data,
+                    to: address
+                },
+                    'latest'
+                ]);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+            var result = contract.testArr({data: data});
+
+            assert.deepEqual(new BigNumber(5), result);
         });
     });
 });
-
