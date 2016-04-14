@@ -3,6 +3,7 @@ var Web3 = require('../index');
 var web3 = new Web3();
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var errors = require('../lib/web3/errors');
 
 var method = 'filter';
 
@@ -96,6 +97,22 @@ describe('web3.eth', function () {
                    });
                }
             });
+
+            it('should call filterCreationErrorCallback on error while filter creation', function () {
+                // given
+                var provider = new FakeHttpProvider();
+                web3.reset();
+                web3.setProvider(provider);
+                provider.injectError(errors.InvalidConnection());
+                // call
+                var args = test.args.slice();
+                args.push(undefined);
+                args.push(function (err) {
+                    assert.include(errors, err);
+                    done();
+                });
+                web3.eth[method].apply(web3.eth, args);
+            })
         });
     });
 });
