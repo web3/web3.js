@@ -5970,7 +5970,7 @@ module.exports = Property;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file requestmanager.js
  * @author Jeffrey Wilcke <jeff@ethdev.com>
  * @author Marek Kotewicz <marek@ethdev.com>
@@ -6037,7 +6037,7 @@ RequestManager.prototype.sendAsync = function (data, callback) {
         if (err) {
             return callback(err);
         }
-        
+
         if (!Jsonrpc.getInstance().isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
@@ -6070,7 +6070,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
         }
 
         callback(err, results);
-    }); 
+    });
 };
 
 /**
@@ -6174,7 +6174,7 @@ RequestManager.prototype.poll = function () {
     }
 
     var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
-    
+
     // map the request id to they poll id
     var pollsIdMap = {};
     payload.forEach(function(load, index){
@@ -6184,10 +6184,12 @@ RequestManager.prototype.poll = function () {
 
     var self = this;
     this.provider.sendAsync(payload, function (error, results) {
-
-
-        // TODO: console log?
         if (error) {
+            for (var key in self.polls) {
+                if (self.polls.hasOwnProperty(key)) {
+                    self.polls[key].callback(error);
+                }
+            }
             return;
         }
 
@@ -6204,7 +6206,7 @@ RequestManager.prototype.poll = function () {
             } else
                 return false;
         }).filter(function (result) {
-            return !!result; 
+            return !!result;
         }).filter(function (result) {
             var valid = Jsonrpc.getInstance().isValidResponse(result);
             if (!valid) {
@@ -8377,7 +8379,8 @@ module.exports = transfer;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	                    var bitsCombined = bits1 | bits2;
+	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
