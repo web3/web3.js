@@ -3440,6 +3440,7 @@ module.exports = extend;
 
 var formatters = require('./formatters');
 var utils = require('../utils/utils');
+var Q = require('Q');
 
 /**
 * Converts a given topic to a hex string, but also allows null values.
@@ -3640,10 +3641,24 @@ Filter.prototype.get = function (callback) {
     return this;
 };
 
+Filter.prototype.q = function () {
+    var deferred = Q.defer();
+    var args = Array.prototype.slice.call(arguments)
+    args.push(function(err, result){
+        if (err) {
+            deferred.reject(err)
+        } else {
+            deferred.resolve(result)
+        }
+    })
+    this.get.apply(this, args)
+    return deferred.promise;
+}
+
 module.exports = Filter;
 
 
-},{"../utils/utils":20,"./formatters":30}],30:[function(require,module,exports){
+},{"../utils/utils":20,"./formatters":30,"Q":49}],30:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
