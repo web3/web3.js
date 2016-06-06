@@ -2911,7 +2911,7 @@ var checkForContractAddress = function(contract, callback){
                             filter.stopWatching();
                             callbackFired = true;
 
-                            if(code.length > 2) {
+                            if(code.length > 3) {
 
                                 // console.log('Contract code deployed!');
 
@@ -8377,7 +8377,8 @@ module.exports = transfer;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	                    var bitsCombined = bits1 | bits2;
+	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
