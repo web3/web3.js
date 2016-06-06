@@ -2916,6 +2916,7 @@ var checkForContractAddress = function(contract, callback){
                                 // console.log('Contract code deployed!');
 
                                 contract.address = receipt.contractAddress;
+                                contract.code = code
 
                                 // attach events and methods again after we have
                                 addFunctionsToContract(contract);
@@ -8377,7 +8378,8 @@ module.exports = transfer;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	                    var bitsCombined = bits1 | bits2;
+	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
