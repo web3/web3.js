@@ -52,7 +52,7 @@ Component
 component install ethereum/web3.js
 ```
 
-* Include `ethereum.min.js` in your html file. (not required for the meteor package)
+* Include `web3.min.js` in your html file. (not required for the meteor package)
 
 ## Usage
 Use the `web3` object directly from global namespace:
