@@ -2518,6 +2518,7 @@ var Batch = require('./web3/batch');
 var Property = require('./web3/property');
 var HttpProvider = require('./web3/httpprovider');
 var IpcProvider = require('./web3/ipcprovider');
+var BigNumber = require('bignumber.js');
 
 
 
@@ -2559,6 +2560,7 @@ Web3.prototype.reset = function (keepIsSyncing) {
     this.settings = new Settings();
 };
 
+Web3.prototype.BigNumber = BigNumber;
 Web3.prototype.toHex = utils.toHex;
 Web3.prototype.toAscii = utils.toAscii;
 Web3.prototype.toUtf8 = utils.toUtf8;
@@ -2622,7 +2624,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/property":44,"./web3/requestmanager":45,"./web3/settings":46}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/property":44,"./web3/requestmanager":45,"./web3/settings":46,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4194,12 +4196,8 @@ var errors = require('./errors');
 // workaround to use httpprovider in different envs
 var XMLHttpRequest; // jshint ignore: line
 
-// meteor server environment
-if (typeof Meteor !== 'undefined' && Meteor.isServer) { // jshint ignore: line
-    XMLHttpRequest = Npm.require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
-
 // browser
-} else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
+if (typeof window !== 'undefined' && window.XMLHttpRequest) {
     XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 
 // node
@@ -4338,7 +4336,7 @@ var BigNumber = require('bignumber.js');
 var padLeft = function (string, bytes) {
     var result = string;
     while (result.length < bytes * 2) {
-        result = '00' + result;
+        result = '0' + result;
     }
     return result;
 };
