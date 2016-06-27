@@ -11,6 +11,7 @@
 *un~
 .DS_Store
 */**/.DS_Store
+dist/
 ethereum/ethereum
 ethereal/ethereal
 example/js
