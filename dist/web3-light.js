@@ -2518,6 +2518,7 @@ var Batch = require('./web3/batch');
 var Property = require('./web3/property');
 var HttpProvider = require('./web3/httpprovider');
 var IpcProvider = require('./web3/ipcprovider');
+var BigNumber = require('bignumber.js');
 
 
 
@@ -2559,6 +2560,7 @@ Web3.prototype.reset = function (keepIsSyncing) {
     this.settings = new Settings();
 };
 
+Web3.prototype.BigNumber = BigNumber;
 Web3.prototype.toHex = utils.toHex;
 Web3.prototype.toAscii = utils.toAscii;
 Web3.prototype.toUtf8 = utils.toUtf8;
@@ -2622,7 +2624,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/property":44,"./web3/requestmanager":45,"./web3/settings":46}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/property":44,"./web3/requestmanager":45,"./web3/settings":46,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -8377,7 +8379,8 @@ module.exports = transfer;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	                    var bitsCombined = bits1 | bits2;
+	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
