@@ -8,7 +8,8 @@ SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var IpcProvider = SandboxedModule.require('../lib/web3/ipcprovider', {
     requires: {
         'bignumber.js': require('bignumber.js'), 
-    }
+    },
+    singleOnly: true
 });
 
 describe('lib/web3/ipcprovider', function () {
