@@ -2471,7 +2471,7 @@ module.exports = {
 
 },{"bignumber.js":"bignumber.js","utf8":81}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.7"
+    "version": "1.0.0"
 }
 
 },{}],22:[function(require,module,exports){
