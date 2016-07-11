@@ -4117,6 +4117,29 @@ SolidityFunction.prototype.estimateGas = function () {
 };
 
 /**
+ * Should be used to estimateGas of solidity function and return a promise
+ *
+ * @method estimateGasQ
+ * @return {deferred.promise} promise
+ */
+SolidityFunction.prototype.estimateGasQ = function () {
+    var deferred = Q.defer()
+    var args = Array.prototype.slice.call(arguments).filter(function (a) {return a !== undefined; });
+    
+    args.push(function (error, gas) {
+        if (error) {
+            deferred.reject(error)
+        } else {
+            deferred.resolve(gas)
+        }
+    })
+
+    this.estimateGas.apply(this, args);
+
+    return deferred.promise
+};
+
+/**
  * Return the encoded data of the call
  *
  * @method getData
@@ -4222,6 +4245,7 @@ SolidityFunction.prototype.attachToContract = function (contract) {
     execute.call = this.call.bind(this);
     execute.sendTransaction = this.sendTransaction.bind(this);
     execute.estimateGas = this.estimateGas.bind(this);
+    execute.estimateGas.q = this.estimateGasQ.bind(this);
     execute.getData = this.getData.bind(this);
     execute.q = this.q.bind(this);
     var displayName = this.displayName();
