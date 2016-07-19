@@ -2471,7 +2471,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.16.0"
+    "version": "0.17.0-alpha"
 }
 
 },{}],22:[function(require,module,exports){
@@ -5534,6 +5534,13 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter, null, null]
     });
 
+    var unlockAccountAndSendTransaction = new Method({
+        name: 'unlockAccountAndSendTransaction',
+        call: 'personal_signAndSendTransaction',
+        params: 2,
+        inputFormatter: [formatters.inputTransactionFormatter, null]
+    });
+
     var lockAccount = new Method({
         name: 'lockAccount',
         call: 'personal_lockAccount',
@@ -5544,6 +5551,7 @@ var methods = function () {
     return [
         newAccount,
         unlockAccount,
+        unlockAccountAndSendTransaction,
         lockAccount
     ];
 };
@@ -8375,8 +8383,7 @@ module.exports = transfer;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    var bitsCombined = bits1 | bits2;
-	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
+	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
