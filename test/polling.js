@@ -69,9 +69,13 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
-                    filter.stopWatching();
-                    done();
+                    filter.stopWatching(function (e, r) {
+                        if (e) {
+                          throw e;
+                        }
 
+                        done();
+                    });
                 });
             });
             it('should create && successfully poll filter when passed as callback', function (done) {
@@ -105,9 +109,13 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
-                    filter.stopWatching();
-                    done();
+                    filter.stopWatching(function (e, r) {
+                        if (e) {
+                          throw e;
+                        }
 
+                        done();
+                    });
                 });
 
                 // when
