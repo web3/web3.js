@@ -17,7 +17,7 @@ To migrate to this version, please follow the guide:
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
 which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url][![Coverage Status][coveralls-image]][coveralls-url][![Stories in Ready][waffle-image]][waffle-url]
+[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
 
 <!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
 
@@ -52,7 +52,7 @@ Component
 component install ethereum/web3.js
 ```
 
-* Include `ethereum.min.js` in your html file. (not required for the meteor package)
+* Include `web3.min.js` in your html file. (not required for the meteor package)
 
 ## Usage
 Use the `web3` object directly from global namespace:

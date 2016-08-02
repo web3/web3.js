@@ -31,13 +31,13 @@ var browserifyOptions = {
 
 gulp.task('version', function(){
   gulp.src(['./package.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
+    .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
   gulp.src(['./bower.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
+    .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
   gulp.src(['./package.js'])
-    .pipe(replace(/version\: \'([\.0-9]*)\'/, "version: '"+ version.version + "'"))
+    .pipe(replace(/version\: \'([\.0-9\-a-z]*)\'/, "version: '"+ version.version + "'"))
     .pipe(gulp.dest('./'));
 });
 

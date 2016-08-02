@@ -1875,7 +1875,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":56,"crypto-js/sha3":77}],20:[function(require,module,exports){
+},{"crypto-js":57,"crypto-js/sha3":78}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2474,9 +2474,9 @@ module.exports = {
     isJson: isJson
 };
 
-},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":83}],21:[function(require,module,exports){
+},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.15.3"
+    "version": "1.0.0"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2523,6 +2523,8 @@ var Batch = require('./web3/batch');
 var Property = require('./web3/property');
 var HttpProvider = require('./web3/httpprovider');
 var IpcProvider = require('./web3/ipcprovider');
+var WebsocketProvider = require('./web3/websocketprovider');
+var BigNumber = require('bignumber.js');
 
 
 
@@ -2540,7 +2542,8 @@ function Web3 (provider) {
     };
     this.providers = {
         HttpProvider: HttpProvider,
-        IpcProvider: IpcProvider
+        IpcProvider: IpcProvider,
+        WebsocketProvider: WebsocketProvider
     };
     this._extend = extend(this);
     this._extend({
@@ -2551,7 +2554,8 @@ function Web3 (provider) {
 // expose providers on the class
 Web3.providers = {
     HttpProvider: HttpProvider,
-    IpcProvider: IpcProvider
+    IpcProvider: IpcProvider,
+    WebsocketProvider: WebsocketProvider
 };
 
 Web3.prototype.setProvider = function (provider) {
@@ -2564,6 +2568,7 @@ Web3.prototype.reset = function (keepIsSyncing) {
     this.settings = new Settings();
 };
 
+Web3.prototype.BigNumber = BigNumber;
 Web3.prototype.toHex = utils.toHex;
 Web3.prototype.toAscii = utils.toAscii;
 Web3.prototype.toUtf8 = utils.toUtf8;
@@ -2627,7 +2632,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":29,"./web3/iban":30,"./web3/ipcprovider":31,"./web3/methods/db":34,"./web3/methods/eth":35,"./web3/methods/net":36,"./web3/methods/personal":37,"./web3/methods/shh":38,"./web3/property":40,"./web3/requestmanager":41,"./web3/settings":42}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":29,"./web3/iban":30,"./web3/ipcprovider":31,"./web3/methods/db":34,"./web3/methods/eth":35,"./web3/methods/net":36,"./web3/methods/personal":37,"./web3/methods/shh":38,"./web3/property":40,"./web3/requestmanager":41,"./web3/settings":42,"./web3/websocketprovider":46,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3516,7 +3521,7 @@ var eventifiedPromise = function() {
 
 module.exports = eventifiedPromise;
 
-},{"bluebird":46,"eventemitter3":82}],27:[function(require,module,exports){
+},{"bluebird":47,"eventemitter3":83}],27:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
 var Method = require('./method');
@@ -3784,6 +3789,9 @@ var inputLogFormatter = function(options) {
     if(options.address && !utils.isAddress(options.address))
         throw new Error('The given address is not valid!');
 
+    // if(options.address)
+    //     options.address = options.address.toLowerCase();
+
     return options;
 };
 
@@ -3940,12 +3948,8 @@ var errors = require('./errors');
 // workaround to use httpprovider in different envs
 var XMLHttpRequest; // jshint ignore: line
 
-// meteor server environment
-if (typeof Meteor !== 'undefined' && Meteor.isServer) { // jshint ignore: line
-    XMLHttpRequest = Npm.require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
-
 // browser
-} else if (typeof window !== 'undefined' && window.XMLHttpRequest) {
+if (typeof window !== 'undefined' && window.XMLHttpRequest) {
     XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 
 // node
@@ -4084,7 +4088,7 @@ var BigNumber = require('bignumber.js');
 var padLeft = function (string, bytes) {
     var result = string;
     while (result.length < bytes * 2) {
-        result = '00' + result;
+        result = '0' + result;
     }
     return result;
 };
@@ -4319,7 +4323,7 @@ var IpcProvider = function (path, net) {
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
     this.path = path;
-    
+
     this.connection = net.connect({path: this.path});
 
     this.addDefaultEvents();
@@ -4367,17 +4371,29 @@ Will add the error and end event to timeout existing calls
 IpcProvider.prototype.addDefaultEvents = function(){
     var _this = this;
 
+    this.connection.on('connect', function(){
+        console.log('->>CONCONCOCN');
+    });
+
     this.connection.on('error', function(){
         _this._timeout();
     });
 
-    this.connection.on('end', function(){
+    this.connection.on('end', function(e){
         _this._timeout();
+
+        console.log('->>ENENENENENED');
+
+        // inform notifications
+        _this.notificationCallbacks.forEach(function (callback) {
+            if (utils.isFunction(callback))
+                callback(new Error('IPC socket connection closed'));
+        });
     });
 
     this.connection.on('timeout', function(){
         _this._timeout();
-    }); 
+    });
 };
 
 /**
@@ -4389,7 +4405,7 @@ Will parse the response and make an array out of it.
 IpcProvider.prototype._parseResponse = function(data) {
     var _this = this,
         returnValues = [];
-    
+
     // DE-CHUNKER
     var dechunkedData = data
         .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
@@ -4463,6 +4479,14 @@ IpcProvider.prototype._timeout = function() {
     }
 };
 
+/**
+ Try to reconnect
+
+ @method reconnect
+ */
+IpcProvider.prototype.reconnect = function() {
+    this.connection.connect({path: this.path});
+};
 
 /**
 Check if the current connection is still valid.
@@ -4493,7 +4517,7 @@ IpcProvider.prototype.send = function (payload) {
         try {
             result = JSON.parse(data);
         } catch(e) {
-            throw errors.InvalidResponse(data);                
+            throw errors.InvalidResponse(data);
         }
 
         return result;
@@ -4517,7 +4541,7 @@ IpcProvider.prototype.sendAsync = function (payload, callback) {
 Subscribes to provider events.provider
 
 @method on
-@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
 @param {Function} callback   the callback to call
 */
 IpcProvider.prototype.on = function (type, callback) {
@@ -4537,10 +4561,25 @@ IpcProvider.prototype.on = function (type, callback) {
 };
 
 /**
+ Subscribes to provider events.provider
+
+ @method on
+ @param {String} type    'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+IpcProvider.prototype.once = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    this.connection.once(type, callback);
+};
+
+/**
 Removes event listener
 
 @method removeListener
-@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
 @param {Function} callback   the callback to call
 */
 IpcProvider.prototype.removeListener = function (type, callback) {
@@ -4564,7 +4603,7 @@ IpcProvider.prototype.removeListener = function (type, callback) {
 Removes all event listeners
 
 @method removeAllListeners
-@param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
 */
 IpcProvider.prototype.removeAllListeners = function (type) {
     switch(type){
@@ -4579,7 +4618,7 @@ IpcProvider.prototype.removeAllListeners = function (type) {
 };
 
 /**
-Resetes the providers, clears all callbacks
+Resets the providers, clears all callbacks
 
 @method reset
 */
@@ -4589,6 +4628,7 @@ IpcProvider.prototype.reset = function () {
 
     this.connection.removeAllListeners('error');
     this.connection.removeAllListeners('end');
+    this.connection.removeAllListeners('timeout');
 
     this.addDefaultEvents();
 };
@@ -5422,6 +5462,13 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter, null, null]
     });
 
+    var unlockAccountAndSendTransaction = new Method({
+        name: 'unlockAccountAndSendTransaction',
+        call: 'personal_signAndSendTransaction',
+        params: 2,
+        inputFormatter: [formatters.inputTransactionFormatter, null]
+    });
+
     var lockAccount = new Method({
         name: 'lockAccount',
         call: 'personal_lockAccount',
@@ -5432,6 +5479,7 @@ var methods = function () {
     return [
         newAccount,
         unlockAccount,
+        unlockAccountAndSendTransaction,
         lockAccount
     ];
 };
@@ -5817,6 +5865,8 @@ RequestManager.prototype.send = function (data) {
  * @param {Function} callback
  */
 RequestManager.prototype.sendAsync = function (data, callback) {
+    callback = callback || function(){};
+
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
@@ -5866,9 +5916,11 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  *
  * @method addSubscription
  * @param {String} id           the subscription id
+ * @param {String} name         the subscription name
+ * @param {String} type         the subscription namespace (eth, personal, etc)
  * @param {Function} callback   the callback to call for incoming notifications
  */
-RequestManager.prototype.addSubscription = function (name, type, id, callback) {
+RequestManager.prototype.addSubscription = function (id, name, type, callback) {
     if(this.provider.on) {
         this.subscriptions[id] = {
             callback: callback,
@@ -5896,15 +5948,10 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
         this.sendAsync({
             method: this.subscriptions[id].type + '_unsubscribe',
             params: [id]
-        }, function(err, result){
+        }, callback);
 
-            if(!err) {
-                delete _this.subscriptions[id];
-            }
-
-            if(utils.isFunction(callback))
-                callback(err, result);
-        });
+        // remove subscription
+        delete _this.subscriptions[id];
     }
 };
 
@@ -5925,10 +5972,16 @@ RequestManager.prototype.setProvider = function (p) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('notification', function(err, result){
+        this.provider.on('notification', function requestManagerNotification(err, result){
             if(!err) {
                 if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
                     _this.subscriptions[result.params.subscription].callback(null, result.params.result);
+            } else {
+
+                Object.keys(_this.subscriptions).forEach(function(id){
+                    if(_this.subscriptions[id].callback)
+                        _this.subscriptions[id].callback(err);
+                });
             }
         });
     }
@@ -6001,6 +6054,7 @@ var Subscription = function (options) {
     var emitter = new EventEmitter();
     this.id = null;
     this.callback = null;
+    this._reconnectIntervalId = null;
 
     this.options = {
         subscription: options.subscription,
@@ -6123,10 +6177,10 @@ Subscription.prototype._toPayload = function (args) {
  * @return {Object}
  */
 Subscription.prototype.unsubscribe = function(callback) {
-    this.callback = null; // really necessary? will this subscription be re-used?
-    this.removeAllListeners('data');
-    this.removeAllListeners('error');
+    this.removeAllListeners();
+    clearInterval(this._reconnectIntervalId);
     this.options.requestManager.removeSubscription(this.id, callback);
+    this.id = null;
 };
 
 /**
@@ -6139,15 +6193,19 @@ Subscription.prototype.unsubscribe = function(callback) {
  */
 Subscription.prototype.subscribe = function() {
     var _this = this;
+    var args = arguments;
     var payload = this._toPayload(Array.prototype.slice.call(arguments));
 
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on)
         throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
 
+    // store the params in the options object
+    this.options.params = payload.params[1];
 
     // get past logs, if fromBlock is available
     if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+        // send the subscription request
         this.options.requestManager.sendAsync({
             method: 'eth_getLogs',
             params: [payload.params[1]]
@@ -6165,6 +6223,8 @@ Subscription.prototype.subscribe = function() {
         });
     }
 
+    console.log('Subscribe', args);
+
     // create subscription
     if (_this.callback) {
 
@@ -6175,14 +6235,31 @@ Subscription.prototype.subscribe = function() {
                 _this.id = result;
 
                 // call callback on notifications
-                _this.options.requestManager.addSubscription(payload.params[0] ,'eth', _this.id, function(err, result) {
-                    console.log(JSON.stringify(result));
+                _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
                     var output = _this._formatOutput(result);
+
                     _this.callback(err, output, _this);
                     if (!err) {
-                        // TODO add reverted log
-                        _this.emit('data', output);
+                        if(output.removed)
+                            _this.emit('changed', output);
+                        else
+                            _this.emit('data', output);
                     } else {
+                        // unsubscribe, but keep listeners
+                        _this.options.requestManager.removeSubscription(_this.id);
+
+                        // re-subscribe, if connection fails
+                        if(_this.options.requestManager.provider.once) {
+                            _this._reconnectIntervalId = setInterval(function () {
+                                console.log('reconnect')
+                                _this.options.requestManager.provider.reconnect();
+                            }, 500);
+
+                            _this.options.requestManager.provider.once('connect', function () {
+                                clearInterval(_this._reconnectIntervalId);
+                                _this.subscribe.apply(_this, args);
+                            });
+                        }
                         _this.emit('error', err);
                     }
 
@@ -6201,7 +6278,7 @@ Subscription.prototype.subscribe = function() {
 
 module.exports = Subscription;
 
-},{"../utils/utils":20,"./errors":25,"eventemitter3":82}],44:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"eventemitter3":83}],44:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6368,6 +6445,330 @@ module.exports = transfer;
 
 
 },{"../contracts/SmartExchange.json":3,"./iban":30}],46:[function(require,module,exports){
+/*
+ This file is part of web3.js.
+
+ web3.js is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ web3.js is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/** @file WebsocketProvider.js
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+"use strict";
+
+var utils = require('../utils/utils');
+var errors = require('./errors');
+// var W3CWebSocket = require('websocket').w3cwebsocket;
+// Default connection ws://localhost:8546
+
+
+var WebsocketProvider = function (path)  {
+    var _this = this;
+    this.responseCallbacks = {};
+    this.notificationCallbacks = [];
+    this.path = path;
+    this.connection = new WebSocket(path);
+
+
+    this.addDefaultEvents();
+
+
+    // LISTEN FOR CONNECTION RESPONSES
+    this.connection.onmessage = function(e) {
+        /*jshint maxcomplexity: 6 */
+        var data = (typeof e.data === 'string') ? e.data : '';
+
+        _this._parseResponse(data).forEach(function(result){
+
+            var id = null;
+
+            // get the id which matches the returned id
+            if(utils.isArray(result)) {
+                result.forEach(function(load){
+                    if(_this.responseCallbacks[load.id])
+                        id = load.id;
+                });
+            } else {
+                id = result.id;
+            }
+
+            // notification
+            if(!id && result.method === 'eth_subscription') {
+                _this.notificationCallbacks.forEach(function(callback){
+                    if(utils.isFunction(callback))
+                        callback(null, result);
+                });
+
+                // fire the callback
+            } else if(_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](null, result);
+                delete _this.responseCallbacks[id];
+            }
+        });
+    };
+};
+
+/**
+ Will add the error and end event to timeout existing calls
+
+ @method addDefaultEvents
+ */
+WebsocketProvider.prototype.addDefaultEvents = function(){
+    var _this = this;
+
+    this.connection.onerror = function(e){
+        _this._timeout();
+    };
+
+    this.connection.onclose = function(e){
+        _this._timeout();
+
+        var noteCb = _this.notificationCallbacks;
+
+        // reset all requests and callbacks
+        _this.reset();
+
+        // cancel subscriptions
+        noteCb.forEach(function (callback) {
+            if (utils.isFunction(callback))
+                callback(e);
+        });
+    };
+
+    // this.connection.on('timeout', function(){
+    //     _this._timeout();
+    // });
+};
+
+/**
+ Will parse the response and make an array out of it.
+
+ @method _parseResponse
+ @param {String} data
+ */
+WebsocketProvider.prototype._parseResponse = function(data) {
+    var _this = this,
+        returnValues = [];
+
+    // DE-CHUNKER
+    var dechunkedData = data
+        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
+        .split('|--|');
+
+    dechunkedData.forEach(function(data){
+
+        // prepend the last chunk
+        if(_this.lastChunk)
+            data = _this.lastChunk + data;
+
+        var result = null;
+
+        try {
+            result = JSON.parse(data);
+
+        } catch(e) {
+
+            _this.lastChunk = data;
+
+            // start timeout to cancel all requests
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunkTimeout = setTimeout(function(){
+                _this._timeout();
+                throw errors.InvalidResponse(data);
+            }, 1000 * 15);
+
+            return;
+        }
+
+        // cancel timeout and set chunk to null
+        clearTimeout(_this.lastChunkTimeout);
+        _this.lastChunk = null;
+
+        if(result)
+            returnValues.push(result);
+    });
+
+    return returnValues;
+};
+
+
+/**
+ Get the adds a callback to the responseCallbacks object,
+ which will be called if a response matching the response Id will arrive.
+
+ @method _addResponseCallback
+ */
+WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
+    var id = payload.id || payload[0].id;
+    var method = payload.method || payload[0].method;
+
+    this.responseCallbacks[id] = callback;
+    this.responseCallbacks[id].method = method;
+};
+
+/**
+ Timeout all requests when the end/error event is fired
+
+ @method _timeout
+ */
+WebsocketProvider.prototype._timeout = function() {
+    for(var key in this.responseCallbacks) {
+        if(this.responseCallbacks.hasOwnProperty(key)){
+            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
+            delete this.responseCallbacks[key];
+        }
+    }
+};
+
+// TODO add reconnect
+
+
+/**
+ Check if the current connection is still valid.
+
+ @method isConnected
+ */
+WebsocketProvider.prototype.isConnected = function() {
+    var _this = this;
+
+    // try reconnect, when connection is gone
+    // if(!_this.connection.writable)
+    //     _this.connection.connect({path: _this.path});
+
+    console.log(this.connection);
+
+    // return !!this.connection.writable;
+};
+
+WebsocketProvider.prototype.send = function (payload) {
+    throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the Websocket provider.');
+};
+
+WebsocketProvider.prototype.sendAsync = function (payload, callback) {
+    // try reconnect, when connection is gone
+    // if(!this.connection.writable)
+    //     this.connection.connect({path: this.path});
+
+
+    this.connection.send(JSON.stringify(payload));
+    this._addResponseCallback(payload, callback);
+};
+
+/**
+ Subscribes to provider events.provider
+
+ @method on
+ @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+WebsocketProvider.prototype.on = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.push(callback);
+            break;
+
+        case 'connect':
+            this.connection.onopen = callback;
+            break;
+
+        // default:
+        //     this.connection.on(type, callback);
+        //     break;
+    }
+};
+
+// TODO add once
+
+/**
+ Removes event listener
+
+ @method removeListener
+ @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+WebsocketProvider.prototype.removeListener = function (type, callback) {
+    var _this = this;
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.forEach(function(cb, index){
+                if(cb === callback)
+                    _this.notificationCallbacks.splice(index, 1);
+            });
+            break;
+
+        // TODO remvoving connect missing
+
+        // default:
+        //     this.connection.removeListener(type, callback);
+        //     break;
+    }
+};
+
+/**
+ Removes all event listeners
+
+ @method removeAllListeners
+ @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ */
+WebsocketProvider.prototype.removeAllListeners = function (type) {
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks = [];
+            break;
+
+        // TODO remvoving connect properly missing
+
+        case 'connect':
+            this.connection.onopen = null;
+            break;
+
+        default:
+            // this.connection.removeAllListeners(type);
+            break;
+    }
+};
+
+/**
+ Resets the providers, clears all callbacks
+
+ @method reset
+ */
+WebsocketProvider.prototype.reset = function () {
+    this._timeout();
+    this.notificationCallbacks = [];
+
+    // this.connection.removeAllListeners('error');
+    // this.connection.removeAllListeners('end');
+    // this.connection.removeAllListeners('timeout');
+
+    this.addDefaultEvents();
+};
+
+module.exports = WebsocketProvider;
+
+
+},{"../utils/utils":20,"./errors":25}],47:[function(require,module,exports){
 /* @preserve
  * The MIT License (MIT)
  * 
@@ -11776,9 +12177,9 @@ module.exports = ret;
 
 },{"./es5":13}]},{},[4])(4)
 });                    ;if (typeof window !== 'undefined' && window !== null) {                               window.P = window.Promise;                                                     } else if (typeof self !== 'undefined' && self !== null) {                             self.P = self.Promise;                                                         }
-},{}],47:[function(require,module,exports){
-
 },{}],48:[function(require,module,exports){
+
+},{}],49:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12006,7 +12407,7 @@ module.exports = ret;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],49:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],50:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12882,7 +13283,7 @@ module.exports = ret;
 
 
 }));
-},{"./core":50}],50:[function(require,module,exports){
+},{"./core":51}],51:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13625,7 +14026,7 @@ module.exports = ret;
 	return CryptoJS;
 
 }));
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13749,7 +14150,7 @@ module.exports = ret;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":50}],52:[function(require,module,exports){
+},{"./core":51}],53:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13899,7 +14300,7 @@ module.exports = ret;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":50}],53:[function(require,module,exports){
+},{"./core":51}],54:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14032,7 +14433,7 @@ module.exports = ret;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":50,"./hmac":55,"./sha1":74}],54:[function(require,module,exports){
+},{"./core":51,"./hmac":56,"./sha1":75}],55:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14099,7 +14500,7 @@ module.exports = ret;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":49,"./core":50}],55:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],56:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14243,7 +14644,7 @@ module.exports = ret;
 
 
 }));
-},{"./core":50}],56:[function(require,module,exports){
+},{"./core":51}],57:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14262,7 +14663,7 @@ module.exports = ret;
 	return CryptoJS;
 
 }));
-},{"./aes":48,"./cipher-core":49,"./core":50,"./enc-base64":51,"./enc-utf16":52,"./evpkdf":53,"./format-hex":54,"./hmac":55,"./lib-typedarrays":57,"./md5":58,"./mode-cfb":59,"./mode-ctr":61,"./mode-ctr-gladman":60,"./mode-ecb":62,"./mode-ofb":63,"./pad-ansix923":64,"./pad-iso10126":65,"./pad-iso97971":66,"./pad-nopadding":67,"./pad-zeropadding":68,"./pbkdf2":69,"./rabbit":71,"./rabbit-legacy":70,"./rc4":72,"./ripemd160":73,"./sha1":74,"./sha224":75,"./sha256":76,"./sha3":77,"./sha384":78,"./sha512":79,"./tripledes":80,"./x64-core":81}],57:[function(require,module,exports){
+},{"./aes":49,"./cipher-core":50,"./core":51,"./enc-base64":52,"./enc-utf16":53,"./evpkdf":54,"./format-hex":55,"./hmac":56,"./lib-typedarrays":58,"./md5":59,"./mode-cfb":60,"./mode-ctr":62,"./mode-ctr-gladman":61,"./mode-ecb":63,"./mode-ofb":64,"./pad-ansix923":65,"./pad-iso10126":66,"./pad-iso97971":67,"./pad-nopadding":68,"./pad-zeropadding":69,"./pbkdf2":70,"./rabbit":72,"./rabbit-legacy":71,"./rc4":73,"./ripemd160":74,"./sha1":75,"./sha224":76,"./sha256":77,"./sha3":78,"./sha384":79,"./sha512":80,"./tripledes":81,"./x64-core":82}],58:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14339,7 +14740,7 @@ module.exports = ret;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":50}],58:[function(require,module,exports){
+},{"./core":51}],59:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14608,7 +15009,7 @@ module.exports = ret;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":50}],59:[function(require,module,exports){
+},{"./core":51}],60:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14687,7 +15088,7 @@ module.exports = ret;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":49,"./core":50}],60:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14804,7 +15205,7 @@ module.exports = ret;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":49,"./core":50}],61:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14863,7 +15264,7 @@ module.exports = ret;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":49,"./core":50}],62:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],63:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14904,7 +15305,7 @@ module.exports = ret;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":49,"./core":50}],63:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -14959,7 +15360,7 @@ module.exports = ret;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":49,"./core":50}],64:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],65:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15009,7 +15410,7 @@ module.exports = ret;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":49,"./core":50}],65:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],66:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15054,7 +15455,7 @@ module.exports = ret;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":49,"./core":50}],66:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15095,7 +15496,7 @@ module.exports = ret;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":49,"./core":50}],67:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15126,7 +15527,7 @@ module.exports = ret;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":49,"./core":50}],68:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15172,7 +15573,7 @@ module.exports = ret;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":49,"./core":50}],69:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15318,7 +15719,7 @@ module.exports = ret;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":50,"./hmac":55,"./sha1":74}],70:[function(require,module,exports){
+},{"./core":51,"./hmac":56,"./sha1":75}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15509,7 +15910,7 @@ module.exports = ret;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],71:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15702,7 +16103,7 @@ module.exports = ret;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],72:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],73:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -15842,7 +16243,7 @@ module.exports = ret;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],73:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],74:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16110,7 +16511,7 @@ module.exports = ret;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":50}],74:[function(require,module,exports){
+},{"./core":51}],75:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16261,7 +16662,7 @@ module.exports = ret;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":50}],75:[function(require,module,exports){
+},{"./core":51}],76:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16342,7 +16743,7 @@ module.exports = ret;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":50,"./sha256":76}],76:[function(require,module,exports){
+},{"./core":51,"./sha256":77}],77:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16542,7 +16943,7 @@ module.exports = ret;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":50}],77:[function(require,module,exports){
+},{"./core":51}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16866,7 +17267,7 @@ module.exports = ret;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":50,"./x64-core":81}],78:[function(require,module,exports){
+},{"./core":51,"./x64-core":82}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -16950,7 +17351,7 @@ module.exports = ret;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":50,"./sha512":79,"./x64-core":81}],79:[function(require,module,exports){
+},{"./core":51,"./sha512":80,"./x64-core":82}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -17274,7 +17675,7 @@ module.exports = ret;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":50,"./x64-core":81}],80:[function(require,module,exports){
+},{"./core":51,"./x64-core":82}],81:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -18045,7 +18446,7 @@ module.exports = ret;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":49,"./core":50,"./enc-base64":51,"./evpkdf":53,"./md5":58}],81:[function(require,module,exports){
+},{"./cipher-core":50,"./core":51,"./enc-base64":52,"./evpkdf":54,"./md5":59}],82:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -18350,7 +18751,7 @@ module.exports = ret;
 	return CryptoJS;
 
 }));
-},{"./core":50}],82:[function(require,module,exports){
+},{"./core":51}],83:[function(require,module,exports){
 'use strict';
 
 //
@@ -18614,7 +19015,7 @@ if ('undefined' !== typeof module) {
   module.exports = EventEmitter;
 }
 
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.0.0 by @mathias */
 ;(function(root) {
 
