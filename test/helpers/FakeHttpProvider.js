@@ -35,7 +35,7 @@ FakeHttpProvider.prototype.send = function (payload) {
     // TODO: validate jsonrpc request
     if (this.error) {
         throw this.error;
-    } 
+    }
     if (this.validation) {
         // imitate plain json object
         this.validation(JSON.parse(JSON.stringify(payload)));
@@ -71,7 +71,7 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
         _this.notificationCallbacks.forEach(function(cb){
             cb(null, notification);
         });
-    }, 1);
+    }, 100);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
@@ -93,7 +93,7 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
             response.result = r;
         }
         return response;
-    }); 
+    });
 };
 
 FakeHttpProvider.prototype.getResponse = function (payload) {
