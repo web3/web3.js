@@ -19,6 +19,24 @@ var tests = [{
         highestBlock: 11
     },
     call: 'eth_syncing'
+}, {
+    args: [],
+    formattedArgs: [],
+    result: [{
+        startingBlock: '0xb',
+        currentBlock: '0xb',
+        highestBlock: '0xb',
+        knownStates: '0xb',
+        pulledStates: '0xb'
+    }],
+    formattedResult: {
+        startingBlock: 11,
+        currentBlock: 11,
+        highestBlock: 11,
+        knownStates: 11,
+        pulledStates: 11
+    },
+    call: 'eth_syncing'
 }];
 
 describe('eth', function () {
@@ -51,7 +69,7 @@ describe('eth', function () {
                         done();
                     }
                 });
-                
+
             });
         });
     });
