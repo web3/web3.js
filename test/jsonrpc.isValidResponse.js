@@ -1,6 +1,5 @@
 var assert = require('assert');
-var jsonrpc = require('../lib/web3/jsonrpc');
-jsonrpc = new jsonrpc();
+var Jsonrpc = require('../lib/web3/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('isValidResponse', function () {
@@ -14,7 +13,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
@@ -26,7 +25,7 @@ describe('jsonrpc', function () {
             var response = undefined;
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -41,7 +40,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -57,7 +56,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -72,7 +71,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -88,7 +87,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -103,7 +102,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
@@ -119,7 +118,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
@@ -135,7 +134,7 @@ describe('jsonrpc', function () {
             };
 
             // when
-            var valid = jsonrpc.isValidResponse(response);
+            var valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
