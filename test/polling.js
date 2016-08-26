@@ -69,8 +69,10 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
-                    filter.stopWatching();
-                    done();
+                    filter.stopWatching(function (err) {
+                        assert.isNotOk(err);
+                        done();
+                    });
 
                 });
             });
@@ -105,8 +107,10 @@ var testPolling = function (tests) {
                     } else {
                         assert.equal(result, test.secondResult[0]);
                     }
-                    filter.stopWatching();
-                    done();
+                    filter.stopWatching(function (err) {
+                        assert.isNotOk(err);
+                        done();
+                    });
 
                 });
 
