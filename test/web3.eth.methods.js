@@ -30,6 +30,7 @@ describe('web3.eth', function() {
         u.propertyExists(web3.eth, 'accounts');
         u.propertyExists(web3.eth, 'defaultBlock');
         u.propertyExists(web3.eth, 'blockNumber');
+        u.propertyExists(web3.eth, 'protocolVersion');
     });
 });
 
