@@ -121,89 +121,89 @@ describe('contract', function () {
             });
         });
 
-        // it('should create event filter and watch immediately', function (done) {
-        //     var provider = new FakeHttpProvider();
-        //     var web3 = new Web3(provider);
-        //     var signature = 'Changed(address,uint256,uint256,uint256)';
-        //     var step = 0;
-        //     provider.injectValidation(function (payload) {
-        //         if (step === 0) {
-        //             provider.injectResult('0x321');
-        //             assert.equal(payload.jsonrpc, '2.0');
-        //             assert.equal(payload.method, 'eth_subscribe');
-        //             assert.deepEqual(payload.params[1], {
-        //                 topics: [
-        //                     '0x' + sha3(signature),
-        //                     '0x0000000000000000000000001234567890123456789012345678901234567891',
-        //                     null
-        //                 ],
-        //                 address: address
-        //             });
-        //             step++;
-        //         } else if (step === 1) {
-        //             provider.injectResult(true);
-        //             assert.equal(payload.jsonrpc, '2.0');
-        //             assert.equal(payload.method, 'eth_unsubscribe');
-        //         }
-        //     });
-        //
-        //     var contract = new web3.eth.contract(abi, address);
-        //
-        //     var res = 0;
-        //     var event = contract.Changed({filter: {from: address}}, function(err, result) {
-        //         assert.equal(result.returnValues.from, address);
-        //         assert.equal(result.returnValues.amount, 1);
-        //         assert.equal(result.returnValues.t1, 1);
-        //         assert.equal(result.returnValues.t2, 8);
-        //         res++;
-        //         if (res === 2) {
-        //             event.unsubscribe();
-        //             done();
-        //         }
-        //     });
-        //
-        //     provider.injectNotification({
-        //         method: 'eth_subscription',
-        //         params: {
-        //             subscription: '0x321',
-        //             result: {
-        //                 address: address,
-        //                 topics: [
-        //                     '0x' + sha3(signature),
-        //                     '0x0000000000000000000000001234567890123456789012345678901234567891',
-        //                     '0x0000000000000000000000000000000000000000000000000000000000000001'
-        //                 ],
-        //                 blockNumber: '0x3',
-        //                 transactionHash: '0x1234',
-        //                 blockHash: '0x1345',
-        //                 logIndex: '0x4',
-        //                 data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-        //                         '0000000000000000000000000000000000000000000000000000000000000008'
-        //             }
-        //         }
-        //     });
-        //
-        //     provider.injectNotification({
-        //         method: 'eth_subscription',
-        //         params: {
-        //             subscription: '0x321',
-        //             result: {
-        //                 address: address,
-        //                 topics: [
-        //                     '0x' + sha3(signature),
-        //                     '0x0000000000000000000000001234567890123456789012345678901234567891',
-        //                     '0x0000000000000000000000000000000000000000000000000000000000000001'
-        //                 ],
-        //                 blockNumber: '0x3',
-        //                 transactionHash: '0x1234',
-        //                 blockHash: '0x1345',
-        //                 logIndex: '0x4',
-        //                 data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-        //                         '0000000000000000000000000000000000000000000000000000000000000008'
-        //             }
-        //         }
-        //     });
-        // });
+        it('should create event filter and watch immediately', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+            var step = 0;
+            provider.injectValidation(function (payload) {
+                if (step === 0) {
+                    provider.injectResult('0x321');
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_subscribe');
+                    assert.deepEqual(payload.params[1], {
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            null
+                        ],
+                        address: address
+                    });
+                    step++;
+                } else if (step === 1) {
+                    provider.injectResult(true);
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, 'eth_unsubscribe');
+                }
+            });
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var res = 0;
+            var event = contract.on('Changed', {filter: {from: address}}, function(err, result) {
+                assert.equal(result.returnValues.from, address);
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
+                res++;
+                if (res === 2) {
+                    event.unsubscribe();
+                    done();
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                                '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+        });
 
         it('should create all event filter', function (done) {
             var provider = new FakeHttpProvider();
