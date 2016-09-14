@@ -2,29 +2,32 @@ var chai = require('chai');
 var assert = require('assert');
 var utils = require('../../lib/utils/utils');
 
-countId = 1;
 
-var getResponseStub = function () {
-    return {
-        jsonrpc: '2.0',
-        id: countId++,
-        result: null
-    };
-};
 
-var getErrorStub = function () {
-    return {
-        jsonrpc: '2.0',
-        countId: countId++,
-        error: {
-            code: 1234,
-            message: 'Stub error'
-        }
-    };
-};
 
 var FakeHttpProvider = function () {
-    this.response = getResponseStub();
+    var _this = this;
+    this.countId = 1;
+    this.getResponseStub = function () {
+        console.log(_this.countId);
+        return {
+            jsonrpc: '2.0',
+            id: _this.countId++,
+            result: null
+        };
+    };
+    this.getErrorStub = function () {
+        return {
+            jsonrpc: '2.0',
+            countId: _this.countId++,
+            error: {
+                code: 1234,
+                message: 'Stub error'
+            }
+        };
+    };
+
+    this.response = this.getResponseStub();
     this.error = null;
     this.validation = null;
     this.notificationCallbacks = [];
@@ -56,7 +59,7 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
-    },1);
+    }, 1);
 };
 
 FakeHttpProvider.prototype.on = function (type, callback) {
@@ -71,7 +74,7 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
         _this.notificationCallbacks.forEach(function(cb){
             cb(null, notification);
         });
-    }, 100);
+    }, 10);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
@@ -79,17 +82,18 @@ FakeHttpProvider.prototype.injectResponse = function (response) {
 };
 
 FakeHttpProvider.prototype.injectResult = function (result) {
-    this.response = getResponseStub();
+    this.response = this.getResponseStub();
     this.response.result = result;
 };
 
 FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
+    var _this = this;
     this.response = results.map(function (r) {
         if(error) {
-            var response = getErrorStub();
+            var response = _this.getErrorStub();
             response.error.message = r;
         } else {
-            var response = getResponseStub();
+            var response = this.getResponseStub();
             response.result = r;
         }
         return response;
@@ -97,11 +101,11 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
 };
 
 FakeHttpProvider.prototype.getResponse = function (payload) {
-
+    var _this = this;
     if(this.response) {
         if(utils.isArray(this.response)) {
             this.response = this.response.map(function(response, index) {
-                response.id = payload[index] ? payload[index].id : countId++;
+                response.id = payload[index] ? payload[index].id : _this.countId++;
                 return response;
             });
         } else
