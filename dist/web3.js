@@ -2769,7 +2769,7 @@ Batch.prototype.execute = function () {
         }).forEach(function (result, index) {
             if (requests[index].callback) {
 
-                if (!Jsonrpc.getInstance().isValidResponse(result)) {
+                if (!Jsonrpc.isValidResponse(result)) {
                     return requests[index].callback(errors.InvalidResponse(result));
                 }
 
@@ -3573,11 +3573,15 @@ Filter.prototype.watch = function (callback) {
     return this;
 };
 
-Filter.prototype.stopWatching = function () {
+Filter.prototype.stopWatching = function (callback) {
     this.requestManager.stopPolling(this.filterId);
-    // remove filter async
-    this.implementation.uninstallFilter(this.filterId, function(){});
     this.callbacks = [];
+    // remove filter async
+    if (callback) {
+        this.implementation.uninstallFilter(this.filterId, callback);
+    } else {
+        return this.implementation.uninstallFilter(this.filterId);
+    }
 };
 
 Filter.prototype.get = function (callback) {
@@ -3631,7 +3635,7 @@ module.exports = Filter;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file formatters.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @author Fabian Vogelsteller <fabian@ethdev.com>
@@ -3698,7 +3702,7 @@ var inputCallFormatter = function (options){
         options[key] = utils.fromDecimal(options[key]);
     });
 
-    return options; 
+    return options;
 };
 
 /**
@@ -3723,12 +3727,12 @@ var inputTransactionFormatter = function (options){
         options[key] = utils.fromDecimal(options[key]);
     });
 
-    return options; 
+    return options;
 };
 
 /**
  * Formats the output of a transaction to its proper values
- * 
+ *
  * @method outputTransactionFormatter
  * @param {Object} tx
  * @returns {Object}
@@ -3747,7 +3751,7 @@ var outputTransactionFormatter = function (tx){
 
 /**
  * Formats the output of a transaction receipt to its proper values
- * 
+ *
  * @method outputTransactionReceiptFormatter
  * @param {Object} receipt
  * @returns {Object}
@@ -3773,7 +3777,7 @@ var outputTransactionReceiptFormatter = function (receipt){
  * Formats the output of a block to its proper values
  *
  * @method outputBlockFormatter
- * @param {Object} block 
+ * @param {Object} block
  * @returns {Object}
 */
 var outputBlockFormatter = function(block) {
@@ -3801,7 +3805,7 @@ var outputBlockFormatter = function(block) {
 
 /**
  * Formats the output of a log
- * 
+ *
  * @method outputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
@@ -3842,7 +3846,7 @@ var inputPostFormatter = function(post) {
         return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
     });
 
-    return post; 
+    return post;
 };
 
 /**
@@ -3894,6 +3898,10 @@ var outputSyncingFormatter = function(result) {
     result.startingBlock = utils.toDecimal(result.startingBlock);
     result.currentBlock = utils.toDecimal(result.currentBlock);
     result.highestBlock = utils.toDecimal(result.highestBlock);
+    if (result.knownStates) {
+        result.knownStates = utils.toDecimal(result.knownStates);
+        result.pulledStates = utils.toDecimal(result.pulledStates);
+    }
 
     return result;
 };
@@ -4766,25 +4774,13 @@ module.exports = IpcProvider;
 /** @file jsonrpc.js
  * @authors:
  *   Marek Kotewicz <marek@ethdev.com>
+ *   Aaron Kumavis <aaron@kumavis.me>
  * @date 2015
  */
 
-var Jsonrpc = function () {
-    // singleton pattern
-    if (arguments.callee._singletonInstance) {
-        return arguments.callee._singletonInstance;
-    }
-    arguments.callee._singletonInstance = this;
-
-    this.messageId = 1;
-};
-
-/**
- * @return {Jsonrpc} singleton
- */
-Jsonrpc.getInstance = function () {
-    var instance = new Jsonrpc();
-    return instance;
+// Initialize Jsonrpc as a simple object with utility functions.
+var Jsonrpc = {
+    messageId: 0
 };
 
 /**
@@ -4795,15 +4791,18 @@ Jsonrpc.getInstance = function () {
  * @param {Array} params, an array of method params, optional
  * @returns {Object} valid jsonrpc payload object
  */
-Jsonrpc.prototype.toPayload = function (method, params) {
+Jsonrpc.toPayload = function (method, params) {
     if (!method)
         console.error('jsonrpc method should be specified!');
 
+    // advance message ID
+    Jsonrpc.messageId++;
+
     return {
         jsonrpc: '2.0',
+        id: Jsonrpc.messageId,
         method: method,
-        params: params || [],
-        id: this.messageId++
+        params: params || []
     };
 };
 
@@ -4814,12 +4813,16 @@ Jsonrpc.prototype.toPayload = function (method, params) {
  * @param {Object}
  * @returns {Boolean} true if response is valid, otherwise false
  */
-Jsonrpc.prototype.isValidResponse = function (response) {
-    return !!response &&
-        !response.error &&
-        response.jsonrpc === '2.0' &&
-        typeof response.id === 'number' &&
-        response.result !== undefined; // only undefined is not valid json object
+Jsonrpc.isValidResponse = function (response) {
+    return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
+
+    function validateSingleMessage(message){
+      return !!message &&
+        !message.error &&
+        message.jsonrpc === '2.0' &&
+        typeof message.id === 'number' &&
+        message.result !== undefined; // only undefined is not valid json object
+    }
 };
 
 /**
@@ -4829,10 +4832,9 @@ Jsonrpc.prototype.isValidResponse = function (response) {
  * @param {Array} messages, an array of objects with method (required) and params (optional) fields
  * @returns {Array} batch payload
  */
-Jsonrpc.prototype.toBatchPayload = function (messages) {
-    var self = this;
+Jsonrpc.toBatchPayload = function (messages) {
     return messages.map(function (message) {
-        return self.toPayload(message.method, message.params);
+        return Jsonrpc.toPayload(message.method, message.params);
     });
 };
 
@@ -5391,6 +5393,10 @@ var properties = function () {
             name: 'blockNumber',
             getter: 'eth_blockNumber',
             outputFormatter: utils.toDecimal
+        }),
+        new Property({
+            name: 'protocolVersion',
+            getter: 'eth_protocolVersion'
         })
     ];
 };
@@ -5535,8 +5541,8 @@ var methods = function () {
     });
 
     var unlockAccountAndSendTransaction = new Method({
-        name: 'unlockAccountAndSendTransaction',
-        call: 'personal_signAndSendTransaction',
+        name: 'unlockAccountAndSendTransaction', // sendTransaction
+        call: 'personal_signAndSendTransaction', // personal_sendTransaction
         params: 2,
         inputFormatter: [formatters.inputTransactionFormatter, null]
     });
@@ -6016,10 +6022,10 @@ RequestManager.prototype.send = function (data) {
         return null;
     }
 
-    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
+    var payload = Jsonrpc.toPayload(data.method, data.params);
     var result = this.provider.send(payload);
 
-    if (!Jsonrpc.getInstance().isValidResponse(result)) {
+    if (!Jsonrpc.isValidResponse(result)) {
         throw errors.InvalidResponse(result);
     }
 
@@ -6038,13 +6044,13 @@ RequestManager.prototype.sendAsync = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
+    var payload = Jsonrpc.toPayload(data.method, data.params);
     this.provider.sendAsync(payload, function (err, result) {
         if (err) {
             return callback(err);
         }
         
-        if (!Jsonrpc.getInstance().isValidResponse(result)) {
+        if (!Jsonrpc.isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
 
@@ -6064,7 +6070,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
         return callback(errors.InvalidProvider());
     }
 
-    var payload = Jsonrpc.getInstance().toBatchPayload(data);
+    var payload = Jsonrpc.toBatchPayload(data);
 
     this.provider.sendAsync(payload, function (err, results) {
         if (err) {
@@ -6179,7 +6185,7 @@ RequestManager.prototype.poll = function () {
         return;
     }
 
-    var payload = Jsonrpc.getInstance().toBatchPayload(pollsData);
+    var payload = Jsonrpc.toBatchPayload(pollsData);
     
     // map the request id to they poll id
     var pollsIdMap = {};
@@ -6212,7 +6218,7 @@ RequestManager.prototype.poll = function () {
         }).filter(function (result) {
             return !!result; 
         }).filter(function (result) {
-            var valid = Jsonrpc.getInstance().isValidResponse(result);
+            var valid = Jsonrpc.isValidResponse(result);
             if (!valid) {
                 result.callback(errors.InvalidResponse(result));
             }
