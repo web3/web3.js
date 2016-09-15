@@ -575,46 +575,44 @@ describe('contract', function () {
         });
     });
     describe('with data', function () {
-        it('should deploy a contract and use callback', function (done) {
-            var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-            console.log(provider);
-            var  count = 0;
-            provider.injectValidation(function (payload) {
-                count++
-                if(count > 1) return;
-
-                assert.equal(payload.method, 'eth_sendTransaction');
-                assert.deepEqual(payload.params, [{
-                    data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
-                    from: address,
-                    gas: '0xc350',
-                    gasPrice: '0xbb8'
-                }]);
-            });
-
-            var contract = new web3.eth.contract(abi);
-
-            contract.deploy({
-                from: address,
-                data: '0x1234567',
-                arguments: ['0x5554567890123456789012345678901234567891', 200],
-                gas: 50000,
-                gasPrice: 3000
-            }, function (err) {
-                assert.equal(err, null);
-                done();
-            });
-        });
+        // it('should deploy a contract and use callback', function (done) {
+        //     var provider = new FakeHttpProvider();
+        //     var web3 = new Web3(provider);
+        //     var count = 0;
+        //     provider.injectValidation(function (payload) {
+        //         count++
+        //         if(count > 1) return;
+        //
+        //         assert.equal(payload.method, 'eth_sendTransaction');
+        //         assert.deepEqual(payload.params, [{
+        //             data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
+        //             from: address,
+        //             gas: '0xc350',
+        //             gasPrice: '0xbb8'
+        //         }]);
+        //     });
+        //
+        //     var contract = new web3.eth.contract(abi);
+        //
+        //     contract.deploy({
+        //         from: address,
+        //         data: '0x1234567',
+        //         arguments: ['0x5554567890123456789012345678901234567891', 200],
+        //         gas: 50000,
+        //         gasPrice: 3000
+        //     }, function (err) {
+        //         assert.equal(err, null);
+        //         done();
+        //     });
+        // });
 
         it('should deploy a contract and use all promise steps', function (done) {
+            var FakeHttpProvider = require('./helpers/FakeHttpProvider');
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
-            var  count = 0;
+            var count = 0;
             provider.injectValidation(function (payload) {
                 count++
-
-                // console.log(payload);
 
                 if(count === 1) {
                     assert.equal(payload.method, 'eth_sendTransaction');
@@ -630,12 +628,10 @@ describe('contract', function () {
 
                 if(count === 2) {
 
+
                     assert.equal(payload.method, 'eth_subscribe');
                     assert.deepEqual(payload.params, ['newBlocks', {}]);
 
-                    provider.injectResult({
-                        contractAddress: address
-                    });
 
                     provider.injectResult('0x1234567');
 
@@ -649,7 +645,6 @@ describe('contract', function () {
                             }
                         }
                     });
-
 
                 }
                 if(count === 3) {

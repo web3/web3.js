@@ -7,9 +7,8 @@ var utils = require('../../lib/utils/utils');
 
 var FakeHttpProvider = function () {
     var _this = this;
-    this.countId = 1;
+    this.countId = 0;
     this.getResponseStub = function () {
-        console.log(_this.countId);
         return {
             jsonrpc: '2.0',
             id: _this.countId++,
@@ -19,7 +18,7 @@ var FakeHttpProvider = function () {
     this.getErrorStub = function () {
         return {
             jsonrpc: '2.0',
-            countId: _this.countId++,
+            id: _this.countId++,
             error: {
                 code: 1234,
                 message: 'Stub error'
@@ -35,7 +34,7 @@ var FakeHttpProvider = function () {
 
 FakeHttpProvider.prototype.send = function (payload) {
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
-    // TODO: validate jsonrpc request
+
     if (this.error) {
         throw this.error;
     }
@@ -48,6 +47,8 @@ FakeHttpProvider.prototype.send = function (payload) {
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
+    var _this = this;
+
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
     if (this.validation) {
@@ -55,11 +56,12 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
         this.validation(JSON.parse(JSON.stringify(payload)), callback);
     }
 
-    var response = this.getResponse(payload);
-    var error = this.error;
+    var response = _this.getResponse(payload);
+    var error = _this.error;
+
     setTimeout(function(){
         callback(error, response);
-    }, 1);
+    }, 2);
 };
 
 FakeHttpProvider.prototype.on = function (type, callback) {
@@ -93,7 +95,7 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
             var response = _this.getErrorStub();
             response.error.message = r;
         } else {
-            var response = this.getResponseStub();
+            var response = _this.getResponseStub();
             response.result = r;
         }
         return response;
