@@ -676,7 +676,7 @@ describe('contract', function () {
                 assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
             });
             deploy.on('mined', function (value) {
-                assert.equal(address, value);
+                assert.equal(address, value.contractAddress);
                 done();
             });
             // deploy.on('error', function (value) {
