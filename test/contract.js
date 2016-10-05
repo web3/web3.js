@@ -89,18 +89,6 @@ describe('contract', function () {
                 done();
 
             });
-            provider.injectResult(true);
-
-            var contract = new web3.eth.contract(abi, address);
-
-            var event = contract.on('Changed', {filter: {from: address}}, function (err, result, sub) {
-                assert.equal(result.returnValues.from, address);
-                assert.equal(result.returnValues.amount, 1);
-                assert.equal(result.returnValues.t1, 1);
-                assert.equal(result.returnValues.t2, 8);
-
-                sub.unsubscribe();
-            });
 
             provider.injectNotification({
                 method: 'eth_subscription',
@@ -122,9 +110,134 @@ describe('contract', function () {
                     }
                 }
             });
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var event = contract.on('Changed', {filter: {from: address}}, function (err, result, sub) {
+                assert.equal(result.returnValues.from, address);
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
+
+                sub.unsubscribe();
+            });
+
         });
 
-        it('should create event filter and watch immediately', function (done) {
+        it('should create event from the events object and use the fromBlock option', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_getLogs');
+            });
+            provider.injectResult([{
+                    address: address,
+                    topics: [
+                        '0x' + sha3(signature),
+                        '0x0000000000000000000000001234567890123456789012345678901234567891',
+                        '0x0000000000000000000000000000000000000000000000000000000000000002'
+                    ],
+                    blockNumber: '0x3',
+                    transactionHash: '0x1234',
+                    blockHash: '0x1345',
+                    logIndex: '0x4',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000002' +
+                    '0000000000000000000000000000000000000000000000000000000000000009'
+                },
+                {
+                    address: address,
+                    topics: [
+                        '0x' + sha3(signature),
+                        '0x0000000000000000000000001234567890123456789012345678901234567891',
+                        '0x0000000000000000000000000000000000000000000000000000000000000003'
+                    ],
+                    blockNumber: '0x4',
+                    transactionHash: '0x1235',
+                    blockHash: '0x1346',
+                    logIndex: '0x1',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000004' +
+                    '0000000000000000000000000000000000000000000000000000000000000005'
+            }]);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params[1], {
+                    topics: [
+                        '0x' + sha3(signature),
+                        '0x0000000000000000000000001234567890123456789012345678901234567891',
+                        null
+                    ],
+                    address: address
+                });
+            });
+            provider.injectResult('0x321');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_unsubscribe');
+                done();
+            });
+            provider.injectResult(true);
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x0000000000000000000000001234567890123456789012345678901234567891',
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                        '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+
+            var contract = new web3.eth.contract(abi, address);
+            var count = 0;
+            var event = contract.events.Changed({fromBlock: 0,filter: {from: address}})
+                .on('data', function (result) {
+                    count++;
+
+                    if(count === 1) {
+                        assert.equal(result.returnValues.from, address);
+                        assert.equal(result.returnValues.amount, 2);
+                        assert.equal(result.returnValues.t1, 2);
+                        assert.equal(result.returnValues.t2, 9);
+
+                    }
+                    if(count === 2) {
+                        assert.equal(result.returnValues.from, address);
+                        assert.equal(result.returnValues.amount, 3);
+                        assert.equal(result.returnValues.t1, 4);
+                        assert.equal(result.returnValues.t2, 5);
+
+                    }
+                    if(count === 3) {
+                        assert.equal(result.returnValues.from, address);
+                        assert.equal(result.returnValues.amount, 1);
+                        assert.equal(result.returnValues.t1, 1);
+                        assert.equal(result.returnValues.t2, 8);
+
+                        event.unsubscribe();
+                    }
+
+                });
+        });
+
+
+        it('should create event from the events object using a signature and callback', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -150,17 +263,6 @@ describe('contract', function () {
             });
             provider.injectResult(true);
 
-            var contract = new web3.eth.contract(abi, address);
-
-            var event = contract.on('Changed', {filter: {from: address}}, function (err, result, sub) {
-                assert.equal(result.returnValues.from, address);
-                assert.equal(result.returnValues.amount, 1);
-                assert.equal(result.returnValues.t1, 1);
-                assert.equal(result.returnValues.t2, 8);
-
-                sub.unsubscribe();
-            });
-
             provider.injectNotification({
                 method: 'eth_subscription',
                 params: {
@@ -182,6 +284,15 @@ describe('contract', function () {
                 }
             });
 
+            var contract = new web3.eth.contract(abi, address);
+            var event = contract.events['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651']({filter: {from: address}}, function (err, result) {
+                assert.equal(result.returnValues.from, address);
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
+
+                event.unsubscribe();
+            });
         });
 
         it('should create all event filter', function (done) {

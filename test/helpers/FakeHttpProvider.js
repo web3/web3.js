@@ -35,10 +35,9 @@ var FakeHttpProvider = function () {
 FakeHttpProvider.prototype.send = function (payload) {
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
 
-
-
-    if (this.error) {
-        throw this.error.shift();
+    var error = this.getResponseOrError('error', payload);
+    if (error) {
+        throw new Error(error.error.message);
     }
 
     var validation = this.validation.shift();
@@ -48,7 +47,7 @@ FakeHttpProvider.prototype.send = function (payload) {
         validation(JSON.parse(JSON.stringify(payload)));
     }
 
-    return this.getResponse(payload);
+    return this.getResponseOrError('response', payload);
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
@@ -70,8 +69,8 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
         validation(JSON.parse(JSON.stringify(payload)), callback);
     }
 
-    var response = _this.getResponse(payload);
-    var error = _this.error.shift();
+    var response = _this.getResponseOrError('response', payload);
+    var error = this.getResponseOrError('error', payload);
 
     setTimeout(function(){
         callback(error, response);
@@ -84,6 +83,28 @@ FakeHttpProvider.prototype.on = function (type, callback) {
     }
 };
 
+FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
+    var _this = this;
+    var response;
+
+    if(type === 'error')
+        response = this.error.shift();
+    else
+        response = this.response.shift() || this.getResponseStub();
+
+    if(response) {
+        if(utils.isArray(response)) {
+            response = response.map(function(resp, index) {
+                resp.id = payload[index] ? payload[index].id : _this.countId++;
+                return resp;
+            });
+        } else
+            response.id = payload.id;
+    }
+
+    return response;
+};
+
 FakeHttpProvider.prototype.injectNotification = function (notification) {
     var _this = this;
     setTimeout(function(){
@@ -91,7 +112,7 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
             if(notification && cb)
                 cb(null, notification);
         });
-    }, 10);
+    }, 100);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
@@ -119,24 +140,10 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     }));
 };
 
-FakeHttpProvider.prototype.getResponse = function (payload) {
-    var _this = this;
-    var response = this.response.shift() || this.getResponseStub();
-
-    if(response) {
-        if(utils.isArray(response)) {
-            response = response.map(function(resp, index) {
-                resp.id = payload[index] ? payload[index].id : _this.countId++;
-                return resp;
-            });
-        } else
-            response.id = payload.id;
-    }
-
-    return response;
-};
-
 FakeHttpProvider.prototype.injectError = function (error) {
+    var error = this.getErrorStub();
+    error.error = error; // message, code
+
     this.error.push(error);
 };
 
