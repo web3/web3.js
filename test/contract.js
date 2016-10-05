@@ -60,7 +60,15 @@ var abi = [{
         {"name":"t1","type":"uint256","indexed":false},
         {"name":"t2","type":"uint256","indexed":false}
     ]
-}];
+}, {
+        "name":"Unchanged",
+        "type":"event",
+        "inputs": [
+            {"name":"value","type":"uint256","indexed":true},
+            {"name":"addressFrom","type":"address","indexed":true},
+            {"name":"t1","type":"uint256","indexed":false}
+        ]
+    }];
 
 var address = '0x1234567890123456789012345678901234567891';
 
@@ -295,7 +303,7 @@ describe('contract', function () {
             });
         });
 
-        it('should create all event filter', function (done) {
+        it('should create all event filter and receive two logs', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -313,19 +321,31 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_unsubscribe');
+                done();
             });
             provider.injectResult(true);
 
 
             var contract = new web3.eth.contract(abi, address);
 
-            var event = contract.once('allEvents', function (err, result) {
-                assert.equal(result.returnValues.from, address);
-                assert.equal(result.returnValues.amount, 1);
-                assert.equal(result.returnValues.t1, 1);
-                assert.equal(result.returnValues.t2, 8);
+            var count = 0;
+            var event = contract.on('allEvents', function (err, result) {
+                count++;
 
-                done();
+                if(count === 1) {
+                    assert.equal(result.returnValues.from, address);
+                    assert.equal(result.returnValues.amount, 1);
+                    assert.equal(result.returnValues.t1, 1);
+                    assert.equal(result.returnValues.t2, 8);
+                }
+                if(count === 2) {
+                    assert.equal(result.returnValues.addressFrom, address);
+                    assert.equal(result.returnValues.value, 2);
+                    assert.equal(result.returnValues.t1, 5);
+
+                    event.unsubscribe();
+                }
+
             });
 
 
@@ -336,7 +356,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            '0x' + sha3('Changed(address,uint256,uint256,uint256)'),
                             '0x0000000000000000000000001234567890123456789012345678901234567891',
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -346,6 +366,27 @@ describe('contract', function () {
                         logIndex: '0x4',
                         data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
                         '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x333',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3('Unchanged(uint256,address,uint256)'),
+                            '0x0000000000000000000000000000000000000000000000000000000000000002',
+                            '0x0000000000000000000000001234567890123456789012345678901234567891'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000005'
                     }
                 }
             });
