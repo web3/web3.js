@@ -700,39 +700,37 @@ describe('contract', function () {
         });
     });
     describe('with data', function () {
-        // it('should deploy a contract and use callback', function (done) {
-        //     var provider = new FakeHttpProvider();
-        //     var web3 = new Web3(provider);
-        //     var count = 0;
-        //     provider.injectValidation(function (payload) {
-        //         count++
-        //         if(count > 1) return;
-        //
-        //         assert.equal(payload.method, 'eth_sendTransaction');
-        //         assert.deepEqual(payload.params, [{
-        //             data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
-        //             from: address,
-        //             gas: '0xc350',
-        //             gasPrice: '0xbb8'
-        //         }]);
-        //     });
-        //
-        //     var contract = new web3.eth.contract(abi);
-        //
-        //     contract.deploy({
-        //         from: address,
-        //         data: '0x1234567',
-        //         arguments: ['0x5554567890123456789012345678901234567891', 200],
-        //         gas: 50000,
-        //         gasPrice: 3000
-        //     }, function (err) {
-        //         assert.equal(err, null);
-        //         done();
-        //     });
-        // });
+        it('should deploy a contract and use callback', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            provider.injectValidation(function () {});
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
+                    from: address,
+                    gas: '0xc350',
+                    gasPrice: '0xbb8'
+                }]);
+            });
+
+            var contract = new web3.eth.contract(abi);
+
+            contract.deploy({
+                from: address,
+                data: '0x1234567',
+                arguments: ['0x5554567890123456789012345678901234567891', 200],
+                gas: 50000,
+                gasPrice: 3000
+            }, function (err) {
+                assert.equal(err, null);
+                done();
+            });
+        });
 
         it('should deploy a contract and use all promise steps', function (done) {
-            var FakeHttpProvider = require('./helpers/FakeHttpProvider');
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
 
@@ -801,6 +799,114 @@ describe('contract', function () {
             //     done();
             // });
 
+        });
+
+        // TODO add error check
+    });
+
+    describe('internal method', function () {
+        it('_encodeEventABI should return the encoded event object without topics', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var result = contract._encodeEventABI({
+                signature: '0x1234',
+                "name":"Changed",
+                "type":"event",
+                "inputs": [
+                    {"name":"from","type":"address","indexed":true},
+                    {"name":"amount","type":"uint256","indexed":true},
+                    {"name":"t1","type":"uint256","indexed":false},
+                    {"name":"t2","type":"uint256","indexed":false}
+                ]
+            });
+
+            assert.deepEqual(result, {
+                address: address,
+                topics: [
+                    '0x1234',
+                    null,
+                    null
+                ]
+            });
+
+            done();
+        });
+        it('_encodeEventABI should return the encoded event object with topics', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var result = contract._encodeEventABI({
+                signature: '0x1234',
+                "name":"Changed",
+                "type":"event",
+                "inputs": [
+                    {"name":"from","type":"address","indexed":true},
+                    {"name":"amount","type":"uint256","indexed":true},
+                    {"name":"t1","type":"uint256","indexed":false},
+                    {"name":"t2","type":"uint256","indexed":false}
+                ]
+            }, {filter: {amount: 12}, fromBlock: 2});
+
+            assert.deepEqual(result, {
+                address: address,
+                fromBlock: '0x2',
+                topics: [
+                    '0x1234',
+                    null,
+                    '0x000000000000000000000000000000000000000000000000000000000000000c'
+                ]
+            });
+
+            done();
+        });
+        it('_decodeEventABI should return the decoded event object with topics', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var result = contract._decodeEventABI.call({
+                signature: '0x'+ sha3(signature),
+                "name":"Changed",
+                "type":"event",
+                "inputs": [
+                    {"name":"from","type":"address","indexed":true},
+                    {"name":"amount","type":"uint256","indexed":true},
+                    {"name":"t1","type":"uint256","indexed":false},
+                    {"name":"t2","type":"uint256","indexed":false}
+                ]
+            }, {
+                address: address,
+                topics: [
+                    '0x' + sha3(signature),
+                    '0x0000000000000000000000001234567890123456789012345678901234567891',
+                    '0x0000000000000000000000000000000000000000000000000000000000000001'
+                ],
+                blockNumber: '0x3',
+                transactionHash: '0x1234',
+                blockHash: '0x1345',
+                logIndex: '0x4',
+                data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                '0000000000000000000000000000000000000000000000000000000000000008'
+            });
+
+            assert.equal(result.blockNumber, 3);
+            assert.equal(result.blockHash, '0x1345');
+            assert.equal(result.logIndex, 4);
+            assert.equal(result.id, 'log_9ff24cb4');
+            assert.equal(result.transactionIndex, 0);
+            assert.equal(result.returnValues.from, address);
+            assert.equal(result.returnValues.amount, 1);
+            assert.equal(result.returnValues.t1, 1);
+            assert.equal(result.returnValues.t2, 8);
+
+            done();
         });
     });
 });
