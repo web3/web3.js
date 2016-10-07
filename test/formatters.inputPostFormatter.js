@@ -5,7 +5,7 @@ var formatters = require('../lib/web3/formatters.js');
 describe('formatters', function () {
     describe('inputPostFormatter', function () {
         it('should return the correct value', function () {
-            
+
             // input as strings and numbers
             assert.deepEqual(formatters.inputPostFormatter({
                 from: '0x00000',
