@@ -26,7 +26,7 @@
 
     function createExampleContract() {
         // hide create button
-        document.getElementById('create').style.visibility = 'hidden'; 
+        document.getElementById('create').style.visibility = 'hidden';
         document.getElementById('code').innerText = code;
 
         // let's assume that coinbase is our account
@@ -34,19 +34,17 @@
 
         // create contract
         document.getElementById('status').innerText = "transaction sent, waiting for confirmation";
-        web3.eth.contract(abi).new({data: code}, function (err, contract) {
-            if(err) {
-                console.error(err);
+        new web3.eth.contract(abi).deploy({data: code}, function (err, txHash) {
+            if (!err) {
+                console.log(txHash);
                 return;
 
-            // callback fires twice, we only want the second call when the contract is deployed
-            } else if(contract.address){
-
-                myContract = contract;
-                console.log('address: ' + myContract.address);
-                document.getElementById('status').innerText = 'Mined!';
-                document.getElementById('call').style.visibility = 'visible';
             }
+        })
+        .on('mined', function(address, myContract){
+            console.log('address: ' + address);
+            document.getElementById('status').innerText = 'Mined!';
+            document.getElementById('call').style.visibility = 'visible';
         });
     }
 
@@ -63,7 +61,7 @@
 </head>
 <body>
     <h1>contract</h1>
-    <div id="code"></div> 
+    <div id="code"></div>
     <div id="status"></div>
     <div id='create'>
         <button type="button" onClick="createExampleContract();">create example contract</button>

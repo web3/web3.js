@@ -2,61 +2,79 @@ var chai = require('chai');
 var assert = require('assert');
 var utils = require('../../lib/utils/utils');
 
-countId = 1;
 
-var getResponseStub = function () {
-    return {
-        jsonrpc: '2.0',
-        id: countId++,
-        result: null
-    };
-};
 
-var getErrorStub = function () {
-    return {
-        jsonrpc: '2.0',
-        countId: countId++,
-        error: {
-            code: 1234,
-            message: 'Stub error'
-        }
-    };
-};
 
 var FakeHttpProvider = function () {
-    this.response = getResponseStub();
-    this.error = null;
-    this.validation = null;
+    var _this = this;
+    this.countId = 1;
+    this.getResponseStub = function () {
+        return {
+            jsonrpc: '2.0',
+            id: _this.countId,
+            result: null
+        };
+    };
+    this.getErrorStub = function () {
+        return {
+            jsonrpc: '2.0',
+            id: _this.countId,
+            error: {
+                code: 1234,
+                message: 'Stub error'
+            }
+        };
+    };
+
+    this.response = [];
+    this.error = [];
+    this.validation = [];
     this.notificationCallbacks = [];
 };
 
 FakeHttpProvider.prototype.send = function (payload) {
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
-    // TODO: validate jsonrpc request
-    if (this.error) {
-        throw this.error;
-    } 
-    if (this.validation) {
-        // imitate plain json object
-        this.validation(JSON.parse(JSON.stringify(payload)));
+
+    var error = this.getResponseOrError('error', payload);
+    if (error) {
+        throw new Error(error.error.message);
     }
 
-    return this.getResponse(payload);
+    var validation = this.validation.shift();
+
+    if(validation) {
+        // imitate plain json object
+        validation(JSON.parse(JSON.stringify(payload)));
+    }
+
+    return this.getResponseOrError('response', payload);
 };
 
 FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
+    var _this = this;
+
+    // set id
+    if(payload.id)
+        this.countId = payload.id;
+    // else
+    //     this.countId++;
+
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
     assert.equal(utils.isFunction(callback), true);
-    if (this.validation) {
+
+    var validation = this.validation.shift();
+
+    if (validation) {
         // imitate plain json object
-        this.validation(JSON.parse(JSON.stringify(payload)), callback);
+        validation(JSON.parse(JSON.stringify(payload)), callback);
     }
 
-    var response = this.getResponse(payload);
-    var error = this.error;
+    var response = _this.getResponseOrError('response', payload);
+    var error = this.getResponseOrError('error', payload);
+
     setTimeout(function(){
         callback(error, response);
-    },1);
+    }, 1);
 };
 
 FakeHttpProvider.prototype.on = function (type, callback) {
@@ -65,13 +83,36 @@ FakeHttpProvider.prototype.on = function (type, callback) {
     }
 };
 
+FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
+    var _this = this;
+    var response;
+
+    if(type === 'error')
+        response = this.error.shift();
+    else
+        response = this.response.shift() || this.getResponseStub();
+
+    if(response) {
+        if(utils.isArray(response)) {
+            response = response.map(function(resp, index) {
+                resp.id = payload[index] ? payload[index].id : _this.countId++;
+                return resp;
+            });
+        } else
+            response.id = payload.id;
+    }
+
+    return response;
+};
+
 FakeHttpProvider.prototype.injectNotification = function (notification) {
     var _this = this;
     setTimeout(function(){
         _this.notificationCallbacks.forEach(function(cb){
-            cb(null, notification);
+            if(notification && cb)
+                cb(null, notification);
         });
-    }, 1);
+    }, 100);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
@@ -79,44 +120,35 @@ FakeHttpProvider.prototype.injectResponse = function (response) {
 };
 
 FakeHttpProvider.prototype.injectResult = function (result) {
-    this.response = getResponseStub();
-    this.response.result = result;
+    var response = this.getResponseStub();
+    response.result = result;
+
+    this.response.push(response);
 };
 
 FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
-    this.response = results.map(function (r) {
+    var _this = this;
+    this.response.push(results.map(function (r) {
         if(error) {
-            var response = getErrorStub();
+            var response = _this.getErrorStub();
             response.error.message = r;
         } else {
-            var response = getResponseStub();
+            var response = _this.getResponseStub();
             response.result = r;
         }
         return response;
-    }); 
-};
-
-FakeHttpProvider.prototype.getResponse = function (payload) {
-
-    if(this.response) {
-        if(utils.isArray(this.response)) {
-            this.response = this.response.map(function(response, index) {
-                response.id = payload[index] ? payload[index].id : countId++;
-                return response;
-            });
-        } else
-            this.response.id = payload.id;
-    }
-
-    return this.response;
+    }));
 };
 
 FakeHttpProvider.prototype.injectError = function (error) {
-    this.error = error;
+    var error = this.getErrorStub();
+    error.error = error; // message, code
+
+    this.error.push(error);
 };
 
 FakeHttpProvider.prototype.injectValidation = function (callback) {
-    this.validation = callback;
+    this.validation.push(callback);
 };
 
 module.exports = FakeHttpProvider;
