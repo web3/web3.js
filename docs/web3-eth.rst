@@ -1,5 +1,5 @@
 ###############
-API Reference
+web3.eth
 ###############
 
 Some text
