@@ -1,22 +1,20 @@
-.. web3.js documentation master file, created by
-   sphinx-quickstart on Fri Oct 14 15:04:49 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to web3.js's documentation!
+web3.js - Ethereum JavaScript API
 ===================================
 
+web3.js is a collection of libraries which allow you to interact with a local or remote ethereum node,
+using a HTTP or IPC connection.
+
+The following documentation will guide you through installing and running web3.js,
+as well as providing a reference documentation with examples.
+
 Contents:
+
+:ref:`Keyword Index <genindex>`
 
 .. toctree::
    :maxdepth: 2
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+    getting-started.rst
+    api-reference.rst
+    contract-object.rst
 
