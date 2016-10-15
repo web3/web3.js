@@ -28,7 +28,7 @@ describe('lib/web3/httpprovider', function () {
                 assert.equal(typeof result, 'object');
                 done();
             });
-        }); 
+        });
     });
 
     describe('isConnected', function () {
@@ -36,7 +36,18 @@ describe('lib/web3/httpprovider', function () {
             var provider = new HttpProvider();
 
             assert.isBoolean(provider.isConnected());
-        }); 
+        });
+    });
+
+    describe('isConnectedAsync', function () {
+        it('should return a callback with boolean', function (done) {
+            var provider = new HttpProvider();
+
+            provider.isConnectedAsync(function(connected) {
+                assert.isBoolean(connected);
+                done()
+            })
+        });
     });
 });
 

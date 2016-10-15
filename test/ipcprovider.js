@@ -7,7 +7,7 @@ var net = new FakeIpcRequest();
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var IpcProvider = SandboxedModule.require('../lib/web3/ipcprovider', {
     requires: {
-        'bignumber.js': require('bignumber.js'), 
+        'bignumber.js': require('bignumber.js'),
     },
     singleOnly: true
 });
@@ -29,7 +29,7 @@ describe('lib/web3/ipcprovider', function () {
                 assert.isObject(result);
                 done();
             });
-        }); 
+        });
     });
 
     describe('isConnected', function () {
@@ -53,7 +53,41 @@ describe('lib/web3/ipcprovider', function () {
             provider.connection.writable = true;
 
             assert.isTrue(provider.isConnected());
-        }); 
+        });
+    });
+
+    describe('isConnectedAsync', function () {
+        it('should return a callback with a boolean', function (done) {
+            var provider = new IpcProvider('', net);
+
+            provider.isConnectedAsync(function(connected){
+                assert.isBoolean(connected);
+                done()
+            })
+
+        });
+
+        it('should return false', function (done) {
+            var provider = new IpcProvider('', net);
+
+            provider.connection.writable = false;
+
+            provider.isConnectedAsync(function(connected){
+                assert.isFalse(connected);
+                done()
+            })
+        });
+
+        it('should return true, when a net handle is set', function (done) {
+            var provider = new IpcProvider('', net);
+
+            provider.connection.writable = true;
+            provider.isConnectedAsync(function(connected){
+                assert.isTrue(connected);
+                done()
+            })
+
+        });
     });
 });
 
