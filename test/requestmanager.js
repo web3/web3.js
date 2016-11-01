@@ -13,8 +13,8 @@ describe('lib/web3/requestmanager', function () {
             var manager = new RequestManager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
-            
-            var result = manager.send({
+
+            var result = manager.sendSync({
                 method: 'test',
                 params: [1,2,3]
             });
@@ -27,8 +27,8 @@ describe('lib/web3/requestmanager', function () {
             var manager = new RequestManager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
-            
-            manager.sendAsync({
+
+            manager.send({
                 method: 'test',
                 params: [1,2,3]
             }, function (error, result) {
