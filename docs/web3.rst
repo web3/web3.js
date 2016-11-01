@@ -4,8 +4,9 @@ web3
 
 The web3.js object is a container object to house all ethereum related modules.
 
+------------------------------------------------------------------------------
 
-web3.version
+version
 ============
 
 Contains the version of the web3.js container object.
@@ -24,3 +25,5 @@ Example
 
     web3.version;
     > "1.0.0"
+
+------------------------------------------------------------------------------
