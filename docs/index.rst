@@ -15,7 +15,7 @@ Contents:
    :maxdepth: 2
    :caption: User Documentation
 
-    getting-started
+    getting-started.rst
 
 
 .. _api-reference:
