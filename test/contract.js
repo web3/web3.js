@@ -324,7 +324,7 @@ describe('contract', function () {
                 // tx hash
                 assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
             })
-            .on('mined', function(result){
+            .on('receipt', function(result){
                 assert.deepEqual(result, {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
@@ -1256,21 +1256,21 @@ describe('contract', function () {
 
             var contract = new web3.eth.contract(abi);
 
-            var deploy = contract.deploy({
+            contract.deploy({
                 from: address,
                 data: '0x1234567',
                 arguments: [address, 200],
                 gas: 50000,
                 gasPrice: 3000
-            });
-            deploy.on('transactionHash', function (value) {
+            })
+            .on('transactionHash', function (value) {
                 assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
-            });
-            deploy.on('mined', function (value) {
-                assert.equal(address, value.contractAddress);
+            })
+            .on('receipt', function (receipt) {
+                assert.equal(address, receipt.contractAddress);
                 done();
             });
-            // deploy.on('error', function (value) {
+            // .on('error', function (value) {
             //     console.log('error', value);
             //     done();
             // });
