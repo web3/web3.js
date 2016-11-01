@@ -15,10 +15,7 @@ Contents:
    :maxdepth: 2
    :caption: User Documentation
 
-    getting-started
-    installation
-    getting-around
-    web3-eth
+   getting-started
 
 
 .. toctree::
