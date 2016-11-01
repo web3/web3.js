@@ -1,6 +1,6 @@
-###############
+=========================
 Callbacks Promises Events
-###############
+=========================
 
 To help web3 integrate into all kind of projects with different standards
 we provide multiple ways to act on asynchronous functions.

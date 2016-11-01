@@ -1,6 +1,6 @@
-###############
+===============
 Getting Started
-###############
+===============
 
 The web3.js library is a collection of modules which contain specific functionality for the ethereum ecosystem.
 
@@ -19,7 +19,7 @@ Please also check out these `useful patterns <https://github.com/ethereum/wiki/w
 .. _adding-web3:
 
 Adding web3.js
-**************
+==============
 
 .. index:: npm
 .. index:: bower
