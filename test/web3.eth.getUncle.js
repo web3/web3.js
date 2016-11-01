@@ -64,7 +64,7 @@ var blockResultWithTx = {
     "gasUsed": "0x9f759",
     "timestamp": "0x54e34e8e",
     "transactions": [{
-        "status": "mined",
+        // "status": "mined",
         "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
         "nonce":"0x2",
         "blockHash": "0x6fd9e2a26ab",
@@ -97,7 +97,7 @@ var formattedBlockResultWithTx = {
     "gasUsed": 653145,
     "timestamp": 1424182926,
     "transactions": [{
-        "status": "mined",
+        // "status": "mined",
         "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
         "nonce": 2,
         "blockHash": "0x6fd9e2a26ab",
