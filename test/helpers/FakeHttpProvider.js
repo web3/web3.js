@@ -32,7 +32,7 @@ var FakeHttpProvider = function () {
     this.notificationCallbacks = [];
 };
 
-FakeHttpProvider.prototype.send = function (payload) {
+FakeHttpProvider.prototype.sendSync = function (payload) {
     assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
 
     var error = this.getResponseOrError('error', payload);
@@ -50,7 +50,7 @@ FakeHttpProvider.prototype.send = function (payload) {
     return this.getResponseOrError('response', payload);
 };
 
-FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
+FakeHttpProvider.prototype.send = function (payload, callback) {
     var _this = this;
 
     // set id
