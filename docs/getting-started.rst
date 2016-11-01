@@ -2,7 +2,7 @@
 Getting Started
 ###############
 
-The web3.js library is a collection of libraries which contains specific functions for the ethereum ecosystem.
+The web3.js library is a collection of modules which contain specific functionality for the ethereum ecosystem.
 
 - The ``web3-eth`` library contains functions related to the ethereum blockchain and smart contracts
 - The ``web3-net`` library contains functions related to the network connection and peers
