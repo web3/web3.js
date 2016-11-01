@@ -18,9 +18,8 @@ Contents:
     getting-started
     installation
     getting-around
+    web3-eth
 
-
-.. _api-reference:
 
 .. toctree::
     :maxdepth: 2
