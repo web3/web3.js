@@ -1,6 +1,5 @@
 var assert = require('assert');
-var jsonrpc = require('../lib/web3/jsonrpc');
-jsonrpc = new jsonrpc();
+var Jsonrpc = require('../lib/web3/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('toBatchPayload', function () {
@@ -15,7 +14,7 @@ describe('jsonrpc', function () {
             }];
 
             // when
-            var payload = jsonrpc.toBatchPayload(messages);
+            var payload = Jsonrpc.toBatchPayload(messages);
 
             // then
             assert.equal(payload instanceof Array, true);
@@ -38,7 +37,7 @@ describe('jsonrpc', function () {
             var messages = [];
 
             // when
-            var payload = jsonrpc.toBatchPayload(messages);
+            var payload = Jsonrpc.toBatchPayload(messages);
 
             // then
             assert.equal(payload instanceof Array, true);

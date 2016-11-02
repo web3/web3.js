@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert; 
-var jsonrpc = require('../lib/web3/jsonrpc');
-jsonrpc = new jsonrpc();
+var Jsonrpc = require('../lib/web3/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('toPayload', function () {
@@ -11,7 +10,7 @@ describe('jsonrpc', function () {
             var method = 'helloworld';
 
             // when
-            var payload = jsonrpc.toPayload(method);
+            var payload = Jsonrpc.toPayload(method);
 
             // then
             assert.equal(payload.jsonrpc, '2.0');
@@ -28,7 +27,7 @@ describe('jsonrpc', function () {
             var params = [123, 'test'];
 
             // when
-            var payload = jsonrpc.toPayload(method, params);
+            var payload = Jsonrpc.toPayload(method, params);
 
             // then
             assert.equal(payload.jsonrpc, '2.0');

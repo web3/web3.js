@@ -1,16 +1,7 @@
-# Migration 0.13.0 -> 0.14.0
-
-web3.js version 0.14.0 supports [multiple instances of web3](https://github.com/ethereum/web3.js/issues/297) object.
-To migrate to this version, please follow the guide:
-
-```diff
--var web3 = require('web3');
-+var Web3 = require('web3');
-+var web3 = new Web3();
-```
+web3.js has moved from 0.x.x to 1.x.x. This is a majore refactor, please read the following guide to update your dapp.
 
 
-# Ethereum JavaScript API
+# web3.js - Ethereum JavaScript API
 
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -77,7 +68,9 @@ var balance = web3.eth.getBalance(coinbase);
 You can find more examples in [`example`](https://github.com/ethereum/web3.js/tree/master/example) directory.
 
 
-## Contribute!
+## Documentation
+
+Documentation can be found at [read the docs](http://web3js.readthedocs.io/en/latest/)
 
 ### Requirements
 
