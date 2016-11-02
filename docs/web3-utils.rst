@@ -1,17 +1,18 @@
 ========
-web3.eth
+web3.utils
 ========
 
-Some text
+This package provides utility functions for ethereum dapps and other web3.js packages.
+
 
 ------------------------------------------------------------------------------
 
-example
+sha3
 =====================
 
 .. code-block:: javascript
 
-    web3.setProvider(myProvider)
+    web3.utils.sha3(myProvider)
 
 When called changes the current provider for all modules.
 
