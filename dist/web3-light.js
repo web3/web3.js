@@ -2546,9 +2546,9 @@ var sha3 = require('./utils/sha3');
 var extend = require('./web3/extend');
 var Batch = require('./web3/batch');
 var Property = require('./web3/property');
-var HttpProvider = require('./web3/httpprovider');
-var IpcProvider = require('./web3/ipcprovider');
-var WebsocketProvider = require('./web3/websocketprovider');
+var HttpProvider = require('./web3/providers/httpprovider');
+var IpcProvider = require('./web3/providers/ipcprovider');
+var WebsocketProvider = require('./web3/providers/websocketprovider');
 var BigNumber = require('bignumber.js');
 
 
@@ -2657,7 +2657,7 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":29,"./web3/iban":30,"./web3/ipcprovider":31,"./web3/methods/db":34,"./web3/methods/eth":35,"./web3/methods/net":36,"./web3/methods/personal":37,"./web3/methods/shh":38,"./web3/property":40,"./web3/requestmanager":41,"./web3/settings":42,"./web3/websocketprovider":46,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/iban":29,"./web3/methods/db":32,"./web3/methods/eth":33,"./web3/methods/net":34,"./web3/methods/personal":35,"./web3/methods/shh":36,"./web3/property":38,"./web3/providers/httpprovider":39,"./web3/providers/ipcprovider":40,"./web3/providers/websocketprovider":41,"./web3/requestmanager":42,"./web3/settings":43,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2712,7 +2712,7 @@ Batch.prototype.execute = function () {
         }).forEach(function (result, index) {
             if (requests[index].callback) {
 
-                if (!Jsonrpc.getInstance().isValidResponse(result)) {
+                if (!Jsonrpc.isValidResponse(result)) {
                     return requests[index].callback(errors.InvalidResponse(result));
                 }
 
@@ -2725,7 +2725,7 @@ Batch.prototype.execute = function () {
 module.exports = Batch;
 
 
-},{"./errors":25,"./jsonrpc":32}],24:[function(require,module,exports){
+},{"./errors":25,"./jsonrpc":30}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2770,6 +2770,7 @@ var Subscription = require('./subscription.js');
 var Contract = function(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
+
     this.options = {};
 
     if(!(this instanceof Contract))
@@ -2810,35 +2811,51 @@ var Contract = function(jsonInterface, address, options) {
     Object.defineProperty(this, 'jsonInterface', {
         set: function(value){
             _this._jsonInterface = value.map(function(method) {
-                // function
-                if (method.type === 'function') {
-                    method.signature = '0x'+ sha3(utils.transformToFullName(method)).slice(0, 8);
-                    method.outputTypes = method.outputs.map(function (i) {
-                        return i.type;
-                    });
 
-                    // add method only if not one already exists
-                    if(!_this.methods[method.name])
-                        _this.methods[method.name] = _this._createTxObject.bind({
-                            signatureBased: false,
-                            method: method,
-                            parent: _this
-                        });
-
-                    // definitely add the method based on its signature
-                    _this.methods[method.signature] = _this._createTxObject.bind({
-                        signatureBased: true,
+                // constructor
+                if (method.type === 'constructor') {
+                    method.signature = 'constructor';
+                    var func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
                     });
 
+                    // add constructor
+                    _this.methods.constructor = func;
+                    _this.constructor = func;
+
+                // function
+                } else if (method.type === 'function') {
+                    method.signature = '0x'+ sha3(utils.transformToFullName(method)).slice(0, 8);
+                    var func = _this._createTxObject.bind({
+                        method: method,
+                        parent: _this
+                    });
+
+
+                    // add method only if not one already exists
+                    if(!_this.methods[method.name])
+                        _this.methods[method.name] = func;
+
+                    // definitely add the method based on its signature
+                    _this.methods[method.signature] = func;
+
                     // also add to the main contract object
-                    if(!_this[method.name])
+                    if(!_this[method.name] || _this[method.name].name === 'bound _createTxObject')
                         _this[method.name] = _this.methods[method.name];
                     _this[method.signature] = _this.methods[method.signature];
 
                     // event
                 } else if (method.type === 'event') {
+                    var event = _this.on.bind(_this, method.signature);
+
+                    // add method only if not already exists
+                    if(!_this.events[method.name] || _this.events[method.name].name === 'bound ')
+                        _this.events[method.name] = event;
+
+                    // definitely add the method based on its signature
+                    _this.events[method.signature] = event;
+
                     method.signature = '0x'+ sha3(utils.transformToFullName(method));
                 }
 
@@ -2855,6 +2872,7 @@ var Contract = function(jsonInterface, address, options) {
 
     // properties
     this.methods = {};
+    this.events = {};
 
     this._address = null;
     this._jsonInterface = [];
@@ -2888,6 +2906,7 @@ Contract.prototype._checkListener = function(type, event, func){
  * Should be used to encode indexed params and options to one final object
  *
  * @method _encodeEventABI
+ * @param {Object} event
  * @param {Object} options
  * @return {Object} everything combined together and encoded
  */
@@ -3026,43 +3045,62 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI(methodSignature,
 
     var signature = false,
         paramsABI = _this.jsonInterface.filter(function (json) {
-        return ((methodSignature === 'constructor' && json.type === methodSignature) ||
-            ((json.signature === methodSignature || json.signature === '0x'+ methodSignature || json.name === methodSignature) && json.type === 'function')) &&
-            json.inputs.length === args.length;
-    }).map(function (json) {
-        if(json.type === 'function') {
-            signature = json.signature;
-        }
-        return json.inputs.map(function (input) {
-            return input.type;
-        });
-    }).map(function (types) {
-        return coder.encodeParams(types, args);
-    })[0] || '';
+            return ((methodSignature === 'constructor' && json.type === methodSignature) ||
+                ((json.signature === methodSignature || json.signature === '0x'+ methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
+        }).map(function (json) {
+            if(json.inputs.length !== args.length) {
+                throw new Error('The number of arguments is not matching the methods required number.');
+            }
 
-    var returnValue = (signature) ? signature + paramsABI : paramsABI;
+            if(json.type === 'function') {
+                signature = json.signature;
+            }
+            return json.inputs.map(function (input) {
+                return input.type;
+            });
+        }).map(function (types) {
+            return coder.encodeParams(types, args);
+        })[0] || '';
 
-    if(!returnValue)
-        throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'", or the number of parameters is wrong.')
-    else
-        return returnValue;
+    // return constructor
+    if(this._method && this._method.type === 'constructor') {
+        if(!_this.options.data)
+            throw new Error('The contract has no contract data option set. This is necessary to append the constructor parameters.');
+
+        return _this.options.data + paramsABI;
+
+    // return method
+    } else {
+
+        var returnValue = (signature) ? signature + paramsABI : paramsABI;
+
+        if(!returnValue)
+            throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".')
+        else
+            return returnValue;
+    }
+
 };
 
 /**
  * Decode method return values
  *
  * @method _decodeMethodReturn
- * @param {Array} outputTypes
+ * @param {Array} outputs
  * @param {String} returnValues
  * @param {Array} decoded output return values
  */
-Contract.prototype._decodeMethodReturn = function (outputTypes, returnValues) {
+Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     if (!returnValues) {
         return;
     }
 
+    var types = outputs.map(function (i) {
+        return i.type;
+    });
+
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-    var result = coder.decodeParams(outputTypes, returnValues);
+    var result = coder.decodeParams(types, returnValues);
     result = result.length === 1 ? result[0] : result;
     if(result === '0x')
         result = null;
@@ -3082,8 +3120,10 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
         count = 0,
         callbackFired = false;
 
+
     // wait for receipt
     var sub = this._web3.eth.subscribe('newBlocks', {}, function(e){
+
         if (!e && !callbackFired) {
             count++;
 
@@ -3102,6 +3142,11 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
                 _this._web3.eth.getTransactionReceipt(transactionHash, function(e, receipt){
                     if(receipt && !callbackFired) {
 
+                        if(!receipt.contractAddress) {
+                            callbackFired = true;
+                            return callback(new Error('The transaction receipt didn\'t contain a contract address.'));
+                        }
+
                         _this._web3.eth.getCode(receipt.contractAddress, function(e, code){
 
                             if(callbackFired || !code)
@@ -3111,7 +3156,7 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
                             callbackFired = true;
 
                             if(code.length > 2) {
-                                callback(null, receipt.contractAddress);
+                                callback(null, receipt);
                             } else {
                                 callback(new Error('The contract code couldn\'t be stored, please check your gas limit.'));
                             }
@@ -3124,14 +3169,14 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
 };
 
 /**
- * Deploys a contract and fire events based on its state: transactionHash, mined
+ * Deploys a contract and fire events based on its state: transactionHash, receipt
  *
- * All event listeners will be removed, once the last possible event is fired ("error", or "mined")
+ * All event listeners will be removed, once the last possible event is fired ("error", or "receipt")
  *
  * @method deploy
  * @param {Object} options
  * @param {Function} callback
- * @return {Object} EventEmitter possible events are "error", "transactionHash" and "mined"
+ * @return {Object} EventEmitter possible events are "error", "transactionHash" and "receipt"
  */
 Contract.prototype.deploy = function(options, callback){
     /*jshint maxcomplexity: 6 */
@@ -3183,18 +3228,18 @@ Contract.prototype.deploy = function(options, callback){
         } else {
             defer.promise.emit('transactionHash', hash);
 
-            // wait for the contract to be mined and return the address
-            _this._checkForContractAddress(hash, function(err, address){
+            // wait for the contract to be receipt and return the address
+            _this._checkForContractAddress(hash, function(err, receipt){
                 if(err) {
                     defer.reject(err);
                     defer.promise.emit('error', err);
                 } else {
-                    defer.resolve(address);
-                    defer.promise.emit('mined', address, _this);
+                    defer.resolve(receipt);
+                    defer.promise.emit('receipt', receipt);
                 }
 
                 // remove all listeners on the end, as no event will ever fire again
-                defer.promise.removeAllListeners();
+                // defer.promise.removeAllListeners();
             });
         }
     });
@@ -3202,6 +3247,7 @@ Contract.prototype.deploy = function(options, callback){
     return defer.promise;
 };
 
+// TODO add constructor as method with .encodeABI
 
 /**
  * Encodes any contract function, including the constructor into a data ABI HEX string.
@@ -3209,29 +3255,29 @@ Contract.prototype.deploy = function(options, callback){
  * @method encodeABI
  * @param {Object} options
  */
-Contract.prototype.encodeABI = function encodeABI(options){
-    var bytes = '';
-    options = options || {};
-
-    options.arguments = options.arguments || [];
-    options.data = options.data || this.options.data || '';
-
-    if(!options.method)
-        throw new Error('You must provide a method, or the string "constructor".');
-
-    if(options.method === 'constructor') {
-        bytes = options.data || bytes;
-        bytes = '0x'+ bytes.replace(/^0x/,'');
-    }
-
-    // remove 0x
-    options.method = options.method.replace(/^0x/,'');
-
-    // add the parameters (and signature, if method not constructor)
-    bytes += this._encodeMethodABI(options.method, options.arguments);
-
-    return bytes;
-};
+// Contract.prototype.encodeABI = function encodeABI(options){
+//     var bytes = '';
+//     options = options || {};
+//
+//     options.arguments = options.arguments || [];
+//     options.data = options.data || this.options.data || '';
+//
+//     if(!options.method)
+//         throw new Error('You must provide a method, or the string "constructor".');
+//
+//     if(options.method === 'constructor') {
+//         bytes = options.data || bytes;
+//         bytes = '0x'+ bytes.replace(/^0x/,'');
+//     }
+//
+//     // remove 0x
+//     options.method = options.method.replace(/^0x/,'');
+//
+//     // add the parameters (and signature, if method not constructor)
+//     bytes += this._encodeMethodABI(options.method, options.arguments);
+//
+//     return bytes;
+// };
 
 /**
  * Gets the event signature and outputformatters
@@ -3259,7 +3305,7 @@ Contract.prototype._generateEventOptions = function(event, options, callback) {
             name: 'ALLEVENTS',
             jsonInterface: this.jsonInterface
         } : this.jsonInterface.find(function (json) {
-            return (json.type === 'event' && json.name === event);
+            return (json.type === 'event' && (json.name === event || json.signature === '0x'+ event.replace('0x','')));
         });
 
     if (!event) {
@@ -3332,7 +3378,7 @@ Contract.prototype.on = function(event, options, callback){
         unsubscribeMethod: 'eth_unsubscribe',
         requestManager: this._web3._requestManager
     });
-    subscription.subscribe('logs', subOptions.params, subOptions.callback);
+    subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});
 
     return subscription;
 };
@@ -3369,27 +3415,28 @@ Contract.prototype.getPastEvents = function(event, options, callback){
  * returns the an object with call, send, estimate funcitons
  *
  * @method _createTxObject
- * @param {String} type
- * @param {Array} args
  * @returns {Object} an object with functions to call the methods
  */
 Contract.prototype._createTxObject =  function _createTxObject(){
     var _this = this,
         txObject = {};
 
-    txObject.call = this.parent._executeMethod.bind(txObject, 'call');
-    txObject.call.request = this.parent._executeMethod.bind(txObject, 'call', true); // to make batch requests
+    if(this.method.type === 'function') {
 
-    txObject.send = this.parent._executeMethod.bind(txObject, 'send');
-    txObject.send.request = this.parent._executeMethod.bind(txObject, 'send', true); // to make batch requests
+        txObject.call = this.parent._executeMethod.bind(txObject, 'call');
+        txObject.call.request = this.parent._executeMethod.bind(txObject, 'call', true); // to make batch requests
 
-    txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
+        txObject.send = this.parent._executeMethod.bind(txObject, 'send');
+        txObject.send.request = this.parent._executeMethod.bind(txObject, 'send', true); // to make batch requests
+
+    }
+
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
-    txObject.arguments = arguments;
+    txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
+    txObject.arguments = arguments;
     txObject._method = this.method;
     txObject._parent = this.parent;
-
 
     return txObject;
 };
@@ -3460,7 +3507,7 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
         if(type === 'call') {
             payload.method = 'eth_call';
-            payload.format = _this._parent._decodeMethodReturn.bind(null, _this._method.outputTypes);
+            payload.format = _this._parent._decodeMethodReturn.bind(null, _this._method.outputs);
         } else {
             payload.method = 'eth_sendTransaction';
         }
@@ -3472,8 +3519,9 @@ Contract.prototype._executeMethod = function _executeMethod(type){
         // create the callback method
         var methodReturnCallback = function(err, returnValue) {
 
-            if(type === 'call')
-                returnValue = _this._parent._decodeMethodReturn(_this._method.outputTypes, returnValue);
+            if(type === 'call') {
+                returnValue = _this._parent._decodeMethodReturn(_this._method.outputs, returnValue);
+            }
 
 
             if (err) {
@@ -3489,7 +3537,7 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
                 if(type === 'send') {
 
-                    // fire "mined" event and resolve after
+                    // fire "receipt" event and resolve after
                     _this._parent._web3.eth.subscribe('newBlocks', {}, function (err, block, sub) {
                         if(!err) {
 
@@ -3499,7 +3547,7 @@ Contract.prototype._executeMethod = function _executeMethod(type){
                                         sub.unsubscribe();
 
                                         if(!receipt.outOfGas) {
-                                            defer.promise.emit('mined', receipt);
+                                            defer.promise.emit('receipt', receipt);
                                             defer.resolve(receipt);
                                             defer.promise.removeAllListeners();
 
@@ -3555,7 +3603,7 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
 module.exports = Contract;
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./eventifiedPromise.js":26,"./formatters":28,"./method.js":33,"./subscription.js":43}],25:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./eventifiedPromise.js":26,"./formatters":28,"./method.js":31,"./subscription.js":44}],25:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3704,7 +3752,7 @@ var extend = function (web3) {
 module.exports = extend;
 
 
-},{"./../utils/utils":20,"./formatters":28,"./method":33,"./property":40}],28:[function(require,module,exports){
+},{"./../utils/utils":20,"./formatters":28,"./method":31,"./property":38}],28:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4031,6 +4079,10 @@ var outputSyncingFormatter = function(result) {
     result.startingBlock = utils.toDecimal(result.startingBlock);
     result.currentBlock = utils.toDecimal(result.currentBlock);
     result.highestBlock = utils.toDecimal(result.highestBlock);
+    if (result.knownStates) {
+        result.knownStates = utils.toDecimal(result.knownStates);
+        result.pulledStates = utils.toDecimal(result.pulledStates);
+    }
 
     return result;
 };
@@ -4053,151 +4105,7 @@ module.exports = {
 };
 
 
-},{"../utils/config":18,"../utils/sha3":19,"../utils/utils":20,"./iban":30}],29:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file httpprovider.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
- */
-
-"use strict";
-
-var errors = require('./errors');
-
-// workaround to use httpprovider in different envs
-var XMLHttpRequest; // jshint ignore: line
-
-// browser
-if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-    XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
-
-// node
-} else {
-    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
-}
-
-/**
- * HttpProvider should be used to send rpc calls over http
- */
-var HttpProvider = function (host) {
-    this.host = host || 'http://localhost:8545';
-};
-
-/**
- * Should be called to prepare new XMLHttpRequest
- *
- * @method prepareRequest
- * @param {Boolean} true if request should be async
- * @return {XMLHttpRequest} object
- */
-HttpProvider.prototype.prepareRequest = function (async) {
-    var request = new XMLHttpRequest();
-    request.open('POST', this.host, async);
-    request.setRequestHeader('Content-Type','application/json');
-    return request;
-};
-
-/**
- * Should be called to make sync request
- *
- * @method send
- * @param {Object} payload
- * @return {Object} result
- */
-HttpProvider.prototype.send = function (payload) {
-    var request = this.prepareRequest(false);
-
-    try {
-        request.send(JSON.stringify(payload));
-    } catch(error) {
-        throw errors.InvalidConnection(this.host);
-    }
-
-    var result = request.responseText;
-
-    try {
-        result = JSON.parse(result);
-    } catch(e) {
-        throw errors.InvalidResponse(request.responseText);                
-    }
-
-    return result;
-};
-
-/**
- * Should be used to make async request
- *
- * @method sendAsync
- * @param {Object} payload
- * @param {Function} callback triggered on end with (err, result)
- */
-HttpProvider.prototype.sendAsync = function (payload, callback) {
-    var request = this.prepareRequest(true); 
-
-    request.onreadystatechange = function() {
-        if (request.readyState === 4) {
-            var result = request.responseText;
-            var error = null;
-
-            try {
-                result = JSON.parse(result);
-            } catch(e) {
-                error = errors.InvalidResponse(request.responseText);                
-            }
-
-            callback(error, result);
-        }
-    };
-    
-    try {
-        request.send(JSON.stringify(payload));
-    } catch(error) {
-        callback(errors.InvalidConnection(this.host));
-    }
-};
-
-/**
- * Synchronously tries to make Http request
- *
- * @method isConnected
- * @return {Boolean} returns true if request haven't failed. Otherwise false
- */
-HttpProvider.prototype.isConnected = function() {
-    try {
-        this.send({
-            id: 9999999999,
-            jsonrpc: '2.0',
-            method: 'net_listening',
-            params: []
-        });
-        return true;
-    } catch(e) {
-        return false;
-    }
-};
-
-module.exports = HttpProvider;
-
-
-},{"./errors":25,"xmlhttprequest":17}],30:[function(require,module,exports){
+},{"../utils/config":18,"../utils/sha3":19,"../utils/utils":20,"./iban":29}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4426,353 +4334,7 @@ Iban.prototype.toString = function () {
 module.exports = Iban;
 
 
-},{"bignumber.js":"bignumber.js"}],31:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
-/** @file ipcprovider.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
- */
-
-"use strict";
-
-var utils = require('../utils/utils');
-var errors = require('./errors');
-
-
-var IpcProvider = function (path, net) {
-    var _this = this;
-    this.responseCallbacks = {};
-    this.notificationCallbacks = [];
-    this.path = path;
-
-    this.connection = net.connect({path: this.path});
-
-    this.addDefaultEvents();
-
-
-    // LISTEN FOR CONNECTION RESPONSES
-    this.connection.on('data', function(data) {
-        /*jshint maxcomplexity: 6 */
-
-        _this._parseResponse(data.toString()).forEach(function(result){
-
-            var id = null;
-
-            // get the id which matches the returned id
-            if(utils.isArray(result)) {
-                result.forEach(function(load){
-                    if(_this.responseCallbacks[load.id])
-                        id = load.id;
-                });
-            } else {
-                id = result.id;
-            }
-
-            // notification
-            if(!id && result.method === 'eth_subscription') {
-                _this.notificationCallbacks.forEach(function(callback){
-                    if(utils.isFunction(callback))
-                        callback(null, result);
-                });
-
-            // fire the callback
-            } else if(_this.responseCallbacks[id]) {
-                _this.responseCallbacks[id](null, result);
-                delete _this.responseCallbacks[id];
-            }
-        });
-    });
-};
-
-/**
-Will add the error and end event to timeout existing calls
-
-@method addDefaultEvents
-*/
-IpcProvider.prototype.addDefaultEvents = function(){
-    var _this = this;
-
-    this.connection.on('connect', function(){
-    });
-
-    this.connection.on('error', function(){
-        _this._timeout();
-    });
-
-    this.connection.on('end', function(e){
-        _this._timeout();
-
-        console.log('->>ENENENENENED');
-
-        // inform notifications
-        _this.notificationCallbacks.forEach(function (callback) {
-            if (utils.isFunction(callback))
-                callback(new Error('IPC socket connection closed'));
-        });
-    });
-
-    this.connection.on('timeout', function(){
-        _this._timeout();
-    });
-};
-
-/**
-Will parse the response and make an array out of it.
-
-@method _parseResponse
-@param {String} data
-*/
-IpcProvider.prototype._parseResponse = function(data) {
-    var _this = this,
-        returnValues = [];
-
-    // DE-CHUNKER
-    var dechunkedData = data
-        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
-        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
-        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
-        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
-        .split('|--|');
-
-    dechunkedData.forEach(function(data){
-
-        // prepend the last chunk
-        if(_this.lastChunk)
-            data = _this.lastChunk + data;
-
-        var result = null;
-
-        try {
-            result = JSON.parse(data);
-
-        } catch(e) {
-
-            _this.lastChunk = data;
-
-            // start timeout to cancel all requests
-            clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunkTimeout = setTimeout(function(){
-                _this._timeout();
-                throw errors.InvalidResponse(data);
-            }, 1000 * 15);
-
-            return;
-        }
-
-        // cancel timeout and set chunk to null
-        clearTimeout(_this.lastChunkTimeout);
-        _this.lastChunk = null;
-
-        if(result)
-            returnValues.push(result);
-    });
-
-    return returnValues;
-};
-
-
-/**
-Get the adds a callback to the responseCallbacks object,
-which will be called if a response matching the response Id will arrive.
-
-@method _addResponseCallback
-*/
-IpcProvider.prototype._addResponseCallback = function(payload, callback) {
-    var id = payload.id || payload[0].id;
-    var method = payload.method || payload[0].method;
-
-    this.responseCallbacks[id] = callback;
-    this.responseCallbacks[id].method = method;
-};
-
-/**
-Timeout all requests when the end/error event is fired
-
-@method _timeout
-*/
-IpcProvider.prototype._timeout = function() {
-    for(var key in this.responseCallbacks) {
-        if(this.responseCallbacks.hasOwnProperty(key)){
-            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
-            delete this.responseCallbacks[key];
-        }
-    }
-};
-
-/**
- Try to reconnect
-
- @method reconnect
- */
-IpcProvider.prototype.reconnect = function() {
-    this.connection.connect({path: this.path});
-};
-
-/**
-Check if the current connection is still valid.
-
-@method isConnected
-*/
-IpcProvider.prototype.isConnected = function() {
-    var _this = this;
-
-    // try reconnect, when connection is gone
-    if(!_this.connection.writable)
-        _this.connection.connect({path: _this.path});
-
-    return !!this.connection.writable;
-};
-
-IpcProvider.prototype.send = function (payload) {
-
-    if(this.connection.writeSync) {
-        var result;
-
-        // try reconnect, when connection is gone
-        if(!this.connection.writable)
-            this.connection.connect({path: this.path});
-
-        var data = this.connection.writeSync(JSON.stringify(payload));
-
-        try {
-            result = JSON.parse(data);
-        } catch(e) {
-            throw errors.InvalidResponse(data);
-        }
-
-        return result;
-
-    } else {
-        throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
-    }
-};
-
-IpcProvider.prototype.sendAsync = function (payload, callback) {
-    // try reconnect, when connection is gone
-    if(!this.connection.writable)
-        this.connection.connect({path: this.path});
-
-
-    this.connection.write(JSON.stringify(payload));
-    this._addResponseCallback(payload, callback);
-};
-
-/**
-Subscribes to provider events.provider
-
-@method on
-@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
-@param {Function} callback   the callback to call
-*/
-IpcProvider.prototype.on = function (type, callback) {
-
-    if(typeof callback !== 'function')
-        throw new Error('The second parameter callback must be a function.');
-
-    switch(type){
-        case 'notification':
-            this.notificationCallbacks.push(callback);
-            break;
-
-        default:
-            this.connection.on(type, callback);
-            break;
-    }
-};
-
-/**
- Subscribes to provider events.provider
-
- @method on
- @param {String} type    'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
- */
-IpcProvider.prototype.once = function (type, callback) {
-
-    if(typeof callback !== 'function')
-        throw new Error('The second parameter callback must be a function.');
-
-    this.connection.once(type, callback);
-};
-
-/**
-Removes event listener
-
-@method removeListener
-@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
-@param {Function} callback   the callback to call
-*/
-IpcProvider.prototype.removeListener = function (type, callback) {
-    var _this = this;
-
-    switch(type){
-        case 'notification':
-            this.notificationCallbacks.forEach(function(cb, index){
-                if(cb === callback)
-                    _this.notificationCallbacks.splice(index, 1);
-            });
-            break;
-
-        default:
-            this.connection.removeListener(type, callback);
-            break;
-    }
-};
-
-/**
-Removes all event listeners
-
-@method removeAllListeners
-@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
-*/
-IpcProvider.prototype.removeAllListeners = function (type) {
-    switch(type){
-        case 'notification':
-            this.notificationCallbacks = [];
-            break;
-
-        default:
-            this.connection.removeAllListeners(type);
-            break;
-    }
-};
-
-/**
-Resets the providers, clears all callbacks
-
-@method reset
-*/
-IpcProvider.prototype.reset = function () {
-    this._timeout();
-    this.notificationCallbacks = [];
-
-    this.connection.removeAllListeners('error');
-    this.connection.removeAllListeners('end');
-    this.connection.removeAllListeners('timeout');
-
-    this.addDefaultEvents();
-};
-
-module.exports = IpcProvider;
-
-
-},{"../utils/utils":20,"./errors":25}],32:[function(require,module,exports){
+},{"bignumber.js":"bignumber.js"}],30:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4791,26 +4353,15 @@ module.exports = IpcProvider;
 */
 /** @file jsonrpc.js
  * @authors:
+ *   Fabian Vogelsteller <fabian@ethereum.org>
  *   Marek Kotewicz <marek@ethdev.com>
+ *   Aaron Kumavis <aaron@kumavis.me>
  * @date 2015
  */
 
-var Jsonrpc = function () {
-    // singleton pattern
-    if (arguments.callee._singletonInstance) {
-        return arguments.callee._singletonInstance;
-    }
-    arguments.callee._singletonInstance = this;
-
-    this.messageId = 1;
-};
-
-/**
- * @return {Jsonrpc} singleton
- */
-Jsonrpc.getInstance = function () {
-    var instance = new Jsonrpc();
-    return instance;
+// Initialize Jsonrpc as a simple object with utility functions.
+var Jsonrpc = {
+    messageId: 0
 };
 
 /**
@@ -4821,15 +4372,18 @@ Jsonrpc.getInstance = function () {
  * @param {Array} params, an array of method params, optional
  * @returns {Object} valid jsonrpc payload object
  */
-Jsonrpc.prototype.toPayload = function (method, params) {
+Jsonrpc.toPayload = function (method, params) {
     if (!method)
         console.error('jsonrpc method should be specified!');
 
+    // advance message ID
+    Jsonrpc.messageId++;
+
     return {
         jsonrpc: '2.0',
+        id: Jsonrpc.messageId,
         method: method,
-        params: params || [],
-        id: this.messageId++
+        params: params || []
     };
 };
 
@@ -4840,12 +4394,16 @@ Jsonrpc.prototype.toPayload = function (method, params) {
  * @param {Object}
  * @returns {Boolean} true if response is valid, otherwise false
  */
-Jsonrpc.prototype.isValidResponse = function (response) {
-    return !!response &&
-        !response.error &&
-        response.jsonrpc === '2.0' &&
-        typeof response.id === 'number' &&
-        response.result !== undefined; // only undefined is not valid json object
+Jsonrpc.isValidResponse = function (response) {
+    return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
+
+    function validateSingleMessage(message){
+      return !!message &&
+        !message.error &&
+        message.jsonrpc === '2.0' &&
+        typeof message.id === 'number' &&
+        message.result !== undefined; // only undefined is not valid json object
+    }
 };
 
 /**
@@ -4855,17 +4413,16 @@ Jsonrpc.prototype.isValidResponse = function (response) {
  * @param {Array} messages, an array of objects with method (required) and params (optional) fields
  * @returns {Array} batch payload
  */
-Jsonrpc.prototype.toBatchPayload = function (messages) {
-    var self = this;
+Jsonrpc.toBatchPayload = function (messages) {
     return messages.map(function (message) {
-        return self.toPayload(message.method, message.params);
+        return Jsonrpc.toPayload(message.method, message.params);
     });
 };
 
 module.exports = Jsonrpc;
 
 
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5018,7 +4575,7 @@ Method.prototype.buildCall = function() {
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
-        method.requestManager.sendAsync(payload, function (err, result) {
+        method.requestManager.send(payload, function (err, result) {
             var result = method.formatOutput(result);
 
             // TODO? if afterProcess is available
@@ -5059,7 +4616,7 @@ Method.prototype.request = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":20,"./errors":25,"./eventifiedPromise.js":26}],34:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"./eventifiedPromise.js":26}],32:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5127,7 +4684,7 @@ var methods = function () {
 
 module.exports = DB;
 
-},{"../method":33}],35:[function(require,module,exports){
+},{"../method":31}],33:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5189,22 +4746,30 @@ function Eth(web3) {
 
     var self = this;
 
-    methods().forEach(function(method) { 
+    methods().forEach(function(method) {
         method.attachToObject(self);
         method.setRequestManager(self._requestManager);
     });
 
-    properties().forEach(function(p) { 
+    properties().forEach(function(p) {
         p.attachToObject(self);
         p.setRequestManager(self._requestManager);
     });
 
+    // add contract
+    this.contract = Contract;
+    this.contract.prototype._web3 = web3;
 
     this.iban = Iban;
     this.sendIBANTransaction = transfer.bind(null, this);
 
-    // add contract
-    Contract.prototype._web3 = web3;
+    this.namereg = function () {
+        return this.contract(namereg.global.abi).at(namereg.global.address);
+    };
+
+    this.icapNamereg = function () {
+        return this.contract(namereg.icap.abi).at(namereg.icap.address);
+    };
 }
 
 
@@ -5484,25 +5049,19 @@ var properties = function () {
             name: 'blockNumber',
             getter: 'eth_blockNumber',
             outputFormatter: utils.toDecimal
+        }),
+        new Property({
+            name: 'protocolVersion',
+            getter: 'eth_protocolVersion'
         })
     ];
-};
-
-Eth.prototype.contract = Contract;
-
-Eth.prototype.namereg = function () {
-    return this.contract(namereg.global.abi).at(namereg.global.address);
-};
-
-Eth.prototype.icapNamereg = function () {
-    return this.contract(namereg.icap.abi).at(namereg.icap.address);
 };
 
 
 module.exports = Eth;
 
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":30,"../method":33,"../namereg":39,"../property":40,"../subscriptions":44,"../transfer":45}],36:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":24,"../formatters":28,"../iban":29,"../method":31,"../namereg":37,"../property":38,"../subscriptions":45,"../transfer":46}],34:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5556,7 +5115,7 @@ var properties = function () {
 
 module.exports = Net;
 
-},{"../../utils/utils":20,"../property":40}],37:[function(require,module,exports){
+},{"../../utils/utils":20,"../property":38}],35:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5618,8 +5177,8 @@ var methods = function () {
     });
 
     var unlockAccountAndSendTransaction = new Method({
-        name: 'unlockAccountAndSendTransaction',
-        call: 'personal_signAndSendTransaction',
+        name: 'unlockAccountAndSendTransaction', // sendTransaction
+        call: 'personal_signAndSendTransaction', // personal_sendTransaction
         params: 2,
         inputFormatter: [formatters.inputTransactionFormatter, null]
     });
@@ -5651,7 +5210,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../formatters":28,"../method":33,"../property":40}],38:[function(require,module,exports){
+},{"../formatters":28,"../method":31,"../property":38}],36:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5760,7 +5319,7 @@ var methods = function () {
 module.exports = Shh;
 
 
-},{"../formatters":28,"../method":33,"../subscriptions":44}],39:[function(require,module,exports){
+},{"../formatters":28,"../method":31,"../subscriptions":45}],37:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5801,7 +5360,7 @@ module.exports = {
 };
 
 
-},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],40:[function(require,module,exports){
+},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],38:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5842,7 +5401,7 @@ Property.prototype.setRequestManager = function (rm) {
 
 /**
  * Should be called to format input args of method
- * 
+ *
  * @method formatInput
  * @param {Array}
  * @return {Array}
@@ -5878,7 +5437,7 @@ Property.prototype.extractCallback = function (args) {
 
 /**
  * Should attach function to method
- * 
+ *
  * @method attachToObject
  * @param {Object}
  * @param {Function}
@@ -5886,7 +5445,7 @@ Property.prototype.extractCallback = function (args) {
 Property.prototype.attachToObject = function (obj) {
     var proto = {
         get: this.buildGet(),
-        enumerable: true 
+        enumerable: true
     };
 
     var names = this.name.split('.');
@@ -5908,16 +5467,16 @@ var asyncGetterName = function (name) {
 Property.prototype.buildGet = function () {
     var property = this;
     return function get() {
-        return property.formatOutput(property.requestManager.send({
+        return property.formatOutput(property.requestManager.sendSync({
             method: property.getter
-        })); 
+        }));
     };
 };
 
 Property.prototype.buildAsyncGet = function () {
     var property = this;
     var get = function (callback) {
-        property.requestManager.sendAsync({
+        property.requestManager.send({
             method: property.getter
         }, function (err, result) {
             callback(err, property.formatOutput(result));
@@ -5947,7 +5506,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":20}],41:[function(require,module,exports){
+},{"../utils/utils":20}],39:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5964,219 +5523,134 @@ module.exports = Property;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
- * @file requestmanager.js
- * @author Jeffrey Wilcke <jeff@ethdev.com>
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Marian Oancea <marian@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
- * @author Gav Wood <g@ethdev.com>
- * @date 2014
+/** @file httpprovider.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ *   Marian Oancea <marian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
  */
 
-var Jsonrpc = require('./jsonrpc');
-var utils = require('../utils/utils');
-var errors = require('./errors');
+"use strict";
+
+var errors = require('../errors');
+
+// workaround to use httpprovider in different envs
+var XMLHttpRequest; // jshint ignore: line
+
+// browser
+if (typeof window !== 'undefined' && window.XMLHttpRequest) {
+    XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
+
+// node
+} else {
+    XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
+}
 
 /**
- * It's responsible for passing messages to providers
- * It's also responsible for polling the ethereum node for incoming messages
- * Default poll timeout is 1 second
- * Singleton
+ * HttpProvider should be used to send rpc calls over http
  */
-var RequestManager = function (provider) {
-    this.setProvider(provider);
-    this.subscriptions = {};
+var HttpProvider = function (host) {
+    this.host = host || 'http://localhost:8545';
 };
 
 /**
- * Should be used to synchronously send request
+ * Should be called to prepare new XMLHttpRequest
+ *
+ * @method prepareRequest
+ * @param {Boolean} true if request should be async
+ * @return {XMLHttpRequest} object
+ */
+HttpProvider.prototype.prepareRequest = function (async) {
+    var request = new XMLHttpRequest();
+    request.open('POST', this.host, async);
+    request.setRequestHeader('Content-Type','application/json');
+    return request;
+};
+
+/**
+ * Should be called to make sync request
  *
  * @method send
- * @param {Object} data
- * @return {Object}
+ * @param {Object} payload
+ * @return {Object} result
  */
-RequestManager.prototype.send = function (data) {
-    if (!this.provider) {
-        console.error(errors.InvalidProvider());
-        return null;
+HttpProvider.prototype.sendSync = function (payload) {
+    var request = this.prepareRequest(false);
+
+    try {
+        request.send(JSON.stringify(payload));
+    } catch(error) {
+        throw errors.InvalidConnection(this.host);
     }
 
-    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
-    var result = this.provider.send(payload);
+    var result = request.responseText;
 
-    if (!Jsonrpc.getInstance().isValidResponse(result)) {
-        throw errors.InvalidResponse(result);
+    try {
+        result = JSON.parse(result);
+    } catch(e) {
+        throw errors.InvalidResponse(request.responseText);
     }
 
-    return result.result;
+    return result;
 };
 
 /**
- * Should be used to asynchronously send request
+ * Should be used to make async request
  *
  * @method sendAsync
- * @param {Object} data
- * @param {Function} callback
+ * @param {Object} payload
+ * @param {Function} callback triggered on end with (err, result)
  */
-RequestManager.prototype.sendAsync = function (data, callback) {
-    callback = callback || function(){};
+HttpProvider.prototype.send = function (payload, callback) {
+    var request = this.prepareRequest(true);
 
-    if (!this.provider) {
-        return callback(errors.InvalidProvider());
-    }
-    var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
-    this.provider.sendAsync(payload, function (err, result) {
-        if (err) {
-            return callback(err);
-        }
+    request.onreadystatechange = function() {
+        if (request.readyState === 4) {
+            var result = request.responseText;
+            var error = null;
 
-        if (!Jsonrpc.getInstance().isValidResponse(result)) {
-            return callback(errors.InvalidResponse(result));
-        }
-
-        callback(null, result.result);
-    });
-};
-
-/**
- * Should be called to asynchronously send batch request
- *
- * @method sendBatch
- * @param {Array} batch data
- * @param {Function} callback
- */
-RequestManager.prototype.sendBatch = function (data, callback) {
-    if (!this.provider) {
-        return callback(errors.InvalidProvider());
-    }
-
-    var payload = Jsonrpc.getInstance().toBatchPayload(data);
-    this.provider.sendAsync(payload, function (err, results) {
-        if (err) {
-            return callback(err);
-        }
-
-        if (!utils.isArray(results)) {
-            return callback(errors.InvalidResponse(results));
-        }
-
-        callback(err, results);
-    });
-};
-
-
-/**
- * Waits for notifications
- *
- * @method addSubscription
- * @param {String} id           the subscription id
- * @param {String} name         the subscription name
- * @param {String} type         the subscription namespace (eth, personal, etc)
- * @param {Function} callback   the callback to call for incoming notifications
- */
-RequestManager.prototype.addSubscription = function (id, name, type, callback) {
-    if(this.provider.on) {
-        this.subscriptions[id] = {
-            callback: callback,
-            type: type,
-            name: name
-        };
-
-    } else {
-        throw new Error('This provider doesn\'t support subscriptions', this.provider);
-    }
-};
-
-/**
- * Waits for notifications
- *
- * @method removeSubscription
- * @param {String} id           the subscription id
- * @param {Function} callback   fired once the subscription is removed
- */
-RequestManager.prototype.removeSubscription = function (id, callback) {
-    var _this = this;
-
-    if(this.subscriptions[id]) {
-
-        this.sendAsync({
-            method: this.subscriptions[id].type + '_unsubscribe',
-            params: [id]
-        }, callback);
-
-        // remove subscription
-        delete _this.subscriptions[id];
-    }
-};
-
-/**
- * Should be used to set provider of request manager
- *
- * @method setProvider
- * @param {Object}
- */
-RequestManager.prototype.setProvider = function (p) {
-    var _this = this;
-
-    // reset the old one before changing
-    if(this.provider)
-        this.reset();
-
-    this.provider = p;
-
-    // listen to incoming notifications
-    if(this.provider && this.provider.on) {
-        this.provider.on('notification', function requestManagerNotification(err, result){
-            if(!err) {
-                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
-                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
-            } else {
-
-                Object.keys(_this.subscriptions).forEach(function(id){
-                    if(_this.subscriptions[id].callback)
-                        _this.subscriptions[id].callback(err);
-                });
+            try {
+                result = JSON.parse(result);
+            } catch(e) {
+                error = errors.InvalidResponse(request.responseText);
             }
-        });
+
+            callback(error, result);
+        }
+    };
+
+    try {
+        request.send(JSON.stringify(payload));
+    } catch(error) {
+        callback(errors.InvalidConnection(this.host));
     }
 };
 
 /**
- * Should be called to reset the polling mechanism of the request manager
+ * Synchronously tries to make Http request
  *
- * @method reset
+ * @method isConnected
+ * @return {Boolean} returns true if request haven't failed. Otherwise false
  */
-RequestManager.prototype.reset = function (keepIsSyncing) {
-    var _this = this;
-
-
-    // uninstall all subscriptions
-    Object.keys(this.subscriptions).forEach(function(id){
-        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
-            _this.removeSubscription(id);
-    });
-
-
-    //  reset notification callbacks etc.
-    if(this.provider.reset)
-        this.provider.reset();
+HttpProvider.prototype.isConnected = function() {
+    try {
+        this.sendSync({
+            id: 9999999999,
+            jsonrpc: '2.0',
+            method: 'net_listening',
+            params: []
+        });
+        return true;
+    } catch(e) {
+        return false;
+    }
 };
 
-module.exports = RequestManager;
-
-},{"../utils/utils":20,"./errors":25,"./jsonrpc":32}],42:[function(require,module,exports){
+module.exports = HttpProvider;
 
 
-var Settings = function () {
-    this.defaultBlock = 'latest';
-    this.defaultAccount = undefined;
-};
-
-module.exports = Settings;
-
-
-},{}],43:[function(require,module,exports){
+},{"../errors":25,"xmlhttprequest":17}],40:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6193,415 +5667,336 @@ module.exports = Settings;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file subscription.js
- *
+/** @file ipcprovider.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethdev.com>
  * @date 2015
  */
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
-var EventEmitter = require('eventemitter3');
+"use strict";
+
+var utils = require('../../utils/utils');
+var errors = require('../errors');
 
 
-var Subscription = function (options) {
-    var emitter = new EventEmitter();
-    this.id = null;
-    this.callback = null;
-    this._reconnectIntervalId = null;
-
-    this.options = {
-        subscription: options.subscription,
-        subscribeMethod: options.subscribeMethod,
-        unsubscribeMethod: options.unsubscribeMethod,
-        requestManager: options.requestManager
-    };
-
-
-    // attach event emitter functions
-    this.emit = emitter.emit;
-    this.on = emitter.on;
-    this.once = emitter.once;
-    this.off = emitter.off;
-    this.listeners = emitter.listeners;
-    this.listenerCount = emitter.listenerCount;
-    this.addListener = emitter.addListener;
-    this.removeListener = emitter.removeListener;
-    this.removeAllListeners = emitter.removeAllListeners;
-    this.setMaxListeners = emitter.setMaxListeners;
-    this.getMaxListeners = emitter.getMaxListeners;
-};
-
-
-/**
- * Should be used to extract callback from array of arguments. Modifies input param
- *
- * @method extractCallback
- * @param {Array} arguments
- * @return {Function|Null} callback, if exists
- */
-
-Subscription.prototype._extractCallback = function (args) {
-    if (utils.isFunction(args[args.length - 1])) {
-        return args.pop(); // modify the args array!
-    }
-};
-
-/**
- * Should be called to check if the number of arguments is correct
- *
- * @method validateArgs
- * @param {Array} arguments
- * @throws {Error} if it is not
- */
-
-Subscription.prototype._validateArgs = function (args) {
-    var subscription = this.options.subscription;
-
-    if(!subscription)
-        subscription = {};
-
-    if(!subscription.params)
-        subscription.params = 0;
-
-    if (args.length !== subscription.params + 1) {
-        throw errors.InvalidNumberOfParams();
-    }
-};
-
-/**
- * Should be called to format input args of method
- *
- * @method formatInput
- * @param {Array}
- * @return {Array}
- */
-
-Subscription.prototype._formatInput = function (args) {
-    var subscription = this.options.subscription;
-
-    if (!subscription || !subscription.inputFormatter) {
-        return args;
-    }
-
-    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
-        return formatter ? formatter(args[index+1]) : args[index+1];
-    });
-    formattedArgs.unshift(args[0]);
-
-    return formattedArgs;
-};
-
-/**
- * Should be called to format output(result) of method
- *
- * @method formatOutput
- * @param {Object}
- * @return {Object}
- */
-
-Subscription.prototype._formatOutput = function (result) {
-    var subscription = this.options.subscription;
-
-    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
-};
-
-/**
- * Should create payload from given input args
- *
- * @method toPayload
- * @param {Array} args
- * @return {Object}
- */
-Subscription.prototype._toPayload = function (args) {
-    this.callback = this._extractCallback(args);
-    var params = this._formatInput(args);
-    this._validateArgs(params);
-
-    return {
-        method: this.options.subscribeMethod,
-        params: params
-    };
-};
-
-/**
- * Unsubscribes and clears callbacks
- *
- * @method unsubscribe
- * @return {Object}
- */
-Subscription.prototype.unsubscribe = function(callback) {
-    this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
-    this.options.requestManager.removeSubscription(this.id, callback);
-    this.id = null;
-};
-
-/**
- * Subscribes and watches for changes
- *
- * @method subscribe
- * @param {String} the subscription
- * @param {Object} the options object with address topics and fromBlock
- * @return {Object}
- */
-Subscription.prototype.subscribe = function() {
+var IpcProvider = function (path, net) {
     var _this = this;
-    var args = arguments;
-    var payload = this._toPayload(Array.prototype.slice.call(arguments));
+    this.responseCallbacks = {};
+    this.notificationCallbacks = [];
+    this.path = path;
 
-    // throw error, if provider doesnt support subscriptions
-    if(!this.options.requestManager.provider.on)
-        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
+    this.connection = net.connect({path: this.path});
 
-    // store the params in the options object
-    this.options.params = payload.params[1];
+    this.addDefaultEvents();
 
-    // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
-        // send the subscription request
-        this.options.requestManager.sendAsync({
-            method: 'eth_getLogs',
-            params: [payload.params[1]]
-        }, function (err, logs) {
-            if(!err) {
-                logs.forEach(function(log){
-                    var output = _this._formatOutput(log);
-                    _this.callback(null, output, _this);
-                    _this.emit('data', output);
+
+    // LISTEN FOR CONNECTION RESPONSES
+    this.connection.on('data', function(data) {
+        /*jshint maxcomplexity: 6 */
+
+        _this._parseResponse(data.toString()).forEach(function(result){
+
+            var id = null;
+
+            // get the id which matches the returned id
+            if(utils.isArray(result)) {
+                result.forEach(function(load){
+                    if(_this.responseCallbacks[load.id])
+                        id = load.id;
                 });
             } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
+                id = result.id;
             }
-        });
-    }
 
-    // create subscription
-    if (_this.callback) {
-
-        this.options.requestManager.sendAsync(payload, function (err, result) {
-            if(!err && result) {
-                _this.id = result;
-
-                // call callback on notifications
-                _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
-
-                    // TODO remove once its fixed in geth
-                    if(utils.isArray(result))
-                        result = result[0];
-
-                    var output = _this._formatOutput(result);
-
-                    _this.callback(err, output, _this);
-
-                    if (!err) {
-                        if(output.removed)
-                            _this.emit('changed', output);
-                        else
-                            _this.emit('data', output);
-                    } else {
-                        // unsubscribe, but keep listeners
-                        _this.options.requestManager.removeSubscription(_this.id);
-
-                        // re-subscribe, if connection fails
-                        if(_this.options.requestManager.provider.once) {
-                            _this._reconnectIntervalId = setInterval(function () {
-                                console.log('reconnect')
-                                _this.options.requestManager.provider.reconnect();
-                            }, 500);
-
-                            _this.options.requestManager.provider.once('connect', function () {
-                                clearInterval(_this._reconnectIntervalId);
-                                _this.subscribe.apply(_this, args);
-                            });
-                        }
-                        _this.emit('error', err);
-                    }
-
+            // notification
+            if(!id && result.method === 'eth_subscription') {
+                _this.notificationCallbacks.forEach(function(callback){
+                    if(utils.isFunction(callback))
+                        callback(null, result);
                 });
-            } else {
-                _this.callback(err, null, _this);
+
+            // fire the callback
+            } else if(_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](null, result);
+                delete _this.responseCallbacks[id];
             }
         });
-
-        // return an object to cancel the subscription
-        return this;
-
-    } else
-        throw new Error('Subscriptions require a callback as the last parameter!');
+    });
 };
 
-module.exports = Subscription;
+/**
+Will add the error and end event to timeout existing calls
 
-},{"../utils/utils":20,"./errors":25,"eventemitter3":83}],44:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+@method addDefaultEvents
 */
-/** @file subscriptions.js
- *
- * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+IpcProvider.prototype.addDefaultEvents = function(){
+    var _this = this;
+
+    this.connection.on('connect', function(){
+    });
+
+    this.connection.on('error', function(){
+        _this._timeout();
+    });
+
+    this.connection.on('end', function(e){
+        _this._timeout();
+
+        console.log('->>ENENENENENED');
+
+        // inform notifications
+        _this.notificationCallbacks.forEach(function (callback) {
+            if (utils.isFunction(callback))
+                callback(new Error('IPC socket connection closed'));
+        });
+    });
+
+    this.connection.on('timeout', function(){
+        _this._timeout();
+    });
+};
+
+/**
+Will parse the response and make an array out of it.
+
+@method _parseResponse
+@param {String} data
+*/
+IpcProvider.prototype._parseResponse = function(data) {
+    var _this = this,
+        returnValues = [];
+
+    // DE-CHUNKER
+    var dechunkedData = data
+        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
+        .split('|--|');
+
+    dechunkedData.forEach(function(data){
+
+        // prepend the last chunk
+        if(_this.lastChunk)
+            data = _this.lastChunk + data;
+
+        var result = null;
+
+        try {
+            result = JSON.parse(data);
+
+        } catch(e) {
+
+            _this.lastChunk = data;
+
+            // start timeout to cancel all requests
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunkTimeout = setTimeout(function(){
+                _this._timeout();
+                throw errors.InvalidResponse(data);
+            }, 1000 * 15);
+
+            return;
+        }
+
+        // cancel timeout and set chunk to null
+        clearTimeout(_this.lastChunkTimeout);
+        _this.lastChunk = null;
+
+        if(result)
+            returnValues.push(result);
+    });
+
+    return returnValues;
+};
+
+
+/**
+Get the adds a callback to the responseCallbacks object,
+which will be called if a response matching the response Id will arrive.
+
+@method _addResponseCallback
+*/
+IpcProvider.prototype._addResponseCallback = function(payload, callback) {
+    var id = payload.id || payload[0].id;
+    var method = payload.method || payload[0].method;
+
+    this.responseCallbacks[id] = callback;
+    this.responseCallbacks[id].method = method;
+};
+
+/**
+Timeout all requests when the end/error event is fired
+
+@method _timeout
+*/
+IpcProvider.prototype._timeout = function() {
+    for(var key in this.responseCallbacks) {
+        if(this.responseCallbacks.hasOwnProperty(key)){
+            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
+            delete this.responseCallbacks[key];
+        }
+    }
+};
+
+/**
+ Try to reconnect
+
+ @method reconnect
  */
-
-var Subscription = require('./subscription.js');
-
-
-var Subscriptions = function (options) {
-    this.name = options.name;
-    this.subscribe = options.subscribe;
-    this.unsubscribe = options.unsubscribe;
-    this.subscriptions = options.subscriptions || {};
-    this.requestManager = null;
+IpcProvider.prototype.reconnect = function() {
+    this.connection.connect({path: this.path});
 };
 
+/**
+Check if the current connection is still valid.
 
-Subscriptions.prototype.setRequestManager = function (rm) {
-    this.requestManager = rm;
+@method isConnected
+*/
+IpcProvider.prototype.isConnected = function() {
+    var _this = this;
+
+    // try reconnect, when connection is gone
+    if(!_this.connection.writable)
+        _this.connection.connect({path: _this.path});
+
+    return !!this.connection.writable;
 };
 
+IpcProvider.prototype.sendSync = function (payload) {
 
-Subscriptions.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
-    func.call = this.call; // TODO!!! that's ugly. filter.js uses it
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        obj[name[0]][name[1]] = func;
+    if(this.connection.writeSync) {
+        var result;
+
+        // try reconnect, when connection is gone
+        if(!this.connection.writable)
+            this.connection.connect({path: this.path});
+
+        var data = this.connection.writeSync(JSON.stringify(payload));
+
+        try {
+            result = JSON.parse(data);
+        } catch(e) {
+            throw errors.InvalidResponse(data);
+        }
+
+        return result;
+
     } else {
-        obj[name[0]] = func; 
+        throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
     }
 };
 
+IpcProvider.prototype.send = function (payload, callback) {
+    // try reconnect, when connection is gone
+    if(!this.connection.writable)
+        this.connection.connect({path: this.path});
 
-Subscriptions.prototype.buildCall = function() {
+
+    this.connection.write(JSON.stringify(payload));
+    this._addResponseCallback(payload, callback);
+};
+
+/**
+Subscribes to provider events.provider
+
+@method on
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.on = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.push(callback);
+            break;
+
+        default:
+            this.connection.on(type, callback);
+            break;
+    }
+};
+
+/**
+ Subscribes to provider events.provider
+
+ @method on
+ @param {String} type    'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+IpcProvider.prototype.once = function (type, callback) {
+
+    if(typeof callback !== 'function')
+        throw new Error('The second parameter callback must be a function.');
+
+    this.connection.once(type, callback);
+};
+
+/**
+Removes event listener
+
+@method removeListener
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
+@param {Function} callback   the callback to call
+*/
+IpcProvider.prototype.removeListener = function (type, callback) {
     var _this = this;
 
-    return function(){
-        var subscription = new Subscription({
-            subscription: _this.subscriptions[arguments[0]],
-            subscribeMethod: _this.subscribe,
-            unsubscribeMethod: _this.unsubscribe,
-            requestManager: _this.requestManager
-        });
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks.forEach(function(cb, index){
+                if(cb === callback)
+                    _this.notificationCallbacks.splice(index, 1);
+            });
+            break;
 
-        return subscription.subscribe.apply(subscription, arguments);
-    };
+        default:
+            this.connection.removeListener(type, callback);
+            break;
+    }
 };
 
-module.exports = Subscriptions;
+/**
+Removes all event listeners
 
-
-},{"./subscription.js":43}],45:[function(require,module,exports){
-/*
-    This file is part of web3.js.
-
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+@method removeAllListeners
+@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
 */
-/** 
- * @file transfer.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
- */
+IpcProvider.prototype.removeAllListeners = function (type) {
+    switch(type){
+        case 'notification':
+            this.notificationCallbacks = [];
+            break;
 
-var Iban = require('./iban');
-var exchangeAbi = require('../contracts/SmartExchange.json');
-
-/**
- * Should be used to make Iban transfer
- *
- * @method transfer
- * @param {String} from
- * @param {String} to iban
- * @param {Value} value to be tranfered
- * @param {Function} callback, callback
- */
-var transfer = function (eth, from, to, value, callback) {
-    var iban = new Iban(to); 
-    if (!iban.isValid()) {
-        throw new Error('invalid iban address');
+        default:
+            this.connection.removeAllListeners(type);
+            break;
     }
-
-    if (iban.isDirect()) {
-        return transferToAddress(eth, from, iban.address(), value, callback);
-    }
-    
-    if (!callback) {
-        var address = eth.icapNamereg().addr(iban.institution());
-        return deposit(eth, from, address, value, iban.client());
-    }
-
-    eth.icapNamereg().addr(iban.institution(), function (err, address) {
-        return deposit(eth, from, address, value, iban.client(), callback);
-    });
-    
 };
 
 /**
- * Should be used to transfer funds to certain address
- *
- * @method transferToAddress
- * @param {String} from
- * @param {String} to
- * @param {Value} value to be tranfered
- * @param {Function} callback, callback
- */
-var transferToAddress = function (eth, from, to, value, callback) {
-    return eth.sendTransaction({
-        address: to,
-        from: from,
-        value: value
-    }, callback);
+Resets the providers, clears all callbacks
+
+@method reset
+*/
+IpcProvider.prototype.reset = function () {
+    this._timeout();
+    this.notificationCallbacks = [];
+
+    this.connection.removeAllListeners('error');
+    this.connection.removeAllListeners('end');
+    this.connection.removeAllListeners('timeout');
+
+    this.addDefaultEvents();
 };
 
-/**
- * Should be used to deposit funds to generic Exchange contract (must implement deposit(bytes32) method!)
- *
- * @method deposit
- * @param {String} from
- * @param {String} to
- * @param {Value} value to be transfered
- * @param {String} client unique identifier
- * @param {Function} callback, callback
- */
-var deposit = function (eth, from, to, value, client, callback) {
-    var abi = exchangeAbi;
-    return eth.contract(abi).at(to).deposit(client, {
-        from: from,
-        value: value
-    }, callback);
-};
-
-module.exports = transfer;
+module.exports = IpcProvider;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":30}],46:[function(require,module,exports){
+},{"../../utils/utils":20,"../errors":25}],41:[function(require,module,exports){
 /*
  This file is part of web3.js.
 
@@ -6626,8 +6021,8 @@ module.exports = transfer;
 
 "use strict";
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
+var utils = require('../../utils/utils');
+var errors = require('../errors');
 // var W3CWebSocket = require('websocket').w3cwebsocket;
 // Default connection ws://localhost:8546
 
@@ -6813,11 +6208,11 @@ WebsocketProvider.prototype.isConnected = function() {
     // return !!this.connection.writable;
 };
 
-WebsocketProvider.prototype.send = function (payload) {
+WebsocketProvider.prototype.sendSync = function (payload) {
     throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the Websocket provider.');
 };
 
-WebsocketProvider.prototype.sendAsync = function (payload, callback) {
+WebsocketProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     // if(!this.connection.writable)
     //     this.connection.connect({path: this.path});
@@ -6925,7 +6320,667 @@ WebsocketProvider.prototype.reset = function () {
 module.exports = WebsocketProvider;
 
 
-},{"../utils/utils":20,"./errors":25}],47:[function(require,module,exports){
+},{"../../utils/utils":20,"../errors":25}],42:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file requestmanager.js
+ * @author Jeffrey Wilcke <jeff@ethdev.com>
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marian Oancea <marian@ethdev.com>
+ * @author Fabian Vogelsteller <fabian@ethdev.com>
+ * @author Gav Wood <g@ethdev.com>
+ * @date 2014
+ */
+
+var Jsonrpc = require('./jsonrpc');
+var utils = require('../utils/utils');
+var errors = require('./errors');
+
+/**
+ * It's responsible for passing messages to providers
+ * It's also responsible for polling the ethereum node for incoming messages
+ * Default poll timeout is 1 second
+ * Singleton
+ */
+var RequestManager = function (provider) {
+    this.setProvider(provider);
+    this.subscriptions = {};
+};
+
+/**
+ * Should be used to synchronously send request
+ *
+ * @method send
+ * @param {Object} data
+ * @return {Object}
+ */
+RequestManager.prototype.sendSync = function (data) {
+    if (!this.provider) {
+        console.error(errors.InvalidProvider());
+        return null;
+    }
+
+    var payload = Jsonrpc.toPayload(data.method, data.params);
+    var result = this.provider.sendSync(payload);
+
+    if (!Jsonrpc.isValidResponse(result)) {
+        throw errors.InvalidResponse(result);
+    }
+
+    return result.result;
+};
+
+/**
+ * Should be used to asynchronously send request
+ *
+ * @method sendAsync
+ * @param {Object} data
+ * @param {Function} callback
+ */
+RequestManager.prototype.send = function (data, callback) {
+    callback = callback || function(){};
+
+    if (!this.provider) {
+        return callback(errors.InvalidProvider());
+    }
+
+    var payload = Jsonrpc.toPayload(data.method, data.params);
+    this.provider.send(payload, function (err, result) {
+        if(payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));;
+
+        if (err) {
+            return callback(err);
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
+            return callback(errors.InvalidResponse(result));
+        }
+
+        callback(null, result.result);
+    });
+};
+
+/**
+ * Should be called to asynchronously send batch request
+ *
+ * @method sendBatch
+ * @param {Array} batch data
+ * @param {Function} callback
+ */
+RequestManager.prototype.sendBatch = function (data, callback) {
+    if (!this.provider) {
+        return callback(errors.InvalidProvider());
+    }
+
+    var payload = Jsonrpc.toBatchPayload(data);
+    this.provider.send(payload, function (err, results) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (!utils.isArray(results)) {
+            return callback(errors.InvalidResponse(results));
+        }
+
+        callback(err, results);
+    });
+};
+
+
+/**
+ * Waits for notifications
+ *
+ * @method addSubscription
+ * @param {String} id           the subscription id
+ * @param {String} name         the subscription name
+ * @param {String} type         the subscription namespace (eth, personal, etc)
+ * @param {Function} callback   the callback to call for incoming notifications
+ */
+RequestManager.prototype.addSubscription = function (id, name, type, callback) {
+    if(this.provider.on) {
+        this.subscriptions[id] = {
+            callback: callback,
+            type: type,
+            name: name
+        };
+
+    } else {
+        throw new Error('This provider doesn\'t support subscriptions', this.provider);
+    }
+};
+
+/**
+ * Waits for notifications
+ *
+ * @method removeSubscription
+ * @param {String} id           the subscription id
+ * @param {Function} callback   fired once the subscription is removed
+ */
+RequestManager.prototype.removeSubscription = function (id, callback) {
+    var _this = this;
+
+    if(this.subscriptions[id]) {
+
+        this.send({
+            method: this.subscriptions[id].type + '_unsubscribe',
+            params: [id]
+        }, callback);
+
+        // remove subscription
+        delete _this.subscriptions[id];
+    }
+};
+
+/**
+ * Should be used to set provider of request manager
+ *
+ * @method setProvider
+ * @param {Object}
+ */
+RequestManager.prototype.setProvider = function (p) {
+    var _this = this;
+
+    // reset the old one before changing
+    if(this.provider)
+        this.reset();
+
+    this.provider = p;
+
+    // listen to incoming notifications
+    if(this.provider && this.provider.on) {
+        this.provider.on('notification', function requestManagerNotification(err, result){
+            if(!err) {
+                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
+                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
+            } else {
+
+                Object.keys(_this.subscriptions).forEach(function(id){
+                    if(_this.subscriptions[id].callback)
+                        _this.subscriptions[id].callback(err);
+                });
+            }
+        });
+    }
+};
+
+/**
+ * Should be called to reset the polling mechanism of the request manager
+ *
+ * @method reset
+ */
+RequestManager.prototype.reset = function (keepIsSyncing) {
+    var _this = this;
+
+
+    // uninstall all subscriptions
+    Object.keys(this.subscriptions).forEach(function(id){
+        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
+            _this.removeSubscription(id);
+    });
+
+
+    //  reset notification callbacks etc.
+    if(this.provider.reset)
+        this.provider.reset();
+};
+
+module.exports = RequestManager;
+
+},{"../utils/utils":20,"./errors":25,"./jsonrpc":30}],43:[function(require,module,exports){
+
+
+var Settings = function () {
+    this.defaultBlock = 'latest';
+    this.defaultAccount = undefined;
+};
+
+module.exports = Settings;
+
+
+},{}],44:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file subscription.js
+ *
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var utils = require('../utils/utils');
+var errors = require('./errors');
+var EventEmitter = require('eventemitter3');
+
+
+var Subscription = function (options) {
+    var emitter = new EventEmitter();
+    this.id = null;
+    this.callback = null;
+    this._reconnectIntervalId = null;
+
+    this.options = {
+        subscription: options.subscription,
+        subscribeMethod: options.subscribeMethod,
+        unsubscribeMethod: options.unsubscribeMethod,
+        requestManager: options.requestManager
+    };
+
+
+    // attach event emitter functions
+    this.emit = emitter.emit;
+    this.on = emitter.on;
+    this.once = emitter.once;
+    this.off = emitter.off;
+    this.listeners = emitter.listeners;
+    this.listenerCount = emitter.listenerCount;
+    this.addListener = emitter.addListener;
+    this.removeListener = emitter.removeListener;
+    this.removeAllListeners = emitter.removeAllListeners;
+    this.setMaxListeners = emitter.setMaxListeners;
+    this.getMaxListeners = emitter.getMaxListeners;
+};
+
+
+/**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
+
+Subscription.prototype._extractCallback = function (args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
+
+/**
+ * Should be called to check if the number of arguments is correct
+ *
+ * @method validateArgs
+ * @param {Array} arguments
+ * @throws {Error} if it is not
+ */
+
+Subscription.prototype._validateArgs = function (args) {
+    var subscription = this.options.subscription;
+
+    if(!subscription)
+        subscription = {};
+
+    if(!subscription.params)
+        subscription.params = 0;
+
+    if (args.length !== subscription.params + 1) {
+        throw errors.InvalidNumberOfParams();
+    }
+};
+
+/**
+ * Should be called to format input args of method
+ *
+ * @method formatInput
+ * @param {Array}
+ * @return {Array}
+ */
+
+Subscription.prototype._formatInput = function (args) {
+    var subscription = this.options.subscription;
+
+    if (!subscription || !subscription.inputFormatter) {
+        return args;
+    }
+
+    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
+        return formatter ? formatter(args[index+1]) : args[index+1];
+    });
+    formattedArgs.unshift(args[0]);
+
+    return formattedArgs;
+};
+
+/**
+ * Should be called to format output(result) of method
+ *
+ * @method formatOutput
+ * @param {Object}
+ * @return {Object}
+ */
+
+Subscription.prototype._formatOutput = function (result) {
+    var subscription = this.options.subscription;
+
+    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
+};
+
+/**
+ * Should create payload from given input args
+ *
+ * @method toPayload
+ * @param {Array} args
+ * @return {Object}
+ */
+Subscription.prototype._toPayload = function (args) {
+    this.callback = this._extractCallback(args);
+    var params = this._formatInput(args);
+    this._validateArgs(params);
+
+    return {
+        method: this.options.subscribeMethod,
+        params: params
+    };
+};
+
+/**
+ * Unsubscribes and clears callbacks
+ *
+ * @method unsubscribe
+ * @return {Object}
+ */
+Subscription.prototype.unsubscribe = function(callback) {
+    this.removeAllListeners();
+    clearInterval(this._reconnectIntervalId);
+    this.options.requestManager.removeSubscription(this.id, callback);
+    this.id = null;
+};
+
+/**
+ * Subscribes and watches for changes
+ *
+ * @method subscribe
+ * @param {String} the subscription
+ * @param {Object} the options object with address topics and fromBlock
+ * @return {Object}
+ */
+Subscription.prototype.subscribe = function() {
+    var _this = this;
+    var args = arguments;
+    var payload = this._toPayload(Array.prototype.slice.call(arguments));
+
+    // throw error, if provider doesnt support subscriptions
+    if(!this.options.requestManager.provider.on)
+        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
+
+    // store the params in the options object
+    this.options.params = payload.params[1];
+
+    // get past logs, if fromBlock is available
+    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+        // send the subscription request
+        this.options.requestManager.send({
+            method: 'eth_getLogs',
+            params: [payload.params[1]]
+        }, function (err, logs) {
+            if(!err) {
+                logs.forEach(function(log){
+                    var output = _this._formatOutput(log);
+                    _this.callback(null, output, _this);
+                    _this.emit('data', output);
+                });
+            } else {
+                _this.callback(err, null, _this);
+                _this.emit('error', err);
+            }
+        });
+    }
+
+    // create subscription
+    if (_this.callback) {
+
+        if(typeof payload.params[1] === 'object')
+            delete payload.params[1].fromBlock;
+
+        this.options.requestManager.send(payload, function (err, result) {
+            if(!err && result) {
+                _this.id = result;
+
+                // call callback on notifications
+                _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
+
+                    // TODO remove once its fixed in geth
+                    if(utils.isArray(result))
+                        result = result[0];
+
+                    var output = _this._formatOutput(result);
+
+                    _this.callback(err, output, _this);
+
+                    if (!err) {
+                        if(output.removed)
+                            _this.emit('changed', output);
+                        else
+                            _this.emit('data', output);
+                    } else {
+                        // unsubscribe, but keep listeners
+                        _this.options.requestManager.removeSubscription(_this.id);
+
+                        // re-subscribe, if connection fails
+                        if(_this.options.requestManager.provider.once) {
+                            _this._reconnectIntervalId = setInterval(function () {
+                                console.log('reconnect')
+                                _this.options.requestManager.provider.reconnect();
+                            }, 500);
+
+                            _this.options.requestManager.provider.once('connect', function () {
+                                clearInterval(_this._reconnectIntervalId);
+                                _this.subscribe.apply(_this, args);
+                            });
+                        }
+                        _this.emit('error', err);
+                    }
+
+                });
+            } else {
+                _this.callback(err, null, _this);
+            }
+        });
+
+        // return an object to cancel the subscription
+        return this;
+
+    } else
+        throw new Error('Subscriptions require a callback as the last parameter!');
+};
+
+module.exports = Subscription;
+
+},{"../utils/utils":20,"./errors":25,"eventemitter3":83}],45:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file subscriptions.js
+ *
+ * @authors:
+ *   Fabian Vogelsteller <fabian@ethdev.com>
+ * @date 2015
+ */
+
+var Subscription = require('./subscription.js');
+
+
+var Subscriptions = function (options) {
+    this.name = options.name;
+    this.subscribe = options.subscribe;
+    this.unsubscribe = options.unsubscribe;
+    this.subscriptions = options.subscriptions || {};
+    this.requestManager = null;
+};
+
+
+Subscriptions.prototype.setRequestManager = function (rm) {
+    this.requestManager = rm;
+};
+
+
+Subscriptions.prototype.attachToObject = function (obj) {
+    var func = this.buildCall();
+    func.call = this.call; // TODO!!! that's ugly. filter.js uses it
+    var name = this.name.split('.');
+    if (name.length > 1) {
+        obj[name[0]] = obj[name[0]] || {};
+        obj[name[0]][name[1]] = func;
+    } else {
+        obj[name[0]] = func; 
+    }
+};
+
+
+Subscriptions.prototype.buildCall = function() {
+    var _this = this;
+
+    return function(){
+        var subscription = new Subscription({
+            subscription: _this.subscriptions[arguments[0]],
+            subscribeMethod: _this.subscribe,
+            unsubscribeMethod: _this.unsubscribe,
+            requestManager: _this.requestManager
+        });
+
+        return subscription.subscribe.apply(subscription, arguments);
+    };
+};
+
+module.exports = Subscriptions;
+
+
+},{"./subscription.js":44}],46:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** 
+ * @file transfer.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var Iban = require('./iban');
+var exchangeAbi = require('../contracts/SmartExchange.json');
+
+/**
+ * Should be used to make Iban transfer
+ *
+ * @method transfer
+ * @param {String} from
+ * @param {String} to iban
+ * @param {Value} value to be tranfered
+ * @param {Function} callback, callback
+ */
+var transfer = function (eth, from, to, value, callback) {
+    var iban = new Iban(to); 
+    if (!iban.isValid()) {
+        throw new Error('invalid iban address');
+    }
+
+    if (iban.isDirect()) {
+        return transferToAddress(eth, from, iban.address(), value, callback);
+    }
+    
+    if (!callback) {
+        var address = eth.icapNamereg().addr(iban.institution());
+        return deposit(eth, from, address, value, iban.client());
+    }
+
+    eth.icapNamereg().addr(iban.institution(), function (err, address) {
+        return deposit(eth, from, address, value, iban.client(), callback);
+    });
+    
+};
+
+/**
+ * Should be used to transfer funds to certain address
+ *
+ * @method transferToAddress
+ * @param {String} from
+ * @param {String} to
+ * @param {Value} value to be tranfered
+ * @param {Function} callback, callback
+ */
+var transferToAddress = function (eth, from, to, value, callback) {
+    return eth.sendTransaction({
+        address: to,
+        from: from,
+        value: value
+    }, callback);
+};
+
+/**
+ * Should be used to deposit funds to generic Exchange contract (must implement deposit(bytes32) method!)
+ *
+ * @method deposit
+ * @param {String} from
+ * @param {String} to
+ * @param {Value} value to be transfered
+ * @param {String} client unique identifier
+ * @param {Function} callback, callback
+ */
+var deposit = function (eth, from, to, value, client, callback) {
+    var abi = exchangeAbi;
+    return eth.contract(abi).at(to).deposit(client, {
+        from: from,
+        value: value
+    }, callback);
+};
+
+module.exports = transfer;
+
+
+},{"../contracts/SmartExchange.json":3,"./iban":29}],47:[function(require,module,exports){
 /* @preserve
  * The MIT License (MIT)
  * 
@@ -6951,7 +7006,7 @@ module.exports = WebsocketProvider;
  * 
  */
 /**
- * bluebird build version 3.3.1
+ * bluebird build version 3.4.6
  * Features enabled: core, race, call_get, generators, map, nodeify, promisify, props, reduce, settle, some, using, timers, filter, any, each
 */
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.Promise=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof _dereq_=="function"&&_dereq_;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof _dereq_=="function"&&_dereq_;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
@@ -6986,6 +7041,7 @@ var Queue = _dereq_("./queue");
 var util = _dereq_("./util");
 
 function Async() {
+    this._customScheduler = false;
     this._isTickUsed = false;
     this._lateQueue = new Queue(16);
     this._normalQueue = new Queue(16);
@@ -6997,6 +7053,17 @@ function Async() {
     };
     this._schedule = schedule;
 }
+
+Async.prototype.setScheduler = function(fn) {
+    var prev = this._schedule;
+    this._schedule = fn;
+    this._customScheduler = true;
+    return prev;
+};
+
+Async.prototype.hasCustomScheduler = function() {
+    return this._customScheduler;
+};
 
 Async.prototype.enableTrampoline = function() {
     this._trampolineEnabled = true;
@@ -7015,7 +7082,8 @@ Async.prototype.haveItemsQueued = function () {
 
 Async.prototype.fatalError = function(e, isNode) {
     if (isNode) {
-        process.stderr.write("Fatal " + (e instanceof Error ? e.stack : e));
+        process.stderr.write("Fatal " + (e instanceof Error ? e.stack : e) +
+            "\n");
         process.exit(2);
     } else {
         this.throwLater(e);
@@ -7352,7 +7420,7 @@ Promise.prototype["break"] = Promise.prototype.cancel = function() {
 
     var promise = this;
     var child = promise;
-    while (promise.isCancellable()) {
+    while (promise._isCancellable()) {
         if (!promise._cancelBy(child)) {
             if (child._isFollowing()) {
                 child._followee().cancel();
@@ -7363,7 +7431,7 @@ Promise.prototype["break"] = Promise.prototype.cancel = function() {
         }
 
         var parent = promise._cancellationParent;
-        if (parent == null || !parent.isCancellable()) {
+        if (parent == null || !parent._isCancellable()) {
             if (promise._isFollowing()) {
                 promise._followee().cancel();
             } else {
@@ -7372,6 +7440,7 @@ Promise.prototype["break"] = Promise.prototype.cancel = function() {
             break;
         } else {
             if (promise._isFollowing()) promise._followee().cancel();
+            promise._setWillBeCancelled();
             child = promise;
             promise = parent;
         }
@@ -7409,8 +7478,7 @@ Promise.prototype._cancelBranched = function() {
 };
 
 Promise.prototype._cancel = function() {
-    if (!this.isCancellable()) return;
-
+    if (!this._isCancellable()) return;
     this._setCancelled();
     async.invoke(this._cancelPromises, this, undefined);
 };
@@ -7421,6 +7489,10 @@ Promise.prototype._cancelPromises = function() {
 
 Promise.prototype._unsetOnCancel = function() {
     this._onCancelField = undefined;
+};
+
+Promise.prototype._isCancellable = function() {
+    return this.isPending() && !this._isCancelled();
 };
 
 Promise.prototype.isCancellable = function() {
@@ -7454,7 +7526,7 @@ Promise.prototype._invokeOnCancel = function() {
 };
 
 Promise.prototype._invokeInternalOnCancel = function() {
-    if (this.isCancellable()) {
+    if (this._isCancellable()) {
         this._doInvokeOnCancel(this._onCancel(), true);
         this._unsetOnCancel();
     }
@@ -7593,6 +7665,8 @@ var unhandledRejectionHandled;
 var possiblyUnhandledRejection;
 var bluebirdFramePattern =
     /[\\\/]bluebird[\\\/]js[\\\/](release|debug|instrumented)/;
+var nodeFramePattern = /\((?:timers\.js):\d+:\d+\)/;
+var parseLinePattern = /[\/<\(](.+?):(\d+):(\d+)\)?\s*$/;
 var stackFramePattern = null;
 var formatStack = null;
 var indentStackFrames = false;
@@ -7680,14 +7754,16 @@ Promise.prototype._warn = function(message, shouldUseOwnTrace, promise) {
 Promise.onPossiblyUnhandledRejection = function (fn) {
     var domain = getDomain();
     possiblyUnhandledRejection =
-        typeof fn === "function" ? (domain === null ? fn : domain.bind(fn))
+        typeof fn === "function" ? (domain === null ?
+                                            fn : util.domainBind(domain, fn))
                                  : undefined;
 };
 
 Promise.onUnhandledRejectionHandled = function (fn) {
     var domain = getDomain();
     unhandledRejectionHandled =
-        typeof fn === "function" ? (domain === null ? fn : domain.bind(fn))
+        typeof fn === "function" ? (domain === null ?
+                                            fn : util.domainBind(domain, fn))
                                  : undefined;
 };
 
@@ -7723,14 +7799,37 @@ Promise.hasLongStackTraces = function () {
 
 var fireDomEvent = (function() {
     try {
-        var event = document.createEvent("CustomEvent");
-        event.initCustomEvent("testingtheevent", false, true, {});
-        util.global.dispatchEvent(event);
-        return function(name, event) {
-            var domEvent = document.createEvent("CustomEvent");
-            domEvent.initCustomEvent(name.toLowerCase(), false, true, event);
-            return !util.global.dispatchEvent(domEvent);
-        };
+        if (typeof CustomEvent === "function") {
+            var event = new CustomEvent("CustomEvent");
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = new CustomEvent(name.toLowerCase(), {
+                    detail: event,
+                    cancelable: true
+                });
+                return !util.global.dispatchEvent(domEvent);
+            };
+        } else if (typeof Event === "function") {
+            var event = new Event("CustomEvent");
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = new Event(name.toLowerCase(), {
+                    cancelable: true
+                });
+                domEvent.detail = event;
+                return !util.global.dispatchEvent(domEvent);
+            };
+        } else {
+            var event = document.createEvent("CustomEvent");
+            event.initCustomEvent("testingtheevent", false, true, {});
+            util.global.dispatchEvent(event);
+            return function(name, event) {
+                var domEvent = document.createEvent("CustomEvent");
+                domEvent.initCustomEvent(name.toLowerCase(), false, true,
+                    event);
+                return !util.global.dispatchEvent(domEvent);
+            };
+        }
     } catch (e) {}
     return function() {
         return false;
@@ -7887,7 +7986,7 @@ function cancellationExecute(executor, resolve, reject) {
 }
 
 function cancellationAttachCancellationCallback(onCancel) {
-    if (!this.isCancellable()) return this;
+    if (!this._isCancellable()) return this;
 
     var previousOnCancel = this._onCancel();
     if (previousOnCancel !== undefined) {
@@ -7975,10 +8074,44 @@ function checkForgottenReturns(returnValue, promiseCreated, name, promise,
     if (returnValue === undefined && promiseCreated !== null &&
         wForgottenReturn) {
         if (parent !== undefined && parent._returnedNonUndefined()) return;
+        if ((promise._bitField & 65535) === 0) return;
 
         if (name) name = name + " ";
+        var handlerLine = "";
+        var creatorLine = "";
+        if (promiseCreated._trace) {
+            var traceLines = promiseCreated._trace.stack.split("\n");
+            var stack = cleanStack(traceLines);
+            for (var i = stack.length - 1; i >= 0; --i) {
+                var line = stack[i];
+                if (!nodeFramePattern.test(line)) {
+                    var lineMatches = line.match(parseLinePattern);
+                    if (lineMatches) {
+                        handlerLine  = "at " + lineMatches[1] +
+                            ":" + lineMatches[2] + ":" + lineMatches[3] + " ";
+                    }
+                    break;
+                }
+            }
+
+            if (stack.length > 0) {
+                var firstUserLine = stack[0];
+                for (var i = 0; i < traceLines.length; ++i) {
+
+                    if (traceLines[i] === firstUserLine) {
+                        if (i > 0) {
+                            creatorLine = "\n" + traceLines[i - 1];
+                        }
+                        break;
+                    }
+                }
+
+            }
+        }
         var msg = "a promise was created in a " + name +
-            "handler but was not returned from it";
+            "handler " + handlerLine + "but was not returned from it, " +
+            "see http://goo.gl/rRqMUw" +
+            creatorLine;
         promise._warn(msg, true, promiseCreated);
     }
 }
@@ -8500,8 +8633,8 @@ function PromiseMapSeries(promises, fn) {
 }
 
 Promise.prototype.each = function (fn) {
-    return this.mapSeries(fn)
-            ._then(promiseAllThis, undefined, undefined, this, undefined);
+    return PromiseReduce(this, fn, INTERNAL, 0)
+              ._then(promiseAllThis, undefined, undefined, this, undefined);
 };
 
 Promise.prototype.mapSeries = function (fn) {
@@ -8509,12 +8642,13 @@ Promise.prototype.mapSeries = function (fn) {
 };
 
 Promise.each = function (promises, fn) {
-    return PromiseMapSeries(promises, fn)
-            ._then(promiseAllThis, undefined, undefined, promises, undefined);
+    return PromiseReduce(promises, fn, INTERNAL, 0)
+              ._then(promiseAllThis, undefined, undefined, promises, undefined);
 };
 
 Promise.mapSeries = PromiseMapSeries;
 };
+
 
 },{}],12:[function(_dereq_,module,exports){
 "use strict";
@@ -8792,7 +8926,7 @@ function finallyHandler(reasonOrValue) {
             var maybePromise = tryConvertToPromise(ret, promise);
             if (maybePromise instanceof Promise) {
                 if (this.cancelPromise != null) {
-                    if (maybePromise.isCancelled()) {
+                    if (maybePromise._isCancelled()) {
                         var reason =
                             new CancellationError("late cancellation observer");
                         promise._attachExtraTrace(reason);
@@ -8876,9 +9010,18 @@ function promiseFromYieldHandler(value, yieldHandlers, traceParent) {
 }
 
 function PromiseSpawn(generatorFunction, receiver, yieldHandler, stack) {
-    var promise = this._promise = new Promise(INTERNAL);
-    promise._captureStackTrace();
-    promise._setOnCancel(this);
+    if (debug.cancellation()) {
+        var internal = new Promise(INTERNAL);
+        var _finallyPromise = this._finallyPromise = new Promise(INTERNAL);
+        this._promise = internal.lastly(function() {
+            return _finallyPromise;
+        });
+        internal._captureStackTrace();
+        internal._setOnCancel(this);
+    } else {
+        var promise = this._promise = new Promise(INTERNAL);
+        promise._captureStackTrace();
+    }
     this._stack = stack;
     this._generatorFunction = generatorFunction;
     this._receiver = receiver;
@@ -8887,6 +9030,7 @@ function PromiseSpawn(generatorFunction, receiver, yieldHandler, stack) {
         ? [yieldHandler].concat(yieldHandlers)
         : yieldHandlers;
     this._yieldedPromise = null;
+    this._cancellationPhase = false;
 }
 util.inherits(PromiseSpawn, Proxyable);
 
@@ -8896,6 +9040,10 @@ PromiseSpawn.prototype._isResolved = function() {
 
 PromiseSpawn.prototype._cleanup = function() {
     this._promise = this._generator = null;
+    if (debug.cancellation() && this._finallyPromise !== null) {
+        this._finallyPromise._fulfill();
+        this._finallyPromise = null;
+    }
 };
 
 PromiseSpawn.prototype._promiseCancelled = function() {
@@ -8912,22 +9060,15 @@ PromiseSpawn.prototype._promiseCancelled = function() {
         result = tryCatch(this._generator["throw"]).call(this._generator,
                                                          reason);
         this._promise._popContext();
-        if (result === errorObj && result.e === reason) {
-            result = null;
-        }
     } else {
         this._promise._pushContext();
         result = tryCatch(this._generator["return"]).call(this._generator,
                                                           undefined);
         this._promise._popContext();
     }
-    var promise = this._promise;
-    this._cleanup();
-    if (result === errorObj) {
-        promise._rejectCallback(result.e, false);
-    } else {
-        promise.cancel();
-    }
+    this._cancellationPhase = true;
+    this._yieldedPromise = null;
+    this._continue(result);
 };
 
 PromiseSpawn.prototype._promiseFulfilled = function(value) {
@@ -8971,13 +9112,21 @@ PromiseSpawn.prototype._continue = function (result) {
     var promise = this._promise;
     if (result === errorObj) {
         this._cleanup();
-        return promise._rejectCallback(result.e, false);
+        if (this._cancellationPhase) {
+            return promise.cancel();
+        } else {
+            return promise._rejectCallback(result.e, false);
+        }
     }
 
     var value = result.value;
     if (result.done === true) {
         this._cleanup();
-        return promise._resolveCallback(value);
+        if (this._cancellationPhase) {
+            return promise.cancel();
+        } else {
+            return promise._resolveCallback(value);
+        }
     } else {
         var maybePromise = tryConvertToPromise(value, this._promise);
         if (!(maybePromise instanceof Promise)) {
@@ -9003,9 +9152,13 @@ PromiseSpawn.prototype._continue = function (result) {
             this._yieldedPromise = maybePromise;
             maybePromise._proxy(this, null);
         } else if (((bitField & 33554432) !== 0)) {
-            this._promiseFulfilled(maybePromise._value());
+            Promise._async.invoke(
+                this._promiseFulfilled, this, maybePromise._value()
+            );
         } else if (((bitField & 16777216) !== 0)) {
-            this._promiseRejected(maybePromise._reason());
+            Promise._async.invoke(
+                this._promiseRejected, this, maybePromise._reason()
+            );
         } else {
             this._promiseCancelled();
         }
@@ -9052,7 +9205,8 @@ Promise.spawn = function (generatorFunction) {
 },{"./errors":12,"./util":36}],17:[function(_dereq_,module,exports){
 "use strict";
 module.exports =
-function(Promise, PromiseArray, tryConvertToPromise, INTERNAL) {
+function(Promise, PromiseArray, tryConvertToPromise, INTERNAL, async,
+         getDomain) {
 var util = _dereq_("./util");
 var canEvaluate = util.canEvaluate;
 var tryCatch = util.tryCatch;
@@ -9094,25 +9248,35 @@ if (canEvaluate) {
         var name = "Holder$" + total;
 
 
-        var code = "return function(tryCatch, errorObj, Promise) {           \n\
+        var code = "return function(tryCatch, errorObj, Promise, async) {    \n\
             'use strict';                                                    \n\
             function [TheName](fn) {                                         \n\
                 [TheProperties]                                              \n\
                 this.fn = fn;                                                \n\
+                this.asyncNeeded = true;                                     \n\
                 this.now = 0;                                                \n\
             }                                                                \n\
+                                                                             \n\
+            [TheName].prototype._callFunction = function(promise) {          \n\
+                promise._pushContext();                                      \n\
+                var ret = tryCatch(this.fn)([ThePassedArguments]);           \n\
+                promise._popContext();                                       \n\
+                if (ret === errorObj) {                                      \n\
+                    promise._rejectCallback(ret.e, false);                   \n\
+                } else {                                                     \n\
+                    promise._resolveCallback(ret);                           \n\
+                }                                                            \n\
+            };                                                               \n\
+                                                                             \n\
             [TheName].prototype.checkFulfillment = function(promise) {       \n\
                 var now = ++this.now;                                        \n\
                 if (now === [TheTotal]) {                                    \n\
-                    promise._pushContext();                                  \n\
-                    var callback = this.fn;                                  \n\
-                    var ret = tryCatch(callback)([ThePassedArguments]);      \n\
-                    promise._popContext();                                   \n\
-                    if (ret === errorObj) {                                  \n\
-                        promise._rejectCallback(ret.e, false);               \n\
+                    if (this.asyncNeeded) {                                  \n\
+                        async.invoke(this._callFunction, this, promise);     \n\
                     } else {                                                 \n\
-                        promise._resolveCallback(ret);                       \n\
+                        this._callFunction(promise);                         \n\
                     }                                                        \n\
+                                                                             \n\
                 }                                                            \n\
             };                                                               \n\
                                                                              \n\
@@ -9121,7 +9285,7 @@ if (canEvaluate) {
             };                                                               \n\
                                                                              \n\
             return [TheName];                                                \n\
-        }(tryCatch, errorObj, Promise);                                      \n\
+        }(tryCatch, errorObj, Promise, async);                               \n\
         ";
 
         code = code.replace(/\[TheName\]/g, name)
@@ -9130,8 +9294,8 @@ if (canEvaluate) {
             .replace(/\[TheProperties\]/g, assignment)
             .replace(/\[CancellationCode\]/g, cancellationCode);
 
-        return new Function("tryCatch", "errorObj", "Promise", code)
-                           (tryCatch, errorObj, Promise);
+        return new Function("tryCatch", "errorObj", "Promise", "async", code)
+                           (tryCatch, errorObj, Promise, async);
     };
 
     var holderClasses = [];
@@ -9172,6 +9336,7 @@ Promise.join = function () {
                             maybePromise._then(callbacks[i], reject,
                                                undefined, ret, holder);
                             promiseSetters[i](maybePromise, holder);
+                            holder.asyncNeeded = false;
                         } else if (((bitField & 33554432) !== 0)) {
                             callbacks[i].call(ret,
                                               maybePromise._value(), holder);
@@ -9184,7 +9349,14 @@ Promise.join = function () {
                         callbacks[i].call(ret, maybePromise, holder);
                     }
                 }
+
                 if (!ret._isFateSealed()) {
+                    if (holder.asyncNeeded) {
+                        var domain = getDomain();
+                        if (domain !== null) {
+                            holder.fn = util.domainBind(domain, holder.fn);
+                        }
+                    }
                     ret._setAsyncGuaranteed();
                     ret._setOnCancel(holder);
                 }
@@ -9212,22 +9384,26 @@ var getDomain = Promise._getDomain;
 var util = _dereq_("./util");
 var tryCatch = util.tryCatch;
 var errorObj = util.errorObj;
-var EMPTY_ARRAY = [];
+var async = Promise._async;
 
 function MappingPromiseArray(promises, fn, limit, _filter) {
     this.constructor$(promises);
     this._promise._captureStackTrace();
     var domain = getDomain();
-    this._callback = domain === null ? fn : domain.bind(fn);
+    this._callback = domain === null ? fn : util.domainBind(domain, fn);
     this._preservedValues = _filter === INTERNAL
         ? new Array(this.length())
         : null;
     this._limit = limit;
     this._inFlight = 0;
-    this._queue = limit >= 1 ? [] : EMPTY_ARRAY;
-    this._init$(undefined, -2);
+    this._queue = [];
+    async.invoke(this._asyncInit, this, undefined);
 }
 util.inherits(MappingPromiseArray, PromiseArray);
+
+MappingPromiseArray.prototype._asyncInit = function() {
+    this._init$(undefined, -2);
+};
 
 MappingPromiseArray.prototype._init = function () {};
 
@@ -9334,9 +9510,22 @@ function map(promises, fn, options, _filter) {
     if (typeof fn !== "function") {
         return apiRejection("expecting a function but got " + util.classString(fn));
     }
-    var limit = typeof options === "object" && options !== null
-        ? options.concurrency
-        : 0;
+
+    var limit = 0;
+    if (options !== undefined) {
+        if (typeof options === "object" && options !== null) {
+            if (typeof options.concurrency !== "number") {
+                return Promise.reject(
+                    new TypeError("'concurrency' must be a number but it is " +
+                                    util.classString(options.concurrency)));
+            }
+            limit = options.concurrency;
+        } else {
+            return Promise.reject(new TypeError(
+                            "options argument must be an object but it is " +
+                             util.classString(options)));
+        }
+    }
     limit = typeof limit === "number" &&
         isFinite(limit) && limit >= 1 ? limit : 0;
     return new MappingPromiseArray(promises, fn, limit, _filter).promise();
@@ -9620,7 +9809,8 @@ Promise.prototype.caught = Promise.prototype["catch"] = function (fn) {
             if (util.isObject(item)) {
                 catchInstances[j++] = item;
             } else {
-                return apiRejection("expecting an object but got " + util.classString(item));
+                return apiRejection("expecting an object but got " +
+                    "A catch statement predicate " + util.classString(item));
             }
         }
         catchInstances.length = j;
@@ -9690,6 +9880,8 @@ Promise.prototype.error = function (fn) {
     return this.caught(util.originatesFromRejection, fn);
 };
 
+Promise.getNewLibraryCopy = module.exports;
+
 Promise.is = function (val) {
     return val instanceof Promise;
 };
@@ -9735,9 +9927,7 @@ Promise.setScheduler = function(fn) {
     if (typeof fn !== "function") {
         throw new TypeError("expecting a function but got " + util.classString(fn));
     }
-    var prev = async._schedule;
-    async._schedule = fn;
-    return prev;
+    return async.setScheduler(fn);
 };
 
 Promise.prototype._then = function (
@@ -9784,7 +9974,8 @@ Promise.prototype._then = function (
 
         async.invoke(settler, target, {
             handler: domain === null ? handler
-                : (typeof handler === "function" && domain.bind(handler)),
+                : (typeof handler === "function" &&
+                    util.domainBind(domain, handler)),
             promise: promise,
             receiver: receiver,
             value: value
@@ -9845,7 +10036,12 @@ Promise.prototype._setCancelled = function() {
     this._fireEvent("promiseCancelled", this);
 };
 
+Promise.prototype._setWillBeCancelled = function() {
+    this._bitField = this._bitField | 8388608;
+};
+
 Promise.prototype._setAsyncGuaranteed = function() {
+    if (async.hasCustomScheduler()) return;
     this._bitField = this._bitField | 134217728;
 };
 
@@ -9915,11 +10111,11 @@ Promise.prototype._addCallbacks = function (
         this._receiver0 = receiver;
         if (typeof fulfill === "function") {
             this._fulfillmentHandler0 =
-                domain === null ? fulfill : domain.bind(fulfill);
+                domain === null ? fulfill : util.domainBind(domain, fulfill);
         }
         if (typeof reject === "function") {
             this._rejectionHandler0 =
-                domain === null ? reject : domain.bind(reject);
+                domain === null ? reject : util.domainBind(domain, reject);
         }
     } else {
         var base = index * 4 - 4;
@@ -9927,11 +10123,11 @@ Promise.prototype._addCallbacks = function (
         this[base + 3] = receiver;
         if (typeof fulfill === "function") {
             this[base + 0] =
-                domain === null ? fulfill : domain.bind(fulfill);
+                domain === null ? fulfill : util.domainBind(domain, fulfill);
         }
         if (typeof reject === "function") {
             this[base + 1] =
-                domain === null ? reject : domain.bind(reject);
+                domain === null ? reject : util.domainBind(domain, reject);
         }
     }
     this._setLength(index + 1);
@@ -9952,6 +10148,12 @@ Promise.prototype._resolveCallback = function(value, shouldBind) {
     if (shouldBind) this._propagateFrom(maybePromise, 2);
 
     var promise = maybePromise._target();
+
+    if (promise === this) {
+        this._reject(makeSelfResolutionError());
+        return;
+    }
+
     var bitField = promise._bitField;
     if (((bitField & 50397184) === 0)) {
         var len = this._length();
@@ -10028,9 +10230,8 @@ Promise.prototype._settlePromiseFromHandler = function (
 
     if (x === NEXT_FILTER) {
         promise._reject(value);
-    } else if (x === errorObj || x === promise) {
-        var err = x === promise ? makeSelfResolutionError() : x.e;
-        promise._rejectCallback(err, false);
+    } else if (x === errorObj) {
+        promise._rejectCallback(x.e, false);
     } else {
         debug.checkForgottenReturns(x, promiseCreated, "",  promise, this);
         promise._resolveCallback(x);
@@ -10165,11 +10366,7 @@ Promise.prototype._reject = function (reason) {
     }
 
     if ((bitField & 65535) > 0) {
-        if (((bitField & 134217728) !== 0)) {
-            this._settlePromises();
-        } else {
-            async.settlePromises(this);
-        }
+        async.settlePromises(this);
     } else {
         this._ensurePossibleRejectionHandled();
     }
@@ -10247,23 +10444,24 @@ _dereq_("./cancel")(Promise, PromiseArray, apiRejection, debug);
 _dereq_("./direct_resolve")(Promise);
 _dereq_("./synchronous_inspection")(Promise);
 _dereq_("./join")(
-    Promise, PromiseArray, tryConvertToPromise, INTERNAL, debug);
+    Promise, PromiseArray, tryConvertToPromise, INTERNAL, async, getDomain);
 Promise.Promise = Promise;
+Promise.version = "3.4.6";
 _dereq_('./map.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
+_dereq_('./call_get.js')(Promise);
 _dereq_('./using.js')(Promise, apiRejection, tryConvertToPromise, createContext, INTERNAL, debug);
 _dereq_('./timers.js')(Promise, INTERNAL, debug);
 _dereq_('./generators.js')(Promise, apiRejection, INTERNAL, tryConvertToPromise, Proxyable, debug);
 _dereq_('./nodeify.js')(Promise);
-_dereq_('./call_get.js')(Promise);
+_dereq_('./promisify.js')(Promise, INTERNAL);
 _dereq_('./props.js')(Promise, PromiseArray, tryConvertToPromise, apiRejection);
 _dereq_('./race.js')(Promise, INTERNAL, tryConvertToPromise, apiRejection);
 _dereq_('./reduce.js')(Promise, PromiseArray, apiRejection, tryConvertToPromise, INTERNAL, debug);
 _dereq_('./settle.js')(Promise, PromiseArray, debug);
 _dereq_('./some.js')(Promise, PromiseArray, apiRejection);
-_dereq_('./promisify.js')(Promise, INTERNAL);
-_dereq_('./any.js')(Promise);
-_dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./filter.js')(Promise, INTERNAL);
+_dereq_('./each.js')(Promise, INTERNAL);
+_dereq_('./any.js')(Promise);
                                                          
     util.toFastProperties(Promise);                                          
     util.toFastProperties(Promise.prototype);                                
@@ -10418,7 +10616,7 @@ PromiseArray.prototype._resolve = function (value) {
 };
 
 PromiseArray.prototype._cancel = function() {
-    if (this._isResolved() || !this._promise.isCancellable()) return;
+    if (this._isResolved() || !this._promise._isCancellable()) return;
     this._values = null;
     this._promise._cancel();
 };
@@ -11069,27 +11267,37 @@ var tryCatch = util.tryCatch;
 function ReductionPromiseArray(promises, fn, initialValue, _each) {
     this.constructor$(promises);
     var domain = getDomain();
-    this._fn = domain === null ? fn : domain.bind(fn);
+    this._fn = domain === null ? fn : util.domainBind(domain, fn);
     if (initialValue !== undefined) {
         initialValue = Promise.resolve(initialValue);
         initialValue._attachCancellationCallback(this);
     }
     this._initialValue = initialValue;
     this._currentCancellable = null;
-    this._eachValues = _each === INTERNAL ? [] : undefined;
+    if(_each === INTERNAL) {
+        this._eachValues = Array(this._length);
+    } else if (_each === 0) {
+        this._eachValues = null;
+    } else {
+        this._eachValues = undefined;
+    }
     this._promise._captureStackTrace();
     this._init$(undefined, -5);
 }
 util.inherits(ReductionPromiseArray, PromiseArray);
 
 ReductionPromiseArray.prototype._gotAccum = function(accum) {
-    if (this._eachValues !== undefined && accum !== INTERNAL) {
+    if (this._eachValues !== undefined && 
+        this._eachValues !== null && 
+        accum !== INTERNAL) {
         this._eachValues.push(accum);
     }
 };
 
 ReductionPromiseArray.prototype._eachComplete = function(value) {
-    this._eachValues.push(value);
+    if (this._eachValues !== null) {
+        this._eachValues.push(value);
+    }
     return this._eachValues;
 };
 
@@ -11225,16 +11433,23 @@ var schedule;
 var noAsyncScheduler = function() {
     throw new Error("No async scheduler available\u000a\u000a    See http://goo.gl/MqrFmX\u000a");
 };
+var NativePromise = util.getNativePromise();
 if (util.isNode && typeof MutationObserver === "undefined") {
     var GlobalSetImmediate = global.setImmediate;
     var ProcessNextTick = process.nextTick;
     schedule = util.isRecentNode
                 ? function(fn) { GlobalSetImmediate.call(global, fn); }
                 : function(fn) { ProcessNextTick.call(process, fn); };
+} else if (typeof NativePromise === "function" &&
+           typeof NativePromise.resolve === "function") {
+    var nativePromise = NativePromise.resolve();
+    schedule = function(fn) {
+        nativePromise.then(fn);
+    };
 } else if ((typeof MutationObserver !== "undefined") &&
           !(typeof window !== "undefined" &&
             window.navigator &&
-            window.navigator.standalone)) {
+            (window.navigator.standalone || window.cordova))) {
     schedule = (function() {
         var div = document.createElement("div");
         var opts = {attributes: true};
@@ -11242,23 +11457,23 @@ if (util.isNode && typeof MutationObserver === "undefined") {
         var div2 = document.createElement("div");
         var o2 = new MutationObserver(function() {
             div.classList.toggle("foo");
-          toggleScheduled = false;
+            toggleScheduled = false;
         });
         o2.observe(div2, opts);
 
         var scheduleToggle = function() {
             if (toggleScheduled) return;
-          toggleScheduled = true;
-          div2.classList.toggle("foo");
-        };
+                toggleScheduled = true;
+                div2.classList.toggle("foo");
+            };
 
-        return function schedule(fn) {
-          var o = new MutationObserver(function() {
-            o.disconnect();
-            fn();
-          });
-          o.observe(div, opts);
-          scheduleToggle();
+            return function schedule(fn) {
+            var o = new MutationObserver(function() {
+                o.disconnect();
+                fn();
+            });
+            o.observe(div, opts);
+            scheduleToggle();
         };
     })();
 } else if (typeof setImmediate !== "undefined") {
@@ -11520,13 +11735,20 @@ var isResolved = PromiseInspection.prototype.isResolved = function () {
     return (this._bitField & 50331648) !== 0;
 };
 
-PromiseInspection.prototype.isCancelled =
-Promise.prototype._isCancelled = function() {
+PromiseInspection.prototype.isCancelled = function() {
+    return (this._bitField & 8454144) !== 0;
+};
+
+Promise.prototype.__isCancelled = function() {
     return (this._bitField & 65536) === 65536;
 };
 
+Promise.prototype._isCancelled = function() {
+    return this._target().__isCancelled();
+};
+
 Promise.prototype.isCancelled = function() {
-    return this._target()._isCancelled();
+    return (this._target()._bitField & 8454144) !== 0;
 };
 
 Promise.prototype.isPending = function() {
@@ -11616,7 +11838,11 @@ function getThen(obj) {
 
 var hasProp = {}.hasOwnProperty;
 function isAnyBluebirdPromise(obj) {
-    return hasProp.call(obj, "_promise0");
+    try {
+        return hasProp.call(obj, "_promise0");
+    } catch (e) {
+        return false;
+    }
 }
 
 function doThenable(x, then, context) {
@@ -11681,6 +11907,7 @@ var delay = Promise.delay = function (ms, value) {
         if (debug.cancellation()) {
             ret._setOnCancel(new HandleWrapper(handle));
         }
+        ret._captureStackTrace();
     }
     ret._setAsyncGuaranteed();
     return ret;
@@ -11754,6 +11981,7 @@ module.exports = function (Promise, apiRejection, tryConvertToPromise,
     var inherits = _dereq_("./util").inherits;
     var errorObj = util.errorObj;
     var tryCatch = util.tryCatch;
+    var NULL = {};
 
     function thrower(e) {
         setTimeout(function(){throw e;}, 0);
@@ -11814,14 +12042,14 @@ module.exports = function (Promise, apiRejection, tryConvertToPromise,
         if (this.promise().isFulfilled()) {
             return this.promise().value();
         }
-        return null;
+        return NULL;
     };
 
     Disposer.prototype.tryDispose = function(inspection) {
         var resource = this.resource();
         var context = this._context;
         if (context !== undefined) context._pushContext();
-        var ret = resource !== null
+        var ret = resource !== NULL
             ? this.doDispose(resource, inspection) : null;
         if (context !== undefined) context._popContext();
         this._promise._unsetDisposable();
@@ -12289,6 +12517,21 @@ function env(key, def) {
     return isNode ? process.env[key] : def;
 }
 
+function getNativePromise() {
+    if (typeof Promise === "function") {
+        try {
+            var promise = new Promise(function(){});
+            if ({}.toString.call(promise) === "[object Promise]") {
+                return Promise;
+            }
+        } catch (e) {}
+    }
+}
+
+function domainBind(self, cb) {
+    return self.bind(cb);
+}
+
 var ret = {
     isClass: isClass,
     isIdentifier: isIdentifier,
@@ -12320,7 +12563,9 @@ var ret = {
                  typeof chrome.loadTimes === "function",
     isNode: isNode,
     env: env,
-    global: globalObject
+    global: globalObject,
+    getNativePromise: getNativePromise,
+    domainBind: domainBind
 };
 ret.isRecentNode = ret.isNode && (function() {
     var version = process.versions.node.split(".").map(Number);
@@ -13506,7 +13751,7 @@ module.exports = ret;
 	                }
 
 	                // Create default initializer
-	                if (!subtype.hasOwnProperty('init')) {
+	                if (!subtype.hasOwnProperty('init') || this.init === subtype.init) {
 	                    subtype.init = function () {
 	                        subtype.$super.init.apply(this, arguments);
 	                    };
@@ -14291,7 +14536,8 @@ module.exports = ret;
 	                if (i % 4) {
 	                    var bits1 = map.indexOf(base64Str.charAt(i - 1)) << ((i % 4) * 2);
 	                    var bits2 = map.indexOf(base64Str.charAt(i)) >>> (6 - (i % 4) * 2);
-	                    words[nBytes >>> 2] |= (bits1 | bits2) << (24 - (nBytes % 4) * 8);
+	                    var bitsCombined = bits1 | bits2;
+	                    words[nBytes >>> 2] |= (bitsCombined) << (24 - (nBytes % 4) * 8);
 	                    nBytes++;
 	                }
 	            }
@@ -18911,6 +19157,8 @@ module.exports = ret;
 },{"./core":51}],83:[function(require,module,exports){
 'use strict';
 
+var has = Object.prototype.hasOwnProperty;
+
 //
 // We store our EE objects in a plain object whose properties are event names.
 // If `Object.create(null)` is not supported we prefix the event names with a
@@ -18926,7 +19174,7 @@ var prefix = typeof Object.create !== 'function' ? '~' : false;
  *
  * @param {Function} fn Event handler to be called.
  * @param {Mixed} context Context for function execution.
- * @param {Boolean} once Only emit once
+ * @param {Boolean} [once=false] Only emit once
  * @api private
  */
 function EE(fn, context, once) {
@@ -18945,12 +19193,37 @@ function EE(fn, context, once) {
 function EventEmitter() { /* Nothing to set */ }
 
 /**
- * Holds the assigned EventEmitters by name.
+ * Hold the assigned EventEmitters by name.
  *
  * @type {Object}
  * @private
  */
 EventEmitter.prototype._events = undefined;
+
+/**
+ * Return an array listing the events for which the emitter has registered
+ * listeners.
+ *
+ * @returns {Array}
+ * @api public
+ */
+EventEmitter.prototype.eventNames = function eventNames() {
+  var events = this._events
+    , names = []
+    , name;
+
+  if (!events) return names;
+
+  for (name in events) {
+    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+  }
+
+  if (Object.getOwnPropertySymbols) {
+    return names.concat(Object.getOwnPropertySymbols(events));
+  }
+
+  return names;
+};
 
 /**
  * Return a list of assigned event listeners.
@@ -19037,8 +19310,8 @@ EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
  * Register a new EventListener for the given event.
  *
  * @param {String} event Name of the event.
- * @param {Functon} fn Callback function.
- * @param {Mixed} context The context of the function.
+ * @param {Function} fn Callback function.
+ * @param {Mixed} [context=this] The context of the function.
  * @api public
  */
 EventEmitter.prototype.on = function on(event, fn, context) {
@@ -19062,7 +19335,7 @@ EventEmitter.prototype.on = function on(event, fn, context) {
  *
  * @param {String} event Name of the event.
  * @param {Function} fn Callback function.
- * @param {Mixed} context The context of the function.
+ * @param {Mixed} [context=this] The context of the function.
  * @api public
  */
 EventEmitter.prototype.once = function once(event, fn, context) {
@@ -19173,7 +19446,7 @@ if ('undefined' !== typeof module) {
 }
 
 },{}],84:[function(require,module,exports){
-/*! https://mths.be/utf8js v2.0.0 by @mathias */
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
 
 	// Detect free variables `exports`
@@ -19332,7 +19605,7 @@ if ('undefined' !== typeof module) {
 
 		// 2-byte sequence
 		if ((byte1 & 0xE0) == 0xC0) {
-			var byte2 = readContinuationByte();
+			byte2 = readContinuationByte();
 			codePoint = ((byte1 & 0x1F) << 6) | byte2;
 			if (codePoint >= 0x80) {
 				return codePoint;
@@ -19359,7 +19632,7 @@ if ('undefined' !== typeof module) {
 			byte2 = readContinuationByte();
 			byte3 = readContinuationByte();
 			byte4 = readContinuationByte();
-			codePoint = ((byte1 & 0x0F) << 0x12) | (byte2 << 0x0C) |
+			codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
 				(byte3 << 0x06) | byte4;
 			if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
 				return codePoint;
@@ -19387,7 +19660,7 @@ if ('undefined' !== typeof module) {
 	/*--------------------------------------------------------------------------*/
 
 	var utf8 = {
-		'version': '2.0.0',
+		'version': '2.1.2',
 		'encode': utf8encode,
 		'decode': utf8decode
 	};
