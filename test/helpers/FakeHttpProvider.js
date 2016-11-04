@@ -115,9 +115,9 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
     }, 100);
 };
 
-FakeHttpProvider.prototype.injectResponse = function (response) {
-    this.response = response;
-};
+// FakeHttpProvider.prototype.injectResponse = function (response) {
+//     this.response = response;
+// };
 
 FakeHttpProvider.prototype.injectResult = function (result) {
     var response = this.getResponseStub();
