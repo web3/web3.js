@@ -5,7 +5,7 @@ var FakeIpcRequest = require('./helpers/FakeIpcRequest')
 var net = new FakeIpcRequest();
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var IpcProvider = SandboxedModule.require('../lib/web3/ipcprovider', {
+var IpcProvider = SandboxedModule.require('../lib/web3/providers/ipcprovider', {
     requires: {
         'bignumber.js': require('bignumber.js'),
     },
