@@ -5,7 +5,7 @@
     "eqeqeq": true,
     "freeze": true,
     "funcscope": false,
-    "maxcomplexity": 8, /* our target is 6! */
+    "maxcomplexity": 9,
     "maxdepth": 3,
     "maxerr": 50,
     /*"maxlen": 80*/ /*this should be our goal*/
