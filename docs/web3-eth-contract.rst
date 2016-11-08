@@ -27,13 +27,18 @@ Creates a new contract instance with all its methods and events defined in its :
 Parameters
 ----------
 
-``Object`` - a valid provider with at least ``send``, ``on`` function
+``Object`` - jsonInterface: The json interface for the contract to instantiate
+``String`` - address (optional): The address of the smart contract to call, can be added later using `myContract.address = '0x1234..'`
+``Object`` - options (optional): The fallback options used for calls and transactions made to this contract.
+    * ``String`` - from: The address transactions should be made from.
+    * ``String`` - gasPrice: The gas price in wei to use for transactions.
+    * ``Number`` - gas: The maximum gas provided for a transaction (gas limit).
 
 -------
 Returns
 -------
 
-``undefined``
+``Object``: The contract instance with all its methods and events.
 
 -------
 Example
@@ -41,7 +46,10 @@ Example
 
 .. code-block:: javascript
 
-    web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+    var myContract = new web3.eth.contract([...], '0x1234....', {
+        from: '0x1234' // default from address
+        gasPrice: '20000000000000' // default gas price in wei
+    });
 
 
 ------------------------------------------------------------------------------

@@ -19,7 +19,7 @@ Contains the version of the ``web3`` container object.
 Returns
 -------
 
-``String`` - The current version.
+``String``: The current version.
 
 -------
 Example
@@ -46,7 +46,7 @@ Will return an object with different available providers to use when instantiati
 Returns
 -------
 
-``Object`` - A list of providers.
+``Object``: A list of providers.
 
 -------
 Example
@@ -76,7 +76,7 @@ When called changes the current provider for all modules.
 Parameters
 ----------
 
-``Object`` - a valid provider with at least ``send``, ``on`` function
+``Object`` - myProvider : a valid provider with at least ``send``, ``on`` function
 
 -------
 Returns
@@ -109,7 +109,7 @@ Will return the current provider, otherwise ``null``.
 Returns
 -------
 
-``Object`` - The current provider set or ``null``;
+``Object``: The current provider set or ``null``;
 
 -------
 Example

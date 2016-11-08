@@ -48,7 +48,7 @@ Example
     contract Test {
         bytes32 b;
 
-        function Test(){ b = 0x12345678901234567890123456789012; }
+        function Test() returns(address b){ b = 0x12345678901234567890123456789012; }
 
         event Event(uint indexed a, bytes32 b)
 
@@ -60,22 +60,22 @@ Example
     // would result in the JSON:
 
     [{
-    "type":"event",
-    "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    "name":"Event"
+        "type":"function",
+        "name":"foo",
+        "inputs": [{"name":"a","type":"uint256"}],
+        "outputs": [{"name":"b","type":"address"}]
+    },{
+        "type":"event",
+        "name":"Event"
+        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
     }, {
-    "type":"event",
-    "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    "name":"Event2"
+        "type":"event",
+        "name":"Event2"
+        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
     }, {
-    "type":"event",
-    "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    "name":"Event2"
-    }, {
-    "type":"function",
-    "inputs": [{"name":"a","type":"uint256"}],
-    "name":"foo",
-    "outputs": []
+        "type":"event",
+        "name":"Event2"
+        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
     }]
 
 
