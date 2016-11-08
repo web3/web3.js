@@ -6,7 +6,7 @@ web3.js is a collection of libraries which allow you to interact with a local or
 using a HTTP or IPC connection.
 
 The following documentation will guide you through :ref:`installing and running web3.js <adding-web3>`,
-as well as providing a :ref:`API reference documentation <#api-reference>` with examples.
+as well as providing a :ref:`API reference documentation <api-reference>` with examples.
 
 Contents:
 
@@ -18,7 +18,9 @@ Contents:
 
    getting-started
    callbacks-promises-events
+   glossary
 
+.. _api-reference:
 
 .. toctree::
     :maxdepth: 2
@@ -27,6 +29,7 @@ Contents:
     web3
     web3-utils
     web3-eth
+    web3-eth-contract
     web3-net
     web3-personal
     web3-admin
