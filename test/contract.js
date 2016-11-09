@@ -846,6 +846,43 @@ describe('contract', function () {
         });
     });
     describe('with methods', function () {
+        it('should reset functions when resetting json interface', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            var contract = new web3.eth.contract(abi);
+
+            assert.isFunction(contract.methods.mySend);
+            assert.isFunction(contract.events.Changed);
+
+            contract.jsonInterface = [{
+                "name": "otherSend",
+                "type": "function",
+                "inputs": [{
+                    "name": "to",
+                    "type": "address"
+                }, {
+                    "name": "value",
+                    "type": "uint256"
+                }],
+                "outputs": []
+            }, {
+                "name":"Unchanged",
+                "type":"event",
+                "inputs": [
+                    {"name":"value","type":"uint256","indexed":true},
+                    {"name":"addressFrom","type":"address","indexed":true},
+                    {"name":"t1","type":"uint256","indexed":false}
+                ]
+            }];
+
+            assert.isFunction(contract.methods.otherSend);
+            assert.isFunction(contract.events.Unchanged);
+
+            assert.isUndefined(contract.methods.mySend);
+            assert.isUndefined(contract.events.Changed);
+        });
+
         it('should encode a function call', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
