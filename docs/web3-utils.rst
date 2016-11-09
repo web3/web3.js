@@ -20,7 +20,7 @@ When called changes the current provider for all modules.
 Parameters
 ----------
 
-``Object`` - myProvider : a valid provider with at least ``send``, ``on`` function
+1. ``Object`` - myProvider : a valid provider with at least ``send``, ``on`` function
 
 -------
 Returns
