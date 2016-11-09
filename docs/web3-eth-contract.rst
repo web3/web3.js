@@ -174,6 +174,7 @@ Example
         "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
     }]
 
+    // set a new interface
     myContract.jsonInterface = [...];
 
 
