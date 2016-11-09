@@ -29,12 +29,12 @@ Creates a new contract instance with all its methods and events defined in its :
 Parameters
 ----------
 
-1. ``Object`` - jsonInterface: The json interface for the contract to instantiate
-2. ``String`` - address (optional): The address of the smart contract to call, can be added later using `myContract.address = '0x1234..'`
-3. ``Object`` - options (optional): The fallback options used for calls and transactions made to this contract.
-    * ``String`` - from: The address transactions should be made from.
-    * ``String`` - gasPrice: The gas price in wei to use for transactions.
-    * ``Number`` - gas: The maximum gas provided for a transaction (gas limit).
+1. ``Object`` - **jsonInterface**: The json interface for the contract to instantiate
+2. ``String`` - **address** (optional): The address of the smart contract to call, can be added later using ``myContract.address = '0x1234..'``
+3. ``Object`` - **options** (optional): The fallback options used for calls and transactions made to this contract:
+    * ``String`` - **from**: The address transactions should be made from.
+    * ``String`` - **gasPrice**: The gas price in wei to use for transactions.
+    * ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
 
 -------
 Returns
@@ -79,9 +79,9 @@ Property
 
 ``Object`` - options:
 
-- ``String`` - from: The address transactions should be made from.
-- ``String`` - gasPrice: The gas price in wei to use for transactions.
-- ``Number`` - gas: The maximum gas provided for a transaction (gas limit).
+- ``String`` - **from**: The address transactions should be made from.
+- ``String`` - **gasPrice**: The gas price in wei to use for transactions.
+- ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
 
 
 -------
