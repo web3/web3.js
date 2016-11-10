@@ -1577,6 +1577,9 @@ describe('contract', function () {
             })
             .on('receipt', function (receipt) {
                 assert.equal(address, receipt.contractAddress);
+            })
+            .then(function(receipt) {
+                assert.equal(address, receipt.contractAddress);
                 done();
             });
             // .on('error', function (value) {
