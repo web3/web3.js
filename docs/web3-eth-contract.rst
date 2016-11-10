@@ -17,7 +17,7 @@ This allows you to interact with smart contracts as if they were JavaScript obje
 new contract
 =========
 
-.. index:: json interface
+.. index:: JSON interface
 
 .. code-block:: javascript
 
@@ -30,11 +30,12 @@ Parameters
 ----------
 
 1. ``Object`` - **jsonInterface**: The json interface for the contract to instantiate
-2. ``String`` - **address** (optional): The address of the smart contract to call, can be added later using ``myContract.address = '0x1234..'``
-3. ``Object`` - **options** (optional): The fallback options used for calls and transactions made to this contract:
+2. ``String`` - **address** (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
+3. ``Object`` - **options** (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``String`` - **from**: The address transactions should be made from.
     * ``String`` - **gasPrice**: The gas price in wei to use for transactions.
     * ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
+    * ``String`` - **data**: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 
 -------
 Returns
@@ -71,16 +72,17 @@ options
 
     myContract.options
 
-The options ``object`` for the contract instance. Contains mostly values which will be used as fallback values for sending transactions.
+The options ``object`` for the contract instance. ``from``, ``gas`` and ``gasPrice`` are used as fallback values when sending transactions.
 
 -------
-Property
+Properties
 -------
 
 ``Object`` - options:
 
 - ``String`` - **address**: The address where the contract is deployed. See :ref:`options.address <contract-address>`.
 - ``Array`` - **jsonInterface**: The json interface of the contract. See :ref:`options.jsonInterface <contract-json-interface>`.
+- ``String`` - **data**: The byte code of the contract. Used when the contract gets :ref:`deployed <contract-deploy>`.
 - ``String`` - **from**: The address transactions should be made from.
 - ``String`` - **gasPrice**: The gas price in wei to use for transactions.
 - ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
@@ -191,3 +193,67 @@ Example
 
 Contract Methods
 =========
+
+
+------------------------------------------------------------------------------
+
+
+.. _contract-deploy:
+
+.. index:: contract deploy
+
+deploy
+=====================
+
+.. code-block:: javascript
+
+    myContract.deploy(options, callback)
+
+Call this function to deploy the contract to the blockchain.
+After successfull deployment the ``myContract.options.address`` will be set automatically to the newly deployed contract.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - **options**: The options used for deployemnt.
+    * ``Array``` - **arguments**: The arguments which get passed to the constructor on deployment.
+    * ``String`` - **data**: The byte code of the contract.
+    * ``String`` - **from**: The address transactions should be made from.
+    * ``String`` - **gasPrice**: The gas price in wei to use for transactions.
+    * ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
+2. ``Function`` - **callbackj**: This callback will be fired when the transaction receipt is available. If the contract couldn't be deployed, the first argument will be an error object.
+
+-------
+Returns
+-------
+
+``PromiEvent``: A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
+    * ``transactionHash``: is fired right after the transaction is send and a transaction hash is available.
+    * ``receipt``: is fired when the transaction receipt with the contract address is available.
+    * ``error``: is fired if an error occurs during deployment.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String'],
+        from: '0x1234567890123456789012345678901234567891',
+        gas: 1500000,
+        gasPrice: '30000000000000'
+    })
+    .on('error', function(error){ ... })
+    .on('transactionHash', function(hash){ ... })
+    .on('receipt', function(receipt){
+        // same as when the promise gets resolved, see below
+    })
+    .then(function(receipt){
+        console.log(myContract.options.address) // gives the new contract address
+    });
+
+
+------------------------------------------------------------------------------
