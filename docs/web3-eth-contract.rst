@@ -50,7 +50,7 @@ Example
 
 .. code-block:: javascript
 
-    var myContract = new web3.eth.contract([...], '0x1234567890123456789012345678901234567891', {
+    var myContract = new web3.eth.contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
         from: '0x1234567890123456789012345678901234567891' // default from address
         gasPrice: '20000000000000' // default gas price in wei
     });
@@ -217,21 +217,21 @@ Parameters
 ----------
 
 1. ``Object`` - **options**: The options used for deployemnt.
-    * ``Array``` - **arguments**: The arguments which get passed to the constructor on deployment.
-    * ``String`` - **data**: The byte code of the contract.
     * ``String`` - **from**: The address transactions should be made from.
-    * ``String`` - **gasPrice**: The gas price in wei to use for transactions.
-    * ``Number`` - **gas**: The maximum gas provided for a transaction (gas limit).
-2. ``Function`` - **callbackj**: This callback will be fired when the transaction receipt is available. If the contract couldn't be deployed, the first argument will be an error object.
+    * ``String`` - **data**: The byte code of the contract.
+    * ``Array``` - **arguments** (optional): The arguments which get passed to the constructor on deployment.
+    * ``String`` - **gasPrice** (optional): The gas price in wei to use for transactions.
+    * ``Number`` - **gas** (optional): The maximum gas provided for a transaction (gas limit).
+2. ``Function`` - **callback** (optional): This callback will be fired when the transaction receipt is available. If the contract couldn't be deployed, the first argument will be an error object.
 
 -------
 Returns
 -------
 
 ``PromiEvent``: A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
-    * ``transactionHash``: is fired right after the transaction is send and a transaction hash is available.
-    * ``receipt``: is fired when the transaction receipt with the contract address is available.
-    * ``error``: is fired if an error occurs during deployment.
+    * ``transactionHash`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
+    * ``receipt`` returns ``String``: is fired when the transaction receipt with the contract address is available.
+    * ``error`` returns ``Error``: is fired if an error occurs during deployment.
 
 -------
 Example
@@ -254,6 +254,80 @@ Example
     .then(function(receipt){
         console.log(myContract.options.address) // gives the new contract address
     });
+
+
+------------------------------------------------------------------------------
+
+
+getPastEvents
+=====================
+
+.. code-block:: javascript
+
+    myContract.getPastEvents(event[, options][, callback])
+
+Gets past events for this contract.
+
+----------
+Parameters
+----------
+
+1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
+1. ``Object`` - **options** (optional): The options used for deployment.
+    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``Number`` - **fromBlock** (optional): The block number from which to get events on.
+    * ``Number`` - **toBlock** (optional): The block number until events to get (Defaults to ``"latest"``).
+    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+2. ``Function`` - **callback** (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
+
+Structure of a returned event ``Object`` in the ``Arrray``:
+
+- ``Object`` - **returnValues**: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
+- ``String`` - **event**: The event name.
+- ``Number`` - **logIndex**: Integer of the event index position in the block.
+- ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
+- ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
+- ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
+- ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
+- ``String`` - **address**: from which this event originated from.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.getPastEvents('MyEvent', {
+        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0,
+        toBlock: 'latest'
+    })
+    .then(function(events){
+        console.log(events)
+    });
+
+    > [{
+        returnValues: {
+            myIndexedParam: 20,
+            myOtherIndexedParam: '0x123456789...',
+            myNonIndexParam: 'My String'
+        },
+        event: 'MyEvent',
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    },{
+        ...
+    }]
 
 
 ------------------------------------------------------------------------------
