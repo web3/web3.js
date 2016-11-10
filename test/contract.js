@@ -846,6 +846,39 @@ describe('contract', function () {
         });
     });
     describe('with methods', function () {
+        it('should change the address', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'balance(address)';
+
+            var contract = new web3.eth.contract(abi, address);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    to: address,
+                    from: address2
+                }, 'latest']);
+            });
+
+            contract.methods.balance('0x1234567890123456789012345678901234567891').call({from: address2});
+
+            // change address
+            contract.address = address2;
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    to: address2,
+                    from: address
+                }, 'latest']);
+            });
+
+            contract.methods.balance('0x1234567890123456789012345678901234567891').call({from: address});
+        });
+
         it('should reset functions when resetting json interface', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
