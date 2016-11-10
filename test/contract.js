@@ -865,7 +865,7 @@ describe('contract', function () {
             contract.methods.balance('0x1234567890123456789012345678901234567891').call({from: address2});
 
             // change address
-            contract.address = address2;
+            contract.options.address = address2;
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
@@ -888,7 +888,7 @@ describe('contract', function () {
             assert.isFunction(contract.methods.mySend);
             assert.isFunction(contract.events.Changed);
 
-            contract.jsonInterface = [{
+            contract.options.jsonInterface = [{
                 "name": "otherSend",
                 "type": "function",
                 "inputs": [{
