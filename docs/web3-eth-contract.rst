@@ -229,9 +229,10 @@ Returns
 -------
 
 ``PromiEvent``: A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
-    * ``transactionHash`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-    * ``receipt`` returns ``String``: is fired when the transaction receipt with the contract address is available.
-    * ``error`` returns ``Error``: is fired if an error occurs during deployment.
+
+- ``transactionHash`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
+- ``receipt`` returns ``String``: is fired when the transaction receipt with the contract address is available.
+- ``error`` returns ``Error``: is fired if an error occurs during deployment.
 
 -------
 Example
@@ -289,7 +290,7 @@ Returns
 
 ``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
 
-Structure of a returned event ``Object`` in the ``Arrray``:
+The structure of the returned event ``Object`` in the ``Arrray`` looks as follows:
 
 - ``Object`` - **returnValues**: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
 - ``String`` - **event**: The event name.
@@ -400,6 +401,76 @@ Example
         blockNumber: 1234,
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     }
+
+
+------------------------------------------------------------------------------
+
+
+methods
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]])
+
+Creates a transaction object for that method, which then can be :ref:`called <contract-call>`, :ref:`send <contract-send>`, :ref:`estimated  <contract-estimateGas>`or :ref:`ABI encoded <contract-encodeABI>`.
+
+The methods of this smart contract are available through:
+
+- The name: ``myContract.methods.myMethod(123)``
+- The name with parameters: ``myContract.methods['myMethod(uint256)'](123)``
+- The signature: ``myContract.methods['0x58cf5f10'](123)``
+
+This allows calling functions with same name but different parameters from the JavaScript contract object.
+
+----------
+Parameters
+----------
+
+Parameters of any method depend on the smart contracts methods, defined in the :ref:`JSON interface <glossary-json-interface>`.
+
+-------
+Returns
+-------
+
+``Object``: The transaction object:
+
+- ``Array`` - arguments: The arguments passed to the method before. They can be changed.
+- ``Function`` - :ref:`call <contract-call>`: Will call the "constant" method and execute its smart contract method in the EVM without sending a transaction (Can't alter the smart contract state).
+- ``Function`` - :ref:`send <contract-send>`: Will send a transaction to the smart contract and execute its method (Can alter the smart contract state).
+- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain.
+- ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
+
+ For details to the methods documentations below.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    // calling a method
+
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(result){
+        ...
+    });
+
+    // or sending and using a promise
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .then(function(receipt){
+        ...
+    });
+
+    // or sending a transaction to a method
+
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
 
 
 ------------------------------------------------------------------------------
