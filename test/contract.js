@@ -787,6 +787,92 @@ describe('contract', function () {
             });
         });
 
+        it('should create event using the once function and unsubscribe after one log received using the event emitter', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params[1], {
+                    topics: [
+                        '0x' + sha3(signature),
+                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        null
+                    ],
+                    address: address
+                });
+            });
+            provider.injectResult('0x321');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_unsubscribe');
+            });
+            provider.injectResult(true);
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                        '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x321',
+                    result: {
+                        address: address,
+                        topics: [
+                            '0x' + sha3(signature),
+                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x0000000000000000000000000000000000000000000000000000000000000001'
+                        ],
+                        blockNumber: '0x3',
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: '0x4',
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                        '0000000000000000000000000000000000000000000000000000000000000008'
+                    }
+                }
+            });
+
+            var count = 1;
+            var contract = new web3.eth.contract(abi, address);
+            var event = contract.once('Changed', {filter: {from: address}})
+            .on('data', function (result) {
+                assert.equal(result.returnValues.from, address);
+                assert.equal(result.returnValues.amount, 1);
+                assert.equal(result.returnValues.t1, 1);
+                assert.equal(result.returnValues.t2, 8);
+                // cant test the below, as emitter events and unsubscribe is called at the same time
+                // assert.deepEqual(event.options.requestManager.subscriptions, {});
+
+                assert.equal(count, 1);
+                count++;
+
+                setTimeout(done, 600);
+            });
+
+        });
+
 
         it('should create all event filter and receive two logs', function (done) {
             var provider = new FakeHttpProvider();
