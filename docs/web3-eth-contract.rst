@@ -310,9 +310,9 @@ Example
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0,
         toBlock: 'latest'
-    })
+    }, function(err, result){ console.log(event); })
     .then(function(events){
-        console.log(events)
+        console.log(events) // same results as the optional callback above
     });
 
     > [{
@@ -376,9 +376,9 @@ Example
     myContract.once('MyEvent', {
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
-    })
+    }, function(err, result){ console.log(event); })
     .on('data', function(event){
-        console.log(event)
+        console.log(event); // same results as the optional callback above
     })
     .on('changed', function(event){
         // remove event from local database
