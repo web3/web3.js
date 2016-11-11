@@ -134,6 +134,38 @@ describe('contract', function () {
 
             done();
         });
+        it('_encodeEventABI should return the encoded event object with topics and multiple choices', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            var contract = new web3.eth.contract(abi, address);
+
+            var result = contract._encodeEventABI({
+                signature: '0x1234',
+                "name":"Changed",
+                "type":"event",
+                "inputs": [
+                    {"name":"test","type":"uint256","indexed":true},
+                    {"name":"from","type":"address","indexed":true},
+                    {"name":"amount","type":"uint256","indexed":true},
+                    {"name":"t1","type":"uint256","indexed":false},
+                    {"name":"t2","type":"uint256","indexed":false}
+                ]
+            }, {filter: {amount: [12,10], from: address}, fromBlock: 2});
+
+            assert.deepEqual(result, {
+                address: address,
+                fromBlock: '0x2',
+                topics: [
+                    '0x1234',
+                    null,
+                    '0x0000000000000000000000001234567890123456789012345678901234567891',
+                    ['0x000000000000000000000000000000000000000000000000000000000000000c', '0x000000000000000000000000000000000000000000000000000000000000000a']
+                ]
+            });
+
+            done();
+        });
         it('_decodeEventABI should return the decoded event object with topics', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
