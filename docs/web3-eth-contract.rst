@@ -222,7 +222,7 @@ Parameters
     * ``Array``` - **arguments** (optional): The arguments which get passed to the constructor on deployment.
     * ``String`` - **gasPrice** (optional): The gas price in wei to use for transactions.
     * ``Number`` - **gas** (optional): The maximum gas provided for a transaction (gas limit).
-2. ``Function`` - **callback** (optional): This callback will be fired when the transaction receipt is available. If the contract couldn't be deployed, the first argument will be an error object.
+2. ``Function`` - **callback** (optional): This callback will be fired for the "transactionHash" and later the "receipt" (as the second parameter). If the contract couldn't be deployed, the first argument will be an error object.
 
 -------
 Returns
@@ -230,9 +230,9 @@ Returns
 
 ``PromiEvent``: A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
 
-- ``transactionHash`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-- ``receipt`` returns ``String``: is fired when the transaction receipt with the contract address is available.
-- ``error`` returns ``Error``: is fired if an error occurs during deployment.
+- ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
+- ``"receipt"`` returns ``String``: is fired when the transaction receipt with the contract address is available.
+- ``"error"`` returns ``Error``: is fired if an error occurs during deployment.
 
 -------
 Example
@@ -246,7 +246,7 @@ Example
         from: '0x1234567890123456789012345678901234567891',
         gas: 1500000,
         gasPrice: '30000000000000'
-    })
+    }, function(error, mixed){ ... })
     .on('error', function(error){ ... })
     .on('transactionHash', function(hash){ ... })
     .on('receipt', function(receipt){
@@ -274,12 +274,12 @@ Parameters
 ----------
 
 1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
-1. ``Object`` - **options** (optional): The options used for deployment.
+2. ``Object`` - **options** (optional): The options used for deployment.
     * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``Number`` - **fromBlock** (optional): The block number from which to get events on.
     * ``Number`` - **toBlock** (optional): The block number until events to get (Defaults to ``"latest"``).
     * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-2. ``Function`` - **callback** (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
+3. ``Function`` - **callback** (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
 
 .. _contract-getPastEvents-return:
@@ -311,7 +311,7 @@ Example
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0,
         toBlock: 'latest'
-    }, function(err, result){ console.log(event); })
+    }, function(error, events){ console.log(events); })
     .then(function(events){
         console.log(events) // same results as the optional callback above
     });
@@ -351,10 +351,10 @@ Parameters
 ----------
 
 1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
-1. ``Object`` - **options** (optional): The options used for deployment.
+2. ``Object`` - **options** (optional): The options used for deployment.
     * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-2. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
+3. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
 
 -------
 Returns
@@ -364,7 +364,7 @@ Returns
 
 - ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
 - ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
-- ``error`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
 
 For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
 
@@ -377,7 +377,7 @@ Example
     myContract.once('MyEvent', {
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
-    }, function(err, result){ console.log(event); })
+    }, function(error, event){ console.log(event); })
     .on('data', function(event){
         console.log(event); // same results as the optional callback above
     })
@@ -451,7 +451,7 @@ Example
 
     // calling a method
 
-    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(result){
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, result){
         ...
     });
 
@@ -474,3 +474,284 @@ Example
 
 
 ------------------------------------------------------------------------------
+
+
+.. _contract-call:
+
+methods.myMethod.call
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]]).call(options[, callback])
+
+Will call a "constant" method and execute its smart contract method in the EVM without sending any transaction. Note calling can not alter the smart contract state.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - **options** (optional): The options used for calling.
+    * ``String`` - **from** (optional): The address the call "transaction" should be made from.
+    * ``String`` - **gasPrice** (optional): The gas price in wei to use for this call "transaction".
+    * ``Number`` - **gas** (optional): The maximum gas provided for this call "transaction" (gas limit).
+2. ``Function`` - **callback** (optional): This callback will be fired with the result of the smart contract method execution as the second argument, or with an error object as the first argument.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Mixed``: The return value(s) of the smart contract method.
+
+// TODO add specific examples, once the decoder is extended
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    // using the callback
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, result){
+        ...
+    });
+
+    // using the promise
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .then(function(result){
+        ...
+    });
+
+
+------------------------------------------------------------------------------
+
+
+.. _contract-send:
+
+methods.myMethod.send
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]]).send(options[, callback])
+
+Will send a transaction to the smart contract and execute its method. Note this can alter the smart contract state.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - **options**: The options used for sending.
+    * ``String`` - **from**: The address the transaction should be send from.
+    * ``String`` - **gasPrice** (optional): The gas price in wei to use for this transaction.
+    * ``Number`` - **gas** (optional): The maximum gas provided for this transaction (gas limit).
+2. ``Function`` - **callback** (optional): This callback will be fired first with the "transactionHash" and later for the "receipt" as second argument, or with an error object as the first argument.
+
+-------
+Returns
+-------
+
+``PromiEvent``:  A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
+
+- ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
+- ``"receipt"`` returns ``String``: is fired when the transaction receipt with the contract address is available.
+- ``"error"`` returns ``Error``: is fired if an error occurs during deployment.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    // using the callback
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'}, function(error, mixed){
+        ...
+    });
+
+    // using the promise
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .then(function(receipt){
+        ...
+    });
+
+
+    // using the event emitter
+    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
+
+------------------------------------------------------------------------------
+
+
+.. _contract-estimateGas:
+
+methods.myMethod.estimateGas
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]]).estimateGas(options[, callback])
+
+Will call estimate the gas a method execution will take when executed in the EVM without.
+The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - **options** (optional): The options used for calling.
+    * ``String`` - **from** (optional): The address the call "transaction" should be made from.
+    * ``Number`` - **gas** (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. If all gas is used it will return the same number.
+2. ``Function`` - **callback** (optional): This callback will be fired with the result of the gas estimation as the second argument, or with an error object as the first argument.
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Number``: The gas amount estimated.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    // using the callback
+    myContract.methods.myMethod(123).estimateGas({gas: 5000000}, function(error, gasAmount){
+        if(gasAmount == 5000000)
+            console.log('Method ran out of gas');
+    });
+
+    // using the promise
+    myContract.methods.myMethod(123).estimateGas({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    .then(function(gasAmount){
+        ...
+    });
+
+
+------------------------------------------------------------------------------
+
+
+.. _contract-encodeABI:
+
+methods.myMethod.encodeABI
+=====================
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
+
+Encodes the ABI for this method. This can be used to send a transaction, call a method or pass it into another smart contracts method as argument.
+
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The encoded ABI byte code to send via a transaction or call.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.methods.myMethod(123).encodeABI();
+    > '0x58cf5f1000000000000000000000000000000000000000000000000000000000000007B'
+
+
+------------------------------------------------------------------------------
+
+
+.. _contract-events:
+
+events
+=====================
+
+.. code-block:: javascript
+
+    myContract.events.MyEvent([options][, callback])
+
+Subscribe to a event
+
+----------
+Parameters
+----------
+
+1. ``Object`` - **options** (optional): The options used for deployment.
+    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``Number`` - **fromBlock** (optional): The block number from which to get events on.
+    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+2. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
+
+-------
+Returns
+-------
+
+``EventEmitter``: The event emitter has the following events:
+
+- ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
+- ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+
+For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.events.MyEvent({
+        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0
+    }, function(error, event){ console.log(event); })
+    .on('data', function(event){
+        console.log(event); // same results as the optional callback above
+    })
+    .on('changed', function(event){
+        // remove event from local database
+    })
+    .on('error', console.error);
+
+    // console output of the event
+    > {
+        returnValues: {
+            myIndexedParam: 20,
+            myOtherIndexedParam: '0x123456789...',
+            myNonIndexParam: 'My String'
+        },
+        event: 'MyEvent',
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    }
+
+
+------------------------------------------------------------------------------
+
+events.allEvents
+=====================
+
+.. code-block:: javascript
+
+    myContract.events.allEvents([options][, callback])
+
+Same as :ref:`events <contract-events>` but receives all events from this smart contract.
+Optionally the filter property can filter those events.
