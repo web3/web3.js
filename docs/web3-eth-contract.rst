@@ -207,7 +207,7 @@ deploy
 
 .. code-block:: javascript
 
-    myContract.deploy(options, callback)
+    myContract.deploy(options[, callback])
 
 Call this function to deploy the contract to the blockchain.
 After successfull deployment the ``myContract.options.address`` will be set automatically to the newly deployed contract.
