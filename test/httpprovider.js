@@ -5,6 +5,7 @@ var SandboxedModule = require('sandboxed-module');
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
     requires: {
+        'xhr2': require('./helpers/FakeXHR2'),
         'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
@@ -28,7 +29,7 @@ describe('lib/web3/httpprovider', function () {
                 assert.equal(typeof result, 'object');
                 done();
             });
-        }); 
+        });
     });
 
     describe('isConnected', function () {
@@ -36,7 +37,6 @@ describe('lib/web3/httpprovider', function () {
             var provider = new HttpProvider();
 
             assert.isBoolean(provider.isConnected());
-        }); 
+        });
     });
 });
-
