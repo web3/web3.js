@@ -59,7 +59,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-Contract Properties
+= Properties =
 =========
 
 
@@ -191,7 +191,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-Contract Methods
+= Methods =
 =========
 
 
@@ -255,152 +255,6 @@ Example
     .then(function(receipt){
         console.log(myContract.options.address) // gives the new contract address
     });
-
-
-------------------------------------------------------------------------------
-
-
-getPastEvents
-=====================
-
-.. code-block:: javascript
-
-    myContract.getPastEvents(event[, options][, callback])
-
-Gets past events for this contract.
-
-----------
-Parameters
-----------
-
-1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
-2. ``Object`` - **options** (optional): The options used for deployment.
-    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``Number`` - **fromBlock** (optional): The block number from which to get events on.
-    * ``Number`` - **toBlock** (optional): The block number until events to get (Defaults to ``"latest"``).
-    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-3. ``Function`` - **callback** (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
-
-
-.. _contract-getPastEvents-return:
-
--------
-Returns
--------
-
-``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
-
-The structure of the returned event ``Object`` in the ``Arrray`` looks as follows:
-
-- ``Object`` - **returnValues**: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
-- ``String`` - **event**: The event name.
-- ``Number`` - **logIndex**: Integer of the event index position in the block.
-- ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
-- ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
-- ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
-- ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
-- ``String`` - **address**: from which this event originated from.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    myContract.getPastEvents('MyEvent', {
-        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
-        fromBlock: 0,
-        toBlock: 'latest'
-    }, function(error, events){ console.log(events); })
-    .then(function(events){
-        console.log(events) // same results as the optional callback above
-    });
-
-    > [{
-        returnValues: {
-            myIndexedParam: 20,
-            myOtherIndexedParam: '0x123456789...',
-            myNonIndexParam: 'My String'
-        },
-        event: 'MyEvent',
-        logIndex: 0,
-        transactionIndex: 0,
-        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
-        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
-        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
-    },{
-        ...
-    }]
-
-
-------------------------------------------------------------------------------
-
-
-once
-=====================
-
-.. code-block:: javascript
-
-    myContract.once(event[, options][, callback])
-
-Subscribes to an event, and unsubscribes immediately after the first event or error.
-
-----------
-Parameters
-----------
-
-1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
-2. ``Object`` - **options** (optional): The options used for deployment.
-    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-3. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
-
--------
-Returns
--------
-
-``EventEmitter``: The event emitter has the following events:
-
-- ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
-- ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
-
-For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    myContract.once('MyEvent', {
-        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
-        fromBlock: 0
-    }, function(error, event){ console.log(event); })
-    .on('data', function(event){
-        console.log(event); // same results as the optional callback above
-    })
-    .on('changed', function(event){
-        // remove event from local database
-    })
-    .on('error', console.error);
-
-    // console output of the event
-    > {
-        returnValues: {
-            myIndexedParam: 20,
-            myOtherIndexedParam: '0x123456789...',
-            myNonIndexParam: 'My String'
-        },
-        event: 'MyEvent',
-        logIndex: 0,
-        transactionIndex: 0,
-        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
-        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
-        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
-    }
 
 
 ------------------------------------------------------------------------------
@@ -675,6 +529,158 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+= Events =
+=========
+
+
+------------------------------------------------------------------------------
+
+
+getPastEvents
+=====================
+
+.. code-block:: javascript
+
+    myContract.getPastEvents(event[, options][, callback])
+
+Gets past events for this contract.
+
+----------
+Parameters
+----------
+
+1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
+2. ``Object`` - **options** (optional): The options used for deployment.
+    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``Number`` - **fromBlock** (optional): The block number from which to get events on.
+    * ``Number`` - **toBlock** (optional): The block number until events to get (Defaults to ``"latest"``).
+    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+3. ``Function`` - **callback** (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
+
+
+.. _contract-getPastEvents-return:
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
+
+The structure of the returned event ``Object`` in the ``Arrray`` looks as follows:
+
+- ``Object`` - **returnValues**: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
+- ``String`` - **event**: The event name.
+- ``Number`` - **logIndex**: Integer of the event index position in the block.
+- ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
+- ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
+- ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
+- ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
+- ``String`` - **address**: from which this event originated from.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.getPastEvents('MyEvent', {
+        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0,
+        toBlock: 'latest'
+    }, function(error, events){ console.log(events); })
+    .then(function(events){
+        console.log(events) // same results as the optional callback above
+    });
+
+    > [{
+        returnValues: {
+            myIndexedParam: 20,
+            myOtherIndexedParam: '0x123456789...',
+            myNonIndexParam: 'My String'
+        },
+        event: 'MyEvent',
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    },{
+        ...
+    }]
+
+
+------------------------------------------------------------------------------
+
+
+once
+=====================
+
+.. code-block:: javascript
+
+    myContract.once(event[, options][, callback])
+
+Subscribes to an event, and unsubscribes immediately after the first event or error.
+
+----------
+Parameters
+----------
+
+1. ``String`` - **event**: The name of the event in the contract, or ``"allEvents"`` to get all events.
+2. ``Object`` - **options** (optional): The options used for deployment.
+    * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+3. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
+
+-------
+Returns
+-------
+
+``EventEmitter``: The event emitter has the following events:
+
+- ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
+- ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+
+For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.once('MyEvent', {
+        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0
+    }, function(error, event){ console.log(event); })
+    .on('data', function(event){
+        console.log(event); // same results as the optional callback above
+    })
+    .on('changed', function(event){
+        // remove event from local database
+    })
+    .on('error', console.error);
+
+    // console output of the event
+    > {
+        returnValues: {
+            myIndexedParam: 20,
+            myOtherIndexedParam: '0x123456789...',
+            myNonIndexParam: 'My String'
+        },
+        event: 'MyEvent',
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    }
+
+
+------------------------------------------------------------------------------
 
 .. _contract-events:
 
