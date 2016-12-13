@@ -53,6 +53,7 @@
     ],
     "name": "deposit",
     "outputs": [],
+    "payable": true,
     "type": "function"
   },
   {
