@@ -39,7 +39,20 @@ var abi = [{
         "name": "value",
         "type": "uint256"
     }],
-    "outputs": []
+    "outputs": [],
+    "payable": true
+},{
+    "name": "myDisallowedSend",
+    "type": "function",
+    "inputs": [{
+        "name": "to",
+        "type": "address"
+    }, {
+        "name": "value",
+        "type": "uint256"
+    }],
+    "outputs": [],
+    "payable": false
 }, {
     "name": "testArr",
     "type": "function",
@@ -1192,6 +1205,61 @@ describe('contract', function () {
 
             contract.methods.mySend(address, 17).send({from: address});
         });
+
+        it('should throw error when trying to send ether to a non payable contract function', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            var contract = new web3.eth.contract(abi, address);
+
+            try{
+                contract.methods.myDisallowedSend(address, 17).send({from: address, value: 123})
+                .on('error', function (e) {
+                    assert.isTrue(e instanceof Error, 'Should throw error');
+                })
+                .catch(function (e) {
+                    assert.isTrue(e instanceof Error, 'Should throw error');
+                });
+
+            } catch(e){
+                assert.isTrue(e instanceof Error, 'Should throw error');
+            }
+        });
+
+        it('should not throw error when trying to not send ether to a non payable contract function', function (done) {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'myDisallowedSend(address,uint256)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) +
+                    '0000000000000000000000001234567890123456789012345678901234567891' +
+                    '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    from: address,
+                    to: address
+                }]);
+
+                done();
+            });
+
+            var contract = new web3.eth.contract(abi, address);
+
+            try{
+                contract.methods.myDisallowedSend(address, 17).send({from: address})
+                .on('error', function (e) {
+                    assert.isFalse(e instanceof Error, 'Should not throw error');
+                })
+                .catch(function (e) {
+                    assert.isFalse(e instanceof Error, 'Should not throw error');
+                });
+
+            } catch(e){
+                assert.isFalse(e instanceof Error, 'Should not throw error');
+            }
+        });
+
 
         it('should sendTransaction to contract function using the function namen incl. parameters', function () {
             var provider = new FakeHttpProvider();
