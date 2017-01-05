@@ -2,6 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var Web3 = require('../index');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var eventifiedPromise = require('../lib/web3/eventifiedPromise.js');
 var utils = require('../lib/utils/utils');
 var BigNumber = require('bignumber.js');
 var sha3 = require('../lib/utils/sha3');
@@ -231,7 +232,7 @@ describe('contract', function () {
 
             done();
         });
-        it('_checkForContractAddress should subscribe and check for receipts and code', function (done) {
+        it('_methodReturnCallback should subscribe and check for receipts and code if a contract was deployed', function (done) {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
 
@@ -270,8 +271,9 @@ describe('contract', function () {
 
 
             var contract = new web3.eth.contract(abi, address);
+            var defer = eventifiedPromise();
 
-            var deploy = contract._checkForContractAddress('0x1234000000000000000000000000000000000000000000000000000000056789', function (err, result) {
+            defer.promise.then(function (result) {
 
                 assert.equal(result.contractAddress, address);
                 assert.equal(result.blockNumber, 10);
@@ -281,6 +283,10 @@ describe('contract', function () {
                 done();
             });
 
+            contract._methodReturnCallback.call({
+                _parent: contract,
+                _deployData: '0x12345'
+            }, defer, null, 'send', null, '0x1234000000000000000000000000000000000000000000000000000000056789')
 
         });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
@@ -408,7 +414,7 @@ describe('contract', function () {
             var deploy = contract._executeMethod.call(txObject, 'call', {from: address2}, function (err, result) {
                 assert.deepEqual(result, new BigNumber(0xa));
             })
-            .on('data', function(result){
+            .then(function(result){
                 assert.deepEqual(result, new BigNumber(0xa));
                 done();
             });
@@ -1046,17 +1052,35 @@ describe('contract', function () {
             assert.equal(result, '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891');
         });
 
-        it('should encode a constructor call', function () {
+        it('should encode a constructor call with pre set data', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider);
             var signature = 'balance(address)';
 
             var contract = new web3.eth.contract(abi, {data: '0x1234'});
 
-            var result = contract.methods.constructor(address, 10).encodeABI();
+            var result = contract.deploy({
+                arguments: [address, 10]
+            }).encodeABI();
 
             assert.equal(result, '0x1234' + '0000000000000000000000001234567890123456789012345678901234567891'+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
+
+        it('should encode a constructor call with passed data', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'balance(address)';
+
+            var contract = new web3.eth.contract(abi);
+
+            var result = contract.deploy({
+                arguments: [address, 10],
+                data: '0x1234'
+            }).encodeABI();
+
+            assert.equal(result, '0x1234' + '0000000000000000000000001234567890123456789012345678901234567891'+ '000000000000000000000000000000000000000000000000000000000000000a');
+        });
+
 
         it('should estimate a function', function (done) {
             var provider = new FakeHttpProvider();
@@ -1088,15 +1112,16 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
-                    data: '0x123400000000000000000000000012345678901234567890123456789012345678910000000000000000000000000000000000000000000000000000000000000032',
-                    to: address
+                    data: '0x123400000000000000000000000012345678901234567890123456789012345678910000000000000000000000000000000000000000000000000000000000000032'
                 }]);
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
 
             var contract = new web3.eth.contract(abi, address, {data: '0x1234'});
 
-            contract.methods.constructor(address, 50).estimateGas(function (err, res) {
+            contract.deploy({
+                arguments: [address, 50]
+            }).estimateGas(function (err, res) {
                 assert.deepEqual(res, 10);
                 done();
             });
@@ -1235,7 +1260,7 @@ describe('contract', function () {
             var contract = new web3.eth.contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
-            .on('data', function (r) {
+            .then(function (r) {
                 assert.deepEqual(new BigNumber(0x32), r);
                 done();
             });
@@ -1567,9 +1592,10 @@ describe('contract', function () {
             var contract = new web3.eth.contract(abi);
 
             contract.deploy({
-                from: address,
                 data: '0x1234567',
-                arguments: ['0x5554567890123456789012345678901234567891', 200],
+                arguments: ['0x5554567890123456789012345678901234567891', 200]
+            }).send({
+                from: address,
                 gas: 50000,
                 gasPrice: 3000
             }, function (err) {
@@ -1629,9 +1655,10 @@ describe('contract', function () {
             var contract = new web3.eth.contract(abi);
 
             contract.deploy({
-                from: address,
                 data: '0x1234567',
-                arguments: [address, 200],
+                arguments: [address, 200]
+            }).send({
+                from: address,
                 gas: 50000,
                 gasPrice: 3000
             })
