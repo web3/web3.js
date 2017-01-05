@@ -30,7 +30,8 @@ var desc = [{
         "name": "value",
         "type": "uint256"
     }],
-    "outputs": []
+    "outputs": [],
+    "payable": true
 }, {
     "name": "testArr(int[])",
     "type": "function",
