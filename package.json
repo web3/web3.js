@@ -17,7 +17,6 @@
         "crypto-js": "^3.1.4",
         "eventemitter3": "^1.1.1",
         "global": "^4.3.1",
-        "solc": "^0.4.7",
         "utf8": "^2.1.1",
         "websocket": "^1.0.23",
         "xhr2": "*",
