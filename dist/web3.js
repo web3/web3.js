@@ -582,7 +582,7 @@ var f = require('./formatters');
 var SolidityType = require('./type');
 
 /**
- * SolidityTypeBytes is a prootype that represents bytes type
+ * SolidityTypeBytes is a prototype that represents the bytes type.
  * It matches:
  * bytes
  * bytes[]
@@ -591,11 +591,8 @@ var SolidityType = require('./type');
  * bytes[3][]
  * bytes[][6][], ...
  * bytes32
- * bytes64[]
  * bytes8[4]
- * bytes256[][]
  * bytes[3][]
- * bytes64[][6][], ...
  */
 var SolidityTypeBytes = function () {
     this._inputFormatter = f.formatInputBytes;
@@ -610,9 +607,7 @@ SolidityTypeBytes.prototype.isType = function (name) {
 };
 
 SolidityTypeBytes.prototype.staticPartLength = function (name) {
-    var matches = name.match(/^bytes([0-9]*)/);
-    var size = parseInt(matches[1]);
-    return size * this.staticArrayLength(name);
+    return 32 * this.staticArrayLength(name);
 };
 
 module.exports = SolidityTypeBytes;
@@ -634,7 +629,7 @@ module.exports = SolidityTypeBytes;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file coder.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -664,7 +659,7 @@ var SolidityCoder = function (types) {
  *
  * @method _requireType
  * @param {String} type
- * @returns {SolidityType}
+ * @returns {SolidityType} 
  * @throws {Error} throws if no matching type is found
  */
 SolidityCoder.prototype._requireType = function (type) {
@@ -712,7 +707,7 @@ SolidityCoder.prototype.encodeParams = function (types, params) {
         return acc + roundedStaticPartLength;
     }, 0);
 
-    var result = this.encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
+    var result = this.encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset); 
 
     return result;
 };
@@ -737,7 +732,7 @@ SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, 
 
         // TODO: figure out nested arrays
     });
-
+    
     types.forEach(function (type, i) {
         if (isDynamic(i)) {
             var e = self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
@@ -757,7 +752,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
             var nestedName = solidityType.nestedName(type);
             var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
             var result = encoded[0];
-
+            
             (function () {
                 var previousLength = 2; // in int
                 if (solidityType.isDynamicArray(nestedName)) {
@@ -767,7 +762,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
                     }
                 }
             })();
-
+            
             // first element is length, skip it
             (function () {
                 for (var i = 0; i < encoded.length - 1; i++) {
@@ -778,7 +773,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
 
             return result;
         })();
-
+       
     } else if (solidityType.isStaticArray(type)) {
         return (function () {
             var nestedName = solidityType.nestedName(type);
@@ -791,7 +786,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
                     var previousLength = 0; // in int
                     for (var i = 0; i < encoded.length; i++) {
                         // calculate length of previous item
-                        previousLength += +(encoded[i - 1] || [])[0] || 0;
+                        previousLength += +(encoded[i - 1] || [])[0] || 0; 
                         result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
                     }
                 })();
@@ -834,7 +829,7 @@ SolidityCoder.prototype.decodeParam = function (type, bytes) {
 SolidityCoder.prototype.decodeParams = function (types, bytes) {
     var solidityTypes = this.getSolidityTypes(types);
     var offsets = this.getOffsets(types, solidityTypes);
-
+        
     return solidityTypes.map(function (solidityType, index) {
         return solidityType.decode(bytes, offsets[index],  types[index], index);
     });
@@ -844,16 +839,16 @@ SolidityCoder.prototype.getOffsets = function (types, solidityTypes) {
     var lengths =  solidityTypes.map(function (solidityType, index) {
         return solidityType.staticPartLength(types[index]);
     });
-
+    
     for (var i = 1; i < lengths.length; i++) {
          // sum with length of previous element
-        lengths[i] += lengths[i - 1];
+        lengths[i] += lengths[i - 1]; 
     }
 
     return lengths.map(function (length, index) {
         // remove the current length, so the length is sum of previous elements
         var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
-        return length - staticPartLength;
+        return length - staticPartLength; 
     });
 };
 
@@ -946,7 +941,7 @@ var SolidityParam = require('./param');
  */
 var formatInputInt = function (value) {
     BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
-    var result = utils.padLeft(utils.toTwosComplement(value).round().toString(16), 64);
+    var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
 
@@ -1097,10 +1092,13 @@ var formatOutputBool = function (param) {
  *
  * @method formatOutputBytes
  * @param {SolidityParam} left-aligned hex representation of string
+ * @param {String} name type name
  * @returns {String} hex string
  */
-var formatOutputBytes = function (param) {
-    return '0x' + param.staticPart();
+var formatOutputBytes = function (param, name) {
+    var matches = name.match(/^bytes([0-9]*)/);
+    var size = parseInt(matches[1]);
+    return '0x' + param.staticPart().slice(0, 2 * size);
 };
 
 /**
@@ -1162,7 +1160,6 @@ module.exports = {
     formatOutputAddress: formatOutputAddress
 };
 
-
 },{"../utils/config":18,"../utils/utils":20,"./param":11,"bignumber.js":"bignumber.js"}],10:[function(require,module,exports){
 var f = require('./formatters');
 var SolidityType = require('./type');
@@ -1218,7 +1215,7 @@ module.exports = SolidityTypeInt;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file param.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -1237,7 +1234,7 @@ var SolidityParam = function (value, offset) {
 
 /**
  * This method should be used to get length of params's dynamic part
- *
+ * 
  * @method dynamicPartLength
  * @returns {Number} length of dynamic part (in bytes)
  */
@@ -1265,7 +1262,7 @@ SolidityParam.prototype.withOffset = function (offset) {
  * @param {SolidityParam} result of combination
  */
 SolidityParam.prototype.combine = function (param) {
-    return new SolidityParam(this.value + param.value);
+    return new SolidityParam(this.value + param.value); 
 };
 
 /**
@@ -1297,8 +1294,8 @@ SolidityParam.prototype.offsetAsBytes = function () {
  */
 SolidityParam.prototype.staticPart = function () {
     if (!this.isDynamic()) {
-        return this.value;
-    }
+        return this.value; 
+    } 
     return this.offsetAsBytes();
 };
 
@@ -1330,7 +1327,7 @@ SolidityParam.prototype.encode = function () {
  * @returns {String}
  */
 SolidityParam.encodeList = function (params) {
-
+    
     // updating offsets
     var totalOffset = params.length * 32;
     var offsetParams = params.map(function (param) {
@@ -1656,13 +1653,14 @@ SolidityType.prototype.decode = function (bytes, offset, name) {
             var dynamicOffset = parseInt('0x' + bytes.substr(offset * 2, 64));      // in bytes
             var length = parseInt('0x' + bytes.substr(dynamicOffset * 2, 64));      // in bytes
             var roundedLength = Math.floor((length + 31) / 32);                     // in int
-
-            return self._outputFormatter(new SolidityParam(bytes.substr(dynamicOffset * 2, ( 1 + roundedLength) * 64), 0));
+            var param = new SolidityParam(bytes.substr(dynamicOffset * 2, ( 1 + roundedLength) * 64), 0);
+            return self._outputFormatter(param, name);
         })();
     }
 
     var length = this.staticPartLength(name);
-    return this._outputFormatter(new SolidityParam(bytes.substr(offset * 2, length * 2)));
+    var param = new SolidityParam(bytes.substr(offset * 2, length * 2));
+    return this._outputFormatter(param, name);
 };
 
 module.exports = SolidityType;
@@ -1779,13 +1777,13 @@ if (typeof XMLHttpRequest === 'undefined') {
 
 /**
  * Utils
- *
+ * 
  * @module utils
  */
 
 /**
  * Utility functions
- *
+ * 
  * @class [utils] config
  * @constructor
  */
@@ -1852,7 +1850,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file sha3.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -1964,8 +1962,10 @@ var _fireError = function (error, emitter, reject, callback) {
         if(isFunction(reject)) {
             reject(error);
         }
-        emitter.emit('error', error);
-        emitter.removeAllListeners();
+        if(emitter && isFunction(emitter.emit)) {
+            emitter.emit('error', error);
+            emitter.removeAllListeners();
+        }
     }, 0);
     return emitter;
 };
@@ -2277,7 +2277,7 @@ var toBigNumber = function(number) {
  * @return {BigNumber}
  */
 var toTwosComplement = function (number) {
-    var bigNumber = toBigNumber(number);
+    var bigNumber = toBigNumber(number).round();
     if (bigNumber.lessThan(0)) {
         return new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(bigNumber).plus(1);
     }
@@ -2674,7 +2674,7 @@ module.exports = Web3;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file batch.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -2719,7 +2719,7 @@ Batch.prototype.execute = function () {
                 requests[index].callback(null, (requests[index].format ? requests[index].format(result.result) : result.result));
             }
         });
-    });
+    }); 
 };
 
 module.exports = Batch;
@@ -2757,7 +2757,6 @@ var sha3 = require('../utils/sha3');
 var Subscription = require('./subscription.js');
 
 
-
 /**
  * Should be called to create new contract instance
  *
@@ -2771,8 +2770,6 @@ var Contract = function(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 
-    this.options = {};
-
     if(!(this instanceof Contract))
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
 
@@ -2780,12 +2777,13 @@ var Contract = function(jsonInterface, address, options) {
         throw new Error('You must provide the json interface of the contract when instatiating a contract object.');
 
     // get the options object
+    this.options = {};
     if(utils.isObject(args[args.length - 1])) {
         options = args[args.length - 1];
         this.options.data = options.data;
         this.options.from = options.from;
         this.options.gasPrice = options.gasPrice;
-        this.options.gasLimit = options.gasLimit;
+        this.options.gas = options.gas || options.gasLimit;
 
         if(utils.isObject(address)) {
             address = null;
@@ -2794,7 +2792,7 @@ var Contract = function(jsonInterface, address, options) {
 
 
     // set address
-    Object.defineProperty(this, 'address', {
+    Object.defineProperty(this.options, 'address', {
         set: function(value){
             if(utils.isAddress(value))
                 this._address = value.toLowerCase();
@@ -2808,26 +2806,36 @@ var Contract = function(jsonInterface, address, options) {
     });
 
     // add method and event signatures, when the jsonInterface gets set
-    Object.defineProperty(this, 'jsonInterface', {
+    Object.defineProperty(this.options, 'jsonInterface', {
         set: function(value){
+            _this.methods = {};
+            _this.events = {};
+
             _this._jsonInterface = value.map(function(method) {
+                var func,
+                    funcName,
+                    inputs = method.inputs ? method.inputs.map(function(key){ return key.type; }).join(',') : '';
+
+                if(method.name)
+                    funcName = method.name +'('+ inputs +')';
+
 
                 // constructor
                 if (method.type === 'constructor') {
                     method.signature = 'constructor';
-                    var func = _this._createTxObject.bind({
+                    func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
                     });
 
                     // add constructor
                     _this.methods.constructor = func;
-                    _this.constructor = func;
+                    // _this.constructor = func;
 
                 // function
                 } else if (method.type === 'function') {
                     method.signature = '0x'+ sha3(utils.transformToFullName(method)).slice(0, 8);
-                    var func = _this._createTxObject.bind({
+                    func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
                     });
@@ -2840,14 +2848,18 @@ var Contract = function(jsonInterface, address, options) {
                     // definitely add the method based on its signature
                     _this.methods[method.signature] = func;
 
-                    // also add to the main contract object
-                    if(!_this[method.name] || _this[method.name].name === 'bound _createTxObject')
-                        _this[method.name] = _this.methods[method.name];
-                    _this[method.signature] = _this.methods[method.signature];
+                    // add method by name
+                    _this.methods[funcName] = func;
 
-                    // event
+                    // also add to the main contract object
+                    // if(!_this[method.name] || _this[method.name].name === 'bound _createTxObject')
+                    //     _this[method.name] = _this.methods[method.name];
+                    // _this[method.signature] = _this.methods[method.signature];
+
+                // event
                 } else if (method.type === 'event') {
-                    var event = _this.on.bind(_this, method.signature);
+                    method.signature = '0x'+ sha3(utils.transformToFullName(method));
+                    var event = _this._on.bind(_this, method.signature);
 
                     // add method only if not already exists
                     if(!_this.events[method.name] || _this.events[method.name].name === 'bound ')
@@ -2856,12 +2868,17 @@ var Contract = function(jsonInterface, address, options) {
                     // definitely add the method based on its signature
                     _this.events[method.signature] = event;
 
-                    method.signature = '0x'+ sha3(utils.transformToFullName(method));
+                    // add event by name
+                    _this.events[funcName] = event;
                 }
 
 
                 return method;
             });
+
+            // add allEvents
+            _this.events.allEvents = _this._on.bind(_this, 'allevents');
+
             return _this._jsonInterface;
         },
         get: function(){
@@ -2878,12 +2895,26 @@ var Contract = function(jsonInterface, address, options) {
     this._jsonInterface = [];
 
     // set getter/setter properties
-    this.address = address;
-    this.jsonInterface = jsonInterface;
+    this.options.address = address;
+    this.options.jsonInterface = jsonInterface;
 
 };
 
 Contract.prototype._web3 = {}; // web3 is attached here in eth.js
+
+
+/**
+ * Get the callback and modiufy the array if necessary
+ *
+ * @method _getCallback
+ * @param {Array} args
+ * @return {Function} the callback
+ */
+Contract.prototype._getCallback = function getCallback(args) {
+    if (utils.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
 
 /**
  * Checks that no listener with name "newListener" or "removeListener" is added.
@@ -2891,15 +2922,37 @@ Contract.prototype._web3 = {}; // web3 is attached here in eth.js
  * @method _checkListener
  * @param {String} type
  * @param {String} event
- * @param {Function} func
  * @return {Object} the contract instance
  */
-Contract.prototype._checkListener = function(type, event, func){
+Contract.prototype._checkListener = function(type, event){
     if(event === type) {
         throw new Error('The event "'+ type +'" is a reserved event name, you can\'t use it.');
     }
 };
 
+
+/**
+ * Use default values, if options are not available
+ *
+ * @method _fillWithDefaultOptions
+ * @param {Object} options the options gived by the user
+ * @return {Object} the options with gaps filled by defaults
+ */
+Contract.prototype._fillWithDefaultOptions = function fillWithDefaultOptions(options) {
+
+    options.data = options.data || this.options.data;
+    options.from = options.from || this.options.from;
+
+    if(utils.isAddress(options.from))
+        options.from = options.from.toLowerCase();
+
+    options.gasPrice = options.gasPrice || this.options.gasPrice;
+    options.gas = options.gas || options.gasLimit || this.options.gas;
+    // TODO replace with only gasLimit?
+    delete options.gasLimit;
+
+    return options;
+};
 
 
 /**
@@ -2960,7 +3013,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
             delete result.topics;
     }
 
-    result.address = this.address;
+    result.address = this.options.address;
 
     return result;
 };
@@ -3044,7 +3097,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI(methodSignature,
     }
 
     var signature = false,
-        paramsABI = _this.jsonInterface.filter(function (json) {
+        paramsABI = _this.options.jsonInterface.filter(function (json) {
             return ((methodSignature === 'constructor' && json.type === methodSignature) ||
                 ((json.signature === methodSignature || json.signature === '0x'+ methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
         }).map(function (json) {
@@ -3075,7 +3128,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI(methodSignature,
         var returnValue = (signature) ? signature + paramsABI : paramsABI;
 
         if(!returnValue)
-            throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".')
+            throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".');
         else
             return returnValue;
     }
@@ -3169,6 +3222,50 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
 };
 
 /**
+ * The callback fired after the contract is deployed. Starts the contract address check
+ *
+ * @method _deployContractCallback
+ * @param {Promise} defer
+ * @param {Function} callback
+ * @param {Object} err
+ * @param {String} hash
+ * @return {undefined}
+ */
+var _deployContractCallback = function deployContractCallback(defer, callback, err, hash){
+
+    // call callback if available
+    if(utils.isFunction(callback)) {
+        callback(err, hash);
+    }
+
+    // TODO remove in the future, when its moved to sendTransaction
+
+    if (err) {
+        defer.reject(err);
+        defer.promise.emit('error', err);
+        // remove all listeners on the end, as no event will ever fire again
+        defer.promise.removeAllListeners();
+
+    } else {
+        defer.promise.emit('transactionHash', hash);
+
+        // wait for the contract to be receipt and return the address
+        this._checkForContractAddress(hash, function(err, receipt){
+            if(err) {
+                defer.reject(err);
+                defer.promise.emit('error', err);
+            } else {
+                defer.resolve(receipt);
+                defer.promise.emit('receipt', receipt);
+            }
+
+            // remove all listeners on the end, as no event will ever fire again
+            // defer.promise.removeAllListeners();
+        });
+    }
+};
+
+/**
  * Deploys a contract and fire events based on its state: transactionHash, receipt
  *
  * All event listeners will be removed, once the last possible event is fired ("error", or "receipt")
@@ -3179,17 +3276,12 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
  * @return {Object} EventEmitter possible events are "error", "transactionHash" and "receipt"
  */
 Contract.prototype.deploy = function(options, callback){
-    /*jshint maxcomplexity: 6 */
-    var _this = this,
-        defer = eventifiedPromise();
+    var defer = eventifiedPromise();
 
     options = options || {};
 
     options.arguments = options.arguments || [];
-    options.data = options.data || this.options.data;
-    options.from = options.from || this.options.from;
-    options.gasPrice = options.gasPrice || this.options.gasPrice;
-    options.gasLimit = options.gas || options.gasLimit || this.options.gasLimit;
+    options = this._fillWithDefaultOptions(options);
 
     // return error, if no "from" is specified
     if(!utils.isAddress(options.from)) {
@@ -3198,7 +3290,7 @@ Contract.prototype.deploy = function(options, callback){
 
     // return error, if no "data" is specified
     if(!options.data) {
-        return utils._fireError(new Error('No "data" specified in neither the default options, nor the given options.'), defer.promise, defer.reject, callback);
+        return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), defer.promise, defer.reject, callback);
     }
 
     // add constructor parameters
@@ -3210,39 +3302,9 @@ Contract.prototype.deploy = function(options, callback){
     this._web3.eth.sendTransaction({
         from: options.from,
         gasPrice: options.gasPrice,
-        gas: options.gasLimit, // TODO change to gasLimit?
+        gas: options.gas,
         data: options.data
-    }, function (err, hash) {
-
-        // call callback if available
-        if(utils.isFunction(callback)) {
-            callback(err, hash);
-        }
-
-        if (err) {
-            defer.reject(err);
-            defer.promise.emit('error', err);
-            // remove all listeners on the end, as no event will ever fire again
-            defer.promise.removeAllListeners();
-
-        } else {
-            defer.promise.emit('transactionHash', hash);
-
-            // wait for the contract to be receipt and return the address
-            _this._checkForContractAddress(hash, function(err, receipt){
-                if(err) {
-                    defer.reject(err);
-                    defer.promise.emit('error', err);
-                } else {
-                    defer.resolve(receipt);
-                    defer.promise.emit('receipt', receipt);
-                }
-
-                // remove all listeners on the end, as no event will ever fire again
-                // defer.promise.removeAllListeners();
-            });
-        }
-    });
+    }, _deployContractCallback.bind(this, defer, callback));
 
     return defer.promise;
 };
@@ -3282,29 +3344,26 @@ Contract.prototype.deploy = function(options, callback){
 /**
  * Gets the event signature and outputformatters
  *
- * @method on
- * @param {String} _generateEventOptions
+ * @method _generateEventOptions
  * @param {Object} event
  * @param {Object} options
  * @param {Function} callback
  * @return {Object} the event options object
  */
-Contract.prototype._generateEventOptions = function(event, options, callback) {
+Contract.prototype._generateEventOptions = function() {
     var args = Array.prototype.slice.call(arguments);
 
     // get the callback
-    if (utils.isFunction(args[args.length - 1])) {
-        callback = args.pop();
-    }
+    var callback = this._getCallback(args);
 
     // get the options
-    options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
+    var options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
 
-    event = (utils.isString(args[0])) ? event : 'allevents';
+    var event = (utils.isString(args[0])) ? args[0] : 'allevents';
     event = (event.toLowerCase() === 'allevents') ? {
             name: 'ALLEVENTS',
-            jsonInterface: this.jsonInterface
-        } : this.jsonInterface.find(function (json) {
+            jsonInterface: this.options.jsonInterface
+        } : this.options.jsonInterface.find(function (json) {
             return (json.type === 'event' && (json.name === event || json.signature === '0x'+ event.replace('0x','')));
         });
 
@@ -3312,7 +3371,7 @@ Contract.prototype._generateEventOptions = function(event, options, callback) {
         throw new Error('Event "' + event.name + '" doesn\'t exist in this contract.');
     }
 
-    if (!utils.isAddress(this.address)) {
+    if (!utils.isAddress(this.options.address)) {
         throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
     }
 
@@ -3336,13 +3395,15 @@ Contract.prototype.once = function(event, options, callback) {
     var args = Array.prototype.slice.call(arguments);
 
     // get the callback
-    if (utils.isFunction(args[args.length - 1])) {
-        callback = args[args.length - 1];
-    }
+    callback = this._getCallback(args);
 
-    return this.on(event, options, function (err, res, sub) {
+    // don't allow fromBlock
+    if(options)
+        delete options.fromBlock;
+
+    return this._on(event, options, function (err, res, sub) {
+        sub.unsubscribe();
         if(utils.isFunction(callback)){
-            sub.unsubscribe();
             callback(err, res);
         }
     });
@@ -3357,7 +3418,7 @@ Contract.prototype.once = function(event, options, callback) {
  * @param {Function} callback
  * @return {Object} the event subscription
  */
-Contract.prototype.on = function(event, options, callback){
+Contract.prototype._on = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
 
@@ -3392,7 +3453,7 @@ Contract.prototype.on = function(event, options, callback){
  * @param {Function} callback
  * @return {Object} the promievent
  */
-Contract.prototype.getPastEvents = function(event, options, callback){
+Contract.prototype.getPastEvents = function(){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
     var getPastLogs = new Method({
@@ -3418,8 +3479,7 @@ Contract.prototype.getPastEvents = function(event, options, callback){
  * @returns {Object} an object with functions to call the methods
  */
 Contract.prototype._createTxObject =  function _createTxObject(){
-    var _this = this,
-        txObject = {};
+    var txObject = {};
 
     if(this.method.type === 'function') {
 
@@ -3442,72 +3502,136 @@ Contract.prototype._createTxObject =  function _createTxObject(){
 };
 
 /**
+ * The callback called when executing a method
+ *
+ * @method _methodReturnCallback
+ * @param {Object} err
+ * @param {Mixed} returnValue
+ */
+Contract.prototype._methodReturnCallback = function methodReturnCallback(defer, callback, type, err, returnValue) {
+    var _this = this;
+
+    if(type === 'call') {
+        returnValue = _this._parent._decodeMethodReturn(_this._method.outputs, returnValue);
+    }
+
+
+    if (err) {
+        return utils._fireError(err, defer.promise, defer.reject, callback);
+    } else {
+
+        if(callback) {
+            callback(null, returnValue);
+        }
+
+        // send immediate returnValue
+        defer.promise.emit('data', returnValue);
+
+        if(type === 'send') {
+
+            // fire "receipt" event and resolve after
+            _this._parent._web3.eth.subscribe('newBlocks', {}, function (err, block, sub) {
+                if(!err) {
+
+                    _this._parent._web3.eth.getTransactionReceipt(returnValue, function (err, receipt) {
+                        if(!err) {
+                            if(receipt) {
+                                sub.unsubscribe();
+
+                                if(!receipt.outOfGas) {
+                                    defer.promise.emit('receipt', receipt);
+                                    defer.resolve(receipt);
+                                    defer.promise.removeAllListeners();
+
+                                } else {
+                                    return utils._fireError(new Error('Transaction ran out of gas.'), defer.promise, defer.reject);
+                                }
+                            }
+                        } else {
+                            sub.unsubscribe();
+                            return utils._fireError(err, defer.promise, defer.reject);
+                        }
+                    });
+
+
+                } else {
+                    sub.unsubscribe();
+                    return utils._fireError(err, defer.promise, defer.reject);
+                }
+            });
+
+        } else {
+            // remove all listeners on the end, as no event will ever fire again
+            defer.resolve(returnValue);
+            defer.promise.removeAllListeners();
+        }
+    }
+};
+
+/**
+ * Generates the options for the execute call
+ *
+ * @method _processExecuteArguments
+ * @param {Array} args
+ * @param {Promise} defer
+ */
+Contract.prototype._processExecuteArguments = function _processExecuteArguments(args, defer) {
+    var processedArgs = {};
+
+    processedArgs.type = args.shift();
+
+    // get the callback
+    processedArgs.callback = this._parent._getCallback(args);
+
+    // get block number to use for call
+    if(processedArgs.type === 'call' && args[args.length - 1] !== true && (utils.isString(args[args.length - 1]) || isFinite(args[args.length - 1])))
+        processedArgs.defaultBlock = args.pop();
+
+    // get the options
+    processedArgs.options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
+
+    // get the generateRequest argument
+    processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;
+
+    processedArgs.options = this._parent._fillWithDefaultOptions(processedArgs.options);
+    processedArgs.options.data = this.encodeABI();
+
+    // add contract address
+    if(!utils.isAddress(this._parent.options.address))
+        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
+
+    processedArgs.options.to = this._parent.options.address;
+
+    // return error, if no "data" is specified
+    if(!processedArgs.options.data)
+        return utils._fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.promise, defer.reject, processedArgs.callback);
+
+    return processedArgs;
+};
+
+/**
  * Executes a call, transact or estimateGas on a contract function
  *
  * @method _executeMethod
  * @param {String} type the type this execute function should execute
  * @param {Boolean} makeRequest if true, it simply returns the request parameters, rather than executing it
  */
-Contract.prototype._executeMethod = function _executeMethod(type){
-    var _this = this,
-        args = Array.prototype.slice.call(arguments),
-        defer = eventifiedPromise(),
-        options = options || {},
-        defaultBlock = null,
-        callback = null;
+Contract.prototype._executeMethod = function _executeMethod(){
+    var defer = eventifiedPromise(),
+        args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer);
 
-    type = args.shift();
-    // get the callback
-    if(utils.isFunction(args[args.length - 1])) {
-        callback = args.pop();
-    }
-
-    // get block number to use for call
-    if(type === 'call' && args[args.length - 1] !== true && (utils.isString(args[args.length - 1]) || isFinite(args[args.length - 1]))) {
-        defaultBlock = args.pop();
-    }
-
-    // get the options
-    options = (utils.isObject(args[args.length - 1]))
-        ? args.pop()
-        : {};
-
-    // get the generateRequest argument
-    makeRequest = (args[args.length - 1] === true)? args.pop() : false;
-
-
-    options.from = options.from || this._parent.options.from;
-    options.data = this.encodeABI();
-    // TODO remove once we switched everywhere to gasLimit
-    options.gas = options.gas || options.gasLimit;
-    delete options.gasLimit;
-
-    // add contract address
-    if(!utils.isAddress(this._parent.address)) {
-        throw new Error('This contract object doesn\'t have address set yet, please set an address first.');
-    }
-
-    if(utils.isAddress(options.from))
-        options.from = options.from.toLowerCase();
-
-    options.to = this._parent.address.toLowerCase();
-
-    // return error, if no "data" is specified
-    if(!options.data) {
-        return utils._fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.promise, defer.reject, callback);
-    }
 
     // simple return request
-    if(makeRequest) {
+    if(args.generateRequest) {
 
         var payload = {
-            params: [formatters.inputCallFormatter(options), formatters.inputDefaultBlockNumberFormatter(defaultBlock)],
-            callback: callback
+            params: [formatters.inputCallFormatter(args.options), formatters.inputDefaultBlockNumberFormatter(args.defaultBlock)],
+            callback: args.callback
         };
 
-        if(type === 'call') {
+        if(args.type === 'call') {
             payload.method = 'eth_call';
-            payload.format = _this._parent._decodeMethodReturn.bind(null, _this._method.outputs);
+            payload.format = this._parent._decodeMethodReturn.bind(null, this._method.outputs);
         } else {
             payload.method = 'eth_sendTransaction';
         }
@@ -3516,81 +3640,29 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
     } else {
 
-        // create the callback method
-        var methodReturnCallback = function(err, returnValue) {
+        var methodReturnCallback = this._parent._methodReturnCallback.bind(this, defer, args.callback, args.type);
 
-            if(type === 'call') {
-                returnValue = _this._parent._decodeMethodReturn(_this._method.outputs, returnValue);
-            }
-
-
-            if (err) {
-                return utils._fireError(err, defer.promise, defer.reject, callback);
-            } else {
-
-                if(callback) {
-                    callback(null, returnValue);
-                }
-
-                // send immediate returnValue
-                defer.promise.emit('data', returnValue);
-
-                if(type === 'send') {
-
-                    // fire "receipt" event and resolve after
-                    _this._parent._web3.eth.subscribe('newBlocks', {}, function (err, block, sub) {
-                        if(!err) {
-
-                            _this._parent._web3.eth.getTransactionReceipt(returnValue, function (err, receipt) {
-                                if(!err) {
-                                    if(receipt) {
-                                        sub.unsubscribe();
-
-                                        if(!receipt.outOfGas) {
-                                            defer.promise.emit('receipt', receipt);
-                                            defer.resolve(receipt);
-                                            defer.promise.removeAllListeners();
-
-                                        } else {
-                                            return utils._fireError(new Error('Transaction ran out of gas.'), defer.promise, defer.reject);
-                                        }
-                                    }
-                                } else {
-                                    sub.unsubscribe();
-                                    return utils._fireError(err, defer.promise, defer.reject);
-                                }
-                            });
-
-
-                        } else {
-                            sub.unsubscribe();
-                            return utils._fireError(err, defer.promise, defer.reject);
-                        }
-                    });
-
-                } else {
-                    // remove all listeners on the end, as no event will ever fire again
-                    defer.resolve(returnValue);
-                    defer.promise.removeAllListeners();
-                }
-            }
-        };
-
-
-        switch (type) {
+        switch (args.type) {
             case 'estimate':
 
-                this._parent._web3.eth.estimateGas(options, methodReturnCallback);
+                this._parent._web3.eth.estimateGas(args.options, methodReturnCallback);
 
                 break;
             case 'call':
 
-                this._parent._web3.eth.call(options, defaultBlock, methodReturnCallback);
+                // TODO check errors: missing "from" should give error on deploy and send, call ?
+
+                this._parent._web3.eth.call(args.options, args.defaultBlock, methodReturnCallback);
 
                 break;
             case 'send':
 
-                this._parent._web3.eth.sendTransaction(options, methodReturnCallback);
+                // return error, if no "from" is specified
+                if(!utils.isAddress(args.options.from)) {
+                    return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.promise, defer.reject, args.callback);
+                }
+
+                this._parent._web3.eth.sendTransaction(args.options, methodReturnCallback);
 
                 break;
         }
@@ -3599,7 +3671,6 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
     return defer.promise;
 };
-
 
 module.exports = Contract;
 
@@ -3620,7 +3691,7 @@ module.exports = Contract;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file errors.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -3639,9 +3710,11 @@ module.exports = {
     InvalidResponse: function (result){
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: ' + JSON.stringify(result);
         return new Error(message);
+    },
+    ConnectionTimeout: function (ms){
+        return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
     }
 };
-
 
 },{}],26:[function(require,module,exports){
 /*
@@ -3739,7 +3812,7 @@ var extend = function (web3) {
         }
     };
 
-    ex.formatters = formatters;
+    ex.formatters = formatters; 
     ex.utils = utils;
     ex.Method = Method;
     ex.Property = Property;
@@ -4122,7 +4195,7 @@ module.exports = {
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file iban.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -4322,7 +4395,7 @@ Iban.prototype.address = function () {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);
         return padLeft(asBn.toString(16), 20);
-    }
+    } 
 
     return '';
 };
@@ -4447,9 +4520,10 @@ module.exports = Jsonrpc;
 
 var utils = require('../utils/utils');
 var errors = require('./errors');
-var eventifiedPromise = require('./eventifiedPromise.js');
+var Promise = require("bluebird");
+// var eventifiedPromise = require('./eventifiedPromise.js');
 
-var Method = function (options, parent) {
+var Method = function (options) {
     this.name = options.name;
     this.call = options.call;
     this.params = options.params || 0;
@@ -4571,30 +4645,36 @@ Method.prototype.attachToObject = function (obj) {
 Method.prototype.buildCall = function() {
     var method = this;
     var send = function () {
-        var defer = eventifiedPromise(),
+        var resolve, reject,
+            promise = new Promise(function() {
+                resolve = arguments[0];
+                reject = arguments[1];
+            }),//eventifiedPromise(),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
         method.requestManager.send(payload, function (err, result) {
-            var result = method.formatOutput(result);
+            result = method.formatOutput(result);
 
             // TODO? if afterProcess is available
             // if(method.afterProcessor)
             //     method.afterProcessor(defer, err, result);
 
+            // TODO send transaction uses PromiEvent
+
             if(!err) {
                 if(payload.callback) {
                     payload.callback(null, result);
                 }
-                defer.promise.emit('data', result);
-                defer.resolve(result);
-                defer.promise.removeAllListeners();
+                // defer.promise.emit('data', result);
+                resolve(result);
+                //defer.promise.removeAllListeners();
             } else {
-                return utils._fireError(err, defer.promise, defer.reject, payload.callback);
+                return utils._fireError(err, null, reject, payload.callback);
             }
         });
 
-        return defer.promise;
+        return promise;
     };
     send.request = this.request.bind(this);
     return send;
@@ -4616,7 +4696,7 @@ Method.prototype.request = function () {
 module.exports = Method;
 
 
-},{"../utils/utils":20,"./errors":25,"./eventifiedPromise.js":26}],32:[function(require,module,exports){
+},{"../utils/utils":20,"./errors":25,"bluebird":47}],32:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4645,8 +4725,8 @@ var DB = function (web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
-
-    methods().forEach(function(method) {
+    
+    methods().forEach(function(method) { 
         method.attachToObject(self);
         method.setRequestManager(web3._requestManager);
     });
@@ -5092,7 +5172,7 @@ var Net = function (web3) {
 
     var self = this;
 
-    properties().forEach(function(p) {
+    properties().forEach(function(p) { 
         p.attachToObject(self);
         p.setRequestManager(web3._requestManager);
     });
@@ -5243,18 +5323,18 @@ var Shh = function (web3) {
 
     var self = this;
 
-    methods().forEach(function(method) {
+    methods().forEach(function(method) { 
         method.attachToObject(self);
         method.setRequestManager(self._requestManager);
     });
 };
 
 
-var methods = function () {
+var methods = function () { 
 
     var post = new Method({
-        name: 'post',
-        call: 'shh_post',
+        name: 'post', 
+        call: 'shh_post', 
         params: 1,
         inputFormatter: [formatters.inputPostFormatter]
     });
@@ -5336,7 +5416,7 @@ module.exports = Shh;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file namereg.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -5537,11 +5617,11 @@ var errors = require('../errors');
 
 // workaround to use httpprovider in different envs
 var XMLHttpRequest; // jshint ignore: line
+var XHR2 = require('xhr2');; // jshint ignore: line
 
 // browser
 if (typeof window !== 'undefined' && window.XMLHttpRequest) {
     XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
-
 // node
 } else {
     XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
@@ -5550,8 +5630,9 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function (host) {
+var HttpProvider = function (host, timeout) {
     this.host = host || 'http://localhost:8545';
+    this.timeout = timeout || 0;
 };
 
 /**
@@ -5562,7 +5643,15 @@ var HttpProvider = function (host) {
  * @return {XMLHttpRequest} object
  */
 HttpProvider.prototype.prepareRequest = function (async) {
-    var request = new XMLHttpRequest();
+    var request;
+
+    if (async) {
+      request = new XHR2();
+      request.timeout = this.timeout;
+    }else {
+      request = new XMLHttpRequest();
+    }
+
     request.open('POST', this.host, async);
     request.setRequestHeader('Content-Type','application/json');
     return request;
@@ -5606,7 +5695,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     var request = this.prepareRequest(true);
 
     request.onreadystatechange = function() {
-        if (request.readyState === 4) {
+        if (request.readyState === 4 && request.timeout !== 1) {
             var result = request.responseText;
             var error = null;
 
@@ -5618,6 +5707,10 @@ HttpProvider.prototype.send = function (payload, callback) {
 
             callback(error, result);
         }
+    };
+
+    request.ontimeout = function() {
+      callback(errors.ConnectionTimeout(this.timeout));
     };
 
     try {
@@ -5649,8 +5742,7 @@ HttpProvider.prototype.isConnected = function() {
 
 module.exports = HttpProvider;
 
-
-},{"../errors":25,"xmlhttprequest":17}],40:[function(require,module,exports){
+},{"../errors":25,"xhr2":85,"xmlhttprequest":17}],40:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5739,10 +5831,8 @@ IpcProvider.prototype.addDefaultEvents = function(){
         _this._timeout();
     });
 
-    this.connection.on('end', function(e){
+    this.connection.on('end', function(){
         _this._timeout();
-
-        console.log('->>ENENENENENED');
 
         // inform notifications
         _this.notificationCallbacks.forEach(function (callback) {
@@ -6081,7 +6171,7 @@ var WebsocketProvider = function (path)  {
 WebsocketProvider.prototype.addDefaultEvents = function(){
     var _this = this;
 
-    this.connection.onerror = function(e){
+    this.connection.onerror = function(){
         _this._timeout();
     };
 
@@ -6197,8 +6287,6 @@ WebsocketProvider.prototype._timeout = function() {
  @method isConnected
  */
 WebsocketProvider.prototype.isConnected = function() {
-    var _this = this;
-
     // try reconnect, when connection is gone
     // if(!_this.connection.writable)
     //     _this.connection.connect({path: _this.path});
@@ -6401,7 +6489,7 @@ RequestManager.prototype.send = function (data, callback) {
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
     this.provider.send(payload, function (err, result) {
-        if(payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));;
+        if(payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
 
         if (err) {
             return callback(err);
@@ -6572,8 +6660,8 @@ module.exports = Settings;
 /** @file subscription.js
  *
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+ *   Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2016
  */
 
 var utils = require('../utils/utils');
@@ -6708,10 +6796,10 @@ Subscription.prototype._toPayload = function (args) {
  * @return {Object}
  */
 Subscription.prototype.unsubscribe = function(callback) {
-    this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
     this.options.requestManager.removeSubscription(this.id, callback);
     this.id = null;
+    this.removeAllListeners();
+    clearInterval(this._reconnectIntervalId);
 };
 
 /**
@@ -6773,8 +6861,6 @@ Subscription.prototype.subscribe = function() {
 
                     var output = _this._formatOutput(result);
 
-                    _this.callback(err, output, _this);
-
                     if (!err) {
                         if(output.removed)
                             _this.emit('changed', output);
@@ -6787,7 +6873,6 @@ Subscription.prototype.subscribe = function() {
                         // re-subscribe, if connection fails
                         if(_this.options.requestManager.provider.once) {
                             _this._reconnectIntervalId = setInterval(function () {
-                                console.log('reconnect')
                                 _this.options.requestManager.provider.reconnect();
                             }, 500);
 
@@ -6799,6 +6884,8 @@ Subscription.prototype.subscribe = function() {
                         _this.emit('error', err);
                     }
 
+                    // call the callback, last so that unsubscribe there won't affect the emit above
+                    _this.callback(err, output, _this);
                 });
             } else {
                 _this.callback(err, null, _this);
@@ -6834,8 +6921,8 @@ module.exports = Subscription;
 /** @file subscriptions.js
  *
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+ *   Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2016
  */
 
 var Subscription = require('./subscription.js');
@@ -6885,7 +6972,6 @@ Subscriptions.prototype.buildCall = function() {
 
 module.exports = Subscriptions;
 
-
 },{"./subscription.js":44}],46:[function(require,module,exports){
 /*
     This file is part of web3.js.
@@ -6903,7 +6989,7 @@ module.exports = Subscriptions;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/**
+/** 
  * @file transfer.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -6922,7 +7008,7 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Function} callback, callback
  */
 var transfer = function (eth, from, to, value, callback) {
-    var iban = new Iban(to);
+    var iban = new Iban(to); 
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
@@ -6930,7 +7016,7 @@ var transfer = function (eth, from, to, value, callback) {
     if (iban.isDirect()) {
         return transferToAddress(eth, from, iban.address(), value, callback);
     }
-
+    
     if (!callback) {
         var address = eth.icapNamereg().addr(iban.institution());
         return deposit(eth, from, address, value, iban.client());
@@ -6939,7 +7025,7 @@ var transfer = function (eth, from, to, value, callback) {
     eth.icapNamereg().addr(iban.institution(), function (err, address) {
         return deposit(eth, from, address, value, iban.client(), callback);
     });
-
+    
 };
 
 /**
@@ -6983,19 +7069,19 @@ module.exports = transfer;
 },{"../contracts/SmartExchange.json":3,"./iban":29}],47:[function(require,module,exports){
 /* @preserve
  * The MIT License (MIT)
- *
+ * 
  * Copyright (c) 2013-2015 Petka Antonov
- *
+ * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
+ * 
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
@@ -7003,7 +7089,7 @@ module.exports = transfer;
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- *
+ * 
  */
 /**
  * bluebird build version 3.4.6
@@ -10462,28 +10548,28 @@ _dereq_('./some.js')(Promise, PromiseArray, apiRejection);
 _dereq_('./filter.js')(Promise, INTERNAL);
 _dereq_('./each.js')(Promise, INTERNAL);
 _dereq_('./any.js')(Promise);
-
-    util.toFastProperties(Promise);
-    util.toFastProperties(Promise.prototype);
-    function fillTypes(value) {
-        var p = new Promise(INTERNAL);
-        p._fulfillmentHandler0 = value;
-        p._rejectionHandler0 = value;
-        p._promise0 = value;
-        p._receiver0 = value;
-    }
-    // Complete slack tracking, opt out of field-type tracking and
-    // stabilize map
-    fillTypes({a: 1});
-    fillTypes({b: 2});
-    fillTypes({c: 3});
-    fillTypes(1);
-    fillTypes(function(){});
-    fillTypes(undefined);
-    fillTypes(false);
-    fillTypes(new Promise(INTERNAL));
-    debug.setBounds(Async.firstLineError, util.lastLineError);
-    return Promise;
+                                                         
+    util.toFastProperties(Promise);                                          
+    util.toFastProperties(Promise.prototype);                                
+    function fillTypes(value) {                                              
+        var p = new Promise(INTERNAL);                                       
+        p._fulfillmentHandler0 = value;                                      
+        p._rejectionHandler0 = value;                                        
+        p._promise0 = value;                                                 
+        p._receiver0 = value;                                                
+    }                                                                        
+    // Complete slack tracking, opt out of field-type tracking and           
+    // stabilize map                                                         
+    fillTypes({a: 1});                                                       
+    fillTypes({b: 2});                                                       
+    fillTypes({c: 3});                                                       
+    fillTypes(1);                                                            
+    fillTypes(function(){});                                                 
+    fillTypes(undefined);                                                    
+    fillTypes(false);                                                        
+    fillTypes(new Promise(INTERNAL));                                        
+    debug.setBounds(Async.firstLineError, util.lastLineError);               
+    return Promise;                                                          
 
 };
 
@@ -11287,8 +11373,8 @@ function ReductionPromiseArray(promises, fn, initialValue, _each) {
 util.inherits(ReductionPromiseArray, PromiseArray);
 
 ReductionPromiseArray.prototype._gotAccum = function(accum) {
-    if (this._eachValues !== undefined &&
-        this._eachValues !== null &&
+    if (this._eachValues !== undefined && 
+        this._eachValues !== null && 
         accum !== INTERNAL) {
         this._eachValues.push(accum);
     }
@@ -19690,6 +19776,9 @@ if ('undefined' !== typeof module) {
 	}
 
 }(this));
+
+},{}],85:[function(require,module,exports){
+module.exports = XMLHttpRequest;
 
 },{}],"bignumber.js":[function(require,module,exports){
 /*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
