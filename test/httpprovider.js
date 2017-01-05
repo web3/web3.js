@@ -5,6 +5,7 @@ var SandboxedModule = require('sandboxed-module');
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var HttpProvider = SandboxedModule.require('../lib/web3/providers/httpprovider', {
     requires: {
+        'xhr2': require('./helpers/FakeXHR2'),
         'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
@@ -39,4 +40,3 @@ describe('lib/web3/providers/httpprovider', function () {
         });
     });
 });
-

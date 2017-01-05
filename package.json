@@ -18,7 +18,8 @@
         "eventemitter3": "^1.1.1",
         "utf8": "^2.1.1",
         "websocket": "^1.0.23",
-        "xmlhttprequest": "*"
+        "xmlhttprequest": "*",
+        "xhr2": "*"
     },
     "devDependencies": {
         "bower": ">=1.4.1",
