@@ -3,6 +3,7 @@
   "namespace": "ethereum",
   "version": "1.0.0",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
+  "license": "LGPL-3.0",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
@@ -11,12 +12,15 @@
     "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "dependencies": {
-    "bluebird": "^3.3.1",
     "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2",
+    "bluebird": "^3.3.1",
     "crypto-js": "^3.1.4",
     "eventemitter3": "^1.1.1",
+    "global": "^4.3.1",
+    "lodash": "^4.17.4",
     "utf8": "^2.1.1",
     "websocket": "^1.0.23",
+    "xhr2": "*",
     "xmlhttprequest": "*"
   },
   "devDependencies": {
@@ -61,77 +65,29 @@
   "author": "ethdev.com",
   "authors": [
     {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethereum.org",
+      "homepage": "http://frozeman.de"
+    },
+    {
       "name": "Marek Kotewicz",
-      "email": "marek@ethdev.com",
+      "email": "marek@ethcore.io",
       "url": "https://github.com/debris"
     },
     {
-      "name": "Fabian Vogelsteller",
-      "email": "fabian@ethdev.com",
-      "homepage": "http://frozeman.de"
-    },
-    "dependencies": {
-        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2",
-        "bluebird": "^3.3.1",
-        "crypto-js": "^3.1.4",
-        "eventemitter3": "^1.1.1",
-        "global": "^4.3.1",
-        "utf8": "^2.1.1",
-        "websocket": "^1.0.23",
-        "xhr2": "*",
-        "xmlhttprequest": "*"
+      "name": "Marian Oancea",
+      "email": "marian@ethereum.org",
+      "url": "https://github.com/cubedro"
     },
     {
       "name": "Gav Wood",
-      "email": "g@ethdev.com",
+      "email": "g@ethcore.io",
       "homepage": "http://gavwood.com"
     },
-    "scripts": {
-        "build": "gulp",
-        "watch": "gulp watch",
-        "lint": "jshint *.js lib",
-        "test": "mocha; jshint *.js lib",
-        "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/ethereum/web3.js.git"
-    },
-    "homepage": "https://github.com/ethereum/web3.js",
-    "bugs": {
-        "url": "https://github.com/ethereum/web3.js/issues"
-    },
-    "keywords": [
-        "ethereum",
-        "javascript",
-        "API"
-    ],
-    "author": "ethdev.com",
-    "authors": [
-        {
-            "name": "Fabian Vogelsteller",
-            "email": "fabian@ethereum.org",
-            "homepage": "http://frozeman.de"
-        },
-        {
-            "name": "Marek Kotewicz",
-            "email": "marek@ethcore.io",
-            "url": "https://github.com/debris"
-        },
-        {
-            "name": "Marian Oancea",
-            "email": "marian@ethereum.org",
-            "url": "https://github.com/cubedro"
-        },
-        {
-            "name": "Gav Wood",
-            "email": "g@ethcore.io",
-            "homepage": "http://gavwood.com"
-        },
-        {
-            "name": "Jeffery Wilcke",
-            "email": "jeffrey.wilcke@ethereum.org",
-            "url": "https://github.com/obscuren"
-        }
-    ]
+    {
+      "name": "Jeffery Wilcke",
+      "email": "jeffrey.wilcke@ethereum.org",
+      "url": "https://github.com/obscuren"
+    }
+  ]
 }

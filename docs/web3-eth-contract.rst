@@ -207,7 +207,7 @@ deploy
 
 .. code-block:: javascript
 
-    myContract.deploy(options[, callback])
+    myContract.deploy(options)
 
 Call this function to deploy the contract to the blockchain.
 After successfull deployment the ``myContract.options.address`` will be set automatically to the newly deployed contract.
@@ -217,22 +217,22 @@ Parameters
 ----------
 
 1. ``Object`` - **options**: The options used for deployemnt.
-    * ``String`` - **from**: The address transactions should be made from.
     * ``String`` - **data**: The byte code of the contract.
     * ``Array``` - **arguments** (optional): The arguments which get passed to the constructor on deployment.
-    * ``String`` - **gasPrice** (optional): The gas price in wei to use for transactions.
-    * ``Number`` - **gas** (optional): The maximum gas provided for a transaction (gas limit).
-2. ``Function`` - **callback** (optional): This callback will be fired for the "transactionHash" and later the "receipt" (as the second parameter). If the contract couldn't be deployed, the first argument will be an error object.
 
 -------
 Returns
 -------
 
-``PromiEvent``: A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
 
-- ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-- ``"receipt"`` returns ``String``: is fired when the transaction receipt with the contract address is available.
-- ``"error"`` returns ``Error``: is fired if an error occurs during deployment.
+``Object``: The transaction object:
+
+- ``Array`` - arguments: The arguments passed to the method before. They can be changed.
+- ``Function`` - :ref:`send <contract-send>`: Will deploy the contract.
+- ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used for deploying.
+- ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI of the deployment, which is contract data + constructor parameters
+
+ For details to the methods see the documentation below.
 
 -------
 Example
@@ -242,13 +242,15 @@ Example
 
     myContract.deploy({
         data: '0x12345...',
-        arguments: [123, 'My String'],
+        arguments: [123, 'My String']
+    })
+    .send({
         from: '0x1234567890123456789012345678901234567891',
         gas: 1500000,
         gasPrice: '30000000000000'
-    }, function(error, mixed){ ... })
+    }, function(error, transactionHash){ ... })
     .on('error', function(error){ ... })
-    .on('transactionHash', function(hash){ ... })
+    .on('transactionHash', function(transactionHash){ ... })
     .on('receipt', function(receipt){
         // same as when the promise gets resolved, see below
     })
@@ -256,6 +258,40 @@ Example
         console.log(myContract.options.address) // gives the new contract address
     });
 
+
+    // When the data is already set as an option to the contract itself
+    myContract.options.data = '0x12345...';
+
+    myContract.deploy({
+        arguments: [123, 'My String']
+    })
+    .send({
+        from: '0x1234567890123456789012345678901234567891',
+        gas: 1500000,
+        gasPrice: '30000000000000'
+    })
+    .then(function(receipt){
+        console.log(myContract.options.address) // gives the new contract address
+    });
+
+
+    // Simply encoding
+    myContract.deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .encodeABI();
+    > '0x12345...0000012345678765432'
+
+
+    // Gas estimation
+    myContract.deploy({
+        data: '0x12345...',
+        arguments: [123, 'My String']
+    })
+    .estimateGas(function(err, gas){
+        console.log(gas);
+    });
 
 ------------------------------------------------------------------------------
 
@@ -295,7 +331,7 @@ Returns
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used when the method would be executed on chain.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI for this method. This can be send using a transaction, call the method or passing into another smart contracts method as argument.
 
- For details to the methods documentations below.
+ For details to the methods see the documentation below.
 
 -------
 Example
