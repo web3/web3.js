@@ -23,9 +23,9 @@
 "use strict";
 
 var core = require('web3-core');
+var Subscriptions = require('web3-core-subscriptions');
+var Method = require('web3-core-method');
 
-var Method = require('../../../lib/web3/method');
-var Subscriptions = require('../../../lib/web3/subscriptions');
 var formatters = require('../../../lib/web3/formatters');
 
 

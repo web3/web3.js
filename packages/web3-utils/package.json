@@ -1,0 +1,12 @@
+{
+    "name": "web3-utils",
+    "version": "1.0.0",
+    "description": "Collection of utility functions used in web3.js.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
+    "license": "LGPL-3.0",
+    "main": "src/index.js",
+    "dependencies": {
+        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2",
+        "utf8": "^2.1.1"
+    }
+}

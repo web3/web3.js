@@ -23,9 +23,8 @@
 "use strict";
 
 var core = require('web3-core');
-
-var utils = require('../../../lib/utils/utils');
-var Property = require('../../../lib/web3/property');
+var Method = require('web3-core-method');
+var utils = require('web3-utils');
 
 
 var Net = function (provider) {
@@ -34,26 +33,36 @@ var Net = function (provider) {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
+
+    methods().forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
     });
+
 };
 
-/// @returns an array of objects describing web3.eth api properties
-var properties = function () {
+var methods = function () {
+
+    var getListening = new Method({
+        name: 'getListening',
+        call: 'net_listening',
+        params: 0
+    });
+
+    var getPeerCount = new Method({
+        name: 'getPeerCount',
+        call: 'net_peerCount',
+        params: 0,
+        outputFormatter: utils.toDecimal
+    });
+
+
     return [
-        new Property({
-            name: 'listening',
-            getter: 'net_listening'
-        }),
-        new Property({
-            name: 'peerCount',
-            getter: 'net_peerCount',
-            outputFormatter: utils.toDecimal
-        })
+        getListening,
+        getPeerCount
     ];
 };
+
 
 module.exports = Net;
 

@@ -23,9 +23,7 @@
 "use strict";
 
 var core = require('web3-core');
-
-var Method = require('../../../lib/web3/method');
-var Property = require('../../../lib/web3/property');
+var Method = require('web3-core-method');
 
 
 function Swarm(provider) {
@@ -34,14 +32,10 @@ function Swarm(provider) {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+
     methods().forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
-    });
-
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
     });
 }
 
@@ -116,6 +110,20 @@ var methods = function () {
         inputFormatter: [null, null, null, null]
     });
 
+    var getHive = new Method({
+        name: 'getHive',
+        call: 'bzz_hive',
+        params: 0,
+        inputFormatter: []
+    });
+
+    var getInfo = new Method({
+        name: 'getInfo',
+        call: 'bzz_info',
+        params: 0,
+        inputFormatter: []
+    });
+
     return [
         blockNetworkRead,
         syncEnabled,
@@ -126,20 +134,9 @@ var methods = function () {
         store,
         get,
         put,
-        modify
-    ];
-};
-
-var properties = function () {
-    return [
-        new Property({
-            name: 'hive',
-            getter: 'bzz_hive'
-        }),
-        new Property({
-            name: 'info',
-            getter: 'bzz_info'
-        })
+        modify,
+        getHive,
+        getInfo
     ];
 };
 

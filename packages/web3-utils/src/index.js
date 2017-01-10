@@ -1,23 +1,24 @@
 /*
-    This file is part of web3.js.
+ This file is part of web3.js.
 
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ web3.js is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+ web3.js is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU Lesser General Public License
+ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
  * @file utils.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 /**
@@ -35,8 +36,9 @@
 
 
 var BigNumber = require('bignumber.js');
-var sha3 = require('./sha3.js');
 var utf8 = require('utf8');
+
+var sha3 = require('../../../lib/utils/sha3.js');
 
 var unitMap = {
     'noether':      '0',
@@ -338,7 +340,7 @@ var getValueOfUnit = function (unit) {
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
-*/
+ */
 var fromWei = function(number, unit) {
     var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
 
@@ -366,7 +368,7 @@ var fromWei = function(number, unit) {
  * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
-*/
+ */
 var toWei = function(number, unit) {
     var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
 
@@ -379,7 +381,7 @@ var toWei = function(number, unit) {
  * @method toBigNumber
  * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
  * @return {BigNumber} BigNumber
-*/
+ */
 var toBigNumber = function(number) {
     /*jshint maxcomplexity:5 */
     number = number || 0;
@@ -414,7 +416,7 @@ var toTwosComplement = function (number) {
  * @method isStrictAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 var isStrictAddress = function (address) {
     return /^0x[0-9a-f]{40}$/i.test(address);
 };
@@ -425,7 +427,7 @@ var isStrictAddress = function (address) {
  * @method isAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 var isAddress = function (address) {
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
@@ -447,7 +449,7 @@ var isAddress = function (address) {
  * @method isChecksumAddress
  * @param {String} address the given HEX adress
  * @return {Boolean}
-*/
+ */
 var isChecksumAddress = function (address) {
     // Check each case
     address = address.replace('0x','');
@@ -470,7 +472,7 @@ var isChecksumAddress = function (address) {
  * @method toChecksumAddress
  * @param {String} address the given HEX adress
  * @return {String}
-*/
+ */
 var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
@@ -481,7 +483,7 @@ var toChecksumAddress = function (address) {
     for (var i = 0; i < address.length; i++ ) {
         // If ith character is 9 to f then make it uppercase
         if (parseInt(addressHash[i], 16) > 7) {
-          checksumAddress += address[i].toUpperCase();
+            checksumAddress += address[i].toUpperCase();
         } else {
             checksumAddress += address[i];
         }
@@ -622,3 +624,4 @@ module.exports = {
     isArray: isArray,
     isJson: isJson
 };
+

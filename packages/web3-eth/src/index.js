@@ -22,39 +22,39 @@
 
 "use strict";
 
+var _ = require('lodash');
 var core = require('web3-core');
+var Subscriptions = require('web3-core-subscriptions');
+var utils = require('web3-utils');
+var Method = require('web3-core-method');
+var Contract = require('./contract');
 
-
-var formatters = require('../../../lib/web3/formatters');
-var utils = require('../../../lib/utils/utils');
 var c = require('../../../lib/utils/config');
-var Method = require('../../../lib/web3/method');
-var Property = require('../../../lib/web3/property');
-var Subscriptions = require('../../../lib/web3/subscriptions');
-var Contract = require('../../../lib/web3/contract');
+var formatters = require('../../../lib/web3/formatters');
 var namereg = require('../../../lib/web3/namereg');
 var Iban = require('../../../lib/web3/iban');
 var transfer = require('../../../lib/web3/transfer');
 
 var blockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
 };
 
 var transactionFromBlockCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getTransactionByBlockHashAndIndex' : 'eth_getTransactionByBlockNumberAndIndex';
 };
 
 var uncleCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleByBlockHashAndIndex' : 'eth_getUncleByBlockNumberAndIndex';
 };
 
 var getBlockTransactionCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getBlockTransactionCountByHash' : 'eth_getBlockTransactionCountByNumber';
 };
 
 var uncleCountCall = function (args) {
-    return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
+    return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
+
 
 function Eth(provider) {
     var _this = this;
@@ -69,10 +69,6 @@ function Eth(provider) {
         method.setRequestManager(_this._requestManager);
     });
 
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
-    });
 
     // add contract
     this.contract = Contract;
@@ -112,6 +108,59 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
 });
 
 var methods = function () {
+
+    var getVersion = new Method({
+        name: 'getVersion',
+        call: 'eth_protocolVersion',
+        params: 0
+    });
+
+    var getCoinbase = new Method({
+        name: 'getCoinbase',
+        call: 'eth_coinbase',
+        params: 0
+    });
+
+    var getMining = new Method({
+        name: 'getMining',
+        call: 'eth_mining',
+        params: 0
+    });
+
+    var getHashrate = new Method({
+        name: 'getHashrate',
+        call: 'eth_hashrate',
+        params: 0,
+        outputFormatter: utils.toDecimal
+    });
+
+    var getSyncing = new Method({
+        name: 'getSyncing',
+        call: 'eth_syncing',
+        params: 0,
+        outputFormatter: formatters.outputSyncingFormatter
+    });
+
+    var getGasPrice = new Method({
+        name: 'getGasPrice',
+        call: 'eth_gasPrice',
+        params: 0,
+        outputFormatter: formatters.outputBigNumberFormatter
+    });
+
+    var getAccounts = new Method({
+        name: 'getAccounts',
+        call: 'eth_accounts',
+        params: 0
+    });
+
+    var getBlockNumber = new Method({
+        name: 'getBlockNumber',
+        call: 'eth_blockNumber',
+        params: 0,
+        outputFormatter: utils.toDecimal
+    });
+
     var getBalance = new Method({
         name: 'getBalance',
         call: 'eth_getBalance',
@@ -306,6 +355,14 @@ var methods = function () {
 
 
     return [
+        getVersion,
+        getCoinbase,
+        getMining,
+        getHashrate,
+        getSyncing,
+        getGasPrice,
+        getAccounts,
+        getBlockNumber,
         getBalance,
         getStorageAt,
         getCode,
@@ -330,48 +387,6 @@ var methods = function () {
         getWork,
         subscribe,
         getPastLogs
-    ];
-};
-
-
-var properties = function () {
-    return [
-        new Property({
-            name: 'coinbase',
-            getter: 'eth_coinbase'
-        }),
-        new Property({
-            name: 'mining',
-            getter: 'eth_mining'
-        }),
-        new Property({
-            name: 'hashrate',
-            getter: 'eth_hashrate',
-            outputFormatter: utils.toDecimal
-        }),
-        new Property({
-            name: 'syncing',
-            getter: 'eth_syncing',
-            outputFormatter: formatters.outputSyncingFormatter
-        }),
-        new Property({
-            name: 'gasPrice',
-            getter: 'eth_gasPrice',
-            outputFormatter: formatters.outputBigNumberFormatter
-        }),
-        new Property({
-            name: 'accounts',
-            getter: 'eth_accounts'
-        }),
-        new Property({
-            name: 'blockNumber',
-            getter: 'eth_blockNumber',
-            outputFormatter: utils.toDecimal
-        }),
-        new Property({
-            name: 'protocolVersion',
-            getter: 'eth_protocolVersion'
-        })
     ];
 };
 

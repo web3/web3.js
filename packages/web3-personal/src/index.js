@@ -23,9 +23,8 @@
 "use strict";
 
 var core = require('web3-core');
+var Method = require('web3-core-method');
 
-var Method = require('../../../lib/web3/method');
-var Property = require('../../../lib/web3/property');
 var formatters = require('../../../lib/web3/formatters');
 
 
@@ -35,18 +34,21 @@ function Personal(provider) {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+
     methods().forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
-
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
-    });
 }
 
 var methods = function () {
+
+    var getAccounts = new Method({
+        name: 'getAccounts',
+        call: 'personal_listAccounts',
+        params: 0
+    });
+
     var newAccount = new Method({
         name: 'newAccount',
         call: 'personal_newAccount',
@@ -75,20 +77,13 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter]
     });
 
+
     return [
+        getAccounts,
         newAccount,
         unlockAccount,
         sendTransaction,
         lockAccount
-    ];
-};
-
-var properties = function () {
-    return [
-        new Property({
-            name: 'listAccounts',
-            getter: 'personal_listAccounts'
-        })
     ];
 };
 

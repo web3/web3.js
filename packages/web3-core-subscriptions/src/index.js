@@ -14,11 +14,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file subscriptions.js
- *
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2016
+/**
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 var Subscription = require('./subscription.js');
@@ -31,6 +30,9 @@ var Subscriptions = function (options) {
     this.subscriptions = options.subscriptions || {};
     this.requestManager = null;
 };
+
+
+Subscription.prototype.subscription = Subscription;
 
 
 Subscriptions.prototype.setRequestManager = function (rm) {

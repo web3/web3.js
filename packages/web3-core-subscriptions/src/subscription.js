@@ -14,16 +14,15 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file subscription.js
- *
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2016
+/**
+ * @file subscription.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
+var errors = require('web3-core-helper').errors;
 var EventEmitter = require('eventemitter3');
+var _ = require('lodash');
 
 
 var Subscription = function (options) {
@@ -64,7 +63,7 @@ var Subscription = function (options) {
  */
 
 Subscription.prototype._extractCallback = function (args) {
-    if (utils.isFunction(args[args.length - 1])) {
+    if (_.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
 };
@@ -180,7 +179,7 @@ Subscription.prototype.subscribe = function() {
     this.options.params = payload.params[1];
 
     // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
+    if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
         // send the subscription request
         this.options.requestManager.send({
             method: 'eth_getLogs',
@@ -213,7 +212,7 @@ Subscription.prototype.subscribe = function() {
                 _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
 
                     // TODO remove once its fixed in geth
-                    if(utils.isArray(result))
+                    if(_.isArray(result))
                         result = result[0];
 
                     var output = _this._formatOutput(result);

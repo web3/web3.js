@@ -15,15 +15,17 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file method.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ * @file index.js
+ * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
-var utils = require('../utils/utils');
-var errors = require('./errors');
+var errors = require('web3-core-helper').errors;
+var utils = require('web3-utils');
 var Promise = require("bluebird");
 // var eventifiedPromise = require('./eventifiedPromise.js');
+
 
 var Method = function (options) {
     this.name = options.name;
@@ -196,4 +198,3 @@ Method.prototype.request = function () {
 };
 
 module.exports = Method;
-

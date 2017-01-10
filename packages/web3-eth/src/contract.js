@@ -21,13 +21,15 @@
  */
 
 var _ = require('lodash');
-var utils = require('../utils/utils');
-var eventifiedPromise = require('./eventifiedPromise.js');
-var Method = require('./method.js');
-var coder = require('../solidity/coder');
-var formatters = require('./formatters');
-var sha3 = require('../utils/sha3');
-var Subscription = require('./subscription.js');
+var Method = require('web3-core-method');
+var utils = require('web3-utils');
+var Subscription = require('web3-core-subscriptions').subscription;
+
+
+var eventifiedPromise = require('../../../lib/web3/eventifiedPromise.js');
+var coder = require('./../../lib/solidity/coder');
+var formatters = require('./../../lib/web3/formatters');
+var sha3 = require('./../../lib/utils/sha3');
 
 
 /**
