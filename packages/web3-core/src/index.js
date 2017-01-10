@@ -20,13 +20,16 @@
  * @date 2017
  */
 
-"use strict";
 
 var requestManager = require('web3-requestManager');
 
 module.exports = {
     packageInit: function (pgk, args) {
         args = Array.prototype.slice.call(args);
+
+        if (!pgk) {
+            throw new Error('You need to instantiate using the "new" keyword.');
+        }
 
         if (!args[0]) {
             throw new Error('You must pass in a provider as argument!');
