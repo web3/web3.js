@@ -15,24 +15,26 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 "use strict";
 
-var formatters = require('../formatters');
-var utils = require('../../utils/utils');
-var c = require('../../utils/config');
-var Method = require('../method');
-var Property = require('../property');
-var Subscriptions = require('../subscriptions');
-var Contract = require('../contract');
-var namereg = require('../namereg');
-var Iban = require('../iban');
-var transfer = require('../transfer');
+var packageCore = require('../../../lib/package-core.js');
+
+
+var formatters = require('../../../lib/web3/formatters');
+var utils = require('../../../lib/utils/utils');
+var c = require('../../../lib/utils/config');
+var Method = require('../../../lib/web3/method');
+var Property = require('../../../lib/web3/property');
+var Subscriptions = require('../../../lib/web3/subscriptions');
+var Contract = require('../../../lib/web3/contract');
+var namereg = require('../../../lib/web3/namereg');
+var Iban = require('../../../lib/web3/iban');
+var transfer = require('../../../lib/web3/transfer');
 
 var blockCall = function (args) {
     return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
@@ -54,24 +56,27 @@ var uncleCountCall = function (args) {
     return (utils.isString(args[0]) && args[0].indexOf('0x') === 0) ? 'eth_getUncleCountByBlockHash' : 'eth_getUncleCountByBlockNumber';
 };
 
-function Eth(web3) {
-    this._requestManager = web3._requestManager;
+function Eth(provider) {
+    var _this = this;
 
-    var self = this;
+    // sets _requestmanager
+    packageCore(this, arguments);
+
+
 
     methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
     });
 
     properties().forEach(function(p) {
-        p.attachToObject(self);
-        p.setRequestManager(self._requestManager);
+        p.attachToObject(_this);
+        p.setRequestManager(_this._requestManager);
     });
 
     // add contract
     this.contract = Contract;
-    this.contract.prototype._web3 = web3;
+    this.contract.prototype._eth = this;
 
     this.iban = Iban;
     this.sendIBANTransaction = transfer.bind(null, this);

@@ -15,31 +15,34 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file eth.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @author Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 "use strict";
 
-var Method = require('../method');
-var Property = require('../property');
-var formatters = require('../formatters');
+var packageCore = require('../../../lib/package-core.js');
 
-function Personal(web3) {
-    this._requestManager = web3._requestManager;
+var Method = require('../../../lib/web3/method');
+var Property = require('../../../lib/web3/property');
+var formatters = require('../../../lib/web3/formatters');
 
-    var self = this;
+
+function Personal(provider) {
+    var _this = this;
+
+    // sets _requestmanager
+    packageCore(this, arguments);
 
     methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
     });
 
     properties().forEach(function(p) {
-        p.attachToObject(self);
-        p.setRequestManager(self._requestManager);
+        p.attachToObject(_this);
+        p.setRequestManager(_this._requestManager);
     });
 }
 
@@ -91,3 +94,5 @@ var properties = function () {
 
 
 module.exports = Personal;
+
+

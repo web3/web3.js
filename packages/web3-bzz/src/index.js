@@ -15,31 +15,33 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file bzz.js
- * @author Alex Beregszaszi <alex@rtfs.hu>
- * @date 2016
- *
- * Reference: https://github.com/ethereum/go-ethereum/blob/swarm/internal/web3ext/web3ext.go#L33
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 "use strict";
 
-var Method = require('../method');
-var Property = require('../property');
+var packageCore = require('../../../lib/package-core.js');
 
-function Swarm(web3) {
-    this._requestManager = web3._requestManager;
+var Method = require('../../../lib/web3/method');
+var Property = require('../../../lib/web3/property');
 
-    var self = this;
+
+function Swarm(provider) {
+    var _this = this;
+
+    // sets _requestmanager
+    packageCore(this, arguments);
 
     methods().forEach(function(method) {
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
     });
 
     properties().forEach(function(p) {
-        p.attachToObject(self);
-        p.setRequestManager(self._requestManager);
+        p.attachToObject(_this);
+        p.setRequestManager(_this._requestManager);
     });
 }
 
@@ -143,3 +145,4 @@ var properties = function () {
 
 
 module.exports = Swarm;
+

@@ -14,34 +14,40 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file shh.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+/**
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
-var Method = require('../method');
-var formatters = require('../formatters');
-var Subscriptions = require('../subscriptions');
+"use strict";
+
+var packageCore = require('../../../lib/package-core.js');
+
+var Method = require('../../../lib/web3/method');
+var Subscriptions = require('../../../lib/web3/subscriptions');
+var formatters = require('../../../lib/web3/formatters');
 
 
-var Shh = function (web3) {
-    this._requestManager = web3._requestManager;
+var Shh = function (provider) {
+    var _this = this;
 
-    var self = this;
+    // sets _requestmanager
+    packageCore(this, arguments);
 
-    methods().forEach(function(method) { 
-        method.attachToObject(self);
-        method.setRequestManager(self._requestManager);
+
+    methods().forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
     });
 };
 
 
-var methods = function () { 
+var methods = function () {
 
     var post = new Method({
-        name: 'post', 
-        call: 'shh_post', 
+        name: 'post',
+        call: 'shh_post',
         params: 1,
         inputFormatter: [formatters.inputPostFormatter]
     });
@@ -104,4 +110,5 @@ var methods = function () {
 };
 
 module.exports = Shh;
+
 

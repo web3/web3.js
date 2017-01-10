@@ -14,23 +14,29 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file eth.js
- * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+/**
+ * @file index.js
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
-var utils = require('../../utils/utils');
-var Property = require('../property');
+"use strict";
 
-var Net = function (web3) {
-    this._requestManager = web3._requestManager;
+var packageCore = require('../../../lib/package-core.js');
 
-    var self = this;
+var utils = require('../../../lib/utils/utils');
+var Property = require('../../../lib/web3/property');
 
-    properties().forEach(function(p) { 
-        p.attachToObject(self);
-        p.setRequestManager(web3._requestManager);
+
+var Net = function (provider) {
+    var _this = this;
+
+    // sets _requestmanager
+    packageCore(this, arguments);
+
+    properties().forEach(function(p) {
+        p.attachToObject(_this);
+        p.setRequestManager(_this._requestManager);
     });
 };
 
@@ -50,3 +56,5 @@ var properties = function () {
 };
 
 module.exports = Net;
+
+

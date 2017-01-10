@@ -1,0 +1,10 @@
+{
+    "name": "web3-shh",
+    "version": "1.0.0",
+    "description": "Web3 module to interact with the Whisper messaging protocol.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-shh",
+    "license": "LGPL-3.0",
+    "main": "src/index.js",
+    "dependencies": {
+    }
+}
