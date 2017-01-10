@@ -22,39 +22,9 @@
 
 "use strict";
 
-var core = require('web3-core');
+var errors = require('./errors');
 
-var utils = require('../../../lib/utils/utils');
-var Property = require('../../../lib/web3/property');
-
-
-var Net = function (provider) {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
-    });
+module.exports = {
+    errors: errors
 };
-
-/// @returns an array of objects describing web3.eth api properties
-var properties = function () {
-    return [
-        new Property({
-            name: 'listening',
-            getter: 'net_listening'
-        }),
-        new Property({
-            name: 'peerCount',
-            getter: 'net_peerCount',
-            outputFormatter: utils.toDecimal
-        })
-    ];
-};
-
-module.exports = Net;
-
 

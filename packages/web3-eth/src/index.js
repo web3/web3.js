@@ -22,7 +22,7 @@
 
 "use strict";
 
-var packageCore = require('../../../lib/package-core.js');
+var core = require('web3-core');
 
 
 var formatters = require('../../../lib/web3/formatters');
@@ -60,7 +60,7 @@ function Eth(provider) {
     var _this = this;
 
     // sets _requestmanager
-    packageCore(this, arguments);
+    core.packageInit(this, arguments);
 
 
 

@@ -14,10 +14,11 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file errors.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Marek Kotewicz <marek@ethcore.io>
+ * @date 2017
  */
 
 module.exports = {

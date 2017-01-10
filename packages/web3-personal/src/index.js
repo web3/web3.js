@@ -22,7 +22,7 @@
 
 "use strict";
 
-var packageCore = require('../../../lib/package-core.js');
+var core = require('web3-core');
 
 var Method = require('../../../lib/web3/method');
 var Property = require('../../../lib/web3/property');
@@ -33,7 +33,7 @@ function Personal(provider) {
     var _this = this;
 
     // sets _requestmanager
-    packageCore(this, arguments);
+    core.packageInit(this, arguments);
 
     methods().forEach(function(method) {
         method.attachToObject(_this);

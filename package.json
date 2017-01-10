@@ -40,7 +40,8 @@
     "jshint": ">=2.5.0",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^1.1.0",
+    "lerna": "2.0.0-beta.32"
   },
   "scripts": {
     "build": "gulp",

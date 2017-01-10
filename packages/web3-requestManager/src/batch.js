@@ -14,14 +14,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file batch.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
 var Jsonrpc = require('./jsonrpc');
-var errors = require('./errors');
+var errors = require('web3-core').errors;
 
 var Batch = function (web3) {
     this.requestManager = web3._requestManager;
@@ -59,7 +59,7 @@ Batch.prototype.execute = function () {
                 requests[index].callback(null, (requests[index].format ? requests[index].format(result.result) : result.result));
             }
         });
-    }); 
+    });
 };
 
 module.exports = Batch;

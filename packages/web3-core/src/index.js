@@ -22,39 +22,20 @@
 
 "use strict";
 
-var core = require('web3-core');
+var requestManager = require('web3-requestManager');
 
-var utils = require('../../../lib/utils/utils');
-var Property = require('../../../lib/web3/property');
+module.exports = {
+    packageInit: function (pgk, args) {
+        args = Array.prototype.slice.call(args);
 
+        if (!args[0]) {
+            throw new Error('You must pass in a provider as argument!');
+        }
 
-var Net = function (provider) {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    properties().forEach(function(p) {
-        p.attachToObject(_this);
-        p.setRequestManager(_this._requestManager);
-    });
+        if (args[0]._requestManager)
+            pgk._requestManager = args[0];
+        else
+            pgk._requestManager = new requestManager.Manager(args[0]);
+    }
 };
-
-/// @returns an array of objects describing web3.eth api properties
-var properties = function () {
-    return [
-        new Property({
-            name: 'listening',
-            getter: 'net_listening'
-        }),
-        new Property({
-            name: 'peerCount',
-            getter: 'net_peerCount',
-            outputFormatter: utils.toDecimal
-        })
-    ];
-};
-
-module.exports = Net;
-
 
