@@ -2443,7 +2443,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.18.0"
+    "version": "0.18.1"
 }
 
 },{}],22:[function(require,module,exports){
@@ -4204,8 +4204,7 @@ module.exports = SolidityFunction;
 var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
-var XMLHttpRequest; // jshint ignore: line
-var XHR2 = require('xhr2');; // jshint ignore: line
+// var XMLHttpRequest; // jshint ignore: line
 
 // browser
 if (typeof window !== 'undefined' && window.XMLHttpRequest) {
@@ -4214,6 +4213,8 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
 } else {
     XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
+
+var XHR2 = require('xhr2'); // jshint ignore: line
 
 /**
  * HttpProvider should be used to send rpc calls over http
