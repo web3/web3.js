@@ -21,7 +21,7 @@
  * @date 2017
  */
 
-var errors = require('web3-core-helper').errors;
+var errors = require('web3-core-helpers').errors;
 var utils = require('web3-utils');
 var Promise = require("bluebird");
 // var eventifiedPromise = require('./eventifiedPromise.js');

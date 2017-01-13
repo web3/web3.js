@@ -22,6 +22,7 @@
 
 
 var requestManager = require('web3-requestManager');
+var extend = require('./extend.js');
 
 module.exports = {
     packageInit: function (pgk, args) {
@@ -39,6 +40,7 @@ module.exports = {
             pgk._requestManager = args[0];
         else
             pgk._requestManager = new requestManager.Manager(args[0]);
-    }
+    },
+    extend: extend
 };
 

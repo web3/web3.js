@@ -25,7 +25,7 @@
 var core = require('web3-core');
 var Method = require('web3-core-method');
 
-var formatters = require('../../../lib/web3/formatters');
+var formatters = require('web3-core-helpers').formatters;
 
 
 function Personal(provider) {

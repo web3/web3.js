@@ -25,8 +25,12 @@
 
 var _ = require('lodash');
 var Jsonrpc = require('./jsonrpc');
+var errors = require('web3-core-helpers').errors;
 var BatchManager = require('./batch');
-var errors = require('web3-core-helper').errors;
+
+var HttpProvider = require('./httpprovider');
+var IpcProvider = require('./ipcprovider');
+var WebsocketProvider = require('./websocketprovider');
 
 /**
  * It's responsible for passing messages to providers
@@ -37,6 +41,12 @@ var errors = require('web3-core-helper').errors;
 var RequestManager = function (provider) {
     this.setProvider(provider);
     this.subscriptions = {};
+
+    this.providers = {
+        HttpProvider: HttpProvider,
+        IpcProvider: IpcProvider,
+        WebsocketProvider: WebsocketProvider
+    };
 };
 
 /**

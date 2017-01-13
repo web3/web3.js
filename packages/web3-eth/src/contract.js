@@ -24,12 +24,11 @@ var _ = require('lodash');
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
+var formatters = require('web3-core-helpers').formatters;
 
 
-var eventifiedPromise = require('../../../lib/web3/eventifiedPromise.js');
+var eventifiedPromise = require('./eventifiedPromise.js');
 var coder = require('./../../lib/solidity/coder');
-var formatters = require('./../../lib/web3/formatters');
-var sha3 = require('./../../lib/utils/sha3');
 
 
 /**
@@ -97,7 +96,7 @@ var Contract = function(jsonInterface, address, options) {
 
                 // function
                 if (method.type === 'function') {
-                    method.signature = '0x'+ sha3(utils.transformToFullName(method)).slice(0, 8);
+                    method.signature = '0x'+ utils.sha3(utils.transformToFullName(method)).slice(0, 8);
                     func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
@@ -121,7 +120,7 @@ var Contract = function(jsonInterface, address, options) {
 
                 // event
                 } else if (method.type === 'event') {
-                    method.signature = '0x'+ sha3(utils.transformToFullName(method));
+                    method.signature = '0x'+ utils.sha3(utils.transformToFullName(method));
                     var event = _this._on.bind(_this, method.signature);
 
                     // add method only if not already exists

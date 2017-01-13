@@ -6,7 +6,7 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "web3-core-helper": "^1.0.0",
+        "web3-core-helpers": "^1.0.0",
         "web3-utils": "^1.0.0",
         "bluebird": "^3.3.1"
     }

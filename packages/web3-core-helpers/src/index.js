@@ -23,8 +23,12 @@
 "use strict";
 
 var errors = require('./errors');
+var formatters = require('./formatters');
+var settings = require('./config');
 
 module.exports = {
-    errors: errors
+    errors: errors,
+    formatters: formatters,
+    settings: settings
 };
 

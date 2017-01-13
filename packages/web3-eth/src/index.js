@@ -24,16 +24,14 @@
 
 var _ = require('lodash');
 var core = require('web3-core');
+var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions');
 var utils = require('web3-utils');
 var Method = require('web3-core-method');
 var Contract = require('./contract');
 
-var c = require('../../../lib/utils/config');
-var formatters = require('../../../lib/web3/formatters');
-var namereg = require('../../../lib/web3/namereg');
-var Iban = require('../../../lib/web3/iban');
-var transfer = require('../../../lib/web3/transfer');
+var formatters = helpers.formatters;
+
 
 var blockCall = function (args) {
     return (_.isString(args[0]) && args[0].indexOf('0x') === 0) ? "eth_getBlockByHash" : "eth_getBlockByNumber";
@@ -63,7 +61,6 @@ function Eth(provider) {
     core.packageInit(this, arguments);
 
 
-
     methods().forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
@@ -74,37 +71,29 @@ function Eth(provider) {
     this.contract = Contract;
     this.contract.prototype._eth = this;
 
-    this.iban = Iban;
-    this.sendIBANTransaction = transfer.bind(null, this);
-
-    this.namereg = function () {
-        return this.contract(namereg.global.abi).at(namereg.global.address);
-    };
-
-    this.icapNamereg = function () {
-        return this.contract(namereg.icap.abi).at(namereg.icap.address);
-    };
 }
 
 
 Object.defineProperty(Eth.prototype, 'defaultBlock', {
     get: function () {
-        return c.defaultBlock;
+        return helpers.config.defaultBlock;
     },
     set: function (val) {
-        c.defaultBlock = val;
+        helpers.config.defaultBlock = val;
         return val;
-    }
+    },
+    enumerable: true
 });
 
 Object.defineProperty(Eth.prototype, 'defaultAccount', {
     get: function () {
-        return c.defaultAccount;
+        return helpers.config.defaultAccount;
     },
     set: function (val) {
-        c.defaultAccount = val;
+        helpers.config.defaultAccount = val;
         return val;
-    }
+    },
+    enumerable: true
 });
 
 var methods = function () {

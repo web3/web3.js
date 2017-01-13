@@ -6,7 +6,7 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "web3-core-helper": "^1.0.0",
+        "web3-core-helpers": "^1.0.0",
         "lodash": "^4.17.4",
         "eventemitter3": "^1.1.1"
     }

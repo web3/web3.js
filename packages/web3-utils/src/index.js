@@ -21,24 +21,11 @@
  * @date 2017
  */
 
-/**
- * Utils
- *
- * @module utils
- */
-
-/**
- * Utility functions
- *
- * @class [utils] utils
- * @constructor
- */
-
 
 var BigNumber = require('bignumber.js');
 var utf8 = require('utf8');
 
-var sha3 = require('../../../lib/utils/sha3.js');
+var sha3 = require('./sha3.js');
 
 var unitMap = {
     'noether':      '0',
@@ -622,6 +609,7 @@ module.exports = {
     isObject: isObject,
     isBoolean: isBoolean,
     isArray: isArray,
-    isJson: isJson
+    isJson: isJson,
+    sha3: sha3
 };
 

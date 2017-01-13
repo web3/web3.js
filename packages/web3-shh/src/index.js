@@ -26,7 +26,7 @@ var core = require('web3-core');
 var Subscriptions = require('web3-core-subscriptions');
 var Method = require('web3-core-method');
 
-var formatters = require('../../../lib/web3/formatters');
+var formatters = require('web3-core-helpers').formatters;
 
 
 var Shh = function (provider) {
