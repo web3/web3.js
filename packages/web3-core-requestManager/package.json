@@ -7,6 +7,11 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
-        "lodash": "^4.17.4"
+        "lodash": "^4.17.4",
+        "xmlhttprequest": "*",
+        "xhr2": "*"
+    },
+    "browser": {
+        "xmlhttprequest": "./src/browser-xhr.js"
     }
 }

@@ -17,12 +17,12 @@
 /**
  * @file web3.js
  * @authors:
- *   Jeffrey Wilcke <jeff@ethdev.com>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
- *   Gav Wood <g@ethdev.com>
- * @date 2016
+ *   Jeffrey Wilcke <jeffrey.wilcke@ethereum.org>
+ *   Gav Wood <gav@ethcore.io>
+ *   Marek Kotewicz <marek@ethcore.io>
+ *   Marian Oancea <marian@ethereum.org>
+ *   Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 var RequestManager = require('./web3/requestmanager');
