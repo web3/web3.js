@@ -25,10 +25,10 @@ var requestManager = require('web3-requestManager');
 var extend = require('./extend.js');
 
 module.exports = {
-    packageInit: function (pgk, args) {
+    packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
 
-        if (!pgk) {
+        if (!pkg) {
             throw new Error('You need to instantiate using the "new" keyword.');
         }
 
@@ -36,13 +36,52 @@ module.exports = {
             throw new Error('You must pass in a provider as argument!');
         }
 
-        if (args[0]._requestManager)
-            pgk._requestManager = args[0];
-        else
-            pgk._requestManager = new requestManager.Manager(args[0]);
+        // make write only property of pkg.provider
+        Object.defineProperty(pkg, 'currentProvider', {
+            get: function () {
+                return pkg._provider;
+            },
+            set: function (val) {
+                return pkg._provider;
+            },
+            enumerable: true
+        });
+
+        // inherit from web3 umbrella package
+        if (args[0]._requestManager) {
+            pkg._requestManager = args[0]._requestManager;
+            pkg._provider =  args[0].provider;
+
+        // set requestmanager on package
+        } else {
+            pkg._requestManager = new requestManager.Manager(args[0]);
+            pkg._provider =  args[0];
+        }
+
+        if(pkg._requestManager && pkg._requestManager.providers) {
+            pkg.providers = pkg._requestManager.providers;
+        }
+
+        // add set Provider function
+        pkg.setProvider = function (provider) {
+            pkg._requestManager.setProvider(provider);
+            pkg._provider = provider;
+            return true;
+        };
+
+        // add reset function
+        pkg.reset = function (keepIsSyncing) {
+            pkg._requestManager.reset(keepIsSyncing);
+            return true;
+        };
+
+        // attach batch request creation
+        pkg.createBatchRequest = function () {
+            return new requestManager.BatchManager(pkg);
+        };
 
         // attach extend function
-        pgk.extend = extend(pgk);
+        pkg.extend = extend(pkg);
     }
 };
 

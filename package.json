@@ -10,9 +10,7 @@
         "doc": "./doc"
     },
     "dependencies": {
-
-        "web3-net": "^1.0.0"
-
+        "web3-core": "^1.0.0"
     },
     "devDependencies": {
         "bower": ">=1.4.1",

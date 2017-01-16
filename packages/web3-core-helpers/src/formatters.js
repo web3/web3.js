@@ -34,7 +34,7 @@ var config = require('./config');
  * @returns {BigNumber} object
  */
 var outputBigNumberFormatter = function (number) {
-    return utils.toBigNumber(number);
+    return utils.toBigNumber(number).toFixed();
 };
 
 var isPredefinedBlockNumber = function (blockNumber) {
@@ -128,8 +128,8 @@ var outputTransactionFormatter = function (tx){
         tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
     tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
-    tx.gasPrice = utils.toBigNumber(tx.gasPrice);
-    tx.value = utils.toBigNumber(tx.value);
+    tx.gasPrice = utils.toBigNumber(tx.gasPrice).toFixed();
+    tx.value = utils.toBigNumber(tx.value).toFixed();
     return tx;
 };
 
