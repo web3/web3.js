@@ -48,7 +48,6 @@ var RequestManager = function (provider) {
     this.setProvider(provider);
     this.subscriptions = {};
 
-
     this.providers = providers;
 };
 

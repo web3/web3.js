@@ -32,9 +32,9 @@ module.exports = {
             throw new Error('You need to instantiate using the "new" keyword.');
         }
 
-        if (!args[0]) {
-            throw new Error('You must pass in a provider as argument!');
-        }
+        // if (!args[0]) {
+        //     throw new Error('You must pass in a provider as argument!');
+        // }
 
         // make write only property of pkg.provider
         Object.defineProperty(pkg, 'currentProvider', {
@@ -48,7 +48,7 @@ module.exports = {
         });
 
         // inherit from web3 umbrella package
-        if (args[0]._requestManager) {
+        if (args[0] && args[0]._requestManager) {
             pkg._requestManager = args[0]._requestManager;
             pkg._provider =  args[0].provider;
 
@@ -58,9 +58,8 @@ module.exports = {
             pkg._provider =  args[0];
         }
 
-        // if(pkg._requestManager && pkg._requestManager.providers) {
-        //     pkg.providers = pkg._requestManager.providers;
-        // }
+        // add providers
+        pkg.providers = requestManager.Manager.providers;
 
         // add set Provider function
         pkg.setProvider = function (provider) {

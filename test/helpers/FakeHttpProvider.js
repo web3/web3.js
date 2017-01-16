@@ -69,7 +69,7 @@ FakeHttpProvider.prototype.send = function (payload, callback) {
         validation(JSON.parse(JSON.stringify(payload)), callback);
     }
 
-    var response = _this.getResponseOrError('response', payload);
+    var response = this.getResponseOrError('response', payload);
     var error = this.getResponseOrError('error', payload);
 
     setTimeout(function(){
@@ -87,10 +87,12 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
     var _this = this;
     var response;
 
-    if(type === 'error')
+    if(type === 'error') {
         response = this.error.shift();
-    else
+    } else {
         response = this.response.shift() || this.getResponseStub();
+    }
+
 
     if(response) {
         if(_.isArray(response)) {
@@ -119,12 +121,7 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
 //     this.response = response;
 // };
 
-FakeHttpProvider.prototype.injectResult = function (result) {
-    var response = this.getResponseStub();
-    response.result = result;
 
-    this.response.push(response);
-};
 
 FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     var _this = this;
@@ -140,11 +137,18 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     }));
 };
 
-FakeHttpProvider.prototype.injectError = function (error) {
-    var error = this.getErrorStub();
-    error.error = error; // message, code
+FakeHttpProvider.prototype.injectResult = function (result) {
+    var response = this.getResponseStub();
+    response.result = result;
 
-    this.error.push(error);
+    this.response.push(response);
+};
+
+FakeHttpProvider.prototype.injectError = function (error) {
+    var errorStub = this.getErrorStub();
+    errorStub.error = error; // message, code
+
+    this.error.push(errorStub);
 };
 
 FakeHttpProvider.prototype.injectValidation = function (callback) {

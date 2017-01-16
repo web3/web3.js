@@ -176,6 +176,11 @@ Method.prototype.buildCall = function() {
                 resolve(result);
                 //defer.promise.removeAllListeners();
             } else {
+
+                if(err.error) {
+                    err = err.error;
+                }
+
                 return utils._fireError(err, null, reject, payload.callback);
             }
         });
