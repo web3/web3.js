@@ -32,6 +32,12 @@ var HttpProvider = require('./providers/httpprovider');
 var IpcProvider = require('./providers/ipcprovider');
 var WebsocketProvider = require('./providers/websocketprovider');
 
+var providers = {
+    HttpProvider: HttpProvider,
+    IpcProvider: IpcProvider,
+    WebsocketProvider: WebsocketProvider
+};
+
 /**
  * It's responsible for passing messages to providers
  * It's also responsible for polling the ethereum node for incoming messages
@@ -42,12 +48,12 @@ var RequestManager = function (provider) {
     this.setProvider(provider);
     this.subscriptions = {};
 
-    this.providers = {
-        HttpProvider: HttpProvider,
-        IpcProvider: IpcProvider,
-        WebsocketProvider: WebsocketProvider
-    };
+
+    this.providers = providers;
 };
+
+// expose providers
+RequestManager.providers = providers;
 
 /**
  * Should be used to synchronously send request

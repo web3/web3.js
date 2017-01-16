@@ -42,6 +42,8 @@ var Shh = function (provider) {
     });
 };
 
+core.addProviders(Shh);
+
 
 var methods = function () {
 

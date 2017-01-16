@@ -58,9 +58,9 @@ module.exports = {
             pkg._provider =  args[0];
         }
 
-        if(pkg._requestManager && pkg._requestManager.providers) {
-            pkg.providers = pkg._requestManager.providers;
-        }
+        // if(pkg._requestManager && pkg._requestManager.providers) {
+        //     pkg.providers = pkg._requestManager.providers;
+        // }
 
         // add set Provider function
         pkg.setProvider = function (provider) {
@@ -82,6 +82,9 @@ module.exports = {
 
         // attach extend function
         pkg.extend = extend(pkg);
+    },
+    addProviders: function (pkg) {
+        pkg.providers = requestManager.Manager.providers;
     }
 };
 

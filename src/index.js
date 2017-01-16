@@ -44,6 +44,9 @@ var Web3 = function (provider) {
     this.net = new Net(this);
 };
 
+core.addProviders(Web3);
+
+
 
 module.exports = Web3;
 

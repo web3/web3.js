@@ -73,6 +73,8 @@ function Eth(provider) {
 
 }
 
+core.addProviders(Eth);
+
 
 Object.defineProperty(Eth.prototype, 'defaultBlock', {
     get: function () {

@@ -41,6 +41,9 @@ function Personal(provider) {
     });
 }
 
+core.addProviders(Personal);
+
+
 var methods = function () {
 
     var getAccounts = new Method({

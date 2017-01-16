@@ -41,6 +41,9 @@ var Net = function (provider) {
 
 };
 
+core.addProviders(Net);
+
+
 var methods = function () {
 
     var getListening = new Method({

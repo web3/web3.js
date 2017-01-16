@@ -39,6 +39,10 @@ function Swarm(provider) {
     });
 }
 
+core.addProviders(Swarm);
+
+
+
 var methods = function () {
     var blockNetworkRead = new Method({
         name: 'blockNetworkRead',
