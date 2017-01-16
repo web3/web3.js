@@ -21,8 +21,8 @@
  */
 
 var BigNumber = require('bignumber.js');
-var utils = require('../utils/utils');
-var c = require('../utils/config');
+var utils = require('web3-utils');
+var c = require('web3-core-helpers').config;
 var SolidityParam = require('./param');
 
 
@@ -133,9 +133,9 @@ var formatOutputInt = function (param) {
     // check if it's negative number
     // it it is, return two's complement
     if (signedIsNegative(value)) {
-        return new BigNumber(value, 16).minus(new BigNumber('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 16)).minus(1);
+        return new BigNumber(value, 16).minus(new BigNumber('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 16)).minus(1).toFixed();
     }
-    return new BigNumber(value, 16);
+    return new BigNumber(value, 16).toFixed();
 };
 
 /**
@@ -143,11 +143,11 @@ var formatOutputInt = function (param) {
  *
  * @method formatOutputUInt
  * @param {SolidityParam}
- * @returns {BigNumeber} right-aligned output bytes formatted to uint
+ * @returns {BigNumber} right-aligned output bytes formatted to uint
  */
 var formatOutputUInt = function (param) {
     var value = param.staticPart() || "0";
-    return new BigNumber(value, 16);
+    return new BigNumber(value, 16).toFixed();
 };
 
 /**
@@ -158,7 +158,7 @@ var formatOutputUInt = function (param) {
  * @returns {BigNumber} input bytes formatted to real
  */
 var formatOutputReal = function (param) {
-    return formatOutputInt(param).dividedBy(new BigNumber(2).pow(128));
+    return new BigNumber(formatOutputInt(param)).dividedBy(new BigNumber(2).pow(128)).toFixed();
 };
 
 /**
@@ -169,7 +169,7 @@ var formatOutputReal = function (param) {
  * @returns {BigNumber} input bytes formatted to ureal
  */
 var formatOutputUReal = function (param) {
-    return formatOutputUInt(param).dividedBy(new BigNumber(2).pow(128));
+    return new BigNumber(formatOutputUInt(param)).dividedBy(new BigNumber(2).pow(128)).toFixed();
 };
 
 /**

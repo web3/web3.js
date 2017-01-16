@@ -28,7 +28,7 @@ var formatters = require('web3-core-helpers').formatters;
 
 
 var eventifiedPromise = require('./eventifiedPromise.js');
-var coder = require('./../../lib/solidity/coder');
+var coder = require('./solidity/coder');
 
 
 /**

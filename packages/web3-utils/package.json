@@ -6,8 +6,9 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2",
         "utf8": "^2.1.1",
-        "crypto-js": "^3.1.4"
+        "crypto-js": "^3.1.4",
+
+        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
     }
 }

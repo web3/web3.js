@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = require('assert');
-var utils = require('../../lib/utils/utils');
+var _ = require('lodash');
 
 
 
@@ -33,7 +33,7 @@ var FakeHttpProvider = function () {
 };
 
 FakeHttpProvider.prototype.sendSync = function (payload) {
-    assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
+    assert.equal(_.isArray(payload) || _.isObject(payload), true);
 
     var error = this.getResponseOrError('error', payload);
     if (error) {
@@ -59,8 +59,8 @@ FakeHttpProvider.prototype.send = function (payload, callback) {
     // else
     //     this.countId++;
 
-    assert.equal(utils.isArray(payload) || utils.isObject(payload), true);
-    assert.equal(utils.isFunction(callback), true);
+    assert.equal(_.isArray(payload) || _.isObject(payload), true);
+    assert.equal(_.isFunction(callback), true);
 
     var validation = this.validation.shift();
 
@@ -93,7 +93,7 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
         response = this.response.shift() || this.getResponseStub();
 
     if(response) {
-        if(utils.isArray(response)) {
+        if(_.isArray(response)) {
             response = response.map(function(resp, index) {
                 resp.id = payload[index] ? payload[index].id : _this.countId++;
                 return resp;

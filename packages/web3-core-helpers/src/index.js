@@ -24,11 +24,11 @@
 
 var errors = require('./errors');
 var formatters = require('./formatters');
-var settings = require('./config');
+var config = require('./config');
 
 module.exports = {
     errors: errors,
     formatters: formatters,
-    settings: settings
+    config: config
 };
 

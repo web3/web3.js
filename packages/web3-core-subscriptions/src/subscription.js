@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-var errors = require('web3-core-helper').errors;
+var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 var _ = require('lodash');
 

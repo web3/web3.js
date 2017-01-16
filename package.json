@@ -32,7 +32,9 @@
         "mocha": ">=2.3.3",
         "sandboxed-module": "^2.0.2",
         "vinyl-source-stream": "^1.1.0",
-        "lerna": "2.0.0-beta.32"
+        "lerna": "2.0.0-beta.32",
+
+        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
     },
     "scripts": {
         "build": "gulp",

@@ -28,9 +28,9 @@ var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
 var BatchManager = require('./batch');
 
-var HttpProvider = require('./httpprovider');
-var IpcProvider = require('./ipcprovider');
-var WebsocketProvider = require('./websocketprovider');
+var HttpProvider = require('./providers/httpprovider');
+var IpcProvider = require('./providers/ipcprovider');
+var WebsocketProvider = require('./providers/websocketprovider');
 
 /**
  * It's responsible for passing messages to providers

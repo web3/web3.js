@@ -23,7 +23,7 @@
 "use strict";
 
 var core = require('web3-core');
-var Subscriptions = require('web3-core-subscriptions');
+var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
 
 var formatters = require('web3-core-helpers').formatters;

@@ -42,7 +42,7 @@ module.exports = {
             pgk._requestManager = new requestManager.Manager(args[0]);
 
         // attach extend function
-        pkg.extend = extend(pkg);
+        pgk.extend = extend(pgk);
     }
 };
 

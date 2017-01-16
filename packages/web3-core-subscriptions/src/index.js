@@ -32,9 +32,6 @@ var Subscriptions = function (options) {
 };
 
 
-Subscription.prototype.subscription = Subscription;
-
-
 Subscriptions.prototype.setRequestManager = function (rm) {
     this.requestManager = rm;
 };
@@ -68,4 +65,8 @@ Subscriptions.prototype.buildCall = function() {
     };
 };
 
-module.exports = Subscriptions;
+
+module.exports = {
+    subscriptions: Subscriptions,
+    subscription: Subscription
+};
