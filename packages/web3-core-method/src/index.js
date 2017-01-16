@@ -148,6 +148,8 @@ Method.prototype.attachToObject = function (obj) {
 
 Method.prototype.buildCall = function() {
     var method = this;
+
+    // actual send function
     var send = function () {
         var resolve, reject,
             promise = new Promise(function() {
@@ -185,7 +187,7 @@ Method.prototype.buildCall = function() {
 };
 
 /**
- * Should be called to create pure JSONRPC request which can be used in batch request
+ * Should be called to create the pure JSONRPC request which can be used in a batch request
  *
  * @method request
  * @param {...} params
