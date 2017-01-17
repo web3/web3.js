@@ -22,8 +22,8 @@
  */
 
 module.exports = {
-    InvalidNumberOfParams: function () {
-        return new Error('Invalid number of input parameters');
+    InvalidNumberOfParams: function (got, expected) {
+        return new Error('Invalid number of parameters! Got '+ got +' expected '+ expected +'.');
     },
     InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');

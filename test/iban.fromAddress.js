@@ -1,5 +1,6 @@
 var chai = require('chai');
-var Iban = require('../lib/web3/iban.js');
+var Iban = require('../packages/web3-iban');
+
 var assert = chai.assert;
 
 var tests = [
@@ -16,7 +17,7 @@ describe('lib/web3/iban', function () {
             it('shoud create indirect iban: ' +  test.expected, function () {
                 assert.deepEqual(Iban.fromAddress(test.address), new Iban(test.expected));
             });
-        });   
+        });
     });
 });
 

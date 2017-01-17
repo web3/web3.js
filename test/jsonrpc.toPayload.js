@@ -1,12 +1,12 @@
 var chai = require('chai');
-var assert = chai.assert; 
-var Jsonrpc = require('../lib/web3/jsonrpc');
+var assert = chai.assert;
+var Jsonrpc = require('../packages/web3-core-requestManager/src/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('toPayload', function () {
         it('should create basic payload', function () {
-            
-            // given 
+
+            // given
             var method = 'helloworld';
 
             // when
@@ -19,10 +19,10 @@ describe('jsonrpc', function () {
             assert.equal(payload.params.length, 0);
             assert.equal(typeof payload.id, 'number');
         });
-        
+
         it('should create payload with params', function () {
-            
-            // given 
+
+            // given
             var method = 'helloworld1';
             var params = [123, 'test'];
 
