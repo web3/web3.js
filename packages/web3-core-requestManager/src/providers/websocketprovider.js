@@ -22,7 +22,7 @@
 
 "use strict";
 
-var _ = require('lodash');
+var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 // var W3CWebSocket = require('websocket').w3cwebsocket;
 // Default connection ws://localhost:8546

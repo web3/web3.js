@@ -128,8 +128,16 @@ var outputTransactionFormatter = function (tx){
         tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
     tx.nonce = utils.toDecimal(tx.nonce);
     tx.gas = utils.toDecimal(tx.gas);
-    tx.gasPrice = utils.toBigNumber(tx.gasPrice).toFixed();
-    tx.value = utils.toBigNumber(tx.value).toFixed();
+    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
+    tx.value = outputBigNumberFormatter(tx.value);
+
+    if(tx.to) {
+        tx.to = utils.toChecksumAddress(tx.to);
+    }
+    if(tx.from) {
+        tx.from = utils.toChecksumAddress(tx.from);
+    }
+
     return tx;
 };
 
@@ -154,6 +162,10 @@ var outputTransactionReceiptFormatter = function (receipt){
         });
     }
 
+    if(tx.contractAddress) {
+        tx.contractAddress = utils.toChecksumAddress(tx.contractAddress);
+    }
+
     return receipt;
 };
 
@@ -174,8 +186,8 @@ var outputBlockFormatter = function(block) {
     if(block.number !== null)
         block.number = utils.toDecimal(block.number);
 
-    block.difficulty = utils.toBigNumber(block.difficulty);
-    block.totalDifficulty = utils.toBigNumber(block.totalDifficulty);
+    block.difficulty = outputBigNumberFormatter(block.difficulty);
+    block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
     if (utils.isArray(block.transactions)) {
         block.transactions.forEach(function(item){
@@ -216,11 +228,8 @@ var inputLogFormatter = function(options) {
 
     toTopic = null;
 
-    if(options.address && !utils.isAddress(options.address))
-        throw new Error('The given address is not valid!');
-
-    // if(options.address)
-    //     options.address = options.address.toLowerCase();
+    if(options.address)
+        options.address = inputAddressFormatter(options.address);
 
     return options;
 };
@@ -235,7 +244,8 @@ var inputLogFormatter = function(options) {
 var outputLogFormatter = function(log) {
 
     // generate a custom log id
-    log.id = 'log_'+ utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x','')).substr(0,8);
+    if(log.blockHash && log.transactionHash && log.logIndex)
+        log.id = 'log_'+ utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x','')).substr(0,8);
 
     if(log.blockNumber !== null)
         log.blockNumber = utils.toDecimal(log.blockNumber);
@@ -243,6 +253,8 @@ var outputLogFormatter = function(log) {
         log.transactionIndex = utils.toDecimal(log.transactionIndex);
     if(log.logIndex !== null)
         log.logIndex = utils.toDecimal(log.logIndex);
+
+    log.address = utils.toChecksumAddress(log.address);
 
     return log;
 };
@@ -310,12 +322,10 @@ var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
         return '0x' + iban.address();
-    } else if (utils.isStrictAddress(address)) {
-        return address;
     } else if (utils.isAddress(address)) {
-        return '0x' + address;
+        return '0x' + address.replace('0x','').toLowerCase();
     }
-    throw new Error('invalid address');
+    throw new Error('Provided address "'+ address +'" is invalid, or the capitalization checksum is not correct.');
 };
 
 

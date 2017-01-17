@@ -23,7 +23,7 @@
 "use strict";
 
 
-var _ = require('lodash');
+var _ = require('underscore');
 var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
 var BatchManager = require('./batch');

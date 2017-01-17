@@ -4,7 +4,8 @@ var Eth = require('../packages/web3-eth/');
 
 
 var name = 'event1';
-var address = '0x1234567890123456789012345678901234567890';
+var address = '0xffddb67890123456789012345678901234567890';
+var resultAddress = '0xffdDb67890123456789012345678901234567890';
 
 var tests = [{
     abi: {
@@ -26,7 +27,7 @@ var tests = [{
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: address,
+        address: resultAddress,
         blockHash: '0x1234567890',
         blockNumber: 1,
         id: "log_c71f2e84",
@@ -59,7 +60,7 @@ var tests = [{
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: address,
+        address: resultAddress,
         blockHash: '0x1234567890',
         blockNumber: 1,
         topics: [],
@@ -114,7 +115,7 @@ var tests = [{
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: address,
+        address: resultAddress,
         blockHash: '0x1234567890',
         blockNumber: 1,
         id: "log_c71f2e84",
@@ -153,7 +154,7 @@ var tests = [{
         logIndex: '0x1',
         transactionIndex: '0x10',
         transactionHash: '0x1234567890',
-        address: address,
+        address: resultAddress,
         blockHash: '0x1234567890',
         blockNumber: '0x1',
         data: '0x' +
@@ -175,7 +176,7 @@ var tests = [{
         logIndex: 1,
         transactionIndex: 16,
         transactionHash: '0x1234567890',
-        address: address,
+        address: resultAddress,
         blockHash: '0x1234567890',
         blockNumber: 1,
         id: "log_c71f2e84",

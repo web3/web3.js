@@ -22,7 +22,7 @@
 
 "use strict";
 
-var _ = require('lodash');
+var _ = require('underscore');
 var core = require('web3-core');
 var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;

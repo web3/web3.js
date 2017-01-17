@@ -20,7 +20,7 @@
  * @date 2016
  */
 
-var _ = require('lodash');
+var _ = require('underscore');
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
@@ -68,10 +68,7 @@ var Contract = function(jsonInterface, address, options) {
     // set address
     Object.defineProperty(this.options, 'address', {
         set: function(value){
-            if(utils.isAddress(value))
-                this._address = value.toLowerCase();
-            else if(value)
-                throw new Error('The provided contract address is not a valid address.');
+            this._address = formatters.inputAddressFormatter(value);
         },
         get: function(){
             return this._address;

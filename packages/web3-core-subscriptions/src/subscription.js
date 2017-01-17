@@ -20,9 +20,9 @@
  * @date 2017
  */
 
+var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
-var _ = require('lodash');
 
 
 var Subscription = function (options) {

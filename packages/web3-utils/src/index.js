@@ -397,16 +397,6 @@ var toTwosComplement = function (number) {
     return bigNumber;
 };
 
-/**
- * Checks if the given string is strictly an address
- *
- * @method isStrictAddress
- * @param {String} address the given HEX adress
- * @return {Boolean}
- */
-var isStrictAddress = function (address) {
-    return /^0x[0-9a-f]{40}$/i.test(address);
-};
 
 /**
  * Checks if the given string is an address
@@ -486,8 +476,8 @@ var toChecksumAddress = function (address) {
  * @return {String} formatted address
  */
 var toAddress = function (address) {
-    if (isStrictAddress(address)) {
-        return address;
+    if (isAddress(address)) {
+        return '0x'+ address.replace('0x','');
     }
 
     if (/^[0-9a-f]{40}$/.test(address)) {
@@ -600,7 +590,6 @@ module.exports = {
     toTwosComplement: toTwosComplement,
     toAddress: toAddress,
     isBigNumber: isBigNumber,
-    isStrictAddress: isStrictAddress,
     isAddress: isAddress,
     isChecksumAddress: isChecksumAddress,
     toChecksumAddress: toChecksumAddress,
