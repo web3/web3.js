@@ -334,8 +334,6 @@ Contract.prototype._decodeEventABI = function (data) {
 
     result.event = event.name;
 
-    //delete result.data;
-    //delete result.topics;
 
     return result;
 };
