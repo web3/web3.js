@@ -643,6 +643,8 @@ Contract.prototype._methodReturnCallback = function methodReturnCallback(defer, 
         // check for receipt on send
         if(type === 'send') {
 
+            // TODO add back the 50 blocks timeout
+
             defer.promise.emit('transactionHash', returnValue);
 
             // fire "receipt" event and resolve after

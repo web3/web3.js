@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../../index');
+var Web3 = require('../../src/index');
 
 var FakeHttpProvider = require('./FakeHttpProvider');
 var clone = function (object) { return JSON.parse(JSON.stringify(object)); };
@@ -12,8 +12,8 @@ var runTests = function (obj, method, tests) {
     describe(testName, function () {
         describe(method, function () {
             tests.forEach(function (test, index) {
-                it('sync test: ' + index, function () {
-                    
+                it('promise test: ' + index, function () {
+
                     // given
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
@@ -36,13 +36,16 @@ var runTests = function (obj, method, tests) {
                     //var result = (obj)
                         //? web3[obj][method].apply(null, test.args.slice(0))
                         //: web3[method].apply(null, test.args.slice(0));
-                    
-                    // then 
-                    assert.deepEqual(test.formattedResult, result);
+
+                    result.then(function(result){
+                        assert.deepEqual(test.formattedResult, result);
+                    });
+
+                    // then
                 });
-                
-                it('async test: ' + index, function (done) {
-                    
+
+                it('callback test: ' + index, function (done) {
+
                     // given
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
@@ -54,7 +57,7 @@ var runTests = function (obj, method, tests) {
                     });
 
                     var args = clone(test.args);
-                   
+
                     // add callback
                     args.push(function (err, result) {
                         assert.deepEqual(test.formattedResult, result);

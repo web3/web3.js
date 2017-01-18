@@ -22,8 +22,10 @@
 
 "use strict";
 
+var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
+var utils = require('web3-utils');
 
 var formatters = require('web3-core-helpers').formatters;
 
@@ -49,7 +51,8 @@ var methods = function () {
     var getAccounts = new Method({
         name: 'getAccounts',
         call: 'personal_listAccounts',
-        params: 0
+        params: 0,
+        outputFormatter: utils.toChecksumAddress
     });
 
     var newAccount = new Method({

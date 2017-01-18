@@ -142,8 +142,9 @@ var methods = function () {
     var getAccounts = new Method({
         name: 'getAccounts',
         call: 'eth_accounts',
-        params: 0
-    });
+        params: 0,
+        outputFormatter: utils.toChecksumAddress
+        });
 
     var getBlockNumber = new Method({
         name: 'getBlockNumber',
