@@ -42,7 +42,7 @@ var isPredefinedBlockNumber = function (blockNumber) {
 };
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    if (!blockNumber) {
+    if (blockNumber === undefined || blockNumber === null) {
         return config.defaultBlock;
     }
     return inputBlockNumberFormatter(blockNumber);
@@ -157,13 +157,11 @@ var outputTransactionReceiptFormatter = function (receipt){
     receipt.gasUsed = utils.toDecimal(receipt.gasUsed);
 
     if(utils.isArray(receipt.logs)) {
-        receipt.logs = receipt.logs.map(function(log){
-            return outputLogFormatter(log);
-        });
+        receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
-    if(tx.contractAddress) {
-        tx.contractAddress = utils.toChecksumAddress(tx.contractAddress);
+    if(receipt.contractAddress) {
+        receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
 
     return receipt;
@@ -183,7 +181,7 @@ var outputBlockFormatter = function(block) {
     block.gasUsed = utils.toDecimal(block.gasUsed);
     block.size = utils.toDecimal(block.size);
     block.timestamp = utils.toDecimal(block.timestamp);
-    if(block.number !== null)
+    if (block.number !== null)
         block.number = utils.toDecimal(block.number);
 
     block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -195,6 +193,9 @@ var outputBlockFormatter = function(block) {
                 return outputTransactionFormatter(item);
         });
     }
+
+    if (block.miner)
+        block.miner = utils.toChecksumAddress(block.miner);
 
     return block;
 };
@@ -244,17 +245,23 @@ var inputLogFormatter = function(options) {
 var outputLogFormatter = function(log) {
 
     // generate a custom log id
-    if(log.blockHash && log.transactionHash && log.logIndex)
+    if(typeof log.blockHash === 'string' &&
+       typeof log.transactionHash === 'string' &&
+       typeof log.logIndex === 'string') {
         log.id = 'log_'+ utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x','')).substr(0,8);
+    } else {
+        log.id = null;
+    }
 
-    if(log.blockNumber !== null)
+    if (log.blockNumber !== null)
         log.blockNumber = utils.toDecimal(log.blockNumber);
-    if(log.transactionIndex !== null)
+    if (log.transactionIndex !== null)
         log.transactionIndex = utils.toDecimal(log.transactionIndex);
-    if(log.logIndex !== null)
+    if (log.logIndex !== null)
         log.logIndex = utils.toDecimal(log.logIndex);
 
-    log.address = utils.toChecksumAddress(log.address);
+    if (log.address)
+        log.address = utils.toChecksumAddress(log.address);
 
     return log;
 };

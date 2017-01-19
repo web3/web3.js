@@ -17,7 +17,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
-                    provider.injectResult(test.result);
+                    provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
@@ -38,7 +38,7 @@ var runTests = function (obj, method, tests) {
                         //: web3[method].apply(null, test.args.slice(0));
 
                     result.then(function(result){
-                        assert.deepEqual(test.formattedResult, result);
+                        assert.deepEqual(result, test.formattedResult);
                     });
 
                     // then
@@ -49,7 +49,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
-                    provider.injectResult(test.result);
+                    provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
@@ -60,7 +60,7 @@ var runTests = function (obj, method, tests) {
 
                     // add callback
                     args.push(function (err, result) {
-                        assert.deepEqual(test.formattedResult, result);
+                        assert.deepEqual(result, test.formattedResult);
                         done();
                     });
 

@@ -1,6 +1,3 @@
-var chai = require('chai');
-var web3 = require('../index');
-var BigNumber = require('bignumber.js');
 var testMethod = require('./helpers/test.method.js');
 
 var method = 'getTransaction';
@@ -24,17 +21,17 @@ var formattedTxResult = {
     "blockHash": "0x6fd9e2a26ab",
     "blockNumber": 5599,
     "transactionIndex":  1,
-    "from":"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-    "to":"0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-    "value": new BigNumber(520464),
+    "from":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
+    "to":"0x85h43d8a49EEB85D32CF465507dD71D507100C1", // checksum address
+    "value": '520464',
     "gas": 520464,
-    "gasPrice": new BigNumber(10000000000000),
+    "gasPrice": '10000000000000',
     "input":"0x603880600c6000396000f30060"
 };
 
 var tests = [{
-    args: ['0x2dbab4c0612bf9caf4c195085547dc0612bf9caf4c1950855'],
-    formattedArgs: ['0x2dbab4c0612bf9caf4c195085547dc0612bf9caf4c1950855'],
+    args: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1'], // checksum address
+    formattedArgs: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1'],
     result: txResult,
     formattedResult: formattedTxResult,
     call: 'eth_'+ method + 'ByHash'

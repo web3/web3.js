@@ -165,7 +165,7 @@ var methods = function () {
         name: 'getStorageAt',
         call: 'eth_getStorageAt',
         params: 3,
-        inputFormatter: [null, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
+        inputFormatter: [formatters.inputAddressFormatter, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
     });
 
     var getCode = new Method({
@@ -212,6 +212,7 @@ var methods = function () {
         name: 'getTransaction',
         call: 'eth_getTransactionByHash',
         params: 1,
+        inputFormatter: [formatters.inputAddressFormatter],
         outputFormatter: formatters.outputTransactionFormatter
     });
 
@@ -227,6 +228,7 @@ var methods = function () {
         name: 'getTransactionReceipt',
         call: 'eth_getTransactionReceipt',
         params: 1,
+        inputFormatter: [formatters.inputAddressFormatter],
         outputFormatter: formatters.outputTransactionReceiptFormatter
     });
 

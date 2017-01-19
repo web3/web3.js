@@ -1,7 +1,3 @@
-var chai = require('chai');
-var Web3 = require('../index');
-var web3 = new Web3();
-var BigNumber = require('bignumber.js');
 var testMethod = require('./helpers/test.method.js');
 
 var method = 'getUncle';
@@ -35,9 +31,9 @@ var formattedBlockResult = {
     "logsBloom": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
     "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
     "stateRoot": "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
-    "miner": "0x4e65fda2159562a496f9f3522f89122a3088497a",
-    "difficulty": new BigNumber(163591),
-    "totalDifficulty":  new BigNumber(163591),
+    "miner": "0x4E65FDa2159562a496F9f3522f89122A3088497a", // checksum address
+    "difficulty": '163591',
+    "totalDifficulty":  '163591',
     "size":  163591,
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": 653145,
@@ -88,9 +84,9 @@ var formattedBlockResultWithTx = {
     "logsBloom": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
     "transactionsRoot": "0x56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421",
     "stateRoot": "0xd5855eb08b3387c0af375e9cdb6acfc05eb8f519e419b874b6ff2ffda7ed1dff",
-    "miner": "0x4e65fda2159562a496f9f3522f89122a3088497a",
-    "difficulty": new BigNumber(163591),
-    "totalDifficulty":  new BigNumber(163591),
+    "miner": "0x4E65FDa2159562a496F9f3522f89122A3088497a", // checksum address
+    "difficulty": '163591',
+    "totalDifficulty":  '163591',
     "size":  163591,
     "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": 653145,
@@ -103,11 +99,11 @@ var formattedBlockResultWithTx = {
         "blockHash": "0x6fd9e2a26ab",
         "blockNumber": 5599,
         "transactionIndex":  1,
-        "from":"0x407d73d8a49eeb85d32cf465507dd71d507100c1",
-        "to":"0x85h43d8a49eeb85d32cf465507dd71d507100c1",
-        "value": new BigNumber(520464),
+        "from":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
+        "to":"0x85h43d8a49EEB85D32CF465507dD71D507100C1", // checksum address
+        "value": '520464',
         "gas": 520464,
-        "gasPrice": new BigNumber(10000000000000),
+        "gasPrice": '10000000000000',
         "input":"0x603880600c6000396000f30060",
     }],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
