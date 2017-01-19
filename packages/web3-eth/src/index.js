@@ -327,8 +327,8 @@ var methods = function () {
         subscribe: 'eth_subscribe',
         unsubscribe: 'eth_unsubscribe',
         subscriptions: {
-            'newBlocks': {
-                params: 1,
+            'newHeads': {
+                params: 0,
                 outputFormatter: formatters.outputBlockFormatter
             },
             'pendingTransactions': {
