@@ -1,9 +1,9 @@
 var chai = require('chai');
 var assert = chai.assert;
+var FakeHttpProvider = require('./FakeHttpProvider');
 var Web3 = require('../../src/index');
 
-var FakeHttpProvider = require('./FakeHttpProvider');
-var clone = function (object) { return JSON.parse(JSON.stringify(object)); };
+var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
 var runTests = function (obj, method, tests) {
 
@@ -21,7 +21,7 @@ var runTests = function (obj, method, tests) {
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
-                        assert.deepEqual(payload.params, test.formattedArgs);
+                        assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
 
                     var args = clone(test.args)
@@ -53,7 +53,7 @@ var runTests = function (obj, method, tests) {
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
-                        assert.deepEqual(payload.params, test.formattedArgs);
+                        assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
 
                     var args = clone(test.args);
