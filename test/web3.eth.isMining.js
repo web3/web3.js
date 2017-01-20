@@ -1,11 +1,11 @@
 var testMethod = require('./helpers/test.method.js');
 
-var method = 'getProtocolVersion';
-var call = 'eth_protocolVersion';
+var method = 'isMining';
+var call = 'eth_mining';
 
 var tests = [{
-    result: '12345',
-    formattedResult: '12345',
+    result: true,
+    formattedResult: true,
     call: call
 }];
 

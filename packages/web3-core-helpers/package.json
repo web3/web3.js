@@ -7,6 +7,6 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-utils": "^1.0.0",
-        "web3-iban": "^1.0.0"
+        "web3-core-iban": "^1.0.0"
     }
 }

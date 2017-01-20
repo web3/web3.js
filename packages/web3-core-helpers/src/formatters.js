@@ -22,7 +22,7 @@
  */
 
 var utils = require('web3-utils');
-var Iban = require('web3-iban');
+var Iban = require('web3-core-iban');
 
 var config = require('./config');
 
@@ -330,9 +330,9 @@ var inputAddressFormatter = function (address) {
     if (iban.isValid() && iban.isDirect()) {
         return '0x' + iban.address();
     } else if (utils.isAddress(address)) {
-        return '0x' + address.replace('0x','').toLowerCase();
+        return '0x' + address.toLowerCase().replace('0x','');
     }
-    throw new Error('Provided address "'+ address +'" is invalid, or the capitalization checksum is not correct.');
+    throw new Error('Provided address "'+ address +'" is invalid, or the capitalization checksum test failed.');
 };
 
 

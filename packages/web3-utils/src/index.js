@@ -25,6 +25,7 @@
 var BigNumber = require('bignumber.js');
 var utf8 = require('utf8');
 
+// var iban = require('web3-core-iban');
 var sha3 = require('./sha3.js');
 
 var unitMap = {
@@ -409,7 +410,7 @@ var isAddress = function (address) {
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
         return false;
-    } else if (/^(0x)?[0-9a-f]{40}$/.test(address) || /^(0x)?[0-9A-F]{40}$/.test(address)) {
+    } else if (/^(0x)|(0X)?[0-9a-f]{40}$/.test(address) || /^(0x)|(0X)?[0-9A-F]{40}$/.test(address)) {
         // If it's all small caps or all all caps, return true
         return true;
     } else {
@@ -477,7 +478,7 @@ var toChecksumAddress = function (address) {
  */
 var toAddress = function (address) {
     if (isAddress(address)) {
-        return '0x'+ address.replace('0x','');
+        return '0x'+ address.toLowerCase().replace('0x','');
     }
 
     if (/^[0-9a-f]{40}$/.test(address)) {
@@ -599,6 +600,7 @@ module.exports = {
     isBoolean: isBoolean,
     isArray: isArray,
     isJson: isJson,
-    sha3: sha3
+    sha3: sha3,
+    // iban: iban
 };
 

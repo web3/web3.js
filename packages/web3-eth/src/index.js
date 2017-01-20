@@ -101,7 +101,7 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
 var methods = function () {
 
     var getVersion = new Method({
-        name: 'getVersion',
+        name: 'getProtocolVersion',
         call: 'eth_protocolVersion',
         params: 0
     });
@@ -113,7 +113,7 @@ var methods = function () {
     });
 
     var getMining = new Method({
-        name: 'getMining',
+        name: 'isMining',
         call: 'eth_mining',
         params: 0
     });

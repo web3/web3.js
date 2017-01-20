@@ -5,6 +5,8 @@ var Web3 = require('../../src/index');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
+// TODO add tests for send transaction promiEvents
+
 var runTests = function (obj, method, tests) {
 
     var testName = obj ? 'web3.' + obj : 'web';

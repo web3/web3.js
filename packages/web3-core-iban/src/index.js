@@ -22,6 +22,7 @@
 
 var BigNumber = require('bignumber.js');
 
+
 var padLeft = function (string, bytes) {
     var result = string;
     while (result.length < bytes * 2) {
@@ -224,4 +225,3 @@ Iban.prototype.toString = function () {
 };
 
 module.exports = Iban;
-
