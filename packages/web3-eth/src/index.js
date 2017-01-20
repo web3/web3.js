@@ -328,6 +328,7 @@ var methods = function () {
         unsubscribe: 'eth_unsubscribe',
         subscriptions: {
             'newBlockHeaders': {
+                // TODO change name on RPC side?
                 subscriptionName: 'newHeads', // replace subscription with this name
                 params: 0,
                 outputFormatter: formatters.outputBlockFormatter

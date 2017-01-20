@@ -1,8 +1,9 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../index');
-var web3 = new Web3();
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var Web3 = require('../index');
+
+var web3 = new Web3();
 
 var method = 'mining';
 
@@ -16,7 +17,7 @@ describe('web3.eth', function () {
     describe(method, function () {
         tests.forEach(function (test, index) {
             it('property test: ' + index, function () {
-                
+
                 // given
                 var provider = new FakeHttpProvider();
                 web3.setProvider(provider);
@@ -27,9 +28,9 @@ describe('web3.eth', function () {
                     assert.deepEqual(payload.params, []);
                 });
 
-                // when 
+                // when
                 var result = web3.eth[method];
-                
+
                 // then
                 assert.deepEqual(test.formattedResult, result);
             });
