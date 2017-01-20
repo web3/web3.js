@@ -327,7 +327,8 @@ var methods = function () {
         subscribe: 'eth_subscribe',
         unsubscribe: 'eth_unsubscribe',
         subscriptions: {
-            'newHeads': {
+            'newBlockHeaders': {
+                subscriptionName: 'newHeads', // replace subscription with this name
                 params: 0,
                 outputFormatter: formatters.outputBlockFormatter
             },
@@ -379,8 +380,8 @@ var methods = function () {
         compileSerpent,
         submitWork,
         getWork,
-        subscribe,
-        getPastLogs
+        getPastLogs,
+        subscribe
     ];
 };
 

@@ -8,7 +8,7 @@ var web3 = new Web3();
     // NEW HEADS
 var tests = [{
     protocol: 'eth',
-    args: ['newHeads'],
+    args: ['newBlockHeaders'],
     firstResult: '0x1234',
     firstPayload: {
         method: "eth_subscribe",

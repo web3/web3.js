@@ -1,36 +1,42 @@
 var chai = require('chai');
-var assert = chai.assert; 
-var Web3 = require('../index.js');
-var web3 = new Web3();
+var assert = chai.assert;
 var u = require('./helpers/test.utils.js');
 
-describe('web3.eth', function() {
-    describe('methods', function() {
-        u.methodExists(web3.eth, 'getBalance');
-        u.methodExists(web3.eth, 'getStorageAt');
-        u.methodExists(web3.eth, 'getTransactionCount');
-        u.methodExists(web3.eth, 'getCode');
-        u.methodExists(web3.eth, 'sendTransaction');
-        u.methodExists(web3.eth, 'call');
-        u.methodExists(web3.eth, 'getBlock');
-        u.methodExists(web3.eth, 'getTransaction');
-        u.methodExists(web3.eth, 'getUncle');
-        u.methodExists(web3.eth, 'getCompilers');
-        u.methodExists(web3.eth.compile, 'lll');
-        u.methodExists(web3.eth.compile, 'solidity');
-        u.methodExists(web3.eth.compile, 'serpent');
-        u.methodExists(web3.eth, 'getBlockTransactionCount');
-        u.methodExists(web3.eth, 'getBlockUncleCount');
-        u.methodExists(web3.eth, 'subscribe');
-        u.methodExists(web3.eth, 'contract');
+var Eth = require('../packages/web3-eth');
+var eth = new Eth();
 
-        u.propertyExists(web3.eth, 'coinbase');
-        u.propertyExists(web3.eth, 'mining');
-        u.propertyExists(web3.eth, 'gasPrice');
-        u.propertyExists(web3.eth, 'accounts');
-        u.propertyExists(web3.eth, 'defaultBlock');
-        u.propertyExists(web3.eth, 'blockNumber');
-        u.propertyExists(web3.eth, 'protocolVersion');
+describe('eth', function() {
+    describe('methods', function() {
+        u.methodExists(eth, 'getBalance');
+        u.methodExists(eth, 'getStorageAt');
+        u.methodExists(eth, 'getTransactionCount');
+        u.methodExists(eth, 'getCode');
+        u.methodExists(eth, 'sendTransaction');
+        u.methodExists(eth, 'call');
+        u.methodExists(eth, 'getBlock');
+        u.methodExists(eth, 'getTransaction');
+        u.methodExists(eth, 'getUncle');
+        u.methodExists(eth, 'getCompilers');
+        u.methodExists(eth.compile, 'lll');
+        u.methodExists(eth.compile, 'solidity');
+        u.methodExists(eth.compile, 'serpent');
+        u.methodExists(eth, 'getBlockTransactionCount');
+        u.methodExists(eth, 'getBlockUncleCount');
+        u.methodExists(eth, 'subscribe');
+        u.methodExists(eth, 'contract');
+
+        u.methodExists(eth, 'getCoinbase');
+        u.methodExists(eth, 'getMining');
+        u.methodExists(eth, 'getGasPrice');
+        u.methodExists(eth, 'getAccounts');
+        u.methodExists(eth, 'getBlockNumber');
+        u.methodExists(eth, 'getProtocolVersion');
+
+        u.methodExists(eth, 'setProvider');
+
+        u.propertyExists(eth, 'providers');
+        u.propertyExists(eth, 'defaultBlock');
+        u.propertyExists(eth, 'defaultAccount');
     });
 });
 

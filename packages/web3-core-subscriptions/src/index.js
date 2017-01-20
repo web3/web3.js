@@ -54,6 +54,10 @@ Subscriptions.prototype.buildCall = function() {
     var _this = this;
 
     return function(){
+        if(!_this.subscriptions[arguments[0]]) {
+            console.warn('Subscription "'+ arguments[0] +'" doesn\'t exist. Subscribing anyway.');
+        }
+
         var subscription = new Subscription({
             subscription: _this.subscriptions[arguments[0]],
             subscribeMethod: _this.subscribe,

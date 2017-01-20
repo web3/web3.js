@@ -101,7 +101,16 @@ Subscription.prototype._validateArgs = function (args) {
 Subscription.prototype._formatInput = function (args) {
     var subscription = this.options.subscription;
 
-    if (!subscription || !subscription.inputFormatter) {
+    if (!subscription) {
+        return args;
+    }
+
+    // replace subscription with given name
+    if (subscription.subscriptionName) {
+        args[0] = subscription.subscriptionName;
+    }
+
+    if (!subscription.inputFormatter) {
         return args;
     }
 
