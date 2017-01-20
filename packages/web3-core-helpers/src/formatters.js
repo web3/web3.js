@@ -66,10 +66,10 @@ var inputBlockNumberFormatter = function (blockNumber) {
 */
 var inputCallFormatter = function (options){
 
-    options.from = options.from || config.defaultAccount;
+    var from = options.from || config.defaultAccount;
 
-    if (options.from) {
-        options.from = inputAddressFormatter(options.from);
+    if (from) {
+        options.from = inputAddressFormatter(from);
     }
 
     if (options.to) { // it might be contract creation
