@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file formatters.js
+ * @file extend.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
@@ -41,6 +41,10 @@ var extend = function (pckg) {
 
         if (extension.methods) {
             extension.methods.forEach(function (method) {
+                if(!(method instanceof Method)) {
+                    method = new Method(method);
+                }
+
                 method.attachToObject(extendedObject);
                 method.setRequestManager(pckg._requestManager);
             });

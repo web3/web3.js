@@ -36,8 +36,9 @@ var Jsonrpc = {
  * @returns {Object} valid jsonrpc payload object
  */
 Jsonrpc.toPayload = function (method, params) {
-    if (!method)
-        console.error('jsonrpc method should be specified!');
+    if (!method) {
+        throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
+    }
 
     // advance message ID
     Jsonrpc.messageId++;

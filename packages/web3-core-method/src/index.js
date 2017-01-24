@@ -28,6 +28,11 @@ var Promise = require("bluebird");
 
 
 var Method = function (options) {
+
+    if(!options.call || !options.name) {
+        throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
+    }
+
     this.name = options.name;
     this.call = options.call;
     this.params = options.params || 0;
