@@ -27,7 +27,7 @@ var Method = require('web3-core-method');
 var utils = require('web3-utils');
 
 
-var Net = function (provider) {
+var Net = function () {
     var _this = this;
 
     // sets _requestmanager

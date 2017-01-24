@@ -41,7 +41,7 @@ module.exports = {
             get: function () {
                 return pkg._provider;
             },
-            set: function (val) {
+            set: function () {
                 return pkg._provider;
             },
             enumerable: true

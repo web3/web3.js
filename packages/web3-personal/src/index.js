@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var core = require('web3-core');
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
@@ -30,7 +29,7 @@ var utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 
 
-function Personal(provider) {
+function Personal() {
     var _this = this;
 
     // sets _requestmanager

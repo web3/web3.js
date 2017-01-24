@@ -430,7 +430,7 @@ Contract.prototype.deploy = function(options, callback){
 
     // return error, if no "data" is specified
     if(!options.data) {
-        return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), defer.promise, defer.reject, callback);
+        return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), null, null, callback);
     }
 
     // return defer.promise;

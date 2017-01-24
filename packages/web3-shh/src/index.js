@@ -29,7 +29,7 @@ var Method = require('web3-core-method');
 var formatters = require('web3-core-helpers').formatters;
 
 
-var Shh = function (provider) {
+var Shh = function () {
     var _this = this;
 
     // sets _requestmanager

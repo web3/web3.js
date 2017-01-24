@@ -55,7 +55,7 @@ var uncleCountCall = function (args) {
 };
 
 
-function Eth(provider) {
+function Eth() {
     var _this = this;
 
     // sets _requestmanager

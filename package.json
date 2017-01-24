@@ -38,8 +38,8 @@
     "scripts": {
         "build": "gulp",
         "watch": "gulp watch",
-        "lint": "jshint *.js lib",
-        "test": "mocha; jshint *.js lib",
+        "lint": "jshint *.js packages",
+        "test": "mocha; jshint *.js packages",
         "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
     },
     "repository": {

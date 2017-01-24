@@ -26,7 +26,7 @@ var core = require('web3-core');
 var Method = require('web3-core-method');
 
 
-function Swarm(provider) {
+function Swarm() {
     var _this = this;
 
     // sets _requestmanager
