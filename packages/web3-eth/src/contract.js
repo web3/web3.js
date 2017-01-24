@@ -68,7 +68,9 @@ var Contract = function(jsonInterface, address, options) {
     // set address
     Object.defineProperty(this.options, 'address', {
         set: function(value){
-            this._address = formatters.inputAddressFormatter(value);
+            if(value) {
+                this._address = formatters.inputAddressFormatter(value);
+            }
         },
         get: function(){
             return this._address;
@@ -93,7 +95,7 @@ var Contract = function(jsonInterface, address, options) {
 
                 // function
                 if (method.type === 'function') {
-                    method.signature = '0x'+ utils.sha3(utils.transformToFullName(method)).slice(0, 8);
+                    method.signature = utils.sha3(utils.transformToFullName(method)).slice(0, 10);
                     func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
@@ -110,14 +112,10 @@ var Contract = function(jsonInterface, address, options) {
                     // add method by name
                     _this.methods[funcName] = func;
 
-                    // also add to the main contract object
-                    // if(!_this[method.name] || _this[method.name].name === 'bound _createTxObject')
-                    //     _this[method.name] = _this.methods[method.name];
-                    // _this[method.signature] = _this.methods[method.signature];
 
                 // event
                 } else if (method.type === 'event') {
-                    method.signature = '0x'+ utils.sha3(utils.transformToFullName(method));
+                    method.signature = utils.sha3(utils.transformToFullName(method));
                     var event = _this._on.bind(_this, method.signature);
 
                     // add method only if not already exists
@@ -350,7 +348,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
     var signature = false,
         paramsABI = this._parent.options.jsonInterface.filter(function (json) {
             return ((methodSignature === 'constructor' && json.type === methodSignature) ||
-                ((json.signature === methodSignature || json.signature === '0x'+ methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
+                ((json.signature === methodSignature || json.signature === methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
         }).map(function (json) {
             if(json.inputs.length !== args.length) {
                 throw new Error('The number of arguments is not matching the methods required number. You need to pass '+ json.inputs.length +' arguments.');
@@ -648,7 +646,7 @@ Contract.prototype._methodReturnCallback = function methodReturnCallback(defer, 
             defer.promise.emit('transactionHash', returnValue);
 
             // fire "receipt" event and resolve after
-            _this._parent._eth.subscribe('newBlocks', {}, function (err, block, sub) {
+            _this._parent._eth.subscribe('newBlockHeaders', function (err, block, sub) {
                 if(!err) {
 
                     _this._parent._eth.getTransactionReceipt(returnValue, function (err, receipt) {

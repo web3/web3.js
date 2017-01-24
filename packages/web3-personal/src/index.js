@@ -59,7 +59,8 @@ var methods = function () {
         name: 'newAccount',
         call: 'personal_newAccount',
         params: 1,
-        inputFormatter: [null]
+        inputFormatter: [null],
+        outputFormatter: utils.toChecksumAddress
     });
 
     var unlockAccount = new Method({

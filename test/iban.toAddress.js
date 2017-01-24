@@ -1,10 +1,10 @@
 var chai = require('chai');
-var Iban = require('../packages/web3-iban');
+var Iban = require('../packages/web3-core-iban');
 
 var assert = chai.assert;
 
 var tests = [
-    { direct: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', address: '00c5496aee77c1ba1f0854206a26dda82a81d6d8'}
+    { direct: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS', address: '0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8'}
 ];
 
 describe('lib/web3/iban', function () {

@@ -407,10 +407,10 @@ var toTwosComplement = function (number) {
  * @return {Boolean}
  */
 var isAddress = function (address) {
-    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+    if (!/^(0x|0X)?[0-9a-f]{40}$/i.test(address)) {
         // check if it has the basic requirements of an address
         return false;
-    } else if (/^(0x)|(0X)?[0-9a-f]{40}$/.test(address) || /^(0x)|(0X)?[0-9A-F]{40}$/.test(address)) {
+    } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
         // If it's all small caps or all all caps, return true
         return true;
     } else {
@@ -431,7 +431,7 @@ var isAddress = function (address) {
 var isChecksumAddress = function (address) {
     // Check each case
     address = address.replace('0x','');
-    var addressHash = sha3(address.toLowerCase());
+    var addressHash = sha3(address.toLowerCase()).replace('0x','');
 
     for (var i = 0; i < 40; i++ ) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
@@ -455,7 +455,7 @@ var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
     address = address.toLowerCase().replace('0x','');
-    var addressHash = sha3(address);
+    var addressHash = sha3(address).replace('0x','');
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {

@@ -79,7 +79,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfParams(args.length, this.params);
+        throw errors.InvalidNumberOfParams(args.length, this.params, this.name);
     }
 };
 

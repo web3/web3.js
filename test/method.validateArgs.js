@@ -9,6 +9,7 @@ describe('lib/web3/method', function () {
 
             // given
             var method = new Method({
+                name: 'something', call: 'eth_something',
                 params: 1
             });
 
@@ -28,6 +29,8 @@ describe('lib/web3/method', function () {
 
             // given
             var method = new Method({
+                name: 'something',
+                call: 'eth_something',
                 params: 2
             });
 
@@ -39,8 +42,8 @@ describe('lib/web3/method', function () {
             var test2 = function () { method.validateArgs(args2); };
 
             // then
-            assert.throws(test, errors.InvalidNumberOfParams(1, 2).message);
-            assert.throws(test2, errors.InvalidNumberOfParams(3, 2).message);
+            assert.throws(test, errors.InvalidNumberOfParams(1, 2, 'something').message);
+            assert.throws(test2, errors.InvalidNumberOfParams(3, 2, 'something').message);
         });
     });
 });

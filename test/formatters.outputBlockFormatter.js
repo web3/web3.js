@@ -26,7 +26,7 @@ describe('formatters', function () {
             }), {
                 hash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
-                miner: '0xdcc6960376d6c6dea93647383ffb245cfced97cf',
+                miner: '0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf',
                 stateRoot: '0x54dda68af07643f68739a6e9612ad157a26ae7e2ce81f77842bb5835fbcde583',
                 sha3Uncles: '0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347',
                 bloom: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',

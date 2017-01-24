@@ -82,7 +82,7 @@ var methods = function () {
         name: 'getPastMessages',
         call: 'shh_getMessages',
         params: 1,
-        inputFormatter: [formatters.inputLogFormatter],
+        inputFormatter: [formatters.inputPostFormatter],
         outputFormatter: formatters.outputPostFormatter
     });
 
@@ -94,7 +94,7 @@ var methods = function () {
         subscriptions: {
             'messages': {
                 params: 1,
-                inputFormatter: [formatters.inputLogFormatter],
+                inputFormatter: [formatters.inputPostFormatter],
                 outputFormatter: formatters.outputPostFormatter
             }
         }

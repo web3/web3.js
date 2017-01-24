@@ -42,7 +42,7 @@ describe('formatters', function () {
                 blockNumber: null,
                 transactionHash: null,
                 blockHash: null,
-                address: "",
+                id: null,
                 data: '0x7b2274657374223a2274657374227',
                 topics: ['0x68656c6c6f','0x6d79746f70696373']
             });

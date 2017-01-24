@@ -35,6 +35,7 @@ describe('eth', function() {
 
         u.methodExists(eth, 'setProvider');
 
+        u.propertyExists(eth, 'iban');
         u.propertyExists(eth, 'providers');
         u.propertyExists(eth, 'defaultBlock');
         u.propertyExists(eth, 'defaultAccount');

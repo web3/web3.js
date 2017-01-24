@@ -9,6 +9,7 @@ describe('lib/web3/method', function () {
             // given
             var call = 'hello_call_world';
             var method = new Method({
+                name: 'something',
                 call: call
             });
 
@@ -27,6 +28,7 @@ describe('lib/web3/method', function () {
             };
 
             var method = new Method({
+                name: 'something',
                 call: call
             });
 

@@ -12,6 +12,7 @@ describe('lib/web3/method', function () {
             };
 
             var method = new Method({
+                name: 'something', call: 'eth_something',
                 outputFormatter: formatter
             });
             var args = '1';
@@ -32,6 +33,7 @@ describe('lib/web3/method', function () {
             };
 
             var method = new Method({
+                name: 'something', call: 'eth_something',
                 outputFormatter: formatter
             });
             var args = '1';
@@ -52,6 +54,7 @@ describe('lib/web3/method', function () {
             };
 
             var method = new Method({
+                name: 'something', call: 'eth_something',
                 outputFormatter: formatter
             });
             var args = ['1','2','3'];
@@ -67,7 +70,7 @@ describe('lib/web3/method', function () {
         it('should do nothing if there is no formatter', function () {
 
             // given
-            var method = new Method({});
+            var method = new Method({name: 'something', call: 'eth_something'});
             var args = [1,2,3];
 
             // when

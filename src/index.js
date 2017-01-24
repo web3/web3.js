@@ -30,6 +30,10 @@ var core = require('../packages/web3-core');
 
 var Eth = require('../packages/web3-eth');
 var Net = require('../packages/web3-net');
+var Shh = require('../packages/web3-shh');
+var Personal = require('../packages/web3-personal');
+
+var utils = require('../packages/web3-utils');
 
 
 
@@ -40,8 +44,12 @@ var Web3 = function (provider) {
     core.packageInit(this, arguments);
 
 
-    this.eth = new Eth(this);
     this.net = new Net(this);
+    this.eth = new Eth(this);
+    this.personal = new Personal(this); // move to -> web3.eth.accounts
+    this.shh = new Shh(this);
+
+    this.utils = utils;
 };
 
 core.addProviders(Web3);

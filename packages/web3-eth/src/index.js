@@ -246,7 +246,7 @@ var methods = function () {
         name: 'getTransactionReceipt',
         call: 'eth_getTransactionReceipt',
         params: 1,
-        inputFormatter: [formatters.inputAddressFormatter],
+        inputFormatter: [null],
         outputFormatter: formatters.outputTransactionReceiptFormatter
     });
 

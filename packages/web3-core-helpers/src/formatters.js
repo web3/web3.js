@@ -248,7 +248,8 @@ var outputLogFormatter = function(log) {
     if(typeof log.blockHash === 'string' &&
        typeof log.transactionHash === 'string' &&
        typeof log.logIndex === 'string') {
-        log.id = 'log_'+ utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x','')).substr(0,8);
+        var shaId = utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
+        log.id = 'log_'+ shaId.replace('0x','').substr(0,8);
     } else {
         log.id = null;
     }
@@ -276,9 +277,13 @@ var outputLogFormatter = function(log) {
 var inputPostFormatter = function(post) {
 
     // post.payload = utils.toHex(post.payload);
-    post.ttl = utils.fromDecimal(post.ttl);
-    post.workToProve = utils.fromDecimal(post.workToProve);
-    post.priority = utils.fromDecimal(post.priority);
+
+    if (post.ttl)
+        post.ttl = utils.fromDecimal(post.ttl);
+    if (post.workToProve)
+        post.workToProve = utils.fromDecimal(post.workToProve);
+    if (post.priority)
+        post.priority = utils.fromDecimal(post.priority);
 
     // fallback
     if (!utils.isArray(post.topics)) {
@@ -319,7 +324,7 @@ var outputPostFormatter = function(post){
         post.topics = [];
     }
     post.topics = post.topics.map(function(topic){
-        return utils.toAscii(topic);
+        return utils.toUtf8(topic);
     });
 
     return post;
@@ -328,11 +333,11 @@ var outputPostFormatter = function(post){
 var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
-        return '0x' + iban.address();
+        return iban.address().toLowerCase();
     } else if (utils.isAddress(address)) {
         return '0x' + address.toLowerCase().replace('0x','');
     }
-    throw new Error('Provided address "'+ address +'" is invalid, or the capitalization checksum test failed.');
+    throw new Error('Provided address "'+ address +'" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can\'t be converted.');
 };
 
 

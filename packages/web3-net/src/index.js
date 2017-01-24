@@ -47,7 +47,7 @@ core.addProviders(Net);
 var methods = function () {
 
     var getListening = new Method({
-        name: 'getListening',
+        name: 'isListening',
         call: 'net_listening',
         params: 0
     });

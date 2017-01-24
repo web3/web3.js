@@ -31,7 +31,7 @@ module.exports = function (value, options) {
         value = CryptoJS.enc.Hex.parse(value);
     }
 
-    return sha3(value, {
+    return '0x'+ sha3(value, {
         outputLength: 256
     }).toString();
 };

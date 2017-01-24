@@ -58,8 +58,8 @@ var formattedTxResult = {
 };
 
 var tests = [{
-    args: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1'], // checksum address
-    formattedArgs: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1'],
+    args: ['0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265'],
+    formattedArgs: ['0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265'],
     result: txResult,
     formattedResult: formattedTxResult,
     call: 'eth_'+ method
