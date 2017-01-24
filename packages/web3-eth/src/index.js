@@ -29,6 +29,7 @@ var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var utils = require('web3-utils');
 var Method = require('web3-core-method');
 var Contract = require('./contract');
+var Iban = require('web3-core-iban');
 
 var formatters = helpers.formatters;
 
@@ -70,6 +71,23 @@ function Eth(provider) {
     // add contract
     this.contract = Contract;
     this.contract.prototype._eth = this;
+
+    // add IBAN
+    this.iban = {
+        _Iban: Iban,
+        toAddress: function (ib) {
+            ib = new Iban(ib);
+
+            if(!ib.isDirect()) {
+                throw new Error('IBAN is indirect and can\'t be converted');
+            }
+
+            return ib.address();
+        },
+        toIBAN: function (address) {
+            return Iban.fromAddress(address).toString();
+        }
+    };
 
 }
 

@@ -6,6 +6,7 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
+        "web3-utils": "^1.0.0",
         "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
     }
 }

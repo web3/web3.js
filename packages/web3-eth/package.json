@@ -8,6 +8,7 @@
     "dependencies": {
         "web3-core": "^1.0.0",
         "web3-core-helpers": "^1.0.0",
+        "web3-core-iban": "^1.0.0",
         "web3-core-subscriptions": "^1.0.0",
         "web3-core-method": "^1.0.0",
         "web3-utils": "^1.0.0",
