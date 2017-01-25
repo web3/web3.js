@@ -26,6 +26,14 @@ var runTests = function (obj, method, tests) {
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
 
+                    // if notification its sendTransaction, which needs two more results, subscription and receipt
+                    if(test.notification) {
+                        provider.injectResult(clone(test.result));
+                        provider.injectResult(clone(test.result));
+                        // fake newBlock
+                        provider.injectNotification(test.notification);
+                    }
+
                     var args = clone(test.args);
 
                     if(test.error) {

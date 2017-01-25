@@ -3,7 +3,6 @@ var assert = chai.assert;
 var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var eventifiedPromise = require('../packages/web3-core-promiEvent');
 
 
 var abi = [{
@@ -242,63 +241,6 @@ describe('contract', function () {
             assert.equal(result[1], 10);
 
             done();
-        });
-        it('_methodReturnCallback should subscribe and check for receipts and code if a contract was deployed', function (done) {
-            var provider = new FakeHttpProvider();
-            var eth = new Eth(provider);
-
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_subscribe');
-                assert.deepEqual(payload.params, ['newHeads']);
-            });
-            provider.injectResult('0x1234567');
-
-            // fake newBlock
-            provider.injectNotification({
-                method: 'eth_subscription',
-                params: {
-                    subscription: '0x1234567',
-                    result: {
-                        blockNumber: '0x10'
-                    }
-                }
-            });
-
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_getTransactionReceipt');
-                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
-            });
-            provider.injectResult({
-                contractAddress: address,
-                cumulativeGasUsed: '0xa',
-                transactionIndex: '0x3',
-                blockNumber: '0xa'
-            });
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_getCode');
-                assert.deepEqual(payload.params, [address, 'latest']);
-            });
-            provider.injectResult('0x321');
-
-
-            var contract = new eth.contract(abi, address);
-            var defer = eventifiedPromise();
-
-            defer.promise.then(function (result) {
-
-                assert.equal(result.contractAddress, address);
-                assert.equal(result.blockNumber, 10);
-                assert.equal(result.transactionIndex, 3);
-                assert.equal(result.cumulativeGasUsed, 10);
-
-                done();
-            });
-
-            contract._methodReturnCallback.call({
-                _parent: contract,
-                _deployData: '0x12345'
-            }, defer, null, 'send', null, '0x1234000000000000000000000000000000000000000000000000000000056789')
-
         });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeHttpProvider();
@@ -1643,7 +1585,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            provider.injectValidation(function () {});
+            provider.injectResult('0x1234567');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
@@ -1664,8 +1606,9 @@ describe('contract', function () {
                 from: address,
                 gas: 50000,
                 gasPrice: 3000
-            }, function (err) {
+            }, function (err, result) {
                 assert.equal(err, null);
+                assert.equal(result, '0x1234567');
                 done();
             });
         });

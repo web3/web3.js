@@ -21,6 +21,7 @@
  * @date 2017
  */
 
+var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promiEvent');
@@ -37,12 +38,15 @@ var Method = function (options) {
     this.params = options.params || 0;
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
-    // this.parent = parent;
     this.requestManager = null;
 };
 
-Method.prototype.setRequestManager = function (rm) {
+Method.prototype.setRequestManager = function (rm, eth) {
     this.requestManager = rm;
+
+    if (eth) {
+        this.eth = eth;
+    }
 };
 
 /**
@@ -152,7 +156,8 @@ Method.prototype.attachToObject = function (obj) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction');
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'),
+        receiptError = new Error('Failed to check for transaction receipt.');
 
 
     // actual send function
@@ -164,38 +169,122 @@ Method.prototype.buildCall = function() {
         method.requestManager.send(payload, function (err, result) {
             result = method.formatOutput(result);
 
-            // TODO? if afterProcess is available
-            // if(method.afterProcessor)
-            //     method.afterProcessor(defer, err, result);
+
+            if (!err) {
+                if (payload.callback) {
+                    payload.callback(null, result);
+                }
+            } else {
+                if(err.error) {
+                    err = err.error;
+                }
+
+                return utils._fireError(err, defer.promise, defer.reject, payload.callback);
+            }
 
             // return PROMISE
-            // if (!isSendTx) {
+            if (!isSendTx) {
 
                 if (!err) {
-                    if(payload.callback) {
-                        payload.callback(null, result);
-                    }
-                    // defer.promise.emit('data', result);
                     defer.resolve(result);
-                    //defer.promise.removeAllListeners();
-                } else {
 
-                    if(err.error) {
-                        err = err.error;
-                    }
-
-                    return utils._fireError(err, defer, defer.reject, payload.callback);
                 }
 
             // return PROMIEVENT
-            // } else {
+            } else if (method.eth) {
+                var promiseResolved = false,
+                    timeoutCount = 0;
 
-            // }
+                // TODO add back the 50 blocks timeout
+
+                defer.promise.emit('transactionHash', result);
+
+                // fire "receipt" event and resolve after
+                method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
+                    if(!err) {
+
+
+                        method.eth.getTransactionReceipt(result, function (err, receipt) {
+                            if(!err) {
+                                if(!promiseResolved && receipt) {
+
+                                    // CHECK for contract deployment
+                                    if(_.isObject(payload.params[0]) &&
+                                        payload.params[0].data &&
+                                        payload.params[0].from &&
+                                        !payload.params[0].to
+                                    ) {
+
+                                        if(!receipt.contractAddress) {
+                                            promiseResolved = true;
+                                            return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.promise, defer.reject);
+                                        }
+
+                                        method.eth.getCode(receipt.contractAddress, function(e, code){
+
+                                            if(!code)
+                                                return;
+
+                                            sub.unsubscribe();
+                                            promiseResolved = true;
+
+                                            if(code.length > 2) {
+                                                defer.promise.emit('receipt', receipt);
+                                                defer.resolve(receipt);
+                                                defer.promise.removeAllListeners();
+                                            } else {
+                                                return utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.promise, defer.reject);
+                                            }
+                                        });
+
+
+
+                                    // CHECK for normal tx check for receipt only
+                                    } else {
+                                        sub.unsubscribe();
+                                        promiseResolved = true;
+
+                                        if(!receipt.outOfGas) {
+                                            defer.promise.emit('receipt', receipt);
+                                            defer.resolve(receipt);
+                                            defer.promise.removeAllListeners();
+
+                                        } else {
+                                            return utils._fireError(new Error('Transaction ran out of gas.'), defer.promise, defer.reject);
+                                        }
+                                    }
+
+                                // time out the transaction if not mined after 50 blocks
+                                } else {
+                                    if(timeoutCount >= 50) {
+                                        return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.promise, defer.reject);
+                                    } else {
+                                        timeoutCount++;
+                                    }
+                                }
+                            } else {
+                                sub.unsubscribe();
+                                promiseResolved = true;
+                                return utils._fireError(receiptError, defer.promise, defer.reject);
+                            }
+                        });
+
+
+                    } else {
+                        sub.unsubscribe();
+                        promiseResolved = true;
+                        return utils._fireError(receiptError, defer.promise, defer.reject);
+                    }
+                });
+
+
+            }
 
         });
 
         return defer.promise;
     };
+
     send.request = this.request.bind(this);
     return send;
 };
@@ -204,7 +293,6 @@ Method.prototype.buildCall = function() {
  * Should be called to create the pure JSONRPC request which can be used in a batch request
  *
  * @method request
- * @param {...} params
  * @return {Object} jsonrpc request
  */
 Method.prototype.request = function () {

@@ -64,7 +64,7 @@ function Eth() {
 
     methods().forEach(function(method) {
         method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
+        method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
     });
 
 
@@ -258,8 +258,8 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
-    var sendRawTransaction = new Method({
-        name: 'sendRawTransaction',
+    var sendSignedTransaction = new Method({
+        name: 'sendSignedTransaction',
         call: 'eth_sendRawTransaction',
         params: 1,
         inputFormatter: [null]
@@ -391,7 +391,7 @@ var methods = function () {
         getTransactionCount,
         call,
         estimateGas,
-        sendRawTransaction,
+        sendSignedTransaction,
         sendTransaction,
         sign,
         compileSolidity,

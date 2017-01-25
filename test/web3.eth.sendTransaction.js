@@ -14,8 +14,17 @@ var tests = [{
         to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
         value: "0x11f71f76bb1"
     }],
-    result: ['0x12345678976543213456786543212345675432'],
-    formattedResult: ['0x12345678976543213456786543212345675432'],
+    result: ['0x1234567'],
+    formattedResult: ['0x1234567'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x1234567',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
     call: 'eth_'+ method
 },{
     args: [{
@@ -32,6 +41,15 @@ var tests = [{
     }],
     result: ['0x12345678976543213456786543212345675432'],
     formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
     call: 'eth_'+ method
 },{
     args: [{
@@ -46,6 +64,15 @@ var tests = [{
     }],
     result: ['0x12345678976543213456786543212345675432'],
     formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
     call: 'eth_'+ method
 },{
     error: true, // only for testing

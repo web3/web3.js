@@ -6,17 +6,17 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var web3 = new Web3();
 
 // use sendTransaction as dummy
-var method = 'sendTransaction';
+var method = 'call';
 
 var tests = [{
     input: {
         'from': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS',
         'to': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
     },
-    formattedInput: {
+    formattedInput: [{
         'from': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8',
         'to': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8'
-    },
+    }, 'latest'],
     result: '0xb',
     formattedResult: '0xb',
     call: 'eth_'+ method
@@ -33,7 +33,7 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [test.formattedInput]);
+                assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
@@ -57,7 +57,7 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [test.formattedInput]);
+                assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
@@ -84,7 +84,7 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [test.formattedInput]);
+                assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
@@ -113,7 +113,7 @@ describe('async', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, [test.formattedInput]);
+                assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when

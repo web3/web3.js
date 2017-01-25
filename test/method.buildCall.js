@@ -1,0 +1,415 @@
+var chai = require('chai');
+var assert = chai.assert;
+var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var Eth = require('../packages/web3-eth');
+var Method = require('../packages/web3-core-method');
+
+describe('lib/web3/method', function () {
+    describe('buildCall', function () {
+        it('should return a promise and resolve it', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'call',
+                call: 'eth_call',
+                params: 2,
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+            });
+            method.setRequestManager(eth._requestManager);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                },"latest"]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).then(function (result) {
+
+                assert.deepEqual(result, '0x1234567453543456321456321');
+
+                done();
+            });
+
+        });
+        it('should subscribe and check for receipt if "sendTransaction"', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    value: '0xa'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            // receipt
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            provider.injectResult({
+                contractAddress: address,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa'
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_unsubscribe');
+                assert.deepEqual(payload.params, ['0x1234567']);
+            });
+            provider.injectResult(true); // unsubscribe result
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa'
+            }).then(function (result) {
+
+
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+                done();
+            });
+
+        });
+        it('should subscribe and check for receipt and code if "sendTransaction" deploying contract', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            // receipt
+            provider.injectResult({
+                contractAddress: address,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa'
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getCode');
+                assert.deepEqual(payload.params, [address, 'latest']);
+            });
+            // code result
+            provider.injectResult('0x321');
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).then(function (result) {
+
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+                done();
+            });
+
+        });
+        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            // receipt
+            provider.injectResult({
+                contractAddress: address,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa'
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getCode');
+                assert.deepEqual(payload.params, [address, 'latest']);
+            });
+            // code result
+            provider.injectResult('0x');
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).catch(function (error) {
+                assert.instanceOf(error, Error);
+                done();
+            });
+
+        });
+        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if receipt has no contract address', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+            // receipt
+            provider.injectResult({
+                contractAddress: null,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa'
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getCode');
+                assert.deepEqual(payload.params, [address, 'latest']);
+            });
+            // code result
+            provider.injectResult('0x123456');
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).catch(function (error) {
+                assert.instanceOf(error, Error);
+                done();
+            });
+
+        });
+        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
+            var address = '0x1234567890123456789012345678901234567891';
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fire 50 fake newBlocks
+            for (i = 0; i < 51; i++) {
+                provider.injectNotification({
+                    method: 'eth_subscription',
+                    params: {
+                        subscription: '0x1234567',
+                        result: {
+                            blockNumber: '0x10'
+                        }
+                    }
+                });
+
+                // receipt
+                provider.injectResult(null);
+            }
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).catch(function (error) {
+                assert.instanceOf(error, Error);
+                done();
+            });
+
+        });
+    });
+});
+

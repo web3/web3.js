@@ -433,7 +433,6 @@ Contract.prototype.deploy = function(options, callback){
         return utils._fireError(new Error('No "data" specified in neither the given options, nor the default options.'), null, null, callback);
     }
 
-    // return defer.promise;
     var constructor = _.find(this.options.jsonInterface, function (method) {
         return (method.type === 'constructor');
     }) || {};
@@ -611,115 +610,6 @@ Contract.prototype._createTxObject =  function _createTxObject(){
 };
 
 
-
-/**
- * The callback called when executing a method
- *
- * @method _methodReturnCallback
- * @param {Object} err
- * @param {Mixed} returnValue
- */
-Contract.prototype._methodReturnCallback = function methodReturnCallback(defer, callback, type, err, returnValue) {
-    var _this = this,
-        error = new Error('Failed to check for transaction receipt.'),
-        callbackFired = false;
-
-    if(type === 'call') {
-        returnValue = _this._parent._decodeMethodReturn(_this._method.outputs, returnValue);
-    }
-
-
-    if (err) {
-        return utils._fireError(err, defer.promise, defer.reject, callback);
-    } else {
-
-        // send immediate returnValue (see end of the function for resolve event of call and estimateGas)
-        if(callback) {
-            callback(null, returnValue);
-        }
-
-        // check for receipt on send
-        if(type === 'send') {
-
-            // TODO move to Methods package!
-            // TODO add back the 50 blocks timeout
-
-            defer.promise.emit('transactionHash', returnValue);
-
-            // fire "receipt" event and resolve after
-            _this._parent._eth.subscribe('newBlockHeaders', function (err, block, sub) {
-                if(!err) {
-
-                    _this._parent._eth.getTransactionReceipt(returnValue, function (err, receipt) {
-                        if(!err) {
-                            if(!callbackFired && receipt) {
-
-                                // CHECK for contract deployment
-                                if(_this._deployData) {
-
-                                    if(!receipt.contractAddress) {
-                                        callbackFired = true;
-                                        return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.promise, defer.reject);
-                                    }
-
-                                    _this._parent._eth.getCode(receipt.contractAddress, function(e, code){
-
-                                        if(!code)
-                                            return;
-
-                                        sub.unsubscribe();
-                                        callbackFired = true;
-
-                                        if(code.length > 2) {
-                                            defer.promise.emit('receipt', receipt);
-                                            defer.resolve(receipt);
-                                            defer.promise.removeAllListeners();
-                                        } else {
-                                            return utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.promise, defer.reject);
-                                        }
-                                    });
-
-
-
-                                // CHECK for normal tx check for receipt only
-                                } else {
-                                    sub.unsubscribe();
-                                    callbackFired = true;
-
-                                    if(!receipt.outOfGas) {
-                                        defer.promise.emit('receipt', receipt);
-                                        defer.resolve(receipt);
-                                        defer.promise.removeAllListeners();
-
-                                    } else {
-                                        return utils._fireError(new Error('Transaction ran out of gas.'), defer.promise, defer.reject);
-                                    }
-                                }
-
-                            }
-                        } else {
-                            sub.unsubscribe();
-                            callbackFired = true;
-                            return utils._fireError(error, defer.promise, defer.reject);
-                        }
-                    });
-
-
-                } else {
-                    sub.unsubscribe();
-                    callbackFired = true;
-                    return utils._fireError(error, defer.promise, defer.reject);
-                }
-            });
-
-        } else {
-
-            // remove all listeners on the end, as no event will ever fire again
-            defer.resolve(returnValue);
-        }
-    }
-};
-
 /**
  * Generates the options for the execute call
  *
@@ -742,7 +632,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
     // get the options
     processedArgs.options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
 
-    // get the generateRequest argument
+    // get the generateRequest argument for batch requests
     processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;
 
     processedArgs.options = this._parent._fillWithDefaultOptions(processedArgs.options);
@@ -770,11 +660,12 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
  * @param {Boolean} makeRequest if true, it simply returns the request parameters, rather than executing it
  */
 Contract.prototype._executeMethod = function _executeMethod(){
-    var args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer),
+    var _this = this,
+        args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer),
         defer =  promiEvent((args.type !== 'send'));
 
 
-    // simple return request
+    // simple return request for batch requests
     if(args.generateRequest) {
 
         var payload = {
@@ -793,21 +684,35 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
     } else {
 
-        var methodReturnCallback = this._parent._methodReturnCallback.bind(this, defer, args.callback, args.type);
-
         switch (args.type) {
             case 'estimate':
 
-                this._parent._eth.estimateGas(args.options, methodReturnCallback);
+                return this._parent._eth.estimateGas(args.options, args.callback);
 
-                break;
             case 'call':
 
                 // TODO check errors: missing "from" should give error on deploy and send, call ?
 
-                this._parent._eth.call(args.options, args.defaultBlock, methodReturnCallback);
+                this._parent._eth.call(args.options, args.defaultBlock, function (err, result) {
 
-                break;
+                    // decode result
+                    if(result) {
+                        result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
+                    }
+
+                    // throw error
+                    if(err) {
+                        return utils._fireError(err, null, defer.reject, args.callback);
+                    }
+
+                    if(_.isFunction(args.callback)) {
+                        args.callback(null, result);
+                    }
+                    defer.resolve(result);
+                });
+
+                return defer.promise;
+
             case 'send':
 
                 // return error, if no "from" is specified
@@ -819,14 +724,12 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.promise, defer.reject, args.callback);
                 }
 
-                this._parent._eth.sendTransaction(args.options, methodReturnCallback);
+                return this._parent._eth.sendTransaction(args.options, args.callback);
 
-                break;
         }
 
     }
 
-    return defer.promise;
 };
 
 module.exports = Contract;
