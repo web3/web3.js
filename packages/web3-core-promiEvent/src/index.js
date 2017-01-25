@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file eventifiedPromise.js
+ * @file index.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2016
  */
@@ -28,7 +28,7 @@ var Promise = require("bluebird");
  *
  * @method eventifiedPromise
  */
-var eventifiedPromise = function(justPromise) {
+var promiEvent = function(justPromise) {
     var resolve, reject,
         promise = new Promise(function() {
             resolve = arguments[0];
@@ -63,4 +63,4 @@ var eventifiedPromise = function(justPromise) {
     };
 };
 
-module.exports = eventifiedPromise;
+module.exports = promiEvent;

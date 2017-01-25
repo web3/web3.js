@@ -13,7 +13,7 @@
         "web3-core-method": "^1.0.0",
         "web3-utils": "^1.0.0",
         "underscore": "^1.8.3",
-        "eventemitter3": "^1.1.1",
+        "web3-core-promiEvent": "^1.0.0",
 
         "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
     }

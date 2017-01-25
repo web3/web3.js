@@ -25,9 +25,9 @@ var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
+var promiEvent = require('web3-core-promiEvent');
 
 
-var eventifiedPromise = require('./eventifiedPromise.js');
 var coder = require('./solidity/coder');
 
 
@@ -641,6 +641,7 @@ Contract.prototype._methodReturnCallback = function methodReturnCallback(defer, 
         // check for receipt on send
         if(type === 'send') {
 
+            // TODO move to Methods package!
             // TODO add back the 50 blocks timeout
 
             defer.promise.emit('transactionHash', returnValue);
@@ -770,7 +771,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
  */
 Contract.prototype._executeMethod = function _executeMethod(){
     var args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer),
-        defer =  eventifiedPromise((args.type !== 'send'));
+        defer =  promiEvent((args.type !== 'send'));
 
 
     // simple return request

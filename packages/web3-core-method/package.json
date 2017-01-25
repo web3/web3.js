@@ -8,6 +8,6 @@
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
         "web3-utils": "^1.0.0",
-        "bluebird": "^3.3.1"
+        "web3-core-promiEvent": "^1.0.0"
     }
 }

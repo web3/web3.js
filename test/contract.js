@@ -3,7 +3,7 @@ var assert = chai.assert;
 var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var eventifiedPromise = require('../packages/web3-eth/src/eventifiedPromise.js');
+var eventifiedPromise = require('../packages/web3-core-promiEvent');
 
 
 var abi = [{

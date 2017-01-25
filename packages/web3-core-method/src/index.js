@@ -23,8 +23,7 @@
 
 var errors = require('web3-core-helpers').errors;
 var utils = require('web3-utils');
-var Promise = require("bluebird");
-// var eventifiedPromise = require('./eventifiedPromise.js');
+var promiEvent = require('web3-core-promiEvent');
 
 
 var Method = function (options) {
@@ -152,15 +151,13 @@ Method.prototype.attachToObject = function (obj) {
 };
 
 Method.prototype.buildCall = function() {
-    var method = this;
+    var method = this,
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction');
+
 
     // actual send function
     var send = function () {
-        var resolve, reject,
-            promise = new Promise(function() {
-                resolve = arguments[0];
-                reject = arguments[1];
-            }),//eventifiedPromise(),
+        var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
@@ -171,26 +168,33 @@ Method.prototype.buildCall = function() {
             // if(method.afterProcessor)
             //     method.afterProcessor(defer, err, result);
 
-            // TODO send transaction uses PromiEvent
+            // return PROMISE
+            // if (!isSendTx) {
 
-            if(!err) {
-                if(payload.callback) {
-                    payload.callback(null, result);
+                if (!err) {
+                    if(payload.callback) {
+                        payload.callback(null, result);
+                    }
+                    // defer.promise.emit('data', result);
+                    defer.resolve(result);
+                    //defer.promise.removeAllListeners();
+                } else {
+
+                    if(err.error) {
+                        err = err.error;
+                    }
+
+                    return utils._fireError(err, defer, defer.reject, payload.callback);
                 }
-                // defer.promise.emit('data', result);
-                resolve(result);
-                //defer.promise.removeAllListeners();
-            } else {
 
-                if(err.error) {
-                    err = err.error;
-                }
+            // return PROMIEVENT
+            // } else {
 
-                return utils._fireError(err, null, reject, payload.callback);
-            }
+            // }
+
         });
 
-        return promise;
+        return defer.promise;
     };
     send.request = this.request.bind(this);
     return send;
