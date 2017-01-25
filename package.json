@@ -36,6 +36,7 @@
         "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
     },
     "scripts": {
+        "postinstall": "lerna bootstrap",
         "build": "gulp",
         "watch": "gulp watch",
         "lint": "jshint *.js packages",

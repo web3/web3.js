@@ -30,7 +30,7 @@ var Promise = require("bluebird");
  */
 var promiEvent = function(justPromise) {
     var resolve, reject,
-        promise = new Promise(function() {
+        eventEmitter = new Promise(function() {
             resolve = arguments[0];
             reject = arguments[1];
         });
@@ -39,7 +39,7 @@ var promiEvent = function(justPromise) {
         return {
             resolve: resolve,
             reject: reject,
-            promise: promise
+            eventEmitter: eventEmitter
         };
     }
 
@@ -47,19 +47,19 @@ var promiEvent = function(justPromise) {
     var emitter = new EventEmitter();
 
     // add eventEmitter to the promise
-    promise.emit = emitter.emit;
-    promise.on = emitter.on;
-    promise.once = emitter.once;
-    promise.off = emitter.off;
-    promise.listeners = emitter.listeners;
-    promise.addListener = emitter.addListener;
-    promise.removeListener = emitter.removeListener;
-    promise.removeAllListeners = emitter.removeAllListeners;
+    eventEmitter.emit = emitter.emit;
+    eventEmitter.on = emitter.on;
+    eventEmitter.once = emitter.once;
+    eventEmitter.off = emitter.off;
+    eventEmitter.listeners = emitter.listeners;
+    eventEmitter.addListener = emitter.addListener;
+    eventEmitter.removeListener = emitter.removeListener;
+    eventEmitter.removeAllListeners = emitter.removeAllListeners;
 
     return {
         resolve: resolve,
         reject: reject,
-        promise: promise
+        eventEmitter: eventEmitter
     };
 };
 

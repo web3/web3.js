@@ -74,8 +74,15 @@ var _fireError = function (error, emitter, reject, callback) {
             callback(error);
         }
         if(isFunction(reject)) {
+            if(emitter &&
+               isFunction(emitter.listeners) &&
+               emitter.listeners('error').length &&
+               isFunction(emitter.suppressUnhandledRejections)) {
+                emitter.suppressUnhandledRejections();
+            }
             reject(error);
         }
+
         if(emitter && isFunction(emitter.emit)) {
             emitter.emit('error', error);
             emitter.removeAllListeners();

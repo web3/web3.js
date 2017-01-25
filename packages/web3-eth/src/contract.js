@@ -647,7 +647,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 
     // return error, if no "data" is specified
     if(!processedArgs.options.data)
-        return utils._fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.promise, defer.reject, processedArgs.callback);
+        return utils._fireError(new Error('Couldn\'t find a matching contract method, or the number of parameters is wrong.'), defer.eventEmitter, defer.reject, processedArgs.callback);
 
     return processedArgs;
 };
@@ -662,7 +662,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 Contract.prototype._executeMethod = function _executeMethod(){
     var _this = this,
         args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer),
-        defer =  promiEvent((args.type !== 'send'));
+        defer = promiEvent((args.type !== 'send'));
 
 
     // simple return request for batch requests
@@ -711,17 +711,17 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     defer.resolve(result);
                 });
 
-                return defer.promise;
+                return defer.eventEmitter;
 
             case 'send':
 
                 // return error, if no "from" is specified
                 if(!utils.isAddress(args.options.from)) {
-                    return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.promise, defer.reject, args.callback);
+                    return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
                 }
 
                 if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
-                    return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.promise, defer.reject, args.callback);
+                    return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
                 }
 
                 return this._parent._eth.sendTransaction(args.options, args.callback);

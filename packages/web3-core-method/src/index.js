@@ -179,7 +179,7 @@ Method.prototype.buildCall = function() {
                     err = err.error;
                 }
 
-                return utils._fireError(err, defer.promise, defer.reject, payload.callback);
+                return utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
             }
 
             // return PROMISE
@@ -195,14 +195,13 @@ Method.prototype.buildCall = function() {
                 var promiseResolved = false,
                     timeoutCount = 0;
 
-                // TODO add back the 50 blocks timeout
+                // TODO add confirmation event! check for confirmation listener('confirmation') and then call on every block for 12 blocks!
 
-                defer.promise.emit('transactionHash', result);
+                defer.eventEmitter.emit('transactionHash', result);
 
                 // fire "receipt" event and resolve after
                 method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
                     if(!err) {
-
 
                         method.eth.getTransactionReceipt(result, function (err, receipt) {
                             if(!err) {
@@ -217,7 +216,7 @@ Method.prototype.buildCall = function() {
 
                                         if(!receipt.contractAddress) {
                                             promiseResolved = true;
-                                            return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.promise, defer.reject);
+                                            return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
                                         }
 
                                         method.eth.getCode(receipt.contractAddress, function(e, code){
@@ -229,11 +228,11 @@ Method.prototype.buildCall = function() {
                                             promiseResolved = true;
 
                                             if(code.length > 2) {
-                                                defer.promise.emit('receipt', receipt);
+                                                defer.eventEmitter.emit('receipt', receipt);
                                                 defer.resolve(receipt);
-                                                defer.promise.removeAllListeners();
+                                                defer.eventEmitter.removeAllListeners();
                                             } else {
-                                                return utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.promise, defer.reject);
+                                                return utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
                                             }
                                         });
 
@@ -245,19 +244,19 @@ Method.prototype.buildCall = function() {
                                         promiseResolved = true;
 
                                         if(!receipt.outOfGas) {
-                                            defer.promise.emit('receipt', receipt);
+                                            defer.eventEmitter.emit('receipt', receipt);
                                             defer.resolve(receipt);
-                                            defer.promise.removeAllListeners();
+                                            defer.eventEmitter.removeAllListeners();
 
                                         } else {
-                                            return utils._fireError(new Error('Transaction ran out of gas.'), defer.promise, defer.reject);
+                                            return utils._fireError(new Error('Transaction ran out of gas.'), defer.eventEmitter, defer.reject);
                                         }
                                     }
 
                                 // time out the transaction if not mined after 50 blocks
                                 } else {
                                     if(timeoutCount >= 50) {
-                                        return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.promise, defer.reject);
+                                        return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
                                     } else {
                                         timeoutCount++;
                                     }
@@ -265,7 +264,7 @@ Method.prototype.buildCall = function() {
                             } else {
                                 sub.unsubscribe();
                                 promiseResolved = true;
-                                return utils._fireError(receiptError, defer.promise, defer.reject);
+                                return utils._fireError(receiptError, defer.eventEmitter, defer.reject);
                             }
                         });
 
@@ -273,7 +272,7 @@ Method.prototype.buildCall = function() {
                     } else {
                         sub.unsubscribe();
                         promiseResolved = true;
-                        return utils._fireError(receiptError, defer.promise, defer.reject);
+                        return utils._fireError(receiptError, defer.eventEmitter, defer.reject);
                     }
                 });
 
@@ -282,7 +281,7 @@ Method.prototype.buildCall = function() {
 
         });
 
-        return defer.promise;
+        return defer.eventEmitter;
     };
 
     send.request = this.request.bind(this);

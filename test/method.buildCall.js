@@ -5,10 +5,12 @@ var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Eth = require('../packages/web3-eth');
 var Method = require('../packages/web3-core-method');
 
+var address = '0x1234567890123456789012345678901234567891';
+
+
 describe('lib/web3/method', function () {
     describe('buildCall', function () {
         it('should return a promise and resolve it', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -33,8 +35,6 @@ describe('lib/web3/method', function () {
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
-
-
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -47,8 +47,51 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should subscribe and check for receipt if "sendTransaction"', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
+        it('should return a promise and fail it', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'call',
+                call: 'eth_call',
+                params: 2,
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+            });
+            method.setRequestManager(eth._requestManager);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                },"latest"]);
+            });
+            provider.injectError({
+                message: 'Wrong!',
+                code: 1234
+            });
+
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).catch(function (error) {
+                assert.deepEqual(error, {
+                    message: 'Wrong!',
+                    code: 1234
+                });
+
+                done();
+            });
+
+        });
+
+        var succeedOnReceipt = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -109,6 +152,12 @@ describe('lib/web3/method', function () {
             });
             provider.injectResult(true); // unsubscribe result
 
+            return send;
+        };
+
+        it('should use promise "then" when subscribing and checking for receipt if "sendTransaction"', function (done) {
+
+            var send = succeedOnReceipt();
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -129,8 +178,32 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should subscribe and check for receipt and code if "sendTransaction" deploying contract', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
+        it('should use on("receipt", ...) when subscribing and checking for receipt if "sendTransaction"', function (done) {
+
+            var send = succeedOnReceipt();
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                value: '0xa'
+            }).on('receipt', function (result) {
+
+
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+                done();
+            });
+
+        });
+
+
+        var succeedwhenDeploying = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -189,6 +262,12 @@ describe('lib/web3/method', function () {
             // code result
             provider.injectResult('0x321');
 
+            return send;
+        };
+
+        it('should use promise "then" when subscribing and checking for receipt and code if "sendTransaction" deploying contract', function (done) {
+
+            var send = succeedwhenDeploying();
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -207,8 +286,30 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
+
+        it('should use on("receipt", ...) when subscribing and checking  for receipt and code if "sendTransaction" deploying contract', function (done) {
+
+            var send = succeedwhenDeploying();
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).on('receipt', function (result) {
+
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+                done();
+            });
+
+        });
+
+        var failOnCodeEmpty = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -267,6 +368,12 @@ describe('lib/web3/method', function () {
             // code result
             provider.injectResult('0x');
 
+            return send;
+        };
+
+        it('should fail on promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
+
+            var send = failOnCodeEmpty();
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -277,8 +384,22 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if receipt has no contract address', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
+
+        it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
+
+            var send = failOnCodeEmpty();
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).on('error', function (error) {
+                assert.instanceOf(error, Error);
+                done();
+            });
+
+        });
+
+        var failOnMissingAddress = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -337,6 +458,11 @@ describe('lib/web3/method', function () {
             // code result
             provider.injectResult('0x123456');
 
+            return send;
+        };
+
+        it('should fail on promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if receipt has no contract address', function (done) {
+            var send = failOnMissingAddress();
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -347,8 +473,23 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should fail when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
-            var address = '0x1234567890123456789012345678901234567891';
+        it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if receipt has no contract address', function (done) {
+            var send = failOnMissingAddress();
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).on('error', function (error) {
+                assert.instanceOf(error, Error);
+            }).catch(function (error) {
+                // also run catch!
+                assert.instanceOf(error, Error);
+                done();
+            });
+
+        });
+
+        var failOnTimeout = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var method = new Method({
@@ -399,12 +540,28 @@ describe('lib/web3/method', function () {
                 assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
             });
 
+            return send;
 
+        };
+
+        it('should fail with promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
+            var send = failOnTimeout();
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 data: '0xa123456'
             }).catch(function (error) {
+                assert.instanceOf(error, Error);
+                done();
+            });
+        });
+        it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
+            var send = failOnTimeout();
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }).on('error', function (error) {
                 assert.instanceOf(error, Error);
                 done();
             });
