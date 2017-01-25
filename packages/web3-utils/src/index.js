@@ -69,25 +69,25 @@ var unitMap = {
  * @return {Object} the emitter
  */
 var _fireError = function (error, emitter, reject, callback) {
-    setTimeout(function(){
-        if(isFunction(callback)) {
-            callback(error);
+    if(isFunction(callback)) {
+        callback(error);
+    }
+    if(isFunction(reject)) {
+        // suppress uncatched error if an error listener is present
+        if(emitter &&
+           isFunction(emitter.listeners) &&
+           emitter.listeners('error').length &&
+           isFunction(emitter.suppressUnhandledRejections)) {
+            emitter.suppressUnhandledRejections();
         }
-        if(isFunction(reject)) {
-            if(emitter &&
-               isFunction(emitter.listeners) &&
-               emitter.listeners('error').length &&
-               isFunction(emitter.suppressUnhandledRejections)) {
-                emitter.suppressUnhandledRejections();
-            }
-            reject(error);
-        }
+        reject(error);
+    }
 
-        if(emitter && isFunction(emitter.emit)) {
-            emitter.emit('error', error);
-            emitter.removeAllListeners();
-        }
-    }, 0);
+    if(emitter && isFunction(emitter.emit)) {
+        emitter.emit('error', error);
+        emitter.removeAllListeners();
+    }
+
     return emitter;
 };
 

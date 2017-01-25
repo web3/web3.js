@@ -16,6 +16,9 @@
 */
 /**
  * @file iban.js
+ *
+ * Details: https://github.com/ethereum/wiki/wiki/ICAP:-Inter-exchange-Client-Address-Protocol
+ *
  * @author Marek Kotewicz <marek@ethcore.io>
  * @date 2015
  */

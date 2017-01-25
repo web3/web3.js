@@ -521,15 +521,17 @@ describe('lib/web3/method', function () {
 
             // fire 50 fake newBlocks
             for (i = 0; i < 51; i++) {
-                provider.injectNotification({
-                    method: 'eth_subscription',
-                    params: {
-                        subscription: '0x1234567',
-                        result: {
-                            blockNumber: '0x10'
+                setTimeout(function () {
+                    provider.injectNotification({
+                        method: 'eth_subscription',
+                        params: {
+                            subscription: '0x1234567',
+                            result: {
+                                blockNumber: '0x10'
+                            }
                         }
-                    }
-                });
+                    });
+                },i);
 
                 // receipt
                 provider.injectResult(null);
@@ -564,6 +566,107 @@ describe('lib/web3/method', function () {
             }).on('error', function (error) {
                 assert.instanceOf(error, Error);
                 done();
+            });
+
+        });
+
+        it('should give confirmation receipts with on("confirmation", ...) when subscribing "sendTransaction"', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae'
+                }]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567'); // subscription id
+
+            // fire 50 fake newBlocks
+            for (i = 0; i < 30; i++) {
+
+                setTimeout(function () {
+                    provider.injectNotification({
+                        method: 'eth_subscription',
+                        params: {
+                            subscription: '0x1234567',
+                            result: {
+                                blockNumber: '0x10'
+                            }
+                        }
+                    });
+                }, i);
+
+                // receipt
+                provider.injectResult({
+                    contractAddress: null,
+                    cumulativeGasUsed: '0xa',
+                    transactionIndex: '0x3',
+                    blockNumber: '0xa'
+                });
+            }
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
+            });
+
+
+            var countConf = 0;
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'
+            })
+            .on('transactionHash', function(result){
+                assert.deepEqual(result, '0x1234567453543456321456321');
+            })
+            .on('receipt', function(result){
+
+                assert.deepEqual(result, {
+                    contractAddress: null,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+            })
+            .on('confirmation', function (conf, receipt) {
+
+                assert.deepEqual(receipt, {
+                    contractAddress: null,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+
+                assert.deepEqual(conf, countConf);
+
+                countConf++;
+
+                if(conf === 12) {
+                    done();
+                }
             });
 
         });

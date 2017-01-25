@@ -227,6 +227,7 @@ Subscription.prototype.subscribe = function() {
                     var output = _this._formatOutput(result);
 
                     if (!err) {
+                        // TODO remove eventEmitter??
                         if(output.removed)
                             _this.emit('changed', output);
                         else
