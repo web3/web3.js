@@ -13,7 +13,7 @@ var SolidityType = require('./type');
  * address[][6][], ...
  */
 var SolidityTypeAddress = function () {
-    this._inputFormatter = function(address){
+    this._inputFormatter = function(){
         var args = Array.prototype.slice.call(arguments);
         args[0] = formatters.inputAddressFormatter(args[0]);
         return f.formatInputInt.apply(this, args);
