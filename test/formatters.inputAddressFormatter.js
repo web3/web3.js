@@ -21,8 +21,11 @@ var errorTests = [
     '00c5496aee77c1ba1f0854206a26dda82a81d6d',
     'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZE',
     '0x',
-    '0x11f4d0a3c12e86B4b5F39b213f7E19D048276DAe'
-]
+    '0x11f4d0a3c12e86B4b5F39b213f7E19D048276DAe',
+    {},
+    [],
+    ''
+];
 
 describe('formatters', function () {
     describe('inputAddressFormatter correct addresses', function () {
