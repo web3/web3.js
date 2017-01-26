@@ -69,11 +69,11 @@ var Contract = function(jsonInterface, address, options) {
     Object.defineProperty(this.options, 'address', {
         set: function(value){
             if(value) {
-                this._address = formatters.inputAddressFormatter(value);
+                _this._address = utils.toChecksumAddress(formatters.inputAddressFormatter(value));
             }
         },
         get: function(){
-            return this._address;
+            return _this._address;
         },
         enumerable: true
     });
@@ -270,7 +270,9 @@ Contract.prototype._encodeEventABI = function (event, options) {
             delete result.topics;
     }
 
-    result.address = this.options.address;
+    if(this.options.address) {
+        result.address = this.options.address.toLowerCase();
+    }
 
     return result;
 };

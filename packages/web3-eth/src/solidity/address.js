@@ -1,4 +1,5 @@
 var f = require('./formatters');
+var formatters = require('web3-core-helpers').formatters;
 var SolidityType = require('./type');
 
 /**
@@ -12,7 +13,11 @@ var SolidityType = require('./type');
  * address[][6][], ...
  */
 var SolidityTypeAddress = function () {
-    this._inputFormatter = f.formatInputInt;
+    this._inputFormatter = function(address){
+        var args = Array.prototype.slice.call(arguments);
+        args[0] = formatters.inputAddressFormatter(args[0]);
+        return f.formatInputInt.apply(this, args);
+    };
     this._outputFormatter = f.formatOutputAddress;
 };
 
