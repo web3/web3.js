@@ -80,7 +80,8 @@ describe('lib/web3/method', function () {
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 data: '0xa123456'
-            }).catch(function (error) {
+            })
+            .catch(function (error) {
                 assert.deepEqual(error, {
                     message: 'Wrong!',
                     code: 1234
@@ -452,11 +453,11 @@ describe('lib/web3/method', function () {
                 blockNumber: '0xa'
             });
             provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_getCode');
-                assert.deepEqual(payload.params, [address, 'latest']);
+                assert.equal(payload.method, 'eth_unsubscribe');
+                assert.deepEqual(payload.params, ['0x1234567']);
             });
             // code result
-            provider.injectResult('0x123456');
+            provider.injectResult(true);
 
             return send;
         };

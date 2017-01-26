@@ -156,10 +156,133 @@ Method.prototype.attachToObject = function (obj) {
     }
 };
 
+Method.prototype._confirmTransaction = function (defer, result, payload) {
+    var method = this,
+        promiseResolved = false,
+        canUnsubscribe = true,
+        timeoutCount = 0,
+        confirmationCount = 0,
+        isContractDeployment = _.isObject(payload.params[0]) &&
+            payload.params[0].data &&
+            payload.params[0].from &&
+            !payload.params[0].to,
+        receiptError = new Error('Failed to check for transaction receipt.');
+
+
+    // fire "receipt" and confirmation events and resolve after
+    method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
+        if(!err) {
+
+            method.eth.getTransactionReceipt(result)
+            // catch error from requesting receipt
+            .catch(function () {
+                sub.unsubscribe();
+                promiseResolved = true;
+                utils._fireError(receiptError, defer.eventEmitter, defer.reject);
+            })
+            // if CONFIRMATION listener exists check for confirmations
+            .then(function(receipt) {
+
+                if (!receipt) {
+                    throw new Error('Receipt is null');
+                }
+
+                if (defer.eventEmitter.listeners('confirmation').length > 0) {
+
+                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+
+                    canUnsubscribe = false;
+                    confirmationCount++;
+
+                    if (confirmationCount === CONFIRMATIONBLOCKS + 1) { // add 1 so we account for conf 0
+                        sub.unsubscribe();
+                        defer.eventEmitter.removeAllListeners();
+                    }
+                }
+
+                return receipt;
+            })
+            // CHECK for CONTRACT DEPLOYMENT
+            .then(function(receipt) {
+
+                if (isContractDeployment && !promiseResolved) {
+
+                    if (!receipt.contractAddress) {
+                        promiseResolved = true;
+                        utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
+                        return;
+                    }
+
+                    method.eth.getCode(receipt.contractAddress, function (e, code) {
+
+                        if (!code) {
+                            return;
+                        }
+
+
+                        if (code.length > 2) {
+                            defer.eventEmitter.emit('receipt', receipt);
+                            defer.resolve(receipt);
+
+                        } else {
+                            utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
+                        }
+
+                        if (canUnsubscribe) {
+                            sub.unsubscribe();
+                            defer.eventEmitter.removeAllListeners();
+                        }
+                        promiseResolved = true;
+                    });
+                }
+
+                return receipt;
+            })
+           // CHECK for normal tx check for receipt only
+            .then(function(receipt) {
+
+                if (!isContractDeployment && !promiseResolved) {
+
+                    if(!receipt.outOfGas) {
+                        defer.eventEmitter.emit('receipt', receipt);
+                        defer.resolve(receipt);
+
+                    } else {
+                        utils._fireError(new Error('Transaction ran out of gas.'), defer.eventEmitter, defer.reject);
+                    }
+
+                    if (canUnsubscribe) {
+                        sub.unsubscribe();
+                        defer.eventEmitter.removeAllListeners();
+                    }
+                    promiseResolved = true;
+                }
+
+            })
+            // time out the transaction if not mined after 50 blocks
+            .catch(function () {
+                if (timeoutCount >= TIMEOUTBLOCK) {
+                    sub.unsubscribe();
+                    promiseResolved = true;
+                    utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                }
+
+                timeoutCount++;
+            });
+
+
+        } else {
+            sub.unsubscribe();
+            promiseResolved = true;
+            utils._fireError(receiptError, defer.eventEmitter, defer.reject);
+        }
+    });
+};
+
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'),
-        receiptError = new Error('Failed to check for transaction receipt.');
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction');
+
 
 
     // actual send function
@@ -181,7 +304,8 @@ Method.prototype.buildCall = function() {
                     err = err.error;
                 }
 
-                return utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
+                utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
+                return;
             }
 
             // return PROMISE
@@ -195,117 +319,10 @@ Method.prototype.buildCall = function() {
             // return PROMIEVENT
             } else if (method.eth) {
 
-                var promiseResolved = false,
-                    canUnsubscribe = true,
-                    timeoutCount = 0,
-                    confirmationCount = 0;
-
-
                 defer.eventEmitter.emit('transactionHash', result);
 
 
-                // fire "receipt" event and resolve after
-                method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
-                    if(!err) {
-
-                        method.eth.getTransactionReceipt(result, function (err, receipt) {
-                            if(!err) {
-
-                                // if CONFIRMATION listener exists check for confirmations
-                                if (receipt && defer.eventEmitter.listeners('confirmation').length > 0) {
-
-                                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
-
-                                    canUnsubscribe = false;
-                                    confirmationCount++;
-
-                                    if (confirmationCount === CONFIRMATIONBLOCKS + 1) { // add 1 so we account for conf 0
-                                        sub.unsubscribe();
-                                        defer.eventEmitter.removeAllListeners();
-                                    }
-                                }
-
-                                if (receipt && !promiseResolved) {
-
-                                    // CHECK for CONTRACT DEPLOYMENT
-                                    if(_.isObject(payload.params[0]) &&
-                                        payload.params[0].data &&
-                                        payload.params[0].from &&
-                                        !payload.params[0].to
-                                    ) {
-
-                                        if(!receipt.contractAddress) {
-                                            promiseResolved = true;
-                                            return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
-                                        }
-
-                                        method.eth.getCode(receipt.contractAddress, function(e, code){
-
-                                            if(!code) {
-                                                return;
-                                            }
-
-
-                                            if(code.length > 2) {
-                                                defer.eventEmitter.emit('receipt', receipt);
-                                                defer.resolve(receipt);
-
-                                            } else {
-                                                utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
-                                            }
-
-                                            if (canUnsubscribe) {
-                                                sub.unsubscribe();
-                                                defer.eventEmitter.removeAllListeners();
-                                            }
-                                            promiseResolved = true;
-                                        });
-
-
-
-                                    // CHECK for normal tx check for receipt only
-                                    } else {
-
-                                        if(!receipt.outOfGas) {
-                                            defer.eventEmitter.emit('receipt', receipt);
-                                            defer.resolve(receipt);
-
-                                        } else {
-                                            utils._fireError(new Error('Transaction ran out of gas.'), defer.eventEmitter, defer.reject);
-                                        }
-
-                                        if (canUnsubscribe) {
-                                            sub.unsubscribe();
-                                            defer.eventEmitter.removeAllListeners();
-                                        }
-                                        promiseResolved = true;
-                                    }
-
-
-                                // time out the transaction if not mined after 50 blocks
-                                } else {
-                                    if(timeoutCount >= TIMEOUTBLOCK) {
-                                        sub.unsubscribe();
-                                        promiseResolved = true;
-                                        return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
-                                    } else {
-                                        timeoutCount++;
-                                    }
-                                }
-                            } else {
-                                sub.unsubscribe();
-                                promiseResolved = true;
-                                return utils._fireError(receiptError, defer.eventEmitter, defer.reject);
-                            }
-                        });
-
-
-                    } else {
-                        sub.unsubscribe();
-                        promiseResolved = true;
-                        return utils._fireError(receiptError, defer.eventEmitter, defer.reject);
-                    }
-                });
+                method._confirmTransaction(defer, result, payload);
 
 
             }
