@@ -16,7 +16,7 @@
 */
 /**
  * @file formatters.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@ethcore.io>
  * @date 2015
  */
 
@@ -230,12 +230,12 @@ var formatOutputString = function (param) {
  * Should be used to format output address
  *
  * @method formatOutputAddress
- * @param {SolidityParam} right-aligned input bytes
+ * @param {Object} param right-aligned input bytes
  * @returns {String} address
  */
 var formatOutputAddress = function (param) {
     var value = param.staticPart();
-    return "0x" + value.slice(value.length - 40, value.length);
+    return utils.toChecksumAddress("0x" + value.slice(value.length - 40, value.length));
 };
 
 module.exports = {

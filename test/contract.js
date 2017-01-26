@@ -81,12 +81,41 @@ var abi = [{
         ]
     }];
 
-var address = '0x1234567890123456789012345678901234567891';
+var address = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
+var addressLowercase = '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae';
 var address2 = '0x5555567890123456789012345678901234567891';
 
 describe('contract', function () {
+    describe('instantiation', function () {
+        it('should transform address from checksum addressess', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            var contract = new eth.contract(abi, address);
+
+            assert.equal(contract.options.address, address);
+        });
+        it('should transform address to checksum address', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            var contract = new eth.contract(abi, addressLowercase);
+
+            assert.equal(contract.options.address, address);
+        });
+        it('should fail on invalid address', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            var test = function () {
+                new eth.contract(abi, '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe');
+            };
+
+            assert.throws(test);
+        });
+    });
     describe('internal method', function () {
-        it('_encodeEventABI should return the encoded event object without topics', function (done) {
+        it('_encodeEventABI should return the encoded event object without topics', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
@@ -105,7 +134,7 @@ describe('contract', function () {
             });
 
             assert.deepEqual(result, {
-                address: address,
+                address: addressLowercase,
                 topics: [
                     '0x1234',
                     null,
@@ -113,9 +142,8 @@ describe('contract', function () {
                 ]
             });
 
-            done();
         });
-        it('_encodeEventABI should return the encoded event object with topics', function (done) {
+        it('_encodeEventABI should return the encoded event object with topics', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
@@ -134,7 +162,7 @@ describe('contract', function () {
             }, {filter: {amount: 12}, fromBlock: 2});
 
             assert.deepEqual(result, {
-                address: address,
+                address: addressLowercase,
                 fromBlock: '0x2',
                 topics: [
                     '0x1234',
@@ -143,9 +171,8 @@ describe('contract', function () {
                 ]
             });
 
-            done();
         });
-        it('_encodeEventABI should return the encoded event object with topics and multiple choices', function (done) {
+        it('_encodeEventABI should return the encoded event object with topics and multiple choices', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
@@ -165,19 +192,18 @@ describe('contract', function () {
             }, {filter: {amount: [12,10], from: address}, fromBlock: 2});
 
             assert.deepEqual(result, {
-                address: address,
+                address: addressLowercase,
                 fromBlock: '0x2',
                 topics: [
                     '0x1234',
                     null,
-                    '0x0000000000000000000000001234567890123456789012345678901234567891',
+                    '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                     ['0x000000000000000000000000000000000000000000000000000000000000000c', '0x000000000000000000000000000000000000000000000000000000000000000a']
                 ]
             });
 
-            done();
         });
-        it('_decodeEventABI should return the decoded event object with topics', function (done) {
+        it('_decodeEventABI should return the decoded event object with topics', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -219,9 +245,8 @@ describe('contract', function () {
             assert.equal(result.returnValues.t1, 1);
             assert.equal(result.returnValues.t2, 8);
 
-            done();
         });
-        it('_decodeMethodReturn should return the decoded values', function (done) {
+        it('_decodeMethodReturn should return the decoded values', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -240,7 +265,6 @@ describe('contract', function () {
             assert.equal(result[0], address);
             assert.equal(result[1], 10);
 
-            done();
         });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeHttpProvider();
@@ -250,9 +274,9 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: signature +"0000000000000000000000001234567890123456789012345678901234567891000000000000000000000000000000000000000000000000000000000000000a",
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
                     from: address2,
-                    to: address
+                    to: addressLowercase
                 }]);
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
@@ -279,7 +303,7 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
             });
             provider.injectResult({
-                contractAddress: address,
+                contractAddress: addressLowercase,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa'
@@ -335,9 +359,9 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: signature +"0000000000000000000000001234567890123456789012345678901234567891",
+                    data: signature + '000000000000000000000000'+ addressLowercase.replace('0x',''),
                     from: address2,
-                    to: address
+                    to: addressLowercase
                 }, 'latest']);
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
@@ -386,10 +410,10 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        ('0x000000000000000000000000' + address.replace('0x', '')),
+                        ('0x000000000000000000000000' + addressLowercase.replace('0x', '')),
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x123');
@@ -405,10 +429,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x123',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            ('0x000000000000000000000000' + address.replace('0x', '')),
+                            ('0x000000000000000000000000' + addressLowercase.replace('0x', '')),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -444,10 +468,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_getLogs');
             });
             provider.injectResult([{
-                    address: address,
+                    address: addressLowercase,
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         '0x0000000000000000000000000000000000000000000000000000000000000002'
                     ],
                     blockNumber: '0x3',
@@ -458,10 +482,10 @@ describe('contract', function () {
                     '0000000000000000000000000000000000000000000000000000000000000009'
                 },
                 {
-                    address: address,
+                    address: addressLowercase,
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         '0x0000000000000000000000000000000000000000000000000000000000000003'
                     ],
                     blockNumber: '0x4',
@@ -478,10 +502,10 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x321');
@@ -498,10 +522,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -558,10 +582,10 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x321');
@@ -578,10 +602,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -616,10 +640,10 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x321');
@@ -636,10 +660,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -674,10 +698,10 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x321');
@@ -693,10 +717,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -714,10 +738,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -760,7 +784,7 @@ describe('contract', function () {
                         null,
                         null
                     ],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x321');
@@ -776,10 +800,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -797,10 +821,10 @@ describe('contract', function () {
                 params: {
                     subscription: '0x321',
                     result: {
-                        address: address,
+                        address: addressLowercase,
                         topics: [
                             sha3(signature),
-                            '0x000000000000000000000000'+ address.replace('0x',''),
+                            '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
                         blockNumber: '0x3',
@@ -848,7 +872,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [],
-                    address: address
+                    address: addressLowercase
                 });
             });
             provider.injectResult('0x333');
@@ -938,13 +962,13 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address,
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase,
                     from: address2
                 }, 'latest']);
             });
 
-            contract.methods.balance('0x1234567890123456789012345678901234567891').call({from: address2});
+            contract.methods.balance(address).call({from: address2});
 
             // change address
             contract.options.address = address2;
@@ -952,13 +976,13 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
                     to: address2,
-                    from: address
+                    from: addressLowercase
                 }, 'latest']);
             });
 
-            contract.methods.balance('0x1234567890123456789012345678901234567891').call({from: address});
+            contract.methods.balance(address).call({from: address});
         });
 
         it('should reset functions when resetting json interface', function () {
@@ -1007,7 +1031,7 @@ describe('contract', function () {
 
             var result = contract.methods.balance(address).encodeABI();
 
-            assert.equal(result, sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891');
+            assert.equal(result, sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''));
         });
 
         it('should encode a constructor call with pre set data', function () {
@@ -1021,7 +1045,7 @@ describe('contract', function () {
                 arguments: [address, 10]
             }).encodeABI();
 
-            assert.equal(result, '0x1234' + '0000000000000000000000001234567890123456789012345678901234567891'+ '000000000000000000000000000000000000000000000000000000000000000a');
+            assert.equal(result, '0x1234' + '000000000000000000000000'+ addressLowercase.replace('0x','')+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
 
         it('should encode a constructor call with passed data', function () {
@@ -1036,7 +1060,7 @@ describe('contract', function () {
                 data: '0x1234'
             }).encodeABI();
 
-            assert.equal(result, '0x1234' + '0000000000000000000000001234567890123456789012345678901234567891'+ '000000000000000000000000000000000000000000000000000000000000000a');
+            assert.equal(result, '0x1234' + '000000000000000000000000'+ addressLowercase.replace('0x','')+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
 
 
@@ -1048,8 +1072,8 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase
                 }]);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
@@ -1070,7 +1094,7 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
-                    data: '0x123400000000000000000000000012345678901234567890123456789012345678910000000000000000000000000000000000000000000000000000000000000032'
+                    data: '0x1234000000000000000000000000'+ addressLowercase.replace('0x','') +'0000000000000000000000000000000000000000000000000000000000000032'
                 }]);
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
@@ -1093,8 +1117,8 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
@@ -1115,8 +1139,8 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase
                 }, '0xb']);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
@@ -1139,10 +1163,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                    '0000000000000000000000001234567890123456789012345678901234567891' +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    from: address,
-                    to: address
+                    from: addressLowercase,
+                    to: addressLowercase
                 }]);
             });
 
@@ -1180,10 +1204,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                    '0000000000000000000000001234567890123456789012345678901234567891' +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    from: address,
-                    to: address
+                    from: addressLowercase,
+                    to: addressLowercase
                 }]);
 
                 done();
@@ -1215,10 +1239,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature +
-                    '0000000000000000000000001234567890123456789012345678901234567891' +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    from: address,
-                    to: address
+                    from: addressLowercase,
+                    to: addressLowercase
                 }]);
             });
 
@@ -1236,10 +1260,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: signature +
-                    '0000000000000000000000001234567890123456789012345678901234567891' +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    from: address,
-                    to: address
+                    from: addressLowercase,
+                    to: addressLowercase
                 }]);
             });
 
@@ -1261,9 +1285,9 @@ describe('contract', function () {
 
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address,
-                    from: address,
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350'
                 }, 'latest']);
             });
@@ -1287,9 +1311,9 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address,
-                    from: address,
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350'
                 }, 'latest']);
             });
@@ -1313,9 +1337,9 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
-                    to: address,
-                    from: address,
+                    data: sha3(signature).slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350'
                 }, '0xb']);
             });
@@ -1340,10 +1364,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                        '0000000000000000000000001234567890123456789012345678901234567891' +
+                        '000000000000000000000000'+ addressLowercase.replace('0x','') +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    to: address,
-                    from: address,
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8',
                     value: '0x2710'
@@ -1364,10 +1388,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                        '0000000000000000000000001234567890123456789012345678901234567891' +
+                        '000000000000000000000000'+ addressLowercase.replace('0x','') +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    to: address,
-                    from: address,
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8',
                     value: '0x2710'
@@ -1389,10 +1413,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                        '0000000000000000000000001234567890123456789012345678901234567891' +
+                        '000000000000000000000000'+ addressLowercase.replace('0x','') +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    to: address,
-                    from: address,
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8',
                     value: '0x2710'
@@ -1416,10 +1440,10 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
                     data: sha3(signature).slice(0, 10) +
-                        '0000000000000000000000001234567890123456789012345678901234567891' +
+                        '000000000000000000000000' + addressLowercase.replace('0x','') +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
-                    to: address,
-                    from: address,
+                    to: addressLowercase,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8',
                     value: '0x2710'
@@ -1439,7 +1463,7 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getLogs');
                 assert.deepEqual(payload.params, [{
-                    address: address,
+                    address: addressLowercase,
                     topics: [
                           "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
                           "0x000000000000000000000000" + address2.replace('0x',''),
@@ -1540,7 +1564,7 @@ describe('contract', function () {
                         '0000000000000000000000000000000000000000000000000000000000000020' +
                         '0000000000000000000000000000000000000000000000000000000000000001' +
                         '0000000000000000000000000000000000000000000000000000000000000003',
-                    to: address
+                    to: addressLowercase
                 },
                 'latest'
                 ]);
@@ -1569,7 +1593,7 @@ describe('contract', function () {
                         '0000000000000000000000000000000000000000000000000000000000000020' +
                         '0000000000000000000000000000000000000000000000000000000000000001' +
                         '0000000000000000000000000000000000000000000000000000000000000003',
-                    to: address
+                    to: addressLowercase
                 },
                 'latest'
                 ]);
@@ -1596,7 +1620,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     data: '0x1234567000000000000000000000000555456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
-                    from: address,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8'
                 }]);
@@ -1626,8 +1650,8 @@ describe('contract', function () {
 
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x1234567000000000000000000000000123456789012345678901234567890123456789100000000000000000000000000000000000000000000000000000000000000c8' ,
-                    from: address,
+                    data: '0x1234567000000000000000000000000'+ addressLowercase.replace('0x','') +'00000000000000000000000000000000000000000000000000000000000000c8' ,
+                    from: addressLowercase,
                     gas: '0xc350',
                     gasPrice: '0xbb8'
                 }]);
@@ -1657,11 +1681,11 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
             });
             provider.injectResult({
-                contractAddress: address
+                contractAddress: addressLowercase
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');
-                assert.deepEqual(payload.params, [address, 'latest']);
+                assert.deepEqual(payload.params, [addressLowercase, 'latest']);
             });
             provider.injectResult('0x321');
 
