@@ -1,5 +1,6 @@
 var chai = require('chai');
-var utils = require('../lib/utils/utils.js');
+var utils = require('../packages/web3-utils');
+
 var assert = chai.assert;
 
 var tests = [
@@ -21,7 +22,7 @@ describe('lib/utils/utils', function () {
             it('shoud test if address ' + test.value + ' passes checksum: ' + test.is, function () {
                 assert.equal(utils.isChecksumAddress(test.value), test.is);
             });
-        });   
+        });
     });
 });
 

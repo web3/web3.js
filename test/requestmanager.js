@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var RequestManager = require('../lib/web3/requestmanager');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var requestManager = require('../packages/web3-core-requestManager');
 
 // TODO: handling errors!
 // TODO: validation of params!
@@ -10,7 +10,7 @@ describe('lib/web3/requestmanager', function () {
     describe('send', function () {
         it('should return expected result synchronously', function () {
             var provider = new FakeHttpProvider();
-            var manager = new RequestManager(provider);
+            var manager = new requestManager.Manager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
 
@@ -24,7 +24,7 @@ describe('lib/web3/requestmanager', function () {
 
         it('should return expected result asynchronously', function (done) {
             var provider = new FakeHttpProvider();
-            var manager = new RequestManager(provider);
+            var manager = new requestManager.Manager(provider);
             var expected = 'hello_world';
             provider.injectResult(expected);
 

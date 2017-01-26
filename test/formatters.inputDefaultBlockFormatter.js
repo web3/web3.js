@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var formatters = require('../lib/web3/formatters');
+var formatters = require('../packages/web3-core-helpers/src/formatters.js');
 
 var tests = [
     { value: 'latest', expected: 'latest' },

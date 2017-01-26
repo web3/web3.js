@@ -2,7 +2,7 @@
 
 'use strict';
 
-var version = require('./lib/version.json');
+var version = require('./lerna.json');
 var path = require('path');
 
 var del = require('del');

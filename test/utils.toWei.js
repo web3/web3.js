@@ -1,11 +1,12 @@
 var chai = require('chai');
-var utils = require('../lib/utils/utils');
+var utils = require('../packages/web3-utils');
+
 var assert = chai.assert;
 
 describe('lib/utils/utils', function () {
     describe('toWei', function () {
         it('should return the correct value', function () {
-            
+
             assert.equal(utils.toWei(1, 'wei'),    '1');
             assert.equal(utils.toWei(1, 'kwei'),   '1000');
             assert.equal(utils.toWei(1, 'Kwei'),   '1000');

@@ -1,36 +1,60 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Web3 = require('../index');
-var web3 = new Web3();
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var utils = require('../lib/utils/utils');
+var testSubscription = require('./helpers/test.subscription.js');
 
+    // NEW HEADS
 var tests = [{
     protocol: 'eth',
-    args: ['newBlocks', {}],
+    args: ['newBlockHeaders'],
     firstResult: '0x1234',
     firstPayload: {
         method: "eth_subscribe",
-        params: ['newBlocks',{}]
+        params: ['newHeads']
     },
     secondResult: true,
     secondPayload: {
         method: "eth_unsubscribe"
     },
-    subscription: {
+    subscriptions: [{
         subscription: '0x1234',
         result: {
-            address: '0x123456789012345678901234567890123456789',
-            topics: [
-                '0x4545454500000000000000001234567890123456789012345678901234567891',
-                '0x0000000000000000000000000000000000000000000000000000000000000001'
-            ],
-            number: 2,
-            data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                    '0000000000000000000000000000000000000000000000000000000000000008' 
+            difficulty: "0x15d9223a23aa",
+            totalDifficulty: "0x15d9223a23aa",
+            extraData: "0xd983010305844765746887676f312e342e328777696e646f7773",
+            gasLimit: "0x47e7c4",
+            gasUsed: "0x38658",
+            hash: "0x950427f707bf395fda0092d4f5dcbcf32d632106fb08e397124d0726082693e6",
+            logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+            miner: "0xf8b483dba2c3b7176a3da549ad41a48bb3121069",
+            nonce: "0x084149998194cc5f",
+            number: "0x1348c9",
+            parentHash: "0x7736fab79e05dc611604d22470dadad26f56fe494421b5b333de816ce1f25701",
+            receiptRoot: "0x2fab35823ad00c7bb388595cb46652fe7886e00660a01e867824d3dceb1c8d36",
+            sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+            stateRoot: "0xb3346685172db67de536d8765c43c31009d0eb3bd9c501c9be3229203f15f378",
+            timestamp: "0x56ffeff8",
+            transactionsRoot: "0x0167ffa60e3ebc0b080cdb95f7c0087dd6c0e61413140e39d94d3468d7c9689f"
         }
-    }
+    }],
+    subscriptionResults: [{
+        difficulty: "24022326322090",
+        totalDifficulty: "24022326322090",
+        extraData: "0xd983010305844765746887676f312e342e328777696e646f7773",
+        gasLimit: 4712388,
+        gasUsed: 231000,
+        hash: "0x950427f707bf395fda0092d4f5dcbcf32d632106fb08e397124d0726082693e6",
+        logsBloom: "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        miner: "0xf8b483DbA2c3B7176a3Da549ad41A48BB3121069", // checksum address
+        nonce: "0x084149998194cc5f",
+        number: 1263817,
+        parentHash: "0x7736fab79e05dc611604d22470dadad26f56fe494421b5b333de816ce1f25701",
+        receiptRoot: "0x2fab35823ad00c7bb388595cb46652fe7886e00660a01e867824d3dceb1c8d36",
+        sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+        stateRoot: "0xb3346685172db67de536d8765c43c31009d0eb3bd9c501c9be3229203f15f378",
+        timestamp: 1459613688,
+        transactionsRoot: "0x0167ffa60e3ebc0b080cdb95f7c0087dd6c0e61413140e39d94d3468d7c9689f",
+        size: 0
+    }]
 },
+    // LOGS
 {
     protocol: 'eth',
     args: ['logs',{}],
@@ -43,96 +67,167 @@ var tests = [{
     secondPayload: {
         method: "eth_unsubscribe"
     },
-    subscription: {
+    subscriptions: [{
         subscription: '0x4444',
         result: {
-            address: '0x123456789012345678901234567890123456789',
+            logIndex: '0x23',
+            transactionHash: '0x2345fdfdf',
+            blockHash: '0x43534ffddd',
+            transactionIndex: '0x1',
+            blockNumber: '0x3222',
+            address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
             topics: [
                 '0x0000000000000000000000000000000000000000000000000000000005656565'
             ],
-            number: 2,
             data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                    '0000000000000000000000000000000000000000000000000000000000000008' 
+            '0000000000000000000000000000000000000000000000000000000000000008'
         }
-    }
+    }],
+    subscriptionResults: [{
+        id: "log_d43624aa",
+        blockHash: "0x43534ffddd",
+        blockNumber: 12834,
+        logIndex: 35,
+        transactionHash: '0x2345fdfdf',
+        transactionIndex: 1,
+        address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // checksum address
+        topics: [
+            '0x0000000000000000000000000000000000000000000000000000000005656565'
+        ],
+        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+        '0000000000000000000000000000000000000000000000000000000000000008'
+    }]
 },
 {
     protocol: 'eth',
-    args: ['logs',{address: '0x1234567890123456789012345678901234567859', topics: ['0x23']}],
+    args: ['logs',{address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', topics: ['0x23']}], // checksum address
     firstResult: '0x555',
     firstPayload: {
         method: "eth_subscribe",
-        params: ['logs',{address: '0x1234567890123456789012345678901234567859', topics: ['0x23']}]
+        params: ['logs',{address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', topics: ['0x23']}]
     },
     secondResult: true,
     secondPayload: {
         method: "eth_unsubscribe"
     },
-    subscription: {
+    subscriptions: [{
         subscription: '0x555',
         result: {
-            address: '0x1234567890123456789012345678901234567859',
+            logIndex: '0x23',
+            transactionHash: '0x2345fdfdf',
+            blockHash: '0x43534ffddd',
+            transactionIndex: '0x1',
+            blockNumber: '0x3222',
+            address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
             topics: [
                 '0x0000000000000000000000000000000000000000000000000000000005656565'
             ],
-            number: 2,
             data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
-                    '0000000000000000000000000000000000000000000000000000000000000008' 
+            '0000000000000000000000000000000000000000000000000000000000000008'
         }
-    }
+    }],
+    subscriptionResults: [{
+        id: "log_d43624aa",
+        blockHash: "0x43534ffddd",
+        blockNumber: 12834,
+        logIndex: 35,
+        transactionHash: '0x2345fdfdf',
+        transactionIndex: 1,
+        address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // checksum address
+        topics: [
+            '0x0000000000000000000000000000000000000000000000000000000005656565'
+        ],
+        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+        '0000000000000000000000000000000000000000000000000000000000000008'
+    }]
+},
+{
+    protocol: 'eth',
+    args: ['logs',{address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', topics: ['0x23']}],
+    firstResult: '0x5556666',
+    firstPayload: {
+        method: "eth_subscribe",
+        params: ['logs',{address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae', topics: ['0x23']}]
+    },
+    secondResult: true,
+    secondPayload: {
+        method: "eth_unsubscribe"
+    },
+    subscriptions: [{
+        subscription: '0x5556666',
+        result: {
+            logIndex: '0x23',
+            transactionHash: '0x2345fdfdf',
+            blockHash: '0x43534ffddd',
+            transactionIndex: '0x1',
+            blockNumber: '0x3222',
+            address: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+            topics: [
+                '0x0000000000000000000000000000000000000000000000000000000005656565'
+            ],
+            data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+            '0000000000000000000000000000000000000000000000000000000000000008'
+        }
+    }],
+    subscriptionResults: [{
+        id: "log_d43624aa",
+        blockHash: "0x43534ffddd",
+        blockNumber: 12834,
+        logIndex: 35,
+        transactionHash: '0x2345fdfdf',
+        transactionIndex: 1,
+        address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', // checksum address
+        topics: [
+            '0x0000000000000000000000000000000000000000000000000000000005656565'
+        ],
+        data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+        '0000000000000000000000000000000000000000000000000000000000000008'
+    }]
+},
+    // SYNCING
+{
+    protocol: 'eth',
+    args: ['syncing'],
+    firstResult: '0x666666',
+    firstPayload: {
+        method: "eth_subscribe",
+        params: ['syncing']
+    },
+    secondResult: true,
+    secondPayload: {
+        method: "eth_unsubscribe"
+    },
+    subscriptions: [{
+            subscription: '0x666666',
+            result: true
+        },{
+            subscription: '0x666666',
+            result: {
+                startingBlock: '0xbff23',
+                currentBlock: '0xbff11',
+                highestBlock: '0xadf23',
+                knownStates: '0xaaa23',
+                pulledStates: '0x23'
+            }
+        },
+        {
+            subscription: '0x666666',
+            result: false
+        }
+    ],
+    subscriptionResults: [
+        true,
+        {
+            startingBlock: 786211,
+            currentBlock: 786193,
+            highestBlock: 712483,
+            knownStates: 698915,
+            pulledStates: 35
+        },
+        false
+    ]
 }];
 
-var testPolling = function (tests) {
-    
-    describe('web3.eth.subscribe', function () {
-        tests.forEach(function (test, index) {
-            it('should create a subscription', function (done) {
 
-                // given
-                var sub;
-                var provider = new FakeHttpProvider(); 
-                web3.setProvider(provider);
-                web3.reset();
-                provider.injectResult(test.firstResult);
-                var step = 0;
-                provider.injectValidation(function (payload) {
-                    if (step === 0) {
-                        assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, 'eth_subscribe');
-                        assert.deepEqual(payload.params, test.firstPayload.params);
+testSubscription.runTests('eth', tests);
 
-
-                        step++;
-                    } else if (step === 1) {
-                        provider.injectResult(test.secondResult);
-                        assert.equal(payload.method, 'eth_unsubscribe');
-                    }
-
-                });
-
-                // add callback
-                test.args.push(function(err, result) {
-                    if (test.err) {
-                        // todo
-                    } else {
-                        assert.deepEqual(result, test.subscription.result);
-                    }
-                    sub.unsubscribe();
-                    done();
-
-                });
-
-                // when
-                var sub = web3[test.protocol].subscribe.apply(web3[test.protocol], test.args);
-
-                provider.injectNotification({
-                    method: 'eth_subscription',
-                    params: test.subscription
-                });
-
-            });
-        }); 
-    });
-};
-
-testPolling(tests);
