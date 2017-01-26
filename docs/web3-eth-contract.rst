@@ -661,7 +661,7 @@ once
 
     myContract.once(event[, options][, callback])
 
-Subscribes to an event, and unsubscribes immediately after the first event or error.
+Subscribes to an event, and unsubscribes immediately after the first event or error. Will fire only for one event.
 
 ----------
 Parameters
@@ -671,19 +671,13 @@ Parameters
 2. ``Object`` - **options** (optional): The options used for deployment.
     * ``Object`` - **filter** (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``Array`` - **topics** (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-3. ``Function`` - **callback** (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
+3. ``Function`` - **callback**: This callback will be fired for the first event as the second argument, or an error as the first argument.
 
 -------
 Returns
 -------
 
-``EventEmitter``: The event emitter has the following events:
-
-- ``"data"`` returns ``Object``: Fires on each incoming event with the event object as argument.
-- ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
-
-For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
+``undefined``
 
 -------
 Example
@@ -694,16 +688,9 @@ Example
     myContract.once('MyEvent', {
         filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
         fromBlock: 0
-    }, function(error, event){ console.log(event); })
-    .on('data', function(event){
-        console.log(event); // same results as the optional callback above
-    })
-    .on('changed', function(event){
-        // remove event from local database
-    })
-    .on('error', console.error);
+    }, function(error, event){ console.log(event); });
 
-    // console output of the event
+    // event output example
     > {
         returnValues: {
             myIndexedParam: 20,
@@ -773,7 +760,7 @@ Example
     })
     .on('error', console.error);
 
-    // console output of the event
+    // event output example
     > {
         returnValues: {
             myIndexedParam: 20,
