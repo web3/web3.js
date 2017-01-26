@@ -1,11 +1,8 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../index');
+var Eth = require('../packages/web3-eth');
+var sha3 = require('../packages/web3-utils').sha3;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var eventifiedPromise = require('../lib/web3/eventifiedPromise.js');
-var utils = require('../lib/utils/utils');
-var BigNumber = require('bignumber.js');
-var sha3 = require('../lib/utils/sha3');
 
 
 var abi = [{
@@ -91,9 +88,9 @@ describe('contract', function () {
     describe('internal method', function () {
         it('_encodeEventABI should return the encoded event object without topics', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -120,9 +117,9 @@ describe('contract', function () {
         });
         it('_encodeEventABI should return the encoded event object with topics', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -150,9 +147,9 @@ describe('contract', function () {
         });
         it('_encodeEventABI should return the encoded event object with topics and multiple choices', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -182,13 +179,13 @@ describe('contract', function () {
         });
         it('_decodeEventABI should return the decoded event object with topics', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var result = contract._decodeEventABI.call({
-                signature: '0x'+ sha3(signature),
+                signature: sha3(signature),
                 "name":"Changed",
                 "type":"event",
                 "inputs": [
@@ -200,7 +197,7 @@ describe('contract', function () {
             }, {
                 address: address,
                 topics: [
-                    '0x' + sha3(signature),
+                    sha3(signature),
                     '0x000000000000000000000000'+ address.replace('0x',''),
                     '0x0000000000000000000000000000000000000000000000000000000000000001'
                 ],
@@ -226,10 +223,10 @@ describe('contract', function () {
         });
         it('_decodeMethodReturn should return the decoded values', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var result = contract._decodeMethodReturn([{
                 "name": "myAddress",
@@ -245,72 +242,15 @@ describe('contract', function () {
 
             done();
         });
-        it('_methodReturnCallback should subscribe and check for receipts and code if a contract was deployed', function (done) {
-            var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_subscribe');
-                assert.deepEqual(payload.params, ['newBlocks', {}]);
-            });
-            provider.injectResult('0x1234567');
-
-            // fake newBlock
-            provider.injectNotification({
-                method: 'eth_subscription',
-                params: {
-                    subscription: '0x1234567',
-                    result: {
-                        blockNumber: '0x10'
-                    }
-                }
-            });
-
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_getTransactionReceipt');
-                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
-            });
-            provider.injectResult({
-                contractAddress: address,
-                cumulativeGasUsed: '0xa',
-                transactionIndex: '0x3',
-                blockNumber: '0xa'
-            });
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.method, 'eth_getCode');
-                assert.deepEqual(payload.params, [address, 'latest']);
-            });
-            provider.injectResult('0x321');
-
-
-            var contract = new web3.eth.contract(abi, address);
-            var defer = eventifiedPromise();
-
-            defer.promise.then(function (result) {
-
-                assert.equal(result.contractAddress, address);
-                assert.equal(result.blockNumber, 10);
-                assert.equal(result.transactionIndex, 3);
-                assert.equal(result.cumulativeGasUsed, 10);
-
-                done();
-            });
-
-            contract._methodReturnCallback.call({
-                _parent: contract,
-                _deployData: '0x12345'
-            }, defer, null, 'send', null, '0x1234000000000000000000000000000000000000000000000000000000056789')
-
-        });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-            var signature = sha3('mySend(address,uint256)').slice(0, 8);
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: "0x"+ signature +"0000000000000000000000001234567890123456789012345678901234567891000000000000000000000000000000000000000000000000000000000000000a",
+                    data: signature +"0000000000000000000000001234567890123456789012345678901234567891000000000000000000000000000000000000000000000000000000000000000a",
                     from: address2,
                     to: address
                 }]);
@@ -319,7 +259,7 @@ describe('contract', function () {
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
-                assert.deepEqual(payload.params, ['newBlocks', {}]);
+                assert.deepEqual(payload.params, ['newHeads']);
             });
             provider.injectResult('0x1234567');
 
@@ -351,7 +291,7 @@ describe('contract', function () {
             provider.injectResult('0x321');
 
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var txObject = {};
             txObject._method = {
@@ -389,13 +329,13 @@ describe('contract', function () {
         });
         it('_executeMethod should call and return values', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-            var signature = sha3('balance(address)').slice(0, 8);
+            var eth = new Eth(provider);
+            var signature = sha3('balance(address)').slice(0, 10);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: "0x"+ signature +"0000000000000000000000001234567890123456789012345678901234567891",
+                    data: signature +"0000000000000000000000001234567890123456789012345678901234567891",
                     from: address2,
                     to: address
                 }, 'latest']);
@@ -403,7 +343,7 @@ describe('contract', function () {
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
 
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var txObject = {};
             txObject._method = {
@@ -425,10 +365,10 @@ describe('contract', function () {
             txObject.arguments = [address];
 
             var deploy = contract._executeMethod.call(txObject, 'call', {from: address2}, function (err, result) {
-                assert.deepEqual(result, new BigNumber(0xa));
+                assert.equal(result, '10');
             })
             .then(function(result){
-                assert.deepEqual(result, new BigNumber(0xa));
+                assert.equal(result, '10');
                 done();
             });
 
@@ -438,14 +378,14 @@ describe('contract', function () {
     describe('event', function () {
         it('should create event subscription', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         ('0x000000000000000000000000' + address.replace('0x', '')),
                         null
                     ],
@@ -467,7 +407,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             ('0x000000000000000000000000' + address.replace('0x', '')),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -481,7 +421,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var event = contract.events.Changed({filter: {from: address}}, function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
@@ -496,7 +436,7 @@ describe('contract', function () {
 
         it('should create event from the events object and use the fromBlock option', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -506,7 +446,7 @@ describe('contract', function () {
             provider.injectResult([{
                     address: address,
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         '0x0000000000000000000000000000000000000000000000000000000000000002'
                     ],
@@ -520,7 +460,7 @@ describe('contract', function () {
                 {
                     address: address,
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         '0x0000000000000000000000000000000000000000000000000000000000000003'
                     ],
@@ -537,7 +477,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         null
                     ],
@@ -560,7 +500,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -574,7 +514,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             var count = 0;
             var event = contract.events.Changed({fromBlock: 0,filter: {from: address}})
                 .on('data', function (result) {
@@ -609,7 +549,7 @@ describe('contract', function () {
 
         it('should create event from the events object using a signature and callback', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -617,7 +557,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         null
                     ],
@@ -640,7 +580,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -654,7 +594,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             var event = contract.events['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651']({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -667,7 +607,7 @@ describe('contract', function () {
 
         it('should create event from the events object using event name and parameters', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -675,7 +615,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         null
                     ],
@@ -698,7 +638,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -712,7 +652,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             var event = contract.events[signature]({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -725,7 +665,7 @@ describe('contract', function () {
 
         it('should create event using the once function and unsubscribe after one log received', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -733,7 +673,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         null
                     ],
@@ -755,7 +695,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -776,7 +716,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -791,7 +731,7 @@ describe('contract', function () {
             });
 
             var count = 1;
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             var event = contract.once('Changed', {filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -808,7 +748,7 @@ describe('contract', function () {
 
         it('should create event using the once function and unsubscribe after one log received using the event emitter', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -816,7 +756,7 @@ describe('contract', function () {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params[1], {
                     topics: [
-                        '0x' + sha3(signature),
+                        sha3(signature),
                         '0x000000000000000000000000'+ address.replace('0x',''),
                         null
                     ],
@@ -838,7 +778,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -859,7 +799,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3(signature),
+                            sha3(signature),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -874,7 +814,7 @@ describe('contract', function () {
             });
 
             var count = 1;
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             var event = contract.once('Changed', {filter: {from: address}})
             .on('data', function (result) {
                 assert.equal(result.returnValues.from, address);
@@ -895,7 +835,7 @@ describe('contract', function () {
 
         it('should create all event filter and receive two logs', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
             provider.injectValidation(function (payload) {
@@ -916,7 +856,7 @@ describe('contract', function () {
             provider.injectResult(true);
 
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             var count = 0;
             var event = contract.events.allEvents(function (err, result) {
@@ -946,7 +886,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3('Changed(address,uint256,uint256,uint256)'),
+                            sha3('Changed(address,uint256,uint256,uint256)'),
                             '0x000000000000000000000000'+ address.replace('0x',''),
                             '0x0000000000000000000000000000000000000000000000000000000000000001'
                         ],
@@ -968,7 +908,7 @@ describe('contract', function () {
                     result: {
                         address: address,
                         topics: [
-                            '0x' + sha3('Unchanged(uint256,address,uint256)'),
+                            sha3('Unchanged(uint256,address,uint256)'),
                             '0x0000000000000000000000000000000000000000000000000000000000000002',
                             '0x000000000000000000000000'+ address.replace('0x','')
                         ],
@@ -985,15 +925,15 @@ describe('contract', function () {
     describe('with methods', function () {
         it('should change the address', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address2
                 }, 'latest']);
@@ -1007,7 +947,7 @@ describe('contract', function () {
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address2,
                     from: address
                 }, 'latest']);
@@ -1018,9 +958,9 @@ describe('contract', function () {
 
         it('should reset functions when resetting json interface', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            var contract = new web3.eth.contract(abi);
+            var contract = new eth.contract(abi);
 
             assert.isFunction(contract.methods.mySend);
             assert.isFunction(contract.events.Changed);
@@ -1055,22 +995,22 @@ describe('contract', function () {
 
         it('should encode a function call', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new web3.eth.contract(abi);
+            var contract = new eth.contract(abi);
 
             var result = contract.methods.balance(address).encodeABI();
 
-            assert.equal(result, '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891');
+            assert.equal(result, sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891');
         });
 
         it('should encode a constructor call with pre set data', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new web3.eth.contract(abi, {data: '0x1234'});
+            var contract = new eth.contract(abi, {data: '0x1234'});
 
             var result = contract.deploy({
                 arguments: [address, 10]
@@ -1081,10 +1021,10 @@ describe('contract', function () {
 
         it('should encode a constructor call with passed data', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new web3.eth.contract(abi);
+            var contract = new eth.contract(abi);
 
             var result = contract.deploy({
                 arguments: [address, 10],
@@ -1097,19 +1037,19 @@ describe('contract', function () {
 
         it('should estimate a function', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address
                 }]);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).estimateGas(function (err, res) {
                 assert.deepEqual(res, 50);
@@ -1119,7 +1059,7 @@ describe('contract', function () {
 
         it('should estimate the constructor', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
@@ -1130,7 +1070,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
 
-            var contract = new web3.eth.contract(abi, address, {data: '0x1234'});
+            var contract = new eth.contract(abi, address, {data: '0x1234'});
 
             contract.deploy({
                 arguments: [address, 50]
@@ -1142,58 +1082,58 @@ describe('contract', function () {
 
         it('should call constant function', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address
                 }, 'latest']);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).call(function (err, res) {
-                assert.deepEqual(new BigNumber(0x32), res);
+                assert.deepEqual(res, '50');
                 done();
             });
         });
 
         it('should call constant function with default block', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address
                 }, '0xb']);
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).call(11)
             .then(function (r) {
-                assert.deepEqual(new BigNumber(0x32), r);
+                assert.deepEqual(r, '50');
                 done();
             });
         });
 
         it('should sendTransaction to contract function', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                     '0000000000000000000000001234567890123456789012345678901234567891' +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: address,
@@ -1201,16 +1141,16 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address});
         });
 
         it('should throw error when trying to send ether to a non payable contract function', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             try{
                 contract.methods.myDisallowedSend(address, 17).send({from: address, value: 123})
@@ -1228,13 +1168,13 @@ describe('contract', function () {
 
         it('should not throw error when trying to not send ether to a non payable contract function', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'myDisallowedSend(address,uint256)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                     '0000000000000000000000001234567890123456789012345678901234567891' +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: address,
@@ -1244,7 +1184,7 @@ describe('contract', function () {
                 done();
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             try{
                 contract.methods.myDisallowedSend(address, 17).send({from: address})
@@ -1263,8 +1203,8 @@ describe('contract', function () {
 
         it('should sendTransaction to contract function using the function namen incl. parameters', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-            var signature = '0x'+ sha3('mySend(address,uint256)').slice(0, 8);
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
@@ -1277,15 +1217,15 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods['mySend(address,uint256)'](address, 17).send({from: address});
         });
 
         it('should sendTransaction to contract function using the signature', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
-            var signature = '0x'+ sha3('mySend(address,uint256)').slice(0, 8);
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
@@ -1298,14 +1238,14 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods[signature](address, 17).send({from: address});
         });
 
         it('should make a call with optional params', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
             var count = 0;
 
@@ -1316,7 +1256,7 @@ describe('contract', function () {
 
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -1325,24 +1265,24 @@ describe('contract', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
             .then(function (r) {
-                assert.deepEqual(new BigNumber(0x32), r);
+                assert.deepEqual(r, '50');
                 done();
             });
         });
 
         it('should explicitly make a call with optional params', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -1350,11 +1290,11 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
             .then(function (r) {
-                assert.deepEqual(new BigNumber(0x32), r);
+                assert.deepEqual(r, '50');
                 done();
             });
 
@@ -1362,13 +1302,13 @@ describe('contract', function () {
 
         it('should explicitly make a call with optional params and defaultBlock', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'balance(address)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    data: sha3(signature).slice(0, 10) + '0000000000000000000000001234567890123456789012345678901234567891',
                     to: address,
                     from: address,
                     gas: '0xc350'
@@ -1376,11 +1316,11 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000}, 11)
             .then(function (r) {
-                assert.deepEqual(new BigNumber(0x32), r);
+                assert.deepEqual(r, '50');
                 done();
             });
 
@@ -1388,13 +1328,13 @@ describe('contract', function () {
 
         it('should sendTransaction with optional params', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000001234567890123456789012345678901234567891' +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
@@ -1405,20 +1345,20 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
         it('should explicitly sendTransaction with optional params', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000001234567890123456789012345678901234567891' +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
@@ -1429,21 +1369,21 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
         it('should explicitly call sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
 
             provider.injectValidation(function (payload) {
 
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000001234567890123456789012345678901234567891' +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
@@ -1454,7 +1394,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000}, function (err) {
                 assert.equal(err, null);
@@ -1464,13 +1404,13 @@ describe('contract', function () {
 
         it('should explicitly estimateGas with optional params', function () {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_estimateGas');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000001234567890123456789012345678901234567891' +
                         '0000000000000000000000000000000000000000000000000000000000000011' ,
                     to: address,
@@ -1481,14 +1421,14 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.mySend(address, 17).estimateGas({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
         it('getPastEvents should get past events and format them correctly', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'testArr(int[])';
 
             provider.injectValidation(function (payload) {
@@ -1504,12 +1444,12 @@ describe('contract', function () {
             });
 
             var topic1 = [
-                '0x' + sha3(signature),
+                sha3(signature),
                 '0x000000000000000000000000'+ address.replace('0x',''),
                 '0x000000000000000000000000000000000000000000000000000000000000000a'
             ];
             var topic2 = [
-                '0x' + sha3(signature),
+                sha3(signature),
                 '0x000000000000000000000000'+ address.replace('0x',''),
                 '0x0000000000000000000000000000000000000000000000000000000000000003'
             ];
@@ -1535,7 +1475,7 @@ describe('contract', function () {
                 '0000000000000000000000000000000000000000000000000000000000000005'
             }]);
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             contract.getPastEvents('Changed', {filter: {from: address2}})
             .then(function (result) {
 
@@ -1553,9 +1493,9 @@ describe('contract', function () {
                     '0000000000000000000000000000000000000000000000000000000000000009',
                     returnValues: {
                         from: address,
-                        amount: new BigNumber(0xa),
-                        t1: new BigNumber(0x2),
-                        t2: new BigNumber(0x9),
+                        amount: '10',
+                        t1: '2',
+                        t2: '9'
                     }
                 },
                     {
@@ -1572,26 +1512,26 @@ describe('contract', function () {
                         '0000000000000000000000000000000000000000000000000000000000000005',
                         returnValues: {
                             from: address,
-                            amount: new BigNumber(0x3),
-                            t1: new BigNumber(0x4),
-                            t2: new BigNumber(0x5),
+                            amount: '3',
+                            t1: '4',
+                            t2: '5'
                         }
                     }]);
 
                 done();
-            });
+            }).catch(done);
 
         });
 
         it('should call testArr method and properly parse result', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'testArr(int[])';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000000000000000000000000000000000000000000020' +
                         '0000000000000000000000000000000000000000000000000000000000000001' +
                         '0000000000000000000000000000000000000000000000000000000000000003',
@@ -1603,10 +1543,10 @@ describe('contract', function () {
 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
             contract.methods.testArr([3]).call()
             .then(function (result) {
-                assert.deepEqual(new BigNumber(5), result);
+                assert.deepEqual(result, '5');
                 done();
             });
 
@@ -1614,13 +1554,13 @@ describe('contract', function () {
 
         it('should call testArr method, properly parse result and return the result in a callback', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
             var signature = 'testArr(int[])';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: '0x' + sha3(signature).slice(0, 8) +
+                    data: sha3(signature).slice(0, 10) +
                         '0000000000000000000000000000000000000000000000000000000000000020' +
                         '0000000000000000000000000000000000000000000000000000000000000001' +
                         '0000000000000000000000000000000000000000000000000000000000000003',
@@ -1631,10 +1571,10 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
 
-            var contract = new web3.eth.contract(abi, address);
+            var contract = new eth.contract(abi, address);
 
             contract.methods.testArr([3]).call(function (err, result) {
-                assert.deepEqual(new BigNumber(5), result);
+                assert.deepEqual(result, '5');
                 done();
             });
 
@@ -1643,9 +1583,9 @@ describe('contract', function () {
     describe('with data', function () {
         it('should deploy a contract and use callback', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
-            provider.injectValidation(function () {});
+            provider.injectResult('0x1234567');
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
@@ -1657,7 +1597,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new web3.eth.contract(abi);
+            var contract = new eth.contract(abi);
 
             contract.deploy({
                 data: '0x1234567',
@@ -1666,15 +1606,16 @@ describe('contract', function () {
                 from: address,
                 gas: 50000,
                 gasPrice: 3000
-            }, function (err) {
+            }, function (err, result) {
                 assert.equal(err, null);
+                assert.equal(result, '0x1234567');
                 done();
             });
         });
 
         it('should deploy a contract and use all promise steps', function (done) {
             var provider = new FakeHttpProvider();
-            var web3 = new Web3(provider);
+            var eth = new Eth(provider);
 
             provider.injectValidation(function (payload) {
 
@@ -1691,7 +1632,7 @@ describe('contract', function () {
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
-                assert.deepEqual(payload.params, ['newBlocks', {}]);
+                assert.deepEqual(payload.params, ['newHeads']);
             });
             provider.injectResult('0x1234567');
 
@@ -1720,7 +1661,7 @@ describe('contract', function () {
             provider.injectResult('0x321');
 
 
-            var contract = new web3.eth.contract(abi);
+            var contract = new eth.contract(abi);
 
             contract.deploy({
                 data: '0x1234567',

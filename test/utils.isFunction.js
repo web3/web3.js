@@ -1,5 +1,6 @@
 var chai = require('chai');
-var utils = require('../lib/utils/utils.js');
+var utils = require('../packages/web3-utils');
+
 var assert = chai.assert;
 
 var tests = [
@@ -15,7 +16,7 @@ describe('lib/utils/utils', function () {
             it('shoud test if value ' + test.func + ' is function: ' + test.is, function () {
                 assert.equal(utils.isFunction(test.func), test.is);
             });
-        });   
+        });
     });
 });
 

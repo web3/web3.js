@@ -254,6 +254,7 @@ Example
     .on('receipt', function(receipt){
         // same as when the promise gets resolved, see below
     })
+    .on('confirmation', function(confirmationNumber, receipt){ ... })
     .then(function(receipt){
         console.log(myContract.options.address) // gives the new contract address
     });
@@ -351,7 +352,7 @@ Example
         ...
     });
 
-    // or sending a transaction to a method
+    // or sending and using the events
 
     myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
     .on('transactionHash', function(hash){
@@ -360,6 +361,7 @@ Example
     .on('receipt', function(receipt){
         ...
     })
+    .on('confirmation', function(confirmationNumber, receipt){ ... })
     .on('error', console.error);
 
 
@@ -435,7 +437,7 @@ Parameters
     * ``String`` - **from**: The address the transaction should be send from.
     * ``String`` - **gasPrice** (optional): The gas price in wei to use for this transaction.
     * ``Number`` - **gas** (optional): The maximum gas provided for this transaction (gas limit).
-2. ``Function`` - **callback** (optional): This callback will be fired first with the "transactionHash" and later for the "receipt" as second argument, or with an error object as the first argument.
+2. ``Function`` - **callback** (optional): This callback will be fired first with the "transactionHash", or with an error object as the first argument.
 
 -------
 Returns
@@ -444,7 +446,8 @@ Returns
 ``PromiEvent``:  A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
 
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-- ``"receipt"`` returns ``String``: is fired when the transaction receipt with the contract address is available.
+- ``"receipt"`` returns ``Object``: is fired when the transaction receipt is available.
+- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the receipt as the second argument.
 - ``"error"`` returns ``Error``: is fired if an error occurs during deployment.
 
 
@@ -474,6 +477,7 @@ Example
     .on('receipt', function(receipt){
         ...
     })
+    .on('confirmation', function(confirmationNumber, receipt){ ... })
     .on('error', console.error);
 
 

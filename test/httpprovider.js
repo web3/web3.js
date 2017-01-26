@@ -3,7 +3,7 @@ var assert = chai.assert;
 var SandboxedModule = require('sandboxed-module');
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var HttpProvider = SandboxedModule.require('../lib/web3/providers/httpprovider', {
+var HttpProvider = SandboxedModule.require('../packages/web3-core-requestmanager/src/providers/httpprovider', {
     requires: {
         'xhr2': require('./helpers/FakeXHR2'),
         'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
