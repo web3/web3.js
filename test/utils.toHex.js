@@ -1,6 +1,8 @@
 var chai = require('chai');
-var utils = require('../lib/utils/utils');
+var utils = require('../packages/web3-utils');
+
 var BigNumber = require('bignumber.js');
+
 var assert = chai.assert;
 
 var tests = [

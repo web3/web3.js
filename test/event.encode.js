@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var SolidityEvent = require('../lib/web3/events');
-var Web3 = require('../index');
+var Eth = require('../packages/web3-eth');
 
 
 var address = '0x1234567890123456789012345678901234567890';
@@ -10,7 +9,8 @@ var signature = '0xffff';
 var tests = [{
     abi: {
         name: 'event1',
-        inputs: []
+        inputs: [],
+        signature: signature
     },
     options: {},
     expected: {
@@ -26,7 +26,8 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -59,7 +60,8 @@ var tests = [{
             type: 'int',
             name: 'd',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -86,7 +88,8 @@ var tests = [{
             type: 'int',
             name: 'b',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -109,7 +112,8 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -130,7 +134,8 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -156,7 +161,8 @@ var tests = [{
             type: 'int',
             name: 'a',
             indexed: true
-        }]
+        }],
+        signature: signature
     },
     options: {
         filter: {
@@ -182,7 +188,8 @@ var tests = [{
             name: 'a',
             indexed: true
         }],
-        anonymous: true
+        anonymous: true,
+        signature: signature
     },
     options: {
         filter: {
@@ -207,7 +214,8 @@ var tests = [{
             name: 'b',
             indexed: true
         }],
-        anonymous: true
+        anonymous: true,
+        signature: signature
     },
     options: {
         filter: {
@@ -227,13 +235,11 @@ describe('lib/web3/event', function () {
     describe('encode', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
-                var web3 = new Web3();
-                var event = new SolidityEvent(web3, test.abi, address);
-                event.signature = function () { // inject signature
-                    return signature.slice(2);
-                };
+                var eth = new Eth();
+                var contract = new eth.contract([test.abi], address);
 
-                var result = event.encode(test.options);
+
+                var result = contract._encodeEventABI(test.abi, test.options);
                 assert.deepEqual(result, test.expected);
             });
         });

@@ -1,11 +1,11 @@
 var assert = require('assert');
-var Jsonrpc = require('../lib/web3/jsonrpc');
+var Jsonrpc = require('../packages/web3-core-requestManager/src/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('toBatchPayload', function () {
         it('should create basic batch payload', function () {
-            
-            // given 
+
+            // given
             var messages = [{
                 method: 'helloworld'
             }, {
@@ -30,10 +30,10 @@ describe('jsonrpc', function () {
             assert.equal(typeof payload[1].id, 'number');
             assert.equal(payload[0].id + 1, payload[1].id);
         });
-        
+
         it('should create batch payload for empty input array', function () {
-            
-            // given 
+
+            // given
             var messages = [];
 
             // when
