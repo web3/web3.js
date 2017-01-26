@@ -659,7 +659,7 @@ once
 
 .. code-block:: javascript
 
-    myContract.once(event[, options][, callback])
+    myContract.once(event[, options], callback)
 
 Subscribes to an event, and unsubscribes immediately after the first event or error. Will fire only for one event.
 
