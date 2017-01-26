@@ -663,7 +663,7 @@ describe('contract', function () {
             });
         });
 
-        it('should create event using the once function and unsubscribe after one log received', function (done) {
+        it('should create event using the  function and unsubscribe after one log received', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -732,21 +732,21 @@ describe('contract', function () {
 
             var count = 1;
             var contract = new eth.contract(abi, address);
-            var event = contract.once('Changed', {filter: {from: address}}, function (err, result) {
+            contract.once('Changed', {filter: {from: address}}, function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                assert.deepEqual(event.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, {});
 
                 assert.equal(count, 1);
                 count++;
 
-                setTimeout(done, 600);
+                setTimeout(done, 10);
             });
         });
 
-        it('should create event using the once function and unsubscribe after one log received using the event emitter', function (done) {
+        it('should create event using the  function and unsubscribe after one log received when no options are provided', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
@@ -757,7 +757,7 @@ describe('contract', function () {
                 assert.deepEqual(payload.params[1], {
                     topics: [
                         sha3(signature),
-                        '0x000000000000000000000000'+ address.replace('0x',''),
+                        null,
                         null
                     ],
                     address: address
@@ -815,21 +815,26 @@ describe('contract', function () {
 
             var count = 1;
             var contract = new eth.contract(abi, address);
-            var event = contract.once('Changed', {filter: {from: address}})
-            .on('data', function (result) {
+            contract.once('Changed', function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
                 assert.equal(result.returnValues.t1, 1);
                 assert.equal(result.returnValues.t2, 8);
-                // cant test the below, as emitter events and unsubscribe is called at the same time
-                // assert.deepEqual(event.options.requestManager.subscriptions, {});
+                assert.deepEqual(sub.options.requestManager.subscriptions, {});
 
                 assert.equal(count, 1);
                 count++;
 
-                setTimeout(done, 600);
+                setTimeout(done, 10);
             });
+        });
 
+        it('should throw an error when using the once() function and no callback is provided', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            var contract = new eth.contract(abi, address);
+            assert.throws(contract.once.bind(contract, 'Changed', {filter: {from: address}}));
         });
 
 
