@@ -503,14 +503,19 @@ Contract.prototype.once = function(event, options, callback) {
     // get the callback
     callback = this._getCallback(args);
 
+    if (!callback) {
+        throw new Error('Once requires a callback as the second parameter.');
+    }
+
     // don't allow fromBlock
-    if(options)
+    if (options)
         delete options.fromBlock;
 
-    return this._on(event, options, function (err, res, sub) {
+    // don't return as once shouldn't provide "on"
+    this._on(event, options, function (err, res, sub) {
         sub.unsubscribe();
         if(utils.isFunction(callback)){
-            callback(err, res);
+            callback(err, res, sub);
         }
     });
 };
