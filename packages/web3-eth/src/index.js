@@ -143,8 +143,8 @@ var methods = function () {
         outputFormatter: utils.toDecimal
     });
 
-    var getSyncing = new Method({
-        name: 'getSyncing',
+    var isSyncing = new Method({
+        name: 'isSyncing',
         call: 'eth_syncing',
         params: 0,
         outputFormatter: formatters.outputSyncingFormatter
@@ -373,7 +373,7 @@ var methods = function () {
         getCoinbase,
         getMining,
         getHashrate,
-        getSyncing,
+        isSyncing,
         getGasPrice,
         getAccounts,
         getBlockNumber,
