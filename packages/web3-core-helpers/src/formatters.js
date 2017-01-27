@@ -45,6 +45,9 @@ var inputDefaultBlockNumberFormatter = function (blockNumber) {
     if (blockNumber === undefined || blockNumber === null) {
         return config.defaultBlock;
     }
+    if (blockNumber === 'genesis' || blockNumber === 'earliest') {
+        return '0x0';
+    }
     return inputBlockNumberFormatter(blockNumber);
 };
 
