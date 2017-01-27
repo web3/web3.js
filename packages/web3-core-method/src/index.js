@@ -162,6 +162,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         canUnsubscribe = true,
         timeoutCount = 0,
         confirmationCount = 0,
+        gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
             payload.params[0].from &&
@@ -243,12 +244,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                 if (!isContractDeployment && !promiseResolved) {
 
-                    if(!receipt.outOfGas) {
+                    if(!receipt.outOfGas &&
+                       (!gasProvided || gasProvided !== receipt.gasUsed)) {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
 
                     } else {
-                        utils._fireError(new Error('Transaction ran out of gas.'), defer.eventEmitter, defer.reject);
+                        utils._fireError([new Error('Transaction ran out of gas. Please provide more gas.'), receipt], defer.eventEmitter, defer.reject);
                     }
 
                     if (canUnsubscribe) {

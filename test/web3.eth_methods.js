@@ -11,6 +11,7 @@ describe('eth', function() {
         u.methodExists(eth, 'getStorageAt');
         u.methodExists(eth, 'getTransactionCount');
         u.methodExists(eth, 'getCode');
+        u.methodExists(eth, 'isSyncing');
         u.methodExists(eth, 'sendTransaction');
         u.methodExists(eth, 'call');
         u.methodExists(eth, 'getBlock');
@@ -29,6 +30,7 @@ describe('eth', function() {
         u.methodExists(eth, 'isMining');
         u.methodExists(eth, 'getCoinbase');
         u.methodExists(eth, 'getGasPrice');
+        u.methodExists(eth, 'getHashrate');
         u.methodExists(eth, 'getAccounts');
         u.methodExists(eth, 'getBlockNumber');
         u.methodExists(eth, 'getProtocolVersion');

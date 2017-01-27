@@ -69,10 +69,17 @@ var unitMap = {
  * @return {Object} the emitter
  */
 var _fireError = function (error, emitter, reject, callback) {
-    if(isFunction(callback)) {
+    var additionalData;
+
+    if (isArray(error)) {
+        error = error[0];
+        additionalData = error[1];
+    }
+
+    if (isFunction(callback)) {
         callback(error);
     }
-    if(isFunction(reject)) {
+    if (isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         if(emitter &&
            isFunction(emitter.listeners) &&
@@ -84,7 +91,7 @@ var _fireError = function (error, emitter, reject, callback) {
     }
 
     if(emitter && isFunction(emitter.emit)) {
-        emitter.emit('error', error);
+        emitter.emit('error', error, additionalData);
         emitter.removeAllListeners();
     }
 
