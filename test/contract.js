@@ -1512,14 +1512,16 @@ describe('contract', function () {
                     event: "Changed",
                     id: "log_9ff24cb4",
                     address: address,
-                    topics: topic1,
                     blockNumber: 3,
                     transactionHash: '0x1234',
                     blockHash: '0x1345',
                     logIndex: 4,
                     transactionIndex: 0,
-                    data: '0x0000000000000000000000000000000000000000000000000000000000000002' +
-                    '0000000000000000000000000000000000000000000000000000000000000009',
+                    raw: {
+                        data: '0x0000000000000000000000000000000000000000000000000000000000000002' +
+                        '0000000000000000000000000000000000000000000000000000000000000009',
+                        topics: topic1
+                    },
                     returnValues: {
                         from: address,
                         amount: '10',
@@ -1531,14 +1533,16 @@ describe('contract', function () {
                         event: "Changed",
                         id: "log_29c93e15",
                         address: address,
-                        topics: topic2,
                         blockNumber: 4,
                         transactionHash: '0x1235',
                         blockHash: '0x1346',
                         logIndex: 1,
                         transactionIndex: 0,
-                        data: '0x0000000000000000000000000000000000000000000000000000000000000004' +
-                        '0000000000000000000000000000000000000000000000000000000000000005',
+                        raw: {
+                            data: '0x0000000000000000000000000000000000000000000000000000000000000004' +
+                            '0000000000000000000000000000000000000000000000000000000000000005',
+                            topics: topic2
+                        },
                         returnValues: {
                             from: address,
                             amount: '3',
