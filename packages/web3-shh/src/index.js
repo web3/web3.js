@@ -89,8 +89,7 @@ var methods = function () {
     // subscriptions
     var subscribe = new Subscriptions({
         name: 'subscribe',
-        subscribe: 'shh_subscribe',
-        unsubscribe: 'shh_unsubscribe',
+        type: 'shh',
         subscriptions: {
             'messages': {
                 params: 1,

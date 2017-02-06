@@ -15,6 +15,8 @@ var runTests = function (protocol, tests) {
                 var sub;
                 var provider = new FakeHttpProvider();
                 var web3 = new Web3(provider);
+                var dataCount = 0;
+                var changedCount = 0;
 
                 provider.injectResult(test.firstResult);
                 provider.injectResult(test.secondResult);
@@ -36,7 +38,8 @@ var runTests = function (protocol, tests) {
                 // add callback
                 test.args.push(function(err, result) {
                     if (test.err) {
-                        // todo
+                        // TODO add subscription error check
+
                     } else if(test.subscriptionResults) {
                         var subRes = test.subscriptionResults.shift();
 
@@ -44,6 +47,12 @@ var runTests = function (protocol, tests) {
                     }
 
                     if(!test.subscriptionResults || !test.subscriptionResults.length) {
+
+                        if(isFinite(test.dataCount))
+                            assert.equal(dataCount, test.dataCount);
+                        if(isFinite(test.changedCount))
+                            assert.equal(changedCount, test.changedCount);
+
                         sub.unsubscribe();
                         done();
                     }
@@ -51,7 +60,15 @@ var runTests = function (protocol, tests) {
                 });
 
                 // when
-                sub = web3[test.protocol].subscribe.apply(web3[test.protocol], test.args);
+                sub = web3[test.protocol].subscribe.apply(web3[test.protocol], test.args)
+                .on('data', function () {
+                    dataCount++;
+                })
+                .on('changed', function () {
+                    changedCount++;
+                });
+
+
 
                 // fire subscriptions
                 test.subscriptions.forEach(function (subscription) {
