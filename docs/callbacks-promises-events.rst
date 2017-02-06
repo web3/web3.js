@@ -1,3 +1,5 @@
+.. _promiEvent:
+
 =========================
 Callbacks Promises Events
 =========================
@@ -11,7 +13,7 @@ Ethereum as a blockchain has different levels of finality and therefore needs to
 To cope with requirement we return a "promiEvent" for functions like ``web3.eth.sendTransaction`` or contract methods.
 This "promiEvent" is a promise combined with an event emitter to allow acting on different stages of action on the blockchain, like a transaction.
 
-PromiEvents work like a normal promises with added ``on`` and ``once`` functions.
+PromiEvents work like a normal promises with added ``on``, ``once`` and ``off`` functions.
 This way developers can watch for additional events like on "receipt" or "transactionHash".
 
 .. code-block:: javascript
