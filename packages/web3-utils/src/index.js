@@ -398,22 +398,6 @@ var toBigNumber = function(number) {
 };
 
 /**
- * Takes and input transforms it into bignumber and if it is negative value, into two's complement
- *
- * @method toTwosComplement
- * @param {Number|String|BigNumber}
- * @return {BigNumber}
- */
-var toTwosComplement = function (number) {
-    var bigNumber = toBigNumber(number).round();
-    if (bigNumber.lessThan(0)) {
-        return new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(bigNumber).plus(1);
-    }
-    return bigNumber;
-};
-
-
-/**
  * Checks if the given string is an address
  *
  * @method isAddress
@@ -602,7 +586,6 @@ module.exports = {
     toWei: toWei,
     fromWei: fromWei,
     toBigNumber: toBigNumber,
-    toTwosComplement: toTwosComplement,
     toAddress: toAddress,
     isBigNumber: isBigNumber,
     isAddress: isAddress,

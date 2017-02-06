@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var coder = require('../lib/solidity/coder');
+var coder = require('../packages/web3-eth/src/solidity/coder');
 
 
 describe('lib/solidity/coder', function () {
