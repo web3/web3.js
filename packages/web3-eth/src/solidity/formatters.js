@@ -20,10 +20,58 @@
  * @date 2015
  */
 
+var _ = require('underscore');
 var BigNumber = require('bignumber.js');
 var utils = require('web3-utils');
-var c = require('web3-core-helpers').config;
 var SolidityParam = require('./param');
+
+
+/**
+ * Returns true if object is BigNumber, otherwise false
+ *
+ * @method isBigNumber
+ * @param {Object}
+ * @return {Boolean}
+ */
+var isBigNumber = function (object) {
+    return object instanceof BigNumber ||
+        (object && object.constructor && object.constructor.name === 'BigNumber');
+};
+
+/**
+ * Takes an input and transforms it into an bignumber
+ *
+ * @method toBigNumber
+ * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
+ * @return {BigNumber} BigNumber
+ */
+var toBigNumber = function(number) {
+    /*jshint maxcomplexity:5 */
+    number = number || 0;
+    if (isBigNumber(number))
+        return number;
+
+    if (_.isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
+        return new BigNumber(number.replace('0x',''), 16);
+    }
+
+    return new BigNumber(number.toString(10), 10);
+};
+
+/**
+ * Takes and input transforms it into bignumber and if it is negative value, into two's complement
+ *
+ * @method toTwosComplement
+ * @param {Number|String|BigNumber}
+ * @return {BigNumber}
+ */
+var toTwosComplement = function (number) {
+    var bigNumber = toBigNumber(number).round();
+    if (bigNumber.lessThan(0)) {
+        return new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(bigNumber).plus(1);
+    }
+    return bigNumber;
+};
 
 
 /**
@@ -36,8 +84,10 @@ var SolidityParam = require('./param');
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config(c.ETH_BIGNUMBER_ROUNDING_MODE);
-    var result = utils.padLeft(utils.toTwosComplement(value).toString(16), 64);
+    BigNumber.config({
+        ROUNDING_MODE: BigNumber.ROUND_DOWN
+    });
+    var result = utils.padLeft(toTwosComplement(value).toString(16), 64);
     return new SolidityParam(result);
 };
 
@@ -253,5 +303,6 @@ module.exports = {
     formatOutputBytes: formatOutputBytes,
     formatOutputDynamicBytes: formatOutputDynamicBytes,
     formatOutputString: formatOutputString,
-    formatOutputAddress: formatOutputAddress
+    formatOutputAddress: formatOutputAddress,
+    toTwosComplement: toTwosComplement
 };
