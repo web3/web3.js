@@ -159,7 +159,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.isSyncing().
+    web3.eth.isSyncing()
     .then(console.log);
 
     > {
@@ -501,24 +501,24 @@ Returns
 
 ``Promise`` returns ``Object`` - The block object:
 
-  - ``number``: ``Number`` - the block number. ``null`` when its pending block.
-  - ``hash``: ``String``, 32 Bytes - hash of the block. ``null`` when its pending block.
-  - ``parentHash``: ``String``, 32 Bytes - hash of the parent block.
-  - ``nonce``: ``String``, 8 Bytes - hash of the generated proof-of-work. ``null`` when its pending block.
-  - ``sha3Uncles``: ``String``, 32 Bytes - SHA3 of the uncles data in the block.
-  - ``logsBloom``: ``String``, 256 Bytes - the bloom filter for the logs of the block. ``null`` when its pending block.
-  - ``transactionsRoot``: ``String``, 32 Bytes - the root of the transaction trie of the block
-  - ``stateRoot``: ``String``, 32 Bytes - the root of the final state trie of the block.
-  - ``miner``: ``String``, 20 Bytes - the address of the beneficiary to whom the mining rewards were given.
-  - ``difficulty``: ``String`` - integer of the difficulty for this block.
-  - ``totalDifficulty``: ``String`` - integer of the total difficulty of the chain until this block.
-  - ``extraData``: ``String`` - the "extra data" field of this block.
-  - ``size``: ``Number`` - integer the size of this block in bytes.
-  - ``gasLimit``: ``Number`` - the maximum gas allowed in this block.
-  - ``gasUsed``: ``Number`` - the total used gas by all transactions in this block.
-  - ``timestamp``: ``Number`` - the unix timestamp for when the block was collated.
-  - ``transactions``: ``Array`` - Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
-  - ``uncles``: ``Array`` - Array of uncle hashes.
+  - ``Number`` - **number**: The block number. ``null`` when its pending block.
+  - ``String`` 32 Bytes - **hash**: Hash of the block. ``null`` when its pending block.
+  - ``String`` 32 Bytes - **parentHash**: Hash of the parent block.
+  - ``String`` 8 Bytes - **nonce**: Hash of the generated proof-of-work. ``null`` when its pending block.
+  - ``String`` 32 Bytes - **sha3Uncles**: SHA3 of the uncles data in the block.
+  - ``String`` 256 Bytes - **logsBloom**: The bloom filter for the logs of the block. ``null`` when its pending block.
+  - ``String`` 32 Bytes - **transactionsRoot**: The root of the transaction trie of the block
+  - ``String`` 32 Bytes - **stateRoot**: The root of the final state trie of the block.
+  - ``String`` - **miner**: The address of the beneficiary to whom the mining rewards were given.
+  - ``String`` - **difficulty**: Integer of the difficulty for this block.
+  - ``String`` - **totalDifficulty**: Integer of the total difficulty of the chain until this block.
+  - ``String`` - **extraData**: The "extra data" field of this block.
+  - ``Number`` - **size**: Integer the size of this block in bytes.
+  - ``Number`` - **gasLimit**: The maximum gas allowed in this block.
+  - ``Number`` - **gasUsed**: The total used gas by all transactions in this block.
+  - ``Number`` - **timestamp**: The unix timestamp for when the block was collated.
+  - ``Array`` - **transactions**: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
+  - ``Array`` - **uncles**: Array of uncle hashes.
 
 -------
 Example
@@ -638,6 +638,8 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-gettransaction:
+
 
 web3.eth.getTransaction
 =====================
@@ -663,17 +665,17 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction object its hash ``transactionHash``:
 
-  - ``hash``: ``String``, 32 Bytes - hash of the transaction.
-  - ``nonce``: ``Number`` - the number of transactions made by the sender prior to this one.
-  - ``blockHash``: ``String``, 32 Bytes - hash of the block where this transaction was in. ``null`` when its pending.
-  - ``blockNumber``: ``Number`` - block number where this transaction was in. ``null`` when its pending.
-  - ``transactionIndex``: ``Number`` - integer of the transactions index position in the block. ``null`` when its pending.
-  - ``from``: ``String``, 20 Bytes - address of the sender.
-  - ``to``: ``String``, 20 Bytes - address of the receiver. ``null`` when its a contract creation transaction.
-  - ``value``: ``BigNumber`` - value transferred in :ref:`wei <what-is-wei>`.
-  - ``gasPrice``: ``BigNumber`` - gas price provided by the sender in :ref:`wei <what-is-wei>`.
-  - ``gas``: ``Number`` - gas provided by the sender.
-  - ``input``: ``String`` - the data sent along with the transaction.
+  - ``String`` 32 Bytes - **hash**: Hash of the transaction.
+  - ``Number`` - **nonce**: The number of transactions made by the sender prior to this one.
+  - ``String`` 32 Bytes - **blockHash**: Hash of the block where this transaction was in. ``null`` when its pending.
+  - ``Number`` - **blockNumber**: Block number where this transaction was in. ``null`` when its pending.
+  - ``Number`` - **transactionIndex**: Integer of the transactions index position in the block. ``null`` when its pending.
+  - ``String`` - **from**: Address of the sender.
+  - ``String`` - **to**: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``String`` - **value**: Value transferred in :ref:`wei <what-is-wei>`.
+  - ``String`` - **gasPrice**: Gas price provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``Number`` - **gas**: Gas provided by the sender.
+  - ``String`` - **input**: The data sent along with the transaction.
 
 
 -------
@@ -683,26 +685,22 @@ Example
 
 .. code-block:: javascript
 
-var blockNumber = 668;
-var indexOfTransaction = 0
+    web3.eth.getTransaction('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b§234')
+    .then(console.log);
 
-var transaction = web3.eth.getTransaction(blockNumber, indexOfTransaction);
-console.log(transaction);
-/*
-{
-  "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
-  "nonce": 2,
-  "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
-  "blockNumber": 3,
-  "transactionIndex": 0,
-  "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
-  "to": "0x6295ee1b4f6dd65047762f924ecd367c17eabf8f",
-  "value": BigNumber,
-  "gas": 314159,
-  "gasPrice": BigNumber,
-  "input": "0x57cb2fc4"
-}
-*/
+    > {
+      "hash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+      "nonce": 2,
+      "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+      "blockNumber": 3,
+      "transactionIndex": 0,
+      "from": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
+      "to": "0x6295ee1b4f6dd65047762f924ecd367c17eabf8f",
+      "value": '123450000000000000',
+      "gas": 314159,
+      "gasPrice": '2000000000000',
+      "input": "0x57cb2fc4"
+    }
 
 
 
@@ -731,7 +729,7 @@ Returns
 -------
 
 
-``Object`` - A transaction object, see :ref:`web3.eth.getTransaction <eth-gettransaction>`:
+``Promise`` returns ``Object`` - A transaction object, see :ref:`web3.eth.getTransaction <eth-gettransaction>`:
 
 
 -------
@@ -741,23 +739,26 @@ Example
 
 .. code-block:: javascript
 
-var transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2);
-console.log(transaction); // see web3.eth.getTransaction
+    var transaction = web3.eth.getTransactionFromBlock('0x4534534534', 2)
+    .then(console.log);
+    > // see web3.eth.getTransaction
 
 
 
 ------------------------------------------------------------------------------
+
+.. _eth-gettransactionreceipt:
 
 web3.eth.getTransactionReceipt
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionReceipt(hashString [, callback])
+    web3.eth.getTransactionReceipt(hash [, callback])
 
 Returns the receipt of a transaction by transaction hash.
 
-**Note** That the receipt is not available for pending transactions.
+**Note** That the receipt is not available for pending transactions and returns ``null``.
 
 
 ----------
@@ -772,18 +773,18 @@ Returns
 -------
 
 
-``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
+``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
-  - ``blockHash``: ``String``, 32 Bytes - hash of the block where this transaction was in.
-  - ``blockNumber``: ``Number`` - block number where this transaction was in.
-  - ``transactionHash``: ``String``, 32 Bytes - hash of the transaction.
-  - ``transactionIndex``: ``Number`` - integer of the transactions index position in the block.
-  - ``from``: ``String``, 20 Bytes - address of the sender.
-  - ``to``: ``String``, 20 Bytes - address of the receiver. ``null`` when its a contract creation transaction.
-  - `cumulativeGasUsed `: `Number ` - The total amount of gas used when this transaction was executed in the block.
-  - `gasUsed `: `Number ` -  The amount of gas used by this specific transaction alone.
-  - `contractAddress `: ``String`` - 20 Bytes - The contract address created, if the transaction was a contract creation, otherwise ``null``.
-  - `logs `:  ``Array`` - Array of log objects, which this transaction generated.
+  - ``String`` 32 Bytes - **blockHash**: Hash of the block where this transaction was in.
+  - ``Number`` - **blockNumber**: Block number where this transaction was in.
+  - ``String`` 32 Bytes - **transactionHash**: Hash of the transaction.
+  - ``Number``- **transactionIndex**: Integer of the transactions index position in the block.
+  - ``String`` - **from**: Address of the sender.
+  - ``String`` - **to**: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``String`` - **contractAddress**: The contract address created, if the transaction was a contract creation, otherwise ``null``.
+  - ``Number`` - **cumulativeGasUsed**: The total amount of gas used when this transaction was executed in the block.
+  - ``Number``- **gasUsed**:  The amount of gas used by this specific transaction alone.
+  - ``Array`` - **logs**: Array of log objects, which this transaction generated.
 
 -------
 Example
@@ -791,23 +792,25 @@ Example
 
 .. code-block:: javascript
 
-var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b');
-console.log(receipt);
-{
-  "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
-  "transactionIndex": 0,
-  "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
-  "blockNumber": 3,
-  "contractAddress": "0xa94f5374fce5edbc8e2a8697c15331677e6ebf0b",
-  "cumulativeGasUsed": 314159,
-  "gasUsed": 30234,
-  "logs": [{
-         // logs as returned by getFilterLogs, etc.
-     }, ...]
-}
+    var receipt = web3.eth.getTransactionReceipt('0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b')
+    .then(console.log);
+
+    > {
+      "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+      "transactionIndex": 0,
+      "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+      "blockNumber": 3,
+      "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+      "cumulativeGasUsed": 314159,
+      "gasUsed": 30234,
+      "logs": [{
+             // logs as returned by getPastLogs, etc.
+         }, ...]
+    }
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.getTransactionCount
 =====================
@@ -823,7 +826,7 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the numbers of transactions from.
-2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -831,7 +834,7 @@ Returns
 -------
 
 
-``Number`` - The number of transactions sent from the given address.
+``Promise`` returns ``Number`` - The number of transactions sent from the given address.
 
 -------
 Example
@@ -840,11 +843,14 @@ Example
 
 .. code-block:: javascript
 
-var number = web3.eth.getTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1");
-console.log(number); // 1
+    web3.eth.getTransactionCount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe")
+    .then(console.log);
+    > 1
 
 
 ------------------------------------------------------------------------------
+
+.. _eth-sendtransaction:
 
 web3.eth.sendTransaction
 =====================
@@ -861,42 +867,76 @@ Parameters
 
 
 1. ``Object`` - The transaction object to send:
-  - ``from``: ``String`` - The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified.
-  - ``to``: ``String`` - (optional) The destination address of the message, left undefined for a contract-creation transaction.
-  - ``value``: ``"Number|String|BigNumber"`` - (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
-  - ``gas``: ``"Number|String|BigNumber"`` - (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
-  - ``gasPrice``: ``"Number|String|BigNumber"`` - (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
-  - ``data``: ``String`` - (optional) Either a [byte string](https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI) containing the associated data of the message, or in the case of a contract-creation transaction, the initialisation code.
-  - ``nonce``: ``Number``  - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+  - ``String`` - **from**: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified.
+  - ``String`` - **to**: (optional) The destination address of the message, left undefined for a contract-creation transaction.
+  - ``Number|String`` - **value**: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
+  - ``Number``  - **gas**: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
+  - ``Number|String`` - **gasPrice**: (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
+  - ``String`` - **data**: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+  - ``Number``  -**nonce**: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
+The **callback** will return the 32 bytes transaction hash.
 
-``String`` - The 32 Bytes transaction hash as HEX string.
+``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction :ref:`receipt <eth-gettransactionreceipt>` is available. Additionally the following events are available:
 
-If the transaction was a contract creation use :ref:`web3.eth.getTransactionReceipt() <web3gettransactionreceipt>` to get the contract address, after the transaction was mined.
+- ``"transactionHash"`` returns ``String``: Is fired right after the transaction is send and a transaction hash is available.
+- ``"receipt"`` returns ``Object``: Is fired when the transaction receipt is available.
+- ``"confirmation"`` returns ``Number``, ``Object``: Is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt>` as the second argument. Fired from confirmation 0 on, which is the block where its minded.
+- ``"error"`` returns ``Error``: Is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
+
 
 -------
 Example
 -------
 
-
 .. code-block:: javascript
 
+    // compiled solidity source code using https://remix.ethereum.org
+    var code = "603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3";
 
-// compiled solidity source code using https://chriseth.github.io/cpp-ethereum/
-var code = "603d80600c6000396000f3007c01000000000000000000000000000000000000000000000000000000006000350463c6888fa18114602d57005b6007600435028060005260206000f3";
 
-web3.eth.sendTransaction({data: code}, function(err, address) {
-  if (!err)
-    console.log(address); // "0x7f9fade1c0d57a7af66ab4ead7c2eb7b11a91385"
-});
+    // using the callback
+    web3.eth.sendTransaction({
+        from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+        data: code // deploying a contracrt
+    }, function(error, hash){
+        ...
+    });
+
+    // using the promise
+    web3.eth.sendTransaction({
+        from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+        to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+        value: '1000000000000000'
+    })
+    .then(function(receipt){
+        ...
+    });
+
+
+    // using the event emitter
+    web3.eth.sendTransaction({
+        from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe',
+        to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+        value: '1000000000000000'
+    })
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){ ... })
+    .on('error', console.error); // If a out of gas error, the second parameter is the receipt.
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.sendSignedTransaction
 =====================
@@ -905,7 +945,7 @@ web3.eth.sendSignedTransaction
 
     web3.eth.sendSignedTransaction(signedTransactionData [, callback])
 
-Sends an already signed transaction. For example can be signed using: https://github.com/SilentCicero/ethereumjs-accounts
+Sends an already signed transaction. For example can be signed using: `ethereumjs-accounts <https://github.com/SilentCicero/ethereumjs-accounts>`_
 
 ----------
 Parameters
@@ -919,9 +959,9 @@ Returns
 -------
 
 
-``String`` - The 32 Bytes transaction hash as HEX string.
+``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction :ref:`receipt <eth-gettransactionreceipt>` is available.
 
-If the transaction was a contract creation use :ref:`web3.eth.getTransactionReceipt() <web3gettransactionreceipt>` to get the contract address, after the transaction was mined.
+Please see the return values for :ref:`web3.eth.sendTransaction <eth-sendtransaction>` for details.
 
 -------
 Example
@@ -930,30 +970,30 @@ Example
 
 .. code-block:: javascript
 
-var Tx = require('ethereumjs-tx');
-var privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
+    var Tx = require('ethereumjs-tx');
+    var privateKey = new Buffer('e331b6d69882b4cb4ea581d88e0b604039a3de5967688d3dcffdd2270c0fd109', 'hex')
 
-var rawTx = {
-  nonce: '0x00',
-  gasPrice: '0x09184e72a000',
-  gasLimit: '0x2710',
-  to: '0x0000000000000000000000000000000000000000',
-  value: '0x00',
-  data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
-}
+    var rawTx = {
+      nonce: '0x00',
+      gasPrice: '0x09184e72a000',
+      gasLimit: '0x2710',
+      to: '0x0000000000000000000000000000000000000000',
+      value: '0x00',
+      data: '0x7f7465737432000000000000000000000000000000000000000000000000000000600057'
+    }
 
-var tx = new Tx(rawTx);
-tx.sign(privateKey);
+    var tx = new Tx(rawTx);
+    tx.sign(privateKey);
 
-var serializedTx = tx.serialize();
+    var serializedTx = tx.serialize();
 
-//console.log(serializedTx.toString('hex'));
-//0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
+    // console.log(serializedTx.toString('hex'));
+    // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
 
-web3.eth.sendSignedTransaction(serializedTx.toString('hex'), function(err, hash) {
-  if (!err)
-    console.log(hash); // "0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385"
-});
+    web3.eth.sendSignedTransaction(serializedTx.toString('hex'))
+    .on('receipt', console.log);
+
+    > // see eth.getTransactionReceipt() for details
 
 
 ------------------------------------------------------------------------------
@@ -973,25 +1013,27 @@ Parameters
 ----------
 
 
-1. ``String`` - Address to sign with.
+1. ``String`` - Address to sign data with.
 2. ``String`` - Data to sign.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+After the hex prefix, characters correspond to ECDSA values like this:
+
+.. code-block:: javascript
+    r = signature[0:64]
+    s = signature[64:128]
+    v = signature[128:130]
 
 -------
 Returns
 -------
 
 
-``String`` - The signed data.
+``Promise`` returns ``String`` - The signed data.
 
-After the hex prefix, characters correspond to ECDSA values like this:
-```
-r = signature[0:64]
-s = signature[64:128]
-v = signature[128:130]
-```
 
 Note that if you are using ``ecrecover``, ``v`` will be either `"00"` or `"01"`. As a result, in order to use this value, you will have to parse it to an integer and then add `27`. This will result in either a `27` or a `28`.
+
 
 -------
 Example
@@ -1000,12 +1042,13 @@ Example
 
 .. code-block:: javascript
 
-var result = web3.eth.sign("0x135a7de83802408321b74c322f8558db1679ac20",
-    "0x9dd2c369a187b4e6b9c402f030e50743e619301ea62aa4c0737d4ef7e10a3d49"); // second argument is web3.sha3("xyz")
-console.log(result); // "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
+    web3.eth.sign("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "0x9dd2c369a187b4e6b9c402f030e50743e619301ea62aa4c0737d4ef7e10a3d49")
+    .then(console.log);
+    > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.call
 =====================
@@ -1021,15 +1064,14 @@ Parameters
 ----------
 
 1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction>`, with the difference that for calls the ``from`` property is optional as well.
-2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
-
-``String``: The returned data of the call, e.g. a codes functions return value.
+``Promise`` returns ``String``: The returned data of the call, e.g. a smart contract functions return value.
 
 -------
 Example
@@ -1038,14 +1080,16 @@ Example
 
 .. code-block:: javascript
 
-var result = web3.eth.call({
-    to: "0xc4abd0339eb8d57087278718986382264244252f",
-    data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-});
-console.log(result); // "0x0000000000000000000000000000000000000000000000000000000000000015"
+    web3.eth.call({
+        to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", // contract address
+        data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
+    })
+    .then(console.log);
+    > "0x000000000000000000000000000000000000000000000000000000000000000a"
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.estimateGas
 =====================
@@ -1054,21 +1098,22 @@ web3.eth.estimateGas
 
     web3.eth.estimateGas(callObject [, callback])
 
-Executes a message call or transaction, which is directly executed in the VM of the node, but never mined into the blockchain and returns the amount of the gas used.
+Executes a message call or transaction and returns the amount of the gas used.
 
 ----------
 Parameters
 ----------
 
 
-See :ref:`web3.eth.sendTransaction <eth-sendtransaction>`, except that all properties are optional.
+1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction>`, with the difference that for calls the ``from`` property is optional as well.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
 
 -------
 Returns
 -------
 
-
-``Number`` - the used gas for the simulated call/transaction.
+``Promise`` returns ``Number`` - the used gas for the simulated call/transaction.
 
 -------
 Example
@@ -1077,106 +1122,230 @@ Example
 
 .. code-block:: javascript
 
-var result = web3.eth.estimateGas({
-    to: "0xc4abd0339eb8d57087278718986382264244252f",
-    data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
-});
-console.log(result); // "0x0000000000000000000000000000000000000000000000000000000000000015"
+    web3.eth.estimateGas({
+        to: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+        data: "0xc6888fa10000000000000000000000000000000000000000000000000000000000000003"
+    })
+    .then(console.log);
+    > "0x0000000000000000000000000000000000000000000000000000000000000015"
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.filter
-=====================
 
-.. code-block:: javascript
-
-// can be 'latest' or 'pending'
-var filter = web3.eth.filter(filterString);
-// OR object are log filter options
-var filter = web3.eth.filter(options);
-
-// watch for changes
-filter.watch(function(error, result){
-  if (!error)
-    console.log(result);
-});
-
-// Additionally you can start watching right away, by passing a callback:
-web3.eth.filter(options, function(error, result){
-  if (!error)
-    console.log(result);
-});
-
-
-----------
-Parameters
-----------
-
-
-1. ``"String|Object"`` - The string ``"latest"`` or ``"pending"`` to watch for changes in the latest block or pending transactions respectively. Or a filter options object as follows:
-  * ``fromBlock``: ``"Number|String"`` - The number of the genesis block (`latest` may be given to mean the most recent and ``pending`` currently mining, block). By default ``latest``.
-  * ``toBlock``: ``"Number|String"`` - The number of the latest block (`latest` may be given to mean the most recent and ``pending`` currently mining, block). By default ``latest``.
-  * ``address``: ``String`` - An address or a list of addresses to only get logs from particular account(s).
-  * ``topics``: `Array of Strings` - An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. `[null, '0x00...']`. You can also pass another array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
-
--------
-Returns
--------
-
-
-``Object`` - A filter object with the following methods:
-
-  * `filter.get(callback)`: Returns all of the log entries that fit the filter.
-  * `filter.watch(callback)`: Watches for state changes that fit the filter and calls the callback. See [this note](#using-callbacks) for details.
-  * `filter.stopWatching()`: Stops the watch and uninstalls the filter in the node. Should always be called once it is done.
-
-##### Watch callback return value
-
-- ``String`` - When using the ``"latest"`` parameter, it returns the block hash of the last incoming block.
-- ``String`` - When using the ``"pending"`` parameter, it returns a transaction hash of the most recent pending transaction.
-- ``Object`` - When using manual filter options, it returns a log object as follows:
-    - ``logIndex``: ``Number`` - integer of the log index position in the block. ``null`` when its pending log.
-    - ``transactionIndex``: ``Number`` - integer of the transactions index position log was created from. ``null`` when its pending log.
-    - ``transactionHash``: ``String``, 32 Bytes - hash of the transactions this log was created from. ``null`` when its pending log.
-    - ``blockHash``: ``String``, 32 Bytes - hash of the block where this log was in. ``null`` when its pending. ``null`` when its pending log.
-    - ``blockNumber``: ``Number`` - the block number where this log was in. ``null`` when its pending. ``null`` when its pending log.
-    - ``address``: ``String``, 32 Bytes - address from which this log originated.
-    - ``data``: ``String`` - contains one or more 32 Bytes non-indexed arguments of the log.
-    - ``topics``: `Array of Strings` - Array of 0 to 4 32 Bytes ``DATA`` of indexed log arguments. (In *solidity*: The first topic is the *hash* of the signature of the event (e.g. `Deposit(address,bytes32,uint256)`), except if you declared the event with the ``anonymous`` specifier.)
-
-**Note** For event filter return values see [Contract Events](#contract-events)
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    var filter = web3.eth.filter('pending');
-
-    filter.watch(function (error, log) {
-      console.log(log); //  {"address":"0x0000000000000000000000000000000000000000", "data":"0x0000000000000000000000000000000000000000000000000000000000000000", ...}
-    });
-
-    // get all past logs again.
-    var myResults = filter.get(function(error, logs){ ... });
-
-    ...
-
-    // stops and uninstalls the filter
-    filter.stopWatching();
-
-
-
-------------------------------------------------------------------------------
 
 web3.eth.contract
 =====================
 
+For ``web3.eth.contract`` see the :ref:`eth.contract reference documentation <eth-contract>`
 
-TODO link to web3.eth.contract page
+
+------------------------------------------------------------------------------
+
+
+web3.eth.getPastLogs
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.getPastLogs(options [, callback])
+
+Gets past logs, matching the given options.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - The filter options as follows:
+  - ``Number|String`` - **fromBlock**: The number of the earliest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
+  - ``Number|String`` -  **toBlock**: The number of the latest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
+  - ``String`` -  **address**: An address or a list of addresses to only get logs from particular account(s).
+  - ``Array`` - **topics**: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use `null`, e.g. `[null, '0x12...']`. You can also pass an array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Array`` - Array of log objects.
+
+The structure of the returned event ``Object`` in the ``Array`` looks as follows:
+
+- ``String`` - **address**: From which this event originated from.
+- ``String`` - **data**: The data containing non-indexed log parameter.
+- ``Array`` - **topics**: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the log.
+- ``Number`` - **logIndex**: Integer of the event index position in the block.
+- ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
+- ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
+- ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
+- ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.getPastLogs({
+        address: "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+        topics: ["0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"]
+    })
+    .then(console.log);
+
+    > [{
+        data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    },{...}]
+
+
+------------------------------------------------------------------------------
+
+
+web3.eth.subscribe
+=====================
+
+.. code-block:: javascript
+
+    var subscription = web3.eth.subscribe(type, function(error, result){
+      if (!error)
+        console.log(result);
+    });
+
+----------
+Parameters
+----------
+
+1. `String` - The subscription, you want to subscribe to.
+2. `Mixed` - (optional) Optional additional parameters, depending on the subscription type.
+
+-------
+Returns
+-------
+
+`Object` - A Subscription instance
+
+  * `subscription.id`: The subscription id, used to identify and unsubscribe the subscription.
+  * `subscription.unsubscribe(callback)`: Unsubscribes the subscription and returns `TRUE` in the callback if successfull.
+
+##### Callback return value
+
+- `Mixed` - depends on the subscription, see the different subscriptions for more.
+
+**Note** For event return values see [Contract Events](#contract-events)
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var subscription = web3.eth.subscribe('logs', {address: '0x123456..', topics: ['0x12345...']}, function(error, result){
+      if (!error)
+        console.log(log);
+    });
+
+    ...
+
+    // unsubscribes the subscription
+    subscription.unsubscribe(function(error, success){
+      if(!error && success)
+        console.log('Successfully unsubscribed!');
+    });
+
+
+------------------------------------------------------------------------------
+
+
+web3.eth.subscribe('newBlocks')
+=====================
+
+.. code-block:: javascript
+
+
+
+----------
+Parameters
+----------
+
+-------
+Returns
+-------
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+
+
+------------------------------------------------------------------------------
+
+
+web3.eth.subscribe('syncing')
+=====================
+
+.. code-block:: javascript
+
+
+----------
+Parameters
+----------
+
+-------
+Returns
+-------
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+
+
+------------------------------------------------------------------------------
+
+
+web3.eth.subscribe('logs')
+=====================
+
+.. code-block:: javascript
+
+
+// TODO
+// mention return parameters of callback: err, log, subscription
+returns evenEmitter: 'error', 'message', 'log', 'reverted/deleted', subsbscription lost??
+
+----------
+Parameters
+----------
+
+1. `String` - `'logs'`, the type of the subscription.
+2. `Object` - The subscription options
+  * `fromBlock`: `Number` - The number of the earliest block. By default `null`.
+  * `address`: `String` - An address or a list of addresses to only get logs from particular account(s).
+  * `topics`: `Array of Strings` - An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use `null`, e.g. `[null, '0x00...']`. You can also pass another array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
+
+-------
+Returns
+-------
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
 
 
 ------------------------------------------------------------------------------

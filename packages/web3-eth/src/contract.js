@@ -331,6 +331,14 @@ Contract.prototype._decodeEventABI = function (data) {
 
     result.event = event.name;
 
+    // move the data and topics to "raw"
+    result.raw = {
+        data: result.data,
+        topics: result.topics
+    };
+    delete result.data;
+    delete result.topics;
+
 
     return result;
 };

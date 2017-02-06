@@ -396,6 +396,7 @@ Returns
 ``Promise`` returns ``Mixed``: The return value(s) of the smart contract method.
 
 // TODO add specific examples, once the decoder is extended
+// TODO add specific examples, once the decoder is extended
 
 -------
 Example
@@ -443,7 +444,9 @@ Parameters
 Returns
 -------
 
-``PromiEvent``:  A promise combined event emitter. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
+The **callback** will return the 32 bytes transaction hash.
+
+``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
 
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: is fired when the transaction receipt is available.
@@ -470,7 +473,7 @@ Example
 
 
     // using the event emitter
-    myContract.methods.myMethod(123).call({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
+    myContract.methods.myMethod(123).send({from: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'})
     .on('transactionHash', function(hash){
         ...
     })
@@ -607,16 +610,18 @@ Returns
 
 ``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
 
-The structure of the returned event ``Object`` in the ``Arrray`` looks as follows:
+The structure of the returned event ``Object`` in the ``Array`` looks as follows:
 
 - ``Object`` - **returnValues**: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
 - ``String`` - **event**: The event name.
+- ``String`` - **address**: From which this event originated from.
+- ``String`` - **raw.data**: The data containing non-indexed log parameter.
+- ``Array`` - **raw.topics**: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.
 - ``Number`` - **logIndex**: Integer of the event index position in the block.
 - ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
 - ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
 - ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
 - ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
-- ``String`` - **address**: from which this event originated from.
 
 -------
 Example
@@ -638,6 +643,10 @@ Example
             myIndexedParam: 20,
             myOtherIndexedParam: '0x123456789...',
             myNonIndexParam: 'My String'
+        },
+        raw: {
+            data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+            topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
         },
         event: 'MyEvent',
         logIndex: 0,
@@ -696,6 +705,10 @@ Example
             myIndexedParam: 20,
             myOtherIndexedParam: '0x123456789...',
             myNonIndexParam: 'My String'
+        },
+        raw: {
+            data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+            topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
         },
         event: 'MyEvent',
         logIndex: 0,
@@ -766,6 +779,10 @@ Example
             myIndexedParam: 20,
             myOtherIndexedParam: '0x123456789...',
             myNonIndexParam: 'My String'
+        },
+        raw: {
+            data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+            topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
         },
         event: 'MyEvent',
         logIndex: 0,
