@@ -33,8 +33,7 @@ var Subscription = function (options) {
 
     this.options = {
         subscription: options.subscription,
-        subscribeMethod: options.subscribeMethod,
-        unsubscribeMethod: options.unsubscribeMethod,
+        type: options.type,
         requestManager: options.requestManager
     };
 
@@ -149,7 +148,7 @@ Subscription.prototype._toPayload = function (args) {
     this._validateArgs(params);
 
     return {
-        method: this.options.subscribeMethod,
+        method: this.options.type + '_subscribe',
         params: params
     };
 };
@@ -217,7 +216,7 @@ Subscription.prototype.subscribe = function() {
             _this.id = result;
 
             // call callback on notifications
-            _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
+            _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
 
                 // TODO remove once its fixed in geth
                 if(_.isArray(result))
@@ -226,11 +225,13 @@ Subscription.prototype.subscribe = function() {
                 var output = _this._formatOutput(result);
 
                 if (!err) {
-                    // TODO remove eventEmitter??
-                    if(output.removed)
-                        _this.emit('changed', output);
-                    else
+
+                    if(_.isFunction(_this.options.subscription.subscriptionHandler)) {
+                        return _this.options.subscription.subscriptionHandler.call(_this, output);
+                    } else {
                         _this.emit('data', output);
+                    }
+
                 } else {
                     // unsubscribe, but keep listeners
                     _this.options.requestManager.removeSubscription(_this.id);

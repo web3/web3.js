@@ -25,8 +25,7 @@ var Subscription = require('./subscription.js');
 
 var Subscriptions = function (options) {
     this.name = options.name;
-    this.subscribe = options.subscribe;
-    this.unsubscribe = options.unsubscribe;
+    this.type = options.type;
     this.subscriptions = options.subscriptions || {};
     this.requestManager = null;
 };
@@ -60,9 +59,8 @@ Subscriptions.prototype.buildCall = function() {
 
         var subscription = new Subscription({
             subscription: _this.subscriptions[arguments[0]],
-            subscribeMethod: _this.subscribe,
-            unsubscribeMethod: _this.unsubscribe,
-            requestManager: _this.requestManager
+            requestManager: _this.requestManager,
+            type: _this.type
         });
 
         return subscription.subscribe.apply(subscription, arguments);
