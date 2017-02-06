@@ -1276,7 +1276,57 @@ Example
 web3.eth.subscribe('pendingTransactions')
 =====================
 
-// TODO
+.. code-block:: javascript
+
+    web3.eth.subscribe('pendingTransactions' [, callback]);
+
+Subscribes to incoming pending transactions.
+
+----------
+Parameters
+----------
+
+1. ``String`` - ``"pendingTransactions"``, the type of the subscription.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription.
+
+-------
+Returns
+-------
+
+``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
+
+- ``"data"`` returns ``Object``: Fires on each incoming pending transaction.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+
+For the structure of the returned object see :ref:`web3.eth.getTransaction() return values <eth-gettransaction-return>`.
+
+----------------
+Callback returns
+----------------
+
+1. ``Object|Null`` - First parameter is an error object if the subscription failed.
+2. ``Object`` - The block header object like above.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
+        if (!error)
+            console.log(transaction);
+    })
+    .on("data", function(transaction){
+    });
+
+    // unsubscribes the subscription
+    subscription.unsubscribe(function(error, success){
+        if(success)
+            console.log('Successfully unsubscribed!');
+    });
+
 
 ------------------------------------------------------------------------------
 
