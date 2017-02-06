@@ -554,10 +554,21 @@ Contract.prototype._on = function(){
         subscription: {
             params: 1,
             inputFormatter: [formatters.inputLogFormatter],
-            outputFormatter: this._decodeEventABI.bind(subOptions.event)
+            outputFormatter: this._decodeEventABI.bind(subOptions.event),
+            // DUBLICATE, also in web3-eth
+            subscriptionHandler: function (output) {
+                if(output.removed) {
+                    this.emit('changed', output);
+                } else {
+                    this.emit('data', output);
+                }
+
+                if (_.isFunction(this.callback)) {
+                    this.callback(null, output, this);
+                }
+            }
         },
-        subscribeMethod: 'eth_subscribe',
-        unsubscribeMethod: 'eth_unsubscribe',
+        type: 'eth',
         requestManager: this._eth._requestManager
     });
     subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});

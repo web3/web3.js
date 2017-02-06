@@ -8,6 +8,7 @@ var _ = require('lodash');
 var FakeHttpProvider = function () {
     var _this = this;
     this.countId = 1;
+    this.notificationCount = 1;
     this.getResponseStub = function () {
         return {
             jsonrpc: '2.0',
@@ -114,7 +115,9 @@ FakeHttpProvider.prototype.injectNotification = function (notification) {
             if(notification && cb)
                 cb(null, notification);
         });
-    }, 100);
+    }, 100 + this.notificationCount);
+
+    this.notificationCount += 10;
 };
 
 // FakeHttpProvider.prototype.injectResponse = function (response) {

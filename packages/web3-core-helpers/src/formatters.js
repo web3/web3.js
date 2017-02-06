@@ -187,8 +187,10 @@ var outputBlockFormatter = function(block) {
     if (block.number !== null)
         block.number = utils.toDecimal(block.number);
 
-    block.difficulty = outputBigNumberFormatter(block.difficulty);
-    block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+    if(block.difficulty)
+        block.difficulty = outputBigNumberFormatter(block.difficulty);
+    if(block.totalDifficulty)
+        block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
     if (utils.isArray(block.transactions)) {
         block.transactions.forEach(function(item){
