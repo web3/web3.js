@@ -82,6 +82,7 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-defaultblock:
 
 web3.eth.defaultBlock
 =====================
@@ -309,7 +310,7 @@ Returns
 -------
 
 
-``Array`` - An array of addresses controlled by node.
+``Promise`` returns ``Array`` - An array of addresses controlled by node.
 
 -------
 Example
@@ -339,7 +340,7 @@ Returns the current block number.
 Returns
 -------
 
-``Number`` - The number of the most recent block.
+``Promise`` returns ``Number`` - The number of the most recent block.
 
 -------
 Example
@@ -357,9 +358,6 @@ Example
 
 
 
-TODO: ----->>>>>>>> Fabian was here [Grafitti]
-
-
 web3.eth.getBalance
 =====================
 
@@ -374,15 +372,15 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the balance of.
-2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
 
-``String`` - A BigNumber instance of the current balance for the given address in :ref:`wei <what-is-wei>`.
+``Promise`` returns ``String`` - The current balance for the given address in :ref:`wei <what-is-wei>`.
 
 See the :ref:`A note on dealing with big numbers in JavaScript <big-numbers-in-javascript>`.
 
@@ -393,10 +391,9 @@ Example
 
 .. code-block:: javascript
 
-    var balance = web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1");
-    console.log(balance); // instanceof BigNumber
-    console.log(balance.toString(10)); // '1000000000000'
-    console.log(balance.toNumber()); // 1000000000000
+    web3.eth.getBalance("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
+    .then(console.log);
+    > "1000000000000"
 
 
 ------------------------------------------------------------------------------
@@ -406,7 +403,7 @@ web3.eth.getStorageAt
 
 .. code-block:: javascript
 
-    web3.eth.getStorageAt(addressHexString, position [, defaultBlock] [, callback])
+    web3.eth.getStorageAt(address, position [, defaultBlock] [, callback])
 
 Get the storage at a specific position of an address.
 
@@ -416,16 +413,15 @@ Parameters
 
 1. ``String`` - The address to get the storage from.
 2. ``Number`` - The index position of the storage.
-3. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
-4. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
 Returns
 -------
 
-
-``String`` - The value in storage at the given position.
+``Promise`` returns ``String`` - The value in storage at the given position.
 
 -------
 Example
@@ -434,8 +430,9 @@ Example
 
 .. code-block:: javascript
 
-    var state = web3.eth.getStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 0);
-    console.log(state); // "0x03"
+    web3.eth.getStorageAt("0x407d73d8a49eeb85d32cf465507dd71d507100c1", 0)
+    .then(console.log);
+    > "0x033456732123ffff2342342dd12342434324234234fd234fd23fd4f23d4234"
 
 
 ------------------------------------------------------------------------------
@@ -445,7 +442,7 @@ web3.eth.getCode
 
 .. code-block:: javascript
 
-    web3.eth.getCode(addressHexString [, defaultBlock] [, callback])
+    web3.eth.getCode(address [, defaultBlock] [, callback])
 
 Get the code at a specific address.
 
@@ -454,15 +451,15 @@ Parameters
 ----------
 
 1. ``String`` - The address to get the code from.
-2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Number|String`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
 
-``String`` - The data at given address ``addressHexString``.
+``Promise`` returns ``String`` - The data at given address ``address``.
 
 -------
 Example
@@ -471,11 +468,14 @@ Example
 
 .. code-block:: javascript
 
-    var code = web3.eth.getCode("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8");
-    console.log(code); // "0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056"
+    web3.eth.getCode("0xd5677cf67b5aa051bb40496e68ad359eb97cfbf8")
+    .then(console.log);
+    > "0x600160008035811a818181146012578301005b601b6001356025565b8060005260206000f25b600060078202905091905056"
 
 
 ------------------------------------------------------------------------------
+
+.. _eth-getblock:
 
 web3.eth.getBlock
 =====================
@@ -490,34 +490,34 @@ Returns a block matching the block number or block hash.
 Parameters
 ----------
 
-1. ``"String|Number"`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number`` - The block number or block hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
 
-``Object`` - The block object:
+``Promise`` returns ``Object`` - The block object:
 
   - ``number``: ``Number`` - the block number. ``null`` when its pending block.
   - ``hash``: ``String``, 32 Bytes - hash of the block. ``null`` when its pending block.
   - ``parentHash``: ``String``, 32 Bytes - hash of the parent block.
   - ``nonce``: ``String``, 8 Bytes - hash of the generated proof-of-work. ``null`` when its pending block.
-  - `sha3Uncles`: ``String``, 32 Bytes - SHA3 of the uncles data in the block.
+  - ``sha3Uncles``: ``String``, 32 Bytes - SHA3 of the uncles data in the block.
   - ``logsBloom``: ``String``, 256 Bytes - the bloom filter for the logs of the block. ``null`` when its pending block.
   - ``transactionsRoot``: ``String``, 32 Bytes - the root of the transaction trie of the block
   - ``stateRoot``: ``String``, 32 Bytes - the root of the final state trie of the block.
   - ``miner``: ``String``, 20 Bytes - the address of the beneficiary to whom the mining rewards were given.
-  - ``difficulty``: ``BigNumber`` - integer of the difficulty for this block.
-  - ``totalDifficulty``: ``BigNumber`` - integer of the total difficulty of the chain until this block.
+  - ``difficulty``: ``String`` - integer of the difficulty for this block.
+  - ``totalDifficulty``: ``String`` - integer of the total difficulty of the chain until this block.
   - ``extraData``: ``String`` - the "extra data" field of this block.
   - ``size``: ``Number`` - integer the size of this block in bytes.
   - ``gasLimit``: ``Number`` - the maximum gas allowed in this block.
   - ``gasUsed``: ``Number`` - the total used gas by all transactions in this block.
   - ``timestamp``: ``Number`` - the unix timestamp for when the block was collated.
-  - ``transactions``: ``Array`` - Array of transaction objects, or 32 Bytes transaction hashes depending on the last given parameter.
+  - ``transactions``: ``Array`` - Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
   - ``uncles``: ``Array`` - Array of uncle hashes.
 
 -------
@@ -527,42 +527,42 @@ Example
 
 .. code-block:: javascript
 
-var info = web3.eth.getBlock(3150);
-console.log(info);
-/*
-{
-  "number": 3,
-  "hash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
-  "parentHash": "0x2302e1c0b972d00932deb5dab9eb2982f570597d9d42504c05d9c2147eaf9c88",
-  "nonce": "0xfb6e1a62d119228b",
-  "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
-  "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-  "transactionsRoot": "0x3a1b03875115b79539e5bd33fb00d8f7b7cd61929d5a3c574f507b8acf415bee",
-  "stateRoot": "0xf1133199d44695dfa8fd1bcfe424d82854b5cebef75bddd7e40ea94cda515bcb",
-  "miner": "0x8888f1f195afa192cfee860698584c030f4c9db1",
-  "difficulty": BigNumber,
-  "totalDifficulty": BigNumber,
-  "size": 616,
-  "extraData": "0x",
-  "gasLimit": 3141592,
-  "gasUsed": 21662,
-  "timestamp": 1429287689,
-  "transactions": [
-    "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b"
-  ],
-  "uncles": []
-}
-*/
+    web3.eth.getBlock(3150);
+    .then(console.log);
+
+    > {
+      "number": 3,
+      "hash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+      "parentHash": "0x2302e1c0b972d00932deb5dab9eb2982f570597d9d42504c05d9c2147eaf9c88",
+      "nonce": "0xfb6e1a62d119228b",
+      "sha3Uncles": "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "transactionsRoot": "0x3a1b03875115b79539e5bd33fb00d8f7b7cd61929d5a3c574f507b8acf415bee",
+      "stateRoot": "0xf1133199d44695dfa8fd1bcfe424d82854b5cebef75bddd7e40ea94cda515bcb",
+      "miner": "0x8888f1f195afa192cfee860698584c030f4c9db1",
+      "difficulty": '21345678965432',
+      "totalDifficulty": '324567845321',
+      "size": 616,
+      "extraData": "0x",
+      "gasLimit": 3141592,
+      "gasUsed": 21662,
+      "timestamp": 1429287689,
+      "transactions": [
+        "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b"
+      ],
+      "uncles": []
+    }
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.getBlockTransactionCount
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.getBlockTransactionCount(hashStringOrBlockNumber [, callback])
+    web3.eth.getBlockTransactionCount(blockHashOrBlockNumber [, callback])
 
 Returns the number of transaction in a given block.
 
@@ -571,15 +571,15 @@ Parameters
 ----------
 
 
-1. ``"String|Number"`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
 -------
 
 
-``Number`` - The number of transactions in the given block.
+``Promise`` returns ``Number`` - The number of transactions in the given block.
 
 -------
 Example
@@ -588,8 +588,9 @@ Example
 
 .. code-block:: javascript
 
-var number = web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1");
-console.log(number); // 1
+    web3.eth.getBlockTransactionCount("0x407d73d8a49eeb85d32cf465507dd71d507100c1")
+    .then(console.log);
+    > 1
 
 
 ------------------------------------------------------------------------------
@@ -599,7 +600,7 @@ web3.eth.getUncle
 
 .. code-block:: javascript
 
-    web3.eth.getUncle(blockHashStringOrNumber, uncleNumber [, returnTransactionObjects] [, callback])
+    web3.eth.getUncle(blockHashOrBlockNumber, uncleIndex [, returnTransactionObjects] [, callback])
 
 Returns a blocks uncle by a given uncle index position.
 
@@ -607,10 +608,10 @@ Returns a blocks uncle by a given uncle index position.
 Parameters
 ----------
 
-1. ``"String|Number"`` - The block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String|Number`` - The block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The index position of the uncle.
 3. ``Boolean`` - (optional, default ``false``) If ``true``, the returned block will contain all transactions as objects, if ``false`` it will only contains the transaction hashes.
-4. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -618,7 +619,7 @@ Returns
 -------
 
 
-``Object`` - the returned uncle. For a return value see :ref:`web3.eth.getBlock() <eth-getblock>`.
+``Promise`` returns ``Object`` - the returned uncle. For a return value see :ref:`web3.eth.getBlock() <eth-getblock>`.
 
 **Note**: An uncle doesn't contain individual transactions.
 
@@ -629,12 +630,14 @@ Example
 
 .. code-block:: javascript
 
-    var uncle = web3.eth.getUncle(500, 0);
-    console.log(uncle); // see web3.eth.getBlock
+    web3.eth.getUncle(500, 0)
+    .then(console.log);
+    > // see web3.eth.getBlock
 
 
 
 ------------------------------------------------------------------------------
+
 
 web3.eth.getTransaction
 =====================
@@ -650,7 +653,7 @@ Parameters
 ----------
 
 1. ``String`` - The transaction hash.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -658,7 +661,7 @@ Returns
 -------
 
 
-``Object`` - A transaction object its hash ``transactionHash``:
+``Promise`` returns ``Object`` - A transaction object its hash ``transactionHash``:
 
   - ``hash``: ``String``, 32 Bytes - hash of the transaction.
   - ``nonce``: ``Number`` - the number of transactions made by the sender prior to this one.
@@ -719,9 +722,9 @@ Parameters
 ----------
 
 
-1. ``String`` - A block number or hash. Or the string ``"earliest"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
+1. ``String`` - A block number or hash. Or the string ``"genesis"``, ``"latest"`` or ``"pending"`` as in the :ref:`default block parameter <eth-defaultblock>`.
 2. ``Number`` - The transactions index position.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -762,7 +765,7 @@ Parameters
 ----------
 
 1. ``String`` - The transaction hash.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -811,7 +814,7 @@ web3.eth.getTransactionCount
 
 .. code-block:: javascript
 
-    web3.eth.getTransactionCount(addressHexString [, defaultBlock] [, callback])
+    web3.eth.getTransactionCount(address [, defaultBlock] [, callback])
 
 Get the numbers of transactions sent from this address.
 
@@ -821,7 +824,7 @@ Parameters
 
 1. ``String`` - The address to get the numbers of transactions from.
 2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -865,7 +868,7 @@ Parameters
   - ``gasPrice``: ``"Number|String|BigNumber"`` - (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
   - ``data``: ``String`` - (optional) Either a [byte string](https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI) containing the associated data of the message, or in the case of a contract-creation transaction, the initialisation code.
   - ``nonce``: ``Number``  - (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -909,7 +912,7 @@ Parameters
 ----------
 
 1. ``String`` - Signed transaction data in HEX format
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -972,7 +975,7 @@ Parameters
 
 1. ``String`` - Address to sign with.
 2. ``String`` - Data to sign.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1019,7 +1022,7 @@ Parameters
 
 1. ``Object`` - A transaction object see :ref:`web3.eth.sendTransaction <eth-sendtransaction>`, with the difference that for calls the ``from`` property is optional as well.
 2. ``"Number|String"`` - (optional) If you pass this parameter it will not use the default block set with :ref:`web3.eth.defaultBlock <eth-defaultblock>`.
-3. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1112,7 +1115,7 @@ Parameters
 
 
 1. ``"String|Object"`` - The string ``"latest"`` or ``"pending"`` to watch for changes in the latest block or pending transactions respectively. Or a filter options object as follows:
-  * ``fromBlock``: ``"Number|String"`` - The number of the earliest block (`latest` may be given to mean the most recent and ``pending`` currently mining, block). By default ``latest``.
+  * ``fromBlock``: ``"Number|String"`` - The number of the genesis block (`latest` may be given to mean the most recent and ``pending`` currently mining, block). By default ``latest``.
   * ``toBlock``: ``"Number|String"`` - The number of the latest block (`latest` may be given to mean the most recent and ``pending`` currently mining, block). By default ``latest``.
   * ``address``: ``String`` - An address or a list of addresses to only get logs from particular account(s).
   * ``topics``: `Array of Strings` - An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. `[null, '0x00...']`. You can also pass another array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
@@ -1191,7 +1194,7 @@ Gets a list of available compilers.
 Parameters
 ----------
 
-1. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1227,7 +1230,7 @@ Parameters
 ----------
 
 1. ``String`` - The solidity source code.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1306,7 +1309,7 @@ Parameters
 ----------
 
 1. ``String`` - The LLL source code.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1345,7 +1348,7 @@ Parameters
 ----------
 
 1. ``String`` - The serpent source code.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1416,7 +1419,7 @@ Parameters
   - ``payload``: ``"String|Number|Object"`` - The payload of the message. Will be autoconverted to a HEX string before.
   - ``priority``: ``Number`` - The integer of the priority in a rang from ... (?).
   - ``ttl``: ``Number`` - integer of the time to live in seconds.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1461,7 +1464,7 @@ Should be called to create new identity.
 Parameters
 ----------
 
-1. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -1497,7 +1500,7 @@ Parameters
 ----------
 
 1. ``String`` - The identity to check.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -1578,7 +1581,7 @@ Parameters
     - `['topic1', ['topic2', 'topic3']] == 'topic1' && ('topic2' || 'topic3')`
     - `[null, 'topic1', 'topic2'] == ANYTHING && 'topic1' && 'topic2'` -> ``null`` works as a wildcard
   * ``to``: Filter by identity of receiver of the message. If provided and the node has this identity, it will decrypt incoming encrypted messages.
-2. ``Function`` - (optional) If you pass a callback the HTTP request is made asynchronous. See [this note](#using-callbacks) for details.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 ##### Callback return
 
