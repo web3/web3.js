@@ -65,7 +65,7 @@ Jsonrpc.isValidResponse = function (response) {
       return !!message &&
         !message.error &&
         message.jsonrpc === '2.0' &&
-        typeof message.id === 'number' &&
+        (typeof message.id === 'number' || typeof message.id === 'string') &&
         message.result !== undefined; // only undefined is not valid json object
     }
 };
