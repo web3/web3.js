@@ -52,6 +52,10 @@ Batch.prototype.execute = function () {
         }).forEach(function (result, index) {
             if (requests[index].callback) {
 
+                if (result && result.error) {
+                    return requests[index].callback(errors.ErrorResponse(result));
+                }
+
                 if (!Jsonrpc.isValidResponse(result)) {
                     return requests[index].callback(errors.InvalidResponse(result));
                 }

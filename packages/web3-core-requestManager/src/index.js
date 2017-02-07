@@ -70,6 +70,10 @@ RequestManager.prototype.sendSync = function (data) {
     var payload = Jsonrpc.getInstance().toPayload(data.method, data.params);
     var result = this.provider.sendSync(payload);
 
+    if (result && result.error) {
+        return callback(errors.ErrorResponse(result));
+    }
+
     if (!Jsonrpc.isValidResponse(result)) {
         throw errors.InvalidResponse(result);
     }
@@ -98,7 +102,11 @@ RequestManager.prototype.send = function (data, callback) {
             return callback(err);
         }
 
-        if (!Jsonrpc.getInstance().isValidResponse(result)) {
+        if (result && result.error) {
+            return callback(errors.ErrorResponse(result));
+        }
+
+        if (!Jsonrpc.isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
 
@@ -128,7 +136,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
             return callback(errors.InvalidResponse(results));
         }
 
-        callback(err, results);
+        callback(null, results);
     });
 };
 

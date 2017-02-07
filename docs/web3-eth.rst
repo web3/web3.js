@@ -1536,8 +1536,6 @@ Example
 ------------------------------------------------------------------------------
 
 
-// TODO fabian was here !!!!
-
 web3.eth.getCompilers
 =====================
 
@@ -1557,8 +1555,7 @@ Parameters
 Returns
 -------
 
-
-``Array`` - An array of strings of available compilers.
+``Promise`` returns ``Array`` - An array of strings of available compilers.
 
 -------
 Example
@@ -1567,8 +1564,9 @@ Example
 
 .. code-block:: javascript
 
-var number = web3.eth.getCompilers();
-console.log(number); // ["lll", "solidity", "serpent"]
+    web3.eth.getCompilers();
+    .then(console.log);
+    > ["lll", "solidity", "serpent"]
 
 
 ------------------------------------------------------------------------------
@@ -1578,7 +1576,7 @@ web3.eth.compile.solidity
 
 .. code-block:: javascript
 
-    web3.eth.compile.solidity(sourceString [, callback])
+    web3.eth.compile.solidity(sourceCode [, callback])
 
 Compiles solidity source code.
 
@@ -1593,9 +1591,7 @@ Parameters
 Returns
 -------
 
-
-``Object`` - Contract and compiler info.
-
+``Promise`` returns ``Object`` - Contract and compiler info.
 
 -------
 Example
@@ -1610,9 +1606,11 @@ Example
         "       return a * 7;\n" +
         "   }\n" +
         "}\n";
-    var compiled = web3.eth.compile.solidity(source);
-    console.log(compiled);
-    // {
+
+    web3.eth.compile.solidity(source);
+    .then(console.log);
+
+    > {
       "test": {
         "code": "0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056",
         "info": {
@@ -1652,12 +1650,13 @@ Example
 
 ------------------------------------------------------------------------------
 
+
 web3.eth.compile.lll
 =====================
 
 .. code-block:: javascript
 
-    web3. eth.compile.lll(sourceString [, callback])
+    web3. eth.compile.lll(sourceCode [, callback])
 
 Compiles LLL source code.
 
@@ -1673,7 +1672,7 @@ Returns
 -------
 
 
-``String`` - The compiled LLL code as HEX string.
+``Promise`` returns ``String`` - The compiled LLL code as HEX string.
 
 
 -------
@@ -1685,8 +1684,9 @@ Example
 
     var source = "...";
 
-    var code = web3.eth.compile.lll(source);
-    console.log(code); // "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
+    web3.eth.compile.lll(source);
+    .then(console.log);
+    > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
 
 
 ------------------------------------------------------------------------------
@@ -1696,7 +1696,7 @@ web3.eth.compile.serpent
 
 .. code-block:: javascript
 
-    web3.eth.compile.serpent(sourceString [, callback])
+    web3.eth.compile.serpent(sourceCode [, callback])
 
 Compiles serpent source code.
 
@@ -1712,7 +1712,7 @@ Returns
 -------
 
 
-``String`` - The compiled serpent code as HEX string.
+``Promise`` returns ``String`` - The compiled serpent code as HEX string.
 
 
 .. code-block:: javascript
@@ -1720,25 +1720,9 @@ Returns
     var source = "...";
 
     var code = web3.eth.compile.serpent(source);
-    console.log(code); // "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
+    .then(console.log);
+    > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
 
-
-------------------------------------------------------------------------------
-
-web3.eth.namereg
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.namereg
-
-Returns GlobalRegistrar object.
-
-##### Usage
-
-see [namereg](https://github.com/ethereum/web3.js/blob/master/example/namereg.html) example.
-
-------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
 

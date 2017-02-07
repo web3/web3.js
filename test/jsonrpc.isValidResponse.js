@@ -77,7 +77,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with wrong id field', function () {
+        it('should validate jsonrpc response with string id field', function () {
 
             // given
             var response = {
@@ -90,7 +90,23 @@ describe('jsonrpc', function () {
             var valid = Jsonrpc.isValidResponse(response);
 
             // then
-            assert.equal(valid, false);
+            assert.equal(valid, true);
+        });
+
+        it('should validate jsonrpc response with string id field but as number', function () {
+
+            // given
+            var response = {
+                jsonrpc: '2.0',
+                id: '23',
+                result: []
+            };
+
+            // when
+            var valid = Jsonrpc.isValidResponse(response);
+
+            // then
+            assert.equal(valid, true);
         });
 
         it('should validate jsonrpc response without result field', function () {
