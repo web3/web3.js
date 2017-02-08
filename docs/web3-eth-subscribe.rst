@@ -1,14 +1,21 @@
 .. _eth-subscribe:
 
-========
-subscribe
-========
+=========
+web3.eth.subscribe
+=========
+
+The ``web3.eth.subscribe`` function lets you subscribe to specifc events in the blockchain.
+
+
+------------------------------------------------------------------------------
+
+
+Pattern
+=====================
 
 .. code-block:: javascript
 
-    web3.eth.subscribe(type [, callback]);
-
-The ``web3.eth.subscribe`` function lets you subscribe to specifc events in the blockchain.
+    web3.eth.subscribe(type [, options] [, callback]);
 
 ----------
 Parameters
@@ -61,7 +68,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-subscribe('pendingTransactions')
+
+pendingTransactions
 =====================
 
 .. code-block:: javascript
@@ -118,7 +126,8 @@ Example
 
 ------------------------------------------------------------------------------
 
-subscribe('newBlockHeaders')
+
+newBlockHeaders
 =====================
 
 .. code-block:: javascript
@@ -190,7 +199,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-subscribe('syncing')
+syncing
 =====================
 
 .. code-block:: javascript
@@ -256,7 +265,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-subscribe('logs')
+logs
 =====================
 
 .. code-block:: javascript
