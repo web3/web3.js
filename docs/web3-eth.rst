@@ -11,6 +11,15 @@ TODO: add note about checksum addresses
 ------------------------------------------------------------------------------
 
 
+subscribe
+=====================
+
+For ``web3.eth.subscribe`` see the :ref:`eth.subscribe reference documentation <eth-subscribe>`
+
+
+------------------------------------------------------------------------------
+
+
 Contract
 =====================
 
@@ -19,14 +28,6 @@ For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <et
 
 ------------------------------------------------------------------------------
 
-
-subscribe
-=====================
-
-For ``web3.eth.subscribe`` see the :ref:`eth.Contract reference documentation <eth-subscribe>`
-
-
-------------------------------------------------------------------------------
 
 setProvider
 =====================
