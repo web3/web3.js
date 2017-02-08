@@ -1,5 +1,6 @@
 .. _eth-subscribe:
 
+
 =========
 web3.eth.subscribe
 =========
