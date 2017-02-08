@@ -338,7 +338,7 @@ var outputPostFormatter = function(post){
 var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
     if (iban.isValid() && iban.isDirect()) {
-        return iban.address().toLowerCase();
+        return iban.toAddress().toLowerCase();
     } else if (utils.isAddress(address)) {
         return '0x' + address.toLowerCase().replace('0x','');
     }
