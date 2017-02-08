@@ -71,7 +71,7 @@ RequestManager.prototype.sendSync = function (data) {
     var result = this.provider.sendSync(payload);
 
     if (result && result.error) {
-        return callback(errors.ErrorResponse(result));
+        throw errors.ErrorResponse(result);
     }
 
     if (!Jsonrpc.isValidResponse(result)) {

@@ -203,7 +203,7 @@ describe('lib/web3/event', function () {
         tests.forEach(function (test, index) {
             it('test no: ' + index, function () {
                 var eth = new Eth();
-                var contract = new eth.contract([test.abi], address);
+                var contract = new eth.Contract([test.abi], address);
 
                 var result = contract._decodeEventABI.call(test.abi, test.data);
                 assert.deepEqual(result, test.expected);
