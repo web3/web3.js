@@ -44,7 +44,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.defaultAccount
+defaultAccount
 =====================
 
 .. code-block:: javascript
@@ -84,7 +84,7 @@ Example
 
 .. _eth-defaultblock:
 
-web3.eth.defaultBlock
+defaultBlock
 =====================
 
 .. code-block:: javascript
@@ -131,7 +131,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getProtocolVersion
+getProtocolVersion
 =====================
 
 .. code-block:: javascript
@@ -160,7 +160,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.isSyncing
+isSyncing
 =====================
 
 .. code-block:: javascript
@@ -205,12 +205,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getCoinbase
+getCoinbase
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.getCoinbase([callback])
+    getCoinbase([callback])
 
 Returns the coinbase address were the mining rewards currently go to.
 
@@ -234,7 +234,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.isMining
+isMining
 =====================
 
 .. code-block:: javascript
@@ -264,7 +264,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getHashrate
+getHashrate
 =====================
 
 .. code-block:: javascript
@@ -293,7 +293,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getGasPrice
+getGasPrice
 =====================
 
 .. code-block:: javascript
@@ -327,7 +327,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getAccounts
+getAccounts
 =====================
 
 .. code-block:: javascript
@@ -358,7 +358,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getBlockNumber
+getBlockNumber
 =====================
 
 .. code-block:: javascript
@@ -389,7 +389,7 @@ Example
 
 
 
-web3.eth.getBalance
+getBalance
 =====================
 
 .. code-block:: javascript
@@ -429,7 +429,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getStorageAt
+getStorageAt
 =====================
 
 .. code-block:: javascript
@@ -468,7 +468,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getCode
+getCode
 =====================
 
 .. code-block:: javascript
@@ -508,7 +508,7 @@ Example
 
 .. _eth-getblock:
 
-web3.eth.getBlock
+getBlock
 =====================
 
 .. code-block:: javascript
@@ -588,7 +588,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getBlockTransactionCount
+getBlockTransactionCount
 =====================
 
 .. code-block:: javascript
@@ -626,7 +626,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getUncle
+getUncle
 =====================
 
 .. code-block:: javascript
@@ -670,7 +670,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getTransaction
+getTransaction
 =====================
 
 .. code-block:: javascript
@@ -737,7 +737,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.getTransactionFromBlock
+getTransactionFromBlock
 =====================
 
 .. code-block:: javascript
@@ -779,7 +779,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getTransactionReceipt
+getTransactionReceipt
 =====================
 
 .. code-block:: javascript
@@ -845,7 +845,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.getTransactionCount
+getTransactionCount
 =====================
 
 .. code-block:: javascript
@@ -884,7 +884,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.sendTransaction
+sendTransaction
 =====================
 
 .. code-block:: javascript
@@ -972,7 +972,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.sendSignedTransaction
+sendSignedTransaction
 =====================
 
 .. code-block:: javascript
@@ -1033,7 +1033,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.sign
+sign
 =====================
 
 .. code-block:: javascript
@@ -1084,7 +1084,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.call
+call
 =====================
 
 .. code-block:: javascript
@@ -1125,7 +1125,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.estimateGas
+estimateGas
 =====================
 
 .. code-block:: javascript
@@ -1168,7 +1168,7 @@ Example
 
 
 
-web3.eth.Contract
+Contract
 =====================
 
 For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <eth-contract>`
@@ -1177,7 +1177,7 @@ For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <et
 ------------------------------------------------------------------------------
 
 
-web3.eth.getPastLogs
+getPastLogs
 =====================
 
 .. code-block:: javascript
@@ -1242,7 +1242,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.subscribe
+subscribe
 =====================
 
 For ``web3.eth.subscribe`` see the :ref:`eth.Contract reference documentation <eth-subscribe>`
@@ -1250,7 +1250,7 @@ For ``web3.eth.subscribe`` see the :ref:`eth.Contract reference documentation <e
 ------------------------------------------------------------------------------
 
 
-web3.eth.getCompilers
+getCompilers
 =====================
 
 .. code-block:: javascript
@@ -1285,7 +1285,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.compile.solidity
+compile.solidity
 =====================
 
 .. code-block:: javascript
@@ -1365,7 +1365,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.compile.lll
+compile.lll
 =====================
 
 .. code-block:: javascript
@@ -1405,7 +1405,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.compile.serpent
+compile.serpent
 =====================
 
 .. code-block:: javascript
@@ -1441,7 +1441,7 @@ Returns
 
 ------------------------------------------------------------------------------
 
-web3.eth.getWork
+getWork
 =====================
 
 .. code-block:: javascript
@@ -1484,7 +1484,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.submitWork
+submitWork
 =====================
 
 .. code-block:: javascript
@@ -1527,7 +1527,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.Iban
+Iban
 =====================
 
 .. code-block:: javascript
@@ -1567,7 +1567,7 @@ Example
 
 .. _eth-iban-toaddress:
 
-web3.eth.Iban.toAddress
+Iban.toAddress
 =====================
 
 .. code-block:: javascript
@@ -1604,7 +1604,7 @@ Example
 
 .. _eth-iban-toiban:
 
-web3.eth.Iban.toIban
+Iban.toIban
 =====================
 
 .. code-block:: javascript
@@ -1639,7 +1639,7 @@ Example
 
 .. _eth-iban-fromethereumaddress:
 
-web3.eth.Iban.fromEthereumAddress
+Iban.fromEthereumAddress
 =====================
 
 .. code-block:: javascript
@@ -1674,7 +1674,7 @@ Example
 
 .. _eth-iban-frombban:
 
-web3.eth.Iban.fromBban
+Iban.fromBban
 =====================
 
 .. code-block:: javascript
@@ -1709,7 +1709,7 @@ Example
 
 .. _eth-iban-createindirect:
 
-web3.eth.Iban.createIndirect
+Iban.createIndirect
 =====================
 
 .. code-block:: javascript
@@ -1749,7 +1749,7 @@ Example
 
 .. _eth-iban-isvalid:
 
-web3.eth.Iban.isValid
+Iban.isValid
 =====================
 
 .. code-block:: javascript
@@ -1791,7 +1791,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.isDirect
+Iban.isDirect
 =====================
 
 .. code-block:: javascript
@@ -1825,7 +1825,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.isIndirect
+Iban.isIndirect
 =====================
 
 .. code-block:: javascript
@@ -1859,7 +1859,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.checksum
+Iban.checksum
 =====================
 
 .. code-block:: javascript
@@ -1893,7 +1893,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.institution
+Iban.institution
 =====================
 
 
@@ -1928,7 +1928,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.client
+Iban.client
 =====================
 
 .. code-block:: javascript
@@ -1962,7 +1962,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.toAddress
+Iban.toAddress
 =====================
 
 .. code-block:: javascript
@@ -1996,7 +1996,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.Iban.toString
+Iban.toString
 =====================
 
 .. code-block:: javascript

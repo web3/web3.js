@@ -1,7 +1,7 @@
 .. _eth-subscribe:
 
 ========
-web3.eth.subscribe
+subscribe
 ========
 
 .. code-block:: javascript
@@ -61,7 +61,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.subscribe('pendingTransactions')
+subscribe('pendingTransactions')
 =====================
 
 .. code-block:: javascript
@@ -118,7 +118,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-web3.eth.subscribe('newBlockHeaders')
+subscribe('newBlockHeaders')
 =====================
 
 .. code-block:: javascript
@@ -190,7 +190,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.subscribe('syncing')
+subscribe('syncing')
 =====================
 
 .. code-block:: javascript
@@ -256,7 +256,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-web3.eth.subscribe('logs')
+subscribe('logs')
 =====================
 
 .. code-block:: javascript
