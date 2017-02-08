@@ -1526,176 +1526,504 @@ Example
 
 ------------------------------------------------------------------------------
 
-// TODO fabian is here
 
 web3.eth.Iban
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.Iban(address, [callback])
+    new web3.eth.Iban(ibanAddress)
 
-Used for submitting a proof-of-work solution.
+Generates a iban object with conversion methods and vailidity checks. Also has singleton functions for conversion like
+:ref:`Iban.toAddress() <_eth-iban-toaddress>`,
+:ref:`Iban.toIban() <_eth-iban-toiban>`,
+:ref:`Iban.fromEthereumAddress() <_eth-iban-fromethereumaddress>`,
+:ref:`Iban.fromBban() <_eth-iban-frombban>`,
+:ref:`Iban.createIndirect() <_eth-iban-createindirect>`,
+:ref:`Iban.isValid() <_eth-iban-isvalid>`.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` 8 Bytes: The nonce found (64 bits)
-2. ``String`` 32 Bytes: The header's pow-hash (256 bits)
-3. ``String`` 32 Bytes: The mix digest (256 bits)
-4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``String``: the iban address to instantiate an Iban instance from.
 
 -------
 Returns
 -------
 
-``Promise`` returns ``Boolean`` - Returns ``TRUE`` if the provided solution is valid, otherwise false.
+``Object`` - The Iban instance.
 
 -------
 Example
 -------
 
-
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.fromAddress
+.. _eth-iban-toaddress:
+
+web3.eth.Iban.toAddress
 =====================
 
 .. code-block:: javascript
 
-var i = web3.eth.iban.fromAddress('0x00c5496aee77c1ba1f0854206a26dda82a81d6d8');
-console.log(i.toString()); // 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS
+    web3.eth.Iban.toAddress(ibanAddress)
+
+Singleton: Converts a direct IBAN address into an ethereum address.
+
+**Note**: This method also exists on the IBAN instance.
+
+----------
+Parameters
+----------
+
+1. ``String``: the IBAN address to convert.
+
+-------
+Returns
+-------
+
+``String`` - The ethereum address.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.toAddress("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
+    > "0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8"
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.fromBban
+.. _eth-iban-toiban:
+
+web3.eth.Iban.toIban
 =====================
 
 .. code-block:: javascript
 
-var i = web3.eth.iban.fromBban('ETHXREGGAVOFYORK');
-console.log(i.toString()); // "XE81ETHXREGGAVOFYORK"
+    web3.eth.Iban.toIban(address)
+
+Singleton: Converts an ethereum address to a direct IBAN address.
+
+----------
+Parameters
+----------
+
+1. ``String``: the ethereum address to convert.
+
+-------
+Returns
+-------
+
+``String`` - The IBAN address.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.toIban("0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+    > "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.createIndirect
+.. _eth-iban-fromethereumaddress:
+
+web3.eth.Iban.fromEthereumAddress
 =====================
 
 .. code-block:: javascript
 
-var i = web3.eth.iban.createIndirect({
-  institution: "XREG",
-  identifier: "GAVOFYORK"
-});
-console.log(i.toString()); // "XE81ETHXREGGAVOFYORK"
+    web3.eth.Iban.fromEthereumAddress(address)
+
+Singleton: Converts an ethereum address to a direct IBAN instance.
+
+----------
+Parameters
+----------
+
+1. ``String``: the ethereum address to convert.
+
+-------
+Returns
+-------
+
+``Object`` - The IBAN instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.fromEthereumAddress("0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+    > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.isValid
+.. _eth-iban-frombban:
+
+web3.eth.Iban.fromBban
 =====================
 
 .. code-block:: javascript
 
-var valid = web3.eth.iban.isValid("XE81ETHXREGGAVOFYORK");
-console.log(valid); // true
+    web3.eth.Iban.fromBban(bbanAddress)
 
-var valid2 = web3.eth.iban.isValid("XE82ETHXREGGAVOFYORK");
-console.log(valid2); // false, because checksum is incorrect
+Singleton: Converts an BBAN address to a direct IBAN instance.
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var valid3 = i.isValid();
-console.log(valid3); // true
+----------
+Parameters
+----------
 
+1. ``String``: the BBAN address to convert.
+
+-------
+Returns
+-------
+
+``Object`` - The IBAN instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.fromBban('ETHXREGGAVOFYORK');
+    > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.isDirect
+.. _eth-iban-createindirect:
+
+web3.eth.Iban.createIndirect
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var direct = i.isDirect();
-console.log(direct); // false
+    web3.eth.Iban.createIndirect(options)
+
+Singleton: Creates an indirect IBAN address from a institution and identifier.
+
+----------
+Parameters
+----------
+
+1. ``Object``: the options object as follows:
+    - ``String`` - **institution**: the institution to be assigned
+    - ``String`` - **identifier**: the identifier to be assigned
+
+-------
+Returns
+-------
+
+``Object`` - The IBAN instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.createIndirect({
+      institution: "XREG",
+      identifier: "GAVOFYORK"
+    });
+    > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.isIndirect
+.. _eth-iban-isvalid:
+
+web3.eth.Iban.isValid
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var indirect = i.isIndirect();
-console.log(indirect); // true
+    web3.eth.Iban.isValid(address)
+
+Singleton: Checks if an IBAN address is valid.
+
+**Note**: This method also exists on the IBAN instance.
+
+----------
+Parameters
+----------
+
+1. ``String``: the IBAN address to check.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.Iban.isValid("XE81ETHXREGGAVOFYORK");
+    > true
+
+    web3.eth.Iban.isValid("XE82ETHXREGGAVOFYORK");
+    > false // because the checksum is incorrect
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.isValid();
+    > true
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.checksum
+web3.eth.Iban.isDirect
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var checksum = i.checksum();
-console.log(checksum); // "81"
+    web3.eth.Iban.isDirect()
+
+Checks if the IBAN instance is direct.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.isDirect();
+    > false
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.institution
+web3.eth.Iban.isIndirect
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var institution = i.institution();
-console.log(institution); // 'XREG'
+    web3.eth.Iban.isIndirect()
+
+Checks if the IBAN instance is indirect.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.isIndirect();
+    > true
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.client
+web3.eth.Iban.checksum
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban("XE81ETHXREGGAVOFYORK");
-var client = i.client();
-console.log(client); // 'GAVOFYORK'
+    web3.eth.Iban.checksum()
+
+Returns the checksum of the IBAN instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The checksum of the IBAN
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.checksum();
+    > "81"
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.address
+web3.eth.Iban.institution
 =====================
+
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
-var address = i.address();
-console.log(address); // '00c5496aee77c1ba1f0854206a26dda82a81d6d8'
+    web3.eth.Iban.institution()
+
+Returns the institution of the IBAN instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The institution of the IBAN
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.institution();
+    > 'XREG'
 
 
 ------------------------------------------------------------------------------
 
-web3.eth.iban.toString
+web3.eth.Iban.client
 =====================
 
 .. code-block:: javascript
 
-var i = new web3.eth.iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
-console.log(i.toString()); // 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
+    web3.eth.Iban.client()
+
+Returns the client of the IBAN instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The client of the IBAN
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    iban.client();
+    > 'GAVOFYORK'
+
+
+------------------------------------------------------------------------------
+
+web3.eth.Iban.toAddress
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Iban.toAddress()
+
+Returns the ethereum address of the IBAN instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The ethereum address of the IBAN
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+    iban.toAddress();
+    > '0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8'
+
+
+------------------------------------------------------------------------------
+
+web3.eth.Iban.toString
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.Iban.toString()
+
+Returns the IBAN address of the IBAN instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``String``: The IBAN address.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var iban = new web3.eth.Iban('XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS');
+    iban.toString();
+    > 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
 

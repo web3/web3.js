@@ -104,7 +104,7 @@ Iban.toAddress = function (ib) {
         throw new Error('IBAN is indirect and can\'t be converted');
     }
 
-    return ib.address();
+    return ib.toAddress();
 };
 
 /**
@@ -115,17 +115,17 @@ Iban.toAddress = function (ib) {
  * @return {String} the IBAN address
  */
 Iban.toIban = function (address) {
-    return Iban.toIbanInstance(address).toString();
+    return Iban.fromAddress(address).toString();
 };
 
 /**
- * This method should be used to create iban object from ethereum address
+ * This method should be used to create iban object from an ethereum address
  *
- * @method toIbanInstance
+ * @method fromAddress
  * @param {String} address
  * @return {Iban} the IBAN object
  */
-Iban.toIbanInstance = function (address) {
+Iban.fromAddress = function (address) {
     if(!utils.isAddress(address)){
         throw new Error('Provided address is not a valid address: '+ address);
     }
@@ -244,10 +244,10 @@ Iban.prototype.client = function () {
 /**
  * Should be called to get client direct address
  *
- * @method address
- * @returns {String} client direct address
+ * @method toAddress
+ * @returns {String} ethereum address
  */
-Iban.prototype.address = function () {
+Iban.prototype.toAddress = function () {
     if (this.isDirect()) {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);

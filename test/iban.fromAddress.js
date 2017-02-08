@@ -14,7 +14,7 @@ describe('lib/web3/iban', function () {
     describe('fromAddress', function () {
         tests.forEach(function (test) {
             it('shoud create indirect iban: ' +  test.expected, function () {
-                assert.deepEqual(Iban.toIbanInstance(test.address), new Iban(test.expected));
+                assert.deepEqual(Iban.fromAddress(test.address), new Iban(test.expected));
             });
         });
     });
