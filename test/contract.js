@@ -79,7 +79,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             assert.equal(contract.options.address, address);
         });
@@ -87,7 +87,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, addressLowercase);
+            var contract = new eth.Contract(abi, addressLowercase);
 
             assert.equal(contract.options.address, address);
         });
@@ -96,7 +96,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
 
             var test = function () {
-                new eth.contract(abi, '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe');
+                new eth.Contract(abi, '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe');
             };
 
             assert.throws(test);
@@ -107,7 +107,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -135,7 +135,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -164,7 +164,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var result = contract._encodeEventABI({
                 signature: '0x1234',
@@ -196,7 +196,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var result = contract._decodeEventABI.call({
                 signature: sha3(signature),
@@ -239,7 +239,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'Changed(address,uint256,uint256,uint256)';
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var result = contract._decodeMethodReturn([{
                 "name": "myAddress",
@@ -303,7 +303,7 @@ describe('contract', function () {
             provider.injectResult('0x321');
 
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var txObject = {};
             txObject._method = {
@@ -355,7 +355,7 @@ describe('contract', function () {
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
 
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var txObject = {};
             txObject._method = {
@@ -433,7 +433,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var event = contract.events.Changed({filter: {from: address}}, function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
@@ -526,7 +526,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             var count = 0;
             var event = contract.events.Changed({fromBlock: 0,filter: {from: address}})
                 .on('data', function (result) {
@@ -606,7 +606,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             var event = contract.events['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651']({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -664,7 +664,7 @@ describe('contract', function () {
                 }
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             var event = contract.events[signature]({filter: {from: address}}, function (err, result) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -743,7 +743,7 @@ describe('contract', function () {
             });
 
             var count = 1;
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             contract.once('Changed', {filter: {from: address}}, function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -826,7 +826,7 @@ describe('contract', function () {
             });
 
             var count = 1;
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             contract.once('Changed', function (err, result, sub) {
                 assert.equal(result.returnValues.from, address);
                 assert.equal(result.returnValues.amount, 1);
@@ -845,7 +845,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             assert.throws(contract.once.bind(contract, 'Changed', {filter: {from: address}}));
         });
 
@@ -918,7 +918,7 @@ describe('contract', function () {
             });
 
             var count = 1;
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             contract.events.Changed({filter: {from: address}})
             .on('data', function(result) {
                 assert.equal(result.returnValues.from, address);
@@ -967,7 +967,7 @@ describe('contract', function () {
             provider.injectResult(true);
 
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             var count = 0;
             var event = contract.events.allEvents(function (err, result) {
@@ -1039,7 +1039,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
@@ -1071,7 +1071,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi);
+            var contract = new eth.Contract(abi);
 
             assert.isFunction(contract.methods.mySend);
             assert.isFunction(contract.events.Changed);
@@ -1109,7 +1109,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new eth.contract(abi);
+            var contract = new eth.Contract(abi);
 
             var result = contract.methods.balance(address).encodeABI();
 
@@ -1121,7 +1121,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new eth.contract(abi, {data: '0x1234'});
+            var contract = new eth.Contract(abi, {data: '0x1234'});
 
             var result = contract.deploy({
                 arguments: [address, 10]
@@ -1135,7 +1135,7 @@ describe('contract', function () {
             var eth = new Eth(provider);
             var signature = 'balance(address)';
 
-            var contract = new eth.contract(abi);
+            var contract = new eth.Contract(abi);
 
             var result = contract.deploy({
                 arguments: [address, 10],
@@ -1160,7 +1160,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).estimateGas(function (err, res) {
                 assert.deepEqual(res, 50);
@@ -1181,7 +1181,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
 
-            var contract = new eth.contract(abi, address, {data: '0x1234'});
+            var contract = new eth.Contract(abi, address, {data: '0x1234'});
 
             contract.deploy({
                 arguments: [address, 50]
@@ -1205,7 +1205,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).call(function (err, res) {
                 assert.deepEqual(res, '50');
@@ -1227,7 +1227,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).call(11)
             .then(function (r) {
@@ -1252,7 +1252,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address});
         });
@@ -1261,7 +1261,7 @@ describe('contract', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             try{
                 contract.methods.myDisallowedSend(address, 17).send({from: address, value: 123})
@@ -1295,7 +1295,7 @@ describe('contract', function () {
                 done();
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             try{
                 contract.methods.myDisallowedSend(address, 17).send({from: address})
@@ -1328,7 +1328,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods['mySend(address,uint256)'](address, 17).send({from: address});
         });
@@ -1349,7 +1349,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods[signature](address, 17).send({from: address});
         });
@@ -1376,7 +1376,7 @@ describe('contract', function () {
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
             .then(function (r) {
@@ -1401,7 +1401,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000})
             .then(function (r) {
@@ -1427,7 +1427,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.balance(address).call({from: address, gas: 50000}, 11)
             .then(function (r) {
@@ -1485,7 +1485,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
@@ -1533,7 +1533,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
@@ -1558,7 +1558,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000}, function (err) {
                 assert.equal(err, null);
@@ -1585,7 +1585,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 17).estimateGas({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
@@ -1639,7 +1639,7 @@ describe('contract', function () {
                 '0000000000000000000000000000000000000000000000000000000000000005'
             }]);
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             contract.getPastEvents('Changed', {filter: {from: address2}})
             .then(function (result) {
 
@@ -1711,7 +1711,7 @@ describe('contract', function () {
 
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
             contract.methods.testArr([3]).call()
             .then(function (result) {
                 assert.deepEqual(result, '5');
@@ -1739,7 +1739,7 @@ describe('contract', function () {
             });
             provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
 
-            var contract = new eth.contract(abi, address);
+            var contract = new eth.Contract(abi, address);
 
             contract.methods.testArr([3]).call(function (err, result) {
                 assert.deepEqual(result, '5');
@@ -1765,7 +1765,7 @@ describe('contract', function () {
                 }]);
             });
 
-            var contract = new eth.contract(abi);
+            var contract = new eth.Contract(abi);
 
             contract.deploy({
                 data: '0x1234567',
@@ -1829,7 +1829,7 @@ describe('contract', function () {
             provider.injectResult('0x321');
 
 
-            var contract = new eth.contract(abi);
+            var contract = new eth.Contract(abi);
 
             contract.deploy({
                 data: '0x1234567',

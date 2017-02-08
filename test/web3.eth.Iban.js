@@ -24,20 +24,20 @@ var tests = [
 ];
 
 describe('eth', function () {
-    describe('iban', function () {
+    describe('Iban', function () {
         tests.forEach(function (test) {
             it('toAddress() should transform iban to address: ' +  test.address, function () {
                 if(test.error) {
-                    assert.throws(eth.iban.toAddress.bind(eth, test.direct));
+                    assert.throws(eth.Iban.toAddress.bind(eth.Iban, test.direct));
                 } else {
-                    assert.deepEqual(eth.iban.toAddress(test.direct), test.address);
+                    assert.deepEqual(eth.Iban.toAddress(test.direct), test.address);
                 }
             });
-            it('toIBAN() should transform address to iban: ' +  test.address, function () {
+            it('toIban() should transform address to iban: ' +  test.address, function () {
                 if(test.error) {
-                    assert.throws(eth.iban.toIBAN.bind(eth, test.address));
+                    assert.throws(eth.Iban.toIban.bind(eth, test.address));
                 } else {
-                    assert.deepEqual(eth.iban.toIBAN(test.address), test.direct);
+                    assert.deepEqual(eth.Iban.toIban(test.address), test.direct);
                 }
             });
         });

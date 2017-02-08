@@ -1,10 +1,10 @@
 .. _eth-contract:
 
 ========
-web3.eth.contract
+web3.eth.Contract
 ========
 
-The ``web3.eth.contract`` object makes it easy to interact with smart contracts on the ethereum blockchain.
+The ``web3.eth.Contract`` object makes it easy to interact with smart contracts on the ethereum blockchain.
 When you create a new contract object you give it the json interface of the respective smart contract
 and web3 will auto convert all calls into low level ABI calls over RPC for you.
 
@@ -21,7 +21,7 @@ new contract
 
 .. code-block:: javascript
 
-    new web3.eth.contract(jsonInterface[, address][, options])
+    new web3.eth.Contract(jsonInterface[, address][, options])
 
 Creates a new contract instance with all its methods and events defined in its :ref:`json interface <glossary-json-interface>` object.
 
@@ -50,7 +50,7 @@ Example
 
 .. code-block:: javascript
 
-    var myContract = new web3.eth.contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
+    var myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
         from: '0x1234567890123456789012345678901234567891' // default from address
         gasPrice: '20000000000000' // default gas price in wei
     });

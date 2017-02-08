@@ -24,7 +24,8 @@ describe('eth', function() {
         u.methodExists(eth, 'getBlockTransactionCount');
         u.methodExists(eth, 'getBlockUncleCount');
         u.methodExists(eth, 'subscribe');
-        u.methodExists(eth, 'contract');
+        u.methodExists(eth, 'Contract');
+        u.methodExists(eth, 'Iban');
 
 
         u.methodExists(eth, 'isMining');
@@ -33,11 +34,10 @@ describe('eth', function() {
         u.methodExists(eth, 'getHashrate');
         u.methodExists(eth, 'getAccounts');
         u.methodExists(eth, 'getBlockNumber');
+
         u.methodExists(eth, 'getProtocolVersion');
 
         u.methodExists(eth, 'setProvider');
-
-        u.propertyExists(eth, 'iban');
         u.propertyExists(eth, 'providers');
         u.propertyExists(eth, 'defaultBlock');
         u.propertyExists(eth, 'defaultAccount');

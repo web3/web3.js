@@ -1,7 +1,6 @@
 var chai = require('chai');
-var Iban = require('../packages/web3-core-iban');
-
 var assert = chai.assert;
+var Iban = require('../packages/web3-core-iban');
 
 var tests = [
     { obj: function () {}, is: false},

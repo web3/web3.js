@@ -91,13 +91,41 @@ var Iban = function (iban) {
 };
 
 /**
+ * This method should be used to create an ethereum address from a direct iban address
+ *
+ * @method toAddress
+ * @param {String} iban address
+ * @return {String} the ethereum address
+ */
+Iban.toAddress = function (ib) {
+    ib = new Iban(ib);
+
+    if(!ib.isDirect()) {
+        throw new Error('IBAN is indirect and can\'t be converted');
+    }
+
+    return ib.address();
+};
+
+/**
+ * This method should be used to create iban address from an ethereum address
+ *
+ * @method toIban
+ * @param {String} address
+ * @return {String} the IBAN address
+ */
+Iban.toIban = function (address) {
+    return Iban.toIbanInstance(address).toString();
+};
+
+/**
  * This method should be used to create iban object from ethereum address
  *
- * @method fromAddress
+ * @method toIbanInstance
  * @param {String} address
  * @return {Iban} the IBAN object
  */
-Iban.fromAddress = function (address) {
+Iban.toIbanInstance = function (address) {
     if(!utils.isAddress(address)){
         throw new Error('Provided address is not a valid address: '+ address);
     }

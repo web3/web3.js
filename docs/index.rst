@@ -28,6 +28,7 @@ Contents:
     web3
     web3-utils
     web3-eth
+    web3-eth-subscribe
     web3-eth-contract
     web3-net
     web3-personal

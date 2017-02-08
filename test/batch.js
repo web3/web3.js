@@ -171,10 +171,10 @@ describe('lib/web3/batch', function () {
 
             var batch = web3.createBatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000022', 'latest', callback));
-            batch.add(new web3.eth.contract(abi, address).methods.balance(address).call.request(callback2));
-            batch.add(new web3.eth.contract(abi, address).methods.balance(address).call.request({from: '0x1000000000000000000000000000000000000002'}, callback2));
-            batch.add(new web3.eth.contract(abi, address).methods.balance(address).call.request({from: '0x1000000000000000000000000000000000000003'}, 10, callback2));
-            batch.add(new web3.eth.contract(abi, address).methods.balance(address).call.request(10, callback3));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request(callback2));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x1000000000000000000000000000000000000002'}, callback2));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x1000000000000000000000000000000000000003'}, 10, callback2));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request(10, callback3));
             provider.injectBatchResults([result, result2, result2, result2, result2]);
             batch.execute();
         });
@@ -233,7 +233,7 @@ describe('lib/web3/batch', function () {
 
             var batch = web3.createBatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
-            batch.add(new web3.eth.contract(abi, address).methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'},10, callback2));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'},10, callback2));
             provider.injectBatchResults([result, result2], true); // injects error
             batch.execute();
         });
