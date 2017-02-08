@@ -8,10 +8,8 @@ web3.eth.subscribe
 The ``web3.eth.subscribe`` function lets you subscribe to specifc events in the blockchain.
 
 
-------------------------------------------------------------------------------
 
-
-Pattern
+= Pattern =
 =====================
 
 .. code-block:: javascript
