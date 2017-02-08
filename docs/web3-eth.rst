@@ -8,6 +8,23 @@ TODO: add instantiation code with web3 and Eth package
 TODO: add note about checksum addresses
 
 
+------------------------------------------------------------------------------
+
+
+Contract
+=====================
+
+For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <eth-contract>`
+
+
+------------------------------------------------------------------------------
+
+
+subscribe
+=====================
+
+For ``web3.eth.subscribe`` see the :ref:`eth.Contract reference documentation <eth-subscribe>`
+
 
 ------------------------------------------------------------------------------
 
@@ -1167,16 +1184,6 @@ Example
 ------------------------------------------------------------------------------
 
 
-
-Contract
-=====================
-
-For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <eth-contract>`
-
-
-------------------------------------------------------------------------------
-
-
 getPastLogs
 =====================
 
@@ -1239,13 +1246,6 @@ Example
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     },{...}]
 
-
-------------------------------------------------------------------------------
-
-subscribe
-=====================
-
-For ``web3.eth.subscribe`` see the :ref:`eth.Contract reference documentation <eth-subscribe>`
 
 ------------------------------------------------------------------------------
 
