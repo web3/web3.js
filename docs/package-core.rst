@@ -1,3 +1,5 @@
+
+
 setProvider
 =====================
 
@@ -7,8 +9,11 @@ setProvider
     web3.eth.setProvider(myProvider)
     web3.shh.setProvider(myProvider)
     web3.bzz.setProvider(myProvider)
+    ...
 
-When called changes the current provider for all modules.
+Will change the provider for its module.
+
+.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
 
 ----------
 Parameters
@@ -47,6 +52,7 @@ providers
     web3.eth.providers
     web3.shh.providers
     web3.bzz.providers
+    ...
 
 Contains the current available :ref:`providers <web3-providers>`.
 
@@ -85,7 +91,7 @@ BatchRequest
     new web3.shh.BatchRequest()
     new web3.bzz.BatchRequest()
 
-Object tp create and execute batch requests.
+Class to create and execute batch requests.
 
 ----------
 Parameters

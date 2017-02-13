@@ -61,12 +61,12 @@ function Eth() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
     methods().forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
     });
-
 
     // add contract
     this.Contract = Contract;

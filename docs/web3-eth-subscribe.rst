@@ -9,7 +9,7 @@ The ``web3.eth.subscribe`` function lets you subscribe to specifc events in the 
 
 
 
-Subscription pattern
+subscribe
 =====================
 
 .. code-block:: javascript
@@ -68,7 +68,46 @@ Example
 ------------------------------------------------------------------------------
 
 
-pendingTransactions
+clearSubscriptions
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.clearSubscriptions()
+
+Resets subscriptions.
+
+.. note:: This will not reset subscriptions from other packages like ``web3-shh``, as they use their own requestManager.
+
+----------
+Parameters
+----------
+
+1. ``Boolean``: If ``true`` it keeps the ``"syncing"`` subscription.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.subscribe('logs', {} ,function(){ ... });
+
+    ...
+
+    web3.eth.clearSubscriptions();
+
+
+------------------------------------------------------------------------------
+
+
+subscribe("pendingTransactions")
 =====================
 
 .. code-block:: javascript
@@ -126,7 +165,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-newBlockHeaders
+subscribe("newBlockHeaders")
 =====================
 
 .. code-block:: javascript
@@ -198,7 +237,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-syncing
+subscribe("syncing")
 =====================
 
 .. code-block:: javascript
@@ -264,7 +303,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-logs
+subscribe("logs")
 =====================
 
 .. code-block:: javascript
