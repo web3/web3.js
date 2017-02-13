@@ -685,7 +685,7 @@ Returns
 
 ``Promise`` returns ``Object`` - the returned uncle. For a return value see :ref:`web3.eth.getBlock() <eth-getblock>`.
 
-**Note**: An uncle doesn't contain individual transactions.
+.. note:: An uncle doesn't contain individual transactions.
 
 -------
 Example
@@ -821,7 +821,7 @@ getTransactionReceipt
 
 Returns the receipt of a transaction by transaction hash.
 
-**Note** That the receipt is not available for pending transactions and returns ``null``.
+.. note:: The receipt is not available for pending transactions and returns ``null``.
 
 
 ----------

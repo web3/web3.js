@@ -50,7 +50,18 @@ var Web3 = function () {
     this.shh = new Shh(this);
 
     this.utils = utils;
+
+    this.setProvider = function (provider) {
+        this._requestManager.setProvider(provider);
+        this.eth.setProvider(provider);
+        this.net.setProvider(provider);
+        this.shh.setProvider(provider);
+        this.personal.setProvider(provider);
+        return true;
+    };
 };
+
+
 
 core.addProviders(Web3);
 

@@ -2,7 +2,7 @@
 web3.shh
 ========
 
-**NOTE** this API is not final yet!!
+.. note:: this API is not final yet!!
 
 
 The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
@@ -199,3 +199,59 @@ Callback Return
   - ``Array`` - ``topics``: topic ``Strings`` for the message.
   - ``String`` - ``payload``: The payload of the message.
   - ``Number`` - ``workProved``: Integer of the work this message required before it was send (?).
+
+
+----------
+Example
+----------
+
+.. code-block:: javascript
+
+    web3.shh.subscribe('messages', {
+        to: '0xc931d93e97ab07fe42d923478ba2465f283f440fd6cabea4dd7a2c807108f651b7135d1d6ca9007d5b68aa497e4619ac10aa3b27726e1863c1fd9b570d99bbaf',
+        ttl: 2000,
+        topics: ['0x123456']
+    }, function(error, message){
+
+        ...
+    })
+
+------------------------------------------------------------------------------
+
+
+clearSubscriptions
+=====================
+
+.. code-block:: javascript
+
+    web3.shh.clearSubscriptions()
+
+Resets subscriptions.
+
+.. note:: This will not reset subscriptions from other packages like ``web3-eth``, as they use their own requestManager.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.subscribe('messages', {} ,function(){ ... });
+
+    ...
+
+    web3.shh.clearSubscriptions();
+
+
