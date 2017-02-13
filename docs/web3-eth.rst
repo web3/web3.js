@@ -4,9 +4,6 @@ web3.eth
 
 The ``web3-eth`` package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.
 
--------
-Example
--------
 
 .. code-block:: javascript
 
