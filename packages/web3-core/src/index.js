@@ -75,9 +75,7 @@ module.exports = {
         };
 
         // attach batch request creation
-        pkg.createBatchRequest = function () {
-            return new requestManager.BatchManager(pkg);
-        };
+        pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg);
 
         // attach extend function
         pkg.extend = extend(pkg);

@@ -5,9 +5,6 @@ web3.shh
 
 The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
 
--------
-Example
--------
 
 .. code-block:: javascript
 
