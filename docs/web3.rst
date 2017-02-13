@@ -2,7 +2,20 @@
 web3
 ====
 
-The web3.js object is a container object to house all ethereum related modules.
+The web3.js object is a umbrella package to house all ethereum related modules.
+
+.. code-block:: javascript
+
+    var Web3 = require('web3');
+
+    // "Eth.providers.givenProvider" will be set if in an Ethereum supported browser.
+    var web3 = new Web3(Eth.providers.givenProvider || new Eth.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+
+    // -> web3.eth
+    // -> web3.shh
+    // -> web3.bzz
+    // -> web3.utils
+
 
 ------------------------------------------------------------------------------
 

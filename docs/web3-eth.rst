@@ -2,10 +2,46 @@
 web3.eth
 ========
 
+The ``web3-eth`` package allows you to interact with an Ethereum blockchain and Ethereum smart contracts.
 
-TODO: add instantiation code with web3 and Eth package
+-------
+Example
+-------
 
-TODO: add note about checksum addresses
+.. code-block:: javascript
+
+    var Eth = require('web3-eth');
+
+    // "Eth.providers.givenProvider" will be set if in an Ethereum supported browser.
+    var eth = new Eth(Eth.providers.givenProvider || new Eth.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+
+
+    // or using the web3 umbrella package
+
+    var Web3 = require('web3');
+    var web3 = new Web3(Eth.providers.givenProvider || new Eth.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+
+    // -> web3.eth
+
+
+Note on checksum addresses
+=======
+
+All Ethereum addresses returned by function of this package are checksum addresses.
+This means some letters are uppercase and some are lowercase.
+Based on that it will calculate a checksum for the address and prove its correctness.
+Incorrect checksum address will throw an error when passed into a function.
+If you want to circumvent the checksum check youn can make an address all lowercase or uppercase.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.getAccounts(console.log);
+    > ["0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"]
 
 
 ------------------------------------------------------------------------------
@@ -14,7 +50,7 @@ TODO: add note about checksum addresses
 subscribe
 =====================
 
-For ``web3.eth.subscribe`` see the :ref:`eth.subscribe reference documentation <eth-subscribe>`
+For ``web3.eth.subscribe`` see the :ref:`Subscribe reference documentation <eth-subscribe>`
 
 
 ------------------------------------------------------------------------------
@@ -23,7 +59,16 @@ For ``web3.eth.subscribe`` see the :ref:`eth.subscribe reference documentation <
 Contract
 =====================
 
-For ``web3.eth.Contract`` see the :ref:`eth.Contract reference documentation <eth-contract>`
+For ``web3.eth.Contract`` see the :ref:`Contract reference documentation <eth-contract>`
+
+
+------------------------------------------------------------------------------
+
+
+Iban
+=====================
+
+For ``web3.eth.iban`` see the :ref:Iban reference documentation <eth-iban>`
 
 
 ------------------------------------------------------------------------------
@@ -1527,11 +1572,3 @@ Example
 
 ------------------------------------------------------------------------------
 
-
-Iban
-=====================
-
-For ``web3.eth.iban`` see the :ref:`eth.iban reference documentation <eth-iban>`
-
-
-------------------------------------------------------------------------------

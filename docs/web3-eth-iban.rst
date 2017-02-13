@@ -49,7 +49,7 @@ Example
 
 .. _eth-iban-toaddress:
 
-Iban.toAddress
+toAddress
 =====================
 
 .. code-block:: javascript
@@ -86,7 +86,7 @@ Example
 
 .. _eth-iban-toiban:
 
-Iban.toIban
+toIban
 =====================
 
 .. code-block:: javascript
@@ -121,7 +121,7 @@ Example
 
 .. _eth-iban-fromethereumaddress:
 
-Iban.fromEthereumAddress
+fromEthereumAddress
 =====================
 
 .. code-block:: javascript
@@ -156,7 +156,7 @@ Example
 
 .. _eth-iban-frombban:
 
-Iban.fromBban
+fromBban
 =====================
 
 .. code-block:: javascript
@@ -191,7 +191,7 @@ Example
 
 .. _eth-iban-createindirect:
 
-Iban.createIndirect
+createIndirect
 =====================
 
 .. code-block:: javascript
@@ -231,7 +231,7 @@ Example
 
 .. _eth-iban-isvalid:
 
-Iban.isValid
+isValid
 =====================
 
 .. code-block:: javascript
@@ -273,7 +273,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.isDirect
+isDirect
 =====================
 
 .. code-block:: javascript
@@ -307,7 +307,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.isIndirect
+isIndirect
 =====================
 
 .. code-block:: javascript
@@ -341,7 +341,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.checksum
+checksum
 =====================
 
 .. code-block:: javascript
@@ -375,7 +375,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.institution
+institution
 =====================
 
 
@@ -410,7 +410,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.client
+client
 =====================
 
 .. code-block:: javascript
@@ -444,7 +444,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.toAddress
+toAddress
 =====================
 
 .. code-block:: javascript
@@ -478,7 +478,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-Iban.toString
+toString
 =====================
 
 .. code-block:: javascript
