@@ -14,7 +14,7 @@ When called changes the current provider for all modules.
 Parameters
 ----------
 
-1. ``Object`` - **myProvider**: :ref:`a valid provider <web3-providers>`.
+1. ``Object`` - ``myProvider``: :ref:`a valid provider <web3-providers>`.
 
 -------
 Returns
@@ -56,10 +56,10 @@ Value
 
 ``Object`` with the following providers:
 
-    - ``Object`` - **HttpProvider**: The HTTP provider is deprecated, as it won't work for subscriptions.
-    - ``Object`` - **WebsocketProvider**: The Websocket provider is the standard for usage in legacy browsers.
-    - ``Object`` - **IpcProvider**: The IPC provider is used node.js dapps when running a local node. Gives the most secure connection.
-    - ``Object`` - **givenProvider**: When using web3.js in an Enthereum compatible browser, this will be set with the current native provider by that browser. Doesn't need to be instantiated.
+    - ``Object`` - ``HttpProvider``: The HTTP provider is deprecated, as it won't work for subscriptions.
+    - ``Object`` - ``WebsocketProvider``: The Websocket provider is the standard for usage in legacy browsers.
+    - ``Object`` - ``IpcProvider``: The IPC provider is used node.js dapps when running a local node. Gives the most secure connection.
+    - ``Object`` - ``givenProvider``: When using web3.js in an Enthereum compatible browser, this will be set with the current native provider by that browser. Doesn't need to be instantiated.
 
 -------
 Example

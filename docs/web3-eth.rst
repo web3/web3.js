@@ -65,7 +65,7 @@ For ``web3.eth.Contract`` see the :ref:`Contract reference documentation <eth-co
 Iban
 =====================
 
-For ``web3.eth.Iban`` see the :ref:Iban reference documentation <eth-iban>`
+For ``web3.eth.Iban`` see the :ref:`Iban reference documentation <eth-iban>`
 
 
 ------------------------------------------------------------------------------
@@ -210,11 +210,11 @@ Returns
 
 ``Promise`` returns ``Object|Boolean`` - A sync object when the node is currently syncing or ``false``:
 
-    - ``startingBlock``: ``Number`` - The block number where the sync started.
-    - ``currentBlock``: ``Number`` - The block number where at which block the node currently synced to already.
-    - ``highestBlock``: ``Number`` - The estimated block number to sync to.
-    - ``knownStates``: ``Number`` - The estimated states to download
-    - ``pulledStates``: ``Number`` - The already downloaded states
+    - ``Number`` - ``startingBlock``: The block number where the sync started.
+    - ``Number`` - ``currentBlock``: The block number where at which block the node currently synced to already.
+    - ``Number`` - ``highestBlock``: The estimated block number to sync to.
+    - ``Number`` - ``knownStates``: The estimated states to download
+    - ``Number`` - ``pulledStates``: The already downloaded states
 
 
 -------
@@ -565,24 +565,24 @@ Returns
 
 ``Promise`` returns ``Object`` - The block object:
 
-  - ``Number`` - **number**: The block number. ``null`` when its pending block.
-  - ``String`` 32 Bytes - **hash**: Hash of the block. ``null`` when its pending block.
-  - ``String`` 32 Bytes - **parentHash**: Hash of the parent block.
-  - ``String`` 8 Bytes - **nonce**: Hash of the generated proof-of-work. ``null`` when its pending block.
-  - ``String`` 32 Bytes - **sha3Uncles**: SHA3 of the uncles data in the block.
-  - ``String`` 256 Bytes - **logsBloom**: The bloom filter for the logs of the block. ``null`` when its pending block.
-  - ``String`` 32 Bytes - **transactionsRoot**: The root of the transaction trie of the block
-  - ``String`` 32 Bytes - **stateRoot**: The root of the final state trie of the block.
-  - ``String`` - **miner**: The address of the beneficiary to whom the mining rewards were given.
-  - ``String`` - **difficulty**: Integer of the difficulty for this block.
-  - ``String`` - **totalDifficulty**: Integer of the total difficulty of the chain until this block.
-  - ``String`` - **extraData**: The "extra data" field of this block.
-  - ``Number`` - **size**: Integer the size of this block in bytes.
-  - ``Number`` - **gasLimit**: The maximum gas allowed in this block.
-  - ``Number`` - **gasUsed**: The total used gas by all transactions in this block.
-  - ``Number`` - **timestamp**: The unix timestamp for when the block was collated.
-  - ``Array`` - **transactions**: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
-  - ``Array`` - **uncles**: Array of uncle hashes.
+  - ``Number`` - ``number``: The block number. ``null`` when its pending block.
+  - ``String`` 32 Bytes - ``hash``: Hash of the block. ``null`` when its pending block.
+  - ``String`` 32 Bytes - ``parentHash``: Hash of the parent block.
+  - ``String`` 8 Bytes - ``nonce``: Hash of the generated proof-of-work. ``null`` when its pending block.
+  - ``String`` 32 Bytes - ``sha3Uncles``: SHA3 of the uncles data in the block.
+  - ``String`` 256 Bytes - ``logsBloom``: The bloom filter for the logs of the block. ``null`` when its pending block.
+  - ``String`` 32 Bytes - ``transactionsRoot``: The root of the transaction trie of the block
+  - ``String`` 32 Bytes - ``stateRoot``: The root of the final state trie of the block.
+  - ``String`` - ``miner``: The address of the beneficiary to whom the mining rewards were given.
+  - ``String`` - ``difficulty``: Integer of the difficulty for this block.
+  - ``String`` - ``totalDifficulty``: Integer of the total difficulty of the chain until this block.
+  - ``String`` - ``extraData``: The "extra data" field of this block.
+  - ``Number`` - ``size``: Integer the size of this block in bytes.
+  - ``Number`` - ``gasLimit``: The maximum gas allowed in this block.
+  - ``Number`` - ``gasUsed``: The total used gas by all transactions in this block.
+  - ``Number`` - ``timestamp``: The unix timestamp for when the block was collated.
+  - ``Array`` - ``transactions``: Array of transaction objects, or 32 Bytes transaction hashes depending on the ``returnTransactionObjects`` parameter.
+  - ``Array`` - ``uncles``: Array of uncle hashes.
 
 -------
 Example
@@ -729,17 +729,17 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction object its hash ``transactionHash``:
 
-  - ``String`` 32 Bytes - **hash**: Hash of the transaction.
-  - ``Number`` - **nonce**: The number of transactions made by the sender prior to this one.
-  - ``String`` 32 Bytes - **blockHash**: Hash of the block where this transaction was in. ``null`` when its pending.
-  - ``Number`` - **blockNumber**: Block number where this transaction was in. ``null`` when its pending.
-  - ``Number`` - **transactionIndex**: Integer of the transactions index position in the block. ``null`` when its pending.
-  - ``String`` - **from**: Address of the sender.
-  - ``String`` - **to**: Address of the receiver. ``null`` when its a contract creation transaction.
-  - ``String`` - **value**: Value transferred in :ref:`wei <what-is-wei>`.
-  - ``String`` - **gasPrice**: Gas price provided by the sender in :ref:`wei <what-is-wei>`.
-  - ``Number`` - **gas**: Gas provided by the sender.
-  - ``String`` - **input**: The data sent along with the transaction.
+  - ``String`` 32 Bytes - ``hash``: Hash of the transaction.
+  - ``Number`` - ``nonce``: The number of transactions made by the sender prior to this one.
+  - ``String`` 32 Bytes - ``blockHash``: Hash of the block where this transaction was in. ``null`` when its pending.
+  - ``Number`` - ``blockNumber``: Block number where this transaction was in. ``null`` when its pending.
+  - ``Number`` - ``transactionIndex``: Integer of the transactions index position in the block. ``null`` when its pending.
+  - ``String`` - ``from``: Address of the sender.
+  - ``String`` - ``to``: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``String`` - ``value``: Value transferred in :ref:`wei <what-is-wei>`.
+  - ``String`` - ``gasPrice``: Gas price provided by the sender in :ref:`wei <what-is-wei>`.
+  - ``Number`` - ``gas``: Gas provided by the sender.
+  - ``String`` - ``input``: The data sent along with the transaction.
 
 
 -------
@@ -841,16 +841,16 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
-  - ``String`` 32 Bytes - **blockHash**: Hash of the block where this transaction was in.
-  - ``Number`` - **blockNumber**: Block number where this transaction was in.
-  - ``String`` 32 Bytes - **transactionHash**: Hash of the transaction.
-  - ``Number``- **transactionIndex**: Integer of the transactions index position in the block.
-  - ``String`` - **from**: Address of the sender.
-  - ``String`` - **to**: Address of the receiver. ``null`` when its a contract creation transaction.
-  - ``String`` - **contractAddress**: The contract address created, if the transaction was a contract creation, otherwise ``null``.
-  - ``Number`` - **cumulativeGasUsed**: The total amount of gas used when this transaction was executed in the block.
-  - ``Number``- **gasUsed**:  The amount of gas used by this specific transaction alone.
-  - ``Array`` - **logs**: Array of log objects, which this transaction generated.
+  - ``String`` 32 Bytes - ``blockHash``: Hash of the block where this transaction was in.
+  - ``Number`` - ``blockNumber``: Block number where this transaction was in.
+  - ``String`` 32 Bytes - ``transactionHash``: Hash of the transaction.
+  - ``Number``- ``transactionIndex``: Integer of the transactions index position in the block.
+  - ``String`` - ``from``: Address of the sender.
+  - ``String`` - ``to``: Address of the receiver. ``null`` when its a contract creation transaction.
+  - ``String`` - ``contractAddress``: The contract address created, if the transaction was a contract creation, otherwise ``null``.
+  - ``Number`` - ``cumulativeGasUsed``: The total amount of gas used when this transaction was executed in the block.
+  - ``Number``- ``gasUsed``:  The amount of gas used by this specific transaction alone.
+  - ``Array`` - ``logs``: Array of log objects, which this transaction generated.
 
 -------
 Example
@@ -932,13 +932,13 @@ Parameters
 
 
 1. ``Object`` - The transaction object to send:
-  - ``String`` - **from**: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified.
-  - ``String`` - **to**: (optional) The destination address of the message, left undefined for a contract-creation transaction.
-  - ``Number|String`` - **value**: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
-  - ``Number``  - **gas**: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
-  - ``Number|String`` - **gasPrice**: (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
-  - ``String`` - **data**: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
-  - ``Number``  -**nonce**: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
+  - ``String`` - ``from``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified.
+  - ``String`` - ``to``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
+  - ``Number|String`` - ``value``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
+  - ``Number``  - ``gas``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
+  - ``Number|String`` - ``gasPrice``: (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
+  - ``String`` - ``data``: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+  - ``Number``  -``nonce``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
 2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 .. _eth-sendtransaction-return:
@@ -1214,10 +1214,10 @@ Parameters
 ----------
 
 1. ``Object`` - The filter options as follows:
-  - ``Number|String`` - **fromBlock**: The number of the earliest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
-  - ``Number|String`` -  **toBlock**: The number of the latest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
-  - ``String`` -  **address**: An address or a list of addresses to only get logs from particular account(s).
-  - ``Array`` - **topics**: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use `null`, e.g. `[null, '0x12...']`. You can also pass an array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
+  - ``Number|String`` - ``fromBlock``: The number of the earliest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
+  - ``Number|String`` -  ``toBlock``: The number of the latest block (`latest` may be given to mean the most recent and `pending` currently mining, block). By default `latest`.
+  - ``String`` -  ``address``: An address or a list of addresses to only get logs from particular account(s).
+  - ``Array`` - ``topics``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use `null`, e.g. `[null, '0x12...']`. You can also pass an array for each topic with options for that topic e.g. `[null, ['option1', 'option2']]`
 
 
 .. _eth-getpastlogs-return:
@@ -1230,14 +1230,14 @@ Returns
 
 The structure of the returned event ``Object`` in the ``Array`` looks as follows:
 
-- ``String`` - **address**: From which this event originated from.
-- ``String`` - **data**: The data containing non-indexed log parameter.
-- ``Array`` - **topics**: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the log.
-- ``Number`` - **logIndex**: Integer of the event index position in the block.
-- ``Number`` - **transactionIndex**: Integer of the transaction's index position, the event was created in.
-- ``String`` 32 Bytes - **transactionHash**: Hash of the transaction this event was created in.
-- ``String`` 32 Bytes - **blockHash**: Hash of the block where this event was created in. ``null`` when its still pending.
-- ``Number`` - **blockNumber**: The block number where this log was created in. ``null`` when still pending.
+- ``String`` - ``address``: From which this event originated from.
+- ``String`` - ``data``: The data containing non-indexed log parameter.
+- ``Array`` - ``topics``: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the log.
+- ``Number`` - ``logIndex``: Integer of the event index position in the block.
+- ``Number`` - ``transactionIndex``: Integer of the transaction's index position, the event was created in.
+- ``String`` 32 Bytes - ``transactionHash``: Hash of the transaction this event was created in.
+- ``String`` 32 Bytes - ``blockHash``: Hash of the block where this event was created in. ``null`` when its still pending.
+- ``Number`` - ``blockNumber``: The block number where this log was created in. ``null`` when still pending.
 
 -------
 Example
