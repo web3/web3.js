@@ -19,7 +19,7 @@ Example
     // or using the web3 umbrella package
 
     var Web3 = require('web3');
-    var web3 = new Web3(Eth.providers.givenProvider || new Eth.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+    var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
 
     // -> web3.eth
 

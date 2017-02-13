@@ -3,9 +3,31 @@ web3.shh
 ========
 
 
-TODO: add instantiation code with web3 and Shh package
+The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var Shh = require('web3-shh');
+
+    // "Shh.providers.givenProvider" will be set if in an Ethereum supported browser.
+    var shh = new Shh(Shh.providers.givenProvider || new Shh.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
 
 
+    // or using the web3 umbrella package
+
+    var Web3 = require('web3');
+    var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+
+    // -> web3.shh
+
+
+.. include:: package-basics.rst
+
+YOOYOYO
 
 ------------------------------------------------------------------------------
 
