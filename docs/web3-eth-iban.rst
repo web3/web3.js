@@ -1,10 +1,10 @@
 .. _eth-iban:
 
 =========
-web3.eth.iban
+web3.eth.Iban
 =========
 
-The ``web3.eth.iban`` function lets convert etheruem addresses from and to IBAN and BBAN.
+The ``web3.eth.Iban`` function lets convert etheruem addresses from and to IBAN and BBAN.
 
 
 ------------------------------------------------------------------------------
