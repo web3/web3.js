@@ -58,7 +58,7 @@ toAddress
 
 Singleton: Converts a direct IBAN address into an ethereum address.
 
-**Note**: This method also exists on the IBAN instance.
+.. note:: This method also exists on the IBAN instance.
 
 ----------
 Parameters
@@ -240,7 +240,7 @@ isValid
 
 Singleton: Checks if an IBAN address is valid.
 
-**Note**: This method also exists on the IBAN instance.
+.. note:: This method also exists on the IBAN instance.
 
 ----------
 Parameters

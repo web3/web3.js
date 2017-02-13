@@ -58,10 +58,11 @@ if(typeof ethereumProvider !== 'undefined') {
  * Singleton
  */
 var RequestManager = function (provider) {
+    this.provider = null;
+    this.providers = providers;
+
     this.setProvider(provider);
     this.subscriptions = {};
-
-    this.providers = providers;
 };
 
 // expose providers
@@ -210,7 +211,7 @@ RequestManager.prototype.setProvider = function (p) {
 
     // reset the old one before changing
     if(this.provider)
-        this.reset();
+        this.clearSubscriptions();
 
     this.provider = p;
 
@@ -232,11 +233,11 @@ RequestManager.prototype.setProvider = function (p) {
 };
 
 /**
- * Should be called to reset the polling mechanism of the request manager
+ * Should be called to reset the subscriptions
  *
  * @method reset
  */
-RequestManager.prototype.reset = function (keepIsSyncing) {
+RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
     var _this = this;
 
 

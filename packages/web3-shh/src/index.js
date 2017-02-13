@@ -35,6 +35,7 @@ var Shh = function () {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
     methods().forEach(function(method) {
         method.attachToObject(_this);

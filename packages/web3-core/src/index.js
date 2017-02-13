@@ -49,8 +49,8 @@ module.exports = {
 
         // inherit from web3 umbrella package
         if (args[0] && args[0]._requestManager) {
-            pkg._requestManager = args[0]._requestManager;
-            pkg._provider =  args[0].provider;
+            pkg._requestManager = new requestManager.Manager(args[0].currentProvider);
+            pkg._provider =  args[0].currentProvider;
 
         // set requestmanager on package
         } else {
@@ -65,12 +65,6 @@ module.exports = {
         pkg.setProvider = function (provider) {
             pkg._requestManager.setProvider(provider);
             pkg._provider = provider;
-            return true;
-        };
-
-        // add reset function
-        pkg.reset = function (keepIsSyncing) {
-            pkg._requestManager.reset(keepIsSyncing);
             return true;
         };
 
