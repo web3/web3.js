@@ -93,8 +93,8 @@ var methods = function () {
         inputFormatter: [null, null]
     });
 
-    var get = new Method({
-        name: 'get',
+    var getManifest = new Method({
+        name: 'getManifest',
         call: 'bzz_get',
         params: 1,
         inputFormatter: [null]
@@ -136,7 +136,7 @@ var methods = function () {
         upload,
         retrieve,
         store,
-        get,
+        getManifest,
         put,
         modify,
         getHive,
