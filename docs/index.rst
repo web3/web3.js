@@ -30,6 +30,7 @@ Contents:
     web3-eth
     web3-eth-subscribe
     web3-eth-contract
+    web3-eth-iban
     web3-net
     web3-personal
     web3-admin
