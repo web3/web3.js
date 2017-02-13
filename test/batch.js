@@ -40,7 +40,7 @@ describe('lib/web3/batch', function () {
                 assert.deepEqual(second.params, ['0x0000000000000000000000000000000000000005', 'latest']);
             });
 
-            var batch = web3.createBatchRequest();
+            var batch = new web3.BatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000005', 'latest', callback2));
             batch.execute();
@@ -77,7 +77,7 @@ describe('lib/web3/batch', function () {
                 assert.deepEqual(second.params, []);
             });
 
-            var batch = web3.createBatchRequest();
+            var batch = new web3.BatchRequest();
             batch.add(web3.eth.getAccounts.request(callback));
             batch.add(web3.net.getPeerCount.request(callback2));
             batch.execute();
@@ -169,7 +169,7 @@ describe('lib/web3/batch', function () {
             });
 
 
-            var batch = web3.createBatchRequest();
+            var batch = new web3.BatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000022', 'latest', callback));
             batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request(callback2));
             batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x1000000000000000000000000000000000000002'}, callback2));
@@ -231,9 +231,9 @@ describe('lib/web3/batch', function () {
                 '0xa']);
             });
 
-            var batch = web3.createBatchRequest();
+            var batch = new web3.BatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
-            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'},10, callback2));
+            batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, 10, callback2));
             provider.injectBatchResults([result, result2], true); // injects error
             batch.execute();
         });

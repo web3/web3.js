@@ -48,7 +48,7 @@ providers
     web3.shh.providers
     web3.bzz.providers
 
-Contains the current available providers
+Contains the current available :ref:`providers <web3-providers>`.
 
 ----------
 Value
@@ -70,4 +70,49 @@ Example
     var Web3 = require('web3');
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
     var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+
+------------------------------------------------------------------------------
+
+
+BatchRequest
+=====================
+
+.. code-block:: javascript
+
+    new web3.BatchRequest()
+    new web3.eth.BatchRequest()
+    new web3.shh.BatchRequest()
+    new web3.bzz.BatchRequest()
+
+Object tp create and execute batch requests.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``Object``: With the following methods:
+
+    - ``add(request)``: To add a request object to the batch call.
+    - ``execute()``: Will execute the batch request.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var contract = new web3.eth.Contract(abi, address);
+
+    var batch = new web3.BatchRequest();
+    batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
+    batch.add(contract.methods.balance(address).call.request({from: '0x0000000000000000000000000000000000000000'}, callback2));
+    batch.execute();
+
 
