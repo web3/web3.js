@@ -34,21 +34,58 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 ------------------------------------------------------------------------------
 
 
-download
+upload
 =====================
 
 .. code-block:: javascript
 
-   web3.shh.download(?, ? [, callback])
+   web3.shh.upload(localfspath, defaultfile [, callback])
 
-Description missing.
+Uploads files or folders to swarm.
 
 ----------
 Parameters
 ----------
 
-1. ``?``: ?
-2. ``?``: ?
+1. ``String`` - ``localfspath``: The file or directory to upload.
+2. ``String`` - ``defaultfile``: The default to use when no file on the manifest path could be mapped. For JavaScript Dapps that is normally an ``index.html``.
+3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``String``: Returns the content hash of the manifest.
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.upload('/User/me/sites/myApp', '/User/me/sites/myApp/index.html')
+    .then(console.log);
+    > '246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20'
+
+
+------------------------------------------------------------------------------
+
+download
+=====================
+
+.. code-block:: javascript
+
+   web3.shh.download(bzzHash, localdirpath [, callback])
+
+Downloads files and folders from swarm.
+
+----------
+Parameters
+----------
+
+1. ``String`` - ``bzzHash``: The file or directory to download.
+2. ``String`` - ``localdirpath``: The local folder to download the content into.
 3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
@@ -64,7 +101,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.download(?, ?)
+    web3.shh.download('246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20', '/User/me/sites/someApp')
     .then(console.log);
     >
 
@@ -72,12 +109,49 @@ Example
 ------------------------------------------------------------------------------
 
 
-upload
+put
 =====================
 
 .. code-block:: javascript
 
-   web3.shh.upload(?, ? [, callback])
+   web3.shh.put(content, contentType [, callback])
+
+Allows to upload a raw data blob to swarm.
+Creates a manifest with an entry. This entry has the empty path and specifies the content type given as second argument.
+
+----------
+Parameters
+----------
+
+1. ``String`` - ``content``: The data blob to store.
+2. ``String`` - ``contentType``: The MIME content type to assign for that data.
+3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``String``: Returns the content hash of the manifest.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.put('0x2345676432', 'text/html')
+    .then(console.log);
+    > '246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20'
+
+
+------------------------------------------------------------------------------
+
+getManifest
+=====================
+
+.. code-block:: javascript
+
+   web3.shh.getManifest(bzzHash [, callback])
 
 Description missing.
 
@@ -85,9 +159,46 @@ Description missing.
 Parameters
 ----------
 
-1. ``?``: ?
-2. ``?``: ?
-3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``String`` - ``bzzHash``: The path to a file, it will then download its manifest JSON file.
+2. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``Object``: the manifest JSON object of the hash location
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.getManifest('246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20')
+    .then(console.log);
+    > {
+        ?
+    }
+
+
+------------------------------------------------------------------------------
+
+
+getHive
+=====================
+
+.. code-block:: javascript
+
+   web3.shh.getHive([callback])
+
+Description missing.
+
+----------
+Parameters
+----------
+
+1. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -102,7 +213,81 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.upload(?, ?)
+    web3.shh.getHive()
+    .then(console.log);
+    >
+
+
+------------------------------------------------------------------------------
+
+getInfo
+=====================
+
+.. code-block:: javascript
+
+   web3.shh.getInfo([callback])
+
+Description missing.
+
+----------
+Parameters
+----------
+
+1. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``?``:
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.getInfo()
+    .then(console.log);
+    >
+
+
+------------------------------------------------------------------------------
+
+modify
+=====================
+
+.. code-block:: javascript
+
+   web3.shh.modify(?, ?, ?, ? [, callback])
+
+Description missing.
+
+----------
+Parameters
+----------
+
+1. ``?``: ?
+2. ``?``: ?
+3. ``?``: ?
+4. ``?``: ?
+5. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+-------
+Returns
+-------
+
+``?``:
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.shh.modify(?, ?, ?, ?)
     .then(console.log);
     >
 
@@ -181,191 +366,6 @@ Example
     .then(console.log);
     >
 
-
-------------------------------------------------------------------------------
-
-
-get
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.get(? [, callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``?``: ?
-2. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.get(?)
-    .then(console.log);
-    >
-
-
-------------------------------------------------------------------------------
-
-
-put
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.put(?, ? [, callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``?``: ?
-2. ``?``: ?
-3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.put(?, ?)
-    .then(console.log);
-    >
-
-
-------------------------------------------------------------------------------
-
-
-modify
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.modify(?, ?, ?, ? [, callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``?``: ?
-2. ``?``: ?
-3. ``?``: ?
-4. ``?``: ?
-5. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.modify(?, ?, ?, ?)
-    .then(console.log);
-    >
-
-
-------------------------------------------------------------------------------
-
-
-getHive
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.getHive([callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.getHive()
-    .then(console.log);
-    >
-
-
-------------------------------------------------------------------------------
-
-getInfo
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.getInfo([callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.getInfo()
-    .then(console.log);
-    >
 
 ------------------------------------------------------------------------------
 
