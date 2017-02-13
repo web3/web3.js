@@ -9,8 +9,7 @@ The ``web3.eth.iban`` function lets convert etheruem addresses from and to IBAN 
 
 ------------------------------------------------------------------------------
 
-
-Class
+Iban
 =========
 
 .. code-block:: javascript

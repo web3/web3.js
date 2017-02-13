@@ -9,7 +9,7 @@ The ``web3.eth.subscribe`` function lets you subscribe to specifc events in the 
 
 
 
-= Pattern =
+Subscription pattern
 =====================
 
 .. code-block:: javascript
