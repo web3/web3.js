@@ -2,7 +2,7 @@
 web3.utils
 ========
 
-This package provides utility functions for ethereum dapps and other web3.js packages.
+This package provides utility functions for Ethereum dapps and other web3.js packages.
 
 
 ------------------------------------------------------------------------------
@@ -12,21 +12,21 @@ sha3
 
 .. code-block:: javascript
 
-    web3.utils.sha3(myProvider)
+    web3.utils.sha3(string)
 
-When called changes the current provider for all modules.
+Will calculate the sha3 of the input.
 
 ----------
 Parameters
 ----------
 
-1. ``Object`` - **myProvider**: a valid provider with at least ``send``, ``on`` function
+1. ``String`` - ``string``: A string to hash.
 
 -------
 Returns
 -------
 
-``undefined``
+``String``: the result hash.
 
 -------
 Example
@@ -34,7 +34,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+    web3.utils.sha3('234');
 
 
 ------------------------------------------------------------------------------
