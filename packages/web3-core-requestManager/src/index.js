@@ -35,8 +35,21 @@ var WebsocketProvider = require('./providers/websocketprovider');
 var providers = {
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
-    WebsocketProvider: WebsocketProvider
+    WebsocketProvider: WebsocketProvider,
+    givenProvider: null
 };
+
+// add given provider
+/* jshint ignore:start */
+if(typeof ethereumProvider !== 'undefined') {
+    providers.givenProvider = ethereumProvider;
+
+} else if(typeof web3 !== 'undefined' && web3.currentProvider) {
+    providers.givenProvider = web3.currentProvider;
+}
+/* jshint ignore:end */
+
+
 
 /**
  * It's responsible for passing messages to providers
