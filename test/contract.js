@@ -113,6 +113,16 @@ describe('contract', function () {
 
             assert.throws(test);
         });
+        it('should fail on invalid address as options.from', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+
+            var test = function () {
+                new eth.Contract(abi, address, {from: '0x11F4D0A3c12e86B4b5F39B213F7E19D048276DAe'});
+            };
+
+            assert.throws(test);
+        });
         it('.clone() should properly clone the contract instance', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
