@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Iban = require('../packages/web3-core-iban');
+var Iban = require('../packages/web3-eth-iban');
 
 var tests = [
     { address: '00c5496aee77c1ba1f0854206a26dda82a81d6d8',   expected: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'},
