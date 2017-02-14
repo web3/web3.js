@@ -202,7 +202,7 @@ Contract.prototype._checkListener = function(type, event){
  * @param {Object} options the options gived by the user
  * @return {Object} the options with gaps filled by defaults
  */
-Contract.prototype._getOrSetDefaultOptions = function fillWithDefaultOptions(options) {
+Contract.prototype._getOrSetDefaultOptions = function getOrSetDefaultOptions(options) {
     var gasPrice = options.gasPrice ? String(options.gasPrice): null;
     var from = options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
 
