@@ -66,7 +66,7 @@ var Contract = function(jsonInterface, address, options) {
     if(utils.isObject(args[args.length - 1])) {
         options = args[args.length - 1];
 
-        this.options = _.extend(this.options, this._fillWithDefaultOptions(options));
+        this.options = _.extend(this.options, this._getOrSetDefaultOptions(options));
         if(utils.isObject(address)) {
             address = null;
         }
@@ -198,19 +198,17 @@ Contract.prototype._checkListener = function(type, event){
 /**
  * Use default values, if options are not available
  *
- * @method _fillWithDefaultOptions
+ * @method _getOrSetDefaultOptions
  * @param {Object} options the options gived by the user
  * @return {Object} the options with gaps filled by defaults
  */
-Contract.prototype._fillWithDefaultOptions = function fillWithDefaultOptions(options) {
+Contract.prototype._getOrSetDefaultOptions = function fillWithDefaultOptions(options) {
     var gasPrice = options.gasPrice ? String(options.gasPrice): null;
+    var from = options.from ? utils.toChecksumAddress(formatters.inputAddressFormatter(options.from)) : null;
 
     options.data = options.data || this.options.data;
 
-    if(utils.isAddress(options.from))
-        options.from = options.from.toLowerCase();
-
-    options.from = options.from || this.options.from;
+    options.from = from || this.options.from;
     options.gasPrice = gasPrice || this.options.gasPrice;
     options.gas = options.gas || options.gasLimit || this.options.gas;
 
@@ -444,7 +442,7 @@ Contract.prototype.deploy = function(options, callback){
     options = options || {};
 
     options.arguments = options.arguments || [];
-    options = this._fillWithDefaultOptions(options);
+    options = this._getOrSetDefaultOptions(options);
 
 
     // return error, if no "data" is specified
@@ -681,7 +679,7 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
     // get the generateRequest argument for batch requests
     processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;
 
-    processedArgs.options = this._parent._fillWithDefaultOptions(processedArgs.options);
+    processedArgs.options = this._parent._getOrSetDefaultOptions(processedArgs.options);
     processedArgs.options.data = this.encodeABI();
 
     // add contract address
