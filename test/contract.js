@@ -113,6 +113,44 @@ describe('contract', function () {
 
             assert.throws(test);
         });
+        it('.clone() should properly clone the contract instance', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var fromAddress = '0xDDfFD0A3C12e86b4b5f39B213f7e19d048276daE';
+            var abi2 = [{
+                "name": "ballerRo",
+                "type": "function",
+                "inputs": [{
+                    "name": "So",
+                    "type": "address"
+                }],
+                "constant": true,
+                "outputs": [{
+                    "name": "man",
+                    "type": "uint256"
+                }]
+            }];
+
+            var contract1 = new eth.Contract(abi, address, {gas: 1222, gasPrice: 12345678, from: fromAddress});
+            var contract2 = contract1.clone();
+
+            assert.equal(contract1.options.address, address);
+            assert.equal(contract1.options.gas, 1222);
+            assert.equal(contract1.options.gasPrice, '12345678');
+            assert.deepEqual(contract1.options.jsonInterface, abi);
+
+
+            contract2.options.jsonInterface = abi2;
+            contract2.options.address = fromAddress;
+            contract2.options.gas = 300;
+            contract2.options.gasPrice = '234234';
+
+            assert.isFunction(contract2.methods.ballerRo);
+            assert.equal(contract2.options.address, fromAddress);
+            assert.equal(contract2.options.gas, 300);
+            assert.equal(contract2.options.gasPrice, '234234');
+            assert.deepEqual(contract2.options.jsonInterface, abi2);
+        });
     });
     describe('internal method', function () {
         it('_encodeEventABI should return the encoded event object without topics', function () {

@@ -51,26 +51,26 @@ var Contract = function(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 
-    if(!(this instanceof Contract))
+    if(!(this instanceof Contract)) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+    }
 
-    if(!jsonInterface || !(jsonInterface instanceof Array))
+    if(!jsonInterface || !(jsonInterface instanceof Array)) {
         throw new Error('You must provide the json interface of the contract when instatiating a contract object.');
+    }
 
-    // get the options object
+
+    // create the options object
     this.options = {};
+
     if(utils.isObject(args[args.length - 1])) {
         options = args[args.length - 1];
-        this.options.data = options.data;
-        this.options.from = options.from;
-        this.options.gasPrice = options.gasPrice;
-        this.options.gas = options.gas || options.gasLimit;
 
+        this.options = _.extend(this.options, this._fillWithDefaultOptions(options));
         if(utils.isObject(address)) {
             address = null;
         }
     }
-
 
     // set address
     Object.defineProperty(this.options, 'address', {
@@ -203,15 +203,17 @@ Contract.prototype._checkListener = function(type, event){
  * @return {Object} the options with gaps filled by defaults
  */
 Contract.prototype._fillWithDefaultOptions = function fillWithDefaultOptions(options) {
+    var gasPrice = options.gasPrice ? String(options.gasPrice): null;
 
     options.data = options.data || this.options.data;
-    options.from = options.from || this.options.from;
 
     if(utils.isAddress(options.from))
         options.from = options.from.toLowerCase();
 
-    options.gasPrice = options.gasPrice || this.options.gasPrice;
+    options.from = options.from || this.options.from;
+    options.gasPrice = gasPrice || this.options.gasPrice;
     options.gas = options.gas || options.gasLimit || this.options.gas;
+
     // TODO replace with only gasLimit?
     delete options.gasLimit;
 
@@ -508,7 +510,18 @@ Contract.prototype._generateEventOptions = function() {
 /**
  * Adds event listeners and creates a subscription, and remove it once its fired.
  *
- * @method on
+ * @method clone
+ * @return {Object} the event subscription
+ */
+Contract.prototype.clone = function() {
+    return new Contract(this.options.jsonInterface, this.options.address, this.options);
+};
+
+
+/**
+ * Adds event listeners and creates a subscription, and remove it once its fired.
+ *
+ * @method once
  * @param {String} event
  * @param {Object} options
  * @param {Function} callback
@@ -540,7 +553,7 @@ Contract.prototype.once = function(event, options, callback) {
 /**
  * Adds event listeners and creates a subscription.
  *
- * @method on
+ * @method _on
  * @param {String} event
  * @param {Object} options
  * @param {Function} callback
