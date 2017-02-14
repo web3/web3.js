@@ -25,7 +25,6 @@
 var BigNumber = require('bignumber.js');
 var utf8 = require('utf8');
 
-// var iban = require('web3-core-iban');
 var sha3 = require('./sha3.js');
 
 var unitMap = {
