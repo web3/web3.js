@@ -16,6 +16,13 @@
 */
 /**
  * @file contract.js
+ *
+ * To initialize a contrac use:
+ *
+ * var Contract = require('web3-eth-contract');
+ * Contract.prototype._eth = needsAEthInstance;
+ * var contract = new Contract(abi, address, ...);
+ *
  * @author Fabian Vogelsteller <fabian@frozeman.de>
  * @date 2016
  */
