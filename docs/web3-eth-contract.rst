@@ -197,6 +197,44 @@ Example
 
 ------------------------------------------------------------------------------
 
+clone
+=====================
+
+.. code-block:: javascript
+
+    myContract.clone()
+
+Clones the current contract instance.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+
+``Object``: The new contract instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var contract1 = new eth.Contract(abi, address, {gasPrice: '12345678', from: fromAddress});
+
+    var contract2 = contract1.clone();
+    contract2.options.address = address2;
+
+    (contract1.options.address !== contract2.options.address);
+    > true
+
+------------------------------------------------------------------------------
+
 
 .. _contract-deploy:
 
