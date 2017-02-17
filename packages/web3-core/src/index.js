@@ -20,6 +20,8 @@
  * @date 2017
  */
 
+"use strict";
+
 
 var requestManager = require('web3-requestManager');
 var extend = require('./extend.js');

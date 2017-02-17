@@ -21,6 +21,8 @@
  * @date 2017
  */
 
+"use strict";
+
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var utils = require('web3-utils');

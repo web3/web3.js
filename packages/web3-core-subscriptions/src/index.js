@@ -20,6 +20,8 @@
  * @date 2017
  */
 
+"use strict";
+
 var Subscription = require('./subscription.js');
 
 

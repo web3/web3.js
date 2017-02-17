@@ -17,6 +17,7 @@ var runTests = function (obj, method, tests) {
                 it('promise test: ' + index, function (done) {
 
                     // given
+                    var result;
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
                     provider.injectResult(clone(test.result));
@@ -29,7 +30,16 @@ var runTests = function (obj, method, tests) {
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
                         provider.injectResult(clone(test.result));
-                        provider.injectResult(clone(test.result));
+                        // inject receipt
+                        provider.injectResult({
+                            "blockHash": "0x6fd9e2a26ab",
+                            "blockNumber": "0x15df",
+                            "transactionHash": "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+                            "transactionIndex": "0x1",
+                            "contractAddress": "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+                            "cumulativeGasUsed": "0x7f110",
+                            "gasUsed": "0x7f110"
+                        });
                         // fake newBlock
                         provider.injectNotification(test.notification);
                     }
@@ -48,16 +58,26 @@ var runTests = function (obj, method, tests) {
                     } else {
 
                         if (obj) {
-                            var result = web3[obj][method].apply(web3[obj], args);
+                            result = web3[obj][method].apply(web3[obj], args);
                         } else {
-                            var result = web3[method].apply(web3, args);
+                            result = web3[method].apply(web3, args);
                         }
-                        //var result = (obj)
-                            //? web3[obj][method].apply(null, test.args.slice(0))
-                            //: web3[method].apply(null, test.args.slice(0));
 
                         result.then(function(result){
-                            assert.deepEqual(result, test.formattedResult);
+                            if(test.notification) {
+                                // test receipt
+                                assert.deepEqual(result, {
+                                    "blockHash": "0x6fd9e2a26ab",
+                                    "blockNumber": 5599,
+                                    "transactionHash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+                                    "transactionIndex":  1,
+                                    "contractAddress":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
+                                    "cumulativeGasUsed": 520464,
+                                    "gasUsed": 520464
+                                });
+                            } else {
+                                assert.deepEqual(result, test.formattedResult);
+                            }
                             done();
                         });
                     }

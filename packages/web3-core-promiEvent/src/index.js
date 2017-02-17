@@ -20,6 +20,8 @@
  * @date 2016
  */
 
+"use strict";
+
 var EventEmitter = require('eventemitter3');
 var Promise = require("bluebird");
 

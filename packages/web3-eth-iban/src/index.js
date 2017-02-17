@@ -23,6 +23,8 @@
  * @date 2015
  */
 
+"use strict";
+
 var utils = require('web3-utils');
 
 var BigNumber = require('bignumber.js');

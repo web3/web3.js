@@ -20,6 +20,8 @@
  * @date 2015
  */
 
+"use strict";
+
 var CryptoJS = require('crypto-js');
 var sha3 = require('crypto-js/sha3');
 

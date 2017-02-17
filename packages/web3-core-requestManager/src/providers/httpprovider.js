@@ -22,8 +22,6 @@
  * @date 2015
  */
 
-"use strict";
-
 var errors = require('web3-core-helpers').errors;
 
 

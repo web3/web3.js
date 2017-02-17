@@ -17,15 +17,19 @@
 /**
  * @file contract.js
  *
- * To initialize a contrac use:
+ * To initialize a contract use:
  *
- * var Contract = require('web3-eth-contract');
- * Contract.prototype._eth = needsAEthInstance;
- * var contract = new Contract(abi, address, ...);
+ *  var Contract = require('web3-eth-contract');
+ *  Contract.prototype._eth = needsAEthInstance;
+ *  var contract = new Contract(abi, address, ...);
  *
  * @author Fabian Vogelsteller <fabian@frozeman.de>
  * @date 2016
  */
+
+
+"use strict";
+
 
 var _ = require('underscore');
 var Method = require('web3-core-method');
@@ -36,7 +40,6 @@ var promiEvent = require('web3-core-promiEvent');
 
 
 var coder = require('./solidity/coder');
-
 
 /**
  * Should be called to create new contract instance
@@ -300,8 +303,8 @@ Contract.prototype._decodeEventABI = function (data) {
 
     // if allEvents get the right event
     if(event.name === 'ALLEVENTS') {
-        event = event.jsonInterface.find(function (interface) {
-            return (interface.signature === data.topics[0]);
+        event = event.jsonInterface.find(function (intf) {
+            return (intf.signature === data.topics[0]);
         }) || {anonymous: true};
     }
 

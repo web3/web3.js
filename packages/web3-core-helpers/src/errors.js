@@ -21,6 +21,8 @@
  * @date 2017
  */
 
+"use strict";
+
 module.exports = {
     ErrorResponse: function (result) {
         var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Returned error: ' + JSON.stringify(result);
