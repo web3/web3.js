@@ -25,6 +25,8 @@
  * @date 2017
  */
 
+"use strict";
+
 
 var core = require('../packages/web3-core');
 
@@ -34,7 +36,6 @@ var Shh = require('../packages/web3-shh');
 var Personal = require('../packages/web3-personal');
 
 var utils = require('../packages/web3-utils');
-
 
 
 

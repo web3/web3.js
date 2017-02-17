@@ -21,6 +21,9 @@
  * @date 2017
  */
 
+"use strict";
+
+
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
@@ -30,7 +33,7 @@ var config = require('./config');
  * Should the format output to a big number
  *
  * @method outputBigNumberFormatter
- * @param {String|Number|BigNumber}
+ * @param {String|Number|BigNumber} number
  * @returns {BigNumber} object
  */
 var outputBigNumberFormatter = function (number) {
@@ -152,6 +155,10 @@ var outputTransactionFormatter = function (tx){
  * @returns {Object}
 */
 var outputTransactionReceiptFormatter = function (receipt){
+    if(typeof receipt !== 'object') {
+        throw new Error('Received receipt is invalid: '+ receipt);
+    }
+
     if(receipt.blockNumber !== null)
         receipt.blockNumber = utils.toDecimal(receipt.blockNumber);
     if(receipt.transactionIndex !== null)

@@ -2,7 +2,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./FakeHttpProvider');
 var Web3 = require('../../src/index');
-var web3 = Web3();
 
 
 var runTests = function (protocol, tests) {
