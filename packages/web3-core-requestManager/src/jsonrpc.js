@@ -22,6 +22,8 @@
  * @date 2015
  */
 
+"use strict";
+
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
     messageId: 0

@@ -20,6 +20,8 @@
  * @date 2015
  */
 
+"use strict";
+
 var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
 

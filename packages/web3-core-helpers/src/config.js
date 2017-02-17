@@ -20,6 +20,9 @@
  * @date 2015
  */
 
+
+"use strict";
+
 // var BigNumber = require('bignumber.js');
 
 // var ETH_UNITS = [
