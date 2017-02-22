@@ -44,26 +44,6 @@ core.addProviders(Swarm);
 
 
 var methods = function () {
-    var blockNetworkRead = new Method({
-        name: 'blockNetworkRead',
-        call: 'bzz_blockNetworkRead',
-        params: 1,
-        inputFormatter: [null]
-    });
-
-    var syncEnabled = new Method({
-        name: 'syncEnabled',
-        call: 'bzz_syncEnabled',
-        params: 1,
-        inputFormatter: [null]
-    });
-
-    var swapEnabled = new Method({
-        name: 'swapEnabled',
-        call: 'bzz_swapEnabled',
-        params: 1,
-        inputFormatter: [null]
-    });
 
     var download = new Method({
         name: 'download',
@@ -75,20 +55,6 @@ var methods = function () {
     var upload = new Method({
         name: 'upload',
         call: 'bzz_upload',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var retrieve = new Method({
-        name: 'retrieve',
-        call: 'bzz_retrieve',
-        params: 1,
-        inputFormatter: [null]
-    });
-
-    var store = new Method({
-        name: 'store',
-        call: 'bzz_store',
         params: 2,
         inputFormatter: [null, null]
     });
@@ -114,13 +80,6 @@ var methods = function () {
         inputFormatter: [null, null, null, null]
     });
 
-    var getHive = new Method({
-        name: 'getHive',
-        call: 'bzz_hive',
-        params: 0,
-        inputFormatter: []
-    });
-
     var getInfo = new Method({
         name: 'getInfo',
         call: 'bzz_info',
@@ -129,17 +88,11 @@ var methods = function () {
     });
 
     return [
-        blockNetworkRead,
-        syncEnabled,
-        swapEnabled,
         download,
         upload,
-        retrieve,
-        store,
         getManifest,
         put,
         modify,
-        getHive,
         getInfo
     ];
 };
