@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./FakeHttpProvider');
@@ -8,8 +9,15 @@ var clone = function (object) { return object ? JSON.parse(JSON.stringify(object
 // TODO add tests for send transaction promiEvents
 
 var runTests = function (obj, method, tests) {
+    var objName;
 
-    var testName = obj ? 'web3.' + obj : 'web';
+    if(_.isArray(obj)) {
+        objName = obj.join('.');
+    } else {
+        objName = obj;
+    }
+
+    var testName = objName ? 'web3.' + objName : 'web3';
 
     describe(testName, function () {
         describe(method, function () {
@@ -17,6 +25,7 @@ var runTests = function (obj, method, tests) {
                 it('promise test: ' + index, function (done) {
 
                     // given
+                    var w3;
                     var result;
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
@@ -48,7 +57,13 @@ var runTests = function (obj, method, tests) {
 
                     if(test.error) {
                         if (obj) {
-                            assert.throws(web3[obj][method].bind(web3[obj], args));
+                            if(_.isArray(obj)) {
+                                w3 = web3[obj[0]][obj[1]];
+                            } else {
+                                w3 = web3[obj];
+                            }
+
+                            assert.throws(w3[method].bind(web3[obj], args));
                         } else {
                             assert.throws(web3[method].bind(web3, args));
                         }
@@ -58,7 +73,13 @@ var runTests = function (obj, method, tests) {
                     } else {
 
                         if (obj) {
-                            result = web3[obj][method].apply(web3[obj], args);
+                            if(_.isArray(obj)) {
+                                w3 = web3[obj[0]][obj[1]];
+                            } else {
+                                w3 = web3[obj];
+                            }
+
+                            result = w3[method].apply(web3[obj], args);
                         } else {
                             result = web3[method].apply(web3, args);
                         }
@@ -87,6 +108,7 @@ var runTests = function (obj, method, tests) {
                 it('callback test: ' + index, function (done) {
 
                     // given
+                    var w3;
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
                     provider.injectResult(clone(test.result));
@@ -100,7 +122,13 @@ var runTests = function (obj, method, tests) {
 
                     if(test.error) {
                         if (obj) {
-                            assert.throws(web3[obj][method].bind(web3[obj], args));
+                            if(_.isArray(obj)) {
+                                w3 = web3[obj[0]][obj[1]];
+                            } else {
+                                w3 = web3[obj];
+                            }
+
+                            assert.throws(w3[method].bind(web3[obj], args));
                         } else {
                             assert.throws(web3[method].bind(web3, args));
                         }
@@ -116,7 +144,13 @@ var runTests = function (obj, method, tests) {
 
                         // when
                         if (obj) {
-                            web3[obj][method].apply(web3[obj], args);
+                            if(_.isArray(obj)) {
+                                w3 = web3[obj[0]][obj[1]];
+                            } else {
+                                w3 = web3[obj];
+                            }
+
+                            w3[method].apply(web3[obj], args);
                         } else {
                             web3[method].apply(web3, args);
                         }
@@ -130,5 +164,4 @@ var runTests = function (obj, method, tests) {
 
 module.exports = {
     runTests: runTests
-}
-
+};

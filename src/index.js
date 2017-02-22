@@ -31,9 +31,9 @@
 var core = require('../packages/web3-core');
 
 var Eth = require('../packages/web3-eth');
-var Net = require('../packages/web3-net');
-var Shh = require('../packages/web3-shh');
 var Personal = require('../packages/web3-personal');
+var Shh = require('../packages/web3-shh');
+var Bzz = require('../packages/web3-bzz');
 
 var utils = require('../packages/web3-utils');
 
@@ -45,18 +45,18 @@ var Web3 = function () {
     core.packageInit(this, arguments);
 
 
-    this.net = new Net(this);
     this.eth = new Eth(this);
     this.personal = new Personal(this); // move to -> web3.eth.accounts
     this.shh = new Shh(this);
+    this.bzz = new Bzz(this);
 
     this.utils = utils;
 
     this.setProvider = function (provider) {
         this._requestManager.setProvider(provider);
         this.eth.setProvider(provider);
-        this.net.setProvider(provider);
         this.shh.setProvider(provider);
+        this.bzz.setProvider(provider);
         this.personal.setProvider(provider);
         return true;
     };

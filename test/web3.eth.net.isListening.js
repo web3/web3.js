@@ -9,4 +9,4 @@ var tests = [{
     call: 'net_listening'
 }];
 
-testMethod.runTests('net', method, tests);
+testMethod.runTests(['eth','net'], method, tests);
