@@ -25,15 +25,17 @@
 var CryptoJS = require('crypto-js');
 var sha3 = require('crypto-js/sha3');
 // var sha3 = require('js-sha3').sha3_256;
+sha3 = require("ethjs-sha3");
 
 module.exports = function (value, options) {
     if (options && options.encoding === 'hex') {
         if (value.length > 2 && value.substr(0, 2) === '0x') {
             value = value.substr(2);
         }
-        value = CryptoJS.enc.Hex.parse(value);
+        console.log(CryptoJS.enc.Hex.parse(value).toString(10));
+        value = CryptoJS.enc.Hex.parse(value).toString(16);
     }
 
-    return '0x'+ sha3(value, {outputLength: 256});
+    return sha3(value); //{outputLength: 256}
 };
 
