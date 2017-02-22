@@ -31,7 +31,7 @@ var Method = require('web3-core-method');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 
-var guessChain = require('./guessChain.js');
+var getNetworkType = require('./getNetworkType.js');
 
 var formatters = helpers.formatters;
 
@@ -79,7 +79,7 @@ function Eth() {
 
 
     // add guess chain
-    this.net.guessChain = guessChain.bind(this);
+    this.net.getNetworkType = getNetworkType.bind(this);
 
 }
 
