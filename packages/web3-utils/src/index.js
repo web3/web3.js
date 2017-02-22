@@ -24,8 +24,7 @@
 
 var BigNumber = require('bignumber.js');
 var utf8 = require('utf8');
-
-var sha3 = require('./sha3.js');
+var ethjsSha3 = require("ethjs-sha3");
 
 var unitMap = {
     'noether':      '0',
@@ -55,6 +54,17 @@ var unitMap = {
     'mether':       '1000000000000000000000000',
     'gether':       '1000000000000000000000000000',
     'tether':       '1000000000000000000000000000000'
+};
+
+/**
+ * Sha3 encodes
+ *
+ * @method sha3
+ * @return {Object} the sha3
+ */
+var sha3 = function (value, returnBuffer) {
+
+    return ethjsSha3(value, returnBuffer);
 };
 
 /**
@@ -596,7 +606,7 @@ module.exports = {
     isBoolean: isBoolean,
     isArray: isArray,
     isJson: isJson,
-    sha3: sha3,
+    sha3: require("ethjs-sha3"),
     // iban: iban
 };
 
