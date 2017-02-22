@@ -24,6 +24,7 @@
 
 var CryptoJS = require('crypto-js');
 var sha3 = require('crypto-js/sha3');
+// var sha3 = require('js-sha3').sha3_256;
 
 module.exports = function (value, options) {
     if (options && options.encoding === 'hex') {
@@ -33,8 +34,6 @@ module.exports = function (value, options) {
         value = CryptoJS.enc.Hex.parse(value);
     }
 
-    return '0x'+ sha3(value, {
-        outputLength: 256
-    }).toString();
+    return '0x'+ sha3(value, {outputLength: 256});
 };
 
