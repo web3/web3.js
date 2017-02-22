@@ -21,7 +21,6 @@
  * @date 2017
  */
 
-"use strict";
 
 var BigNumber = require('bignumber.js');
 var utf8 = require('utf8');

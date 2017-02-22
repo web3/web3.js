@@ -8,21 +8,6 @@ web3.eth.net
 Contains functions to receive information about the current network.
 
 
-.. code-block:: javascript
-
-    var Shh = require('web3-shh');
-
-    // "Shh.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var shh = new Shh(Shh.providers.givenProvider || new Shh.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
-
-
-    // or using the web3 umbrella package
-
-    var Web3 = require('web3');
-    var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
-
-    // -> web3.shh
-
 ------------------------------------------------------------------------------
 
 id
