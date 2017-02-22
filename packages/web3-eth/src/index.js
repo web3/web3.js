@@ -1,19 +1,19 @@
 /*
-    This file is part of web3.js.
+ This file is part of web3.js.
 
-    web3.js is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+ web3.js is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
 
-    web3.js is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+ web3.js is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ You should have received a copy of the GNU Lesser General Public License
+ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+ */
 /**
  * @file index.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
@@ -30,6 +30,8 @@ var utils = require('web3-utils');
 var Method = require('web3-core-method');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
+
+var guessChain = require('./guessChain.js');
 
 var formatters = helpers.formatters;
 
@@ -75,6 +77,10 @@ function Eth() {
     // add IBAN
     this.Iban = Iban;
 
+
+    // add guess chain
+    this.net.guessChain = guessChain.bind(this);
+
 }
 
 core.addProviders(Eth);
@@ -103,6 +109,28 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
 });
 
 var methods = function () {
+
+    var getId = new Method({
+        name: 'net.getId',
+        call: 'net_version',
+        params: 0,
+        outputFormatter: utils.toDecimal
+    });
+
+    var isListening = new Method({
+        name: 'net.isListening',
+        call: 'net_listening',
+        params: 0
+    });
+
+    var getPeerCount = new Method({
+        name: 'net.getPeerCount',
+        call: 'net_peerCount',
+        params: 0,
+        outputFormatter: utils.toDecimal
+    });
+
+
 
     var getVersion = new Method({
         name: 'getProtocolVersion',
@@ -407,6 +435,9 @@ var methods = function () {
 
 
     return [
+        getId,
+        isListening,
+        getPeerCount,
         getVersion,
         getCoinbase,
         getMining,

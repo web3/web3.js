@@ -10,7 +10,7 @@ describe('web3', function() {
         // u.propertyExists(web3, 'currentProvider');
 
         u.propertyExists(web3, 'eth');
-        u.propertyExists(web3, 'net');
+        u.propertyExists(web3, 'bzz');
         u.propertyExists(web3, 'shh');
         u.propertyExists(web3, 'personal');
 
