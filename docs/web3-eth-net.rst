@@ -58,12 +58,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-guessChain
+getNetworkType
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.net.guessChain([callback])
+    web3.eth.net.getNetworkType([callback])
 
 Guesses the chain the node is connected by comparing the genesis hashes.
 
@@ -86,7 +86,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.net.guessChain()
+    web3.eth.net.getNetworkType()
     .then(console.log);
     > "main"
 

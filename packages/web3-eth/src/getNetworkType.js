@@ -24,23 +24,32 @@
 
 var _ = require('underscore');
 
-var guessChain = function (callback) {
-    return this.getBlock(0)
-        .then(function (genesis) {
-            var returnValue;
+var getNetworkType = function (callback) {
+    var _this = this,
+        id;
 
-            switch (genesis.hash) {
-                case '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3':
-                    returnValue = 'main';
-                    break;
-                case '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303':
-                    returnValue = 'morden';
-                    break;
-                case '0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d':
-                    returnValue = 'ropsten';
-                    break;
-                default:
-                    returnValue = 'private';
+
+    return this.net.getId()
+        .then(function (givenId) {
+
+            id = givenId;
+
+            return _this.getBlock(0);
+        })
+        .then(function (genesis) {
+            var returnValue = 'private';
+
+            if (genesis.hash === '0xd4e56740f876aef8c010b86a40d5f56745a118d0906a34e69aec8c0db1cb8fa3' &&
+                id === 1) {
+                returnValue = 'main';
+            }
+            if (genesis.hash === '0cd786a2425d16f152c658316c423e6ce1181e15c3295826d7c9904cba9ce303' &&
+                id === 2) {
+                returnValue = 'morden';
+            }
+            if (genesis.hash === '0x41941023680923e0fe4d74a34bdac8141f2540e3ae90623718e47d66d1ca4a2d' &&
+                id === 3) {
+                returnValue = 'ropsten';
             }
 
             if (_.isFunction(callback)) {
@@ -58,4 +67,4 @@ var guessChain = function (callback) {
         });
 };
 
-module.exports = guessChain;
+module.exports = getNetworkType;
