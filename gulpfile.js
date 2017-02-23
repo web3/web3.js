@@ -61,8 +61,8 @@ gulp.task('clean', ['lint'], function(cb) {
 gulp.task('light', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
-        .ignore('bignumber.js')
-        .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
+        .ignore('bn.js')
+        .require('./lib/utils/browser-bn.js', {expose: 'bn.js'}) // fake bn.js
         .add('./' + src + '.js')
         .bundle()
         .pipe(exorcist(path.join( DEST, lightDst + '.js.map')))
@@ -76,7 +76,7 @@ gulp.task('light', ['clean'], function () {
 gulp.task('standalone', ['clean'], function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
-        .require('bignumber.js') // expose it to dapp users
+        .require('bn.js') // expose it to dapp users
         .add('./' + src + '.js')
         .ignore('crypto')
         .bundle()
