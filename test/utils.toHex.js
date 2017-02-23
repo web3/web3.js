@@ -1,7 +1,7 @@
 var chai = require('chai');
 var utils = require('../packages/web3-utils');
 
-var BigNumber = require('bignumber.js');
+var BigNumber = require('bn.js');
 
 var assert = chai.assert;
 

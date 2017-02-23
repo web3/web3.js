@@ -12,7 +12,7 @@
         "web3-utils": "^1.0.0",
         "underscore": "^1.8.3",
         "web3-core-promiEvent": "^1.0.0",
-
-        "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
+        "number-to-bn": "^1.7.0",
+        "bn.js": "^4.11.6"
     }
 }

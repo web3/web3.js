@@ -27,7 +27,7 @@
 
 var utils = require('web3-utils');
 
-var BigNumber = require('bignumber.js');
+var BigNumber = require('bn.js');
 
 
 var padLeft = function (string, bytes) {
@@ -131,6 +131,8 @@ Iban.fromAddress = function (address) {
     if(!utils.isAddress(address)){
         throw new Error('Provided address is not a valid address: '+ address);
     }
+
+    address = address.replace('0x','').replace('0X','');
 
     var asBn = new BigNumber(address, 16);
     var base36 = asBn.toString(36);
@@ -253,7 +255,7 @@ Iban.prototype.toAddress = function () {
     if (this.isDirect()) {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);
-        return utils.toChecksumAddress(padLeft(asBn.toString(16), 20));
+        return utils.toChecksumAddress(asBn.toString(16, 20));
     }
 
     return '';

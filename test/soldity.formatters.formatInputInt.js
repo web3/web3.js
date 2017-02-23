@@ -11,7 +11,7 @@ var tests = [
 ];
 
 describe('formatters', function () {
-    describe('inputAddressFormatter', function () {
+    describe('formatInputInt', function () {
         tests.forEach(function(test){
             it('should return the correct value', function () {
                 assert.deepEqual(formatters.formatInputInt(test.input), test.result);

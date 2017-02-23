@@ -32,7 +32,7 @@
     "lerna": "2.0.0-beta.32",
     "crypto-js": "^3.1.4",
     "underscore": "^1.8.3",
-    "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2"
+    "bn.js": "^4.11.6"
   },
   "scripts": {
     "postinstall": "lerna bootstrap",

@@ -5,6 +5,7 @@ var assert = chai.assert;
 
 var tests = [
     { value: 1, expected: '0x1' },
+    {value: '21345678976543214567869765432145647586', expected: '0x100f073a3d694d13d1615dc9bc3097e2'},
     { value: '1', expected: '0x1' },
     { value: '0x1', expected: '0x1'},
     { value: '0x01', expected: '0x1'},
