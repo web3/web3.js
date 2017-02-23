@@ -37,7 +37,7 @@ var config = require('./config');
  * @returns {BigNumber} object
  */
 var outputBigNumberFormatter = function (number) {
-    return utils.toBigNumber(number).toFixed();
+    return utils.toBigNumber(number).toString(10);
 };
 
 var isPredefinedBlockNumber = function (blockNumber) {

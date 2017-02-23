@@ -8,7 +8,7 @@ var net = new FakeIpcRequest();
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var IpcProvider = SandboxedModule.require('../packages/web3-core-requestmanager/src/providers/ipcprovider', {
     requires: {
-        'bignumber.js': require('bignumber.js'),
+        'bn.js': require('bn.js'),
     },
     singleOnly: true
 });

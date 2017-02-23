@@ -21,7 +21,8 @@
  */
 
 var _ = require('underscore');
-var BigNumber = require('bignumber.js');
+var numberToBN = require('number-to-bn');
+var BigNumber = require('bn.js');
 var utils = require('web3-utils');
 var SolidityParam = require('./param');
 
@@ -35,7 +36,7 @@ var SolidityParam = require('./param');
  */
 var isBigNumber = function (object) {
     return object instanceof BigNumber ||
-        (object && object.constructor && object.constructor.name === 'BigNumber');
+        (object && object.constructor && object.constructor.name === 'BN');
 };
 
 /**
@@ -52,7 +53,7 @@ var toBigNumber = function(number) {
         return number;
 
     if (_.isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
-        return new BigNumber(number.replace('0x',''), 16);
+        return numberToBN(number);
     }
 
     return new BigNumber(number.toString(10), 10);
@@ -66,11 +67,7 @@ var toBigNumber = function(number) {
  * @return {BigNumber}
  */
 var toTwosComplement = function (number) {
-    var bigNumber = toBigNumber(number).round();
-    if (bigNumber.lessThan(0)) {
-        return new BigNumber("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", 16).plus(bigNumber).plus(1);
-    }
-    return bigNumber;
+    return toBigNumber(number).toTwos(256).toString(16, 64);
 };
 
 
@@ -84,11 +81,10 @@ var toTwosComplement = function (number) {
  * @returns {SolidityParam}
  */
 var formatInputInt = function (value) {
-    BigNumber.config({
-        ROUNDING_MODE: BigNumber.ROUND_DOWN
-    });
-    var result = utils.padLeft(toTwosComplement(value).toString(16), 64);
-    return new SolidityParam(result);
+    if(_.isNumber(value)) {
+        value = Math.trunc(value);
+    }
+    return new SolidityParam(toTwosComplement(value));
 };
 
 /**
@@ -147,17 +143,6 @@ var formatInputBool = function (value) {
     return new SolidityParam(result);
 };
 
-/**
- * Formats input value to byte representation of real
- * Values are multiplied by 2^m and encoded as integers
- *
- * @method formatInputReal
- * @param {String|Number|BigNumber}
- * @returns {SolidityParam}
- */
-var formatInputReal = function (value) {
-    return formatInputInt(new BigNumber(value).times(new BigNumber(2).pow(128)));
-};
 
 /**
  * Check if input value is negative
@@ -183,9 +168,9 @@ var formatOutputInt = function (param) {
     // check if it's negative number
     // it it is, return two's complement
     if (signedIsNegative(value)) {
-        return new BigNumber(value, 16).minus(new BigNumber('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff', 16)).minus(1).toFixed();
+        return new BigNumber(value, 16).fromTwos(256).toString(10);
     }
-    return new BigNumber(value, 16).toFixed();
+    return new BigNumber(value, 16).toString(10);
 };
 
 /**
@@ -197,30 +182,10 @@ var formatOutputInt = function (param) {
  */
 var formatOutputUInt = function (param) {
     var value = param.staticPart() || "0";
-    return new BigNumber(value, 16).toFixed();
+    return new BigNumber(value, 16).toString(10);
 };
 
-/**
- * Formats right-aligned output bytes to real
- *
- * @method formatOutputReal
- * @param {SolidityParam}
- * @returns {BigNumber} input bytes formatted to real
- */
-var formatOutputReal = function (param) {
-    return new BigNumber(formatOutputInt(param)).dividedBy(new BigNumber(2).pow(128)).toFixed();
-};
 
-/**
- * Formats right-aligned output bytes to ureal
- *
- * @method formatOutputUReal
- * @param {SolidityParam}
- * @returns {BigNumber} input bytes formatted to ureal
- */
-var formatOutputUReal = function (param) {
-    return new BigNumber(formatOutputUInt(param)).dividedBy(new BigNumber(2).pow(128)).toFixed();
-};
 
 /**
  * Should be used to format output bool
@@ -294,11 +259,8 @@ module.exports = {
     formatInputDynamicBytes: formatInputDynamicBytes,
     formatInputString: formatInputString,
     formatInputBool: formatInputBool,
-    formatInputReal: formatInputReal,
     formatOutputInt: formatOutputInt,
     formatOutputUInt: formatOutputUInt,
-    formatOutputReal: formatOutputReal,
-    formatOutputUReal: formatOutputUReal,
     formatOutputBool: formatOutputBool,
     formatOutputBytes: formatOutputBytes,
     formatOutputDynamicBytes: formatOutputDynamicBytes,

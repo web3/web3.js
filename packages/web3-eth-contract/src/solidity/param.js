@@ -20,7 +20,6 @@
  * @date 2015
  */
 
-var utils = require('web3-utils');
 var formatters = require('./formatters.js');
 
 /**
@@ -83,7 +82,7 @@ SolidityParam.prototype.isDynamic = function () {
  * @returns {String} bytes representation of offset
  */
 SolidityParam.prototype.offsetAsBytes = function () {
-    return !this.isDynamic() ? '' : utils.padLeft(formatters.toTwosComplement(this.offset).toString(16), 64);
+    return !this.isDynamic() ? '' : formatters.toTwosComplement(this.offset);
 };
 
 /**

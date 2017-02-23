@@ -4,7 +4,6 @@ var sha3 = require('../packages/web3-utils').sha3;
 var CryptoJS = require('crypto-js');
 var cjsSha3 = require('crypto-js/sha3');
 
-var method = 'sha3';
 
 describe('web3.sha3', function () {
     it('should return sha3 with hex prefix', function() {

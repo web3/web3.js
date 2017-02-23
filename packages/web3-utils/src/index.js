@@ -22,39 +22,12 @@
  */
 
 
-var BigNumber = require('bignumber.js');
+var BigNumber = require('bn.js');
+var ethjsUnit = require('ethjs-unit');
+var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var ethjsSha3 = require("ethjs-sha3");
+var keccak256 = require("js-sha3").keccak_256; // jshint ignore:line
 
-var unitMap = {
-    'noether':      '0',
-    'wei':          '1',
-    'kwei':         '1000',
-    'Kwei':         '1000',
-    'babbage':      '1000',
-    'femtoether':   '1000',
-    'mwei':         '1000000',
-    'Mwei':         '1000000',
-    'lovelace':     '1000000',
-    'picoether':    '1000000',
-    'gwei':         '1000000000',
-    'Gwei':         '1000000000',
-    'shannon':      '1000000000',
-    'nanoether':    '1000000000',
-    'nano':         '1000000000',
-    'szabo':        '1000000000000',
-    'microether':   '1000000000000',
-    'micro':        '1000000000000',
-    'finney':       '1000000000000000',
-    'milliether':    '1000000000000000',
-    'milli':         '1000000000000000',
-    'ether':        '1000000000000000000',
-    'kether':       '1000000000000000000000',
-    'grand':        '1000000000000000000000',
-    'mether':       '1000000000000000000000000',
-    'gether':       '1000000000000000000000000000',
-    'tether':       '1000000000000000000000000000000'
-};
 
 /**
  * Sha3 encodes
@@ -62,9 +35,9 @@ var unitMap = {
  * @method sha3
  * @return {Object} the sha3
  */
-var sha3 = function (value, returnBuffer) {
+var sha3 = function (value) {
 
-    return ethjsSha3(value, returnBuffer);
+    return '0x'+ keccak256(value);
 };
 
 /**
@@ -277,7 +250,7 @@ var fromDecimal = function (value) {
     var number = toBigNumber(value);
     var result = number.toString(16);
 
-    return number.lessThan(0) ? '-0x' + result.substr(1) : '0x' + result;
+    return number.lt(new BigNumber(0)) ? '-0x' + result.substr(1) : '0x' + result;
 };
 
 /**
@@ -317,18 +290,17 @@ var toHex = function (val) {
 /**
  * Returns value of unit in Wei
  *
- * @method getValueOfUnit
+ * @method getUnitValue
  * @param {String} unit the unit to convert to, default ether
  * @returns {BigNumber} value of the unit (in Wei)
  * @throws error if the unit is not correct:w
  */
-var getValueOfUnit = function (unit) {
+var getUnitValue = function (unit) {
     unit = unit ? unit.toLowerCase() : 'ether';
-    var unitValue = unitMap[unit];
-    if (unitValue === undefined) {
-        throw new Error('This unit doesn\'t exists, please use the one of the following units' + JSON.stringify(unitMap, null, 2));
+    if (!ethjsUnit.unitMap[unit]) {
+        throw new Error('This unit "'+ unit +'" doesn\'t exist, please use the one of the following units' + JSON.stringify(ethjsUnit.unitMap, null, 2));
     }
-    return new BigNumber(unitValue, 10);
+    return unit;
 };
 
 /**
@@ -353,9 +325,9 @@ var getValueOfUnit = function (unit) {
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
  */
 var fromWei = function(number, unit) {
-    var returnValue = toBigNumber(number).dividedBy(getValueOfUnit(unit));
+    unit = getUnitValue(unit);
 
-    return isBigNumber(number) ? returnValue : returnValue.toString(10);
+    return isBigNumber(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
 };
 
 /**
@@ -381,9 +353,9 @@ var fromWei = function(number, unit) {
  * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
  */
 var toWei = function(number, unit) {
-    var returnValue = toBigNumber(number).times(getValueOfUnit(unit));
+    unit = getUnitValue(unit);
 
-    return isBigNumber(number) ? returnValue : returnValue.toString(10);
+    return isBigNumber(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
 };
 
 /**
@@ -400,7 +372,7 @@ var toBigNumber = function(number) {
         return number;
 
     if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
-        return new BigNumber(number.replace('0x',''), 16);
+        return numberToBN(number);
     }
 
     return new BigNumber(number.toString(10), 10);
@@ -504,7 +476,7 @@ var toAddress = function (address) {
  */
 var isBigNumber = function (object) {
     return object instanceof BigNumber ||
-        (object && object.constructor && object.constructor.name === 'BigNumber');
+        (object && object.constructor && object.constructor.name === 'BN');
 };
 
 /**
@@ -606,7 +578,7 @@ module.exports = {
     isBoolean: isBoolean,
     isArray: isArray,
     isJson: isJson,
-    sha3: require("ethjs-sha3"),
+    sha3: sha3,
     // iban: iban
 };
 
