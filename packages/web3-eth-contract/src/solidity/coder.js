@@ -28,8 +28,6 @@ var SolidityTypeInt = require('./int');
 var SolidityTypeUInt = require('./uint');
 var SolidityTypeDynamicBytes = require('./dynamicbytes');
 var SolidityTypeString = require('./string');
-var SolidityTypeReal = require('./real');
-var SolidityTypeUReal = require('./ureal');
 var SolidityTypeBytes = require('./bytes');
 
 var isDynamic = function (solidityType, type) {
@@ -255,9 +253,7 @@ var coder = new SolidityCoder([
     new SolidityTypeUInt(),
     new SolidityTypeDynamicBytes(),
     new SolidityTypeBytes(),
-    new SolidityTypeString(),
-    new SolidityTypeReal(),
-    new SolidityTypeUReal()
+    new SolidityTypeString()
 ]);
 
 module.exports = coder;
