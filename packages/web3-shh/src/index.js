@@ -80,7 +80,7 @@ var methods = function () {
     });
 
     var getPastMessages = new Method({
-        name: 'getPastMessages',
+        name: 'getMessages',
         call: 'shh_getMessages',
         params: 1,
         inputFormatter: [formatters.inputPostFormatter],

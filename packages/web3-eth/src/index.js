@@ -365,8 +365,8 @@ var methods = function () {
                 outputFormatter: formatters.outputBlockFormatter
             },
             'pendingTransactions': {
-                params: 0,
-                outputFormatter: formatters.outputTransactionFormatter
+                params: 0
+                // outputFormatter: formatters.outputTransactionFormatter // returns only hash???
             },
             'logs': {
                 params: 1,
