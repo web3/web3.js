@@ -24,6 +24,7 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
+var oboe = require('oboe');
 
 
 var IpcProvider = function (path, net) {
@@ -38,36 +39,34 @@ var IpcProvider = function (path, net) {
 
 
     // LISTEN FOR CONNECTION RESPONSES
-    this.connection.on('data', function(data) {
+    oboe(this.connection)
+    .done(function(result) {
         /*jshint maxcomplexity: 6 */
 
-        _this._parseResponse(data.toString()).forEach(function(result){
+        var id = null;
 
-            var id = null;
+        // get the id which matches the returned id
+        if(_.isArray(result)) {
+            result.forEach(function(load){
+                if(_this.responseCallbacks[load.id])
+                    id = load.id;
+            });
+        } else {
+            id = result.id;
+        }
 
-            // get the id which matches the returned id
-            if(_.isArray(result)) {
-                result.forEach(function(load){
-                    if(_this.responseCallbacks[load.id])
-                        id = load.id;
-                });
-            } else {
-                id = result.id;
-            }
+        // notification
+        if(!id && result.method === 'eth_subscription') {
+            _this.notificationCallbacks.forEach(function(callback){
+                if(_.isFunction(callback))
+                    callback(null, result);
+            });
 
-            // notification
-            if(!id && result.method === 'eth_subscription') {
-                _this.notificationCallbacks.forEach(function(callback){
-                    if(_.isFunction(callback))
-                        callback(null, result);
-                });
-
-            // fire the callback
-            } else if(_this.responseCallbacks[id]) {
-                _this.responseCallbacks[id](null, result);
-                delete _this.responseCallbacks[id];
-            }
-        });
+        // fire the callback
+        } else if(_this.responseCallbacks[id]) {
+            _this.responseCallbacks[id](null, result);
+            delete _this.responseCallbacks[id];
+        }
     });
 };
 
@@ -99,60 +98,6 @@ IpcProvider.prototype.addDefaultEvents = function(){
     this.connection.on('timeout', function(){
         _this._timeout();
     });
-};
-
-/**
-Will parse the response and make an array out of it.
-
-@method _parseResponse
-@param {String} data
-*/
-IpcProvider.prototype._parseResponse = function(data) {
-    var _this = this,
-        returnValues = [];
-
-    // DE-CHUNKER
-    var dechunkedData = data
-        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
-        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
-        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
-        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
-        .split('|--|');
-
-    dechunkedData.forEach(function(data){
-
-        // prepend the last chunk
-        if(_this.lastChunk)
-            data = _this.lastChunk + data;
-
-        var result = null;
-
-        try {
-            result = JSON.parse(data);
-
-        } catch(e) {
-
-            _this.lastChunk = data;
-
-            // start timeout to cancel all requests
-            clearTimeout(_this.lastChunkTimeout);
-            _this.lastChunkTimeout = setTimeout(function(){
-                _this._timeout();
-                throw errors.InvalidResponse(data);
-            }, 1000 * 15);
-
-            return;
-        }
-
-        // cancel timeout and set chunk to null
-        clearTimeout(_this.lastChunkTimeout);
-        _this.lastChunk = null;
-
-        if(result)
-            returnValues.push(result);
-    });
-
-    return returnValues;
 };
 
 
