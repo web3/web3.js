@@ -45,6 +45,11 @@ if(typeof ethereumProvider !== 'undefined') {
     providers.givenProvider = ethereumProvider;
 
 } else if(typeof web3 !== 'undefined' && web3.currentProvider) {
+    if(web3.currentProvider.sendAsync) {
+        web3.currentProvider.sendSync = web3.currentProvider.send;
+        web3.currentProvider.send = web3.currentProvider.sendAsync;
+    }
+
     providers.givenProvider = web3.currentProvider;
 }
 /* jshint ignore:end */
