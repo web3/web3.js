@@ -48,6 +48,7 @@ if(typeof ethereumProvider !== 'undefined') {
     if(web3.currentProvider.sendAsync) {
         web3.currentProvider.sendSync = web3.currentProvider.send;
         web3.currentProvider.send = web3.currentProvider.sendAsync;
+        delete web3.currentProvider.sendAsync;
     }
 
     providers.givenProvider = web3.currentProvider;
