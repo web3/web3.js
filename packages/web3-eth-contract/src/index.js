@@ -777,16 +777,33 @@ Contract.prototype._executeMethod = function _executeMethod(){
                         if (_.isArray(receipt.logs)) {
 
                             // decode logs
-                            receipt.events = _.map(receipt.logs, function(log) {
+                            var events = _.map(receipt.logs, function(log) {
                                 return _this._parent._decodeEventABI.call({
                                     name: 'ALLEVENTS',
                                     jsonInterface: _this._parent.options.jsonInterface
                                 }, log);
                             });
 
+                            // make log names keys
+                            receipt.events = {};
+                            var count = 0;
+                            events.forEach(function (ev) {
+                                if (ev.event) {
+                                    receipt.events[ev.event] = ev;
+                                } else {
+                                    receipt.events[count] = ev;
+                                    count++;
+                                }
+                            });
+
                             delete receipt.logs;
                         }
                         return receipt;
+                    },
+                    contractDeployFormatter: function (receipt) {
+                        var newContract = _this._parent.clone();
+                        newContract.options.address = receipt.contractAddress;
+                        return newContract;
                     }
                 };
 
