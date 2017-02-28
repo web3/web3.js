@@ -11,7 +11,7 @@ describe('Web3.providers.givenProvide', function () {
 
             var Web3 = require('../src/index.js');
 
-            assert.deepEqual(Web3.providers.givenProvider, {test: 'ethereumProvider'});
+            assert.deepEqual(Web3.givenProvider, {test: 'ethereumProvider'});
 
         });
 
@@ -19,7 +19,7 @@ describe('Web3.providers.givenProvide', function () {
 
             var Eth = require('../packages/web3-eth');
 
-            assert.deepEqual(Eth.providers.givenProvider, {test: 'ethereumProvider'});
+            assert.deepEqual(Eth.givenProvider, {test: 'ethereumProvider'});
 
         });
 

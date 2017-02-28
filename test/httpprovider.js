@@ -3,24 +3,15 @@ var assert = chai.assert;
 var SandboxedModule = require('sandboxed-module');
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var HttpProvider = SandboxedModule.require('../packages/web3-core-requestmanager/src/providers/httpprovider', {
+var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
     requires: {
         'xhr2': require('./helpers/FakeXHR2'),
-        'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
+        // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
 });
 
-describe('lib/web3/providers/httpprovider', function () {
-    describe('sendSync', function () {
-        it('should send basic request', function () {
-            var provider = new HttpProvider();
-            var result = provider.sendSync({});
-
-            assert.equal(typeof result, 'object');
-        });
-    });
-
+describe('web3-providers-http', function () {
     describe('send', function () {
         it('should send basic async request', function (done) {
             var provider = new HttpProvider();

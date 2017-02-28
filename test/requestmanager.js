@@ -8,20 +8,6 @@ var requestManager = require('../packages/web3-core-requestManager');
 
 describe('lib/web3/requestmanager', function () {
     describe('send', function () {
-        it('should return expected result synchronously', function () {
-            var provider = new FakeHttpProvider();
-            var manager = new requestManager.Manager(provider);
-            var expected = 'hello_world';
-            provider.injectResult(expected);
-
-            var result = manager.sendSync({
-                method: 'test',
-                params: [1,2,3]
-            });
-
-            assert.equal(expected, result);
-        });
-
         it('should return expected result asynchronously', function (done) {
             var provider = new FakeHttpProvider();
             var manager = new requestManager.Manager(provider);

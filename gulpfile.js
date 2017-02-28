@@ -10,6 +10,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
+// var closureCompiler = require('google-closure-compiler').gulp();
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
@@ -18,13 +19,63 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
 var DEST = path.join(__dirname, 'dist/');
-var src = 'index';
-var dst = 'web3';
-var lightDst = 'web3-light';
+var packages = [{
+    fileName: 'web3',
+    expose: 'Web3',
+    src: './src/index.js'
+},{
+    fileName: 'web3-utils',
+    expose: 'Utils',
+    src: './packages/web3-utils/src/index.js'
+},{
+    fileName: 'web3-core-requestManager',
+    expose: 'RequestManager',
+    src: './packages/web3-core-requestManager/src/index.js'
+},{
+    fileName: 'web3-providers-ipc',
+    expose: 'IpcProvider',
+    src: './packages/web3-providers-ipc/src/index.js'
+},{
+    fileName: 'web3-providers-http',
+    expose: 'HttpProvider',
+    src: './packages/web3-providers-http/src/index.js',
+    ignore: ['xmlhttprequest']
+},{
+    fileName: 'web3-providers-ws',
+    expose: 'WsProvider',
+    src: './packages/web3-providers-ws/src/index.js'
+},{
+    fileName: 'web3-eth',
+    expose: 'Eth',
+    src: './packages/web3-eth/src/index.js'
+}];
+// ,{
+//     fileName: 'web3-eth',
+//     expose: 'Eth',
+//     src: './packages/web3-eth/src/index.js'
+// },{
+//     fileName: 'web3-personal',
+//     expose: 'Personal',
+//     src: './packages/web3-personal/src/index.js'
+// },{
+//     fileName: 'web3-shh',
+//     expose: 'Shh',
+//     src: './packages/web3-shh/src/index.js'
+// },{
+//     fileName: 'web3-bzz',
+//     expose: 'Bzz',
+//     src: './packages/web3-bzz/src/index.js'
+// },{
+//     fileName: 'web3-eth-iban',
+//     expose: 'Iban',
+//     src: './packages/web3-eth-iban/src/index.js'
+// }];
 
 var browserifyOptions = {
     debug: true,
-    insert_global_vars: false, // jshint ignore:line
+    // standalone: 'Web3',
+    derequire: true,
+    insertGlobalVars: false, // jshint ignore:line
     detectGlobals: false,
     bundleExternal: true
 };
@@ -58,39 +109,46 @@ gulp.task('clean', ['lint'], function(cb) {
     del([ DEST ]).then(cb.bind(null, null));
 });
 
-gulp.task('light', ['clean'], function () {
-    return browserify(browserifyOptions)
-        .require('./' + src + '.js', {expose: 'web3'})
-        .ignore('bn.js')
-        .require('./lib/utils/browser-bn.js', {expose: 'bn.js'}) // fake bn.js
-        .add('./' + src + '.js')
-        .bundle()
-        .pipe(exorcist(path.join( DEST, lightDst + '.js.map')))
-        .pipe(source(lightDst + '.js'))
-        .pipe(gulp.dest( DEST ))
-        .pipe(streamify(uglify()))
-        .pipe(rename(lightDst + '.min.js'))
-        .pipe(gulp.dest( DEST ));
+packages.forEach(function(pckg, i){
+    var prevPckg = (!i) ? 'clean' : packages[i-1].fileName;
+
+    gulp.task(pckg.fileName, [prevPckg], function () {
+        browserifyOptions.standalone = pckg.expose;
+
+        var pipe = browserify(browserifyOptions)
+            .require(pckg.src, {expose: pckg.expose})
+            .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
+            .add(pckg.src);
+
+        if(pckg.ignore) {
+            pckg.ignore.forEach(function (ignore) {
+                pipe.ignore(ignore);
+            });
+        }
+
+        return pipe.bundle()
+            .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
+            .pipe(source(pckg.fileName + '.js'))
+            .pipe(gulp.dest( DEST ))
+            .pipe(streamify(uglify()))
+            .pipe(rename(pckg.fileName + '.min.js'))
+            // .pipe(streamify(closureCompiler({
+            //     compilation_level: 'ADVANCED_OPTIMIZATIONS',
+            //     warning_level: 'VERBOSE',
+            //     jscomp_off: 'checkVars',
+            //     language_in: 'ECMASCRIPT6_STRICT',
+            //     language_out: 'ECMASCRIPT5_STRICT',
+            //     output_wrapper: '(function(){\n%output%\n}).call(this)',
+            //     js_output_file: pckg.fileName + '.min.js'
+            // })))
+            .pipe(gulp.dest( DEST ));
+    });
 });
 
-gulp.task('standalone', ['clean'], function () {
-    return browserify(browserifyOptions)
-        .require('./' + src + '.js', {expose: 'web3'})
-        .require('bn.js') // expose it to dapp users
-        .add('./' + src + '.js')
-        .ignore('crypto')
-        .bundle()
-        .pipe(exorcist(path.join( DEST, dst + '.js.map')))
-        .pipe(source(dst + '.js'))
-        .pipe(gulp.dest( DEST ))
-        .pipe(streamify(uglify()))
-        .pipe(rename(dst + '.min.js'))
-        .pipe(gulp.dest( DEST ));
-});
 
 gulp.task('watch', function() {
-    gulp.watch(['./lib/*.js'], ['lint', 'build']);
+    gulp.watch(['./src/*.js'], ['lint', 'build']);
 });
 
-gulp.task('default', ['version', 'lint', 'clean', 'light', 'standalone']);
+gulp.task('default', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
 

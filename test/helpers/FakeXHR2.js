@@ -1,10 +1,9 @@
 var chai = require('chai');
 var assert = chai.assert;
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
+
 
 var FakeXHR2 = function () {
-    this.responseText = "{}";
+    this.responseText = undefined;
     this.readyState = 4;
     this.onreadystatechange = null;
     this.async = true;
@@ -16,7 +15,6 @@ var FakeXHR2 = function () {
 FakeXHR2.prototype.open = function (method, host, async) {
     assert.equal(method, 'POST');
     assert.notEqual(host, null);
-    assert.equal(async === true, true);
     this.async = async;
 };
 
@@ -25,13 +23,14 @@ FakeXHR2.prototype.setRequestHeader = function(name, value) {
 };
 
 FakeXHR2.prototype.send = function (payload) {
+
+    this.responseText = payload;
+
     assert.equal(typeof payload, 'string');
     if (this.async) {
         assert.equal(typeof this.onreadystatechange, 'function');
         this.onreadystatechange();
-        return;
     }
-    return this.responseText;
 };
 
 module.exports = FakeXHR2;

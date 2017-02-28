@@ -30,7 +30,7 @@ var Promise = require("bluebird");
  *
  * @method eventifiedPromise
  */
-var promiEvent = function(justPromise) {
+var PromiEvent = function PromiEvent(justPromise) {
     var resolve, reject,
         eventEmitter = new Promise(function() {
             resolve = arguments[0];
@@ -65,4 +65,4 @@ var promiEvent = function(justPromise) {
     };
 };
 
-module.exports = promiEvent;
+module.exports = PromiEvent;
