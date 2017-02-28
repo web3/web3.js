@@ -57,7 +57,7 @@ var uncleCountCall = function (args) {
 };
 
 
-function Eth() {
+var Eth = function Eth() {
     var _this = this;
 
     // sets _requestmanager
@@ -81,7 +81,7 @@ function Eth() {
     // add guess chain
     this.net.getNetworkType = getNetworkType.bind(this);
 
-}
+};
 
 core.addProviders(Eth);
 

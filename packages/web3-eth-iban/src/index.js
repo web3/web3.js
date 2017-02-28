@@ -88,7 +88,7 @@ var mod9710 = function (iban) {
  *
  * @param {String} iban
  */
-var Iban = function (iban) {
+var Iban = function Iban(iban) {
     this._iban = iban;
 };
 

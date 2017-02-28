@@ -29,7 +29,7 @@ var utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 
 
-function Personal() {
+var Personal = function Personal() {
     var _this = this;
 
     // sets _requestmanager
@@ -40,7 +40,7 @@ function Personal() {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
-}
+};
 
 core.addProviders(Personal);
 

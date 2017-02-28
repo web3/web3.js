@@ -26,7 +26,7 @@ var core = require('web3-core');
 var Method = require('web3-core-method');
 
 
-function Swarm() {
+var Bzz = function Bzz() {
     var _this = this;
 
     // sets _requestmanager
@@ -37,9 +37,9 @@ function Swarm() {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
-}
+};
 
-core.addProviders(Swarm);
+core.addProviders(Bzz);
 
 
 
@@ -98,5 +98,5 @@ var methods = function () {
 };
 
 
-module.exports = Swarm;
+module.exports = Bzz;
 

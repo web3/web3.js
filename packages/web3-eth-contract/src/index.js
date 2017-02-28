@@ -50,7 +50,7 @@ var coder = require('./solidity/coder');
  * @param {String} address
  * @param {Object} options
  */
-var Contract = function(jsonInterface, address, options) {
+var Contract = function Contract(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 

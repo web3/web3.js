@@ -33,23 +33,6 @@ var FakeHttpProvider = function () {
     this.notificationCallbacks = [];
 };
 
-FakeHttpProvider.prototype.sendSync = function (payload) {
-    assert.equal(_.isArray(payload) || _.isObject(payload), true);
-
-    var error = this.getResponseOrError('error', payload);
-    if (error) {
-        throw new Error(error.error.message);
-    }
-
-    var validation = this.validation.shift();
-
-    if(validation) {
-        // imitate plain json object
-        validation(JSON.parse(JSON.stringify(payload)));
-    }
-
-    return this.getResponseOrError('response', payload);
-};
 
 FakeHttpProvider.prototype.send = function (payload, callback) {
     var _this = this;

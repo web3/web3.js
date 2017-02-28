@@ -14,9 +14,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file ipcprovider.js
+/** @file index.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
+ *   Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2015
  */
 
@@ -151,30 +151,6 @@ IpcProvider.prototype.isConnected = function() {
         _this.connection.connect({path: _this.path});
 
     return !!this.connection.writable;
-};
-
-IpcProvider.prototype.sendSync = function (payload) {
-
-    if(this.connection.writeSync) {
-        var result;
-
-        // try reconnect, when connection is gone
-        if(!this.connection.writable)
-            this.connection.connect({path: this.path});
-
-        var data = this.connection.writeSync(JSON.stringify(payload));
-
-        try {
-            result = JSON.parse(data);
-        } catch(e) {
-            throw errors.InvalidResponse(data);
-        }
-
-        return result;
-
-    } else {
-        throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the IPC provider.');
-    }
 };
 
 IpcProvider.prototype.send = function (payload, callback) {

@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0",
+  "version": "1.0.0-beta",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "license": "LGPL-3.0",
   "main": "./src/index.js",
@@ -9,30 +9,30 @@
     "src": "./src",
     "doc": "./doc"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "bn.js": "^4.11.6",
     "bower": ">=1.4.1",
     "browserify": ">=10.0",
     "chai": "^3.0.0",
     "coveralls": "^2.11.2",
+    "crypto-js": "^3.1.4",
     "del": ">=2.0.2",
     "exorcist": "^0.4.0",
+    "google-closure-compiler": "^20170218.0.0",
     "gulp": ">=3.9.0",
     "gulp-jshint": ">=1.5.0",
     "gulp-rename": ">=1.2.0",
     "gulp-replace": "^0.5.3",
     "gulp-streamify": "0.0.5",
-    "gulp-uglify": ">=1.2.0",
+    "gulp-uglify": "^2.0.1",
     "istanbul": "^0.4.4",
     "jshint": ">=2.5.0",
+    "lerna": "2.0.0-beta.32",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
-    "vinyl-source-stream": "^1.1.0",
-    "lerna": "2.0.0-beta.32",
-    "crypto-js": "^3.1.4",
     "underscore": "^1.8.3",
-    "bn.js": "^4.11.6"
+    "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "postinstall": "lerna bootstrap",

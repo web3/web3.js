@@ -38,7 +38,7 @@ describe('eth', function() {
         u.methodExists(eth, 'getProtocolVersion');
 
         u.methodExists(eth, 'setProvider');
-        u.propertyExists(eth, 'providers');
+        u.propertyExists(eth, 'givenProvider');
         u.propertyExists(eth, 'defaultBlock');
         u.propertyExists(eth, 'defaultAccount');
     });

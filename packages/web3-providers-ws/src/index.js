@@ -24,7 +24,8 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-// var W3CWebSocket = require('websocket').w3cwebsocket;
+if (typeof global !== 'undefined')
+    var WebSocket = require('websocket').w3cwebsocket;
 // Default connection ws://localhost:8546
 
 
@@ -205,10 +206,6 @@ WebsocketProvider.prototype.isConnected = function() {
     console.log(this.connection);
 
     // return !!this.connection.writable;
-};
-
-WebsocketProvider.prototype.sendSync = function (payload) {
-    throw new Error('You tried to send "'+ payload.method +'" synchronously. Synchronous requests are not supported by the Websocket provider.');
 };
 
 WebsocketProvider.prototype.send = function (payload, callback) {

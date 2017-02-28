@@ -27,7 +27,7 @@ var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 
 
-var Subscription = function (options) {
+var Subscription = function Subscription(options) {
     var emitter = new EventEmitter();
     this.id = null;
     this.callback = null;

@@ -60,8 +60,8 @@ module.exports = {
             pkg._provider =  args[0];
         }
 
-        // add providers
-        pkg.providers = requestManager.Manager.providers;
+        // add givenProvider
+        pkg.givenProvider = requestManager.Manager.givenProvider;
 
         // add set Provider function
         pkg.setProvider = function (provider) {
@@ -71,13 +71,13 @@ module.exports = {
         };
 
         // attach batch request creation
-        pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg);
+        pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);
 
         // attach extend function
         pkg.extend = extend(pkg);
     },
     addProviders: function (pkg) {
-        pkg.providers = requestManager.Manager.providers;
+        pkg.givenProvider = requestManager.Manager.givenProvider;
     }
 };
 

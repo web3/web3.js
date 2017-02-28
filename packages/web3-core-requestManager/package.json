@@ -1,7 +1,7 @@
 {
     "name": "web3-requestManager",
     "version": "1.0.0",
-    "description": "Web3 module to handle requests to external providers. Contains also the providers.",
+    "description": "Web3 module to handle requests to external providers.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-requestManager",
     "license": "LGPL-3.0",
     "main": "src/index.js",

@@ -39,7 +39,7 @@ var utils = require('../packages/web3-utils');
 
 
 
-var Web3 = function () {
+var Web3 = function Web3() {
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);

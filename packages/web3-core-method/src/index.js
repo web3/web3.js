@@ -31,7 +31,7 @@ var promiEvent = require('web3-core-promiEvent');
 var TIMEOUTBLOCK = 50;
 var CONFIRMATIONBLOCKS = 12;
 
-var Method = function (options) {
+var Method = function Method(options) {
 
     if(!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');

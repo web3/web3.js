@@ -25,7 +25,7 @@
 var Subscription = require('./subscription.js');
 
 
-var Subscriptions = function (options) {
+var Subscriptions = function Subscriptions(options) {
     this.name = options.name;
     this.type = options.type;
     this.subscriptions = options.subscriptions || {};
