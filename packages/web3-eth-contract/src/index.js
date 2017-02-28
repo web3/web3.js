@@ -66,8 +66,9 @@ var Contract = function Contract(jsonInterface, address, options) {
     // create the options object
     this.options = {};
 
-    if(utils.isObject(args[args.length - 1])) {
-        options = args[args.length - 1];
+    var lastArg = args[args.length - 1];
+    if(_.isObject(lastArg) && !_.isArray(lastArg)) {
+        options = lastArg;
 
         this.options = _.extend(this.options, this._getOrSetDefaultOptions(options));
         if(utils.isObject(address)) {
