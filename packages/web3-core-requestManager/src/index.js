@@ -28,33 +28,6 @@ var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
 var BatchManager = require('./batch');
 
-var HttpProvider = require('./providers/httpprovider');
-var IpcProvider = require('./providers/ipcprovider');
-var WebsocketProvider = require('./providers/websocketprovider');
-
-var providers = {
-    HttpProvider: HttpProvider,
-    IpcProvider: IpcProvider,
-    WebsocketProvider: WebsocketProvider,
-    givenProvider: null
-};
-
-// add given provider
-/* jshint ignore:start */
-if(typeof ethereumProvider !== 'undefined') {
-    providers.givenProvider = ethereumProvider;
-
-} else if(typeof web3 !== 'undefined' && web3.currentProvider) {
-    if(web3.currentProvider.sendAsync) {
-        web3.currentProvider.sendSync = web3.currentProvider.send;
-        web3.currentProvider.send = web3.currentProvider.sendAsync;
-        delete web3.currentProvider.sendAsync;
-    }
-
-    providers.givenProvider = web3.currentProvider;
-}
-/* jshint ignore:end */
-
 
 
 /**
@@ -63,43 +36,31 @@ if(typeof ethereumProvider !== 'undefined') {
  * Default poll timeout is 1 second
  * Singleton
  */
-var RequestManager = function (provider) {
+var RequestManager = function RequestManager(provider) {
     this.provider = null;
-    this.providers = providers;
 
     this.setProvider(provider);
     this.subscriptions = {};
 };
 
-// expose providers
-RequestManager.providers = providers;
 
-/**
- * Should be used to synchronously send request
- *
- * @method send
- * @param {Object} data
- * @return {Object}
- */
-RequestManager.prototype.sendSync = function (data) {
-    if (!this.provider) {
-        console.error(errors.InvalidProvider());
-        return null;
+// ADD GIVEN PROVIDER
+/* jshint ignore:start */
+var global = Function('return this')();
+
+if(typeof global.ethereumProvider !== 'undefined') {
+    RequestManager.givenProvider = global.ethereumProvider;
+
+} else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
+    if(global.web3.currentProvider.sendAsync) {
+        global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
+        delete global.web3.currentProvider.sendAsync;
     }
 
-    var payload = Jsonrpc.toPayload(data.method, data.params);
-    var result = this.provider.sendSync(payload);
+    RequestManager.givenProvider = global.web3.currentProvider;
+}
+/* jshint ignore:end */
 
-    if (result && result.error) {
-        throw errors.ErrorResponse(result);
-    }
-
-    if (!Jsonrpc.isValidResponse(result)) {
-        throw errors.InvalidResponse(result);
-    }
-
-    return result.result;
-};
 
 /**
  * Should be used to asynchronously send request
@@ -117,7 +78,7 @@ RequestManager.prototype.send = function (data, callback) {
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
     this.provider.send(payload, function (err, result) {
-        if(payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+        if(result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
 
         if (err) {
             return callback(err);

@@ -25,8 +25,8 @@
 var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
 
-var Batch = function (web3) {
-    this.requestManager = web3._requestManager;
+var Batch = function (requestManager) {
+    this.requestManager = requestManager;
     this.requests = [];
 };
 
