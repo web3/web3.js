@@ -1388,48 +1388,51 @@ describe('contract', function () {
                     transactionHash: '0x1234',
                     blockNumber: 10,
                     gasUsed: 0,
-                    events:
-                    [ { address: address,
-                        blockNumber: 10,
-                        transactionHash: '0x1234',
-                        blockHash: '0x1345',
-                        logIndex: 4,
-                        id: 'log_9ff24cb4',
-                        transactionIndex: 0,
-                        returnValues: {
-                            value: '2',
-                            addressFrom: address,
-                            t1: '5'
+                    events: {
+                        Unchanged: {
+                            address: address,
+                            blockNumber: 10,
+                            transactionHash: '0x1234',
+                            blockHash: '0x1345',
+                            logIndex: 4,
+                            id: 'log_9ff24cb4',
+                            transactionIndex: 0,
+                            returnValues: {
+                                value: '2',
+                                addressFrom: address,
+                                t1: '5'
+                            },
+                            event: 'Unchanged',
+                            raw: {
+                                topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
+                                    '0x0000000000000000000000000000000000000000000000000000000000000002',
+                                    '0x000000000000000000000000' + addressLowercase.replace('0x', '')],
+                                data: '0x0000000000000000000000000000000000000000000000000000000000000005',
+                            }
                         },
-                        event: 'Unchanged',
-                        raw: {
-                            topics: [ '0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
-                                '0x0000000000000000000000000000000000000000000000000000000000000002',
-                                '0x000000000000000000000000'+ addressLowercase.replace('0x','') ],
-                            data: '0x0000000000000000000000000000000000000000000000000000000000000005',
+                        Changed: {
+                            address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                            blockNumber: 10,
+                            transactionHash: '0x1234',
+                            blockHash: '0x1345',
+                            logIndex: 4,
+                            id: 'log_9ff24cb4',
+                            transactionIndex: 0,
+                            returnValues: {
+                                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                amount: '1',
+                                t1: '1',
+                                t2: '8'
+                            },
+                            event: 'Changed',
+                            raw: {
+                                topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                    '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                                    '0x0000000000000000000000000000000000000000000000000000000000000001'],
+                                data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                            }
                         }
-                    }, {
-                        address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                        blockNumber: 10,
-                        transactionHash: '0x1234',
-                        blockHash: '0x1345',
-                        logIndex: 4,
-                        id: 'log_9ff24cb4',
-                        transactionIndex: 0,
-                        returnValues:  {
-                            from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                            amount: '1',
-                            t1: '1',
-                            t2: '8'
-                        },
-                        event: 'Changed',
-                        raw: {
-                            topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
-                                '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
-                                '0x0000000000000000000000000000000000000000000000000000000000000001' ],
-                            data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
-                        }
-                    }]
+                    }
                 });
 
                done();
@@ -1993,10 +1996,15 @@ describe('contract', function () {
             })
             .on('receipt', function (receipt) {
                 assert.equal(address, receipt.contractAddress);
+                assert.isNull(contract.options.address);
             })
-            .then(function(receipt) {
-                assert.equal(address, receipt.contractAddress);
-                done();
+            .then(function(newContract) {
+                assert.equal(newContract.options.address, address);
+                assert.isTrue(newContract !== contract, 'contract objects shouldn\'t the same');
+
+                setTimeout(function () {
+                    done();
+                }, 1);
             });
             // .on('error', function (value) {
             //     console.log('error', value);
