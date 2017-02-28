@@ -29,7 +29,7 @@ var utils = require('web3-utils');
 var promiEvent = require('web3-core-promiEvent');
 
 var TIMEOUTBLOCK = 50;
-var CONFIRMATIONBLOCKS = 12;
+var CONFIRMATIONBLOCKS = 24;
 
 var Method = function Method(options) {
 
@@ -158,7 +158,7 @@ Method.prototype.attachToObject = function (obj) {
     }
 };
 
-Method.prototype._confirmTransaction = function (defer, result, payload) {
+Method.prototype._confirmTransaction = function (defer, result, payload, extraFormatters) {
     var method = this,
         promiseResolved = false,
         canUnsubscribe = true,
@@ -183,13 +183,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 promiseResolved = true;
                 utils._fireError(receiptError, defer.eventEmitter, defer.reject);
             })
-            // if CONFIRMATION listener exists check for confirmations
+            // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
 
                 if (!receipt) {
-                    throw new Error('Receipt is null');
+                    throw new Error('Receipt is "null"');
                 }
 
+                // apply extra formatters
+                if (extraFormatters && extraFormatters.receiptFormatter) {
+                    receipt = extraFormatters.receiptFormatter(receipt);
+                }
+
+                // check if confirmation listener exists
                 if (defer.eventEmitter.listeners('confirmation').length > 0) {
 
                     defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
@@ -252,7 +258,10 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         defer.resolve(receipt);
 
                     } else {
-                        utils._fireError([new Error('Transaction ran out of gas. Please provide more gas.'), receipt], defer.eventEmitter, defer.reject);
+                        if(receipt) {
+                            receipt = JSON.stringify(receipt, null, 2);
+                        }
+                        utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n"+ receipt), defer.eventEmitter, defer.reject);
                     }
 
                     if (canUnsubscribe) {
@@ -285,12 +294,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction');
+        call = (_.isString(method.call)) ? method.call.toLowerCase() : Method.call,
+        isSendTx = (call === 'eth_sendtransaction' || call === 'eth_sendrawtransaction');
 
 
 
     // actual send function
     var send = function () {
+        var extraFromatters = this;
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
@@ -326,7 +337,7 @@ Method.prototype.buildCall = function() {
                 defer.eventEmitter.emit('transactionHash', result);
 
 
-                method._confirmTransaction(defer, result, payload);
+                method._confirmTransaction(defer, result, payload, extraFromatters);
 
 
             }
