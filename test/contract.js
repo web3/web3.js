@@ -1296,6 +1296,148 @@ describe('contract', function () {
             });
         });
 
+        it('should sendTransaction and check for receipts with formatted logs', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
+                    from: address2,
+                    to: addressLowercase
+                }]);
+            });
+            provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567');
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult({
+                contractAddress: null,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                transactionHash: '0x1234',
+                blockNumber: '0xa',
+                logs: [{
+                    address: address,
+                    topics: [
+                        sha3('Unchanged(uint256,address,uint256)'),
+                        '0x0000000000000000000000000000000000000000000000000000000000000002',
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x','')
+                    ],
+                    blockNumber: '0xa',
+                    transactionHash: '0x1234',
+                    blockHash: '0x1345',
+                    logIndex: '0x4',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000005'
+                },{
+                    address: address,
+                    topics: [
+                        sha3('Changed(address,uint256,uint256,uint256)'),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                        '0x0000000000000000000000000000000000000000000000000000000000000001'
+                    ],
+                    blockNumber: '0xa',
+                    transactionHash: '0x1234',
+                    blockHash: '0x1345',
+                    logIndex: '0x4',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                    '0000000000000000000000000000000000000000000000000000000000000008'
+                }]
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_unsubscribe');
+                assert.deepEqual(payload.params, ['0x1234567']);
+            });
+            provider.injectResult('0x321');
+
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.mySend(address, 10).send({from: address2})
+            .on('receipt', function (receipt) {
+                // console.log(receipt);
+                // console.log(receipt.events[0].raw);
+                // console.log(receipt.events[1].raw);
+
+                // wont throw if it errors ?!
+                assert.deepEqual(receipt, {
+                    contractAddress: null,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    transactionHash: '0x1234',
+                    blockNumber: 10,
+                    gasUsed: 0,
+                    events:
+                    [ { address: address,
+                        blockNumber: 10,
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: 4,
+                        id: 'log_9ff24cb4',
+                        transactionIndex: 0,
+                        returnValues: {
+                            value: '2',
+                            addressFrom: address,
+                            t1: '5'
+                        },
+                        event: 'Unchanged',
+                        raw: {
+                            topics: [ '0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
+                                '0x0000000000000000000000000000000000000000000000000000000000000002',
+                                '0x000000000000000000000000'+ addressLowercase.replace('0x','') ],
+                            data: '0x0000000000000000000000000000000000000000000000000000000000000005',
+                        }
+                    }, {
+                        address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                        blockNumber: 10,
+                        transactionHash: '0x1234',
+                        blockHash: '0x1345',
+                        logIndex: 4,
+                        id: 'log_9ff24cb4',
+                        transactionIndex: 0,
+                        returnValues:  {
+                            from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                            amount: '1',
+                            t1: '1',
+                            t2: '8'
+                        },
+                        event: 'Changed',
+                        raw: {
+                            topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                                '0x0000000000000000000000000000000000000000000000000000000000000001' ],
+                            data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                        }
+                    }]
+                });
+
+               done();
+            });
+
+
+        });
+
         it('should sendTransaction to contract function', function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);

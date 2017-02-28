@@ -78,14 +78,5 @@ HttpProvider.prototype.send = function (payload, callback) {
     }
 };
 
-/**
- * Synchronously tries to make Http request
- *
- * @method isConnected
- * @return {Boolean} returns true if request haven't failed. Otherwise false
- */
-HttpProvider.prototype.isConnected = function() {
-    return this.connected;
-};
 
 module.exports = HttpProvider;

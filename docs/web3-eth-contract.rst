@@ -488,7 +488,7 @@ The **callback** will return the 32 bytes transaction hash.
 
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: is fired when the transaction receipt is available.
-- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 0 on, which is the block where its minded.
+- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 0 on, which is the block where its minded.
 - ``"error"`` returns ``Error``: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
 
 
