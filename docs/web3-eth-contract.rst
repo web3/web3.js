@@ -248,7 +248,7 @@ deploy
     myContract.deploy(options)
 
 Call this function to deploy the contract to the blockchain.
-After successfull deployment the ``myContract.options.address`` will be set automatically to the newly deployed contract.
+After successfull deployment the promise will resolve with a new contract instance.
 
 ----------
 Parameters
@@ -266,7 +266,7 @@ Returns
 ``Object``: The transaction object:
 
 - ``Array`` - arguments: The arguments passed to the method before. They can be changed.
-- ``Function`` - :ref:`send <contract-send>`: Will deploy the contract.
+- ``Function`` - :ref:`send <contract-send>`: Will deploy the contract. The promise will resolve with the new contract instance, instead of the receipt!
 - ``Function`` - :ref:`estimateGas <contract-estimateGas>`: Will estimate the gas used for deploying.
 - ``Function`` - :ref:`encodeABI <contract-encodeABI>`: Encodes the ABI of the deployment, which is contract data + constructor parameters
 
@@ -290,11 +290,11 @@ Example
     .on('error', function(error){ ... })
     .on('transactionHash', function(transactionHash){ ... })
     .on('receipt', function(receipt){
-        // same as when the promise gets resolved, see below
+       console.log(receipt.contractAddress) // contains the new contract address
     })
     .on('confirmation', function(confirmationNumber, receipt){ ... })
-    .then(function(receipt){
-        console.log(myContract.options.address) // gives the new contract address
+    .then(function(newContractInstance){
+        console.log(newContractInstance.options.address) // instance with the new contract address
     });
 
 
@@ -309,8 +309,8 @@ Example
         gas: 1500000,
         gasPrice: '30000000000000'
     })
-    .then(function(receipt){
-        console.log(myContract.options.address) // gives the new contract address
+    .then(function(newContractInstance){
+        console.log(newContractInstance.options.address) // instance with the new contract address
     });
 
 
@@ -484,7 +484,7 @@ Returns
 
 The **callback** will return the 32 bytes transaction hash.
 
-``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available. Additionally the following events are available:
+``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available. If this ``send()`` is is called from a ``someContract.deploy()`` then the promise will resolve with the *new contract instance*. Additionally the following events are available:
 
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: is fired when the transaction receipt is available.

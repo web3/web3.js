@@ -231,7 +231,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
                         if (code.length > 2) {
                             defer.eventEmitter.emit('receipt', receipt);
-                            defer.resolve(receipt);
+
+                            // if contract, return instance instead of receipt
+                            if (extraFormatters && extraFormatters.contractDeployFormatter) {
+                                defer.resolve(extraFormatters.contractDeployFormatter(receipt));
+                            } else {
+                                defer.resolve(receipt);
+                            }
+
 
                         } else {
                             utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
