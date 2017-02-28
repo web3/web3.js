@@ -466,7 +466,6 @@ Contract.prototype.deploy = function(options, callback){
 
 };
 
-
 /**
  * Gets the event signature and outputformatters
  *
@@ -771,7 +770,27 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
                 }
 
-                return this._parent._eth.sendTransaction(args.options, args.callback);
+
+                // make sure receipt logs are decoded
+                var extraFormatters = {
+                    receiptFormatter: function (receipt) {
+                        if (_.isArray(receipt.logs)) {
+
+                            // decode logs
+                            receipt.events = _.map(receipt.logs, function(log) {
+                                return _this._parent._decodeEventABI.call({
+                                    name: 'ALLEVENTS',
+                                    jsonInterface: _this._parent.options.jsonInterface
+                                }, log);
+                            });
+
+                            delete receipt.logs;
+                        }
+                        return receipt;
+                    }
+                };
+
+                return this._parent._eth.sendTransaction.apply(extraFormatters, [args.options, args.callback]);
 
         }
 

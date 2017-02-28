@@ -33,43 +33,38 @@ var packages = [{
     src: './packages/web3-core-requestManager/src/index.js'
 },{
     fileName: 'web3-providers-ipc',
-    expose: 'IpcProvider',
+    expose: 'Web3IpcProvider',
     src: './packages/web3-providers-ipc/src/index.js'
 },{
     fileName: 'web3-providers-http',
-    expose: 'HttpProvider',
+    expose: 'Web3HttpProvider',
     src: './packages/web3-providers-http/src/index.js',
     ignore: ['xmlhttprequest']
 },{
     fileName: 'web3-providers-ws',
-    expose: 'WsProvider',
+    expose: 'Web3WsProvider',
     src: './packages/web3-providers-ws/src/index.js'
 },{
     fileName: 'web3-eth',
     expose: 'Eth',
     src: './packages/web3-eth/src/index.js'
+},{
+    fileName: 'web3-personal',
+    expose: 'Personal',
+    src: './packages/web3-personal/src/index.js'
+},{
+    fileName: 'web3-shh',
+    expose: 'Shh',
+    src: './packages/web3-shh/src/index.js'
+},{
+    fileName: 'web3-bzz',
+    expose: 'Bzz',
+    src: './packages/web3-bzz/src/index.js'
+},{
+    fileName: 'web3-eth-iban',
+    expose: 'Iban',
+    src: './packages/web3-eth-iban/src/index.js'
 }];
-// ,{
-//     fileName: 'web3-eth',
-//     expose: 'Eth',
-//     src: './packages/web3-eth/src/index.js'
-// },{
-//     fileName: 'web3-personal',
-//     expose: 'Personal',
-//     src: './packages/web3-personal/src/index.js'
-// },{
-//     fileName: 'web3-shh',
-//     expose: 'Shh',
-//     src: './packages/web3-shh/src/index.js'
-// },{
-//     fileName: 'web3-bzz',
-//     expose: 'Bzz',
-//     src: './packages/web3-bzz/src/index.js'
-// },{
-//     fileName: 'web3-eth-iban',
-//     expose: 'Iban',
-//     src: './packages/web3-eth-iban/src/index.js'
-// }];
 
 var browserifyOptions = {
     debug: true,

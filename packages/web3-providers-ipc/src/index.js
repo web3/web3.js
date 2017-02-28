@@ -138,21 +138,14 @@ IpcProvider.prototype.reconnect = function() {
     this.connection.connect({path: this.path});
 };
 
+
 /**
-Check if the current connection is still valid.
+ Sends the request
 
-@method isConnected
-*/
-IpcProvider.prototype.isConnected = function() {
-    var _this = this;
-
-    // try reconnect, when connection is gone
-    if(!_this.connection.writable)
-        _this.connection.connect({path: _this.path});
-
-    return !!this.connection.writable;
-};
-
+ @method send
+ @param {Object} payload    example: {id: 1, jsonrpc: '2.0', 'method': 'eth_someMethod', params: []}
+ @param {Function} callback   the callback to call
+ */
 IpcProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     if(!this.connection.writable)

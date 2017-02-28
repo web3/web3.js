@@ -190,23 +190,6 @@ WebsocketProvider.prototype._timeout = function() {
     }
 };
 
-// TODO add reconnect
-
-
-/**
- Check if the current connection is still valid.
-
- @method isConnected
- */
-WebsocketProvider.prototype.isConnected = function() {
-    // try reconnect, when connection is gone
-    // if(!_this.connection.writable)
-    //     _this.connection.connect({path: _this.path});
-
-    console.log(this.connection);
-
-    // return !!this.connection.writable;
-};
 
 WebsocketProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
@@ -237,6 +220,14 @@ WebsocketProvider.prototype.on = function (type, callback) {
 
         case 'connect':
             this.connection.onopen = callback;
+            break;
+
+        case 'end':
+            this.connection.onclose = callback;
+            break;
+
+        case 'error':
+            this.connection.onerror = callback;
             break;
 
         // default:
@@ -289,6 +280,14 @@ WebsocketProvider.prototype.removeAllListeners = function (type) {
 
         case 'connect':
             this.connection.onopen = null;
+            break;
+
+        case 'end':
+            this.connection.onclose = null;
+            break;
+
+        case 'error':
+            this.connection.onerror = null;
             break;
 
         default:

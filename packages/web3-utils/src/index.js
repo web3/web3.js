@@ -51,12 +51,6 @@ var sha3 = function (value) {
  * @return {Object} the emitter
  */
 var _fireError = function (error, emitter, reject, callback) {
-    var additionalData;
-
-    if (isArray(error)) {
-        error = error[0];
-        additionalData = error[1];
-    }
 
     if (isFunction(callback)) {
         callback(error);
@@ -73,7 +67,7 @@ var _fireError = function (error, emitter, reject, callback) {
     }
 
     if(emitter && isFunction(emitter.emit)) {
-        emitter.emit('error', error, additionalData);
+        emitter.emit('error', error);
         emitter.removeAllListeners();
     }
 

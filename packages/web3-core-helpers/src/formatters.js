@@ -262,7 +262,7 @@ var outputLogFormatter = function(log) {
        typeof log.logIndex === 'string') {
         var shaId = utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
         log.id = 'log_'+ shaId.replace('0x','').substr(0,8);
-    } else {
+    } else if(!log.id) {
         log.id = null;
     }
 

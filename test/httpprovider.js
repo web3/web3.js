@@ -22,12 +22,4 @@ describe('web3-providers-http', function () {
             });
         });
     });
-
-    describe('isConnected', function () {
-        it('should return a boolean', function () {
-            var provider = new HttpProvider();
-
-            assert.isBoolean(provider.isConnected());
-        });
-    });
 });
