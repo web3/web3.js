@@ -7,6 +7,7 @@
     "main": "src/index.js",
     "dependencies": {
         "utf8": "^2.1.1",
+        "underscore": "^1.8.3",
 
         "js-sha3": "^0.5.7",
         "ethjs-unit": "^0.1.6",

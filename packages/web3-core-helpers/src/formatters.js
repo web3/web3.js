@@ -24,6 +24,7 @@
 "use strict";
 
 
+var _ = require('underscore');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
@@ -166,7 +167,7 @@ var outputTransactionReceiptFormatter = function (receipt){
     receipt.cumulativeGasUsed = utils.toDecimal(receipt.cumulativeGasUsed);
     receipt.gasUsed = utils.toDecimal(receipt.gasUsed);
 
-    if(utils.isArray(receipt.logs)) {
+    if(_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
@@ -199,9 +200,9 @@ var outputBlockFormatter = function(block) {
     if(block.totalDifficulty)
         block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
-    if (utils.isArray(block.transactions)) {
+    if (_.isArray(block.transactions)) {
         block.transactions.forEach(function(item){
-            if(!utils.isString(item))
+            if(!_.isString(item))
                 return outputTransactionFormatter(item);
         });
     }
@@ -236,7 +237,7 @@ var inputLogFormatter = function(options) {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic){
-        return (utils.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+        return (_.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     toTopic = null;
@@ -298,7 +299,7 @@ var inputPostFormatter = function(post) {
         post.priority = utils.fromDecimal(post.priority);
 
     // fallback
-    if (!utils.isArray(post.topics)) {
+    if (!_.isArray(post.topics)) {
         post.topics = post.topics ? [post.topics] : [];
     }
 

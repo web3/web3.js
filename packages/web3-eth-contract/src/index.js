@@ -71,7 +71,7 @@ var Contract = function Contract(jsonInterface, address, options) {
         options = lastArg;
 
         this.options = _.extend(this.options, this._getOrSetDefaultOptions(options));
-        if(utils.isObject(address)) {
+        if(_.isObject(address)) {
             address = null;
         }
     }
@@ -97,16 +97,15 @@ var Contract = function Contract(jsonInterface, address, options) {
 
             _this._jsonInterface = value.map(function(method) {
                 var func,
-                    funcName,
-                    inputs = method.inputs ? method.inputs.map(function(key){ return key.type; }).join(',') : '';
+                    funcName;
 
                 if(method.name)
-                    funcName = method.name +'('+ inputs +')';
+                    funcName = utils.jsonInterfaceMethodToString(method);
 
 
                 // function
                 if (method.type === 'function') {
-                    method.signature = utils.sha3(utils.transformToFullName(method)).slice(0, 10);
+                    method.signature = utils.sha3(funcName).slice(0, 10);
                     func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
@@ -126,7 +125,7 @@ var Contract = function Contract(jsonInterface, address, options) {
 
                 // event
                 } else if (method.type === 'event') {
-                    method.signature = utils.sha3(utils.transformToFullName(method));
+                    method.signature = utils.sha3(funcName);
                     var event = _this._on.bind(_this, method.signature);
 
                     // add method only if not already exists
@@ -179,7 +178,7 @@ Contract.prototype._eth = {}; // eth is attached here in web3-eth/src/index.js
  * @return {Function} the callback
  */
 Contract.prototype._getCallback = function getCallback(args) {
-    if (utils.isFunction(args[args.length - 1])) {
+    if (_.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
 };
@@ -243,7 +242,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
     });
 
     // use given topics
-    if(utils.isArray(options.topics)) {
+    if(_.isArray(options.topics)) {
         result.topics = options.topics;
 
     // create topics based on filter
@@ -266,7 +265,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
                     return null;
                 }
 
-                if (utils.isArray(value)) {
+                if (_.isArray(value)) {
                     return value.map(function (v) {
                         return '0x' + coder.encodeParam(i.type, v);
                     });
@@ -483,9 +482,9 @@ Contract.prototype._generateEventOptions = function() {
     var callback = this._getCallback(args);
 
     // get the options
-    var options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
+    var options = (_.isObject(args[args.length - 1])) ? args.pop() : {};
 
-    var event = (utils.isString(args[0])) ? args[0] : 'allevents';
+    var event = (_.isString(args[0])) ? args[0] : 'allevents';
     event = (event.toLowerCase() === 'allevents') ? {
             name: 'ALLEVENTS',
             jsonInterface: this.options.jsonInterface
@@ -545,7 +544,7 @@ Contract.prototype.once = function(event, options, callback) {
     // don't return as once shouldn't provide "on"
     this._on(event, options, function (err, res, sub) {
         sub.unsubscribe();
-        if(utils.isFunction(callback)){
+        if(_.isFunction(callback)){
             callback(err, res, sub);
         }
     });
@@ -673,11 +672,11 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
     processedArgs.callback = this._parent._getCallback(args);
 
     // get block number to use for call
-    if(processedArgs.type === 'call' && args[args.length - 1] !== true && (utils.isString(args[args.length - 1]) || isFinite(args[args.length - 1])))
+    if(processedArgs.type === 'call' && args[args.length - 1] !== true && (_.isString(args[args.length - 1]) || isFinite(args[args.length - 1])))
         processedArgs.defaultBlock = args.pop();
 
     // get the options
-    processedArgs.options = (utils.isObject(args[args.length - 1])) ? args.pop() : {};
+    processedArgs.options = (_.isObject(args[args.length - 1])) ? args.pop() : {};
 
     // get the generateRequest argument for batch requests
     processedArgs.generateRequest = (args[args.length - 1] === true)? args.pop() : false;
