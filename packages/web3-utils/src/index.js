@@ -22,6 +22,7 @@
  */
 
 
+var _ = require('underscore');
 var BigNumber = require('bn.js');
 var ethjsUnit = require('ethjs-unit');
 var numberToBN = require('number-to-bn');
@@ -52,21 +53,21 @@ var sha3 = function (value) {
  */
 var _fireError = function (error, emitter, reject, callback) {
 
-    if (isFunction(callback)) {
+    if (_.isFunction(callback)) {
         callback(error);
     }
-    if (isFunction(reject)) {
+    if (_.isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         if(emitter &&
-           isFunction(emitter.listeners) &&
+           _.isFunction(emitter.listeners) &&
            emitter.listeners('error').length &&
-           isFunction(emitter.suppressUnhandledRejections)) {
+           _.isFunction(emitter.suppressUnhandledRejections)) {
             emitter.suppressUnhandledRejections();
         }
         reject(error);
     }
 
-    if(emitter && isFunction(emitter.emit)) {
+    if(emitter && _.isFunction(emitter.emit)) {
         emitter.emit('error', error);
         emitter.removeAllListeners();
     }
@@ -196,11 +197,11 @@ var fromAscii = function(str, num) {
 /**
  * Should be used to create full function/event name from json abi
  *
- * @method transformToFullName
+ * @method jsonInterfaceMethodToString
  * @param {Object} json-abi
  * @return {String} full fnction/event name
  */
-var transformToFullName = function (json) {
+var jsonInterfaceMethodToString = function (json) {
     if (json.name.indexOf('(') !== -1) {
         return json.name;
     }
@@ -216,24 +217,17 @@ var transformToFullName = function (json) {
  * @param {String} name of function/event
  * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
  */
-var extractDisplayName = function (name) {
-    var stBracket = name.indexOf('(');
-    var endBracket = name.indexOf(')');
-    return (stBracket !== -1 && endBracket !== -1) ? name.substr(0, stBracket) : name;
-};
-
-/**
- * Should be called to get type name of contract function
- *
- * @method extractTypeName
- * @param {String} name of function/event
- * @returns {String} type name for function/event eg. multiply(uint256) -> uint256
- */
-var extractTypeName = function (name) {
-    var stBracket = name.indexOf('(');
-    var endBracket = name.indexOf(')');
-    return (stBracket !== -1 && endBracket !== -1) ? name.substr(stBracket + 1, endBracket - stBracket - 1).replace(' ', '') : "";
-};
+// var extractDisplayName = function (name) {
+//     var length = name.indexOf('(');
+//     return length !== -1 ? name.substr(0, length) : name;
+// };
+//
+// /// @returns overloaded part of function/event name
+// var extractTypeName = function (name) {
+//     /// TODO: make it invulnerable
+//     var length = name.indexOf('(');
+//     return length !== -1 ? name.substr(length + 1, name.length - 1 - (length + 1)).replace(' ', '') : "";
+// };
 
 /**
  * Converts value to it's decimal representation in string
@@ -272,17 +266,17 @@ var fromDecimal = function (value) {
 var toHex = function (val) {
     /*jshint maxcomplexity: 8 */
 
-    if (isBoolean(val))
+    if (_.isBoolean(val))
         return fromDecimal(+val);
 
-    if (isBigNumber(val))
+    if (isBN(val))
         return fromDecimal(val);
 
-    if (typeof val === 'object')
+    if (_.isObject(val))
         return fromUtf8(JSON.stringify(val));
 
     // if its a negative number, pass it through fromDecimal
-    if (isString(val)) {
+    if (_.isString(val)) {
         if (val.indexOf('-0x') === 0)
             return fromDecimal(val);
         else if(val.indexOf('0x') === 0)
@@ -334,7 +328,7 @@ var getUnitValue = function (unit) {
 var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    return isBigNumber(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
+    return isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
 };
 
 /**
@@ -361,7 +355,7 @@ var fromWei = function(number, unit) {
 var toWei = function(number, unit) {
     unit = getUnitValue(unit);
 
-    return isBigNumber(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
+    return isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
 };
 
 /**
@@ -374,10 +368,10 @@ var toWei = function(number, unit) {
 var toBigNumber = function(number) {
     /*jshint maxcomplexity:5 */
     number = number || 0;
-    if (isBigNumber(number))
+    if (isBN(number))
         return number;
 
-    if (isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
+    if (_.isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
         return numberToBN(number);
     }
 
@@ -474,85 +468,15 @@ var toAddress = function (address) {
 /**
  * Returns true if object is BigNumber, otherwise false
  *
- * @method isBigNumber
- * @param {Object}
+ * @method isBN
+ * @param {Object} object
  * @return {Boolean}
  */
-var isBigNumber = function (object) {
+var isBN = function (object) {
     return object instanceof BigNumber ||
         (object && object.constructor && object.constructor.name === 'BN');
 };
 
-/**
- * Returns true if object is string, otherwise false
- *
- * @method isString
- * @param {Object}
- * @return {Boolean}
- */
-var isString = function (object) {
-    return typeof object === 'string' ||
-        (object && object.constructor && object.constructor.name === 'String');
-};
-
-/**
- * Returns true if object is function, otherwise false
- *
- * @method isFunction
- * @param {Object}
- * @return {Boolean}
- */
-var isFunction = function (object) {
-    return typeof object === 'function';
-};
-
-/**
- * Returns true if object is Objet, otherwise false
- *
- * @method isObject
- * @param {Object}
- * @return {Boolean}
- */
-var isObject = function (object) {
-    return object !== null && !(Array.isArray(object)) && typeof object === 'object';
-};
-
-/**
- * Returns true if object is boolean, otherwise false
- *
- * @method isBoolean
- * @param {Object}
- * @return {Boolean}
- */
-var isBoolean = function (object) {
-    return typeof object === 'boolean';
-};
-
-/**
- * Returns true if object is array, otherwise false
- *
- * @method isArray
- * @param {Object}
- * @return {Boolean}
- */
-var isArray = function (object) {
-    return Array.isArray(object);
-};
-
-/**
- * Returns true if given string is valid json object
- *
- * @method isJson
- * @param {String}
- * @return {Boolean}
- */
-var isJson = function (str) {
-    try {
-        return !!JSON.parse(str);
-    } catch (e) {
-        return false;
-    }
-};
 
 /**
  * Returns true if given string is a valid Ethereum block header bloom.
@@ -597,24 +521,18 @@ module.exports = {
     toAscii: toAscii,
     fromUtf8: fromUtf8,
     fromAscii: fromAscii,
-    transformToFullName: transformToFullName,
-    extractDisplayName: extractDisplayName,
-    extractTypeName: extractTypeName,
+    jsonInterfaceMethodToString: jsonInterfaceMethodToString,
+    // extractDisplayName: extractDisplayName,
+    // extractTypeName: extractTypeName,
     toWei: toWei,
     fromWei: fromWei,
     toBigNumber: toBigNumber,
     toAddress: toAddress,
-    isBigNumber: isBigNumber,
+    isBN: isBN,
+    isBigNumber: isBN,
     isAddress: isAddress,
     isChecksumAddress: isChecksumAddress,
     toChecksumAddress: toChecksumAddress,
-    isFunction: isFunction,
-    isString: isString,
-    isObject: isObject,
-    isBoolean: isBoolean,
-    isArray: isArray,
-    isJson: isJson,
-    sha3: sha3,
-    // iban: iban
+    sha3: sha3
 };
 

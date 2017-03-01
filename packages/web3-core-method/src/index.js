@@ -61,7 +61,7 @@ Method.prototype.setRequestManager = function (rm, eth) {
  * @return {String} name of jsonrpc method
  */
 Method.prototype.getCall = function (args) {
-    return utils.isFunction(this.call) ? this.call(args) : this.call;
+    return _.isFunction(this.call) ? this.call(args) : this.call;
 };
 
 /**
@@ -72,7 +72,7 @@ Method.prototype.getCall = function (args) {
  * @return {Function|Null} callback, if exists
  */
 Method.prototype.extractCallback = function (args) {
-    if (utils.isFunction(args[args.length - 1])) {
+    if (_.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
 };
@@ -117,7 +117,7 @@ Method.prototype.formatInput = function (args) {
 Method.prototype.formatOutput = function (result) {
     var _this = this;
 
-    if(utils.isArray(result)) {
+    if(_.isArray(result)) {
         return result.map(function(res){
             return _this.outputFormatter && res ? _this.outputFormatter(res) : res;
         });

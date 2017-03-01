@@ -21,7 +21,7 @@ describe('lib/utils/utils', function () {
     describe('isBigNumber', function () {
         tests.forEach(function (test) {
             it('shoud test if value ' + test.func + ' is BigNumber: ' + test.is, function () {
-                assert.equal(utils.isBigNumber(test.value), test.is);
+                assert.equal(utils.isBN(test.value), test.is);
             });
         });
     });
