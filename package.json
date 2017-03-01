@@ -18,6 +18,7 @@
     "coveralls": "^2.11.2",
     "crypto-js": "^3.1.4",
     "del": ">=2.0.2",
+    "ethjs-abi": "^0.1.8",
     "exorcist": "^0.4.0",
     "google-closure-compiler": "^20170218.0.0",
     "gulp": ">=3.9.0",
