@@ -23,23 +23,12 @@
 
 
 var _ = require('underscore');
-var BigNumber = require('bn.js');
+var BN = require('bn.js');
 var ethjsUnit = require('ethjs-unit');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
 var keccak256 = require("js-sha3").keccak_256; // jshint ignore:line
 
-
-/**
- * Sha3 encodes
- *
- * @method sha3
- * @return {Object} the sha3
- */
-var sha3 = function (value) {
-
-    return '0x'+ keccak256(value);
-};
 
 /**
  * Fires an error in an event emitter and callback and returns the eventemitter
@@ -76,11 +65,40 @@ var _fireError = function (error, emitter, reject, callback) {
 };
 
 /**
+ * Should be used to create full function/event name from json abi
+ *
+ * @method _jsonInterfaceMethodToString
+ * @param {Object} json
+ * @return {String} full function/event name
+ */
+var _jsonInterfaceMethodToString = function (json) {
+    if (json.name.indexOf('(') !== -1) {
+        return json.name;
+    }
+
+    var typeName = json.inputs.map(function(i){return i.type; }).join();
+    return json.name + '(' + typeName + ')';
+};
+
+
+/**
+ * Sha3 encodes
+ *
+ * @method sha3
+ * @return {Object} the sha3
+ */
+var sha3 = function (value) {
+
+    return '0x'+ keccak256(value);
+};
+
+
+/**
  * Should be called to pad string to expected length
  *
  * @method padLeft
  * @param {String} string to be padded
- * @param {Number} characters that result string should have
+ * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
@@ -93,7 +111,7 @@ var padLeft = function (string, chars, sign) {
  *
  * @method padRight
  * @param {String} string to be padded
- * @param {Number} characters that result string should have
+ * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
@@ -102,14 +120,28 @@ var padRight = function (string, chars, sign) {
 };
 
 /**
+ * Check if string is HEX
+ *
+ * @method isHex
+ * @param {String} string to be checked
+ * @returns {Boolean}
+ */
+var isHex = function (string) {
+    return (_.isString(string) && /^(-)?(0x)?[0-9a-f]+$/i.test(string));
+};
+
+
+/**
  * Should be called to get utf8 from it's hex representation
  *
  * @method toUtf8
- * @param {String} string in hex
+ * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
 var toUtf8 = function(hex) {
-// Find termination
+    if (!isHex(hex))
+        throw new Error('The parameter must be a valid HEX string.');
+
     var str = "";
     var i = 0, l = hex.length;
     if (hex.substring(0, 2) === '0x') {
@@ -117,34 +149,12 @@ var toUtf8 = function(hex) {
     }
     for (; i < l; i+=2) {
         var code = parseInt(hex.substr(i, 2), 16);
-        if (code === 0)
-            break;
-        str += String.fromCharCode(code);
+        // if (code !== 0) {
+            str += String.fromCharCode(code);
+        // }
     }
 
     return utf8.decode(str);
-};
-
-/**
- * Should be called to get ascii from it's hex representation
- *
- * @method toAscii
- * @param {String} string in hex
- * @returns {String} ascii string representation of hex value
- */
-var toAscii = function(hex) {
-// Find termination
-    var str = "";
-    var i = 0, l = hex.length;
-    if (hex.substring(0, 2) === '0x') {
-        i = 2;
-    }
-    for (; i < l; i+=2) {
-        var code = parseInt(hex.substr(i, 2), 16);
-        str += String.fromCharCode(code);
-    }
-
-    return str;
 };
 
 /**
@@ -160,21 +170,44 @@ var fromUtf8 = function(str) {
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
-        if (code === 0)
-            break;
-        var n = code.toString(16);
-        hex += n.length < 2 ? '0' + n : n;
+        // if (code !== 0) {
+            var n = code.toString(16);
+            hex += n.length < 2 ? '0' + n : n;
+        // }
     }
 
     return "0x" + hex;
 };
 
 /**
+ * Should be called to get ascii from it's hex representation
+ *
+ * @method toAscii
+ * @param {String} hex
+ * @returns {String} ascii string representation of hex value
+ */
+var toAscii = function(hex) {
+    if (!isHex(hex))
+        throw new Error('The parameter must be a valid HEX string.');
+
+    var str = "";
+    var i = 0, l = hex.length;
+    if (hex.substring(0, 2) === '0x') {
+        i = 2;
+    }
+    for (; i < l; i+=2) {
+        var code = parseInt(hex.substr(i, 2), 16);
+        str += String.fromCharCode(code);
+    }
+
+    return str;
+};
+
+/**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  *
  * @method fromAscii
- * @param {String} string
- * @param {Number} optional padding
+ * @param {String} str
  * @returns {String} hex representation of input string
  */
 var fromAscii = function(str) {
@@ -186,22 +219,6 @@ var fromAscii = function(str) {
     }
 
     return "0x" + hex;
-};
-
-/**
- * Should be used to create full function/event name from json abi
- *
- * @method jsonInterfaceMethodToString
- * @param {Object} json-abi
- * @return {String} full fnction/event name
- */
-var jsonInterfaceMethodToString = function (json) {
-    if (json.name.indexOf('(') !== -1) {
-        return json.name;
-    }
-
-    var typeName = json.inputs.map(function(i){return i.type; }).join();
-    return json.name + '(' + typeName + ')';
 };
 
 /**
@@ -224,28 +241,39 @@ var jsonInterfaceMethodToString = function (json) {
 // };
 
 /**
- * Converts value to it's decimal representation in string
+ * Converts value to it's number representation
  *
- * @method toDecimal
- * @param {String|Number|BigNumber}
+ * @method toNumber
+ * @param {String|Number|BN} value
  * @return {String}
  */
-var toDecimal = function (value) {
-    return toBigNumber(value).toNumber();
+var toNumber = function (value) {
+    return toBN(value).toNumber();
+};
+
+/**
+ * Converts value to it's decimal representation in string
+ *
+ * @method toNumberString
+ * @param {String|Number|BN} value
+ * @return {String}
+ */
+var toNumberString = function (value) {
+    return toBN(value).toString(10);
 };
 
 /**
  * Converts value to it's hex representation
  *
- * @method fromDecimal
- * @param {String|Number|BigNumber}
+ * @method fromNumber
+ * @param {String|Number|BN} value
  * @return {String}
  */
-var fromDecimal = function (value) {
-    var number = toBigNumber(value);
+var fromNumber = function (value) {
+    var number = toBN(value);
     var result = number.toString(16);
 
-    return number.lt(new BigNumber(0)) ? '-0x' + result.substr(1) : '0x' + result;
+    return number.lt(new BN(0)) ? '-0x' + result.substr(1) : '0x' + result;
 };
 
 /**
@@ -254,32 +282,36 @@ var fromDecimal = function (value) {
  * And even stringifys objects before.
  *
  * @method toHex
- * @param {String|Number|BigNumber|Object}
+ * @param {String|Number|BN|Object} value
  * @return {String}
  */
-var toHex = function (val) {
-    /*jshint maxcomplexity: 8 */
+var toHex = function (value) {
+    /*jshint maxcomplexity: 10 */
 
-    if (_.isBoolean(val))
-        return fromDecimal(+val);
-
-    if (isBN(val))
-        return fromDecimal(val);
-
-    if (_.isObject(val))
-        return fromUtf8(JSON.stringify(val));
-
-    // if its a negative number, pass it through fromDecimal
-    if (_.isString(val)) {
-        if (val.indexOf('-0x') === 0)
-            return fromDecimal(val);
-        else if(val.indexOf('0x') === 0)
-            return val;
-        else if (!isFinite(val))
-            return fromAscii(val);
+    if (_.isBoolean(value)) {
+        return fromNumber(+value);
     }
 
-    return fromDecimal(val);
+    if (isBN(value)) {
+        return fromNumber(value);
+    }
+
+    if (_.isObject(value) && !isBigNumber(value)) {
+        return fromUtf8(JSON.stringify(value));
+    }
+
+    // if its a negative number, pass it through fromNumber
+    if (_.isString(value)) {
+        if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
+            return fromNumber(value);
+        } else if(value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
+            return value;
+        } else if (!isFinite(value)) {
+            return fromUtf8(value);
+        }
+    }
+
+    return fromNumber(value);
 };
 
 /**
@@ -287,7 +319,7 @@ var toHex = function (val) {
  *
  * @method getUnitValue
  * @param {String} unit the unit to convert to, default ether
- * @returns {BigNumber} value of the unit (in Wei)
+ * @returns {BN} value of the unit (in Wei)
  * @throws error if the unit is not correct:w
  */
 var getUnitValue = function (unit) {
@@ -317,7 +349,7 @@ var getUnitValue = function (unit) {
  * @method fromWei
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
- * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+ * @return {String|Object} When given a BN object it returns one as well, otherwise a number
  */
 var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
@@ -343,9 +375,9 @@ var fromWei = function(number, unit) {
  * - tether
  *
  * @method toWei
- * @param {Number|String|BigNumber} number can be a number, number string or a HEX of a decimal
+ * @param {Number|String|BN} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
- * @return {String|Object} When given a BigNumber object it returns one as well, otherwise a number
+ * @return {String|Object} When given a BN object it returns one as well, otherwise a number
  */
 var toWei = function(number, unit) {
     unit = getUnitValue(unit);
@@ -354,23 +386,25 @@ var toWei = function(number, unit) {
 };
 
 /**
- * Takes an input and transforms it into an bignumber
+ * Takes an input and transforms it into an BN
  *
- * @method toBigNumber
- * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
- * @return {BigNumber} BigNumber
+ * @method toBN
+ * @param {Number|String|BN} number, string, HEX string or BN
+ * @return {BN} BN
  */
-var toBigNumber = function(number) {
+var toBN = function(number) {
     /*jshint maxcomplexity:5 */
     number = number || 0;
+
+    if (isBigNumber(number))
+        return numberToBN(number.toString(10));
     if (isBN(number))
         return number;
-
-    if (_.isString(number) && (number.indexOf('0x') === 0 || number.indexOf('-0x') === 0)) {
+    if (isHex(number)) {
         return numberToBN(number);
     }
 
-    return new BigNumber(number.toString(10), 10);
+    return new BN(number.toString(10), 10);
 };
 
 /**
@@ -381,14 +415,14 @@ var toBigNumber = function(number) {
  * @return {Boolean}
  */
 var isAddress = function (address) {
-    if (!/^(0x|0X)?[0-9a-f]{40}$/i.test(address)) {
-        // check if it has the basic requirements of an address
+    // check if it has the basic requirements of an address
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         return false;
+    // If it's ALL lowercase or ALL upppercase
     } else if (/^(0x|0X)?[0-9a-f]{40}$/.test(address) || /^(0x|0X)?[0-9A-F]{40}$/.test(address)) {
-        // If it's all small caps or all all caps, return true
         return true;
+    // Otherwise check each case
     } else {
-        // Otherwise check each case
         return isChecksumAddress(address);
     }
 };
@@ -463,38 +497,51 @@ var toAddress = function (address) {
 };
 
 /**
- * Returns true if object is BigNumber, otherwise false
+ * Returns true if object is BN, otherwise false
  *
  * @method isBN
  * @param {Object} object
  * @return {Boolean}
  */
 var isBN = function (object) {
-    return object instanceof BigNumber ||
+    return object instanceof BN ||
         (object && object.constructor && object.constructor.name === 'BN');
+};
+
+/**
+ * Returns true if object is BigNumber, otherwise false
+ *
+ * @method isBigNumber
+ * @param {Object} object
+ * @return {Boolean}
+ */
+var isBigNumber = function (object) {
+    return object && object.constructor && object.constructor.name === 'BigNumber';
 };
 
 
 module.exports = {
     _fireError: _fireError,
+    _jsonInterfaceMethodToString: _jsonInterfaceMethodToString,
+    // extractDisplayName: extractDisplayName,
+    // extractTypeName: extractTypeName,
+    _: _,
     padLeft: padLeft,
     padRight: padRight,
     toHex: toHex,
-    toDecimal: toDecimal,
-    fromDecimal: fromDecimal,
+    toNumber: toNumber,
+    toNumberString: toNumberString,
+    fromNumber: fromNumber,
     toUtf8: toUtf8,
     toAscii: toAscii,
     fromUtf8: fromUtf8,
     fromAscii: fromAscii,
-    jsonInterfaceMethodToString: jsonInterfaceMethodToString,
-    // extractDisplayName: extractDisplayName,
-    // extractTypeName: extractTypeName,
     toWei: toWei,
     fromWei: fromWei,
-    toBigNumber: toBigNumber,
     toAddress: toAddress,
+    toBN: toBN,
     isBN: isBN,
-    isBigNumber: isBN,
+    isBigNumber: isBigNumber,
     isAddress: isAddress,
     isChecksumAddress: isChecksumAddress,
     toChecksumAddress: toChecksumAddress,

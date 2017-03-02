@@ -38,7 +38,7 @@ var config = require('./config');
  * @returns {BigNumber} object
  */
 var outputBigNumberFormatter = function (number) {
-    return utils.toBigNumber(number).toString(10);
+    return utils.toBN(number).toString(10);
 };
 
 var isPredefinedBlockNumber = function (blockNumber) {
@@ -86,7 +86,7 @@ var inputCallFormatter = function (options){
     ['gasPrice', 'gas', 'gasLimit', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
-        options[key] = utils.fromDecimal(options[key]);
+        options[key] = utils.fromNumber(options[key]);
     });
 
     return options;
@@ -115,7 +115,7 @@ var inputTransactionFormatter = function (options){
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
-        options[key] = utils.fromDecimal(options[key]);
+        options[key] = utils.fromNumber(options[key]);
     });
 
     return options;
@@ -130,11 +130,11 @@ var inputTransactionFormatter = function (options){
 */
 var outputTransactionFormatter = function (tx){
     if(tx.blockNumber !== null)
-        tx.blockNumber = utils.toDecimal(tx.blockNumber);
+        tx.blockNumber = utils.toNumber(tx.blockNumber);
     if(tx.transactionIndex !== null)
-        tx.transactionIndex = utils.toDecimal(tx.transactionIndex);
-    tx.nonce = utils.toDecimal(tx.nonce);
-    tx.gas = utils.toDecimal(tx.gas);
+        tx.transactionIndex = utils.toNumber(tx.transactionIndex);
+    tx.nonce = utils.toNumber(tx.nonce);
+    tx.gas = utils.toNumber(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
@@ -161,11 +161,11 @@ var outputTransactionReceiptFormatter = function (receipt){
     }
 
     if(receipt.blockNumber !== null)
-        receipt.blockNumber = utils.toDecimal(receipt.blockNumber);
+        receipt.blockNumber = utils.toNumber(receipt.blockNumber);
     if(receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.toDecimal(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.toDecimal(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.toDecimal(receipt.gasUsed);
+        receipt.transactionIndex = utils.toNumber(receipt.transactionIndex);
+    receipt.cumulativeGasUsed = utils.toNumber(receipt.cumulativeGasUsed);
+    receipt.gasUsed = utils.toNumber(receipt.gasUsed);
 
     if(_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -188,12 +188,12 @@ var outputTransactionReceiptFormatter = function (receipt){
 var outputBlockFormatter = function(block) {
 
     // transform to number
-    block.gasLimit = utils.toDecimal(block.gasLimit);
-    block.gasUsed = utils.toDecimal(block.gasUsed);
-    block.size = utils.toDecimal(block.size);
-    block.timestamp = utils.toDecimal(block.timestamp);
+    block.gasLimit = utils.toNumber(block.gasLimit);
+    block.gasUsed = utils.toNumber(block.gasUsed);
+    block.size = utils.toNumber(block.size);
+    block.timestamp = utils.toNumber(block.timestamp);
     if (block.number !== null)
-        block.number = utils.toDecimal(block.number);
+        block.number = utils.toNumber(block.number);
 
     if(block.difficulty)
         block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -268,11 +268,11 @@ var outputLogFormatter = function(log) {
     }
 
     if (log.blockNumber !== null)
-        log.blockNumber = utils.toDecimal(log.blockNumber);
+        log.blockNumber = utils.toNumber(log.blockNumber);
     if (log.transactionIndex !== null)
-        log.transactionIndex = utils.toDecimal(log.transactionIndex);
+        log.transactionIndex = utils.toNumber(log.transactionIndex);
     if (log.logIndex !== null)
-        log.logIndex = utils.toDecimal(log.logIndex);
+        log.logIndex = utils.toNumber(log.logIndex);
 
     if (log.address)
         log.address = utils.toChecksumAddress(log.address);
@@ -292,11 +292,11 @@ var inputPostFormatter = function(post) {
     // post.payload = utils.toHex(post.payload);
 
     if (post.ttl)
-        post.ttl = utils.fromDecimal(post.ttl);
+        post.ttl = utils.fromNumber(post.ttl);
     if (post.workToProve)
-        post.workToProve = utils.fromDecimal(post.workToProve);
+        post.workToProve = utils.fromNumber(post.workToProve);
     if (post.priority)
-        post.priority = utils.fromDecimal(post.priority);
+        post.priority = utils.fromNumber(post.priority);
 
     // fallback
     if (!_.isArray(post.topics)) {
@@ -321,10 +321,10 @@ var inputPostFormatter = function(post) {
  */
 var outputPostFormatter = function(post){
 
-    post.expiry = utils.toDecimal(post.expiry);
-    post.sent = utils.toDecimal(post.sent);
-    post.ttl = utils.toDecimal(post.ttl);
-    post.workProved = utils.toDecimal(post.workProved);
+    post.expiry = utils.toNumber(post.expiry);
+    post.sent = utils.toNumber(post.sent);
+    post.ttl = utils.toNumber(post.ttl);
+    post.workProved = utils.toNumber(post.workProved);
     // post.payloadRaw = post.payload;
     // post.payload = utils.toAscii(post.payload);
 
@@ -356,12 +356,12 @@ var inputAddressFormatter = function (address) {
 
 var outputSyncingFormatter = function(result) {
 
-    result.startingBlock = utils.toDecimal(result.startingBlock);
-    result.currentBlock = utils.toDecimal(result.currentBlock);
-    result.highestBlock = utils.toDecimal(result.highestBlock);
+    result.startingBlock = utils.toNumber(result.startingBlock);
+    result.currentBlock = utils.toNumber(result.currentBlock);
+    result.highestBlock = utils.toNumber(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = utils.toDecimal(result.knownStates);
-        result.pulledStates = utils.toDecimal(result.pulledStates);
+        result.knownStates = utils.toNumber(result.knownStates);
+        result.pulledStates = utils.toNumber(result.pulledStates);
     }
 
     return result;

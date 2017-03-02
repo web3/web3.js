@@ -114,7 +114,7 @@ var methods = function () {
         name: 'net.getId',
         call: 'net_version',
         params: 0,
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var isListening = new Method({
@@ -127,7 +127,7 @@ var methods = function () {
         name: 'net.getPeerCount',
         call: 'net_peerCount',
         params: 0,
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
 
@@ -154,7 +154,7 @@ var methods = function () {
         name: 'getHashrate',
         call: 'eth_hashrate',
         params: 0,
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var isSyncing = new Method({
@@ -182,7 +182,7 @@ var methods = function () {
         name: 'getBlockNumber',
         call: 'eth_blockNumber',
         params: 0,
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var getBalance = new Method({
@@ -229,7 +229,7 @@ var methods = function () {
         call: getBlockTransactionCountCall,
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var getBlockUncleCount = new Method({
@@ -237,7 +237,7 @@ var methods = function () {
         call: uncleCountCall,
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var getTransaction = new Method({
@@ -269,7 +269,7 @@ var methods = function () {
         call: 'eth_getTransactionCount',
         params: 2,
         inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var sendSignedTransaction = new Method({
@@ -305,7 +305,7 @@ var methods = function () {
         call: 'eth_estimateGas',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
-        outputFormatter: utils.toDecimal
+        outputFormatter: utils.toNumber
     });
 
     var getCompilers = new Method({

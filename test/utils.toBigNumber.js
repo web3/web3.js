@@ -37,10 +37,10 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('toBigNumber', function () {
+    describe('toBN', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.equal(utils.toBigNumber(test.value).toString(10), test.expected);
+                assert.equal(utils.toBN(test.value).toString(10), test.expected);
             });
         });
     });
