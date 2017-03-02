@@ -548,6 +548,8 @@ Contract.prototype.once = function(event, options, callback) {
             callback(err, res, sub);
         }
     });
+
+    return undefined;
 };
 
 /**
