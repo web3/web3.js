@@ -143,14 +143,21 @@ var toUtf8 = function(hex) {
         throw new Error('The parameter must be a valid HEX string.');
 
     var str = "";
-    var i = 0, l = hex.length;
-    if (hex.substring(0, 2) === '0x') {
-        i = 2;
-    }
-    for (; i < l; i+=2) {
-        var code = parseInt(hex.substr(i, 2), 16);
+    var code = 0;
+    hex = hex.replace(/^0x/i,'');
+
+    // remove 00 padding from either side
+    hex = hex.replace(/^(?:00)*/,'');
+    hex = hex.split("").reverse().join("");
+    hex = hex.replace(/^(?:00)*/,'');
+    hex = hex.split("").reverse().join("");
+
+    var l = hex.length;
+
+    for (var i=0; i < l; i+=2) {
+        code = parseInt(hex.substr(i, 2), 16);
         // if (code !== 0) {
-            str += String.fromCharCode(code);
+        str += String.fromCharCode(code);
         // }
     }
 
@@ -167,6 +174,13 @@ var toUtf8 = function(hex) {
 var fromUtf8 = function(str) {
     str = utf8.encode(str);
     var hex = "";
+
+    // remove \u0000 padding from either side
+    str = str.replace(/^(?:\u0000)*/,'');
+    str = str.split("").reverse().join("");
+    str = str.replace(/^(?:\u0000)*/,'');
+    str = str.split("").reverse().join("");
+
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
         // if (code !== 0) {
