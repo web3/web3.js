@@ -489,7 +489,7 @@ The **callback** will return the 32 bytes transaction hash.
 ``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available, OR If this ``send()`` is is called from a ``someContract.deploy()`` then the promise will resolve with the *new contract instance*. Additionally the following events are available:
 
 - ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-- ``"receipt"`` returns ``Object``: is fired when the transaction receipt is available.
+- ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead a ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
 - ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 0 on, which is the block where its minded.
 - ``"error"`` returns ``Error``: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
 
@@ -517,11 +517,44 @@ Example
     .on('transactionHash', function(hash){
         ...
     })
-    .on('receipt', function(receipt){
-        ...
-    })
     .on('confirmation', function(confirmationNumber, receipt){
         ...
+    })
+    .on('receipt', function(receipt){
+        // receipt example
+        console.log(receipt);
+        > {
+            "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
+            "transactionIndex": 0,
+            "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
+            "blockNumber": 3,
+            "contractAddress": "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe",
+            "cumulativeGasUsed": 314159,
+            "gasUsed": 30234,
+            "events": {
+                "MyEvent": {
+                    returnValues: {
+                        myIndexedParam: 20,
+                        myOtherIndexedParam: '0x123456789...',
+                        myNonIndexParam: 'My String'
+                    },
+                    raw: {
+                        data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+                        topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
+                    },
+                    event: 'MyEvent',
+                    logIndex: 0,
+                    transactionIndex: 0,
+                    transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+                    blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+                    blockNumber: 1234,
+                    address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+                },
+                "MyOtherEvent": {
+                    ...
+                }
+            }
+        }
     })
     .on('error', console.error); // If a out of gas error, the second parameter is the receipt.
 
@@ -625,89 +658,6 @@ Example
 ------------------------------------------------------------------------------
 
 
-getPastEvents
-=====================
-
-.. code-block:: javascript
-
-    myContract.getPastEvents(event[, options][, callback])
-
-Gets past events for this contract.
-
-----------
-Parameters
-----------
-
-1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
-2. ``options`` - ``Object`` (optional): The options used for deployment.
-    * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
-    * ``toBlock`` - ``Number`` (optional): The block number until events to get (Defaults to ``"latest"``).
-    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
-
-
-.. _contract-getPastEvents-return:
-
--------
-Returns
--------
-
-``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
-
-The structure of the returned event ``Object`` in the ``Array`` looks as follows:
-
-- ``event`` - ``String``: The event name.
-- ``address`` - ``String``: From which this event originated from.
-- ``returnValues`` - ``Object``: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
-- ``logIndex`` - ``Number``: Integer of the event index position in the block.
-- ``transactionIndex`` - ``Number``: Integer of the transaction's index position, the event was created in.
-- ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction this event was created in.
-- ``blockHash`` 32 Bytes - ``String``: Hash of the block where this event was created in. ``null`` when its still pending.
-- ``blockNumber`` - ``Number``: The block number where this log was created in. ``null`` when still pending.
-- ``raw.data`` - ``String``: The data containing non-indexed log parameter.
-- ``raw.topics`` - ``Array``: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    myContract.getPastEvents('MyEvent', {
-        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
-        fromBlock: 0,
-        toBlock: 'latest'
-    }, function(error, events){ console.log(events); })
-    .then(function(events){
-        console.log(events) // same results as the optional callback above
-    });
-
-    > [{
-        returnValues: {
-            myIndexedParam: 20,
-            myOtherIndexedParam: '0x123456789...',
-            myNonIndexParam: 'My String'
-        },
-        raw: {
-            data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
-            topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
-        },
-        event: 'MyEvent',
-        logIndex: 0,
-        transactionIndex: 0,
-        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
-        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
-        blockNumber: 1234,
-        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
-    },{
-        ...
-    }]
-
-
-------------------------------------------------------------------------------
-
-
 once
 =====================
 
@@ -725,7 +675,7 @@ Parameters
 2. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-3. ``callback`` - ``Function``: This callback will be fired for the first event as the second argument, or an error as the first argument.
+3. ``callback`` - ``Function``: This callback will be fired for the first *event* as the second argument, or an error as the first argument. See :ref:`getPastEvents return values <contract-events-return>` for details about the event structure.
 
 -------
 Returns
@@ -786,7 +736,9 @@ Parameters
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
     * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
-2. ``callback`` - ``Function`` (optional): This callback will be fired for each event as the second argument, or an error as the first argument.
+2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
+
+.. _contract-events-return:
 
 -------
 Returns
@@ -798,7 +750,19 @@ Returns
 - ``"changed"`` returns ``Object``: Fires on each event which was removed from the blockchain. The event will have the additional property ``"removed: true"``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
 
-For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-getPastEvents-return>`.
+
+The structure of the returned event ``Object`` looks as follows:
+
+- ``event`` - ``String``: The event name.
+- ``address`` - ``String``: From which this event originated from.
+- ``returnValues`` - ``Object``: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
+- ``logIndex`` - ``Number``: Integer of the event index position in the block.
+- ``transactionIndex`` - ``Number``: Integer of the transaction's index position, the event was created in.
+- ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction this event was created in.
+- ``blockHash`` 32 Bytes - ``String``: Hash of the block where this event was created in. ``null`` when its still pending.
+- ``blockNumber`` - ``Number``: The block number where this log was created in. ``null`` when still pending.
+- ``raw.data`` - ``String``: The data containing non-indexed log parameter.
+- ``raw.topics`` - ``Array``: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.
 
 -------
 Example
@@ -850,3 +814,74 @@ events.allEvents
 
 Same as :ref:`events <contract-events>` but receives all events from this smart contract.
 Optionally the filter property can filter those events.
+
+
+------------------------------------------------------------------------------
+
+
+getPastEvents
+=====================
+
+.. code-block:: javascript
+
+    myContract.getPastEvents(event[, options][, callback])
+
+Gets past events for this contract.
+
+----------
+Parameters
+----------
+
+1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
+2. ``options`` - ``Object`` (optional): The options used for deployment.
+    * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
+    * ``toBlock`` - ``Number`` (optional): The block number until events to get (Defaults to ``"latest"``).
+    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
+
+
+-------
+Returns
+-------
+
+``Promise`` returns ``Array``: An array with the past event ``Objects``, matching the given event name and filter.
+
+For the structure of a returned event ``Object`` see :ref:`getPastEvents return values <contract-events-return>`.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    myContract.getPastEvents('MyEvent', {
+        filter: {myIndexedParam: [20,23], myOtherIndexedParam: '0x123456789...'}, // Using an array means OR: e.g. 20 or 23
+        fromBlock: 0,
+        toBlock: 'latest'
+    }, function(error, events){ console.log(events); })
+    .then(function(events){
+        console.log(events) // same results as the optional callback above
+    });
+
+    > [{
+        returnValues: {
+            myIndexedParam: 20,
+            myOtherIndexedParam: '0x123456789...',
+            myNonIndexParam: 'My String'
+        },
+        raw: {
+            data: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+            topics: ['0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7', '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385']
+        },
+        event: 'MyEvent',
+        logIndex: 0,
+        transactionIndex: 0,
+        transactionHash: '0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385',
+        blockHash: '0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7',
+        blockNumber: 1234,
+        address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+    },{
+        ...
+    }]
+
