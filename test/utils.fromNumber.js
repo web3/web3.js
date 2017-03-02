@@ -34,10 +34,10 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('fromDecimal', function () {
+    describe('fromNumber', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.equal(utils.fromDecimal(test.value), test.expected);
+                assert.equal(utils.fromNumber(test.value), test.expected);
             });
         });
     });

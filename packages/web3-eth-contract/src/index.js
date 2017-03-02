@@ -100,7 +100,7 @@ var Contract = function Contract(jsonInterface, address, options) {
                     funcName;
 
                 if(method.name)
-                    funcName = utils.jsonInterfaceMethodToString(method);
+                    funcName = utils._jsonInterfaceMethodToString(method);
 
 
                 // function
