@@ -192,20 +192,20 @@ Returns
 
 The structure of a returned block header is as follows:
 
-    - ``Number`` - ``number``: The block number. ``null`` when its pending block.
-    - ``String`` 32 Bytes - ``hash``: Hash of the block. ``null`` when its pending block.
-    - ``String`` 32 Bytes - ``parentHash``: Hash of the parent block.
-    - ``String`` 8 Bytes - ``nonce``: Hash of the generated proof-of-work. ``null`` when its pending block.
-    - ``String`` 32 Bytes - ``sha3Uncles``: SHA3 of the uncles data in the block.
-    - ``String`` 256 Bytes - ``logsBloom``: The bloom filter for the logs of the block. ``null`` when its pending block.
-    - ``String`` 32 Bytes - ``transactionsRoot``: The root of the transaction trie of the block
-    - ``String`` 32 Bytes - ``stateRoot``: The root of the final state trie of the block.
-    - ``String`` 32 Bytes - ``receiptRoot``: The root of the receipts.
-    - ``String`` - ``miner``: The address of the beneficiary to whom the mining rewards were given.
-    - ``String`` - ``extraData``: The "extra data" field of this block.
-    - ``Number`` - ``gasLimit``: The maximum gas allowed in this block.
-    - ``Number`` - ``gasUsed``: The total used gas by all transactions in this block.
-    - ``Number`` - ``timestamp``: The unix timestamp for when the block was collated.
+    - ``number`` - ``Number``: The block number. ``null`` when its pending block.
+    - ``hash`` 32 Bytes - ``String``: Hash of the block. ``null`` when its pending block.
+    - ``parentHash`` 32 Bytes - ``String``: Hash of the parent block.
+    - ``nonce`` 8 Bytes - ``String``: Hash of the generated proof-of-work. ``null`` when its pending block.
+    - ``sha3Uncles`` 32 Bytes - ``String``: SHA3 of the uncles data in the block.
+    - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` when its pending block.
+    - ``transactionsRoot`` 32 Bytes - ``String``: The root of the transaction trie of the block
+    - ``stateRoot`` 32 Bytes - ``String``: The root of the final state trie of the block.
+    - ``receiptRoot`` 32 Bytes - ``String``: The root of the receipts.
+    - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
+    - ``extraData`` - ``String``: The "extra data" field of this block.
+    - ``gasLimit`` - ``Number``: The maximum gas allowed in this block.
+    - ``gasUsed`` - ``Number``: The total used gas by all transactions in this block.
+    - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
 
 ----------------
 Callback returns
@@ -260,7 +260,7 @@ Returns
 ``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
 - ``"data"`` returns ``Object``: Fires on each incoming sync object as argument.
-- ``"changed"`` returns ``Object``: Fires when the synchronisation is started with ``TRUE`` and when finsihed with ``FALSE``.
+- ``"changed"`` returns ``Object``: Fires when the synchronisation is started with ``true`` and when finsihed with ``false``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
 
 For the structure of a returned event ``Object`` see :ref:`web3.eth.isSyncing return values <eth-issyncing-return>`.
@@ -270,7 +270,7 @@ Callback returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
-2. ``Object|Boolean`` - The syncing object, when started it will return ``TRUE`` once or when finished it will return `FALSE` once.
+2. ``Object|Boolean`` - The syncing object, when started it will return ``true`` once or when finished it will return `false` once.
 
 -------
 Example
@@ -316,12 +316,12 @@ Subscribes to incoming logs, filtered by the given options.
 Parameters
 ----------
 
-1. ``String`` - ``"logs"``, the type of the subscription.
+1. ``"logs"`` - ``String``, the type of the subscription.
 2. ``Object`` - The subscription options
-  - ``Number`` - ``fromBlock``: The number of the earliest block. By default ``null``.
-  - ``String`` - ``address``: An address or a list of addresses to only get logs from particular account(s).
-  - ``Array`` - ``topics``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x00...']``. You can also pass another array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription.
+  - ``fromBlock`` - ``Number``: The number of the earliest block. By default ``null``.
+  - ``address`` - ``String``: An address or a list of addresses to only get logs from particular account(s).
+  - ``topics`` - ``Array``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x00...']``. You can also pass another array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription.
 
 -------
 Returns
