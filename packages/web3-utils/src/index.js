@@ -161,8 +161,7 @@ var toUtf8 = function(hex) {
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
  * @method fromUtf8
- * @param {String} string
- * @param {Number} optional padding
+ * @param {String} str
  * @returns {String} hex representation of input string
  */
 var fromUtf8 = function(str) {
