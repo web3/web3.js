@@ -49,7 +49,7 @@ Parameters
 
 1. ``String`` - ``localfspath``: The file or directory to upload.
 2. ``String`` - ``defaultfile``: The default to use when no file on the manifest path could be mapped. For JavaScript Dapps that is normally an ``index.html``.
-3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -84,9 +84,9 @@ Downloads files and folders from swarm.
 Parameters
 ----------
 
-1. ``String`` - ``bzzHash``: The file or directory to download.
-2. ``String`` - ``localdirpath``: The local folder to download the content into.
-3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``bzzHash`` - ``String``: The file or directory to download.
+2. ``localdirpath`` - ``String``: The local folder to download the content into.
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -123,9 +123,9 @@ Creates a manifest with an entry. This entry has the empty path and specifies th
 Parameters
 ----------
 
-1. ``String`` - ``content``: The data blob to store.
-2. ``String`` - ``contentType``: The MIME content type to assign for that data.
-3. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``content`` - ``String``: The data blob to store.
+2. ``contentType`` - ``String``: The MIME content type to assign for that data.
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -159,8 +159,8 @@ Description missing.
 Parameters
 ----------
 
-1. ``String`` - ``bzzHash``: The path to a file, it will then download its manifest JSON file.
-2. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``bzzHash`` - ``String``: The path to a file, it will then download its manifest JSON file.
+2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns

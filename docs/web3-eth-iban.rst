@@ -205,8 +205,8 @@ Parameters
 ----------
 
 1. ``Object``: the options object as follows:
-    - ``String`` - ``institution``: the institution to be assigned
-    - ``String`` - ``identifier``: the identifier to be assigned
+    - ``institution`` - ``String``: the institution to be assigned
+    - ``identifier`` - ``String``: the identifier to be assigned
 
 -------
 Returns

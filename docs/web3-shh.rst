@@ -48,12 +48,12 @@ Parameters
 ----------
 
 1. ``Object`` - The post object:
-  - ``String`` 60 Bytes - ``from`` (optional): The identity of the sender.
-  - ``String`` 60 Bytes - ``to`` (optional): The identity of the receiver. When present whisper will encrypt the message so that only the receiver can decrypt it.
-  - ``Array`` - ``topics``: Array of topics ``Strings``, for the receiver to identify messages.
-  - ``String|Number|Object`` - ``payload``: The payload of the message. Will be autoconverted to a HEX string before.
-  - ``Number`` - ``ttl``: Integer of the time to live in seconds.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+  - ``from`` 60 Bytes - ``String`` (optional): The identity of the sender.
+  - ``to`` 60 Bytes - ``String`` (optional): The identity of the receiver. When present whisper will encrypt the message so that only the receiver can decrypt it.
+  - ``topics`` - ``Array``: Array of topics ``Strings``, for the receiver to identify messages.
+  - ``payload`` - ``String|Number|Object``: The payload of the message. Will be autoconverted to a HEX string before. (?)
+  - ``ttl`` - ``Number``: Integer of the time to live in seconds.
+2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 -------
 Returns
@@ -175,14 +175,14 @@ Watch for incoming whisper messages.
 Parameters
 ----------
 
-1. ``String``: Type ``"messages"``.
-1. ``Object`` - The filter options:
-  - ``Array``- ``topics``: Filters messages by this topic(s). You can use the following combinations:
-    - `['topic1', 'topic2'] == 'topic1' && 'topic2'`
-    - `['topic1', ['topic2', 'topic3']] == 'topic1' && ('topic2' || 'topic3')`
-    - `[null, 'topic1', 'topic2'] == ANYTHING && 'topic1' && 'topic2'` -> ``null`` works as a wildcard
-  - ``String`` - ``to``: Filter by identity of the message receiver. If provided and the node has this identity, it will decrypt the incoming encrypted messages.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``"messages"`` - ``String``: Type of the subscription.
+2. ``Object`` - The filter options:
+  - ``topics``- ``Array``: Filters messages by this topic(s). You can use the following combinations:
+    - ``['topic1', 'topic2'] == 'topic1' && 'topic2'``
+    - ``['topic1', ['topic2', 'topic3']] == 'topic1' && ('topic2' || 'topic3')``
+    - ``[null, 'topic1', 'topic2'] == ANYTHING && 'topic1' && 'topic2'`` -> ``null`` works as a wildcard
+  - ``to`` - ``String``: Filter by identity of the message receiver. If provided and the node has this identity, it will decrypt the incoming encrypted messages.
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 ----------
@@ -191,14 +191,14 @@ Callback Return
 
 ``Object`` - The incoming message:
 
-  - ``String`` 60 Bytes - ``from``: The sender of the message, if a sender was specified.
-  - ``String`` 60 Bytes - ``to``: The receiver of the message, if a receiver was specified.
-  - ``Number`` - ``expiry``: Integer of the time in seconds when this message should expire (?).
-  - ``Number`` -  ``ttl``: Integer of the time the message should float in the system in seconds (?).
-  - ``Number`` -  ``sent``: Integer of the unix timestamp when the message was sent.
-  - ``Array`` - ``topics``: topic ``Strings`` for the message.
-  - ``String`` - ``payload``: The payload of the message.
-  - ``Number`` - ``workProved``: Integer of the work this message required before it was send (?).
+  - ``from`` - 60 Bytes ``String``: The sender of the message, if a sender was specified.
+  - ``to`` - 60 Bytes ``String``: The receiver of the message, if a receiver was specified.
+  - ``expiry`` - ``Number``: Integer of the time in seconds when this message should expire (?).
+  - ``ttl`` -  ``Number``: Integer of the time the message should float in the system in seconds (?).
+  - ``sent`` -  ``Number``: Integer of the unix timestamp when the message was sent.
+  - ``topics`` - ``Array``: topic ``Strings`` for the message.
+  - ``payload`` - ``String``: The payload of the message.
+  - ``workProved`` - ``Number``: Integer of the work this message required before it was send (?).
 
 
 ----------
