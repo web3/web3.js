@@ -37,12 +37,21 @@ var Bzz = require('../packages/web3-bzz');
 
 var utils = require('../packages/web3-utils');
 
+// providers
+var providers = {
+    WebsocketProvider: require('../packages/web3-providers-ws'),
+    HttpProvider: require('../packages/web3-providers-http'),
+    IpcProvider: require('../packages/web3-providers-ipc')
+}
 
 
 var Web3 = function Web3() {
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
+
+
+    this.providers = providers;
 
 
     this.eth = new Eth(this);
@@ -63,6 +72,7 @@ var Web3 = function Web3() {
 };
 
 
+Web3.providers = providers;
 
 core.addProviders(Web3);
 
