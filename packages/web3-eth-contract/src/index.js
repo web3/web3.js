@@ -37,9 +37,8 @@ var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
 var promiEvent = require('web3-core-promiEvent');
+var coder = require('web3-core-abi').solidity;
 
-
-var coder = require('./solidity/coder');
 
 /**
  * Should be called to create new contract instance
