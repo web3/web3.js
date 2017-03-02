@@ -62,8 +62,12 @@ var packages = [{
     src: './packages/web3-bzz/src/index.js'
 },{
     fileName: 'web3-eth-iban',
-    expose: 'Iban',
+    expose: 'EthIban',
     src: './packages/web3-eth-iban/src/index.js'
+},{
+    fileName: 'web3-eth-abi',
+    expose: 'EthAbi',
+    src: './packages/web3-eth-abi/src/index.js'
 }];
 
 var browserifyOptions = {

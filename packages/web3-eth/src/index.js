@@ -28,6 +28,7 @@ var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var utils = require('web3-utils');
 var Method = require('web3-core-method');
+var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 
@@ -76,6 +77,9 @@ var Eth = function Eth() {
 
     // add IBAN
     this.Iban = Iban;
+
+    // add ABI
+    this.abi = abi;
 
 
     // add guess chain
