@@ -42,11 +42,11 @@ var isBigNumber = function (object) {
 /**
  * Takes an input and transforms it into an bignumber
  *
- * @method toBigNumber
+ * @method toBN
  * @param {Number|String|BigNumber} a number, string, HEX string or BigNumber
  * @return {BigNumber} BigNumber
  */
-var toBigNumber = function(number) {
+var toBN = function(number) {
     /*jshint maxcomplexity:5 */
     number = number || 0;
     if (isBigNumber(number))
@@ -67,7 +67,7 @@ var toBigNumber = function(number) {
  * @return {BigNumber}
  */
 var toTwosComplement = function (number) {
-    return toBigNumber(number).toTwos(256).toString(16, 64);
+    return toBN(number).toTwos(256).toString(16, 64);
 };
 
 
