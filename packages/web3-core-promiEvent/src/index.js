@@ -49,6 +49,7 @@ var PromiEvent = function PromiEvent(justPromise) {
     var emitter = new EventEmitter();
 
     // add eventEmitter to the promise
+    eventEmitter._events = emitter._events;
     eventEmitter.emit = emitter.emit;
     eventEmitter.on = emitter.on;
     eventEmitter.once = emitter.once;
