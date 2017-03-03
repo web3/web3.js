@@ -7,6 +7,7 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
+        "web3-providers-ipc": "^1.0.0",
         "underscore": "^1.8.3",
         "oboe": "^2.1.3",
         "xmlhttprequest": "*",
