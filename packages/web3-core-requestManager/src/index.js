@@ -24,9 +24,10 @@
 
 
 var _ = require('underscore');
-var Jsonrpc = require('./jsonrpc');
 var errors = require('web3-core-helpers').errors;
-var BatchManager = require('./batch');
+var Jsonrpc = require('./jsonrpc.js');
+var BatchManager = require('./batch.js');
+var givenProvider = require('./givenProvider.js');
 
 
 
@@ -44,31 +45,8 @@ var RequestManager = function RequestManager(provider) {
 };
 
 
-// ADD GIVEN PROVIDER
-/* jshint ignore:start */
-var IpcProvider = require('web3-providers-ipc');
-var global = Function('return this')();
 
-if(typeof global.ethereumProvider !== 'undefined') {
-    RequestManager.givenProvider = global.ethereumProvider;
-
-} else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-    // if connection object is available, create new provider
-    if (global.web3.currentProvider.connection) {
-        RequestManager.givenProvider = new IpcProvider('', global.web3.currentProvider.connection);
-
-    // otherwise subscription aren't available
-    } else {
-        if(global.web3.currentProvider.sendAsync) {
-            global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
-            delete global.web3.currentProvider.sendAsync;
-        }
-
-        RequestManager.givenProvider = global.web3.currentProvider;
-    }
-
-}
-/* jshint ignore:end */
+RequestManager.givenProvider = givenProvider;
 
 
 /**

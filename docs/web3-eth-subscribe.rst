@@ -33,7 +33,9 @@ Returns
 ``EventEmitter`` - A Subscription instance
 
     - ``subscription.id``: The subscription id, used to identify and unsubscribing the subscription.
+    - ``subscription.subscribe([callback])``: Can be used to re-subscribe with the same parameters.
     - ``subscription.unsubscribe([callback])``: Unsubscribes the subscription and returns `TRUE` in the callback if successfull.
+    - ``subscription.arguments``: The subscription arguments, used when re-subscribing.
     - ``on("data")`` returns ``Object``: Fires on each incoming log with the log object as argument.
     - ``on("changed")`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
     - ``on("error")`` returns ``Object``: Fires when an error in the subscription occours.

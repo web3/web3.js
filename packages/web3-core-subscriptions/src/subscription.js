@@ -31,6 +31,7 @@ var Subscription = function Subscription(options) {
     var emitter = new EventEmitter();
     this.id = null;
     this.callback = null;
+    this.arguments = null;
     this._reconnectIntervalId = null;
 
     this.options = {
@@ -86,7 +87,7 @@ Subscription.prototype._validateArgs = function (args) {
     if(!subscription.params)
         subscription.params = 0;
 
-    if (args.length !== subscription.params + 1) {
+    if (args.length !== subscription.params) {
         throw errors.InvalidNumberOfParams(args.length, subscription.params + 1, args[0]);
     }
 };
@@ -106,19 +107,13 @@ Subscription.prototype._formatInput = function (args) {
         return args;
     }
 
-    // replace subscription with given name
-    if (subscription.subscriptionName) {
-        args[0] = subscription.subscriptionName;
-    }
-
     if (!subscription.inputFormatter) {
         return args;
     }
 
     var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
-        return formatter ? formatter(args[index+1]) : args[index+1];
+        return formatter ? formatter(args[index]) : args[index];
     });
-    formattedArgs.unshift(args[0]);
 
     return formattedArgs;
 };
@@ -145,9 +140,33 @@ Subscription.prototype._formatOutput = function (result) {
  * @return {Object}
  */
 Subscription.prototype._toPayload = function (args) {
+    var params = [];
     this.callback = this._extractCallback(args);
-    var params = this._formatInput(args);
-    this._validateArgs(params);
+
+    if (!this.subscriptionMethod) {
+        this.subscriptionMethod = args.shift();
+
+        // replace subscription with given name
+        if (this.options.subscription.subscriptionName) {
+            this.subscriptionMethod = this.options.subscription.subscriptionName;
+        }
+    }
+
+    if (!this.arguments) {
+        this.arguments = this._formatInput(args);
+        this._validateArgs(this.arguments);
+        args = []; // make empty after validation
+
+    }
+
+    // re-add subscriptionName
+    params.push(this.subscriptionMethod);
+    params = params.concat(this.arguments);
+
+
+    if (args.length) {
+        throw new Error('Only a callback is allowed as parameter on an already instantiated subscription.');
+    }
 
     return {
         method: this.options.type + '_subscribe',
@@ -178,12 +197,25 @@ Subscription.prototype.unsubscribe = function(callback) {
  */
 Subscription.prototype.subscribe = function() {
     var _this = this;
-    var args = arguments;
-    var payload = this._toPayload(Array.prototype.slice.call(arguments));
+    var args = Array.prototype.slice.call(arguments);
+    var payload = this._toPayload(args);
+
+    if(!payload) {
+        return this;
+    }
 
     // throw error, if provider doesnt support subscriptions
-    if(!this.options.requestManager.provider.on)
-        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
+    if(!this.options.requestManager.provider.on) {
+        var err = new Error('The current provider doesn\'t support subscriptions'+ this.options.requestManager.provider.constructor.name);
+        this.callback(err, null, this);
+        this.emit('error', err);
+        return this;
+    }
+
+    // if id is there unsubscribe first
+    if (this.id) {
+        this.unsubscribe();
+    }
 
     // store the params in the options object
     this.options.params = payload.params[1];
@@ -241,12 +273,13 @@ Subscription.prototype.subscribe = function() {
                     // re-subscribe, if connection fails
                     if(_this.options.requestManager.provider.once) {
                         _this._reconnectIntervalId = setInterval(function () {
+                            // TODO check if that makes sense!
                             _this.options.requestManager.provider.reconnect();
                         }, 500);
 
                         _this.options.requestManager.provider.once('connect', function () {
                             clearInterval(_this._reconnectIntervalId);
-                            _this.subscribe.apply(_this, args);
+                            _this.subscribe(_this.callback);
                         });
                     }
                     _this.emit('error', err);
