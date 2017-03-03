@@ -56,7 +56,7 @@ Subscriptions.prototype.buildCall = function() {
 
     return function(){
         if(!_this.subscriptions[arguments[0]]) {
-            console.warn('Subscription "'+ JSON.stringify(arguments[0]) +'" doesn\'t exist. Subscribing anyway.');
+            console.warn('Subscription '+ JSON.stringify(arguments[0]) +' doesn\'t exist. Subscribing anyway.');
         }
 
         var subscription = new Subscription({

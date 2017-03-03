@@ -28,7 +28,7 @@ All Ethereum addresses returned by function of this package are checksum address
 This means some letters are uppercase and some are lowercase.
 Based on that it will calculate a checksum for the address and prove its correctness.
 Incorrect checksum address will throw an error when passed into a function.
-If you want to circumvent the checksum check youn can make an address all lowercase or uppercase.
+If you want to circumvent the checksum check you can make an address all lowercase or uppercase.
 
 
 -------
@@ -255,7 +255,7 @@ getCoinbase
 
     getCoinbase([callback])
 
-Returns the coinbase address were the mining rewards currently go to.
+Returns the coinbase address to which mining rewards will go.
 
 -------
 Returns

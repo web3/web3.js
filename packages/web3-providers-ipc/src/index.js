@@ -54,7 +54,7 @@ var IpcProvider = function (path, net) {
         }
 
         // notification
-        if(!id && result.method === 'eth_subscription') {
+        if(!id && result.method.indexOf('_subscription') !== -1) {
             _this.notificationCallbacks.forEach(function(callback){
                 if(_.isFunction(callback))
                     callback(null, result);
