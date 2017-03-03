@@ -27,8 +27,9 @@ var errors = require('web3-core-helpers').errors;
 var EventEmitter = require('eventemitter3');
 
 
-var Subscription = function Subscription(options) {
-    var emitter = new EventEmitter();
+function Subscription(options) {
+    EventEmitter.call(this);
+
     this.id = null;
     this.callback = null;
     this.arguments = null;
@@ -39,21 +40,11 @@ var Subscription = function Subscription(options) {
         type: options.type,
         requestManager: options.requestManager
     };
+}
 
-
-    // attach event emitter functions
-    this.emit = emitter.emit;
-    this.on = emitter.on;
-    this.once = emitter.once;
-    this.off = emitter.off;
-    this.listeners = emitter.listeners;
-    this.listenerCount = emitter.listenerCount;
-    this.addListener = emitter.addListener;
-    this.removeListener = emitter.removeListener;
-    this.removeAllListeners = emitter.removeAllListeners;
-    this.setMaxListeners = emitter.setMaxListeners;
-    this.getMaxListeners = emitter.getMaxListeners;
-};
+// INHERIT
+Subscription.prototype = Object.create(EventEmitter.prototype);
+Subscription.prototype.constructor = Subscription;
 
 
 /**
