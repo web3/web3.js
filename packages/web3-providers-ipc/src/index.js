@@ -37,10 +37,8 @@ var IpcProvider = function (path, net) {
 
     this.addDefaultEvents();
 
-
     // LISTEN FOR CONNECTION RESPONSES
-    oboe(this.connection)
-    .done(function(result) {
+    var callback = function(result) {
         /*jshint maxcomplexity: 6 */
 
         var id = null;
@@ -62,12 +60,22 @@ var IpcProvider = function (path, net) {
                     callback(null, result);
             });
 
-        // fire the callback
+            // fire the callback
         } else if(_this.responseCallbacks[id]) {
             _this.responseCallbacks[id](null, result);
             delete _this.responseCallbacks[id];
         }
-    });
+    };
+
+    // use oboe.js for Sockets
+    if (net.constructor.name === 'Socket') {
+        oboe(this.connection)
+        .done(callback);
+    } else {
+        this.connection.on('data', function(data){
+            _this._parseResponse(data.toString()).forEach(callback);
+        });
+    }
 };
 
 /**
@@ -98,6 +106,63 @@ IpcProvider.prototype.addDefaultEvents = function(){
     this.connection.on('timeout', function(){
         _this._timeout();
     });
+};
+
+
+/**
+ Will parse the response and make an array out of it.
+
+ NOTE, this exists for backwards compatibility reasons.
+
+ @method _parseResponse
+ @param {String} data
+ */
+IpcProvider.prototype._parseResponse = function(data) {
+    var _this = this,
+        returnValues = [];
+
+    // DE-CHUNKER
+    var dechunkedData = data
+        .replace(/\}[\n\r]?\{/g,'}|--|{') // }{
+        .replace(/\}\][\n\r]?\[\{/g,'}]|--|[{') // }][{
+        .replace(/\}[\n\r]?\[\{/g,'}|--|[{') // }[{
+        .replace(/\}\][\n\r]?\{/g,'}]|--|{') // }]{
+        .split('|--|');
+
+    dechunkedData.forEach(function(data){
+
+        // prepend the last chunk
+        if(_this.lastChunk)
+            data = _this.lastChunk + data;
+
+        var result = null;
+
+        try {
+            result = JSON.parse(data);
+
+        } catch(e) {
+
+            _this.lastChunk = data;
+
+            // start timeout to cancel all requests
+            clearTimeout(_this.lastChunkTimeout);
+            _this.lastChunkTimeout = setTimeout(function(){
+                _this._timeout();
+                throw errors.InvalidResponse(data);
+            }, 1000 * 15);
+
+            return;
+        }
+
+        // cancel timeout and set chunk to null
+        clearTimeout(_this.lastChunkTimeout);
+        _this.lastChunk = null;
+
+        if(result)
+            returnValues.push(result);
+    });
+
+    return returnValues;
 };
 
 

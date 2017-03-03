@@ -32,15 +32,13 @@ First you need to get web3.js into your project. This can be done using the foll
 - pure js: link the ``dist/web3.min.js``
 
 After that you need to create a web3 instance and set a provider.
-If you are in a ethereum supported Browser like Mist or MetaMask check if the ``web3`` object is available:
+Ethereum supported Browsers like Mist or MetaMask will have a ``ethereumProvider`` available, web3.js is setting this one to ``Web3.givenProvider``.
+If this property is ``null`` you need to connect to a remote/local node.
 
 .. code-block:: javascript
 
-    if (typeof web3 !== 'undefined') {
-        web3 = new Web3(web3.currentProvider);
-    } else {
-        // set the provider you want from Web3.providers
-        web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-    }
+    // in node.js use: var Web3 = require('web3');
+
+    var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider("ws://localhost:8546"));
 
 Thats it! now you can use the ``web3`` object.

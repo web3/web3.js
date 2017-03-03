@@ -30,7 +30,7 @@ var BatchManager = require('./batch');
 
 
 
-/**
+    /**
  * It's responsible for passing messages to providers
  * It's also responsible for polling the ethereum node for incoming messages
  * Default poll timeout is 1 second
@@ -46,18 +46,27 @@ var RequestManager = function RequestManager(provider) {
 
 // ADD GIVEN PROVIDER
 /* jshint ignore:start */
+var IpcProvider = require('web3-providers-ipc');
 var global = Function('return this')();
 
 if(typeof global.ethereumProvider !== 'undefined') {
     RequestManager.givenProvider = global.ethereumProvider;
 
 } else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-    if(global.web3.currentProvider.sendAsync) {
-        global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
-        delete global.web3.currentProvider.sendAsync;
+    // if connection object is available, create new provider
+    if (global.web3.currentProvider.connection) {
+        RequestManager.givenProvider = new IpcProvider('', global.web3.currentProvider.connection);
+
+    // otherwise subscription aren't available
+    } else {
+        if(global.web3.currentProvider.sendAsync) {
+            global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
+            delete global.web3.currentProvider.sendAsync;
+        }
+
+        RequestManager.givenProvider = global.web3.currentProvider;
     }
 
-    RequestManager.givenProvider = global.web3.currentProvider;
 }
 /* jshint ignore:end */
 
