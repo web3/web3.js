@@ -28,7 +28,7 @@ var XHR2 = require('xhr2'); // jshint ignore: line
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function (host, timeout) {
+var HttpProvider = function HttpProvider(host, timeout) {
     this.host = host || 'http://localhost:8545';
     this.timeout = timeout || 0;
     this.connected = false;
@@ -38,7 +38,7 @@ var HttpProvider = function (host, timeout) {
 /**
  * Should be used to make async request
  *
- * @method sendAsync
+ * @method send
  * @param {Object} payload
  * @param {Function} callback triggered on end with (err, result)
  */
