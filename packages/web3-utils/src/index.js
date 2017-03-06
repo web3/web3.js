@@ -34,13 +34,27 @@ var keccak256 = require("js-sha3").keccak_256; // jshint ignore:line
  * Fires an error in an event emitter and callback and returns the eventemitter
  *
  * @method _fireError
- * @param {Object} error
+ * @param {Object} error a string, a error, or an object with {message, data}
  * @param {Object} emitter
  * @param {Function} reject
  * @param {Function} callback
  * @return {Object} the emitter
  */
 var _fireError = function (error, emitter, reject, callback) {
+    /*jshint maxcomplexity: 10 */
+
+    // add data if given
+    if(_.isObject(error) && !(error instanceof Error) &&  error.data) {
+        if(_.isObject(error.data) || _.isArray(error.data)) {
+            error.data = JSON.stringify(error.data, null, 2);
+        }
+
+        error = error.message +"\n"+ error.data;
+    }
+
+    if(_.isString(error)) {
+        error = new Error(error);
+    }
 
     if (_.isFunction(callback)) {
         callback(error);

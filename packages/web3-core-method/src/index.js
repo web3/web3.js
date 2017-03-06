@@ -169,7 +169,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             payload.params[0].data &&
             payload.params[0].from &&
             !payload.params[0].to,
-        receiptError = new Error('Failed to check for transaction receipt.');
+        receiptError = 'Failed to check for transaction receipt:';
 
 
     // fire "receipt" and confirmation events and resolve after
@@ -178,10 +178,10 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
             method.eth.getTransactionReceipt(result)
             // catch error from requesting receipt
-            .catch(function () {
+            .catch(function (err) {
                 sub.unsubscribe();
                 promiseResolved = true;
-                utils._fireError(receiptError, defer.eventEmitter, defer.reject);
+                utils._fireError({message: receiptError, data: err}, defer.eventEmitter, defer.reject);
             })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
@@ -254,7 +254,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
                 return receipt;
             })
-           // CHECK for normal tx check for receipt only
+            // CHECK for normal tx check for receipt only
             .then(function(receipt) {
 
                 if (!isContractDeployment && !promiseResolved) {
@@ -294,7 +294,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            utils._fireError(receiptError, defer.eventEmitter, defer.reject);
+            utils._fireError({message: receiptError, data: err}, defer.eventEmitter, defer.reject);
         }
     });
 };
@@ -343,10 +343,7 @@ Method.prototype.buildCall = function() {
 
                 defer.eventEmitter.emit('transactionHash', result);
 
-
                 method._confirmTransaction(defer, result, payload, extraFromatters);
-
-
             }
 
         });
