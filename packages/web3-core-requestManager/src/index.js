@@ -128,7 +128,7 @@ RequestManager.prototype.addSubscription = function (id, name, type, callback) {
         };
 
     } else {
-        throw new Error('This provider doesn\'t support subscriptions', this.provider);
+        throw new Error('The provider doesn\'t support subscriptions: '+ this.provider.constructor.name);
     }
 };
 
