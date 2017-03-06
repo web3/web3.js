@@ -27,7 +27,7 @@ var errors = require('web3-core-helpers').errors;
 var oboe = require('oboe');
 
 
-var IpcProvider = function (path, net) {
+var IpcProvider = function IpcProvider(path, net) {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];

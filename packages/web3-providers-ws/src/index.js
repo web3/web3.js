@@ -29,7 +29,7 @@ if (typeof global !== 'undefined')
 // Default connection ws://localhost:8546
 
 
-var WebsocketProvider = function (path)  {
+var WebsocketProvider = function WebsocketProvider(path)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];

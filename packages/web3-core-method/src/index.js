@@ -168,8 +168,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
             payload.params[0].from &&
-            !payload.params[0].to,
-        receiptError = 'Failed to check for transaction receipt:';
+            !payload.params[0].to;
 
 
     // fire "receipt" and confirmation events and resolve after
@@ -181,7 +180,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             .catch(function (err) {
                 sub.unsubscribe();
                 promiseResolved = true;
-                utils._fireError({message: receiptError, data: err}, defer.eventEmitter, defer.reject);
+                utils._fireError({message: 'Failed to check for transaction receipt:', data: err}, defer.eventEmitter, defer.reject);
             })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
@@ -294,7 +293,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            utils._fireError({message: receiptError, data: err}, defer.eventEmitter, defer.reject);
+            utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transactions receipt. Are you using HttpProvider? Please switch to Websockets.', data: err}, defer.eventEmitter, defer.reject);
         }
     });
 };
