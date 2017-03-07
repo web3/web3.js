@@ -224,6 +224,9 @@ Subscription.prototype.subscribe = function() {
                     _this.callback(null, output, _this);
                     _this.emit('data', output);
                 });
+
+                // TODO subscribe here? after the past logs?
+
             } else {
                 _this.callback(err, null, _this);
                 _this.emit('error', err);
@@ -232,6 +235,7 @@ Subscription.prototype.subscribe = function() {
     }
 
     // create subscription
+    // TODO move to separate function? so that past logs can go first?
 
     if(typeof payload.params[1] === 'object')
         delete payload.params[1].fromBlock;
