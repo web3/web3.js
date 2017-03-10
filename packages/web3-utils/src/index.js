@@ -275,6 +275,8 @@ var fromAscii = function(str) {
  * @return {String}
  */
 var toNumber = function (value) {
+    if (!value) return value;
+
     return toBN(value).toNumber();
 };
 
@@ -419,19 +421,12 @@ var toWei = function(number, unit) {
  * @param {Number|String|BN} number, string, HEX string or BN
  * @return {BN} BN
  */
-var toBN = function(number) {
-    /*jshint maxcomplexity:5 */
-    number = number || 0;
-
-    if (isBigNumber(number))
-        return numberToBN(number.toString(10));
-    if (isBN(number))
-        return number;
-    if (isHex(number)) {
-        return numberToBN(number);
+var toBN = function(number){
+    try {
+        return numberToBN.apply(null, arguments);
+    } catch(e) {
+        throw new Error(e + ' "'+ number +'"');
     }
-
-    return new BN(number.toString(10), 10);
 };
 
 /**
@@ -475,25 +470,6 @@ var checkAddressChecksum = function (address) {
         }
     }
     return true;
-};
-
-/**
- * Transforms given string to valid 20 bytes-length address with 0x prefix
- *
- * @method toAddress
- * @param {String} address
- * @return {String} formatted address
- */
-var toAddress = function (address) {
-    if (isAddress(address)) {
-        return '0x'+ address.toLowerCase().replace('0x','');
-    }
-
-    if (/^[0-9a-f]{40}$/.test(address)) {
-        return '0x' + address;
-    }
-
-    return '0x' + padLeft(toHex(address).substr(2), 40);
 };
 
 
@@ -560,15 +536,15 @@ module.exports = {
     // extractTypeName: extractTypeName,
     _: _,
     sha3: sha3,
-    toAddress: toAddress,
     isAddress: isAddress,
     checkAddressChecksum: checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
     toHex: toHex,
+
     toBN: toBN,
     toNumberString: toNumberString,
     toNumber: toNumber,
-    toDecimal: toNumber,
+    toDecimal: toNumber, // alias
     fromNumber: fromNumber,
     fromDecimal: fromNumber, // alias
     toUtf8: toUtf8,

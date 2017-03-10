@@ -144,7 +144,8 @@ describe('lib/web3/method', function () {
                 contractAddress: address,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
-                blockNumber: '0xa'
+                blockNumber: '0xa',
+                gasUsed: '0x0'
             });
 
             provider.injectValidation(function (payload) {
@@ -254,7 +255,8 @@ describe('lib/web3/method', function () {
                 contractAddress: address,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
-                blockNumber: '0xa'
+                blockNumber: '0xa',
+                gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');
@@ -360,7 +362,8 @@ describe('lib/web3/method', function () {
                 contractAddress: address,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
-                blockNumber: '0xa'
+                blockNumber: '0xa',
+                gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');
@@ -450,7 +453,8 @@ describe('lib/web3/method', function () {
                 contractAddress: null,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
-                blockNumber: '0xa'
+                blockNumber: '0xa',
+                gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
@@ -621,7 +625,8 @@ describe('lib/web3/method', function () {
                     contractAddress: null,
                     cumulativeGasUsed: '0xa',
                     transactionIndex: '0x3',
-                    blockNumber: '0xa'
+                    blockNumber: '0xa',
+                    gasUsed: '0x0'
                 });
             }
 
