@@ -450,7 +450,7 @@ var isAddress = function (address) {
         return true;
     // Otherwise check each case
     } else {
-        return isChecksumAddress(address);
+        return checkAddressChecksum(address);
     }
 };
 
@@ -459,11 +459,11 @@ var isAddress = function (address) {
 /**
  * Checks if the given string is a checksummed address
  *
- * @method isChecksumAddress
+ * @method checkAddressChecksum
  * @param {String} address the given HEX adress
  * @return {Boolean}
  */
-var isChecksumAddress = function (address) {
+var checkAddressChecksum = function (address) {
     // Check each case
     address = address.replace('0x','');
     var addressHash = sha3(address.toLowerCase()).replace('0x','');
@@ -562,6 +562,9 @@ module.exports = {
     padLeft: padLeft,
     padRight: padRight,
     toAddress: toAddress,
+    isAddress: isAddress,
+    checkAddressChecksum: checkAddressChecksum,
+    toChecksumAddress: toChecksumAddress,
     toHex: toHex,
     toBN: toBN,
     toNumberString: toNumberString,
@@ -577,9 +580,6 @@ module.exports = {
     fromWei: fromWei,
     isBN: isBN,
     isBigNumber: isBigNumber,
-    isAddress: isAddress,
-    isChecksumAddress: isChecksumAddress,
-    toChecksumAddress: toChecksumAddress,
     sha3: sha3
 };
 
