@@ -117,7 +117,10 @@ var sha3 = function (value) {
  * @returns {String} right aligned string
  */
 var padLeft = function (string, chars, sign) {
-    return new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
+    var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
+    string = string.toString(16).replace(/^0x/i,'');
+
+    return (hasPrefix ? '0x' : '') + new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
 };
 
 /**
@@ -130,7 +133,10 @@ var padLeft = function (string, chars, sign) {
  * @returns {String} right aligned string
  */
 var padRight = function (string, chars, sign) {
-    return string + (new Array(chars - string.length + 1).join(sign ? sign : "0"));
+    var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
+    string = string.toString(16).replace(/^0x/i,'');
+
+    return (hasPrefix ? '0x' : '') + string + (new Array(chars - string.length + 1).join(sign ? sign : "0"));
 };
 
 /**
@@ -288,6 +294,8 @@ var toNumber = function (value) {
  * @return {String}
  */
 var toNumberString = function (value) {
+    if (!value) return value;
+
     return toBN(value).toString(10);
 };
 
@@ -460,8 +468,8 @@ var isAddress = function (address) {
  */
 var checkAddressChecksum = function (address) {
     // Check each case
-    address = address.replace('0x','');
-    var addressHash = sha3(address.toLowerCase()).replace('0x','');
+    address = address.replace(/^0x/i,'');
+    var addressHash = sha3(address.toLowerCase()).replace(/^0x/i,'');
 
     for (var i = 0; i < 40; i++ ) {
         // the nth letter should be uppercase if the nth digit of casemap is 1
@@ -489,8 +497,8 @@ var toChecksumAddress = function (address) {
 
 
 
-    address = address.toLowerCase().replace('0x','');
-    var addressHash = sha3(address).replace('0x','');
+    address = address.toLowerCase().replace(/^0x/i,'');
+    var addressHash = sha3(address).replace(/^0x/i,'');
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {
@@ -535,12 +543,14 @@ module.exports = {
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     _: _,
+    BN: BN,
+    isBN: isBN,
+    isBigNumber: isBigNumber,
     sha3: sha3,
     isAddress: isAddress,
     checkAddressChecksum: checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
     toHex: toHex,
-
     toBN: toBN,
     toNumberString: toNumberString,
     toNumber: toNumber,
@@ -548,13 +558,15 @@ module.exports = {
     fromNumber: fromNumber,
     fromDecimal: fromNumber, // alias
     toUtf8: toUtf8,
+    toString: toUtf8,
     toAscii: toAscii,
     fromUtf8: fromUtf8,
+    fromString: fromUtf8,
     fromAscii: fromAscii,
+    unitMap: ethjsUnit.unitMap,
     toWei: toWei,
     fromWei: fromWei,
-    isBN: isBN,
-    isBigNumber: isBigNumber,
+
     padLeft: padLeft,
     padRight: padRight
 };
