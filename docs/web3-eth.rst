@@ -73,6 +73,15 @@ For ``web3.eth.Iban`` see the :ref:`Iban reference documentation <eth-iban>`
 ------------------------------------------------------------------------------
 
 
+personal
+=====================
+
+For ``web3.eth.personal`` see the :ref:`personal reference documentation <eth-personal>`
+
+
+------------------------------------------------------------------------------
+
+
 net
 =====================
 
@@ -82,7 +91,7 @@ For ``web3.eth.net`` see the :ref:`net reference documentation <eth-net>`
 ------------------------------------------------------------------------------
 
 
-.. include:: package-core.rst
+.. include:: include_package-core.rst
 
 
 ------------------------------------------------------------------------------

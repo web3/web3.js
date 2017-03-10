@@ -25,8 +25,8 @@
 var core = require('web3-core');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
-
 var formatters = require('web3-core-helpers').formatters;
+var Net = require('web3-net');
 
 
 var Shh = function Shh() {
@@ -41,6 +41,8 @@ var Shh = function Shh() {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
+
+    this.net = new Net(this.currentProvider);
 };
 
 core.addProviders(Shh);

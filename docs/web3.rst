@@ -12,7 +12,6 @@ The web3.js object is a umbrella package to house all ethereum related modules.
     var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
 
     > web3.eth
-    > web3.personal
     > web3.shh
     > web3.bzz
     > web3.utils
