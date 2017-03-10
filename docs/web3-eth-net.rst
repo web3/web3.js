@@ -10,36 +10,9 @@ Contains functions to receive information about the current network.
 
 ------------------------------------------------------------------------------
 
-id
-=========
 
-.. code-block:: javascript
+.. include:: include_package-net.rst
 
-    web3.eth.net.getId([callback])
-
-Gets the current network ID.
-
-----------
-Parameters
-----------
-
-none
-
--------
-Returns
--------
-
-``Promise`` returns ``Number``: The network ID.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.getId()
-    .then(console.log);
-    > 1
 
 ------------------------------------------------------------------------------
 
@@ -76,68 +49,3 @@ Example
     > "main"
 
 
-------------------------------------------------------------------------------
-
-isListening
-=========
-
-.. code-block:: javascript
-
-    web3.eth.net.isListening([callback])
-
-Checks if the node is listening for peers.
-
-----------
-Parameters
-----------
-
-none
-
--------
-Returns
--------
-
-``Promise`` returns ``Boolean``
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.isListening()
-    .then(console.log);
-    > true
-
-------------------------------------------------------------------------------
-
-getPeerCount
-=========
-
-.. code-block:: javascript
-
-    web3.eth.net.getPeerCount([callback])
-
-Get the number of peers connected to.
-
-----------
-Parameters
-----------
-
-none
-
--------
-Returns
--------
-
-``Promise`` returns ``Number``
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.getPeerCount()
-    .then(console.log);
-    > 25

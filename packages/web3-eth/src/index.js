@@ -26,9 +26,11 @@ var _ = require('underscore');
 var core = require('web3-core');
 var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
-var utils = require('web3-utils');
 var Method = require('web3-core-method');
-var Net = require('web3-eth-net');
+var utils = require('web3-utils');
+var Net = require('web3-net');
+
+var Personal = require('web3-eth-personal');
 var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
@@ -73,7 +75,11 @@ var Eth = function Eth() {
         method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
     });
 
+    // add net
     this.net = new Net(this.currentProvider);
+
+    // add personal
+    this.personal = new Personal(this.currentProvider);
 
     // add contract
     this.Contract = Contract;

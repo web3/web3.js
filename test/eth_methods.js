@@ -41,6 +41,16 @@ describe('eth', function() {
         u.propertyExists(eth, 'givenProvider');
         u.propertyExists(eth, 'defaultBlock');
         u.propertyExists(eth, 'defaultAccount');
+
+        u.propertyExists(eth, 'net');
+        u.methodExists(eth.net, 'getId');
+        u.methodExists(eth.net, 'isListening');
+        u.methodExists(eth.net, 'getPeerCount');
+
+        u.propertyExists(eth, 'personal');
+        u.methodExists(eth.personal, 'sendTransaction');
+        u.methodExists(eth.personal, 'newAccount');
+        u.methodExists(eth.personal, 'unlockAccount');
     });
 });
 

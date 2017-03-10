@@ -32,8 +32,8 @@ var version = require('../lerna.json');
 var core = require('../packages/web3-core');
 
 var Eth = require('../packages/web3-eth');
-var Net = require('../packages/web3-eth-net');
-var Personal = require('../packages/web3-personal');
+var Net = require('../packages/web3-net');
+var Personal = require('../packages/web3-eth-personal');
 var Shh = require('../packages/web3-shh');
 var Bzz = require('../packages/web3-bzz');
 
@@ -59,7 +59,6 @@ var Web3 = function Web3() {
 
 
     this.eth = new Eth(this);
-    this.personal = new Personal(this); // move to -> web3.eth.accounts
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
 
@@ -67,10 +66,16 @@ var Web3 = function Web3() {
 
     this.setProvider = function (provider) {
         this._requestManager.setProvider(provider);
+
         this.eth.setProvider(provider);
+        this.eth.net.setProvider(provider);
+        this.eth.personal.setProvider(provider);
+
         this.shh.setProvider(provider);
+        this.shh.net.setProvider(provider);
+
         this.bzz.setProvider(provider);
-        this.personal.setProvider(provider);
+        this.bzz.net.setProvider(provider);
         return true;
     };
 };

@@ -30,8 +30,14 @@ For more see `Whisper  Overview <https://github.com/ethereum/wiki/wiki/Whisper-O
 ------------------------------------------------------------------------------
 
 
-.. include:: package-core.rst
+.. include:: include_package-core.rst
 
+
+
+------------------------------------------------------------------------------
+
+
+.. include:: include_package-net.rst
 
 
 ------------------------------------------------------------------------------

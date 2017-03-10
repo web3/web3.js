@@ -24,6 +24,7 @@
 
 var core = require('web3-core');
 var Method = require('web3-core-method');
+var Net = require('web3-net');
 
 
 var Bzz = function Bzz() {
@@ -37,6 +38,8 @@ var Bzz = function Bzz() {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
+
+    this.net = new Net(this.currentProvider);
 };
 
 core.addProviders(Bzz);
