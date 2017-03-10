@@ -11,11 +11,13 @@ The web3.js object is a umbrella package to house all ethereum related modules.
     // "Web3.providers.givenProvider" will be set if in an Ethereum supported browser.
     var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
 
-    // -> web3.eth
-    // -> web3.personal
-    // -> web3.shh
-    // -> web3.bzz
-    // -> web3.utils
+    > web3.eth
+    > web3.personal
+    > web3.shh
+    > web3.bzz
+    > web3.utils
+
+
 
 
 ------------------------------------------------------------------------------
@@ -44,23 +46,36 @@ Example
     web3.version;
     > "1.0.0"
 
+
 ------------------------------------------------------------------------------
 
-providers
+
+.. include:: package-core.rst
+
+
+------------------------------------------------------------------------------
+
+
+modules
 =====================
 
 .. code-block:: javascript
 
-    web3.providers
+    web3.modules
 
-Will return an object with different available providers to use when instantiating ``Web3``
+Will return an object with the classes of all major sub modules, to be able to instantiate them manually.
 
 
 -------
 Returns
 -------
 
-``Object``: A list of providers.
+``Object``: A list of modules:
+    - ``Eth`` - ``Function``: the Eth module for interacting with the ethereum network see :ref:`web3.eth <eth>` for more.
+    - ``Net`` - ``Function``: the Net module for interacting with network properties see :ref:`web3.eth.net <eth-net>` for more.
+    - ``Personal`` - ``Function``: the Personal module for interacting with the ethereum accounts see :ref:`web3.personal <personal>` for more.
+    - ``Shh`` - ``Function``: the Shh module for interacting with the whisper protocol see :ref:`web3.shh <shh>` for more.
+    - ``Bzz`` - ``Function``: the Bzz module for interacting with the swarm network see :ref:`web3.bzz <bzz>` for more.
 
 -------
 Example
@@ -68,69 +83,13 @@ Example
 
 .. code-block:: javascript
 
-    web3.providers
+    web3.modules
     > {
-        HttpProvider: HttpProvider,
-        IpcProvider: IpcProvider,
-        WebsocketProvider: WebsocketProvider
+        Eth: Eth function(provider),
+        Net: Net function(provider),
+        Personal: Personal function(provider),
+        Shh: Shh function(provider),
+        Bzz: Bzz function(provider),
     }
 
-------------------------------------------------------------------------------
 
-setProvider
-=====================
-
-.. code-block:: javascript
-
-    web3.setProvider(myProvider)
-
-When called changes the current provider for all modules.
-
-----------
-Parameters
-----------
-
-``Object`` - **myProvider**: a valid provider with at least ``send``, ``on`` function
-
--------
-Returns
--------
-
-``undefined``
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
-
-
-------------------------------------------------------------------------------
-
-currentProvider
-=====================
-
-.. code-block:: javascript
-
-    web3.currentProvider
-
-Will return the current provider, otherwise ``null``.
-
-
--------
-Returns
--------
-
-``Object``: The current provider set or ``null``;
-
--------
-Example
--------
-
-.. code-block:: javascript
-    if(!web3.currentProvider)
-        web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
-
-------------------------------------------------------------------------------

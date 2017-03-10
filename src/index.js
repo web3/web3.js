@@ -28,9 +28,11 @@
 "use strict";
 
 
+var version = require('../lerna.json');
 var core = require('../packages/web3-core');
 
 var Eth = require('../packages/web3-eth');
+var Net = require('../packages/web3-eth-net');
 var Personal = require('../packages/web3-personal');
 var Shh = require('../packages/web3-shh');
 var Bzz = require('../packages/web3-bzz');
@@ -46,6 +48,8 @@ var providers = {
 
 
 var Web3 = function Web3() {
+
+    this.version = version.version;
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
@@ -71,10 +75,20 @@ var Web3 = function Web3() {
     };
 };
 
+Web3.prototype.version = version.version;
 
 Web3.providers = providers;
 
 core.addProviders(Web3);
+
+
+Web3.modules = {
+    Eth: Eth,
+    Net: Net,
+    Personal: Personal,
+    Shh: Shh,
+    Bzz: Bzz
+};
 
 
 

@@ -588,8 +588,7 @@ module.exports = {
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     _: _,
-    padLeft: padLeft,
-    padRight: padRight,
+    sha3: sha3,
     toAddress: toAddress,
     isAddress: isAddress,
     checkAddressChecksum: checkAddressChecksum,
@@ -609,6 +608,7 @@ module.exports = {
     fromWei: fromWei,
     isBN: isBN,
     isBigNumber: isBigNumber,
-    sha3: sha3
+    padLeft: padLeft,
+    padRight: padRight
 };
 
