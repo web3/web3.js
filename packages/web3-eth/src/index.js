@@ -28,9 +28,11 @@ var helpers = require('web3-core-helpers');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var utils = require('web3-utils');
 var Method = require('web3-core-method');
+var Net = require('web3-eth-net');
 var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
+
 
 var getNetworkType = require('./getNetworkType.js');
 
@@ -70,6 +72,8 @@ var Eth = function Eth() {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
     });
+
+    this.net = new Net(this.currentProvider);
 
     // add contract
     this.Contract = Contract;
@@ -113,27 +117,6 @@ Object.defineProperty(Eth.prototype, 'defaultAccount', {
 });
 
 var methods = function () {
-
-    var getId = new Method({
-        name: 'net.getId',
-        call: 'net_version',
-        params: 0,
-        outputFormatter: utils.toNumber
-    });
-
-    var isListening = new Method({
-        name: 'net.isListening',
-        call: 'net_listening',
-        params: 0
-    });
-
-    var getPeerCount = new Method({
-        name: 'net.getPeerCount',
-        call: 'net_peerCount',
-        params: 0,
-        outputFormatter: utils.toNumber
-    });
-
 
 
     var getVersion = new Method({
@@ -439,9 +422,6 @@ var methods = function () {
 
 
     return [
-        getId,
-        isListening,
-        getPeerCount,
         getVersion,
         getCoinbase,
         getMining,

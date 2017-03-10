@@ -81,6 +81,36 @@ Example
 ------------------------------------------------------------------------------
 
 
+currentProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.currentProvider
+    web3.eth.currentProvider
+    web3.shh.currentProvider
+    web3.bzz.currentProvider
+    ...
+
+Will return the current provider, otherwise ``null``.
+
+
+-------
+Returns
+-------
+
+``Object``: The current provider set or ``null``;
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+    if(!web3.currentProvider)
+        web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+
+------------------------------------------------------------------------------
+
 BatchRequest
 =====================
 
