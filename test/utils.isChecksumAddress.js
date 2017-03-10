@@ -17,10 +17,10 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('isChecksumAddress', function () {
+    describe('checkAddressChecksum', function () {
         tests.forEach(function (test) {
             it('shoud test if address ' + test.value + ' passes checksum: ' + test.is, function () {
-                assert.equal(utils.isChecksumAddress(test.value), test.is);
+                assert.equal(utils.checkAddressChecksum(test.value), test.is);
             });
         });
     });
