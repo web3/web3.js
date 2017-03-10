@@ -266,6 +266,7 @@ describe('contract', function () {
                 blockNumber: '0x3',
                 transactionHash: '0x1234',
                 blockHash: '0x1345',
+                transactionIndex: '0x0',
                 logIndex: '0x4',
                 data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
                 '0000000000000000000000000000000000000000000000000000000000000008'
@@ -342,7 +343,8 @@ describe('contract', function () {
                 contractAddress: addressLowercase,
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
-                blockNumber: '0xa'
+                blockNumber: '0xa',
+                gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_unsubscribe');
@@ -1326,6 +1328,7 @@ describe('contract', function () {
                 transactionIndex: '0x3',
                 transactionHash: '0x1234',
                 blockNumber: '0xa',
+                gasUsed: '0x0',
                 logs: [{
                     address: address,
                     topics: [
@@ -1335,6 +1338,7 @@ describe('contract', function () {
                     ],
                     blockNumber: '0xa',
                     transactionHash: '0x1234',
+                    transactionIndex: '0x0',
                     blockHash: '0x1345',
                     logIndex: '0x4',
                     data: '0x0000000000000000000000000000000000000000000000000000000000000005'
@@ -1347,6 +1351,7 @@ describe('contract', function () {
                     ],
                     blockNumber: '0xa',
                     transactionHash: '0x1234',
+                    transactionIndex: '0x0',
                     blockHash: '0x1345',
                     logIndex: '0x4',
                     data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
@@ -1816,6 +1821,7 @@ describe('contract', function () {
                 topics: topic1,
                 blockNumber: '0x3',
                 transactionHash: '0x1234',
+                transactionIndex: '0x0',
                 blockHash: '0x1345',
                 logIndex: '0x4',
                 data: '0x0000000000000000000000000000000000000000000000000000000000000002' +
@@ -1826,6 +1832,7 @@ describe('contract', function () {
                 topics: topic2,
                 blockNumber: '0x4',
                 transactionHash: '0x1235',
+                transactionIndex: '0x0',
                 blockHash: '0x1346',
                 logIndex: '0x1',
                 data: '0x0000000000000000000000000000000000000000000000000000000000000004' +

@@ -27,6 +27,7 @@ var tests = [{
             miner: "0xf8b483dba2c3b7176a3da549ad41a48bb3121069",
             nonce: "0x084149998194cc5f",
             number: "0x1348c9",
+            size: "0x0",
             parentHash: "0x7736fab79e05dc611604d22470dadad26f56fe494421b5b333de816ce1f25701",
             receiptRoot: "0x2fab35823ad00c7bb388595cb46652fe7886e00660a01e867824d3dceb1c8d36",
             sha3Uncles: "0x1dcc4de8dec75d7aab85b567b6ccd41ad312451b948a7413f0a142fd40d49347",

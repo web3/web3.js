@@ -14,7 +14,7 @@ var tests = [{
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [web3.extend.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     }]
 },{
@@ -27,7 +27,7 @@ var tests = [{
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [web3.extend.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     }]
 },{
