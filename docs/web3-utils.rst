@@ -8,6 +8,38 @@ This package provides utility functions for Ethereum dapps and other web3.js pac
 
 ------------------------------------------------------------------------------
 
+_
+=====================
+
+.. code-block:: javascript
+
+    web3.utils._()
+
+The `underscore <http://underscorejs.org`_ library for many convenience JavaScript functions.
+
+See the `underscore API reference <http://underscorejs.org`_ for details.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var _ = web3.utils._;
+
+    _.union([1,2],[3]);
+    > [1,2,3]
+
+    _.each({my: 'object'}, function(value, key){ ... })
+
+    ...
+
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
 .. _utils-bn:
 
 BN
@@ -17,9 +49,10 @@ BN
 
     web3.utils.BN(mixed)
 
-The BN.js library for calculating with big numbers in JavaScript.
+The `BN.js <https://github.com/indutny/bn.js/`_ library for calculating with big numbers in JavaScript.
+See the `BN.js documentation <https://github.com/indutny/bn.js/` for details.
 
-For safe conversion of many types, incl BigNumber.js use :ref:`utils.toBN <utils-tobn>`
+.. note:: For safe conversion of many types, incl `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ use :ref:`utils.toBN <utils-tobn>`
 
 ----------
 Parameters
@@ -31,7 +64,7 @@ Parameters
 Returns
 -------
 
-``Object``: The BN instance.
+``Object``: The `BN.js <https://github.com/indutny/bn.js/`_ instance.
 
 -------
 Example
@@ -49,6 +82,80 @@ Example
 
     new BN('0xea').toString();
     > "234"
+
+
+------------------------------------------------------------------------------
+
+isBN
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.isBN(bn)
+
+
+Checks if a given value is a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+
+
+----------
+Parameters
+----------
+
+1. ``bn`` - ``Object``: An `BN.js <https://github.com/indutny/bn.js/`_ instance.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var number = new BN(10);
+
+    web3.utils.isBN(number);
+    > true
+
+
+------------------------------------------------------------------------------
+
+isBigNumber
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.isBigNumber(bignumber)
+
+
+Checks if a given value is a `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instance.
+
+
+----------
+Parameters
+----------
+
+1. ``bignumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instance.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var number = new BigNumber(10);
+
+    web3.utils.isBigNumber(number);
+    > true
 
 
 ------------------------------------------------------------------------------
@@ -259,21 +366,21 @@ toBN
 
     web3.utils.toBN(number)
 
-Will safly convert any given value, including BigNumebr.js into a BN.js instance, for handling big numbers in JavaScript.
+Will safly convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instances) into a `BN.js <https://github.com/indutny/bn.js/`_ instance, for handling big numbers in JavaScript.
 
-For just the BN class use :ref:`utils.BN <utils-bn>`
+.. note:: For just the `BN.js <https://github.com/indutny/bn.js/`_ class use :ref:`utils.BN <utils-bn>`
 
 ----------
 Parameters
 ----------
 
-1. ``number`` - ``String|Number``: Number to convert to a big number.
+1. ``number`` - ``String|Number|HEX``: Number to convert to a big number.
 
 -------
 Returns
 -------
 
-``Object``: The BN instance.
+``Object``: The `BN.js <https://github.com/indutny/bn.js/`_ instance.
 
 -------
 Example
@@ -294,26 +401,26 @@ Example
 ------------------------------------------------------------------------------
 
 
-sha3
+toNumberString
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
+    web3.utils.toNumberString(hex)
 
-Will calculate the sha3 of the input.
+Returns the number representation of a given HEX value as a string.
 
 ----------
 Parameters
 ----------
 
-1. ``string`` - ``String``: A string to hash.
+1. ``hexString`` - ``String|HEX``: A string to hash.
 
 -------
 Returns
 -------
 
-``String``: the result hash.
+``String``: The number as a string.
 
 -------
 Example
@@ -321,33 +428,35 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234');
-    > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
+    web3.utils.toNumberString('0xea');
+    > "234"
 
 
 ------------------------------------------------------------------------------
 
-
-sha3
+toNumber
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
+    web3.utils.toNumber(hex)
+    web3.utils.toDecimal(hex) // ALIAS: might be deprecated in the future
 
-Will calculate the sha3 of the input.
+Returns the number representation of a given HEX value.
+
+.. note:: This is not useful for big numbers, rather use :ref:`utils.toBN <utils-tobn>` instead.
 
 ----------
 Parameters
 ----------
 
-1. ``string`` - ``String``: A string to hash.
+1. ``hexString`` - ``String|HEX``: A string to hash.
 
 -------
 Returns
 -------
 
-``String``: the result hash.
+``Number``
 
 -------
 Example
@@ -355,33 +464,33 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234');
-    > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
+    web3.utils.toNumber('0xea');
+    > 234
 
 
 ------------------------------------------------------------------------------
 
-
-sha3
+fromNumber
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.sha3(string)
+    web3.utils.fromNumber(number)
+    web3.utils.fromDecimal(number) // ALIAS
 
-Will calculate the sha3 of the input.
+Returns the HEX representation of a given number value.
 
 ----------
 Parameters
 ----------
 
-1. ``string`` - ``String``: A string to hash.
+1. ``number`` - ``String|Number|BN|BigNumber``: A number as string or number.
 
 -------
 Returns
 -------
 
-``String``: the result hash.
+``String``: The HEX value of the given number.
 
 -------
 Example
@@ -389,8 +498,461 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234');
-    > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
+    web3.utils.fromNumber('234');
+    > '0xea'
 
 
 ------------------------------------------------------------------------------
+
+
+toUtf8
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.toUtf8(hex)
+    web3.utils.toString(hex) // ALIAS
+
+Returns the UTF-8 string representation of a given HEX value.
+
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String``: A HEX string to convert to a UTF-8 string.
+
+-------
+Returns
+-------
+
+``String``: The UTF-8 string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.toUtf8('0x49206861766520313030e282ac');
+    > "I have 100€"
+
+
+------------------------------------------------------------------------------
+
+toAscii
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.toAscii(hex)
+
+Returns the ASCII string representation of a given HEX value.
+
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String``: A HEX string to convert to a ASCII string.
+
+-------
+Returns
+-------
+
+``String``: The ASCII string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.toAscii('0x4920686176652031303021');
+    > "I have 100!"
+
+
+------------------------------------------------------------------------------
+
+
+
+fromUtf8
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.fromUtf8(hex)
+    web3.utils.fromString(hex) // ALIAS
+
+Returns the HEX representation of a given UTF-8 string.
+
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String``: A UTF-8 string to convert to a HEX string.
+
+-------
+Returns
+-------
+
+``String``: The HEX string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.fromUtf8('I have 100€');
+    > "0x49206861766520313030e282ac"
+
+
+------------------------------------------------------------------------------
+
+fromAscii
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.fromAscii(hex)
+
+
+Returns the HEX representation of a given ASCII string.
+
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String``: A ASCII string to convert to a HEX string.
+
+-------
+Returns
+-------
+
+``String``: The HEX string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.fromAscii('I have 100!');
+    > "0x4920686176652031303021"
+
+
+------------------------------------------------------------------------------
+
+toWei
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.toWei(number [, unit])
+
+
+Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_.
+
+.. note:: "wei" are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.
+
+----------
+Parameters
+----------
+
+1. ``number`` - ``String|Number|BN``: The value.
+1. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert from. Possible units are:
+    - ``noether``: '0'
+    - ``wei``: '1'
+    - ``kwei``: '1000'
+    - ``Kwei``: '1000'
+    - ``babbage``: '1000'
+    - ``femtoether``: '1000'
+    - ``mwei``: '1000000'
+    - ``Mwei``: '1000000'
+    - ``lovelace``: '1000000'
+    - ``picoether``: '1000000'
+    - ``gwei``: '1000000000'
+    - ``Gwei``: '1000000000'
+    - ``shannon``: '1000000000'
+    - ``nanoether``: '1000000000'
+    - ``nano``: '1000000000'
+    - ``szabo``: '1000000000000'
+    - ``microether``: '1000000000000'
+    - ``micro``: '1000000000000'
+    - ``finney``: '1000000000000000'
+    - ``milliether``: '1000000000000000'
+    - ``milli``: '1000000000000000'
+    - ``ether``: '1000000000000000000'
+    - ``kether``: '1000000000000000000000'
+    - ``grand``: '1000000000000000000000'
+    - ``mether``: '1000000000000000000000000'
+    - ``gether``: '1000000000000000000000000000'
+    - ``tether``: '1000000000000000000000000000000'
+
+-------
+Returns
+-------
+
+``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.toWei('1', 'ether');
+    > "1000000000000000000"
+
+    web3.utils.toWei('1', 'finney');
+    > "1000000000000000"
+
+    web3.utils.toWei('1', 'szabo');
+    > "1000000000000"
+
+    web3.utils.toWei('1', 'shannon');
+    > "1000000000"
+
+
+
+------------------------------------------------------------------------------
+
+fromWei
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.fromWei(number [, unit])
+
+
+Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_ value into a `ether value <http://ethdocs.org/en/latest/ether.html>`_.
+
+.. note:: "wei" are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.
+
+----------
+Parameters
+----------
+
+1. ``number`` - ``String|Number|BN``: The value in wei.
+1. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert to. Possible units are:
+    - ``noether``: '0'
+    - ``wei``: '1'
+    - ``kwei``: '1000'
+    - ``Kwei``: '1000'
+    - ``babbage``: '1000'
+    - ``femtoether``: '1000'
+    - ``mwei``: '1000000'
+    - ``Mwei``: '1000000'
+    - ``lovelace``: '1000000'
+    - ``picoether``: '1000000'
+    - ``gwei``: '1000000000'
+    - ``Gwei``: '1000000000'
+    - ``shannon``: '1000000000'
+    - ``nanoether``: '1000000000'
+    - ``nano``: '1000000000'
+    - ``szabo``: '1000000000000'
+    - ``microether``: '1000000000000'
+    - ``micro``: '1000000000000'
+    - ``finney``: '1000000000000000'
+    - ``milliether``: '1000000000000000'
+    - ``milli``: '1000000000000000'
+    - ``ether``: '1000000000000000000'
+    - ``kether``: '1000000000000000000000'
+    - ``grand``: '1000000000000000000000'
+    - ``mether``: '1000000000000000000000000'
+    - ``gether``: '1000000000000000000000000000'
+    - ``tether``: '1000000000000000000000000000000'
+
+-------
+Returns
+-------
+
+``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.fromWei('1', 'ether');
+    > "0.000000000000000001"
+
+    web3.utils.fromWei('1', 'finney');
+    > "0.000000000000001"
+
+    web3.utils.fromWei('1', 'szabo');
+    > "0.000000000001"
+
+    web3.utils.fromWei('1', 'shannon');
+    > "0.000000001"
+
+------------------------------------------------------------------------------
+
+unitMap
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.unitMap
+
+
+Shows all possible `ether value <http://ethdocs.org/en/latest/ether.html>`_ and their amount in `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_.
+
+----------
+Retrun value
+----------
+
+- ``Object`` with the following properties:
+    - ``noether``: '0'
+    - ``wei``: '1'
+    - ``kwei``: '1000'
+    - ``Kwei``: '1000'
+    - ``babbage``: '1000'
+    - ``femtoether``: '1000'
+    - ``mwei``: '1000000'
+    - ``Mwei``: '1000000'
+    - ``lovelace``: '1000000'
+    - ``picoether``: '1000000'
+    - ``gwei``: '1000000000'
+    - ``Gwei``: '1000000000'
+    - ``shannon``: '1000000000'
+    - ``nanoether``: '1000000000'
+    - ``nano``: '1000000000'
+    - ``szabo``: '1000000000000'
+    - ``microether``: '1000000000000'
+    - ``micro``: '1000000000000'
+    - ``finney``: '1000000000000000'
+    - ``milliether``: '1000000000000000'
+    - ``milli``: '1000000000000000'
+    - ``ether``: '1000000000000000000'
+    - ``kether``: '1000000000000000000000'
+    - ``grand``: '1000000000000000000000'
+    - ``mether``: '1000000000000000000000000'
+    - ``gether``: '1000000000000000000000000000'
+    - ``tether``: '1000000000000000000000000000000'
+
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.unitMap
+    > {
+        noether: '0',
+        wei:        '1',
+        kwei:       '1000',
+        Kwei:       '1000',
+        babbage:    '1000',
+        femtoether: '1000',
+        mwei:       '1000000',
+        Mwei:       '1000000',
+        lovelace:   '1000000',
+        picoether:  '1000000',
+        gwei:       '1000000000',
+        Gwei:       '1000000000',
+        shannon:    '1000000000',
+        nanoether:  '1000000000',
+        nano:       '1000000000',
+        szabo:      '1000000000000',
+        microether: '1000000000000',
+        micro:      '1000000000000',
+        finney:     '1000000000000000',
+        milliether: '1000000000000000',
+        milli:      '1000000000000000',
+        ether:      '1000000000000000000',
+        kether:     '1000000000000000000000',
+        grand:      '1000000000000000000000',
+        mether:     '1000000000000000000000000',
+        gether:     '1000000000000000000000000000',
+        tether:     '1000000000000000000000000000000'
+    }
+
+------------------------------------------------------------------------------
+
+padLeft
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.padLeft(string, characterAmount [, sign])
+
+
+Adds a padding on the left of a string, Useful for adding paddings to HEX strings.
+
+
+----------
+Parameters
+----------
+
+1. ``string`` - ``String``: The string to add padding on the left.
+2. ``characterAmount`` - ``Number``: The number of characters the total string should have.
+3. ``sign`` - ``String`` (optional): The character sign to use, defaults to ``"0"``.
+
+-------
+Returns
+-------
+
+``String``: The padded string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.padLeft('0x3456ff', 20);
+    > "0x000000000000003456ff"
+
+    web3.utils.padLeft(0x3456ff, 20);
+    > "0x000000000000003456ff"
+
+    web3.utils.padLeft('Hello', 20, 'x');
+    > "xxxxxxxxxxxxxxxHello"
+
+------------------------------------------------------------------------------
+
+padRight
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.padRight(string, characterAmount [, sign])
+
+
+Adds a padding on the right of a string, Useful for adding paddings to HEX strings.
+
+
+----------
+Parameters
+----------
+
+1. ``string`` - ``String``: The string to add padding on the right.
+2. ``characterAmount`` - ``Number``: The number of characters the total string should have.
+3. ``sign`` - ``String`` (optional): The character sign to use, defaults to ``"0"``.
+
+-------
+Returns
+-------
+
+``String``: The padded string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.padRight('0x3456ff', 20);
+    > "0x3456ff00000000000000"
+
+    web3.utils.padRight(0x3456ff, 20);
+    > "0x3456ff00000000000000"
+
+    web3.utils.padRight('Hello', 20, 'x');
+    > "Helloxxxxxxxxxxxxxxx"
