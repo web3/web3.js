@@ -10,6 +10,10 @@ describe('shh', function() {
         u.methodExists(shh, 'newGroup');
         u.methodExists(shh, 'addToGroup');
         u.methodExists(shh, 'subscribe');
+        u.propertyExists(shh, 'net');
+        u.methodExists(shh.net, 'getId');
+        u.methodExists(shh.net, 'isListening');
+        u.methodExists(shh.net, 'getPeerCount');
     });
 });
 

@@ -28,7 +28,13 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 ------------------------------------------------------------------------------
 
 
-.. include:: package-core.rst
+.. include:: include_package-core.rst
+
+
+------------------------------------------------------------------------------
+
+
+.. include:: include_package-net.rst
 
 
 ------------------------------------------------------------------------------

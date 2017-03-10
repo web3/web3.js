@@ -17,4 +17,4 @@ var tests = [{
     call: 'personal_'+ method
 }];
 
-testMethod.runTests('personal', method, tests);
+testMethod.runTests(['eth','personal'], method, tests);

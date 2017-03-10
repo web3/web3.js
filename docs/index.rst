@@ -31,11 +31,9 @@ Contents:
     web3-eth-subscribe
     web3-eth-contract
     web3-eth-iban
-    web3-eth-net
     web3-shh
     web3-bzz
+    web3-net
     web3-personal
     web3-admin
-
-    .. contract-object.rst
 

@@ -49,17 +49,9 @@ var packages = [{
     expose: 'Eth',
     src: './packages/web3-eth/src/index.js'
 },{
-    fileName: 'web3-personal',
+    fileName: 'web3-eth-personal',
     expose: 'Personal',
-    src: './packages/web3-personal/src/index.js'
-},{
-    fileName: 'web3-shh',
-    expose: 'Shh',
-    src: './packages/web3-shh/src/index.js'
-},{
-    fileName: 'web3-bzz',
-    expose: 'Bzz',
-    src: './packages/web3-bzz/src/index.js'
+    src: './packages/web3-eth-personal/src/index.js'
 },{
     fileName: 'web3-eth-iban',
     expose: 'EthIban',
@@ -68,6 +60,18 @@ var packages = [{
     fileName: 'web3-eth-abi',
     expose: 'EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
+},{
+    fileName: 'web3-net',
+    expose: 'Net',
+    src: './packages/web3-net/src/index.js'
+},{
+    fileName: 'web3-shh',
+    expose: 'Shh',
+    src: './packages/web3-shh/src/index.js'
+},{
+    fileName: 'web3-bzz',
+    expose: 'Bzz',
+    src: './packages/web3-bzz/src/index.js'
 }];
 
 var browserifyOptions = {
