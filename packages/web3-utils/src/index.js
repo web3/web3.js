@@ -477,35 +477,8 @@ var isChecksumAddress = function (address) {
     return true;
 };
 
-
-
 /**
- * Makes a checksum address
- *
- * @method toChecksumAddress
- * @param {String} address the given HEX adress
- * @return {String}
- */
-var toChecksumAddress = function (address) {
-    if (typeof address === 'undefined') return '';
-
-    address = address.toLowerCase().replace('0x','');
-    var addressHash = sha3(address).replace('0x','');
-    var checksumAddress = '0x';
-
-    for (var i = 0; i < address.length; i++ ) {
-        // If ith character is 9 to f then make it uppercase
-        if (parseInt(addressHash[i], 16) > 7) {
-            checksumAddress += address[i].toUpperCase();
-        } else {
-            checksumAddress += address[i];
-        }
-    }
-    return checksumAddress;
-};
-
-/**
- * Transforms given string to valid 20 bytes-length addres with 0x prefix
+ * Transforms given string to valid 20 bytes-length address with 0x prefix
  *
  * @method toAddress
  * @param {String} address
@@ -522,6 +495,39 @@ var toAddress = function (address) {
 
     return '0x' + padLeft(toHex(address).substr(2), 40);
 };
+
+
+
+/**
+ * Converts to a checksum address
+ *
+ * @method toChecksumAddress
+ * @param {String} address the given HEX adress
+ * @return {String}
+ */
+var toChecksumAddress = function (address) {
+    if (typeof address === 'undefined') return '';
+
+    if(!isAddress(address))
+        throw new Error('Given address "'+ address +'" is not a valid ethereum address.');
+
+
+
+    address = address.toLowerCase().replace('0x','');
+    var addressHash = sha3(address).replace('0x','');
+    var checksumAddress = '0x';
+
+    for (var i = 0; i < address.length; i++ ) {
+        // If ith character is 9 to f then make it uppercase
+        if (parseInt(addressHash[i], 16) > 7) {
+            checksumAddress += address[i].toUpperCase();
+        } else {
+            checksumAddress += address[i];
+        }
+    }
+    return checksumAddress;
+};
+
 
 /**
  * Returns true if object is BN, otherwise false
@@ -555,18 +561,20 @@ module.exports = {
     _: _,
     padLeft: padLeft,
     padRight: padRight,
+    toAddress: toAddress,
     toHex: toHex,
-    toNumber: toNumber,
+    toBN: toBN,
     toNumberString: toNumberString,
+    toNumber: toNumber,
+    toDecimal: toNumber,
     fromNumber: fromNumber,
+    fromDecimal: fromNumber, // alias
     toUtf8: toUtf8,
     toAscii: toAscii,
     fromUtf8: fromUtf8,
     fromAscii: fromAscii,
     toWei: toWei,
     fromWei: fromWei,
-    toAddress: toAddress,
-    toBN: toBN,
     isBN: isBN,
     isBigNumber: isBigNumber,
     isAddress: isAddress,
