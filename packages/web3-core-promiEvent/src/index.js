@@ -26,7 +26,7 @@ var EventEmitter = require('eventemitter3');
 var Promise = require("bluebird");
 
 /**
- * This function generates a defer promise and adds eventEmitter funcitonality to it
+ * This function generates a defer promise and adds eventEmitter functionality to it
  *
  * @method eventifiedPromise
  */
