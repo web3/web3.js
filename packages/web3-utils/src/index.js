@@ -441,7 +441,7 @@ var toBN = function(number){
  * Checks if the given string is an address
  *
  * @method isAddress
- * @param {String} address the given HEX adress
+ * @param {String} address the given HEX address
  * @return {Boolean}
  */
 var isAddress = function (address) {
@@ -463,7 +463,7 @@ var isAddress = function (address) {
  * Checks if the given string is a checksummed address
  *
  * @method checkAddressChecksum
- * @param {String} address the given HEX adress
+ * @param {String} address the given HEX address
  * @return {Boolean}
  */
 var checkAddressChecksum = function (address) {
@@ -486,7 +486,7 @@ var checkAddressChecksum = function (address) {
  * Converts to a checksum address
  *
  * @method toChecksumAddress
- * @param {String} address the given HEX adress
+ * @param {String} address the given HEX address
  * @return {String}
  */
 var toChecksumAddress = function (address) {
