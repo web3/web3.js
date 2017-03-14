@@ -626,7 +626,7 @@ Contract.prototype.getPastEvents = function(){
 
 
 /**
- * returns the an object with call, send, estimate funcitons
+ * returns the an object with call, send, estimate functions
  *
  * @method _createTxObject
  * @returns {Object} an object with functions to call the methods
