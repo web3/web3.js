@@ -110,7 +110,7 @@ var formattedBlockResultWithTx = {
 };
 
 var tests = [{
-    args: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', 2],
+    args: ['0x47D33b27Bb249a2DBab4C0612BF9CaF4C1950855', 2],
     formattedArgs: ['0x47d33b27bb249a2dbab4c0612bf9caf4c1950855', '0x2'],
     result: blockResult,
     formattedResult: formattedBlockResult,
