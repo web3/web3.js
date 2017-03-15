@@ -50,7 +50,7 @@ var methods = function () {
         name: 'getId',
         call: 'net_version',
         params: 0,
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var isListening = new Method({
@@ -63,7 +63,7 @@ var methods = function () {
         name: 'getPeerCount',
         call: 'net_peerCount',
         params: 0,
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
 

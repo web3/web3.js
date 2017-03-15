@@ -27,7 +27,7 @@ var BN = require('bn.js');
 var ethjsUnit = require('ethjs-unit');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var keccak256 = require("js-sha3").keccak_256; // jshint ignore:line
+var jsSha3 = require("js-sha3");
 
 
 /**
@@ -94,71 +94,289 @@ var _jsonInterfaceMethodToString = function (json) {
     return json.name + '(' + typeName + ')';
 };
 
+/**
+ * Convert a hex string to a byte array
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method hexToBytes
+ * @param {string} hex
+ * @return {Array} the byte array
+ */
+var hexToBytes = function(hex) {
+    hex = hex.toString(16);
+
+    if (!isHex(hex)) {
+        throw new Error('Given value "'+ hex +'" is not a valid hex string.');
+    }
+
+    hex = hex.replace(/^0x/i,'');
+
+    for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+    return bytes;
+};
+
 
 /**
- * Sha3 encodes
+ * Convert a byte array to a hex string
+ *
+ * Note: Implementation from crypto-js
+ *
+ * @method bytesToHex
+ * @param {Array} bytes
+ * @return {String} the hex string
+ */
+var bytesToHex = function(bytes) {
+    for (var hex = [], i = 0; i < bytes.length; i++) {
+        /* jshint ignore:start */
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+        /* jshint ignore:end */
+    }
+    return '0x'+ hex.join("");
+};
+
+
+/**
+ * Hashes values to a sha3 hash using keccak 256
+ *
+ * To hash a HEX string the hex must have 0x in front.
  *
  * @method sha3
+ * @return {String} the sha3 string
+ */
+var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
+
+var sha3 = function (value) {
+    if (isHex(value) && /^0x/i.test((value).toString())) {
+        value = hexToBytes(value);
+    }
+
+    var returnValue = '0x'+ jsSha3.keccak_256(value); // jshint ignore:line
+
+    if(returnValue === SHA3_NULL_S) {
+        return null;
+    } else {
+        return returnValue;
+    }
+};
+// expose the under the hood keccak256
+sha3.jsSha3 = jsSha3;
+
+
+
+var _elementaryName = function (name) {
+    if (name.startsWith('int[')) {
+        return 'int256' + name.slice(3)
+    } else if (name === 'int') {
+        return 'int256';
+    } else if (name.startsWith('uint[')) {
+        return 'uint256' + name.slice(4)
+    } else if (name === 'uint') {
+        return 'uint256';
+    } else if (name.startsWith('fixed[')) {
+        return 'fixed128x128' + name.slice(5)
+    } else if (name === 'fixed') {
+        return 'fixed128x128';
+    } else if (name.startsWith('ufixed[')) {
+        return 'ufixed128x128' + name.slice(6)
+    } else if (name === 'ufixed') {
+        return 'ufixed128x128';
+    }
+    return name;
+};
+
+// Parse N from type<N>
+var _parseTypeN = function (type) {
+    return parseInt(/^\D+(\d+)$/.exec(type)[1], 10);
+};
+
+var _parseNumber = function (arg) {
+    var type = typeof arg;
+    if (type === 'string') {
+        if (isHex(arg)) {
+            return new BN(arg.replace(/^0x/i,''), 16);
+        } else {
+            return new BN(arg, 10);
+        }
+    } else if (type === 'number') {
+        return new BN(arg);
+    } else if (isBigNumber(arg)) {
+        // assume this is a BN for the moment, replace with BN.isBN soon
+        return new BN(arg.toString(10));
+    } else if (isBN(arg)) {
+        // assume this is a BN for the moment, replace with BN.isBN soon
+        return arg;
+    } else {
+        throw new Error('Argument is not a number');
+    }
+};
+
+var _solidityPack = function (types, values) {
+    if (types.length !== values.length) {
+        throw new Error('Number of types are not matching the values')
+    }
+
+    var size, num;
+    var ret = [];
+
+    for (var i = 0; i < types.length; i++) {
+        var type = _elementaryName(types[i]);
+        var value = values[i];
+
+
+
+        if (type === 'bytes') {
+            ret.push((_.isString(value) ? new Buffer(hexToBytes(value)) : value));
+        } else if (type === 'string') {
+            ret.push(new Buffer(value, 'utf8'));
+        } else if (type === 'bool') {
+            ret.push(new Buffer(value ? '01' : '00', 'hex'));
+        } else if (type === 'address') {
+            ret.push(new Buffer(hexToBytes(leftPad(value, 40))));
+        } else if (type.startsWith('bytes')) {
+            size = _parseTypeN(type);
+
+            if (size < 1 || size > 32) {
+                throw new Error('Invalid bytes<N> width: ' + size);
+            }
+
+            ret.push(new Buffer(hexToBytes(rightPad(value, size * 2))));
+        } else if (type.startsWith('uint')) {
+            size = _parseTypeN(type);
+            if ((size % 8) || (size < 8) || (size > 256)) {
+                throw new Error('Invalid uint<N> width: ' + size);
+            }
+
+            num = _parseNumber(value);
+            if (num.bitLength() > size) {
+                throw new Error('Supplied uint exceeds width: ' + size + ' vs ' + num.bitLength());
+            }
+
+            ret.push(num.toArrayLike(Buffer, 'be', size / 8));
+        } else if (type.startsWith('int')) {
+            size = _parseTypeN(type);
+            if ((size % 8) || (size < 8) || (size > 256)) {
+                throw new Error('Invalid int<N> width: ' + size);
+            }
+
+            num = _parseNumber(value);
+            if (num.bitLength() > size) {
+                throw new Error('Supplied int exceeds width: ' + size + ' vs ' + num.bitLength());
+            }
+
+            ret.push(num.toTwos(size).toArrayLike(Buffer, 'be', size / 8));
+
+        } else {
+            // FIXME: support all other types
+            throw new Error('Unsupported or invalid type: ' + type);
+        }
+    }
+
+    return Buffer.concat(ret);
+};
+
+
+/**
+ * Hashes solidity values to a sha3 hash using keccak 256
+ *
+ * @method soliditySha3
  * @return {Object} the sha3
  */
-var sha3 = function (value) {
+var soliditySha3 = function () {
+    var args = Array.prototype.slice.call(arguments);
 
-    return '0x'+ keccak256(value);
+    var hexArgs = _.map(args, function (arg) {
+        var type, value = '';
+
+        // if type is given
+        if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+            type = arg.t || arg.type;
+            value = arg.v || arg.value;
+
+        // otherwise try to guess the type
+        } else {
+            type = toHex(arg, true);
+            value = toHex(arg);
+
+            if (!type.startsWith('int') && !type.startsWith('uint')) {
+                type = 'bytes';
+            }
+        }
+
+        if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^0x/i.test(value)) {
+            value = new BN(value);
+        }
+
+        var hexArg = _solidityPack([type],[value]);//abi.encodeParam(arg.type, arg.value);
+
+        return hexArg.toString('hex').replace('0x','');
+    });
+
+    // console.log(hexArgs);
+    console.log('0x'+ hexArgs.join(''));
+
+    return sha3('0x'+ hexArgs.join(''));
 };
 
 
 /**
  * Should be called to pad string to expected length
  *
- * @method padLeft
+ * @method leftPad
  * @param {String} string to be padded
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
-var padLeft = function (string, chars, sign) {
+var leftPad = function (string, chars, sign) {
     var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i,'');
 
-    return (hasPrefix ? '0x' : '') + new Array(chars - string.length + 1).join(sign ? sign : "0") + string;
+    var padding = (chars - string.length + 1 >= 0) ? chars - string.length + 1 : 0;
+
+    return (hasPrefix ? '0x' : '') + new Array(padding).join(sign ? sign : "0") + string;
 };
 
 /**
  * Should be called to pad string to expected length
  *
- * @method padRight
+ * @method rightPad
  * @param {String} string to be padded
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
  * @returns {String} right aligned string
  */
-var padRight = function (string, chars, sign) {
+var rightPad = function (string, chars, sign) {
     var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i,'');
 
-    return (hasPrefix ? '0x' : '') + string + (new Array(chars - string.length + 1).join(sign ? sign : "0"));
+    var padding = (chars - string.length + 1 >= 0) ? chars - string.length + 1 : 0;
+
+    return (hasPrefix ? '0x' : '') + string + (new Array(padding).join(sign ? sign : "0"));
 };
 
 /**
  * Check if string is HEX
  *
  * @method isHex
- * @param {String} string to be checked
+ * @param {String} hex to be checked
  * @returns {Boolean}
  */
-var isHex = function (string) {
-    return (_.isString(string) && /^(-)?(0x)?[0-9a-f]+$/i.test(string));
+var isHex = function (hex) {
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?(0x)?[0-9a-f]+$/i.test(hex));
 };
 
 
 /**
  * Should be called to get utf8 from it's hex representation
  *
- * @method toUtf8
+ * @method hexToUtf8
  * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
-var toUtf8 = function(hex) {
+var hexToUtf8 = function(hex) {
     if (!isHex(hex))
         throw new Error('The parameter must be a valid HEX string.');
 
@@ -187,11 +405,11 @@ var toUtf8 = function(hex) {
 /**
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
- * @method fromUtf8
+ * @method utf8ToHex
  * @param {String} str
  * @returns {String} hex representation of input string
  */
-var fromUtf8 = function(str) {
+var utf8ToHex = function(str) {
     str = utf8.encode(str);
     var hex = "";
 
@@ -215,11 +433,11 @@ var fromUtf8 = function(str) {
 /**
  * Should be called to get ascii from it's hex representation
  *
- * @method toAscii
+ * @method hexToAscii
  * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
-var toAscii = function(hex) {
+var hexToAscii = function(hex) {
     if (!isHex(hex))
         throw new Error('The parameter must be a valid HEX string.');
 
@@ -239,11 +457,11 @@ var toAscii = function(hex) {
 /**
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  *
- * @method fromAscii
+ * @method asciiToHex
  * @param {String} str
  * @returns {String} hex representation of input string
  */
-var fromAscii = function(str) {
+var asciiToHex = function(str) {
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
@@ -254,33 +472,15 @@ var fromAscii = function(str) {
     return "0x" + hex;
 };
 
-/**
- * Should be called to get display name of contract function
- *
- * @method extractDisplayName
- * @param {String} name of function/event
- * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
- */
-// var extractDisplayName = function (name) {
-//     var length = name.indexOf('(');
-//     return length !== -1 ? name.substr(0, length) : name;
-// };
-//
-// /// @returns overloaded part of function/event name
-// var extractTypeName = function (name) {
-//     /// TODO: make it invulnerable
-//     var length = name.indexOf('(');
-//     return length !== -1 ? name.substr(length + 1, name.length - 1 - (length + 1)).replace(' ', '') : "";
-// };
 
 /**
  * Converts value to it's number representation
  *
- * @method toNumber
+ * @method hexToNumber
  * @param {String|Number|BN} value
  * @return {String}
  */
-var toNumber = function (value) {
+var hexToNumber = function (value) {
     if (!value) return value;
 
     return toBN(value).toNumber();
@@ -289,11 +489,11 @@ var toNumber = function (value) {
 /**
  * Converts value to it's decimal representation in string
  *
- * @method toNumberString
+ * @method hexToNumberString
  * @param {String|Number|BN} value
  * @return {String}
  */
-var toNumberString = function (value) {
+var hexToNumberString = function (value) {
     if (!value) return value;
 
     return toBN(value).toString(10);
@@ -302,11 +502,11 @@ var toNumberString = function (value) {
 /**
  * Converts value to it's hex representation
  *
- * @method fromNumber
+ * @method numberToHex
  * @param {String|Number|BN} value
  * @return {String}
  */
-var fromNumber = function (value) {
+var numberToHex = function (value) {
     var number = toBN(value);
     var result = number.toString(16);
 
@@ -320,35 +520,33 @@ var fromNumber = function (value) {
  *
  * @method toHex
  * @param {String|Number|BN|Object} value
+ * @param {Boolean} returnType
  * @return {String}
  */
-var toHex = function (value) {
+var toHex = function (value, returnType) {
     /*jshint maxcomplexity: 10 */
 
     if (_.isBoolean(value)) {
-        return fromNumber(+value);
+        return returnType ? 'bool' : numberToHex(+value);
     }
 
-    if (isBN(value)) {
-        return fromNumber(value);
+
+    if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
+        return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
     }
 
-    if (_.isObject(value) && !isBigNumber(value)) {
-        return fromUtf8(JSON.stringify(value));
-    }
-
-    // if its a negative number, pass it through fromNumber
+    // if its a negative number, pass it through numberToHex
     if (_.isString(value)) {
         if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
-            return fromNumber(value);
+            return returnType ? 'uint256' : numberToHex(value);
         } else if(value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
-            return value;
+            return returnType ? 'bytes' : value;
         } else if (!isFinite(value)) {
-            return fromUtf8(value);
+            return returnType ? 'string' : utf8ToHex(value);
         }
     }
 
-    return fromNumber(value);
+    return returnType ? 'uint256' : numberToHex(value);
 };
 
 /**
@@ -433,7 +631,7 @@ var toBN = function(number){
     try {
         return numberToBN.apply(null, arguments);
     } catch(e) {
-        throw new Error(e + ' "'+ number +'"');
+        throw new Error(e + ' Given value: "'+ number +'"');
     }
 };
 
@@ -492,8 +690,8 @@ var checkAddressChecksum = function (address) {
 var toChecksumAddress = function (address) {
     if (typeof address === 'undefined') return '';
 
-    if(!isAddress(address))
-        throw new Error('Given address "'+ address +'" is not a valid ethereum address.');
+    if(!/^(0x)?[0-9a-f]{40}$/i.test(address))
+        throw new Error('Given address "'+ address +'" is not a valid Ethereum address.');
 
 
 
@@ -546,28 +744,47 @@ module.exports = {
     BN: BN,
     isBN: isBN,
     isBigNumber: isBigNumber,
+    isHex: isHex,
     sha3: sha3,
+    keccak256: sha3,
+    soliditySha3: soliditySha3,
     isAddress: isAddress,
     checkAddressChecksum: checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
     toHex: toHex,
     toBN: toBN,
-    toNumberString: toNumberString,
-    toNumber: toNumber,
-    toDecimal: toNumber, // alias
-    fromNumber: fromNumber,
-    fromDecimal: fromNumber, // alias
-    toUtf8: toUtf8,
-    toString: toUtf8,
-    toAscii: toAscii,
-    fromUtf8: fromUtf8,
-    fromString: fromUtf8,
-    fromAscii: fromAscii,
+
+    bytesToHex: bytesToHex,
+    hexToBytes: hexToBytes,
+
+    hexToNumberString: hexToNumberString,
+
+    hexToNumber: hexToNumber,
+    toDecimal: hexToNumber, // alias
+
+    numberToHex: numberToHex,
+    fromDecimal: numberToHex, // alias
+
+    hexToUtf8: hexToUtf8,
+    hexToString: hexToUtf8,
+    toUtf8: hexToUtf8,
+
+    utf8ToHex: utf8ToHex,
+    stringToHex: utf8ToHex,
+    fromUtf8: utf8ToHex,
+
+    hexToAscii: hexToAscii,
+    toAscii: hexToAscii,
+    asciiToHex: asciiToHex,
+    fromAscii: asciiToHex,
+
     unitMap: ethjsUnit.unitMap,
     toWei: toWei,
     fromWei: fromWei,
 
-    padLeft: padLeft,
-    padRight: padRight
+    padLeft: leftPad,
+    leftPad: leftPad,
+    padRight: rightPad,
+    rightPad: rightPad
 };
 

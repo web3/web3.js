@@ -34,10 +34,10 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('fromNumber', function () {
+    describe('numberToHex', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
-                assert.equal(utils.fromNumber(test.value), test.expected);
+                assert.equal(utils.numberToHex(test.value), test.expected);
             });
         });
     });

@@ -7,9 +7,10 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
-        "web3-utils": "^1.0.0",
         "underscore": "^1.8.3",
+        "js-sha3": "^0.5.7",
         "number-to-bn": "^1.7.0",
+        "utf8": "^2.1.1",
         "bn.js": "^4.11.6"
     }
 }

@@ -147,7 +147,7 @@ var methods = function () {
         name: 'getHashrate',
         call: 'eth_hashrate',
         params: 0,
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var isSyncing = new Method({
@@ -175,7 +175,7 @@ var methods = function () {
         name: 'getBlockNumber',
         call: 'eth_blockNumber',
         params: 0,
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var getBalance = new Method({
@@ -222,7 +222,7 @@ var methods = function () {
         call: getBlockTransactionCountCall,
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var getBlockUncleCount = new Method({
@@ -230,7 +230,7 @@ var methods = function () {
         call: uncleCountCall,
         params: 1,
         inputFormatter: [formatters.inputBlockNumberFormatter],
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var getTransaction = new Method({
@@ -262,7 +262,7 @@ var methods = function () {
         call: 'eth_getTransactionCount',
         params: 2,
         inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var sendSignedTransaction = new Method({
@@ -270,6 +270,13 @@ var methods = function () {
         call: 'eth_sendRawTransaction',
         params: 1,
         inputFormatter: [null]
+    });
+
+    var signTransaction = new Method({
+        name: 'signTransaction',
+        call: 'eth_signTransaction',
+        params: 1,
+        inputFormatter: [formatters.inputTransactionFormatter]
     });
 
     var sendTransaction = new Method({
@@ -298,7 +305,7 @@ var methods = function () {
         call: 'eth_estimateGas',
         params: 1,
         inputFormatter: [formatters.inputCallFormatter],
-        outputFormatter: utils.toNumber
+        outputFormatter: utils.hexToNumber
     });
 
     var getCompilers = new Method({
@@ -451,6 +458,7 @@ var methods = function () {
         call,
         estimateGas,
         sendSignedTransaction,
+        signTransaction,
         sendTransaction,
         sign,
         compileSolidity,
