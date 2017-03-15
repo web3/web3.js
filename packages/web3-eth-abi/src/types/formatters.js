@@ -44,7 +44,7 @@ var toChecksumAddress = function (address) {
 
 
     address = address.toLowerCase().replace(/^0x/i,'');
-    var addressHash = jsSha3.keccak_256(address).replace(/^0x/i,'');
+    var addressHash = jsSha3.keccak_256(address).replace(/^0x/i,''); // jshint ignore:line
     var checksumAddress = '0x';
 
     for (var i = 0; i < address.length; i++ ) {
@@ -169,7 +169,7 @@ var formatInputInt = function (value) {
  * Formats input bytes
  *
  * @method formatInputBytes
- * @param {String}
+ * @param {String} value
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
@@ -183,7 +183,7 @@ var formatInputBytes = function (value) {
  * Formats input bytes
  *
  * @method formatDynamicInputBytes
- * @param {String}
+ * @param {String} value
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
