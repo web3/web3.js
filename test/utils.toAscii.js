@@ -11,7 +11,7 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('toAscii', function () {
+    describe('hexToAscii', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.strictEqual(utils.toAscii(test.value), test.expected);

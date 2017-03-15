@@ -86,7 +86,7 @@ var inputCallFormatter = function (options){
     ['gasPrice', 'gas', 'gasLimit', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
-        options[key] = utils.fromNumber(options[key]);
+        options[key] = utils.numberToHex(options[key]);
     });
 
     return options;
@@ -96,7 +96,7 @@ var inputCallFormatter = function (options){
  * Formats the input of a transaction and converts all values to HEX
  *
  * @method inputTransactionFormatter
- * @param {Object} transaction options
+ * @param {Object} options
  * @returns object
 */
 var inputTransactionFormatter = function (options){
@@ -115,7 +115,7 @@ var inputTransactionFormatter = function (options){
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
-        options[key] = utils.fromNumber(options[key]);
+        options[key] = utils.numberToHex(options[key]);
     });
 
     return options;
@@ -130,11 +130,11 @@ var inputTransactionFormatter = function (options){
 */
 var outputTransactionFormatter = function (tx){
     if(tx.blockNumber !== null)
-        tx.blockNumber = utils.toNumber(tx.blockNumber);
+        tx.blockNumber = utils.hexToNumber(tx.blockNumber);
     if(tx.transactionIndex !== null)
-        tx.transactionIndex = utils.toNumber(tx.transactionIndex);
-    tx.nonce = utils.toNumber(tx.nonce);
-    tx.gas = utils.toNumber(tx.gas);
+        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
+    tx.nonce = utils.hexToNumber(tx.nonce);
+    tx.gas = utils.hexToNumber(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
@@ -161,11 +161,11 @@ var outputTransactionReceiptFormatter = function (receipt){
     }
 
     if(receipt.blockNumber !== null)
-        receipt.blockNumber = utils.toNumber(receipt.blockNumber);
+        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
     if(receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.toNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.toNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.toNumber(receipt.gasUsed);
+        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
+    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
+    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
 
     if(_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
@@ -188,12 +188,12 @@ var outputTransactionReceiptFormatter = function (receipt){
 var outputBlockFormatter = function(block) {
 
     // transform to number
-    block.gasLimit = utils.toNumber(block.gasLimit);
-    block.gasUsed = utils.toNumber(block.gasUsed);
-    block.size = utils.toNumber(block.size);
-    block.timestamp = utils.toNumber(block.timestamp);
+    block.gasLimit = utils.hexToNumber(block.gasLimit);
+    block.gasUsed = utils.hexToNumber(block.gasUsed);
+    block.size = utils.hexToNumber(block.size);
+    block.timestamp = utils.hexToNumber(block.timestamp);
     if (block.number !== null)
-        block.number = utils.toNumber(block.number);
+        block.number = utils.hexToNumber(block.number);
 
     if(block.difficulty)
         block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -268,11 +268,11 @@ var outputLogFormatter = function(log) {
     }
 
     if (log.blockNumber !== null)
-        log.blockNumber = utils.toNumber(log.blockNumber);
+        log.blockNumber = utils.hexToNumber(log.blockNumber);
     if (log.transactionIndex !== null)
-        log.transactionIndex = utils.toNumber(log.transactionIndex);
+        log.transactionIndex = utils.hexToNumber(log.transactionIndex);
     if (log.logIndex !== null)
-        log.logIndex = utils.toNumber(log.logIndex);
+        log.logIndex = utils.hexToNumber(log.logIndex);
 
     if (log.address)
         log.address = utils.toChecksumAddress(log.address);
@@ -292,11 +292,11 @@ var inputPostFormatter = function(post) {
     // post.payload = utils.toHex(post.payload);
 
     if (post.ttl)
-        post.ttl = utils.fromNumber(post.ttl);
+        post.ttl = utils.numberToHex(post.ttl);
     if (post.workToProve)
-        post.workToProve = utils.fromNumber(post.workToProve);
+        post.workToProve = utils.numberToHex(post.workToProve);
     if (post.priority)
-        post.priority = utils.fromNumber(post.priority);
+        post.priority = utils.numberToHex(post.priority);
 
     // fallback
     if (!_.isArray(post.topics)) {
@@ -321,12 +321,12 @@ var inputPostFormatter = function(post) {
  */
 var outputPostFormatter = function(post){
 
-    post.expiry = utils.toNumber(post.expiry);
-    post.sent = utils.toNumber(post.sent);
-    post.ttl = utils.toNumber(post.ttl);
-    post.workProved = utils.toNumber(post.workProved);
+    post.expiry = utils.hexToNumber(post.expiry);
+    post.sent = utils.hexToNumber(post.sent);
+    post.ttl = utils.hexToNumber(post.ttl);
+    post.workProved = utils.hexToNumber(post.workProved);
     // post.payloadRaw = post.payload;
-    // post.payload = utils.toAscii(post.payload);
+    // post.payload = utils.hexToAscii(post.payload);
 
     // if (utils.isJson(post.payload)) {
     //     post.payload = JSON.parse(post.payload);
@@ -356,12 +356,12 @@ var inputAddressFormatter = function (address) {
 
 var outputSyncingFormatter = function(result) {
 
-    result.startingBlock = utils.toNumber(result.startingBlock);
-    result.currentBlock = utils.toNumber(result.currentBlock);
-    result.highestBlock = utils.toNumber(result.highestBlock);
+    result.startingBlock = utils.hexToNumber(result.startingBlock);
+    result.currentBlock = utils.hexToNumber(result.currentBlock);
+    result.highestBlock = utils.hexToNumber(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = utils.toNumber(result.knownStates);
-        result.pulledStates = utils.toNumber(result.pulledStates);
+        result.knownStates = utils.hexToNumber(result.knownStates);
+        result.pulledStates = utils.hexToNumber(result.pulledStates);
     }
 
     return result;

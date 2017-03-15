@@ -26,11 +26,10 @@
 "use strict";
 
 var utils = require('web3-utils');
-
 var BigNumber = require('bn.js');
 
 
-var padLeft = function (string, bytes) {
+var leftPad = function (string, bytes) {
     var result = string;
     while (result.length < bytes * 2) {
         result = '0' + result;
@@ -136,7 +135,7 @@ Iban.fromAddress = function (address) {
 
     var asBn = new BigNumber(address, 16);
     var base36 = asBn.toString(36);
-    var padded = padLeft(base36, 15);
+    var padded = leftPad(base36, 15);
     return Iban.fromBban(padded.toUpperCase());
 };
 

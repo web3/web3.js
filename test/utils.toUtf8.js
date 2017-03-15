@@ -12,7 +12,7 @@ var tests = [
 ];
 
 describe('lib/utils/utils', function () {
-    describe('toUtf8', function () {
+    describe('hexToUtf8', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.strictEqual(utils.toUtf8(test.value), test.expected);
