@@ -47,6 +47,7 @@ var tests = [{
         {v: '2342342342342342342345676856', t: 'uint256'},
         {v: '2342342342342342342345676856', t: 'uint'}
     ], expected: '0x8ac2efaaee0058e1f1fbcb59643f6799c31c27096a347651e40f98daf1905094'
+// 5
 },{
     values: [
         {v: '56', t: 'uint8'}
@@ -71,6 +72,7 @@ var tests = [{
     values: [
         {v: '3435454256', t: 'uint160'}
     ], expected: '0x89e0942df3602c010e0252becbbe1b4053bd4a871a021c02d8ab9878f1194b6b'
+// 11
 },{
     values: [
         '0x2345435675432144555ffffffffdd222222222222224444556553522',
@@ -79,9 +81,38 @@ var tests = [{
     ], expected: '0xb7ecb0d74e96b792a62b4a9dad28f5b1795417a89679562178b1987e0767e009'
 },{
     values: [
+        -3435454256,
+        new BN(-3435454256),
+        new BN('-3435454256'),
+        '-3435454256',
+        {v: '-3435454256', t: 'int'},
+        {v: '-3435454256', t: 'int256'}
+    ], expected: '0x858d68fc4ad9f80dc5ee9571c7076298f8139d1d111e0955426de9381b10a061'
+// 13
+},{
+    values: [
+        {v: '-36', t: 'int8'}
+    ], expected: '0xd1023f33bbf70407fe1e7011c03159e2efe16e44fa97b4a8d50bc4acbfd6ce23'
+},{
+    values: [
         {v: '0x22', t: 'bytes2'},
         {v: '22', t: 'bytes2'}
     ], expected: '0xb07fb0a3471486f9ccb02aab1d525df60d82925cb2d27860f923e655d76f35fc'
+},{
+    values: [
+        {v: '0x44222266', t: 'bytes4'},
+        {v: '44222266', t: 'bytes4'}
+    ], expected: '0x7cdb669d75710eb06b9b34618e77206db56f0cc71698f246433ce8339ed8075b'
+},{
+    values: [
+        {v: '0x44555ffffffffdd222222222222224444556553522', t: 'bytes32'},
+        {v: '44555ffffffffdd222222222222224444556553522', t: 'bytes32'}
+    ], expected: '0x5aac5a7501e071c3ee062ede777be470acb4cd05a2724146438d7e4518d91677'
+},{
+    values: [
+        '0x407D73d8a49eeb85D32Cf465507dd71d507100c1',
+        {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'}
+    ], expected: '0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b'
 }];
 
 
@@ -131,5 +162,16 @@ describe('web3.soliditySha3', function () {
             tests[9].values[0],  // v: '44454256', t: 'uint128'
             tests[10].values[0]  // v: '3435454256', t: 'uint160'
         ), '0x31d6c48574796dfb1a652f2e5c5a261db0677e39fff5c3032449c50eade4b6b6');
+    });
+
+    it('should hash mixed number types addresses and boolean in any order', function() {
+
+        assert.deepEqual(utils.soliditySha3(
+            tests[5].values[0], // v: '56', t: 'uint8'
+            tests[13].values[0], // v: '-36', t: 'int8'
+            tests[15].values[0], // v: '0x44222266', t: 'bytes4'
+            tests[0].values[0],  // true
+            tests[17].values[1]  // v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'
+        ), '0x334086a8fa05e16afb86bed41c614aa74e99ea32eefe8ce0026b4076ce217698');
     });
 });

@@ -167,20 +167,22 @@ sha3.jsSha3 = jsSha3;
 
 
 var _elementaryName = function (name) {
+    /*jshint maxcomplexity:false */
+
     if (name.startsWith('int[')) {
-        return 'int256' + name.slice(3)
+        return 'int256' + name.slice(3);
     } else if (name === 'int') {
         return 'int256';
     } else if (name.startsWith('uint[')) {
-        return 'uint256' + name.slice(4)
+        return 'uint256' + name.slice(4);
     } else if (name === 'uint') {
         return 'uint256';
     } else if (name.startsWith('fixed[')) {
-        return 'fixed128x128' + name.slice(5)
+        return 'fixed128x128' + name.slice(5);
     } else if (name === 'fixed') {
         return 'fixed128x128';
     } else if (name.startsWith('ufixed[')) {
-        return 'ufixed128x128' + name.slice(6)
+        return 'ufixed128x128' + name.slice(6);
     } else if (name === 'ufixed') {
         return 'ufixed128x128';
     }
@@ -213,68 +215,63 @@ var _parseNumber = function (arg) {
     }
 };
 
-var _solidityPack = function (types, values) {
-    if (types.length !== values.length) {
-        throw new Error('Number of types are not matching the values')
-    }
+var _solidityPack = function (type, value) {
+    /*jshint maxcomplexity:false */
 
     var size, num;
-    var ret = [];
-
-    for (var i = 0; i < types.length; i++) {
-        var type = _elementaryName(types[i]);
-        var value = values[i];
+    type = _elementaryName(type);
 
 
+    if (type === 'bytes') {
+        return value;
+    } else if (type === 'string') {
+        return utf8ToHex(value);
+    } else if (type === 'bool') {
+        return value ? '01' : '00';
+    } else if (type === 'address') {
+        return leftPad(value, 40);
+    } else if (type.startsWith('bytes')) {
+        size = _parseTypeN(type);
 
-        if (type === 'bytes') {
-            ret.push((_.isString(value) ? new Buffer(hexToBytes(value)) : value));
-        } else if (type === 'string') {
-            ret.push(new Buffer(value, 'utf8'));
-        } else if (type === 'bool') {
-            ret.push(new Buffer(value ? '01' : '00', 'hex'));
-        } else if (type === 'address') {
-            ret.push(new Buffer(hexToBytes(leftPad(value, 40))));
-        } else if (type.startsWith('bytes')) {
-            size = _parseTypeN(type);
-
-            if (size < 1 || size > 32) {
-                throw new Error('Invalid bytes<N> width: ' + size);
-            }
-
-            ret.push(new Buffer(hexToBytes(rightPad(value, size * 2))));
-        } else if (type.startsWith('uint')) {
-            size = _parseTypeN(type);
-            if ((size % 8) || (size < 8) || (size > 256)) {
-                throw new Error('Invalid uint<N> width: ' + size);
-            }
-
-            num = _parseNumber(value);
-            if (num.bitLength() > size) {
-                throw new Error('Supplied uint exceeds width: ' + size + ' vs ' + num.bitLength());
-            }
-
-            ret.push(num.toArrayLike(Buffer, 'be', size / 8));
-        } else if (type.startsWith('int')) {
-            size = _parseTypeN(type);
-            if ((size % 8) || (size < 8) || (size > 256)) {
-                throw new Error('Invalid int<N> width: ' + size);
-            }
-
-            num = _parseNumber(value);
-            if (num.bitLength() > size) {
-                throw new Error('Supplied int exceeds width: ' + size + ' vs ' + num.bitLength());
-            }
-
-            ret.push(num.toTwos(size).toArrayLike(Buffer, 'be', size / 8));
-
-        } else {
-            // FIXME: support all other types
-            throw new Error('Unsupported or invalid type: ' + type);
+        if (size < 1 || size > 32) {
+            throw new Error('Invalid bytes<N> width: ' + size);
         }
-    }
 
-    return Buffer.concat(ret);
+        return rightPad(value, size * 2);
+    } else if (type.startsWith('uint')) {
+        size = _parseTypeN(type);
+        if ((size % 8) || (size < 8) || (size > 256)) {
+            throw new Error('Invalid uint<N> width: ' + size);
+        }
+
+        num = _parseNumber(value);
+        if (num.bitLength() > size) {
+            throw new Error('Supplied uint exceeds width: ' + size + ' vs ' + num.bitLength());
+        }
+
+        return size ? leftPad(num.toString('hex'), size/8 * 2) : num;
+    } else if (type.startsWith('int')) {
+
+        if(typeof value === 'string' && value.startsWith('-0x')) {
+            value = value.replace('0x','');
+        }
+
+        size = _parseTypeN(type);
+        if ((size % 8) || (size < 8) || (size > 256)) {
+            throw new Error('Invalid int<N> width: ' + size);
+        }
+
+        num = _parseNumber(value);
+        if (num.bitLength() > size) {
+            throw new Error('Supplied int exceeds width: ' + size + ' vs ' + num.bitLength());
+        }
+
+        return num.toTwos(size);
+
+    } else {
+        // FIXME: support all other types
+        throw new Error('Unsupported or invalid type: ' + type);
+    }
 };
 
 
@@ -285,6 +282,8 @@ var _solidityPack = function (types, values) {
  * @return {Object} the sha3
  */
 var soliditySha3 = function () {
+    /*jshint maxcomplexity:false */
+
     var args = Array.prototype.slice.call(arguments);
 
     var hexArgs = _.map(args, function (arg) {
@@ -305,17 +304,17 @@ var soliditySha3 = function () {
             }
         }
 
-        if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^0x/i.test(value)) {
+        if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^(-)?0x/i.test(value)) {
             value = new BN(value);
         }
 
-        var hexArg = _solidityPack([type],[value]);//abi.encodeParam(arg.type, arg.value);
+        var hexArg = _solidityPack(type, value);//abi.encodeParam(arg.type, arg.value);
 
         return hexArg.toString('hex').replace('0x','');
     });
 
-    // console.log(hexArgs);
-    console.log('0x'+ hexArgs.join(''));
+    // console.log(args, hexArgs);
+    // console.log('0x'+ hexArgs.join(''));
 
     return sha3('0x'+ hexArgs.join(''));
 };
@@ -524,10 +523,14 @@ var numberToHex = function (value) {
  * @return {String}
  */
 var toHex = function (value, returnType) {
-    /*jshint maxcomplexity: 10 */
+    /*jshint maxcomplexity: false */
+
+    if (isAddress(value)) {
+        return returnType ? 'address' : '0x'+ value.toLowerCase().replace(/^0x/i,'');
+    }
 
     if (_.isBoolean(value)) {
-        return returnType ? 'bool' : numberToHex(+value);
+        return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
 
@@ -538,7 +541,7 @@ var toHex = function (value, returnType) {
     // if its a negative number, pass it through numberToHex
     if (_.isString(value)) {
         if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
-            return returnType ? 'uint256' : numberToHex(value);
+            return returnType ? 'int256' : numberToHex(value);
         } else if(value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
             return returnType ? 'bytes' : value;
         } else if (!isFinite(value)) {
@@ -546,7 +549,7 @@ var toHex = function (value, returnType) {
         }
     }
 
-    return returnType ? 'uint256' : numberToHex(value);
+    return returnType ? (value < 0 ? 'int256' : 'uint256') : numberToHex(value);
 };
 
 /**
