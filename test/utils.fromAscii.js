@@ -19,7 +19,7 @@ var paddedTests = [
 ]
 
 describe('lib/utils/utils', function () {
-    describe('fromAscii', function () {
+    describe('asciiToHex', function () {
         tests.forEach(function (test) {
             it('should turn ' + test.value + ' to ' + test.expected, function () {
                 assert.strictEqual(utils.fromAscii(test.value), test.expected);

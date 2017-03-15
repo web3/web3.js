@@ -37,7 +37,7 @@ var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
 var promiEvent = require('web3-core-promiEvent');
-var coder = require('web3-eth-abi');
+var abi = require('web3-eth-abi');
 
 
 /**
@@ -266,10 +266,10 @@ Contract.prototype._encodeEventABI = function (event, options) {
 
                 if (_.isArray(value)) {
                     return value.map(function (v) {
-                        return '0x' + coder.encodeParam(i.type, v);
+                        return '0x' + abi.encodeParam(i.type, v);
                     });
                 }
-                return '0x' + coder.encodeParam(i.type, value);
+                return '0x' + abi.encodeParam(i.type, value);
             });
 
             result.topics = result.topics.concat(indexedTopics);
@@ -325,10 +325,10 @@ Contract.prototype._decodeEventABI = function (data) {
 
     var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join('');
     // console.log('INDEXED', indexedTypes, indexedData);
-    var indexedParams = coder.decodeParams(indexedTypes, indexedData);
+    var indexedParams = abi.decodeParams(indexedTypes, indexedData);
 
     // console.log('NOT INDEXED', notIndexedTypes, data.data.slice(2));
-    var notIndexedParams = coder.decodeParams(notIndexedTypes, data.data.slice(2));
+    var notIndexedParams = abi.decodeParams(notIndexedTypes, data.data.slice(2));
 
 
     var count = 0;
@@ -380,7 +380,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
                 return input.type;
             });
         }).map(function (types) {
-            return coder.encodeParams(types, args);
+            return abi.encodeParams(types, args);
         })[0] || '';
 
     // return constructor
@@ -421,7 +421,7 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     });
 
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-    var result = coder.decodeParams(types, returnValues);
+    var result = abi.decodeParams(types, returnValues);
     result = result.length === 1 ? result[0] : result;
     if(result === '0x')
         result = null;

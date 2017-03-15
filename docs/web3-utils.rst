@@ -166,8 +166,12 @@ sha3
 .. code-block:: javascript
 
     web3.utils.sha3(string)
+    web3.utils.keccak256(string) // ALIAS
 
 Will calculate the sha3 of the input.
+
+.. note::  If given a HEX string it will be converted to a byte array first before hashed to match solidity's sha3.
+``web3.utils.sha3.jsSha3`` exposes the underlying `js-sha3 library <https://github.com/emn178/js-sha3>`_. Use to to hash without HEX conversion.
 
 ----------
 Parameters
@@ -187,8 +191,68 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.sha3('234');
+    web3.utils.sha3('234'); // taken as string
     > "0xc1912fee45d61c87cc5ea59dae311904cd86b84fee17cc96966216f811ce6a79"
+
+    web3.utils.sha3(new BN('234'));
+    > "0xbc36789e7a1e281436464229828f817d6612f7b477d66591ff96a9e064bcc98a"
+
+    web3.utils.sha3(234);
+    > null // can't calculate the has of a number
+
+    web3.utils.sha3(0xea); // same as above, just the HEX representation of the number
+    > null
+
+    web3.utils.sha3('0xea'); // will be converted to a byte array first, and then hashed
+    > "0x2f20677459120677484f7104c76deb6846a2c071f9b3152c103bb12cd54d1a4a"
+
+
+------------------------------------------------------------------------------
+
+isHex
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.isHex(hex)
+
+Checks if a given string is a HEX string.
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String|HEX``: The given HEX string.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.isHex('0xc1912');
+    > true
+
+    web3.utils.isHex(0xc1912);
+    > true
+
+    web3.utils.isHex('c1912');
+    > true
+
+    web3.utils.isHex(345);
+    > true // this is tricky, as 345 can be a a HEX representation or a number, be careful when not having a 0x in front!
+
+    web3.utils.isHex('0xZ1912');
+    > false
+
+    web3.utils.isHex('Hello');
+    > false
 
 
 ------------------------------------------------------------------------------
@@ -401,12 +465,12 @@ Example
 ------------------------------------------------------------------------------
 
 
-toNumberString
+hexToNumberString
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.toNumberString(hex)
+    web3.utils.hexToNumberString(hex)
 
 Returns the number representation of a given HEX value as a string.
 
@@ -428,19 +492,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toNumberString('0xea');
+    web3.utils.hexToNumberString('0xea');
     > "234"
 
 
 ------------------------------------------------------------------------------
 
-toNumber
+hexToNumber
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.toNumber(hex)
-    web3.utils.toDecimal(hex) // ALIAS: might be deprecated in the future
+    web3.utils.hexToNumber(hex)
+    web3.utils.toDecimal(hex) // ALIAS, deprecated
 
 Returns the number representation of a given HEX value.
 
@@ -464,19 +528,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toNumber('0xea');
+    web3.utils.hexToNumber('0xea');
     > 234
 
 
 ------------------------------------------------------------------------------
 
-fromNumber
+numberToHex
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.fromNumber(number)
-    web3.utils.fromDecimal(number) // ALIAS
+    web3.utils.numberToHex(number)
+    web3.utils.fromDecimal(number) // ALIAS, deprecated
 
 Returns the HEX representation of a given number value.
 
@@ -498,20 +562,21 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.fromNumber('234');
+    web3.utils.numberToHex('234');
     > '0xea'
 
 
 ------------------------------------------------------------------------------
 
 
-toUtf8
+hexToUtf8
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.toUtf8(hex)
-    web3.utils.toString(hex) // ALIAS
+    web3.utils.hexToUtf8(hex)
+    web3.utils.hexToString(hex) // ALIAS
+    web3.utils.toUtf8(hex) // ALIAS, deprecated
 
 Returns the UTF-8 string representation of a given HEX value.
 
@@ -534,18 +599,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toUtf8('0x49206861766520313030e282ac');
+    web3.utils.hexToUtf8('0x49206861766520313030e282ac');
     > "I have 100€"
 
 
 ------------------------------------------------------------------------------
 
-toAscii
+hexToAscii
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.toAscii(hex)
+    web3.utils.hexToAscii(hex)
+    web3.utils.toAscii(hex) // ALIAS, deprecated
 
 Returns the ASCII string representation of a given HEX value.
 
@@ -568,7 +634,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.toAscii('0x4920686176652031303021');
+    web3.utils.hexToAscii('0x4920686176652031303021');
     > "I have 100!"
 
 
@@ -576,13 +642,14 @@ Example
 
 
 
-fromUtf8
+utf8ToHex
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.fromUtf8(hex)
-    web3.utils.fromString(hex) // ALIAS
+    web3.utils.utf8ToHex(string)
+    web3.utils.stringToHex(string) // ALIAS
+    web3.utils.fromUtf8(string) // ALIAS, deprecated
 
 Returns the HEX representation of a given UTF-8 string.
 
@@ -591,7 +658,7 @@ Returns the HEX representation of a given UTF-8 string.
 Parameters
 ----------
 
-1. ``hex`` - ``String``: A UTF-8 string to convert to a HEX string.
+1. ``string`` - ``String``: A UTF-8 string to convert to a HEX string.
 
 -------
 Returns
@@ -605,18 +672,19 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.fromUtf8('I have 100€');
+    web3.utils.utf8ToHex('I have 100€');
     > "0x49206861766520313030e282ac"
 
 
 ------------------------------------------------------------------------------
 
-fromAscii
+asciiToHex
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.fromAscii(hex)
+    web3.utils.asciiToHex(string)
+    web3.utils.fromAscii(string) // ALIAS, deprecated
 
 
 Returns the HEX representation of a given ASCII string.
@@ -626,7 +694,7 @@ Returns the HEX representation of a given ASCII string.
 Parameters
 ----------
 
-1. ``hex`` - ``String``: A ASCII string to convert to a HEX string.
+1. ``string`` - ``String``: A ASCII string to convert to a HEX string.
 
 -------
 Returns
@@ -640,8 +708,79 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.fromAscii('I have 100!');
+    web3.utils.asciiToHex('I have 100!');
     > "0x4920686176652031303021"
+
+
+------------------------------------------------------------------------------
+
+hexToBytes
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.hexToBytes(hex)
+
+Returns a byte array from the given HEX string.
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String|HEX``: A HEX to convert.
+
+-------
+Returns
+-------
+
+``Array``: The byte array.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.hexToBytes('0x000000ea');
+    > [ 0, 0, 0, 234 ]
+
+    web3.utils.hexToBytes(0x000000ea);
+    > [ 234 ]
+
+
+------------------------------------------------------------------------------
+
+
+bytesToHex
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.bytesToHex(byteArray)
+
+Returns a HEX string from a byte array.
+
+----------
+Parameters
+----------
+
+1. ``byteArray`` - ``Array``: A byte array to convert.
+
+-------
+Returns
+-------
+
+``String``: The HEX string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.bytesToHex([ 72, 101, 108, 108, 111, 33, 36 ]);
+    > "0x48656c6c6f2125"
+
 
 
 ------------------------------------------------------------------------------
@@ -875,12 +1014,13 @@ Example
 
 ------------------------------------------------------------------------------
 
-padLeft
+leftPad
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.padLeft(string, characterAmount [, sign])
+    web3.utils.leftPad(string, characterAmount [, sign])
+    web3.utils.leftPad(string, characterAmount [, sign]) // ALIAS
 
 
 Adds a padding on the left of a string, Useful for adding paddings to HEX strings.
@@ -906,23 +1046,24 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.padLeft('0x3456ff', 20);
+    web3.utils.leftPad('0x3456ff', 20);
     > "0x000000000000003456ff"
 
-    web3.utils.padLeft(0x3456ff, 20);
+    web3.utils.leftPad(0x3456ff, 20);
     > "0x000000000000003456ff"
 
-    web3.utils.padLeft('Hello', 20, 'x');
+    web3.utils.leftPad('Hello', 20, 'x');
     > "xxxxxxxxxxxxxxxHello"
 
 ------------------------------------------------------------------------------
 
-padRight
+rightPad
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.padRight(string, characterAmount [, sign])
+    web3.utils.rightPad(string, characterAmount [, sign])
+    web3.utils.rightPad(string, characterAmount [, sign]) // ALIAS
 
 
 Adds a padding on the right of a string, Useful for adding paddings to HEX strings.
@@ -948,11 +1089,11 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.padRight('0x3456ff', 20);
+    web3.utils.rightPad('0x3456ff', 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.padRight(0x3456ff, 20);
+    web3.utils.rightPad(0x3456ff, 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.padRight('Hello', 20, 'x');
+    web3.utils.rightPad('Hello', 20, 'x');
     > "Helloxxxxxxxxxxxxxxx"

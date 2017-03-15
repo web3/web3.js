@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file coder.js
+ * @file index.js
  * @author Marek Kotewicz <marek@ethcore.io>
  * @date 2015
  */
@@ -34,6 +34,8 @@ var isDynamic = function (solidityType, type) {
     return solidityType.isDynamicType(type) ||
         solidityType.isDynamicArray(type);
 };
+
+
 
 /**
  * SolidityCoder prototype should be used to encode/decode solidity params of any type
