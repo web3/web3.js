@@ -331,12 +331,15 @@ Contract.prototype._decodeEventABI = function (data) {
     var notIndexedParams = abi.decodeParams(notIndexedTypes, data.data.slice(2));
 
 
-    var count = 0;
-    result.returnValues = event.inputs.reduce(function (acc, current) {
-        var name = current.name || count++;
-        acc[name] = current.indexed ? indexedParams.shift() : notIndexedParams.shift();
-        return acc;
-    }, {});
+    result.returnValues = new Result();
+    event.inputs.forEach(function (res, i) {
+        var decodedRes = res.indexed ? indexedParams.shift() : notIndexedParams.shift();
+        result.returnValues[i] = decodedRes;
+
+        if(res.name) {
+            result.returnValues[res.name] = decodedRes;
+        }
+    });
 
     result.event = event.name;
 
@@ -403,6 +406,10 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
 
 };
 
+// result method
+function Result() {}
+
+
 /**
  * Decode method return values
  *
@@ -422,10 +429,27 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
 
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
     var result = abi.decodeParams(types, returnValues);
-    result = result.length === 1 ? result[0] : result;
-    if(result === '0x')
-        result = null;
-    return result;
+    // return empty values as null
+    result = result.map(function (res) {
+        return (res === '0x') ? null: res;
+    });
+    // return Result object, or result
+    if(result.length === 1) {
+
+        return result[0];
+
+    } else {
+        var returnResult = new Result();
+
+        result.forEach(function (res, i) {
+            returnResult[i] = res;
+            if (outputs[i].name) {
+                returnResult[outputs[i].name] = res;
+            }
+        });
+
+        return returnResult;
+    }
 };
 
 

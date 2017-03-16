@@ -57,6 +57,7 @@ var tests = [{
     expected: {
         event: name,
         returnValues: {
+            0: '1',
             a: '1'
         },
         logIndex: 1,
@@ -111,6 +112,10 @@ var tests = [{
     expected: {
         event: name,
         returnValues: {
+            0: '1',
+            1: '10',
+            2: '4',
+            3: '16',
             a: '1',
             b: '10',
             c: '4',
@@ -174,6 +179,10 @@ var tests = [{
     expected: {
         event: name,
         returnValues: {
+            0: '1',
+            1: '10',
+            2: '4',
+            3: '16',
             a: '1',
             b: '10',
             c: '4',
