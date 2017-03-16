@@ -296,6 +296,8 @@ var _solidityPack = function (type, value, arraySize) {
 
 
 var _processSoliditySha3Args = function (arg) {
+    /*jshint maxcomplexity:false */
+    
     var type, value = '';
     var hexArg, arraySize;
 
