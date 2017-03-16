@@ -224,6 +224,7 @@ Parameters
 ----------
 
 1. ``paramX`` - ``Mixed``: Any type, or an object with ``{type: 'uint', value: '123456'}`` or ``{t: 'bytes', v: '0xfff456'}``. Basic types are autodetected as follows:
+
     - ``String`` non numerical UTF-8 string is interpreted as ``string``.
     - ``String|Number|BN|HEX`` positive number is interpreted as ``uint256``.
     - ``String|Number|BN`` negative number is interpreted as ``int256``.
