@@ -229,8 +229,8 @@ Parameters
     - ``String|Number|BN|HEX`` positive number is interpreted as ``uint256``.
     - ``String|Number|BN`` negative number is interpreted as ``int256``.
     - ``Boolean`` as ``bool``.
-    - ``String`` HEX string(!) is interpreted as ``bytes``.
-    - ``HEX`` is interpreted as ``uint256``.
+    - ``String`` HEX string with leading ``0x`` is interpreted as ``bytes``.
+    - ``HEX`` HEX number representation is interpreted as ``uint256``.
 
 -------
 Returns
@@ -251,6 +251,9 @@ Example
     > "0x661136a4267dba9ccdf6bfddb7c00e714de936674c4bdb065a531cf1cb15c7fc"
 
     web3.utils.soliditySha3('234'); // auto detects: uint256
+    > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
+
+    web3.utils.soliditySha3(0xea); // auto detects: uint256
     > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
 
     web3.utils.soliditySha3(new BN('234')); // same as above
