@@ -434,9 +434,7 @@ Returns
 -------
 
 ``Promise`` returns ``Mixed``: The return value(s) of the smart contract method.
-
-// TODO add specific examples, once the decoder is extended
-// TODO add specific examples, once the decoder is extended
+If its a single return value its returned as is, if its multiple return values they are returned as object with properties and indexeds additionally:
 
 -------
 Example
@@ -454,6 +452,51 @@ Example
     .then(function(result){
         ...
     });
+
+
+    // MULTI RETURN:
+
+    // Solidity
+    contract MyContract {
+        function myFunction() returns(uint256 myNumber, string myString) {
+
+            return (23456, "Hello!%");
+        }
+    }
+
+    // web3.js
+    var MyContract = new web3.eth.contract(abi, address);
+    MyContract.methods.myFunction().call()
+    .then(function(result){
+        console.log(result);
+        > {
+            myNumber: '23456',
+            myString: 'Hello!%',
+            0: '23456', // those are here as fallback, if the name is not know or given
+            1: 'Hello!%'
+        }
+
+    });
+
+    // SINGLE RETURN:
+
+    // Solidity
+    contract MyContract {
+        function myFunction() returns(string myString) {
+
+            return "Hello!%";
+        }
+    }
+
+    // web3.js
+    var MyContract = new web3.eth.contract(abi, address);
+    MyContract.methods.myFunction().call()
+    .then(function(result){
+        console.log(result);
+        > "Hello!%"
+
+    });
+
 
 
 ------------------------------------------------------------------------------
