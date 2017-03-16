@@ -87,6 +87,11 @@ var _solidityPack = function (type, value, arraySize) {
 
 
     if (type === 'bytes') {
+
+        if (value.replace(/^0x/i,'').length % 2 !== 0) {
+            throw new Error('Invalid bytes characters '+ value.length);
+        }
+
         return value;
     } else if (type === 'string') {
         return utils.utf8ToHex(value);
@@ -97,6 +102,10 @@ var _solidityPack = function (type, value, arraySize) {
             size = 64;
         } else {
             size = 40;
+        }
+
+        if(!utils.isAddress(value)) {
+            throw new Error(value +' is not a valid address, or the checksum is invalid.');
         }
 
         return utils.leftPad(value.toLowerCase(), size);
@@ -115,15 +124,15 @@ var _solidityPack = function (type, value, arraySize) {
             size = 32;
         }
 
-        if (size < 1 || size > 32) {
-            throw new Error('Invalid bytes<N> width: ' + size);
+        if (size < 1 || size > 32 || size < value.replace(/^0x/i,'').length / 2 ) {
+            throw new Error('Invalid bytes' + size +' for '+ value);
         }
 
         return utils.rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
-            throw new Error('Invalid uint<N> width: ' + size);
+            throw new Error('Invalid uint'+size+' size');
         }
 
         num = _parseNumber(value);
@@ -139,7 +148,7 @@ var _solidityPack = function (type, value, arraySize) {
     } else if (type.startsWith('int')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
-            throw new Error('Invalid int<N> width: ' + size);
+            throw new Error('Invalid int'+size+' size');
         }
 
         num = _parseNumber(value);
@@ -163,6 +172,10 @@ var _solidityPack = function (type, value, arraySize) {
 var _processSoliditySha3Args = function (arg) {
     /*jshint maxcomplexity:false */
 
+    if(_.isArray(arg)) {
+        throw new Error('Autodetection of array types is not supported.');
+    }
+
     var type, value = '';
     var hexArg, arraySize;
 
@@ -173,6 +186,7 @@ var _processSoliditySha3Args = function (arg) {
 
         // otherwise try to guess the type
     } else {
+
         type = utils.toHex(arg, true);
         value = utils.toHex(arg);
 

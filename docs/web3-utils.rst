@@ -170,8 +170,7 @@ sha3
 
 Will calculate the sha3 of the input.
 
-.. note::  If given a HEX string it will be converted to a byte array first before hashed to match solidity's sha3.
-``web3.utils.sha3.jsSha3`` exposes the underlying `js-sha3 library <https://github.com/emn178/js-sha3>`_. Use to to hash without HEX conversion.
+.. note::  To mimick the sha3 behaviour of solidity use :ref:`soliditySah3 <utils-soliditysha3>`
 
 ----------
 Parameters
@@ -205,6 +204,75 @@ Example
 
     web3.utils.sha3('0xea'); // will be converted to a byte array first, and then hashed
     > "0x2f20677459120677484f7104c76deb6846a2c071f9b3152c103bb12cd54d1a4a"
+
+
+------------------------------------------------------------------------------
+
+.. _utils-soliditysha3:
+
+soliditySha3
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.soliditySha3(param1 [, param2, ...])
+
+Will calculate the sha3 of given input parameters in the same way solidity would.
+
+----------
+Parameters
+----------
+
+1. ``paramX`` - ``Mixed``: Any type, or an object with ``{type: 'uint', value: '123456'}`` or ``{t: 'bytes', v: '0xfff456'}``. Basic types are autodetected as follows:
+    - ``String`` non numerical UTF-8 string is interpreted as ``string``.
+    - ``String|Number|BN|HEX`` positive number is interpreted as ``uint256``.
+    - ``String|Number|BN`` negative number is interpreted as ``int256``.
+    - ``Boolean`` as ``bool``.
+    - ``String`` HEX string(!) is interpreted as ``bytes``.
+    - ``HEX`` is interpreted as ``uint256``.
+
+-------
+Returns
+-------
+
+``String``: the result hash.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.soliditySha3('234564535', '0xfff23243', true, -10); // auto detects: uint256, bytes, boolean, int256
+    > "0x3e27a893dc40ef8a7f0841d96639de2f58a132be5ae466d40087a2cfa83b7179"
+
+    web3.utils.soliditySha3('Hello!%'); // auto detects: string
+    > "0x661136a4267dba9ccdf6bfddb7c00e714de936674c4bdb065a531cf1cb15c7fc"
+
+    web3.utils.soliditySha3('234'); // auto detects: uint256
+    > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
+
+    web3.utils.soliditySha3(new BN('234')); // same as above
+    > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
+
+    web3.utils.soliditySha3({type: 'uint256', value: '234'})); // same as above
+    > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
+
+    web3.utils.soliditySha3({t: 'uint', v: new BN('234')})); // same as above
+    > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
+
+    web3.utils.soliditySha3({t: 'address', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1'});
+    > 0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b
+
+    web3.utils.soliditySha3({t: 'bytes', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1'});
+    > 0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b // same result as above
+
+    web3.utils.soliditySha3({t: 'bytes32', v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1'});
+    > 0x3c69a194aaf415ba5d6afca734660d0a3d45acdc05d54cd1ca89a8988e7625b4 // different result as above
+
+    web3.utils.soliditySha3({t: 'string', v: 'Hello!%'}, {t: 'int8', v:-23}, {t: 'address', v: '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'});
+    > "0xa13b31627c1ed7aaded5aecec71baf02fe123797fffd45e662eac8e06fbe4955"
+
 
 
 ------------------------------------------------------------------------------

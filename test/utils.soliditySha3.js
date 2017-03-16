@@ -66,7 +66,8 @@ var tests = [{
     ], expected: '0x5ce6ff175acd532fb4dcef362c829e74a0ce1fde4a43885cca0d257b33d06d07'
 },{
     values: [
-        {v: '44454256', t: 'uint128'}
+        {v: '44454256', t: 'uint128'},
+        {v: '44454256', t: 'int128'} // should be the same
     ], expected: '0x372b694bc0f2dd9229f39b3892621a6ae3ffe111c5096a0a9253c34558a92ab8'
 },{
     values: [
@@ -77,7 +78,8 @@ var tests = [{
     values: [
         '0x2345435675432144555ffffffffdd222222222222224444556553522',
         {v: '0x2345435675432144555ffffffffdd222222222222224444556553522', t: 'bytes'},
-        {v: '2345435675432144555ffffffffdd222222222222224444556553522', t: 'bytes'}
+        {v: '2345435675432144555ffffffffdd222222222222224444556553522', t: 'bytes'},
+        {error: true, v: '0x2345435675432144555ffffffffdd22222222222222444455655352', t: 'bytes'}
     ], expected: '0xb7ecb0d74e96b792a62b4a9dad28f5b1795417a89679562178b1987e0767e009'
 },{
     values: [
@@ -96,7 +98,8 @@ var tests = [{
 },{
     values: [
         {v: '0x22', t: 'bytes2'},
-        {v: '22', t: 'bytes2'}
+        {v: '22', t: 'bytes2'},
+        {error: true, v: '0x222222', t: 'bytes2'}
     ], expected: '0xb07fb0a3471486f9ccb02aab1d525df60d82925cb2d27860f923e655d76f35fc'
 },{
     values: [
@@ -111,7 +114,11 @@ var tests = [{
 },{
     values: [
         '0x407D73d8a49eeb85D32Cf465507dd71d507100c1',
-        {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'}
+        '0x407d73d8a49eeb85D32Cf465507dd71d507100c1', // invalid checksum, should work as it is interpreted as address
+        {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'},
+        {error: true, v: '0x407d73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'},
+        {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes'},
+        {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes20'}
     ], expected: '0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b'
 // 18
 },{
@@ -157,17 +164,22 @@ var tests = [{
     values: [
         {v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[]'},
         {v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[2]'},
+        {error: true, v: ['0x407d73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[]'},
         {error: true, v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[4]'}
     ], expected: '0x1dcd26e646452836052e2a57400510aa63e07aede06fa43660cb6054edacfce0'
+},{
+    values: [
+        ['someValue'] // should error
+    ], expected: ''
 }];
 
 
 describe('web3.soliditySha3', function () {
     tests.forEach(function (test) {
         test.values.forEach(function (value) {
-            it('should hash "'+ value +'" into "'+ test.expected +'"', function() {
+            it('should hash "'+ JSON.stringify(value) +'" into "'+ test.expected +'"', function() {
 
-                if(value.error) {
+                if(value.error || _.isArray(value)) {
                     assert.throws(utils.soliditySha3.bind(null, value));
                 } else {
                     assert.deepEqual(utils.soliditySha3(value), test.expected);
