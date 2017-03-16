@@ -311,8 +311,26 @@ describe('contract', function () {
             }], '0x000000000000000000000000'+ address.replace('0x','')+
                 '000000000000000000000000000000000000000000000000000000000000000a');
 
+            assert.isObject(result);
             assert.equal(result[0], address);
+            assert.equal(result.myAddress, address);
             assert.equal(result[1], 10);
+            assert.equal(result.value, 10);
+
+        });
+        it('_decodeMethodReturn should return a single decoded value', function () {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var signature = 'Changed(address,uint256,uint256,uint256)';
+
+            var contract = new eth.Contract(abi, address);
+
+            var result = contract._decodeMethodReturn([{
+                "name": "myAddress",
+                "type": "address"
+            }], '0x000000000000000000000000'+ address.replace('0x',''));
+
+            assert.equal(result, address);
 
         });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
@@ -1403,6 +1421,9 @@ describe('contract', function () {
                             id: 'log_9ff24cb4',
                             transactionIndex: 0,
                             returnValues: {
+                                0: '2',
+                                1: address,
+                                2: '5',
                                 value: '2',
                                 addressFrom: address,
                                 t1: '5'
@@ -1424,6 +1445,10 @@ describe('contract', function () {
                             id: 'log_9ff24cb4',
                             transactionIndex: 0,
                             returnValues: {
+                                0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                1: '1',
+                                2: '1',
+                                3: '8',
                                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                                 amount: '1',
                                 t1: '1',
@@ -1817,6 +1842,10 @@ describe('contract', function () {
                         topics: topic1
                     },
                     returnValues: {
+                        0: address,
+                        1: '10',
+                        2: '2',
+                        3: '9',
                         from: address,
                         amount: '10',
                         t1: '2',
@@ -1838,6 +1867,10 @@ describe('contract', function () {
                             topics: topic2
                         },
                         returnValues: {
+                            0: address,
+                            1: '3',
+                            2: '4',
+                            3: '5',
                             from: address,
                             amount: '3',
                             t1: '4',
