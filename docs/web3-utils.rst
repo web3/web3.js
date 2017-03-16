@@ -245,7 +245,7 @@ Example
 .. code-block:: javascript
 
     web3.utils.soliditySha3('234564535', '0xfff23243', true, -10);
-    // auto detects: uint256, bytes, boolean, int256
+    // auto detects:        uint256,      bytes,     bool,   int256
     > "0x3e27a893dc40ef8a7f0841d96639de2f58a132be5ae466d40087a2cfa83b7179"
 
     web3.utils.soliditySha3('Hello!%'); // auto detects: string
