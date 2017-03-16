@@ -113,6 +113,52 @@ var tests = [{
         '0x407D73d8a49eeb85D32Cf465507dd71d507100c1',
         {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'}
     ], expected: '0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b'
+// 18
+},{
+    values: [
+        {v: '36', t: 'int8'}
+    ], expected: '0xb104e6a8e5e1477c7a8346486401cbd4f10ab4840a4201066d9b59b747cb6f88'
+},{
+    values: [
+        {v: '36', t: 'int256'}
+    ], expected: '0x7cd332d19b93bcabe3cce7ca0c18a052f57e5fd03b4758a09f30f5ddc4b22ec4'
+},{
+    values: [
+        {v: [-12, 243], t: 'int[]'},
+        {v: [-12, 243], t: 'int256[]'},
+        {v: ['-12', '243'], t: 'int256[]'},
+        {v: [new BN('-12'), new BN('243')], t: 'int256[]'},
+        {v: ['-12', '243'], t: 'int256[2]'}
+    ], expected: '0xa9805b78a6ec1d71c3722498d521fde9d3913c92360e3aed06a9403db25f0351'
+},{
+    values: [
+        {v: [12, 243], t: 'uint[]'},
+        {v: [12, 243], t: 'uint256[]'},
+        {v: ['12', '243'], t: 'uint256[]'},
+        {v: [new BN('12'), new BN('243')], t: 'uint256[]'},
+        {v: ['12', '243'], t: 'uint256[2]'},
+        {error: true, v: ['12', '243'], t: 'uint256[1]'}
+    ], expected: '0x74282b2d1a7a1a70af6f3a43ab576cd6feeaa6ebaa5fb2033b90d5942bf48a60'
+},{
+    values: [
+        {v: ['0x234656', '0x23434234234ffff456'], t: 'bytes32[]'},
+    ], expected: '0x3f67732837541dd9e3aa29cb99d88839fceccf9486b3ec053d82d339d35c79d5'
+},{
+    values: [
+        {v: '0x234656', t: 'bytes16'},
+        {v: '234656', t: 'bytes16'}
+    ], expected: '0x5d0d56c5b556a2dfee96b3de4717b3bd0333b7ffa5932e208fdcc24a03bdf088'
+},{
+    values: [
+        {v: ['0x234656', '0x23434234234ffff456'], t: 'bytes16[]'},
+        {v: ['234656', '23434234234ffff456'], t: 'bytes16[]'}
+    ], expected: '0x3f67732837541dd9e3aa29cb99d88839fceccf9486b3ec053d82d339d35c79d5'
+},{
+    values: [
+        {v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[]'},
+        {v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[2]'},
+        {error: true, v: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x85F43D8a49eeB85d32Cf465507DD71d507100C1d'], t: 'address[4]'}
+    ], expected: '0x1dcd26e646452836052e2a57400510aa63e07aede06fa43660cb6054edacfce0'
 }];
 
 
@@ -121,11 +167,11 @@ describe('web3.soliditySha3', function () {
         test.values.forEach(function (value) {
             it('should hash "'+ value +'" into "'+ test.expected +'"', function() {
 
-                if (!_.isArray(value)) {
-                    value = [value];
+                if(value.error) {
+                    assert.throws(utils.soliditySha3.bind(null, value));
+                } else {
+                    assert.deepEqual(utils.soliditySha3(value), test.expected);
                 }
-
-                assert.deepEqual(utils.soliditySha3.apply(null, value), test.expected);
 
             });
         });
@@ -173,5 +219,18 @@ describe('web3.soliditySha3', function () {
             tests[0].values[0],  // true
             tests[17].values[1]  // v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'address'
         ), '0x334086a8fa05e16afb86bed41c614aa74e99ea32eefe8ce0026b4076ce217698');
+    });
+
+    it('should hash mixed number arrays addresses and boolean in any order', function() {
+
+        assert.deepEqual(utils.soliditySha3(
+            tests[15].values[1], // v: '0x44222266', t: 'bytes4'
+            tests[25].values[0], // address array
+            tests[0].values[0],  // true
+            tests[13].values[0], // v: '-36', t: 'int8'
+            tests[12].values[5],  // v: '-3435454256', t: 'int256'
+            tests[17].values[0],  // 0x407D73d8a49eeb85D32Cf465507dd71d507100c1
+            tests[17].values[1]  // v: 0x407D73d8a49eeb85D32Cf465507dd71d507100c1 t: address
+        ), '0x61c62b29bbe21d8821a938f7331ac875859cc50331556b3383196b19cfc45aff');
     });
 });

@@ -191,31 +191,35 @@ var _elementaryName = function (name) {
 
 // Parse N from type<N>
 var _parseTypeN = function (type) {
-    return parseInt(/^\D+(\d+)$/.exec(type)[1], 10);
+    return parseInt(/^\D+(\d+).*$/.exec(type)[1], 10);
+};
+
+// Parse N from type[<N>]
+var _parseTypeNArray = function (type) {
+    var arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
+    return arraySize ? parseInt(arraySize[1], 10) : null;
 };
 
 var _parseNumber = function (arg) {
     var type = typeof arg;
     if (type === 'string') {
         if (isHex(arg)) {
-            return new BN(arg.replace(/^0x/i,''), 16);
+            return new BN(arg.replace(/0x/i,''), 16);
         } else {
             return new BN(arg, 10);
         }
     } else if (type === 'number') {
         return new BN(arg);
     } else if (isBigNumber(arg)) {
-        // assume this is a BN for the moment, replace with BN.isBN soon
         return new BN(arg.toString(10));
     } else if (isBN(arg)) {
-        // assume this is a BN for the moment, replace with BN.isBN soon
         return arg;
     } else {
-        throw new Error('Argument is not a number');
+        throw new Error(arg +' is not a number');
     }
 };
 
-var _solidityPack = function (type, value) {
+var _solidityPack = function (type, value, arraySize) {
     /*jshint maxcomplexity:false */
 
     var size, num;
@@ -228,10 +232,21 @@ var _solidityPack = function (type, value) {
         return utf8ToHex(value);
     } else if (type === 'bool') {
         return value ? '01' : '00';
-    } else if (type === 'address') {
-        return leftPad(value, 40);
+    } else if (type.startsWith('address')) {
+        if(arraySize) {
+            size = 64;
+        } else {
+            size = 40;
+        }
+
+        return leftPad(value.toLowerCase(), size);
     } else if (type.startsWith('bytes')) {
         size = _parseTypeN(type);
+
+        // must be 32 byte slices when in an array
+        if(arraySize) {
+            size = 32;
+        }
 
         if (size < 1 || size > 32) {
             throw new Error('Invalid bytes<N> width: ' + size);
@@ -240,6 +255,7 @@ var _solidityPack = function (type, value) {
         return rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
         size = _parseTypeN(type);
+
         if ((size % 8) || (size < 8) || (size > 256)) {
             throw new Error('Invalid uint<N> width: ' + size);
         }
@@ -249,12 +265,12 @@ var _solidityPack = function (type, value) {
             throw new Error('Supplied uint exceeds width: ' + size + ' vs ' + num.bitLength());
         }
 
+        if(num.lt(new BN(0))) {
+            throw new Error('Supplied uint '+ num.toString() +' is negative');
+        }
+
         return size ? leftPad(num.toString('hex'), size/8 * 2) : num;
     } else if (type.startsWith('int')) {
-
-        if(typeof value === 'string' && value.startsWith('-0x')) {
-            value = value.replace('0x','');
-        }
 
         size = _parseTypeN(type);
         if ((size % 8) || (size < 8) || (size > 256)) {
@@ -266,7 +282,11 @@ var _solidityPack = function (type, value) {
             throw new Error('Supplied int exceeds width: ' + size + ' vs ' + num.bitLength());
         }
 
-        return num.toTwos(size);
+        if(num.lt(new BN(0))) {
+            return num.toTwos(size).toString('hex');
+        } else {
+            return size ? leftPad(num.toString('hex'), size/8 * 2) : num;
+        }
 
     } else {
         // FIXME: support all other types
@@ -274,6 +294,52 @@ var _solidityPack = function (type, value) {
     }
 };
 
+
+var _processSoliditySha3Args = function (arg) {
+    var type, value = '';
+    var hexArg, arraySize;
+
+    // if type is given
+    if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+        type = arg.t || arg.type;
+        value = arg.v || arg.value;
+
+        // otherwise try to guess the type
+    } else {
+        type = toHex(arg, true);
+        value = toHex(arg);
+
+        if (!type.startsWith('int') && !type.startsWith('uint')) {
+            type = 'bytes';
+        }
+    }
+
+    if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^(-)?0x/i.test(value)) {
+        value = new BN(value);
+    }
+
+    // get the array size
+    if(_.isArray(value)) {
+        arraySize = _parseTypeNArray(type);
+        if(arraySize && value.length !== arraySize) {
+            throw new Error(type +' is not matching the given array '+ JSON.stringify(value));
+        } else {
+            arraySize = value.length;
+        }
+    }
+
+
+    if (_.isArray(value)) {
+        hexArg = value.map(function (val) {
+            return _solidityPack(type, val, arraySize).toString('hex').replace('0x','');//abi.encodeParam(arg.type, arg.value);
+        });
+        return hexArg.join('');
+    } else {
+        hexArg = _solidityPack(type, value, arraySize);//abi.encodeParam(arg.type, arg.value);
+        return hexArg.toString('hex').replace('0x','');
+    }
+
+};
 
 /**
  * Hashes solidity values to a sha3 hash using keccak 256
@@ -286,32 +352,7 @@ var soliditySha3 = function () {
 
     var args = Array.prototype.slice.call(arguments);
 
-    var hexArgs = _.map(args, function (arg) {
-        var type, value = '';
-
-        // if type is given
-        if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
-            type = arg.t || arg.type;
-            value = arg.v || arg.value;
-
-        // otherwise try to guess the type
-        } else {
-            type = toHex(arg, true);
-            value = toHex(arg);
-
-            if (!type.startsWith('int') && !type.startsWith('uint')) {
-                type = 'bytes';
-            }
-        }
-
-        if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^(-)?0x/i.test(value)) {
-            value = new BN(value);
-        }
-
-        var hexArg = _solidityPack(type, value);//abi.encodeParam(arg.type, arg.value);
-
-        return hexArg.toString('hex').replace('0x','');
-    });
+    var hexArgs = _.map(args, _processSoliditySha3Args);
 
     // console.log(args, hexArgs);
     // console.log('0x'+ hexArgs.join(''));
@@ -364,7 +405,7 @@ var rightPad = function (string, chars, sign) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?(0x)?[0-9a-f]+$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]+$/i.test(hex));
 };
 
 
