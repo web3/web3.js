@@ -254,7 +254,7 @@ Example
     web3.utils.soliditySha3('234'); // auto detects: uint256
     > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
 
-    web3.utils.soliditySha3(0xea); // auto detects: uint256
+    web3.utils.soliditySha3(0xea); // same as above
     > "0x61c831beab28d67d1bb40b5ae1a11e2757fa842f031a2d0bc94a7867bc5d26c2"
 
     web3.utils.soliditySha3(new BN('234')); // same as above
