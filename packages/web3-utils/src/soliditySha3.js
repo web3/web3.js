@@ -50,7 +50,8 @@ var _elementaryName = function (name) {
 
 // Parse N from type<N>
 var _parseTypeN = function (type) {
-    return parseInt(/^\D+(\d+).*$/.exec(type)[1], 10);
+    var typesize = /^\D+(\d+).*$/.exec(type);
+    return typesize ? parseInt(typesize[1], 10) : null;
 };
 
 // Parse N from type[<N>]
@@ -99,8 +100,15 @@ var _solidityPack = function (type, value, arraySize) {
         }
 
         return utils.leftPad(value.toLowerCase(), size);
-    } else if (type.startsWith('bytes')) {
-        size = _parseTypeN(type);
+    }
+
+    size = _parseTypeN(type);
+
+    if (type.startsWith('bytes')) {
+
+        if(!size) {
+            throw new Error('bytes[] not yet supported in solidity');
+        }
 
         // must be 32 byte slices when in an array
         if(arraySize) {
@@ -113,7 +121,6 @@ var _solidityPack = function (type, value, arraySize) {
 
         return utils.rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
-        size = _parseTypeN(type);
 
         if ((size % 8) || (size < 8) || (size > 256)) {
             throw new Error('Invalid uint<N> width: ' + size);
@@ -131,7 +138,6 @@ var _solidityPack = function (type, value, arraySize) {
         return size ? utils.leftPad(num.toString('hex'), size/8 * 2) : num;
     } else if (type.startsWith('int')) {
 
-        size = _parseTypeN(type);
         if ((size % 8) || (size < 8) || (size > 256)) {
             throw new Error('Invalid int<N> width: ' + size);
         }
