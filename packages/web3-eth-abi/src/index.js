@@ -17,7 +17,8 @@
 /**
  * @file index.js
  * @author Marek Kotewicz <marek@ethcore.io>
- * @date 2015
+ * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @date 2017
  */
 
 var f = require('./types/formatters');
@@ -35,6 +36,9 @@ var isDynamic = function (solidityType, type) {
         solidityType.isDynamicArray(type);
 };
 
+
+// result method
+function Result() {}
 
 
 /**
@@ -204,25 +208,97 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
  * @return {Object} plain param
  */
 SolidityCoder.prototype.decodeParam = function (type, bytes) {
-    return this.decodeParams([type], bytes)[0];
+    return this.decodeParams([{type: type}], bytes)[0];
 };
 
 /**
  * Should be used to decode list of params
  *
  * @method decodeParam
- * @param {Array} types
+ * @param {Array} outputs
  * @param {String} bytes
  * @return {Array} array of plain params
  */
-SolidityCoder.prototype.decodeParams = function (types, bytes) {
+SolidityCoder.prototype.decodeParams = function (outputs, bytes) {
+    var types = [];
+    outputs.forEach(function (output) {
+        types.push(output.type);
+    });
     var solidityTypes = this.getSolidityTypes(types);
     var offsets = this.getOffsets(types, solidityTypes);
 
-    return solidityTypes.map(function (solidityType, index) {
-        return solidityType.decode(bytes, offsets[index],  types[index], index);
+    var returnValue = new Result();
+    returnValue.__length__ = 0;
+    var count = 0;
+
+    outputs.forEach(function (output, i) {
+        var decodedValue = solidityTypes[count].decode(bytes, offsets[count],  types[count], count);
+        decodedValue = (decodedValue === '0x') ? null : decodedValue;
+
+        returnValue[i] = decodedValue;
+
+        if (output.name) {
+            returnValue[output.name] = decodedValue;
+        }
+
+        returnValue.__length__++;
+        count++;
     });
+
+    return returnValue;
 };
+
+/**
+ * Decodes events non- and indexed parameters.
+ *
+ * @method decodeEvent
+ * @param {Object} inputs
+ * @param {String} data
+ * * @param {Array} topics
+ * @return {Array} array of plain params
+ */
+SolidityCoder.prototype.decodeEvent = function (inputs, data, topics) {
+
+    var notIndexedInputs = [];
+    var indexedInputs = [];
+
+    inputs.forEach(function (input, i) {
+        if (input.indexed) {
+            indexedInputs[i] = input;
+        } else {
+            notIndexedInputs[i] = input;
+        }
+    });
+
+    var nonIndexedData = data.slice(2);
+    var indexedData = topics ? topics.map(function (topic) { return topic.slice(2); }).join('') : '';
+
+    // console.log('NOT INDEXED', notIndexedTypes, data.data.slice(2));
+    var notIndexedParams = this.decodeParams(notIndexedInputs, nonIndexedData);
+    var indexedParams = this.decodeParams(indexedInputs, indexedData);
+
+
+    var returnValue = new Result();
+    returnValue.__length__ = 0;
+
+    inputs.forEach(function (res, i) {
+        if (notIndexedParams[i]) {
+            returnValue[i] = notIndexedParams[i];
+        }
+        if (indexedParams[i]) {
+            returnValue[i] = indexedParams[i];
+        }
+
+        if(res.name) {
+            returnValue[res.name] = returnValue[i];
+        }
+
+        returnValue.__length__++;
+    });
+
+    return returnValue;
+};
+
 
 SolidityCoder.prototype.getOffsets = function (types, solidityTypes) {
     var lengths =  solidityTypes.map(function (solidityType, index) {

@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
 var coder = require('../packages/web3-eth-abi');
@@ -246,11 +247,26 @@ describe('lib/solidity/coder', function () {
     });
 });
 
+
 describe('lib/solidity/coder', function () {
     describe('decodeParams', function () {
         var test = function (t) {
             it('should turn ' + t.values + ' to ' + t.expected, function () {
-                assert.deepEqual(coder.decodeParams(t.types, t.values), t.expected);
+                var outputs = t.types.map(function(type){
+                    return {type: type};
+                });
+
+                var result = coder.decodeParams(outputs, t.values);
+
+                var resultArray = [];
+                _.each(result, function (res, key) {
+                    if(_.isFinite(key))
+                        resultArray.push(res);
+                });
+
+
+
+                assert.deepEqual(resultArray, t.expected);
             });
         };
 
