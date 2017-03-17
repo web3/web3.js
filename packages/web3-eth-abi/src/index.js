@@ -21,6 +21,9 @@
  * @date 2017
  */
 
+var _ = require('underscore');
+var utils = require('web3-utils');
+
 var f = require('./types/formatters');
 
 var SolidityTypeAddress = require('./types/address');
@@ -42,9 +45,9 @@ function Result() {}
 
 
 /**
- * SolidityCoder prototype should be used to encode/decode solidity params of any type
+ * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var SolidityCoder = function (types) {
+var ABICoder = function (types) {
     this._types = types;
 };
 
@@ -56,7 +59,7 @@ var SolidityCoder = function (types) {
  * @returns {SolidityType}
  * @throws {Error} throws if no matching type is found
  */
-SolidityCoder.prototype._requireType = function (type) {
+ABICoder.prototype._requireType = function (type) {
     var solidityType = this._types.filter(function (t) {
         return t.isType(type);
     })[0];
@@ -68,59 +71,45 @@ SolidityCoder.prototype._requireType = function (type) {
     return solidityType;
 };
 
-/**
- * Should be used to encode plain param
- *
- * @method encodeParam
- * @param {String} type
- * @param {Object} plain param
- * @return {String} encoded plain param
- */
-SolidityCoder.prototype.encodeParam = function (type, param) {
-    return this.encodeParams([type], [param]);
-};
 
-/**
- * Should be used to encode list of params
- *
- * @method encodeParams
- * @param {Array} types
- * @param {Array} params
- * @return {String} encoded list of params
- */
-SolidityCoder.prototype.encodeParams = function (types, params) {
-    var solidityTypes = this.getSolidityTypes(types);
 
-    var encodeds = solidityTypes.map(function (solidityType, index) {
-        return solidityType.encode(params[index], types[index]);
+ABICoder.prototype._getOffsets = function (types, solidityTypes) {
+    var lengths =  solidityTypes.map(function (solidityType, index) {
+        return solidityType.staticPartLength(types[index]);
     });
 
-    var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
-        var staticPartLength = solidityType.staticPartLength(types[index]);
-        var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
+    for (var i = 1; i < lengths.length; i++) {
+        // sum with length of previous element
+        lengths[i] += lengths[i - 1];
+    }
 
-        return acc + (isDynamic(solidityTypes[index], types[index]) ?
-                32 :
-                roundedStaticPartLength);
-    }, 0);
-
-    var result = this.encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
-
-    return result;
+    return lengths.map(function (length, index) {
+        // remove the current length, so the length is sum of previous elements
+        var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
+        return length - staticPartLength;
+    });
 };
 
-SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, encodeds, dynamicOffset) {
+ABICoder.prototype._getSolidityTypes = function (types) {
+    var self = this;
+    return types.map(function (type) {
+        return self._requireType(type);
+    });
+};
+
+
+ABICoder.prototype._encodeMultiWithOffset = function (types, solidityTypes, encodeds, dynamicOffset) {
     var result = "";
     var self = this;
 
     types.forEach(function (type, i) {
         if (isDynamic(solidityTypes[i], types[i])) {
             result += f.formatInputInt(dynamicOffset).encode();
-            var e = self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
+            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
             dynamicOffset += e.length / 2;
         } else {
             // don't add length to dynamicOffset. it's already counted
-            result += self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
+            result += self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
         }
 
         // TODO: figure out nested arrays
@@ -128,7 +117,7 @@ SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, 
 
     types.forEach(function (type, i) {
         if (isDynamic(solidityTypes[i], types[i])) {
-            var e = self.encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
+            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
             dynamicOffset += e.length / 2;
             result += e;
         }
@@ -137,7 +126,7 @@ SolidityCoder.prototype.encodeMultiWithOffset = function (types, solidityTypes, 
 };
 
 // TODO: refactor whole encoding!
-SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded, offset) {
+ABICoder.prototype._encodeWithOffset = function (type, solidityType, encoded, offset) {
     var self = this;
     if (solidityType.isDynamicArray(type)) {
         return (function () {
@@ -160,7 +149,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
             (function () {
                 for (var i = 0; i < encoded.length - 1; i++) {
                     var additionalOffset = result / 2;
-                    result += self.encodeWithOffset(nestedName, solidityType, encoded[i + 1], offset +  additionalOffset);
+                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i + 1], offset +  additionalOffset);
                 }
             })();
 
@@ -188,7 +177,7 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
             (function () {
                 for (var i = 0; i < encoded.length; i++) {
                     var additionalOffset = result / 2;
-                    result += self.encodeWithOffset(nestedName, solidityType, encoded[i], offset + additionalOffset);
+                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i], offset + additionalOffset);
                 }
             })();
 
@@ -199,45 +188,143 @@ SolidityCoder.prototype.encodeWithOffset = function (type, solidityType, encoded
     return encoded;
 };
 
+
+/**
+ * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+ *
+ * @method encodeFunctionSignature
+ * @param {String|Object} functionName
+ * @return {String} encoded function name
+ */
+ABICoder.prototype.encodeFunctionSignature = function (functionName) {
+    if(_.isObject(functionName)) {
+        functionName = utils._jsonInterfaceMethodToString(functionName);
+    }
+
+    return utils.sha3(functionName).slice(0, 10);
+};
+
+
+/**
+ * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
+ *
+ * @method encodeEventSignature
+ * @param {String|Object} functionName
+ * @return {String} encoded function name
+ */
+ABICoder.prototype.encodeEventSignature = function (functionName) {
+    if(_.isObject(functionName)) {
+        functionName = utils._jsonInterfaceMethodToString(functionName);
+    }
+
+    return utils.sha3(functionName);
+};
+
+
+/**
+ * Should be used to encode plain param
+ *
+ * @method encodeParameter
+ * @param {String} type
+ * @param {Object} param
+ * @return {String} encoded plain param
+ */
+ABICoder.prototype.encodeParameter = function (type, param) {
+    return this.encodeParameters([type], [param]);
+};
+
+/**
+ * Should be used to encode list of params
+ *
+ * @method encodeParameters
+ * @param {Array} types
+ * @param {Array} params
+ * @return {String} encoded list of params
+ */
+ABICoder.prototype.encodeParameters = function (types, params) {
+    // given a json interface
+    if(_.isObject(types) && types.inputs) {
+        types = _.map(types.inputs, function (input) {
+            return input.type;
+        });
+    }
+
+    var solidityTypes = this._getSolidityTypes(types);
+
+    var encodeds = solidityTypes.map(function (solidityType, index) {
+        return solidityType.encode(params[index], types[index]);
+    });
+
+    var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
+        var staticPartLength = solidityType.staticPartLength(types[index]);
+        var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
+
+        return acc + (isDynamic(solidityTypes[index], types[index]) ?
+                32 :
+                roundedStaticPartLength);
+    }, 0);
+
+    return '0x'+ this._encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
+};
+
+
+/**
+ * Encodes a function call from its json interface and parameters.
+ *
+ * @method encodeFunctionCall
+ * @param {Array} jsonInterface
+ * @param {Array} params
+ * @return {String} The encoded ABI for this function call
+ */
+ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
+    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface, params).replace('0x','');
+};
+
+
 /**
  * Should be used to decode bytes to plain param
  *
- * @method decodeParam
+ * @method decodeParameter
  * @param {String} type
  * @param {String} bytes
  * @return {Object} plain param
  */
-SolidityCoder.prototype.decodeParam = function (type, bytes) {
-    return this.decodeParams([{type: type}], bytes)[0];
+ABICoder.prototype.decodeParameter = function (type, bytes) {
+    return this.decodeParameters([{type: type}], bytes)[0];
 };
 
 /**
  * Should be used to decode list of params
  *
- * @method decodeParam
+ * @method decodeParameter
  * @param {Array} outputs
  * @param {String} bytes
  * @return {Array} array of plain params
  */
-SolidityCoder.prototype.decodeParams = function (outputs, bytes) {
-    var types = [];
-    outputs.forEach(function (output) {
-        types.push(output.type);
-    });
-    var solidityTypes = this.getSolidityTypes(types);
-    var offsets = this.getOffsets(types, solidityTypes);
+ABICoder.prototype.decodeParameters = function (outputs, bytes) {
+    var isTypeArray = _.isArray(outputs) && _.isString(outputs[0]);
+    var types = (isTypeArray) ? outputs : [];
+
+    if(!isTypeArray) {
+        outputs.forEach(function (output) {
+            types.push(output.type);
+        });
+    }
+
+    var solidityTypes = this._getSolidityTypes(types);
+    var offsets = this._getOffsets(types, solidityTypes);
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
     var count = 0;
 
     outputs.forEach(function (output, i) {
-        var decodedValue = solidityTypes[count].decode(bytes, offsets[count],  types[count], count);
+        var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
         decodedValue = (decodedValue === '0x') ? null : decodedValue;
 
         returnValue[i] = decodedValue;
 
-        if (output.name) {
+        if (_.isObject(output) && output.name) {
             returnValue[output.name] = decodedValue;
         }
 
@@ -251,13 +338,13 @@ SolidityCoder.prototype.decodeParams = function (outputs, bytes) {
 /**
  * Decodes events non- and indexed parameters.
  *
- * @method decodeEvent
+ * @method decodeLog
  * @param {Object} inputs
  * @param {String} data
  * * @param {Array} topics
  * @return {Array} array of plain params
  */
-SolidityCoder.prototype.decodeEvent = function (inputs, data, topics) {
+ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
     var notIndexedInputs = [];
     var indexedInputs = [];
@@ -271,11 +358,10 @@ SolidityCoder.prototype.decodeEvent = function (inputs, data, topics) {
     });
 
     var nonIndexedData = data.slice(2);
-    var indexedData = topics ? topics.map(function (topic) { return topic.slice(2); }).join('') : '';
+    var indexedData = _.isArray(topics) ? topics.map(function (topic) { return topic.slice(2); }).join('') : topics;
 
-    // console.log('NOT INDEXED', notIndexedTypes, data.data.slice(2));
-    var notIndexedParams = this.decodeParams(notIndexedInputs, nonIndexedData);
-    var indexedParams = this.decodeParams(indexedInputs, indexedData);
+    var notIndexedParams = this.decodeParameters(notIndexedInputs, nonIndexedData);
+    var indexedParams = this.decodeParameters(indexedInputs, indexedData);
 
 
     var returnValue = new Result();
@@ -300,31 +386,7 @@ SolidityCoder.prototype.decodeEvent = function (inputs, data, topics) {
 };
 
 
-SolidityCoder.prototype.getOffsets = function (types, solidityTypes) {
-    var lengths =  solidityTypes.map(function (solidityType, index) {
-        return solidityType.staticPartLength(types[index]);
-    });
-
-    for (var i = 1; i < lengths.length; i++) {
-        // sum with length of previous element
-        lengths[i] += lengths[i - 1];
-    }
-
-    return lengths.map(function (length, index) {
-        // remove the current length, so the length is sum of previous elements
-        var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
-        return length - staticPartLength;
-    });
-};
-
-SolidityCoder.prototype.getSolidityTypes = function (types) {
-    var self = this;
-    return types.map(function (type) {
-        return self._requireType(type);
-    });
-};
-
-var coder = new SolidityCoder([
+var coder = new ABICoder([
     new SolidityTypeAddress(),
     new SolidityTypeBool(),
     new SolidityTypeInt(),

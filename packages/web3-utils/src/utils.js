@@ -184,7 +184,7 @@ var utf8ToHex = function(str) {
  */
 var hexToUtf8 = function(hex) {
     if (!isHex(hex))
-        throw new Error('The parameter must be a valid HEX string.');
+        throw new Error('The parameter "'+ hex +'" must be a valid HEX string.');
 
     var str = "";
     var code = 0;

@@ -98,13 +98,14 @@ var Contract = function Contract(jsonInterface, address, options) {
                 var func,
                     funcName;
 
-                if(method.name)
+                if (method.name) {
                     funcName = utils._jsonInterfaceMethodToString(method);
+                }
 
 
                 // function
                 if (method.type === 'function') {
-                    method.signature = utils.sha3(funcName).slice(0, 10);
+                    method.signature = abi.encodeFunctionSignature(funcName);
                     func = _this._createTxObject.bind({
                         method: method,
                         parent: _this
@@ -124,7 +125,7 @@ var Contract = function Contract(jsonInterface, address, options) {
 
                 // event
                 } else if (method.type === 'event') {
-                    method.signature = utils.sha3(funcName);
+                    method.signature = abi.encodeEventSignature(funcName);
                     var event = _this._on.bind(_this, method.signature);
 
                     // add method only if not already exists
@@ -266,10 +267,10 @@ Contract.prototype._encodeEventABI = function (event, options) {
 
                 if (_.isArray(value)) {
                     return value.map(function (v) {
-                        return '0x' + abi.encodeParam(i.type, v);
+                        return abi.encodeParameter(i.type, v);
                     });
                 }
-                return '0x' + abi.encodeParam(i.type, value);
+                return abi.encodeParameter(i.type, value);
             });
 
             result.topics = result.topics.concat(indexedTopics);
@@ -313,7 +314,7 @@ Contract.prototype._decodeEventABI = function (data) {
 
     var argTopics = event.anonymous ? data.topics : data.topics.slice(1);
 
-    result.returnValues = abi.decodeEvent(event.inputs, data.data, argTopics);
+    result.returnValues = abi.decodeLog(event.inputs, data.data, argTopics);
     delete result.returnValues.__length__;
 
     result.event = event.name;
@@ -358,7 +359,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
                 return input.type;
             });
         }).map(function (types) {
-            return abi.encodeParams(types, args);
+            return abi.encodeParameters(types, args).replace('0x','');
         })[0] || '';
 
     // return constructor
@@ -373,10 +374,11 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
 
         var returnValue = (signature) ? signature + paramsABI : paramsABI;
 
-        if(!returnValue)
+        if(!returnValue) {
             throw new Error('Couldn\'t find a matching contract method named "'+ this._method.name +'".');
-        else
+        } else {
             return returnValue;
+        }
     }
 
 };
@@ -396,7 +398,7 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     }
 
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-    var result = abi.decodeParams(outputs, returnValues);
+    var result = abi.decodeParameters(outputs, returnValues);
 
     if (result.__length__ === 1) {
         return result[0];

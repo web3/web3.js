@@ -4,10 +4,10 @@ var coder = require('../packages/web3-eth-abi');
 
 
 describe('lib/solidity/coder', function () {
-    describe('encodeParam', function () {
+    describe('encodeParameter', function () {
         var test = function (t) {
             it('should turn ' + t.value + ' to ' + t.expected, function () {
-                assert.equal(coder.encodeParam(t.type, t.value), t.expected);
+                assert.equal(coder.encodeParameter(t.type, t.value).replace('0x',''), t.expected);
             });
         };
 
@@ -194,10 +194,10 @@ describe('lib/solidity/coder', function () {
 
 
 describe('lib/solidity/coder', function () {
-    describe('encodeParams', function () {
+    describe('encodeParameters', function () {
         var test = function (t) {
             it('should turn ' + t.values + ' to ' + t.expected, function () {
-                assert.equal(coder.encodeParams(t.types, t.values), t.expected);
+                assert.equal(coder.encodeParameters(t.types, t.values).replace('0x',''), t.expected);
             });
         };
 

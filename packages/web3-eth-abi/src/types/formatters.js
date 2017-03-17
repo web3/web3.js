@@ -22,131 +22,23 @@
  */
 
 var _ = require('underscore');
-var utf8 = require('utf8');
-var jsSha3 = require("js-sha3");
-var toBN = require('number-to-bn');
+var utils = require('web3-utils');
 var BN = require('bn.js');
 var SolidityParam = require('./param');
 
 
-/**
- * Converts to a checksum address
- *
- * @method toChecksumAddress
- * @param {String} address the given HEX address
- * @return {String}
- */
-var toChecksumAddress = function (address) {
-    if (typeof address === 'undefined') return '';
 
-    if(!/^(0x)?[0-9a-f]{40}$/i.test(address))
-        throw new Error('Given address "'+ address +'" is not a valid Ethereum address.');
-
-
-
-    address = address.toLowerCase().replace(/^0x/i,'');
-    var addressHash = jsSha3.keccak_256(address).replace(/^0x/i,''); // jshint ignore:line
-    var checksumAddress = '0x';
-
-    for (var i = 0; i < address.length; i++ ) {
-        // If ith character is 9 to f then make it uppercase
-        if (parseInt(addressHash[i], 16) > 7) {
-            checksumAddress += address[i].toUpperCase();
-        } else {
-            checksumAddress += address[i];
-        }
-    }
-    return checksumAddress;
-};
-
-/**
- * Should be called to pad string to expected length
- *
- * @method rightPad
- * @param {String} string to be padded
- * @param {Number} chars that result string should have
- * @param {String} sign, by default 0
- * @returns {String} right aligned string
- */
-var rightPad = function (string, chars, sign) {
-    var hasPrefix = /^0x/i.test(string) || typeof string === 'number';
-    string = string.toString(16).replace(/^0x/i,'');
-
-    var padding = (chars - string.length + 1 >= 0) ? chars - string.length + 1 : 0;
-
-    return (hasPrefix ? '0x' : '') + string + (new Array(padding).join(sign ? sign : "0"));
-};
-
-
-/**
- * Should be called to get utf8 from it's hex representation
- *
- * @method hexToUtf8
- * @param {String} hex
- * @returns {String} ascii string representation of hex value
- */
-var hexToUtf8 = function(hex) {
-
-    var str = "";
-    var code = 0;
-    hex = hex.replace(/^0x/i,'');
-
-    // remove 00 padding from either side
-    hex = hex.replace(/^(?:00)*/,'');
-    hex = hex.split("").reverse().join("");
-    hex = hex.replace(/^(?:00)*/,'');
-    hex = hex.split("").reverse().join("");
-
-    var l = hex.length;
-
-    for (var i=0; i < l; i+=2) {
-        code = parseInt(hex.substr(i, 2), 16);
-        // if (code !== 0) {
-        str += String.fromCharCode(code);
-        // }
-    }
-
-    return utf8.decode(str);
-};
-
-/**
- * Should be called to get hex representation (prefixed by 0x) of utf8 string
- *
- * @method utf8ToHex
- * @param {String} str
- * @returns {String} hex representation of input string
- */
-var utf8ToHex = function(str) {
-    str = utf8.encode(str);
-    var hex = "";
-
-    // remove \u0000 padding from either side
-    str = str.replace(/^(?:\u0000)*/,'');
-    str = str.split("").reverse().join("");
-    str = str.replace(/^(?:\u0000)*/,'');
-    str = str.split("").reverse().join("");
-
-    for(var i = 0; i < str.length; i++) {
-        var code = str.charCodeAt(i);
-        // if (code !== 0) {
-        var n = code.toString(16);
-        hex += n.length < 2 ? '0' + n : n;
-        // }
-    }
-
-    return "0x" + hex;
-};
 
 
 /**
  * Takes and input transforms it into BN and if it is negative value, into two's complement
  *
  * @method toTwosComplement
- * @param {Number|String|BN}
+ * @param {Number|String|BN} number
  * @return {String}
  */
 var toTwosComplement = function (number) {
-    return toBN(number).toTwos(256).toString(16, 64);
+    return utils.toBN(number).toTwos(256).toString(16, 64);
 };
 
 
@@ -174,9 +66,9 @@ var formatInputInt = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
-    var result = value.substr(2);
+    var result = value.replace(/^0x/i,'');
     var l = Math.floor((result.length + 63) / 64);
-    result = rightPad(result, l * 64);
+    result = utils.padRight(result, l * 64);
     return new SolidityParam(result);
 };
 
@@ -188,10 +80,10 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
-    var result = value.substr(2);
+    var result = value.replace(/^0x/i,'');
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
-    result = rightPad(result, l * 64);
+    result = utils.padRight(result, l * 64);
     return new SolidityParam(formatInputInt(length).value + result);
 };
 
@@ -203,10 +95,10 @@ var formatInputDynamicBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
-    var result = utf8ToHex(value).substr(2);
+    var result = utils.utf8ToHex(value).replace(/^0x/i,'');
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
-    result = rightPad(result, l * 64);
+    result = utils.padRight(result, l * 64);
     return new SolidityParam(formatInputInt(length).value + result);
 };
 
@@ -314,7 +206,7 @@ var formatOutputString = function (param) {
     var hex = param.dynamicPart().slice(0, 64);
     if(hex) {
         var length = (new BN(hex, 16)).toNumber() * 2;
-        return hexToUtf8(param.dynamicPart().substr(64, length));
+        return utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, ''));
     } else {
         return "ERROR: Strings are not yet supported as return values";
     }
@@ -329,7 +221,7 @@ var formatOutputString = function (param) {
  */
 var formatOutputAddress = function (param) {
     var value = param.staticPart();
-    return toChecksumAddress("0x" + value.slice(value.length - 40, value.length));
+    return utils.toChecksumAddress("0x" + value.slice(value.length - 40, value.length));
 };
 
 module.exports = {

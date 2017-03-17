@@ -9,7 +9,7 @@ describe('lib/solidity/coder', function () {
     describe('decodeParam', function () {
         var test = function (t) {
             it('should turn ' + t.type +': ' + t.value + ' to ' + t.expected, function () {
-                assert.deepEqual(coder.decodeParam(t.type, t.value), t.expected);
+                assert.deepEqual(coder.decodeParameter(t.type, t.value), t.expected);
             });
         };
 
@@ -252,11 +252,7 @@ describe('lib/solidity/coder', function () {
     describe('decodeParams', function () {
         var test = function (t) {
             it('should turn ' + t.values + ' to ' + t.expected, function () {
-                var outputs = t.types.map(function(type){
-                    return {type: type};
-                });
-
-                var result = coder.decodeParams(outputs, t.values);
+                var result = coder.decodeParameters(t.types, t.values);
 
                 var resultArray = [];
                 _.each(result, function (res, key) {

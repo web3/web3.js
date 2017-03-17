@@ -88,10 +88,9 @@ var _jsonInterfaceMethodToString = function (json) {
         return json.name;
     }
 
-    var typeName = json.inputs.map(function(i){return i.type; }).join();
+    var typeName = json.inputs.map(function(i){return i.type; }).join(',');
     return json.name + '(' + typeName + ')';
 };
-
 
 
 
