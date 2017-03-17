@@ -24,7 +24,7 @@
  *  var contract = new Contract(abi, address, ...);
  *
  * @author Fabian Vogelsteller <fabian@frozeman.de>
- * @date 2016
+ * @date 2017
  */
 
 
@@ -312,34 +312,9 @@ Contract.prototype._decodeEventABI = function (data) {
 
 
     var argTopics = event.anonymous ? data.topics : data.topics.slice(1);
-    var indexedTypes = event.inputs.filter(function (i) {
-        return i.indexed === true;
-    }).map(function (i) {
-        return i.type;
-    });
-    var notIndexedTypes = event.inputs.filter(function (i) {
-        return i.indexed === false;
-    }).map(function (i) {
-        return i.type;
-    });
 
-    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join('');
-    // console.log('INDEXED', indexedTypes, indexedData);
-    var indexedParams = abi.decodeParams(indexedTypes, indexedData);
-
-    // console.log('NOT INDEXED', notIndexedTypes, data.data.slice(2));
-    var notIndexedParams = abi.decodeParams(notIndexedTypes, data.data.slice(2));
-
-
-    result.returnValues = new Result();
-    event.inputs.forEach(function (res, i) {
-        var decodedRes = res.indexed ? indexedParams.shift() : notIndexedParams.shift();
-        result.returnValues[i] = decodedRes;
-
-        if(res.name) {
-            result.returnValues[res.name] = decodedRes;
-        }
-    });
+    result.returnValues = abi.decodeEvent(event.inputs, data.data, argTopics);
+    delete result.returnValues.__length__;
 
     result.event = event.name;
 
@@ -406,9 +381,6 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
 
 };
 
-// result method
-function Result() {}
-
 
 /**
  * Decode method return values
@@ -416,39 +388,21 @@ function Result() {}
  * @method _decodeMethodReturn
  * @param {Array} outputs
  * @param {String} returnValues
- * @param {Array} decoded output return values
+ * @return {Object} decoded output return values
  */
 Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     if (!returnValues) {
-        return;
+        return null;
     }
 
-    var types = outputs.map(function (i) {
-        return i.type;
-    });
-
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
-    var result = abi.decodeParams(types, returnValues);
-    // return empty values as null
-    result = result.map(function (res) {
-        return (res === '0x') ? null: res;
-    });
-    // return Result object, or result
-    if(result.length === 1) {
+    var result = abi.decodeParams(outputs, returnValues);
 
+    if (result.__length__ === 1) {
         return result[0];
-
     } else {
-        var returnResult = new Result();
-
-        result.forEach(function (res, i) {
-            returnResult[i] = res;
-            if (outputs[i].name) {
-                returnResult[outputs[i].name] = res;
-            }
-        });
-
-        return returnResult;
+        delete result.__length__;
+        return result;
     }
 };
 

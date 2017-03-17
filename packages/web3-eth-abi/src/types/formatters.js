@@ -17,7 +17,8 @@
 /**
  * @file formatters.js
  * @author Marek Kotewicz <marek@ethcore.io>
- * @date 2015
+ * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @date 2017
  */
 
 var _ = require('underscore');
@@ -255,7 +256,7 @@ var formatOutputInt = function (param) {
  * Formats right-aligned output bytes to uint
  *
  * @method formatOutputUInt
- * @param {SolidityParam}
+ * @param {SolidityParam} param
  * @returns {BN} right-aligned output bytes formatted to uint
  */
 var formatOutputUInt = function (param) {
@@ -269,18 +270,18 @@ var formatOutputUInt = function (param) {
  * Should be used to format output bool
  *
  * @method formatOutputBool
- * @param {SolidityParam}
+ * @param {SolidityParam} param
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
 var formatOutputBool = function (param) {
-    return param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001' ? true : false;
+    return (param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001');
 };
 
 /**
  * Should be used to format output bytes
  *
  * @method formatOutputBytes
- * @param {SolidityParam} left-aligned hex representation of string
+ * @param {SolidityParam} param left-aligned hex representation of string
  * @param {String} name type name
  * @returns {String} hex string
  */
@@ -294,7 +295,7 @@ var formatOutputBytes = function (param, name) {
  * Should be used to format output bytes
  *
  * @method formatOutputDynamicBytes
- * @param {SolidityParam} left-aligned hex representation of string
+ * @param {SolidityParam} param left-aligned hex representation of string
  * @returns {String} hex string
  */
 var formatOutputDynamicBytes = function (param) {
