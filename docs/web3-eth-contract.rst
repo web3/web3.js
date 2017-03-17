@@ -454,12 +454,11 @@ Example
     });
 
 
-    // MULTI RETURN:
+    // MULTI-ARGUMENT RETURN:
 
     // Solidity
     contract MyContract {
         function myFunction() returns(uint256 myNumber, string myString) {
-
             return (23456, "Hello!%");
         }
     }
@@ -467,23 +466,20 @@ Example
     // web3.js
     var MyContract = new web3.eth.contract(abi, address);
     MyContract.methods.myFunction().call()
-    .then(function(result){
-        console.log(result);
-        > {
-            myNumber: '23456',
-            myString: 'Hello!%',
-            0: '23456', // those are here as fallback, if the name is not know or given
-            1: 'Hello!%'
-        }
+    .then(console.log);
+    > {
+        myNumber: '23456',
+        myString: 'Hello!%',
+        0: '23456', // those are here as fallback, if the name is not know or given
+        1: 'Hello!%'
+    }
 
-    });
 
-    // SINGLE RETURN:
+    // SINGLE-ARGUMENT RETURN:
 
     // Solidity
     contract MyContract {
         function myFunction() returns(string myString) {
-
             return "Hello!%";
         }
     }
@@ -491,11 +487,8 @@ Example
     // web3.js
     var MyContract = new web3.eth.contract(abi, address);
     MyContract.methods.myFunction().call()
-    .then(function(result){
-        console.log(result);
-        > "Hello!%"
-
-    });
+    .then(console.log);
+    > "Hello!%"
 
 
 
