@@ -2,7 +2,7 @@ var f = require('./formatters');
 var SolidityType = require('./type');
 
 /**
- * SolidityTypeUInt is a prootype that represents uint type
+ * SolidityTypeUInt is a protoype that represents uint type
  * It matches:
  * uint
  * uint[]

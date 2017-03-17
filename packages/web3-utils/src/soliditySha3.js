@@ -212,11 +212,11 @@ var _processSoliditySha3Args = function (arg) {
 
     if (_.isArray(value)) {
         hexArg = value.map(function (val) {
-            return _solidityPack(type, val, arraySize).toString('hex').replace('0x','');//abi.encodeParam(arg.type, arg.value);
+            return _solidityPack(type, val, arraySize).toString('hex').replace('0x','');
         });
         return hexArg.join('');
     } else {
-        hexArg = _solidityPack(type, value, arraySize);//abi.encodeParam(arg.type, arg.value);
+        hexArg = _solidityPack(type, value, arraySize);
         return hexArg.toString('hex').replace('0x','');
     }
 
