@@ -2,7 +2,7 @@ var f = require('./formatters');
 var SolidityType = require('./type');
 
 /**
- * SolidityTypeBool is a prootype that represents bool type
+ * SolidityTypeBool is a protoype that represents bool type
  * It matches:
  * bool
  * bool[]

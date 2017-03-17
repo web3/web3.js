@@ -26,14 +26,15 @@ Contents:
     :caption: API Reference
 
     web3
-    web3-utils
     web3-eth
     web3-eth-subscribe
     web3-eth-contract
+    web3-eth-personal
     web3-eth-iban
-    web3-shh
-    web3-bzz
+    web3-eth-abi
     web3-net
-    web3-personal
+    web3-bzz
+    web3-shh
+    web3-utils
     web3-admin
 

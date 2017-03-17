@@ -3,7 +3,7 @@ var formatters = require('web3-core-helpers').formatters;
 var SolidityType = require('./type');
 
 /**
- * SolidityTypeAddress is a prootype that represents address type
+ * SolidityTypeAddress is a protoype that represents address type
  * It matches:
  * address
  * address[]
