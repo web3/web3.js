@@ -467,7 +467,7 @@ Example
     var MyContract = new web3.eth.contract(abi, address);
     MyContract.methods.myFunction().call()
     .then(console.log);
-    > {
+    > Result {
         myNumber: '23456',
         myString: 'Hello!%',
         0: '23456', // those are here as fallback, if the name is not know or given
