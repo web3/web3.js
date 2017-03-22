@@ -30,7 +30,7 @@
     "gulp-uglify": "^2.0.1",
     "istanbul": "^0.4.4",
     "jshint": ">=2.5.0",
-    "lerna": "2.0.0-beta.32",
+    "lerna": "2.0.0-beta.38",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
     "underscore": "^1.8.3",
