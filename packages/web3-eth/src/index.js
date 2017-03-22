@@ -35,6 +35,9 @@ var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 
+var accounts = require('ethjs-account');
+
+
 
 var getNetworkType = require('./getNetworkType.js');
 
