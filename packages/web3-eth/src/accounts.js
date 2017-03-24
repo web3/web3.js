@@ -22,8 +22,13 @@
 
 "use strict";
 
+var helpers = require('web3-core-helpers');
 var utils = require('web3-utils');
 var accounts = require('ethjs-account');
+var signer = require('ethjs-signer');
+
+var elliptic = require('elliptic');
+var secp256k1 = new (elliptic.ec)('secp256k1'); // eslint-disable-line
 
 
 
@@ -49,5 +54,37 @@ module.exports = {
     publicToAddress: function publicToAddress(pubKey) {
         pubKey = new Buffer(pubKey.replace(/^0x/i,''), 'hex');
         return accounts.publicToAddress(pubKey);
-    }
+    },
+
+
+
+    signTransaction: function sign(tx, privKey) {
+
+        if(tx.to) {
+            tx.to = helpers.formatters.inputAddressFormatter(tx.to);
+        }
+
+        return signer.sign(tx, privKey);
+    },
+    secp256k1: secp256k1,
+    sign: function sign(data, privKey) {
+        privKey = privKey.replace(/^0x/i,'');
+
+        var hash = utils.sha3(data);
+        var signature = secp256k1.keyFromPrivate(privKey, 16)
+        .sign(hash.replace(/^0x/i,''), 16);//{ canonical: true }
+
+        console.log(signature);
+
+        return signature;
+    },
+    ecrecover: function recover(data, v, r, s) {
+        var hash = utils.sha3(data);
+
+
+        var publicKey = secp256k1.recoverPubKey(hash.replace(/^0x/i,''), { r, s }, v - 27);
+        console.log(publicKey);
+        return (new Buffer(publicKey.encode('hex', false), 'hex')).slice(1);
+    },
+    recover: signer.recover
 };

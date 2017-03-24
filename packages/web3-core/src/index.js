@@ -56,6 +56,17 @@ module.exports = {
 
         // set requestmanager on package
         } else {
+
+            if(typeof args[0] === 'string' && pkg.providers) {
+                if(/^http:\/\//.test(args[0])) {
+                   args[0] = new pkg.providers.HttpProvider(args[0]);
+                } else if(/^ws:\/\//.test(args[0])) {
+                    args[0] = new pkg.providers.WebsocketProvider(args[0]);
+                } else if(args[0]) {
+                    throw new Error('Can\'t autodetect provider for "'+ args[0] +'"');
+                }
+            }
+
             pkg._requestManager = new requestManager.Manager(args[0]);
             pkg._provider =  args[0];
         }

@@ -17,6 +17,8 @@
         "web3-net": "^1.0.0",
         "web3-utils": "^1.0.0",
         "ethjs-account": "^0.1.0",
+        "ethjs-signer": "^0.1.1",
+        "elliptic": "6.3.2",
         "underscore": "^1.8.3"
     }
 }

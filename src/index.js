@@ -44,7 +44,7 @@ var providers = {
     WebsocketProvider: require('../packages/web3-providers-ws'),
     HttpProvider: require('../packages/web3-providers-http'),
     IpcProvider: require('../packages/web3-providers-ipc')
-}
+};
 
 
 var Web3 = function Web3() {
@@ -54,7 +54,7 @@ var Web3 = function Web3() {
 
     this.version = version.version;
 
-    this.providers = providers;
+    // this.providers = providers;
 
 
     this.eth = new Eth(this);
@@ -82,6 +82,7 @@ var Web3 = function Web3() {
 Web3.prototype.version = version.version;
 
 Web3.providers = providers;
+Web3.prototype.providers = providers;
 
 core.addProviders(Web3);
 
