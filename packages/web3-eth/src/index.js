@@ -34,8 +34,7 @@ var Personal = require('web3-eth-personal');
 var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
-
-var accounts = require('ethjs-account');
+var accounts = require('./accounts.js');
 
 
 
@@ -80,6 +79,9 @@ var Eth = function Eth() {
 
     // add net
     this.net = new Net(this.currentProvider);
+
+    // add accounts
+    this.accounts = accounts;
 
     // add personal
     this.personal = new Personal(this.currentProvider);

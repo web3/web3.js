@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file guessChain.js
+ * @file getNetworkType.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */

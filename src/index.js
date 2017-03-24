@@ -49,11 +49,10 @@ var providers = {
 
 var Web3 = function Web3() {
 
-    this.version = version.version;
-
     // sets _requestmanager etc
     core.packageInit(this, arguments);
 
+    this.version = version.version;
 
     this.providers = providers;
 
