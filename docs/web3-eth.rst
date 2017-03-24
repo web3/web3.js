@@ -81,6 +81,22 @@ For ``web3.eth.personal`` see the :ref:`personal reference documentation <eth-pe
 
 ------------------------------------------------------------------------------
 
+accounts
+=====================
+
+For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-accounts>`
+
+
+------------------------------------------------------------------------------
+
+abi
+=====================
+
+For ``web3.eth.abi`` see the :ref:`abi reference documentation <eth-abi>`
+
+
+------------------------------------------------------------------------------
+
 
 net
 =====================
