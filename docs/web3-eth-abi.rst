@@ -5,7 +5,7 @@
 web3.eth.abi
 =========
 
-The ``web3.eth.abi`` functions let you de- and encode ABI parameters for function calls.
+The ``web3.eth.abi`` functions let you de- and encode parameters to ABI (Application Binary Interface) for function calls to the EVM (Ethereum Virtual Machine).
 
 
 
