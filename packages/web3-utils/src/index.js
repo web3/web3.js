@@ -26,6 +26,8 @@ var _ = require('underscore');
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
+var randomHex = require('randomhex');
+
 
 
 /**
@@ -249,6 +251,7 @@ module.exports = {
     _jsonInterfaceMethodToString: _jsonInterfaceMethodToString,
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
+    randomHex: randomHex,
     _: _,
     BN: utils.BN,
     isBN: utils.isBN,
