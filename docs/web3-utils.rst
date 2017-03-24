@@ -8,6 +8,53 @@ This package provides utility functions for Ethereum dapps and other web3.js pac
 
 ------------------------------------------------------------------------------
 
+randomHex
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.randomHex(size)
+
+The `randomHex <https://github.com/frozeman/randomHex`_ library to generate cryptographically strong pseudo-random HEX strings from a given byte size.
+
+----------
+Parameters
+----------
+
+1. ``size`` - ``Number``: The byte size for the HEX string, e.g. ``32`` will result in a 32 bytes HEX string with 64 characters preficed with "0x".
+
+-------
+Returns
+-------
+
+``String``: The generated random HEX string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.randomHex(32)
+    > "0xa5b9d60f32436310afebcfda832817a68921beb782fabf7915cc0460b443116a"
+
+    web3.utils.randomHex(4)
+    > "0x6892ffc6"
+
+    web3.utils.randomHex(2)
+    > "0x99d6"
+
+    web3.utils.randomHex(1)
+    > "0x9a"
+
+    web3.utils.randomHex(0)
+    > "0x"
+
+
+
+
+------------------------------------------------------------------------------
+
 _
 =====================
 
@@ -34,8 +81,6 @@ Example
 
     ...
 
-
-------------------------------------------------------------------------------
 
 
 ------------------------------------------------------------------------------

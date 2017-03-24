@@ -22,7 +22,7 @@
 
 "use strict";
 
-var randomhex = require('randomhex');
+var utils = require('web3-utils');
 var accounts = require('ethjs-account');
 
 
@@ -30,7 +30,7 @@ var accounts = require('ethjs-account');
 module.exports = {
     generate: function generate(randomString) {
         if(!randomString) {
-            randomString = randomhex(32);
+            randomString = utils.randomHex(32);
         }
         return accounts.generate(randomString);
     },

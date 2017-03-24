@@ -44,6 +44,13 @@ Example
 
 .. code-block:: javascript
 
+    web3.eth.accounts.generate();
+    > {
+        address: "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01",
+        publicKey: "0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7"
+        privateKey: "0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
+    }
+
     web3.eth.accounts.generate('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
     > {
         address: "0xF2CD2AA0c7926743B1D4310b2BC984a0a453c3d4",
@@ -51,11 +58,11 @@ Example
         privateKey: "0xd7325de5c2c1cf0009fac77d3d04a9c004b038883446b065871bc3e831dcd098",
     }
 
-    web3.eth.accounts.generate();
+    web3.eth.accounts.generate(web3.utils.randomHex(32));
     > {
-        address: "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01",
-        publicKey: "0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7"
-        privateKey: "0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
+        address: "0xe78150FaCD36E8EB00291e251424a0515AA1FF05",
+        publicKey: "0x03ade6efb5848276b2ed4185f2523fabaec2443c42c5f648ca3a419d5234dcd03ee22333104be64df1b6db1536591b00cd425b7e13d45c75cea857cf1d4861f7"
+        privateKey: "0xcc505ee6067fba3f6fc2050643379e190e087aeffe5d958ab9f2f3ed3800fa4e",
     }
 
 ------------------------------------------------------------------------------

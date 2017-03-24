@@ -17,7 +17,6 @@
         "web3-net": "^1.0.0",
         "web3-utils": "^1.0.0",
         "ethjs-account": "^0.1.0",
-        "randomhex": "^0.1.5",
         "underscore": "^1.8.3"
     }
 }
