@@ -158,7 +158,7 @@ encodeParameters
 
 .. code-block:: javascript
 
-    web3.eth.abi.encodeParameters(typesArray, parameter);
+    web3.eth.abi.encodeParameters(typesArray, parameters);
 
 Encodes a function parameters based on its :ref:`JSON interface <glossary-json-interface>` object.
 
@@ -167,7 +167,7 @@ Parameters
 ----------
 
 1. ``typesArray`` - ``Array|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` of a function. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
-2. ``parameter`` - ``Array``: The parameters to encode.
+2. ``parameters`` - ``Array``: The parameters to encode.
 
 -------
 Returns
@@ -194,7 +194,7 @@ encodeFunctionCall
 
 .. code-block:: javascript
 
-    web3.eth.abi.encodeFunctionCall(jsonInterface, parameter);
+    web3.eth.abi.encodeFunctionCall(jsonInterface, parameters);
 
 Encodes a function call using its :ref:`JSON interface <glossary-json-interface>` object and given paramaters.
 
@@ -203,7 +203,7 @@ Parameters
 ----------
 
 1. ``jsonInterface`` - ``Object``: The :ref:`JSON interface <glossary-json-interface>` object of a function.
-2. ``parameter`` - ``Array``: The parameters to encode.
+2. ``parameters`` - ``Array``: The parameters to encode.
 
 -------
 Returns
