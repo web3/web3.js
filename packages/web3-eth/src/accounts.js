@@ -82,7 +82,7 @@ module.exports = {
         var hash = utils.sha3(data);
 
 
-        var publicKey = secp256k1.recoverPubKey(hash.replace(/^0x/i,''), { r, s }, v - 27);
+        var publicKey = secp256k1.recoverPubKey(hash.replace(/^0x/i,''), { r:r, s:s }, v - 27);
         console.log(publicKey);
         return (new Buffer(publicKey.encode('hex', false), 'hex')).slice(1);
     },

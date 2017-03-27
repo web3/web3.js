@@ -86,7 +86,7 @@ var _fireError = function (error, emitter, reject, callback) {
  * @return {String} full function/event name
  */
 var _jsonInterfaceMethodToString = function (json) {
-    if (json.name.indexOf('(') !== -1) {
+    if (_.isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
 
