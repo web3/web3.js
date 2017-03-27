@@ -168,10 +168,18 @@ Example
 .. code-block:: javascript
 
     web3.eth.accounts.privateToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
-    > "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01"
+    > {
+        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+        publicKey: '0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7',
+        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
+    }
 
     web3.eth.accounts.privateToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
-    > "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01"
+    > {
+        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+        publicKey: '0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7',
+        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
+    }
 
 
 ------------------------------------------------------------------------------
