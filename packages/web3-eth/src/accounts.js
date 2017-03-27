@@ -49,7 +49,7 @@ module.exports = {
     },
     privateToAccount: function privateToAccount(privKey) {
         privKey = '0x'+ privKey.replace(/^0x/i,'');
-        return '0x'+ accounts.privateToAccount(privKey);
+        return accounts.privateToAccount(privKey);
     },
     publicToAddress: function publicToAddress(pubKey) {
         pubKey = new Buffer(pubKey.replace(/^0x/i,''), 'hex');
