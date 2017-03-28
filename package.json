@@ -9,7 +9,10 @@
     "src": "./src",
     "doc": "./doc"
   },
-  "dependencies": {},
+  "dependencies": {
+    "elliptic": "^6.4.0",
+    "ethjs-signer": "^0.1.1"
+  },
   "devDependencies": {
     "bignumber.js": "^4.0.0",
     "bn.js": "^4.11.6",
