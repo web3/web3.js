@@ -343,7 +343,8 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, [{
                     data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
                     from: address2,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x5af3107a4000"
                 }]);
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
@@ -403,7 +404,7 @@ describe('contract', function () {
             txObject.encodeABI = contract._encodeMethodABI.bind(txObject);
             txObject.arguments = [address, 10];
 
-            var deploy = contract._executeMethod.call(txObject, 'send', {from: address2}, function (err, result) {
+            var deploy = contract._executeMethod.call(txObject, 'send', {from: address2, gasPrice: '100000000000000' }, function (err, result) {
                 // tx hash
                 assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
             })
@@ -1326,7 +1327,8 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, [{
                     data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
                     from: address2,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x1369ed97fb71"
                 }]);
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
@@ -1397,7 +1399,7 @@ describe('contract', function () {
 
             var contract = new eth.Contract(abi, address);
 
-            contract.methods.mySend(address, 10).send({from: address2})
+            contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
             .on('receipt', function (receipt) {
                 // console.log(receipt);
                 // console.log(receipt.events[0].raw);
@@ -1483,13 +1485,14 @@ describe('contract', function () {
                     '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: addressLowercase,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x369d1f7fd2"
                 }]);
             });
 
             var contract = new eth.Contract(abi, address);
 
-            contract.methods.mySend(address, 17).send({from: address});
+            contract.methods.mySend(address, 17).send({from: address, gasPrice: '234564321234'});
         });
 
         it('should throw error when trying to send ether to a non payable contract function', function () {
@@ -1524,7 +1527,8 @@ describe('contract', function () {
                     '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: addressLowercase,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x1555757ee6b1"
                 }]);
 
                 done();
@@ -1533,7 +1537,7 @@ describe('contract', function () {
             var contract = new eth.Contract(abi, address);
 
             try{
-                contract.methods.myDisallowedSend(address, 17).send({from: address})
+                contract.methods.myDisallowedSend(address, 17).send({from: address, gasPrice: '23456787654321'})
                 .on('error', function (e) {
                     assert.isFalse(e instanceof Error, 'Should not throw error');
                 })
@@ -1559,13 +1563,14 @@ describe('contract', function () {
                     '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: addressLowercase,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x1555757ee6b1"
                 }]);
             });
 
             var contract = new eth.Contract(abi, address);
 
-            contract.methods['mySend(address,uint256)'](address, 17).send({from: address});
+            contract.methods['mySend(address,uint256)'](address, 17).send({from: address, gasPrice: '23456787654321'});
         });
 
         it('should sendTransaction to contract function using the signature', function () {
@@ -1580,13 +1585,14 @@ describe('contract', function () {
                     '000000000000000000000000'+ addressLowercase.replace('0x','') +
                     '0000000000000000000000000000000000000000000000000000000000000011' ,
                     from: addressLowercase,
-                    to: addressLowercase
+                    to: addressLowercase,
+                    gasPrice: "0x49504f80"
                 }]);
             });
 
             var contract = new eth.Contract(abi, address);
 
-            contract.methods[signature](address, 17).send({from: address});
+            contract.methods[signature](address, 17).send({from: address, gasPrice: '1230000000'});
         });
 
         it('should make a call with optional params', function (done) {
@@ -1672,7 +1678,7 @@ describe('contract', function () {
 
         });
 
-        it('should sendTransaction with optional params', function () {
+        it('should sendTransaction with optional params', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
@@ -1689,6 +1695,8 @@ describe('contract', function () {
                     gasPrice: '0xbb8',
                     value: '0x2710'
                 }]);
+
+                done();
             });
 
             var contract = new eth.Contract(abi, address);
@@ -1696,7 +1704,39 @@ describe('contract', function () {
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
-        it('should explicitly sendTransaction with optional params', function () {
+        it('should sendTransaction and fill in default gasPrice', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var signature = 'mySend(address,uint256)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_gasPrice');
+                assert.deepEqual(payload.params, []);
+            });
+
+            provider.injectResult('0x45656456456456');
+
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
+                    '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    to: addressLowercase,
+                    from: addressLowercase,
+                    gasPrice: '0x45656456456456'
+                }]);
+
+                done();
+            });
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.mySend(address, 17).send({from: address});
+        });
+
+        it('should explicitly sendTransaction with optional params', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
             var signature = 'mySend(address,uint256)';
@@ -1713,6 +1753,8 @@ describe('contract', function () {
                     gasPrice: '0xbb8',
                     value: '0x2710'
                 }]);
+
+                done();
             });
 
             var contract = new eth.Contract(abi, address);
