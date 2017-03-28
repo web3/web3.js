@@ -303,8 +303,6 @@ Method.prototype.buildCall = function() {
         call = (_.isString(method.call)) ? method.call.toLowerCase() : Method.call,
         isSendTx = (call === 'eth_sendtransaction' || call === 'eth_sendrawtransaction');
 
-
-
     // actual send function
     var send = function () {
         var extraFromatters = this;
@@ -312,7 +310,7 @@ Method.prototype.buildCall = function() {
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
-        method.requestManager.send(payload, function (err, result) {
+        var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
 
 
@@ -337,7 +335,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-            // return PROMIEVENT
+                // return PROMIEVENT
             } else if (method.eth) {
 
                 defer.eventEmitter.emit('transactionHash', result);
@@ -345,7 +343,20 @@ Method.prototype.buildCall = function() {
                 method._confirmTransaction(defer, result, payload, extraFromatters);
             }
 
-        });
+        };
+
+        if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
+
+
+            method.eth.getGasPrice(function (err, gasPrice) {
+                payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+                method.requestManager.send(payload, sendTxCallback);
+            });
+
+        } else {
+            method.requestManager.send(payload, sendTxCallback);
+        }
+
 
         return defer.eventEmitter;
     };
