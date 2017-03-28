@@ -82,6 +82,7 @@ var Eth = function Eth() {
 
     // add accounts
     this.accounts = accounts;
+    this.accounts._eth = this;
 
     // add personal
     this.personal = new Personal(this.currentProvider);

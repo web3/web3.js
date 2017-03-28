@@ -231,7 +231,7 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.accounts.signTransaction(tx, privateKey);
+    web3.eth.accounts.signTransaction(tx, privateKey [, callback]);
 
 Gets an Ethereum address from a public key.
 
@@ -240,19 +240,22 @@ Parameters
 ----------
 
 1. ``tx`` - ``Object``: The transaction object as follows:
-    - ``to`` - ``String`` (optional): The recevier of the transaction, can be empty when deploying a contract.
-    - ``data`` - ``String`` (optional): The call data of the transaction, can be empty for simple value transfers.
-    - ``value`` - ``String`` (optional): The value of the transaction in wei.
+    - ``nonce`` - ``String``: (optional) The nonce to use when signing this transaction. Default will use :ref:`web3.eth.getTransactionCount <eth-gettransactioncount>`.
+    - ``chainId`` - ``String``: (optional) The chain id to use when signing this transaction. Default will use :ref:`web3.eth.net.getId <net-getid>`.
+    - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
+    - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
+    - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gas`` - ``String``: The gas provided by the transaction.
-    - ``gasPrice`` - ``String`` (optional): The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice <eth-gasprice>`
-    - ``to`` - ``String`` (optional):
+    - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice <eth-gasprice>`
 2. ``privateKey`` - ``String``: The public key to convert.
+3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
 
 -------
 Returns
 -------
 
-``String`` - The Ethereum address.
+``Promise`` - ``String``: The signed RLP encoded transaction.
 
 -------
 Example
@@ -260,11 +263,13 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.publicToAddress('0x7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
-    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
-
-    web3.eth.accounts.publicToAddress('7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
-    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
+    web3.eth.accounts.signTransaction({
+        to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
+        value: '1000000000',
+        gas: 2000000
+    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    .then(console.log);
+    > "0xf86180808401ef364594f0109fc8df283027b6285cc889f5aa624eac1f5580801ca031573280d608f75137e33fc14655f097867d691d5c4c44ebe5ae186070ac3d5ea0524410802cdc025034daefcdfa08e7d2ee3f0b9d9ae184b2001fe0aff07603d9"
 
 
 

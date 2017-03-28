@@ -24,6 +24,9 @@
 
 var helpers = require('web3-core-helpers');
 var utils = require('web3-utils');
+
+var _ = require('underscore');
+var promiEvent = require("web3-core-promiEvent");
 var accounts = require('ethjs-account');
 var signer = require('ethjs-signer');
 
@@ -58,13 +61,50 @@ module.exports = {
 
 
 
-    signTransaction: function sign(tx, privKey) {
+    signTransaction: function sign(tx, privKey, callback) {
+        var _this = this;
+        var defer = promiEvent(true); // just promise
+
+        var account = this.privateToAccount(privKey);
+        privKey = null;
 
         if(tx.to) {
             tx.to = helpers.formatters.inputAddressFormatter(tx.to);
         }
 
-        return signer.sign(tx, privKey);
+        // probably need to convert gas, chainId, nonce to HEX using utils.numberToHex()
+
+        // get chain id
+        (function () {
+            if(tx.chainId) {
+                return tx.chainId;
+            } else {
+                return _this._eth.net.getId();
+            }
+        })()
+        // get transaction count
+        .then(function (chainId) {
+            tx.chainId = chainId;
+
+            if(tx.nonce) {
+                return tx.nonce;
+            } else {
+                return _this._eth.getTransactionCount(account.address);
+            }
+        })
+        .then(function (nonce) {
+            tx.nonce = nonce;
+            
+            var signature = signer.sign(tx, account.privateKey);
+            delete account.privateKey;
+
+            defer.resolve(signature);
+            if (_.isFunction(callback)) {
+                callback(null, signature);
+            }
+        });
+
+        return defer.eventEmitter;
     },
     secp256k1: secp256k1,
     sign: function sign(data, privKey) {
