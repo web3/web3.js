@@ -262,7 +262,7 @@ sign
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recoverTransaction(data, privateKey, returnSignature);
+    web3.eth.accounts.recoverTransaction(data, privateKey [, returnSignature]);
 
 Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
 
