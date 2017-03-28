@@ -70,10 +70,12 @@ module.exports = {
 
         // return synchronous
         if(tx.gas && _.isFinite(tx.gasPrice) && _.isFinite(tx.chainId) && _.isFinite(tx.nonce)) {
+            var signature = signer.sign(tx, privKey);
+
             if (_.isFunction(callback)) {
                 callback(null, signature);
             }
-            return signer.sign(tx, privKey);
+            return signature;
         }
 
         // make it async and retrive missing values

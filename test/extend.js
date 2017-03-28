@@ -7,33 +7,33 @@ var web3 = new Web3();
 
 var tests = [{
     methods: [{
-        name: 'getGasPrice',
+        name: 'getGasPrice2',
         call: 'eth_gasPrice',
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     },{
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [web3.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     }]
 },{
     property: 'admin',
     methods: [{
-        name: 'getGasPrice',
+        name: 'getGasPrice3',
         call: 'eth_gasPrice',
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     },{
         name: 'getBalance',
         call: 'eth_getBalance',
         params: 2,
-        inputFormatter: [web3.extend.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [web3.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     }]
 },{
     error: true,
     methods: [{
-        name: 'getGasPrice',
+        name: 'getGasPrice4',
         outputFormatter: web3.extend.formatters.outputBigNumberFormatter
     }]
 },{
@@ -62,7 +62,7 @@ describe('web3', function () {
                     web3.extend(test);
                 }
 
-                if(test.methods)
+                if(test.methods) {
                     test.methods.forEach(function(property){
 
 
@@ -85,6 +85,7 @@ describe('web3', function () {
                             web3[property.name]();
                         }
                     });
+                }
             });
         });
     });
