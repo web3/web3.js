@@ -266,6 +266,9 @@ sign
 
 Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
 
+Lets use: `https://github.com/ethereum/EIPs/issues/191 <https://github.com/ethereum/EIPs/issues/191>`_
+
+
 ----------
 Parameters
 ----------
@@ -342,7 +345,7 @@ encrypt
 
     web3.eth.accounts.encrypt(privateKey, password);
 
-Encrypts a private key using ???
+Encrypts a private key using web3 keystore standards?
 
 ----------
 Parameters
@@ -378,7 +381,7 @@ decrypt
 
     web3.eth.accounts.decrypt(encryptedPrivateKey, password);
 
-Encrypts a private key using ???
+Encrypts a private key using web3 keystore standards?
 
 ----------
 Parameters
@@ -586,6 +589,84 @@ Example
 
 ------------------------------------------------------------------------------
 
+wallet.encrypt
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.encrypt(privateKey, password);
+
+Encrypts a private key using web3 keystore standards?
+
+----------
+Parameters
+----------
+
+1. ``privateKey`` - ``String``: The private key to encrypt.
+2. ``password`` - ``String``: The password used for encryption.
+
+
+-------
+Returns
+-------
+
+``String``: The encrypted privatekey.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.encrypt('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318', 'test!$@');
+    > [{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}]
+
+
+
+------------------------------------------------------------------------------
+
+wallet.decrypt
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.decrypt(encryptedPrivateKey, password);
+
+Encrypts a private key using web3 keystore standards?
+
+----------
+Parameters
+----------
+
+1. ``encryptedPrivateKey`` - ``String``: The encrypted private key to decrypt.
+2. ``password`` - ``String``: The password used for encryption.
+
+
+-------
+Returns
+-------
+
+``String``: The decrypted privatekey.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.decrypt([{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}, {...}], 'test!$@');
+    > Wallet {
+        0: {...},
+        1: {...},
+        "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...},
+        "0xD0122fC8DF283027b6285cc889F5aA624EaC1d23": {...}
+        ...
+    }
+
+
+
+------------------------------------------------------------------------------
+
 wallet.save
 =====================
 
@@ -616,7 +697,7 @@ Example
 .. code-block:: javascript
 
     web3.eth.accounts.wallet.save('test#!$', 'myWalletKey');
-    > '634534562534412426573645312443567753214567432145674321456784321345678543213456' ??
+    > [{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}, {...}]
 
 
 
