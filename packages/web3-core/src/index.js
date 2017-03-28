@@ -73,6 +73,7 @@ module.exports = {
 
         // add givenProvider
         pkg.givenProvider = requestManager.Manager.givenProvider;
+        pkg.providers = requestManager.Manager.providers;
 
         // add set Provider function
         pkg.setProvider = function (provider) {
@@ -89,6 +90,7 @@ module.exports = {
     },
     addProviders: function (pkg) {
         pkg.givenProvider = requestManager.Manager.givenProvider;
+        pkg.providers = requestManager.Manager.providers;
     }
 };
 

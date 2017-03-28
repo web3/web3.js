@@ -39,6 +39,7 @@ var givenProvider = require('./givenProvider.js');
  */
 var RequestManager = function RequestManager(provider) {
     this.provider = null;
+    this.providers = RequestManager.providers;
 
     this.setProvider(provider);
     this.subscriptions = {};
@@ -47,6 +48,12 @@ var RequestManager = function RequestManager(provider) {
 
 
 RequestManager.givenProvider = givenProvider;
+
+RequestManager.providers = {
+    WebsocketProvider: require('web3-providers-ws'),
+    HttpProvider: require('web3-providers-http'),
+    IpcProvider: require('web3-providers-ipc')
+};
 
 
 /**

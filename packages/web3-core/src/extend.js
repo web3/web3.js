@@ -53,6 +53,7 @@ var extend = function (pckg) {
             });
         }
 
+        return pckg;
     };
 
     ex.formatters = formatters;
