@@ -272,7 +272,7 @@ Parameters
 
 1. ``signature`` - ``String``: The RLP encoded transaction.
 2. ``privateKey`` - ``String``: The private key for signing.
-3. ``returnSignature`` - ``Boolean``: If true it returns an object with r, v, s and hash properties.
+3. ``returnSignature`` - ``Boolean``: (optional) If true it returns an object with r, v, s and hash properties.
 
 
 -------
