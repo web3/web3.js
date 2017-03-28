@@ -33,7 +33,7 @@ var secp256k1 = new (elliptic.ec)('secp256k1'); // eslint-disable-line
 
 
 module.exports = {
-    generate: function generate(randomString) {
+    new: function newAccount(randomString) {
         if(!randomString) {
             randomString = utils.randomHex(32);
         }

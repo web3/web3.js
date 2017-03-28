@@ -11,12 +11,12 @@ The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and s
 ------------------------------------------------------------------------------
 
 
-generate
+new
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.generate([entropy]);
+    web3.eth.accounts.new([entropy]);
 
 Generates an account object with private key and public key.
 
@@ -44,14 +44,14 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.generate();
+    web3.eth.accounts.new();
     > {
         address: "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01",
         publicKey: "0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7"
         privateKey: "0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
     }
 
-    web3.eth.accounts.generate('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
+    web3.eth.accounts.new('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
     > {
         address: "0xF2CD2AA0c7926743B1D4310b2BC984a0a453c3d4",
         publicKey: "0x0b9f65726c43d486229d0a44f27edb53a0e4b141350ceaa8f7a12c893e5b0385b3b25b35b1a0b85d39e2b7e8f1b407f776f0fc765be04683dea4697a3c603a46"
