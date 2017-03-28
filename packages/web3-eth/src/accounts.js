@@ -70,6 +70,9 @@ module.exports = {
 
         // return synchronous
         if(tx.gas && _.isFinite(tx.gasPrice) && _.isFinite(tx.chainId) && _.isFinite(tx.nonce)) {
+            if (_.isFunction(callback)) {
+                callback(null, signature);
+            }
             return signer.sign(tx, privKey);
         }
 
