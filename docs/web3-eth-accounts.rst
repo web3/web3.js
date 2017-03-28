@@ -221,3 +221,51 @@ Example
 
 
 ------------------------------------------------------------------------------
+
+
+// TODO ----------------------------------------
+
+
+signTransaction
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.signTransaction(tx, privateKey);
+
+Gets an Ethereum address from a public key.
+
+----------
+Parameters
+----------
+
+1. ``tx`` - ``Object``: The transaction object as follows:
+    - ``to`` - ``String`` (optional): The recevier of the transaction, can be empty when deploying a contract.
+    - ``data`` - ``String`` (optional): The call data of the transaction, can be empty for simple value transfers.
+    - ``value`` - ``String`` (optional): The value of the transaction in wei.
+    - ``gas`` - ``String``: The gas provided by the transaction.
+    - ``gasPrice`` - ``String`` (optional): The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice <eth-gasprice>`
+    - ``to`` - ``String`` (optional):
+2. ``privateKey`` - ``String``: The public key to convert.
+
+-------
+Returns
+-------
+
+``String`` - The Ethereum address.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.publicToAddress('0x7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
+    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
+
+    web3.eth.accounts.publicToAddress('7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
+    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
+
+
+
+------------------------------------------------------------------------------

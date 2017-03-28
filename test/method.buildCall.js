@@ -92,6 +92,49 @@ describe('lib/web3/method', function () {
 
         });
 
+        it('should fill in gasPrice if not given', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'sendTransaction',
+                call: 'eth_sendTransaction',
+                params: 1,
+                inputFormatter: [formatters.inputTransactionFormatter]
+            });
+            method.setRequestManager(eth._requestManager, eth);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_gasPrice');
+                assert.deepEqual(payload.params, []);
+            });
+            provider.injectResult('0xffffdddd'); // gas price
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456',
+                    gasPrice: '0xffffdddd'
+                }]);
+
+                done();
+
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            });
+
+        });
+
         var succeedOnReceipt = function () {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
@@ -112,7 +155,8 @@ describe('lib/web3/method', function () {
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    value: '0xa'
+                    value: '0xa',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -164,7 +208,8 @@ describe('lib/web3/method', function () {
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                value: '0xa'
+                value: '0xa',
+                gasPrice: '23435234234'
             }).then(function (result) {
 
 
@@ -187,7 +232,8 @@ describe('lib/web3/method', function () {
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                value: '0xa'
+                value: '0xa',
+                gasPrice: '23435234234'
             }).on('receipt', function (result) {
 
 
@@ -224,7 +270,8 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    data: '0xa123456'
+                    data: '0xa123456',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -274,7 +321,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).then(function (result) {
 
                 assert.deepEqual(result, {
@@ -296,7 +344,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).on('receipt', function (result) {
 
                 assert.deepEqual(result, {
@@ -331,7 +380,8 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    data: '0xa123456'
+                    data: '0xa123456',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -381,7 +431,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).catch(function (error) {
                 assert.instanceOf(error, Error);
                 done();
@@ -395,7 +446,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).on('error', function (error) {
                 assert.instanceOf(error, Error);
                 done();
@@ -422,7 +474,8 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    data: '0xa123456'
+                    data: '0xa123456',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -471,7 +524,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).catch(function (error) {
                 assert.instanceOf(error, Error);
                 done();
@@ -483,7 +537,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).on('error', function (error) {
                 assert.instanceOf(error, Error);
             }).catch(function (error) {
@@ -513,7 +568,8 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    data: '0xa123456'
+                    data: '0xa123456',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -556,7 +612,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).catch(function (error) {
                 assert.instanceOf(error, Error);
                 done();
@@ -567,7 +624,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                data: '0xa123456'
+                data: '0xa123456',
+                gasPrice: '23435234234'
             }).on('error', function (error) {
                 assert.instanceOf(error, Error);
                 done();
@@ -594,7 +652,8 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_sendTransaction');
                 assert.deepEqual(payload.params, [{
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
-                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae'
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    gasPrice: "0x574d94bba"
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
@@ -640,7 +699,8 @@ describe('lib/web3/method', function () {
 
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe'
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                gasPrice: '23435234234'
             })
             .on('transactionHash', function(result){
                 assert.deepEqual(result, '0x1234567453543456321456321');
