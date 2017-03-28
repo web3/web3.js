@@ -10,6 +10,7 @@
         "web3-core-helpers": "^1.0.0",
         "web3-core-subscriptions": "^1.0.0",
         "web3-core-method": "^1.0.0",
+        "web3-core-promiEvent": "^1.0.0",
         "web3-eth-iban": "^1.0.0",
         "web3-eth-abi": "^1.0.0",
         "web3-eth-contract": "^1.0.0",

@@ -1,5 +1,7 @@
 
-net.id
+.. _net-getid:
+
+net.getId
 =========
 
 .. code-block:: javascript
