@@ -51,7 +51,7 @@ if(typeof global.ethereumProvider !== 'undefined') {
                 throw new Error('The second parameter callback must be a function.');
 
             switch(type){
-                case 'notification':
+                case 'data':
                     this.connection.on('data', function(data) {
                         var result = '';
 

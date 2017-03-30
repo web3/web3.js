@@ -204,13 +204,6 @@ IpcProvider.prototype.reconnect = function() {
 };
 
 
-/**
- Sends the request
-
- @method send
- @param {Object} payload    example: {id: 1, jsonrpc: '2.0', 'method': 'eth_someMethod', params: []}
- @param {Function} callback   the callback to call
- */
 IpcProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     if(!this.connection.writable)
@@ -234,7 +227,7 @@ IpcProvider.prototype.on = function (type, callback) {
         throw new Error('The second parameter callback must be a function.');
 
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks.push(callback);
             break;
 
@@ -263,14 +256,14 @@ IpcProvider.prototype.once = function (type, callback) {
 Removes event listener
 
 @method removeListener
-@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
+@param {String} type    'data', 'connect', 'error', 'end' or 'data'
 @param {Function} callback   the callback to call
 */
 IpcProvider.prototype.removeListener = function (type, callback) {
     var _this = this;
 
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks.forEach(function(cb, index){
                 if(cb === callback)
                     _this.notificationCallbacks.splice(index, 1);
@@ -287,11 +280,11 @@ IpcProvider.prototype.removeListener = function (type, callback) {
 Removes all event listeners
 
 @method removeAllListeners
-@param {String} type    'notification', 'connect', 'error', 'end' or 'data'
+@param {String} type    'data', 'connect', 'error', 'end' or 'data'
 */
 IpcProvider.prototype.removeAllListeners = function (type) {
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks = [];
             break;
 
