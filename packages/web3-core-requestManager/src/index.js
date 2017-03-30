@@ -178,7 +178,7 @@ RequestManager.prototype.setProvider = function (p) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('notification', function requestManagerNotification(err, result){
+        this.provider.on('data', function requestManagerNotification(err, result){
             if(!err) {
                 if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
                     _this.subscriptions[result.params.subscription].callback(null, result.params.result);

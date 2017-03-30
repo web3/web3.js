@@ -214,7 +214,7 @@ WebsocketProvider.prototype.on = function (type, callback) {
         throw new Error('The second parameter callback must be a function.');
 
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks.push(callback);
             break;
 
@@ -249,7 +249,7 @@ WebsocketProvider.prototype.removeListener = function (type, callback) {
     var _this = this;
 
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks.forEach(function(cb, index){
                 if(cb === callback)
                     _this.notificationCallbacks.splice(index, 1);
@@ -272,7 +272,7 @@ WebsocketProvider.prototype.removeListener = function (type, callback) {
  */
 WebsocketProvider.prototype.removeAllListeners = function (type) {
     switch(type){
-        case 'notification':
+        case 'data':
             this.notificationCallbacks = [];
             break;
 
