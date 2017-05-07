@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "elliptic": "^6.4.0",
+    "ethfp": "^0.1.6",
     "ethjs-signer": "^0.1.1"
   },
   "devDependencies": {
