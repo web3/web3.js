@@ -1,3 +1,7 @@
+.. _bzz:
+
+.. include:: include_announcement.rst
+
 ========
 web3.bzz
 ========
