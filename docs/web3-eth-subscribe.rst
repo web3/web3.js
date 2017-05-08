@@ -1,5 +1,6 @@
 .. _eth-subscribe:
 
+.. include:: include_announcement.rst
 
 =========
 web3.eth.subscribe

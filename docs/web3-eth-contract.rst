@@ -1,5 +1,7 @@
 .. _eth-contract:
 
+.. include:: include_announcement.rst
+
 ========
 web3.eth.Contract
 ========

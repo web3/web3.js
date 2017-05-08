@@ -1,5 +1,7 @@
 .. _utils:
 
+.. include:: include_announcement.rst
+
 ========
 web3.utils
 ========

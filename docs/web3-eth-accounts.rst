@@ -1,5 +1,6 @@
 .. _eth-accounts:
 
+.. include:: include_announcement.rst
 
 =========
 web3.eth.accounts
