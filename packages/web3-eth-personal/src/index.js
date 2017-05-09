@@ -72,6 +72,19 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter, null, null]
     });
 
+    var lockAccount = new Method({
+        name: 'lockAccount',
+        call: 'personal_lockAccount',
+        params: 1,
+        inputFormatter: [formatters.inputAddressFormatter]
+    });
+
+    var importRawKey = new Method({
+        name: 'importRawKey',
+        call: 'personal_importRawKey',
+        params: 2
+    });
+
     var sendTransaction = new Method({
         name: 'sendTransaction',
         call: 'personal_sendTransaction',
@@ -79,11 +92,17 @@ var methods = function () {
         inputFormatter: [formatters.inputTransactionFormatter, null]
     });
 
-    var lockAccount = new Method({
-        name: 'lockAccount',
-        call: 'personal_lockAccount',
-        params: 1,
-        inputFormatter: [formatters.inputAddressFormatter]
+    var sign = new Method({
+        name: 'sign',
+        call: 'personal_sign',
+        params: 3,
+        inputFormatter: [null, formatters.inputAddressFormatter, null]
+    });
+
+    var ecRecover = new Method({
+        name: 'ecRecover',
+        call: 'personal_ecRecover',
+        params: 2
     });
 
 
@@ -92,7 +111,10 @@ var methods = function () {
         newAccount,
         unlockAccount,
         sendTransaction,
-        lockAccount
+        lockAccount,
+        importRawKey,
+        sign,
+        ecRecover
     ];
 };
 
