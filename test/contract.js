@@ -1595,6 +1595,36 @@ describe('contract', function () {
             contract.methods[signature](address, 17).send({from: address, gasPrice: '1230000000'});
         });
 
+        it('should throw when trying to create a tx object and wrong amount of params', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var signature = 'mySend(address,uint256)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10) +
+                    '000000000000000000000000'+ addressLowercase.replace('0x','') +
+                    '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    to: addressLowercase,
+                    from: addressLowercase,
+                    gas: '0xc350',
+                    gasPrice: '0xbb8',
+                    value: '0x2710'
+                }]);
+
+                done();
+            });
+
+            var contract = new eth.Contract(abi, address);
+
+            assert.throws(function () {
+                contract.methods.mySend(address);
+            });
+
+            setTimeout(done, 1);
+        });
+
         it('should make a call with optional params', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
@@ -1761,6 +1791,7 @@ describe('contract', function () {
 
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
+
 
         it('should explicitly call sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeHttpProvider();

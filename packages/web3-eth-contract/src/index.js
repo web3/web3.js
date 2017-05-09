@@ -36,6 +36,7 @@ var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
+var errors = require('web3-core-helpers').errors;
 var promiEvent = require('web3-core-promiEvent');
 var abi = require('web3-eth-abi');
 
@@ -626,7 +627,14 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
-    txObject.arguments = arguments;
+    if (arguments.length) {
+
+        if (arguments.length !== this.method.inputs.length) {
+            throw errors.InvalidNumberOfParams(arguments.length, this.method.inputs.length, this.method.name);
+        }
+
+        txObject.arguments = arguments;
+    }
     txObject._method = this.method;
     txObject._parent = this.parent;
 
