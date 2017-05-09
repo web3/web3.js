@@ -1,5 +1,6 @@
 .. _eth-abi:
 
+.. include:: include_announcement.rst
 
 =========
 web3.eth.abi

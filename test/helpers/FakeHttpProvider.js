@@ -62,7 +62,7 @@ FakeHttpProvider.prototype.send = function (payload, callback) {
 };
 
 FakeHttpProvider.prototype.on = function (type, callback) {
-    if(type === 'notification') {
+    if(type === 'data') {
         this.notificationCallbacks.push(callback);
     }
 };

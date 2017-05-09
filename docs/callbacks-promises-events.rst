@@ -1,5 +1,7 @@
 .. _promiEvent:
 
+.. include:: include_announcement.rst
+
 =========================
 Callbacks Promises Events
 =========================

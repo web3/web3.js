@@ -1,5 +1,7 @@
 .. _eth:
 
+.. include:: include_announcement.rst
+
 ========
 web3.eth
 ========
@@ -362,6 +364,9 @@ Example
 
 
 ------------------------------------------------------------------------------
+
+.. _eth-gasprice:
+
 
 getGasPrice
 =====================
@@ -915,6 +920,8 @@ Example
 ------------------------------------------------------------------------------
 
 
+.. _eth-gettransactioncount:
+
 getTransactionCount
 =====================
 
@@ -953,6 +960,7 @@ Example
 
 ------------------------------------------------------------------------------
 
+.. _eth-sendtransaction:
 
 sendTransaction
 =====================
@@ -973,7 +981,7 @@ Parameters
   - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
   - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
   - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
-  - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional, default: To-Be-Determined) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to the mean network gas price.
+  - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
   - ``data`` - ``String``: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
   - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
