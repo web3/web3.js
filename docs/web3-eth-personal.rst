@@ -75,3 +75,5 @@ Example
 ------------------------------------------------------------------------------
 
 // TODO
+
+getAccounts, unlockAccount, lockAccount, sendTransaction, sign, ecRecover
