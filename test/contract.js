@@ -4,6 +4,7 @@ var Web3 = require('../index');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var FakeHttpProvider2 = require('./helpers/FakeHttpProvider2');
 var utils = require('../lib/utils/utils');
+var errors = require('../lib/web3/errors');
 var BigNumber = require('bignumber.js');
 var sha3 = require('../lib/utils/sha3');
 
@@ -353,6 +354,31 @@ describe('contract', function () {
 
         });
 
+        it('should throw if called with optional params without all args', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider); 
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000032');
+            var signature = 'balance(address)';
+            var address = '0x1234567890123456789012345678901234567891';
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) + '0000000000000000000000001234567890123456789012345678901234567891',
+                    to: address,
+                    from: address,
+                    gas: '0xc350'
+                }, 'latest']);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+            
+            var test = function() {
+              var r = contract.balance({from: address, gas: 50000});
+            }
+            assert.throws(test, errors.InvalidNumberOfSolidityArgs().message);
+
+        });
+
         it('should explicitly make a call with optional params', function () {
             var provider = new FakeHttpProvider();
             var web3 = new Web3(provider); 
@@ -396,6 +422,35 @@ describe('contract', function () {
 
             var r = contract.balance.call(address, {from: address, gas: 50000}, 11);
             assert.deepEqual(new BigNumber(0x32), r);
+
+        });
+
+        it('it should throw if sendTransaction with optional params without all args', function () {
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+            var signature = 'send(address,uint256)';
+            var address = '0x1234567890123456789012345678901234567891';
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: '0x' + sha3(signature).slice(0, 8) +
+                        '0000000000000000000000001234567890123456789012345678901234567891' +
+                        '0000000000000000000000000000000000000000000000000000000000000011' ,
+                    to: address,
+                    from: address,
+                    gas: '0xc350',
+                    gasPrice: '0xbb8',
+                    value: '0x2710'
+                }]);
+            });
+
+            var contract = web3.eth.contract(desc).at(address);
+
+            var test = function() {
+              contract.send(address, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
+            }
+
+            assert.throws(test, errors.InvalidNumberOfSolidityArgs().message);
 
         });
 
@@ -557,4 +612,3 @@ describe('contract', function () {
         });
     });
 });
-
