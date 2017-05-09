@@ -39,9 +39,8 @@ describe('lib/web3/method', function () {
             var test2 = function () { method.validateArgs(args2); };
             
             // then
-            assert.throws(test, errors.InvalidNumberOfParams().message);
-            assert.throws(test2, errors.InvalidNumberOfParams().message);
+            assert.throws(test, errors.InvalidNumberOfRPCParams().message);
+            assert.throws(test2, errors.InvalidNumberOfRPCParams().message);
         });
     });
 });
-
