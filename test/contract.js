@@ -2129,4 +2129,3 @@ describe('contract', function () {
         // TODO add error check
     });
 });
-
