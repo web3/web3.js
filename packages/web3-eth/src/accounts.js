@@ -73,7 +73,7 @@ function signTransaction (tx, privateKey, callback) {
         tx.chainId || this._eth.net.getId(),
         tx.gasPrice || this._eth.getGasPrice(),
         tx.nonce || this._eth.getTransactionCount(privateToAccount(privateKey).address)
-    ]).then(function(args) {
+    ]).then(function (args) {
         return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
     });
 }
@@ -111,11 +111,99 @@ function recover (hash, signature) {
     return EthFP.Account.recover(hash, signature);
 }
 
+function encrypt (account, password) {
+    // TODO: implement
+    return JSON.stringify(account);
+}
+
+function decrypt (account, password) {
+    return JSON.parse(account);
+}
+
+// Note: this is trying to follow closely the specs on
+// http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
+
+function Wallet() {
+    this.length = 0;
+}
+
+Wallet.prototype.create = function (numberOfAccounts, entropy) {
+    for (var i = 0; i < numberOfAccounts; ++i) {
+        this.add(create(entropy).privateKey);
+    }
+    return this;
+};
+
+Wallet.prototype.add = function (account) {
+    if (typeof account === "string") {
+        account = privateToAccount(account);
+    }
+    if (!this[account.address]) {
+        this[this.length++] = account;
+        this[account.address] = account;
+    }
+};
+
+Wallet.prototype.remove = function (addressOrIndex) {
+    var account = this[addressOrIndex];
+    for (var i = 0; i < this.length; ++i) {
+        if (this[i] && this[i].address === account.address) {
+            delete this[account.address];
+            this[i].address = null;
+            this[i].privateKey = null;
+            delete this[i];
+        }
+        if (!this[i]) {
+            if (i < this.length - 1) {
+                this[i] = this[i + 1];
+                delete this[i + 1];
+            } else {
+                --this.length;
+            }
+        }
+    }
+};
+
+Wallet.prototype.clear = function () {
+    for (var i = 0; i < this.length; ++i) {
+        delete this[this[i].address];
+        this[i].address = null;
+        this[i].privateKey = null;
+        delete this[i];
+    }
+    this.length = 0;
+}
+
+Wallet.prototype.encrypt = function (password) {
+    var accounts = [];
+    for (var i = 0; i < this.length; ++i) {
+        accounts.push(this[i]);
+    }
+    return JSON.stringify(accounts.map(encrypt));
+};
+
+Wallet.prototype.decrypt = function (encryptedWallet) {
+    JSON.parse(encryptedWallet).map(decrypt).forEach(function (account) {
+        this.add(account);
+    }.bind(this));
+};
+
+Wallet.prototype.defaultKeyName = "web3js_wallet";
+
+Wallet.prototype.save = function (password, keyName) {
+    localStorage.setItem(keyName || this.defaultKeyName, this.encrypt());
+};
+
+Wallet.prototype.load = function (password, keyName) {
+    this.decrypt(localStorage.getItem(keyName || this.defaultKeyName));
+};
+
 module.exports = {
     create: create,
     privateToAccount: privateToAccount,
     signTransaction: signTransaction,
     recoverTransaction: recoverTransaction,
     sign: sign,
-    recover: recover
+    recover: recover,
+    wallet: new Wallet()
 }
