@@ -22,10 +22,11 @@
 
 "use strict";
 
+var _ = require("underscore");
+var Promise = require('bluebird');
 var EthFP = require("ethfp");
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var _ = require("underscore");
 
 
 function create (entropy) {
@@ -37,6 +38,8 @@ function privateToAccount (privateKey) {
 }
 
 function signTransaction (tx, privateKey, callback) {
+    var _this = this;
+
     function signed (tx) {
         var transaction = {
             nonce: utils.numberToHex(tx.nonce),
@@ -70,9 +73,9 @@ function signTransaction (tx, privateKey, callback) {
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        tx.chainId || this._eth.net.getId(),
-        tx.gasPrice || this._eth.getGasPrice(),
-        tx.nonce || this._eth.getTransactionCount(privateToAccount(privateKey).address)
+        tx.chainId || _this.net.getId(),
+        tx.gasPrice || _this.getGasPrice(),
+        tx.nonce || _this.getTransactionCount(privateToAccount(privateKey).address)
     ]).then(function (args) {
         return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
     });
@@ -172,7 +175,7 @@ Wallet.prototype.clear = function () {
         delete this[i];
     }
     this.length = 0;
-}
+};
 
 Wallet.prototype.encrypt = function (password) {
     var accounts = [];
@@ -206,4 +209,4 @@ module.exports = {
     sign: sign,
     recover: recover,
     wallet: new Wallet()
-}
+};

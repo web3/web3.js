@@ -34,7 +34,7 @@ var Personal = require('web3-eth-personal');
 var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
-var accounts = require('./accounts.js');
+var accounts = require('web3-eth-accounts');
 
 
 
@@ -82,7 +82,7 @@ var Eth = function Eth() {
 
     // add accounts
     this.accounts = accounts;
-    this.accounts._eth = this;
+    this.accounts.signTransaction.bind(this);
 
     // add personal
     this.personal = new Personal(this.currentProvider);
@@ -196,7 +196,7 @@ var methods = function () {
         name: 'getStorageAt',
         call: 'eth_getStorageAt',
         params: 3,
-        inputFormatter: [formatters.inputAddressFormatter, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
+        inputFormatter: [formatters.inputAddressFormatter, utils.numberToHex, formatters.inputDefaultBlockNumberFormatter]
     });
 
     var getCode = new Method({
@@ -218,7 +218,7 @@ var methods = function () {
         name: 'getUncle',
         call: uncleCall,
         params: 2,
-        inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+        inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
         outputFormatter: formatters.outputBlockFormatter,
 
     });
@@ -251,7 +251,7 @@ var methods = function () {
         name: 'getTransactionFromBlock',
         call: transactionFromBlockCall,
         params: 2,
-        inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+        inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
         outputFormatter: formatters.outputTransactionFormatter
     });
 

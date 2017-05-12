@@ -6,10 +6,6 @@
   "license": "LGPL-3.0",
   "main": "src/index.js",
   "dependencies": {
-    "elliptic": "6.3.2",
-    "ethfp": "^0.1.12",
-    "ethjs-account": "^0.1.0",
-    "ethjs-signer": "^0.1.1",
     "underscore": "^1.8.3",
     "web3-core": "^1.0.0",
     "web3-core-helpers": "^1.0.0",
@@ -19,6 +15,7 @@
     "web3-eth-contract": "^1.0.0",
     "web3-eth-iban": "^1.0.0",
     "web3-eth-personal": "^1.0.0",
+    "web3-eth-accounts": "^1.0.0",
     "web3-net": "^1.0.0",
     "web3-utils": "^1.0.0"
   }
