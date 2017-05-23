@@ -27,7 +27,7 @@ var Promise = require('bluebird');
 var EthFP = require("ethfp");
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-
+var wallet = require('ethereumjs-wallet');
 
 function create (entropy) {
     return EthFP.Account.create(entropy || utils.randomHex(32));
@@ -46,7 +46,7 @@ function signTransaction (tx, privateKey, callback) {
             to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : "0x",
             data: tx.data || "0x",
             value: utils.numberToHex(tx.value),
-            gasLimit: utils.numberToHex(tx.gas),
+            gas: utils.numberToHex(tx.gas),
             gasPrice: utils.numberToHex(tx.gasPrice),
             chainId: utils.numberToHex(tx.chainId)
         };
@@ -114,13 +114,12 @@ function recover (hash, signature) {
     return EthFP.Account.recover(hash, signature);
 }
 
-function encrypt (account, password) {
-    // TODO: implement
-    return JSON.stringify(account);
+function decrypt (jsonString, password) {
+    return privateToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
 }
 
-function decrypt (account, password) {
-    return JSON.parse(account);
+function encrypt (privateKey, password) {
+    return JSON.stringify(wallet.fromPrivateKey(new Buffer(privateKey.slice(2), "hex")).toV3(password));
 }
 
 // Note: this is trying to follow closely the specs on
@@ -208,5 +207,7 @@ module.exports = {
     recoverTransaction: recoverTransaction,
     sign: sign,
     recover: recover,
-    wallet: new Wallet()
+    wallet: new Wallet(),
+    encrypt: encrypt,
+    decrypt: decrypt
 };

@@ -6,9 +6,10 @@
   "license": "LGPL-3.0",
   "main": "src/index.js",
   "dependencies": {
-    "underscore": "^1.8.3",
     "bluebird": "^3.3.1",
-    "ethfp": "^0.1.12",
+    "ethereumjs-wallet": "^0.6.0",
+    "ethfp": "^0.1.13",
+    "underscore": "^1.8.3",
     "web3-core-helpers": "^1.0.0",
     "web3-utils": "^1.0.0"
   }
