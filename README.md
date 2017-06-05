@@ -115,5 +115,5 @@ npm test
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
-[waffle-url]: http://waffle.io/ethereum/web3.js
+[waffle-url]: https://waffle.io/ethereum/web3.js
 
