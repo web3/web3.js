@@ -30,6 +30,7 @@ var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Net = require('web3-net');
 
+var ENS = require('web3-eth-ens');
 var Personal = require('web3-eth-personal');
 var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
@@ -101,6 +102,8 @@ var Eth = function Eth() {
     // add guess chain
     this.net.getNetworkType = getNetworkType.bind(this);
 
+    // add ENS
+    this.ens = new ENS(this);
 };
 
 core.addProviders(Eth);
