@@ -671,7 +671,7 @@ Object.defineProperty(ENS.prototype, 'registry', {
  * @param {Function} optional callback
  * @return {Function} a promise
  */
-ENS.prototype.address = function address(name, callback) {
+ENS.prototype.getAddress = function getAddress(name, callback) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.methods.addr().call(callback);
     }, function(err) {
