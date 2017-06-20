@@ -11,6 +11,8 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/bignumber.js":"^4.0.2",
+    "@types/underscore":"^1.8.0",
     "bignumber.js": "^4.0.0",
     "bn.js": "^4.11.6",
     "bower": ">=1.4.1",
