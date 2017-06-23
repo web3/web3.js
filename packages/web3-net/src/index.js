@@ -46,32 +46,25 @@ core.addProviders(Net);
 
 var methods = function () {
 
-    var getId = new Method({
-        name: 'getId',
-        call: 'net_version',
-        params: 0,
-        outputFormatter: utils.hexToNumber
-    });
-
-    var isListening = new Method({
-        name: 'isListening',
-        call: 'net_listening',
-        params: 0
-    });
-
-    var getPeerCount = new Method({
-        name: 'getPeerCount',
-        call: 'net_peerCount',
-        params: 0,
-        outputFormatter: utils.hexToNumber
-    });
-
-
     return [
-        getId,
-        isListening,
-        getPeerCount
-    ];
+        new Method({
+            name: 'getId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        }),
+        new Method({
+            name: 'isListening',
+            call: 'net_listening',
+            params: 0
+        }),
+        new Method({
+            name: 'getPeerCount',
+            call: 'net_peerCount',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        })
+    ]
 };
 
 
