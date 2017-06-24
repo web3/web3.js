@@ -1,15 +1,15 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.18.3",
+  "version": "0.20.0",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
     "lib": "./lib"
   },
   "dependencies": {
-    "bignumber.js": "git+https://github.com/debris/bignumber.js.git#94d7146671b9719e00a09c29b01a691bc85048c2",
     "btoa": "^1.1.2",
+    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "crypto-js": "^3.1.4",
     "utf8": "^2.1.1",
     "xhr2": "*",
