@@ -3460,6 +3460,7 @@ var toTopic = function(value){
 /// @param should be string or object
 /// @returns options string or object
 var getOptions = function (options, type) {
+    /*jshint maxcomplexity: 6 */
 
     if (utils.isString(options)) {
         return options;
@@ -4026,7 +4027,10 @@ SolidityFunction.prototype.extractDefaultBlock = function (args) {
 SolidityFunction.prototype.validateArgs = function (args) {
     var inputArgs = args.filter(function (a) {
       // filter the options object but not arguments that are arrays
-      return !(utils.isObject(a) === true && utils.isArray(a) === false);
+      return !( (utils.isObject(a) === true) &&
+                (utils.isArray(a) === false) &&
+                (utils.isBigNumber(a) === false)
+              );
     });
     if (inputArgs.length !== this._inputTypes.length) {
         throw errors.InvalidNumberOfSolidityArgs();
@@ -5706,7 +5710,6 @@ module.exports = Personal;
  */
 
 var Method = require('../method');
-var formatters = require('../formatters');
 var Filter = require('../filter');
 var watches = require('./watches');
 
@@ -5828,7 +5831,7 @@ var methods = function () {
 module.exports = Shh;
 
 
-},{"../filter":29,"../formatters":30,"../method":36,"./watches":43}],42:[function(require,module,exports){
+},{"../filter":29,"../method":36,"./watches":43}],42:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
