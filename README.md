@@ -36,7 +36,7 @@ npm install web3
 ### Meteor.js
 
 ```bash
-meteor add ethereum:web3
+meteor npm install --save web3
 ```
 
 ### As Browser module
