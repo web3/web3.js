@@ -64,7 +64,7 @@ var methods = function () {
             params: 0,
             outputFormatter: utils.hexToNumber
         })
-    ]
+    ];
 };
 
 

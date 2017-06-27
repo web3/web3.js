@@ -25,7 +25,7 @@
 var core = require('web3-core');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
-var formatters = require('web3-core-helpers').formatters;
+// var formatters = require('web3-core-helpers').formatters;
 var Net = require('web3-net');
 
 
@@ -56,9 +56,9 @@ var methods = function () {
             type: 'shh',
             subscriptions: {
                 'messages': {
-                    params: 1,
-                    inputFormatter: [formatters.inputPostFormatter],
-                    outputFormatter: formatters.outputPostFormatter
+                    params: 1
+                    // inputFormatter: [formatters.inputPostFormatter],
+                    // outputFormatter: formatters.outputPostFormatter
                 }
             }
         }),
@@ -146,6 +146,22 @@ var methods = function () {
         new Method({
             name: 'deleteSymKey',
             call: 'shh_deleteSymKey',
+            params: 1
+        }),
+
+        new Method({
+            name: 'newMessageFilter',
+            call: 'shh_newMessageFilter',
+            params: 1
+        }),
+        new Method({
+            name: 'getFilterMessages',
+            call: 'shh_getFilterMessages',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteMessageFilter',
+            call: 'shh_deleteMessageFilter',
             params: 1
         }),
 
