@@ -39,6 +39,12 @@ Example
     // change provider
     web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 
+    // Using the IPC provider in node.js
+    var net = require('net');
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os
+    // on windows path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux path is: "/users/myuser/.ethereum/geth.ipc"
+
 
 ------------------------------------------------------------------------------
 
@@ -75,6 +81,12 @@ Example
     var Web3 = require('web3');
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
     var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+    // Using the IPC provider in node.js
+    var net = require('net');
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os
+    // on windows path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux path is: "/users/myuser/.ethereum/geth.ipc"
 
 
 ------------------------------------------------------------------------------
