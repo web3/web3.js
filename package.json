@@ -8,6 +8,7 @@
     "lib": "./lib"
   },
   "dependencies": {
+    "btoa": "^1.1.2",
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
     "crypto-js": "^3.1.4",
     "utf8": "^2.1.1",
