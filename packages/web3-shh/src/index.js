@@ -25,7 +25,7 @@
 var core = require('web3-core');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
-var formatters = require('web3-core-helpers').formatters;
+// var formatters = require('web3-core-helpers').formatters;
 var Net = require('web3-net');
 
 
@@ -50,66 +50,127 @@ core.addProviders(Shh);
 
 var methods = function () {
 
-    var post = new Method({
-        name: 'post',
-        call: 'shh_post',
-        params: 1,
-        inputFormatter: [formatters.inputPostFormatter]
-    });
-
-    var newIdentity = new Method({
-        name: 'newIdentity',
-        call: 'shh_newIdentity',
-        params: 0
-    });
-
-    var hasIdentity = new Method({
-        name: 'hasIdentity',
-        call: 'shh_hasIdentity',
-        params: 1
-    });
-
-    var newGroup = new Method({
-        name: 'newGroup',
-        call: 'shh_newGroup',
-        params: 0
-    });
-
-    var addToGroup = new Method({
-        name: 'addToGroup',
-        call: 'shh_addToGroup',
-        params: 0
-    });
-
-    var getPastMessages = new Method({
-        name: 'getMessages',
-        call: 'shh_getMessages',
-        params: 1,
-        inputFormatter: [formatters.inputPostFormatter],
-        outputFormatter: formatters.outputPostFormatter
-    });
-
-    // subscriptions
-    var subscribe = new Subscriptions({
-        name: 'subscribe',
-        type: 'shh',
-        subscriptions: {
-            'messages': {
-                params: 1,
-                inputFormatter: [formatters.inputPostFormatter],
-                outputFormatter: formatters.outputPostFormatter
-            }
-        }
-    });
-
     return [
-        post,
-        newIdentity,
-        hasIdentity,
-        newGroup,
-        addToGroup,
-        getPastMessages,
-        subscribe
+        new Subscriptions({
+            name: 'subscribe',
+            type: 'shh',
+            subscriptions: {
+                'messages': {
+                    params: 1
+                    // inputFormatter: [formatters.inputPostFormatter],
+                    // outputFormatter: formatters.outputPostFormatter
+                }
+            }
+        }),
+
+        new Method({
+            name: 'version',
+            call: 'shh_version',
+            params: 0
+        }),
+        new Method({
+            name: 'info',
+            call: 'shh_info',
+            params: 0
+        }),
+        new Method({
+            name: 'setMaxMessageSize',
+            call: 'shh_setMaxMessageSize',
+            params: 1
+        }),
+        new Method({
+            name: 'setMinPoW',
+            call: 'shh_setMinPoW',
+            params: 1
+        }),
+        new Method({
+            name: 'markTrustedPeer',
+            call: 'shh_markTrustedPeer',
+            params: 1
+        }),
+        new Method({
+            name: 'newKeyPair',
+            call: 'shh_newKeyPair',
+            params: 0
+        }),
+        new Method({
+            name: 'addPrivateKey',
+            call: 'shh_addPrivateKey',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteKeyPair',
+            call: 'shh_deleteKeyPair',
+            params: 1
+        }),
+        new Method({
+            name: 'hasKeyPair',
+            call: 'shh_hasKeyPair',
+            params: 1
+        }),
+        new Method({
+            name: 'getPublicKey',
+            call: 'shh_getPublicKey',
+            params: 1
+        }),
+        new Method({
+            name: 'getPrivateKey',
+            call: 'shh_getPrivateKey',
+            params: 1
+        }),
+        new Method({
+            name: 'newSymKey',
+            call: 'shh_newSymKey',
+            params: 0
+        }),
+        new Method({
+            name: 'addSymKey',
+            call: 'shh_addSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'generateSymKeyFromPassword',
+            call: 'shh_generateSymKeyFromPassword',
+            params: 1
+        }),
+        new Method({
+            name: 'hasSymKey',
+            call: 'shh_hasSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'getSymKey',
+            call: 'shh_getSymKey',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteSymKey',
+            call: 'shh_deleteSymKey',
+            params: 1
+        }),
+
+        new Method({
+            name: 'newMessageFilter',
+            call: 'shh_newMessageFilter',
+            params: 1
+        }),
+        new Method({
+            name: 'getFilterMessages',
+            call: 'shh_getFilterMessages',
+            params: 1
+        }),
+        new Method({
+            name: 'deleteMessageFilter',
+            call: 'shh_deleteMessageFilter',
+            params: 1
+        }),
+
+        new Method({
+            name: 'post',
+            call: 'shh_post',
+            params: 1,
+            inputFormatter: [null]
+        })
     ];
 };
 
