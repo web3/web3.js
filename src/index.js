@@ -55,18 +55,18 @@ var Web3 = function Web3() {
 
     this.utils = utils;
 
-    this.setProvider = function (provider) {
-        this._requestManager.setProvider(provider);
+    this.setProvider = function (provider, net) {
+        this._requestManager.setProvider(provider, net);
 
-        this.eth.setProvider(provider);
-        this.eth.net.setProvider(provider);
-        this.eth.personal.setProvider(provider);
+        this.eth.setProvider(provider, net);
+        this.eth.net.setProvider(provider, net);
+        this.eth.personal.setProvider(provider, net);
 
-        this.shh.setProvider(provider);
-        this.shh.net.setProvider(provider);
+        this.shh.setProvider(provider, net);
+        this.shh.net.setProvider(provider, net);
 
-        this.bzz.setProvider(provider);
-        this.bzz.net.setProvider(provider);
+        this.bzz.setProvider(provider, net);
+        this.bzz.net.setProvider(provider, net);
         return true;
     };
 };

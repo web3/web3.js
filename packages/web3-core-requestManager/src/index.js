@@ -167,12 +167,33 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
  * @method setProvider
  * @param {Object}
  */
-RequestManager.prototype.setProvider = function (p) {
+RequestManager.prototype.setProvider = function (p, net) {
     var _this = this;
+
+    // autodetect provider
+    if(typeof p === 'string' && this.providers) {
+
+        // HTTP
+        if(/^http:\/\/i/.test(p)) {
+            p = new this.providers.HttpProvider(p);
+
+        // WS
+        } else if(/^ws:\/\/i/.test(p)) {
+            p = new this.providers.WebsocketProvider(p);
+
+        // IPC
+        } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
+            p = new this.providers.IpcProvider(p, net);
+
+        } else if(p) {
+            throw new Error('Can\'t autodetect provider for "'+ p +'"');
+        }
+    }
 
     // reset the old one before changing
     if(this.provider)
         this.clearSubscriptions();
+
 
     this.provider = p;
 
