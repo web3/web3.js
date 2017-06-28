@@ -171,14 +171,14 @@ RequestManager.prototype.setProvider = function (p, net) {
     var _this = this;
 
     // autodetect provider
-    if(typeof p === 'string' && this.providers) {
+    if(p && typeof p === 'string' && this.providers) {
 
         // HTTP
-        if(/^http:\/\/i/.test(p)) {
+        if(/^http:\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
         // WS
-        } else if(/^ws:\/\/i/.test(p)) {
+        } else if(/^ws:\/\//i.test(p)) {
             p = new this.providers.WebsocketProvider(p);
 
         // IPC
