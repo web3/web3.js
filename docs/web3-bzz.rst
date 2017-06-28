@@ -18,13 +18,13 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     var Bzz = require('web3-bzz');
 
     // "Bzz.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var bzz = new Bzz(Bzz.givenProvider || new Bzz.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+    var bzz = new Bzz(Bzz.givenProvider || 'ws://some.local-or-remote.node:8546');
 
 
     // or using the web3 umbrella package
 
     var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.bzz
 
