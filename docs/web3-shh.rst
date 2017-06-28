@@ -10,7 +10,7 @@ web3.shh
 
 
 The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
-For more see `Whisper  Overview <https://github.com/ethereum/wiki/wiki/Whisper-Overview>`_.
+For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
 
 
 .. code-block:: javascript
@@ -58,23 +58,31 @@ Parameters
 ----------
 
 1. ``Object`` - The post object:
-  - ``from`` 60 Bytes - ``String`` (optional): The identity of the sender.
-  - ``to`` 60 Bytes - ``String`` (optional): The identity of the receiver. When present whisper will encrypt the message so that only the receiver can decrypt it.
-  - ``topics`` - ``Array``: Array of topics ``Strings``, for the receiver to identify messages.
-  - ``payload`` - ``String|Number|Object``: The payload of the message. Will be autoconverted to a HEX string before. (?)
-  - ``ttl`` - ``Number``: Integer of the time to live in seconds.
+    - ``symKeyID`` - ``String`` (optional): ID of symmetric key for message encryption (Either ``symKeyID`` or ``pubKey`` must be present. Can not be both.).
+    - ``pubKey`` - ``String`` (optional): The public key for message encryption (Either ``symKeyID`` or ``pubKey`` must be present. Can not be both.).
+    - ``sig`` - ``String`` (optional): The ID of the signing key.
+    - ``ttl`` - ``Number``: Time-to-live in seconds.
+    - ``topic`` - ``String``: 4 Bytes (mandatory when key is symmetric): Message topic.
+    - ``payload`` - ``String``: The payload of the message to be encrypted.
+    - ``padding`` - ``Number`` (optional): Padding (byte array of arbitrary length).
+    - ``powTime`` - ``Number`` (optional)?: Maximal time in seconds to be spent on proof of work.
+    - ``powTarget`` - ``Number`` (optional)?: Minimal PoW target required for this message.
+    - ``targetPeer`` - ``Number`` (optional): Peer ID (for peer-to-peer message only).
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
 
 -------
 Returns
 -------
 
-``Boolean`` - returns ``true`` if the message was send, otherwise ``false``.
+``Boolean`` - returns ``true`` if the message was send, otherwise ``false`` or error.
 
 
 -------
 Example
 -------
+
+// TODO continue here
 
 .. code-block:: javascript
 
