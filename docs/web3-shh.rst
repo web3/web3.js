@@ -18,13 +18,13 @@ For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Wh
     var Shh = require('web3-shh');
 
     // "Shh.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var shh = new Shh(Shh.givenProvider || new Shh.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+    var shh = new Shh(Shh.givenProvider || 'ws://some.local-or-remote.node:8546');
 
 
     // or using the web3 umbrella package
 
     var Web3 = require('web3');
-    var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://some.local-or-remote.node:8546'));
+    var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
     // -> web3.shh
 
