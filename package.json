@@ -8,10 +8,10 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "btoa": "^1.1.2",
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
-    "crypto-js": "^3.1.4",
-    "utf8": "^2.1.1",
+    "btoa": "^1.1.2",
+    "crypto-js": "^3.1.8",
+    "utf8": "^2.1.2",
     "xhr2": "*",
     "xmlhttprequest": "*"
   },
@@ -19,21 +19,21 @@
     "xmlhttprequest": "./lib/utils/browser-xhr.js"
   },
   "devDependencies": {
-    "bower": ">=1.4.1",
-    "browserify": ">=10.0",
+    "bower": "^1.8.0",
+    "browserify": "^14.4.0",
     "chai": "^3.0.0",
-    "coveralls": "^2.11.2",
-    "del": ">=2.0.2",
+    "coveralls": "^2.13.1",
+    "del": "^3.0.0",
     "exorcist": "^0.4.0",
     "gulp": ">=3.9.0",
-    "gulp-jshint": ">=1.5.0",
+    "gulp-jshint": "^2.0.4",
     "gulp-rename": ">=1.2.0",
     "gulp-replace": "^0.5.3",
     "gulp-streamify": "0.0.5",
-    "gulp-uglify": ">=1.2.0",
+    "gulp-uglify": "^3.0.0",
     "istanbul": "^0.4.4",
-    "jshint": ">=2.5.0",
-    "mocha": ">=2.3.3",
+    "jshint": "^2.9.5",
+    "mocha": "^3.4.2",
     "sandboxed-module": "^2.0.2",
     "vinyl-source-stream": "^1.1.0"
   },

@@ -6,8 +6,6 @@ var u = require('./helpers/test.utils.js');
 
 describe('web3.shh', function() {
     describe('methods', function() {
-        u.methodExists(web3.shh, 'version');
-        u.methodExists(web3.shh, 'info');
         u.methodExists(web3.shh, 'setMaxMessageSize');
         u.methodExists(web3.shh, 'setMinPoW');
         u.methodExists(web3.shh, 'markTrustedPeer');
@@ -25,7 +23,9 @@ describe('web3.shh', function() {
         u.methodExists(web3.shh, 'deleteSymKey');
         u.methodExists(web3.shh, 'newMessageFilter');
         u.methodExists(web3.shh, 'post');
-
+        
+        u.propertyExists(web3.shh, 'version');
+        u.propertyExists(web3.shh, 'info');
     });
 });
 
