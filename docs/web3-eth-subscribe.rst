@@ -23,7 +23,7 @@ Parameters
 
 1. ``String`` - The subscription, you want to subscribe to.
 2. ``Mixed`` - (optional) Optional additional parameters, depending on the subscription type.
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription, and the subscription itself as 3 parameter.
 
 .. _eth-subscription-return:
 
@@ -42,7 +42,7 @@ Returns
     - ``on("error")`` returns ``Object``: Fires when an error in the subscription occours.
 
 ----------------
-Callback returns
+Notification returns
 ----------------
 
 - ``Mixed`` - depends on the subscription, see the different subscriptions for more.
@@ -138,7 +138,7 @@ Returns
 For the structure of the returned object see :ref:`web3.eth.getTransaction() return values <eth-gettransaction-return>`.
 
 ----------------
-Callback returns
+Notification returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
@@ -211,7 +211,7 @@ The structure of a returned block header is as follows:
     - ``timestamp`` - ``Number``: The unix timestamp for when the block was collated.
 
 ----------------
-Callback returns
+Notification returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
@@ -269,7 +269,7 @@ Returns
 For the structure of a returned event ``Object`` see :ref:`web3.eth.isSyncing return values <eth-issyncing-return>`.
 
 ----------------
-Callback returns
+Notification returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
@@ -339,7 +339,7 @@ Returns
 For the structure of a returned event ``Object`` see :ref:`web3.eth.getPastEvents return values <eth-getpastlogs-return>`.
 
 ----------------
-Callback returns
+Notification returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
