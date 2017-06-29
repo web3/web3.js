@@ -6,8 +6,8 @@ describe('shh', function() {
     describe('methods', function() {
         u.methodExists(shh, 'subscribe');
 
-        u.methodExists(shh, 'version');
-        u.methodExists(shh, 'info');
+        u.methodExists(shh, 'getVersion');
+        u.methodExists(shh, 'getInfo');
         u.methodExists(shh, 'setMaxMessageSize');
         u.methodExists(shh, 'setMinPoW');
         u.methodExists(shh, 'markTrustedPeer');

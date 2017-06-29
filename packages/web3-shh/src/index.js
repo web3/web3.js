@@ -64,12 +64,12 @@ var methods = function () {
         }),
 
         new Method({
-            name: 'version',
+            name: 'getVersion',
             call: 'shh_version',
             params: 0
         }),
         new Method({
-            name: 'info',
+            name: 'getInfo',
             call: 'shh_info',
             params: 0
         }),
