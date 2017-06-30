@@ -6,8 +6,6 @@
 web3.shh
 ========
 
-.. note:: this API is not final yet!!
-
 
 The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
 For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
