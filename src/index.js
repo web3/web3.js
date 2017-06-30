@@ -51,7 +51,7 @@ var Web3 = function Web3() {
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
-    this.bzz = new Bzz(this);
+    this.bzz = new Bzz();
 
     this.utils = utils;
 

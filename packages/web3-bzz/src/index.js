@@ -27,77 +27,21 @@ var Method = require('web3-core-method');
 var Net = require('web3-net');
 
 
-var Bzz = function Bzz() {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
-
-    this.net = new Net(this.currentProvider);
-};
-
-core.addProviders(Bzz);
+var swarm = require("swarm-js");
 
 
 
-var methods = function () {
+var Bzz = function Bzz(url) {
+    url = url || 'http://swarm-gateways.net'; // default to gateway
 
-    var download = new Method({
-        name: 'download',
-        call: 'bzz_download',
-        params: 2,
-        inputFormatter: [null, null]
-    });
+    // check for ethereum provider
+    if (typeof ethereum === 'object' && ethereum.swarm) {
+        url = ethereum.swarm;
+    }
 
-    var upload = new Method({
-        name: 'upload',
-        call: 'bzz_upload',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var getManifest = new Method({
-        name: 'getManifest',
-        call: 'bzz_get',
-        params: 1,
-        inputFormatter: [null]
-    });
-
-    var put = new Method({
-        name: 'put',
-        call: 'bzz_put',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var modify = new Method({
-        name: 'modify',
-        call: 'bzz_modify',
-        params: 4,
-        inputFormatter: [null, null, null, null]
-    });
-
-    var getInfo = new Method({
-        name: 'getInfo',
-        call: 'bzz_info',
-        params: 0,
-        inputFormatter: []
-    });
-
-    return [
-        download,
-        upload,
-        getManifest,
-        put,
-        modify,
-        getInfo
-    ];
+    var bzz = swarm.at(url);
+    bzz.url = url;
+    return bzz;
 };
 
 
