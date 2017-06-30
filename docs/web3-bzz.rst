@@ -17,8 +17,9 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 
     var Bzz = require('web3-bzz');
 
-    // "Bzz.providers.givenProvider" will be set if in an Ethereum supported browser.
-    var bzz = new Bzz(Bzz.givenProvider || 'ws://some.local-or-remote.node:8546');
+    // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
+    // Optional you can give your own "url"
+    var bzz = new Bzz([url]);
 
 
     // or using the web3 umbrella package
