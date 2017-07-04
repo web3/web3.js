@@ -6,7 +6,7 @@
 web3.bzz
 ========
 
-.. note:: this API is not final yet!!
+.. note:: This API might change over time.
 
 
 The ``web3-bzz`` package allows you to interact swarm the decentralized file store.
@@ -19,7 +19,7 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
 
     // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
     // Optional you can give your own "url"
-    var bzz = new Bzz([url]);
+    var bzz = new Bzz(Bzz.givenProvider || 'http://swarm-gateways.net');
 
 
     // or using the web3 umbrella package
@@ -27,19 +27,117 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     var Web3 = require('web3');
     var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
-    // -> web3.bzz
+    // -> web3.bzz.currentProvider // http://localhost:8500 or http://swarm-gateways.net
 
 
 ------------------------------------------------------------------------------
 
 
-.. include:: include_package-core.rst
+setProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.bzz.setProvider(myProvider)
+
+Will change the provider for its module.
+
+.. note:: When called on the umbrella package ``web3`` it will also set the provider for all sub modules ``web3.eth``, ``web3.shh``, etc EXCEPT ``web3.bzz`` which needs a separate provider at all times.
+
+----------
+Parameters
+----------
+
+1. ``Object`` - ``myProvider``: :ref:`a valid provider <web3-providers>`.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var Bzz = require('web3-bzz');
+    var bzz = new Bzz('http://localhost:8500');
+
+    // change provider
+    bzz.setProvider('http://swarm-gateways.net');
+
+
+------------------------------------------------------------------------------
+
+givenProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.bzz.givenProvider
+
+When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
+Will return the given provider by the (browser) environment, otherwise ``null``.
+
+
+-------
+Returns
+-------
+
+``Object``: The given provider set or ``null``;
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    bzz.givenProvider;
+    > {
+        send: function(),
+        on: function(),
+        bzz: "http://localhost:8500",
+        shh: true,
+        ...
+    }
+
+    bzz.setProvider(bzz.givenProvider || "http://swarm-gateways.net");
 
 
 ------------------------------------------------------------------------------
 
 
-.. include:: include_package-net.rst
+currentProvider
+=====================
+
+.. code-block:: javascript
+
+    bzz.currentProvider
+
+Will return the current provider URL, otherwise ``null``.
+
+
+-------
+Returns
+-------
+
+``Object``: The current provider URL or ``null``;
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    bzz.currentProvider;
+    > "http://localhost:8500"
+
+
+    if(!bzz.currentProvider) {
+        bzz.setProvider("http://swarm-gateways.net");
+    }
 
 
 ------------------------------------------------------------------------------

@@ -22,25 +22,39 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var Net = require('web3-net');
-
-
+var _ = require('underscore');
 var swarm = require("swarm-js");
 
 
 
-var Bzz = function Bzz(url) {
-    url = url || 'http://swarm-gateways.net'; // default to gateway
+var Bzz = function Bzz(provider) {
+    return swarm.setProvider(provider);
+};
 
-    // check for ethereum provider
-    if (typeof ethereum === 'object' && ethereum.swarm) {
-        url = ethereum.swarm;
+// set default ethereum provider
+Bzz.prototype.givenProvider = null;
+if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
+    Bzz.prototype.givenProvider = ethereumProvider;
+}
+
+swarm.setProvider = function(provider) {
+    var ethereumProvider = null;
+
+    // is ethereum provider
+    if(_.isObject(provider) && _.isString(provider.bzz)) {
+        provider = provider.bzz;
+        ethereumProvider = provider;
+
+    // is no string, set default
+    } else if(!_.isString(provider)) {
+        provider = 'http://swarm-gateways.net'; // default to gateway
     }
 
-    var bzz = swarm.at(url);
-    bzz.url = url;
+
+    var bzz = swarm.at(provider);
+    bzz.setProvider = swarm.setProvider;
+    bzz.currentProvider = provider;
+    bzz.givenProvider = Bzz.prototype.givenProvider;
     return bzz;
 };
 
