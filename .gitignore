@@ -19,3 +19,4 @@ bower_components
 npm-debug.log
 /bower
 .npm/
+packages/
