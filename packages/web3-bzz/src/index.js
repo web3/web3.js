@@ -26,36 +26,53 @@ var _ = require('underscore');
 var swarm = require("swarm-js");
 
 
-
 var Bzz = function Bzz(provider) {
-    return swarm.setProvider(provider);
+
+    this.givenProvider = Bzz.givenProvider;
+
+    // if new Web3(provider), use the given provider
+    if (provider && provider._requestManager) {
+        provider = provider.currentProvider;
+    }
+
+    // only allow file picker when in browser
+    if(typeof document !== 'undefined') {
+        this.pick = swarm.pick;
+    }
+
+    this.setProvider(provider);
 };
 
 // set default ethereum provider
-Bzz.prototype.givenProvider = null;
+/* jshint ignore:start */
+Bzz.givenProvider = null;
 if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
-    Bzz.prototype.givenProvider = ethereumProvider;
+    Bzz.givenProvider = ethereumProvider;
 }
+/* jshint ignore:end */
 
-swarm.setProvider = function(provider) {
-    var ethereumProvider = null;
-
+Bzz.prototype.setProvider = function(provider) {
     // is ethereum provider
     if(_.isObject(provider) && _.isString(provider.bzz)) {
         provider = provider.bzz;
-        ethereumProvider = provider;
-
     // is no string, set default
     } else if(!_.isString(provider)) {
         provider = 'http://swarm-gateways.net'; // default to gateway
     }
 
 
-    var bzz = swarm.at(provider);
-    bzz.setProvider = swarm.setProvider;
-    bzz.currentProvider = provider;
-    bzz.givenProvider = Bzz.prototype.givenProvider;
-    return bzz;
+    if(_.isString(provider)) {
+        this.currentProvider = provider;
+    } else {
+        return false;
+    }
+
+    // add functions
+    this.download = swarm.at(provider).download;
+    this.upload = swarm.at(provider).upload;
+    this.isAvailable = swarm.at(provider).isAvailable;
+
+    return true;
 };
 
 

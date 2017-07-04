@@ -18,7 +18,7 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     var Bzz = require('web3-bzz');
 
     // will autodetect if the "ethereum" object is present and will either connect to the local swarm node, or the swarm-gateways.net.
-    // Optional you can give your own "url"
+    // Optional you can give your own provider URL; If no provider URL is given it will use "http://swarm-gateways.net"
     var bzz = new Bzz(Bzz.givenProvider || 'http://swarm-gateways.net');
 
 
@@ -27,7 +27,10 @@ For more see the `Swarm Docs <http://swarm-guide.readthedocs.io/en/latest/>`_.
     var Web3 = require('web3');
     var web3 = new Web3(Web3.givenProvider || 'ws://some.local-or-remote.node:8546');
 
-    // -> web3.bzz.currentProvider // http://localhost:8500 or http://swarm-gateways.net
+    // -> web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: "http://localhost:8500" otherwise it will set: "http://swarm-gateways.net"
+
+    // set the provider manually if necessary
+    web3.bzz.setProvider("http://localhost:8500");
 
 
 ------------------------------------------------------------------------------
@@ -148,23 +151,34 @@ upload
 
 .. code-block:: javascript
 
-   web3.shh.upload(localfspath, defaultfile [, callback])
+   web3.bzz.upload(mixed)
 
-Uploads files or folders to swarm.
+Uploads files folders or raw data to swarm.
 
 ----------
 Parameters
 ----------
 
-1. ``String`` - ``localfspath``: The file or directory to upload.
-2. ``String`` - ``defaultfile``: The default to use when no file on the manifest path could be mapped. For JavaScript Dapps that is normally an ``index.html``.
-3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``mixed`` - ``Buffer|Object``: The data to upload, can be a Buffer, multiple files, or a directory or file (only in node.js). The following types are allowed:
+    - ``Buffer``: A file Buffer to upload.
+    - ``Object``:
+        1. Multiple key values for files and directories. The paths will be kept the same:
+            - key must be the files path, or name, e.g. ``"/foo.txt"`` and its value is an object with:
+                - ``type``: The mime-type of the file, e.g. ``"text/html"``.
+                - ``data``: The Buffer of the data.
+        2. Upload raw data, a file or a directory from disk in Node.js. Requires and object with the following properties:
+            - ``path``: The path to the file or directory.
+            - ``kind``: The type of the source ``"directory"``, ``"file"`` or ``"data"``.
+            - ``defaultFile`` (optional): Path of the "defaultFile" when ``"kind": "directory"``, e.g. ``"/index.html"``.
+        3. Upload file or folder in the browser. Requres and object with the following properties:
+            - ``pick``: The file picker to launch. Can be ``"file"``, ``"directory"`` or ``"data"``.
+
 
 -------
 Returns
 -------
 
-``String``: Returns the content hash of the manifest.
+``Promise`` returning ``String``: Returns the content hash of the manifest.
 
 
 -------
@@ -173,10 +187,35 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.upload('/User/me/sites/myApp', '/User/me/sites/myApp/index.html')
-    .then(console.log);
-    > '246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20'
+    var bzz = web3.bzz;
 
+    // raw data
+    var file = "test file";
+    bzz.upload(new Buffer(file)).then(function(hash) {
+        console.log("Uploaded file. Address:", hash);
+    })
+
+    // raw directory
+    var dir = {
+        "/foo.txt": {type: "text/plain", data: new Buffer("sample file")},
+        "/bar.txt": {type: "text/plain", data: new Buffer("another file")}
+    };
+    bzz.upload(dir).then(function(hash) {
+        console.log("Uploaded directory. Address:", hash);
+    });
+
+    // upload from disk in node.js
+    bzz.upload({
+        path: "/path/to/thing",      // path to data / file / directory
+        kind: "directory",           // could also be "file" or "data"
+        defaultFile: "/index.html"   // optional, and only for kind === "directory"
+    })
+    .then(console.log)
+    .catch(console.log);
+
+    // upload from disk in the browser
+    bzz.upload({pick: "file"}) // could also be "directory" or "data"
+    .then(console.log);
 
 ------------------------------------------------------------------------------
 
@@ -185,23 +224,22 @@ download
 
 .. code-block:: javascript
 
-   web3.shh.download(bzzHash, localdirpath [, callback])
+   web3.bzz.download(bzzHash [, localpath])
 
-Downloads files and folders from swarm.
+Downloads files and folders from swarm, as buffer or to disk (only node.js).
 
 ----------
 Parameters
 ----------
 
-1. ``bzzHash`` - ``String``: The file or directory to download.
-2. ``localdirpath`` - ``String``: The local folder to download the content into.
-3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+1. ``bzzHash`` - ``String``: The file or directory to download. If the hash is a raw file it will return a Buffer, if a manifest file, it will return the directory structure. If the ``localpath`` is given, it will return that path where it downloaded the files to.
+2. ``localpath`` - ``String``: The local folder to download the content into. (only node.js)
 
 -------
 Returns
 -------
 
-``?``:
+``Promise`` returning ``Buffer|Object|String``: The Buffer of the file downloaded, an object with the directory structure, or the path where it was downloaded to.
 
 
 -------
@@ -210,37 +248,56 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.download('246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20', '/User/me/sites/someApp')
-    .then(console.log);
-    >
+    var bzz = web3.bzz;
+
+    // download raw file
+    var fileHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
+    bzz.download(fileHash).then(function(buffer) {
+        console.log("Downloaded file:", buffer.toString());
+    });
+
+    // download directory, if the hash is manifest file.
+    var dirHash = "7e980476df218c05ecfcb0a2ca73597193a34c5a9d6da84d54e295ecd8e0c641";
+    bzz.download(dirHash).then(function(dir) {
+        console.log("Downloaded directory:");
+        > {
+            'bar.txt': { type: 'text/plain', data: <Buffer 61 6e 6f 74 68 65 72 20 66 69 6c 65> },
+            'foo.txt': { type: 'text/plain', data: <Buffer 73 61 6d 70 6c 65 20 66 69 6c 65> }
+        }
+    });
+
+    // download file/directory to disk (only node.js)
+    var dirHash = "a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23";
+    bzz.download(dirHash, "/target/dir")
+    .then(path => console.log(`Downloaded directory to ${path}.`))
+    .catch(console.log);
 
 
 ------------------------------------------------------------------------------
 
 
-put
+pick
 =====================
 
 .. code-block:: javascript
 
-   web3.shh.put(content, contentType [, callback])
+   web3.bzz.pick.file()
+   web3.bzz.pick.directory()
+   web3.bzz.pick.data()
 
-Allows to upload a raw data blob to swarm.
-Creates a manifest with an entry. This entry has the empty path and specifies the content type given as second argument.
+Opens a file picker in the browser to select file(s), directory or data.
 
 ----------
 Parameters
 ----------
 
-1. ``content`` - ``String``: The data blob to store.
-2. ``contentType`` - ``String``: The MIME content type to assign for that data.
-3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+none
 
 -------
 Returns
 -------
 
-``String``: Returns the content hash of the manifest.
+``Promise`` returning ``Object``: Returns the file or multiple files.
 
 -------
 Example
@@ -248,120 +305,8 @@ Example
 
 .. code-block:: javascript
 
-    web3.shh.put('0x2345676432', 'text/html')
-    .then(console.log);
-    > '246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20'
-
-
-------------------------------------------------------------------------------
-
-getManifest
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.getManifest(bzzHash [, callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``bzzHash`` - ``String``: The path to a file, it will then download its manifest JSON file.
-2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``Object``: the manifest JSON object of the hash location
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.getManifest('246749122b6435dc395250c44c8ebc2eaa13dff2f3986ce5265148d84e619d20')
+    web3.bzz.pick.file()
     .then(console.log);
     > {
-        ?
+        ...
     }
-
-
-------------------------------------------------------------------------------
-
-getInfo
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.getInfo([callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.getInfo()
-    .then(console.log);
-    >
-
-
-------------------------------------------------------------------------------
-
-modify
-=====================
-
-.. code-block:: javascript
-
-   web3.shh.modify(?, ?, ?, ? [, callback])
-
-Description missing.
-
-----------
-Parameters
-----------
-
-1. ``?``: ?
-2. ``?``: ?
-3. ``?``: ?
-4. ``?``: ?
-5. ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``?``:
-
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.shh.modify(?, ?, ?, ?)
-    .then(console.log);
-    >
-
-

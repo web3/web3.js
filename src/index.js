@@ -51,7 +51,7 @@ var Web3 = function Web3() {
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
-    this.bzz = new Bzz();
+    this.bzz = new Bzz(this);
 
     this.utils = utils;
 
@@ -68,7 +68,7 @@ var Web3 = function Web3() {
         this.shh.net.setProvider(provider, net);
 
         this.bzz.setProvider(provider);
-        // this.bzz.net.setProvider(provider, net);
+
         return true;
     };
 };
