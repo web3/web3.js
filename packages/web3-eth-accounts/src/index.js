@@ -29,27 +29,42 @@ var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 var wallet = require('ethereumjs-wallet');
 
-function create (entropy) {
+
+var Accounts = function Accounts(eth) {
+
+    this.eth = eth;
+    this.wallet = new Wallet(this);
+};
+
+Accounts.prototype.create = function create(entropy) {
     return EthFP.Account.create(entropy || utils.randomHex(32));
-}
+};
 
-function privateToAccount (privateKey) {
+Accounts.prototype.privateToAccount = function privateToAccount(privateKey) {
     return EthFP.Account.fromPrivate(privateKey);
-}
+};
 
-function signTransaction (tx, privateKey, callback) {
+Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
     var _this = this;
 
     function signed (tx) {
+
+        if (!tx.gas) {
+            throw new Error('"gas" is missing');
+        }
+
         var transaction = {
             nonce: utils.numberToHex(tx.nonce),
-            to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : "0x",
-            data: tx.data || "0x",
-            value: utils.numberToHex(tx.value),
+            to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
+            data: tx.data || '0x',
+            value: tx.value ? utils.numberToHex(tx.value) : "0x",
             gas: utils.numberToHex(tx.gas),
             gasPrice: utils.numberToHex(tx.gasPrice),
             chainId: utils.numberToHex(tx.chainId)
         };
+
+
+
         var hash = EthFP.Hash.keccak256(EthFP.Account.transactionSigningData(transaction));
         var rawTransaction = EthFP.Account.signTransaction(transaction, privateKey);
         var values = EthFP.RLP.decode(rawTransaction);
@@ -71,21 +86,25 @@ function signTransaction (tx, privateKey, callback) {
         return signed(tx);
     }
 
+    if (!_this || !_this.eth || !_this.eth.net) {
+        return Promise.reject(new Error('The Eth package is not bound. Please bind using "signTransaction.bind(eth)", or provide "nonce", "chainId" and "gasPrice" in the transaction yourself.'));
+    }
+
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        tx.chainId || _this.net.getId(),
-        tx.gasPrice || _this.getGasPrice(),
-        tx.nonce || _this.getTransactionCount(privateToAccount(privateKey).address)
+        tx.chainId || _this.eth.net.getId(),
+        tx.gasPrice || _this.eth.getGasPrice(),
+        tx.nonce || _this.eth.getTransactionCount(_this.privateToAccount(privateKey).address)
     ]).then(function (args) {
         return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
     });
-}
+};
 
-function recoverTransaction (rawTx) {
+Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     return EthFP.Account.recoverTransaction(rawTx);
-}
+};
 
-function sign (data, privateKey) {
+Accounts.prototype.sign = function sign(data, privateKey) {
     // TODO / FIXME: the specs isn't clear on how this is encoded
     // https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
     // I'm guessing it means to encode len as the decimal UTF8
@@ -102,31 +121,32 @@ function sign (data, privateKey) {
         s: vrs[2],
         signature: signature
     };
-}
+};
 
-function recover (hash, signature) {
+Accounts.prototype.recover = function recover(hash, signature) {
     if (typeof hash === "object") {
-        return recover(hash.messageHash, EthFP.Account.encodeSignature([hash.v, hash.r, hash.s]));
+        return this.recover(hash.messageHash, EthFP.Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
     if (arguments.length === 4) {
-        return recover(hash, EthFP.Account.encodeSignature([].slice.call(arguments, 1, 4)));
+        return this.recover(hash, EthFP.Account.encodeSignature([].slice.call(arguments, 1, 4)));
     }
     return EthFP.Account.recover(hash, signature);
-}
+};
 
-function decrypt (jsonString, password) {
-    return privateToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
-}
+Accounts.prototype.decrypt = function decrypt(jsonString, password) {
+    return this.privateToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
+};
 
-function encrypt (privateKey, password) {
-    return JSON.stringify(wallet.fromPrivateKey(new Buffer(privateKey.slice(2), "hex")).toV3(password));
-}
+Accounts.prototype.encrypt = function encrypt(privateKey, password) {
+    return JSON.stringify(this.wallet.fromPrivateKey(new Buffer(privateKey.slice(2), "hex")).toV3(password));
+};
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
 
-function Wallet() {
+function Wallet(accounts) {
     this.length = 0;
+    this.accounts = accounts;
 }
 
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
@@ -138,7 +158,7 @@ Wallet.prototype.create = function (numberOfAccounts, entropy) {
 
 Wallet.prototype.add = function (account) {
     if (typeof account === "string") {
-        account = privateToAccount(account);
+        account = this.accounts.privateToAccount(account);
     }
     if (!this[account.address]) {
         this[this.length++] = account;
@@ -176,6 +196,7 @@ Wallet.prototype.clear = function () {
     this.length = 0;
 };
 
+// TODO encrypt!
 Wallet.prototype.encrypt = function (password) {
     var accounts = [];
     for (var i = 0; i < this.length; ++i) {
@@ -200,14 +221,5 @@ Wallet.prototype.load = function (password, keyName) {
     this.decrypt(localStorage.getItem(keyName || this.defaultKeyName));
 };
 
-module.exports = {
-    create: create,
-    privateToAccount: privateToAccount,
-    signTransaction: signTransaction,
-    recoverTransaction: recoverTransaction,
-    sign: sign,
-    recover: recover,
-    wallet: new Wallet(),
-    encrypt: encrypt,
-    decrypt: decrypt
-};
+
+module.exports = Accounts;

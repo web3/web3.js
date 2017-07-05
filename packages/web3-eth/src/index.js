@@ -31,10 +31,10 @@ var utils = require('web3-utils');
 var Net = require('web3-net');
 
 var Personal = require('web3-eth-personal');
-var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
-var accounts = require('web3-eth-accounts');
+var Accounts = require('web3-eth-accounts');
+var abi = require('web3-eth-abi');
 
 
 
@@ -80,9 +80,12 @@ var Eth = function Eth() {
     // add net
     this.net = new Net(this.currentProvider);
 
+    // add guess chain
+    this.net.getNetworkType = getNetworkType.bind(this);
+
+
     // add accounts
-    this.accounts = accounts;
-    this.accounts.signTransaction.bind(this);
+    this.accounts = new Accounts(this);
 
     // add personal
     this.personal = new Personal(this.currentProvider);
@@ -96,10 +99,6 @@ var Eth = function Eth() {
 
     // add ABI
     this.abi = abi;
-
-
-    // add guess chain
-    this.net.getNetworkType = getNetworkType.bind(this);
 
 };
 

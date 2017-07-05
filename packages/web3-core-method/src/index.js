@@ -310,6 +310,7 @@ Method.prototype.buildCall = function() {
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
+        // CALLBACK function
         var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
 
@@ -335,7 +336,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-                // return PROMIEVENT
+            // return PROMIEVENT
             } else if (method.eth) {
 
                 defer.eventEmitter.emit('transactionHash', result);
@@ -345,6 +346,39 @@ Method.prototype.buildCall = function() {
 
         };
 
+
+        // Check for local accounts in the wallet
+        if(call === 'eth_sendtransaction' && method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+            var tx = payload.params[0],
+                from = (tx) ? tx.from.toLowerCase() : null,
+                wallet;
+
+            // is index given
+            if (_.isNumber(from)) {
+                wallet = method.eth.accounts.wallet[from];
+
+            // is account given
+            } else if (_.isObject(from) && from.address && from.privateKey) {
+                wallet = from;
+
+            // search in wallet for address
+            } else {
+                wallet = _.find(method.eth.accounts.wallet, function (wal) {
+                    return (wal.address.toLowerCase() === from);
+                });
+            }
+
+            // If wallet was found, sign tx, and send using sendRawTransaction
+            if (wallet) {
+                delete tx.from;
+
+                method.eth.accounts.signTransaction(tx, wallet.privateKey)
+                    .then(console.log)
+            }
+        }
+
+
+        // Send the actual transaction
         if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
 

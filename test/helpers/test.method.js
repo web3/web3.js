@@ -6,7 +6,26 @@ var Web3 = require('../../src/index');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
-// TODO add tests for send transaction promiEvents
+var addLocalWalletChecks = function (test, provider, web3) {
+
+    test.addWallet(web3);
+
+    provider.injectResult(1);
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.jsonrpc, '2.0');
+        assert.equal(payload.method, 'net_version');
+        assert.deepEqual(payload.params, []);
+    });
+
+    provider.injectResult('0xa');
+    provider.injectValidation(function (payload) {
+        assert.equal(payload.jsonrpc, '2.0');
+        assert.equal(payload.method, 'eth_getTransactionCount');
+        assert.deepEqual(payload.params, [test.args[0].from, "latest"]);
+    });
+};
+
+
 
 var runTests = function (obj, method, tests) {
     var objName;
@@ -29,12 +48,21 @@ var runTests = function (obj, method, tests) {
                     var result;
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
+
+                    // add a wallet
+                    if(test.addWallet) {
+                        addLocalWalletChecks(test, provider, web3);
+                    }
+
+
                     provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
+
+
 
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
@@ -63,9 +91,9 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
-                            assert.throws(w3[method].bind(web3[obj], args));
+                            assert.throws(function(){ w3[method].apply(w3, args); });
                         } else {
-                            assert.throws(web3[method].bind(web3, args));
+                            assert.throws(function(){ web3[method].apply(web3, args); });
                         }
 
                         done();
@@ -79,7 +107,7 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
-                            result = w3[method].apply(web3[obj], args);
+                            result = w3[method].apply(w3, args);
                         } else {
                             result = web3[method].apply(web3, args);
                         }
@@ -111,12 +139,19 @@ var runTests = function (obj, method, tests) {
                     var w3;
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
+
+                    // add a wallet
+                    if(test.addWallet) {
+                        addLocalWalletChecks(test, provider, web3);
+                    }
+
                     provider.injectResult(clone(test.result));
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
                         assert.equal(payload.method, test.call);
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
+
 
                     var args = clone(test.args);
 
@@ -128,9 +163,9 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
-                            assert.throws(w3[method].bind(web3[obj], args));
+                            assert.throws(function(){ w3[method].apply(w3, args); });
                         } else {
-                            assert.throws(web3[method].bind(web3, args));
+                            assert.throws(function(){ web3[method].apply(web3, args); });
                         }
 
                         done();
@@ -150,7 +185,7 @@ var runTests = function (obj, method, tests) {
                                 w3 = web3[obj];
                             }
 
-                            w3[method].apply(web3[obj], args);
+                            w3[method].apply(w3, args);
                         } else {
                             web3[method].apply(web3, args);
                         }

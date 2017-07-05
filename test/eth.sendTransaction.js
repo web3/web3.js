@@ -80,6 +80,39 @@ var tests = [{
         }
     },
     call: 'eth_'+ method
+
+// using local wallet
+},{
+    addWallet: function (web3) {
+        web3.eth.accounts.wallet.add('0xd7d364e720c129acb940439a84a99185dd55af6f6d105018a8acfb7f8c008142');
+        // 0x5af0838657202f865A4547b5eD28a64f799960DC
+    },
+    args: [{
+        from: '0x5af0838657202f865A4547b5eD28a64f799960DC',
+        to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        gas: 500000
+    }],
+    formattedArgs: [{
+        from: "0x5af0838657202f865a4547b5ed28a64f799960dc",
+        to: "0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6",
+        value: "0x11f71f76bb1",
+        gasPrice: "0x4b7dddc97a",
+        gas: "0x7a120"
+    }],
+    result: ['0x12345678976543213456786543212345675432'],
+    formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_sendRawTransaction'
 },{
     error: true, // only for testing
     args: [{
