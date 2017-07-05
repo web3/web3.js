@@ -73,13 +73,13 @@ describe('lib/web3/batch', function () {
 
                 assert.equal(first.method, 'eth_accounts');
                 assert.deepEqual(first.params, []);
-                assert.equal(second.method, 'bzz_upload');
-                assert.deepEqual(second.params, ['','']);
+                assert.equal(second.method, 'shh_post');
+                assert.deepEqual(second.params, [{}]);
             });
 
             var batch = new web3.BatchRequest();
             batch.add(web3.eth.getAccounts.request(callback));
-            batch.add(web3.bzz.upload.request('','', callback2));
+            batch.add(web3.shh.post.request({}, callback2));
             batch.execute();
         });
 

@@ -67,8 +67,8 @@ var Web3 = function Web3() {
         this.shh.setProvider(provider, net);
         this.shh.net.setProvider(provider, net);
 
-        this.bzz.setProvider(provider, net);
-        this.bzz.net.setProvider(provider, net);
+        this.bzz.setProvider(provider);
+
         return true;
     };
 };
