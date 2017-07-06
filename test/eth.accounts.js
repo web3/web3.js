@@ -1,4 +1,4 @@
-var ethAccounts = require("./../packages/web3-eth-accounts/src/index.js");
+var Accounts = require("./../packages/web3-eth-accounts/src/index.js");
 var ethjsSigner = require("ethjs-signer");
 var assert = require('assert');
 
@@ -49,6 +49,7 @@ describe("eth", function () {
         // For each account
         accounts.forEach(function (correctAccount, i) {
             it("creation and signature algorithms must match expected values (account " + i + ")", function() {
+                var ethAccounts = new Accounts();
 
                 // Generates an address from this account's private key
                 var testAccount = ethAccounts.privateToAccount(correctAccount.privateKey);

@@ -350,7 +350,10 @@ Method.prototype.buildCall = function() {
 
 
         var sendRequest = function(payload, method) {
-            if (payload.method.toLowerCase() === 'eth_sendtransaction' && method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+
+            if (payload.method.toLowerCase() === 'eth_sendtransaction' &&
+                method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+
                 var tx = payload.params[0],
                     from = (_.isObject(tx)) ? tx.from : null,
                     wallet;
@@ -365,10 +368,7 @@ Method.prototype.buildCall = function() {
 
                     // search in wallet for address
                 } else {
-                    from = from.toLowerCase();
-                    wallet = _.find(method.eth.accounts.wallet, function (wal) {
-                        return (wal.address.toLowerCase() === from);
-                    });
+                    wallet = method.eth.accounts.wallet[from.toLowerCase()];
                 }
 
                 // If wallet was found, sign tx, and send using sendRawTransaction
@@ -376,13 +376,13 @@ Method.prototype.buildCall = function() {
                     delete tx.from;
 
                     method.eth.accounts.signTransaction(tx, wallet.privateKey)
-                        .then(function(sign){
+                    .then(function(sign){
 
-                            payload.method = 'eth_sendRawTransaction';
-                            payload.params = [sign.rawTransaction];
+                        payload.method = 'eth_sendRawTransaction';
+                        payload.params = [sign.rawTransaction];
 
-                            method.requestManager.send(payload, sendTxCallback);
-                        });
+                        method.requestManager.send(payload, sendTxCallback);
+                    });
                 }
             } else {
                 method.requestManager.send(payload, sendTxCallback);
@@ -393,8 +393,10 @@ Method.prototype.buildCall = function() {
         // Send the actual transaction
         if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-            method.eth.getGasPrice.then(function (gasPrice) {
-                payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+            method.eth.getGasPrice(function (err, gasPrice) {
+                if (gasPrice) {
+                    payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+                }
                 sendRequest(payload, method);
             });
 

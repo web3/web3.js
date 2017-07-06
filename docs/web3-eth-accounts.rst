@@ -153,17 +153,14 @@ Example
 ------------------------------------------------------------------------------
 
 
-// TODO ----------------------------------------
-
-
 signTransaction
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.signTransaction(tx, privateKey [, returnSignature] [, callback]);
+    web3.eth.accounts.signTransaction(tx, privateKey [, callback]);
 
-Signs a ethereum transaction with a given private key.
+Signs an Ethereum transaction with a given private key.
 
 ----------
 Parameters
@@ -185,14 +182,14 @@ Parameters
 Returns
 -------
 
-``String|Object``: The signed data RLP encoded transaction, or if ``returnSignature`` is ``true`` the signature values as follows:
-    - ``message`` - ``String``: The the given message.
-    - ``hash`` - ``String``: The hash of the given message.
+``Promise|Object`` returning ``Object``: The signed data RLP encoded transaction, or if ``returnSignature`` is ``true`` the signature values as follows:
+    - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: first 2 ??? bytes of ????
     - ``s`` - ``String``: first 2 ??? bytes of ????
     - ``v`` - ``String``: first 2 ??? bytes of ????
+    - ``rawTransaction`` - ``String``: The RLP encoded transaction, ready to be send using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
-.. note:: If ``nonce``, ``chainId``, ``gas`` and ``gasPrice`` is given, it returns synchronous with the signed transaction.
+.. note:: If ``nonce``, ``chainId``, ``gas`` and ``gasPrice`` is given, it returns the signed transaction *directly* as ``Object``.
 
 -------
 Example
@@ -206,7 +203,13 @@ Example
         gas: 2000000
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
     .then(console.log);
-    > "0xf86180808401ef364594f0109fc8df283027b6285cc889f5aa624eac1f5580801ca031573280d608f75137e33fc14655f097867d691d5c4c44ebe5ae186070ac3d5ea0524410802cdc025034daefcdfa08e7d2ee3f0b9d9ae184b2001fe0aff07603d9"
+    > {
+        messageHash: '0x88cfbd7e51c7a40540b233cf68b62ad1df3e92462f1c6018d6d67eae0f3b08f5',
+        v: '0x25',
+        r: '0xc9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895',
+        s: '0x727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68',
+        rawTransaction: '0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68'
+    }
 
     // if nonce, chainId, gas and gasPrice is given it returns synchronous
     web3.eth.accounts.signTransaction({
@@ -217,18 +220,23 @@ Example
         nonce: 0,
         chainId: 1
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
-    > "0xf86180808401ef364594f0109fc8df283027b6285cc889f5aa624eac1f5580801ca031573280d608f75137e33fc14655f097867d691d5c4c44ebe5ae186070ac3d5ea0524410802cdc025034daefcdfa08e7d2ee3f0b9d9ae184b2001fe0aff07603d9"
+    > {
+        messageHash: '0x6893a6ee8df79b0f5d64a180cd1ef35d030f3e296a5361cf04d02ce720d32ec5',
+        v: '0x25',r: '0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',        s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
+        rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
+    }
 
 
 
 ------------------------------------------------------------------------------
+
 
 recoverTransaction
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recoverTransaction(signature);
+    web3.eth.accounts.recoverTransaction(rawTransaction);
 
 Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
 
@@ -236,7 +244,7 @@ Recovers the Ethereum address which was used to sign the given RLP encoded trans
 Parameters
 ----------
 
-1. ``signature`` - ``String|Object``: The RLP encoded transaction.  Or a signature object with hash, r, s, v properties.
+1. ``signature`` - ``String``: The RLP encoded transaction.
 
 
 -------

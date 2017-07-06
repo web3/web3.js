@@ -49,7 +49,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     function signed (tx) {
 
-        if (!tx.gas) {
+        if (!tx.gas && !tx.gasLimit) {
             throw new Error('"gas" is missing');
         }
 
@@ -58,7 +58,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
             data: tx.data || '0x',
             value: tx.value ? utils.numberToHex(tx.value) : "0x",
-            gas: utils.numberToHex(tx.gas),
+            gas: utils.numberToHex(tx.gasLimit || tx.gas),
             gasPrice: utils.numberToHex(tx.gasPrice),
             chainId: utils.numberToHex(tx.chainId)
         };
@@ -157,12 +157,24 @@ Wallet.prototype.create = function (numberOfAccounts, entropy) {
 };
 
 Wallet.prototype.add = function (account) {
+    var _this = this;
+
     if (typeof account === "string") {
         account = this.accounts.privateToAccount(account);
     }
     if (!this[account.address]) {
+
+        // add sign functions
+        account.signTransaction = function signTransaction(tx, callback) {
+            _this.accounts.signTransaction(tx, account.privateKey, callback);
+        };
+        account.sign = function sign(data) {
+            _this.accounts.sign(data, account.privateKey);
+        };
+
         this[this.length++] = account;
         this[account.address] = account;
+        this[account.address.toLowerCase()] = account;
     }
 
     return account;
@@ -202,7 +214,11 @@ Wallet.prototype.clear = function () {
 Wallet.prototype.encrypt = function (password) {
     var accounts = [];
     for (var i = 0; i < this.length; ++i) {
-        accounts.push(this[i]);
+        accounts[i] = this[i];
+
+        // remove functions
+        delete accounts[i].sign;
+        delete accounts[i].signTransaction;
     }
     return JSON.stringify(accounts.map(encrypt));
 };

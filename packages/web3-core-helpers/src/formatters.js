@@ -116,6 +116,9 @@ var inputTransactionFormatter = function (options) {
         options.to = inputAddressFormatter(options.to);
     }
 
+    // allow both
+    options.gas = options.gas || options.gasLimit;
+
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){

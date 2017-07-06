@@ -127,6 +127,7 @@ var runTests = function (obj, method, tests) {
                             } else {
                                 assert.deepEqual(result, test.formattedResult);
                             }
+
                             done();
                         });
                     }
@@ -174,6 +175,7 @@ var runTests = function (obj, method, tests) {
                         // add callback
                         args.push(function (err, result) {
                             assert.deepEqual(result, test.formattedResult);
+
                             done();
                         });
 
