@@ -6,9 +6,9 @@ var Web3 = require('../../src/index');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
-var addLocalWalletChecks = function (test, provider, web3) {
+var useLocalWallet = function (test, provider, web3) {
 
-    test.addWallet(web3);
+    test.useLocalWallet(web3);
 
     provider.injectResult(1);
     provider.injectValidation(function (payload) {
@@ -21,7 +21,7 @@ var addLocalWalletChecks = function (test, provider, web3) {
     provider.injectValidation(function (payload) {
         assert.equal(payload.jsonrpc, '2.0');
         assert.equal(payload.method, 'eth_getTransactionCount');
-        assert.deepEqual(payload.params, [test.args[0].from, "latest"]);
+        assert.deepEqual(payload.params, [test.walletFrom, "latest"]);
     });
 };
 
@@ -50,8 +50,8 @@ var runTests = function (obj, method, tests) {
                     var web3 = new Web3(provider);
 
                     // add a wallet
-                    if(test.addWallet) {
-                        addLocalWalletChecks(test, provider, web3);
+                    if(test.useLocalWallet) {
+                        useLocalWallet(test, provider, web3);
                     }
 
 
@@ -141,8 +141,8 @@ var runTests = function (obj, method, tests) {
                     var web3 = new Web3(provider);
 
                     // add a wallet
-                    if(test.addWallet) {
-                        addLocalWalletChecks(test, provider, web3);
+                    if(test.useLocalWallet) {
+                        useLocalWallet(test, provider, web3);
                     }
 
                     provider.injectResult(clone(test.result));

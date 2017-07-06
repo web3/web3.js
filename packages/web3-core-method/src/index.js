@@ -298,6 +298,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
     });
 };
 
+
+
 Method.prototype.buildCall = function() {
     var method = this,
         call = (_.isString(method.call)) ? method.call.toLowerCase() : Method.call,
@@ -347,48 +349,57 @@ Method.prototype.buildCall = function() {
         };
 
 
-        // Check for local accounts in the wallet
-        if(call === 'eth_sendtransaction' && method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
-            var tx = payload.params[0],
-                from = (tx) ? tx.from.toLowerCase() : null,
-                wallet;
+        var sendRequest = function(payload, method) {
+            if (payload.method.toLowerCase() === 'eth_sendtransaction' && method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+                var tx = payload.params[0],
+                    from = (_.isObject(tx)) ? tx.from : null,
+                    wallet;
 
-            // is index given
-            if (_.isNumber(from)) {
-                wallet = method.eth.accounts.wallet[from];
+                // is index given
+                if (_.isNumber(from)) {
+                    wallet = method.eth.accounts.wallet[from];
 
-            // is account given
-            } else if (_.isObject(from) && from.address && from.privateKey) {
-                wallet = from;
+                    // is account given
+                } else if (_.isObject(from) && from.address && from.privateKey) {
+                    wallet = from;
 
-            // search in wallet for address
+                    // search in wallet for address
+                } else {
+                    from = from.toLowerCase();
+                    wallet = _.find(method.eth.accounts.wallet, function (wal) {
+                        return (wal.address.toLowerCase() === from);
+                    });
+                }
+
+                // If wallet was found, sign tx, and send using sendRawTransaction
+                if (wallet) {
+                    delete tx.from;
+
+                    method.eth.accounts.signTransaction(tx, wallet.privateKey)
+                        .then(function(sign){
+
+                            payload.method = 'eth_sendRawTransaction';
+                            payload.params = [sign.rawTransaction];
+
+                            method.requestManager.send(payload, sendTxCallback);
+                        });
+                }
             } else {
-                wallet = _.find(method.eth.accounts.wallet, function (wal) {
-                    return (wal.address.toLowerCase() === from);
-                });
+                method.requestManager.send(payload, sendTxCallback);
             }
-
-            // If wallet was found, sign tx, and send using sendRawTransaction
-            if (wallet) {
-                delete tx.from;
-
-                method.eth.accounts.signTransaction(tx, wallet.privateKey)
-                    .then(console.log)
-            }
-        }
+        };
 
 
         // Send the actual transaction
         if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-
-            method.eth.getGasPrice(function (err, gasPrice) {
+            method.eth.getGasPrice.then(function (gasPrice) {
                 payload.params[0].gasPrice = utils.numberToHex(gasPrice);
-                method.requestManager.send(payload, sendTxCallback);
+                sendRequest(payload, method);
             });
 
         } else {
-            method.requestManager.send(payload, sendTxCallback);
+            sendRequest(payload, method);
         }
 
 

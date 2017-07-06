@@ -164,6 +164,8 @@ Wallet.prototype.add = function (account) {
         this[this.length++] = account;
         this[account.address] = account;
     }
+
+    return account;
 };
 
 Wallet.prototype.remove = function (addressOrIndex) {

@@ -99,14 +99,18 @@ var inputCallFormatter = function (options){
  * @param {Object} options
  * @returns object
 */
-var inputTransactionFormatter = function (options){
+var inputTransactionFormatter = function (options) {
 
-    options.from = options.from || config.defaultAccount;
+    // check from, only if not number, or object
+    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
+        options.from = options.from || config.defaultAccount;
 
-    if(!options.from)
-        throw new Error('The send transactions "from" field must be defined!');
+        if (!options.from && !_.isNumber(options.from)) {
+            throw new Error('The send transactions "from" field must be defined!');
+        }
 
-    options.from = inputAddressFormatter(options.from);
+        options.from = inputAddressFormatter(options.from);
+    }
 
     if (options.to) { // it might be contract creation
         options.to = inputAddressFormatter(options.to);
