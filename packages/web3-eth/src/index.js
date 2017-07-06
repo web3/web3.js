@@ -295,7 +295,11 @@ var methods = function () {
         name: 'sign',
         call: 'eth_sign',
         params: 2,
-        inputFormatter: [formatters.inputAddressFormatter, null]
+        inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter],
+        transformPayload: function (payload) {
+            payload.params.reverse();
+            return payload;
+        }
     });
 
     var call = new Method({

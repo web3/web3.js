@@ -36,12 +36,26 @@ var Accounts = function Accounts(eth) {
     this.wallet = new Wallet(this);
 };
 
-Accounts.prototype.create = function create(entropy) {
-    return EthFP.Account.create(entropy || utils.randomHex(32));
+Accounts.prototype._addAccountFunctions = function (account) {
+    var _this = this;
+
+    // add sign functions
+    account.signTransaction = function signTransaction(tx, callback) {
+        return _this.signTransaction(tx, account.privateKey, callback);
+    };
+    account.sign = function sign(data) {
+        return _this.sign(data, account.privateKey);
+    };
+
+    return account;
 };
 
-Accounts.prototype.privateToAccount = function privateToAccount(privateKey) {
-    return EthFP.Account.fromPrivate(privateKey);
+Accounts.prototype.create = function create(entropy) {
+    return this._addAccountFunctions(EthFP.Account.create(entropy || utils.randomHex(32)));
+};
+
+Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
+    return this._addAccountFunctions(EthFP.Account.fromPrivate(privateKey));
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
@@ -94,7 +108,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     return Promise.all([
         tx.chainId || _this.eth.net.getId(),
         tx.gasPrice || _this.eth.getGasPrice(),
-        tx.nonce || _this.eth.getTransactionCount(_this.privateToAccount(privateKey).address)
+        tx.nonce || _this.eth.getTransactionCount(_this.privateKeyToAccount(privateKey).address)
     ]).then(function (args) {
         return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
     });
@@ -104,17 +118,19 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     return EthFP.Account.recoverTransaction(rawTx);
 };
 
+Accounts.prototype.hashMessage = function hashMessage(data) {
+    var message = utils.isHex(data) ? utils.hexToUtf8(data) : data;
+    var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
+    return EthFP.Hash.keccak256s(ethMessage);
+};
+
 Accounts.prototype.sign = function sign(data, privateKey) {
-    // TODO / FIXME: the specs isn't clear on how this is encoded
-    // https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
-    // I'm guessing it means to encode len as the decimal UTF8
-    // representation, and message as the string encoded by the
-    // given hex, as opposed to the hex itself. Requires testing
-    var message = /^0x/.test(data) ? new Buffer(data.slice(2),"hex").toString() : data; // string encoded by the hex
-    var hash = EthFP.Hash.keccak256s("\x19Ethereum Signed Message:\n" + message.length + message);
+
+    var hash = this.hashMessage(data);
     var signature = EthFP.Account.sign(hash, privateKey);
     var vrs = EthFP.Account.decodeSignature(signature);
     return {
+        message: data,
         messageHash: hash,
         v: vrs[0],
         r: vrs[1],
@@ -124,21 +140,27 @@ Accounts.prototype.sign = function sign(data, privateKey) {
 };
 
 Accounts.prototype.recover = function recover(hash, signature) {
-    if (typeof hash === "object") {
+
+    if (_.isObject(hash)) {
         return this.recover(hash.messageHash, EthFP.Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
+
+    if (!utils.isHex(hash)) {
+        hash = this.hashMessage(hash);
+    }
+
     if (arguments.length === 4) {
-        return this.recover(hash, EthFP.Account.encodeSignature([].slice.call(arguments, 1, 4)));
+        return this.recover(hash, EthFP.Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
     }
     return EthFP.Account.recover(hash, signature);
 };
 
 Accounts.prototype.decrypt = function decrypt(jsonString, password) {
-    return this.privateToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
+    // return this.privateKeyToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
 };
 
 Accounts.prototype.encrypt = function encrypt(privateKey, password) {
-    return JSON.stringify(this.wallet.fromPrivateKey(new Buffer(privateKey.slice(2), "hex")).toV3(password));
+    // return JSON.stringify(this.wallet.fromPrivateKey(utils.utf8ToHex(privateKey)).toV3(password));
 };
 
 // Note: this is trying to follow closely the specs on
@@ -146,12 +168,12 @@ Accounts.prototype.encrypt = function encrypt(privateKey, password) {
 
 function Wallet(accounts) {
     this.length = 0;
-    this.accounts = accounts;
+    this._accounts = accounts;
 }
 
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
-        this.add(create(entropy).privateKey);
+        this.add(this._accounts.create(entropy).privateKey);
     }
     return this;
 };
@@ -159,18 +181,10 @@ Wallet.prototype.create = function (numberOfAccounts, entropy) {
 Wallet.prototype.add = function (account) {
     var _this = this;
 
-    if (typeof account === "string") {
-        account = this.accounts.privateToAccount(account);
+    if (_.isString(account)) {
+        account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {
-
-        // add sign functions
-        account.signTransaction = function signTransaction(tx, callback) {
-            _this.accounts.signTransaction(tx, account.privateKey, callback);
-        };
-        account.sign = function sign(data) {
-            _this.accounts.sign(data, account.privateKey);
-        };
 
         this[this.length++] = account;
         this[account.address] = account;
@@ -217,8 +231,8 @@ Wallet.prototype.encrypt = function (password) {
         accounts[i] = this[i];
 
         // remove functions
-        delete accounts[i].sign;
-        delete accounts[i].signTransaction;
+        // delete accounts[i].sign;
+        // delete accounts[i].signTransaction;
     }
     return JSON.stringify(accounts.map(encrypt));
 };

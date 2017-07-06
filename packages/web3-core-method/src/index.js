@@ -42,6 +42,7 @@ var Method = function Method(options) {
     this.params = options.params || 0;
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
+    this.transformPayload = options.transformPayload;
     this.requestManager = null;
 };
 
@@ -139,11 +140,17 @@ Method.prototype.toPayload = function (args) {
     var params = this.formatInput(args);
     this.validateArgs(params);
 
-    return {
+    var payload = {
         method: call,
         params: params,
         callback: callback
     };
+
+    if (this.transformPayload) {
+        payload = this.transformPayload(payload);
+    }
+
+    return payload;
 };
 
 Method.prototype.attachToObject = function (obj) {

@@ -11,14 +11,14 @@ The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and s
 
 ------------------------------------------------------------------------------
 
-.. _accounts-new:
+.. _accounts-create:
 
-new
+create
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.new([entropy]);
+    web3.eth.accounts.create([entropy]);
 
 Generates an account object with private key and public key.
 
@@ -28,7 +28,7 @@ Parameters
 
 1. ``entropy`` - ``String`` (optional): A random strong to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using :ref:`randomhex <randomhex>`.
 
-.. _eth-accounts-generate-return:
+.. _eth-accounts-create-return:
 
 -------
 Returns
@@ -37,8 +37,9 @@ Returns
 ``Object`` - The account object with the following structure:
 
     - ``address`` - ``string``: The account address.
-    - ``publicKey`` - ``string``: The accounts public key.
     - ``privateKey`` - ``string``: The accounts private key. This should never be shared or stored unencrypted in localstorage! Also make sure to ``null`` the memory after usage.
+    - ``signTransaction(tx [, callback])`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.signTransaction() <eth-accounts-signtransaction>` for more.
+    - ``sign(data)`` - ``Function``: The function to sign transactions. See :ref:`web3.eth.accounts.sign() <eth-accounts-sign>` for more.
 
 -------
 Example
@@ -46,38 +47,41 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.new();
+    web3.eth.accounts.create();
     > {
         address: "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01",
-        publicKey: "0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7"
         privateKey: "0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
-    web3.eth.accounts.new('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
+    web3.eth.accounts.create('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
     > {
         address: "0xF2CD2AA0c7926743B1D4310b2BC984a0a453c3d4",
-        publicKey: "0x0b9f65726c43d486229d0a44f27edb53a0e4b141350ceaa8f7a12c893e5b0385b3b25b35b1a0b85d39e2b7e8f1b407f776f0fc765be04683dea4697a3c603a46"
         privateKey: "0xd7325de5c2c1cf0009fac77d3d04a9c004b038883446b065871bc3e831dcd098",
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
-    web3.eth.accounts.generate(web3.utils.randomHex(32));
+    web3.eth.accounts.create(web3.utils.randomHex(32));
     > {
         address: "0xe78150FaCD36E8EB00291e251424a0515AA1FF05",
-        publicKey: "0x03ade6efb5848276b2ed4185f2523fabaec2443c42c5f648ca3a419d5234dcd03ee22333104be64df1b6db1536591b00cd425b7e13d45c75cea857cf1d4861f7"
         privateKey: "0xcc505ee6067fba3f6fc2050643379e190e087aeffe5d958ab9f2f3ed3800fa4e",
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
 ------------------------------------------------------------------------------
 
 
-privateToAccount
+privateKeyToAccount
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.privateToAccount(privateKey);
+    web3.eth.accounts.privateKeyToAccount(privateKey);
 
-Gets a account object from a private key.
+Creates an account object from a private key.
 
 ----------
 Parameters
@@ -89,7 +93,7 @@ Parameters
 Returns
 -------
 
-``Object`` - The account object with the :ref:`structure seen here <eth-accounts-generate-return>`.
+``Object`` - The account object with the :ref:`structure seen here <eth-accounts-create-return>`.
 
 -------
 Example
@@ -97,61 +101,26 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.privateToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
+    web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
     > {
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-        publicKey: '0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7',
-        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
+        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
-    web3.eth.accounts.privateToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
+    web3.eth.accounts.privateKeyToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
     > {
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-        publicKey: '0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7',
-        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
+        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
 
 ------------------------------------------------------------------------------
 
-
-publicToAddress
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.accounts.publicToAddress(publicKey);
-
-Gets an Ethereum address from a public key.
-
-----------
-Parameters
-----------
-
-1. ``publicKey`` - ``String``: The public key to convert.
-
--------
-Returns
--------
-
-``String`` - The Ethereum address.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.accounts.publicToAddress('0x7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
-    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
-
-    web3.eth.accounts.publicToAddress('7195981eaa1ccf18c6d2e15ca5c5bc6ad97f7f8e3505005f9ad12fc68a02ded647f95b9cacf71a2a99f96371c6133dfd3d4486493d9159d49a7faae7c5793c24');
-    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
-
-
-
-------------------------------------------------------------------------------
-
+.. _eth-accounts-signtransaction:
 
 signTransaction
 =====================
@@ -174,7 +143,7 @@ Parameters
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gas`` - ``String``: The gas provided by the transaction.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
-2. ``privateKey`` - ``String``: The private key for signing.
+2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
@@ -184,9 +153,9 @@ Returns
 
 ``Promise|Object`` returning ``Object``: The signed data RLP encoded transaction, or if ``returnSignature`` is ``true`` the signature values as follows:
     - ``messageHash`` - ``String``: The hash of the given message.
-    - ``r`` - ``String``: first 2 ??? bytes of ????
-    - ``s`` - ``String``: first 2 ??? bytes of ????
-    - ``v`` - ``String``: first 2 ??? bytes of ????
+    - ``r`` - ``String``: First 32 bytes of the signature
+    - ``s`` - ``String``: Next 32 bytes of the signature
+    - ``v`` - ``String``: Recovery value + 27
     - ``rawTransaction`` - ``String``: The RLP encoded transaction, ready to be send using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
 .. note:: If ``nonce``, ``chainId``, ``gas`` and ``gasPrice`` is given, it returns the signed transaction *directly* as ``Object``.
@@ -222,7 +191,9 @@ Example
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
     > {
         messageHash: '0x6893a6ee8df79b0f5d64a180cd1ef35d030f3e296a5361cf04d02ce720d32ec5',
-        v: '0x25',r: '0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',        s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
+        r: '0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',
+        s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
+        v: '0x25',
         rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
     }
 
@@ -266,25 +237,62 @@ Example
 
 ------------------------------------------------------------------------------
 
-sign
+hashMessage
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recoverTransaction(data, privateKey [, returnSignature]);
+    web3.eth.accounts.hashMessage(message);
 
-Recovers the Ethereum address which was used to sign the given RLP encoded transaction.
-
-Lets use: `https://github.com/ethereum/EIPs/issues/191 <https://github.com/ethereum/EIPs/issues/191>`_
-
+Hashes the given message to be passed :ref:`web3.eth.accounts.recover() <accounts-recover>` function. The data  will be UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message`` and hashed using keccak256.
 
 ----------
 Parameters
 ----------
 
-1. ``signature`` - ``String``: The RLP encoded transaction.
-2. ``privateKey`` - ``String``: The private key for signing.
-3. ``returnSignature`` - ``Boolean``: (optional) If true it returns an object with r, v, s and hash properties.
+1. ``message`` - ``String``: A message to hash, if its HEX it will be UTF8 decoded before.
+
+
+-------
+Returns
+-------
+
+``String``: The hashed message
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.hashMessage("Hello World")
+    > "0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2"
+
+    // the below results in the same hash
+    web3.eth.accounts.hashMessage(web3.utils.utf8ToHex("Hello World"))
+    > "0xa1de988600a42c4b4ab089b619297c17d53cffae5d5120d82d8a92d0bb3b78f2"
+
+
+
+------------------------------------------------------------------------------
+
+.. _eth-accounts-sign:
+
+sign
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.sign(data, privateKey);
+
+Signs arbitrary data. This data is before UTF-8 HEX decoded and enveloped as follows: ``"\x19Ethereum Signed Message:\n" + message.length + message``.
+
+----------
+Parameters
+----------
+
+1. ``data`` - ``String``: The data to sign. If its a string it will be
+2. ``privateKey`` - ``String``: The private key to sign with.
 
 
 -------
@@ -293,10 +301,10 @@ Returns
 
 ``String|Object``: The signed data RLP encoded signature, or if ``returnSignature`` is ``true`` the signature values as follows:
     - ``message`` - ``String``: The the given message.
-    - ``hash`` - ``String``: The hash of the given message.
-    - ``r`` - ``String``: first 2 ??? bytes of ????
-    - ``s`` - ``String``: first 2 ??? bytes of ????
-    - ``v`` - ``String``: first 2 ??? bytes of ????
+    - ``messageHash`` - ``String``: The hash of the given message.
+    - ``r`` - ``String``: First 32 bytes of the signature
+    - ``s`` - ``String``: Next 32 bytes of the signature
+    - ``v`` - ``String``: Recovery value + 27
 
 -------
 Example
@@ -304,19 +312,30 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recoverTransaction('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318');
-    > "0xdd6180808401ef364594f0109fc8df283027b6285cc889f5aa624eac1f5580801ca031573280d608f75137e33fc14655f097867d691d5c4c44ebe5ae186070ac3d5ea0524410802cdc025034daefcdfa08e7d2ee3f0b9d9ae184b2001fe0aff07603d9"
+    web3.eth.accounts.sign('Some data', '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318');
+    > {
+        message: 'Some data',
+        messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
+        v: '0x1c',
+        r: '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd',
+        s: '0x6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a029',
+        signature: '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c'
+    }
 
 
 
 ------------------------------------------------------------------------------
+
+.. _accounts-recover:
 
 recover
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recover(signature);
+    web3.eth.accounts.recover(signatureObject);
+    web3.eth.accounts.recover(hash, signature);
+    web3.eth.accounts.recover(hash, v, r, s);
 
 Recovers the Ethereum address which was used to sign the given data.
 
@@ -324,14 +343,18 @@ Recovers the Ethereum address which was used to sign the given data.
 Parameters
 ----------
 
-1. ``signature`` - ``String|Object``: The RLP (?) encoded signed data. Or a signature object with hash, r, s, v properties.
+1. ``signature`` - ``String|Object``: Either the encoded signature, the v, r, s values as separate parameters, or an object with the following values:
+    - ``messageHash`` - ``String``: The hash of the given message.
+    - ``r`` - ``String``: First 32 bytes of the signature
+    - ``s`` - ``String``: Next 32 bytes of the signature
+    - ``v`` - ``String``: Recovery value + 27
 
 
 -------
 Returns
 -------
 
-``String``: The Ethereum address used to sign this transaction.
+``String``: The Ethereum address used to sign this data.
 
 -------
 Example
@@ -339,8 +362,21 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.recover('0xdd6180808401ef364594f0109fc8df283027b6285cc889f5aa624eac1f5580801ca031573280d608f75137e33fc14655f097867d691d5c4c44ebe5ae186070ac3d5ea0524410802cdc025034daefcdfa08e7d2ee3f0b9d9ae184b2001fe0aff07603d9');
-    > "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55"
+    web3.eth.accounts.recover({
+        messageHash: '0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655',
+        v: '0x1c',
+        r: '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd',
+        s: '0x6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a029'
+    })
+    > "0x2c7536E3605D9C16a7a3D7b1898e529396a65c23"
+
+    // hash signature
+    web3.eth.accounts.recover('0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655', '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a0291c');
+    > "0x2c7536E3605D9C16a7a3D7b1898e529396a65c23"
+
+    // hash, v, r, s
+    web3.eth.accounts.recover('0x1da44b586eb0729ff70a73c326926f6ed5a25f5b056e7f47fbc6e58d86871655', '0x1c', '0xb91467e570a6466aa9e9876cbcd013baba02900b8979d43fe208a4a4f339f5fd', '0x6007e74cd82e037b800186422fc2da167c747ef045e5d18a5f5d4300f8e1a029');
+    > "0x2c7536E3605D9C16a7a3D7b1898e529396a65c23"
 
 
 
@@ -508,7 +544,7 @@ Adds an account using a private key or account object to the wallet.
 Parameters
 ----------
 
-1. ``account`` - ``String|Object``: A private key or account object created with :ref:`web3.eth.accounts.new() <accounts-new>`.
+1. ``account`` - ``String|Object``: A private key or account object created with :ref:`web3.eth.accounts.new() <accounts-create>`.
 
 
 -------

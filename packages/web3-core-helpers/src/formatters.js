@@ -117,7 +117,9 @@ var inputTransactionFormatter = function (options) {
     }
 
     // allow both
-    options.gas = options.gas || options.gasLimit;
+    if (options.gas || options.gasLimit) {
+        options.gas = options.gas || options.gasLimit;
+    }
 
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
@@ -126,6 +128,17 @@ var inputTransactionFormatter = function (options) {
     });
 
     return options;
+};
+
+/**
+ * Hex encodes the data passed to eth_sign and personal_sign
+ *
+ * @method inputSignFormatter
+ * @param {String} data
+ * @returns {String}
+ */
+var inputSignFormatter = function (data) {
+    return (utils.isHex(data)) ? data : utils.utf8ToHex(data);
 };
 
 /**
@@ -382,6 +395,7 @@ module.exports = {
     inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
     inputLogFormatter: inputLogFormatter,
+    inputSignFormatter: inputSignFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,
