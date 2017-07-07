@@ -6,7 +6,25 @@
 web3.eth.accounts
 =========
 
-The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions.
+The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions and data.
+
+To use this package standalone use:
+
+
+
+.. code-block:: javascript
+
+    var Accounts = require('web3-eth-accounts');
+    var Eth = require('web3-eth');
+    var eth = new Eth('ws://localhost:8546');
+
+    // Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically
+    // for accounts.signTransaction().
+    var accounts = new Accounts(eth);
+
+    // If nonce, chainId and gasPrice will be always given you don't need to pass in the Eth, or web3 package.
+    var accounts = new Accounts();
+
 
 
 ------------------------------------------------------------------------------
@@ -103,16 +121,16 @@ Example
 
     web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
     > {
-        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         signTransaction: function(tx){...},
         sign: function(data){...}
     }
 
     web3.eth.accounts.privateKeyToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
     > {
-        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         signTransaction: function(tx){...},
         sign: function(data){...}
     }
@@ -390,7 +408,7 @@ encrypt
 
     web3.eth.accounts.encrypt(privateKey, password);
 
-Encrypts a private key using web3 keystore standards?
+Encrypts a private key using web3 keystore v3 standard.
 
 ----------
 Parameters
@@ -404,7 +422,7 @@ Parameters
 Returns
 -------
 
-``String``: The encrypted privatekey.
+``String``: The encrypted private key.
 
 -------
 Example
@@ -426,7 +444,7 @@ decrypt
 
     web3.eth.accounts.decrypt(encryptedPrivateKey, password);
 
-Encrypts a private key using web3 keystore standards?
+Decrypts a private key encrypted in the web3 keystore v3 standard.
 
 ----------
 Parameters
@@ -440,7 +458,7 @@ Parameters
 Returns
 -------
 
-``String``: The decrypted privatekey.
+``String``: The decrypted private key.
 
 -------
 Example
@@ -462,9 +480,7 @@ wallet
 
     web3.eth.accounts.wallet;
 
-Contains an in memory wallet with multiple accounts. These accounts can be used when using :ref:`web3.eth.sendTransaction <eth-sendtransaction>`.
-
-?? Should we allow multiple wallets? How sendTransaction knows then which to use?
+Contains an in memory wallet with multiple accounts. These accounts can be used when using :ref:`web3.eth.sendTransaction() <eth-sendtransaction>`.
 
 -------
 Example
@@ -474,36 +490,41 @@ Example
 
     web3.eth.accounts.wallet;
     > Wallet {
-        0: {...},
+        0: {...}, // account by index
+        "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...},  // same account by address
+        "0xf0109fc8df283027b6285cc889f5aa624eac1f55": {...},  // same account by address lowercase
         1: {...},
-        "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...},
-        "0xD0122fC8DF283027b6285cc889F5aA624EaC1d23": {...}
+        "0xD0122fC8DF283027b6285cc889F5aA624EaC1d23": {...},
+        "0xd0122fc8df283027b6285cc889f5aa624eac1d23": {...},
+
         add: function(){},
         remove: function(){},
         save: function(){},
         load: function(){},
-        clear: function(){}
+        clear: function(){},
+
+        length: 2,
     }
 
 
 
 ------------------------------------------------------------------------------
 
-wallet.new
+wallet.create
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.new(numberOfAccounts [, entropy]);
+    web3.eth.accounts.wallet.create(numberOfAccounts [, entropy]);
 
-Generates one or more accounts in the wallet.
+Generates one or more accounts in the wallet. If wallets already exist they will not be overridden.
 
 ----------
 Parameters
 ----------
 
 1. ``numberOfAccounts`` - ``Number``: Number of accounts to create. Leave empty to create an empty wallet.
-2. ``entropy`` - ``String``: (optional) A string with random characters as additional entropy when generating accounts. If given it should be at least 32 characters.
+2. ``entropy`` - ``String`` (optional): A string with random characters as additional entropy when generating accounts. If given it should be at least 32 characters.
 
 
 -------
@@ -518,12 +539,11 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.new(2, '54674321§3456764321§345674321§3453647544±±±§±±±!!!43534534534534');
+    web3.eth.accounts.wallet.create(2, '54674321§3456764321§345674321§3453647544±±±§±±±!!!43534534534534');
     > Wallet {
         0: {...},
-        1: {...},
         "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...},
-        "0xD0122fC8DF283027b6285cc889F5aA624EaC1d23": {...}
+        "0xf0109fc8df283027b6285cc889f5aa624eac1f55": {...},
         ...
     }
 
@@ -551,7 +571,7 @@ Parameters
 Returns
 -------
 
-``Object``: The wallet object.
+``Object``: The added account.
 
 -------
 Example
@@ -560,21 +580,24 @@ Example
 .. code-block:: javascript
 
     web3.eth.accounts.wallet.add('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318');
-    > Wallet {
-        0: {...},
-        "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...}
-        ...
+    > {
+        index: 0,
+        address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
+        privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
     web3.eth.accounts.wallet.add({
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-        publicKey: '0xbb1846722a4c27e71196e1a44611ee7174276a6c51c4830fb810cac64b0725f217cb8783625a809d1303adeeec2cf036ab74098a77a6b7f1003486e173b29aa7',
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01'
     });
-    > Wallet {
-        0: {...},
-        "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01": {...}
-        ...
+    > {
+        index: 0,
+        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
+        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+        signTransaction: function(tx){...},
+        sign: function(data){...}
     }
 
 
@@ -588,7 +611,7 @@ wallet.remove
 
     web3.eth.accounts.wallet.remove(account);
 
-Removes an securely account from the wallet.
+Removes an account from the wallet.
 
 ----------
 Parameters
@@ -601,7 +624,7 @@ Parameters
 Returns
 -------
 
-``Object``: The wallet object.
+``Boolean``: ``true`` if the wallet was removed. ``false`` if it couldn't be found.
 
 -------
 Example
@@ -619,16 +642,10 @@ Example
     }
 
     web3.eth.accounts.wallet.remove('0xF0109fC8DF283027b6285cc889F5aA624EaC1F55');
-    > Wallet {
-        1: {...},
-        "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01": {...}
-        ...
-    }
+    > true
 
-    web3.eth.accounts.wallet.remove(1);
-    > Wallet {
-        ...
-    }
+    web3.eth.accounts.wallet.remove(3);
+    > false
 
 
 
@@ -666,6 +683,45 @@ Example
     web3.eth.accounts.encrypt('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318', 'test!$@');
     > [{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}]
 
+------------------------------------------------------------------------------
+
+wallet.clear
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.clear();
+
+Securely empties the wallet and removes all its accounts.
+
+----------
+Parameters
+----------
+
+none
+
+-------
+Returns
+-------
+
+``Object``: The wallet object.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.clear();
+    > Wallet {
+        add: function(){},
+        remove: function(){},
+        save: function(){},
+        load: function(){},
+        clear: function(){},
+
+        length: 0
+    }
 
 
 ------------------------------------------------------------------------------
@@ -785,52 +841,3 @@ Example
         "0xD0122fC8DF283027b6285cc889F5aA624EaC1d23": {...}
         ...
     }
-
-
-
-------------------------------------------------------------------------------
-
-wallet.clear
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.accounts.wallet.clear();
-
-Securely empties the wallet and removes the keys.
-
-----------
-Parameters
-----------
-
-none
-
--------
-Returns
--------
-
-``Object``: The wallet object.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.accounts.wallet;
-    > Wallet {
-        0: {...},
-        "0xF0109fC8DF283027b6285cc889F5aA624EaC1F55": {...}
-        1: {...},
-        "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01": {...}
-        ...
-    }
-
-    web3.eth.accounts.wallet.clear();
-    > Wallet {
-        ...
-    }
-
-
-
-------------------------------------------------------------------------------

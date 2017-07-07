@@ -31,7 +31,9 @@ var helpers = require('web3-core-helpers');
 
 var Accounts = function Accounts(eth) {
 
-    this.eth = eth;
+    if (eth) {
+        this.eth = (eth.eth) ? eth.eth : eth;
+    }
     this.wallet = new Wallet(this);
 };
 
@@ -100,7 +102,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     }
 
     if (!_this || !_this.eth || !_this.eth.net) {
-        return Promise.reject(new Error('The Eth package is not bound. Please bind using "signTransaction.bind(eth)", or provide "nonce", "chainId" and "gasPrice" in the transaction yourself.'));
+        return Promise.reject(new Error('The Eth package is set bound. Please set using "accounts.eth = eth", or provide "nonce", "chainId" and "gasPrice" in the transaction yourself.'));
     }
 
     // Otherwise, get the missing info from the Ethereum Node
@@ -184,43 +186,50 @@ Wallet.prototype.add = function (account) {
         account = this._accounts.privateKeyToAccount(account);
     }
     if (!this[account.address]) {
+        account = this._accounts.privateKeyToAccount(account.privateKey);
+        account.index = this.length;
 
-        this[this.length++] = account;
+        this[this.length] = account;
         this[account.address] = account;
         this[account.address.toLowerCase()] = account;
-    }
 
-    return account;
+        this.length++;
+
+        return account;
+    } else {
+        return this[account.address];
+    }
 };
 
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
-    for (var i = 0; i < this.length; ++i) {
-        if (this[i] && this[i].address === account.address) {
-            delete this[account.address];
-            this[i].address = null;
-            this[i].privateKey = null;
-            delete this[i];
-        }
-        if (!this[i]) {
-            if (i < this.length - 1) {
-                this[i] = this[i + 1];
-                delete this[i + 1];
-            } else {
-                --this.length;
-            }
-        }
+
+    if (account) {
+        // address
+        this[account.address].privateKey = null;
+        delete this[account.address];
+        // address lowercase
+        this[account.address.toLowerCase()].privateKey = null;
+        delete this[account.address.toLowerCase()];
+        // index
+        this[account.index].privateKey = null;
+        delete this[account.index];
+
+        this.length--;
+
+        return true;
+    } else {
+        return false;
     }
 };
 
 Wallet.prototype.clear = function () {
-    for (var i = 0; i < this.length; ++i) {
-        delete this[this[i].address];
-        this[i].address = null;
-        this[i].privateKey = null;
-        delete this[i];
+    var length = this.length;
+    for (var i = 0; i < length; i++) {
+        this.remove(i);
     }
-    this.length = 0;
+
+    return this;
 };
 
 // TODO encrypt!
