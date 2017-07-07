@@ -28,6 +28,9 @@ var EthFP = require("ethfp");
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 
+var isNot = function(value) {
+    return (_.isUndefined(value) || _.isNull(value));
+};
 
 var Accounts = function Accounts(eth) {
 
@@ -107,10 +110,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        tx.chainId || _this.eth.net.getId(),
-        tx.gasPrice || _this.eth.getGasPrice(),
-        tx.nonce || _this.eth.getTransactionCount(_this.privateKeyToAccount(privateKey).address)
+        isNot(tx.chainId) ? _this.eth.net.getId() : tx.chainId,
+        isNot(tx.gasPrice) ? _this.eth.getGasPrice() : tx.gasPrice,
+        isNot(tx.nonce) ? _this.eth.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {
+        if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
+            throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
+        }
         return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
     });
 };
