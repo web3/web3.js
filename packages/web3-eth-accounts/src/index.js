@@ -27,7 +27,6 @@ var Promise = require('bluebird');
 var EthFP = require("ethfp");
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-var wallet = require('ethereumjs-wallet');
 
 
 var Accounts = function Accounts(eth) {
@@ -155,13 +154,14 @@ Accounts.prototype.recover = function recover(hash, signature) {
     return EthFP.Account.recover(hash, signature);
 };
 
-Accounts.prototype.decrypt = function decrypt(jsonString, password) {
-    // return this.privateKeyToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
-};
+// Accounts.prototype.decrypt = function decrypt(jsonString, password) {
+//     return this.privateKeyToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
+// };
+//
+// Accounts.prototype.encrypt = function encrypt(privateKey, password) {
+//     return JSON.stringify(this.wallet.fromPrivateKey(utils.utf8ToHex(privateKey)).toV3(password));
+// };
 
-Accounts.prototype.encrypt = function encrypt(privateKey, password) {
-    // return JSON.stringify(this.wallet.fromPrivateKey(utils.utf8ToHex(privateKey)).toV3(password));
-};
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
@@ -179,7 +179,6 @@ Wallet.prototype.create = function (numberOfAccounts, entropy) {
 };
 
 Wallet.prototype.add = function (account) {
-    var _this = this;
 
     if (_.isString(account)) {
         account = this._accounts.privateKeyToAccount(account);
@@ -225,23 +224,23 @@ Wallet.prototype.clear = function () {
 };
 
 // TODO encrypt!
-Wallet.prototype.encrypt = function (password) {
-    var accounts = [];
-    for (var i = 0; i < this.length; ++i) {
-        accounts[i] = this[i];
-
-        // remove functions
-        // delete accounts[i].sign;
-        // delete accounts[i].signTransaction;
-    }
-    return JSON.stringify(accounts.map(encrypt));
-};
-
-Wallet.prototype.decrypt = function (encryptedWallet) {
-    JSON.parse(encryptedWallet).map(decrypt).forEach(function (account) {
-        this.add(account);
-    }.bind(this));
-};
+// Wallet.prototype.encrypt = function (password) {
+//     var accounts = [];
+//     for (var i = 0; i < this.length; ++i) {
+//         accounts[i] = this[i];
+//
+//         // remove functions
+//         // delete accounts[i].sign;
+//         // delete accounts[i].signTransaction;
+//     }
+//     return JSON.stringify(accounts.map(encrypt));
+// };
+//
+// Wallet.prototype.decrypt = function (encryptedWallet) {
+//     JSON.parse(encryptedWallet).map(decrypt).forEach(function (account) {
+//         this.add(account);
+//     }.bind(this));
+// };
 
 Wallet.prototype.defaultKeyName = "web3js_wallet";
 

@@ -52,8 +52,6 @@ describe("eth", function () {
 
                 var tx = testAccount.signTransaction(test.transaction);
 
-
-                console.log(tx);
                 assert.equal(tx.rawTransaction, test.rawTransaction);
             });
         });

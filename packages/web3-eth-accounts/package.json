@@ -7,7 +7,6 @@
   "main": "src/index.js",
   "dependencies": {
     "bluebird": "^3.3.1",
-    "ethereumjs-wallet": "^0.6.0",
     "ethfp": "^0.1.13",
     "underscore": "^1.8.3",
     "web3-core-helpers": "^1.0.0",
