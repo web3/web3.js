@@ -10,6 +10,7 @@ var clone = function (object) { return object ? JSON.parse(JSON.stringify(object
 var tests = [
     {
         address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+        iban: 'XE25RG8S3H5TX5RD7QTL5UPVW90AHN2VYDC',
         privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
         transaction: {
             chainId: 1,
@@ -17,6 +18,7 @@ var tests = [
             gasPrice: "20000000000",
             gas: 21000,
             to: '0x3535353535353535353535353535353535353535',
+            toIban: 'XE4967QZMA14MI680T89KSPPJEJMU68MEYD', // will be switched to "to" in the test
             value: "1000000000000000000",
             data: ""
         },
@@ -33,6 +35,7 @@ var tests = [
             gasPrice: "230000000000",
             gas: 50000,
             to: '0xFCAd0B19bB29D4674531d6f115237E16AfCE377c',
+            toIban: 'XE63TIJX31ZHSLZ6F601ZPKVDKKYHMIK03G', // will be switched to "to" in the test
             value: "1000000000000000000",
             data: "0x0123abcd"
         },
@@ -55,6 +58,22 @@ describe("eth", function () {
                 assert.equal(testAccount.address, test.address);
 
                 var tx = testAccount.signTransaction(test.transaction);
+
+                assert.equal(tx.rawTransaction, test.rawTransaction);
+            });
+        });
+
+        tests.forEach(function (test, i) {
+            it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function() {
+                var ethAccounts = new Accounts();
+
+                var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
+                assert.equal(testAccount.address, test.address);
+
+                var transaction = clone(test.transaction);
+                transaction.to = transaction.toIban;
+                delete transaction.toIban;
+                var tx = testAccount.signTransaction(transaction);
 
                 assert.equal(tx.rawTransaction, test.rawTransaction);
             });
