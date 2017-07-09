@@ -25,6 +25,8 @@
 var _ = require("underscore");
 var Promise = require('bluebird');
 var EthLib = require("eth-lib");
+var crypto = require('crypto');
+var scryptsy = require('scrypt.js');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 
@@ -160,6 +162,104 @@ Accounts.prototype.recover = function recover(hash, signature) {
         return this.recover(hash, EthLib.Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
     }
     return EthLib.Account.recover(hash, signature);
+};
+
+// Taken from https://github.com/ethereumjs/ethereumjs-wallet
+Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
+    if(!_.isString(password)) {
+        throw new Error('No password given.');
+    }
+
+    var json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+
+    if (json.version !== 3) {
+        throw new Error('Not a valid V3 wallet');
+    }
+
+    var derivedKey;
+    var kdfparams;
+    if (json.crypto.kdf === 'scrypt') {
+        kdfparams = json.crypto.kdfparams;
+
+        // FIXME: support progress reporting callback
+        derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+    } else if (json.crypto.kdf === 'pbkdf2') {
+        kdfparams = json.crypto.kdfparams;
+
+        if (kdfparams.prf !== 'hmac-sha256') {
+            throw new Error('Unsupported parameters to PBKDF2');
+        }
+
+        derivedKey = crypto.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+    } else {
+        throw new Error('Unsupported key derivation scheme');
+    }
+
+    var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+
+    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ]));
+    if (mac !== '0x'+ json.crypto.mac) {
+        throw new Error('Key derivation failed - possibly wrong password');
+    }
+
+    var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+    var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
+    
+    return this.privateKeyToAccount(seed);
+};
+
+Wallet.prototype.encrypt = function (password, opts) {
+    assert(this._privKey, 'This is a public key only wallet');
+
+    opts = opts || {}
+    var salt = opts.salt || crypto.randomBytes(32);
+    var iv = opts.iv || crypto.randomBytes(16);
+
+    var derivedKey
+    var kdf = opts.kdf || 'scrypt';
+    var kdfparams = {
+        dklen: opts.dklen || 32,
+        salt: salt.toString('hex')
+    }
+
+    if (kdf === 'pbkdf2') {
+        kdfparams.c = opts.c || 262144;
+        kdfparams.prf = 'hmac-sha256';
+        derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+    } else if (kdf === 'scrypt') {
+        // FIXME: support progress reporting callback
+        kdfparams.n = opts.n || 262144;
+        kdfparams.r = opts.r || 8;
+        kdfparams.p = opts.p || 1;
+        derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+    } else {
+        throw new Error('Unsupported kdf');
+    }
+
+    var cipher = crypto.createCipheriv(opts.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+    if (!cipher) {
+        throw new Error('Unsupported cipher');
+    }
+
+    var ciphertext = Buffer.concat([ cipher.update(this.privKey), cipher.final() ]);
+
+    var mac = ethUtil.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ]));
+
+    return {
+        version: 3,
+        id: uuid.v4({ random: opts.uuid || crypto.randomBytes(16) }),
+        address: this.getAddress().toString('hex'),
+        crypto: {
+            ciphertext: ciphertext.toString('hex'),
+            cipherparams: {
+                iv: iv.toString('hex')
+            },
+            cipher: opts.cipher || 'aes-128-ctr',
+            kdf: kdf,
+            kdfparams: kdfparams,
+            mac: mac.toString('hex')
+        }
+    };
 };
 
 // Accounts.prototype.decrypt = function decrypt(jsonString, password) {
