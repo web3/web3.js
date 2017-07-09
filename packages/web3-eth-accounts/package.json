@@ -7,7 +7,7 @@
   "main": "src/index.js",
   "dependencies": {
     "bluebird": "^3.3.1",
-    "ethfp": "^0.1.13",
+    "eth-lib": "^0.1.17",
     "underscore": "^1.8.3",
     "web3-core-helpers": "^1.0.0",
     "web3-utils": "^1.0.0"
