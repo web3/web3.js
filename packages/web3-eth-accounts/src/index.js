@@ -172,6 +172,8 @@ Accounts.prototype.recover = function recover(hash, signature) {
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
 Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
+    /* jshint maxcomplexity: 10 */
+
     if(!_.isString(password)) {
         throw new Error('No password given.');
     }
@@ -215,6 +217,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
 };
 
 Accounts.prototype.encrypt = function (privateKey, password, opts) {
+    /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
 
     opts = opts || {};
@@ -254,7 +257,7 @@ Accounts.prototype.encrypt = function (privateKey, password, opts) {
     return {
         version: 3,
         id: uuid.v4({ random: opts.uuid || crypto.randomBytes(16) }),
-        address: account.address.replace('0x',''),
+        address: account.address.toLowerCase().replace('0x',''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
             cipherparams: {
@@ -358,7 +361,7 @@ Wallet.prototype.decrypt = function (encryptedWallet, password) {
     var _this = this;
 
     JSON.parse(encryptedWallet).forEach(function (account) {
-        var account = _this._accounts.decrypt(account, password);
+        account = _this._accounts.decrypt(account, password);
 
         if (account) {
             _this.add(account);
