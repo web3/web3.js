@@ -27,6 +27,7 @@ var Promise = require('bluebird');
 var EthLib = require("eth-lib");
 var crypto = require('crypto');
 var scryptsy = require('scrypt.js');
+var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
 
@@ -52,6 +53,11 @@ Accounts.prototype._addAccountFunctions = function (account) {
     account.sign = function sign(data) {
         return _this.sign(data, account.privateKey);
     };
+
+    account.encrypt = function encrypt(password, options) {
+        return _this.encrypt(account.privateKey, password, options);
+    };
+
 
     return account;
 };
@@ -197,30 +203,30 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
 
     var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ]));
-    if (mac !== '0x'+ json.crypto.mac) {
+    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ])).replace('0x','');
+    if (mac !== json.crypto.mac) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
     var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
-    
+
     return this.privateKeyToAccount(seed);
 };
 
-Wallet.prototype.encrypt = function (password, opts) {
-    assert(this._privKey, 'This is a public key only wallet');
+Accounts.prototype.encrypt = function (privateKey, password, opts) {
+    var account = this.privateKeyToAccount(privateKey);
 
-    opts = opts || {}
+    opts = opts || {};
     var salt = opts.salt || crypto.randomBytes(32);
     var iv = opts.iv || crypto.randomBytes(16);
 
-    var derivedKey
+    var derivedKey;
     var kdf = opts.kdf || 'scrypt';
     var kdfparams = {
         dklen: opts.dklen || 32,
         salt: salt.toString('hex')
-    }
+    };
 
     if (kdf === 'pbkdf2') {
         kdfparams.c = opts.c || 262144;
@@ -241,14 +247,14 @@ Wallet.prototype.encrypt = function (password, opts) {
         throw new Error('Unsupported cipher');
     }
 
-    var ciphertext = Buffer.concat([ cipher.update(this.privKey), cipher.final() ]);
+    var ciphertext = Buffer.concat([ cipher.update(new Buffer(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
 
-    var mac = ethUtil.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ]));
+    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
 
     return {
         version: 3,
         id: uuid.v4({ random: opts.uuid || crypto.randomBytes(16) }),
-        address: this.getAddress().toString('hex'),
+        address: account.address.replace('0x',''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
             cipherparams: {
@@ -277,6 +283,7 @@ Wallet.prototype.encrypt = function (password, opts) {
 function Wallet(accounts) {
     this.length = 0;
     this._accounts = accounts;
+    this.defaultKeyName = "web3js_wallet";
 }
 
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
@@ -338,26 +345,29 @@ Wallet.prototype.clear = function () {
     return this;
 };
 
-// TODO encrypt!
-// Wallet.prototype.encrypt = function (password) {
-//     var accounts = [];
-//     for (var i = 0; i < this.length; ++i) {
-//         accounts[i] = this[i];
-//
-//         // remove functions
-//         // delete accounts[i].sign;
-//         // delete accounts[i].signTransaction;
-//     }
-//     return JSON.stringify(accounts.map(encrypt));
-// };
-//
-// Wallet.prototype.decrypt = function (encryptedWallet) {
-//     JSON.parse(encryptedWallet).map(decrypt).forEach(function (account) {
-//         this.add(account);
-//     }.bind(this));
-// };
+Wallet.prototype.encrypt = function (password) {
+    var accounts = [];
+    for (var i = 0; i < this.length; ++i) {
+        accounts[i] = this[i].encrypt(password);
+    }
+    return JSON.stringify(accounts);
+};
 
-Wallet.prototype.defaultKeyName = "web3js_wallet";
+
+Wallet.prototype.decrypt = function (encryptedWallet, password) {
+    var _this = this;
+
+    JSON.parse(encryptedWallet).forEach(function (account) {
+        var account = _this._accounts.decrypt(account, password);
+
+        if (account) {
+            _this.add(account);
+        } else {
+            throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+        }
+    });
+    return true;
+};
 
 Wallet.prototype.save = function (password, keyName) {
     localStorage.setItem(keyName || this.defaultKeyName, this.encrypt());
