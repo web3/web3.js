@@ -373,11 +373,11 @@ Wallet.prototype.decrypt = function (encryptedWallet, password) {
 };
 
 Wallet.prototype.save = function (password, keyName) {
-    localStorage.setItem(keyName || this.defaultKeyName, this.encrypt());
+    localStorage.setItem(keyName || this.defaultKeyName, this.encrypt(password));
 };
 
 Wallet.prototype.load = function (password, keyName) {
-    this.decrypt(localStorage.getItem(keyName || this.defaultKeyName));
+    this.decrypt(localStorage.getItem(keyName || this.defaultKeyName), password);
 };
 
 
