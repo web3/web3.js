@@ -977,7 +977,7 @@ Parameters
 
 
 1. ``Object`` - The transaction object to send:
-  - ``from`` - ``String``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified.
+  - ``from`` - ``String|Number``: The address for the sending account. Uses the :ref:`web3.eth.defaultAccount <eth-defaultaccount>` property, if not specified. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
   - ``to`` - ``String``: (optional) The destination address of the message, left undefined for a contract-creation transaction.
   - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
   - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
@@ -985,6 +985,8 @@ Parameters
   - ``data`` - ``String``: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
   - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+.. note:: The ``from`` property can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of that account, and send the transaction via :ref:`web3.eth.sendSignedTransaction() <eth-sendsignedtransaction>`.
 
 .. _eth-sendtransaction-return:
 
@@ -1127,8 +1129,10 @@ Parameters
 
 
 1. ``String`` - Data to sign. If String it will be converted using :ref:`web3.utils.utf8ToHex <utils-utf8tohex>`.
-2. ``String`` - Address to sign data with.
+2. ``String|Number`` - Address to sign data with. Or an address or index of a local wallet in :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`.
 3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+.. note:: The 2. ``address`` parameter can also be an address or index from the :ref:`web3.eth.accounts.wallet <eth_accounts_wallet>`. It will then sign locally using the private key of this account.
 
 
 -------
