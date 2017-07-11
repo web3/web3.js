@@ -377,11 +377,12 @@ Method.prototype.buildCall = function() {
         var sendRequest = function(payload, method) {
 
             if (method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+                var wallet;
 
                 // ETH_SENDTRANSACTION
                 if (payload.method.toLowerCase() === 'eth_sendtransaction') {
-                    var tx = payload.params[0],
-                        wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.eth.accounts);
+                    var tx = payload.params[0];
+                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.eth.accounts);
 
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
@@ -400,8 +401,8 @@ Method.prototype.buildCall = function() {
 
                 // ETH_SIGN
                 } else if (payload.method.toLowerCase() === 'eth_sign') {
-                    var data = payload.params[1],
-                        wallet = getWallet(payload.params[0], method.eth.accounts);
+                    var data = payload.params[1];
+                    wallet = getWallet(payload.params[0], method.eth.accounts);
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
