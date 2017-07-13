@@ -243,7 +243,7 @@ var methods = function () {
         name: 'getTransaction',
         call: 'eth_getTransactionByHash',
         params: 1,
-        inputFormatter: [formatters.inputAddressFormatter],
+        inputFormatter: [null],
         outputFormatter: formatters.outputTransactionFormatter
     });
 
