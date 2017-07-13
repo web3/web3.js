@@ -70,7 +70,8 @@ Example
         address: "0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01",
         privateKey: "0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709",
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
     web3.eth.accounts.create('2435@#@#@±±±±!!!!678543213456764321§34567543213456785432134567');
@@ -78,7 +79,8 @@ Example
         address: "0xF2CD2AA0c7926743B1D4310b2BC984a0a453c3d4",
         privateKey: "0xd7325de5c2c1cf0009fac77d3d04a9c004b038883446b065871bc3e831dcd098",
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
     web3.eth.accounts.create(web3.utils.randomHex(32));
@@ -86,7 +88,8 @@ Example
         address: "0xe78150FaCD36E8EB00291e251424a0515AA1FF05",
         privateKey: "0xcc505ee6067fba3f6fc2050643379e190e087aeffe5d958ab9f2f3ed3800fa4e",
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
 ------------------------------------------------------------------------------
@@ -124,7 +127,8 @@ Example
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
     web3.eth.accounts.privateKeyToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
@@ -132,7 +136,8 @@ Example
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
 
@@ -408,7 +413,7 @@ encrypt
 
     web3.eth.accounts.encrypt(privateKey, password);
 
-Encrypts a private key using web3 keystore v3 standard.
+Encrypts a private key to the web3 keystore v3 standard.
 
 ----------
 Parameters
@@ -422,7 +427,7 @@ Parameters
 Returns
 -------
 
-``String``: The encrypted private key.
+``Object``: The encrypted keystore v3 JSON.
 
 -------
 Example
@@ -430,8 +435,26 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.encrypt('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318', 'test!$@');
-    > {"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}
+    web3.eth.accounts.encrypt('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318', 'test!')
+    > {
+        version: 3,
+        id: '04e9bcbb-96fa-497b-94d1-14df4cd20af6',
+        address: '2c7536e3605d9c16a7a3d7b1898e529396a65c23',
+        crypto: {
+            ciphertext: 'a1c25da3ecde4e6a24f3697251dd15d6208520efc84ad97397e906e6df24d251',
+            cipherparams: { iv: '2885df2b63f7ef247d753c82fa20038a' },
+            cipher: 'aes-128-ctr',
+            kdf: 'scrypt',
+            kdfparams: {
+                dklen: 32,
+                salt: '4531b3c174cc3ff32a6a7a85d6761b410db674807b2d216d022318ceee50be10',
+                n: 262144,
+                r: 8,
+                p: 1
+            },
+            mac: 'b8b010fff37f9ae5559a352a185e86f9b9c1d7f7a9f1bd4e82a5dd35468fc7f6'
+        }
+    }
 
 
 
@@ -442,9 +465,9 @@ decrypt
 
 .. code-block:: javascript
 
-    web3.eth.accounts.decrypt(encryptedPrivateKey, password);
+    web3.eth.accounts.decrypt(keystoreJsonV3, password);
 
-Decrypts a private key encrypted in the web3 keystore v3 standard.
+Decrypts a keysore v3 JSON, and creates the account.
 
 ----------
 Parameters
@@ -458,7 +481,7 @@ Parameters
 Returns
 -------
 
-``String``: The decrypted private key.
+``Object``: The decrypted account.
 
 -------
 Example
@@ -466,8 +489,32 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.decrypt({"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}, 'test!$@');
-    > "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318"
+    web3.eth.accounts.decrypt({
+        version: 3,
+        id: '04e9bcbb-96fa-497b-94d1-14df4cd20af6',
+        address: '2c7536e3605d9c16a7a3d7b1898e529396a65c23',
+        crypto: {
+            ciphertext: 'a1c25da3ecde4e6a24f3697251dd15d6208520efc84ad97397e906e6df24d251',
+            cipherparams: { iv: '2885df2b63f7ef247d753c82fa20038a' },
+            cipher: 'aes-128-ctr',
+            kdf: 'scrypt',
+            kdfparams: {
+                dklen: 32,
+                salt: '4531b3c174cc3ff32a6a7a85d6761b410db674807b2d216d022318ceee50be10',
+                n: 262144,
+                r: 8,
+                p: 1
+            },
+            mac: 'b8b010fff37f9ae5559a352a185e86f9b9c1d7f7a9f1bd4e82a5dd35468fc7f6'
+        }
+    }, 'test!');
+    > {
+        address: "0x2c7536E3605D9C16a7a3D7b1898e529396a65c23",
+        privateKey: "0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318",
+        signTransaction: function(tx){...},
+        sign: function(data){...},
+        encrypt: function(password){...}
+    }
 
 
 
@@ -586,7 +633,8 @@ Example
         address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
         privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
     web3.eth.accounts.wallet.add({
@@ -598,7 +646,8 @@ Example
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
         signTransaction: function(tx){...},
-        sign: function(data){...}
+        sign: function(data){...},
+        encrypt: function(password){...}
     }
 
 
@@ -652,39 +701,6 @@ Example
 
 ------------------------------------------------------------------------------
 
-wallet.encrypt
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.accounts.wallet.encrypt(privateKey, password);
-
-Encrypts a private key using web3 keystore standards?
-
-----------
-Parameters
-----------
-
-1. ``privateKey`` - ``String``: The private key to encrypt.
-2. ``password`` - ``String``: The password used for encryption.
-
-
--------
-Returns
--------
-
-``String``: The encrypted privatekey.
-
--------
-Example
--------
-
-.. code-block:: javascript
-
-    web3.eth.accounts.encrypt('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318', 'test!$@');
-    > [{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}]
-
-------------------------------------------------------------------------------
 
 wallet.clear
 =====================
@@ -727,28 +743,27 @@ Example
 
 ------------------------------------------------------------------------------
 
-wallet.decrypt
+wallet.encrypt
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.decrypt(encryptedPrivateKey, password);
+    web3.eth.accounts.wallet.encrypt(password);
 
-Encrypts a private key using web3 keystore standards?
+Encrypts all wallet accounts to and array of encrypted keystore v3 objects.
 
 ----------
 Parameters
 ----------
 
-1. ``encryptedPrivateKey`` - ``String``: The encrypted private key to decrypt.
-2. ``password`` - ``String``: The password used for encryption.
+1. ``password`` - ``String``: The password which will be used for encryption.
 
 
 -------
 Returns
 -------
 
-``String``: The decrypted privatekey.
+``Array``: The encrypted keystore v3.
 
 -------
 Example
@@ -756,7 +771,93 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.decrypt([{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}, {...}], 'test!$@');
+    web3.eth.accounts.wallet.encrypt('test');
+    > [ { version: 3,
+        id: 'dcf8ab05-a314-4e37-b972-bf9b86f91372',
+        address: '06f702337909c06c82b09b7a22f0a2f0855d1f68',
+        crypto:
+         { ciphertext: '0de804dc63940820f6b3334e5a4bfc8214e27fb30bb7e9b7b74b25cd7eb5c604',
+           cipherparams: [Object],
+           cipher: 'aes-128-ctr',
+           kdf: 'scrypt',
+           kdfparams: [Object],
+           mac: 'b2aac1485bd6ee1928665642bf8eae9ddfbc039c3a673658933d320bac6952e3' } },
+      { version: 3,
+        id: '9e1c7d24-b919-4428-b10e-0f3ef79f7cf0',
+        address: 'b5d89661b59a9af0b34f58d19138baa2de48baaf',
+        crypto:
+         { ciphertext: 'd705ebed2a136d9e4db7e5ae70ed1f69d6a57370d5fbe06281eb07615f404410',
+           cipherparams: [Object],
+           cipher: 'aes-128-ctr',
+           kdf: 'scrypt',
+           kdfparams: [Object],
+           mac: 'af9eca5eb01b0f70e909f824f0e7cdb90c350a802f04a9f6afe056602b92272b' } }
+    ]
+
+------------------------------------------------------------------------------
+
+
+wallet.decrypt
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.decrypt(keystoreArray, password);
+
+Decrypts keystore v3 objects.
+
+----------
+Parameters
+----------
+
+1. ``keystoreArray`` - ``Array``: The encrypted keystore v3 objects to decrypt.
+2. ``password`` - ``String``: The password which will be used for encryption.
+
+
+-------
+Returns
+-------
+
+``Object``: The wallet object.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.accounts.wallet.decrypt([
+      { version: 3,
+      id: '83191a81-aaca-451f-b63d-0c5f3b849289',
+      address: '06f702337909c06c82b09b7a22f0a2f0855d1f68',
+      crypto:
+       { ciphertext: '7d34deae112841fba86e3e6cf08f5398dda323a8e4d29332621534e2c4069e8d',
+         cipherparams: { iv: '497f4d26997a84d570778eae874b2333' },
+         cipher: 'aes-128-ctr',
+         kdf: 'scrypt',
+         kdfparams:
+          { dklen: 32,
+            salt: '208dd732a27aa4803bb760228dff18515d5313fd085bbce60594a3919ae2d88d',
+            n: 262144,
+            r: 8,
+            p: 1 },
+         mac: '0062a853de302513c57bfe3108ab493733034bf3cb313326f42cf26ea2619cf9' } },
+       { version: 3,
+      id: '7d6b91fa-3611-407b-b16b-396efb28f97e',
+      address: 'b5d89661b59a9af0b34f58d19138baa2de48baaf',
+      crypto:
+       { ciphertext: 'cb9712d1982ff89f571fa5dbef447f14b7e5f142232bd2a913aac833730eeb43',
+         cipherparams: { iv: '8cccb91cb84e435437f7282ec2ffd2db' },
+         cipher: 'aes-128-ctr',
+         kdf: 'scrypt',
+         kdfparams:
+          { dklen: 32,
+            salt: '08ba6736363c5586434cd5b895e6fe41ea7db4785bd9b901dedce77a1514e8b8',
+            n: 262144,
+            r: 8,
+            p: 1 },
+         mac: 'd2eb068b37e2df55f56fa97a2bf4f55e072bef0dd703bfd917717d9dc54510f0' } }
+    ], 'test');
     > Wallet {
         0: {...},
         1: {...},
@@ -776,21 +877,23 @@ wallet.save
 
     web3.eth.accounts.wallet.save(password [, keyName]);
 
-Stores the wallet encrypted in local storage.
+Stores the wallet encrypted and as string in local storage.
+
+.. note::  Browser only.
 
 ----------
 Parameters
 ----------
 
 1. ``password`` - ``String``: The password to encrypt the wallet.
-2. ``keyName`` - ``String``: (optional) The key used for the localstorage position, defaults to ``"web3js_wallet"``.
+2. ``keyName`` - ``String``: (optional) The key used for the local storage position, defaults to ``"web3js_wallet"``.
 
 
 -------
 Returns
 -------
 
-``String``: The stringified and encrypted wallet.
+``Boolean``
 
 -------
 Example
@@ -798,9 +901,8 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.wallet.save('test#!$', 'myWalletKey');
-    > [{"address":"4bf2a80d5c7b337da05b446081f95d0a34f79e7f","Crypto":{"cipher":"aes-128-ctr","ciphertext":"acfe42eed2d102e9bd2383c5c3f9bfdcb346a152dd7b9a3d18bab270f323f683","cipherparams":{"iv":"22cb99fa11a257f3c5b7d19ddb8bb5a4"},"kdf":"scrypt","kdfparams":{"dklen":32,"n":261144,"p":1,"r":5,"salt":"81e332698874fc168bfde32f1529648df2fb5d9b2494e7c418ff563f18cbce86"},"mac":"0e82211205dcfb8deaff19e8433f9e966f2d72c488ac54b0b4f6ab1cf594a542"},"id":"e1268f6b-1220-4f7a-a6de-f2ad695831dc","version":3}, {...}]
-
+    web3.eth.accounts.wallet.save('test#!$');
+    > true
 
 
 ------------------------------------------------------------------------------
@@ -812,7 +914,9 @@ wallet.load
 
     web3.eth.accounts.wallet.load(password [, keyName]);
 
-Loads the wallet and decrypt it from local storage.
+Loads a wallet from local storage and decrypts it.
+
+.. note::  Browser only.
 
 ----------
 Parameters

@@ -350,18 +350,18 @@ Wallet.prototype.clear = function () {
 
 Wallet.prototype.encrypt = function (password) {
     var accounts = [];
-    for (var i = 0; i < this.length; ++i) {
+    for (var i = 0; i < this.length; i++) {
         accounts[i] = this[i].encrypt(password);
     }
-    return JSON.stringify(accounts);
+    return accounts;
 };
 
 
 Wallet.prototype.decrypt = function (encryptedWallet, password) {
     var _this = this;
 
-    JSON.parse(encryptedWallet).forEach(function (account) {
-        account = _this._accounts.decrypt(account, password);
+    encryptedWallet.forEach(function (keystore) {
+        var account = _this._accounts.decrypt(keystore, password);
 
         if (account) {
             _this.add(account);
@@ -369,16 +369,34 @@ Wallet.prototype.decrypt = function (encryptedWallet, password) {
             throw new Error('Couldn\'t decrypt accounts. Password wrong?');
         }
     });
-    return true;
+
+    return this;
 };
 
 Wallet.prototype.save = function (password, keyName) {
-    localStorage.setItem(keyName || this.defaultKeyName, this.encrypt(password));
+    localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
+
+    return true;
 };
 
 Wallet.prototype.load = function (password, keyName) {
-    this.decrypt(localStorage.getItem(keyName || this.defaultKeyName), password);
+    var keystore = localStorage.getItem(keyName || this.defaultKeyName);
+
+    if (keystore) {
+        try {
+            keystore = JSON.parse(keystore);
+        } catch(e) {
+
+        }
+    }
+
+    return this.decrypt(keystore || [], password);
 };
+
+if (typeof localStorage === 'undefined') {
+    delete Wallet.prototype.save;
+    delete Wallet.prototype.load;
+}
 
 
 module.exports = Accounts;

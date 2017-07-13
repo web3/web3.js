@@ -30,8 +30,8 @@ var formattedTxResult = {
 };
 
 var tests = [{
-    args: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1'], // checksum address
-    formattedArgs: ['0x407d73d8a49eeb85d32cf465507dd71d507100c1'],
+    args: ['0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b'],
+    formattedArgs: ['0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b'],
     result: txResult,
     formattedResult: formattedTxResult,
     call: 'eth_'+ method + 'ByHash'
