@@ -80,6 +80,86 @@ var tests = [{
         }
     },
     call: 'eth_'+ method
+
+// using local wallet
+},{
+    useLocalWallet: function (web3) {
+        web3.eth.accounts.wallet.add('0xd7d364e720c129acb940439a84a99185dd55af6f6d105018a8acfb7f8c008142');
+    },
+    walletFrom: '0x5af0838657202f865A4547b5eD28a64f799960DC',
+    args: [{
+        from: '0x5af0838657202f865A4547b5eD28a64f799960DC',
+        to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        gas: 500000
+    }],
+    formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a0ce66ccabda889012314677073ded7bec9f763e564dfcff1135e7c6a3c5b89353a07bfa06fe1ba3f1804e4677295a5147e6c8b2224647cc2b7b62063081f6490bd3'],
+    result: ['0x12345678976543213456786543212345675432'],
+    formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_sendRawTransaction'
+},{
+    useLocalWallet: function (web3) {
+        web3.eth.accounts.wallet.add('0xf7d364e720c129acb940439a84a99185dd55af6f6d105018a8acfb7f8c008142');
+    },
+    walletFrom: '0xE2873A6bE9Bc50E70dE4295d968459d4aCF515C0',
+    args: [{
+        from: 0,
+        to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        gas: 500000
+    }],
+    formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a0fe620c94cc14fdcdef494a40caf9e2860d1a5929d95730e1b7a6a2041c9c507fa01d3d22e7ab1010fa95a357322ad14a8ce1b1b631d3bb9c123922ff8042c8fc8b'],
+    result: ['0x12345678976543213456786543212345675432'],
+    formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_sendRawTransaction'
+},{
+    useLocalWallet: function (web3) {
+        web3.eth.accounts.wallet.add('0xa1d364e720c129acb940439a84a99185dd55af6f6d105018a8acfb7f8c008142');
+    },
+    walletFrom: '0xF65a29341Fd9F8357e060f2e21Bf3407062f2A46',
+    args: [{
+        from: {
+            address: '0xF65a29341Fd9F8357e060f2e21Bf3407062f2A46',
+            privateKey: '0xa1d364e720c129acb940439a84a99185dd55af6f6d105018a8acfb7f8c008142'
+        },
+        to: '0xdbdbdb2cbd23b783741e8d7fcf51e459b497e4a6',
+        value: '1234567654321',
+        gasPrice: '324234234234',
+        gas: 500000
+    }],
+    formattedArgs: ['0xf86b0a854b7dddc97a8307a12094dbdbdb2cbd23b783741e8d7fcf51e459b497e4a686011f71f76bb18026a016a5bc4e1808e60a5d370f6b335be158673bd95c457ee7925dc8ae1bec69647fa03831c5e0a966a0aad0c67d6ddea55288f76ae1d73dfe11c6174a8682c2ec165d'],
+    result: ['0x12345678976543213456786543212345675432'],
+    formattedResult: ['0x12345678976543213456786543212345675432'],
+    notification: {
+        method: 'eth_subscription',
+        params: {
+            subscription: '0x12345678976543213456786543212345675432',
+            result: {
+                blockNumber: '0x10'
+            }
+        }
+    },
+    call: 'eth_sendRawTransaction'
 },{
     error: true, // only for testing
     args: [{
