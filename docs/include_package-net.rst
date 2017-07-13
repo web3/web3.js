@@ -1,7 +1,7 @@
 
 .. _net-getid:
 
-net.getId
+getId
 =========
 
 .. code-block:: javascript
@@ -37,7 +37,7 @@ Example
 ------------------------------------------------------------------------------
 
 
-net.isListening
+isListening
 =========
 
 .. code-block:: javascript
@@ -72,7 +72,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-net.getPeerCount
+getPeerCount
 =========
 
 .. code-block:: javascript

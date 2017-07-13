@@ -2694,7 +2694,97 @@ Web3.prototype.createBatch = function () {
 module.exports = Web3;
 
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":23,"./web3/extend":27,"./web3/httpprovider":29,"./web3/iban":30,"./web3/ipcprovider":31,"./web3/methods/db":34,"./web3/methods/eth":35,"./web3/methods/net":36,"./web3/methods/personal":37,"./web3/methods/shh":38,"./web3/property":40,"./web3/requestmanager":41,"./web3/settings":42,"./web3/websocketprovider":46,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/net":39,"./web3/methods/personal":40,"./web3/methods/shh":41,"./web3/methods/swarm":42,"./web3/property":45,"./web3/requestmanager":46,"./web3/settings":47,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file allevents.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
+
+var sha3 = require('../utils/sha3');
+var SolidityEvent = require('./event');
+var formatters = require('./formatters');
+var utils = require('../utils/utils');
+var Filter = require('./filter');
+var watches = require('./methods/watches');
+
+var AllSolidityEvents = function (requestManager, json, address) {
+    this._requestManager = requestManager;
+    this._json = json;
+    this._address = address;
+};
+
+AllSolidityEvents.prototype.encode = function (options) {
+    options = options || {};
+    var result = {};
+
+    ['fromBlock', 'toBlock'].filter(function (f) {
+        return options[f] !== undefined;
+    }).forEach(function (f) {
+        result[f] = formatters.inputBlockNumberFormatter(options[f]);
+    });
+
+    result.address = this._address;
+
+    return result;
+};
+
+AllSolidityEvents.prototype.decode = function (data) {
+    data.data = data.data || '';
+    data.topics = data.topics || [];
+
+    var eventTopic = data.topics[0].slice(2);
+    var match = this._json.filter(function (j) {
+        return eventTopic === sha3(utils.transformToFullName(j));
+    })[0];
+
+    if (!match) { // cannot find matching event?
+        console.warn('cannot find event for log');
+        return data;
+    }
+
+    var event = new SolidityEvent(this._requestManager, match, this._address);
+    return event.decode(data);
+};
+
+AllSolidityEvents.prototype.execute = function (options, callback) {
+
+    if (utils.isFunction(arguments[arguments.length - 1])) {
+        callback = arguments[arguments.length - 1];
+        if(arguments.length === 1)
+            options = null;
+    }
+
+    var o = this.encode(options);
+    var formatter = this.decode.bind(this);
+    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
+};
+
+AllSolidityEvents.prototype.attachToContract = function (contract) {
+    var execute = this.execute.bind(this);
+    contract.allEvents = execute;
+};
+
+module.exports = AllSolidityEvents;
+
+
+},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":43}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2928,10 +3018,24 @@ Contract.prototype._checkListener = function(type, event, func){
  * @param {Object} options
  * @return {Object} everything combined together and encoded
  */
-Contract.prototype._encodeEventABI = function (event, options) {
-    options = options || {};
-    var filter = options.filter || {},
-        result = {};
+var ContractFactory = function (eth, abi) {
+    this.eth = eth;
+    this.abi = abi;
+
+    /**
+     * Should be called to create new contract on a blockchain
+     *
+     * @method new
+     * @param {Any} contract constructor param1 (optional)
+     * @param {Any} contract constructor param2 (optional)
+     * @param {Object} contract transaction object (required)
+     * @param {Function} callback
+     * @returns {Contract} returns contract instance
+     */
+    this.new = function () {
+        /*jshint maxcomplexity: 7 */
+
+        var contract = new Contract(this.eth, this.abi);
 
     ['fromBlock', 'toBlock'].filter(function (f) {
         return options[f] !== undefined;
@@ -3130,8 +3234,14 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
                 sub.unsubscribe();
                 callbackFired = true;
 
-                if (callback)
-                    callback(new Error('Contract deployment timed out. Transaction couldn\'t be found after 50 blocks'));
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file errors.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
 
 
             } else {
@@ -3141,8 +3251,14 @@ Contract.prototype._checkForContractAddress = function(transactionHash, callback
 
                         _this._web3.eth.getCode(receipt.contractAddress, function(e, code){
 
-                            if(callbackFired || !code)
-                                return;
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/**
+ * @file event.js
+ * @author Marek Kotewicz <marek@ethdev.com>
+ * @date 2014
+ */
 
                             sub.unsubscribe();
                             callbackFired = true;
@@ -3340,10 +3456,10 @@ Contract.prototype.once = function(event, options, callback) {
 };
 
 /**
- * Adds event listeners and creates a subscription.
+ * Should be used to encode indexed params and options to one final object
  *
- * @method on
- * @param {String} event
+ * @method encode
+ * @param {Object} indexed
  * @param {Object} options
  * @param {Function} callback
  * @return {Object} the event subscription
@@ -3386,12 +3502,20 @@ Contract.prototype.on = function(event, options, callback){
 Contract.prototype.getPastEvents = function(event, options, callback){
     var subOptions = this._generateEventOptions.apply(this, arguments);
 
-    var getPastLogs = new Method({
-        name: 'getPastLogs',
-        call: 'eth_getLogs',
-        params: 1,
-        inputFormatter: [formatters.inputLogFormatter],
-        outputFormatter: this._decodeEventABI.bind(subOptions.event)
+    var indexedTopics = this._params.filter(function (i) {
+        return i.indexed === true;
+    }).map(function (i) {
+        var value = indexed[i.name];
+        if (value === undefined || value === null) {
+            return null;
+        }
+
+        if (utils.isArray(value)) {
+            return value.map(function (v) {
+                return '0x' + coder.encodeParam(i.type, v);
+            });
+        }
+        return '0x' + coder.encodeParam(i.type, value);
     });
     getPastLogs.setRequestManager(this._web3._requestManager);
     var call = getPastLogs.buildCall();
@@ -3410,15 +3534,21 @@ Contract.prototype.getPastEvents = function(event, options, callback){
  * @param {Array} args
  * @returns {Object} an object with functions to call the methods
  */
-Contract.prototype._createTxObject =  function _createTxObject(){
-    var _this = this,
-        txObject = {};
+SolidityEvent.prototype.decode = function (data) {
 
-    txObject.call = this.parent._executeMethod.bind(txObject, 'call');
-    txObject.call.request = this.parent._executeMethod.bind(txObject, 'call', true); // to make batch requests
+    data.data = data.data || '';
+    data.topics = data.topics || [];
 
-    txObject.send = this.parent._executeMethod.bind(txObject, 'send');
-    txObject.send.request = this.parent._executeMethod.bind(txObject, 'send', true); // to make batch requests
+    var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
+    var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
+    var indexedParams = coder.decodeParams(this.types(true), indexedData);
+
+    var notIndexedData = data.data.slice(2);
+    var notIndexedParams = coder.decodeParams(this.types(false), notIndexedData);
+
+    var result = formatters.outputLogFormatter(data);
+    result.event = this.displayName();
+    result.address = data.address;
 
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
@@ -3456,6 +3586,11 @@ Contract.prototype._executeMethod = function _executeMethod(type){
     if(type === 'call' && args[args.length - 1] !== true && (utils.isString(args[args.length - 1]) || isFinite(args[args.length - 1]))) {
         defaultBlock = args.pop();
     }
+
+    var o = this.encode(indexed, options);
+    var formatter = this.decode.bind(this);
+    return new Filter(this._requestManager, o, watches.eth(), formatter, callback);
+};
 
     // get the options
     options = (utils.isObject(args[args.length - 1]))
@@ -3506,11 +3641,10 @@ Contract.prototype._executeMethod = function _executeMethod(type){
 
     } else {
 
-        // create the callback method
-        var methodReturnCallback = function(err, returnValue) {
-
-            if(type === 'call')
-                returnValue = _this._parent._decodeMethodReturn(_this._method.outputTypes, returnValue);
+    ex.formatters = formatters;
+    ex.utils = utils;
+    ex.Method = Method;
+    ex.Property = Property;
 
 
             if (err) {
@@ -4285,7 +4419,7 @@ module.exports = HttpProvider;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file iban.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -4534,7 +4668,11 @@ var IpcProvider = function (path, net) {
 
     this.connection = net.connect({path: this.path});
 
-    this.addDefaultEvents();
+    this.connection = net.connect({path: this.path});
+
+    this.connection.on('end', function(){
+        _this._timeout();
+    });
 
 
     // LISTEN FOR CONNECTION RESPONSES
@@ -5158,8 +5296,8 @@ var DB = function (web3) {
     this._requestManager = web3._requestManager;
 
     var self = this;
-    
-    methods().forEach(function(method) { 
+
+    methods().forEach(function(method) {
         method.attachToObject(self);
         method.setRequestManager(web3._requestManager);
     });
@@ -5729,9 +5867,77 @@ var methods = function () {
         inputFormatter: [formatters.inputAddressFormatter]
     });
 
-    var getPastMessages = new Method({
-        name: 'getPastMessages',
-        call: 'shh_getMessages',
+    return [
+        newAccount,
+        importRawKey,
+        unlockAccount,
+        ecRecover,
+        sign,
+        sendTransaction,
+        lockAccount
+    ];
+};
+
+var properties = function () {
+    return [
+        new Property({
+            name: 'listAccounts',
+            getter: 'personal_listAccounts'
+        })
+    ];
+};
+
+
+module.exports = Personal;
+
+},{"../formatters":30,"../method":36,"../property":45}],41:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file shh.js
+ * @authors:
+ *   Marek Kotewicz <marek@ethdev.com>
+ * @date 2015
+ */
+
+var Method = require('../method');
+var formatters = require('../formatters');
+var Filter = require('../filter');
+var watches = require('./watches');
+
+var Shh = function (web3) {
+    this._requestManager = web3._requestManager;
+
+    var self = this;
+
+    methods().forEach(function(method) {
+        method.attachToObject(self);
+        method.setRequestManager(self._requestManager);
+    });
+};
+
+Shh.prototype.filter = function (fil, callback) {
+    return new Filter(this._requestManager, fil, watches.shh(), formatters.outputPostFormatter, callback);
+};
+
+var methods = function () {
+
+    var post = new Method({
+        name: 'post',
+        call: 'shh_post',
         params: 1,
         inputFormatter: [formatters.inputLogFormatter],
         outputFormatter: formatters.outputPostFormatter
@@ -6287,7 +6493,7 @@ RequestManager.prototype.sendAsync = function (data, callback) {
             return callback(err);
         }
 
-        if (!Jsonrpc.getInstance().isValidResponse(result)) {
+        if (!Jsonrpc.isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
         }
 
@@ -6407,16 +6613,48 @@ RequestManager.prototype.reset = function (keepIsSyncing) {
     var _this = this;
 
 
-    // uninstall all subscriptions
-    Object.keys(this.subscriptions).forEach(function(id){
-        if(!keepIsSyncing || _this.subscriptions[id].name !== 'syncing')
-            _this.removeSubscription(id);
+    var payload = Jsonrpc.toBatchPayload(pollsData);
+
+    // map the request id to they poll id
+    var pollsIdMap = {};
+    payload.forEach(function(load, index){
+        pollsIdMap[load.id] = pollsIds[index];
     });
 
 
-    //  reset notification callbacks etc.
-    if(this.provider.reset)
-        this.provider.reset();
+    var self = this;
+    this.provider.sendAsync(payload, function (error, results) {
+
+
+        // TODO: console log?
+        if (error) {
+            return;
+        }
+
+        if (!utils.isArray(results)) {
+            throw errors.InvalidResponse(results);
+        }
+        results.map(function (result) {
+            var id = pollsIdMap[result.id];
+
+            // make sure the filter is still installed after arrival of the request
+            if (self.polls[id]) {
+                result.callback = self.polls[id].callback;
+                return result;
+            } else
+                return false;
+        }).filter(function (result) {
+            return !!result;
+        }).filter(function (result) {
+            var valid = Jsonrpc.isValidResponse(result);
+            if (!valid) {
+                result.callback(errors.InvalidResponse(result));
+            }
+            return valid;
+        }).forEach(function (result) {
+            result.callback(null, result.result);
+        });
+    });
 };
 
 module.exports = RequestManager;
@@ -6519,164 +6757,19 @@ Subscription.prototype._validateArgs = function (args) {
     if(!subscription.params)
         subscription.params = 0;
 
-    if (args.length !== subscription.params + 1) {
-        throw errors.InvalidNumberOfParams();
-    }
-};
+        self.callbacks.forEach(function (callback) {
+            if (self.lastSyncState !== sync) {
 
-/**
- * Should be called to format input args of method
- * 
- * @method formatInput
- * @param {Array}
- * @return {Array}
- */
+                // call the callback with true first so the app can stop anything, before receiving the sync data
+                if(!self.lastSyncState && utils.isObject(sync))
+                    callback(null, true);
 
-Subscription.prototype._formatInput = function (args) {
-    var subscription = this.options.subscription;
+                // call on the next CPU cycle, so the actions of the sync stop can be processes first
+                setTimeout(function() {
+                    callback(null, sync);
+                }, 0);
 
-    if (!subscription || !subscription.inputFormatter) {
-        return args;
-    }
-
-    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
-        return formatter ? formatter(args[index+1]) : args[index+1];
-    });
-    formattedArgs.unshift(args[0]);
-
-    return formattedArgs;
-};
-
-/**
- * Should be called to format output(result) of method
- *
- * @method formatOutput
- * @param {Object}
- * @return {Object}
- */
-
-Subscription.prototype._formatOutput = function (result) {
-    var subscription = this.options.subscription;
-
-    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
-};
-
-/**
- * Should create payload from given input args
- *
- * @method toPayload
- * @param {Array} args
- * @return {Object}
- */
-Subscription.prototype._toPayload = function (args) {
-    this.callback = this._extractCallback(args);
-    var params = this._formatInput(args);
-    this._validateArgs(params);
-
-    return {
-        method: this.options.subscribeMethod,
-        params: params
-    };
-};
-
-/**
- * Unsubscribes and clears callbacks
- *
- * @method unsubscribe
- * @return {Object}
- */
-Subscription.prototype.unsubscribe = function(callback) {
-    this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
-    this.options.requestManager.removeSubscription(this.id, callback);
-    this.id = null;
-};
-
-/**
- * Subscribes and watches for changes
- *
- * @method subscribe
- * @param {String} the subscription
- * @param {Object} the options object with address topics and fromBlock
- * @return {Object}
- */
-Subscription.prototype.subscribe = function() {
-    var _this = this;
-    var args = arguments;
-    var payload = this._toPayload(Array.prototype.slice.call(arguments));
-
-    // throw error, if provider doesnt support subscriptions
-    if(!this.options.requestManager.provider.on)
-        throw new Error('The current provider doesn\'t support subscriptions', this.options.requestManager.provider);
-
-    // store the params in the options object
-    this.options.params = payload.params[1];
-
-    // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && utils.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
-        // send the subscription request
-        this.options.requestManager.sendAsync({
-            method: 'eth_getLogs',
-            params: [payload.params[1]]
-        }, function (err, logs) {
-            if(!err) {
-                logs.forEach(function(log){
-                    var output = _this._formatOutput(log);
-                    _this.callback(null, output, _this);
-                    _this.emit('data', output);
-                });
-            } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
-            }
-        });
-    }
-
-    // create subscription
-    if (_this.callback) {
-
-        this.options.requestManager.sendAsync(payload, function (err, result) {
-            if(!err && result) {
-                _this.id = result;
-                
-                // call callback on notifications
-                _this.options.requestManager.addSubscription(_this.id, payload.params[0] ,'eth', function(err, result) {
-
-                    // TODO remove once its fixed in geth
-                    if(utils.isArray(result))
-                        result = result[0];
-
-                    var output = _this._formatOutput(result);
-
-                    _this.callback(err, output, _this);
-
-                    if (!err) {
-                        if(output.removed)
-                            _this.emit('changed', output);
-                        else
-                            _this.emit('data', output);
-                    } else {
-                        // unsubscribe, but keep listeners
-                        _this.options.requestManager.removeSubscription(_this.id);
-
-                        // re-subscribe, if connection fails
-                        if(_this.options.requestManager.provider.once) {
-                            _this._reconnectIntervalId = setInterval(function () {
-                                console.log('reconnect')
-                                _this.options.requestManager.provider.reconnect();
-                            }, 500);
-
-                            _this.options.requestManager.provider.once('connect', function () {
-                                clearInterval(_this._reconnectIntervalId);
-                                _this.subscribe.apply(_this, args);
-                            });
-                        }
-                        _this.emit('error', err);
-                    }
-
-                });
-            } else {
-                _this.callback(err, null, _this);
+                self.lastSyncState = sync;
             }
         });
 
@@ -6778,7 +6871,7 @@ module.exports = Subscriptions;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** 
+/**
  * @file transfer.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
@@ -6797,7 +6890,7 @@ var exchangeAbi = require('../contracts/SmartExchange.json');
  * @param {Function} callback, callback
  */
 var transfer = function (eth, from, to, value, callback) {
-    var iban = new Iban(to); 
+    var iban = new Iban(to);
     if (!iban.isValid()) {
         throw new Error('invalid iban address');
     }
@@ -6805,7 +6898,7 @@ var transfer = function (eth, from, to, value, callback) {
     if (iban.isDirect()) {
         return transferToAddress(eth, from, iban.address(), value, callback);
     }
-    
+
     if (!callback) {
         var address = eth.icapNamereg().addr(iban.institution());
         return deposit(eth, from, address, value, iban.client());
@@ -6814,7 +6907,7 @@ var transfer = function (eth, from, to, value, callback) {
     eth.icapNamereg().addr(iban.institution(), function (err, address) {
         return deposit(eth, from, address, value, iban.client(), callback);
     });
-    
+
 };
 
 /**

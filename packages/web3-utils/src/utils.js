@@ -217,7 +217,9 @@ var hexToUtf8 = function(hex) {
  * @return {String}
  */
 var hexToNumber = function (value) {
-    if (!value) return value;
+    if (!value) {
+        return value;
+    }
 
     return toBN(value).toNumber();
 };
@@ -244,6 +246,10 @@ var hexToNumberString = function (value) {
  * @return {String}
  */
 var numberToHex = function (value) {
+    if (!isFinite(value) && !_.isString(value)) {
+        return value;
+    }
+
     var number = toBN(value);
     var result = number.toString(16);
 

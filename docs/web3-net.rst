@@ -28,12 +28,6 @@ The ``web3-net`` package allows you to interact with the Ethereum nodes network 
     // -> web3.shh.net
 
 
-------------------------------------------------------------------------------
-
-
-.. include:: include_package-core.rst
-
-
 
 ------------------------------------------------------------------------------
 
