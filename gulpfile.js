@@ -10,6 +10,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
 // var closureCompiler = require('google-closure-compiler').gulp();
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
@@ -28,26 +29,17 @@ var packages = [{
     expose: 'Utils',
     src: './packages/web3-utils/src/index.js'
 },{
-    fileName: 'web3-core-requestManager',
-    expose: 'RequestManager',
-    src: './packages/web3-core-requestManager/src/index.js'
-},{
-    fileName: 'web3-providers-ipc',
-    expose: 'Web3IpcProvider',
-    src: './packages/web3-providers-ipc/src/index.js'
-},{
-    fileName: 'web3-providers-http',
-    expose: 'Web3HttpProvider',
-    src: './packages/web3-providers-http/src/index.js',
-    ignore: ['xmlhttprequest']
-},{
-    fileName: 'web3-providers-ws',
-    expose: 'Web3WsProvider',
-    src: './packages/web3-providers-ws/src/index.js'
-},{
     fileName: 'web3-eth',
     expose: 'Eth',
     src: './packages/web3-eth/src/index.js'
+},{
+    fileName: 'web3-eth-accounts',
+    expose: 'Accounts',
+    src: './packages/web3-eth-accounts/src/index.js'
+},{
+    fileName: 'web3-eth-contract',
+    expose: 'Conract',
+    src: './packages/web3-eth-contract/src/index.js'
 },{
     fileName: 'web3-eth-personal',
     expose: 'Personal',
@@ -72,6 +64,23 @@ var packages = [{
     fileName: 'web3-bzz',
     expose: 'Bzz',
     src: './packages/web3-bzz/src/index.js'
+},{
+    fileName: 'web3-core-requestManager',
+    expose: 'RequestManager',
+    src: './packages/web3-core-requestManager/src/index.js'
+},{
+    fileName: 'web3-providers-ipc',
+    expose: 'Web3IpcProvider',
+    src: './packages/web3-providers-ipc/src/index.js'
+},{
+    fileName: 'web3-providers-http',
+    expose: 'Web3HttpProvider',
+    src: './packages/web3-providers-http/src/index.js',
+    ignore: ['xmlhttprequest']
+},{
+    fileName: 'web3-providers-ws',
+    expose: 'Web3WsProvider',
+    src: './packages/web3-providers-ws/src/index.js'
 }];
 
 var browserifyOptions = {
@@ -133,6 +142,9 @@ packages.forEach(function(pckg, i){
             .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
             .pipe(source(pckg.fileName + '.js'))
             .pipe(gulp.dest( DEST ))
+            .pipe(streamify(babel({
+                presets: ['env']
+            })))
             .pipe(streamify(uglify()))
             .pipe(rename(pckg.fileName + '.min.js'))
             // .pipe(streamify(closureCompiler({
