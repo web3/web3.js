@@ -74,6 +74,55 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+sign
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.sign(dataToSign, address, password [, callback])
+
+Signs data using a specific account.
+
+.. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
+
+----------
+Parameters
+----------
+
+
+1. ``String`` - Data to sign. If String it will be converted using :ref:`web3.utils.utf8ToHex <utils-utf8tohex>`.
+2. ``String`` - Address to sign data with.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``String`` - The signature.
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.personal.sign("Hello world", "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!")
+    .then(console.log);
+    > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
+
+    // the below is the same
+    web3.eth.personal.sign(web3.utils.utf8ToHex("Hello world"), "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!")
+    .then(console.log);
+    > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
+
+
+------------------------------------------------------------------------------
+
 // TODO
 
-getAccounts, unlockAccount, lockAccount, sendTransaction, sign, ecRecover
+getAccounts, unlockAccount, lockAccount, sendTransaction, ecRecover

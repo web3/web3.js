@@ -42,6 +42,7 @@ var Method = function Method(options) {
     this.params = options.params || 0;
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
+    this.transformPayload = options.transformPayload;
     this.requestManager = null;
 };
 
@@ -139,11 +140,17 @@ Method.prototype.toPayload = function (args) {
     var params = this.formatInput(args);
     this.validateArgs(params);
 
-    return {
+    var payload = {
         method: call,
         params: params,
         callback: callback
     };
+
+    if (this.transformPayload) {
+        payload = this.transformPayload(payload);
+    }
+
+    return payload;
 };
 
 Method.prototype.attachToObject = function (obj) {
@@ -298,6 +305,26 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
     });
 };
 
+
+var getWallet = function(from, accounts) {
+    var wallet = null;
+
+    // is index given
+    if (_.isNumber(from)) {
+        wallet = accounts.wallet[from];
+
+        // is account given
+    } else if (_.isObject(from) && from.address && from.privateKey) {
+        wallet = from;
+
+        // search in wallet for address
+    } else {
+        wallet = accounts.wallet[from.toLowerCase()];
+    }
+
+    return wallet;
+};
+
 Method.prototype.buildCall = function() {
     var method = this,
         call = (_.isString(method.call)) ? method.call.toLowerCase() : Method.call,
@@ -310,6 +337,7 @@ Method.prototype.buildCall = function() {
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
+        // CALLBACK function
         var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
 
@@ -335,7 +363,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-                // return PROMIEVENT
+            // return PROMIEVENT
             } else if (method.eth) {
 
                 defer.eventEmitter.emit('transactionHash', result);
@@ -345,16 +373,69 @@ Method.prototype.buildCall = function() {
 
         };
 
+
+        var sendRequest = function(payload, method) {
+
+            if (method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+                var wallet;
+
+                // ETH_SENDTRANSACTION
+                if (payload.method.toLowerCase() === 'eth_sendtransaction') {
+                    var tx = payload.params[0];
+                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.eth.accounts);
+
+
+                    // If wallet was found, sign tx, and send using sendRawTransaction
+                    if (wallet && wallet.privateKey) {
+                        delete tx.from;
+
+                        return method.eth.accounts.signTransaction(tx, wallet.privateKey)
+                        .then(function(sign){
+
+                            payload.method = 'eth_sendRawTransaction';
+                            payload.params = [sign.rawTransaction];
+
+                            method.requestManager.send(payload, sendTxCallback);
+                        });
+                    }
+
+                // ETH_SIGN
+                } else if (payload.method.toLowerCase() === 'eth_sign') {
+                    var data = payload.params[1];
+                    wallet = getWallet(payload.params[0], method.eth.accounts);
+
+                    // If wallet was found, sign tx, and send using sendRawTransaction
+                    if (wallet && wallet.privateKey) {
+                        var sign = method.eth.accounts.sign(data, wallet.privateKey);
+
+                        if (payload.callback) {
+                            payload.callback(null, sign.signature);
+                        }
+
+                        defer.resolve(sign.signature);
+                        return;
+                    }
+
+
+                }
+            }
+
+            return method.requestManager.send(payload, sendTxCallback);
+        };
+
+
+        // Send the actual transaction
         if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-
             method.eth.getGasPrice(function (err, gasPrice) {
-                payload.params[0].gasPrice = utils.numberToHex(gasPrice);
-                method.requestManager.send(payload, sendTxCallback);
+                if (gasPrice) {
+                    payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+                }
+                sendRequest(payload, method);
             });
 
         } else {
-            method.requestManager.send(payload, sendTxCallback);
+            sendRequest(payload, method);
         }
 
 
