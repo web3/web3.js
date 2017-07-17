@@ -151,11 +151,15 @@ packages.forEach(function(pckg, i){
         return pipe.bundle()
             .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
             .pipe(source(pckg.fileName + '.js'))
+            .pipe(streamify(babel({
+                presets: ['env']
+            })))
             .pipe(gulp.dest( DEST ))
             .pipe(streamify(babel({
                 presets: ['env']
             })))
             .pipe(streamify(uglify(ugliyOptions)))
+            .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
             // .pipe(streamify(closureCompiler({
             //     compilation_level: 'ADVANCED_OPTIMIZATIONS',
