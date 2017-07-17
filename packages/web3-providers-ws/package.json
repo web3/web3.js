@@ -7,7 +7,7 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
-        "underscore": "^1.8.3",
-        "websocket": "^1.0.24"
+        "underscore": "1.8.3",
+        "websocket": "1.0.24"
     }
 }
