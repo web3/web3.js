@@ -6,7 +6,7 @@
   "license": "LGPL-3.0",
   "main": "src/index.js",
   "dependencies": {
-    "eth-lib": "0.1.22",
+    "eth-lib": "0.1.23",
     "bluebird": "3.3.1",
     "scrypt.js": "0.2.0",
     "underscore": "1.8.3",
