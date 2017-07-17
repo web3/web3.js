@@ -2475,7 +2475,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.0"
+    "version": "0.20.1"
 }
 
 },{}],22:[function(require,module,exports){
@@ -4274,19 +4274,19 @@ module.exports = SolidityFunction;
  * @date 2015
  */
 
-var errors = require('./errors')
+var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
 
 // browser
 if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-  XMLHttpRequest = window.XMLHttpRequest // jshint ignore: line
+  XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 // node
 } else {
-  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest // jshint ignore: line
+  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
-var XHR2 = require('xhr2') // jshint ignore: line
+var XHR2 = require('xhr2'); // jshint ignore: line
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -4315,8 +4315,11 @@ HttpProvider.prototype.prepareRequest = function (async) {
     request = new XMLHttpRequest();
   }
 
-  request.open('POST', this.host, async, this.user, this.password);
-  request.setRequestHeader('Content-Type', 'application/json');
+  request.open('POST', this.host, async);
+  if (this.user && this.password) {
+    var auth = 'Basic ' + new Buffer(this.user + ':' + this.password).toString('base64');
+    request.setRequestHeader('Authorization', auth);
+  } request.setRequestHeader('Content-Type', 'application/json');
   return request;
 };
 
@@ -4397,9 +4400,9 @@ HttpProvider.prototype.isConnected = function () {
       method: 'net_listening',
       params: []
     });
-    return true
+    return true;
   } catch (e) {
-    return false
+    return false;
   }
 };
 
