@@ -157,6 +157,7 @@ packages.forEach(function(pckg, i){
             })))
             .pipe(gulp.dest( DEST ))
             .pipe(streamify(babel({
+                compact: true,
                 presets: ['env']
             })))
             .pipe(streamify(uglify(ugliyOptions)))

@@ -24,7 +24,9 @@
 
 var _ = require("underscore");
 var Promise = require('bluebird');
-var EthLib = require("eth-lib");
+var Account = require("eth-lib/src/account");
+var Hash = require("eth-lib/src/hash");
+var RLP = require("eth-lib/src/rlp");
 var crypto = require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
@@ -63,11 +65,11 @@ Accounts.prototype._addAccountFunctions = function (account) {
 };
 
 Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(EthLib.Account.create(entropy || utils.randomHex(32)));
+    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
 };
 
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
-    return this._addAccountFunctions(EthLib.Account.fromPrivate(privateKey));
+    return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
@@ -91,9 +93,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
 
 
-        var hash = EthLib.Hash.keccak256(EthLib.Account.transactionSigningData(transaction));
-        var rawTransaction = EthLib.Account.signTransaction(transaction, privateKey);
-        var values = EthLib.RLP.decode(rawTransaction);
+        var hash = Hash.keccak256(Account.transactionSigningData(transaction));
+        var rawTransaction = Account.signTransaction(transaction, privateKey);
+        var values = RLP.decode(rawTransaction);
         var result = {
             messageHash: hash,
             v: values[6],
@@ -130,20 +132,20 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 };
 
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    return EthLib.Account.recoverTransaction(rawTx);
+    return Account.recoverTransaction(rawTx);
 };
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var message = utils.isHex(data) ? utils.hexToUtf8(data) : data;
     var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
-    return EthLib.Hash.keccak256s(ethMessage);
+    return Hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
 
     var hash = this.hashMessage(data);
-    var signature = EthLib.Account.sign(hash, privateKey);
-    var vrs = EthLib.Account.decodeSignature(signature);
+    var signature = Account.sign(hash, privateKey);
+    var vrs = Account.decodeSignature(signature);
     return {
         message: data,
         messageHash: hash,
@@ -157,7 +159,7 @@ Accounts.prototype.sign = function sign(data, privateKey) {
 Accounts.prototype.recover = function recover(hash, signature) {
 
     if (_.isObject(hash)) {
-        return this.recover(hash.messageHash, EthLib.Account.encodeSignature([hash.v, hash.r, hash.s]));
+        return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
 
     if (!utils.isHex(hash)) {
@@ -165,9 +167,9 @@ Accounts.prototype.recover = function recover(hash, signature) {
     }
 
     if (arguments.length === 4) {
-        return this.recover(hash, EthLib.Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
+        return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
     }
-    return EthLib.Account.recover(hash, signature);
+    return Account.recover(hash, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
