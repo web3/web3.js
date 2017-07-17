@@ -171,6 +171,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         canUnsubscribe = true,
         timeoutCount = 0,
         confirmationCount = 0,
+        intervalId = null,
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
@@ -178,9 +179,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             !payload.params[0].to;
 
 
+
     // fire "receipt" and confirmation events and resolve after
-    method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
-        if(!err) {
+    var checkConfirmation = function (err, block, sub) {
+        if (!err) {
+            // create fake unsubscribe
+            if (!sub) {
+                sub = {
+                    unsubscribe: function () {
+                        clearInterval(intervalId);
+                    }
+                };
+            }
+
 
             method.eth.getTransactionReceipt(result)
             // catch error from requesting receipt
@@ -302,7 +313,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             promiseResolved = true;
             utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transactions receipt. Are you using HttpProvider? Please switch to Websockets.', data: err}, defer.eventEmitter, defer.reject);
         }
-    });
+    };
+
+    if (this.requestManager.provider.constructor.name === 'IpcProvider' ||
+        this.requestManager.provider.constructor.name === 'WebsocketProvider') {
+        method.eth.subscribe('newBlockHeaders', checkConfirmation);
+    } else {
+        intervalId = setInterval(checkConfirmation, 1000 * 3);
+    }
 };
 
 
