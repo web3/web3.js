@@ -87,7 +87,7 @@ var browserifyOptions = {
     debug: true,
     // standalone: 'Web3',
     derequire: true,
-    insertGlobalVars: true, // jshint ignore:line
+    insertGlobalVars: false, // jshint ignore:line
     detectGlobals: true,
     bundleExternal: true
 };
