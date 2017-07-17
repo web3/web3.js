@@ -9,7 +9,8 @@
     "src": "./src",
     "doc": "./doc"
   },
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "babel-preset-env": "^1.6.0",
     "bignumber.js": "^4.0.0",

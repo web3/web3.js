@@ -26,17 +26,17 @@
   "authors": [
     {
       "name": "Marek Kotewicz",
-      "email": "marek@ethdev.com",
+      "email": "marek@ethcore.io",
       "homepage": "https://github.com/debris"
     },
     {
       "name": "Marian Oancea",
-      "email": "marian@ethdev.com",
+      "email": "",
       "homepage": "https://github.com/cubedro"
     },
     {
       "name": "Fabian Vogelsteller",
-      "email": "fabian@ethdev.com",
+      "email": "fabian@ethereum.org",
       "homepage": "https://github.com/frozeman"
     }
   ],
