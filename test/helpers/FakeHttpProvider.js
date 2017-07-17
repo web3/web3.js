@@ -5,7 +5,7 @@ var _ = require('lodash');
 
 
 
-var FakeHttpProvider = function () {
+var FakeHttpProvider = function IpcProvider() {
     var _this = this;
     this.countId = 1;
     this.notificationCount = 1;
