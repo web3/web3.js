@@ -92,6 +92,16 @@ var browserifyOptions = {
     bundleExternal: true
 };
 
+var ugliyOptions = {
+    compress:{
+        dead_code     : true,  // discard unreachable code
+        drop_debugger : true,  // discard “debugger” statements
+        global_defs   : {      // global definitions
+            "DEBUG": false      // matters for some libraries
+        }
+    }
+};
+
 gulp.task('version', function(){
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
@@ -145,7 +155,7 @@ packages.forEach(function(pckg, i){
             .pipe(streamify(babel({
                 presets: ['env']
             })))
-            .pipe(streamify(uglify()))
+            .pipe(streamify(uglify(ugliyOptions)))
             .pipe(rename(pckg.fileName + '.min.js'))
             // .pipe(streamify(closureCompiler({
             //     compilation_level: 'ADVANCED_OPTIMIZATIONS',

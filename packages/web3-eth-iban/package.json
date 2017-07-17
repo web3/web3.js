@@ -7,7 +7,6 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-utils": "^1.0.0",
-        "bases": "^0.2.1",
         "bn.js": "^4.11.6"
     }
 }
