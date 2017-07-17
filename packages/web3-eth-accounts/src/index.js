@@ -218,36 +218,36 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
     return this.privateKeyToAccount(seed);
 };
 
-Accounts.prototype.encrypt = function (privateKey, password, opts) {
+Accounts.prototype.encrypt = function (privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
 
-    opts = opts || {};
-    var salt = opts.salt || crypto.randomBytes(32);
-    var iv = opts.iv || crypto.randomBytes(16);
+    options = options || {};
+    var salt = options.salt || crypto.randomBytes(32);
+    var iv = options.iv || crypto.randomBytes(16);
 
     var derivedKey;
-    var kdf = opts.kdf || 'scrypt';
+    var kdf = options.kdf || 'scrypt';
     var kdfparams = {
-        dklen: opts.dklen || 32,
+        dklen: options.dklen || 32,
         salt: salt.toString('hex')
     };
 
     if (kdf === 'pbkdf2') {
-        kdfparams.c = opts.c || 262144;
+        kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
         derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
-        kdfparams.n = opts.n || 262144;
-        kdfparams.r = opts.r || 8;
-        kdfparams.p = opts.p || 1;
+        kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
+        kdfparams.r = options.r || 8;
+        kdfparams.p = options.p || 1;
         derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
     } else {
         throw new Error('Unsupported kdf');
     }
 
-    var cipher = crypto.createCipheriv(opts.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+    var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
     if (!cipher) {
         throw new Error('Unsupported cipher');
     }
@@ -258,28 +258,20 @@ Accounts.prototype.encrypt = function (privateKey, password, opts) {
 
     return {
         version: 3,
-        id: uuid.v4({ random: opts.uuid || crypto.randomBytes(16) }),
+        id: uuid.v4({ random: options.uuid || crypto.randomBytes(16) }),
         address: account.address.toLowerCase().replace('0x',''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
             cipherparams: {
                 iv: iv.toString('hex')
             },
-            cipher: opts.cipher || 'aes-128-ctr',
+            cipher: options.cipher || 'aes-128-ctr',
             kdf: kdf,
             kdfparams: kdfparams,
             mac: mac.toString('hex')
         }
     };
 };
-
-// Accounts.prototype.decrypt = function decrypt(jsonString, password) {
-//     return this.privateKeyToAccount("0x" + wallet.fromV3(jsonString, password)._privKey.toString("hex"));
-// };
-//
-// Accounts.prototype.encrypt = function encrypt(privateKey, password) {
-//     return JSON.stringify(this.wallet.fromPrivateKey(utils.utf8ToHex(privateKey)).toV3(password));
-// };
 
 
 // Note: this is trying to follow closely the specs on
@@ -350,10 +342,10 @@ Wallet.prototype.clear = function () {
     return this;
 };
 
-Wallet.prototype.encrypt = function (password) {
+Wallet.prototype.encrypt = function (password, options) {
     var accounts = [];
     for (var i = 0; i < this.length; i++) {
-        accounts[i] = this[i].encrypt(password);
+        accounts[i] = this[i].encrypt(password, options);
     }
     return accounts;
 };
