@@ -7,7 +7,6 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core": "^1.0.0",
-        "web3-core-helpers": "^1.0.0",
         "web3-core-method": "^1.0.0",
         "web3-core-subscriptions": "^1.0.0",
         "web3-net": "^1.0.0"
