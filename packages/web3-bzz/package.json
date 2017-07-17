@@ -6,7 +6,7 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "swarm-js": "0.1.18",
+        "swarm-js": "0.1.30",
         "underscore": "1.8.3"
     }
 }
