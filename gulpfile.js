@@ -87,16 +87,16 @@ var browserifyOptions = {
     debug: true,
     // standalone: 'Web3',
     derequire: true,
-    insertGlobalVars: false, // jshint ignore:line
-    detectGlobals: false,
+    insertGlobalVars: true, // jshint ignore:line
+    detectGlobals: true,
     bundleExternal: true
 };
 
 var ugliyOptions = {
     compress:{
-        dead_code     : true,  // discard unreachable code
-        drop_debugger : true,  // discard “debugger” statements
-        global_defs   : {      // global definitions
+        dead_code     : true,  // jshint ignore:line
+        drop_debugger : true,  // jshint ignore:line
+        global_defs   : {      // jshint ignore:line
             "DEBUG": false      // matters for some libraries
         }
     }
@@ -152,6 +152,7 @@ packages.forEach(function(pckg, i){
             .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
             .pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
+                compact: false,
                 presets: ['env']
             })))
             .pipe(gulp.dest( DEST ))
