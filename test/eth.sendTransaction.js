@@ -1,4 +1,11 @@
 var testMethod = require('./helpers/test.method.js');
+var chai = require('chai');
+var assert = chai.assert;
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var Web3 = require('../src/index');
+
+var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
+
 
 var method = 'sendTransaction';
 
@@ -172,3 +179,121 @@ var tests = [{
 
 testMethod.runTests('eth', method, tests);
 
+
+// Test HTTPProvider
+describe(method, function () {
+    tests.forEach(function (test, index) {
+        it('promise test: ' + index, function (done) {
+
+            // given
+            var w3;
+            var result;
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            // skipp wallet tests
+            if(test.useLocalWallet) {
+                return done();
+            }
+
+
+            provider.injectResult(clone(test.result));
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, test.call);
+                assert.deepEqual(payload.params, test.formattedArgs || []);
+            });
+
+
+
+            // if notification its sendTransaction, which needs two more results, subscription and receipt
+            if(test.notification) {
+                // inject receipt
+                provider.injectResult({
+                    "blockHash": "0x6fd9e2a26ab",
+                    "blockNumber": "0x15df",
+                    "transactionHash": "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+                    "transactionIndex": "0x1",
+                    "contractAddress": "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+                    "cumulativeGasUsed": "0x7f110",
+                    "gasUsed": "0x7f110"
+                });
+                // fake newBlock
+                provider.injectNotification(test.notification);
+            }
+
+            var args = clone(test.args);
+
+            if(test.error) {
+
+                assert.throws(function(){ web3.eth[method].apply(web3, args); });
+                done();
+
+
+            } else {
+
+
+                result = web3.eth[method].apply(web3, args);
+
+                result.then(function(result){
+                    if(test.notification) {
+                        // test receipt
+                        assert.deepEqual(result, {
+                            "blockHash": "0x6fd9e2a26ab",
+                            "blockNumber": 5599,
+                            "transactionHash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+                            "transactionIndex":  1,
+                            "contractAddress":"0x407D73d8a49eeb85D32Cf465507dd71d507100c1", // checksum address
+                            "cumulativeGasUsed": 520464,
+                            "gasUsed": 520464
+                        });
+                    } else {
+                        assert.deepEqual(result, test.formattedResult);
+                    }
+
+                    done();
+                });
+            }
+
+        });
+
+        it('callback test: ' + index, function (done) {
+
+            // given
+            var w3;
+            var provider = new FakeHttpProvider();
+            var web3 = new Web3(provider);
+
+            // add a wallet
+            if(test.useLocalWallet) {
+                return done();
+            }
+
+            provider.injectResult(clone(test.result));
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, test.call);
+                assert.deepEqual(payload.params, test.formattedArgs || []);
+            });
+
+
+            var args = clone(test.args);
+
+            if(test.error) {
+                assert.throws(function(){ web3.eth[method].apply(web3, args); });
+
+                done();
+
+            } else {
+                // add callback
+                args.push(function (err, result) {
+                    assert.deepEqual(result, test.formattedResult);
+
+                    done();
+                });
+
+                web3.eth[method].apply(web3, args);
+            }
+        });
+    });
+});
