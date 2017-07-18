@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 
 
 var abi = [{
