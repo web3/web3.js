@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
-var FakeHttpProvider = require('./FakeIpcProvider');
+var FakeIpcProvider = require('./FakeIpcProvider');
 var Web3 = require('../../src/index');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
@@ -46,7 +46,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var w3;
                     var result;
-                    var provider = new FakeHttpProvider();
+                    var provider = new FakeIpcProvider();
                     var web3 = new Web3(provider);
 
                     // add a wallet
@@ -138,7 +138,7 @@ var runTests = function (obj, method, tests) {
 
                     // given
                     var w3;
-                    var provider = new FakeHttpProvider();
+                    var provider = new FakeIpcProvider();
                     var web3 = new Web3(provider);
 
                     // add a wallet

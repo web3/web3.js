@@ -319,7 +319,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         this.requestManager.provider.constructor.name === 'WebsocketProvider') {
         method.eth.subscribe('newBlockHeaders', checkConfirmation);
     } else {
-        intervalId = setInterval(checkConfirmation, 1000 * 3);
+        intervalId = setInterval(checkConfirmation, 1000 * 1);
     }
 };
 
