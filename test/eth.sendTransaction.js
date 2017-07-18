@@ -180,7 +180,7 @@ var tests = [{
 testMethod.runTests('eth', method, tests);
 
 
-// Test HTTPProvider
+// Test HTTPProvider with interval
 describe(method, function () {
     tests.forEach(function (test, index) {
         it('promise test: ' + index, function (done) {
@@ -218,8 +218,6 @@ describe(method, function () {
                     "cumulativeGasUsed": "0x7f110",
                     "gasUsed": "0x7f110"
                 });
-                // fake newBlock
-                provider.injectNotification(test.notification);
             }
 
             var args = clone(test.args);
