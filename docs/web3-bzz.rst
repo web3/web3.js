@@ -159,14 +159,14 @@ Uploads files folders or raw data to swarm.
 Parameters
 ----------
 
-1. ``mixed`` - ``Buffer|Object``: The data to upload, can be a Buffer, multiple files, or a directory or file (only in node.js). The following types are allowed:
-    - ``Buffer``: A file Buffer to upload.
+1. ``mixed`` - ``String|Buffer|Uint8Array|Object``: The data to upload, can be a file content, file Buffer/Uint8Array, multiple files, or a directory or file (only in node.js). The following types are allowed:
+    - ``String|Buffer|Uint8Array``: A file content, file Uint8Array or Buffer to upload, or:
     - ``Object``:
         1. Multiple key values for files and directories. The paths will be kept the same:
             - key must be the files path, or name, e.g. ``"/foo.txt"`` and its value is an object with:
                 - ``type``: The mime-type of the file, e.g. ``"text/html"``.
-                - ``data``: The Buffer of the data.
-        2. Upload raw data, a file or a directory from disk in Node.js. Requires and object with the following properties:
+                - ``data``: A file content, file Uint8Array or Buffer to upload.
+        2. Upload a file or a directory from disk in Node.js. Requires and object with the following properties:
             - ``path``: The path to the file or directory.
             - ``kind``: The type of the source ``"directory"``, ``"file"`` or ``"data"``.
             - ``defaultFile`` (optional): Path of the "defaultFile" when ``"kind": "directory"``, e.g. ``"/index.html"``.
@@ -190,15 +190,14 @@ Example
     var bzz = web3.bzz;
 
     // raw data
-    var file = "test file";
-    bzz.upload(new Buffer(file)).then(function(hash) {
+    bzz.upload("test file").then(function(hash) {
         console.log("Uploaded file. Address:", hash);
     })
 
     // raw directory
     var dir = {
-        "/foo.txt": {type: "text/plain", data: new Buffer("sample file")},
-        "/bar.txt": {type: "text/plain", data: new Buffer("another file")}
+        "/foo.txt": {type: "text/plain", data: "sample file"},
+        "/bar.txt": {type: "text/plain", data: "another file"}
     };
     bzz.upload(dir).then(function(hash) {
         console.log("Uploaded directory. Address:", hash);
