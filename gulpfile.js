@@ -11,7 +11,6 @@ var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
-// var closureCompiler = require('google-closure-compiler').gulp();
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
@@ -163,15 +162,6 @@ packages.forEach(function(pckg, i){
             .pipe(streamify(uglify(ugliyOptions)))
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
-            // .pipe(streamify(closureCompiler({
-            //     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-            //     warning_level: 'VERBOSE',
-            //     jscomp_off: 'checkVars',
-            //     language_in: 'ECMASCRIPT6_STRICT',
-            //     language_out: 'ECMASCRIPT5_STRICT',
-            //     output_wrapper: '(function(){\n%output%\n}).call(this)',
-            //     js_output_file: pckg.fileName + '.min.js'
-            // })))
             .pipe(gulp.dest( DEST ));
     });
 });
