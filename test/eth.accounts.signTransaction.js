@@ -1,4 +1,4 @@
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../src/index.js');
 var Accounts = require("./../packages/web3-eth-accounts/src/index.js");
 var ethjsSigner = require("ethjs-signer");

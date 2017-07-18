@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var requestManager = require('../packages/web3-core-requestManager');
 
 // TODO: handling errors!

@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var chai = require('chai');
 var assert = chai.assert;
-var FakeHttpProvider = require('./FakeHttpProvider');
+var FakeHttpProvider = require('./FakeIpcProvider');
 var Web3 = require('../../src/index');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
