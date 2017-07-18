@@ -8,7 +8,6 @@ var _ = require('lodash');
 var FakeHttpProvider = function HttpProvider() {
     var _this = this;
     this.countId = 1;
-    this.notificationCount = 1;
     this.getResponseStub = function () {
         return {
             jsonrpc: '2.0',
@@ -30,7 +29,6 @@ var FakeHttpProvider = function HttpProvider() {
     this.response = [];
     this.error = [];
     this.validation = [];
-    this.notificationCallbacks = [];
 };
 
 
@@ -61,12 +59,6 @@ FakeHttpProvider.prototype.send = function (payload, callback) {
     }, 1);
 };
 
-FakeHttpProvider.prototype.on = function (type, callback) {
-    if(type === 'data') {
-        this.notificationCallbacks.push(callback);
-    }
-};
-
 FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
     var _this = this;
     var response;
@@ -91,17 +83,6 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
     return response;
 };
 
-FakeHttpProvider.prototype.injectNotification = function (notification) {
-    var _this = this;
-    setTimeout(function(){
-        _this.notificationCallbacks.forEach(function(cb){
-            if(notification && cb)
-                cb(null, notification);
-        });
-    }, 100 + this.notificationCount);
-
-    this.notificationCount += 10;
-};
 
 // FakeHttpProvider.prototype.injectResponse = function (response) {
 //     this.response = response;

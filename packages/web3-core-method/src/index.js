@@ -315,11 +315,11 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         }
     };
 
-    if (this.requestManager.provider.constructor.name === 'IpcProvider' ||
-        this.requestManager.provider.constructor.name === 'WebsocketProvider') {
+    // if provider allows PUB/SUB
+    if (_.isFunction(this.requestManager.provider.on)) {
         method.eth.subscribe('newBlockHeaders', checkConfirmation);
     } else {
-        intervalId = setInterval(checkConfirmation, 1000 * 1);
+        intervalId = setInterval(checkConfirmation, 1000);
     }
 };
 
