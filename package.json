@@ -2,42 +2,13 @@
   "name": "web3",
   "namespace": "ethereum",
   "version": "1.0.0-beta",
-  "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
+  "description": "Ethereum JavaScript API",
   "license": "LGPL-3.0",
   "main": "./src/index.js",
   "directories": {
-    "src": "./src",
-    "doc": "./doc"
-  },
-  "dependencies": {
-  },
-  "devDependencies": {
-    "babel-preset-env": "^1.6.0",
-    "bignumber.js": "^4.0.0",
-    "bn.js": "^4.11.6",
-    "bower": ">=1.4.1",
-    "browserify": "^14.4.0",
-    "chai": "^3.0.0",
-    "coveralls": "^2.11.2",
-    "crypto-js": "^3.1.4",
-    "del": ">=2.0.2",
-    "ethereumjs-wallet": "^0.6.0",
-    "ethjs-signer": "^0.1.1",
-    "exorcist": "^0.4.0",
-    "gulp": ">=3.9.0",
-    "gulp-babel": "^6.1.2",
-    "gulp-jshint": "^2.0.4",
-    "gulp-rename": "^1.2.2",
-    "gulp-replace": "^0.6.1",
-    "gulp-streamify": "^1.0.2",
-    "gulp-uglify": "^3.0.0",
-    "istanbul": "^0.4.4",
-    "jshint": ">=2.5.0",
-    "lerna": "^2.0.0",
-    "mocha": ">=2.3.3",
-    "sandboxed-module": "^2.0.2",
-    "underscore": "^1.8.3",
-    "vinyl-source-stream": "^1.1.0"
+    "lib": "./src",
+    "doc": "./doc",
+    "test": "./test"
   },
   "scripts": {
     "postinstall": "lerna bootstrap",
@@ -74,7 +45,6 @@
     },
     {
       "name": "Marian Oancea",
-      "email": "marian@ethereum.org",
       "url": "https://github.com/cubedro"
     },
     {
@@ -87,5 +57,34 @@
       "email": "jeffrey.wilcke@ethereum.org",
       "url": "https://github.com/obscuren"
     }
-  ]
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "babel-preset-env": "^1.6.0",
+    "bignumber.js": "^4.0.0",
+    "bn.js": "^4.11.6",
+    "bower": ">=1.4.1",
+    "browserify": "^14.4.0",
+    "chai": "^3.0.0",
+    "coveralls": "^2.11.2",
+    "crypto-js": "^3.1.4",
+    "del": ">=2.0.2",
+    "ethereumjs-wallet": "^0.6.0",
+    "ethjs-signer": "^0.1.1",
+    "exorcist": "^0.4.0",
+    "gulp": ">=3.9.0",
+    "gulp-babel": "^6.1.2",
+    "gulp-jshint": "^2.0.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-streamify": "^1.0.2",
+    "gulp-uglify": "^3.0.0",
+    "istanbul": "^0.4.4",
+    "jshint": ">=2.5.0",
+    "lerna": "^2.0.0",
+    "mocha": ">=2.3.3",
+    "sandboxed-module": "^2.0.2",
+    "underscore": "^1.8.3",
+    "vinyl-source-stream": "^1.1.0"
+  }
 }
