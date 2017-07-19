@@ -7,7 +7,6 @@ npm-debug.log
 .npm/
 /coverage
 /tmp
-example/js
 node_modules
 bower_components
 /bower

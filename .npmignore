@@ -1,8 +1,9 @@
+*.idea
 test
 dist
+docs
 .gitignore
 .editorconfig
 .travis.yml
 .npmignore
-*.idea
 .DS_Store
