@@ -1,6 +1,6 @@
 web3.js has moved from 0.x.x to 1.x.x. This is a major refactor, we will provide a guide on how to upgrade in the future.
 
-![](./web3js.jpg)
+<img src="./web3js.jpg" width=200 />
 
 # web3.js - Ethereum JavaScript API
 
