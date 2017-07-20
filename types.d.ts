@@ -248,7 +248,7 @@ export declare interface Utils {
   padLeft(string: string, chars: number, sign: string): string
   rightPad(string: string, chars: number, sign: string): string
   padRight(string: string, chars: number, sign: string): string
-  sha3(val: string): string
+  sha3(val: string, val2?:string, val3?:string, val4?:string, val5?:string): string
   soliditySha3(val: string): string
   randomHex(bytes: number): string
   stringToHex(val: string): string
