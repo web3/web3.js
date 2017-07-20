@@ -1,7 +1,6 @@
-# Migration 0.13.0 -> 0.14.0
+web3.js has moved from 0.x.x to 1.x.x. This is a major refactor, we will provide a guide on how to upgrade in the future.
 
-web3.js version 0.14.0 supports [multiple instances of web3](https://github.com/ethereum/web3.js/issues/297) object.
-To migrate to this version, please follow the guide:
+![](./web3js.jpg)
 
 ```diff
 -var web3 = require('web3');
@@ -59,60 +58,53 @@ Bower
 bower install web3
 ```
 
-Component
-
-```bash
-component install ethereum/web3.js
-```
-
-* Include `web3.min.js` in your html file. (not required for the meteor package)
+Or Include `dist/web3.min.js` in your html file.
 
 ## Usage
-Use the `web3` object directly from global namespace:
+Use the `Web3` object directly from global namespace:
 
 ```js
-console.log(web3); // {eth: .., shh: ...} // it's here!
-```
-
-Set a provider (HttpProvider)
-
-```js
-if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider);
-} else {
-  // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+var web3 = new Web3('ws://localhost:8546');
+console.log(Web3);
+> {
+    eth: ... ,
+    shh: ... ,
+    utils: ...,
+    ...
 }
 ```
 
-Set a provider (HttpProvider using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication))
+Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
 
 ```js
-web3.setProvider(new web3.providers.HttpProvider('http://host.url', 0, BasicAuthUsername, BasicAuthPassword));
+web3.setProvider('ws://localhost:8546');
+// or
+web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
 There you go, now you can use it:
 
 ```js
-var coinbase = web3.eth.coinbase;
-var balance = web3.eth.getBalance(coinbase);
+web3.eth.getAccounts()
+.then(console.log);
 ```
 
-You can find more examples in [`example`](https://github.com/ethereum/web3.js/tree/master/example) directory.
+## Documentation
+
+Documentation can be found at [read the docs](http://web3js.readthedocs.io/en/1.0/)
 
 
-## Contribute!
+## Building
 
 ### Requirements
 
-* Node.js
+* [Node.js](https://nodejs.org)
 * npm
 
 ```bash
 sudo apt-get update
 sudo apt-get install nodejs
 sudo apt-get install npm
-sudo apt-get install nodejs-legacy
 ```
 
 ### Building (gulp)
