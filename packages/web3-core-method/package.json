@@ -9,6 +9,6 @@
         "web3-core-helpers": "^1.0.0",
         "web3-utils": "^1.0.0",
         "web3-core-promiEvent": "^1.0.0",
-        "underscore": "^1.8.3"
+        "underscore": "1.8.3"
     }
 }

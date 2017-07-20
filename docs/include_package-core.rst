@@ -34,10 +34,22 @@ Example
 .. code-block:: javascript
 
     var Web3 = require('web3');
+    var web3 = new Web3('http://localhost:8545');
+    // or
     var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
     // change provider
+    web3.setProvider('ws://localhost:8546');
+    // or
     web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+    // Using the IPC provider in node.js
+    var net = require('net');
+    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    // or
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
+    // on windows the path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
 
 
 ------------------------------------------------------------------------------
@@ -64,7 +76,6 @@ Value
     - ``Object`` - ``HttpProvider``: The HTTP provider is **deprecated**, as it won't work for subscriptions.
     - ``Object`` - ``WebsocketProvider``: The Websocket provider is the standard for usage in legacy browsers.
     - ``Object`` - ``IpcProvider``: The IPC provider is used node.js dapps when running a local node. Gives the most secure connection.
-    - ``Object`` - ``givenProvider``: When using web3.js in an Enthereum compatible browser, this will be set with the current native provider by that browser. Doesn't need to be instantiated.
 
 -------
 Example
@@ -74,8 +85,49 @@ Example
 
     var Web3 = require('web3');
     // use the given Provider, e.g in Mist, or instantiate a new websocket provider
-    var web3 = new Web3(Web3.providers.givenProvider || new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+    var web3 = new Web3(Web3.givenProvider || 'ws://remotenode.com:8546');
+    // or
+    var web3 = new Web3(Web3.givenProvider || new Web3.providers.WebsocketProvider('ws://remotenode.com:8546'));
 
+    // Using the IPC provider in node.js
+    var net = require('net');
+
+    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    // or
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
+    // on windows the path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
+
+------------------------------------------------------------------------------
+
+givenProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.givenProvider
+    web3.eth.givenProvider
+    web3.shh.givenProvider
+    web3.bzz.givenProvider
+    ...
+
+When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
+Will return the given provider by the (browser) environment, otherwise ``null``.
+
+
+-------
+Returns
+-------
+
+``Object``: The given provider set or ``null``;
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+    web3.setProvider(web3.givenProvider || "ws://remotenode.com:8546");
 
 ------------------------------------------------------------------------------
 
@@ -105,8 +157,9 @@ Example
 -------
 
 .. code-block:: javascript
-    if(!web3.currentProvider)
-        web3.setProvider(new web3.providers.HttpProvider("http://localhost:8545"));
+    if(!web3.currentProvider) {
+        web3.setProvider("http://localhost:8545");
+    }
 
 ------------------------------------------------------------------------------
 
