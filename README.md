@@ -1,6 +1,4 @@
-**PREVIEW RELEASE** This is a beta preview release. The current stable version is 0.20.0 
-
-web3.js has moved from 0.x.x to 1.x.x. This is a major refactor, we will provide a guide on how to upgrade in the future.
+**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
 <img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
 
@@ -15,16 +13,15 @@ web3.js has moved from 0.x.x to 1.x.x. This is a major refactor, we will provide
 
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
-which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
-
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
 
-<!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
+This is the Ethereum [JavaScript API][docs]
+which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
-You need to run a local Ethereum node to use this library.
 
-[Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+You need to run a local or remote Ethereum node to use this library.
+
+Please read the [documentation][docs] for more.
 
 ## Installation
 
@@ -57,10 +54,10 @@ CDN
 Bower
 
 ```bash
-bower install web3
+// bower install web3 (not published yet)
 ```
 
-Or Include `dist/web3.min.js` in your html file.
+Or build and include `dist/web3.min.js` in your html file.
 
 ## Usage
 Use the `Web3` object directly from global namespace:
@@ -93,7 +90,7 @@ web3.eth.getAccounts()
 
 ## Documentation
 
-Documentation can be found at [read the docs](http://web3js.readthedocs.io/en/1.0/)
+Documentation can be found at [read the docs][docs]
 
 
 ## Building
@@ -115,6 +112,8 @@ sudo apt-get install npm
 npm run-script build
 ```
 
+This will put all the browser build files into the `dist` folder.
+
 
 ### Testing (mocha)
 
@@ -122,22 +121,8 @@ npm run-script build
 npm test
 ```
 
-### Community
- - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
- - [Forum](https://forum.ethereum.org/categories/ethereum-js)
-
-
-### Other implementations
- - Python [Web3.py](https://github.com/ethereum/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)
- - Java [web3j](https://github.com/web3j/web3j)
- - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
- - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
- - PHP [web3.php](https://github.com/sc0Vu/web3.php)
- - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
-
-
-[npm-image]: https://badge.fury.io/js/web3.svg
+[docs]: http://web3js.readthedocs.io/en/1.0/
+[npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
 [travis-url]: https://travis-ci.org/ethereum/web3.js
