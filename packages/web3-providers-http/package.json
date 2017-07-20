@@ -7,7 +7,6 @@
     "main": "src/index.js",
     "dependencies": {
         "web3-core-helpers": "^1.0.0",
-        "xmlhttprequest": "*",
-        "xhr2": "*"
+        "xhr2": "0.1.4"
     }
 }

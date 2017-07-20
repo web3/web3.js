@@ -6,7 +6,7 @@
     "freeze": true,
     "funcscope": false,
     "maxcomplexity": 8,
-    "maxdepth": 3,
+    "maxdepth": 4,
     "maxerr": 50,
     /*"maxlen": 80*/ /*this should be our goal*/
     /*"maxparams": 3,*/

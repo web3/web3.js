@@ -5,9 +5,10 @@ var _ = require('lodash');
 
 
 
-var FakeHttpProvider = function HttpProvider() {
+var FakeIpcProvider = function IpcProvider() {
     var _this = this;
     this.countId = 1;
+    this.notificationCount = 1;
     this.getResponseStub = function () {
         return {
             jsonrpc: '2.0',
@@ -29,10 +30,11 @@ var FakeHttpProvider = function HttpProvider() {
     this.response = [];
     this.error = [];
     this.validation = [];
+    this.notificationCallbacks = [];
 };
 
 
-FakeHttpProvider.prototype.send = function (payload, callback) {
+FakeIpcProvider.prototype.send = function (payload, callback) {
     var _this = this;
 
     // set id
@@ -59,7 +61,13 @@ FakeHttpProvider.prototype.send = function (payload, callback) {
     }, 1);
 };
 
-FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
+FakeIpcProvider.prototype.on = function (type, callback) {
+    if(type === 'data') {
+        this.notificationCallbacks.push(callback);
+    }
+};
+
+FakeIpcProvider.prototype.getResponseOrError = function (type, payload) {
     var _this = this;
     var response;
 
@@ -83,6 +91,17 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
     return response;
 };
 
+FakeIpcProvider.prototype.injectNotification = function (notification) {
+    var _this = this;
+    setTimeout(function(){
+        _this.notificationCallbacks.forEach(function(cb){
+            if(notification && cb)
+                cb(null, notification);
+        });
+    }, 100 + this.notificationCount);
+
+    this.notificationCount += 10;
+};
 
 // FakeHttpProvider.prototype.injectResponse = function (response) {
 //     this.response = response;
@@ -90,7 +109,7 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
 
 
 
-FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
+FakeIpcProvider.prototype.injectBatchResults = function (results, error) {
     var _this = this;
     this.response.push(results.map(function (r) {
         if(error) {
@@ -104,23 +123,23 @@ FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     }));
 };
 
-FakeHttpProvider.prototype.injectResult = function (result) {
+FakeIpcProvider.prototype.injectResult = function (result) {
     var response = this.getResponseStub();
     response.result = result;
 
     this.response.push(response);
 };
 
-FakeHttpProvider.prototype.injectError = function (error) {
+FakeIpcProvider.prototype.injectError = function (error) {
     var errorStub = this.getErrorStub();
     errorStub.error = error; // message, code
 
     this.error.push(errorStub);
 };
 
-FakeHttpProvider.prototype.injectValidation = function (callback) {
+FakeIpcProvider.prototype.injectValidation = function (callback) {
     this.validation.push(callback);
 };
 
-module.exports = FakeHttpProvider;
+module.exports = FakeIpcProvider;
 

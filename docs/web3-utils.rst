@@ -512,7 +512,7 @@ toHex
 
 Will auto convert any given value to HEX.
 Number strings will interpreted as numbers.
-Text strings will be interepreted as UTF-8 strings.
+Text strings will be interpreted as UTF-8 strings.
 
 ----------
 Parameters
@@ -769,7 +769,7 @@ Example
 
 ------------------------------------------------------------------------------
 
-
+.. _utils-utf8tohex:
 
 utf8ToHex
 =====================

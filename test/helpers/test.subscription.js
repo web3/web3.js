@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var FakeHttpProvider = require('./FakeHttpProvider');
+var FakeHttpProvider = require('./FakeIpcProvider');
 var Web3 = require('../../src/index');
 
 
@@ -18,19 +18,18 @@ var runTests = function (protocol, tests) {
                 var changedCount = 0;
 
                 provider.injectResult(test.firstResult);
-                provider.injectResult(test.secondResult);
-                var step = 0;
+                provider.injectResult(test.datadResult);
+
                 provider.injectValidation(function (payload) {
-                    if (step === 0) {
-                        assert.equal(payload.jsonrpc, '2.0');
-                        assert.equal(payload.method, protocol + '_subscribe');
-                        assert.deepEqual(payload.params, test.firstPayload.params);
 
-                        step++;
-                    } else if (step === 1) {
+                    assert.equal(payload.jsonrpc, '2.0');
+                    assert.equal(payload.method, protocol + '_subscribe');
+                    assert.deepEqual(payload.params, test.firstPayload.params);
+                });
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.method, test.secondPayload.method);
 
-                        assert.equal(payload.method, protocol + '_unsubscribe');
-                    }
+                    done();
 
                 });
 
@@ -53,7 +52,6 @@ var runTests = function (protocol, tests) {
                             assert.equal(changedCount, test.changedCount);
 
                         sub.unsubscribe();
-                        done();
                     }
 
                 });
@@ -66,7 +64,6 @@ var runTests = function (protocol, tests) {
                 .on('changed', function () {
                     changedCount++;
                 });
-
 
 
                 // fire subscriptions

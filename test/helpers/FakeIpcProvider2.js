@@ -1,18 +1,18 @@
-var FakeHttpProvider = require('./FakeHttpProvider');
+var FakeHttpProvider = require('./FakeIpcProvider');
 
-var FakeHttpProvider2 = function () {
+var FakeIpcProvider2 = function () {
     this.counter = 0;
     this.resultList = [];
 };
 
-FakeHttpProvider2.prototype = new FakeHttpProvider();
-FakeHttpProvider2.prototype.constructor = FakeHttpProvider2;
+FakeIpcProvider2.prototype = new FakeHttpProvider();
+FakeIpcProvider2.prototype.constructor = FakeIpcProvider2;
 
-FakeHttpProvider2.prototype.injectResultList = function (list) {
+FakeIpcProvider2.prototype.injectResultList = function (list) {
     this.resultList = list;
 };
 
-FakeHttpProvider2.prototype.getResponse = function () {
+FakeIpcProvider2.prototype.getResponse = function () {
     var result = this.resultList[this.counter];
     this.counter++;
 
@@ -33,5 +33,5 @@ FakeHttpProvider2.prototype.getResponse = function () {
     return this.response;
 };
 
-module.exports = FakeHttpProvider2;
+module.exports = FakeIpcProvider2;
 
