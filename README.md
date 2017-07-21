@@ -32,6 +32,11 @@ npm install web3
 meteor add ethereum:web3
 ```
 
+### Lerna
+```bash
+npm install -g lerna
+```
+
 ### In the Browser
 
 Build and include `dist/web3.min.js` in your html file.
