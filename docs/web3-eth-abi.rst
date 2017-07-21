@@ -56,8 +56,8 @@ Example
     > 0x24ee0097
 
     // Or string
-    web3.eth.abi.encodeFunctionSignature('myFunction(uint256,uint32[],bytes10,bytes)')
-    > '0xd5c5ed59'
+    web3.eth.abi.encodeFunctionSignature('myMethod(uint256,string)')
+    > '0x24ee0097'
 
 
 ------------------------------------------------------------------------------
