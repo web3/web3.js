@@ -41,10 +41,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.abi.encodeFunctionSignature('myMethod(uint256,string)')
-    > 0x24ee0097
-
-    // or from a json interface object
+    // From a JSON interface object
     web3.eth.abi.encodeFunctionSignature({
         name: 'myMethod',
         type: 'function',
@@ -58,7 +55,7 @@ Example
     })
     > 0x24ee0097
 
-    // Or
+    // Or string
     web3.eth.abi.encodeFunctionSignature('myFunction(uint256,uint32[],bytes10,bytes)')
     > '0xd5c5ed59'
 
