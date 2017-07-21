@@ -320,7 +320,7 @@ export declare class Eth {
     sign(data: string, privateKey: string, returnSignature?: boolean): string | Signature
     recover(signature: string | Signature): string
     encrypt(privateKey: string, password: string): PrivateKey
-    decrypt(privateKey: PrivateKey, password: string): string
+    decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
       'new'(numberOfAccounts: number, entropy: string): Account[]
       add(account: string | Account): any
