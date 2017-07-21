@@ -39,25 +39,16 @@ yarn add web3
 
 ### Meteor.js
 
+*Note*: works only in the Browser for now. (PRs welcome)
+
 ```bash
 meteor add ethereum:web3
 ```
 
-### As Browser module
+### In the Browser
 
-CDN
+Build and include `dist/web3.min.js` in your html file.
 
-```html
-<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
-```
-
-Bower
-
-```bash
-// bower install web3 (not published yet)
-```
-
-Or build and include `dist/web3.min.js` in your html file.
 
 ## Usage
 Use the `Web3` object directly from global namespace:
