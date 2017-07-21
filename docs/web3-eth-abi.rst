@@ -58,6 +58,10 @@ Example
     })
     > 0x24ee0097
 
+    // Or
+    web3.eth.abi.encodeFunctionSignature('myFunction(uint256,uint32[],bytes10,bytes)')
+    > '0xd5c5ed59'
+
 
 ------------------------------------------------------------------------------
 
