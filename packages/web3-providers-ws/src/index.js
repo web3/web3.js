@@ -206,7 +206,6 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     // if(!this.connection.writable)
     //     this.connection.connect({url: this.url});
 
-
     this.connection.send(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);
 };
