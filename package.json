@@ -11,7 +11,7 @@
     "test": "./test"
   },
   "scripts": {
-    "postinstall": "lerna bootstrap",
+    "postinstall": "./node_modules/lerna/bin/lerna.js bootstrap",
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "jshint *.js packages",
