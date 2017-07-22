@@ -181,7 +181,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, block, sub) {
+    var checkConfirmation = function (err, block, sub, existingReceipt) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -192,8 +192,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                 };
             }
 
-
-            method.eth.getTransactionReceipt(result)
+            // if we have a valid receipt we don't need to send a request
+            (existingReceipt ? Promise.resolve(existingReceipt) : method.eth.getTransactionReceipt(result))
             // catch error from requesting receipt
             .catch(function (err) {
                 sub.unsubscribe();
@@ -314,13 +314,35 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transactions receipt. Are you using HttpProvider? Please switch to Websockets.', data: err}, defer.eventEmitter, defer.reject);
         }
     };
-
+    
+  // start watching for confirmation depending on the support features of the provider
+  var startWatching = function() {
     // if provider allows PUB/SUB
     if (_.isFunction(this.requestManager.provider.on)) {
-        method.eth.subscribe('newBlockHeaders', checkConfirmation);
+      method.eth.subscribe('newBlockHeaders', checkConfirmation);
     } else {
-        intervalId = setInterval(checkConfirmation, 1000);
+      intervalId = setInterval(checkConfirmation, 1000);
     }
+  };
+
+  // first check if we already have a confirmed transaction
+  method.eth.getTransactionReceipt(result)
+    .then(function(receipt) {
+      if (receipt && receipt.blockNumber) {
+        checkConfirmation(null, receipt.blockNumber, null, receipt);
+        setTimeout(function(){
+            // if the promised has not been resolved we must keep on watching for new Blocks
+            if (!promiseResolved) startWatching();
+        } ,1000);
+      }
+      else {
+        startWatching();
+      }
+    })
+    .catch(startWatching);
+
+    
+    
 };
 
 
