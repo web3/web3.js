@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Ethereum JavaScript API",
   "license": "LGPL-3.0",
   "main": "./src/index.js",
@@ -14,6 +14,7 @@
     "postinstall": "./node_modules/lerna/bin/lerna.js bootstrap",
     "build": "gulp",
     "watch": "gulp watch",
+    "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
     "test": "mocha; jshint *.js packages",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
@@ -40,7 +41,7 @@
     },
     {
       "name": "Marek Kotewicz",
-      "email": "marek@ethcore.io",
+      "email": "marek@parity.io",
       "url": "https://github.com/debris"
     },
     {
@@ -49,7 +50,7 @@
     },
     {
       "name": "Gav Wood",
-      "email": "g@ethcore.io",
+      "email": "g@parity.io",
       "homepage": "http://gavwood.com"
     },
     {
