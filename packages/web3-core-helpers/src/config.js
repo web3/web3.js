@@ -16,7 +16,7 @@
  */
 /**
  * @file index.js
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @date 2015
  */
 

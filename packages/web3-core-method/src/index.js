@@ -17,7 +17,7 @@
 /**
  * @file index.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @date 2017
  */
 

@@ -16,7 +16,7 @@
  */
 /**
  * @file index.js
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@frozeman.de>
  * @date 2017
  */

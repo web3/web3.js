@@ -16,9 +16,9 @@
 */
 /** @file httpprovider.js
  * @authors:
- *   Marek Kotewicz <marek@ethdev.com>
- *   Marian Oancea <marian@ethdev.com>
- *   Fabian Vogelsteller <fabian@ethdev.com>
+ *   Marek Kotewicz <marek@parity.io>
+ *   Marian Oancea
+ *   Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2015
  */
 
