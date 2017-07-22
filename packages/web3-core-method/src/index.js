@@ -391,6 +391,15 @@ Method.prototype.buildCall = function() {
 
         };
 
+        // SENDS the SIGNED SIGNATURE
+        var sendSignedTx = function(sign){
+
+            payload.method = 'eth_sendRawTransaction';
+            payload.params = [sign.rawTransaction];
+
+            method.requestManager.send(payload, sendTxCallback);
+        };
+
 
         var sendRequest = function(payload, method) {
 
@@ -407,14 +416,9 @@ Method.prototype.buildCall = function() {
                     if (wallet && wallet.privateKey) {
                         delete tx.from;
 
-                        return method.eth.accounts.signTransaction(tx, wallet.privateKey)
-                        .then(function(sign){
+                        var signature = method.eth.accounts.signTransaction(tx, wallet.privateKey);
 
-                            payload.method = 'eth_sendRawTransaction';
-                            payload.params = [sign.rawTransaction];
-
-                            method.requestManager.send(payload, sendTxCallback);
-                        });
+                        return (_.isFunction(signature.then)) ? signature.then(sendSignedTx) : sendSignedTx(signature);
                     }
 
                 // ETH_SIGN
