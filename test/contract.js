@@ -1432,6 +1432,7 @@ describe('contract', function () {
                                 t1: '5'
                             },
                             event: 'Unchanged',
+                            signature: "0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5",
                             raw: {
                                 topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                     '0x0000000000000000000000000000000000000000000000000000000000000002',
@@ -1458,6 +1459,7 @@ describe('contract', function () {
                                 t2: '8'
                             },
                             event: 'Changed',
+                            signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
                             raw: {
                                 topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                     '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1573,6 +1575,7 @@ describe('contract', function () {
                                     t1: '5'
                                 },
                                 event: 'Unchanged',
+                                signature: '0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                 raw: {
                                     topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                         '0x0000000000000000000000000000000000000000000000000000000000000002',
@@ -1599,6 +1602,7 @@ describe('contract', function () {
                                     t2: '8'
                                 },
                                 event: 'Changed',
+                                signature: '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                 raw: {
                                     topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                         '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -2044,6 +2048,7 @@ describe('contract', function () {
 
                 assert.deepEqual(result, [{
                     event: "Changed",
+                    signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                     id: "log_9ff24cb4",
                     address: address,
                     blockNumber: 3,
@@ -2069,6 +2074,7 @@ describe('contract', function () {
                 },
                     {
                         event: "Changed",
+                        signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                         id: "log_29c93e15",
                         address: address,
                         blockNumber: 4,
