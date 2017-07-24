@@ -23,6 +23,7 @@ var tests = [{
     },
     expected: {
         event: name,
+        signature: null,
         returnValues: {},
         logIndex: 1,
         transactionIndex: 16,
@@ -56,6 +57,7 @@ var tests = [{
     },
     expected: {
         event: name,
+        signature: null,
         returnValues: {
             0: '1',
             a: '1'
@@ -111,6 +113,7 @@ var tests = [{
     },
     expected: {
         event: name,
+        signature: address,
         returnValues: {
             0: '1',
             1: '10',
@@ -178,6 +181,7 @@ var tests = [{
     },
     expected: {
         event: name,
+        signature: null,
         returnValues: {
             0: '1',
             1: '10',

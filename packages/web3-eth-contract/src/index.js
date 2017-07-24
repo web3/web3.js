@@ -318,7 +318,11 @@ Contract.prototype._decodeEventABI = function (data) {
     result.returnValues = abi.decodeLog(event.inputs, data.data, argTopics);
     delete result.returnValues.__length__;
 
+    // add name
     result.event = event.name;
+
+    // add signature
+    result.signature = (event.anonymous || !data.topics[0]) ? null : data.topics[0];
 
     // move the data and topics to "raw"
     result.raw = {
