@@ -2475,7 +2475,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":84}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.0"
+    "version": "0.20.1"
 }
 
 },{}],22:[function(require,module,exports){
@@ -4274,19 +4274,19 @@ module.exports = SolidityFunction;
  * @date 2015
  */
 
-var errors = require('./errors')
+var errors = require('./errors');
 
 // workaround to use httpprovider in different envs
 
 // browser
 if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-  XMLHttpRequest = window.XMLHttpRequest // jshint ignore: line
+  XMLHttpRequest = window.XMLHttpRequest; // jshint ignore: line
 // node
 } else {
-  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest // jshint ignore: line
+  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
-var XHR2 = require('xhr2') // jshint ignore: line
+var XHR2 = require('xhr2'); // jshint ignore: line
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -4315,8 +4315,11 @@ HttpProvider.prototype.prepareRequest = function (async) {
     request = new XMLHttpRequest();
   }
 
-  request.open('POST', this.host, async, this.user, this.password);
-  request.setRequestHeader('Content-Type', 'application/json');
+  request.open('POST', this.host, async);
+  if (this.user && this.password) {
+    var auth = 'Basic ' + new Buffer(this.user + ':' + this.password).toString('base64');
+    request.setRequestHeader('Authorization', auth);
+  } request.setRequestHeader('Content-Type', 'application/json');
   return request;
 };
 
@@ -4397,9 +4400,9 @@ HttpProvider.prototype.isConnected = function () {
       method: 'net_listening',
       params: []
     });
-    return true
+    return true;
   } catch (e) {
-    return false
+    return false;
   }
 };
 
@@ -13604,13 +13607,13 @@ module.exports = transfer;
 module.exports = XMLHttpRequest;
 
 },{}],"bignumber.js":[function(require,module,exports){
-/*! bignumber.js v4.0.2 https://github.com/MikeMcl/bignumber.js/LICENCE */
+/*! bignumber.js v4.0.0 https://github.com/MikeMcl/bignumber.js/LICENCE */
 
 ;(function (globalObj) {
     'use strict';
 
     /*
-      bignumber.js v4.0.2
+      bignumber.js v4.0.0
       A JavaScript library for arbitrary-precision arithmetic.
       https://github.com/MikeMcl/bignumber.js
       Copyright (c) 2017 Michael Mclaughlin <M8ch88l@gmail.com>
@@ -14241,7 +14244,7 @@ module.exports = XMLHttpRequest;
                 } else {
 
                     // Remove leading elements which are zero and adjust exponent accordingly.
-                    for ( e = -1 ; c[0] === 0; c.splice(0, 1), e -= LOG_BASE);
+                    for ( e = -1 ; c[0] === 0; c.shift(), e -= LOG_BASE);
 
                     // Count the digits of the first element of c to determine leading zeros, and...
                     for ( i = 1, v = c[0]; v >= 10; v /= 10, i++);
@@ -14334,7 +14337,7 @@ module.exports = XMLHttpRequest;
 
                         if ( !d ) {
                             ++e;
-                            xc = [1].concat(xc);
+                            xc.unshift(1);
                         }
                     }
                 }
@@ -14372,7 +14375,7 @@ module.exports = XMLHttpRequest;
                     x[i] = temp % base;
                 }
 
-                if (carry) x = [carry].concat(x);
+                if (carry) x.unshift(carry);
 
                 return x;
             }
@@ -14406,7 +14409,7 @@ module.exports = XMLHttpRequest;
                 }
 
                 // Remove leading zeros.
-                for ( ; !a[0] && a.length > 1; a.splice(0, 1) );
+                for ( ; !a[0] && a.length > 1; a.shift() );
             }
 
             // x: dividend, y: divisor.
@@ -14475,7 +14478,7 @@ module.exports = XMLHttpRequest;
                     // Add zeros to make remainder as long as divisor.
                     for ( ; remL < yL; rem[remL++] = 0 );
                     yz = yc.slice();
-                    yz = [0].concat(yz);
+                    yz.unshift(0);
                     yc0 = yc[0];
                     if ( yc[1] >= base / 2 ) yc0++;
                     // Not necessary, but to prevent trial digit n > base, when using base 3.
@@ -14546,7 +14549,7 @@ module.exports = XMLHttpRequest;
                                 prodL = prod.length;
                             }
 
-                            if ( prodL < remL ) prod = [0].concat(prod);
+                            if ( prodL < remL ) prod.unshift(0);
 
                             // Subtract product from remainder.
                             subtract( rem, prod, remL, base );
@@ -14587,7 +14590,7 @@ module.exports = XMLHttpRequest;
                     more = rem[0] != null;
 
                     // Leading zero?
-                    if ( !qc[0] ) qc.splice(0, 1);
+                    if ( !qc[0] ) qc.shift();
                 }
 
                 if ( base == BASE ) {
@@ -15297,7 +15300,7 @@ module.exports = XMLHttpRequest;
             }
 
             // Remove leading zeros and adjust exponent accordingly.
-            for ( ; xc[0] == 0; xc.splice(0, 1), --ye );
+            for ( ; xc[0] == 0; xc.shift(), --ye );
 
             // Zero?
             if ( !xc[0] ) {
@@ -15465,7 +15468,7 @@ module.exports = XMLHttpRequest;
             }
 
             if (a) {
-                xc = [a].concat(xc);
+                xc.unshift(a);
                 ++ye;
             }
 
@@ -15754,7 +15757,7 @@ module.exports = XMLHttpRequest;
             if (c) {
                 ++e;
             } else {
-                zc.splice(0, 1);
+                zc.shift();
             }
 
             return normalise( y, zc, e );
@@ -16321,7 +16324,7 @@ module.exports = XMLHttpRequest;
 
 
     BigNumber = constructorFactory();
-    BigNumber['default'] = BigNumber.BigNumber = BigNumber;
+    BigNumber.default = BigNumber.BigNumber = BigNumber;
 
 
     // AMD.
