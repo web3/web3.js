@@ -19,6 +19,7 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
 var DEST = path.join(__dirname, 'dist/');
+
 var packages = [{
     fileName: 'web3',
     expose: 'Web3',
@@ -33,15 +34,15 @@ var packages = [{
     src: './packages/web3-eth/src/index.js'
 },{
     fileName: 'web3-eth-accounts',
-    expose: 'Web3Accounts',
+    expose: 'Web3EthAccounts',
     src: './packages/web3-eth-accounts/src/index.js'
 },{
     fileName: 'web3-eth-contract',
-    expose: 'Web3Contract',
+    expose: 'Web3EthContract',
     src: './packages/web3-eth-contract/src/index.js'
 },{
     fileName: 'web3-eth-personal',
-    expose: 'Web3Personal',
+    expose: 'Web3EthPersonal',
     src: './packages/web3-eth-personal/src/index.js'
 },{
     fileName: 'web3-eth-iban',
@@ -64,10 +65,6 @@ var packages = [{
     expose: 'Web3Bzz',
     src: './packages/web3-bzz/src/index.js'
 },{
-    fileName: 'web3-core-requestmanager',
-    expose: 'Web3RequestManager',
-    src: './packages/web3-core-requestmanager/src/index.js'
-},{
     fileName: 'web3-providers-ipc',
     expose: 'Web3IpcProvider',
     src: './packages/web3-providers-ipc/src/index.js'
@@ -80,6 +77,22 @@ var packages = [{
     fileName: 'web3-providers-ws',
     expose: 'Web3WsProvider',
     src: './packages/web3-providers-ws/src/index.js'
+},{
+    fileName: 'web3-core-subscriptions',
+    expose: 'Web3Subscriptions',
+    src: './packages/web3-core-subscriptions/src/index.js'
+},{
+    fileName: 'web3-core-requestmanager',
+    expose: 'Web3RequestManager',
+    src: './packages/web3-core-requestmanager/src/index.js'
+},{
+    fileName: 'web3-core-promievent',
+    expose: 'Web3PromiEvent',
+    src: './packages/web3-core-promievent/src/index.js'
+},{
+    fileName: 'web3-core-method',
+    expose: 'Web3Method',
+    src: './packages/web3-core-method/src/index.js'
 }];
 
 var browserifyOptions = {
@@ -171,5 +184,7 @@ gulp.task('watch', function() {
     gulp.watch(['./src/*.js'], ['lint', 'build']);
 });
 
-gulp.task('default', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
+gulp.task('all', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
+
+gulp.task('default', ['version', 'lint', 'clean', packages[0].fileName]);
 

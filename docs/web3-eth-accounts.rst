@@ -612,7 +612,7 @@ Adds an account using a private key or account object to the wallet.
 Parameters
 ----------
 
-1. ``account`` - ``String|Object``: A private key or account object created with :ref:`web3.eth.accounts.new() <accounts-create>`.
+1. ``account`` - ``String|Object``: A private key or account object created with :ref:`web3.eth.accounts.create() <accounts-create>`.
 
 
 -------
