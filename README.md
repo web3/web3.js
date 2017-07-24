@@ -115,6 +115,17 @@ npm run-script build
 npm test
 ```
 
+### Community
+ - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+ - [Forum](https://forum.ethereum.org/categories/ethereum-js)
+
+
+### Other implementations
+ - Python [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Haskell [hs-web3](https://github.com/airalab/hs-web3)
+ - Java [web3j](https://github.com/web3j/web3j)
+
+
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
