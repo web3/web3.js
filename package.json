@@ -84,5 +84,11 @@
       "url": "https://github.com/obscuren"
     }
   ],
+  "contributors": [
+    {
+      "name": "Shayan Eskandari",
+      "email": "shayan@theshayan.com"
+    }
+  ],
   "license": "LGPL-3.0"
 }
