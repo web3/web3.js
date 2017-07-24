@@ -37,7 +37,7 @@ var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
 var errors = require('web3-core-helpers').errors;
-var promiEvent = require('web3-core-promiEvent');
+var promiEvent = require('web3-core-promievent');
 var abi = require('web3-eth-abi');
 
 
