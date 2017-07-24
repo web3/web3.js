@@ -23,7 +23,7 @@
 "use strict";
 
 
-var requestManager = require('web3-requestManager');
+var requestManager = require('web3-requestmanager');
 var extend = require('./extend.js');
 
 module.exports = {

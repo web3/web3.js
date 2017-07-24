@@ -8,7 +8,7 @@
     "dependencies": {
         "web3-core-helpers": "^1.0.0-beta.8",
         "web3-core-method": "^1.0.0-beta.8",
-        "web3-requestManager": "^1.0.0-beta.8",
+        "web3-requestmanager": "^1.0.0-beta.8",
         "web3-utils": "^1.0.0-beta.8"
     }
 }

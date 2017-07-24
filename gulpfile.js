@@ -25,48 +25,48 @@ var packages = [{
     src: './src/index.js'
 },{
     fileName: 'web3-utils',
-    expose: 'Utils',
+    expose: 'Web3Utils',
     src: './packages/web3-utils/src/index.js'
 },{
     fileName: 'web3-eth',
-    expose: 'Eth',
+    expose: 'Web3Eth',
     src: './packages/web3-eth/src/index.js'
 },{
     fileName: 'web3-eth-accounts',
-    expose: 'Accounts',
+    expose: 'Web3Accounts',
     src: './packages/web3-eth-accounts/src/index.js'
 },{
     fileName: 'web3-eth-contract',
-    expose: 'Conract',
+    expose: 'Web3Contract',
     src: './packages/web3-eth-contract/src/index.js'
 },{
     fileName: 'web3-eth-personal',
-    expose: 'Personal',
+    expose: 'Web3Personal',
     src: './packages/web3-eth-personal/src/index.js'
 },{
     fileName: 'web3-eth-iban',
-    expose: 'EthIban',
+    expose: 'Web3EthIban',
     src: './packages/web3-eth-iban/src/index.js'
 },{
     fileName: 'web3-eth-abi',
-    expose: 'EthAbi',
+    expose: 'Web3EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
 },{
     fileName: 'web3-net',
-    expose: 'Net',
+    expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
 },{
     fileName: 'web3-shh',
-    expose: 'Shh',
+    expose: 'Web3Shh',
     src: './packages/web3-shh/src/index.js'
 },{
     fileName: 'web3-bzz',
-    expose: 'Bzz',
+    expose: 'Web3Bzz',
     src: './packages/web3-bzz/src/index.js'
 },{
-    fileName: 'web3-core-requestManager',
-    expose: 'RequestManager',
-    src: './packages/web3-core-requestManager/src/index.js'
+    fileName: 'web3-core-requestmanager',
+    expose: 'Web3RequestManager',
+    src: './packages/web3-core-requestmanager/src/index.js'
 },{
     fileName: 'web3-providers-ipc',
     expose: 'Web3IpcProvider',

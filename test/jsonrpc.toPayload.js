@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Jsonrpc = require('../packages/web3-core-requestManager/src/jsonrpc');
+var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
 
 describe('jsonrpc', function () {
     describe('toPayload', function () {

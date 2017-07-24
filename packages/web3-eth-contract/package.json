@@ -9,7 +9,7 @@
         "underscore": "1.8.3",
         "web3-core-helpers": "^1.0.0-beta.8",
         "web3-core-method": "^1.0.0-beta.8",
-        "web3-core-promiEvent": "^1.0.0-beta.8",
+        "web3-core-promievent": "^1.0.0-beta.8",
         "web3-core-subscriptions": "^1.0.0-beta.8",
         "web3-eth-abi": "^1.0.0-beta.8",
         "web3-utils": "^1.0.0-beta.8"
