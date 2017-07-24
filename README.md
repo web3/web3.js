@@ -34,15 +34,24 @@ meteor add ethereum:web3
 
 ### In the Browser
 
-Build and include `dist/web3.min.js` in your html file.
+Use the prebuild ``dist/web3.min.js``, or
+build using the [web3.js][repo] repository:
 
+```bash
+npm run-script build
+```
+
+Then include `dist/web3.js` in your html file.
+This will expose the `Web3` object on the window object.
 
 ## Usage
-Use the `Web3` object directly from global namespace:
 
 ```js
+// in node.js
+var Web3 = require('web3');
+
 var web3 = new Web3('ws://localhost:8546');
-console.log(Web3);
+console.log(web3);
 > {
     eth: ... ,
     shh: ... ,
@@ -86,8 +95,16 @@ sudo apt-get install npm
 
 ### Building (gulp)
 
+Build only the web3.js package
+
 ```bash
 npm run-script build
+```
+
+Or build all sub packages as well
+
+```bash
+npm run-script build-all
 ```
 
 This will put all the browser build files into the `dist` folder.
@@ -99,6 +116,7 @@ This will put all the browser build files into the `dist` folder.
 npm test
 ```
 
+[repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
