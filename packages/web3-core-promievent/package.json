@@ -1,8 +1,8 @@
 {
-    "name": "web3-core-promiEvent",
+    "name": "web3-core-promievent",
     "version": "1.0.0-beta.8",
     "description": "This package extends eventEmitters with promises to allow chaining as well as multiple final states of a function.",
-    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-promiEvent",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-promievent",
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
