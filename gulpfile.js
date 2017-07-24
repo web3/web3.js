@@ -115,6 +115,8 @@ var ugliyOptions = {
 };
 
 gulp.task('version', function(){
+  if(!version.version) return;
+
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
