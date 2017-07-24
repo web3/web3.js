@@ -1,14 +1,14 @@
 {
     "name": "web3-eth-abi",
-    "version": "1.0.0",
+    "version": "1.0.0-beta.8",
     "description": "Web3 module encode and decode EVM in/output.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth-abi",
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "web3-core-helpers": "^1.0.0",
-        "web3-utils": "^1.0.0",
+        "bn.js": "4.11.6",
         "underscore": "1.8.3",
-        "bn.js": "4.11.6"
+        "web3-core-helpers": "^1.0.0-beta.8",
+        "web3-utils": "^1.0.0-beta.8"
     }
 }
