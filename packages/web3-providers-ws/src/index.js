@@ -16,25 +16,26 @@
  */
 /** @file WebsocketProvider.js
  * @authors:
- *   Fabian Vogelsteller <fabian@ethdev.com>
- * @date 2015
+ *   Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2017
  */
 
 "use strict";
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-if (typeof global !== 'undefined')
+if (typeof global !== 'undefined') {
     var WebSocket = require('websocket').w3cwebsocket;
+}
 // Default connection ws://localhost:8546
 
 
-var WebsocketProvider = function WebsocketProvider(path)  {
+
+var WebsocketProvider = function WebsocketProvider(url)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-    this.path = path;
-    this.connection = new WebSocket(path);
+    this.connection = new WebSocket(url);
 
 
     this.addDefaultEvents();
@@ -192,10 +193,18 @@ WebsocketProvider.prototype._timeout = function() {
 
 
 WebsocketProvider.prototype.send = function (payload, callback) {
+    var _this = this;
+
+    if (this.connection.readyState === this.connection.CONNECTING) {
+        setTimeout(function () {
+            _this.send(payload, callback);
+        }, 10);
+        return;
+    }
+
     // try reconnect, when connection is gone
     // if(!this.connection.writable)
-    //     this.connection.connect({path: this.path});
-
+    //     this.connection.connect({url: this.url});
 
     this.connection.send(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);

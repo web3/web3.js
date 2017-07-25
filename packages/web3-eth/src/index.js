@@ -32,10 +32,10 @@ var Net = require('web3-net');
 
 var ENS = require('web3-eth-ens');
 var Personal = require('web3-eth-personal');
-var abi = require('web3-eth-abi');
 var Contract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
-var accounts = require('./accounts.js');
+var Accounts = require('web3-eth-accounts');
+var abi = require('web3-eth-abi');
 
 
 
@@ -81,9 +81,12 @@ var Eth = function Eth() {
     // add net
     this.net = new Net(this.currentProvider);
 
+    // add guess chain
+    this.net.getNetworkType = getNetworkType.bind(this);
+
+
     // add accounts
-    this.accounts = accounts;
-    this.accounts._eth = this;
+    this.accounts = new Accounts(this);
 
     // add personal
     this.personal = new Personal(this.currentProvider);
@@ -97,10 +100,6 @@ var Eth = function Eth() {
 
     // add ABI
     this.abi = abi;
-
-
-    // add guess chain
-    this.net.getNetworkType = getNetworkType.bind(this);
 
     // add ENS
     this.ens = new ENS(this);
@@ -199,7 +198,7 @@ var methods = function () {
         name: 'getStorageAt',
         call: 'eth_getStorageAt',
         params: 3,
-        inputFormatter: [formatters.inputAddressFormatter, utils.toHex, formatters.inputDefaultBlockNumberFormatter]
+        inputFormatter: [formatters.inputAddressFormatter, utils.numberToHex, formatters.inputDefaultBlockNumberFormatter]
     });
 
     var getCode = new Method({
@@ -221,7 +220,7 @@ var methods = function () {
         name: 'getUncle',
         call: uncleCall,
         params: 2,
-        inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+        inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
         outputFormatter: formatters.outputBlockFormatter,
 
     });
@@ -246,7 +245,7 @@ var methods = function () {
         name: 'getTransaction',
         call: 'eth_getTransactionByHash',
         params: 1,
-        inputFormatter: [formatters.inputAddressFormatter],
+        inputFormatter: [null],
         outputFormatter: formatters.outputTransactionFormatter
     });
 
@@ -254,7 +253,7 @@ var methods = function () {
         name: 'getTransactionFromBlock',
         call: transactionFromBlockCall,
         params: 2,
-        inputFormatter: [formatters.inputBlockNumberFormatter, utils.toHex],
+        inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
         outputFormatter: formatters.outputTransactionFormatter
     });
 
@@ -299,7 +298,11 @@ var methods = function () {
         name: 'sign',
         call: 'eth_sign',
         params: 2,
-        inputFormatter: [formatters.inputAddressFormatter, null]
+        inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter],
+        transformPayload: function (payload) {
+            payload.params.reverse();
+            return payload;
+        }
     });
 
     var call = new Method({

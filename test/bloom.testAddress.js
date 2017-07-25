@@ -11,7 +11,6 @@ var addressTests = [
 describe('web3-utils/bloomFilter', function() {
 	describe('testAddress', function() {
 		addressTests.forEach(function(test) {
-		    console.log(bloom.testAddress(test.bloom, test.address), test.result);
 			assert.equal(bloom.testAddress(test.bloom, test.address), test.result);
 		});
 	});

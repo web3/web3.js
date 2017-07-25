@@ -18,9 +18,9 @@
  * @file index.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Gav Wood <gav@ethcore.io>
+ *   Gav Wood <gav@parity.io>
  *   Jeffrey Wilcke <jeffrey.wilcke@ethereum.org>
- *   Marek Kotewicz <marek@ethcore.io>
+ *   Marek Kotewicz <marek@parity.io>
  *   Marian Oancea <marian@ethereum.org>
  * @date 2017
  */
@@ -55,18 +55,20 @@ var Web3 = function Web3() {
 
     this.utils = utils;
 
-    this.setProvider = function (provider) {
-        this._requestManager.setProvider(provider);
+    // overwrite package setProvider
+    this.setProvider = function (provider, net) {
+        this._requestManager.setProvider(provider, net);
+        this._provider = this._requestManager.provider;
 
-        this.eth.setProvider(provider);
-        this.eth.net.setProvider(provider);
-        this.eth.personal.setProvider(provider);
+        this.eth.setProvider(provider, net);
+        this.eth.net.setProvider(provider, net);
+        this.eth.personal.setProvider(provider, net);
 
-        this.shh.setProvider(provider);
-        this.shh.net.setProvider(provider);
+        this.shh.setProvider(provider, net);
+        this.shh.net.setProvider(provider, net);
 
         this.bzz.setProvider(provider);
-        this.bzz.net.setProvider(provider);
+
         return true;
     };
 };
