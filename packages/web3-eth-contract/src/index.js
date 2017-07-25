@@ -37,7 +37,7 @@ var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
 var formatters = require('web3-core-helpers').formatters;
 var errors = require('web3-core-helpers').errors;
-var promiEvent = require('web3-core-promiEvent');
+var promiEvent = require('web3-core-promievent');
 var abi = require('web3-eth-abi');
 
 
@@ -318,7 +318,11 @@ Contract.prototype._decodeEventABI = function (data) {
     result.returnValues = abi.decodeLog(event.inputs, data.data, argTopics);
     delete result.returnValues.__length__;
 
+    // add name
     result.event = event.name;
+
+    // add signature
+    result.signature = (event.anonymous || !data.topics[0]) ? null : data.topics[0];
 
     // move the data and topics to "raw"
     result.raw = {

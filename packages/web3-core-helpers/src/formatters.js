@@ -17,7 +17,7 @@
 /**
  * @file formatters.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @date 2017
  */
 
@@ -61,7 +61,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return utils.toHex(blockNumber);
+    return utils.numberToHex(blockNumber);
 };
 
 /**
@@ -99,17 +99,26 @@ var inputCallFormatter = function (options){
  * @param {Object} options
  * @returns object
 */
-var inputTransactionFormatter = function (options){
+var inputTransactionFormatter = function (options) {
 
-    options.from = options.from || config.defaultAccount;
+    // check from, only if not number, or object
+    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
+        options.from = options.from || config.defaultAccount;
 
-    if(!options.from)
-        throw new Error('The send transactions "from" field must be defined!');
+        if (!options.from && !_.isNumber(options.from)) {
+            throw new Error('The send transactions "from" field must be defined!');
+        }
 
-    options.from = inputAddressFormatter(options.from);
+        options.from = inputAddressFormatter(options.from);
+    }
 
     if (options.to) { // it might be contract creation
         options.to = inputAddressFormatter(options.to);
+    }
+
+    // allow both
+    if (options.gas || options.gasLimit) {
+        options.gas = options.gas || options.gasLimit;
     }
 
     ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
@@ -119,6 +128,17 @@ var inputTransactionFormatter = function (options){
     });
 
     return options;
+};
+
+/**
+ * Hex encodes the data passed to eth_sign and personal_sign
+ *
+ * @method inputSignFormatter
+ * @param {String} data
+ * @returns {String}
+ */
+var inputSignFormatter = function (data) {
+    return (utils.isHex(data)) ? data : utils.utf8ToHex(data);
 };
 
 /**
@@ -375,6 +395,7 @@ module.exports = {
     inputAddressFormatter: inputAddressFormatter,
     inputPostFormatter: inputPostFormatter,
     inputLogFormatter: inputLogFormatter,
+    inputSignFormatter: inputSignFormatter,
     outputBigNumberFormatter: outputBigNumberFormatter,
     outputTransactionFormatter: outputTransactionFormatter,
     outputTransactionReceiptFormatter: outputTransactionReceiptFormatter,

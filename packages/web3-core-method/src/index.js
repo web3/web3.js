@@ -17,7 +17,7 @@
 /**
  * @file index.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @date 2017
  */
 
@@ -26,7 +26,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var utils = require('web3-utils');
-var promiEvent = require('web3-core-promiEvent');
+var promiEvent = require('web3-core-promievent');
 
 var TIMEOUTBLOCK = 50;
 var CONFIRMATIONBLOCKS = 24;
@@ -42,6 +42,7 @@ var Method = function Method(options) {
     this.params = options.params || 0;
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
+    this.transformPayload = options.transformPayload;
     this.requestManager = null;
 };
 
@@ -139,11 +140,17 @@ Method.prototype.toPayload = function (args) {
     var params = this.formatInput(args);
     this.validateArgs(params);
 
-    return {
+    var payload = {
         method: call,
         params: params,
         callback: callback
     };
+
+    if (this.transformPayload) {
+        payload = this.transformPayload(payload);
+    }
+
+    return payload;
 };
 
 Method.prototype.attachToObject = function (obj) {
@@ -164,6 +171,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
         canUnsubscribe = true,
         timeoutCount = 0,
         confirmationCount = 0,
+        intervalId = null,
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
@@ -171,9 +179,19 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             !payload.params[0].to;
 
 
+
     // fire "receipt" and confirmation events and resolve after
-    method.eth.subscribe('newBlockHeaders', function (err, block, sub) {
-        if(!err) {
+    var checkConfirmation = function (err, block, sub) {
+        if (!err) {
+            // create fake unsubscribe
+            if (!sub) {
+                sub = {
+                    unsubscribe: function () {
+                        clearInterval(intervalId);
+                    }
+                };
+            }
+
 
             method.eth.getTransactionReceipt(result)
             // catch error from requesting receipt
@@ -295,7 +313,34 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             promiseResolved = true;
             utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transactions receipt. Are you using HttpProvider? Please switch to Websockets.', data: err}, defer.eventEmitter, defer.reject);
         }
-    });
+    };
+
+    // if provider allows PUB/SUB
+    if (_.isFunction(this.requestManager.provider.on)) {
+        method.eth.subscribe('newBlockHeaders', checkConfirmation);
+    } else {
+        intervalId = setInterval(checkConfirmation, 1000);
+    }
+};
+
+
+var getWallet = function(from, accounts) {
+    var wallet = null;
+
+    // is index given
+    if (_.isNumber(from)) {
+        wallet = accounts.wallet[from];
+
+        // is account given
+    } else if (_.isObject(from) && from.address && from.privateKey) {
+        wallet = from;
+
+        // search in wallet for address
+    } else {
+        wallet = accounts.wallet[from.toLowerCase()];
+    }
+
+    return wallet;
 };
 
 Method.prototype.buildCall = function() {
@@ -310,6 +355,7 @@ Method.prototype.buildCall = function() {
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
 
+        // CALLBACK function
         var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
 
@@ -335,7 +381,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-                // return PROMIEVENT
+            // return PROMIEVENT
             } else if (method.eth) {
 
                 defer.eventEmitter.emit('transactionHash', result);
@@ -345,16 +391,73 @@ Method.prototype.buildCall = function() {
 
         };
 
+        // SENDS the SIGNED SIGNATURE
+        var sendSignedTx = function(sign){
+
+            payload.method = 'eth_sendRawTransaction';
+            payload.params = [sign.rawTransaction];
+
+            method.requestManager.send(payload, sendTxCallback);
+        };
+
+
+        var sendRequest = function(payload, method) {
+
+            if (method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+                var wallet;
+
+                // ETH_SENDTRANSACTION
+                if (payload.method.toLowerCase() === 'eth_sendtransaction') {
+                    var tx = payload.params[0];
+                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.eth.accounts);
+
+
+                    // If wallet was found, sign tx, and send using sendRawTransaction
+                    if (wallet && wallet.privateKey) {
+                        delete tx.from;
+
+                        var signature = method.eth.accounts.signTransaction(tx, wallet.privateKey);
+
+                        return (_.isFunction(signature.then)) ? signature.then(sendSignedTx) : sendSignedTx(signature);
+                    }
+
+                // ETH_SIGN
+                } else if (payload.method.toLowerCase() === 'eth_sign') {
+                    var data = payload.params[1];
+                    wallet = getWallet(payload.params[0], method.eth.accounts);
+
+                    // If wallet was found, sign tx, and send using sendRawTransaction
+                    if (wallet && wallet.privateKey) {
+                        var sign = method.eth.accounts.sign(data, wallet.privateKey);
+
+                        if (payload.callback) {
+                            payload.callback(null, sign.signature);
+                        }
+
+                        defer.resolve(sign.signature);
+                        return;
+                    }
+
+
+                }
+            }
+
+            return method.requestManager.send(payload, sendTxCallback);
+        };
+
+
+        // Send the actual transaction
         if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-
             method.eth.getGasPrice(function (err, gasPrice) {
-                payload.params[0].gasPrice = utils.numberToHex(gasPrice);
-                method.requestManager.send(payload, sendTxCallback);
+                if (gasPrice) {
+                    payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+                }
+                sendRequest(payload, method);
             });
 
         } else {
-            method.requestManager.send(payload, sendTxCallback);
+            sendRequest(payload, method);
         }
 
 

@@ -96,13 +96,14 @@ var methods = function () {
         name: 'sign',
         call: 'personal_sign',
         params: 3,
-        inputFormatter: [null, formatters.inputAddressFormatter, null]
+        inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter, null]
     });
 
     var ecRecover = new Method({
         name: 'ecRecover',
         call: 'personal_ecRecover',
-        params: 2
+        params: 2,
+        inputFormatter: [formatters.inputSignFormatter, null]
     });
 
 

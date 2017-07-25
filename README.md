@@ -1,20 +1,20 @@
-web3.js has moved from 0.x.x to 1.x.x. This is a majore refactor, please read the following guide to update your dapp.
+**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
+<img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
 
 # web3.js - Ethereum JavaScript API
 
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
-which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
-
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
 
-<!-- [![browser support](https://ci.testling.com/ethereum/ethereum.js.png)](https://ci.testling.com/ethereum/ethereum.js) -->
+This is the Ethereum [JavaScript API][docs]
+which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
 
-You need to run a local Ethereum node to use this library.
 
-[Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+You need to run a local or remote Ethereum node to use this library.
+
+Please read the [documentation][docs] for more.
 
 ## Installation
 
@@ -26,69 +26,88 @@ npm install web3
 
 ### Meteor.js
 
+*Note*: works only in the Browser for now. (PRs welcome)
+
 ```bash
 meteor add ethereum:web3
 ```
 
-### As Browser module
-Bower
+### In the Browser
+
+Use the prebuild ``dist/web3.min.js``, or
+build using the [web3.js][repo] repository:
 
 ```bash
-bower install web3
+npm run-script build
 ```
 
-Component
-
-```bash
-component install ethereum/web3.js
-```
-
-* Include `web3.min.js` in your html file. (not required for the meteor package)
+Then include `dist/web3.js` in your html file.
+This will expose the `Web3` object on the window object.
 
 ## Usage
-Use the `web3` object directly from global namespace:
 
 ```js
-console.log(web3); // {eth: .., shh: ...} // it's here!
+// in node.js
+var Web3 = require('web3');
+
+var web3 = new Web3('ws://localhost:8546');
+console.log(web3);
+> {
+    eth: ... ,
+    shh: ... ,
+    utils: ...,
+    ...
+}
 ```
 
-Set a provider (HttpProvider)
+Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
 
 ```js
-web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+web3.setProvider('ws://localhost:8546');
+// or
+web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
 ```
 
 There you go, now you can use it:
 
 ```js
-var coinbase = web3.eth.coinbase;
-var balance = web3.eth.getBalance(coinbase);
+web3.eth.getAccounts()
+.then(console.log);
 ```
-
-You can find more examples in [`example`](https://github.com/ethereum/web3.js/tree/master/example) directory.
-
 
 ## Documentation
 
-Documentation can be found at [read the docs](http://web3js.readthedocs.io/en/latest/)
+Documentation can be found at [read the docs][docs]
+
+
+## Building
 
 ### Requirements
 
-* Node.js
+* [Node.js](https://nodejs.org)
 * npm
 
 ```bash
 sudo apt-get update
 sudo apt-get install nodejs
 sudo apt-get install npm
-sudo apt-get install nodejs-legacy
 ```
 
 ### Building (gulp)
 
+Build only the web3.js package
+
 ```bash
 npm run-script build
 ```
+
+Or build all sub packages as well
+
+```bash
+npm run-script build-all
+```
+
+This will put all the browser build files into the `dist` folder.
 
 
 ### Testing (mocha)
@@ -97,6 +116,8 @@ npm run-script build
 npm test
 ```
 
+[repo]: https://github.com/ethereum/web3.js
+[docs]: http://web3js.readthedocs.io/en/1.0/
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
@@ -108,5 +129,5 @@ npm test
 [coveralls-image]: https://coveralls.io/repos/ethereum/web3.js/badge.svg?branch=master
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
-[waffle-url]: http://waffle.io/ethereum/web3.js
+[waffle-url]: https://waffle.io/ethereum/web3.js
 

@@ -10,7 +10,7 @@ var gulp = require('gulp');
 var browserify = require('browserify');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
-// var closureCompiler = require('google-closure-compiler').gulp();
+var babel = require('gulp-babel');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
 var exorcist = require('exorcist');
@@ -19,18 +19,55 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 
 var DEST = path.join(__dirname, 'dist/');
+
 var packages = [{
     fileName: 'web3',
     expose: 'Web3',
     src: './src/index.js'
 },{
     fileName: 'web3-utils',
-    expose: 'Utils',
+    expose: 'Web3Utils',
     src: './packages/web3-utils/src/index.js'
 },{
-    fileName: 'web3-core-requestManager',
-    expose: 'RequestManager',
-    src: './packages/web3-core-requestManager/src/index.js'
+    fileName: 'web3-eth',
+    expose: 'Web3Eth',
+    src: './packages/web3-eth/src/index.js'
+},{
+    fileName: 'web3-eth-accounts',
+    expose: 'Web3EthAccounts',
+    src: './packages/web3-eth-accounts/src/index.js'
+},{
+    fileName: 'web3-eth-contract',
+    expose: 'Web3EthContract',
+    src: './packages/web3-eth-contract/src/index.js'
+},{
+    fileName: 'web3-eth-personal',
+    expose: 'Web3EthPersonal',
+    src: './packages/web3-eth-personal/src/index.js'
+},{
+    fileName: 'web3-eth-iban',
+    expose: 'Web3EthIban',
+    src: './packages/web3-eth-iban/src/index.js'
+},{
+    fileName: 'web3-eth-abi',
+    expose: 'Web3EthAbi',
+    src: './packages/web3-eth-abi/src/index.js'
+},{
+    fileName: 'web3-eth-ens',
+    expose: 'EthEns',
+    src: './packages/web3-eth-ens/src/index.js'
+},{
+    fileName: 'web3-net',
+    expose: 'Web3Net',
+    src: './packages/web3-net/src/index.js'
+},{
+    fileName: 'web3-shh',
+    expose: 'Web3Shh',
+    src: './packages/web3-shh/src/index.js'
+},{
+    fileName: 'web3-bzz',
+    expose: 'Web3Bzz',
+    src: './packages/web3-bzz/src/index.js'
 },{
     fileName: 'web3-providers-ipc',
     expose: 'Web3IpcProvider',
@@ -45,37 +82,21 @@ var packages = [{
     expose: 'Web3WsProvider',
     src: './packages/web3-providers-ws/src/index.js'
 },{
-    fileName: 'web3-eth',
-    expose: 'Eth',
-    src: './packages/web3-eth/src/index.js'
+    fileName: 'web3-core-subscriptions',
+    expose: 'Web3Subscriptions',
+    src: './packages/web3-core-subscriptions/src/index.js'
 },{
-    fileName: 'web3-eth-personal',
-    expose: 'Personal',
-    src: './packages/web3-eth-personal/src/index.js'
+    fileName: 'web3-core-requestmanager',
+    expose: 'Web3RequestManager',
+    src: './packages/web3-core-requestmanager/src/index.js'
 },{
-    fileName: 'web3-eth-iban',
-    expose: 'EthIban',
-    src: './packages/web3-eth-iban/src/index.js'
+    fileName: 'web3-core-promievent',
+    expose: 'Web3PromiEvent',
+    src: './packages/web3-core-promievent/src/index.js'
 },{
-    fileName: 'web3-eth-abi',
-    expose: 'EthAbi',
-    src: './packages/web3-eth-abi/src/index.js'
-},{
-    fileName: 'web3-eth-ens',
-    expose: 'EthEns',
-    src: './packages/web3-eth-ens/src/index.js'
-},{
-    fileName: 'web3-net',
-    expose: 'Net',
-    src: './packages/web3-net/src/index.js'
-},{
-    fileName: 'web3-shh',
-    expose: 'Shh',
-    src: './packages/web3-shh/src/index.js'
-},{
-    fileName: 'web3-bzz',
-    expose: 'Bzz',
-    src: './packages/web3-bzz/src/index.js'
+    fileName: 'web3-core-method',
+    expose: 'Web3Method',
+    src: './packages/web3-core-method/src/index.js'
 }];
 
 var browserifyOptions = {
@@ -83,11 +104,23 @@ var browserifyOptions = {
     // standalone: 'Web3',
     derequire: true,
     insertGlobalVars: false, // jshint ignore:line
-    detectGlobals: false,
+    detectGlobals: true,
     bundleExternal: true
 };
 
+var ugliyOptions = {
+    compress:{
+        dead_code     : true,  // jshint ignore:line
+        drop_debugger : true,  // jshint ignore:line
+        global_defs   : {      // jshint ignore:line
+            "DEBUG": false      // matters for some libraries
+        }
+    }
+};
+
 gulp.task('version', function(){
+  if(!version.version) return;
+
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
@@ -136,18 +169,18 @@ packages.forEach(function(pckg, i){
         return pipe.bundle()
             .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
             .pipe(source(pckg.fileName + '.js'))
+            .pipe(streamify(babel({
+                compact: false,
+                presets: ['env']
+            })))
             .pipe(gulp.dest( DEST ))
-            .pipe(streamify(uglify()))
+            .pipe(streamify(babel({
+                compact: true,
+                presets: ['env']
+            })))
+            .pipe(streamify(uglify(ugliyOptions)))
+            .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
-            // .pipe(streamify(closureCompiler({
-            //     compilation_level: 'ADVANCED_OPTIMIZATIONS',
-            //     warning_level: 'VERBOSE',
-            //     jscomp_off: 'checkVars',
-            //     language_in: 'ECMASCRIPT6_STRICT',
-            //     language_out: 'ECMASCRIPT5_STRICT',
-            //     output_wrapper: '(function(){\n%output%\n}).call(this)',
-            //     js_output_file: pckg.fileName + '.min.js'
-            // })))
             .pipe(gulp.dest( DEST ));
     });
 });
@@ -157,5 +190,7 @@ gulp.task('watch', function() {
     gulp.watch(['./src/*.js'], ['lint', 'build']);
 });
 
-gulp.task('default', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
+gulp.task('all', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
+
+gulp.task('default', ['version', 'lint', 'clean', packages[0].fileName]);
 

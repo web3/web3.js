@@ -17,7 +17,7 @@
 /** @file index.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2015
+ * @date 2017
  */
 
 "use strict";
