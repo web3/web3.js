@@ -14,7 +14,7 @@
     "postinstall": "lerna bootstrap",
     "build": "gulp",
     "build-all": "gulp all",
-    "publish": "lerna publish --skipp-git --force-publish; gulp; npm publish;",
+    "publish": "lerna bootstrap; lerna publish --force-publish; gulp; npm publish",
     "watch": "gulp watch",
     "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
