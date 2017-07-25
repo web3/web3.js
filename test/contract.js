@@ -383,15 +383,12 @@ describe('contract', function () {
             txObject.encodeABI = contract._encodeMethodABI.bind(txObject);
             txObject.arguments = [address, 10];
 
-            console.log('sending')
-
             var deploy = contract._executeMethod.call(txObject, 'send', {from: address2, gasPrice: '100000000000000' }, function (err, result) {
                 // tx hash
-            console.log('hs')
                 assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
             })
             .on('receipt', function(result){
-            console.log('receipt')
+
                 assert.deepEqual(result, {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
