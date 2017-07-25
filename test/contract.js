@@ -351,6 +351,12 @@ describe('contract', function () {
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
             provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -1335,6 +1341,12 @@ describe('contract', function () {
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
             provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -1490,6 +1502,11 @@ describe('contract', function () {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
 
 
             provider.injectValidation(function (payload) {
@@ -2204,6 +2221,13 @@ describe('contract', function () {
 
             });
             provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
+            });
+            provider.injectResult(null);
+
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
