@@ -23,6 +23,8 @@
 "use strict";
 
 var _ = require("underscore");
+var core = require('web3-core');
+var Method = require('web3-core-method');
 var Promise = require('bluebird');
 var Account = require("eth-lib/src/account");
 var Hash = require("eth-lib/src/hash");
@@ -37,11 +39,49 @@ var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
 
-var Accounts = function Accounts(eth) {
+var Accounts = function Accounts() {
+    var _this = this;
 
-    if (eth) {
-        this.eth = (eth.eth) ? eth.eth : eth;
-    }
+    // sets _requestmanager
+    core.packageInit(this, arguments);
+
+    // remove unecessary core functions
+    delete this.BatchRequest;
+    delete this.extend;
+
+    var calls = {
+        getId: new Method({
+            name: 'getId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        }),
+        getGasPrice: new Method({
+            name: 'getGasPrice',
+            call: 'eth_gasPrice',
+            params: 0
+        }),
+        getTransactionCount: new Method({
+            name: 'getTransactionCount',
+            call: 'eth_getTransactionCount',
+            params: 2,
+            inputFormatter: [function (address) {
+                if (utils.isAddress(address)) {
+                    return address;
+                } else {
+                    throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
+                }
+            }, function () { return 'latest'; }]
+        })
+    };
+    // attach methods to this.call
+    this.call = {};
+    _.each(calls, function (method) {
+        method.attachToObject(_this.call);
+        method.setRequestManager(_this._requestManager);
+    });
+
+
     this.wallet = new Wallet(this);
 };
 
@@ -114,15 +154,12 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         return signed(tx);
     }
 
-    if (!_this || !_this.eth || !_this.eth.net) {
-        return Promise.reject(new Error('The Eth package is set bound. Please set using "accounts.eth = eth", or provide "nonce", "chainId" and "gasPrice" in the transaction yourself.'));
-    }
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this.eth.net.getId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this.eth.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this.eth.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
+        isNot(tx.chainId) ? _this.call.getId() : tx.chainId,
+        isNot(tx.gasPrice) ? _this.call.getGasPrice() : tx.gasPrice,
+        isNot(tx.nonce) ? _this.call.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
             throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
