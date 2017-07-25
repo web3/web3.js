@@ -328,12 +328,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
   // first check if we already have a confirmed transaction
   method.eth.getTransactionReceipt(result)
   .then(function(receipt) {
-      if (receipt) {
+      if (receipt && receipt.blockNumber) {
           checkConfirmation(null, null, null, receipt);
-          setTimeout(function(){
-              // if the promised has not been resolved we must keep on watching for new Blocks
-              if (!promiseResolved) startWatching();
-          } ,1000);
+          if (defer.eventEmitter.listeners('confirmation').length > 0) {
+              setTimeout(function(){
+                  // if the promised has not been resolved we must keep on watching for new Blocks
+                  if (!promiseResolved) startWatching();
+              } ,1000);
+          }
       }
       else {
           startWatching();
