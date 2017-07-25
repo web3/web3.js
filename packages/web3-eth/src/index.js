@@ -79,10 +79,8 @@ var Eth = function Eth() {
 
     // add net
     this.net = new Net(this.currentProvider);
-
-    // add guess chain
+    // add chain detection
     this.net.getNetworkType = getNetworkType.bind(this);
-
 
     // add accounts
     this.accounts = new Accounts(this.currentProvider);

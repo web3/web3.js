@@ -32,6 +32,7 @@
 
 
 var _ = require('underscore');
+var core = require('web3-core');
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Subscription = require('web3-core-subscriptions').subscription;
@@ -53,6 +54,11 @@ var abi = require('web3-eth-abi');
 var Contract = function Contract(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
+
+    // TODO use core interface
+    // sets _requestmanager
+    // move to setRequestManager function
+    core.packageInit(this, arguments);
 
     if(!(this instanceof Contract)) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
