@@ -51,6 +51,14 @@ var getNetworkType = function (callback) {
                 id === 3) {
                 returnValue = 'ropsten';
             }
+            if (genesis.hash === '0x6341fd3daf94b748c72ced5a5b26028f2474f5f00d824504e4fa37a75767e177' &&
+                id === 4) {
+                returnValue = 'rinkeby';
+            }
+            if (genesis.hash === '0xa3c565fc15c7478862d50ccd6561e3c06b24cc509bf388941c25ea985ce32cb9' &&
+                id === 42) {
+                returnValue = 'kovan';
+            }
 
             if (_.isFunction(callback)) {
                 callback(null, returnValue);
