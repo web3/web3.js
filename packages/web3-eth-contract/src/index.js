@@ -352,7 +352,7 @@ Contract.prototype._decodeEventABI = function (data) {
  */
 Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
     var methodSignature = this._method.signature,
-        args = this.arguments;
+        args = Array.from(this.arguments);
 
     var signature = false,
         paramsABI = this._parent.options.jsonInterface.filter(function (json) {
