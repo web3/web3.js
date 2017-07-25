@@ -334,6 +334,75 @@ describe('contract', function () {
             assert.equal(result, address);
 
         });
+        it('_executeMethod as instantSealEngine should sendTransaction and check for receipts', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
+                    from: address2,
+                    to: addressLowercase,
+                    gasPrice: "0x5af3107a4000"
+                }]);
+            });
+            provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            // with instant seal we get the receipt right away
+            provider.injectResult({
+                contractAddress: addressLowercase,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa',
+                gasUsed: '0x0'
+            });
+
+            var contract = new eth.Contract(abi, address);
+
+            var txObject = {};
+            txObject._method = {
+                signature: signature,
+                "name": "send",
+                "type": "function",
+                "inputs": [{
+                    "name": "to",
+                    "type": "address"
+                }, {
+                    "name": "value",
+                    "type": "uint256"
+                }],
+                "outputs": []
+            };
+            txObject._parent = contract;
+            txObject.encodeABI = contract._encodeMethodABI.bind(txObject);
+            txObject.arguments = [address, 10];
+
+            console.log('sending')
+
+            var deploy = contract._executeMethod.call(txObject, 'send', {from: address2, gasPrice: '100000000000000' }, function (err, result) {
+                // tx hash
+            console.log('hs')
+                assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
+            })
+            .on('receipt', function(result){
+            console.log('receipt')
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+                done();
+            });
+
+        });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
