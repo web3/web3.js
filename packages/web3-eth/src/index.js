@@ -79,13 +79,11 @@ var Eth = function Eth() {
 
     // add net
     this.net = new Net(this.currentProvider);
-
-    // add guess chain
+    // add chain detection
     this.net.getNetworkType = getNetworkType.bind(this);
 
-
     // add accounts
-    this.accounts = new Accounts(this);
+    this.accounts = new Accounts(this.currentProvider);
 
     // add personal
     this.personal = new Personal(this.currentProvider);
@@ -266,7 +264,7 @@ var methods = function () {
         name: 'getTransactionCount',
         call: 'eth_getTransactionCount',
         params: 2,
-        inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: utils.hexToNumber
     });
 

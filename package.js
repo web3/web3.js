@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 Package.describe({
     name: 'ethereum:web3',
-    version: '1.0.0-beta.6',
+    version: '1.0.0-beta.11',
     summary: 'Ethereum JavaScript API, middleware to talk to a ethreum node over RPC',
     git: 'https://github.com/ethereum/ethereum.js',
     // By default, Meteor will default to using README.md for documentation.
@@ -9,15 +9,15 @@ Package.describe({
     documentation: 'README.md'
 });
 
-Npm.depends({
-    "xmlhttprequest": "1.7.0"
-});
+// Npm.depends({
+//     "xmlhttprequest": "1.7.0"
+// });
 
 
 Package.onUse(function(api) {
     api.versionsFrom('1.0.3.2');
 
-    api.addFiles('dist/web3.min.js', ['client']); // 'server'
+    api.addFiles('dist/web3.js', ['client']); // 'server'
 });
 
 /* jshint ignore:end */
