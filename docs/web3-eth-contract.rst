@@ -12,6 +12,21 @@ and web3 will auto convert all calls into low level ABI calls over RPC for you.
 
 This allows you to interact with smart contracts as if they were JavaScript objects.
 
+To use it standalone:
+
+.. code-block:: javascript
+    var Contract = require('web3-eth-contract');
+
+    // set provider for all later instances to use
+    Contract.setProvider = 'ws://localhost:8546';
+
+    var contract = new Contract(jsonInterface, address);
+
+    contract.methods.somFunc().send({from: ....})
+    .on('receipt', function(){
+        ...
+    });
+
 
 ------------------------------------------------------------------------------
 

@@ -20,10 +20,10 @@
  * To initialize a contract use:
  *
  *  var Contract = require('web3-eth-contract');
- *  Contract.prototype._eth = needsAEthInstance;
+ *  Contract.setProvider('ws://localhost:8546');
  *  var contract = new Contract(abi, address, ...);
  *
- * @author Fabian Vogelsteller <fabian@frozeman.de>
+ * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
 
@@ -55,10 +55,12 @@ var Contract = function Contract(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 
-    // TODO use core interface
+
     // sets _requestmanager
-    // move to setRequestManager function
-    core.packageInit(this, arguments);
+    core.packageInit(this, [Contract.currentProvider]);
+
+    this.clearSubscriptions = this._requestManager.clearSubscriptions;
+
 
     if(!(this instanceof Contract)) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
@@ -67,6 +69,36 @@ var Contract = function Contract(jsonInterface, address, options) {
     if(!jsonInterface || !(jsonInterface instanceof Array)) {
         throw new Error('You must provide the json interface of the contract when instatiating a contract object.');
     }
+
+    // add custom send Methods
+    var _ethereumCall = {
+        estimateGas: new Method({
+            name: 'estimateGas',
+            call: 'eth_estimateGas',
+            params: 1,
+            inputFormatter: [formatters.inputCallFormatter],
+            outputFormatter: utils.hexToNumber
+        }),
+        call: new Method({
+            name: 'call',
+            call: 'eth_call',
+            params: 2,
+            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+        }),
+        sendTransaction: new Method({
+            name: 'sendTransaction',
+            call: 'eth_sendTransaction',
+            params: 1,
+            inputFormatter: [formatters.inputTransactionFormatter]
+        })
+    };
+    // attach methods to this._ethereumCall
+    this._ethereumCall = {};
+    _.each(_ethereumCall, function (method) {
+        method.attachToObject(_this._ethereumCall);
+        method.setRequestManager(_this._requestManager);
+    });
+
 
 
     // create the options object
@@ -174,7 +206,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 };
 
-Contract.prototype._eth = {}; // eth is attached here in web3-eth/src/index.js
+Contract.setProvider = function(provider) {
+    Contract.currentProvider = provider;
+};
 
 
 /**
@@ -583,7 +617,7 @@ Contract.prototype._on = function(){
             }
         },
         type: 'eth',
-        requestManager: this._eth._requestManager
+        requestManager: this._requestManager
     });
     subscription.subscribe('logs', subOptions.params, subOptions.callback || function () {});
 
@@ -609,7 +643,7 @@ Contract.prototype.getPastEvents = function(){
         inputFormatter: [formatters.inputLogFormatter],
         outputFormatter: this._decodeEventABI.bind(subOptions.event)
     });
-    getPastLogs.setRequestManager(this._eth._requestManager);
+    getPastLogs.setRequestManager(this._requestManager);
     var call = getPastLogs.buildCall();
 
     getPastLogs = null;
@@ -734,38 +768,28 @@ Contract.prototype._executeMethod = function _executeMethod(){
         switch (args.type) {
             case 'estimate':
 
-                return this._parent._eth.estimateGas(args.options, args.callback);
+                return this._parent._ethereumCall.estimateGas(args.options, args.callback);
 
             case 'call':
 
                 // TODO check errors: missing "from" should give error on deploy and send, call ?
 
-                this._parent._eth.call(args.options, args.defaultBlock, function (err, result) {
-
-                    // decode result
+                // add output formatter for decoding
+                this._parent._ethereumCall.call.method.outputFormatter = function (result) {
                     if(result) {
                         result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
                     }
+                    return result;
+                };
 
-                    // throw error
-                    if(err) {
-                        return utils._fireError(err, null, defer.reject, args.callback);
-                    }
-
-                    if(_.isFunction(args.callback)) {
-                        args.callback(null, result);
-                    }
-                    defer.resolve(result);
-                });
-
-                return defer.eventEmitter;
+                return this._parent._ethereumCall.call(args.options, args.defaultBlock, args.callback);
 
             case 'send':
 
                 // return error, if no "from" is specified
-                if(!utils.isAddress(args.options.from)) {
+                // if(!utils.isAddress(args.options.from)) {
                     return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
-                }
+                // }
 
                 if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
                     return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
@@ -808,7 +832,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     }
                 };
 
-                return this._parent._eth.sendTransaction.apply(extraFormatters, [args.options, args.callback]);
+                return this._parent._ethereumCall.sendTransaction.apply(extraFormatters, [args.options, args.callback]);
 
         }
 
