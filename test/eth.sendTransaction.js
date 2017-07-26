@@ -43,7 +43,6 @@ var tests = [{
         to: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
         value: '1234567654321'
     }],
-
     notification: {
         method: 'eth_subscription',
         params: {
