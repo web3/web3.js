@@ -49,19 +49,19 @@ var Accounts = function Accounts() {
     delete this.BatchRequest;
     delete this.extend;
 
-    var _ethereumCall = {
-        getId: new Method({
+    var _ethereumCall = [
+        new Method({
             name: 'getId',
             call: 'net_version',
             params: 0,
             outputFormatter: utils.hexToNumber
         }),
-        getGasPrice: new Method({
+        new Method({
             name: 'getGasPrice',
             call: 'eth_gasPrice',
             params: 0
         }),
-        getTransactionCount: new Method({
+        new Method({
             name: 'getTransactionCount',
             call: 'eth_getTransactionCount',
             params: 2,
@@ -73,7 +73,7 @@ var Accounts = function Accounts() {
                 }
             }, function () { return 'latest'; }]
         })
-    };
+    ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
     _.each(_ethereumCall, function (method) {
