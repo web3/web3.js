@@ -72,11 +72,6 @@ var Eth = function Eth() {
 
     this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
-    });
-
     // add net
     this.net = new Net(this.currentProvider);
     // add chain detection
@@ -90,13 +85,18 @@ var Eth = function Eth() {
 
     // add contract
     this.Contract = Contract;
-    this.Contract.setProvider(this.currentProvider);
+    this.Contract.setProvider(this.currentProvider, _this.accounts);
 
     // add IBAN
     this.Iban = Iban;
 
     // add ABI
     this.abi = abi;
+
+    methods().forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
+    });
 
 };
 

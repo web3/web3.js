@@ -25,13 +25,16 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
+var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var promiEvent = require('web3-core-promievent');
+var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
 var TIMEOUTBLOCK = 50;
 var CONFIRMATIONBLOCKS = 24;
 
 var Method = function Method(options) {
+    var _this = this;
 
     if(!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
@@ -43,15 +46,60 @@ var Method = function Method(options) {
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
     this.transformPayload = options.transformPayload;
-    this.requestManager = null;
+
+    this.requestManager = options.requestManager;
+    // reference to eth.accounts
+    this.accounts = options.accounts;
+
 };
 
-Method.prototype.setRequestManager = function (rm, eth) {
-    this.requestManager = rm;
+Method.prototype.setRequestManager = function (requestManager, accounts) {
+    var _this = this;
+    this.requestManager = requestManager;
 
-    if (eth) {
-        this.eth = eth;
+    // reference to eth.accounts
+    if (accounts) {
+        this.accounts = accounts;
     }
+
+    // add custom send Methods
+    var _ethereumCall = [
+        new Method({
+            name: 'getTransactionReceipt',
+            call: 'eth_getTransactionReceipt',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: formatters.outputTransactionReceiptFormatter
+        }),
+        new Method({
+            name: 'getCode',
+            call: 'eth_getCode',
+            params: 2,
+            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
+        }),
+        new Method({
+            name: 'getGasPrice',
+            call: 'eth_gasPrice',
+            params: 0
+        }),
+        new Subscriptions({
+            name: 'subscribe',
+            type: 'eth',
+            subscriptions: {
+                'newBlockHeaders': {
+                    subscriptionName: 'newHeads', // replace subscription with this name
+                    params: 0,
+                    outputFormatter: formatters.outputBlockFormatter
+                }
+            }
+        })
+    ];
+    // attach methods to this._ethereumCall
+    this._ethereumCall = {};
+    _.each(_ethereumCall, function (method) {
+        method.attachToObject(_this._ethereumCall);
+        method.requestManager = _this.requestManager; // assign rather than call setRequestManager()
+    });
 };
 
 /**
@@ -193,7 +241,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             }
 
 
-            method.eth.getTransactionReceipt(result)
+            method._ethereumCall.getTransactionReceipt(result)
             // catch error from requesting receipt
             .catch(function (err) {
                 sub.unsubscribe();
@@ -234,12 +282,16 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                 if (isContractDeployment && !promiseResolved) {
 
                     if (!receipt.contractAddress) {
-                        promiseResolved = true;
-                        utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
-                        return;
+
+                        if (canUnsubscribe) {
+                            sub.unsubscribe();
+                            promiseResolved = true;
+                        }
+
+                        return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
                     }
 
-                    method.eth.getCode(receipt.contractAddress, function (e, code) {
+                    method._ethereumCall.getCode(receipt.contractAddress, function (e, code) {
 
                         if (!code) {
                             return;
@@ -305,26 +357,26 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             })
             // time out the transaction if not mined after 50 blocks
             .catch(function () {
-                if (timeoutCount >= TIMEOUTBLOCK) {
+                timeoutCount++;
+
+                if (timeoutCount - 1 >= TIMEOUTBLOCK) {
                     sub.unsubscribe();
                     promiseResolved = true;
-                    utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                    return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
                 }
-
-                timeoutCount++;
             });
 
 
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transactions receipt. Are you using HttpProvider? Please switch to Websockets.', data: err}, defer.eventEmitter, defer.reject);
+            return utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.', data: err}, defer.eventEmitter, defer.reject);
         }
     };
 
     // if provider allows PUB/SUB
     if (_.isFunction(this.requestManager.provider.on)) {
-        method.eth.subscribe('newBlockHeaders', checkConfirmation);
+        method._ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
     } else {
         intervalId = setInterval(checkConfirmation, 1000);
     }
@@ -352,12 +404,11 @@ var getWallet = function(from, accounts) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        call = (_.isString(method.call)) ? method.call.toLowerCase() : Method.call,
-        isSendTx = (call === 'eth_sendtransaction' || call === 'eth_sendrawtransaction');
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction' || method.call === 'personal_sendTransaction');
 
     // actual send function
     var send = function () {
-        var extraFromatters = this;
+        var extraFormatters = this;
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
@@ -376,8 +427,7 @@ Method.prototype.buildCall = function() {
                     err = err.error;
                 }
 
-                utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
-                return;
+                return utils._fireError(err, defer.eventEmitter, defer.reject, payload.callback);
             }
 
             // return PROMISE
@@ -389,11 +439,11 @@ Method.prototype.buildCall = function() {
                 }
 
             // return PROMIEVENT
-            } else if (method.eth) {
+            } else {
 
                 defer.eventEmitter.emit('transactionHash', result);
 
-                method._confirmTransaction(defer, result, payload, extraFromatters);
+                method._confirmTransaction(defer, result, payload, extraFormatters);
             }
 
         };
@@ -410,32 +460,32 @@ Method.prototype.buildCall = function() {
 
         var sendRequest = function(payload, method) {
 
-            if (method && method.eth && method.eth.accounts && method.eth.accounts.wallet.length) {
+            if (method && method.accounts && method.accounts.wallet && method.accounts.wallet.length) {
                 var wallet;
 
                 // ETH_SENDTRANSACTION
-                if (payload.method.toLowerCase() === 'eth_sendtransaction') {
+                if (payload.method === 'eth_sendTransaction') {
                     var tx = payload.params[0];
-                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.eth.accounts);
+                    wallet = getWallet((_.isObject(tx)) ? tx.from : null, method.accounts);
 
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
                         delete tx.from;
 
-                        var signature = method.eth.accounts.signTransaction(tx, wallet.privateKey);
+                        var signature = method.accounts.signTransaction(tx, wallet.privateKey);
 
                         return (_.isFunction(signature.then)) ? signature.then(sendSignedTx) : sendSignedTx(signature);
                     }
 
                 // ETH_SIGN
-                } else if (payload.method.toLowerCase() === 'eth_sign') {
+                } else if (payload.method === 'eth_sign') {
                     var data = payload.params[1];
-                    wallet = getWallet(payload.params[0], method.eth.accounts);
+                    wallet = getWallet(payload.params[0], method.accounts);
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        var sign = method.eth.accounts.sign(data, wallet.privateKey);
+                        var sign = method.accounts.sign(data, wallet.privateKey);
 
                         if (payload.callback) {
                             payload.callback(null, sign.signature);
@@ -452,13 +502,13 @@ Method.prototype.buildCall = function() {
             return method.requestManager.send(payload, sendTxCallback);
         };
 
-
         // Send the actual transaction
-        if(isSendTx && method.eth && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
+        if(isSendTx && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-            method.eth.getGasPrice(function (err, gasPrice) {
+            method._ethereumCall.getGasPrice(function (err, gasPrice) {
+
                 if (gasPrice) {
-                    payload.params[0].gasPrice = utils.numberToHex(gasPrice);
+                    payload.params[0].gasPrice = gasPrice;
                 }
                 sendRequest(payload, method);
             });
