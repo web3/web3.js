@@ -34,7 +34,6 @@ var TIMEOUTBLOCK = 50;
 var CONFIRMATIONBLOCKS = 24;
 
 var Method = function Method(options) {
-    var _this = this;
 
     if(!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
@@ -402,7 +401,7 @@ var getWallet = function(from, accounts) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction' || method.call === 'personal_sendTransaction');
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'); // || method.call === 'personal_sendTransaction'
 
     // actual send function
     var send = function () {
