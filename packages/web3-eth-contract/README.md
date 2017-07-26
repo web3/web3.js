@@ -32,7 +32,7 @@ This will expose the `Web3EthContract` object on the window object.
 var Web3EthContract = require('web3-eth-contract');
 
 // set provider for all later instances to use
-Web3EthContract.setProvider = 'ws://localhost:8546';
+Web3EthContract.setProvider('ws://localhost:8546');
 
 var contract = new Web3EthContract(jsonInterface, address);
 contract.methods.somFunc().send({from: ....})

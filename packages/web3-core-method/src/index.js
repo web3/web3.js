@@ -227,7 +227,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             !payload.params[0].to;
 
 
-
     // fire "receipt" and confirmation events and resolve after
     var checkConfirmation = function (err, block, sub) {
         if (!err) {
@@ -239,7 +238,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                     }
                 };
             }
-
 
             method._ethereumCall.getTransactionReceipt(result)
             // catch error from requesting receipt
@@ -416,7 +414,6 @@ Method.prototype.buildCall = function() {
         // CALLBACK function
         var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
-
 
             if (!err) {
                 if (payload.callback) {
