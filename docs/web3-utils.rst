@@ -217,7 +217,7 @@ sha3
 
 Will calculate the sha3 of the input.
 
-.. note::  To mimick the sha3 behaviour of solidity use :ref:`soliditySah3 <utils-soliditysha3>`
+.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySah3 <utils-soliditysha3>`
 
 ----------
 Parameters
@@ -265,6 +265,7 @@ soliditySha3
     web3.utils.soliditySha3(param1 [, param2, ...])
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
+This means arguments will be ABI converted and tightly packed before being hashed.
 
 ----------
 Parameters

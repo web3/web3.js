@@ -185,7 +185,7 @@ Contract.prototype._eth = {}; // eth is attached here in web3-eth/src/index.js
  * @return {Function} the callback
  */
 Contract.prototype._getCallback = function getCallback(args) {
-    if (_.isFunction(args[args.length - 1])) {
+    if (args && _.isFunction(args[args.length - 1])) {
         return args.pop(); // modify the args array!
     }
 };
@@ -352,18 +352,20 @@ Contract.prototype._decodeEventABI = function (data) {
  */
 Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
     var methodSignature = this._method.signature,
-        args = this.arguments;
+        args = this.arguments || [];
 
     var signature = false,
         paramsABI = this._parent.options.jsonInterface.filter(function (json) {
             return ((methodSignature === 'constructor' && json.type === methodSignature) ||
                 ((json.signature === methodSignature || json.signature === methodSignature.replace('0x','') || json.name === methodSignature) && json.type === 'function'));
         }).map(function (json) {
-            if(json.inputs.length !== args.length) {
-                throw new Error('The number of arguments is not matching the methods required number. You need to pass '+ json.inputs.length +' arguments.');
+            var inputLength = (_.isArray(json.inputs)) ? json.inputs.length : 0;
+
+            if (inputLength !== args.length) {
+                throw new Error('The number of arguments is not matching the methods required number. You need to pass '+ inputLength +' arguments.');
             }
 
-            if(json.type === 'function') {
+            if (json.type === 'function') {
                 signature = json.signature;
             }
             return json.inputs.map(function (input) {
@@ -623,6 +625,7 @@ Contract.prototype.getPastEvents = function(){
  * @returns {Object} an object with functions to call the methods
  */
 Contract.prototype._createTxObject =  function _createTxObject(){
+    var args = Array.prototype.slice.call(arguments);
     var txObject = {};
 
     if(this.method.type === 'function') {
@@ -637,19 +640,18 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
-    if (arguments.length) {
 
-        if (arguments.length !== this.method.inputs.length) {
-            throw errors.InvalidNumberOfParams(arguments.length, this.method.inputs.length, this.method.name);
-        }
-
-        txObject.arguments = arguments;
+    if (args.length !== this.method.inputs.length) {
+        throw errors.InvalidNumberOfParams(args.length, this.method.inputs.length, this.method.name);
     }
+
+    txObject.arguments = args;
     txObject._method = this.method;
     txObject._parent = this.parent;
 
-    if(this.deployData)
+    if(this.deployData) {
         txObject._deployData = this.deployData;
+    }
 
     return txObject;
 };
