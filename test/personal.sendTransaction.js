@@ -18,15 +18,15 @@ var tests = [{
     }, 'SomePass@Word!'],
     result: ['0x12345678976543213456786543212345675432'],
     formattedResult: ['0x12345678976543213456786543212345675432'],
-    notification: {
-        method: 'eth_subscription',
-        params: {
-            subscription: '0x1234567',
-            result: {
-                blockNumber: '0x10'
-            }
-        }
-    },
+    // notification: {
+    //     method: 'eth_subscription',
+    //     params: {
+    //         subscription: '0x1234567',
+    //         result: {
+    //             blockNumber: '0x10'
+    //         }
+    //     }
+    // },
     call: 'personal_'+ method
 },{
     args: [{
@@ -45,15 +45,15 @@ var tests = [{
     }, 'SomePass@Word!'],
     result: ['0x12345678976543213456786543212345675432'],
     formattedResult: ['0x12345678976543213456786543212345675432'],
-    notification: {
-        method: 'eth_subscription',
-        params: {
-            subscription: '0x1234567',
-            result: {
-                blockNumber: '0x10'
-            }
-        }
-    },
+    // notification: {
+    //     method: 'eth_subscription',
+    //     params: {
+    //         subscription: '0x1234567',
+    //         result: {
+    //             blockNumber: '0x10'
+    //         }
+    //     }
+    // },
     call: 'personal_'+ method
 },{
     args: [{
@@ -70,15 +70,15 @@ var tests = [{
     }, 'SomePass@Word!'],
     result: ['0x12345678976543213456786543212345675432'],
     formattedResult: ['0x12345678976543213456786543212345675432'],
-    notification: {
-        method: 'eth_subscription',
-        params: {
-            subscription: '0x1234567',
-            result: {
-                blockNumber: '0x10'
-            }
-        }
-    },
+    // notification: {
+    //     method: 'eth_subscription',
+    //     params: {
+    //         subscription: '0x1234567',
+    //         result: {
+    //             blockNumber: '0x10'
+    //         }
+    //     }
+    // },
     call: 'personal_'+ method
 },{
     error: true, // only for testing
