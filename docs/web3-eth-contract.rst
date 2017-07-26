@@ -18,7 +18,7 @@ To use it standalone:
     var Contract = require('web3-eth-contract');
 
     // set provider for all later instances to use
-    Contract.setProvider = 'ws://localhost:8546';
+    Contract.setProvider('ws://localhost:8546');
 
     var contract = new Contract(jsonInterface, address);
 
