@@ -71,32 +71,32 @@ var Contract = function Contract(jsonInterface, address, options) {
     }
 
     // add custom send Methods
-    var _ethereumCall = {
-        estimateGas: new Method({
+    var _ethereumCall = [
+        new Method({
             name: 'estimateGas',
             call: 'eth_estimateGas',
             params: 1,
             inputFormatter: [formatters.inputCallFormatter],
             outputFormatter: utils.hexToNumber
         }),
-        call: new Method({
+        new Method({
             name: 'call',
             call: 'eth_call',
             params: 2,
             inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
         }),
-        sendTransaction: new Method({
+        new Method({
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
             inputFormatter: [formatters.inputTransactionFormatter]
         })
-    };
+    ];
     // attach methods to this._ethereumCall
     this._ethereumCall = {};
     _.each(_ethereumCall, function (method) {
         method.attachToObject(_this._ethereumCall);
-        method.setRequestManager(_this._requestManager);
+        method.setRequestManager(_this._requestManager, Contract._ethAccounts); // second param means is eth.accounts (necessary for wallet signing)
     });
 
 
@@ -206,8 +206,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 };
 
-Contract.setProvider = function(provider) {
+Contract.setProvider = function(provider, accounts) {
     Contract.currentProvider = provider;
+    Contract._ethAccounts = accounts;
 };
 
 
@@ -787,9 +788,9 @@ Contract.prototype._executeMethod = function _executeMethod(){
             case 'send':
 
                 // return error, if no "from" is specified
-                // if(!utils.isAddress(args.options.from)) {
+                if(!utils.isAddress(args.options.from)) {
                     return utils._fireError(new Error('No "from" address specified in neither the given options, nor the default options.'), defer.eventEmitter, defer.reject, args.callback);
-                // }
+                }
 
                 if (_.isBoolean(this._method.payable) && !this._method.payable && args.options.value && args.options.value > 0) {
                     return utils._fireError(new Error('Can not send value to non-payable contract method or constructor'), defer.eventEmitter, defer.reject, args.callback);
