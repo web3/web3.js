@@ -90,7 +90,7 @@ var Eth = function Eth() {
 
     // add contract
     this.Contract = Contract;
-    this.Contract.prototype._eth = this;
+    this.Contract.setProvider(this.currentProvider);
 
     // add IBAN
     this.Iban = Iban;

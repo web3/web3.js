@@ -49,7 +49,7 @@ var Accounts = function Accounts() {
     delete this.BatchRequest;
     delete this.extend;
 
-    var calls = {
+    var _ethereumCall = {
         getId: new Method({
             name: 'getId',
             call: 'net_version',
@@ -74,10 +74,10 @@ var Accounts = function Accounts() {
             }, function () { return 'latest'; }]
         })
     };
-    // attach methods to this.call
-    this.call = {};
-    _.each(calls, function (method) {
-        method.attachToObject(_this.call);
+    // attach methods to this._ethereumCall
+    this._ethereumCall = {};
+    _.each(_ethereumCall, function (method) {
+        method.attachToObject(_this._ethereumCall);
         method.setRequestManager(_this._requestManager);
     });
 
@@ -157,9 +157,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this.call.getId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this.call.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this.call.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
+        isNot(tx.chainId) ? _this._ethereumCall.getId() : tx.chainId,
+        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
+        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
             throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
