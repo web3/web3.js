@@ -256,6 +256,10 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                                 defer.resolve(receipt);
                             }
 
+                            // need to remove listeners, as they aren't removed automatically when succesfull
+                            if (canUnsubscribe) {
+                                defer.eventEmitter.removeAllListeners();
+                            }
 
                         } else {
                             utils._fireError(new Error('The contract code couldn\'t be stored, please check your gas limit.'), defer.eventEmitter, defer.reject);
@@ -263,7 +267,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
                         if (canUnsubscribe) {
                             sub.unsubscribe();
-                            defer.eventEmitter.removeAllListeners();
                         }
                         promiseResolved = true;
                     });
@@ -281,6 +284,11 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
 
+                        // need to remove listeners, as they aren't removed automatically when succesfull
+                        if (canUnsubscribe) {
+                            defer.eventEmitter.removeAllListeners();
+                        }
+
                     } else {
                         if(receipt) {
                             receipt = JSON.stringify(receipt, null, 2);
@@ -290,7 +298,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
                     if (canUnsubscribe) {
                         sub.unsubscribe();
-                        defer.eventEmitter.removeAllListeners();
                     }
                     promiseResolved = true;
                 }
@@ -464,6 +471,9 @@ Method.prototype.buildCall = function() {
         return defer.eventEmitter;
     };
 
+    // necessary to attach things to the method
+    send.method = method;
+    // necessary for batch requests
     send.request = this.request.bind(this);
     return send;
 };

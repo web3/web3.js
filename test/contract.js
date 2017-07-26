@@ -427,7 +427,7 @@ describe('contract', function () {
                     gasUsed: 0
                 });
                 done();
-            });
+            }).on('error', console.log);
 
         });
         it('_executeMethod should call and return values', function (done) {
