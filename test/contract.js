@@ -27,6 +27,15 @@ var abi = [{
         "name": "value",
         "type": "uint256"
     }]
+},{
+    "name": "owner",
+    "type": "function",
+    "inputs": [],
+    "constant": true,
+    "outputs": [{
+        "name": "owner",
+        "type": "address"
+    }]
 }, {
     "name": "mySend",
     "type": "function",
@@ -2156,6 +2165,31 @@ describe('contract', function () {
 
             contract.methods.testArr([3]).call(function (err, result) {
                 assert.deepEqual(result, '5');
+                done();
+            });
+
+        });
+
+        it('should call owner method, properly', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'owner()';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase
+                },
+                    'latest'
+                ]);
+            });
+            provider.injectResult(addressLowercase);
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.owner().call(function (err, result) {
+                assert.deepEqual(result, address);
                 done();
             });
 
