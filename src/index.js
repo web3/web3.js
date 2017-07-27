@@ -18,9 +18,9 @@
  * @file index.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Gav Wood <gav@ethcore.io>
+ *   Gav Wood <gav@parity.io>
  *   Jeffrey Wilcke <jeffrey.wilcke@ethereum.org>
- *   Marek Kotewicz <marek@ethcore.io>
+ *   Marek Kotewicz <marek@parity.io>
  *   Marian Oancea <marian@ethereum.org>
  * @date 2017
  */

@@ -62,10 +62,23 @@ var runTests = function (obj, method, tests) {
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
 
+                    if (test.call2) {
+                        provider.injectResult(clone(test.result2));
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.jsonrpc, '2.0');
+                            assert.equal(payload.method, test.call2);
+                            assert.deepEqual(payload.params, test.formattedArgs2 || []);
+                        });
+                    }
 
 
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
+                        provider.injectResult(null);
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.method, 'eth_getTransactionReceipt');
+                        });
+
                         provider.injectResult(clone(test.result));
                         // inject receipt
                         provider.injectResult({
@@ -152,6 +165,15 @@ var runTests = function (obj, method, tests) {
                         assert.equal(payload.method, test.call);
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
+
+                    if (test.call2) {
+                        provider.injectResult(clone(test.result2));
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.jsonrpc, '2.0');
+                            assert.equal(payload.method, test.call2);
+                            assert.deepEqual(payload.params, test.formattedArgs2 || []);
+                        });
+                    }
 
 
                     var args = clone(test.args);

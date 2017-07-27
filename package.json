@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.13",
   "description": "Ethereum JavaScript API",
   "license": "LGPL-3.0",
   "main": "./src/index.js",
@@ -13,7 +13,10 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "build": "gulp",
+    "build-all": "gulp all",
+    "publish": "lerna bootstrap; lerna publish --force-publish; gulp; npm publish",
     "watch": "gulp watch",
+    "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
     "test": "mocha; jshint *.js packages",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
@@ -40,7 +43,7 @@
     },
     {
       "name": "Marek Kotewicz",
-      "email": "marek@ethcore.io",
+      "email": "marek@parity.io",
       "url": "https://github.com/debris"
     },
     {
@@ -49,7 +52,7 @@
     },
     {
       "name": "Gav Wood",
-      "email": "g@ethcore.io",
+      "email": "g@parity.io",
       "homepage": "http://gavwood.com"
     },
     {
@@ -58,7 +61,9 @@
       "url": "https://github.com/obscuren"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+      "lerna": "^2.0.0"
+  },
   "devDependencies": {
     "@types/bignumber.js":"^4.0.2",
     "@types/underscore":"^1.8.0",
@@ -83,7 +88,6 @@
     "gulp-uglify": "^3.0.0",
     "istanbul": "^0.4.4",
     "jshint": ">=2.5.0",
-    "lerna": "^2.0.0",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
     "underscore": "^1.8.3",

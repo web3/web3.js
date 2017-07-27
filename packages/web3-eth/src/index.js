@@ -72,33 +72,31 @@ var Eth = function Eth() {
 
     this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager, _this); // second param means is Eth (necessary for promiEvent)
-    });
-
     // add net
     this.net = new Net(this.currentProvider);
-
-    // add guess chain
+    // add chain detection
     this.net.getNetworkType = getNetworkType.bind(this);
 
-
     // add accounts
-    this.accounts = new Accounts(this);
+    this.accounts = new Accounts(this.currentProvider);
 
     // add personal
     this.personal = new Personal(this.currentProvider);
 
     // add contract
     this.Contract = Contract;
-    this.Contract.prototype._eth = this;
+    this.Contract.setProvider(this.currentProvider, _this.accounts);
 
     // add IBAN
     this.Iban = Iban;
 
     // add ABI
     this.abi = abi;
+
+    methods().forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
+    });
 
 };
 
@@ -266,7 +264,7 @@ var methods = function () {
         name: 'getTransactionCount',
         call: 'eth_getTransactionCount',
         params: 2,
-        inputFormatter: [null, formatters.inputDefaultBlockNumberFormatter],
+        inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
         outputFormatter: utils.hexToNumber
     });
 
@@ -368,14 +366,14 @@ var methods = function () {
         type: 'eth',
         subscriptions: {
             'newBlockHeaders': {
-                // TODO change name on RPC side?
+                // TODO rename on RPC side?
                 subscriptionName: 'newHeads', // replace subscription with this name
                 params: 0,
                 outputFormatter: formatters.outputBlockFormatter
             },
             'pendingTransactions': {
+                subscriptionName: 'newPendingTransactions', // replace subscription with this name
                 params: 0
-                // outputFormatter: formatters.outputTransactionFormatter // returns only hash???
             },
             'logs': {
                 params: 1,

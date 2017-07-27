@@ -16,7 +16,7 @@
  */
 /**
  * @file utils.js
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
@@ -67,12 +67,18 @@ var _fireError = function (error, emitter, reject, callback) {
            _.isFunction(emitter.suppressUnhandledRejections)) {
             emitter.suppressUnhandledRejections();
         }
-        reject(error);
+        // reject later, to be able to return emitter
+        setTimeout(function () {
+            reject(error);
+        }, 1);
     }
 
     if(emitter && _.isFunction(emitter.emit)) {
-        emitter.emit('error', error);
-        emitter.removeAllListeners();
+        // emit later, to be able to return emitter
+        setTimeout(function () {
+            emitter.emit('error', error);
+            emitter.removeAllListeners();
+        }, 1);
     }
 
     return emitter;

@@ -27,6 +27,15 @@ var abi = [{
         "name": "value",
         "type": "uint256"
     }]
+},{
+    "name": "owner",
+    "type": "function",
+    "inputs": [],
+    "constant": true,
+    "outputs": [{
+        "name": "owner",
+        "type": "address"
+    }]
 }, {
     "name": "mySend",
     "type": "function",
@@ -334,6 +343,72 @@ describe('contract', function () {
             assert.equal(result, address);
 
         });
+        it('_executeMethod as instantSealEngine should sendTransaction and check for receipts', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
+                    from: address2,
+                    to: addressLowercase,
+                    gasPrice: "0x5af3107a4000"
+                }]);
+            });
+            provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            // with instant seal we get the receipt right away
+            provider.injectResult({
+                contractAddress: addressLowercase,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                blockNumber: '0xa',
+                gasUsed: '0x0'
+            });
+
+            var contract = new eth.Contract(abi, address);
+
+            var txObject = {};
+            txObject._method = {
+                signature: signature,
+                "name": "send",
+                "type": "function",
+                "inputs": [{
+                    "name": "to",
+                    "type": "address"
+                }, {
+                    "name": "value",
+                    "type": "uint256"
+                }],
+                "outputs": []
+            };
+            txObject._parent = contract;
+            txObject.encodeABI = contract._encodeMethodABI.bind(txObject);
+            txObject.arguments = [address, 10];
+
+            var deploy = contract._executeMethod.call(txObject, 'send', {from: address2, gasPrice: '100000000000000' }, function (err, result) {
+                // tx hash
+                assert.equal(result, '0x1234000000000000000000000000000000000000000000000000000000056789');
+            })
+            .on('receipt', function(result){
+
+                assert.deepEqual(result, {
+                    contractAddress: address,
+                    cumulativeGasUsed: 10,
+                    transactionIndex: 3,
+                    blockNumber: 10,
+                    gasUsed: 0
+                });
+                done();
+            });
+
+        });
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -349,6 +424,12 @@ describe('contract', function () {
                 }]);
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
@@ -418,7 +499,7 @@ describe('contract', function () {
                     gasUsed: 0
                 });
                 done();
-            });
+            }).catch(console.log);
 
         });
         it('_executeMethod should call and return values', function (done) {
@@ -1335,6 +1416,12 @@ describe('contract', function () {
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
             provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -1432,6 +1519,7 @@ describe('contract', function () {
                                 t1: '5'
                             },
                             event: 'Unchanged',
+                            signature: "0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5",
                             raw: {
                                 topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                     '0x0000000000000000000000000000000000000000000000000000000000000002',
@@ -1458,6 +1546,7 @@ describe('contract', function () {
                                 t2: '8'
                             },
                             event: 'Changed',
+                            signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
                             raw: {
                                 topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                     '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -1490,6 +1579,11 @@ describe('contract', function () {
             });
             provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
 
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
 
 
             provider.injectValidation(function (payload) {
@@ -1573,6 +1667,7 @@ describe('contract', function () {
                                     t1: '5'
                                 },
                                 event: 'Unchanged',
+                                signature: '0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                 raw: {
                                     topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                         '0x0000000000000000000000000000000000000000000000000000000000000002',
@@ -1599,6 +1694,7 @@ describe('contract', function () {
                                     t2: '8'
                                 },
                                 event: 'Changed',
+                                signature: '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                 raw: {
                                     topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                         '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
@@ -2044,6 +2140,7 @@ describe('contract', function () {
 
                 assert.deepEqual(result, [{
                     event: "Changed",
+                    signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                     id: "log_9ff24cb4",
                     address: address,
                     blockNumber: 3,
@@ -2069,6 +2166,7 @@ describe('contract', function () {
                 },
                     {
                         event: "Changed",
+                        signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
                         id: "log_29c93e15",
                         address: address,
                         blockNumber: 4,
@@ -2154,6 +2252,31 @@ describe('contract', function () {
             });
 
         });
+
+        it('should call owner method, properly', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'owner()';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase
+                },
+                    'latest'
+                ]);
+            });
+            provider.injectResult(addressLowercase);
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.owner().call(function (err, result) {
+                assert.deepEqual(result, address);
+                done();
+            });
+
+        });
     });
     describe('with data', function () {
         it('should deploy a contract and use callback', function (done) {
@@ -2204,6 +2327,13 @@ describe('contract', function () {
 
             });
             provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
+            });
+            provider.injectResult(null);
+
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
