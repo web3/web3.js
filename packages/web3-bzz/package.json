@@ -7,6 +7,7 @@
     "main": "src/index.js",
     "dependencies": {
         "swarm-js": "0.1.34",
-        "underscore": "1.8.3"
+        "underscore": "1.8.3",
+        "got": "7.1.0"
     }
 }
