@@ -64,7 +64,18 @@ console.log(web3); // {eth: .., shh: ...} // it's here!
 Set a provider (HttpProvider)
 
 ```js
-web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
+if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+}
+```
+
+Set a provider (HttpProvider using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication))
+
+```js
+web3.setProvider(new web3.providers.HttpProvider('http://host.url', 0, BasicAuthUsername, BasicAuthPassword));
 ```
 
 There you go, now you can use it:
@@ -104,6 +115,17 @@ npm run-script build
 npm test
 ```
 
+### Community
+ - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+ - [Forum](https://forum.ethereum.org/categories/ethereum-js)
+
+
+### Other implementations
+ - Python [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Haskell [hs-web3](https://github.com/airalab/hs-web3)
+ - Java [web3j](https://github.com/web3j/web3j)
+
+
 [npm-image]: https://badge.fury.io/js/web3.png
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
@@ -116,4 +138,3 @@ npm test
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
-

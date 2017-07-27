@@ -10,4 +10,3 @@ console.log(coinbase);
 
 var balance = web3.eth.getBalance(coinbase);
 console.log(balance.toString(10));
-
