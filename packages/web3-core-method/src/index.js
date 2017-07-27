@@ -87,8 +87,7 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
             subscriptions: {
                 'newBlockHeaders': {
                     subscriptionName: 'newHeads', // replace subscription with this name
-                    params: 0,
-                    outputFormatter: formatters.outputBlockFormatter
+                    params: 0
                 }
             }
         })
@@ -227,7 +226,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, block, sub) {
+    var checkConfirmation = function (err, blockHash, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -237,6 +236,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                     }
                 };
             }
+            // console.log('FF:');
 
             method._ethereumCall.getTransactionReceipt(result)
             // catch error from requesting receipt
@@ -401,7 +401,7 @@ var getWallet = function(from, accounts) {
 
 Method.prototype.buildCall = function() {
     var method = this,
-        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction'); // || method.call === 'personal_sendTransaction'
+        isSendTx = (method.call === 'eth_sendTransaction' || method.call === 'eth_sendRawTransaction' || method.call === 'personal_sendTransaction');
 
     // actual send function
     var send = function () {
@@ -436,7 +436,6 @@ Method.prototype.buildCall = function() {
 
             // return PROMIEVENT
             } else {
-
                 defer.eventEmitter.emit('transactionHash', result);
 
                 method._confirmTransaction(defer, result, payload, extraFormatters);
