@@ -227,7 +227,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, block, sub) {
+    var checkConfirmation = function (err, block, sub, existingReceipt) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -237,8 +237,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                     }
                 };
             }
-
-            method._ethereumCall.getTransactionReceipt(result)
+            // if we have a valid receipt we don't need to send a request
+            (existingReceipt ? promiEvent.resolve(existingReceipt) : method._ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
             .catch(function (err) {
                 sub.unsubscribe();
@@ -370,13 +370,35 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             return utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.', data: err}, defer.eventEmitter, defer.reject);
         }
     };
+    
+  // start watching for confirmation depending on the support features of the provider
+  var startWatching = function() {
+      // if provider allows PUB/SUB
+      if (_.isFunction(this.requestManager.provider.on)) {
+          method._ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
+      } else {
+          intervalId = setInterval(checkConfirmation, 1000);
+      }
+  }.bind(this);
 
-    // if provider allows PUB/SUB
-    if (_.isFunction(this.requestManager.provider.on)) {
-        method._ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
-    } else {
-        intervalId = setInterval(checkConfirmation, 1000);
-    }
+  // first check if we already have a confirmed transaction
+  method._ethereumCall.getTransactionReceipt(result)
+  .then(function(receipt) {
+      if (receipt && receipt.blockNumber) {
+          checkConfirmation(null, null, null, receipt);
+          if (defer.eventEmitter.listeners('confirmation').length > 0) {
+              setTimeout(function(){
+                  // if the promised has not been resolved we must keep on watching for new Blocks
+                  if (!promiseResolved) startWatching();
+              } ,1000);
+          }
+      }
+      else {
+          startWatching();
+      }
+  })
+  .catch(startWatching);
+
 };
 
 
