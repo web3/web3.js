@@ -368,7 +368,8 @@ var methods = function () {
             'newBlockHeaders': {
                 // TODO rename on RPC side?
                 subscriptionName: 'newHeads', // replace subscription with this name
-                params: 0
+                params: 0,
+                outputFormatter: formatters.outputBlockFormatter
             },
             'pendingTransactions': {
                 subscriptionName: 'newPendingTransactions', // replace subscription with this name

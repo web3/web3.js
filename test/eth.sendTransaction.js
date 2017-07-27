@@ -29,7 +29,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x1234567',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_'+ method
@@ -45,7 +47,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x1234567',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_gasPrice',
@@ -82,7 +86,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x12345678976543213456786543212345675432',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_'+ method
@@ -105,7 +111,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x12345678976543213456786543212345675432',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_'+ method
@@ -130,7 +138,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x12345678976543213456786543212345675432',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_sendRawTransaction'
@@ -153,7 +163,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x12345678976543213456786543212345675432',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_sendRawTransaction'
@@ -179,7 +191,9 @@ var tests = [{
         method: 'eth_subscription',
         params: {
             subscription: '0x12345678976543213456786543212345675432',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
+            result: {
+                blockNumber: '0x10'
+            }
         }
     },
     call: 'eth_sendRawTransaction'
