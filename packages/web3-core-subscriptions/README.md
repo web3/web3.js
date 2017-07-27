@@ -37,7 +37,8 @@ var sub = new Web3Subscriptions({
     subscriptions: {
         'newBlockHeaders': {
             subscriptionName: 'newHeads',
-            params: 0
+            params: 0,
+            outputFormatter: formatters.outputBlockFormatter
         },
         'pendingTransactions': {
             params: 0,
