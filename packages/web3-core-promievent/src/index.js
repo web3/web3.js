@@ -66,4 +66,10 @@ var PromiEvent = function PromiEvent(justPromise) {
     };
 };
 
+PromiEvent.resolve = function(value) {
+    var promise = PromiEvent(true);
+    promise.resolve(value);
+    return promise.eventEmitter;
+}
+
 module.exports = PromiEvent;

@@ -242,8 +242,12 @@ describe(method, function () {
                     assert.deepEqual(payload.params, test.formattedArgs2 || []);
                 });
             }
-
-
+          
+            provider.injectResult(null);
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+          
 
             // if notification its sendTransaction, which needs two more results, subscription and receipt
             if(test.notification) {
