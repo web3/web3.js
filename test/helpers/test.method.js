@@ -61,7 +61,7 @@ var runTests = function (obj, method, tests) {
                         assert.equal(payload.method, test.call);
                         assert.deepEqual(payload.params, test.formattedArgs || []);
                     });
-                  
+
                     if (test.call2) {
                         provider.injectResult(clone(test.result2));
                         provider.injectValidation(function (payload) {
@@ -71,15 +71,14 @@ var runTests = function (obj, method, tests) {
                         });
                     }
 
-                    if (method === 'sendTransaction') {
-                        provider.injectResult(null);
-                        provider.injectValidation(function (payload) {
-                            assert.equal(payload.method, 'eth_getTransactionReceipt');
-                    }
-
 
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
+                        provider.injectResult(null);
+                        provider.injectValidation(function (payload) {
+                            assert.equal(payload.method, 'eth_getTransactionReceipt');
+                        });
+
                         provider.injectResult(clone(test.result));
                         // inject receipt
                         provider.injectResult({
