@@ -87,7 +87,8 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
             subscriptions: {
                 'newBlockHeaders': {
                     subscriptionName: 'newHeads', // replace subscription with this name
-                    params: 0
+                    params: 0,
+                    outputFormatter: formatters.outputBlockFormatter
                 }
             }
         })
@@ -226,7 +227,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, blockHash, sub) {
+    var checkConfirmation = function (err, blockHeader, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -236,7 +237,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                     }
                 };
             }
-            // console.log('FF:');
 
             method._ethereumCall.getTransactionReceipt(result)
             // catch error from requesting receipt
