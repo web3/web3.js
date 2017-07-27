@@ -18,13 +18,13 @@ var tests = [{
     }, 'SomePass@Word!'],
     result: '0xfff12345678976543213456786543212345675432',
     formattedResult: '0xfff12345678976543213456786543212345675432',
-    notification: {
-        method: 'eth_subscription',
-        params: {
-            subscription: '0x1234567',
-            result: '0x9ce59a13059e417087c02d3236a0b1cc'
-        }
-    },
+    // notification: {
+    //     method: 'eth_subscription',
+    //     params: {
+    //         subscription: '0x1234567',
+    //         result: '0x9ce59a13059e417087c02d3236a0b1cc'
+    //     }
+    // },
     call: 'personal_'+ method
 },{
     args: [{
