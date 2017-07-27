@@ -93,7 +93,8 @@ Parameters
 
 1. ``String`` - Data to sign. If String it will be converted using :ref:`web3.utils.utf8ToHex <utils-utf8tohex>`.
 2. ``String`` - Address to sign data with.
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+3. ``String`` - The password of the account to sign data with.
+4. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
