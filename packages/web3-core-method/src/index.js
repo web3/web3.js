@@ -238,7 +238,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                 };
             }
             // if we have a valid receipt we don't need to send a request
-            (existingReceipt ? promiEvent.resolve(existingReceipt) : method._ethereumCall.getTransactionReceipt(result))
+            return (existingReceipt ? promiEvent.resolve(existingReceipt) : method._ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
             .catch(function (err) {
                 sub.unsubscribe();
