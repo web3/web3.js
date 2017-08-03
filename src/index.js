@@ -42,30 +42,28 @@ var utils = require('../packages/web3-utils');
 
 
 var Web3 = function Web3() {
+    var _this = this;
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
 
     this.version = version.version;
 
+    this.utils = utils;
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
 
-    this.utils = utils;
 
     // overwrite package setProvider
+    var setProvider = this.setProvider;
     this.setProvider = function (provider, net) {
-        this._requestManager.setProvider(provider, net);
-        this._provider = this._requestManager.provider;
+        setProvider.apply(_this, arguments);
 
         this.eth.setProvider(provider, net);
-        this.eth.net.setProvider(provider, net);
-        this.eth.personal.setProvider(provider, net);
 
         this.shh.setProvider(provider, net);
-        this.shh.net.setProvider(provider, net);
 
         this.bzz.setProvider(provider);
 
