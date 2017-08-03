@@ -30,7 +30,6 @@ var Bzz = function Bzz(provider) {
 
     this.givenProvider = Bzz.givenProvider;
 
-    // if new Web3(provider), use the given provider
     if (provider && provider._requestManager) {
         provider = provider.currentProvider;
     }
@@ -47,7 +46,7 @@ var Bzz = function Bzz(provider) {
 /* jshint ignore:start */
 Bzz.givenProvider = null;
 if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
-    Bzz.givenProvider = ethereumProvider;
+    Bzz.givenProvider = ethereumProvider.bzz;
 }
 /* jshint ignore:end */
 
@@ -56,14 +55,16 @@ Bzz.prototype.setProvider = function(provider) {
     if(_.isObject(provider) && _.isString(provider.bzz)) {
         provider = provider.bzz;
     // is no string, set default
-    } else if(!_.isString(provider)) {
-        provider = 'http://swarm-gateways.net'; // default to gateway
     }
+    // else if(!_.isString(provider)) {
+    //      provider = 'http://swarm-gateways.net'; // default to gateway
+    // }
 
 
     if(_.isString(provider)) {
         this.currentProvider = provider;
     } else {
+        this.currentProvider = null;
         return false;
     }
 

@@ -70,6 +70,16 @@ var Eth = function Eth() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    // overwrite setProvider
+    var setProvider = this.setProvider;
+    this.setProvider = function () {
+        setProvider.apply(_this, arguments);
+        _this.net.setProvider.apply(_this, arguments);
+        _this.personal.setProvider.apply(_this, arguments);
+        _this.accounts.setProvider.apply(_this, arguments);
+        _this.Contract.setProvider(_this.currentProvider, _this.accounts);
+    };
+
     this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
     // add net
@@ -85,7 +95,7 @@ var Eth = function Eth() {
 
     // add contract
     this.Contract = Contract;
-    this.Contract.setProvider(this.currentProvider, _this.accounts);
+    this.Contract.setProvider(this.currentProvider, this.accounts);
 
     // add IBAN
     this.Iban = Iban;

@@ -2,18 +2,18 @@ var chai = require('chai');
 var assert = chai.assert;
 
 global.web3 = {
-    currentProvider: {test: 'ethereumProvider'}
+    currentProvider: {bzz: 'http://givenProvider:8500'}
 };
 
 
-describe('Web3.providers.givenProvide', function () {
+describe('Web3.providers.givenProvider', function () {
     describe('should be set if web3.currentProvider is available ', function () {
 
         it('when instantiating Web3', function () {
 
             var Web3 = require('../src/index.js');
 
-            assert.deepEqual(Web3.givenProvider, {test: 'ethereumProvider'});
+            assert.deepEqual(Web3.givenProvider, global.web3.currentProvider);
 
         });
 
@@ -21,10 +21,9 @@ describe('Web3.providers.givenProvide', function () {
 
             var Eth = require('../packages/web3-eth');
 
-            assert.deepEqual(Eth.givenProvider, {test: 'ethereumProvider'});
+            assert.deepEqual(Eth.givenProvider, global.web3.currentProvider);
 
         });
-
     });
 });
 

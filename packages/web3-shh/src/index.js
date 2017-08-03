@@ -35,6 +35,13 @@ var Shh = function Shh() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    // overwrite setProvider
+    var setProvider = this.setProvider;
+    this.setProvider = function () {
+        setProvider.apply(_this, arguments);
+        _this.net.setProvider.apply(_this, arguments);
+    };
+
     this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
     methods().forEach(function(method) {
