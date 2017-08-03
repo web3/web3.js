@@ -207,7 +207,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 };
 
 Contract.setProvider = function(provider, accounts) {
-    Contract.currentProvider = provider;
+    // Contract.currentProvider = provider;
+    core.packageInit(Contract, [provider]);
+
     Contract._ethAccounts = accounts;
 };
 

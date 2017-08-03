@@ -56,6 +56,61 @@ RequestManager.providers = {
 };
 
 
+
+/**
+ * Should be used to set provider of request manager
+ *
+ * @method setProvider
+ * @param {Object} p
+ */
+RequestManager.prototype.setProvider = function (p, net) {
+    var _this = this;
+
+    // autodetect provider
+    if(p && typeof p === 'string' && this.providers) {
+
+        // HTTP
+        if(/^http:\/\//i.test(p)) {
+            p = new this.providers.HttpProvider(p);
+
+            // WS
+        } else if(/^ws:\/\//i.test(p)) {
+            p = new this.providers.WebsocketProvider(p);
+
+            // IPC
+        } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
+            p = new this.providers.IpcProvider(p, net);
+
+        } else if(p) {
+            throw new Error('Can\'t autodetect provider for "'+ p +'"');
+        }
+    }
+
+    // reset the old one before changing
+    if(this.provider)
+        this.clearSubscriptions();
+
+
+    this.provider = p || null;
+
+    // listen to incoming notifications
+    if(this.provider && this.provider.on) {
+        this.provider.on('data', function requestManagerNotification(err, result){
+            if(!err) {
+                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
+                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
+            } else {
+
+                Object.keys(_this.subscriptions).forEach(function(id){
+                    if(_this.subscriptions[id].callback)
+                        _this.subscriptions[id].callback(err);
+                });
+            }
+        });
+    }
+};
+
+
 /**
  * Should be used to asynchronously send request
  *
@@ -158,59 +213,6 @@ RequestManager.prototype.removeSubscription = function (id, callback) {
 
         // remove subscription
         delete _this.subscriptions[id];
-    }
-};
-
-/**
- * Should be used to set provider of request manager
- *
- * @method setProvider
- * @param {Object}
- */
-RequestManager.prototype.setProvider = function (p, net) {
-    var _this = this;
-
-    // autodetect provider
-    if(p && typeof p === 'string' && this.providers) {
-
-        // HTTP
-        if(/^http:\/\//i.test(p)) {
-            p = new this.providers.HttpProvider(p);
-
-        // WS
-        } else if(/^ws:\/\//i.test(p)) {
-            p = new this.providers.WebsocketProvider(p);
-
-        // IPC
-        } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
-            p = new this.providers.IpcProvider(p, net);
-
-        } else if(p) {
-            throw new Error('Can\'t autodetect provider for "'+ p +'"');
-        }
-    }
-
-    // reset the old one before changing
-    if(this.provider)
-        this.clearSubscriptions();
-
-
-    this.provider = p;
-
-    // listen to incoming notifications
-    if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(err, result){
-            if(!err) {
-                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
-                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
-            } else {
-
-                Object.keys(_this.subscriptions).forEach(function(id){
-                    if(_this.subscriptions[id].callback)
-                        _this.subscriptions[id].callback(err);
-                });
-            }
-        });
     }
 };
 
