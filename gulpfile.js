@@ -23,7 +23,8 @@ var DEST = path.join(__dirname, 'dist/');
 var packages = [{
     fileName: 'web3',
     expose: 'Web3',
-    src: './src/index.js'
+    src: './src/index.js',
+    ignore: ['xmlhttprequest','websocket']
 },{
     fileName: 'web3-utils',
     expose: 'Web3Utils',
@@ -76,7 +77,8 @@ var packages = [{
 },{
     fileName: 'web3-providers-ws',
     expose: 'Web3WsProvider',
-    src: './packages/web3-providers-ws/src/index.js'
+    src: './packages/web3-providers-ws/src/index.js',
+    ignore: ['websocket']
 },{
     fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscriptions',
