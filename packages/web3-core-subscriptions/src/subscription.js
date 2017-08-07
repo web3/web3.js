@@ -204,7 +204,7 @@ Subscription.prototype.subscribe = function() {
 
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on) {
-        var err2 = new Error('The current provider doesn\'t support subscriptions'+ this.options.requestManager.provider.constructor.name);
+        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
         this.callback(err2, null, this);
         this.emit('error', err2);
         return this;
