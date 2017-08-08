@@ -18,15 +18,15 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+### Node
 
 ```bash
 npm install web3
 ```
 
-### Meteor.js
+### Meteor
 
-*Note*: works only in the Browser for now. (PRs welcome)
+*Note*: works only in the Browser for now. (PR welcome).
 
 ```bash
 meteor add ethereum:web3
@@ -42,7 +42,7 @@ npm run-script build
 ```
 
 Then include `dist/web3.js` in your html file.
-This will expose the `Web3` object on the window object.
+This will expose `Web3` on the window object.
 
 ## Usage
 
