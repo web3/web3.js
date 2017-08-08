@@ -124,10 +124,10 @@ RequestManager.prototype.send = function (data, callback) {
     if (!this.provider) {
         return callback(errors.InvalidProvider());
     }
-
+console.log(data.params);
     var payload = Jsonrpc.toPayload(data.method, data.params);
     this.provider.send(payload, function (err, result) {
-        if(result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
+        if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
 
         if (err) {
             return callback(err);

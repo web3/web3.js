@@ -25,8 +25,8 @@
 
 module.exports = {
     ErrorResponse: function (result) {
-        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Returned error: ' + JSON.stringify(result);
-        return new Error(message);
+        var message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
+        return new Error('Returned error: ' + message);
     },
     InvalidNumberOfParams: function (got, expected, method) {
         return new Error('Invalid number of parameters for "'+ method +'". Got '+ got +' expected '+ expected +'!');
