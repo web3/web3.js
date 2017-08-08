@@ -2,6 +2,7 @@
 test
 dist
 docs
+coverage
 .gitignore
 .editorconfig
 .travis.yml
