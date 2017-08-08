@@ -189,6 +189,9 @@ describe("eth", function () {
 
         staticTests.forEach(function (test, i) {
             it("decrypt staticTests and compare to private key", function() {
+                // increase the test timeout
+                this.timeout(4000);
+
                 var ethAccounts = new Accounts();
 
                 // create account
@@ -196,7 +199,6 @@ describe("eth", function () {
 
                 // compare addresses
                 assert.equal(acc.privateKey, '0x'+ test.priv);
-
             });
         });
     });
