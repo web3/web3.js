@@ -61,7 +61,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return utils.numberToHex(blockNumber);
+    return (utils.isHex(blockNumber)) ? blockNumber : utils.numberToHex(blockNumber);
 };
 
 /**
