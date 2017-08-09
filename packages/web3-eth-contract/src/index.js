@@ -76,20 +76,20 @@ var Contract = function Contract(jsonInterface, address, options) {
             name: 'estimateGas',
             call: 'eth_estimateGas',
             params: 1,
-            inputFormatter: [formatters.inputCallFormatter],
+            inputFormatter: [formatters.inputCallFormatter.bind(this)],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatters.inputCallFormatter.bind(this), formatters.inputDefaultBlockNumberFormatter.bind(this)]
         }),
         new Method({
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatters.inputTransactionFormatter]
+            inputFormatter: [formatters.inputTransactionFormatter.bind(this)]
         })
     ];
     // attach methods to this._ethereumCall
@@ -189,6 +189,45 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         get: function(){
             return _this._jsonInterface;
+        },
+        enumerable: true
+    });
+
+    // get default account from the Class
+    var defaultAccount = Contract.defaultAccount;
+    var defaultBlock = Contract.defaultBlock || 'latest';
+
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            return defaultAccount;
+        },
+        set: function (val) {
+            if(val) {
+                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+            }
+
+            // update defaultBlock
+            _ethereumCall.forEach(function(method) {
+                method.defaultAccount = defaultAccount;
+            });
+
+            return val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultBlock', {
+        get: function () {
+            return defaultBlock;
+        },
+        set: function (val) {
+            defaultBlock = val;
+
+            // update defaultBlock
+            _ethereumCall.forEach(function(method) {
+                method.defaultBlock = defaultBlock;
+            });
+
+            return val;
         },
         enumerable: true
     });
@@ -752,7 +791,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
     if(args.generateRequest) {
 
         var payload = {
-            params: [formatters.inputCallFormatter(args.options), formatters.inputDefaultBlockNumberFormatter(args.defaultBlock)],
+            params: [formatters.inputCallFormatter.call(this._parent, args.options), formatters.inputDefaultBlockNumberFormatter.call(this._parent, args.defaultBlock)],
             callback: args.callback
         };
 

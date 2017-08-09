@@ -34,19 +34,7 @@ var Net = function () {
     core.packageInit(this, arguments);
 
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
-
-};
-
-core.addProviders(Net);
-
-
-var methods = function () {
-
-    return [
+    [
         new Method({
             name: 'getId',
             call: 'net_version',
@@ -64,8 +52,14 @@ var methods = function () {
             params: 0,
             outputFormatter: utils.hexToNumber
         })
-    ];
+    ].forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
+    });
+
 };
+
+core.addProviders(Net);
 
 
 module.exports = Net;
