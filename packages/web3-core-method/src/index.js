@@ -47,9 +47,12 @@ var Method = function Method(options) {
     this.transformPayload = options.transformPayload;
 
     this.requestManager = options.requestManager;
+
     // reference to eth.accounts
     this.accounts = options.accounts;
 
+    this.defaultBlock = options.defaultBlock || 'latest';
+    this.defaultAccount = options.defaultAccount || null;
 };
 
 Method.prototype.setRequestManager = function (requestManager, accounts) {
@@ -146,12 +149,15 @@ Method.prototype.validateArgs = function (args) {
  * @return {Array}
  */
 Method.prototype.formatInput = function (args) {
+    var _this = this;
+
     if (!this.inputFormatter) {
         return args;
     }
 
     return this.inputFormatter.map(function (formatter, index) {
-        return formatter ? formatter(args[index]) : args[index];
+        // bind this for defaultBlock, and defaultAccount
+        return formatter ? formatter.call(_this, args[index]) : args[index];
     });
 };
 

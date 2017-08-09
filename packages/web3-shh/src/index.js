@@ -44,20 +44,10 @@ var Shh = function Shh() {
 
     this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
-
     this.net = new Net(this.currentProvider);
-};
-
-core.addProviders(Shh);
 
 
-var methods = function () {
-
-    return [
+    [
         new Subscriptions({
             name: 'subscribe',
             type: 'shh',
@@ -178,8 +168,15 @@ var methods = function () {
             params: 1,
             inputFormatter: [null]
         })
-    ];
+    ].forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
+    });
 };
+
+core.addProviders(Shh);
+
+
 
 module.exports = Shh;
 
