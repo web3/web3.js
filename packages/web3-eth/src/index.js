@@ -36,11 +36,8 @@ var Iban = require('web3-eth-iban');
 var Accounts = require('web3-eth-accounts');
 var abi = require('web3-eth-abi');
 
-
-
 var getNetworkType = require('./getNetworkType.js');
-
-var formatters = helpers.formatters;
+var formatter = helpers.formatters;
 
 
 var blockCall = function (args) {
@@ -90,7 +87,7 @@ var Eth = function Eth() {
         },
         set: function (val) {
             if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+                defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
             }
 
             // also set on the Contract object
@@ -180,13 +177,13 @@ var Eth = function Eth() {
             name: 'isSyncing',
             call: 'eth_syncing',
             params: 0,
-            outputFormatter: formatters.outputSyncingFormatter
+            outputFormatter: formatter.outputSyncingFormatter
         }),
         new Method({
             name: 'getGasPrice',
             call: 'eth_gasPrice',
             params: 0,
-            outputFormatter: formatters.outputBigNumberFormatter
+            outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
             name: 'getAccounts',
@@ -204,48 +201,48 @@ var Eth = function Eth() {
             name: 'getBalance',
             call: 'eth_getBalance',
             params: 2,
-            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
-            outputFormatter: formatters.outputBigNumberFormatter
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputDefaultBlockNumberFormatter],
+            outputFormatter: formatter.outputBigNumberFormatter
         }),
         new Method({
             name: 'getStorageAt',
             call: 'eth_getStorageAt',
             params: 3,
-            inputFormatter: [formatters.inputAddressFormatter, utils.numberToHex, formatters.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputAddressFormatter, utils.numberToHex, formatter.inputDefaultBlockNumberFormatter]
         }),
         new Method({
             name: 'getCode',
             call: 'eth_getCode',
             params: 2,
-            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputDefaultBlockNumberFormatter]
         }),
         new Method({
             name: 'getBlock',
             call: blockCall,
             params: 2,
-            inputFormatter: [formatters.inputBlockNumberFormatter, function (val) { return !!val; }],
-            outputFormatter: formatters.outputBlockFormatter
+            inputFormatter: [formatter.inputBlockNumberFormatter, function (val) { return !!val; }],
+            outputFormatter: formatter.outputBlockFormatter
         }),
         new Method({
             name: 'getUncle',
             call: uncleCall,
             params: 2,
-            inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
-            outputFormatter: formatters.outputBlockFormatter,
+            inputFormatter: [formatter.inputBlockNumberFormatter, utils.numberToHex],
+            outputFormatter: formatter.outputBlockFormatter,
 
         }),
         new Method({
             name: 'getBlockTransactionCount',
             call: getBlockTransactionCountCall,
             params: 1,
-            inputFormatter: [formatters.inputBlockNumberFormatter],
+            inputFormatter: [formatter.inputBlockNumberFormatter],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
             name: 'getBlockUncleCount',
             call: uncleCountCall,
             params: 1,
-            inputFormatter: [formatters.inputBlockNumberFormatter],
+            inputFormatter: [formatter.inputBlockNumberFormatter],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
@@ -253,27 +250,27 @@ var Eth = function Eth() {
             call: 'eth_getTransactionByHash',
             params: 1,
             inputFormatter: [null],
-            outputFormatter: formatters.outputTransactionFormatter
+            outputFormatter: formatter.outputTransactionFormatter
         }),
         new Method({
             name: 'getTransactionFromBlock',
             call: transactionFromBlockCall,
             params: 2,
-            inputFormatter: [formatters.inputBlockNumberFormatter, utils.numberToHex],
-            outputFormatter: formatters.outputTransactionFormatter
+            inputFormatter: [formatter.inputBlockNumberFormatter, utils.numberToHex],
+            outputFormatter: formatter.outputTransactionFormatter
         }),
         new Method({
             name: 'getTransactionReceipt',
             call: 'eth_getTransactionReceipt',
             params: 1,
             inputFormatter: [null],
-            outputFormatter: formatters.outputTransactionReceiptFormatter
+            outputFormatter: formatter.outputTransactionReceiptFormatter
         }),
         new Method({
             name: 'getTransactionCount',
             call: 'eth_getTransactionCount',
             params: 2,
-            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter],
+            inputFormatter: [formatter.inputAddressFormatter, formatter.inputDefaultBlockNumberFormatter],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
@@ -286,19 +283,19 @@ var Eth = function Eth() {
             name: 'signTransaction',
             call: 'eth_signTransaction',
             params: 1,
-            inputFormatter: [formatters.inputTransactionFormatter]
+            inputFormatter: [formatter.inputTransactionFormatter]
         }),
         new Method({
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatters.inputTransactionFormatter]
+            inputFormatter: [formatter.inputTransactionFormatter]
         }),
         new Method({
             name: 'sign',
             call: 'eth_sign',
             params: 2,
-            inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter],
+            inputFormatter: [formatter.inputSignFormatter, formatter.inputAddressFormatter],
             transformPayload: function (payload) {
                 payload.params.reverse();
                 return payload;
@@ -308,13 +305,13 @@ var Eth = function Eth() {
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+            inputFormatter: [formatter.inputCallFormatter, formatter.inputDefaultBlockNumberFormatter]
         }),
         new Method({
             name: 'estimateGas',
             call: 'eth_estimateGas',
             params: 1,
-            inputFormatter: [formatters.inputCallFormatter],
+            inputFormatter: [formatter.inputCallFormatter],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
@@ -351,8 +348,8 @@ var Eth = function Eth() {
             name: 'getPastLogs',
             call: 'eth_getLogs',
             params: 1,
-            inputFormatter: [formatters.inputLogFormatter],
-            outputFormatter: formatters.outputLogFormatter
+            inputFormatter: [formatter.inputLogFormatter],
+            outputFormatter: formatter.outputLogFormatter
         }),
 
         // subscriptions
@@ -364,7 +361,7 @@ var Eth = function Eth() {
                     // TODO rename on RPC side?
                     subscriptionName: 'newHeads', // replace subscription with this name
                     params: 0,
-                    outputFormatter: formatters.outputBlockFormatter
+                    outputFormatter: formatter.outputBlockFormatter
                 },
                 'pendingTransactions': {
                     subscriptionName: 'newPendingTransactions', // replace subscription with this name
@@ -372,8 +369,8 @@ var Eth = function Eth() {
                 },
                 'logs': {
                     params: 1,
-                    inputFormatter: [formatters.inputLogFormatter],
-                    outputFormatter: formatters.outputLogFormatter,
+                    inputFormatter: [formatter.inputLogFormatter],
+                    outputFormatter: formatter.outputLogFormatter,
                     // DUBLICATE, also in web3-eth-contract
                     subscriptionHandler: function (output) {
                         if(output.removed) {
@@ -389,7 +386,7 @@ var Eth = function Eth() {
                 },
                 'syncing': {
                     params: 0,
-                    outputFormatter: formatters.outputSyncingFormatter,
+                    outputFormatter: formatter.outputSyncingFormatter,
                     subscriptionHandler: function (output) {
                         var _this = this;
 

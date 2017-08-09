@@ -76,20 +76,20 @@ var Contract = function Contract(jsonInterface, address, options) {
             name: 'estimateGas',
             call: 'eth_estimateGas',
             params: 1,
-            inputFormatter: [formatters.inputCallFormatter.bind(this)],
+            inputFormatter: [formatters.inputCallFormatter],
             outputFormatter: utils.hexToNumber
         }),
         new Method({
             name: 'call',
             call: 'eth_call',
             params: 2,
-            inputFormatter: [formatters.inputCallFormatter.bind(this), formatters.inputDefaultBlockNumberFormatter.bind(this)]
+            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
         }),
         new Method({
             name: 'sendTransaction',
             call: 'eth_sendTransaction',
             params: 1,
-            inputFormatter: [formatters.inputTransactionFormatter.bind(this)]
+            inputFormatter: [formatters.inputTransactionFormatter]
         })
     ];
     // attach methods to this._ethereumCall
