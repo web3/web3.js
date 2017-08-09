@@ -48,7 +48,6 @@ var Web3 = function Web3() {
     core.packageInit(this, arguments);
 
     this.version = version.version;
-
     this.utils = utils;
 
     this.eth = new Eth(this);
@@ -71,10 +70,8 @@ var Web3 = function Web3() {
     };
 };
 
-Web3.prototype.version = version.version;
-
-core.addProviders(Web3);
-
+Web3.version = version.version;
+Web3.utils = utils;
 
 Web3.modules = {
     Eth: Eth,
@@ -83,6 +80,9 @@ Web3.modules = {
     Shh: Shh,
     Bzz: Bzz
 };
+
+core.addProviders(Web3);
+
 
 
 
