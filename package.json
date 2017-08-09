@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0-beta.17",
+  "version": "1.0.0-beta.18",
   "description": "Ethereum JavaScript API",
   "license": "LGPL-3.0",
   "main": "./src/index.js",
