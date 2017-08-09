@@ -83,7 +83,12 @@ var inputCallFormatter = function (options){
         options.to = inputAddressFormatter(options.to);
     }
 
-    ['gasPrice', 'gas', 'gasLimit', 'value', 'nonce'].filter(function (key) {
+    // allow both
+    if (options.gas || options.gasLimit) {
+        options.gas = options.gas || options.gasLimit;
+    }
+
+    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
         options[key] = utils.numberToHex(options[key]);
