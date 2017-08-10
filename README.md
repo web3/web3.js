@@ -24,6 +24,12 @@ Please read the [documentation][docs] for more.
 npm install web3
 ```
 
+### Yarn
+
+```bash
+yarn add web3
+```
+
 ### Meteor
 
 *Note*: works only in the Browser for now. (PR welcome).
