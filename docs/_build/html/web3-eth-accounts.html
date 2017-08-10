@@ -60,15 +60,10 @@
 <p>The <code class="docutils literal"><span class="pre">web3.eth.accounts</span></code> contains functions to generate Ethereum accounts and sign transactions and data.</p>
 <p>To use this package standalone use:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Accounts</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3-eth-accounts&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">Eth</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3-eth&#39;</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">eth</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Eth</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 
 <span class="c1">// Passing in the eth or web3 package is necessary to allow retrieving chainId, gasPrice and nonce automatically</span>
 <span class="c1">// for accounts.signTransaction().</span>
-<span class="kd">var</span> <span class="nx">accounts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Accounts</span><span class="p">(</span><span class="nx">eth</span><span class="p">);</span>
-
-<span class="c1">// If nonce, chainId and gasPrice will be always given you don&#39;t need to pass in the Eth, or web3 package.</span>
-<span class="kd">var</span> <span class="nx">accounts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Accounts</span><span class="p">();</span>
+<span class="kd">var</span> <span class="nx">accounts</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Accounts</span><span class="p">(</span><span class="s1">&#39;ws://localhost:8546&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 <hr class="docutils" />
@@ -563,7 +558,7 @@
 <div class="section" id="id29">
 <h3>Parameters<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">account</span></code> - <code class="docutils literal"><span class="pre">String|Object</span></code>: A private key or account object created with <a class="reference internal" href="#accounts-create"><span class="std std-ref">web3.eth.accounts.new()</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">account</span></code> - <code class="docutils literal"><span class="pre">String|Object</span></code>: A private key or account object created with <a class="reference internal" href="#accounts-create"><span class="std std-ref">web3.eth.accounts.create()</span></a>.</li>
 </ol>
 </div>
 <div class="section" id="id30">
