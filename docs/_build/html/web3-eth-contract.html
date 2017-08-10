@@ -61,6 +61,7 @@
 When you create a new contract object you give it the json interface of the respective smart contract
 and web3 will auto convert all calls into low level ABI calls over RPC for you.</p>
 <p>This allows you to interact with smart contracts as if they were JavaScript objects.</p>
+<p>To use it standalone:</p>
 <hr class="docutils" />
 <div class="section" id="new-contract">
 <h2>new contract<a class="headerlink" href="#new-contract" title="Permalink to this headline">¶</a></h2>
@@ -547,6 +548,7 @@ If its a single return value its returned as is, if its multiple return values t
                     <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">]</span>
                 <span class="p">},</span>
                 <span class="nx">event</span><span class="o">:</span> <span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span>
+                <span class="nx">signature</span><span class="o">:</span> <span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span>
                 <span class="nx">logIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="nx">transactionIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
                 <span class="nx">transactionHash</span><span class="o">:</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">,</span>
@@ -688,6 +690,7 @@ The estimation can differ from the actual gas used when later sending a transact
         <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="nx">event</span><span class="o">:</span> <span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span>
+    <span class="nx">signature</span><span class="o">:</span> <span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span>
     <span class="nx">logIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionHash</span><span class="o">:</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">,</span>
@@ -734,6 +737,7 @@ The estimation can differ from the actual gas used when later sending a transact
 <p>The structure of the returned event <code class="docutils literal"><span class="pre">Object</span></code> looks as follows:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">event</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The event name.</li>
+<li><code class="docutils literal"><span class="pre">signature</span></code> - <code class="docutils literal"><span class="pre">String|Null</span></code>: The event signature, <code class="docutils literal"><span class="pre">null</span></code> if its an anonymous event.</li>
 <li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: From which this event originated from.</li>
 <li><code class="docutils literal"><span class="pre">returnValues</span></code> - <code class="docutils literal"><span class="pre">Object</span></code>: The return values coming from the event, e.g. <code class="docutils literal"><span class="pre">{myVar:</span> <span class="pre">1,</span> <span class="pre">myVar2:</span> <span class="pre">'0x234...'}</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">logIndex</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: Integer of the event index position in the block.</li>
@@ -771,6 +775,7 @@ The estimation can differ from the actual gas used when later sending a transact
         <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="nx">event</span><span class="o">:</span> <span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span>
+    <span class="nx">signature</span><span class="o">:</span> <span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span>
     <span class="nx">logIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionHash</span><span class="o">:</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">,</span>
@@ -845,6 +850,7 @@ Optionally the filter property can filter those events.</p>
         <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">]</span>
     <span class="p">},</span>
     <span class="nx">event</span><span class="o">:</span> <span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span>
+    <span class="nx">signature</span><span class="o">:</span> <span class="s1">&#39;0xfd43ade1c09fade1c0d57a7af66ab4ead7c2c2eb7b11a91ffdd57a7af66ab4ead7&#39;</span><span class="p">,</span>
     <span class="nx">logIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionIndex</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">transactionHash</span><span class="o">:</span> <span class="s1">&#39;0x7f9fade1c0d57a7af66ab4ead79fade1c0d57a7af66ab4ead7c2c2eb7b11a91385&#39;</span><span class="p">,</span>
