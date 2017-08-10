@@ -65,7 +65,7 @@ ABICoder.prototype._requireType = function (type) {
     })[0];
 
     if (!solidityType) {
-        throw Error('invalid solidity type!: ' + type);
+        throw Error('Invalid solidity type: ' + type);
     }
 
     return solidityType;
@@ -290,6 +290,11 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
+
+    if (!_.isString(type)) {
+        throw new Error('Given parameter type is not a string: '+ type);
+    }
+
     return this.decodeParameters([{type: type}], bytes)[0];
 };
 
