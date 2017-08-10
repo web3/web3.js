@@ -33,6 +33,12 @@ You need to run a local Ethereum node to use this library.
 npm install web3
 ```
 
+### Yarn
+
+```bash
+yarn add web3
+```
+
 ### Meteor.js
 
 ```bash
