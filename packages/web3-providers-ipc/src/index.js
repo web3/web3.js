@@ -25,7 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var oboe = require('oboe');
-
+var net = require('net');
 
 var IpcProvider = function IpcProvider(path, net) {
     var _this = this;
