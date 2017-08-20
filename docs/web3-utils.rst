@@ -97,7 +97,7 @@ BN
     web3.utils.BN(mixed)
 
 The `BN.js <https://github.com/indutny/bn.js/>`_ library for calculating with big numbers in JavaScript.
-See the `BN.js documentation <https://github.com/indutny/bn.js/` for details.
+See the `BN.js documentation <https://github.com/indutny/bn.js/>`_ for details.
 
 .. note:: For safe conversion of many types, incl `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ use :ref:`utils.toBN <utils-tobn>`
 
