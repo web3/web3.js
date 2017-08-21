@@ -1,13 +1,13 @@
 {
     "name": "web3-bzz",
-    "version": "1.0.0-beta.13",
+    "version": "1.0.0-beta.17",
     "description": "Web3 module to interact with the Swarm network.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-bzz",
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
         "got": "7.1.0",
-        "swarm-js": "0.1.34",
+        "swarm-js": "0.1.35",
         "underscore": "1.8.3"
     }
 }

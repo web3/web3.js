@@ -215,7 +215,7 @@ See the <cite>BN.js documentation &lt;https://github.com/indutny/bn.js/</cite> f
 <p>Will calculate the sha3 of the input.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">To mimick the sha3 behaviour of solidity use <a class="reference internal" href="#utils-soliditysha3"><span class="std std-ref">soliditySah3</span></a></p>
+<p class="last">To mimic the sha3 behaviour of solidity use <a class="reference internal" href="#utils-soliditysha3"><span class="std std-ref">soliditySah3</span></a></p>
 </div>
 <div class="section" id="id12">
 <h3>Parameters<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
@@ -253,7 +253,8 @@ See the <cite>BN.js documentation &lt;https://github.com/indutny/bn.js/</cite> f
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">soliditySha3</span><span class="p">(</span><span class="nx">param1</span> <span class="p">[,</span> <span class="nx">param2</span><span class="p">,</span> <span class="p">...])</span>
 </pre></div>
 </div>
-<p>Will calculate the sha3 of given input parameters in the same way solidity would.</p>
+<p>Will calculate the sha3 of given input parameters in the same way solidity would.
+This means arguments will be ABI converted and tightly packed before being hashed.</p>
 <div class="section" id="id15">
 <h3>Parameters<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">

@@ -60,6 +60,10 @@
 <p>The web3.js object is a umbrella package to house all ethereum related modules.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
 
+<span class="o">&gt;</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">utils</span>
+<span class="o">&gt;</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">version</span>
+<span class="o">&gt;</span> <span class="nx">Web3</span><span class="p">.</span><span class="nx">modules</span>
+
 <span class="c1">// &quot;Web3.providers.givenProvider&quot; will be set if in an Ethereum supported browser.</span>
 <span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">);</span>
 
@@ -67,12 +71,14 @@
 <span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span>
 <span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span>
 <span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span>
+<span class="o">&gt;</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
 </pre></div>
 </div>
 <hr class="docutils" />
 <div class="section" id="version">
 <h2>version<a class="headerlink" href="#version" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">version</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">version</span>
 </pre></div>
 </div>
 <p>Contains the version of the <code class="docutils literal"><span class="pre">web3</span></code> container object.</p>
@@ -86,13 +92,13 @@
 <span class="o">&gt;</span> <span class="s2">&quot;1.0.0&quot;</span>
 </pre></div>
 </div>
-<hr class="docutils" />
 </div>
 </div>
 <hr class="docutils" />
 <div class="section" id="modules">
 <h2>modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">modules</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">modules</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">modules</span>
 </pre></div>
 </div>
 <p>Will return an object with the classes of all major sub modules, to be able to instantiate them manually.</p>
@@ -123,6 +129,16 @@
 </pre></div>
 </div>
 </div>
+</div>
+<hr class="docutils" />
+<div class="section" id="utils">
+<h2>utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">Web3</span><span class="p">.</span><span class="nx">utils</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span>
+</pre></div>
+</div>
+<p>Utility functions are also exposes on the <code class="docutils literal"><span class="pre">Web3</span></code> class object directly.</p>
+<p>See <a class="reference internal" href="web3-utils.html#utils"><span class="std std-ref">web3.utils</span></a> for more.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="setprovider">
@@ -397,6 +413,7 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <li><a class="reference internal" href="#id2">Example</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#utils">utils</a></li>
 <li><a class="reference internal" href="#setprovider">setProvider</a><ul>
 <li><a class="reference internal" href="#parameters">Parameters</a></li>
 <li><a class="reference internal" href="#id3">Returns</a></li>

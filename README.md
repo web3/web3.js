@@ -18,15 +18,21 @@ Please read the [documentation][docs] for more.
 
 ## Installation
 
-### Node.js
+### Node
 
 ```bash
 npm install web3
 ```
 
-### Meteor.js
+### Yarn
 
-*Note*: works only in the Browser for now. (PRs welcome)
+```bash
+yarn add web3
+```
+
+### Meteor
+
+*Note*: works only in the Browser for now. (PR welcome).
 
 ```bash
 meteor add ethereum:web3
@@ -42,7 +48,7 @@ npm run-script build
 ```
 
 Then include `dist/web3.js` in your html file.
-This will expose the `Web3` object on the window object.
+This will expose `Web3` on the window object.
 
 ## Usage
 
@@ -116,6 +122,18 @@ This will put all the browser build files into the `dist` folder.
 npm test
 ```
 
+
+### Community
+ - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+ - [Forum](https://forum.ethereum.org/categories/ethereum-js)
+
+
+### Similar libraries in other languages
+ - Python [Web3.py](https://github.com/pipermerriam/web3.py)
+ - Haskell [hs-web3](https://github.com/airalab/hs-web3)
+ - Java [web3j](https://github.com/web3j/web3j)
+
+
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [npm-image]: https://badge.fury.io/js/web3.png
@@ -130,4 +148,3 @@ npm test
 [coveralls-url]: https://coveralls.io/r/ethereum/web3.js?branch=master
 [waffle-image]: https://badge.waffle.io/ethereum/web3.js.svg?label=ready&title=Ready
 [waffle-url]: https://waffle.io/ethereum/web3.js
-

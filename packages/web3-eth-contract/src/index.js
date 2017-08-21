@@ -193,6 +193,45 @@ var Contract = function Contract(jsonInterface, address, options) {
         enumerable: true
     });
 
+    // get default account from the Class
+    var defaultAccount = Contract.defaultAccount;
+    var defaultBlock = Contract.defaultBlock || 'latest';
+
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            return defaultAccount;
+        },
+        set: function (val) {
+            if(val) {
+                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+            }
+
+            // update defaultBlock
+            _ethereumCall.forEach(function(method) {
+                method.defaultAccount = defaultAccount;
+            });
+
+            return val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultBlock', {
+        get: function () {
+            return defaultBlock;
+        },
+        set: function (val) {
+            defaultBlock = val;
+
+            // update defaultBlock
+            _ethereumCall.forEach(function(method) {
+                method.defaultBlock = defaultBlock;
+            });
+
+            return val;
+        },
+        enumerable: true
+    });
+
     // properties
     this.methods = {};
     this.events = {};
@@ -207,7 +246,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 };
 
 Contract.setProvider = function(provider, accounts) {
-    Contract.currentProvider = provider;
+    // Contract.currentProvider = provider;
+    core.packageInit(Contract, [provider]);
+
     Contract._ethAccounts = accounts;
 };
 
@@ -307,6 +348,8 @@ Contract.prototype._encodeEventABI = function (event, options) {
                     return null;
                 }
 
+                // TODO: https://github.com/ethereum/web3.js/issues/344
+
                 if (_.isArray(value)) {
                     return value.map(function (v) {
                         return abi.encodeParameter(i.type, v);
@@ -403,9 +446,7 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
             if (json.type === 'function') {
                 signature = json.signature;
             }
-            return json.inputs.map(function (input) {
-                return input.type;
-            });
+            return _.isArray(json.inputs) ? json.inputs.map(function (input) { return input.type; }) : [];
         }).map(function (types) {
             return abi.encodeParameters(types, args).replace('0x','');
         })[0] || '';
@@ -675,12 +716,11 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.encodeABI = this.parent._encodeMethodABI.bind(txObject);
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
-
-    if (args.length !== this.method.inputs.length) {
+    if (args && this.method.inputs && args.length !== this.method.inputs.length) {
         throw errors.InvalidNumberOfParams(args.length, this.method.inputs.length, this.method.name);
     }
 
-    txObject.arguments = args;
+    txObject.arguments = args || [];
     txObject._method = this.method;
     txObject._parent = this.parent;
 
@@ -751,7 +791,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
     if(args.generateRequest) {
 
         var payload = {
-            params: [formatters.inputCallFormatter(args.options), formatters.inputDefaultBlockNumberFormatter(args.defaultBlock)],
+            params: [formatters.inputCallFormatter.call(this._parent, args.options), formatters.inputDefaultBlockNumberFormatter.call(this._parent, args.defaultBlock)],
             callback: args.callback
         };
 

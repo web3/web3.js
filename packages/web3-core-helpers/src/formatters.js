@@ -28,8 +28,6 @@ var _ = require('underscore');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
-var config = require('./config');
-
 /**
  * Should the format output to a big number
  *
@@ -46,8 +44,8 @@ var isPredefinedBlockNumber = function (blockNumber) {
 };
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    if (blockNumber === undefined || blockNumber === null) {
-        return config.defaultBlock;
+    if (this && (blockNumber === undefined || blockNumber === null)) {
+        return this.defaultBlock;
     }
     if (blockNumber === 'genesis' || blockNumber === 'earliest') {
         return '0x0';
@@ -61,7 +59,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return utils.numberToHex(blockNumber);
+    return (utils.isHex(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
 
 /**
@@ -73,7 +71,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
 */
 var inputCallFormatter = function (options){
 
-    var from = options.from || config.defaultAccount;
+    var from = options.from || (this ? this.defaultAccount : null);
 
     if (from) {
         options.from = inputAddressFormatter(from);
@@ -83,7 +81,12 @@ var inputCallFormatter = function (options){
         options.to = inputAddressFormatter(options.to);
     }
 
-    ['gasPrice', 'gas', 'gasLimit', 'value', 'nonce'].filter(function (key) {
+    // allow both
+    if (options.gas || options.gasLimit) {
+        options.gas = options.gas || options.gasLimit;
+    }
+
+    ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
         return options[key] !== undefined;
     }).forEach(function(key){
         options[key] = utils.numberToHex(options[key]);
@@ -103,7 +106,7 @@ var inputTransactionFormatter = function (options) {
 
     // check from, only if not number, or object
     if (!_.isNumber(options.from) && !_.isObject(options.from)) {
-        options.from = options.from || config.defaultAccount;
+        options.from = options.from || (this ? this.defaultAccount : null);
 
         if (!options.from && !_.isNumber(options.from)) {
             throw new Error('The send transactions "from" field must be defined!');

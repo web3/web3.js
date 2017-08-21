@@ -24,8 +24,12 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-if (typeof global !== 'undefined') {
-    var WebSocket = require('websocket').w3cwebsocket;
+
+var Ws = null;
+if (typeof window !== 'undefined') {
+    Ws = window.WebSocket;
+} else {
+    Ws = require('websocket').w3cwebsocket;
 }
 // Default connection ws://localhost:8546
 
@@ -35,7 +39,7 @@ var WebsocketProvider = function WebsocketProvider(url)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-    this.connection = new WebSocket(url);
+    this.connection = new Ws(url);
 
 
     this.addDefaultEvents();

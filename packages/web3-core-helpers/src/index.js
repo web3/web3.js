@@ -24,11 +24,9 @@
 
 var errors = require('./errors');
 var formatters = require('./formatters');
-var config = require('./config');
 
 module.exports = {
     errors: errors,
-    formatters: formatters,
-    config: config
+    formatters: formatters
 };
 
