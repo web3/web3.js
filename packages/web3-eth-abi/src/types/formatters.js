@@ -206,7 +206,7 @@ var formatOutputString = function (param) {
     var hex = param.dynamicPart().slice(0, 64);
     if(hex) {
         var length = (new BN(hex, 16)).toNumber() * 2;
-        return utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, ''));
+        return length ? utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, '')) : '';
     } else {
         return "ERROR: Strings are not yet supported as return values";
     }
