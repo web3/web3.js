@@ -817,7 +817,9 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
                 // add output formatter for decoding
                 this._parent._ethereumCall.call.method.outputFormatter = function (result) {
-                    if(result) {
+                    if (result === '0x') {
+                        result = null;
+                    } else if (result) {
                         result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
                     }
                     return result;
