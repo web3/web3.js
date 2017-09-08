@@ -23,7 +23,7 @@
 "use strict";
 
 
-var requestManager = require('web3-requestManager');
+var requestManager = require('web3-core-requestmanager');
 var extend = require('./extend.js');
 
 module.exports = {
@@ -34,53 +34,43 @@ module.exports = {
             throw new Error('You need to instantiate using the "new" keyword.');
         }
 
-        // if (!args[0]) {
-        //     throw new Error('You must pass in a provider as argument!');
-        // }
 
-        // make write only property of pkg.provider
+        // make property of pkg._provider, which can properly set providers
         Object.defineProperty(pkg, 'currentProvider', {
             get: function () {
                 return pkg._provider;
             },
-            set: function () {
-                return pkg._provider;
+            set: function (value) {
+                return pkg.setProvider(value);
             },
-            enumerable: true
+            enumerable: true,
+            configurable: true
         });
 
         // inherit from web3 umbrella package
         if (args[0] && args[0]._requestManager) {
             pkg._requestManager = new requestManager.Manager(args[0].currentProvider);
-            pkg._provider =  args[0].currentProvider;
 
         // set requestmanager on package
         } else {
-
-            if(typeof args[0] === 'string' && pkg.providers) {
-                if(/^http:\/\//.test(args[0])) {
-                   args[0] = new pkg.providers.HttpProvider(args[0]);
-                } else if(/^ws:\/\//.test(args[0])) {
-                    args[0] = new pkg.providers.WebsocketProvider(args[0]);
-                } else if(args[0]) {
-                    throw new Error('Can\'t autodetect provider for "'+ args[0] +'"');
-                }
-            }
-
-            pkg._requestManager = new requestManager.Manager(args[0]);
-            pkg._provider =  args[0];
+            pkg._requestManager = new requestManager.Manager();
+            pkg._requestManager.setProvider(args[0], args[1]);
         }
 
         // add givenProvider
         pkg.givenProvider = requestManager.Manager.givenProvider;
         pkg.providers = requestManager.Manager.providers;
 
-        // add set Provider function
-        pkg.setProvider = function (provider) {
-            pkg._requestManager.setProvider(provider);
-            pkg._provider = provider;
-            return true;
-        };
+         pkg._provider =  pkg._requestManager.provider;
+
+        // add SETPROVIDER function (don't overwrite if already existing)
+        if (!pkg.setProvider) {
+            pkg.setProvider = function (provider, net) {
+                pkg._requestManager.setProvider(provider, net);
+                pkg._provider = pkg._requestManager.provider;
+                return true;
+            };
+        }
 
         // attach batch request creation
         pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);

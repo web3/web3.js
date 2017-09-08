@@ -1,0 +1,439 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>web3.bzz &#8212; web3.js 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="top" title="web3.js 1.0.0 documentation" href="index.html" />
+    <link rel="next" title="web3.shh" href="web3-shh.html" />
+    <link rel="prev" title="web3.*.net" href="web3-net.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="web3-shh.html" title="web3.shh"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="web3-net.html" title="web3.*.net"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">web3.js 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="admonition note" id="bzz">
+<p class="first admonition-title">Note</p>
+<p class="last">This documentation is work in progress and web3.js 1.0 is not yet released! You can find the current documentation for web3 0.x.x at <a class="reference external" href="https://github.com/ethereum/wiki/wiki/JavaScript-API">github.com/ethereum/wiki/wiki/JavaScript-API</a>.</p>
+</div>
+<div class="section" id="web3-bzz">
+<h1>web3.bzz<a class="headerlink" href="#web3-bzz" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This API might change over time.</p>
+</div>
+<p>The <code class="docutils literal"><span class="pre">web3-bzz</span></code> package allows you to interact swarm the decentralized file store.
+For more see the <a class="reference external" href="http://swarm-guide.readthedocs.io/en/latest/">Swarm Docs</a>.</p>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Bzz</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3-bzz&#39;</span><span class="p">);</span>
+
+<span class="c1">// will autodetect if the &quot;ethereum&quot; object is present and will either connect to the local swarm node, or the swarm-gateways.net.</span>
+<span class="c1">// Optional you can give your own provider URL; If no provider URL is given it will use &quot;http://swarm-gateways.net&quot;</span>
+<span class="kd">var</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bzz</span><span class="p">(</span><span class="nx">Bzz</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;http://swarm-gateways.net&#39;</span><span class="p">);</span>
+
+
+<span class="c1">// or using the web3 umbrella package</span>
+
+<span class="kd">var</span> <span class="nx">Web3</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">web3</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Web3</span><span class="p">(</span><span class="nx">Web3</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s1">&#39;ws://some.local-or-remote.node:8546&#39;</span><span class="p">);</span>
+
+<span class="c1">// -&gt; web3.bzz.currentProvider // if Web3.givenProvider was an ethereum provider it will set: &quot;http://localhost:8500&quot; otherwise it will set: &quot;http://swarm-gateways.net&quot;</span>
+
+<span class="c1">// set the provider manually if necessary</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s2">&quot;http://localhost:8500&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<div class="section" id="setprovider">
+<h2>setProvider<a class="headerlink" href="#setprovider" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">myProvider</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Will change the provider for its module.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When called on the umbrella package <code class="docutils literal"><span class="pre">web3</span></code> it will also set the provider for all sub modules <code class="docutils literal"><span class="pre">web3.eth</span></code>, <code class="docutils literal"><span class="pre">web3.shh</span></code>, etc EXCEPT <code class="docutils literal"><span class="pre">web3.bzz</span></code> which needs a separate provider at all times.</p>
+</div>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">Object</span></code> - <code class="docutils literal"><span class="pre">myProvider</span></code>: <span class="xref std std-ref">a valid provider</span>.</li>
+</ol>
+</div>
+<div class="section" id="returns">
+<h3>Returns<a class="headerlink" href="#returns" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Boolean</span></code></p>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Bzz</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3-bzz&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Bzz</span><span class="p">(</span><span class="s1">&#39;http://localhost:8500&#39;</span><span class="p">);</span>
+
+<span class="c1">// change provider</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s1">&#39;http://swarm-gateways.net&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="givenprovider">
+<h2>givenProvider<a class="headerlink" href="#givenprovider" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">givenProvider</span>
+</pre></div>
+</div>
+<p>When using web3.js in an Ethereum compatible browser, it will set with the current native provider by that browser.
+Will return the given provider by the (browser) environment, otherwise <code class="docutils literal"><span class="pre">null</span></code>.</p>
+<div class="section" id="id1">
+<h3>Returns<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Object</span></code>: The given provider set or <code class="docutils literal"><span class="pre">null</span></code>;</p>
+</div>
+<div class="section" id="id2">
+<h3>Example<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">bzz</span><span class="p">.</span><span class="nx">givenProvider</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="p">{</span>
+    <span class="nx">send</span><span class="o">:</span> <span class="kd">function</span><span class="p">(),</span>
+    <span class="nx">on</span><span class="o">:</span> <span class="kd">function</span><span class="p">(),</span>
+    <span class="nx">bzz</span><span class="o">:</span> <span class="s2">&quot;http://localhost:8500&quot;</span><span class="p">,</span>
+    <span class="nx">shh</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">givenProvider</span> <span class="o">||</span> <span class="s2">&quot;http://swarm-gateways.net&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="currentprovider">
+<h2>currentProvider<a class="headerlink" href="#currentprovider" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">bzz</span><span class="p">.</span><span class="nx">currentProvider</span>
+</pre></div>
+</div>
+<p>Will return the current provider URL, otherwise <code class="docutils literal"><span class="pre">null</span></code>.</p>
+<div class="section" id="id3">
+<h3>Returns<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Object</span></code>: The current provider URL or <code class="docutils literal"><span class="pre">null</span></code>;</p>
+</div>
+<div class="section" id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">bzz</span><span class="p">.</span><span class="nx">currentProvider</span><span class="p">;</span>
+<span class="o">&gt;</span> <span class="s2">&quot;http://localhost:8500&quot;</span>
+
+
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">currentProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">bzz</span><span class="p">.</span><span class="nx">setProvider</span><span class="p">(</span><span class="s2">&quot;http://swarm-gateways.net&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="upload">
+<h2>upload<a class="headerlink" href="#upload" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">upload</span><span class="p">(</span><span class="nx">mixed</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Uploads files folders or raw data to swarm.</p>
+<div class="section" id="id5">
+<h3>Parameters<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic">
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">mixed</span></code> - <code class="docutils literal"><span class="pre">String|Buffer|Uint8Array|Object</span></code>: The data to upload, can be a file content, file Buffer/Uint8Array, multiple files, or a directory or file (only in node.js). The following types are allowed:</dt>
+<dd><ul class="first last">
+<li><p class="first"><code class="docutils literal"><span class="pre">String|Buffer|Uint8Array</span></code>: A file content, file Uint8Array or Buffer to upload, or:</p>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">Object</span></code>:</dt>
+<dd><ol class="first last arabic">
+<li><dl class="first docutils">
+<dt>Multiple key values for files and directories. The paths will be kept the same:</dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt>key must be the files path, or name, e.g. <code class="docutils literal"><span class="pre">&quot;/foo.txt&quot;</span></code> and its value is an object with:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">type</span></code>: The mime-type of the file, e.g. <code class="docutils literal"><span class="pre">&quot;text/html&quot;</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">data</span></code>: A file content, file Uint8Array or Buffer to upload.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Upload a file or a directory from disk in Node.js. Requires and object with the following properties:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">path</span></code>: The path to the file or directory.</li>
+<li><code class="docutils literal"><span class="pre">kind</span></code>: The type of the source <code class="docutils literal"><span class="pre">&quot;directory&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;file&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;data&quot;</span></code>.</li>
+<li><code class="docutils literal"><span class="pre">defaultFile</span></code> (optional): Path of the &#8220;defaultFile&#8221; when <code class="docutils literal"><span class="pre">&quot;kind&quot;:</span> <span class="pre">&quot;directory&quot;</span></code>, e.g. <code class="docutils literal"><span class="pre">&quot;/index.html&quot;</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Upload file or folder in the browser. Requres and object with the following properties:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">pick</span></code>: The file picker to launch. Can be <code class="docutils literal"><span class="pre">&quot;file&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;directory&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;data&quot;</span></code>.</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+</div>
+<div class="section" id="id6">
+<h3>Returns<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Promise</span></code> returning <code class="docutils literal"><span class="pre">String</span></code>: Returns the content hash of the manifest.</p>
+</div>
+<div class="section" id="id7">
+<h3>Example<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">;</span>
+
+<span class="c1">// raw data</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">upload</span><span class="p">(</span><span class="s2">&quot;test file&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">hash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Uploaded file. Address:&quot;</span><span class="p">,</span> <span class="nx">hash</span><span class="p">);</span>
+<span class="p">})</span>
+
+<span class="c1">// raw directory</span>
+<span class="kd">var</span> <span class="nx">dir</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;/foo.txt&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span> <span class="s2">&quot;sample file&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;/bar.txt&quot;</span><span class="o">:</span> <span class="p">{</span><span class="nx">type</span><span class="o">:</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span> <span class="s2">&quot;another file&quot;</span><span class="p">}</span>
+<span class="p">};</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">upload</span><span class="p">(</span><span class="nx">dir</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">hash</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Uploaded directory. Address:&quot;</span><span class="p">,</span> <span class="nx">hash</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">// upload from disk in node.js</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">upload</span><span class="p">({</span>
+    <span class="nx">path</span><span class="o">:</span> <span class="s2">&quot;/path/to/thing&quot;</span><span class="p">,</span>      <span class="c1">// path to data / file / directory</span>
+    <span class="nx">kind</span><span class="o">:</span> <span class="s2">&quot;directory&quot;</span><span class="p">,</span>           <span class="c1">// could also be &quot;file&quot; or &quot;data&quot;</span>
+    <span class="nx">defaultFile</span><span class="o">:</span> <span class="s2">&quot;/index.html&quot;</span>   <span class="c1">// optional, and only for kind === &quot;directory&quot;</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">)</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+
+<span class="c1">// upload from disk in the browser</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">upload</span><span class="p">({</span><span class="nx">pick</span><span class="o">:</span> <span class="s2">&quot;file&quot;</span><span class="p">})</span> <span class="c1">// could also be &quot;directory&quot; or &quot;data&quot;</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="download">
+<h2>download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">download</span><span class="p">(</span><span class="nx">bzzHash</span> <span class="p">[,</span> <span class="nx">localpath</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Downloads files and folders from swarm, as buffer or to disk (only node.js).</p>
+<div class="section" id="id8">
+<h3>Parameters<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">bzzHash</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The file or directory to download. If the hash is a raw file it will return a Buffer, if a manifest file, it will return the directory structure. If the <code class="docutils literal"><span class="pre">localpath</span></code> is given, it will return that path where it downloaded the files to.</li>
+<li><code class="docutils literal"><span class="pre">localpath</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The local folder to download the content into. (only node.js)</li>
+</ol>
+</div>
+<div class="section" id="id9">
+<h3>Returns<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Promise</span></code> returning <code class="docutils literal"><span class="pre">Buffer|Object|String</span></code>: The Buffer of the file downloaded, an object with the directory structure, or the path where it was downloaded to.</p>
+</div>
+<div class="section" id="id10">
+<h3>Example<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">bzz</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">;</span>
+
+<span class="c1">// download raw file</span>
+<span class="kd">var</span> <span class="nx">fileHash</span> <span class="o">=</span> <span class="s2">&quot;a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23&quot;</span><span class="p">;</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">download</span><span class="p">(</span><span class="nx">fileHash</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">buffer</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Downloaded file:&quot;</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="p">});</span>
+
+<span class="c1">// download directory, if the hash is manifest file.</span>
+<span class="kd">var</span> <span class="nx">dirHash</span> <span class="o">=</span> <span class="s2">&quot;7e980476df218c05ecfcb0a2ca73597193a34c5a9d6da84d54e295ecd8e0c641&quot;</span><span class="p">;</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">download</span><span class="p">(</span><span class="nx">dirHash</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">dir</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Downloaded directory:&quot;</span><span class="p">);</span>
+    <span class="o">&gt;</span> <span class="p">{</span>
+        <span class="s1">&#39;bar.txt&#39;</span><span class="o">:</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span> <span class="o">&lt;</span><span class="nx">Buffer</span> <span class="mi">61</span> <span class="mi">6</span><span class="nx">e</span> <span class="mi">6</span><span class="nx">f</span> <span class="mi">74</span> <span class="mi">68</span> <span class="mi">65</span> <span class="mi">72</span> <span class="mi">20</span> <span class="mi">66</span> <span class="mi">69</span> <span class="mi">6</span><span class="nx">c</span> <span class="mi">65</span><span class="o">&gt;</span> <span class="p">},</span>
+        <span class="s1">&#39;foo.txt&#39;</span><span class="o">:</span> <span class="p">{</span> <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;text/plain&#39;</span><span class="p">,</span> <span class="nx">data</span><span class="o">:</span> <span class="o">&lt;</span><span class="nx">Buffer</span> <span class="mi">73</span> <span class="mi">61</span> <span class="mi">6</span><span class="nx">d</span> <span class="mi">70</span> <span class="mi">6</span><span class="nx">c</span> <span class="mi">65</span> <span class="mi">20</span> <span class="mi">66</span> <span class="mi">69</span> <span class="mi">6</span><span class="nx">c</span> <span class="mi">65</span><span class="o">&gt;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// download file/directory to disk (only node.js)</span>
+<span class="kd">var</span> <span class="nx">dirHash</span> <span class="o">=</span> <span class="s2">&quot;a5c10851ef054c268a2438f10a21f6efe3dc3dcdcc2ea0e6a1a7a38bf8c91e23&quot;</span><span class="p">;</span>
+<span class="nx">bzz</span><span class="p">.</span><span class="nx">download</span><span class="p">(</span><span class="nx">dirHash</span><span class="p">,</span> <span class="s2">&quot;/target/dir&quot;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">path</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Downloaded directory to </span><span class="si">${</span><span class="nx">path</span><span class="si">}</span><span class="sb">.`</span><span class="p">))</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="pick">
+<h2>pick<a class="headerlink" href="#pick" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">pick</span><span class="p">.</span><span class="nx">file</span><span class="p">()</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">pick</span><span class="p">.</span><span class="nx">directory</span><span class="p">()</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">pick</span><span class="p">.</span><span class="nx">data</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Opens a file picker in the browser to select file(s), directory or data.</p>
+<div class="section" id="id11">
+<h3>Parameters<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<p>none</p>
+</div>
+<div class="section" id="id12">
+<h3>Returns<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Promise</span></code> returning <code class="docutils literal"><span class="pre">Object</span></code>: Returns the file or multiple files.</p>
+</div>
+<div class="section" id="id13">
+<h3>Example<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">bzz</span><span class="p">.</span><span class="nx">pick</span><span class="p">.</span><span class="nx">file</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="p">{</span>
+    <span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">web3.bzz</a><ul>
+<li><a class="reference internal" href="#setprovider">setProvider</a><ul>
+<li><a class="reference internal" href="#parameters">Parameters</a></li>
+<li><a class="reference internal" href="#returns">Returns</a></li>
+<li><a class="reference internal" href="#example">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#givenprovider">givenProvider</a><ul>
+<li><a class="reference internal" href="#id1">Returns</a></li>
+<li><a class="reference internal" href="#id2">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#currentprovider">currentProvider</a><ul>
+<li><a class="reference internal" href="#id3">Returns</a></li>
+<li><a class="reference internal" href="#id4">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#upload">upload</a><ul>
+<li><a class="reference internal" href="#id5">Parameters</a></li>
+<li><a class="reference internal" href="#id6">Returns</a></li>
+<li><a class="reference internal" href="#id7">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#download">download</a><ul>
+<li><a class="reference internal" href="#id8">Parameters</a></li>
+<li><a class="reference internal" href="#id9">Returns</a></li>
+<li><a class="reference internal" href="#id10">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#pick">pick</a><ul>
+<li><a class="reference internal" href="#id11">Parameters</a></li>
+<li><a class="reference internal" href="#id12">Returns</a></li>
+<li><a class="reference internal" href="#id13">Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="web3-net.html"
+                        title="previous chapter">web3.*.net</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="web3-shh.html"
+                        title="next chapter">web3.shh</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/web3-bzz.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="web3-shh.html" title="web3.shh"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="web3-net.html" title="web3.*.net"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">web3.js 1.0.0 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2016, Ethereum.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.8.
+    </div>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var formatters = require('../packages/web3-core-helpers/src/formatters.js');
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Eth = require('../packages/web3-eth');
 var Method = require('../packages/web3-core-method');
 
@@ -17,7 +17,7 @@ describe('lib/web3/method', function () {
                 name: 'call',
                 call: 'eth_call',
                 params: 2,
-                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter.bind({defaultBlock: 'latest'})]
             });
             method.setRequestManager(eth._requestManager);
 
@@ -31,7 +31,7 @@ describe('lib/web3/method', function () {
                     from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
                     data: '0xa123456'
-                },"latest"]);
+                }, "latest"]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
@@ -54,7 +54,7 @@ describe('lib/web3/method', function () {
                 name: 'call',
                 call: 'eth_call',
                 params: 2,
-                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter.bind({defaultBlock: 'latest'})]
             });
             method.setRequestManager(eth._requestManager);
 
@@ -161,6 +161,10 @@ describe('lib/web3/method', function () {
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
@@ -260,7 +264,7 @@ describe('lib/web3/method', function () {
                 params: 1,
                 inputFormatter: [formatters.inputTransactionFormatter]
             });
-            method.setRequestManager(eth._requestManager, eth);
+            method.setRequestManager(eth._requestManager); // second parameter accounts
 
             // generate send function
             var send = method.buildCall();
@@ -275,6 +279,11 @@ describe('lib/web3/method', function () {
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
@@ -387,6 +396,11 @@ describe('lib/web3/method', function () {
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
             provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -479,6 +493,11 @@ describe('lib/web3/method', function () {
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
@@ -575,6 +594,11 @@ describe('lib/web3/method', function () {
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
             provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
             });
@@ -657,6 +681,11 @@ describe('lib/web3/method', function () {
                 }]);
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+            provider.injectResult(null);
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');

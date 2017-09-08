@@ -24,8 +24,7 @@ var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var jsSha3 = require("js-sha3");
-
+var Hash = require("eth-lib/src/hash");
 
 
 /**
@@ -217,7 +216,9 @@ var hexToUtf8 = function(hex) {
  * @return {String}
  */
 var hexToNumber = function (value) {
-    if (!value) return value;
+    if (!value) {
+        return value;
+    }
 
     return toBN(value).toNumber();
 };
@@ -244,6 +245,10 @@ var hexToNumberString = function (value) {
  * @return {String}
  */
 var numberToHex = function (value) {
+    if (!isFinite(value) && !_.isString(value)) {
+        return value;
+    }
+
     var number = toBN(value);
     var result = number.toString(16);
 
@@ -398,7 +403,7 @@ var sha3 = function (value) {
         value = hexToBytes(value);
     }
 
-    var returnValue = '0x'+ jsSha3.keccak_256(value); // jshint ignore:line
+    var returnValue = Hash.keccak256(value); // jshint ignore:line
 
     if(returnValue === SHA3_NULL_S) {
         return null;
@@ -407,7 +412,7 @@ var sha3 = function (value) {
     }
 };
 // expose the under the hood keccak256
-sha3.jsSha3 = jsSha3;
+sha3._Hash = Hash;
 
 
 module.exports = {

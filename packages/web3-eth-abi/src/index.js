@@ -16,7 +16,7 @@
  */
 /**
  * @file index.js
- * @author Marek Kotewicz <marek@ethcore.io>
+ * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@frozeman.de>
  * @date 2017
  */
@@ -65,7 +65,7 @@ ABICoder.prototype._requireType = function (type) {
     })[0];
 
     if (!solidityType) {
-        throw Error('invalid solidity type!: ' + type);
+        throw Error('Invalid solidity type: ' + type);
     }
 
     return solidityType;
@@ -290,6 +290,11 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
+
+    if (!_.isString(type)) {
+        throw new Error('Given parameter type is not a string: '+ type);
+    }
+
     return this.decodeParameters([{type: type}], bytes)[0];
 };
 

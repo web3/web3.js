@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var Web3 = require('../src/index');
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 
 
 
@@ -9,7 +9,7 @@ describe('lib/web3/batch', function () {
     describe('execute', function () {
         it('should execute batch request', function (done) {
 
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
             var result = '0x126';
@@ -48,7 +48,7 @@ describe('lib/web3/batch', function () {
 
         it('should execute batch request for async properties', function (done) {
 
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
             var result = [];
@@ -73,19 +73,19 @@ describe('lib/web3/batch', function () {
 
                 assert.equal(first.method, 'eth_accounts');
                 assert.deepEqual(first.params, []);
-                assert.equal(second.method, 'bzz_upload');
-                assert.deepEqual(second.params, ['','']);
+                assert.equal(second.method, 'shh_post');
+                assert.deepEqual(second.params, [{}]);
             });
 
             var batch = new web3.BatchRequest();
             batch.add(web3.eth.getAccounts.request(callback));
-            batch.add(web3.bzz.upload.request('','', callback2));
+            batch.add(web3.shh.post.request({}, callback2));
             batch.execute();
         });
 
         it('should execute batch request with contract', function (done) {
 
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
             var abi = [{
@@ -181,7 +181,7 @@ describe('lib/web3/batch', function () {
 
         it('should execute batch requests and receive errors', function (done) {
 
-            var provider = new FakeHttpProvider();
+            var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
             var abi = [{

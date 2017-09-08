@@ -22,82 +22,58 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var Net = require('web3-net');
+var _ = require('underscore');
+var swarm = require("swarm-js");
 
 
-var Bzz = function Bzz() {
-    var _this = this;
+var Bzz = function Bzz(provider) {
 
-    // sets _requestmanager
-    core.packageInit(this, arguments);
+    this.givenProvider = Bzz.givenProvider;
 
+    if (provider && provider._requestManager) {
+        provider = provider.currentProvider;
+    }
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-    });
+    // only allow file picker when in browser
+    if(typeof document !== 'undefined') {
+        this.pick = swarm.pick;
+    }
 
-    this.net = new Net(this.currentProvider);
+    this.setProvider(provider);
 };
 
-core.addProviders(Bzz);
+// set default ethereum provider
+/* jshint ignore:start */
+Bzz.givenProvider = null;
+if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
+    Bzz.givenProvider = ethereumProvider.bzz;
+}
+/* jshint ignore:end */
+
+Bzz.prototype.setProvider = function(provider) {
+    // is ethereum provider
+    if(_.isObject(provider) && _.isString(provider.bzz)) {
+        provider = provider.bzz;
+    // is no string, set default
+    }
+    // else if(!_.isString(provider)) {
+    //      provider = 'http://swarm-gateways.net'; // default to gateway
+    // }
 
 
+    if(_.isString(provider)) {
+        this.currentProvider = provider;
+    } else {
+        this.currentProvider = null;
+        return false;
+    }
 
-var methods = function () {
+    // add functions
+    this.download = swarm.at(provider).download;
+    this.upload = swarm.at(provider).upload;
+    this.isAvailable = swarm.at(provider).isAvailable;
 
-    var download = new Method({
-        name: 'download',
-        call: 'bzz_download',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var upload = new Method({
-        name: 'upload',
-        call: 'bzz_upload',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var getManifest = new Method({
-        name: 'getManifest',
-        call: 'bzz_get',
-        params: 1,
-        inputFormatter: [null]
-    });
-
-    var put = new Method({
-        name: 'put',
-        call: 'bzz_put',
-        params: 2,
-        inputFormatter: [null, null]
-    });
-
-    var modify = new Method({
-        name: 'modify',
-        call: 'bzz_modify',
-        params: 4,
-        inputFormatter: [null, null, null, null]
-    });
-
-    var getInfo = new Method({
-        name: 'getInfo',
-        call: 'bzz_info',
-        params: 0,
-        inputFormatter: []
-    });
-
-    return [
-        download,
-        upload,
-        getManifest,
-        put,
-        modify,
-        getInfo
-    ];
+    return true;
 };
 
 

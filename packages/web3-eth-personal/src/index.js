@@ -36,87 +36,107 @@ var Personal = function Personal() {
     // sets _requestmanager
     core.packageInit(this, arguments);
 
+    this.net = new Net(this.currentProvider);
 
-    methods().forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
+    var defaultAccount = null;
+    var defaultBlock = 'latest';
+
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            return defaultAccount;
+        },
+        set: function (val) {
+            if(val) {
+                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+            }
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultAccount = defaultAccount;
+            });
+
+            return val;
+        },
+        enumerable: true
+    });
+    Object.defineProperty(this, 'defaultBlock', {
+        get: function () {
+            return defaultBlock;
+        },
+        set: function (val) {
+            defaultBlock = val;
+
+            // update defaultBlock
+            methods.forEach(function(method) {
+                method.defaultBlock = defaultBlock;
+            });
+
+            return val;
+        },
+        enumerable: true
     });
 
-    this.net = new Net(this.currentProvider);
+
+    var methods = [
+        new Method({
+            name: 'getAccounts',
+            call: 'personal_listAccounts',
+            params: 0,
+            outputFormatter: utils.toChecksumAddress
+        }),
+        new Method({
+            name: 'newAccount',
+            call: 'personal_newAccount',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: utils.toChecksumAddress
+        }),
+        new Method({
+            name: 'unlockAccount',
+            call: 'personal_unlockAccount',
+            params: 3,
+            inputFormatter: [formatters.inputAddressFormatter, null, null]
+        }),
+        new Method({
+            name: 'lockAccount',
+            call: 'personal_lockAccount',
+            params: 1,
+            inputFormatter: [formatters.inputAddressFormatter]
+        }),
+        new Method({
+            name: 'importRawKey',
+            call: 'personal_importRawKey',
+            params: 2
+        }),
+        new Method({
+            name: 'sendTransaction',
+            call: 'personal_sendTransaction',
+            params: 2,
+            inputFormatter: [formatters.inputTransactionFormatter, null]
+        }),
+        new Method({
+            name: 'sign',
+            call: 'personal_sign',
+            params: 3,
+            inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter, null]
+        }),
+        new Method({
+            name: 'ecRecover',
+            call: 'personal_ecRecover',
+            params: 2,
+            inputFormatter: [formatters.inputSignFormatter, null]
+        })
+    ];
+    methods.forEach(function(method) {
+        method.attachToObject(_this);
+        method.setRequestManager(_this._requestManager);
+        method.defaultBlock = _this.defaultBlock;
+        method.defaultAccount = _this.defaultAccount;
+    });
 };
 
 core.addProviders(Personal);
 
-
-var methods = function () {
-
-    var getAccounts = new Method({
-        name: 'getAccounts',
-        call: 'personal_listAccounts',
-        params: 0,
-        outputFormatter: utils.toChecksumAddress
-    });
-
-    var newAccount = new Method({
-        name: 'newAccount',
-        call: 'personal_newAccount',
-        params: 1,
-        inputFormatter: [null],
-        outputFormatter: utils.toChecksumAddress
-    });
-
-    var unlockAccount = new Method({
-        name: 'unlockAccount',
-        call: 'personal_unlockAccount',
-        params: 3,
-        inputFormatter: [formatters.inputAddressFormatter, null, null]
-    });
-
-    var lockAccount = new Method({
-        name: 'lockAccount',
-        call: 'personal_lockAccount',
-        params: 1,
-        inputFormatter: [formatters.inputAddressFormatter]
-    });
-
-    var importRawKey = new Method({
-        name: 'importRawKey',
-        call: 'personal_importRawKey',
-        params: 2
-    });
-
-    var sendTransaction = new Method({
-        name: 'sendTransaction',
-        call: 'personal_sendTransaction',
-        params: 2,
-        inputFormatter: [formatters.inputTransactionFormatter, null]
-    });
-
-    var sign = new Method({
-        name: 'sign',
-        call: 'personal_sign',
-        params: 3,
-        inputFormatter: [null, formatters.inputAddressFormatter, null]
-    });
-
-    var ecRecover = new Method({
-        name: 'ecRecover',
-        call: 'personal_ecRecover',
-        params: 2
-    });
-
-
-    return [
-        getAccounts,
-        newAccount,
-        unlockAccount,
-        sendTransaction,
-        lockAccount,
-        importRawKey,
-        sign,
-        ecRecover
-    ];
-};
 
 
 module.exports = Personal;

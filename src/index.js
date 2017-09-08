@@ -18,9 +18,9 @@
  * @file index.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Gav Wood <gav@ethcore.io>
+ *   Gav Wood <gav@parity.io>
  *   Jeffrey Wilcke <jeffrey.wilcke@ethereum.org>
- *   Marek Kotewicz <marek@ethcore.io>
+ *   Marek Kotewicz <marek@parity.io>
  *   Marian Oancea <marian@ethereum.org>
  * @date 2017
  */
@@ -42,39 +42,36 @@ var utils = require('../packages/web3-utils');
 
 
 var Web3 = function Web3() {
+    var _this = this;
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
 
     this.version = version.version;
-
+    this.utils = utils;
 
     this.eth = new Eth(this);
     this.shh = new Shh(this);
     this.bzz = new Bzz(this);
 
-    this.utils = utils;
 
-    this.setProvider = function (provider) {
-        this._requestManager.setProvider(provider);
+    // overwrite package setProvider
+    var setProvider = this.setProvider;
+    this.setProvider = function (provider, net) {
+        setProvider.apply(_this, arguments);
 
-        this.eth.setProvider(provider);
-        this.eth.net.setProvider(provider);
-        this.eth.personal.setProvider(provider);
+        this.eth.setProvider(provider, net);
 
-        this.shh.setProvider(provider);
-        this.shh.net.setProvider(provider);
+        this.shh.setProvider(provider, net);
 
         this.bzz.setProvider(provider);
-        this.bzz.net.setProvider(provider);
+
         return true;
     };
 };
 
-Web3.prototype.version = version.version;
-
-core.addProviders(Web3);
-
+Web3.version = version.version;
+Web3.utils = utils;
 
 Web3.modules = {
     Eth: Eth,
@@ -83,6 +80,9 @@ Web3.modules = {
     Shh: Shh,
     Bzz: Bzz
 };
+
+core.addProviders(Web3);
+
 
 
 

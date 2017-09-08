@@ -195,11 +195,18 @@ Subscription.prototype.subscribe = function() {
         return this;
     }
 
+    if(!this.options.requestManager.provider) {
+        var err1 = new Error('No provider set.');
+        this.callback(err1, null, this);
+        this.emit('error', err1);
+        return this;
+    }
+
     // throw error, if provider doesnt support subscriptions
     if(!this.options.requestManager.provider.on) {
-        var err = new Error('The current provider doesn\'t support subscriptions'+ this.options.requestManager.provider.constructor.name);
-        this.callback(err, null, this);
-        this.emit('error', err);
+        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
+        this.callback(err2, null, this);
+        this.emit('error', err2);
         return this;
     }
 

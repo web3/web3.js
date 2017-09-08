@@ -34,7 +34,25 @@ var Net = function () {
     core.packageInit(this, arguments);
 
 
-    methods().forEach(function(method) {
+    [
+        new Method({
+            name: 'getId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        }),
+        new Method({
+            name: 'isListening',
+            call: 'net_listening',
+            params: 0
+        }),
+        new Method({
+            name: 'getPeerCount',
+            call: 'net_peerCount',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        })
+    ].forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
@@ -42,37 +60,6 @@ var Net = function () {
 };
 
 core.addProviders(Net);
-
-
-var methods = function () {
-
-    var getId = new Method({
-        name: 'getId',
-        call: 'net_version',
-        params: 0,
-        outputFormatter: utils.hexToNumber
-    });
-
-    var isListening = new Method({
-        name: 'isListening',
-        call: 'net_listening',
-        params: 0
-    });
-
-    var getPeerCount = new Method({
-        name: 'getPeerCount',
-        call: 'net_peerCount',
-        params: 0,
-        outputFormatter: utils.hexToNumber
-    });
-
-
-    return [
-        getId,
-        isListening,
-        getPeerCount
-    ];
-};
 
 
 module.exports = Net;
