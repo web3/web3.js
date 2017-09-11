@@ -170,8 +170,14 @@ var formatOutputUInt = function (param, name) {
  * @param {SolidityParam} param
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
-var formatOutputBool = function (param) {
-    return (param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001');
+var formatOutputBool = function (param, name) {
+    var value = param.staticPart();
+
+    if(!value) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
+    return (value === '0000000000000000000000000000000000000000000000000000000000000001');
 };
 
 /**
