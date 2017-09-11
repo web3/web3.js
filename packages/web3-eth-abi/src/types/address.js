@@ -1,6 +1,6 @@
-var f = require('./formatters');
+var f = require('../formatters');
 var formatters = require('web3-core-helpers').formatters;
-var SolidityType = require('./type');
+var SolidityType = require('../type');
 
 /**
  * SolidityTypeAddress is a protoype that represents address type

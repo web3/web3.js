@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
-var formatters = require('../packages/web3-eth-abi/src/types/formatters.js');
-var Param = require('../packages/web3-eth-abi/src/types/param');
+var formatters = require('../packages/web3-eth-abi/src/formatters.js');
+var Param = require('../packages/web3-eth-abi/src/param');
 
 var tests = [
     { input: 1, result: new Param('0000000000000000000000000000000000000000000000000000000000000001') },

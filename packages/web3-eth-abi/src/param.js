@@ -16,7 +16,7 @@
 */
 /**
  * @file param.js
- * @author Marek Kotewicz <marek@ethdev.com>
+ * @author Marek Kotewicz <marek@parity.io>
  * @date 2015
  */
 
@@ -26,9 +26,10 @@ var formatters = require('./formatters.js');
  * SolidityParam object prototype.
  * Should be used when encoding, decoding solidity bytes
  */
-var SolidityParam = function (value, offset) {
+var SolidityParam = function (value, offset, rawValue) {
     this.value = value || '';
     this.offset = offset; // offset in bytes
+    this.rawValue = rawValue; // used for debugging
 };
 
 /**

@@ -1,5 +1,5 @@
-var f = require('./formatters');
-var SolidityType = require('./type');
+var f = require('../formatters');
+var SolidityType = require('../type');
 
 /**
  * SolidityTypeUInt is a protoype that represents uint type
