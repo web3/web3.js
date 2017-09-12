@@ -70,11 +70,11 @@ RequestManager.prototype.setProvider = function (p, net) {
     if(p && typeof p === 'string' && this.providers) {
 
         // HTTP
-        if(/^http:\/\//i.test(p)) {
+        if(/^(http|https):\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
             // WS
-        } else if(/^ws:\/\//i.test(p)) {
+        } else if(/^(ws|wss):\/\//i.test(p)) {
             p = new this.providers.WebsocketProvider(p);
 
             // IPC
