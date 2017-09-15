@@ -161,9 +161,12 @@ var outputTransactionFormatter = function (tx){
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
-    if(tx.to) {
+    if(tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
         tx.to = utils.toChecksumAddress(tx.to);
+    } else {
+        tx.to = null; // set to `null` if invalid address
     }
+
     if(tx.from) {
         tx.from = utils.toChecksumAddress(tx.from);
     }
