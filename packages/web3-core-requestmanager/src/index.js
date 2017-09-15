@@ -70,7 +70,7 @@ RequestManager.prototype.setProvider = function (p, net) {
     if(p && typeof p === 'string' && this.providers) {
 
         // HTTP
-        if(/^http:\/\//i.test(p)) {
+        if(/^http(s)?:\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
             // WS

@@ -217,7 +217,7 @@ sha3
 
 Will calculate the sha3 of the input.
 
-.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySah3 <utils-soliditysha3>`
+.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
 
 ----------
 Parameters

@@ -455,7 +455,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.blockNumber()
+    web3.eth.getBlockNumber()
     .then(console.log);
     > 2744
 
