@@ -829,7 +829,7 @@ Notification Returns
 
 ``Object`` - The incoming message:
 
-    - ``hash`` - ``String``: Hash of the enveloved message.
+    - ``hash`` - ``String``: Hash of the enveloped message.
     - ``sig`` - ``String``: Public key which signed this message.
     - ``recipientPublicKey`` - ``String``: The recipients public key.
     - ``timestamp`` - ``String``: Unix timestamp of the message genertion.
