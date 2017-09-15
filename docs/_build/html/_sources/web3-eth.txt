@@ -455,7 +455,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.blockNumber()
+    web3.eth.getBlockNumber()
     .then(console.log);
     > 2744
 
@@ -982,7 +982,7 @@ Parameters
   - ``value`` - ``Number|String|BN|BigNumber``: (optional) The value transferred for the transaction in :ref:`wei <what-is-wei>`, also the endowment if it's a contract-creation transaction.
   - ``gas``  - ``Number``: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).
   - ``gasPrice`` - ``Number|String|BN|BigNumber``: (optional) The price of gas for this transaction in :ref:`wei <what-is-wei>`, defaults to :ref:`web3.eth.gasPrice <eth-gasprice>`.
-  - ``data`` - ``String``: (optional) Either a `ABI byte string <https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
+  - ``data`` - ``String``: (optional) Either a `ABI byte string <http://solidity.readthedocs.io/en/latest/abi-spec.html>`_ containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.
   - ``nonce`` - ``Number``: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.
 2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -1648,4 +1648,3 @@ Example
 
 
 ------------------------------------------------------------------------------
-

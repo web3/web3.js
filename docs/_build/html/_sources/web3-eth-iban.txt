@@ -6,7 +6,7 @@
 web3.eth.Iban
 =========
 
-The ``web3.eth.Iban`` function lets convert etheruem addresses from and to IBAN and BBAN.
+The ``web3.eth.Iban`` function lets convert ethereum addresses from and to IBAN and BBAN.
 
 
 ------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ Generates a iban object with conversion methods and vailidity checks. Also has s
 Parameters
 ----------
 
-1. ``String``: the iban address to instantiate an Iban instance from.
+1. ``String``: the IBAN address to instantiate an Iban instance from.
 
 -------
 Returns

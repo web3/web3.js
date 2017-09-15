@@ -610,7 +610,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 </div>
 <div class="section" id="id31">
 <h3>Example<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">blockNumber</span><span class="p">()</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBlockNumber</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">2744</span>
 </pre></div>
@@ -1022,7 +1022,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 <li><code class="docutils literal"><span class="pre">value</span></code> - <code class="docutils literal"><span class="pre">Number|String|BN|BigNumber</span></code>: (optional) The value transferred for the transaction in <span class="xref std std-ref">wei</span>, also the endowment if it&#8217;s a contract-creation transaction.</li>
 <li><code class="docutils literal"><span class="pre">gas</span></code>  - <code class="docutils literal"><span class="pre">Number</span></code>: (optional, default: To-Be-Determined) The amount of gas to use for the transaction (unused gas is refunded).</li>
 <li><code class="docutils literal"><span class="pre">gasPrice</span></code> - <code class="docutils literal"><span class="pre">Number|String|BN|BigNumber</span></code>: (optional) The price of gas for this transaction in <span class="xref std std-ref">wei</span>, defaults to <a class="reference internal" href="#eth-gasprice"><span class="std std-ref">web3.eth.gasPrice</span></a>.</li>
-<li><code class="docutils literal"><span class="pre">data</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) Either a <a href="#id100"><span class="problematic" id="id101">`ABI byte string &lt;https://github.com/ethereum/wiki/wiki/Solidity,-Docs-and-ABI`_</span></a> containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.</li>
+<li><code class="docutils literal"><span class="pre">data</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) Either a <a class="reference external" href="http://solidity.readthedocs.io/en/latest/abi-spec.html">ABI byte string</a> containing the data of the function call on a contract, or in the case of a contract-creation transaction the initialisation code.</li>
 <li><code class="docutils literal"><span class="pre">nonce</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: (optional) Integer of a nonce. This allows to overwrite your own pending transactions that use the same nonce.</li>
 </ul>
 </div></blockquote>

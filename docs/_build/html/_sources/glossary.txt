@@ -24,11 +24,15 @@ Specification
 
 Functions:
 
-- ``type``: ``"function"`` or ``"constructor"`` (can be omitted, defaulting to ``"function"``);
+- ``type``: ``"function"``, ``"constructor"`` (can be omitted, defaulting to ``"function"``; ``"fallback"`` also possible but not relevant in web3.js);
 - ``name``: the name of the function (only present for function types);
+- ``constant``: ``true`` if function is specified to not modify the blockchain state;
+- ``payable``: ``true`` if function accepts ether, defaults to ``false``;
+- ``stateMutability``: a string with one of the following values: ``pure`` (specified to not read blockchain state), ``view`` (same as ``constant`` above), ``nonpayable`` and ``payable`` (same as ``payable`` above);
 - ``inputs``: an array of objects, each of which contains:
-  * ``name``: the name of the parameter;
-  * ``type``: the canonical type of the parameter.
+
+  - ``name``: the name of the parameter;
+  - ``type``: the canonical type of the parameter.
 - ``outputs``: an array of objects same as ``inputs``, can be omitted if no outputs exist.
 
 Events:
@@ -36,9 +40,10 @@ Events:
 - ``type``: always ``"event"``
 - ``name``: the name of the event;
 - ``inputs``: an array of objects, each of which contains:
-  * ``name``: the name of the parameter;
-  * ``type``: the canonical type of the parameter.
-  * ``indexed``: ``true`` if the field is part of the log's topics, ``false`` if it one of the log's data segment.
+
+  - ``name``: the name of the parameter;
+  - ``type``: the canonical type of the parameter.
+  - ``indexed``: ``true`` if the field is part of the log's topics, ``false`` if it one of the log's data segment.
 - ``anonymous``: ``true`` if the event was declared as ``anonymous``.
 
 
@@ -49,36 +54,45 @@ Example
 .. code-block:: javascript
 
     contract Test {
-        bytes32 b;
+        uint a;
+        address d = 0x12345678901234567890123456789012;
 
-        function Test() returns(address b){ b = 0x12345678901234567890123456789012; }
+        function Test(uint testInt)  { a = testInt;}
 
-        event Event(uint indexed a, bytes32 b)
+        event Event(uint indexed b, bytes32 c);
 
-        event Event2(uint indexed a, bytes32 b)
+        event Event2(uint indexed b, bytes32 c);
 
-        function foo(uint a) { Event(a, b); }
+        function foo(uint b, bytes32 c) returns(address) {
+            Event(b, c);
+            return d;
+        }
     }
 
     // would result in the JSON:
-
     [{
+        "type":"constructor",
+        "payable":false,
+        "stateMutability":"nonpayable"
+        "inputs":[{"name":"testInt","type":"uint256"}],
+      },{
         "type":"function",
         "name":"foo",
-        "inputs": [{"name":"a","type":"uint256"}],
-        "outputs": [{"name":"b","type":"address"}]
-    },{
+        "constant":false,
+        "payable":false,
+        "stateMutability":"nonpayable",
+        "inputs":[{"name":"b","type":"uint256"}, {"name":"c","type":"bytes32"}],
+        "outputs":[{"name":"","type":"address"}]
+      },{
         "type":"event",
-        "name":"Event"
-        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    }, {
+        "name":"Event",
+        "inputs":[{"indexed":true,"name":"b","type":"uint256"}, {"indexed":false,"name":"c","type":"bytes32"}],
+        "anonymous":false
+      },{
         "type":"event",
-        "name":"Event2"
-        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
-    }, {
-        "type":"event",
-        "name":"Event2"
-        "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
+        "name":"Event2",
+        "inputs":[{"indexed":true,"name":"b","type":"uint256"},{"indexed":false,"name":"c","type":"bytes32"}],
+        "anonymous":false
     }]
 
 
