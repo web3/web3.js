@@ -226,7 +226,7 @@ Example
 
     var subscription = web3.eth.subscribe('newBlockHeaders', function(error, result){
         if (!error)
-            console.log(blockHeader);
+            console.log(error);
     })
     .on("data", function(blockHeader){
     });
