@@ -62,7 +62,7 @@
     }
   ],
   "dependencies": {
-      "lerna": "^2.0.0"
+    "lerna": "^2.0.0"
   },
   "devDependencies": {
     "babel-preset-env": "^1.6.0",
