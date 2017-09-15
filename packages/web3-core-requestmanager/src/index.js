@@ -70,7 +70,7 @@ RequestManager.prototype.setProvider = function (p, net) {
     if(p && typeof p === 'string' && this.providers) {
 
         // HTTP
-        if(/^(http|https):\/\//i.test(p)) {
+        if(/^http(s)?:\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
             // WS
@@ -126,7 +126,7 @@ RequestManager.prototype.send = function (data, callback) {
     }
 
     var payload = Jsonrpc.toPayload(data.method, data.params);
-    this.provider.send(payload, function (err, result) {
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
         if(result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "'+ result.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload)));
 
         if (err) {
