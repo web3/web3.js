@@ -24,7 +24,7 @@ var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var Hash = require("eth-lib/src/hash");
+var Hash = require("eth-lib/lib/hash");
 
 
 /**
