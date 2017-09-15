@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var f = require('./types/formatters');
+var f = require('./formatters');
 
 var SolidityTypeAddress = require('./types/address');
 var SolidityTypeBool = require('./types/bool');
