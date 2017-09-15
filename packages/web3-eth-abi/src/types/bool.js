@@ -1,5 +1,5 @@
-var f = require('./formatters');
-var SolidityType = require('./type');
+var f = require('../formatters');
+var SolidityType = require('../type');
 
 /**
  * SolidityTypeBool is a protoype that represents bool type
