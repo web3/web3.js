@@ -5,7 +5,7 @@
 web3
 ====
 
-The web3.js object is a umbrella package to house all ethereum related modules.
+The web3.js object is an umbrella package to house all ethereum related modules.
 
 .. code-block:: javascript
 
