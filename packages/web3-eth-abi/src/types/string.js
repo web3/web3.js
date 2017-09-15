@@ -1,5 +1,5 @@
-var f = require('./formatters');
-var SolidityType = require('./type');
+var f = require('../formatters');
+var SolidityType = require('../type');
 
 var SolidityTypeString = function () {
     this._inputFormatter = f.formatInputString;

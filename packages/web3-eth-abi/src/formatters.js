@@ -151,8 +151,13 @@ var formatOutputInt = function (param) {
  * @param {SolidityParam} param
  * @returns {BN} right-aligned output bytes formatted to uint
  */
-var formatOutputUInt = function (param) {
-    var value = param.staticPart() || "0";
+var formatOutputUInt = function (param, name) {
+    var value = param.staticPart();
+
+    if(!value) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
     return new BN(value, 16).toString(10);
 };
 
@@ -165,8 +170,14 @@ var formatOutputUInt = function (param) {
  * @param {SolidityParam} param
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
-var formatOutputBool = function (param) {
-    return (param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001');
+var formatOutputBool = function (param, name) {
+    var value = param.staticPart();
+
+    if(!value) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
+    return (value === '0000000000000000000000000000000000000000000000000000000000000001');
 };
 
 /**
@@ -180,6 +191,11 @@ var formatOutputBool = function (param) {
 var formatOutputBytes = function (param, name) {
     var matches = name.match(/^bytes([0-9]*)/);
     var size = parseInt(matches[1]);
+
+    if(param.staticPart().slice(0, 2 * size).length !== size * 2) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue + ' The size doesn\'t match.');
+    }
+
     return '0x' + param.staticPart().slice(0, 2 * size);
 };
 
