@@ -74,7 +74,7 @@ RequestManager.prototype.setProvider = function (p, net) {
             p = new this.providers.HttpProvider(p);
 
             // WS
-        } else if(/^(ws|wss):\/\//i.test(p)) {
+        } else if(/^ws(s)?:\/\//i.test(p)) {
             p = new this.providers.WebsocketProvider(p);
 
             // IPC
