@@ -254,11 +254,13 @@ Subscription.prototype.subscribe = function() {
             // call callback on notifications
             _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
 
-                // TODO remove once its fixed in geth
-                if(_.isArray(result))
-                    result = result[0];
-
-                var output = _this._formatOutput(result);
+                // TODO remove the length check once this is fixed in geth
+                var output;
+                if(_.isArray(result) && result.length > 1) {
+                    output = _.map(result, (function(r) { return _this._formatOutput(r); }));
+                } else {
+                    output = _.isArray(result) ? _this._formatOutput(result[0]) : _this._formatOutput(result);
+                }
 
                 if (!err) {
 
