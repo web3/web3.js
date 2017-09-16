@@ -860,7 +860,16 @@ Contract.prototype._executeMethod = function _executeMethod(){
                             var count = 0;
                             events.forEach(function (ev) {
                                 if (ev.event) {
-                                    receipt.events[ev.event] = ev;
+                                    // if > 1 of the same event, don't overwrite any existing events
+                                    if (receipt.events[ev.event]) {
+                                        if (Array.isArray(receipt.events[ ev.event ])) {
+                                            receipt.events[ ev.event ].push(ev);
+                                        } else {
+                                            receipt.events[ev.event] = [receipt.events[ev.event], ev];
+                                        }
+                                    } else {
+                                        receipt.events[ ev.event ] = ev;
+                                    }
                                 } else {
                                     receipt.events[count] = ev;
                                     count++;

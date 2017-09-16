@@ -1462,11 +1462,11 @@ describe('contract', function () {
                     blockHash: '0x1345',
                     logIndex: '0x4',
                     data: '0x0000000000000000000000000000000000000000000000000000000000000005'
-                },{
+                }, {
                     address: address,
                     topics: [
                         sha3('Changed(address,uint256,uint256,uint256)'),
-                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                        '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
                         '0x0000000000000000000000000000000000000000000000000000000000000001'
                     ],
                     blockNumber: '0xa',
@@ -1474,6 +1474,20 @@ describe('contract', function () {
                     transactionIndex: '0x0',
                     blockHash: '0x1345',
                     logIndex: '0x4',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                    '0000000000000000000000000000000000000000000000000000000000000008'
+                },{
+                    address: address,
+                    topics: [
+                        sha3('Changed(address,uint256,uint256,uint256)'),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                        '0x0000000000000000000000000000000000000000000000000000000000000002'
+                    ],
+                    blockNumber: '0xa',
+                    transactionHash: '0x1234',
+                    transactionIndex: '0x0',
+                    blockHash: '0x1345',
+                    logIndex: '0x5',
                     data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
                     '0000000000000000000000000000000000000000000000000000000000000008'
                 }]
@@ -1493,7 +1507,7 @@ describe('contract', function () {
                 // console.log(receipt.events[0].raw);
                 // console.log(receipt.events[1].raw);
 
-                // wont throw if it errors ?!
+                // wont throw if it errors ?! nope: causes a timeout
                 assert.deepEqual(receipt, {
                     contractAddress: null,
                     cumulativeGasUsed: 10,
@@ -1527,33 +1541,61 @@ describe('contract', function () {
                                 data: '0x0000000000000000000000000000000000000000000000000000000000000005',
                             }
                         },
-                        Changed: {
-                            address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                            blockNumber: 10,
-                            transactionHash: '0x1234',
-                            blockHash: '0x1345',
-                            logIndex: 4,
-                            id: 'log_9ff24cb4',
-                            transactionIndex: 0,
-                            returnValues: {
-                                0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                                1: '1',
-                                2: '1',
-                                3: '8',
-                                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-                                amount: '1',
-                                t1: '1',
-                                t2: '8'
-                            },
-                            event: 'Changed',
-                            signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
-                            raw: {
-                                topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
-                                    '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
-                                    '0x0000000000000000000000000000000000000000000000000000000000000001'],
-                                data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                        Changed: [
+                            {
+                                address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                blockNumber: 10,
+                                transactionHash: '0x1234',
+                                blockHash: '0x1345',
+                                logIndex: 4,
+                                id: 'log_9ff24cb4',
+                                transactionIndex: 0,
+                                returnValues: {
+                                    0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    1: '1',
+                                    2: '1',
+                                    3: '8',
+                                    from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    amount: '1',
+                                    t1: '1',
+                                    t2: '8'
+                                },
+                                event: 'Changed',
+                                signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
+                                raw: {
+                                    topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                        '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                                        '0x0000000000000000000000000000000000000000000000000000000000000001' ],
+                                    data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                                }
+                            }, {
+                                address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                blockNumber: 10,
+                                transactionHash: '0x1234',
+                                blockHash: '0x1345',
+                                logIndex: 5,
+                                id: 'log_8b8a2b7f',
+                                transactionIndex: 0,
+                                returnValues: {
+                                    0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    1: '2',
+                                    2: '1',
+                                    3: '8',
+                                    from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    amount: '2',
+                                    t1: '1',
+                                    t2: '8'
+                                },
+                                event: 'Changed',
+                                signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
+                                raw: {
+                                    topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                        '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                                        '0x0000000000000000000000000000000000000000000000000000000000000002' ],
+                                    data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                                }
                             }
-                        }
+                        ]
                     }
                 });
 
