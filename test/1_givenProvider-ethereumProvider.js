@@ -9,7 +9,7 @@ describe('Web3.providers.givenProvider', function () {
 
         it('when instantiating Web3', function () {
 
-            var Web3 = require('../src/index.js');
+            var Web3 = require('../packages/web3');
 
             assert.deepEqual(Web3.givenProvider, global.ethereumProvider);
 
