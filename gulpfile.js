@@ -185,7 +185,7 @@ packages.forEach(function(pckg, i){
 
 
 gulp.task('watch', function() {
-    gulp.watch(['./src/*.js'], ['lint', 'build']);
+    gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
 });
 
 gulp.task('all', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
