@@ -8,5 +8,6 @@ before_script:
 install:
   - npm install
 script:
-   - npm test
+   - npm run-script build
+   - npm run-script test-coveralls
 
