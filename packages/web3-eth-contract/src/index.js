@@ -66,8 +66,8 @@ var Contract = function Contract(jsonInterface, address, options) {
         throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
     }
 
-    if(!jsonInterface || !(jsonInterface instanceof Array)) {
-        throw new Error('You must provide the json interface of the contract when instatiating a contract object.');
+    if(!jsonInterface || !(Array.isArray(jsonInterface))) {
+        throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
     }
 
     // add custom send Methods
@@ -818,7 +818,12 @@ Contract.prototype._executeMethod = function _executeMethod(){
                 // add output formatter for decoding
                 this._parent._ethereumCall.call.method.outputFormatter = function (result) {
                     if(result) {
-                        result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
+                        // if decoding throws, ctach it here and send to the promise, or callback
+                        try {
+                            result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
+                        } catch(error) {
+                            utils._fireError(error, defer.eventEmitter, defer.reject, args.callback);
+                        }
                     }
                     return result;
                 };
