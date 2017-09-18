@@ -23,7 +23,7 @@ var DEST = path.join(__dirname, 'dist/');
 var packages = [{
     fileName: 'web3',
     expose: 'Web3',
-    src: './src/index.js',
+    src: './packages/web3/src/index.js',
     ignore: ['xmlhttprequest','websocket']
 },{
     fileName: 'web3-utils',
@@ -185,7 +185,7 @@ packages.forEach(function(pckg, i){
 
 
 gulp.task('watch', function() {
-    gulp.watch(['./src/*.js'], ['lint', 'build']);
+    gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
 });
 
 gulp.task('all', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);

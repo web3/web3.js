@@ -1,7 +1,7 @@
-var Accounts = require("./../packages/web3-eth-accounts/src/index.js");
+var Accounts = require("./../packages/web3-eth-accounts");
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../src/index.js');
+var Web3 = require('../packages/web3');
 var web3 = new Web3();
 
 var tests = [
