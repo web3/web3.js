@@ -28,6 +28,15 @@ var abi = [{
         "type": "uint256"
     }]
 },{
+    "name": "getStr",
+    "type": "function",
+    "inputs": [],
+    "constant": true,
+    "outputs": [{
+        "name": "myString",
+        "type": "string"
+    }]
+},{
     "name": "owner",
     "type": "function",
     "inputs": [],
@@ -1401,6 +1410,55 @@ describe('contract', function () {
                 assert.deepEqual(r, '50');
                 done();
             });
+        });
+
+        it('should return an error when returned string is 0x', function () {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'getStr()';
+
+            var contract = new eth.Contract(abi, address);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase,
+                    from: address2
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x');
+
+            contract.methods.getStr().call({from: address2}, function (err, result) {
+                // console.log(err, result)
+                assert.isTrue(err instanceof Error);
+            });
+
+        });
+
+        it('should return an empty string when 0x0', function () {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'getStr()';
+
+            var contract = new eth.Contract(abi, address);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase,
+                    from: address2
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0');
+
+            contract.methods.getStr().call({from: address2}, function (err, result) {
+                assert.equals(result, '');
+            });
+
         });
 
         it('should sendTransaction and check for receipts with formatted logs', function (done) {
