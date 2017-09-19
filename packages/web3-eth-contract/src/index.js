@@ -822,8 +822,12 @@ Contract.prototype._executeMethod = function _executeMethod(){
                         try {
                             result = _this._parent._decodeMethodReturn(_this._method.outputs, result);
                         } catch(error) {
-                            utils._fireError(error, defer.eventEmitter, defer.reject, args.callback);
+                            if (!(error instanceof Error)) {
+                                error = new Error(error);
+                            }
+                            return error;
                         }
+
                     }
                     return result;
                 };

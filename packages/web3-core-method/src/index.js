@@ -442,6 +442,10 @@ Method.prototype.buildCall = function() {
         var sendTxCallback = function (err, result) {
             result = method.formatOutput(result);
 
+            if (result instanceof Error) {
+                err = result;
+            }
+
             if (!err) {
                 if (payload.callback) {
                     payload.callback(null, result);
