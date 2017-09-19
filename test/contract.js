@@ -28,6 +28,15 @@ var abi = [{
         "type": "uint256"
     }]
 },{
+    "name": "getStr",
+    "type": "function",
+    "inputs": [],
+    "constant": true,
+    "outputs": [{
+        "name": "myString",
+        "type": "string"
+    }]
+},{
     "name": "owner",
     "type": "function",
     "inputs": [],
@@ -369,6 +378,7 @@ describe('contract', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xbf1234',
                 gasUsed: '0x0'
             });
 
@@ -403,6 +413,7 @@ describe('contract', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xbf1234',
                     gasUsed: 0
                 });
                 done();
@@ -457,6 +468,7 @@ describe('contract', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xbf1234',
                 gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
@@ -496,6 +508,7 @@ describe('contract', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xbf1234',
                     gasUsed: 0
                 });
                 done();
@@ -1399,6 +1412,57 @@ describe('contract', function () {
             });
         });
 
+        it('should return an error when returned string is 0x', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'getStr()';
+
+            var contract = new eth.Contract(abi, address);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase,
+                    from: address2
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x');
+
+            contract.methods.getStr().call({from: address2}, function (err, result) {
+                // console.log(err, result)
+                assert.isTrue(err instanceof Error);
+                done();
+            });
+
+        });
+
+        it('should return an empty string when 0x0', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = 'getStr()';
+
+            var contract = new eth.Contract(abi, address);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(signature).slice(0, 10),
+                    to: addressLowercase,
+                    from: address2
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0');
+
+            contract.methods.getStr().call({from: address2}, function (err, result) {
+                assert.equal(result, '');
+                done();
+            });
+
+        });
+
         it('should sendTransaction and check for receipts with formatted logs', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -1448,6 +1512,7 @@ describe('contract', function () {
                 transactionIndex: '0x3',
                 transactionHash: '0x1234',
                 blockNumber: '0xa',
+                blockHash: '0x1234',
                 gasUsed: '0x0',
                 logs: [{
                     address: address,
@@ -1500,6 +1565,7 @@ describe('contract', function () {
                     transactionIndex: 3,
                     transactionHash: '0x1234',
                     blockNumber: 10,
+                    blockHash: '0x1234',
                     gasUsed: 0,
                     events: {
                         Unchanged: {
@@ -1596,6 +1662,7 @@ describe('contract', function () {
                 transactionIndex: '0x3',
                 transactionHash: '0x1234',
                 blockNumber: '0xa',
+                blockHash: '0x43ffdd',
                 gasUsed: '0x0',
                 logs: [{
                     address: address,
@@ -1648,6 +1715,7 @@ describe('contract', function () {
                         transactionIndex: 3,
                         transactionHash: '0x1234',
                         blockNumber: 10,
+                        blockHash: '0x43ffdd',
                         gasUsed: 0,
                         events: {
                             Unchanged: {
@@ -2357,7 +2425,8 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
             });
             provider.injectResult({
-                contractAddress: addressLowercase
+                contractAddress: addressLowercase,
+                blockHash: '0xffdd'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');

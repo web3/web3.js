@@ -254,7 +254,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
 
-                if (!receipt) {
+                if (!receipt || !receipt.blockHash) {
                     throw new Error('Receipt is "null"');
                 }
 
@@ -390,7 +390,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
   // first check if we already have a confirmed transaction
   method._ethereumCall.getTransactionReceipt(result)
   .then(function(receipt) {
-      if (receipt && receipt.blockNumber) {
+      if (receipt && receipt.blockHash) {
           checkConfirmation(null, null, null, receipt);
           if (defer.eventEmitter.listeners('confirmation').length > 0) {
               setTimeout(function(){
@@ -440,7 +440,15 @@ Method.prototype.buildCall = function() {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
-            result = method.formatOutput(result);
+            try {
+                result = method.formatOutput(result);
+            } catch(e) {
+                err = e;
+            }
+
+            if (result instanceof Error) {
+                err = result;
+            }
 
             if (!err) {
                 if (payload.callback) {
