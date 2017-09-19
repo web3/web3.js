@@ -122,6 +122,10 @@ This will put all the browser build files into the `dist` folder.
 npm test
 ```
 
+### Contributing
+
+- All contributions have to go into develop, or the 1.0 branch
+- Please follow the code style of the other files, we use 4 spaces as tabs.
 
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
