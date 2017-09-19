@@ -1412,7 +1412,7 @@ describe('contract', function () {
             });
         });
 
-        it('should return an error when returned string is 0x', function () {
+        it('should return an error when returned string is 0x', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var signature = 'getStr()';
@@ -1433,11 +1433,12 @@ describe('contract', function () {
             contract.methods.getStr().call({from: address2}, function (err, result) {
                 // console.log(err, result)
                 assert.isTrue(err instanceof Error);
+                done();
             });
 
         });
 
-        it('should return an empty string when 0x0', function () {
+        it('should return an empty string when 0x0', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
             var signature = 'getStr()';
@@ -1456,7 +1457,8 @@ describe('contract', function () {
             provider.injectResult('0x0');
 
             contract.methods.getStr().call({from: address2}, function (err, result) {
-                assert.equals(result, '');
+                assert.equal(result, '');
+                done();
             });
 
         });
