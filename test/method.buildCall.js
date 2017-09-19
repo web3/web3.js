@@ -193,6 +193,7 @@ describe('lib/web3/method', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xafff',
                 gasUsed: '0x0'
             });
 
@@ -222,6 +223,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
@@ -246,6 +248,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
@@ -312,6 +315,7 @@ describe('lib/web3/method', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xafff',
                 gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
@@ -339,6 +343,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
@@ -362,6 +367,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
@@ -427,6 +433,7 @@ describe('lib/web3/method', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xafff',
                 gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
@@ -526,6 +533,7 @@ describe('lib/web3/method', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xafff',
                 gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
@@ -714,6 +722,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: '0xa',
                     transactionIndex: '0x3',
                     blockNumber: '0xa',
+                    blockHash: '0xafff',
                     gasUsed: '0x0'
                 });
             }
@@ -741,6 +750,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
@@ -752,6 +762,7 @@ describe('lib/web3/method', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xafff',
                     gasUsed: 0
                 });
 
