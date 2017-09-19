@@ -392,19 +392,20 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
   .then(function(receipt) {
       if (receipt && receipt.blockHash) {
           if (defer.eventEmitter.listeners('confirmation').length > 0) {
+              // if the promise has not been resolved we must keep on watching for new Blocks, if a confrimation listener is present
               setTimeout(function(){
-                  // if the promise has not been resolved we must keep on watching for new Blocks
                   if (!promiseResolved) startWatching();
-              } ,1000);
+              }, 1000);
           }
 
           return checkConfirmation(null, null, null, receipt);
-      }
-      else {
+      } else if (!promiseResolved) {
           startWatching();
       }
   })
-  .catch(startWatching);
+  .catch(function(){
+      if (!promiseResolved) startWatching();
+  });
 
 };
 
