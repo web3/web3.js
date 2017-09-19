@@ -369,6 +369,7 @@ describe('contract', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xbf1234',
                 gasUsed: '0x0'
             });
 
@@ -403,6 +404,7 @@ describe('contract', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xbf1234',
                     gasUsed: 0
                 });
                 done();
@@ -457,6 +459,7 @@ describe('contract', function () {
                 cumulativeGasUsed: '0xa',
                 transactionIndex: '0x3',
                 blockNumber: '0xa',
+                blockHash: '0xbf1234',
                 gasUsed: '0x0'
             });
             provider.injectValidation(function (payload) {
@@ -496,6 +499,7 @@ describe('contract', function () {
                     cumulativeGasUsed: 10,
                     transactionIndex: 3,
                     blockNumber: 10,
+                    blockHash: '0xbf1234',
                     gasUsed: 0
                 });
                 done();
@@ -1448,6 +1452,7 @@ describe('contract', function () {
                 transactionIndex: '0x3',
                 transactionHash: '0x1234',
                 blockNumber: '0xa',
+                blockHash: '0x1234',
                 gasUsed: '0x0',
                 logs: [{
                     address: address,
@@ -1514,6 +1519,7 @@ describe('contract', function () {
                     transactionIndex: 3,
                     transactionHash: '0x1234',
                     blockNumber: 10,
+                    blockHash: '0x1234',
                     gasUsed: 0,
                     events: {
                         Unchanged: {
@@ -1638,6 +1644,7 @@ describe('contract', function () {
                 transactionIndex: '0x3',
                 transactionHash: '0x1234',
                 blockNumber: '0xa',
+                blockHash: '0x43ffdd',
                 gasUsed: '0x0',
                 logs: [{
                     address: address,
@@ -1690,6 +1697,7 @@ describe('contract', function () {
                         transactionIndex: 3,
                         transactionHash: '0x1234',
                         blockNumber: 10,
+                        blockHash: '0x43ffdd',
                         gasUsed: 0,
                         events: {
                             Unchanged: {
@@ -2399,7 +2407,8 @@ describe('contract', function () {
                 assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
             });
             provider.injectResult({
-                contractAddress: addressLowercase
+                contractAddress: addressLowercase,
+                blockHash: '0xffdd'
             });
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getCode');
