@@ -28,6 +28,31 @@ var abi = [{
         "type": "uint256"
     }]
 },{
+    "name": "hasALotOfParams",
+    "inputs": [
+        {
+            "name": "_var1",
+            "type": "bytes32"
+        },
+        {
+            "name": "_var2",
+            "type": "string"
+        },
+        {
+            "name": "_var3",
+            "type": "bytes32[]"
+        }
+    ],
+    "outputs": [
+        {
+            "name": "owner",
+            "type": "address"
+        }
+    ],
+    "constant": false,
+    "payable": false,
+    "type": "function"
+},{
     "name": "getStr",
     "type": "function",
     "inputs": [],
@@ -1363,6 +1388,27 @@ describe('contract', function () {
                 arguments: [address, 50]
             }).estimateGas(function (err, res) {
                 assert.deepEqual(res, 10);
+                done();
+            });
+        });
+
+        it('should send with many parameters', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x8708f4a12454534500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000c30786666323435343533343500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004ff24545345000000000000000000000000000000000000000000000000000000534500000000000000000000000000000000000000000000000000000000000045450000000000000000000000000000000000000000000000000000000000004533450000000000000000000000000000000000000000000000000000000000',
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x000000000000000000000000'+ addressLowercase.replace('0x',''));
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.hasALotOfParams("0x24545345", "0xff24545345", ["0xff24545345", "0x5345", "0x4545", "0x453345"]).call(function (err, res) {
+                assert.deepEqual(res, address);
                 done();
             });
         });
