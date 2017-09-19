@@ -440,7 +440,15 @@ Method.prototype.buildCall = function() {
 
         // CALLBACK function
         var sendTxCallback = function (err, result) {
-            result = method.formatOutput(result);
+            try {
+                result = method.formatOutput(result);
+            } catch(e) {
+                err = e;
+            }
+
+            if (result instanceof Error) {
+                err = result;
+            }
 
             if (!err) {
                 if (payload.callback) {

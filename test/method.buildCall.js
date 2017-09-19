@@ -92,6 +92,90 @@ describe('lib/web3/method', function () {
 
         });
 
+        it('should return an error, if the outputFormatter returns an error', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'call',
+                call: 'eth_call',
+                params: 2,
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter.bind({defaultBlock: 'latest'})],
+                outputFormatter: function (result) {
+                    return new Error('Error!');
+                }
+            });
+            method.setRequestManager(eth._requestManager);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }, "latest"]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }, function (err, result) {
+
+                assert.isTrue(err instanceof Error);
+                assert.isUndefined(result);
+
+                done();
+            });
+
+        });
+
+        it('should return an error, if the outputFormatter throws', function (done) {
+            var provider = new FakeHttpProvider();
+            var eth = new Eth(provider);
+            var method = new Method({
+                name: 'call',
+                call: 'eth_call',
+                params: 2,
+                inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter.bind({defaultBlock: 'latest'})],
+                outputFormatter: function (result) {
+                    throw new Error('Error!');
+                }
+            });
+            method.setRequestManager(eth._requestManager);
+
+            // generate send function
+            var send = method.buildCall();
+
+            // add results
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    to: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                    data: '0xa123456'
+                }, "latest"]);
+            });
+            provider.injectResult('0x1234567453543456321456321'); // tx hash
+
+            send({
+                from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                data: '0xa123456'
+            }, function (err, result) {
+
+                assert.isTrue(err instanceof Error);
+                assert.isUndefined(result);
+
+                done();
+            });
+
+        });
+
         it('should fill in gasPrice if not given', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
