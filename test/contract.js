@@ -1527,11 +1527,11 @@ describe('contract', function () {
                     blockHash: '0x1345',
                     logIndex: '0x4',
                     data: '0x0000000000000000000000000000000000000000000000000000000000000005'
-                }, {
+                },{
                     address: address,
                     topics: [
                         sha3('Changed(address,uint256,uint256,uint256)'),
-                        '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
                         '0x0000000000000000000000000000000000000000000000000000000000000001'
                     ],
                     blockNumber: '0xa',
@@ -1587,9 +1587,9 @@ describe('contract', function () {
                             event: 'Unchanged',
                             signature: "0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5",
                             raw: {
-                                topics: [ '0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
+                                topics: ['0xf359668f205d0b5cfdc20d11353e05f633f83322e96f15486cbb007d210d66e5',
                                     '0x0000000000000000000000000000000000000000000000000000000000000002',
-                                    '0x000000000000000000000000' + addressLowercase.replace('0x', '') ],
+                                    '0x000000000000000000000000' + addressLowercase.replace('0x', '')],
                                 data: '0x0000000000000000000000000000000000000000000000000000000000000005',
                             }
                         },
@@ -1614,9 +1614,9 @@ describe('contract', function () {
                             event: 'Changed',
                             signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
                             raw: {
-                                topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                topics: ['0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
                                     '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
-                                    '0x0000000000000000000000000000000000000000000000000000000000000001' ],
+                                    '0x0000000000000000000000000000000000000000000000000000000000000001'],
                                 data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
                             }
                         }
