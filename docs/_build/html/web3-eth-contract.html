@@ -96,8 +96,8 @@ and web3 will auto convert all calls into low level ABI calls over RPC for you.<
 <div class="section" id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">myContract</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">Contract</span><span class="p">([...],</span> <span class="s1">&#39;0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe&#39;</span><span class="p">,</span> <span class="p">{</span>
-    <span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;0x1234567890123456789012345678901234567891&#39;</span> <span class="c1">// default from address</span>
-    <span class="nx">gasPrice</span><span class="o">:</span> <span class="s1">&#39;20000000000000&#39;</span> <span class="c1">// default gas price in wei</span>
+    <span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;0x1234567890123456789012345678901234567891&#39;</span><span class="p">,</span> <span class="c1">// default from address</span>
+    <span class="nx">gasPrice</span><span class="o">:</span> <span class="s1">&#39;20000000000&#39;</span> <span class="c1">// default gas price in wei, 20 gwei in this case</span>
 <span class="p">});</span>
 </pre></div>
 </div>
