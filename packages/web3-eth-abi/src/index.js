@@ -373,6 +373,8 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     returnValue.__length__ = 0;
 
     inputs.forEach(function (res, i) {
+        returnValue[i] = (res.type === 'string') ? '' : null;
+
         if (notIndexedParams[i]) {
             returnValue[i] = notIndexedParams[i];
         }
