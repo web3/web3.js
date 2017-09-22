@@ -55,10 +55,6 @@ const onwarn = ({ code, message }) => {
     return;
   }
 
-  if (code === 'THIS_IS_UNDEFINED') {
-    return;
-  }
-
   // throw on others
   if (code === 'NON_EXISTENT_EXPORT') {
     throw new Error(message);
@@ -70,13 +66,10 @@ const onwarn = ({ code, message }) => {
 
 const buildUmd = (p, moduleName, minify = false) => {
   const rbc = rollupBabelrc();
-  // rbc['exclude'] = `./packages/${p}/node_modules/**`;
   return rollup.rollup({
     input: path.resolve(PACKAGES_DIR, p, 'src/index.js'),
     external: ['websocket'],
     plugins: [
-      // rollupGlobals(),
-      // rollupBuiltins(),
       rollupResolve({
         preferBuiltins: true,
         browser: true,
