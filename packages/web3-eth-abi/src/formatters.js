@@ -66,7 +66,16 @@ var formatInputInt = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
+    if(!utils.isHex(value)) {
+        throw new Error('Given parameter is not bytes: "'+ value + '"');
+    }
+
     var result = value.replace(/^0x/i,'');
+
+    if(result.length % 2 !== 0) {
+        throw new Error('Given parameter bytes has an invalid length: "'+ value + '"');
+    }
+
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
     return new SolidityParam(result);
@@ -80,7 +89,16 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
+    if(!utils.isHex(value)) {
+        throw new Error('Given parameter is not bytes: "'+ value + '"');
+    }
+
     var result = value.replace(/^0x/i,'');
+
+    if(result.length % 2 !== 0) {
+        throw new Error('Given parameter bytes has an invalid length: "'+ value + '"');
+    }
+
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
@@ -222,9 +240,9 @@ var formatOutputString = function (param) {
     var hex = param.dynamicPart().slice(0, 64);
     if(hex) {
         var length = (new BN(hex, 16)).toNumber() * 2;
-        return utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, ''));
+        return length ? utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, '')) : '';
     } else {
-        return "ERROR: Strings are not yet supported as return values";
+        throw new Error('ERROR: The returned value is not a convertible string:'+ hex);
     }
 };
 

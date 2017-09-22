@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0-beta.20",
+  "version": "1.0.0-beta.21",
   "description": "Ethereum JavaScript API wrapper repository",
   "license": "LGPL-3.0",
   "private": true,
@@ -67,6 +67,8 @@
     "babel-plugin-lodash": "^3.2.11",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-export-extensions": "^6.22.0",
+    "@types/bignumber.js":"^4.0.2",
+    "@types/underscore":"^1.8.0",
     "babel-preset-env": "^1.6.0",
     "babelrc-rollup": "^3.0.0",
     "bignumber.js": "^4.0.0",
