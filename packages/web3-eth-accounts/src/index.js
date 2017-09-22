@@ -30,14 +30,22 @@ var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
 var crypto = require('crypto');
-var scryptsy = require('scrypt.js');
+// var scryptsy = require('scrypt.js');
 var scrypt_js = require('scrypt-js');
-var scryptasync = require('scrypt-async');
-var scrypt = require('scryptsy');
-var scrpt = require('scrypt');
+// var scryptasync = require('scrypt-async');
+// var scrypthash = require('scrypt-hash');
+// var scrypt = require('scryptsy');
+// var scrpt = require('scrypt');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
+
+
+// "scrypt.js": "0.2.0",
+//     "scrypt-js": "2.0.3",
+//     "scryptsy": "2.0.0",
+//     "scrypt": "6.0.3",
+//     "scrypt-async": "1.3.1",
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
@@ -243,7 +251,11 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict, callback
         throw new Error('Not a valid V3 wallet');
     }
 
-    var cb = function(derivedKey){
+    var cb = function(error, progress, derivedKey){
+
+        if(!derivedKey)
+            return;
+
         derivedKey = new Buffer(derivedKey, 'hex');
 
         var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
@@ -272,8 +284,9 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict, callback
         // }, kdfparams.dklen, new Buffer(kdfparams.salt, 'hex'));
         // derivedKey = scrypt(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
         // derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-        // derivedKey = scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
-        derivedKey = scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
+        scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
+        // scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
+        // scrypthash(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -306,7 +319,11 @@ Accounts.prototype.encrypt = function (privateKey, password, options, callback) 
         salt: salt.toString('hex')
     };
 
-    var cb = function(derivedKey){
+    var cb = function(error, progress, derivedKey){
+
+        if(!derivedKey)
+            return;
+
         derivedKey = new Buffer(derivedKey, 'hex');
 
         var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
@@ -352,8 +369,9 @@ Accounts.prototype.encrypt = function (privateKey, password, options, callback) 
         // }, kdfparams.dklen, new Buffer(kdfparams.salt, 'hex'));
         // derivedKey = scrypt(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
         // derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
-        // derivedKey = scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
-        derivedKey = scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
+        scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
+        // scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
+        // scrypthash(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
     } else {
         throw new Error('Unsupported kdf');
     }

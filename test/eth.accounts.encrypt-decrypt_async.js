@@ -9,7 +9,7 @@ var tests = [];
 for (var i = 0; i < 1; i++) {
     tests.push(i);
 }
-var n = 64;
+var n = 256;
 var salt = '3a1012583f8be138537bc7cf8a50c925b6fcc01a9f7744c85a18fbdc07999f10';
 var iv = new Buffer('653195c3e2791ac53f3f19b125c18f8c', 'hex');
 var uuid = new Buffer('ff31ddc3e2791ac53f3f19b125c18fff', 'hex');
@@ -116,6 +116,8 @@ describe("eth", function () {
             it("encrypt eth.account, and compare to ethereumjs-wallet", function(done) {
                 var ethAccounts = new Accounts();
 
+                this.timeout(16000);
+
                 // create account
                 var acc = ethAccounts.create();
 
@@ -134,6 +136,8 @@ describe("eth", function () {
 
             it("encrypt eth.account, and decrypt with ethereumjs-wallet", function(done) {
                 var ethAccounts = new Accounts();
+
+                this.timeout(16000);
 
                 // create account
                 var acc = ethAccounts.create();
@@ -157,15 +161,14 @@ describe("eth", function () {
 
                 // create account
                 var ethWall = ethereumWallet.generate();
-                ethWall.toV3(pw, {n: n}, function(error, encrypt){
+                var encrypt = ethWall.toV3(pw, {n: n});
 
-                    // create ethereumjs-wallet account
-                    ethAccounts.decrypt(encrypt, pw, function (error, acc) {
-                        // compare addresses
-                        assert.equal(acc.address, ethWall.getChecksumAddressString());
+                // create ethereumjs-wallet account
+                ethAccounts.decrypt(encrypt, pw, function (error, acc) {
+                    // compare addresses
+                    assert.equal(acc.address, ethWall.getChecksumAddressString());
 
-                        done();
-                    });
+                    done();
                 });
 
 
@@ -173,6 +176,8 @@ describe("eth", function () {
 
             it("decrypt static signature using ethereumjs-wallet and eth.account and compare", function(done) {
                 var ethAccounts = new Accounts();
+
+                this.timeout(16000);
 
                 var encrypt = { version: 3,
                     id: '6dac4ae5-7604-498e-a2a2-e86cfb289d0c',
@@ -207,7 +212,7 @@ describe("eth", function () {
         staticTests.forEach(function (test, i) {
             it("decrypt staticTests and compare to private key", function(done) {
                 // increase the test timeout
-                this.timeout(4000);
+                this.timeout(120000);
 
                 var ethAccounts = new Accounts();
 

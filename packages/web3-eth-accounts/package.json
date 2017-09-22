@@ -9,11 +9,8 @@
     "dependencies": {
         "bluebird": "3.3.1",
         "eth-lib": "0.1.27",
-        "scrypt.js": "0.2.0",
         "scrypt-js": "2.0.3",
-        "scryptsy": "2.0.0",
-        "scrypt": "6.0.3",
-        "scrypt-async": "1.3.1",
+        "scrypt-hash": "1.1.14",
         "underscore": "1.8.3",
         "uuid": "2.0.1",
         "web3-core": "^1.0.0-beta.21",
