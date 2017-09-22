@@ -13,7 +13,8 @@
 
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
-*/
+    */
+
 /** @file jsonrpc.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
@@ -26,7 +27,7 @@
 
 // Initialize Jsonrpc as a simple object with utility functions.
 var Jsonrpc = {
-    messageId: 0
+  messageId: 0
 };
 
 /**
@@ -38,19 +39,19 @@ var Jsonrpc = {
  * @returns {Object} valid jsonrpc payload object
  */
 Jsonrpc.toPayload = function (method, params) {
-    if (!method) {
-        throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
-    }
+  if (!method) {
+    throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
+  }
 
-    // advance message ID
-    Jsonrpc.messageId++;
+  // advance message ID
+  Jsonrpc.messageId++;
 
-    return {
-        jsonrpc: '2.0',
-        id: Jsonrpc.messageId,
-        method: method,
-        params: params || []
-    };
+  return {
+    jsonrpc: '2.0',
+    id: Jsonrpc.messageId,
+    method: method,
+    params: params || []
+  };
 };
 
 /**
@@ -61,15 +62,15 @@ Jsonrpc.toPayload = function (method, params) {
  * @returns {Boolean} true if response is valid, otherwise false
  */
 Jsonrpc.isValidResponse = function (response) {
-    return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
+  return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
 
-    function validateSingleMessage(message){
-      return !!message &&
-        !message.error &&
-        message.jsonrpc === '2.0' &&
-        (typeof message.id === 'number' || typeof message.id === 'string') &&
-        message.result !== undefined; // only undefined is not valid json object
-    }
+  function validateSingleMessage(message){
+    return !!message &&
+      !message.error &&
+      message.jsonrpc === '2.0' &&
+      (typeof message.id === 'number' || typeof message.id === 'string') &&
+      message.result !== undefined; // only undefined is not valid json object
+  }
 };
 
 /**
@@ -80,9 +81,9 @@ Jsonrpc.isValidResponse = function (response) {
  * @returns {Array} batch payload
  */
 Jsonrpc.toBatchPayload = function (messages) {
-    return messages.map(function (message) {
-        return Jsonrpc.toPayload(message.method, message.params);
-    });
+  return messages.map(function (message) {
+    return Jsonrpc.toPayload(message.method, message.params);
+  });
 };
 
 module.exports = Jsonrpc;

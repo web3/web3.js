@@ -20,53 +20,51 @@
  * @date 2015
  */
 
-"use strict";
+import Jsonrpc from './jsonrpc';
+import { ErrorResponse, InvalidResponse } from 'web3-core-helpers/lib/errors';
 
-var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
+export default class Batch {
+  requestManager = null
+  requests = null
 
-var Batch = function (requestManager) {
+  constructor (requestManager) {
     this.requestManager = requestManager;
     this.requests = [];
-};
+  }
 
-/**
- * Should be called to add create new request to batch request
- *
- * @method add
- * @param {Object} jsonrpc requet object
- */
-Batch.prototype.add = function (request) {
+  /**
+   * Should be called to add create new request to batch request
+   *
+   * @method add
+   * @param {Object} jsonrpc requet object
+   */
+  add (request) {
     this.requests.push(request);
-};
+  }
 
-/**
- * Should be called to execute batch request
- *
- * @method execute
- */
-Batch.prototype.execute = function () {
-    var requests = this.requests;
-    this.requestManager.sendBatch(requests, function (err, results) {
-        results = results || [];
-        requests.map(function (request, index) {
-            return results[index] || {};
-        }).forEach(function (result, index) {
-            if (requests[index].callback) {
+  /**
+   * Should be called to execute batch request
+   *
+   * @method execute
+   */
+  execute () {
+    this.requestManager.sendBatch(this.requests, (err, results = []) => {
+      this.requests.map((request, index) => {
+        return results[index] || {};
+      }).forEach((result, index) => {
+        if (this.requests[index].callback) {
+          if (result && result.error) {
+            return this.requests[index].callback(ErrorResponse(result));
+          }
 
-                if (result && result.error) {
-                    return requests[index].callback(errors.ErrorResponse(result));
-                }
+          if (!Jsonrpc.isValidResponse(result)) {
+            return this.requests[index].callback(InvalidResponse(result));
+          }
 
-                if (!Jsonrpc.isValidResponse(result)) {
-                    return requests[index].callback(errors.InvalidResponse(result));
-                }
-
-                requests[index].callback(null, (requests[index].format ? requests[index].format(result.result) : result.result));
-            }
-        });
+          const v = this.requests[index].format ? this.requests[index].format(result.result) : result.result;
+          this.requests[index].callback(null, v);
+        }
+      });
     });
-};
-
-module.exports = Batch;
-
+  }
+}

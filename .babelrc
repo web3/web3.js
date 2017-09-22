@@ -1,0 +1,9 @@
+{
+  "presets": [
+    "env"
+  ],
+  "plugins": [
+    "lodash",
+    "transform-class-properties"
+  ]
+}

@@ -12,3 +12,6 @@ bower_components
 /bower
 .idea/
 .npm/
+package-lock.json
+/packages/*/lib
+dist
