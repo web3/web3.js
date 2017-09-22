@@ -31,6 +31,10 @@ var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
 var crypto = require('crypto');
 var scryptsy = require('scrypt.js');
+var scrypt_js = require('scrypt-js');
+var scryptasync = require('scrypt-async');
+var scrypt = require('scryptsy');
+var scrpt = require('scrypt');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
@@ -85,6 +89,19 @@ var Accounts = function Accounts() {
     this.wallet = new Wallet(this);
 };
 
+/**
+ * Should be used to extract callback from array of arguments. Modifies input param
+ *
+ * @method extractCallback
+ * @param {Array} arguments
+ * @return {Function|Null} callback, if exists
+ */
+Accounts.prototype.extractCallback = function (args) {
+    if (_.isFunction(args[args.length - 1])) {
+        return args.pop(); // modify the args array!
+    }
+};
+
 Accounts.prototype._addAccountFunctions = function (account) {
     var _this = this;
 
@@ -96,8 +113,8 @@ Accounts.prototype._addAccountFunctions = function (account) {
         return _this.sign(data, account.privateKey);
     };
 
-    account.encrypt = function encrypt(password, options) {
-        return _this.encrypt(account.privateKey, password, options);
+    account.encrypt = function encrypt(password, options, callback) {
+        return _this.encrypt(account.privateKey, password, options, callback);
     };
 
 
@@ -210,7 +227,10 @@ Accounts.prototype.recover = function recover(hash, signature) {
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
-Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
+Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict, callback) {
+    var _this = this;
+    callback = this.extractCallback(Array.prototype.slice.call(arguments));
+
     /* jshint maxcomplexity: 10 */
 
     if(!_.isString(password)) {
@@ -223,13 +243,37 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
         throw new Error('Not a valid V3 wallet');
     }
 
+    var cb = function(derivedKey){
+        derivedKey = new Buffer(derivedKey, 'hex');
+
+        var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+
+        var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ])).replace('0x','');
+        if (mac !== json.crypto.mac) {
+            throw new Error('Key derivation failed - possibly wrong password');
+        }
+
+        var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+        var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
+
+        callback(null, _this.privateKeyToAccount(seed));
+    };
+
     var derivedKey;
     var kdfparams;
     if (json.crypto.kdf === 'scrypt') {
         kdfparams = json.crypto.kdfparams;
 
-        // FIXME: support progress reporting callback
-        derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        // TODO: support progress reporting callback
+        // derivedKey = scrpt.hashSync(new Buffer(password), {
+        //     N: kdfparams.n,
+        //     r: kdfparams.r,
+        //     p:kdfparams.p
+        // }, kdfparams.dklen, new Buffer(kdfparams.salt, 'hex'));
+        // derivedKey = scrypt(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        // derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        // derivedKey = scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
+        derivedKey = scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
     } else if (json.crypto.kdf === 'pbkdf2') {
         kdfparams = json.crypto.kdfparams;
 
@@ -237,25 +281,17 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
             throw new Error('Unsupported parameters to PBKDF2');
         }
 
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = crypto.pbkdf2(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256', cb);
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
 
-    var ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), ciphertext ])).replace('0x','');
-    if (mac !== json.crypto.mac) {
-        throw new Error('Key derivation failed - possibly wrong password');
-    }
-
-    var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
-    var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
-
-    return this.privateKeyToAccount(seed);
 };
 
-Accounts.prototype.encrypt = function (privateKey, password, options) {
+Accounts.prototype.encrypt = function (privateKey, password, options, callback) {
+    callback = this.extractCallback(Array.prototype.slice.call(arguments));
+
     /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
 
@@ -270,44 +306,59 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         salt: salt.toString('hex')
     };
 
+    var cb = function(derivedKey){
+        derivedKey = new Buffer(derivedKey, 'hex');
+
+        var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+        if (!cipher) {
+            throw new Error('Unsupported cipher');
+        }
+
+        var ciphertext = Buffer.concat([ cipher.update(new Buffer(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
+
+        var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
+
+        callback(null, {
+            version: 3,
+            id: uuid.v4({ random: options.uuid || crypto.randomBytes(16) }),
+            address: account.address.toLowerCase().replace('0x',''),
+            crypto: {
+                ciphertext: ciphertext.toString('hex'),
+                cipherparams: {
+                    iv: iv.toString('hex')
+                },
+                cipher: options.cipher || 'aes-128-ctr',
+                kdf: kdf,
+                kdfparams: kdfparams,
+                mac: mac.toString('hex')
+            }
+        });
+    };
+
     if (kdf === 'pbkdf2') {
         kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = crypto.pbkdf2(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256', cb);
     } else if (kdf === 'scrypt') {
-        // FIXME: support progress reporting callback
+        // TODO: support progress reporting callback
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
         kdfparams.r = options.r || 8;
         kdfparams.p = options.p || 1;
-        derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+
+        // derivedKey = scrpt.hashSync(new Buffer(password), {
+        //     N: kdfparams.n,
+        //     r: kdfparams.r,
+        //     p:kdfparams.p
+        // }, kdfparams.dklen, new Buffer(kdfparams.salt, 'hex'));
+        // derivedKey = scrypt(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        // derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+        // derivedKey = scrypt_js(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen, cb);
+        derivedKey = scryptasync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), {N: kdfparams.n, r: kdfparams.r, p: kdfparams.p, dkLen: kdfparams.dklen, encoding: 'hex'}, cb);
     } else {
         throw new Error('Unsupported kdf');
     }
 
-    var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
-    if (!cipher) {
-        throw new Error('Unsupported cipher');
-    }
 
-    var ciphertext = Buffer.concat([ cipher.update(new Buffer(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
-
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
-
-    return {
-        version: 3,
-        id: uuid.v4({ random: options.uuid || crypto.randomBytes(16) }),
-        address: account.address.toLowerCase().replace('0x',''),
-        crypto: {
-            ciphertext: ciphertext.toString('hex'),
-            cipherparams: {
-                iv: iv.toString('hex')
-            },
-            cipher: options.cipher || 'aes-128-ctr',
-            kdf: kdf,
-            kdfparams: kdfparams,
-            mac: mac.toString('hex')
-        }
-    };
 };
 
 
@@ -379,20 +430,20 @@ Wallet.prototype.clear = function () {
     return this;
 };
 
-Wallet.prototype.encrypt = function (password, options) {
+Wallet.prototype.encrypt = function (password, options, callback) {
     var accounts = [];
     for (var i = 0; i < this.length; i++) {
-        accounts[i] = this[i].encrypt(password, options);
+        accounts[i] = this[i].encrypt(password, options, callback);
     }
     return accounts;
 };
 
 
-Wallet.prototype.decrypt = function (encryptedWallet, password) {
+Wallet.prototype.decrypt = function (encryptedWallet, password, callback) {
     var _this = this;
 
     encryptedWallet.forEach(function (keystore) {
-        var account = _this._accounts.decrypt(keystore, password);
+        var account = _this._accounts.decrypt(keystore, password, callback);
 
         if (account) {
             _this.add(account);
