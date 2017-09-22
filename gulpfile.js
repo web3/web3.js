@@ -24,8 +24,6 @@ const rollupResolve = require('rollup-plugin-node-resolve');
 const rollupJson = require('rollup-plugin-json');
 const rollupCommonjs = require('rollup-plugin-commonjs');
 const rollupUglify = require('rollup-plugin-uglify');
-const rollupBuiltins = require('rollup-plugin-node-builtins');
-const rollupGlobals = require('rollup-plugin-node-globals');
 
 const scripts = './packages/*/src/**/*.js';
 const PACKAGES_DIR = path.join(__dirname, 'packages');
