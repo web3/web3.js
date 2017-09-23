@@ -24,7 +24,7 @@
  */
 
 
-import { BN, isAddress, toChecksumAddress } from 'web3-utils';
+import { BN, isAddress, toChecksumAddress } from 'web3-utils/lib/utils';
 
 const leftPad = (string, bytes) => {
   let result = string;
