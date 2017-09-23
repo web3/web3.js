@@ -20,62 +20,60 @@
  * @date 2017
  */
 
-"use strict";
+import _ from 'lodash';
+import swarm from 'swarm-js';
 
-var _ = require('underscore');
-var swarm = require("swarm-js");
+let givenProvider = null;
+if (typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
+  givenProvider = ethereumProvider.bzz;
+}
 
+export default class Bzz {
+  static givenProvider = givenProvider
 
-var Bzz = function Bzz(provider) {
+  givenProvider = null
+  provider = null
+  pick = null
 
+  constructor (p) {
     this.givenProvider = Bzz.givenProvider;
 
+    let provider = p;
     if (provider && provider._requestManager) {
-        provider = provider.currentProvider;
+      provider = provider.currentProvider;
     }
 
     // only allow file picker when in browser
-    if(typeof document !== 'undefined') {
-        this.pick = swarm.pick;
+    if (typeof document !== 'undefined') {
+      this.pick = swarm.pick;
     }
 
     this.setProvider(provider);
-};
+  }
 
-// set default ethereum provider
-/* jshint ignore:start */
-Bzz.givenProvider = null;
-if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
-    Bzz.givenProvider = ethereumProvider.bzz;
-}
-/* jshint ignore:end */
+  setProvider (_provider) {
+    let provider = _provider;
 
-Bzz.prototype.setProvider = function(provider) {
     // is ethereum provider
-    if(_.isObject(provider) && _.isString(provider.bzz)) {
-        provider = provider.bzz;
-    // is no string, set default
+    if (_.isObject(provider) && _.isString(provider.bzz)) {
+      provider = provider.bzz;
     }
+
     // else if(!_.isString(provider)) {
-    //      provider = 'http://swarm-gateways.net'; // default to gateway
+    //   // is no string, set default
+    //   provider = 'http://swarm-gateways.net'; // default to gateway
     // }
 
-
-    if(_.isString(provider)) {
-        this.currentProvider = provider;
-    } else {
-        this.currentProvider = null;
-        return false;
+    if (!_.isString(provider)) {
+      this.currentProvider = null;
+      return false;
     }
 
     // add functions
+    this.provider = provider;
     this.download = swarm.at(provider).download;
     this.upload = swarm.at(provider).upload;
     this.isAvailable = swarm.at(provider).isAvailable;
-
     return true;
-};
-
-
-module.exports = Bzz;
-
+  }
+}

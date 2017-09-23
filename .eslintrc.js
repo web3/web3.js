@@ -12,5 +12,7 @@ module.exports = {
     'space-before-function-paren': [2, 'always'],
     'import/extensions': 'off',
   },
-  globals: {},
+  globals: {
+    ethereumProvider: 'ethereumProvider',
+  },
 };
