@@ -5629,6 +5629,13 @@ var methods = function () {
 		inputFormatter: [null, formatters.inputAddressFormatter, null]
     });
 
+    var signTypedData = new Method({
+        name: 'signTypedData',
+        call: 'personal_signTypedData',
+        params: 2,
+        inputFormatter: [null, formatters.inputAddressFormatter]
+    });
+
     var ecRecover = new Method({
         name: 'ecRecover',
 		call: 'personal_ecRecover',
@@ -5662,6 +5669,7 @@ var methods = function () {
         unlockAccount,
         ecRecover,
         sign,
+        signTypedData,
         sendTransaction,
         lockAccount
     ];
