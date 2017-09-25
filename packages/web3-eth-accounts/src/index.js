@@ -29,7 +29,7 @@ var Promise = require('bluebird');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
-var crypto = require('crypto');
+var cryp = require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
@@ -237,7 +237,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
             throw new Error('Unsupported parameters to PBKDF2');
         }
 
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
@@ -249,7 +249,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
-    var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+    var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
 
     return this.privateKeyToAccount(seed);
@@ -260,8 +260,8 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     var account = this.privateKeyToAccount(privateKey);
 
     options = options || {};
-    var salt = options.salt || crypto.randomBytes(32);
-    var iv = options.iv || crypto.randomBytes(16);
+    var salt = options.salt || cryp.randomBytes(32);
+    var iv = options.iv || cryp.randomBytes(16);
 
     var derivedKey;
     var kdf = options.kdf || 'scrypt';
@@ -273,7 +273,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     if (kdf === 'pbkdf2') {
         kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
@@ -284,7 +284,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         throw new Error('Unsupported kdf');
     }
 
-    var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+    var cipher = cryp.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
     if (!cipher) {
         throw new Error('Unsupported cipher');
     }
@@ -295,7 +295,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 
     return {
         version: 3,
-        id: uuid.v4({ random: options.uuid || crypto.randomBytes(16) }),
+        id: uuid.v4({ random: options.uuid || cryp.randomBytes(16) }),
         address: account.address.toLowerCase().replace('0x',''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
