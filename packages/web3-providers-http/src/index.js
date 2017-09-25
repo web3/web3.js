@@ -23,9 +23,9 @@
  */
 
 import {
-  InvalidResponse,
-  ConnectionTimeout,
-  InvalidConnection,
+    InvalidResponse,
+    ConnectionTimeout,
+    InvalidConnection,
 } from 'web3-core-helpers/lib/errors';
 
 import XHR2 from 'xhr2';
@@ -39,8 +39,8 @@ export default class HttpProvider {
   connected = false
 
   constructor (host = 'http://localhost:8545', timeout = 0) {
-    this.host = host;
-    this.timeout = timeout;
+      this.host = host;
+      this.timeout = timeout;
   }
 
 
@@ -52,35 +52,35 @@ export default class HttpProvider {
    * @param {Function} callback triggered on end with (err, result)
    */
   send (payload, callback = () => {}) {
-    const request = new XHR2();
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type', 'application/json');
-    request.onreadystatechange = () => {
-      if (request.readyState === 4 && request.timeout !== 1) {
-        let result = request.responseText;
-        let error = null;
+      const request = new XHR2();
+      request.open('POST', this.host, true);
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.onreadystatechange = () => {
+          if (request.readyState === 4 && request.timeout !== 1) {
+              let result = request.responseText;
+              let error = null;
 
-        try {
-          result = JSON.parse(result);
-        } catch (e) {
-          error = InvalidResponse(request.responseText);
-        }
+              try {
+                  result = JSON.parse(result);
+              } catch (e) {
+                  error = InvalidResponse(request.responseText);
+              }
 
-        this.connected = true;
-        callback(error, result);
+              this.connected = true;
+              callback(error, result);
+          }
+      };
+
+      request.ontimeout = () => {
+          this.connected = false;
+          callback(ConnectionTimeout(this.timeout));
+      };
+
+      try {
+          request.send(JSON.stringify(payload));
+      } catch (error) {
+          this.connected = false;
+          callback(InvalidConnection(this.host));
       }
-    };
-
-    request.ontimeout = () => {
-      this.connected = false;
-      callback(ConnectionTimeout(this.timeout));
-    };
-
-    try {
-      request.send(JSON.stringify(payload));
-    } catch (error) {
-      this.connected = false;
-      callback(InvalidConnection(this.host));
-    }
   }
 }

@@ -22,37 +22,37 @@
  */
 
 export function ErrorResponse (result = {}) {
-  const { error = {} } = result;
-  let { message } = error;
-  if (!message) {
-    message = JSON.stringify(result);
-  }
+    const { error = {} } = result;
+    let { message } = error;
+    if (!message) {
+        message = JSON.stringify(result);
+    }
 
-  return new Error(`Returned error: ${message}`);
+    return new Error(`Returned error: ${message}`);
 }
 
 export function InvalidNumberOfParams (got, expected, method) {
-  return new Error(`Invalid number of parameters for "${method}". Got ${got} expected ${expected}!`);
+    return new Error(`Invalid number of parameters for "${method}". Got ${got} expected ${expected}!`);
 }
 
 export function InvalidConnection (host) {
-  return new Error(`CONNECTION ERROR: Couldn't connect to node ${host}.`);
+    return new Error(`CONNECTION ERROR: Couldn't connect to node ${host}.`);
 }
 
 export function InvalidProvider () {
-  return new Error('Provider not set or invalid');
+    return new Error('Provider not set or invalid');
 }
 
 export function InvalidResponse (result = {}) {
-  const { error = {} } = result;
-  let { message } = error;
-  if (!message) {
-    message = `Invalid JSON RPC response: ${JSON.stringify(result)}`;
-  }
+    const { error = {} } = result;
+    let { message } = error;
+    if (!message) {
+        message = `Invalid JSON RPC response: ${JSON.stringify(result)}`;
+    }
 
-  return new Error(message);
+    return new Error(message);
 }
 
 export function ConnectionTimeout (ms) {
-  return new Error(`CONNECTION TIMEOUT: timeout of ${ms} ms achived`);
+    return new Error(`CONNECTION TIMEOUT: timeout of ${ms} ms achived`);
 }

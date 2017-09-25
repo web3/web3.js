@@ -24,8 +24,8 @@
 
 import _ from 'lodash';
 import {
-  InvalidResponse,
-  InvalidConnection,
+    InvalidResponse,
+    InvalidConnection,
 } from 'web3-core-helpers/lib/errors';
 
 import websocket from 'websocket';
@@ -40,45 +40,45 @@ export default class WebsocketProvider {
 
   // Default connection ws://localhost:8546
   constructor (url = 'ws://localhost:8546') {
-    this.responseCallbacks = {};
-    this.notificationCallbacks = [];
-    this.connection = new Ws(url);
+      this.responseCallbacks = {};
+      this.notificationCallbacks = [];
+      this.connection = new Ws(url);
 
-    this.addDefaultEvents();
+      this.addDefaultEvents();
 
-    // Listen for connection responses
-    this.connection.onmessage = (e) => {
-      const data = _.isString(e.data) ? e.data : '';
+      // Listen for connection responses
+      this.connection.onmessage = (e) => {
+          const data = _.isString(e.data) ? e.data : '';
 
-      this._parseResponse(data).forEach((result) => {
-        let id = null;
+          this._parseResponse(data).forEach((result) => {
+              let id = null;
 
-        // get the id which matches the returned id
-        if (_.isArray(result)) {
-          result.forEach((load) => {
-            if (this.responseCallbacks[load.id]) {
-              ({ id } = load);
-            }
+              // get the id which matches the returned id
+              if (_.isArray(result)) {
+                  result.forEach((load) => {
+                      if (this.responseCallbacks[load.id]) {
+                          ({ id } = load);
+                      }
+                  });
+              } else {
+                  ({ id } = result);
+              }
+
+              // notification
+              if (!id && result.method.indexOf('_subscription') !== -1) {
+                  this.notificationCallbacks.forEach((callback) => {
+                      if (_.isFunction(callback)) {
+                          callback(null, result);
+                      }
+                  });
+
+                  // fire the callback
+              } else if (this.responseCallbacks[id]) {
+                  this.responseCallbacks[id](null, result);
+                  delete this.responseCallbacks[id];
+              }
           });
-        } else {
-          ({ id } = result);
-        }
-
-        // notification
-        if (!id && result.method.indexOf('_subscription') !== -1) {
-          this.notificationCallbacks.forEach((callback) => {
-            if (_.isFunction(callback)) {
-              callback(null, result);
-            }
-          });
-
-          // fire the callback
-        } else if (this.responseCallbacks[id]) {
-          this.responseCallbacks[id](null, result);
-          delete this.responseCallbacks[id];
-        }
-      });
-    };
+      };
   }
 
 
@@ -88,29 +88,29 @@ export default class WebsocketProvider {
    @method addDefaultEvents
    */
   addDefaultEvents () {
-    this.connection.onerror = () => {
-      this._timeout();
-    };
+      this.connection.onerror = () => {
+          this._timeout();
+      };
 
-    this.connection.onclose = (e) => {
-      this._timeout();
+      this.connection.onclose = (e) => {
+          this._timeout();
 
-      const noteCb = this.notificationCallbacks;
+          const noteCb = this.notificationCallbacks;
 
-      // reset all requests and callbacks
-      this.reset();
+          // reset all requests and callbacks
+          this.reset();
 
-      // cancel subscriptions
-      noteCb.forEach((callback) => {
-        if (_.isFunction(callback)) {
-          callback(e);
-        }
-      });
-    };
+          // cancel subscriptions
+          noteCb.forEach((callback) => {
+              if (_.isFunction(callback)) {
+                  callback(e);
+              }
+          });
+      };
 
-    // this.connection.on('timeout', function(){
-    //     this._timeout();
-    // });
+      // this.connection.on('timeout', function(){
+      //     this._timeout();
+      // });
   }
 
   /**
@@ -120,49 +120,49 @@ export default class WebsocketProvider {
    @param {String} data
    */
   _parseResponse (value) {
-    const returnValues = [];
+      const returnValues = [];
 
-    // DE-CHUNKER
-    const dechunkedData = value
-      .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-      .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-      .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-      .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-      .split('|--|');
+      // DE-CHUNKER
+      const dechunkedData = value
+          .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+          .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+          .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+          .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+          .split('|--|');
 
-    dechunkedData.forEach((data) => {
+      dechunkedData.forEach((data) => {
       // prepend the last chunk
-      if (this.lastChunk) {
-        data = this.lastChunk + data; // eslint-disable-line no-param-reassign
-      }
+          if (this.lastChunk) {
+              data = this.lastChunk + data; // eslint-disable-line no-param-reassign
+          }
 
-      let result = null;
+          let result = null;
 
-      try {
-        result = JSON.parse(data);
-      } catch (e) {
-        this.lastChunk = data;
+          try {
+              result = JSON.parse(data);
+          } catch (e) {
+              this.lastChunk = data;
 
-        // start timeout to cancel all requests
-        clearTimeout(this.lastChunkTimeout);
-        this.lastChunkTimeout = setTimeout(() => {
-          this._timeout();
-          throw InvalidResponse(data);
-        }, 1000 * 15);
+              // start timeout to cancel all requests
+              clearTimeout(this.lastChunkTimeout);
+              this.lastChunkTimeout = setTimeout(() => {
+                  this._timeout();
+                  throw InvalidResponse(data);
+              }, 1000 * 15);
 
-        return;
-      }
+              return;
+          }
 
-      // cancel timeout and set chunk to null
-      clearTimeout(this.lastChunkTimeout);
-      this.lastChunk = null;
+          // cancel timeout and set chunk to null
+          clearTimeout(this.lastChunkTimeout);
+          this.lastChunk = null;
 
-      if (result) {
-        returnValues.push(result);
-      }
-    });
+          if (result) {
+              returnValues.push(result);
+          }
+      });
 
-    return returnValues;
+      return returnValues;
   }
 
 
@@ -173,11 +173,11 @@ export default class WebsocketProvider {
    @method _addResponseCallback
    */
   _addResponseCallback (payload, callback) {
-    const id = payload.id || payload[0].id;
-    const method = payload.method || payload[0].method;
+      const id = payload.id || payload[0].id;
+      const method = payload.method || payload[0].method;
 
-    this.responseCallbacks[id] = callback;
-    this.responseCallbacks[id].method = method;
+      this.responseCallbacks[id] = callback;
+      this.responseCallbacks[id].method = method;
   }
 
   /**
@@ -186,26 +186,26 @@ export default class WebsocketProvider {
    @method _timeout
    */
   _timeout () {
-    Object.keys(this.responseCallbacks).forEach((key) => {
-      this.responseCallbacks[key](InvalidConnection('on IPC'));
-      delete this.responseCallbacks[key];
-    });
+      Object.keys(this.responseCallbacks).forEach((key) => {
+          this.responseCallbacks[key](InvalidConnection('on IPC'));
+          delete this.responseCallbacks[key];
+      });
   }
 
   send (payload, callback) {
-    if (this.connection.readyState === this.connection.CONNECTING) {
-      setTimeout(() => {
-        this.send(payload, callback);
-      }, 10);
-      return;
-    }
+      if (this.connection.readyState === this.connection.CONNECTING) {
+          setTimeout(() => {
+              this.send(payload, callback);
+          }, 10);
+          return;
+      }
 
-    // try reconnect, when connection is gone
-    // if(!this.connection.writable)
-    //     this.connection.connect({url: this.url});
+      // try reconnect, when connection is gone
+      // if(!this.connection.writable)
+      //     this.connection.connect({url: this.url});
 
-    this.connection.send(JSON.stringify(payload));
-    this._addResponseCallback(payload, callback);
+      this.connection.send(JSON.stringify(payload));
+      this._addResponseCallback(payload, callback);
   }
 
   /**
@@ -216,31 +216,31 @@ export default class WebsocketProvider {
    @param {Function} callback   the callback to call
    */
   on (type, callback) {
-    if (typeof callback !== 'function') {
-      throw new Error('The second parameter callback must be a function.');
-    }
+      if (typeof callback !== 'function') {
+          throw new Error('The second parameter callback must be a function.');
+      }
 
-    switch (type) {
+      switch (type) {
       case 'data':
-        this.notificationCallbacks.push(callback);
-        break;
+          this.notificationCallbacks.push(callback);
+          break;
 
       case 'connect':
-        this.connection.onopen = callback;
-        break;
+          this.connection.onopen = callback;
+          break;
 
       case 'end':
-        this.connection.onclose = callback;
-        break;
+          this.connection.onclose = callback;
+          break;
 
       case 'error':
-        this.connection.onerror = callback;
-        break;
+          this.connection.onerror = callback;
+          break;
 
       default:
-        // this.connection.on(type, callback);
-        break;
-    }
+          // this.connection.on(type, callback);
+          break;
+      }
   }
 
   // TODO add once
@@ -253,21 +253,21 @@ export default class WebsocketProvider {
    @param {Function} callback   the callback to call
    */
   removeListener (type, callback) {
-    switch (type) {
+      switch (type) {
       case 'data':
-        this.notificationCallbacks.forEach((cb, index) => {
-          if (cb === callback) {
-            this.notificationCallbacks.splice(index, 1);
-          }
-        });
-        break;
+          this.notificationCallbacks.forEach((cb, index) => {
+              if (cb === callback) {
+                  this.notificationCallbacks.splice(index, 1);
+              }
+          });
+          break;
 
       // TODO remvoving connect missing
 
       default:
-        // this.connection.removeListener(type, callback);
-        break;
-    }
+          // this.connection.removeListener(type, callback);
+          break;
+      }
   }
 
   /**
@@ -277,29 +277,29 @@ export default class WebsocketProvider {
    @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
    */
   removeAllListeners (type) {
-    switch (type) {
+      switch (type) {
       case 'data':
-        this.notificationCallbacks = [];
-        break;
+          this.notificationCallbacks = [];
+          break;
 
-        // TODO remvoving connect properly missing
+          // TODO remvoving connect properly missing
 
       case 'connect':
-        this.connection.onopen = null;
-        break;
+          this.connection.onopen = null;
+          break;
 
       case 'end':
-        this.connection.onclose = null;
-        break;
+          this.connection.onclose = null;
+          break;
 
       case 'error':
-        this.connection.onerror = null;
-        break;
+          this.connection.onerror = null;
+          break;
 
       default:
-        // this.connection.removeAllListeners(type);
-        break;
-    }
+          // this.connection.removeAllListeners(type);
+          break;
+      }
   }
 
   /**
@@ -308,13 +308,13 @@ export default class WebsocketProvider {
    @method reset
    */
   reset () {
-    this._timeout();
-    this.notificationCallbacks = [];
+      this._timeout();
+      this.notificationCallbacks = [];
 
-    // this.connection.removeAllListeners('error');
-    // this.connection.removeAllListeners('end');
-    // this.connection.removeAllListeners('timeout');
+      // this.connection.removeAllListeners('error');
+      // this.connection.removeAllListeners('end');
+      // this.connection.removeAllListeners('timeout');
 
-    this.addDefaultEvents();
+      this.addDefaultEvents();
   }
 }

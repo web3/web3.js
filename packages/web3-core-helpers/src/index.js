@@ -24,6 +24,6 @@ import * as errors from './errors';
 import * as formatters from './formatters';
 
 export {
-  errors,
-  formatters,
+    errors,
+    formatters,
 };
