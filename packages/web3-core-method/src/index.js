@@ -255,7 +255,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             .then(function(receipt) {
 
                 if (!receipt || !receipt.blockHash) {
-                    throw new Error('Receipt is "null"');
+                    throw new Error('Receipt missing or blockHash null');
                 }
 
                 // apply extra formatters
@@ -391,19 +391,21 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
   method._ethereumCall.getTransactionReceipt(result)
   .then(function(receipt) {
       if (receipt && receipt.blockHash) {
-          checkConfirmation(null, null, null, receipt);
           if (defer.eventEmitter.listeners('confirmation').length > 0) {
+              // if the promise has not been resolved we must keep on watching for new Blocks, if a confrimation listener is present
               setTimeout(function(){
-                  // if the promised has not been resolved we must keep on watching for new Blocks
                   if (!promiseResolved) startWatching();
-              } ,1000);
+              }, 1000);
           }
-      }
-      else {
+
+          return checkConfirmation(null, null, null, receipt);
+      } else if (!promiseResolved) {
           startWatching();
       }
   })
-  .catch(startWatching);
+  .catch(function(){
+      if (!promiseResolved) startWatching();
+  });
 
 };
 
