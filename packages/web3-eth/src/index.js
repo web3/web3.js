@@ -373,7 +373,14 @@ var Eth = function Eth() {
                     outputFormatter: formatter.outputLogFormatter,
                     // DUBLICATE, also in web3-eth-contract
                     subscriptionHandler: function (output) {
-                        if(output.removed) {
+                        var changed;
+                        if (_.isArray(output)) {
+                            changed = _.reduce(output, function (c, log) {return c || log.changed;}, false);
+                        } else {
+                            changed = output.removed;
+                        }
+
+                        if(changed) {
                             this.emit('changed', output);
                         } else {
                             this.emit('data', output);

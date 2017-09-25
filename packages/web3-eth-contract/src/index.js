@@ -647,7 +647,14 @@ Contract.prototype._on = function(){
             outputFormatter: this._decodeEventABI.bind(subOptions.event),
             // DUBLICATE, also in web3-eth
             subscriptionHandler: function (output) {
-                if(output.removed) {
+                var changed;
+                if (_.isArray(output)) {
+                    changed = _.reduce(output, function (c, log) {return c || log.changed;}, false);
+                } else {
+                    changed = output.removed;
+                }
+
+                if(changed) {
                     this.emit('changed', output);
                 } else {
                     this.emit('data', output);
