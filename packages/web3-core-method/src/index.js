@@ -255,7 +255,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             .then(function(receipt) {
 
                 if (!receipt || !receipt.blockHash) {
-                    throw new Error('Receipt is "null"');
+                    throw new Error('Receipt missing or blockHash null');
                 }
 
                 // apply extra formatters
