@@ -8,7 +8,7 @@
     "main": "src/index.js",
     "dependencies": {
         "eventemitter3": "1.1.1",
-        "underscore": "1.8.3",
+        "lodash": "^4.17.4",
         "web3-core-helpers": "^1.0.0-beta.22"
     }
 }

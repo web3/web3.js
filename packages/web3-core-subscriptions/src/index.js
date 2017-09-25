@@ -20,57 +20,56 @@
  * @date 2017
  */
 
-"use strict";
+import Subscription from './subscription.js';
 
-var Subscription = require('./subscription.js');
+class Subscriptions {
+    name = null
+    type = null
+    subscriptions = null
+    requestManager = null
 
-
-var Subscriptions = function Subscriptions(options) {
-    this.name = options.name;
-    this.type = options.type;
-    this.subscriptions = options.subscriptions || {};
-    this.requestManager = null;
-};
-
-
-Subscriptions.prototype.setRequestManager = function (rm) {
-    this.requestManager = rm;
-};
-
-
-Subscriptions.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
-    func.call = this.call;
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        obj[name[0]][name[1]] = func;
-    } else {
-        obj[name[0]] = func;
+    constructor (options = {}) {
+        this.name = options.name;
+        this.type = options.type;
+        this.subscriptions = options.subscriptions || {};
+        this.requestManager = null;
     }
-};
 
+    setRequestManager (rm) {
+        this.requestManager = rm;
+    }
 
-Subscriptions.prototype.buildCall = function() {
-    var _this = this;
-
-    return function(){
-        if(!_this.subscriptions[arguments[0]]) {
-            console.warn('Subscription '+ JSON.stringify(arguments[0]) +' doesn\'t exist. Subscribing anyway.');
+    attachToObject (obj) {
+        /* eslint-disable no-param-reassign */
+        const func = this.buildCall();
+        func.call = this.call;
+        const name = this.name.split('.');
+        if (name.length > 1) {
+            obj[name[0]] = obj[name[0]] || {};
+            obj[name[0]][name[1]] = func;
+        } else {
+            obj[name[0]] = func;
         }
-
-        var subscription = new Subscription({
-            subscription: _this.subscriptions[arguments[0]],
-            requestManager: _this.requestManager,
-            type: _this.type
-        });
-
-        return subscription.subscribe.apply(subscription, arguments);
-    };
-};
+        /* eslint-enable no-param-reassign */
+    }
 
 
-module.exports = {
-    subscriptions: Subscriptions,
-    subscription: Subscription
-};
+    buildCall () {
+        return (s, ...args) => {
+            if (!this.subscriptions[s]) {
+                console.warn(`Subscription ${JSON.stringify(s)} doesn't exist. Subscribing anyway.`); // eslint-disable-line no-console
+            }
+
+            const subscription = new Subscription({
+                subscription: this.subscriptions[s],
+                requestManager: this.requestManager,
+                type: this.type,
+            });
+
+            return subscription.subscribe(s, ...args);
+        };
+    }
+}
+
+export const subscriptions = Subscriptions;
+export const subscription = Subscription;

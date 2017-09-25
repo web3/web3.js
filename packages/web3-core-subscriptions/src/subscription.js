@@ -20,286 +20,274 @@
  * @date 2017
  */
 
-"use strict";
+/* eslint-disable no-underscore-dangle */
 
-var _ = require('underscore');
-var errors = require('web3-core-helpers').errors;
-var EventEmitter = require('eventemitter3');
+import _ from 'lodash';
+import { InvalidNumberOfParams } from 'web3-core-helpers/lib/errors';
+import EventEmitter from 'eventemitter3';
 
+export default class Subscription extends EventEmitter {
+    id = null
+    callback = null
+    arguments = null
+    _reconnectIntervalId = null
+    options = null;
 
-function Subscription(options) {
-    EventEmitter.call(this);
+    constructor (options = {}) {
+        super();
 
-    this.id = null;
-    this.callback = null;
-    this.arguments = null;
-    this._reconnectIntervalId = null;
+        this.id = null;
+        this.callback = null;
+        this.arguments = null;
+        this._reconnectIntervalId = null;
 
-    this.options = {
-        subscription: options.subscription,
-        type: options.type,
-        requestManager: options.requestManager
-    };
-}
-
-// INHERIT
-Subscription.prototype = Object.create(EventEmitter.prototype);
-Subscription.prototype.constructor = Subscription;
-
-
-/**
- * Should be used to extract callback from array of arguments. Modifies input param
- *
- * @method extractCallback
- * @param {Array} arguments
- * @return {Function|Null} callback, if exists
- */
-
-Subscription.prototype._extractCallback = function (args) {
-    if (_.isFunction(args[args.length - 1])) {
-        return args.pop(); // modify the args array!
-    }
-};
-
-/**
- * Should be called to check if the number of arguments is correct
- *
- * @method validateArgs
- * @param {Array} arguments
- * @throws {Error} if it is not
- */
-
-Subscription.prototype._validateArgs = function (args) {
-    var subscription = this.options.subscription;
-
-    if(!subscription)
-        subscription = {};
-
-    if(!subscription.params)
-        subscription.params = 0;
-
-    if (args.length !== subscription.params) {
-        throw errors.InvalidNumberOfParams(args.length, subscription.params + 1, args[0]);
-    }
-};
-
-/**
- * Should be called to format input args of method
- *
- * @method formatInput
- * @param {Array}
- * @return {Array}
- */
-
-Subscription.prototype._formatInput = function (args) {
-    var subscription = this.options.subscription;
-
-    if (!subscription) {
-        return args;
+        this.options = {
+            subscription: options.subscription,
+            type: options.type,
+            requestManager: options.requestManager,
+        };
     }
 
-    if (!subscription.inputFormatter) {
-        return args;
-    }
-
-    var formattedArgs = subscription.inputFormatter.map(function (formatter, index) {
-        return formatter ? formatter(args[index]) : args[index];
-    });
-
-    return formattedArgs;
-};
-
-/**
- * Should be called to format output(result) of method
- *
- * @method formatOutput
- * @param {Object}
- * @return {Object}
- */
-
-Subscription.prototype._formatOutput = function (result) {
-    var subscription = this.options.subscription;
-
-    return (subscription && subscription.outputFormatter && result) ? subscription.outputFormatter(result) : result;
-};
-
-/**
- * Should create payload from given input args
- *
- * @method toPayload
- * @param {Array} args
- * @return {Object}
- */
-Subscription.prototype._toPayload = function (args) {
-    var params = [];
-    this.callback = this._extractCallback(args);
-
-    if (!this.subscriptionMethod) {
-        this.subscriptionMethod = args.shift();
-
-        // replace subscription with given name
-        if (this.options.subscription.subscriptionName) {
-            this.subscriptionMethod = this.options.subscription.subscriptionName;
+    /**
+     * Should be called to check if the number of arguments is correct
+     *
+     * @method validateArgs
+     * @param {Array} arguments
+     * @throws {Error} if it is not
+     */
+    _validateArgs (args) {
+        const { subscription = {} } = this.options;
+        const { params = 0 } = subscription;
+        if (args.length !== params) {
+            throw InvalidNumberOfParams(args.length, params + 1, args[0]);
         }
     }
 
-    if (!this.arguments) {
-        this.arguments = this._formatInput(args);
-        this._validateArgs(this.arguments);
-        args = []; // make empty after validation
+    /**
+     * Should be called to format input args of method
+     *
+     * @method formatInput
+     * @param {Array}
+     * @return {Array}
+     */
+    _formatInput (args) {
+        const { subscription } = this.options;
+        if (!subscription || !subscription.inputFormatter) {
+            return args;
+        }
 
-    }
-
-    // re-add subscriptionName
-    params.push(this.subscriptionMethod);
-    params = params.concat(this.arguments);
-
-
-    if (args.length) {
-        throw new Error('Only a callback is allowed as parameter on an already instantiated subscription.');
-    }
-
-    return {
-        method: this.options.type + '_subscribe',
-        params: params
-    };
-};
-
-/**
- * Unsubscribes and clears callbacks
- *
- * @method unsubscribe
- * @return {Object}
- */
-Subscription.prototype.unsubscribe = function(callback) {
-    this.options.requestManager.removeSubscription(this.id, callback);
-    this.id = null;
-    this.removeAllListeners();
-    clearInterval(this._reconnectIntervalId);
-};
-
-/**
- * Subscribes and watches for changes
- *
- * @method subscribe
- * @param {String} subscription the subscription
- * @param {Object} options the options object with address topics and fromBlock
- * @return {Object}
- */
-Subscription.prototype.subscribe = function() {
-    var _this = this;
-    var args = Array.prototype.slice.call(arguments);
-    var payload = this._toPayload(args);
-
-    if(!payload) {
-        return this;
-    }
-
-    if(!this.options.requestManager.provider) {
-        var err1 = new Error('No provider set.');
-        this.callback(err1, null, this);
-        this.emit('error', err1);
-        return this;
-    }
-
-    // throw error, if provider doesnt support subscriptions
-    if(!this.options.requestManager.provider.on) {
-        var err2 = new Error('The current provider doesn\'t support subscriptions: '+ this.options.requestManager.provider.constructor.name);
-        this.callback(err2, null, this);
-        this.emit('error', err2);
-        return this;
-    }
-
-    // if id is there unsubscribe first
-    if (this.id) {
-        this.unsubscribe();
-    }
-
-    // store the params in the options object
-    this.options.params = payload.params[1];
-
-    // get past logs, if fromBlock is available
-    if(payload.params[0] === 'logs' && _.isObject(payload.params[1]) && payload.params[1].hasOwnProperty('fromBlock') && isFinite(payload.params[1].fromBlock)) {
-        // send the subscription request
-        this.options.requestManager.send({
-            method: 'eth_getLogs',
-            params: [payload.params[1]]
-        }, function (err, logs) {
-            if(!err) {
-                logs.forEach(function(log){
-                    var output = _this._formatOutput(log);
-                    _this.callback(null, output, _this);
-                    _this.emit('data', output);
-                });
-
-                // TODO subscribe here? after the past logs?
-
-            } else {
-                _this.callback(err, null, _this);
-                _this.emit('error', err);
+        return subscription.inputFormatter.map((formatter, index) => {
+            if (formatter) {
+                return formatter(args[index]);
             }
+            return args[index];
         });
     }
 
-    // create subscription
-    // TODO move to separate function? so that past logs can go first?
+    /**
+     * Should be called to format output(result) of method
+     *
+     * @method formatOutput
+     * @param {Object}
+     * @return {Object}
+     */
 
-    if(typeof payload.params[1] === 'object')
-        delete payload.params[1].fromBlock;
+    _formatOutput (result) {
+        const { subscription } = this.options;
+        if (subscription && subscription.outputFormatter && result) {
+            return subscription.outputFormatter(result);
+        }
+        return result;
+    }
 
-    this.options.requestManager.send(payload, function (err, result) {
-        if(!err && result) {
-            _this.id = result;
+    /**
+     * Should create payload from given input args
+     *
+     * @method toPayload
+     * @param {Array} args
+     * @return {Object}
+     */
+    _toPayload (args) {
+        let params = [];
+        if (_.isFunction(args[args.length - 1])) {
+            this.callback = args.pop(); // eslint-disable-line no-param-reassign
+        } else {
+            this.callback = null;
+        }
 
-            // call callback on notifications
-            _this.options.requestManager.addSubscription(_this.id, payload.params[0] , _this.options.type, function(err, result) {
+        if (!this.subscriptionMethod) {
+            this.subscriptionMethod = args.shift();
 
-                // TODO remove once its fixed in geth
-                if(_.isArray(result))
-                    result = result[0];
+            // replace subscription with given name
+            if (this.options.subscription.subscriptionName) {
+                this.subscriptionMethod = this.options.subscription.subscriptionName;
+            }
+        }
 
-                var output = _this._formatOutput(result);
+        if (!this.arguments) {
+            this.arguments = this._formatInput(args);
+            this._validateArgs(this.arguments);
+            // make empty after validation
+            args = []; // eslint-disable-line no-param-reassign
+        }
 
+        // re-add subscriptionName
+        params.push(this.subscriptionMethod);
+        params = params.concat(this.arguments);
+
+        if (args.length) {
+            throw new Error('Only a callback is allowed as parameter on an already instantiated subscription.');
+        }
+
+        return {
+            method: `${this.options.type}_subscribe`,
+            params,
+        };
+    }
+
+    /**
+     * Unsubscribes and clears callbacks
+     *
+     * @method unsubscribe
+     * @return {Object}
+     */
+    unsubscribe (callback) {
+        this.options.requestManager.removeSubscription(this.id, callback);
+        this.id = null;
+        this.removeAllListeners();
+        clearInterval(this._reconnectIntervalId);
+    }
+
+    /**
+     * Subscribes and watches for changes
+     *
+     * @method subscribe
+     * @param {String} subscription the subscription
+     * @param {Object} options the options object with address topics and fromBlock
+     * @return {Object}
+     */
+    subscribe (...args) {
+        const payload = this._toPayload(args);
+
+        if (!payload) {
+            return this;
+        }
+
+        if (!this.options.requestManager.provider) {
+            const err1 = new Error('No provider set.');
+            this.callback(err1, null, this);
+            this.emit('error', err1);
+            return this;
+        }
+
+        // throw error, if provider doesnt support subscriptions
+        if (!this.options.requestManager.provider.on) {
+            const err2 = new Error(`The current provider doesn't support subscriptions: ${this.options.requestManager.provider.constructor.name}`);
+            this.callback(err2, null, this);
+            this.emit('error', err2);
+            return this;
+        }
+
+        // if id is there unsubscribe first
+        if (this.id) {
+            this.unsubscribe();
+        }
+
+        // store the params in the options object
+        [this.options.params] = payload.params;
+
+        // get past logs, if fromBlock is available
+        if (
+            payload.params[0] === 'logs'
+            && _.isObject(payload.params[1])
+            && Object.prototype.hasOwnProperty.call(payload.params[1], 'fromBlock')
+            && isFinite(payload.params[1].fromBlock) // eslint-disable-line no-restricted-globals
+        ) {
+            // send the subscription request
+            this.options.requestManager.send({
+                method: 'eth_getLogs',
+                params: [payload.params[1]],
+            }, (err, logs) => {
                 if (!err) {
+                    logs.forEach((log) => {
+                        const output = this._formatOutput(log);
+                        this.callback(null, output, this);
+                        this.emit('data', output);
+                    });
 
-                    if(_.isFunction(_this.options.subscription.subscriptionHandler)) {
-                        return _this.options.subscription.subscriptionHandler.call(_this, output);
-                    } else {
-                        _this.emit('data', output);
-                    }
-
+                    // TODO subscribe here? after the past logs?
                 } else {
-                    // unsubscribe, but keep listeners
-                    _this.options.requestManager.removeSubscription(_this.id);
-
-                    // re-subscribe, if connection fails
-                    if(_this.options.requestManager.provider.once) {
-                        _this._reconnectIntervalId = setInterval(function () {
-                            // TODO check if that makes sense!
-                            _this.options.requestManager.provider.reconnect();
-                        }, 500);
-
-                        _this.options.requestManager.provider.once('connect', function () {
-                            clearInterval(_this._reconnectIntervalId);
-                            _this.subscribe(_this.callback);
-                        });
-                    }
-                    _this.emit('error', err);
-                }
-
-                // call the callback, last so that unsubscribe there won't affect the emit above
-                if (_.isFunction(_this.callback)) {
-                    _this.callback(err, output, _this);
+                    this.callback(err, null, this);
+                    this.emit('error', err);
                 }
             });
-        } else if (_.isFunction(_this.callback)) {
-            _this.callback(err, null, _this);
-            _this.emit('error', err);
         }
-    });
 
-    // return an object to cancel the subscription
-    return this;
-};
+        // create subscription
+        // TODO move to separate function? so that past logs can go first?
 
-module.exports = Subscription;
+        if (typeof payload.params[1] === 'object') {
+            delete payload.params[1].fromBlock;
+        }
+
+        this.options.requestManager.send(payload, (err, result) => {
+            if (!err && result) {
+                this.id = result;
+
+                const c = (callbackError, callbackResult) => {
+                    // TODO remove once its fixed in geth
+                    let res = callbackResult;
+                    if (_.isArray(res)) {
+                        ([res] = res);
+                    }
+
+                    const output = this._formatOutput(res);
+                    if (!callbackError) {
+                        const { subscriptionHandler } = this.options.subscription;
+                        if (_.isFunction(subscriptionHandler)) {
+                            subscriptionHandler.call(this, output);
+                            return;
+                        }
+                        this.emit('data', output);
+                    } else {
+                        // unsubscribe, but keep listeners
+                        this.options.requestManager.removeSubscription(this.id);
+
+                        // re-subscribe, if connection fails
+                        if (this.options.requestManager.provider.once) {
+                            this._reconnectIntervalId = setInterval(() => {
+                                // TODO check if that makes sense!
+                                this.options.requestManager.provider.reconnect();
+                            }, 500);
+
+                            this.options.requestManager.provider.once('connect', () => {
+                                clearInterval(this._reconnectIntervalId);
+                                this.subscribe(this.callback);
+                            });
+                        }
+                        this.emit('error', callbackError);
+                    }
+
+                    // call the callback, last so that unsubscribe there won't affect the emit above
+                    if (_.isFunction(this.callback)) {
+                        this.callback(err, output, this);
+                    }
+                };
+
+                // call callback on notifications
+                this.options.requestManager.addSubscription(
+                    this.id,
+                    payload.params[0],
+                    this.options.type,
+                    c,
+                );
+            } else if (_.isFunction(this.callback)) {
+                this.callback(err, null, this);
+                this.emit('error', err);
+            }
+        });
+
+        // return an object to cancel the subscription
+        return this;
+    }
+}
