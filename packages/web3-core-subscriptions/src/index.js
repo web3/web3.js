@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import Subscription from './subscription.js';
+import Subscription from './subscription';
 
 class Subscriptions {
     name = null
