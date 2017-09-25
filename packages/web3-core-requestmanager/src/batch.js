@@ -20,16 +20,16 @@
  * @date 2015
  */
 
-import Jsonrpc from './jsonrpc';
 import { ErrorResponse, InvalidResponse } from 'web3-core-helpers/lib/errors';
+import Jsonrpc from './jsonrpc';
 
 export default class Batch {
   requestManager = null
   requests = null
 
   constructor (requestManager) {
-    this.requestManager = requestManager;
-    this.requests = [];
+      this.requestManager = requestManager;
+      this.requests = [];
   }
 
   /**
@@ -39,7 +39,7 @@ export default class Batch {
    * @param {Object} jsonrpc requet object
    */
   add (request) {
-    this.requests.push(request);
+      this.requests.push(request);
   }
 
   /**
@@ -48,23 +48,22 @@ export default class Batch {
    * @method execute
    */
   execute () {
-    this.requestManager.sendBatch(this.requests, (err, results = []) => {
-      this.requests.map((request, index) => {
-        return results[index] || {};
-      }).forEach((result, index) => {
-        if (this.requests[index].callback) {
-          if (result && result.error) {
-            return this.requests[index].callback(ErrorResponse(result));
-          }
+      this.requestManager.sendBatch(this.requests, (err, results = []) => {
+          this.requests.map((request, index) => results[index] || {}).forEach((result, index) => {
+              if (!this.requests[index].callback) {
+                  return;
+              }
 
-          if (!Jsonrpc.isValidResponse(result)) {
-            return this.requests[index].callback(InvalidResponse(result));
-          }
-
-          const v = this.requests[index].format ? this.requests[index].format(result.result) : result.result;
-          this.requests[index].callback(null, v);
-        }
+              if (result && result.error) {
+                  this.requests[index].callback(ErrorResponse(result));
+              } else if (!Jsonrpc.isValidResponse(result)) {
+                  this.requests[index].callback(InvalidResponse(result));
+              } else {
+                  const v = this.requests[index].format ?
+                      this.requests[index].format(result.result) : result.result;
+                  this.requests[index].callback(null, v);
+              }
+          });
       });
-    });
   }
 }
