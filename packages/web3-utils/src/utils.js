@@ -80,7 +80,7 @@ export function toBN (...args) {
  * @returns {Boolean}
  */
 export function isHex (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]+$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
 }
 
 /**

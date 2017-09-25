@@ -229,7 +229,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
             throw new Error('Unsupported parameters to PBKDF2');
         }
 
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
@@ -265,7 +265,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     if (kdf === 'pbkdf2') {
         kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
     } else if (kdf === 'scrypt') {
     // FIXME: support progress reporting callback
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384

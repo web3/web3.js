@@ -1,14 +1,14 @@
 {
     "name": "web3-providers-ws",
     "namespace": "ethereum",
-    "version": "1.0.0-beta.21",
+    "version": "1.0.0-beta.22",
     "description": "Module to handle web3 RPC connections over WebSockets.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-providers-ws",
     "license": "LGPL-3.0",
     "main": "lib/index.js",
     "dependencies": {
         "lodash": "^4.17.4",
-        "web3-core-helpers": "^1.0.0-beta.21",
+        "web3-core-helpers": "^1.0.0-beta.22",
         "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible"
     }
 }
