@@ -20,13 +20,10 @@
  * @date 2017
  */
 
-"use strict";
+import * as errors from './errors';
+import * as formatters from './formatters';
 
-var errors = require('./errors');
-var formatters = require('./formatters');
-
-module.exports = {
-    errors: errors,
-    formatters: formatters
+export {
+  errors,
+  formatters,
 };
-
