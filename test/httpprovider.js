@@ -9,7 +9,7 @@ var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
         // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
-});
+}).default;
 
 describe('web3-providers-http', function () {
     describe('send', function () {

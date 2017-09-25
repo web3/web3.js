@@ -68,7 +68,9 @@ const buildUmd = (p, moduleName, minify = false) => {
   const rbc = rollupBabelrc();
   return rollup.rollup({
     input: path.resolve(PACKAGES_DIR, p, 'src/index.js'),
-    external: ['websocket'],
+    external: [
+      'websocket',
+    ],
     plugins: [
       rollupResolve({
         preferBuiltins: false,
@@ -92,7 +94,7 @@ const buildUmd = (p, moduleName, minify = false) => {
     format: 'umd',
     sourcemap: minify,
     globals: {
-      websocket: 'Websocket',
+      websocket: 'WebSocket',
     },
   })).catch((e) => {
     gutil.log(e);

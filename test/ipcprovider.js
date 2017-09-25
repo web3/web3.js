@@ -11,7 +11,7 @@ var IpcProvider = SandboxedModule.require('../packages/web3-providers-ipc', {
         'bn.js': require('bn.js'),
     },
     singleOnly: true
-});
+}).default;
 
 describe('web3-providers-ipc', function () {
 
