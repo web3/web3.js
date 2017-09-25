@@ -70,35 +70,6 @@ var Contract = function Contract(jsonInterface, address, options) {
         throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
     }
 
-    // add custom send Methods
-    var _ethereumCall = [
-        new Method({
-            name: 'estimateGas',
-            call: 'eth_estimateGas',
-            params: 1,
-            inputFormatter: [formatters.inputCallFormatter],
-            outputFormatter: utils.hexToNumber
-        }),
-        new Method({
-            name: 'call',
-            call: 'eth_call',
-            params: 2,
-            inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter]
-        }),
-        new Method({
-            name: 'sendTransaction',
-            call: 'eth_sendTransaction',
-            params: 1,
-            inputFormatter: [formatters.inputTransactionFormatter]
-        })
-    ];
-    // attach methods to this._ethereumCall
-    this._ethereumCall = {};
-    _.each(_ethereumCall, function (method) {
-        method.attachToObject(_this._ethereumCall);
-        method.setRequestManager(_this._requestManager, Contract._ethAccounts); // second param means is eth.accounts (necessary for wallet signing)
-    });
-
 
 
     // create the options object
@@ -206,11 +177,6 @@ var Contract = function Contract(jsonInterface, address, options) {
                 defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
             }
 
-            // update defaultBlock
-            _ethereumCall.forEach(function(method) {
-                method.defaultAccount = defaultAccount;
-            });
-
             return val;
         },
         enumerable: true
@@ -221,11 +187,6 @@ var Contract = function Contract(jsonInterface, address, options) {
         },
         set: function (val) {
             defaultBlock = val;
-
-            // update defaultBlock
-            _ethereumCall.forEach(function(method) {
-                method.defaultBlock = defaultBlock;
-            });
 
             return val;
         },
@@ -809,18 +770,40 @@ Contract.prototype._executeMethod = function _executeMethod(){
         switch (args.type) {
             case 'estimate':
 
-                return this._parent._ethereumCall.estimateGas(args.options, args.callback);
+                var estimateGas = (new Method({
+                    name: 'estimateGas',
+                    call: 'eth_estimateGas',
+                    params: 1,
+                    inputFormatter: [formatters.inputCallFormatter],
+                    outputFormatter: utils.hexToNumber,
+                    requestManager: _this._parent._requestManager,
+                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    defaultAccount: _this._parent.defaultAccount,
+                    defaultBlock: _this._parent.defaultBlock
+                })).createFunction();
+
+                return estimateGas(args.options, args.callback);
 
             case 'call':
 
                 // TODO check errors: missing "from" should give error on deploy and send, call ?
 
-                // add output formatter for decoding
-                this._parent._ethereumCall.call.method.outputFormatter = function (result) {
-                    return _this._parent._decodeMethodReturn(_this._method.outputs, result);
-                };
+                var call = (new Method({
+                    name: 'call',
+                    call: 'eth_call',
+                    params: 2,
+                    inputFormatter: [formatters.inputCallFormatter, formatters.inputDefaultBlockNumberFormatter],
+                    // add output formatter for decoding
+                    outputFormatter: function (result) {
+                        return _this._parent._decodeMethodReturn(_this._method.outputs, result);
+                    },
+                    requestManager: _this._parent._requestManager,
+                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    defaultAccount: _this._parent.defaultAccount,
+                    defaultBlock: _this._parent.defaultBlock
+                })).createFunction();
 
-                return this._parent._ethereumCall.call(args.options, args.defaultBlock, args.callback);
+                return call(args.options, args.defaultBlock, args.callback);
 
             case 'send':
 
@@ -870,7 +853,19 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     }
                 };
 
-                return this._parent._ethereumCall.sendTransaction.apply(extraFormatters, [args.options, args.callback]);
+                var sendTransaction = (new Method({
+                    name: 'sendTransaction',
+                    call: 'eth_sendTransaction',
+                    params: 1,
+                    inputFormatter: [formatters.inputTransactionFormatter],
+                    requestManager: _this._parent._requestManager,
+                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    defaultAccount: _this._parent.defaultAccount,
+                    defaultBlock: _this._parent.defaultBlock,
+                    extraFormatters: extraFormatters
+                })).createFunction();
+
+                return sendTransaction(args.options, args.callback);
 
         }
 

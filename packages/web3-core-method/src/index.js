@@ -45,6 +45,7 @@ var Method = function Method(options) {
     this.inputFormatter = options.inputFormatter;
     this.outputFormatter = options.outputFormatter;
     this.transformPayload = options.transformPayload;
+    this.extraFormatters = options.extraFormatters;
 
     this.requestManager = options.requestManager;
 
@@ -56,7 +57,6 @@ var Method = function Method(options) {
 };
 
 Method.prototype.setRequestManager = function (requestManager, accounts) {
-    var _this = this;
     this.requestManager = requestManager;
 
     // reference to eth.accounts
@@ -64,44 +64,27 @@ Method.prototype.setRequestManager = function (requestManager, accounts) {
         this.accounts = accounts;
     }
 
-    // add custom send Methods
-    var _ethereumCall = [
-        new Method({
-            name: 'getTransactionReceipt',
-            call: 'eth_getTransactionReceipt',
-            params: 1,
-            inputFormatter: [null],
-            outputFormatter: formatters.outputTransactionReceiptFormatter
-        }),
-        new Method({
-            name: 'getCode',
-            call: 'eth_getCode',
-            params: 2,
-            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
-        }),
-        new Method({
-            name: 'getGasPrice',
-            call: 'eth_gasPrice',
-            params: 0
-        }),
-        new Subscriptions({
-            name: 'subscribe',
-            type: 'eth',
-            subscriptions: {
-                'newBlockHeaders': {
-                    subscriptionName: 'newHeads', // replace subscription with this name
-                    params: 0,
-                    outputFormatter: formatters.outputBlockFormatter
-                }
-            }
-        })
-    ];
-    // attach methods to this._ethereumCall
-    this._ethereumCall = {};
-    _.each(_ethereumCall, function (method) {
-        method.attachToObject(_this._ethereumCall);
-        method.requestManager = _this.requestManager; // assign rather than call setRequestManager()
-    });
+};
+
+Method.prototype.createFunction = function (requestManager, accounts) {
+    var func = this.buildCall();
+    func.call = this.call;
+
+    this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
+
+    return func;
+};
+
+Method.prototype.attachToObject = function (obj) {
+    var func = this.buildCall();
+    func.call = this.call;
+    var name = this.name.split('.');
+    if (name.length > 1) {
+        obj[name[0]] = obj[name[0]] || {};
+        obj[name[0]][name[1]] = func;
+    } else {
+        obj[name[0]] = func;
+    }
 };
 
 /**
@@ -206,19 +189,8 @@ Method.prototype.toPayload = function (args) {
     return payload;
 };
 
-Method.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
-    func.call = this.call; // TODO!!! that's ugly. filter.js uses it
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        obj[name[0]][name[1]] = func;
-    } else {
-        obj[name[0]] = func;
-    }
-};
 
-Method.prototype._confirmTransaction = function (defer, result, payload, extraFormatters) {
+Method.prototype._confirmTransaction = function (defer, result, payload) {
     var method = this,
         promiseResolved = false,
         canUnsubscribe = true,
@@ -230,6 +202,41 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
             payload.params[0].data &&
             payload.params[0].from &&
             !payload.params[0].to;
+
+
+    // add custom send Methods
+    var _ethereumCalls = [
+        new Method({
+            name: 'getTransactionReceipt',
+            call: 'eth_getTransactionReceipt',
+            params: 1,
+            inputFormatter: [null],
+            outputFormatter: formatters.outputTransactionReceiptFormatter
+        }),
+        new Method({
+            name: 'getCode',
+            call: 'eth_getCode',
+            params: 2,
+            inputFormatter: [formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter]
+        }),
+        new Subscriptions({
+            name: 'subscribe',
+            type: 'eth',
+            subscriptions: {
+                'newBlockHeaders': {
+                    subscriptionName: 'newHeads', // replace subscription with this name
+                    params: 0,
+                    outputFormatter: formatters.outputBlockFormatter
+                }
+            }
+        })
+    ];
+    // attach methods to this._ethereumCall
+    var _ethereumCall = {};
+    _.each(_ethereumCalls, function (mthd) {
+        mthd.attachToObject(_ethereumCall);
+        mthd.requestManager = method.requestManager; // assign rather than call setRequestManager()
+    });
 
 
     // fire "receipt" and confirmation events and resolve after
@@ -244,7 +251,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                 };
             }
             // if we have a valid receipt we don't need to send a request
-            return (existingReceipt ? promiEvent.resolve(existingReceipt) : method._ethereumCall.getTransactionReceipt(result))
+            return (existingReceipt ? promiEvent.resolve(existingReceipt) : _ethereumCall.getTransactionReceipt(result))
             // catch error from requesting receipt
             .catch(function (err) {
                 sub.unsubscribe();
@@ -259,8 +266,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                 }
 
                 // apply extra formatters
-                if (extraFormatters && extraFormatters.receiptFormatter) {
-                    receipt = extraFormatters.receiptFormatter(receipt);
+                if (method.extraFormatters && method.extraFormatters.receiptFormatter) {
+                    receipt = method.extraFormatters.receiptFormatter(receipt);
                 }
 
                 // check if confirmation listener exists
@@ -294,7 +301,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                         return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
                     }
 
-                    method._ethereumCall.getCode(receipt.contractAddress, function (e, code) {
+                    _ethereumCall.getCode(receipt.contractAddress, function (e, code) {
 
                         if (!code) {
                             return;
@@ -305,8 +312,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
                             defer.eventEmitter.emit('receipt', receipt);
 
                             // if contract, return instance instead of receipt
-                            if (extraFormatters && extraFormatters.contractDeployFormatter) {
-                                defer.resolve(extraFormatters.contractDeployFormatter(receipt));
+                            if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
+                                defer.resolve(method.extraFormatters.contractDeployFormatter(receipt));
                             } else {
                                 defer.resolve(receipt);
                             }
@@ -381,14 +388,15 @@ Method.prototype._confirmTransaction = function (defer, result, payload, extraFo
   var startWatching = function() {
       // if provider allows PUB/SUB
       if (_.isFunction(this.requestManager.provider.on)) {
-          method._ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
+          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
       } else {
           intervalId = setInterval(checkConfirmation, 1000);
       }
   }.bind(this);
 
+
   // first check if we already have a confirmed transaction
-  method._ethereumCall.getTransactionReceipt(result)
+  _ethereumCall.getTransactionReceipt(result)
   .then(function(receipt) {
       if (receipt && receipt.blockHash) {
           if (defer.eventEmitter.listeners('confirmation').length > 0) {
@@ -435,7 +443,6 @@ Method.prototype.buildCall = function() {
 
     // actual send function
     var send = function () {
-        var extraFormatters = this;
         var defer = promiEvent(!isSendTx),
             payload = method.toPayload(Array.prototype.slice.call(arguments));
 
@@ -476,7 +483,7 @@ Method.prototype.buildCall = function() {
             } else {
                 defer.eventEmitter.emit('transactionHash', result);
 
-                method._confirmTransaction(defer, result, payload, extraFormatters);
+                method._confirmTransaction(defer, result, payload);
             }
 
         };
@@ -538,7 +545,13 @@ Method.prototype.buildCall = function() {
         // Send the actual transaction
         if(isSendTx && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
 
-            method._ethereumCall.getGasPrice(function (err, gasPrice) {
+            var getGasPrice = (new Method({
+                name: 'getGasPrice',
+                call: 'eth_gasPrice',
+                params: 0
+            })).createFunction(method.requestManager);
+
+            getGasPrice(function (err, gasPrice) {
 
                 if (gasPrice) {
                     payload.params[0].gasPrice = gasPrice;
