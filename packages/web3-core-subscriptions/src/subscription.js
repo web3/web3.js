@@ -27,12 +27,6 @@ import { InvalidNumberOfParams } from 'web3-core-helpers/lib/errors';
 import EventEmitter from 'eventemitter3';
 
 export default class Subscription extends EventEmitter {
-    id = null
-    callback = null
-    arguments = null
-    _reconnectIntervalId = null
-    options = null;
-
     constructor (options = {}) {
         super();
 
@@ -40,7 +34,6 @@ export default class Subscription extends EventEmitter {
         this.callback = null;
         this.arguments = null;
         this._reconnectIntervalId = null;
-
         this.options = {
             subscription: options.subscription,
             type: options.type,
@@ -275,12 +268,8 @@ export default class Subscription extends EventEmitter {
                 };
 
                 // call callback on notifications
-                this.options.requestManager.addSubscription(
-                    this.id,
-                    payload.params[0],
-                    this.options.type,
-                    c,
-                );
+                this.options.requestManager
+                    .addSubscription(this.id, payload.params[0], this.options.type, c);
             } else if (_.isFunction(this.callback)) {
                 this.callback(err, null, this);
                 this.emit('error', err);
