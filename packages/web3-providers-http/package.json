@@ -1,13 +1,13 @@
 {
-  "name": "web3-providers-http",
-  "namespace": "ethereum",
-  "version": "1.0.0-beta.21",
-  "description": "Module to handle web3 RPC connections over HTTP.",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-providers-http",
-  "license": "LGPL-3.0",
-  "main": "lib/index.js",
-  "dependencies": {
-    "web3-core-helpers": "^1.0.0-beta.21",
-    "xhr2": "0.1.4"
-  }
+    "name": "web3-providers-http",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.21",
+    "description": "Module to handle web3 RPC connections over HTTP.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-providers-http",
+    "license": "LGPL-3.0",
+    "main": "lib/index.js",
+    "dependencies": {
+        "web3-core-helpers": "^1.0.0-beta.21",
+        "xhr2": "0.1.4"
+    }
 }

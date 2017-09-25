@@ -20,36 +20,35 @@
  * @date 2016
  */
 
-"use strict";
 
-var EventEmitter = require('eventemitter3');
-var Promise = require("bluebird");
+import EventEmitter from 'eventemitter3';
+import Promise from 'bluebird';
 
 /**
  * This function generates a defer promise and adds eventEmitter functionality to it
  *
  * @method eventifiedPromise
  */
-var PromiEvent = function PromiEvent(justPromise) {
-    var resolve, reject,
-        eventEmitter = new Promise(function() {
-            resolve = arguments[0];
-            reject = arguments[1];
-        });
+const PromiEvent = (justPromise) => {
+    let resolve;
+    let reject;
+    const eventEmitter = new Promise((...args) => {
+        ({ resolve, reject } = args);
+    });
 
-    if(justPromise) {
+    if (justPromise) {
         return {
-            resolve: resolve,
-            reject: reject,
-            eventEmitter: eventEmitter
+            resolve,
+            reject,
+            eventEmitter,
         };
     }
 
     // get eventEmitter
-    var emitter = new EventEmitter();
+    const emitter = new EventEmitter();
 
     // add eventEmitter to the promise
-    eventEmitter._events = emitter._events;
+    eventEmitter._events = emitter._events; // eslint-disable-line no-underscore-dangle
     eventEmitter.emit = emitter.emit;
     eventEmitter.on = emitter.on;
     eventEmitter.once = emitter.once;
@@ -60,16 +59,16 @@ var PromiEvent = function PromiEvent(justPromise) {
     eventEmitter.removeAllListeners = emitter.removeAllListeners;
 
     return {
-        resolve: resolve,
-        reject: reject,
-        eventEmitter: eventEmitter
+        resolve,
+        reject,
+        eventEmitter,
     };
 };
 
-PromiEvent.resolve = function(value) {
-    var promise = PromiEvent(true);
+PromiEvent.resolve = (value) => {
+    const promise = PromiEvent(true);
     promise.resolve(value);
     return promise.eventEmitter;
 };
 
-module.exports = PromiEvent;
+export default PromiEvent;

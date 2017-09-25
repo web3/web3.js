@@ -1,21 +1,21 @@
 {
-  "name": "web3-utils",
-  "namespace": "ethereum",
-  "version": "1.0.0-beta.21",
-  "description": "Collection of utility functions used in web3.js.",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
-  "license": "LGPL-3.0",
-  "main": "lib/index.js",
-  "directories": [
-    "lib"
-  ],
-  "dependencies": {
-    "bn.js": "4.11.6",
-    "eth-lib": "^0.1.27",
-    "ethjs-unit": "0.1.6",
-    "lodash": "^4.17.4",
-    "number-to-bn": "1.7.0",
-    "randomhex": "0.1.5",
-    "utf8": "2.1.1"
-  }
+    "name": "web3-utils",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.21",
+    "description": "Collection of utility functions used in web3.js.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
+    "license": "LGPL-3.0",
+    "main": "lib/index.js",
+    "directories": [
+        "lib"
+    ],
+    "dependencies": {
+        "bn.js": "4.11.6",
+        "eth-lib": "^0.1.27",
+        "ethjs-unit": "0.1.6",
+        "lodash": "^4.17.4",
+        "number-to-bn": "1.7.0",
+        "randomhex": "0.1.5",
+        "utf8": "2.1.1"
+    }
 }
