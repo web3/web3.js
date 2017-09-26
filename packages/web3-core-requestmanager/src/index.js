@@ -234,7 +234,7 @@ class Manager {
     }
 }
 
-export default {
+export {
     Manager,
     BatchManager,
 };

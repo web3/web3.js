@@ -24,7 +24,7 @@
  */
 
 // Initialize Jsonrpc as a simple object with utility functions.
-export default {
+const Jsonrpc = {
     messageId: 0,
 
     /**
@@ -85,3 +85,5 @@ export default {
         return messages.map(message => this.toPayload(message.method, message.params));
     },
 };
+
+module.exports = Jsonrpc;

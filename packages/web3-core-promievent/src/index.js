@@ -33,7 +33,7 @@ const PromiEvent = (justPromise) => {
     let resolve;
     let reject;
     const eventEmitter = new Promise((...args) => {
-        ({ resolve, reject } = args);
+        ([resolve, reject] = args);
     });
 
     if (justPromise) {

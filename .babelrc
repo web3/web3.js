@@ -4,6 +4,7 @@
   ],
   "plugins": [
     "lodash",
-    "transform-class-properties"
+    "transform-class-properties",
+    ["transform-runtime", { "polyfill": false }]
   ]
 }

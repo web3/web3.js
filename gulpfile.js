@@ -65,7 +65,11 @@ const onwarn = ({ code, message }) => {
 };
 
 const buildUmd = (p, moduleName, minify = false) => {
+    // Exclude babel runtime
     const rbc = rollupBabelrc();
+    rbc.runtimeHelpers = true;
+    rbc.exclude = 'node_modules/**';
+
     return rollup.rollup({
         input: path.resolve(PACKAGES_DIR, p, 'src/index.js'),
         external: [

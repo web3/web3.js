@@ -86,62 +86,60 @@ const mod9710 = (iban) => {
  * @param {String} iban
  */
 class Iban {
-  iban = null
+    constructor (iban) {
+        this.iban = iban;
+    }
 
-  constructor (iban) {
-      this.iban = iban;
-  }
-
-  /**
+    /**
    * This method should be used to create an ethereum address from a direct iban address
    *
    * @method toAddress
    * @param {String} iban address
    * @return {String} the ethereum address
    */
-  static toAddress (ib) {
-      const obj = new Iban(ib);
+    static toAddress (ib) {
+        const obj = new Iban(ib);
 
-      if (!obj.isDirect()) {
-          throw new Error('IBAN is indirect and can\'t be converted');
-      }
+        if (!obj.isDirect()) {
+            throw new Error('IBAN is indirect and can\'t be converted');
+        }
 
-      return obj.toAddress();
-  }
+        return obj.toAddress();
+    }
 
-  /**
+    /**
    * This method should be used to create iban address from an ethereum address
    *
    * @method toIban
    * @param {String} address
    * @return {String} the IBAN address
    */
-  static toIban (address) {
-      return Iban.fromAddress(address).toString();
-  }
+    static toIban (address) {
+        return Iban.fromAddress(address).toString();
+    }
 
-  /**
+    /**
    * This method should be used to create iban object from an ethereum address
    *
    * @method fromAddress
    * @param {String} address
    * @return {Iban} the IBAN object
    */
-  static fromAddress (value) {
-      let address = value;
-      if (!isAddress(address)) {
-          throw new Error(`Provided address is not a valid address: ${address}`);
-      }
+    static fromAddress (value) {
+        let address = value;
+        if (!isAddress(address)) {
+            throw new Error(`Provided address is not a valid address: ${address}`);
+        }
 
-      address = address.replace('0x', '').replace('0X', '');
+        address = address.replace('0x', '').replace('0X', '');
 
-      const asBn = new BN(address, 16);
-      const base36 = asBn.toString(36);
-      const padded = leftPad(base36, 15);
-      return Iban.fromBban(padded.toUpperCase());
-  }
+        const asBn = new BN(address, 16);
+        const base36 = asBn.toString(36);
+        const padded = leftPad(base36, 15);
+        return Iban.fromBban(padded.toUpperCase());
+    }
 
-  /**
+    /**
    * Convert the passed BBAN to an IBAN for this country specification.
    * Please note that <i>"generation of the IBAN shall be the exclusive
    * responsibility of the bank/branch servicing the account"</i>.
@@ -152,122 +150,122 @@ class Iban {
    * @param {String} bban the BBAN to convert to IBAN
    * @returns {Iban} the IBAN object
    */
-  static fromBban (bban) {
-      const countryCode = 'XE';
+    static fromBban (bban) {
+        const countryCode = 'XE';
 
-      const remainder = mod9710(iso13616Prepare(`${countryCode}00${bban}`));
-      const checkDigit = (`0${98 - remainder}`).slice(-2);
+        const remainder = mod9710(iso13616Prepare(`${countryCode}00${bban}`));
+        const checkDigit = (`0${98 - remainder}`).slice(-2);
 
-      return new Iban(countryCode + checkDigit + bban);
-  }
+        return new Iban(countryCode + checkDigit + bban);
+    }
 
-  /**
+    /**
    * Should be used to create IBAN object for given institution and identifier
    *
    * @method createIndirect
    * @param {Object} options, required options are "institution" and "identifier"
    * @return {Iban} the IBAN object
    */
-  static createIndirect ({ institution, identifier }) {
-      return Iban.fromBban(`ETH${institution}${identifier}`);
-  }
+    static createIndirect ({ institution, identifier }) {
+        return Iban.fromBban(`ETH${institution}${identifier}`);
+    }
 
-  /**
+    /**
    * This method should be used to check if given string is valid iban object
    *
    * @method isValid
    * @param {String} iban string
    * @return {Boolean} true if it is valid IBAN
    */
-  static isValid (iban) {
-      const obj = new Iban(iban);
-      return obj.isValid();
-  }
+    static isValid (iban) {
+        const obj = new Iban(iban);
+        return obj.isValid();
+    }
 
 
-  /**
+    /**
    * Should be called to check if iban is correct
    *
    * @method isValid
    * @returns {Boolean} true if it is, otherwise false
    */
-  isValid () {
-      return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this.iban) &&
+    isValid () {
+        return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this.iban) &&
           mod9710(iso13616Prepare(this.iban)) === 1;
-  }
+    }
 
-  /**
+    /**
    * Should be called to check if iban number is direct
    *
    * @method isDirect
    * @returns {Boolean} true if it is, otherwise false
    */
-  isDirect () {
-      return this.iban.length === 34 || this.iban.length === 35;
-  }
+    isDirect () {
+        return this.iban.length === 34 || this.iban.length === 35;
+    }
 
-  /**
+    /**
    * Should be called to check if iban number if indirect
    *
    * @method isIndirect
    * @returns {Boolean} true if it is, otherwise false
    */
-  isIndirect () {
-      return this.iban.length === 20;
-  }
+    isIndirect () {
+        return this.iban.length === 20;
+    }
 
-  /**
+    /**
    * Should be called to get iban checksum
    * Uses the mod-97-10 checksumming protocol (ISO/IEC 7064:2003)
    *
    * @method checksum
    * @returns {String} checksum
    */
-  checksum () {
-      return this.iban.substr(2, 2);
-  }
+    checksum () {
+        return this.iban.substr(2, 2);
+    }
 
-  /**
+    /**
    * Should be called to get institution identifier
    * eg. XREG
    *
    * @method institution
    * @returns {String} institution identifier
    */
-  institution () {
-      return this.isIndirect() ? this.iban.substr(7, 4) : '';
-  }
+    institution () {
+        return this.isIndirect() ? this.iban.substr(7, 4) : '';
+    }
 
-  /**
+    /**
    * Should be called to get client identifier within institution
    * eg. GAVOFYORK
    *
    * @method client
    * @returns {String} client identifier
    */
-  client () {
-      return this.isIndirect() ? this.iban.substr(11) : '';
-  }
+    client () {
+        return this.isIndirect() ? this.iban.substr(11) : '';
+    }
 
-  /**
+    /**
    * Should be called to get client direct address
    *
    * @method toAddress
    * @returns {String} ethereum address
    */
-  toAddress () {
-      if (this.isDirect()) {
-          const base36 = this.iban.substr(4);
-          const asBn = new BN(base36, 36);
-          return toChecksumAddress(asBn.toString(16, 20));
-      }
+    toAddress () {
+        if (this.isDirect()) {
+            const base36 = this.iban.substr(4);
+            const asBn = new BN(base36, 36);
+            return toChecksumAddress(asBn.toString(16, 20));
+        }
 
-      return '';
-  }
+        return '';
+    }
 
-  toString () {
-      return this.iban;
-  }
+    toString () {
+        return this.iban;
+    }
 }
 
-export default Iban;
+module.exports = Iban;
