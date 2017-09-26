@@ -33,11 +33,9 @@ var tests = [
 describe('lib/utils/utils', function () {
     describe('toTwosComplement', function () {
         tests.forEach(function (test) {
-            items = [];
             it('printing ' + test.value, function () {
                 assert(test.expected.equals(utils.toTwosComplement(test.value)));
             });
-            //console.log(items);
         });
     });
 });
