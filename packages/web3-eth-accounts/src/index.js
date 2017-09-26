@@ -320,6 +320,15 @@ function Wallet(accounts) {
     this.defaultKeyName = "web3js_wallet";
 }
 
+Wallet.prototype._findSafeIndex = function (pointer) {
+    pointer = pointer || 0;
+    if (_.has(this, pointer)) {
+        return this._findSafeIndex(pointer + 1);
+    } else {
+        return pointer;
+    }
+};
+
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
         this.add(this._accounts.create(entropy).privateKey);
@@ -334,9 +343,9 @@ Wallet.prototype.add = function (account) {
     }
     if (!this[account.address]) {
         account = this._accounts.privateKeyToAccount(account.privateKey);
-        account.index = this.length;
+        account.index = this._findSafeIndex();
 
-        this[this.length] = account;
+        this[account.index] = account;
         this[account.address] = account;
         this[account.address.toLowerCase()] = account;
 
