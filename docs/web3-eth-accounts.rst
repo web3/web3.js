@@ -462,7 +462,7 @@ decrypt
 
     web3.eth.accounts.decrypt(keystoreJsonV3, password);
 
-Decrypts a keysore v3 JSON, and creates the account.
+Decrypts a keystore v3 JSON, and creates the account.
 
 ----------
 Parameters

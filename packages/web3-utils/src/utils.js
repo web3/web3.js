@@ -67,6 +67,17 @@ var toBN = function(number){
 
 
 /**
+ * Takes and input transforms it into BN and if it is negative value, into two's complement
+ *
+ * @method toTwosComplement
+ * @param {Number|String|BN} number
+ * @return {String}
+ */
+var toTwosComplement = function (number) {
+    return '0x'+ toBN(number).toTwos(256).toString(16, 64);
+};
+
+/**
  * Checks if the given string is an address
  *
  * @method isAddress
@@ -347,7 +358,7 @@ var toHex = function (value, returnType) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]+$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
 };
 
 
@@ -435,5 +446,6 @@ module.exports = {
     isHex: isHex,
     leftPad: leftPad,
     rightPad: rightPad,
+    toTwosComplement: toTwosComplement,
     sha3: sha3
 };
