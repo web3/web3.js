@@ -1144,12 +1144,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-leftPad
+padLeft
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.leftPad(string, characterAmount [, sign])
+    web3.utils.padLeft(string, characterAmount [, sign])
     web3.utils.leftPad(string, characterAmount [, sign]) // ALIAS
 
 
@@ -1176,23 +1176,23 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.leftPad('0x3456ff', 20);
+    web3.utils.padLeft('0x3456ff', 20);
     > "0x000000000000003456ff"
 
-    web3.utils.leftPad(0x3456ff, 20);
+    web3.utils.padLeft(0x3456ff, 20);
     > "0x000000000000003456ff"
 
-    web3.utils.leftPad('Hello', 20, 'x');
+    web3.utils.padLeft('Hello', 20, 'x');
     > "xxxxxxxxxxxxxxxHello"
 
 ------------------------------------------------------------------------------
 
-rightPad
+padRight
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.rightPad(string, characterAmount [, sign])
+    web3.utils.padRight(string, characterAmount [, sign])
     web3.utils.rightPad(string, characterAmount [, sign]) // ALIAS
 
 
@@ -1219,11 +1219,58 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.rightPad('0x3456ff', 20);
+    web3.utils.padRight('0x3456ff', 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.rightPad(0x3456ff, 20);
+    web3.utils.padRight(0x3456ff, 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.rightPad('Hello', 20, 'x');
+    web3.utils.padRight('Hello', 20, 'x');
     > "Helloxxxxxxxxxxxxxxx"
+
+------------------------------------------------------------------------------
+
+toTwosComplement
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.toTwosComplement(number)
+
+
+Conversta negative numer into a twos complement.
+
+
+----------
+Parameters
+----------
+
+1. ``number`` - ``Number|String|BigNumber``: The number to convert.
+
+-------
+Returns
+-------
+
+``String``: The converted hex string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.toTwosComplement('-1');
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+    web3.utils.toTwosComplement(-1);
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+    web3.utils.toTwosComplement('0x1');
+    > "0x0000000000000000000000000000000000000000000000000000000000000001"
+
+    web3.utils.toTwosComplement(-15);
+    > "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1"
+
+    web3.utils.toTwosComplement('-0x1');
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
