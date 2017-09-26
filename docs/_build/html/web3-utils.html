@@ -988,9 +988,9 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="leftpad">
-<h2>leftPad<a class="headerlink" href="#leftpad" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
+<div class="section" id="padleft">
+<h2>padLeft<a class="headerlink" href="#padleft" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span> <span class="c1">// ALIAS</span>
 </pre></div>
 </div>
@@ -1009,22 +1009,22 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 <div class="section" id="id88">
 <h3>Example<a class="headerlink" href="#id88" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x000000000000003456ff&quot;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x000000000000003456ff&quot;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">leftPad</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padLeft</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;xxxxxxxxxxxxxxxHello&quot;</span>
 </pre></div>
 </div>
 </div>
 </div>
 <hr class="docutils" />
-<div class="section" id="rightpad">
-<h2>rightPad<a class="headerlink" href="#rightpad" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
+<div class="section" id="padright">
+<h2>padRight<a class="headerlink" href="#padright" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="nx">string</span><span class="p">,</span> <span class="nx">characterAmount</span> <span class="p">[,</span> <span class="nx">sign</span><span class="p">])</span> <span class="c1">// ALIAS</span>
 </pre></div>
 </div>
@@ -1043,14 +1043,51 @@ Text strings will be interpreted as UTF-8 strings.</p>
 </div>
 <div class="section" id="id91">
 <h3>Example<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="s1">&#39;0x3456ff&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x3456ff00000000000000&quot;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="mh">0x3456ff</span><span class="p">,</span> <span class="mi">20</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x3456ff00000000000000&quot;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">rightPad</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">padRight</span><span class="p">(</span><span class="s1">&#39;Hello&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;Helloxxxxxxxxxxxxxxx&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="totwoscomplement">
+<h2>toTwosComplement<a class="headerlink" href="#totwoscomplement" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="nx">number</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Conversta negative numer into a twos complement.</p>
+<div class="section" id="id92">
+<h3>Parameters<a class="headerlink" href="#id92" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">number</span></code> - <code class="docutils literal"><span class="pre">Number|String|BigNumber</span></code>: The number to convert.</li>
+</ol>
+</div>
+<div class="section" id="id93">
+<h3>Returns<a class="headerlink" href="#id93" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">String</span></code>: The converted hex string.</p>
+</div>
+<div class="section" id="id94">
+<h3>Example<a class="headerlink" href="#id94" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff&quot;</span>
+
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff&quot;</span>
+
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="s1">&#39;0x1&#39;</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0x0000000000000000000000000000000000000000000000000000000000000001&quot;</span>
+
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1&quot;</span>
+
+<span class="nx">web3</span><span class="p">.</span><span class="nx">utils</span><span class="p">.</span><span class="nx">toTwosComplement</span><span class="p">(</span><span class="s1">&#39;-0x1&#39;</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff&quot;</span>
 </pre></div>
 </div>
 </div>
@@ -1213,16 +1250,22 @@ Text strings will be interpreted as UTF-8 strings.</p>
 <li><a class="reference internal" href="#id85">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#leftpad">leftPad</a><ul>
+<li><a class="reference internal" href="#padleft">padLeft</a><ul>
 <li><a class="reference internal" href="#id86">Parameters</a></li>
 <li><a class="reference internal" href="#id87">Returns</a></li>
 <li><a class="reference internal" href="#id88">Example</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#rightpad">rightPad</a><ul>
+<li><a class="reference internal" href="#padright">padRight</a><ul>
 <li><a class="reference internal" href="#id89">Parameters</a></li>
 <li><a class="reference internal" href="#id90">Returns</a></li>
 <li><a class="reference internal" href="#id91">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#totwoscomplement">toTwosComplement</a><ul>
+<li><a class="reference internal" href="#id92">Parameters</a></li>
+<li><a class="reference internal" href="#id93">Returns</a></li>
+<li><a class="reference internal" href="#id94">Example</a></li>
 </ul>
 </li>
 </ul>

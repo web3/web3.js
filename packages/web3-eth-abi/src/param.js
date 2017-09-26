@@ -83,7 +83,7 @@ SolidityParam.prototype.isDynamic = function () {
  * @returns {String} bytes representation of offset
  */
 SolidityParam.prototype.offsetAsBytes = function () {
-    return !this.isDynamic() ? '' : formatters.toTwosComplement(this.offset);
+    return !this.isDynamic() ? '' : formatters.toTwosComplement(this.offset).replace('0x','');
 };
 
 /**
