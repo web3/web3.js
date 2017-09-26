@@ -28,20 +28,6 @@ var SolidityParam = require('./param');
 
 
 
-
-
-/**
- * Takes and input transforms it into BN and if it is negative value, into two's complement
- *
- * @method toTwosComplement
- * @param {Number|String|BN} number
- * @return {String}
- */
-var toTwosComplement = function (number) {
-    return utils.toBN(number).toTwos(256).toString(16, 64);
-};
-
-
 /**
  * Formats input value to byte representation of int
  * If value is negative, return it's two's complement
@@ -55,7 +41,7 @@ var formatInputInt = function (value) {
     if(_.isNumber(value)) {
         value = Math.trunc(value);
     }
-    return new SolidityParam(toTwosComplement(value));
+    return new SolidityParam(utils.toTwosComplement(value).replace('0x',''));
 };
 
 /**
@@ -271,5 +257,5 @@ module.exports = {
     formatOutputDynamicBytes: formatOutputDynamicBytes,
     formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress,
-    toTwosComplement: toTwosComplement
+    toTwosComplement: utils.toTwosComplement
 };
