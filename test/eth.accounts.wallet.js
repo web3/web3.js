@@ -165,12 +165,13 @@ describe("eth", function () {
             });
 
             it("create 5 wallets, remove two, create two more and check for overwrites", function() {
+                var count = 5;
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(5);
+                var wallet = ethAccounts.wallet.create(count);
                 var initialAddresses = [0,1,2,3,4].map(function(n) { return wallet[n].address } );
-                assert.equal(ethAccounts.wallet.length, 5);
+                assert.equal(ethAccounts.wallet.length, count);
 
                 var thirdAddress = ethAccounts.wallet[2].address;
                 var lastAddress = ethAccounts.wallet[4].address;
@@ -205,7 +206,7 @@ describe("eth", function () {
                 assert.sameOrderedMembers(afterRemoval, afterMoreCreation, "same ordered members");
                 assert.notSameMembers(initialAddresses, newAddresses, "not same members");
 
-                assert.equal(ethAccounts.wallet.length, 5);
+                assert.equal(ethAccounts.wallet.length, count);
             });
 
             it("clear wallet", function() {
@@ -220,6 +221,35 @@ describe("eth", function () {
                 for (var i = 0; i < count; i++) {
                     addresses.push(wallet[i].address);
                 }
+
+                ethAccounts.wallet.clear();
+
+                for (var i = 0; i < count; i++) {
+                    assert.isUndefined(ethAccounts.wallet[i]);
+                    assert.isUndefined(ethAccounts.wallet[addresses[i]]);
+                    assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
+                }
+
+                assert.equal(ethAccounts.wallet.length, 0);
+            });
+
+            it("remove accounts then clear wallet", function() {
+                var count = 10;
+                var ethAccounts = new Accounts();
+                assert.equal(ethAccounts.wallet.length, 0);
+
+                var wallet = ethAccounts.wallet.create(count);
+                assert.equal(ethAccounts.wallet.length, count);
+
+                var addresses = [];
+                for (var i = 0; i < count; i++) {
+                    addresses.push(wallet[i].address);
+                }
+
+                ethAccounts.wallet.remove(0);
+                assert.isUndefined(ethAccounts.wallet[0])
+                ethAccounts.wallet.remove(5);
+                assert.isUndefined(ethAccounts.wallet[5])
 
                 ethAccounts.wallet.clear();
 

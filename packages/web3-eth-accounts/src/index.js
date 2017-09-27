@@ -329,6 +329,15 @@ Wallet.prototype._findSafeIndex = function (pointer) {
     }
 };
 
+Wallet.prototype._currentIndexes = function () {
+    var keys = Object.keys(this);
+    var indexes = keys
+        .map(function(key) { return parseInt(key); })
+        .filter(function(n) { return (n < 9e20); });
+
+    return indexes;
+};
+
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
         this.add(this._accounts.create(entropy).privateKey);
@@ -380,19 +389,23 @@ Wallet.prototype.remove = function (addressOrIndex) {
 };
 
 Wallet.prototype.clear = function () {
-    var length = this.length;
-    for (var i = 0; i < length; i++) {
-        this.remove(i);
-    }
+    var _this = this;
+    var indexes = this._currentIndexes();
+
+    indexes.forEach(function(index) {
+        _this.remove(index);
+    });
 
     return this;
 };
 
 Wallet.prototype.encrypt = function (password, options) {
-    var accounts = [];
-    for (var i = 0; i < this.length; i++) {
-        accounts[i] = this[i].encrypt(password, options);
-    }
+    var indexes = this._currentIndexes();
+
+    var accounts = indexes.map(function(index) {
+        this[index].encrypt(password, options);
+    });
+
     return accounts;
 };
 
