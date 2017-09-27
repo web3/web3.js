@@ -317,7 +317,11 @@ class Method {
                 }
             }
 
-            if (!receipt || !receipt.blockHash) {
+            if (!receipt) {
+                return null;
+            }
+
+            if (!receipt.blockHash) {
                 throw new Error('Receipt missing or blockHash null');
             }
 

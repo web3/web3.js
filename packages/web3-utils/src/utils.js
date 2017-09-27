@@ -19,6 +19,7 @@
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
+/* eslint-disable no-restricted-globals */
 
 import _ from 'lodash';
 
@@ -454,13 +455,17 @@ export function fireError (err, emitter, reject, callback) {
     }
 
     if (_.isFunction(reject)) {
-    // suppress uncatched error if an error listener is present
-        if (emitter &&
-      _.isFunction(emitter.listeners) &&
-      emitter.listeners('error').length &&
-      _.isFunction(emitter.suppressUnhandledRejections)) {
+        // suppress uncatched error if an error listener is present
+        let hasErrorListener = false;
+        if (emitter) {
+            hasErrorListener = _.isFunction(emitter.listeners) && emitter.listeners('error').length;
+        }
+
+        const supress = hasErrorListener || _.isFunction(callback);
+        if (supress && _.isFunction(emitter.suppressUnhandledRejections)) {
             emitter.suppressUnhandledRejections();
         }
+
         // reject later, to be able to return emitter
         setTimeout(() => {
             reject(error);
