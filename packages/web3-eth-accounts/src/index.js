@@ -400,10 +400,11 @@ Wallet.prototype.clear = function () {
 };
 
 Wallet.prototype.encrypt = function (password, options) {
+    var _this = this;
     var indexes = this._currentIndexes();
 
     var accounts = indexes.map(function(index) {
-        this[index].encrypt(password, options);
+        return _this[index].encrypt(password, options);
     });
 
     return accounts;

@@ -262,6 +262,32 @@ describe("eth", function () {
 
 
                 assert.equal(ethAccounts.wallet.length, 0);
+            });
+
+            it("encrypt then decrypt wallet", function() {
+                var ethAccounts = new Accounts();
+                var password = "qwerty";
+
+                assert.equal(ethAccounts.wallet.length, 0);
+
+                var wallet = ethAccounts.wallet.create(5);
+                var addressFromWallet = ethAccounts.wallet[0].address;
+                assert.equal(ethAccounts.wallet.length, 5);
+
+                ethAccounts.wallet.remove(2);
+                assert.equal(ethAccounts.wallet.length, 4);
+
+                var keystore = ethAccounts.wallet.encrypt(password);
+                assert.equal(keystore.length, 4);
+
+                ethAccounts.wallet.clear();
+                assert.equal(ethAccounts.wallet.length, 0);
+
+                ethAccounts.wallet.decrypt(keystore, password);
+                assert.equal(ethAccounts.wallet.length, 4);
+
+                var addressFromKeystore = ethAccounts.wallet[0].address;
+                assert.equal(addressFromKeystore, addressFromWallet);
 
             });
         });
