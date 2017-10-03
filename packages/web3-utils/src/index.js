@@ -307,6 +307,7 @@ module.exports = {
     padLeft: utils.leftPad,
     leftPad: utils.leftPad,
     padRight: utils.rightPad,
-    rightPad: utils.rightPad
+    rightPad: utils.rightPad,
+    toTwosComplement: utils.toTwosComplement
 };
 

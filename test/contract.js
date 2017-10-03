@@ -4,6 +4,7 @@ var Eth = require('../packages/web3-eth');
 var sha3 = require('../packages/web3-utils').sha3;
 var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
+var Promise = require('bluebird');
 
 
 var abi = [{
@@ -1454,6 +1455,51 @@ describe('contract', function () {
             contract.methods.balance(address).call(11)
             .then(function (r) {
                 assert.deepEqual(r, '50');
+                done();
+            });
+        });
+
+        it('should call constant concurrently', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('balance(address)').slice(0, 10) + '000000000000000000000000'+ addressLowercase.replace('0x',''),
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('owner()').slice(0, 10),
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x00000000000000000000000011f4d0a3c12e86b4b5f39b213f7e19d048276dae');
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3('getStr()').slice(0, 10),
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000848656c6c6f212521000000000000000000000000000000000000000000000000');
+
+            var contract = new eth.Contract(abi, address);
+
+
+            Promise.join(
+                contract.methods.balance(address).call(),
+                contract.methods.owner().call(),
+                contract.methods.getStr().call()
+            ).spread(function(m1, m2, m3) {
+                assert.deepEqual(m1, '10');
+                assert.deepEqual(m2, '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe');
+                assert.deepEqual(m3, 'Hello!%!');
+
                 done();
             });
         });
