@@ -60,14 +60,14 @@
     }
   ],
   "devDependencies": {
-    "@types/bignumber.js":"^4.0.2",
-    "@types/underscore":"^1.8.0",
+    "@types/bignumber.js": "^4.0.2",
+    "@types/underscore": "^1.8.0",
     "babel-preset-env": "^1.6.0",
     "bignumber.js": "^4.0.0",
     "bn.js": "^4.11.6",
     "bower": ">=1.4.1",
     "browserify": "^14.4.0",
-    "chai": "^3.0.0",
+    "chai": "^4.0.0",
     "coveralls": "^2.11.2",
     "crypto-js": "^3.1.4",
     "del": ">=2.0.2",
