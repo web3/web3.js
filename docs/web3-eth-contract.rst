@@ -606,7 +606,8 @@ Example
                 },
                 "MyOtherEvent": {
                     ...
-                }
+                },
+                "MyMultipleEvent":[{...}, {...}] // If there are multiple of the same event, they will be in an array
             }
         }
     })
