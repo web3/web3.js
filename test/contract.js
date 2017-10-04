@@ -1721,6 +1721,173 @@ describe('contract', function () {
 
         });
 
+        it('should sendTransaction and check for receipts with formatted logs when multiple of same event', function (done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
+                    from: address2,
+                    to: addressLowercase,
+                    gasPrice: "0x1369ed97fb71"
+                }]);
+            });
+            provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult(null);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567');
+
+            // fake newBlock
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+            provider.injectResult({
+                contractAddress: null,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                transactionHash: '0x1234',
+                blockNumber: '0xa',
+                blockHash: '0x1234',
+                gasUsed: '0x0',
+                logs: [{
+                    address: address,
+                    topics: [
+                        sha3('Changed(address,uint256,uint256,uint256)'),
+                        '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                        '0x0000000000000000000000000000000000000000000000000000000000000001'
+                    ],
+                    blockNumber: '0xa',
+                    transactionHash: '0x1234',
+                    transactionIndex: '0x0',
+                    blockHash: '0x1345',
+                    logIndex: '0x4',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                    '0000000000000000000000000000000000000000000000000000000000000008'
+                },{
+                    address: address,
+                    topics: [
+                        sha3('Changed(address,uint256,uint256,uint256)'),
+                        '0x000000000000000000000000'+ addressLowercase.replace('0x',''),
+                        '0x0000000000000000000000000000000000000000000000000000000000000002'
+                    ],
+                    blockNumber: '0xa',
+                    transactionHash: '0x1234',
+                    transactionIndex: '0x0',
+                    blockHash: '0x1345',
+                    logIndex: '0x5',
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                    '0000000000000000000000000000000000000000000000000000000000000008'
+                }]
+            });
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_unsubscribe');
+                assert.deepEqual(payload.params, ['0x1234567']);
+            });
+            provider.injectResult('0x321');
+
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
+                .on('receipt', function (receipt) {
+
+                    // wont throw if it errors ?! nope: causes a timeout
+                    assert.deepEqual(receipt, {
+                        contractAddress: null,
+                        cumulativeGasUsed: 10,
+                        transactionIndex: 3,
+                        transactionHash: '0x1234',
+                        blockNumber: 10,
+                        blockHash: '0x1234',
+                        gasUsed: 0,
+                        events: {
+                            Changed: [
+                                {
+                                    address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    blockNumber: 10,
+                                    transactionHash: '0x1234',
+                                    blockHash: '0x1345',
+                                    logIndex: 4,
+                                    id: 'log_9ff24cb4',
+                                    transactionIndex: 0,
+                                    returnValues: {
+                                        0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                        1: '1',
+                                        2: '1',
+                                        3: '8',
+                                        from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                        amount: '1',
+                                        t1: '1',
+                                        t2: '8'
+                                    },
+                                    event: 'Changed',
+                                    signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
+                                    raw: {
+                                        topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                            '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                                            '0x0000000000000000000000000000000000000000000000000000000000000001' ],
+                                        data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                                    }
+                                }, {
+                                    address: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                    blockNumber: 10,
+                                    transactionHash: '0x1234',
+                                    blockHash: '0x1345',
+                                    logIndex: 5,
+                                    id: 'log_8b8a2b7f',
+                                    transactionIndex: 0,
+                                    returnValues: {
+                                        0: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                        1: '2',
+                                        2: '1',
+                                        3: '8',
+                                        from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+                                        amount: '2',
+                                        t1: '1',
+                                        t2: '8'
+                                    },
+                                    event: 'Changed',
+                                    signature: "0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651",
+                                    raw: {
+                                        topics: [ '0x792991ed5ba9322deaef76cff5051ce4bedaaa4d097585970f9ad8f09f54e651',
+                                            '0x000000000000000000000000' + addressLowercase.replace('0x', ''),
+                                            '0x0000000000000000000000000000000000000000000000000000000000000002' ],
+                                        data: '0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000008',
+                                    }
+                                }
+                            ]
+                        }
+                    });
+
+                    done();
+                });
+
+
+        });
+
         it('should sendTransaction and check for receipts with formatted logs using the HTTP provider', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
