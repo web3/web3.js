@@ -210,7 +210,6 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     // if(!this.connection.writable)
     //     this.connection.connect({url: this.url});
     if (this.connection.readyState !== this.connection.OPEN) {
-        console.trace()
         console.error('connection not open on send()')
         if (typeof this.connection.onerror === 'function') {
             this.connection.onerror(new Error('connection not open'))
