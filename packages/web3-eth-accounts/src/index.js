@@ -320,6 +320,24 @@ function Wallet(accounts) {
     this.defaultKeyName = "web3js_wallet";
 }
 
+Wallet.prototype._findSafeIndex = function (pointer) {
+    pointer = pointer || 0;
+    if (_.has(this, pointer)) {
+        return this._findSafeIndex(pointer + 1);
+    } else {
+        return pointer;
+    }
+};
+
+Wallet.prototype._currentIndexes = function () {
+    var keys = Object.keys(this);
+    var indexes = keys
+        .map(function(key) { return parseInt(key); })
+        .filter(function(n) { return (n < 9e20); });
+
+    return indexes;
+};
+
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
         this.add(this._accounts.create(entropy).privateKey);
@@ -334,9 +352,9 @@ Wallet.prototype.add = function (account) {
     }
     if (!this[account.address]) {
         account = this._accounts.privateKeyToAccount(account.privateKey);
-        account.index = this.length;
+        account.index = this._findSafeIndex();
 
-        this[this.length] = account;
+        this[account.index] = account;
         this[account.address] = account;
         this[account.address.toLowerCase()] = account;
 
@@ -371,19 +389,24 @@ Wallet.prototype.remove = function (addressOrIndex) {
 };
 
 Wallet.prototype.clear = function () {
-    var length = this.length;
-    for (var i = 0; i < length; i++) {
-        this.remove(i);
-    }
+    var _this = this;
+    var indexes = this._currentIndexes();
+
+    indexes.forEach(function(index) {
+        _this.remove(index);
+    });
 
     return this;
 };
 
 Wallet.prototype.encrypt = function (password, options) {
-    var accounts = [];
-    for (var i = 0; i < this.length; i++) {
-        accounts[i] = this[i].encrypt(password, options);
-    }
+    var _this = this;
+    var indexes = this._currentIndexes();
+
+    var accounts = indexes.map(function(index) {
+        return _this[index].encrypt(password, options);
+    });
+
     return accounts;
 };
 
