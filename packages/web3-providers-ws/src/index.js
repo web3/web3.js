@@ -210,13 +210,13 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     // if(!this.connection.writable)
     //     this.connection.connect({url: this.url});
     if (this.connection.readyState !== this.connection.OPEN) {
-        console.error('connection not open on send()')
+        console.error('connection not open on send()');
         if (typeof this.connection.onerror === 'function') {
-            this.connection.onerror(new Error('connection not open'))
+            this.connection.onerror(new Error('connection not open'));
         } else {
-            console.error('no error callback')
+            console.error('no error callback');
         }
-        return
+        return;
     }
 
     this.connection.send(JSON.stringify(payload));
