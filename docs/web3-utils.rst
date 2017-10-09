@@ -1238,7 +1238,7 @@ toTwosComplement
     web3.utils.toTwosComplement(number)
 
 
-Conversta negative numer into a twos complement.
+Converts a negative numer into a two's complement.
 
 
 ----------
