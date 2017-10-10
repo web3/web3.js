@@ -209,6 +209,15 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     // if(!this.connection.writable)
     //     this.connection.connect({url: this.url});
+    if (this.connection.readyState !== this.connection.OPEN) {
+        console.error('connection not open on send()');
+        if (typeof this.connection.onerror === 'function') {
+            this.connection.onerror(new Error('connection not open'));
+        } else {
+            console.error('no error callback');
+        }
+        return;
+    }
 
     this.connection.send(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);
