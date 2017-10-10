@@ -52,7 +52,7 @@ var formatInputInt = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
-    if(!utils.isHex(value)) {
+    if(!utils.isHexStrict(value)) {
         throw new Error('Given parameter is not bytes: "'+ value + '"');
     }
 
@@ -75,7 +75,7 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
-    if(!utils.isHex(value)) {
+    if(!utils.isHexStrict(value)) {
         throw new Error('Given parameter is not bytes: "'+ value + '"');
     }
 

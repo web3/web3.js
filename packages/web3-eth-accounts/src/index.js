@@ -173,7 +173,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 };
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHex(data) ? utils.hexToUtf8(data) : data;
+    var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
     var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
     return Hash.keccak256s(ethMessage);
 };
@@ -199,7 +199,7 @@ Accounts.prototype.recover = function recover(hash, signature) {
         return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
 
-    if (!utils.isHex(hash)) {
+    if (!utils.isHexStrict(hash)) {
         hash = this.hashMessage(hash);
     }
 

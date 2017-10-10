@@ -59,7 +59,7 @@ var inputBlockNumberFormatter = function (blockNumber) {
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return (utils.isHex(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
+    return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
 
 /**
@@ -141,7 +141,7 @@ var inputTransactionFormatter = function (options) {
  * @returns {String}
  */
 var inputSignFormatter = function (data) {
-    return (utils.isHex(data)) ? data : utils.utf8ToHex(data);
+    return (utils.isHexStrict(data)) ? data : utils.utf8ToHex(data);
 };
 
 /**

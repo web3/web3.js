@@ -63,7 +63,7 @@ var _parseTypeNArray = function (type) {
 var _parseNumber = function (arg) {
     var type = typeof arg;
     if (type === 'string') {
-        if (utils.isHex(arg)) {
+        if (utils.isHexStrict(arg)) {
             return new BN(arg.replace(/0x/i,''), 16);
         } else {
             return new BN(arg, 10);
