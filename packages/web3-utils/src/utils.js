@@ -358,7 +358,7 @@ var toHex = function (value, returnType) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?(0x)?[0-9a-f]*$/i.test(hex));
 };
 
 
