@@ -10,7 +10,8 @@ Package.describe({
 });
 
 Npm.depends({
-  "xmlhttprequest": "1.7.0"
+  "xmlhttprequest": "1.7.0",
+  "xhr2": "0.1.4"
 });
 
 
