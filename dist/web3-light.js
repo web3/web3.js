@@ -2157,7 +2157,6 @@ var fromWei = function(number, unit) {
  * - mwei       picoether      lovelace
  * - gwei       nanoether      shannon      nano
  * - --         microether     szabo        micro
- * - --         microether     szabo        micro
  * - --         milliether     finney       milli
  * - ether      --             --
  * - kether                    --           grand
@@ -4271,7 +4270,11 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
   XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
-var XHR2 = require('xhr2'); // jshint ignore: line
+if(typeof Meteor !== 'undefined' && Meteor.isServer) {
+	var XHR2 = Npm.require('xhr2');
+} else {
+	var XHR2 = require('xhr2'); // jshint ignore: line
+}
 
 /**
  * HttpProvider should be used to send rpc calls over http
