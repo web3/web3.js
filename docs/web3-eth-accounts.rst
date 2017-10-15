@@ -145,9 +145,9 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.accounts.signTransaction(tx, privateKey [, callback]);
+    web3.eth.accounts.signTransaction(tx [, callback]);
 
-Signs an Ethereum transaction with a given private key.
+Signs an Ethereum transaction with the accounts private key.
 
 ----------
 Parameters
@@ -161,8 +161,7 @@ Parameters
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
     - ``gas`` - ``String``: The gas provided by the transaction.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
-2. ``privateKey`` - ``String``: The private key to sign with.
-3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
+2. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
@@ -184,11 +183,13 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.accounts.signTransaction({
+    var account = web3.eth.accounts.privateKeyToAccount('0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318');
+
+    account.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
         gas: 2000000
-    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    })
     .then(console.log);
     > {
         messageHash: '0x88cfbd7e51c7a40540b233cf68b62ad1df3e92462f1c6018d6d67eae0f3b08f5',
@@ -199,14 +200,14 @@ Example
     }
 
     // if nonce, chainId, gas and gasPrice is given it returns synchronous
-    web3.eth.accounts.signTransaction({
+    account.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
         gas: 2000000,
         gasPrice: '234567897654321',
         nonce: 0,
         chainId: 1
-    }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    })
     > {
         messageHash: '0x6893a6ee8df79b0f5d64a180cd1ef35d030f3e296a5361cf04d02ce720d32ec5',
         r: '0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',
