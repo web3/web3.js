@@ -147,7 +147,7 @@ signTransaction
 
     web3.eth.accounts.signTransaction(tx [, callback]);
 
-Signs an Ethereum transaction with the account's private key.
+Signs an Ethereum transaction with the accounts private key.
 
 ----------
 Parameters
