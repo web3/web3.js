@@ -1167,9 +1167,9 @@ signTransaction
 
 .. code-block:: javascript
 
-    web3.eth.signTransaction(transactionObject, address [, callback])
+    web3.eth.signTransaction(transactionObject [, callback])
 
-Signs a transaction. This account needs to be unlocked.
+Signs a transaction using the transactionObject.from account on the remote Ethereum node. This account needs to be unlocked.
 
 ----------
 Parameters
@@ -1177,8 +1177,7 @@ Parameters
 
 
 1. ``Object`` - The transaction data to sign :ref:`web3.eth.sendTransaction() <eth-sendtransaction>` for more.
-2. ``String`` - Address to sign transaction with.
-3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
 
 
 -------
