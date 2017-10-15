@@ -12,3 +12,4 @@ bower_components
 /bower
 .idea/
 .npm/
+.vscode/
