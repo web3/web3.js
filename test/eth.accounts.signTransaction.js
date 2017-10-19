@@ -70,7 +70,7 @@ describe("eth", function () {
             var testAccount = ethAccounts.privateKeyToAccount(tests[0].privateKey);
             assert.equal(testAccount.address, tests[0].address);
 
-            var tx = testAccount.signTransaction(test.transaction, tests[1].privateKey);
+            var tx = testAccount.signTransaction(test.transaction);
 
             assert.equal(tx.rawTransaction, tests[1].rawTransaction);
         });
