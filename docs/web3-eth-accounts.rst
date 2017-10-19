@@ -8,8 +8,9 @@ web3.eth.accounts
 
 The ``web3.eth.accounts`` contains functions to generate Ethereum accounts and sign transactions and data.
 
-To use this package standalone use:
+.. note:: This package has NOT been audited and might potentially be unsafe. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!
 
+To use this package standalone use:
 
 
 .. code-block:: javascript

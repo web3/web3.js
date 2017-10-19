@@ -364,6 +364,17 @@ var isHexStrict = function (hex) {
 /**
  * Check if string is HEX
  *
+ * @method isHexStrict
+ * @param {String} hex to be checked
+ * @returns {Boolean}
+ */
+var isHex = function (hex) {
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x)?(0x)?[0-9a-f]*$/i.test(hex));
+};
+
+/**
+ * Check if string is HEX
+ *
  * @method isHex
  * @param {String} hex to be checked
  * @returns {Boolean}
