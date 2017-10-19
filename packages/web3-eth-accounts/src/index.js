@@ -29,6 +29,8 @@ var Promise = require('bluebird');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
+var Nat = require("eth-lib/lib/nat");
+var Bytes = require("eth-lib/lib/bytes");
 var cryp = require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
@@ -131,10 +133,24 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             chainId: utils.numberToHex(tx.chainId)
         };
 
+        var rlpEncoded = RLP.encode([
+            Bytes.fromNat(transaction.nonce),
+            Bytes.fromNat(transaction.gasPrice),
+            Bytes.fromNat(transaction.gas),
+            transaction.to.toLowerCase(),
+            Bytes.fromNat(transaction.value),
+            transaction.data,
+            Bytes.fromNat(transaction.chainId || "0x1"),
+            "0x",
+            "0x"]);
+
+        var hash = Hash.keccak256(rlpEncoded);
 
 
-        var hash = Hash.keccak256(Account.transactionSigningData(transaction));
-        var rawTransaction = Account.signTransaction(transaction, privateKey);
+        var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+        var rawTx = RLP.decode(rlpEncoded).slice(0,6).concat(Account.decodeSignature(signature));
+        var rawTransaction = RLP.encode(rawTx);
+
         var values = RLP.decode(rawTransaction);
         var result = {
             messageHash: hash,
@@ -168,12 +184,20 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     });
 };
 
+/* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    return Account.recoverTransaction(rawTx);
+    var values = RLP.decode(rawTx);
+    var signature = Account.encodeSignature(values.slice(6,9));
+    var recovery = Bytes.toNumber(values[6]);
+    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
+    var signingData = values.slice(0,6).concat(extraData);
+    var signingDataHex = RLP.encode(signingData);
+    return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
+/* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHex(data) ? utils.hexToUtf8(data) : data;
+    var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
     var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
     return Hash.keccak256s(ethMessage);
 };
@@ -199,7 +223,7 @@ Accounts.prototype.recover = function recover(hash, signature) {
         return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
 
-    if (!utils.isHex(hash)) {
+    if (!utils.isHexStrict(hash)) {
         hash = this.hashMessage(hash);
     }
 

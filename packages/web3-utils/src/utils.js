@@ -193,7 +193,7 @@ var utf8ToHex = function(str) {
  * @returns {String} ascii string representation of hex value
  */
 var hexToUtf8 = function(hex) {
-    if (!isHex(hex))
+    if (!isHexStrict(hex))
         throw new Error('The parameter "'+ hex +'" must be a valid HEX string.');
 
     var str = "";
@@ -298,7 +298,7 @@ var bytesToHex = function(bytes) {
 var hexToBytes = function(hex) {
     hex = hex.toString(16);
 
-    if (!isHex(hex)) {
+    if (!isHexStrict(hex)) {
         throw new Error('Given value "'+ hex +'" is not a valid hex string.');
     }
 
@@ -351,6 +351,17 @@ var toHex = function (value, returnType) {
 
 
 /**
+ * Check if string is HEX, requires a 0x in front
+ *
+ * @method isHexStrict
+ * @param {String} hex to be checked
+ * @returns {Boolean}
+ */
+var isHexStrict = function (hex) {
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+};
+
+/**
  * Check if string is HEX
  *
  * @method isHex
@@ -358,7 +369,7 @@ var toHex = function (value, returnType) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x)?(0x)?[0-9a-f]*$/i.test(hex));
 };
 
 
@@ -410,7 +421,7 @@ var isTopic = function (topic) {
 var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 var sha3 = function (value) {
-    if (isHex(value) && /^0x/i.test((value).toString())) {
+    if (isHexStrict(value) && /^0x/i.test((value).toString())) {
         value = hexToBytes(value);
     }
 
@@ -444,6 +455,7 @@ module.exports = {
     hexToBytes: hexToBytes,
     bytesToHex: bytesToHex,
     isHex: isHex,
+    isHexStrict: isHexStrict,
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
