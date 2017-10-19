@@ -227,48 +227,5 @@ describe("eth", function () {
                 assert.equal(ethAccounts.recoverTransaction(oldSignature), test.address);
             });
         });
-
-    // OLD
-        function test() {
-            var ethAccounts = new Accounts();
-
-            // Generates an address from this account's private key
-            var testAccount = ethAccounts.privateKeyToAccount(correctAccount.privateKey);
-
-            // Generated address must match
-            assert.equal(testAccount.address, correctAccount.address);
-
-            // For each transaction on this account
-            correctAccount.transactions.forEach(function (transaction) {
-
-                // Signs it, uing post-EIP 155 scheme
-                var signature = ethAccounts.signTransaction(
-                    transaction.object,
-                    correctAccount.privateKey);
-
-                // Checks if the signature is as expected
-                assert.equal(transaction.signature, signature.rawTransaction);
-
-                // Checks if we can recover the right address
-                var recoveredAddress = ethAccounts.recoverTransaction(signature);
-                assert.equal(recoveredAddress, testAccount.address);
-
-                // If the test also provides a pre-EIP 155 signature
-                if (transaction.oldSignature) {
-
-                    // Signs it, using pre-EIP 155 scheme (using the ethjs-signer lib)
-                    var oldSignature = ethjsSigner.sign(
-                        transaction.object,
-                        correctAccount.privateKey);
-
-                    // Checks if the signature is as expected
-                    assert.equal(transaction.oldSignature, oldSignature);
-
-                    // Checks if we can recover the right address from old sigs (using web3)
-                    var recoveredAddress = ethAccounts.recoverTransaction(oldSignature);
-                    assert.equal(recoveredAddress, testAccount.address);
-                }
-            });
-        }
     });
 });

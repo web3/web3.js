@@ -339,8 +339,8 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
 
 function Wallet(accounts) {
-    this.length = 0;
     this._accounts = accounts;
+    this.length = 0;
     this.defaultKeyName = "web3js_wallet";
 }
 
