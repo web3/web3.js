@@ -114,7 +114,7 @@ var _jsonInterfaceMethodToString = function (json) {
  * @returns {String} ascii string representation of hex value
  */
 var hexToAscii = function(hex) {
-    if (!utils.isHex(hex))
+    if (!utils.isHexStrict(hex))
         throw new Error('The parameter must be a valid HEX string.');
 
     var str = "";
@@ -267,6 +267,7 @@ module.exports = {
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,
     isHex: utils.isHex,
+    isHexStrict: utils.isHexStrict,
     sha3: utils.sha3,
     keccak256: utils.sha3,
     soliditySha3: soliditySha3,
