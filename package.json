@@ -12,7 +12,7 @@
     "postinstall": "lerna bootstrap",
     "build": "gulp",
     "build-all": "gulp all",
-    "release": "lerna bootstrap; gulp; lerna publish --skip-git; gulp version;",
+    "release": "lerna bootstrap; gulp; lerna publish --exact --skip-git; gulp version;",
     "watch": "gulp watch",
     "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
