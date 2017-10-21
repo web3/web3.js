@@ -63,18 +63,6 @@ describe("eth", function () {
             });
         });
 
-        it("signTransaction using passed private key", function()
-        {
-            var ethAccounts = new Accounts();
-            
-            var testAccount = ethAccounts.privateKeyToAccount(tests[0].privateKey);
-            assert.equal(testAccount.address, tests[0].address);
-
-            var tx = testAccount.signTransaction(test.transaction);
-
-            assert.equal(tx.rawTransaction, tests[1].rawTransaction);
-        });
-
         tests.forEach(function (test, i) {
             it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function() {
                 var ethAccounts = new Accounts();
