@@ -15,4 +15,3 @@ describe('web3', function() {
         u.propertyExists(web3, 'utils');
     });
 });
-

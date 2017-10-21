@@ -2,7 +2,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var Eth = require('../packages/web3-eth');
 
-
 var address = '0x1234567890123456789012345678901234567890';
 var signature = '0xffff';
 
@@ -245,4 +244,3 @@ describe('lib/web3/event', function () {
         });
     });
 });
-

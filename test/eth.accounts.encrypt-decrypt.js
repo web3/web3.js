@@ -111,7 +111,6 @@ var staticTests = [{
 
 describe("eth", function () {
     describe("accounts", function () {
-
         tests.forEach(function (test, i) {
             it("encrypt eth.account, and compare to ethereumjs-wallet", function() {
                 var ethAccounts = new Accounts();
@@ -140,7 +139,6 @@ describe("eth", function () {
 
                 // compare addresses
                 assert.equal(acc.address, ethWall.getChecksumAddressString());
-
             });
 
             it("encrypt ethereumjs-wallet, and decrypt with eth.account", function() {
@@ -155,7 +153,6 @@ describe("eth", function () {
 
                 // compare addresses
                 assert.equal(acc.address, ethWall.getChecksumAddressString());
-
             });
 
             it("decrypt static signature using ethereumjs-wallet and eth.account and compare", function() {
@@ -184,7 +181,6 @@ describe("eth", function () {
                 assert.equal(acc.address, ethWall.getChecksumAddressString());
                 assert.equal(web3.utils.toChecksumAddress('0x143f8913e0417997304fc179b531ff4cb9cab582'), acc.address);
             });
-
         });
 
         staticTests.forEach(function (test, i) {

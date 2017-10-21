@@ -14,4 +14,3 @@ describe('utils', function() {
         u.methodExists(utils, 'isAddress');
     });
 });
-

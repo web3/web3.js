@@ -5,7 +5,6 @@ var eth = new Eth();
 
 var method = 'getStorageAt';
 
-
 var tests = [{
     args: ['0x4E65FDa2159562a496F9f3522f89122A3088497a', 2], // checksum address
     formattedArgs: ['0x4e65fda2159562a496f9f3522f89122a3088497a', '0x2', eth.defaultBlock],
@@ -33,4 +32,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-

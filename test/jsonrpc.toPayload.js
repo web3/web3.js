@@ -5,7 +5,6 @@ var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
 describe('jsonrpc', function () {
     describe('toPayload', function () {
         it('should create basic payload', function () {
-
             // given
             var method = 'helloworld';
 
@@ -21,7 +20,6 @@ describe('jsonrpc', function () {
         });
 
         it('should create payload with params', function () {
-
             // given
             var method = 'helloworld1';
             var params = [123, 'test'];

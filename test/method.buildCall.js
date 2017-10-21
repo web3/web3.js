@@ -7,7 +7,6 @@ var Method = require('../packages/web3-core-method');
 
 var address = '0x1234567890123456789012345678901234567891';
 
-
 describe('lib/web3/method', function () {
     describe('buildCall', function () {
         it('should return a promise and resolve it', function (done) {
@@ -45,8 +44,8 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
+
         it('should return a promise and fail it', function (done) {
             var provider = new FakeHttpProvider();
             var eth = new Eth(provider);
@@ -75,7 +74,6 @@ describe('lib/web3/method', function () {
                 code: 1234
             });
 
-
             send({
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -89,7 +87,6 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
 
         it('should return an error, if the outputFormatter returns an error', function (done) {
@@ -131,7 +128,6 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
 
         it('should return an error, if the outputFormatter throws', function (done) {
@@ -173,7 +169,6 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
 
         it('should fill in gasPrice if not given', function (done) {
@@ -207,7 +202,6 @@ describe('lib/web3/method', function () {
                 }]);
 
                 done();
-
             });
             provider.injectResult('0x1234567453543456321456321'); // tx hash
 
@@ -216,7 +210,6 @@ describe('lib/web3/method', function () {
                 to: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
                 data: '0xa123456'
             });
-
         });
 
         var succeedOnReceipt = function () {
@@ -291,7 +284,6 @@ describe('lib/web3/method', function () {
         };
 
         it('should use promise "then" when subscribing and checking for receipt if "sendTransaction"', function (done) {
-
             var send = succeedOnReceipt();
 
             send({
@@ -300,8 +292,6 @@ describe('lib/web3/method', function () {
                 value: '0xa',
                 gasPrice: '23435234234'
             }).then(function (result) {
-
-
                 assert.deepEqual(result, {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
@@ -315,8 +305,8 @@ describe('lib/web3/method', function () {
             });
 
         });
-        it('should use on("receipt", ...) when subscribing and checking for receipt if "sendTransaction"', function (done) {
 
+        it('should use on("receipt", ...) when subscribing and checking for receipt if "sendTransaction"', function (done) {
             var send = succeedOnReceipt();
 
             send({
@@ -325,8 +315,6 @@ describe('lib/web3/method', function () {
                 value: '0xa',
                 gasPrice: '23435234234'
             }).on('receipt', function (result) {
-
-
                 assert.deepEqual(result, {
                     contractAddress: address,
                     cumulativeGasUsed: 10,
@@ -338,9 +326,7 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
-
 
         var succeedwhenDeploying = function () {
             var provider = new FakeHttpProvider();
@@ -413,7 +399,6 @@ describe('lib/web3/method', function () {
         };
 
         it('should use promise "then" when subscribing and checking for receipt and code if "sendTransaction" deploying contract', function (done) {
-
             var send = succeedwhenDeploying();
 
             send({
@@ -433,11 +418,9 @@ describe('lib/web3/method', function () {
 
                 done();
             });
-
         });
 
         it('should use on("receipt", ...) when subscribing and checking  for receipt and code if "sendTransaction" deploying contract', function (done) {
-
             var send = succeedwhenDeploying();
 
             send({
@@ -531,7 +514,6 @@ describe('lib/web3/method', function () {
         };
 
         it('should fail on promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
-
             var send = failOnCodeEmpty();
 
             send({
@@ -542,11 +524,9 @@ describe('lib/web3/method', function () {
                 assert.instanceOf(error, Error);
                 done();
             });
-
         });
 
         it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if code is empty', function (done) {
-
             var send = failOnCodeEmpty();
 
             send({
@@ -557,7 +537,6 @@ describe('lib/web3/method', function () {
                 assert.instanceOf(error, Error);
                 done();
             });
-
         });
 
         var failOnMissingAddress = function () {
@@ -641,8 +620,8 @@ describe('lib/web3/method', function () {
                 assert.instanceOf(error, Error);
                 done();
             });
-
         });
+
         it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: error if receipt has no contract address', function (done) {
             var send = failOnMissingAddress();
 
@@ -657,7 +636,6 @@ describe('lib/web3/method', function () {
                 assert.instanceOf(error, Error);
                 done();
             });
-
         });
 
         var failOnTimeout = function () {
@@ -697,6 +675,7 @@ describe('lib/web3/method', function () {
             provider.injectResult('0x1234567'); // subscription id
 
             // fire 50 fake newBlocks
+            // jshint -W083
             for (i = 0; i < 51; i++) {
                 setTimeout(function () {
                     provider.injectNotification({
@@ -720,7 +699,6 @@ describe('lib/web3/method', function () {
             });
 
             return send;
-
         };
 
         it('should fail with promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
@@ -735,6 +713,7 @@ describe('lib/web3/method', function () {
                 done();
             });
         });
+
         it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
             var send = failOnTimeout();
 
@@ -746,7 +725,6 @@ describe('lib/web3/method', function () {
                 assert.instanceOf(error, Error);
                 done();
             });
-
         });
 
         it('should give confirmation receipts with on("confirmation", ...) when subscribing "sendTransaction"', function (done) {
@@ -786,8 +764,8 @@ describe('lib/web3/method', function () {
             provider.injectResult('0x1234567'); // subscription id
 
             // fire 50 fake newBlocks
+            // jshint -W083
             for (i = 0; i < 30; i++) {
-
                 setTimeout(function () {
                     provider.injectNotification({
                         method: 'eth_subscription',
@@ -815,7 +793,6 @@ describe('lib/web3/method', function () {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
                 assert.deepEqual(payload.params, ['0x1234567453543456321456321']);
             });
-
 
             var countConf = 0;
 
@@ -858,8 +835,6 @@ describe('lib/web3/method', function () {
                     done();
                 }
             });
-
         });
     });
 });
-

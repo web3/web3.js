@@ -2,7 +2,6 @@ var testMethod = require('./helpers/test.method.js');
 
 var method = 'newAccount';
 
-
 var tests = [{
     args: ['P@ssw0rd!'],
     formattedArgs: ['P@ssw0rd!'],
@@ -12,4 +11,3 @@ var tests = [{
 }];
 
 testMethod.runTests(['eth','personal'], method, tests);
-

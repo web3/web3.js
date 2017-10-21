@@ -23,4 +23,3 @@ module.exports = {
     methodExists: methodExists,
     propertyExists: propertyExists
 };
-

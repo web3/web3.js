@@ -29,4 +29,3 @@ describe('shh', function() {
         u.methodExists(shh, 'post');
     });
 });
-

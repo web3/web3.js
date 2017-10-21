@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
 
-
 var FakeXHR2 = function () {
     this.responseText = undefined;
     this.readyState = 4;

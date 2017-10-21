@@ -2,7 +2,6 @@ var chai = require('chai');
 var assert = chai.assert;
 var coder = require('../packages/web3-eth-abi');
 
-
 describe('lib/solidity/coder', function () {
     describe('encodeParameter', function () {
         var test = function (t) {
@@ -10,7 +9,6 @@ describe('lib/solidity/coder', function () {
                 assert.equal(coder.encodeParameter(t.type, t.value).replace('0x',''), t.expected);
             });
         };
-
 
         test({ type: 'address', value: '0x407d73d8a49eeb85d32cf465507dd71d507100c1',
                                                     expected: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'});
@@ -345,5 +343,3 @@ describe('lib/solidity/coder', function () {
 
     });
 });
-
-

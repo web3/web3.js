@@ -2,9 +2,6 @@ var chai = require('chai');
 var assert = require('assert');
 var _ = require('lodash');
 
-
-
-
 var FakeIpcProvider = function IpcProvider() {
     var _this = this;
     this.countId = 1;
@@ -32,7 +29,6 @@ var FakeIpcProvider = function IpcProvider() {
     this.validation = [];
     this.notificationCallbacks = [];
 };
-
 
 FakeIpcProvider.prototype.send = function (payload, callback) {
     var _this = this;
@@ -77,7 +73,6 @@ FakeIpcProvider.prototype.getResponseOrError = function (type, payload) {
         response = this.response.shift() || this.getResponseStub();
     }
 
-
     if(response) {
         if(_.isArray(response)) {
             response = response.map(function(resp, index) {
@@ -107,18 +102,19 @@ FakeIpcProvider.prototype.injectNotification = function (notification) {
 //     this.response = response;
 // };
 
-
-
 FakeIpcProvider.prototype.injectBatchResults = function (results, error) {
     var _this = this;
     this.response.push(results.map(function (r) {
+        var response;
+
         if(error) {
-            var response = _this.getErrorStub();
+            response = _this.getErrorStub();
             response.error.message = r;
         } else {
-            var response = _this.getResponseStub();
+            response = _this.getResponseStub();
             response.result = r;
         }
+
         return response;
     }));
 };
@@ -142,4 +138,3 @@ FakeIpcProvider.prototype.injectValidation = function (callback) {
 };
 
 module.exports = FakeIpcProvider;
-

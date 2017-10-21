@@ -5,7 +5,6 @@ var Method = require('../packages/web3-core-method');
 describe('lib/web3/method', function () {
     describe('formatOutput', function () {
         it('should format plain output', function () {
-
             // given
             var formatter = function (arg) {
                 return arg + '*';
@@ -26,7 +25,6 @@ describe('lib/web3/method', function () {
         });
 
         it('should format plain output if array', function () {
-
             // given
             var formatter = function (arg) {
                 return arg + '*';
@@ -47,7 +45,6 @@ describe('lib/web3/method', function () {
         });
 
         it('should format output arrays with the same formatter', function () {
-
             // given
             var formatter = function (arg) {
                 return arg + '*';
@@ -68,7 +65,6 @@ describe('lib/web3/method', function () {
         });
 
         it('should do nothing if there is no formatter', function () {
-
             // given
             var method = new Method({name: 'something', call: 'eth_something'});
             var args = [1,2,3];
@@ -81,4 +77,3 @@ describe('lib/web3/method', function () {
         });
     });
 });
-

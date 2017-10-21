@@ -5,11 +5,10 @@ var Method = require('../packages/web3-core-method');
 describe('lib/web3/method', function () {
     describe('extractCallback', function () {
         it('should extract callback', function () {
-
             // given
             var method = new Method({name: 'something', call: 'eth_something'});
             var callback = function () { };
-            var args = [1, callback]
+            var args = [1, callback];
 
             // when
             var result = method.extractCallback(args);
@@ -20,11 +19,13 @@ describe('lib/web3/method', function () {
         });
 
         it('should extract callback created using newFunction', function () {
-
             // given
             var method = new Method({name: 'something', call: 'eth_something'});
+
+            // jshint -W054
             var callback = new Function ();
-            var args = [1, callback]
+
+            var args = [1, callback];
 
             // when
             var result = method.extractCallback(args);
@@ -35,10 +36,9 @@ describe('lib/web3/method', function () {
         });
 
         it('should not extract the callback', function () {
-
             // given
             var method = new Method({name: 'something', call: 'eth_something'});
-            var args = [1, 2]
+            var args = [1, 2];
 
             // when
             var result = method.extractCallback(args);
@@ -49,4 +49,3 @@ describe('lib/web3/method', function () {
         });
     });
 });
-

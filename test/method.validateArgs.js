@@ -6,7 +6,6 @@ var errors = require('../packages/web3-core-helpers/src/errors');
 describe('lib/web3/method', function () {
     describe('validateArgs', function () {
         it('should pass', function () {
-
             // given
             var method = new Method({
                 name: 'something', call: 'eth_something',
@@ -26,7 +25,6 @@ describe('lib/web3/method', function () {
         });
 
         it('should return call based on args', function () {
-
             // given
             var method = new Method({
                 name: 'something',

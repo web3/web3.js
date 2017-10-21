@@ -9,6 +9,4 @@ var tests = [{
     call: methodCall
 }];
 
-
 testMethod.runTests('eth', method, tests);
-

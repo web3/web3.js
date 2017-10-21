@@ -39,4 +39,3 @@ describe('lib/web3/method', function () {
         });
     });
 });
-

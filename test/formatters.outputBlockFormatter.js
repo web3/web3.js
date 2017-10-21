@@ -2,11 +2,9 @@ var chai = require('chai');
 var assert = chai.assert;
 var formatters = require('../packages/web3-core-helpers/src/formatters.js');
 
-
 describe('formatters', function () {
     describe('outputBlockFormatter', function () {
         it('should return the correct value', function () {
-
             assert.deepEqual(formatters.outputBlockFormatter({
                 hash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
@@ -41,8 +39,8 @@ describe('formatters', function () {
                 size: 1000
             });
         });
-        it('should return the correct value, when null values are present', function () {
 
+        it('should return the correct value, when null values are present', function () {
             assert.deepEqual(formatters.outputBlockFormatter({
                 hash: null,
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',

@@ -13,7 +13,6 @@ describe('lib/solidity/coder', function () {
             });
         };
 
-
         test({ type: 'address', expected: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1',
                                                             value: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'});
         test({ type: 'address[2]', expected: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1', '0x407D73d8A49eEB85D32Cf465507Dd71d507100c3'],
@@ -265,7 +264,6 @@ describe('lib/solidity/coder', function () {
                 assert.deepEqual(resultArray, t.expected);
             });
         };
-
 
         test({ types: ['address'], expected: ['0x407D73d8a49eeb85D32Cf465507dd71d507100c1'],
                                                             values: '000000000000000000000000407d73d8a49eeb85d32cf465507dd71d507100c1'});

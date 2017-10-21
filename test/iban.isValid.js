@@ -4,7 +4,10 @@ var Iban = require('../packages/web3-eth-iban');
 
 var tests = [
     { obj: function () {}, is: false},
+
+    // jshint -W054
     { obj: new Function(), is: false},
+
     { obj: 'function', is: false},
     { obj: {}, is: false},
     { obj: '[]', is: false},
@@ -32,4 +35,3 @@ describe('lib/web3/iban', function () {
         });
     });
 });
-

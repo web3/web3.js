@@ -20,7 +20,6 @@ var tests = [
     }
 ];
 
-
 describe("eth", function () {
     describe("accounts", function () {
 

@@ -16,6 +16,7 @@ var txResult = {
     "gasPrice":"0x09184e72a000",
     "input":"0x603880600c6000396000f30060"
 };
+
 var formattedTxResult = {
     "status": "mined",
     "hash":"0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
@@ -46,4 +47,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-

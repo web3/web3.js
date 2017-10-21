@@ -42,4 +42,3 @@ describe('lib/utils/utils', function () {
         });
     });
 });
-

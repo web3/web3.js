@@ -5,7 +5,6 @@ var eth = new Eth();
 
 var method = 'getCode';
 
-
 var tests = [{
     args: ['0x4E65FDa2159562a496F9f3522f89122A3088497a'], // checksum address
     formattedArgs: ['0x4e65fda2159562a496f9f3522f89122a3088497a', eth.defaultBlock],
@@ -27,4 +26,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-
