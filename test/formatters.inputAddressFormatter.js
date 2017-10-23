@@ -37,7 +37,6 @@ describe('formatters', function () {
     });
 });
 
-
 describe('formatters', function () {
     describe('inputAddressFormatter wrong addresses', function () {
         errorTests.forEach(function(test){

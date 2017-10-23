@@ -10,7 +10,6 @@ for (var i = 0; i < 1000; i++) {
     tests.push(i);
 }
 
-
 describe("eth", function () {
     describe("accounts", function () {
 

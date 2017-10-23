@@ -3,12 +3,9 @@ var assert = chai.assert;
 var Web3 = require('../packages/web3');
 var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 
-
-
 describe('lib/web3/batch', function () {
     describe('execute', function () {
         it('should execute batch request', function (done) {
-
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
@@ -47,7 +44,6 @@ describe('lib/web3/batch', function () {
         });
 
         it('should execute batch request for async properties', function (done) {
-
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
@@ -84,7 +80,6 @@ describe('lib/web3/batch', function () {
         });
 
         it('should execute batch request with contract', function (done) {
-
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
@@ -101,7 +96,6 @@ describe('lib/web3/batch', function () {
                     "type": "uint256"
                 }]
             }];
-
 
             var address = '0x1000000000000000000000000000000000000001';
             var result = '0x126';
@@ -128,8 +122,6 @@ describe('lib/web3/batch', function () {
             };
 
             provider.injectValidation(function (payload) {
-
-
                 assert.equal(payload[0].method, 'eth_getBalance');
                 assert.deepEqual(payload[0].params, ['0x0000000000000000000000000000000000000022', 'latest']);
 
@@ -168,7 +160,6 @@ describe('lib/web3/batch', function () {
                 ]);
             });
 
-
             var batch = new web3.BatchRequest();
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000022', 'latest', callback));
             batch.add(new web3.eth.Contract(abi, address).methods.balance(address).call.request(callback2));
@@ -180,7 +171,6 @@ describe('lib/web3/batch', function () {
         });
 
         it('should execute batch requests and receive errors', function (done) {
-
             var provider = new FakeIpcProvider();
             var web3 = new Web3(provider);
 
@@ -198,11 +188,9 @@ describe('lib/web3/batch', function () {
                 }]
             }];
 
-
             var address = '0x1000000000000000000000000000000000000001';
             var result = 'Something went wrong';
             var result2 = 'Something went wrong 2';
-
 
             var counter = 0;
             var callback = function (err, r) {
@@ -239,4 +227,3 @@ describe('lib/web3/batch', function () {
         });
     });
 });
-

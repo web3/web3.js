@@ -3,9 +3,7 @@ var assert = chai.assert;
 var FakeHttpProvider = require('./FakeIpcProvider');
 var Web3 = require('../../packages/web3');
 
-
 var runTests = function (protocol, tests) {
-
     describe('web3.shh.subscribe', function () {
         tests.forEach(function (test, index) {
             it('should create a subscription for "'+ test.args[0] +'"', function (done) {
@@ -53,7 +51,6 @@ var runTests = function (protocol, tests) {
 
                         sub.unsubscribe();
                     }
-
                 });
 
                 // when
@@ -64,7 +61,6 @@ var runTests = function (protocol, tests) {
                 .on('changed', function () {
                     changedCount++;
                 });
-
 
                 // fire subscriptions
                 test.subscriptions.forEach(function (subscription) {
@@ -81,5 +77,4 @@ var runTests = function (protocol, tests) {
 
 module.exports = {
     runTests: runTests
-}
-
+};

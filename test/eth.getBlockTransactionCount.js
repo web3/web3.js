@@ -2,7 +2,6 @@ var testMethod = require('./helpers/test.method.js');
 
 var method = 'getBlockTransactionCount';
 
-
 var tests = [{
     args: ['0x4e65fda2159562a496f9f3522f8922f89122a3088497a122a3088497a'],
     formattedArgs: ['0x4e65fda2159562a496f9f3522f8922f89122a3088497a122a3088497a'],
@@ -30,4 +29,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-

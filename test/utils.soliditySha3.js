@@ -47,7 +47,6 @@ var tests = [{
         {v: '2342342342342342342345676856', t: 'uint256'},
         {v: '2342342342342342342345676856', t: 'uint'}
     ], expected: '0x8ac2efaaee0058e1f1fbcb59643f6799c31c27096a347651e40f98daf1905094'
-// 5
 },{
     values: [
         {v: '56', t: 'uint8'}
@@ -73,7 +72,6 @@ var tests = [{
     values: [
         {v: '3435454256', t: 'uint160'}
     ], expected: '0x89e0942df3602c010e0252becbbe1b4053bd4a871a021c02d8ab9878f1194b6b'
-// 11
 },{
     values: [
         '0x2345435675432144555ffffffffdd222222222222224444556553522',
@@ -90,7 +88,6 @@ var tests = [{
         {v: '-3435454256', t: 'int'},
         {v: '-3435454256', t: 'int256'}
     ], expected: '0x858d68fc4ad9f80dc5ee9571c7076298f8139d1d111e0955426de9381b10a061'
-// 13
 },{
     values: [
         {v: '-36', t: 'int8'}
@@ -120,7 +117,6 @@ var tests = [{
         {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes'},
         {v: '0x407D73d8a49eeb85D32Cf465507dd71d507100c1', t: 'bytes20'}
     ], expected: '0x4e8ebbefa452077428f93c9520d3edd60594ff452a29ac7d2ccc11d47f3ab95b'
-// 18
 },{
     values: [
         {v: '36', t: 'int8'}
@@ -173,24 +169,20 @@ var tests = [{
     ], expected: ''
 }];
 
-
 describe('web3.soliditySha3', function () {
     tests.forEach(function (test) {
         test.values.forEach(function (value) {
             it('should hash "'+ JSON.stringify(value) +'" into "'+ test.expected +'"', function() {
-
                 if(value.error || _.isArray(value)) {
                     assert.throws(utils.soliditySha3.bind(null, value));
                 } else {
                     assert.deepEqual(utils.soliditySha3(value), test.expected);
                 }
-
             });
         });
     });
 
     it('should hash mixed boolean values in any order', function() {
-
         assert.deepEqual(utils.soliditySha3(
             tests[0].values[1], // true
             tests[1].values[0], // false
@@ -200,7 +192,6 @@ describe('web3.soliditySha3', function () {
     });
 
     it('should hash mixed string and number values in any order', function() {
-
         assert.deepEqual(utils.soliditySha3(
             tests[2].values[0], // 'Hello!%'
             tests[3].values[2], // 2345676856
@@ -211,7 +202,6 @@ describe('web3.soliditySha3', function () {
     });
 
     it('should hash mixed number types in any order', function() {
-
         assert.deepEqual(utils.soliditySha3(
             tests[5].values[0], // v: '56', t: 'uint8'
             tests[6].values[0], // v: '256', t: 'uint16'
@@ -223,7 +213,6 @@ describe('web3.soliditySha3', function () {
     });
 
     it('should hash mixed number types addresses and boolean in any order', function() {
-
         assert.deepEqual(utils.soliditySha3(
             tests[5].values[0], // v: '56', t: 'uint8'
             tests[13].values[0], // v: '-36', t: 'int8'
@@ -234,7 +223,6 @@ describe('web3.soliditySha3', function () {
     });
 
     it('should hash mixed number arrays addresses and boolean in any order', function() {
-
         assert.deepEqual(utils.soliditySha3(
             tests[15].values[1], // v: '0x44222266', t: 'bytes4'
             tests[25].values[0], // address array

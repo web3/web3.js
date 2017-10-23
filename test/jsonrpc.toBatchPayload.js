@@ -4,7 +4,6 @@ var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
 describe('jsonrpc', function () {
     describe('toBatchPayload', function () {
         it('should create basic batch payload', function () {
-
             // given
             var messages = [{
                 method: 'helloworld'
@@ -32,7 +31,6 @@ describe('jsonrpc', function () {
         });
 
         it('should create batch payload for empty input array', function () {
-
             // given
             var messages = [];
 

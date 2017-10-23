@@ -2,7 +2,6 @@ var testMethod = require('./helpers/test.method.js');
 
 var method = 'sendTransaction';
 
-
 var tests = [{
     args: [{
         from: '0xdbdbdB2cBD23b783741e8d7fcF51e459b497e4a6', // checksum address
@@ -85,4 +84,3 @@ var tests = [{
 }];
 
 testMethod.runTests(['eth','personal'], method, tests);
-

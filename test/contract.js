@@ -6,7 +6,6 @@ var FakeIpcProvider = require('./helpers/FakeIpcProvider');
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Promise = require('bluebird');
 
-
 var abi = [{
     "type": "constructor",
     "inputs": [{
@@ -140,6 +139,7 @@ describe('contract', function () {
 
             assert.equal(contract.options.address, address);
         });
+
         it('should transform address to checksum address', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -148,6 +148,7 @@ describe('contract', function () {
 
             assert.equal(contract.options.address, address);
         });
+
         it('should fail on invalid address', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -158,6 +159,7 @@ describe('contract', function () {
 
             assert.throws(test);
         });
+
         it('should fail on invalid address as options.from', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -168,6 +170,7 @@ describe('contract', function () {
 
             assert.throws(test);
         });
+
         it('.clone() should properly clone the contract instance', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -194,7 +197,6 @@ describe('contract', function () {
             assert.equal(contract1.options.gasPrice, '12345678');
             assert.deepEqual(contract1.options.jsonInterface, abi);
 
-
             contract2.options.jsonInterface = abi2;
             contract2.options.address = fromAddress;
             contract2.options.gas = 300;
@@ -207,6 +209,7 @@ describe('contract', function () {
             assert.deepEqual(contract2.options.jsonInterface, abi2);
         });
     });
+
     describe('internal method', function () {
         it('_encodeEventABI should return the encoded event object without topics', function () {
             var provider = new FakeIpcProvider();
@@ -234,8 +237,8 @@ describe('contract', function () {
                     null
                 ]
             });
-
         });
+
         it('_encodeEventABI should return the encoded event object with topics', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -263,8 +266,8 @@ describe('contract', function () {
                     '0x000000000000000000000000000000000000000000000000000000000000000c'
                 ]
             });
-
         });
+
         it('_encodeEventABI should return the encoded event object with topics and multiple choices', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -294,8 +297,8 @@ describe('contract', function () {
                     ['0x000000000000000000000000000000000000000000000000000000000000000c', '0x000000000000000000000000000000000000000000000000000000000000000a']
                 ]
             });
-
         });
+
         it('_decodeEventABI should return the decoded event object with topics', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -338,8 +341,8 @@ describe('contract', function () {
             assert.equal(result.returnValues.amount, 1);
             assert.equal(result.returnValues.t1, 1);
             assert.equal(result.returnValues.t2, 8);
-
         });
+
         it('_decodeMethodReturn should return the decoded values', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -361,8 +364,8 @@ describe('contract', function () {
             assert.equal(result.myAddress, address);
             assert.equal(result[1], 10);
             assert.equal(result.value, 10);
-
         });
+
         it('_decodeMethodReturn should return a single decoded value', function () {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -376,8 +379,8 @@ describe('contract', function () {
             }], '0x000000000000000000000000'+ address.replace('0x',''));
 
             assert.equal(result, address);
-
         });
+
         it('_executeMethod as instantSealEngine should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -444,8 +447,8 @@ describe('contract', function () {
                 });
                 done();
             });
-
         });
+
         it('_executeMethod should sendTransaction and check for receipts', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -539,8 +542,8 @@ describe('contract', function () {
                 });
                 done();
             }).catch(console.log);
-
         });
+
         it('_executeMethod should call and return values', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -555,7 +558,6 @@ describe('contract', function () {
                 }, 'latest']);
             });
             provider.injectResult('0x000000000000000000000000000000000000000000000000000000000000000a');
-
 
             var contract = new eth.Contract(abi, address);
 
@@ -585,7 +587,6 @@ describe('contract', function () {
                 assert.equal(result, '10');
                 done();
             });
-
         });
     });
 
@@ -645,7 +646,6 @@ describe('contract', function () {
 
                 sub.unsubscribe();
             });
-
         });
 
         it('should create event from the events object and use the fromBlock option', function (done) {
@@ -756,10 +756,8 @@ describe('contract', function () {
 
                         event.unsubscribe();
                     }
-
                 });
         });
-
 
         it('should create event from the events object using a signature and callback', function (done) {
             var provider = new FakeIpcProvider();
@@ -1143,7 +1141,6 @@ describe('contract', function () {
             });
 
             setTimeout(done, 60);
-
         });
 
         it('should create all event filter and receive two logs', function (done) {
@@ -1168,7 +1165,6 @@ describe('contract', function () {
             });
             provider.injectResult(true);
 
-
             var contract = new eth.Contract(abi, address);
 
             var count = 0;
@@ -1188,9 +1184,7 @@ describe('contract', function () {
 
                     event.unsubscribe();
                 }
-
             });
-
 
             provider.injectNotification({
                 method: 'eth_subscription',
@@ -1213,7 +1207,6 @@ describe('contract', function () {
                 }
             });
 
-
             provider.injectNotification({
                 method: 'eth_subscription',
                 params: {
@@ -1235,6 +1228,7 @@ describe('contract', function () {
             });
         });
     });
+
     describe('with methods', function () {
         it('should change the address', function () {
             var provider = new FakeIpcProvider();
@@ -1346,7 +1340,6 @@ describe('contract', function () {
 
             assert.equal(result, '0x1234' + '000000000000000000000000'+ addressLowercase.replace('0x','')+ '000000000000000000000000000000000000000000000000000000000000000a');
         });
-
 
         it('should estimate a function', function (done) {
             var provider = new FakeIpcProvider();
@@ -1490,7 +1483,6 @@ describe('contract', function () {
 
             var contract = new eth.Contract(abi, address);
 
-
             Promise.join(
                 contract.methods.balance(address).call(),
                 contract.methods.owner().call(),
@@ -1527,7 +1519,6 @@ describe('contract', function () {
                 assert.isTrue(err instanceof Error);
                 done();
             });
-
         });
 
         it('should return an empty string when 0x0', function (done) {
@@ -1552,7 +1543,6 @@ describe('contract', function () {
                 assert.equal(result, '');
                 done();
             });
-
         });
 
         it('should sendTransaction and check for receipts with formatted logs', function (done) {
@@ -1641,15 +1631,10 @@ describe('contract', function () {
             });
             provider.injectResult('0x321');
 
-
             var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
             .on('receipt', function (receipt) {
-                // console.log(receipt);
-                // console.log(receipt.events[0].raw);
-                // console.log(receipt.events[1].raw);
-
                 // wont throw if it errors ?!
                 assert.deepEqual(receipt, {
                     contractAddress: null,
@@ -1717,8 +1702,6 @@ describe('contract', function () {
 
                done();
             });
-
-
         });
 
         it('should sendTransaction and check for receipts with formatted logs when multiple of same event', function (done) {
@@ -1808,7 +1791,6 @@ describe('contract', function () {
             });
             provider.injectResult('0x321');
 
-
             var contract = new eth.Contract(abi, address);
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
@@ -1884,8 +1866,6 @@ describe('contract', function () {
 
                     done();
                 });
-
-
         });
 
         it('should sendTransaction and check for receipts with formatted logs using the HTTP provider', function (done) {
@@ -1963,10 +1943,6 @@ describe('contract', function () {
 
             contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
                 .on('receipt', function (receipt) {
-                    // console.log(receipt);
-                    // console.log(receipt.events[0].raw);
-                    // console.log(receipt.events[1].raw);
-
                     // wont throw if it errors ?!
                     assert.deepEqual(receipt, {
                         contractAddress: null,
@@ -2034,8 +2010,6 @@ describe('contract', function () {
 
                     done();
                 });
-
-
         });
 
         it('should sendTransaction to contract function', function () {
@@ -2114,7 +2088,6 @@ describe('contract', function () {
                 assert.isFalse(e instanceof Error, 'Should not throw error');
             }
         });
-
 
         it('should sendTransaction to contract function using the function namen incl. parameters', function () {
             var provider = new FakeIpcProvider();
@@ -2244,7 +2217,6 @@ describe('contract', function () {
                 assert.deepEqual(r, '50');
                 done();
             });
-
         });
 
         it('should explicitly make a call with optional params and defaultBlock', function (done) {
@@ -2270,7 +2242,6 @@ describe('contract', function () {
                 assert.deepEqual(r, '50');
                 done();
             });
-
         });
 
         it('should sendTransaction with optional params', function (done) {
@@ -2310,7 +2281,6 @@ describe('contract', function () {
             });
 
             provider.injectResult('0x45656456456456');
-
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_sendTransaction');
@@ -2357,7 +2327,6 @@ describe('contract', function () {
             contract.methods.mySend(address, 17).send({from: address, gas: 50000, gasPrice: 3000, value: 10000});
         });
 
-
         it('should explicitly call sendTransaction with optional params and call callback without error', function (done) {
             var provider = new FakeIpcProvider();
             var eth = new Eth(provider);
@@ -2384,7 +2353,7 @@ describe('contract', function () {
                 assert.equal(err, null);
                 done();
             });
-        })
+        });
 
         it('should explicitly estimateGas with optional params', function () {
             var provider = new FakeIpcProvider();
@@ -2464,7 +2433,6 @@ describe('contract', function () {
             var contract = new eth.Contract(abi, address);
             contract.getPastEvents('Changed', {filter: {from: address2}})
             .then(function (result) {
-
                 assert.deepEqual(result, [{
                     event: "Changed",
                     signature: "0xc00c1c37cc8b83163fb4fddc06c74d1d5c00d74648e7cb28c0ebada3e32fd62c",
@@ -2520,7 +2488,6 @@ describe('contract', function () {
 
                 done();
             }).catch(done);
-
         });
 
         it('should call testArr method and properly parse result', function (done) {
@@ -2549,7 +2516,6 @@ describe('contract', function () {
                 assert.deepEqual(result, '5');
                 done();
             });
-
         });
 
         it('should call testArr method, properly parse result and return the result in a callback', function (done) {
@@ -2577,7 +2543,6 @@ describe('contract', function () {
                 assert.deepEqual(result, '5');
                 done();
             });
-
         });
 
         it('should call owner method, properly', function (done) {
@@ -2602,9 +2567,9 @@ describe('contract', function () {
                 assert.deepEqual(result, address);
                 done();
             });
-
         });
     });
+
     describe('with data', function () {
         it('should deploy a contract and use callback', function (done) {
             var provider = new FakeIpcProvider();
@@ -2661,7 +2626,6 @@ describe('contract', function () {
             });
             provider.injectResult(null);
 
-
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_subscribe');
                 assert.deepEqual(payload.params, ['newHeads']);
@@ -2693,7 +2657,6 @@ describe('contract', function () {
             });
             provider.injectResult('0x321');
 
-
             var contract = new eth.Contract(abi);
 
             contract.deploy({
@@ -2719,11 +2682,6 @@ describe('contract', function () {
                     done();
                 }, 1);
             });
-            // .on('error', function (value) {
-            //     console.log('error', value);
-            //     done();
-            // });
-
         });
 
         // TODO add error check

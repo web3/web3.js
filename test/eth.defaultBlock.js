@@ -14,6 +14,7 @@ describe('web3.eth', function () {
             assert.equal(eth.Contract.defaultBlock, 'latest');
             assert.equal(eth.getCode.method.defaultBlock, 'latest');
         });
+
         it('should set defaultBlock for all sub packages is set to proper value, if Eth package is changed', function () {
             eth.defaultBlock = setValue;
 
@@ -24,4 +25,3 @@ describe('web3.eth', function () {
         });
     });
 });
-

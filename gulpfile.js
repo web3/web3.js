@@ -106,7 +106,7 @@ var browserifyOptions = {
     bundleExternal: true
 };
 
-var ugliyOptions = {
+var uglifyOptions = {
     compress:{
         dead_code     : true,  // jshint ignore:line
         drop_debugger : true,  // jshint ignore:line
@@ -138,7 +138,7 @@ gulp.task('bower', ['version'], function(cb){
 });
 
 gulp.task('lint', [], function(){
-    return gulp.src(['./*.js', './lib/*.js'])
+    return gulp.src(['./*.js', './packages/**/*.js', './test/**/*.js', '!./**/node_modules/**/*'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
@@ -176,7 +176,7 @@ packages.forEach(function(pckg, i){
                 compact: true,
                 presets: ['env']
             })))
-            .pipe(streamify(uglify(ugliyOptions)))
+            .pipe(streamify(uglify(uglifyOptions)))
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
             .pipe(gulp.dest( DEST ));

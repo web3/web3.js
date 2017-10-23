@@ -25,8 +25,6 @@ var useLocalWallet = function (test, provider, web3) {
     });
 };
 
-
-
 var runTests = function (obj, method, tests) {
     var objName;
 
@@ -70,7 +68,6 @@ var runTests = function (obj, method, tests) {
                             assert.deepEqual(payload.params, test.formattedArgs2 || []);
                         });
                     }
-
 
                     // if notification its sendTransaction, which needs two more results, subscription and receipt
                     if(test.notification) {
@@ -175,7 +172,6 @@ var runTests = function (obj, method, tests) {
                         });
                     }
 
-
                     var args = clone(test.args);
 
                     if(test.error) {
@@ -218,7 +214,6 @@ var runTests = function (obj, method, tests) {
             });
         });
     });
-
 };
 
 module.exports = {

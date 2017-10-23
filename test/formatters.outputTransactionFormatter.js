@@ -4,7 +4,6 @@ var formatters = require('../packages/web3-core-helpers/src/formatters.js');
 describe('formatters', function () {
     describe('outputTransactionFormatter', function () {
         it('should return the correct value', function () {
-
             assert.deepEqual(formatters.outputTransactionFormatter({
                 input: '0x3454645634534',
                 from: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
@@ -31,7 +30,6 @@ describe('formatters', function () {
         });
 
         it('should return the correct value, when null values are present', function () {
-
             assert.deepEqual(formatters.outputTransactionFormatter({
                 input: '0x3454645634534',
                 from: '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae',

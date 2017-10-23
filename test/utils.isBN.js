@@ -7,14 +7,19 @@ var assert = chai.assert;
 
 var tests = [
     { value: function () {}, is: false},
+
+    // jshint -W054
     { value: new Function(), is: false},
+
     { value: 'function', is: false},
     { value: {}, is: false},
+
+    // jshint -W053
     { value: new String('hello'), is: false},
+
     { value: new BigNumber(0), is: true},
     { value: 132, is: false},
-    { value: '0x12', is: false},
-
+    { value: '0x12', is: false}
 ];
 
 describe('lib/utils/utils', function () {

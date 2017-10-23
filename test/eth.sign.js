@@ -5,7 +5,6 @@ var eth = new Eth();
 
 var method = 'sign';
 
-
 var tests = [{
     args: ['Hello World!$*', '0xeb014f8c8b418db6b45774c326a0e64c78914dc0'],
     formattedArgs: ['0xeb014f8c8b418db6b45774c326a0e64c78914dc0', '0x48656c6c6f20576f726c6421242a'],
@@ -39,4 +38,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-

@@ -4,7 +4,6 @@ var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../packages/web3');
 var web3 = new Web3();
 
-
 var tests = [{
     methods: [{
         name: 'getGasPrice2',
@@ -57,15 +56,12 @@ describe('web3', function () {
                     assert.throws(web3.extend.bind(web3,test));
 
                     return done();
-
                 } else {
                     web3.extend(test);
                 }
 
                 if(test.methods) {
                     test.methods.forEach(function(property){
-
-
                         provider.injectResult('0x1234');
                         provider.injectValidation(function (payload) {
                             assert.equal(payload.jsonrpc, '2.0');
@@ -90,4 +86,3 @@ describe('web3', function () {
         });
     });
 });
-

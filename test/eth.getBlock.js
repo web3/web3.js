@@ -22,6 +22,7 @@ var blockResult = {
     "transactions": ['0x460cfb8472af2c5fd05b5a2','0x460cfb8472af2c5fd05b5a2'],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
+
 var formattedBlockResult = {
     "number": 436,
     "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
@@ -42,6 +43,7 @@ var formattedBlockResult = {
     "transactions": ['0x460cfb8472af2c5fd05b5a2','0x460cfb8472af2c5fd05b5a2'],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
+
 var blockResultWithTx = {
     "number": "0x1b4",
     "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",
@@ -75,6 +77,7 @@ var blockResultWithTx = {
     }],
     "uncles": ["0x460cfb8472af2c5fd05b5a2", "0xd5460cfb8472af2c5fd05b5a2"]
 };
+
 var formattedBlockResultWithTx = {
     "number": 436,
     "hash": "0xe670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331",

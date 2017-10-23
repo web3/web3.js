@@ -4,7 +4,6 @@ var formatters = require('../packages/web3-core-helpers/src/formatters.js');
 describe('formatters', function () {
     describe('outputLogFormatter', function () {
         it('should return the correct value', function () {
-
             assert.deepEqual(formatters.outputLogFormatter({
                 transactionIndex: '0x3e8',
                 logIndex: '0x3e8',
@@ -26,8 +25,8 @@ describe('formatters', function () {
                 id: "log_2b801386"
             });
         });
-        it('should return the correct value, when null values are present', function () {
 
+        it('should return the correct value, when null values are present', function () {
             assert.deepEqual(formatters.outputLogFormatter({
                 transactionIndex: null,
                 logIndex: null,

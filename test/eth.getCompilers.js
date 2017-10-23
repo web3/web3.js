@@ -2,7 +2,6 @@ var testMethod = require('./helpers/test.method.js');
 
 var method = 'getCompilers';
 
-
 var tests = [{
     args: [],
     formattedArgs: [],
@@ -18,4 +17,3 @@ var tests = [{
 }];
 
 testMethod.runTests('eth', method, tests);
-

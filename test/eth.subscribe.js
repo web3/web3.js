@@ -294,6 +294,4 @@ var tests = [{
     ]
 }];
 
-
 testSubscription.runTests('eth', tests);
-

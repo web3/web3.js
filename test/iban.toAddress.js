@@ -14,6 +14,7 @@ describe('lib/web3/iban', function () {
             });
         });
     });
+
     describe('iban instance address()', function () {
         tests.forEach(function (test) {
             it('shoud transform iban to address: ' +  test.address, function () {
@@ -23,4 +24,3 @@ describe('lib/web3/iban', function () {
         });
     });
 });
-

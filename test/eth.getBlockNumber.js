@@ -8,5 +8,4 @@ var tests = [{
     call: 'eth_blockNumber'
 }];
 
-
 testMethod.runTests('eth', method, tests);

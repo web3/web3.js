@@ -5,7 +5,10 @@ var assert = chai.assert;
 
 var tests = [
     { value: function () {}, is: false},
+
+    // jshint -W054
     { value: new Function(), is: false},
+
     { value: 'function', is: false},
     { value: {}, is: false},
     { value: '0xc6d9d2cd449a754c494264e1809c50e34d64562b', is: true },
@@ -21,4 +24,3 @@ describe('lib/utils/utils', function () {
         });
     });
 });
-

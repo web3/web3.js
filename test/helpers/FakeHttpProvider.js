@@ -2,9 +2,6 @@ var chai = require('chai');
 var assert = require('assert');
 var _ = require('lodash');
 
-
-
-
 var FakeHttpProvider = function HttpProvider() {
     var _this = this;
     this.countId = 1;
@@ -30,7 +27,6 @@ var FakeHttpProvider = function HttpProvider() {
     this.error = [];
     this.validation = [];
 };
-
 
 FakeHttpProvider.prototype.send = function (payload, callback) {
     var _this = this;
@@ -69,7 +65,6 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
         response = this.response.shift() || this.getResponseStub();
     }
 
-
     if(response) {
         if(_.isArray(response)) {
             response = response.map(function(resp, index) {
@@ -83,23 +78,23 @@ FakeHttpProvider.prototype.getResponseOrError = function (type, payload) {
     return response;
 };
 
-
 // FakeHttpProvider.prototype.injectResponse = function (response) {
 //     this.response = response;
 // };
 
-
-
 FakeHttpProvider.prototype.injectBatchResults = function (results, error) {
     var _this = this;
     this.response.push(results.map(function (r) {
+        var response;
+
         if(error) {
-            var response = _this.getErrorStub();
+            response = _this.getErrorStub();
             response.error.message = r;
         } else {
-            var response = _this.getResponseStub();
+            response = _this.getResponseStub();
             response.result = r;
         }
+
         return response;
     }));
 };
@@ -123,4 +118,3 @@ FakeHttpProvider.prototype.injectValidation = function (callback) {
 };
 
 module.exports = FakeHttpProvider;
-

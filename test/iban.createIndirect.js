@@ -18,4 +18,3 @@ describe('lib/web3/iban', function () {
         });
     });
 });
-

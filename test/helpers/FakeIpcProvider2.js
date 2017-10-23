@@ -34,4 +34,3 @@ FakeIpcProvider2.prototype.getResponse = function () {
 };
 
 module.exports = FakeIpcProvider2;
-

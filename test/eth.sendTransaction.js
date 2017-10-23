@@ -6,9 +6,7 @@ var Web3 = require('../packages/web3');
 
 var clone = function (object) { return object ? JSON.parse(JSON.stringify(object)) : []; };
 
-
 var method = 'sendTransaction';
-
 
 var tests = [{
     args: [{
@@ -209,12 +207,10 @@ var tests = [{
 
 testMethod.runTests('eth', method, tests);
 
-
 // Test HTTPProvider with interval
 describe(method, function () {
     tests.forEach(function (test, index) {
         it('promise test: ' + index, function (done) {
-
             // given
             var w3;
             var result;
@@ -225,7 +221,6 @@ describe(method, function () {
             if(test.useLocalWallet) {
                 return done();
             }
-
 
             provider.injectResult(clone(test.result));
             provider.injectValidation(function (payload) {
@@ -242,12 +237,11 @@ describe(method, function () {
                     assert.deepEqual(payload.params, test.formattedArgs2 || []);
                 });
             }
-          
+
             provider.injectResult(null);
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
             });
-          
 
             // if notification its sendTransaction, which needs two more results, subscription and receipt
             if(test.notification) {
@@ -266,14 +260,9 @@ describe(method, function () {
             var args = clone(test.args);
 
             if(test.error) {
-
                 assert.throws(function(){ web3.eth[method].apply(web3, args); });
                 done();
-
-
             } else {
-
-
                 result = web3.eth[method].apply(web3, args);
 
                 result.then(function(result){
@@ -295,11 +284,9 @@ describe(method, function () {
                     done();
                 });
             }
-
         });
 
         it('callback test: ' + index, function (done) {
-
             // given
             var w3;
             var provider = new FakeHttpProvider();
@@ -326,14 +313,12 @@ describe(method, function () {
                 });
             }
 
-
             var args = clone(test.args);
 
             if(test.error) {
                 assert.throws(function(){ web3.eth[method].apply(web3, args); });
 
                 done();
-
             } else {
                 // add callback
                 args.push(function (err, result) {

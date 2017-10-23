@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var SandboxedModule = require('sandboxed-module');
 
-var FakeIpcRequest = require('./helpers/FakeIpcRequest')
+var FakeIpcRequest = require('./helpers/FakeIpcRequest');
 var net = new FakeIpcRequest();
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
@@ -14,7 +14,6 @@ var IpcProvider = SandboxedModule.require('../packages/web3-providers-ipc', {
 });
 
 describe('web3-providers-ipc', function () {
-
     // oboe.js DOESNT WORK with FakeIpcProvider
     // describe('send', function () {
     //     it('should send basic async request', function (done) {
@@ -50,4 +49,3 @@ describe('web3-providers-ipc', function () {
     //     });
     // });
 });
-

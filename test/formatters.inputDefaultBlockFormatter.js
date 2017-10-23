@@ -20,6 +20,3 @@ describe('lib/web3/formatters', function () {
         });
     });
 });
-
-
-

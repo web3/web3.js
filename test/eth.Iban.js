@@ -33,6 +33,7 @@ describe('eth', function () {
                     assert.deepEqual(eth.Iban.toAddress(test.direct), test.address);
                 }
             });
+
             it('toIban() should transform address to iban: ' +  test.address, function () {
                 if(test.error) {
                     assert.throws(eth.Iban.toIban.bind(eth, test.address));
@@ -43,4 +44,3 @@ describe('eth', function () {
         });
     });
 });
-

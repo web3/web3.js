@@ -25,7 +25,6 @@ var tests = [{
 describe('async', function () {
     tests.forEach(function (test, index) {
         it('test callback: ' + index, function (done) {
-
             // given
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
@@ -45,11 +44,9 @@ describe('async', function () {
 
                 done();
             });
-
         });
 
         it('test promise: ' + index, function (done) {
-
             // given
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
@@ -69,11 +66,9 @@ describe('async', function () {
 
                 done();
             });
-
         });
 
         it('error test callback: ' + index, function (done) {
-
             // given
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
@@ -96,13 +91,10 @@ describe('async', function () {
 
                 done();
             }).catch(function () {
-
             });
-
         });
 
         it('error test promise: ' + index, function (done) {
-
             // given
             var provider = new FakeHttpProvider();
             web3.setProvider(provider);
@@ -119,14 +111,11 @@ describe('async', function () {
             // when
             web3.eth[method](test.input)
             .catch(function(error){
-
                 // then
                 assert.strictEqual(test.formattedResult, error.message);
 
                 done();
             });
-
         });
     });
 });
-

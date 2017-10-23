@@ -30,4 +30,3 @@ var tests = [{
 }];
 
 testMethod.runTests('shh', method, tests);
-

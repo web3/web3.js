@@ -25,4 +25,3 @@ describe('lib/web3/requestmanager', function () {
         });
     });
 });
-

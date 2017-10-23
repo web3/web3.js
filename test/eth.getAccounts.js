@@ -14,6 +14,4 @@ var tests = [{
     call: call
 }];
 
-
 testMethod.runTests('eth', method, tests);
-

@@ -15,13 +15,11 @@ FakeIpcRequest.prototype.connect = function (path) {
     return this;
 };
 
-
 FakeIpcRequest.prototype.on = function (name, callback) {
     if(name === 'data'){
         this.listenerList.push(callback);
     }
 };
-
 
 FakeIpcRequest.prototype.writeSync = function (payload) {
     assert.equal(typeof payload, 'string');
@@ -40,4 +38,3 @@ FakeIpcRequest.prototype.write = function (payload) {
 };
 
 module.exports = FakeIpcRequest;
-
