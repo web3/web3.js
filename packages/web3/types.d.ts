@@ -112,6 +112,22 @@ export declare interface TransactionReceipt {
   logs?: Array<Log>
   events?: {
     [eventName: string]: EventLog
+  },
+  status: string
+}
+export declare interface EncodedTransaction {
+  raw: string,
+  tx: {
+    nonce: string,
+    gasPrice: string,
+    gas: string,
+    to: string,
+    value: string,
+    input: string,
+    v: string,
+    r: string,
+    s: string,
+    hash: string
   }
 }
 export declare interface BlockHeader {
@@ -265,6 +281,10 @@ export declare interface Contract {
   options: {
     address: string
     jsonInterface: ABIDefinition[]
+    data: string
+    from: string
+    gasPrice: string
+    gas: number
   }
   methods: {
     [fnName: string]: (...args) => TransactionObject<any>
@@ -313,7 +333,7 @@ export declare class Eth {
   }
   accounts: {
     'new'(entropy?: string): Account
-    privateToAccount(privKey: string): Account
+    privateKeyToAccount(privKey: string): Account
     publicToAddress(key: string): string
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
@@ -376,6 +396,7 @@ export declare class Eth {
   isSyncing(cb?: Callback<boolean>): Promise<boolean>
   net: Net
   personal: Personal
+  signTransaction(tx: Tx, address?: string, cb?: Callback<string>): Promise<EncodedTransaction>
   sendSignedTransaction(data: string, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   sendTransaction(tx: Tx, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   submitWork(nonce: string, powHash: string, digest: string, cb?: Callback<boolean>): Promise<boolean>
