@@ -23,7 +23,7 @@
  */
 
 var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2'); // jshint ignore: line
+var XHR2 = require('xhr2');
 
 /**
  * HttpProvider should be used to send rpc calls over http

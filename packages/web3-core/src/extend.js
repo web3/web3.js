@@ -29,7 +29,6 @@ var utils = require('web3-utils');
 
 
 var extend = function (pckg) {
-    /* jshint maxcomplexity:5 */
     var ex = function (extension) {
 
         var extendedObject;

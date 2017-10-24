@@ -278,10 +278,11 @@ var numberToHex = function (value) {
  */
 var bytesToHex = function(bytes) {
     for (var hex = [], i = 0; i < bytes.length; i++) {
-        /* jshint ignore:start */
+        // eslint-disable-next-line no-bitwise
         hex.push((bytes[i] >>> 4).toString(16));
+
+        // eslint-disable-next-line no-bitwise
         hex.push((bytes[i] & 0xF).toString(16));
-        /* jshint ignore:end */
     }
     return '0x'+ hex.join("");
 };
@@ -319,9 +320,8 @@ var hexToBytes = function(hex) {
  * @param {Boolean} returnType
  * @return {String}
  */
+/* eslint-disable complexity */
 var toHex = function (value, returnType) {
-    /*jshint maxcomplexity: false */
-
     if (isAddress(value)) {
         return returnType ? 'address' : '0x'+ value.toLowerCase().replace(/^0x/i,'');
     }
@@ -348,7 +348,7 @@ var toHex = function (value, returnType) {
 
     return returnType ? (value < 0 ? 'int256' : 'uint256') : numberToHex(value);
 };
-
+/* eslint-enable complexity */
 
 /**
  * Check if string is HEX, requires a 0x in front
@@ -425,7 +425,7 @@ var sha3 = function (value) {
         value = hexToBytes(value);
     }
 
-    var returnValue = Hash.keccak256(value); // jshint ignore:line
+    var returnValue = Hash.keccak256(value);
 
     if(returnValue === SHA3_NULL_S) {
         return null;

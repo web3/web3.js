@@ -1,6 +1,6 @@
 **PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
-<img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
+<img src="./assets/web3js.jpg" width=200 />
 
 # web3.js - Ethereum JavaScript API
 
@@ -44,7 +44,7 @@ Use the prebuild ``dist/web3.min.js``, or
 build using the [web3.js][repo] repository:
 
 ```bash
-npm run-script build
+npm run build
 ```
 
 Then include `dist/web3.js` in your html file.
@@ -104,13 +104,13 @@ sudo apt-get install npm
 Build only the web3.js package
 
 ```bash
-npm run-script build
+npm run build
 ```
 
 Or build all sub packages as well
 
 ```bash
-npm run-script build-all
+npm run build-all
 ```
 
 This will put all the browser build files into the `dist` folder.

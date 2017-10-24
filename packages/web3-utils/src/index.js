@@ -41,8 +41,6 @@ var randomHex = require('randomhex');
  * @return {Object} the emitter
  */
 var _fireError = function (error, emitter, reject, callback) {
-    /*jshint maxcomplexity: 10 */
-
     // add data if given
     if(_.isObject(error) && !(error instanceof Error) &&  error.data) {
         if(_.isObject(error.data) || _.isArray(error.data)) {

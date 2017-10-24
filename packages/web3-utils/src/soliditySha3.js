@@ -24,10 +24,7 @@ var _ = require('underscore');
 var BN = require('bn.js');
 var utils = require('./utils.js');
 
-
 var _elementaryName = function (name) {
-    /*jshint maxcomplexity:false */
-
     if (name.startsWith('int[')) {
         return 'int256' + name.slice(3);
     } else if (name === 'int') {
@@ -79,9 +76,8 @@ var _parseNumber = function (arg) {
     }
 };
 
+/* eslint-disable complexity */
 var _solidityPack = function (type, value, arraySize) {
-    /*jshint maxcomplexity:false */
-
     var size, num;
     type = _elementaryName(type);
 
@@ -167,11 +163,10 @@ var _solidityPack = function (type, value, arraySize) {
         throw new Error('Unsupported or invalid type: ' + type);
     }
 };
+/* eslint-enable complexity */
 
-
+/* eslint-disable complexity */
 var _processSoliditySha3Args = function (arg) {
-    /*jshint maxcomplexity:false */
-
     if(_.isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
@@ -219,8 +214,8 @@ var _processSoliditySha3Args = function (arg) {
         hexArg = _solidityPack(type, value, arraySize);
         return hexArg.toString('hex').replace('0x','');
     }
-
 };
+/* eslint-enable complexity */
 
 /**
  * Hashes solidity values to a sha3 hash using keccak 256
@@ -229,8 +224,6 @@ var _processSoliditySha3Args = function (arg) {
  * @return {Object} the sha3
  */
 var soliditySha3 = function () {
-    /*jshint maxcomplexity:false */
-
     var args = Array.prototype.slice.call(arguments);
 
     var hexArgs = _.map(args, _processSoliditySha3Args);

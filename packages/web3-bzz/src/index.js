@@ -43,12 +43,11 @@ var Bzz = function Bzz(provider) {
 };
 
 // set default ethereum provider
-/* jshint ignore:start */
+/* global ethereumProvider: false */
 Bzz.givenProvider = null;
 if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
     Bzz.givenProvider = ethereumProvider.bzz;
 }
-/* jshint ignore:end */
 
 Bzz.prototype.setProvider = function(provider) {
     // is ethereum provider
