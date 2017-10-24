@@ -65,6 +65,13 @@ Bzz.prototype.setProvider = function(provider) {
         this.currentProvider = provider;
     } else {
         this.currentProvider = null;
+
+        var noProviderError = new Error('No provider set, please set one using bzz.setProvider().');
+
+        this.download = this.upload = this.isAvailable = function(){
+            throw noProviderError;
+        };
+
         return false;
     }
 
