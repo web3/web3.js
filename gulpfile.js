@@ -122,20 +122,17 @@ gulp.task('version', function () {
     }
 
     var version = lernaJSON.version;
-    var jsonPattern = /\"version\"\: \"[\.0-9\-a-z]*\"/;
-    var jsPattern = /version\: \'[\.0-9\-a-z]*\'/;
-    var meteorPattern = /ethereum:web3@[\.0-9\-a-z]*/;
+    var jsonPattern = /"version": "[.0-9\-a-z]*"/;
+    var jsPattern = /version: '[.0-9\-a-z]*'/;
     var glob = [
         './package.json',
         './bower.json',
-        './package.js',
-        './.versions'
+        './package.js'
     ];
 
     gulp.src(glob, {base: './'})
         .pipe(replace(jsonPattern, '"version": "' + version + '"'))
         .pipe(replace(jsPattern, "version: '" + version + "'"))
-        .pipe(replace(meteorPattern, 'ethereum:web3@' + version))
         .pipe(gulp.dest('./'));
 });
 
