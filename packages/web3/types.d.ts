@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js' // TODO change to BN
+import { BigNumber } from 'bn.js'
 import * as us from 'underscore'
 
 
@@ -18,7 +18,7 @@ export declare interface JsonRPCResponse {
 
 type Callback<T> = (error: Error, result: T) => void
 type ABIDataTypes = "uint256" | "boolean" | "string" | "bytes" | string // TODO complete list
-export declare interface Provider {
+export declare interface IProvider {
   send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
 }
 type PromiEventType = "transactionHash" | "receipt" | "confirmation" | "error"
@@ -232,9 +232,23 @@ export declare interface Tx {
   gasPrice?: string | number
 
 }
-export declare interface WebsocketProvider extends Provider { }
-export declare interface HttpProvider extends Provider { }
-export declare interface IpcProvider extends Provider { }
+export declare interface WebsocketProvider extends IProvider {
+  responseCallbacks: object
+  notificationCallbacks: [() => any]
+  connection: {
+    onclose(e: any): void,
+    onmessage(e: any): void,
+    onerror(e?: any): void
+  }
+  addDefaultEvents: () => void
+  on(type: string, callback: () => any): void
+  removeListener(type: string, callback: () => any): void
+  removeAllListeners(type: string): void
+  reset(): void
+}
+export declare interface HttpProvider extends IProvider { }
+export declare interface IpcProvider extends IProvider { }
+export type Provider = WebsocketProvider & IpcProvider & HttpProvider
 type Unit = "kwei" | "femtoether" | "babbage" | "mwei" | "picoether" | "lovelace" | "qwei" | "nanoether" | "shannon" | "microether" | "szabo" | "nano" | "micro" | "milliether" | "finney" | "milli" | "ether" | "kether" | "grand" | "mether" | "gether" | "tether"
 export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
@@ -422,4 +436,3 @@ export declare class BatchRequest {
   add(request: Request): void //
   execute(): void
 }
-
