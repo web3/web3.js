@@ -18,9 +18,6 @@ export declare interface JsonRPCResponse {
 
 type Callback<T> = (error: Error, result: T) => void
 type ABIDataTypes = "uint256" | "boolean" | "string" | "bytes" | string // TODO complete list
-export declare interface IProvider {
-  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
-}
 type PromiEventType = "transactionHash" | "receipt" | "confirmation" | "error"
 export declare interface PromiEvent<T> extends Promise<T> {
   once(type: "transactionHash", handler: (receipt: string) => void): PromiEvent<T>
@@ -232,6 +229,9 @@ export declare interface Tx {
   gasPrice?: string | number
 
 }
+export declare interface IProvider {
+  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
+}
 export declare interface WebsocketProvider extends IProvider {
   responseCallbacks: object
   notificationCallbacks: [() => any]
@@ -246,9 +246,27 @@ export declare interface WebsocketProvider extends IProvider {
   removeAllListeners(type: string): void
   reset(): void
 }
-export declare interface HttpProvider extends IProvider { }
-export declare interface IpcProvider extends IProvider { }
-export type Provider = WebsocketProvider & IpcProvider & HttpProvider
+export declare interface HttpProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export declare interface IpcProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export type Provider = WebsocketProvider | IpcProvider | HttpProvider;
 type Unit = "kwei" | "femtoether" | "babbage" | "mwei" | "picoether" | "lovelace" | "qwei" | "nanoether" | "shannon" | "microether" | "szabo" | "nano" | "micro" | "milliether" | "finney" | "milli" | "ether" | "kether" | "grand" | "mether" | "gether" | "tether"
 export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
