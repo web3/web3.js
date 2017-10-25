@@ -17,12 +17,25 @@ import config from './config.js';
 
 export default buildUmd;
 
+function log(msg, color = 'green') {
+    if (!msg) {
+        // eslint-disable-next-line no-console
+        console.log(); // Blank line
+
+        return;
+    }
+
+    gutil.log(gutil.colors[color](msg));
+}
+
 async function buildUmd(p, minify = false) {
     const rbc = rollupBabelrc();
     rbc.runtimeHelpers = true;
     rbc.exclude = 'node_modules/**';
 
     try {
+        log(`Compiling ${p} (minified: ${minify})...`);
+
         const bundle = await rollup({
             input: path.resolve(config.PACKAGES_DIR, p, 'src/index.js'),
             external: [
@@ -37,7 +50,7 @@ async function buildUmd(p, minify = false) {
                 rollupJson(),
                 rollupCommonjs(),
                 rollupGlobals(),
-                rollupBuiltins(),
+                rollupBuiltins({ crypto: true }),
                 rollupBabel(rbc),
                 rollupReplace({
                     exclude: `./packages/${p}/node_modules/**`,
@@ -48,8 +61,13 @@ async function buildUmd(p, minify = false) {
             onwarn
         });
 
+        const baseFilename = `${p}${minify ? '.min' : ''}.js`;
+        const file = path.resolve(config.DIST, baseFilename);
+        log();
+        log(`Saving compiled module to ${baseFilename}...`);
+
         await bundle.write({
-            file: path.resolve(config.DIST, `${p}${minify ? '.min' : ''}.js`),
+            file,
             name: getModuleName(p),
             format: 'umd',
             sourcemap: minify,
@@ -57,9 +75,11 @@ async function buildUmd(p, minify = false) {
                 websocket: 'WebSocket'
             }
         });
+
+        log('Done.');
     } catch (err) {
-        console.log(); // eslint-disable-line no-console
-        gutil.log(err);
+        log();
+        log(err, 'red');
     }
 }
 

@@ -16,6 +16,14 @@
                 "allowTemplateLiterals": true
             }
         ],
+        "newline-before-return": "error",
+        "no-multiple-empty-lines": [
+            "error",
+            {
+                "max": 1,
+                "maxEOF": 0
+            }
+        ],
         "no-use-before-define": [
             "error",
             {
@@ -48,8 +56,10 @@
                 ]
             }
         ],
-        "comma-dangle": ["error", "never"]
+        "comma-dangle": [
+            "error",
+            "never"
+        ]
     },
-    "globals": {
-    }
+    "globals": {}
 }
