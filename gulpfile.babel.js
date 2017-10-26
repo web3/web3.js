@@ -1,15 +1,15 @@
 import _ from 'lodash';
 import del from 'del';
 import gulp from 'gulp';
-import eslint from 'gulp-eslint';
-import watch from 'gulp-watch';
+import git from 'gulp-git';
 
+import config from './gulp/config.js';
 import buildUmd from './gulp/buildUmd.js';
 import fixFileVersions from './gulp/fixFileVersions.js';
 import transpile from './gulp/transpile.js';
-import config from './gulp/config.js';
+import lint from './gulp/lint.js';
 
-// Create task for each package
+// Create a build task for each package
 _.each(config.packages, (p) => {
     gulp.task(p, async () => {
         await buildUmd(p);
@@ -17,19 +17,23 @@ _.each(config.packages, (p) => {
     });
 });
 
-gulp.task('lint', () => gulp.src(config.lintableFiles)
-    .pipe(eslint())
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError()));
+gulp.task('watch', () => {
+    const options = {
+        delay: 200,
+        ignoreInitial: false
+    };
 
-gulp.task('watch', gulp.series('lint', () => {
-    watch(config.scripts, { debounceDelay: 200 }, () => {
-        gulp.start('lint');
-    });
-}));
+    gulp.watch(config.scripts, options, () => lint());
+});
 
-gulp.task('build', transpile);
+gulp.task('clean', () => {
+    git.clean(`${config.DIST}`, { args: '-fxd' }, _.noop);
+
+    return del([`${config.PACKAGES_DIR}/*/lib`]);
+});
+
+gulp.task('lint', () => lint(true));
+gulp.task('build', gulp.series('lint', transpile));
 gulp.task('version', fixFileVersions);
-gulp.task('clean', () => del([config.DIST, `${config.PACKAGES_DIR}/*/lib`]));
-gulp.task('all', gulp.series('lint', ...config.packages));
-gulp.task('default', gulp.series('lint', 'web3'));
+gulp.task('all', gulp.series('build', ...config.packages));
+gulp.task('default', gulp.series('build', 'web3'));

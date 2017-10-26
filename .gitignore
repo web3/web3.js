@@ -8,10 +8,6 @@ npm-debug.log
 /coverage
 /tmp
 node_modules
-bower_components
-/bower
 .idea/
 .npm/
-package-lock.json
-/packages/*/lib
-dist
+/packages/**/lib/*
