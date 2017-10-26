@@ -10,16 +10,13 @@ export default () => {
 
     const jsonPattern = /"version": "[.0-9\-a-z]*"/;
     const jsPattern = /version: '[.0-9\-a-z]*'/;
-    const meteorPattern = /ethereum:web3@[.0-9\-a-z]*/;
     const files = [
         './package.json',
-        './package.js',
-        './.versions'
+        './package.js'
     ];
 
     gulp.src(files, { base: './' })
         .pipe(replace(jsonPattern, `"version": "${version}"`))
         .pipe(replace(jsPattern, `version: '${version}'`))
-        .pipe(replace(meteorPattern, `ethereum:web3@${version}`))
         .pipe(gulp.dest('./'));
 };
