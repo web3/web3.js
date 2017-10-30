@@ -11,3 +11,4 @@ node_modules
 .idea/
 .npm/
 /packages/**/lib/*
+/.nyc_output
