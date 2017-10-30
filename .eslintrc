@@ -8,6 +8,17 @@
     "extends": "airbnb-base",
     "plugins": [],
     "rules": {
+        "curly": [
+            "error",
+            "all"
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": false
+            }
+        ],
         "quotes": [
             "error",
             "single",
@@ -16,7 +27,17 @@
                 "allowTemplateLiterals": true
             }
         ],
+        "no-plusplus": "off",
+        "no-underscore-dangle": "off",
         "newline-before-return": "error",
+        "no-unused-vars": [
+            "error",
+            {
+                "vars": "all",
+                "args": "all",
+                "argsIgnorePattern": "^_"
+            }
+        ],
         "no-multiple-empty-lines": [
             "error",
             {
@@ -52,6 +73,7 @@
             {
                 "devDependencies": [
                     "gulpfile.babel.js",
+                    "test/**/*.js",
                     "gulp/**/*.js"
                 ]
             }
