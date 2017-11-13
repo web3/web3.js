@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js' // TODO change to BN
+import { BigNumber } from 'bn.js'
 import * as us from 'underscore'
 
 
@@ -18,9 +18,6 @@ export declare interface JsonRPCResponse {
 
 type Callback<T> = (error: Error, result: T) => void
 type ABIDataTypes = "uint256" | "boolean" | "string" | "bytes" | string // TODO complete list
-export declare interface Provider {
-  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
-}
 type PromiEventType = "transactionHash" | "receipt" | "confirmation" | "error"
 export declare interface PromiEvent<T> extends Promise<T> {
   once(type: "transactionHash", handler: (receipt: string) => void): PromiEvent<T>
@@ -112,6 +109,22 @@ export declare interface TransactionReceipt {
   logs?: Array<Log>
   events?: {
     [eventName: string]: EventLog
+  },
+  status: string
+}
+export declare interface EncodedTransaction {
+  raw: string,
+  tx: {
+    nonce: string,
+    gasPrice: string,
+    gas: string,
+    to: string,
+    value: string,
+    input: string,
+    v: string,
+    r: string,
+    s: string,
+    hash: string
   }
 }
 export declare interface BlockHeader {
@@ -216,9 +229,44 @@ export declare interface Tx {
   gasPrice?: string | number
 
 }
-export declare interface WebsocketProvider extends Provider { }
-export declare interface HttpProvider extends Provider { }
-export declare interface IpcProvider extends Provider { }
+export declare interface IProvider {
+  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
+}
+export declare interface WebsocketProvider extends IProvider {
+  responseCallbacks: object
+  notificationCallbacks: [() => any]
+  connection: {
+    onclose(e: any): void,
+    onmessage(e: any): void,
+    onerror(e?: any): void
+  }
+  addDefaultEvents: () => void
+  on(type: string, callback: () => any): void
+  removeListener(type: string, callback: () => any): void
+  removeAllListeners(type: string): void
+  reset(): void
+}
+export declare interface HttpProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export declare interface IpcProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export type Provider = WebsocketProvider | IpcProvider | HttpProvider;
 type Unit = "kwei" | "femtoether" | "babbage" | "mwei" | "picoether" | "lovelace" | "qwei" | "nanoether" | "shannon" | "microether" | "szabo" | "nano" | "micro" | "milliether" | "finney" | "milli" | "ether" | "kether" | "grand" | "mether" | "gether" | "tether"
 export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
@@ -265,6 +313,10 @@ export declare interface Contract {
   options: {
     address: string
     jsonInterface: ABIDefinition[]
+    data: string
+    from: string
+    gasPrice: string
+    gas: number
   }
   methods: {
     [fnName: string]: (...args) => TransactionObject<any>
@@ -313,7 +365,7 @@ export declare class Eth {
   }
   accounts: {
     'new'(entropy?: string): Account
-    privateToAccount(privKey: string): Account
+    privateKeyToAccount(privKey: string): Account
     publicToAddress(key: string): string
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
@@ -376,6 +428,7 @@ export declare class Eth {
   isSyncing(cb?: Callback<boolean>): Promise<boolean>
   net: Net
   personal: Personal
+  signTransaction(tx: Tx, address?: string, cb?: Callback<string>): Promise<EncodedTransaction>
   sendSignedTransaction(data: string, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   sendTransaction(tx: Tx, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   submitWork(nonce: string, powHash: string, digest: string, cb?: Callback<boolean>): Promise<boolean>
@@ -384,7 +437,9 @@ export declare class Eth {
 
 }
 export declare class Net {
-
+  getId(cb?: Callback<number>): Promise<number>
+  isListening(cb?: Callback<boolean>): Promise<boolean>
+  getPeerCount(cb?: Callback<number>): Promise<number>
 }
 export declare class Personal {
   newAccount(password: string, cb?: Callback<boolean>): Promise<boolean>
@@ -401,4 +456,3 @@ export declare class BatchRequest {
   add(request: Request): void //
   execute(): void
 }
-

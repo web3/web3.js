@@ -62,6 +62,10 @@ var formatInputBytes = function (value) {
         throw new Error('Given parameter bytes has an invalid length: "'+ value + '"');
     }
 
+    if (result.length > 64) {
+        throw new Error('Given parameter bytes is too long: "' + value + '"');
+    }
+
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
     return new SolidityParam(result);
@@ -158,7 +162,7 @@ var formatOutputInt = function (param) {
 var formatOutputUInt = function (param, name) {
     var value = param.staticPart();
 
-    if(!value) {
+    if(!value && param.rawValue) {
         throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
     }
 

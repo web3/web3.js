@@ -60,7 +60,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Boolean``: ``true`` if the account was created, otherwise ``false``.
+``Promise`` returns ``String``: The address of the newly created account.
 
 -------
 Example
@@ -70,7 +70,7 @@ Example
 
     web3.eth.personal.newAccount('!@superpassword')
     .then(console.log);
-    > true
+    > '0x1234567891011121314151617181920212223456'
 
 ------------------------------------------------------------------------------
 
@@ -124,6 +124,46 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+ecRecover
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.ecRecover(dataThatWasSigned, signature [, callback])
+
+Recovers the account that signed the data.
+
+----------
+Parameters
+----------
+
+
+1. ``String`` - Data that was signed. If String it will be converted using :ref:`web3.utils.utf8ToHex <utils-utf8tohex>`.
+2. ``String`` - The signature.
+3. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
+
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``String`` - The account.
+
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.personal.ecRecover("Hello world", "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400").then(console.log);
+    > "0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe"
+
+------------------------------------------------------------------------------
+
 // TODO
 
-getAccounts, unlockAccount, lockAccount, sendTransaction, ecRecover
+getAccounts, unlockAccount, lockAccount, sendTransaction
