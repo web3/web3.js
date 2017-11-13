@@ -633,7 +633,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getBlock(3150);
+    web3.eth.getBlock(3150)
     .then(console.log);
 
     > {
@@ -1105,7 +1105,7 @@ Example
     // console.log(serializedTx.toString('hex'));
     // 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f
 
-    web3.eth.sendSignedTransaction(serializedTx.toString('hex'))
+    web3.eth.sendSignedTransaction('0x' + serializedTx.toString('hex'))
     .on('receipt', console.log);
 
     > // see eth.getTransactionReceipt() for details
@@ -1401,7 +1401,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getCompilers();
+    web3.eth.getCompilers()
     .then(console.log);
     > ["lll", "solidity", "serpent"]
 
@@ -1444,7 +1444,7 @@ Example
         "   }\n" +
         "}\n";
 
-    web3.eth.compile.solidity(source);
+    web3.eth.compile.solidity(source)
     .then(console.log);
 
     > {
@@ -1521,7 +1521,7 @@ Example
 
     var source = "...";
 
-    web3.eth.compile.lll(source);
+    web3.eth.compile.lll(source)
     .then(console.log);
     > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
 
@@ -1556,7 +1556,7 @@ Returns
 
     var source = "...";
 
-    var code = web3.eth.compile.serpent(source);
+    var code = web3.eth.compile.serpent(source)
     .then(console.log);
     > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
 
@@ -1596,7 +1596,7 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.getWork();
+    web3.eth.getWork()
     .then(console.log);
     > [
       "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
@@ -1642,7 +1642,7 @@ Example
         "0x0000000000000001",
         "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
         "0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000"
-    ]);
+    ])
     .then(console.log);
     > true
 
