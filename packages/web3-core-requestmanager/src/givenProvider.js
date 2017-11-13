@@ -25,7 +25,6 @@
 var givenProvider = null;
 
 // ADD GIVEN PROVIDER
-/* jshint ignore:start */
 var global = Function('return this')();
 
 // EthereumProvider
@@ -80,7 +79,5 @@ if(typeof global.ethereumProvider !== 'undefined') {
 
     givenProvider = global.web3.currentProvider;
 }
-/* jshint ignore:end */
-
 
 module.exports = givenProvider;

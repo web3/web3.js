@@ -47,7 +47,6 @@ var WebsocketProvider = function WebsocketProvider(url)  {
 
     // LISTEN FOR CONNECTION RESPONSES
     this.connection.onmessage = function(e) {
-        /*jshint maxcomplexity: 6 */
         var data = (typeof e.data === 'string') ? e.data : '';
 
         _this._parseResponse(data).forEach(function(result){

@@ -39,8 +39,6 @@ var IpcProvider = function IpcProvider(path, net) {
 
     // LISTEN FOR CONNECTION RESPONSES
     var callback = function(result) {
-        /*jshint maxcomplexity: 6 */
-
         var id = null;
 
         // get the id which matches the returned id

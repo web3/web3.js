@@ -184,17 +184,16 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     });
 };
 
-/* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
     var signature = Account.encodeSignature(values.slice(6,9));
     var recovery = Bytes.toNumber(values[6]);
+    // eslint-disable-next-line no-bitwise
     var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
     var signingData = values.slice(0,6).concat(extraData);
     var signingDataHex = RLP.encode(signingData);
     return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
-/* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
@@ -235,8 +234,6 @@ Accounts.prototype.recover = function recover(hash, signature) {
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
 Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
-    /* jshint maxcomplexity: 10 */
-
     if(!_.isString(password)) {
         throw new Error('No password given.');
     }
@@ -279,8 +276,8 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
     return this.privateKeyToAccount(seed);
 };
 
+/* eslint-disable complexity */
 Accounts.prototype.encrypt = function (privateKey, password, options) {
-    /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
 
     options = options || {};
@@ -333,7 +330,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         }
     };
 };
-
+/* eslint-enable complexity */
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html

@@ -1,0 +1,28 @@
+{
+    "root": true,
+    "env": {
+        "node": true
+    },
+    "rules": {
+        "no-bitwise": 2,
+        "camelcase": 2,
+        "eqeqeq": 2,
+        "no-extend-native": 2,
+        "block-scoped-var": 0,
+        "complexity": [
+            2,
+            10
+        ],
+        "max-depth": [
+            2,
+            4
+        ],
+        "no-new": 2,
+        "no-unused-vars": 2,
+        "no-undef": 2
+    },
+    "globals": {
+        "localStorage": false,
+        "window": false
+    }
+}
