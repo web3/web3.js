@@ -12,3 +12,5 @@ node_modules
 .npm/
 /packages/**/lib/*
 /.nyc_output
+package-lock.json
+
