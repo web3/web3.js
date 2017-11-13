@@ -850,7 +850,7 @@ Example
         symKeyID: 'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
         sig: '0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6'
         ttl: 20,
-        topic: '0xffddaa11',
+        topics: ['0xffddaa11'],
         minPow: 0.8,
     }, function(error, message, subscription){
 
