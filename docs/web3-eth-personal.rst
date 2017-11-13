@@ -60,7 +60,7 @@ Parameters
 Returns
 -------
 
-``Promise`` returns ``Boolean``: ``true`` if the account was created, otherwise ``false``.
+``Promise`` returns ``String``: The address of the newly created account.
 
 -------
 Example
@@ -70,7 +70,7 @@ Example
 
     web3.eth.personal.newAccount('!@superpassword')
     .then(console.log);
-    > true
+    > '0x1234567891011121314151617181920212223456'
 
 ------------------------------------------------------------------------------
 
