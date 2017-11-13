@@ -405,7 +405,9 @@ export declare class Eth {
 
 }
 export declare class Net {
-
+  getId(cb?: Callback<number>): Promise<number>
+  isListening(cb?: Callback<boolean>): Promise<boolean>
+  getPeerCount(cb?: Callback<number>): Promise<number>
 }
 export declare class Personal {
   newAccount(password: string, cb?: Callback<boolean>): Promise<boolean>
