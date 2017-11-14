@@ -242,12 +242,12 @@ describe(method, function () {
                     assert.deepEqual(payload.params, test.formattedArgs2 || []);
                 });
             }
-          
+
             provider.injectResult(null);
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_getTransactionReceipt');
             });
-          
+
 
             // if notification its sendTransaction, which needs two more results, subscription and receipt
             if(test.notification) {
@@ -326,6 +326,26 @@ describe(method, function () {
                 });
             }
 
+
+            provider.injectResult(null);
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+            });
+
+
+            // if notification its sendTransaction, which needs two more results, subscription and receipt
+            if(test.notification) {
+                // inject receipt
+                provider.injectResult({
+                    "blockHash": "0x6fd9e2a26ab",
+                    "blockNumber": "0x15df",
+                    "transactionHash": "0xc6ef2fc5426d6ad6fd9e2a26abeab0aa2411b7ab17f30a99d3cb96aed1d1055b",
+                    "transactionIndex": "0x1",
+                    "contractAddress": "0x407d73d8a49eeb85d32cf465507dd71d507100c1",
+                    "cumulativeGasUsed": "0x7f110",
+                    "gasUsed": "0x7f110"
+                });
+            }
 
             var args = clone(test.args);
 
