@@ -9,6 +9,7 @@
         web3.setProvider(new web3.providers.HttpProvider('http://localhost:8545'));
 
         var source = "" +
+        "pragma solidity ^0.4.6;" +
         "contract Contract { " +
         "   event Incremented(bool indexed odd, uint x); " +
         "   function Contract() { " +
@@ -22,8 +23,8 @@
         "}";
 
         var compiled = web3.eth.compile.solidity(source);
-        var code = compiled.Contract.code;
-        var abi = compiled.Contract.info.abiDefinition;
+        var code = compiled.code;
+        var abi = compiled.info.abiDefinition;
 
         var address;
         var contract;
