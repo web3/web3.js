@@ -1,4 +1,4 @@
-commvar testMethod = require('./helpers/test.method.js');
+var testMethod = require('./helpers/test.method.js');
 var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
