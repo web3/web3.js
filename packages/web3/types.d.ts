@@ -332,8 +332,16 @@ export declare interface Contract {
       topics?: any[]
     }, cb?: Callback<EventLog>) => EventEmitter
     allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: any[] }, cb?: Callback<EventLog>) => EventEmitter
-  }
-
+  },
+  getPastEvents(
+    event: string,
+    options?: {
+      filter?: object,
+      fromBlock?: BlockType,
+      toBlock?: BlockType,
+      topics?: any[]
+    },
+    cb?: Callback<EventLog[]>): Promise<EventLog[]>
 }
 export declare interface Request { }
 export declare interface Providers {
