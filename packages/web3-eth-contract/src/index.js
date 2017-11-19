@@ -123,8 +123,16 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 
                     // add method only if not one already exists
-                    if(!_this.methods[method.name])
+                    if(!_this.methods[method.name]) {
                         _this.methods[method.name] = func;
+                    } else {
+                        var cascadeFunc = _this._createTxObject.bind({
+                            method: method,
+                            parent: _this,
+                            next: _this.methods[method.name]
+                        });
+                        _this.methods[method.name] = cascadeFunc;
+                    }
 
                     // definitely add the method based on its signature
                     _this.methods[method.signature] = func;
@@ -678,6 +686,9 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
     if (args && this.method.inputs && args.length !== this.method.inputs.length) {
+        if (this.next) {
+            return this.next.apply(null, args);
+        }
         throw errors.InvalidNumberOfParams(args.length, this.method.inputs.length, this.method.name);
     }
 

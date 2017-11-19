@@ -124,6 +124,28 @@ var abi = [{
             {"name":"addressFrom","type":"address","indexed":true},
             {"name":"t1","type":"uint256","indexed":false}
         ]
+}, {
+    "name":"overloadedFunction",
+    "type":"function",
+    "inputs":[
+        {"name":"a","type":"uint256"}
+    ],
+    "constant":true,
+    "outputs":[
+        {"name":"", "type":"uint256"}
+    ],
+    "payable":false,
+    "stateMutability":"view"
+}, {
+    "name":"overloadedFunction",
+    "type":"function",
+    "inputs":[],
+    "constant":true,
+    "outputs":[
+        {"name":"","type":"uint256"}
+    ],
+    "payable":false,
+    "stateMutability":"view"
     }];
 
 var address = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
@@ -1410,6 +1432,47 @@ describe('contract', function () {
 
             contract.methods.hasALotOfParams("0x24545345", "0xff24545345", ["0xff24545345", "0x5345", "0x4545", "0x453345"]).call(function (err, res) {
                 assert.deepEqual(res, address);
+                done();
+            });
+        });
+
+        it('should send overload functions with zero parameters', function(done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0xbb853481',
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000005');
+
+            var contract = new eth.Contract(abi, address);
+            contract.methods.overloadedFunction().call(function (err, res) {
+                assert.equal(res, 5);
+                done();
+            });
+        });
+
+        it('should send overload functions with one parameters', function(done) {
+            var provider = new FakeIpcProvider();
+            var eth = new Eth(provider);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x533678270000000000000000000000000000000000000000000000000000000000000006',
+                    to: addressLowercase
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000006');
+
+            var contract = new eth.Contract(abi, address);
+
+            contract.methods.overloadedFunction(6).call(function (err, res) {
+                assert.equal(res, 6);
                 done();
             });
         });
