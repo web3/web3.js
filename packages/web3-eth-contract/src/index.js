@@ -129,7 +129,7 @@ var Contract = function Contract(jsonInterface, address, options) {
                         var cascadeFunc = _this._createTxObject.bind({
                             method: method,
                             parent: _this,
-                            next: _this.methods[method.name]
+                            nextMethod: _this.methods[method.name]
                         });
                         _this.methods[method.name] = cascadeFunc;
                     }
@@ -686,8 +686,8 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.estimateGas = this.parent._executeMethod.bind(txObject, 'estimate');
 
     if (args && this.method.inputs && args.length !== this.method.inputs.length) {
-        if (this.next) {
-            return this.next.apply(null, args);
+        if (this.nextMethod) {
+            return this.nextMethod.apply(null, args);
         }
         throw errors.InvalidNumberOfParams(args.length, this.method.inputs.length, this.method.name);
     }
