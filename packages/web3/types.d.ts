@@ -379,7 +379,7 @@ export declare class Eth {
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
     sign(data: string, privateKey: string, returnSignature?: boolean): string | Signature
-    recover(sigOrHash: string | Signature, sigOrV : string, r : string, s : string): string
+    recover(sigOrHash: string | Signature, sigOrV ?: string, r ?: string, s ?: string): string
     encrypt(privateKey: string, password: string): PrivateKey
     decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
