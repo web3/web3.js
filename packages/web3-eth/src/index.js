@@ -36,6 +36,8 @@ var Iban = require('web3-eth-iban');
 var Accounts = require('web3-eth-accounts');
 var abi = require('web3-eth-abi');
 
+var util = require('util');
+
 var getNetworkType = require('./getNetworkType.js');
 var formatter = helpers.formatters;
 
@@ -138,8 +140,18 @@ var Eth = function Eth() {
     this.personal = new Personal(this.currentProvider);
     this.personal.defaultAccount = this.defaultAccount;
 
+    var ContractWrapper = function ContractWrapper() {
+      Contract.apply(this, arguments);
+    };
+
+    ContractWrapper.setProvider = function() {
+      Contract.setProvider.apply(this, arguments);
+    };
+
+    util.inherits(ContractWrapper, Contract);
+
     // add contract
-    this.Contract = Contract;
+    this.Contract = ContractWrapper;
     this.Contract.defaultAccount = this.defaultAccount;
     this.Contract.defaultBlock = this.defaultBlock;
     this.Contract.setProvider(this.currentProvider, this.accounts);

@@ -55,16 +55,16 @@ var Contract = function Contract(jsonInterface, address, options) {
     var _this = this,
         args = Array.prototype.slice.call(arguments);
 
+    if(!(this instanceof Contract)) {
+        throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+    }
 
     // sets _requestmanager
-    core.packageInit(this, [Contract.currentProvider]);
+    core.packageInit(this, [this.constructor.currentProvider]);
 
     this.clearSubscriptions = this._requestManager.clearSubscriptions;
 
 
-    if(!(this instanceof Contract)) {
-        throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
-    }
 
     if(!jsonInterface || !(Array.isArray(jsonInterface))) {
         throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
@@ -165,8 +165,8 @@ var Contract = function Contract(jsonInterface, address, options) {
     });
 
     // get default account from the Class
-    var defaultAccount = Contract.defaultAccount;
-    var defaultBlock = Contract.defaultBlock || 'latest';
+    var defaultAccount = this.constructor.defaultAccount;
+    var defaultBlock = this.constructor.defaultBlock || 'latest';
 
     Object.defineProperty(this, 'defaultAccount', {
         get: function () {
@@ -208,9 +208,9 @@ var Contract = function Contract(jsonInterface, address, options) {
 
 Contract.setProvider = function(provider, accounts) {
     // Contract.currentProvider = provider;
-    core.packageInit(Contract, [provider]);
+    core.packageInit(this, [provider]);
 
-    Contract._ethAccounts = accounts;
+    this._ethAccounts = accounts;
 };
 
 
@@ -777,7 +777,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     inputFormatter: [formatters.inputCallFormatter],
                     outputFormatter: utils.hexToNumber,
                     requestManager: _this._parent._requestManager,
-                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock
                 })).createFunction();
@@ -798,7 +798,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                         return _this._parent._decodeMethodReturn(_this._method.outputs, result);
                     },
                     requestManager: _this._parent._requestManager,
-                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock
                 })).createFunction();
@@ -868,7 +868,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     params: 1,
                     inputFormatter: [formatters.inputTransactionFormatter],
                     requestManager: _this._parent._requestManager,
-                    accounts: Contract._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock,
                     extraFormatters: extraFormatters
