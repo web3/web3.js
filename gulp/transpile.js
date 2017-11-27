@@ -23,12 +23,12 @@ function transpile() {
             dest: config.PACKAGES_DIR,
             map: swapSrcWithLib
         }))
-        .pipe(through.obj((file, enc, callback) => {
+        .pipe(through.obj((file, _enc, callback) => {
             gutil.log('Compiling', `'${chalk.cyan(file.relative)}'...`);
             callback(null, file);
         }))
         .pipe(babel())
-        .pipe(through.obj((file, enc, callback) => {
+        .pipe(through.obj((file, _enc, callback) => {
             // Passing 'file.relative' for consistency with newer() above
             // eslint-disable-next-line no-param-reassign
             file.path = path.resolve(file.base, swapSrcWithLib(file.relative));

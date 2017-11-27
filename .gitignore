@@ -10,9 +10,7 @@ npm-debug.log
 node_modules
 .idea/
 .npm/
-/packages/**/lib/*
 .vscode/
-
 /packages/**/lib/*
 /.nyc_output
 package-lock.json

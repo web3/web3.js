@@ -22,4 +22,5 @@ install:
     - npm install
 script:
     - npm run build
-    - npm run test-coveralls
+    - npm run test
+    - npm run coverage
