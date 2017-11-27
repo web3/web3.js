@@ -1,8 +1,8 @@
-var u = require('./helpers/test.utils.js');
-var utils = require('../packages/web3-utils');
+import u from './helpers/test.utils.js';
+import utils from '../packages/web3-utils';
 
-describe('utils', function() {
-    describe('methods', function () {
+describe('utils', () => {
+    describe('methods', () => {
         u.methodExists(utils, 'sha3');
         u.methodExists(utils, 'hexToAscii');
         u.methodExists(utils, 'asciiToHex');
@@ -14,4 +14,3 @@ describe('utils', function() {
         u.methodExists(utils, 'isAddress');
     });
 });
-

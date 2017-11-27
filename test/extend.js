@@ -1,83 +1,95 @@
-var chai = require('chai');
-var assert = chai.assert;
-var FakeHttpProvider = require('./helpers/FakeIpcProvider');
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+import { assert } from 'chai';
+import FakeHttpProvider from './helpers/FakeIpcProvider';
+import Web3 from '../packages/web3';
 
+const web3 = new Web3();
 
-var tests = [{
-    methods: [{
-        name: 'getGasPrice2',
-        call: 'eth_gasPrice',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    },{
-        name: 'getBalance',
-        call: 'eth_getBalance',
-        params: 2,
-        inputFormatter: [web3.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    }]
-},{
-    property: 'admin',
-    methods: [{
-        name: 'getGasPrice3',
-        call: 'eth_gasPrice',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    },{
-        name: 'getBalance',
-        call: 'eth_getBalance',
-        params: 2,
-        inputFormatter: [web3.utils.toChecksumAddress, web3.extend.formatters.inputDefaultBlockNumberFormatter],
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    }]
-},{
-    error: true,
-    methods: [{
-        name: 'getGasPrice4',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    }]
-},{
-    error: true,
-    methods: [{
-        call: 'eth_gasPrice',
-        outputFormatter: web3.extend.formatters.outputBigNumberFormatter
-    }]
-}];
+const tests = [
+    {
+        methods: [
+            {
+                name: 'getGasPrice2',
+                call: 'eth_gasPrice',
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            },
+            {
+                name: 'getBalance',
+                call: 'eth_getBalance',
+                params: 2,
+                inputFormatter: [
+                    web3.utils.toChecksumAddress,
+                    web3.extend.formatters.inputDefaultBlockNumberFormatter
+                ],
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            }
+        ]
+    },
+    {
+        property: 'admin',
+        methods: [
+            {
+                name: 'getGasPrice3',
+                call: 'eth_gasPrice',
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            },
+            {
+                name: 'getBalance',
+                call: 'eth_getBalance',
+                params: 2,
+                inputFormatter: [
+                    web3.utils.toChecksumAddress,
+                    web3.extend.formatters.inputDefaultBlockNumberFormatter
+                ],
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            }
+        ]
+    },
+    {
+        error: true,
+        methods: [
+            {
+                name: 'getGasPrice4',
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            }
+        ]
+    },
+    {
+        error: true,
+        methods: [
+            {
+                call: 'eth_gasPrice',
+                outputFormatter: web3.extend.formatters.outputBigNumberFormatter
+            }
+        ]
+    }
+];
 
-describe('web3', function () {
-    describe('extend', function () {
-        tests.forEach(function (test, index) {
-            it('test no: ' + index, function (done) {
-                var count = 1;
-
-                var provider = new FakeHttpProvider();
+describe('web3', () => {
+    describe('extend', () => {
+        tests.forEach((test, index) => {
+            it(`test no: ${index}`, async () => {
+                const provider = new FakeHttpProvider();
                 web3.setProvider(provider);
 
-                if(test.error) {
-                    assert.throws(web3.extend.bind(web3,test));
+                if (test.error) {
+                    assert.throws(web3.extend.bind(web3, test));
 
-                    return done();
-
-                } else {
-                    web3.extend(test);
+                    return;
                 }
 
-                if(test.methods) {
-                    test.methods.forEach(function(property){
+                web3.extend(test);
 
-
+                if (test.methods) {
+                    const testMethod = property => new Promise((resolve) => {
                         provider.injectResult('0x1234');
-                        provider.injectValidation(function (payload) {
+                        provider.injectValidation((payload) => {
                             assert.equal(payload.jsonrpc, '2.0');
                             assert.equal(payload.method, property.call);
 
-                            if(test.methods.length === count)
-                                done();
-                            else
-                                count++;
+                            resolve();
                         });
 
-                        if(test.property) {
+                        if (test.property) {
                             assert.isFunction(web3[test.property][property.name]);
                             web3[test.property][property.name]();
                         } else {
@@ -85,9 +97,13 @@ describe('web3', function () {
                             web3[property.name]();
                         }
                     });
+
+                    for (let i = 0; i < test.methods.length; ++i) {
+                        // eslint-disable-next-line no-await-in-loop
+                        await testMethod(test.methods[i]);
+                    }
                 }
             });
         });
     });
 });
-

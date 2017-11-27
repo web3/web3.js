@@ -1,19 +1,4 @@
-var chai = require('chai');
-var assert = chai.assert;
-var SandboxedModule = require('sandboxed-module');
-
-var FakeIpcRequest = require('./helpers/FakeIpcRequest')
-var net = new FakeIpcRequest();
-
-SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var IpcProvider = SandboxedModule.require('../packages/web3-providers-ipc', {
-    requires: {
-        'bn.js': require('bn.js'),
-    },
-    singleOnly: true
-});
-
-describe('web3-providers-ipc', function () {
+describe('web3-providers-ipc', () => {
 
     // oboe.js DOESNT WORK with FakeIpcProvider
     // describe('send', function () {
@@ -50,4 +35,3 @@ describe('web3-providers-ipc', function () {
     //     });
     // });
 });
-

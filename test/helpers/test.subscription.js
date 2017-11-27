@@ -1,85 +1,77 @@
-var chai = require('chai');
-var assert = chai.assert;
-var FakeHttpProvider = require('./FakeIpcProvider');
-var Web3 = require('../../packages/web3');
+import _ from 'lodash';
+import { assert } from 'chai';
+import FakeIpcProvider from './FakeIpcProvider';
+import Web3 from '../../packages/web3';
 
+export default {
+    runTests
+};
 
-var runTests = function (protocol, tests) {
-
-    describe('web3.shh.subscribe', function () {
-        tests.forEach(function (test, index) {
-            it('should create a subscription for "'+ test.args[0] +'"', function (done) {
-
+function runTests(protocol, tests) {
+    describe('web3.shh.subscribe', () => {
+        tests.forEach((test) => {
+            it(`should create a subscription for "${test.args[0]}"`, (done) => {
                 // given
-                var sub;
-                var provider = new FakeHttpProvider();
-                var web3 = new Web3(provider);
-                var dataCount = 0;
-                var changedCount = 0;
+                let sub;
+                const provider = new FakeIpcProvider();
+                const web3 = new Web3(provider);
+                let dataCount = 0;
+                let changedCount = 0;
 
                 provider.injectResult(test.firstResult);
                 provider.injectResult(test.datadResult);
 
-                provider.injectValidation(function (payload) {
-
+                provider.injectValidation((payload) => {
                     assert.equal(payload.jsonrpc, '2.0');
-                    assert.equal(payload.method, protocol + '_subscribe');
+                    assert.equal(payload.method, `${protocol}_subscribe`);
                     assert.deepEqual(payload.params, test.firstPayload.params);
                 });
-                provider.injectValidation(function (payload) {
+                provider.injectValidation((payload) => {
                     assert.equal(payload.method, test.secondPayload.method);
 
                     done();
-
                 });
 
                 // add callback
-                test.args.push(function(err, result) {
+                test.args.push((_err, result) => {
                     if (test.err) {
                         // TODO add subscription error check
 
-                    } else if(test.subscriptionResults) {
-                        var subRes = test.subscriptionResults.shift();
+                    } else if (test.subscriptionResults) {
+                        const subRes = test.subscriptionResults.shift();
 
                         assert.deepEqual(result, subRes);
                     }
 
-                    if(!test.subscriptionResults || !test.subscriptionResults.length) {
-
-                        if(isFinite(test.dataCount))
+                    if (!test.subscriptionResults || !test.subscriptionResults.length) {
+                        if (_.isFinite(test.dataCount)) {
                             assert.equal(dataCount, test.dataCount);
-                        if(isFinite(test.changedCount))
+                        }
+                        if (_.isFinite(test.changedCount)) {
                             assert.equal(changedCount, test.changedCount);
+                        }
 
                         sub.unsubscribe();
                     }
-
                 });
 
                 // when
-                sub = web3[test.protocol].subscribe.apply(web3[test.protocol], test.args)
-                .on('data', function () {
-                    dataCount++;
-                })
-                .on('changed', function () {
-                    changedCount++;
-                });
-
+                sub = web3[test.protocol].subscribe(...test.args)
+                    .on('data', () => {
+                        dataCount++;
+                    })
+                    .on('changed', () => {
+                        changedCount++;
+                    });
 
                 // fire subscriptions
-                test.subscriptions.forEach(function (subscription) {
+                test.subscriptions.forEach((subscription) => {
                     provider.injectNotification({
-                        method: protocol + '_subscription',
+                        method: `${protocol}_subscription`,
                         params: subscription
                     });
                 });
-
             });
         });
     });
-};
-
-module.exports = {
-    runTests: runTests
 }
-

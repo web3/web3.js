@@ -1,48 +1,41 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Method = require('../packages/web3-core-method');
+import { assert } from 'chai';
+import Method from '../packages/web3-core-method';
 
-describe('lib/web3/method', function () {
-    describe('getCall', function () {
-        it('should return call name', function () {
-
+describe('lib/web3/method', () => {
+    describe('getCall', () => {
+        it('should return call name', () => {
             // given
-            var call = 'hello_call_world';
-            var method = new Method({
+            const call = 'hello_call_world';
+            const method = new Method({
                 name: 'something',
-                call: call
+                call
             });
 
             // when
-            var result = method.getCall();
+            const result = method.getCall();
 
             // then
             assert.equal(call, result);
         });
 
-        it('should return call based on args', function () {
-
+        it('should return call based on args', () => {
             // given
-            var call = function (args) {
-                return args ? args.length.toString() : '0';
-            };
+            const call = args => (args ? args.length.toString() : '0');
 
-            var method = new Method({
+            const method = new Method({
                 name: 'something',
-                call: call
+                call
             });
 
             // when
-            var r0 = method.getCall();
-            var r1 = method.getCall([1]);
-            var r2 = method.getCall([1, 2]);
+            const r0 = method.getCall();
+            const r1 = method.getCall([1]);
+            const r2 = method.getCall([1, 2]);
 
             // then
             assert.equal(r0, '0');
             assert.equal(r1, '1');
             assert.equal(r2, '2');
-
         });
     });
 });
-

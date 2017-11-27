@@ -1,12 +1,13 @@
-var testMethod = require('./helpers/test.method.js');
+import testMethod from './helpers/test.method.js';
 
-var method = 'isListening';
+const method = 'isListening';
 
+const tests = [
+    {
+        result: true,
+        formattedResult: true,
+        call: 'net_listening'
+    }
+];
 
-var tests = [{
-    result: true,
-    formattedResult: true,
-    call: 'net_listening'
-}];
-
-testMethod.runTests(['eth','net'], method, tests);
+testMethod.runTests(['eth', 'net'], method, tests);

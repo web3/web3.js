@@ -1,9 +1,9 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Eth = require('../packages/web3-eth');
-var eth = new Eth();
+import { assert } from 'chai';
+import Eth from '../packages/web3-eth';
 
-var tests = [
+const eth = new Eth();
+
+const tests = [
     {
         direct: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS',
         address: '0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8' // checksum address
@@ -23,18 +23,18 @@ var tests = [
     }
 ];
 
-describe('eth', function () {
-    describe('Iban', function () {
-        tests.forEach(function (test) {
-            it('toAddress() should transform iban to address: ' +  test.address, function () {
-                if(test.error) {
+describe('eth', () => {
+    describe('Iban', () => {
+        tests.forEach((test) => {
+            it(`toAddress() should transform iban to address: ${test.address}`, () => {
+                if (test.error) {
                     assert.throws(eth.Iban.toAddress.bind(eth.Iban, test.direct));
                 } else {
                     assert.deepEqual(eth.Iban.toAddress(test.direct), test.address);
                 }
             });
-            it('toIban() should transform address to iban: ' +  test.address, function () {
-                if(test.error) {
+            it(`toIban() should transform address to iban: ${test.address}`, () => {
+                if (test.error) {
                     assert.throws(eth.Iban.toIban.bind(eth, test.address));
                 } else {
                     assert.deepEqual(eth.Iban.toIban(test.address), test.direct);
@@ -43,4 +43,3 @@ describe('eth', function () {
         });
     });
 });
-

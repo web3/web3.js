@@ -1,11 +1,10 @@
-var chai = require('chai');
-var assert = chai.assert;
-var u = require('./helpers/test.utils.js');
-var Personal = require('../packages/web3-eth-personal');
-var personal = new Personal();
+import u from './helpers/test.utils.js';
+import Personal from '../packages/web3-eth-personal';
 
-describe('web3.net', function() {
-    describe('methods', function() {
+const personal = new Personal();
+
+describe('web3.net', () => {
+    describe('methods', () => {
         u.methodExists(personal, 'getAccounts');
         u.methodExists(personal, 'newAccount');
         u.methodExists(personal, 'unlockAccount');

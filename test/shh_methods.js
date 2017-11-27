@@ -1,9 +1,10 @@
-var u = require('./helpers/test.utils.js');
-var Shh = require('../packages/web3-shh');
-var shh = new Shh();
+import u from './helpers/test.utils.js';
+import Shh from '../packages/web3-shh';
 
-describe('shh', function() {
-    describe('methods', function() {
+const shh = new Shh();
+
+describe('shh', () => {
+    describe('methods', () => {
         u.methodExists(shh, 'subscribe');
 
         u.methodExists(shh, 'getVersion');
@@ -29,4 +30,3 @@ describe('shh', function() {
         u.methodExists(shh, 'post');
     });
 });
-

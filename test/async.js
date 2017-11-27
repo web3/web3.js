@@ -1,132 +1,108 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var FakeHttpProvider = require('./helpers/FakeIpcProvider');
+import { assert } from 'chai';
+import Web3 from '../packages/web3';
+import FakeIpcProvider from './helpers/FakeIpcProvider';
 
-var web3 = new Web3();
+const web3 = new Web3();
 
 // use sendTransaction as dummy
-var method = 'call';
+const method = 'call';
 
-var tests = [{
+const tests = [{
     input: {
-        'from': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS',
-        'to': 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
+        from: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS',
+        to: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS'
     },
     formattedInput: [{
-        'from': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8',
-        'to': '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8'
+        from: '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8',
+        to: '0x00c5496aee77c1ba1f0854206a26dda82a81d6d8'
     }, 'latest'],
     result: '0xb',
     formattedResult: '0xb',
-    call: 'eth_'+ method
+    call: `eth_${method}`
 }];
 
-describe('async', function () {
-    tests.forEach(function (test, index) {
-        it('test callback: ' + index, function (done) {
-
+describe('async', () => {
+    tests.forEach((test, index) => {
+        it(`test callback: ${index}`, (done) => {
             // given
-            var provider = new FakeHttpProvider();
+            const provider = new FakeIpcProvider();
             web3.setProvider(provider);
             provider.injectResult(test.result);
-            provider.injectValidation(function (payload) {
+            provider.injectValidation((payload) => {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
                 assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
-            web3.eth[method](test.input, function(error, result){
-
-                // then
+            web3.eth[method](test.input, (error, result) => {
                 assert.isNull(error);
                 assert.strictEqual(test.formattedResult, result);
 
                 done();
             });
-
         });
 
-        it('test promise: ' + index, function (done) {
-
+        it(`test promise: ${index}`, async () => {
             // given
-            var provider = new FakeHttpProvider();
+            const provider = new FakeIpcProvider();
             web3.setProvider(provider);
             provider.injectResult(test.result);
-            provider.injectValidation(function (payload) {
+            provider.injectValidation((payload) => {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
                 assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
-            web3.eth[method](test.input)
-            .then(function(result){
-
-                // then
-                assert.strictEqual(test.formattedResult, result);
-
-                done();
-            });
-
+            const result = await web3.eth[method](test.input);
+            assert.strictEqual(test.formattedResult, result);
         });
 
-        it('error test callback: ' + index, function (done) {
-
+        it(`error test callback: ${index}`, (done) => {
             // given
-            var provider = new FakeHttpProvider();
-            web3.setProvider(provider);
-            provider.injectError({
-                    message: test.result,
-                    code: -32603
-            });
-            provider.injectValidation(function (payload) {
-                assert.equal(payload.jsonrpc, '2.0');
-                assert.equal(payload.method, test.call);
-                assert.deepEqual(payload.params, test.formattedInput);
-            });
-
-            // when
-            web3.eth[method](test.input, function(error, result){
-
-                // then
-                assert.isUndefined(result);
-                assert.strictEqual(test.formattedResult, error.message);
-
-                done();
-            }).catch(function () {
-
-            });
-
-        });
-
-        it('error test promise: ' + index, function (done) {
-
-            // given
-            var provider = new FakeHttpProvider();
+            const provider = new FakeIpcProvider();
             web3.setProvider(provider);
             provider.injectError({
                 message: test.result,
                 code: -32603
             });
-            provider.injectValidation(function (payload) {
+            provider.injectValidation((payload) => {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, test.call);
                 assert.deepEqual(payload.params, test.formattedInput);
             });
 
             // when
-            web3.eth[method](test.input)
-            .catch(function(error){
-
-                // then
+            web3.eth[method](test.input, (error, result) => {
+                assert.isUndefined(result);
                 assert.strictEqual(test.formattedResult, error.message);
 
                 done();
             });
+        });
 
+        it(`error test promise: ${index}`, async () => {
+            // given
+            const provider = new FakeIpcProvider();
+            web3.setProvider(provider);
+            provider.injectError({
+                message: test.result,
+                code: -32603
+            });
+            provider.injectValidation((payload) => {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, test.call);
+                assert.deepEqual(payload.params, test.formattedInput);
+            });
+
+            // when
+            try {
+                await web3.eth[method](test.input);
+                assert.fail('Should have thrown');
+            } catch (error) {
+                assert.strictEqual(test.formattedResult, error.message);
+            }
         });
     });
 });
-

@@ -1,5 +1,5 @@
-const _ = require('lodash');
-const { assert } = require('chai');
+import _ from 'lodash';
+import { assert } from 'chai';
 
 export default class FakeHttpProvider {
     countId = 1;
@@ -58,7 +58,9 @@ export default class FakeHttpProvider {
             if (_.isArray(response)) {
                 response = response.map((resp, index) => {
                     // eslint-disable-next-line no-param-reassign
-                    resp.id = payload[index] ? payload[index].id : this.countId++;
+                    resp.id = payload[index]
+                        ? payload[index].id
+                        : this.countId++;
 
                     return resp;
                 });

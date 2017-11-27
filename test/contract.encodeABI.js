@@ -1,46 +1,42 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Eth = require('../packages/web3-eth');
-var sha3 = require('../packages/web3-utils').sha3;
-var FakeIpcProvider = require('./helpers/FakeIpcProvider');
-var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Promise = require('bluebird');
+import { assert } from 'chai';
+import Eth from '../packages/web3-eth';
+import FakeIpcProvider from './helpers/FakeIpcProvider';
 
-var abi = [
+const abi = [
     {
         constant: true,
         inputs: [
             {
-                name: "a",
-                type: "bytes32"
+                name: 'a',
+                type: 'bytes32'
             },
             {
-                name: "b",
-                type: "bytes32"
+                name: 'b',
+                type: 'bytes32'
             }
         ],
-        name: "takesTwoBytes32",
+        name: 'takesTwoBytes32',
         outputs: [
             {
-                name: "",
-                type: "bytes32"
+                name: '',
+                type: 'bytes32'
             }
         ],
         payable: false,
-        type: "function",
-        stateMutability: "view"
+        type: 'function',
+        stateMutability: 'view'
     }
 ];
 
-describe('contract', function () {
-    describe('method.encodeABI', function () {
-        it('should handle bytes32 arrays that only contain 1 byte', function () {
-            var provider = new FakeIpcProvider();
-            var eth = new Eth(provider);
+describe('contract', () => {
+    describe('method.encodeABI', () => {
+        it('should handle bytes32 arrays that only contain 1 byte', () => {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
 
-            var contract = new eth.Contract(abi);
+            const contract = new eth.Contract(abi);
 
-            var result = contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(2)), '0x'.concat('b'.repeat(2))).encodeABI();
+            const result = contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(2)), '0x'.concat('b'.repeat(2))).encodeABI();
 
             assert.equal(result, [
                 '0x1323517e',
@@ -49,13 +45,13 @@ describe('contract', function () {
             ].join(''));
         });
 
-        it('should handle bytes32 arrays that are short 1 byte', function () {
-            var provider = new FakeIpcProvider();
-            var eth = new Eth(provider);
+        it('should handle bytes32 arrays that are short 1 byte', () => {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
 
-            var contract = new eth.Contract(abi);
+            const contract = new eth.Contract(abi);
 
-            var result = contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(62)), '0x'.concat('b'.repeat(62))).encodeABI();
+            const result = contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(62)), '0x'.concat('b'.repeat(62))).encodeABI();
 
             assert.equal(result, [
                 '0x1323517e',
@@ -64,26 +60,30 @@ describe('contract', function () {
             ].join(''));
         });
 
-        it('should throw an exception on bytes32 arrays that have an invalid length', function () {
-            var provider = new FakeIpcProvider();
-            var eth = new Eth(provider);
+        it('should throw an exception on bytes32 arrays that have an invalid length', () => {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
 
-            var contract = new eth.Contract(abi);
+            const contract = new eth.Contract(abi);
 
-            var test = function () {
-                contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(63)), '0x'.concat('b'.repeat(63))).encodeABI();
-            }
+            const test = () => {
+                const param1 = `0x${'a'.repeat(63)}`;
+                const param2 = `0x${'b'.repeat(63)}`;
+                contract.methods.takesTwoBytes32(param1, param2).encodeABI();
+            };
 
             assert.throws(test, 'Given parameter bytes has an invalid length: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"');
         });
 
-        it('should handle bytes32 arrays that are full', function () {
-            var provider = new FakeIpcProvider();
-            var eth = new Eth(provider);
+        it('should handle bytes32 arrays that are full', () => {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
 
-            var contract = new eth.Contract(abi);
+            const contract = new eth.Contract(abi);
 
-            var result = contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(64)), '0x'.concat('b'.repeat(64))).encodeABI();
+            const param1 = `0x${'a'.repeat(64)}`;
+            const param2 = `0x${'b'.repeat(64)}`;
+            const result = contract.methods.takesTwoBytes32(param1, param2).encodeABI();
 
             assert.equal(result, [
                 '0x1323517e',
@@ -92,15 +92,17 @@ describe('contract', function () {
             ].join(''));
         });
 
-        it('should throw an exception on bytes32 arrays that are too long', function () {
-            var provider = new FakeIpcProvider();
-            var eth = new Eth(provider);
+        it('should throw an exception on bytes32 arrays that are too long', () => {
+            const provider = new FakeIpcProvider();
+            const eth = new Eth(provider);
 
-            var contract = new eth.Contract(abi);
+            const contract = new eth.Contract(abi);
 
-            var test = function() {
-                contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(66)), '0x'.concat('b'.repeat(66))).encodeABI();
-            }
+            const test = () => {
+                const param1 = `0x${'a'.repeat(66)}`;
+                const param2 = `0x${'b'.repeat(66)}`;
+                contract.methods.takesTwoBytes32(param1, param2).encodeABI();
+            };
 
             assert.throws(test, 'Given parameter bytes is too long: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"');
         });

@@ -1,13 +1,13 @@
-var testMethod = require('./helpers/test.method.js');
+import testMethod from './helpers/test.method.js';
 
-var method = 'getCoinbase';
+const method = 'getCoinbase';
 
-
-var tests = [{
-    result: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
-    formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
-    call: 'eth_coinbase'
-}];
-
+const tests = [
+    {
+        result: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
+        formattedResult: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
+        call: 'eth_coinbase'
+    }
+];
 
 testMethod.runTests('eth', method, tests);

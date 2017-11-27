@@ -1,13 +1,14 @@
-var testMethod = require('./helpers/test.method.js');
+import testMethod from './helpers/test.method.js';
 
-var method = 'getProtocolVersion';
-var call = 'eth_protocolVersion';
+const method = 'getProtocolVersion';
+const call = 'eth_protocolVersion';
 
-var tests = [{
-    result: '12345',
-    formattedResult: '12345',
-    call: call
-}];
-
+const tests = [
+    {
+        result: '12345',
+        formattedResult: '12345',
+        call
+    }
+];
 
 testMethod.runTests('eth', method, tests);

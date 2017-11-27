@@ -1,156 +1,143 @@
-var assert = require('assert');
-var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
+import { assert } from 'chai';
+import Jsonrpc from '../packages/web3-core-requestmanager/src/jsonrpc';
 
-describe('jsonrpc', function () {
-    describe('isValidResponse', function () {
-        it('should validate basic jsonrpc response', function () {
-
+describe('jsonrpc', () => {
+    describe('isValidResponse', () => {
+        it('should validate basic jsonrpc response', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: 1,
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
         });
 
-        it('should validate basic undefined response', function () {
-
-            // given
-            var response = undefined;
-
+        it('should validate basic undefined response', () => {
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(undefined);
 
             // then
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response without jsonrpc field', function () {
-
+        it('should validate jsonrpc response without jsonrpc field', () => {
             // given
-            var response = {
+            const response = {
                 id: 1,
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with wrong jsonrpc version', function () {
-
+        it('should validate jsonrpc response with wrong jsonrpc version', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '1.0',
                 id: 1,
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response without id number', function () {
-
+        it('should validate jsonrpc response without id number', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with string id field', function () {
-
+        it('should validate jsonrpc response with string id field', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: 'x',
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response with string id field but as number', function () {
-
+        it('should validate jsonrpc response with string id field but as number', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: '23',
                 result: []
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response without result field', function () {
-
+        it('should validate jsonrpc response without result field', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: 1
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with result field === false', function () {
-
+        it('should validate jsonrpc response with result field === false', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: 1,
                 result: false
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response with result field === 0', function () {
-
+        it('should validate jsonrpc response with result field === 0', () => {
             // given
-            var response = {
+            const response = {
                 jsonrpc: '2.0',
                 id: 1,
                 result: 0
             };
 
             // when
-            var valid = Jsonrpc.isValidResponse(response);
+            const valid = Jsonrpc.isValidResponse(response);
 
             // then
             assert.equal(valid, true);

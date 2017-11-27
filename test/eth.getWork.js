@@ -1,14 +1,15 @@
-var testMethod = require('./helpers/test.method.js');
+import testMethod from './helpers/test.method.js';
 
-var method = 'getWork';
+const method = 'getWork';
 
-var tests = [{
-    args: [],
-    formattedArgs: [],
-    result: true,
-    formattedResult: true,
-    call: 'eth_'+ method
-}];
+const tests = [
+    {
+        args: [],
+        formattedArgs: [],
+        result: true,
+        formattedResult: true,
+        call: `eth_${method}`
+    }
+];
 
 testMethod.runTests('eth', method, tests);
-

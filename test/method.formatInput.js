@@ -1,42 +1,37 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Method = require('../packages/web3-core-method');
+import { assert } from 'chai';
+import Method from '../packages/web3-core-method';
 
-describe('lib/web3/method', function () {
-    describe('formatInput', function () {
-        it('should format plain input', function () {
-
+describe('lib/web3/method', () => {
+    describe('formatInput', () => {
+        it('should format plain input', () => {
             // given
-            var star = function (arg) {
-                return arg + '*';
-            };
+            const star = arg => `${arg}*`;
 
-            var method = new Method({
-                name: 'something', call: 'eth_something',
+            const method = new Method({
+                name: 'something',
+                call: 'eth_something',
                 inputFormatter: [star, star, star]
             });
-            var args = ['1','2','3'];
-            var expectedArgs = ['1*', '2*', '3*'];
+            const args = ['1', '2', '3'];
+            const expectedArgs = ['1*', '2*', '3*'];
 
             // when
-            var result = method.formatInput(args);
+            const result = method.formatInput(args);
 
             // then
             assert.deepEqual(result, expectedArgs);
         });
 
-        it('should do nothing if there is no formatter', function () {
-
+        it('should do nothing if there is no formatter', () => {
             // given
-            var method = new Method({name: 'something', call: 'eth_something'});
-            var args = [1,2,3];
+            const method = new Method({ name: 'something', call: 'eth_something' });
+            const args = [1, 2, 3];
 
             // when
-            var result = method.formatInput(args);
+            const result = method.formatInput(args);
 
             // then
             assert.deepEqual(result, args);
         });
     });
 });
-

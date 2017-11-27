@@ -14,8 +14,7 @@ export default {
     lintableFiles: [
         scripts,
         './*.js',
-        './gulp/**/*.js'
-        // Disable linting tests until we've finished converting them to ES6
-        // './test/**/*.js'
+        './gulp/**/*.js',
+        './test/**/*.js'
     ]
 };

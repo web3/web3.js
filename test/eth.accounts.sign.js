@@ -1,17 +1,18 @@
-var Accounts = require("./../packages/web3-eth-accounts");
-var chai = require('chai');
-var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+import { assert } from 'chai';
+import Accounts from './../packages/web3-eth-accounts/src/index.js';
+import Web3 from '../packages/web3';
 
-var tests = [
+const web3 = new Web3();
+
+const tests = [
     {
         address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
         data: 'Some data',
         // signature done with personal_sign
         signature: '0xa8037a6116c176a25e6fc224947fde9e79a2deaa0dd8b67b366fbdfdbffc01f953e41351267b20d4a89ebfe9c8f03c04de9b345add4a52f15bd026b63c8fb1501b'
-    }, {
+    },
+    {
         address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
         data: 'Some data!%$$%&@*',
@@ -20,76 +21,74 @@ var tests = [
     }
 ];
 
+describe('eth', () => {
+    describe('accounts', () => {
+        tests.forEach((test) => {
+            it('sign data using a string', () => {
+                const ethAccounts = new Accounts();
 
-describe("eth", function () {
-    describe("accounts", function () {
-
-        tests.forEach(function (test, i) {
-            it("sign data using a string", function() {
-                var ethAccounts = new Accounts();
-
-                var data = ethAccounts.sign(test.data, test.privateKey);
+                const data = ethAccounts.sign(test.data, test.privateKey);
 
                 assert.equal(data.signature, test.signature);
             });
 
-            it("sign data using a utf8 encoded hex string", function() {
-                var ethAccounts = new Accounts();
+            it('sign data using a utf8 encoded hex string', () => {
+                const ethAccounts = new Accounts();
 
-                var data = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
+                const data = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
 
                 assert.equal(data.signature, test.signature);
             });
 
+            it('recover signature using a string', () => {
+                const ethAccounts = new Accounts();
 
-            it("recover signature using a string", function() {
-                var ethAccounts = new Accounts();
-
-                var address = ethAccounts.recover(test.data, test.signature);
-
-                assert.equal(address, test.address);
-            });
-
-            it("recover signature using a hashed message", function() {
-                var ethAccounts = new Accounts();
-
-                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), test.signature);
+                const address = ethAccounts.recover(test.data, test.signature);
 
                 assert.equal(address, test.address);
             });
 
-            it("recover signature (pre encoded) using a signature object", function() {
-                var ethAccounts = new Accounts();
+            it('recover signature using a hashed message', () => {
+                const ethAccounts = new Accounts();
 
-                var sig = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
-                var address = ethAccounts.recover(sig);
-
-                assert.equal(address, test.address);
-            });
-
-            it("recover signature using a signature object", function() {
-                var ethAccounts = new Accounts();
-
-                var sig = ethAccounts.sign(test.data, test.privateKey);
-                var address = ethAccounts.recover(sig);
+                const hash = ethAccounts.hashMessage(test.data);
+                const address = ethAccounts.recover(hash, test.signature);
 
                 assert.equal(address, test.address);
             });
 
-            it("recover signature (pre encoded) using a hash and r s v values", function() {
-                var ethAccounts = new Accounts();
+            it('recover signature (pre encoded) using a signature object', () => {
+                const ethAccounts = new Accounts();
 
-                var sig = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
-                var address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
+                const sig = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
+                const address = ethAccounts.recover(sig);
 
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a hash and r s v values", function() {
-                var ethAccounts = new Accounts();
+            it('recover signature using a signature object', () => {
+                const ethAccounts = new Accounts();
 
-                var sig = ethAccounts.sign(test.data, test.privateKey);
-                var address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
+                const sig = ethAccounts.sign(test.data, test.privateKey);
+                const address = ethAccounts.recover(sig);
+
+                assert.equal(address, test.address);
+            });
+
+            it('recover signature (pre encoded) using a hash and r s v values', () => {
+                const ethAccounts = new Accounts();
+
+                const sig = ethAccounts.sign(web3.utils.utf8ToHex(test.data), test.privateKey);
+                const address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
+
+                assert.equal(address, test.address);
+            });
+
+            it('recover signature using a hash and r s v values', () => {
+                const ethAccounts = new Accounts();
+
+                const sig = ethAccounts.sign(test.data, test.privateKey);
+                const address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
 
                 assert.equal(address, test.address);
             });
