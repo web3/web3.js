@@ -1,10 +1,10 @@
-var Accounts = require("./../packages/web3-eth-accounts");
-var chai = require('chai');
-var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+import { assert } from 'chai';
+import Accounts from './../packages/web3-eth-accounts';
+import Web3 from '../packages/web3';
 
-var tests = [
+const web3 = new Web3();
+
+const tests = [
     {
         address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
         privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
@@ -20,17 +20,15 @@ var tests = [
     }
 ];
 
-
-describe("eth", function () {
-    describe("accounts.wallet", function () {
-
-        tests.forEach(function (test, i) {
-            it("creates the right number of wallets", function() {
-                var ethAccounts = new Accounts();
+describe('eth', () => {
+    describe('accounts.wallet', () => {
+        tests.forEach((test) => {
+            it('creates the right number of wallets', () => {
+                const ethAccounts = new Accounts();
 
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(2, '542342f!@#$$');
+                let wallet = ethAccounts.wallet.create(2, '542342f!@#$$');
 
                 assert.equal(ethAccounts.wallet.length, 2);
                 assert.equal(wallet.length, 2);
@@ -44,11 +42,11 @@ describe("eth", function () {
                 assert.isTrue(web3.utils.isAddress(ethAccounts.wallet[2].address));
             });
 
-            it("add wallet using a privatekey", function() {
-                var ethAccounts = new Accounts();
+            it('add wallet using a privatekey', () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add(test.privateKey);
+                const wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(wallet.address, test.address);
                 assert.equal(wallet.privateKey, test.privateKey);
                 assert.isFunction(wallet.signTransaction);
@@ -63,11 +61,11 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 1);
             });
 
-            it("add wallet using an account", function() {
-                var ethAccounts = new Accounts();
+            it('add wallet using an account', () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add({
+                const wallet = ethAccounts.wallet.add({
                     address: test.address,
                     privateKey: test.privateKey
                 });
@@ -85,11 +83,11 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 1);
             });
 
-            it("add wallet double shouldn't work", function() {
-                var ethAccounts = new Accounts();
+            it("add wallet double shouldn't work", () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add({
+                let wallet = ethAccounts.wallet.add({
                     address: test.address,
                     privateKey: test.privateKey
                 });
@@ -113,11 +111,11 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 1);
             });
 
-            it("remove wallet using an index", function() {
-                var ethAccounts = new Accounts();
+            it('remove wallet using an index', () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add(test.privateKey);
+                const wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
 
                 ethAccounts.wallet.remove(0);
@@ -127,14 +125,13 @@ describe("eth", function () {
                 assert.isUndefined(ethAccounts.wallet[wallet.address.toLowerCase()]);
 
                 assert.equal(ethAccounts.wallet.length, 0);
-
             });
 
-            it("remove wallet using an address", function() {
-                var ethAccounts = new Accounts();
+            it('remove wallet using an address', () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add(test.privateKey);
+                const wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
 
                 ethAccounts.wallet.remove(test.address);
@@ -144,14 +141,13 @@ describe("eth", function () {
                 assert.isUndefined(ethAccounts.wallet[wallet.address.toLowerCase()]);
 
                 assert.equal(ethAccounts.wallet.length, 0);
-
             });
 
-            it("remove wallet using an lowercase address", function() {
-                var ethAccounts = new Accounts();
+            it('remove wallet using an lowercase address', () => {
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.add(test.privateKey);
+                const wallet = ethAccounts.wallet.add(test.privateKey);
                 assert.equal(ethAccounts.wallet.length, 1);
 
                 ethAccounts.wallet.remove(test.address.toLowerCase());
@@ -161,22 +157,21 @@ describe("eth", function () {
                 assert.isUndefined(ethAccounts.wallet[wallet.address.toLowerCase()]);
 
                 assert.equal(ethAccounts.wallet.length, 0);
-
             });
 
-            it("create 5 wallets, remove two, create two more and check for overwrites", function() {
-                var count = 5;
-                var ethAccounts = new Accounts();
+            it('create 5 wallets, remove two, create two more and check for overwrites', () => {
+                const count = 5;
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(count);
-                var initialAddresses = [0,1,2,3,4].map(function(n) { return wallet[n].address } );
+                const wallet = ethAccounts.wallet.create(count);
+                const initialAddresses = [0, 1, 2, 3, 4].map(n => wallet[n].address);
                 assert.equal(ethAccounts.wallet.length, count);
 
-                var thirdAddress = ethAccounts.wallet[2].address;
-                var lastAddress = ethAccounts.wallet[4].address;
-                var remainingAddresses = [0,1,3];
-                var beforeRemoval = remainingAddresses.map(function(n) { return wallet[n].address } );
+                const thirdAddress = ethAccounts.wallet[2].address;
+                const lastAddress = ethAccounts.wallet[4].address;
+                const remainingAddresses = [0, 1, 3];
+                const beforeRemoval = remainingAddresses.map(n => wallet[n].address);
 
                 ethAccounts.wallet.remove(2);
                 ethAccounts.wallet.remove(4);
@@ -188,7 +183,7 @@ describe("eth", function () {
                 assert.isUndefined(ethAccounts.wallet[lastAddress]);
                 assert.isUndefined(ethAccounts.wallet[lastAddress.toLowerCase()]);
 
-                var afterRemoval = remainingAddresses.map(function(n) { return wallet[n].address } );
+                const afterRemoval = remainingAddresses.map(n => wallet[n].address);
 
                 assert.equal(ethAccounts.wallet._findSafeIndex(), 2);
                 assert.equal(ethAccounts.wallet.length, 3);
@@ -198,33 +193,33 @@ describe("eth", function () {
                 assert.isTrue(web3.utils.isAddress(wallet[4].address));
                 assert.isUndefined(ethAccounts.wallet[5]);
 
-                var afterMoreCreation = remainingAddresses.map(function(n) { return wallet[n].address } );
-                var newAddresses = [0,1,2,3,4].map(function(n) { return wallet[n].address } );
+                const afterMoreCreation = remainingAddresses.map(n => wallet[n].address);
+                const newAddresses = [0, 1, 2, 3, 4].map(n => wallet[n].address);
 
                 // Checks for account overwrites
-                assert.sameOrderedMembers(beforeRemoval, afterMoreCreation, "same ordered members");
-                assert.sameOrderedMembers(afterRemoval, afterMoreCreation, "same ordered members");
-                assert.notSameMembers(initialAddresses, newAddresses, "not same members");
+                assert.sameOrderedMembers(beforeRemoval, afterMoreCreation, 'same ordered members');
+                assert.sameOrderedMembers(afterRemoval, afterMoreCreation, 'same ordered members');
+                assert.notSameMembers(initialAddresses, newAddresses, 'not same members');
 
                 assert.equal(ethAccounts.wallet.length, count);
             });
 
-            it("clear wallet", function() {
-                var count = 10;
-                var ethAccounts = new Accounts();
+            it('clear wallet', () => {
+                const count = 10;
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(count);
+                const wallet = ethAccounts.wallet.create(count);
                 assert.equal(ethAccounts.wallet.length, count);
 
-                var addresses = [];
-                for (var i = 0; i < count; i++) {
+                const addresses = [];
+                for (let i = 0; i < count; i++) {
                     addresses.push(wallet[i].address);
                 }
 
                 ethAccounts.wallet.clear();
 
-                for (var i = 0; i < count; i++) {
+                for (let i = 0; i < count; i++) {
                     assert.isUndefined(ethAccounts.wallet[i]);
                     assert.isUndefined(ethAccounts.wallet[addresses[i]]);
                     assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
@@ -233,51 +228,49 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 0);
             });
 
-            it("remove accounts then clear wallet", function() {
-                var count = 10;
-                var ethAccounts = new Accounts();
+            it('remove accounts then clear wallet', () => {
+                const count = 10;
+                const ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(count);
+                const wallet = ethAccounts.wallet.create(count);
                 assert.equal(ethAccounts.wallet.length, count);
 
-                var addresses = [];
-                for (var i = 0; i < count; i++) {
+                const addresses = [];
+                for (let i = 0; i < count; i++) {
                     addresses.push(wallet[i].address);
                 }
 
                 ethAccounts.wallet.remove(0);
-                assert.isUndefined(ethAccounts.wallet[0])
+                assert.isUndefined(ethAccounts.wallet[0]);
                 ethAccounts.wallet.remove(5);
-                assert.isUndefined(ethAccounts.wallet[5])
+                assert.isUndefined(ethAccounts.wallet[5]);
 
                 ethAccounts.wallet.clear();
 
-                for (var i = 0; i < count; i++) {
+                for (let i = 0; i < count; i++) {
                     assert.isUndefined(ethAccounts.wallet[i]);
                     assert.isUndefined(ethAccounts.wallet[addresses[i]]);
                     assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
                 }
 
-
-
                 assert.equal(ethAccounts.wallet.length, 0);
             });
 
-            it("encrypt then decrypt wallet", function() {
-                var ethAccounts = new Accounts();
-                var password = "qwerty";
+            it('encrypt then decrypt wallet', () => {
+                const ethAccounts = new Accounts();
+                const password = 'qwerty';
 
                 assert.equal(ethAccounts.wallet.length, 0);
 
-                var wallet = ethAccounts.wallet.create(5);
-                var addressFromWallet = ethAccounts.wallet[0].address;
+                ethAccounts.wallet.create(5);
+                const addressFromWallet = ethAccounts.wallet[0].address;
                 assert.equal(ethAccounts.wallet.length, 5);
 
                 ethAccounts.wallet.remove(2);
                 assert.equal(ethAccounts.wallet.length, 4);
 
-                var keystore = ethAccounts.wallet.encrypt(password);
+                const keystore = ethAccounts.wallet.encrypt(password);
                 assert.equal(keystore.length, 4);
 
                 ethAccounts.wallet.clear();
@@ -286,9 +279,8 @@ describe("eth", function () {
                 ethAccounts.wallet.decrypt(keystore, password);
                 assert.equal(ethAccounts.wallet.length, 4);
 
-                var addressFromKeystore = ethAccounts.wallet[0].address;
+                const addressFromKeystore = ethAccounts.wallet[0].address;
                 assert.equal(addressFromKeystore, addressFromWallet);
-
             });
         });
     });

@@ -17,8 +17,8 @@
     "watch": "gulp watch",
     "docs": "cd docs; make html;",
     "lint": "gulp lint",
-    "test": "mocha; gulp lint",
-    "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "coverage": "nyc report --reporter=text-lcov | coveralls --verbose"
   },
   "repository": {
     "type": "git",
@@ -91,10 +91,10 @@
     "gulp-plumber": "^1.1.0",
     "gulp-replace": "^0.6.1",
     "gulp-util": "^3.0.8",
-    "istanbul": "^0.4.5",
     "lerna": "^2.4.0",
     "lodash": "^4.17.4",
     "mocha": "^4.0.1",
+    "nyc": "^11.2.1",
     "rollup": "^0.50.0",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-commonjs": "^8.2.4",

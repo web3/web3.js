@@ -11,4 +11,6 @@ node_modules
 .idea/
 .npm/
 /packages/**/lib/*
-.vscode/
+/.nyc_output
+package-lock.json
+
