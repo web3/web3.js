@@ -2871,7 +2871,7 @@ var runTests = function(contractFactory) {
             provider.injectResult('0x321');
 
 
-            var contract = new eth.Contract(abi);
+            var contract = contractFactory(abi, provider);
 
             contract.deploy({
                 data: '0x1234567',
