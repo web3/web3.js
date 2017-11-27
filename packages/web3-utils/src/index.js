@@ -138,6 +138,8 @@ var hexToAscii = function(hex) {
  * @returns {String} hex representation of input string
  */
 var asciiToHex = function(str) {
+    if(!str)
+        return "0x00";
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
