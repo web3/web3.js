@@ -152,6 +152,11 @@ var address = '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe';
 var addressLowercase = '0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae';
 var address2 = '0x5555567890123456789012345678901234567891';
 
+var account = {
+    address: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+    privateKey: '0xbe6383dad004f233317e46ddb46ad31b16064d14447a95cc1d8c8d4bc61c3728',
+};
+
 describe('contract', function () {
     describe('instantiation', function () {
         it('should transform address from checksum addressess', function () {
@@ -2788,6 +2793,102 @@ describe('contract', function () {
             // });
 
         });
+
+        it('should deploy a contract, sign transaction, and return contract instance', function (done) {
+                var provider = new FakeIpcProvider();
+                var eth = new Eth(provider);
+                eth.accounts.wallet.add(account.privateKey);
+
+                provider.injectValidation(function (payload) {
+
+                    var expected = eth.accounts.wallet[0].signTransaction({
+                        data: '0x1234567000000000000000000000000'+ account.address.toLowerCase().replace('0x','') +'00000000000000000000000000000000000000000000000000000000000000c8' ,
+                        from: account.address.toLowerCase(),
+                        gas: '0xc350',
+                        gasPrice: '0xbb8',
+                        chainId: '0x1',
+                        nonce: '0x1',
+                    }).rawTransaction;
+
+                    assert.equal(payload.method, 'eth_sendRawTransaction');
+                    assert.deepEqual(payload.params, [expected]);
+
+                });
+                provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
+
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.method, 'eth_getTransactionReceipt');
+                    assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
+                });
+                provider.injectResult(null);
+
+
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.method, 'eth_subscribe');
+                    assert.deepEqual(payload.params, ['newHeads']);
+                });
+                provider.injectResult('0x1234567');
+
+                // fake newBlock
+                provider.injectNotification({
+                    method: 'eth_subscription',
+                    params: {
+                        subscription: '0x1234567',
+                        result: {
+                            blockNumber: '0x10'
+                        }
+                    }
+                });
+
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.method, 'eth_getTransactionReceipt');
+                    assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
+                });
+                provider.injectResult({
+                    contractAddress: addressLowercase,
+                    blockHash: '0xffdd'
+                });
+                provider.injectValidation(function (payload) {
+                    assert.equal(payload.method, 'eth_getCode');
+                    assert.deepEqual(payload.params, [addressLowercase, 'latest']);
+                });
+                provider.injectResult('0x321');
+
+
+                var contract = new eth.Contract(abi);
+
+                contract.deploy({
+                    data: '0x1234567',
+                    arguments: [account.address, 200]
+                }).send({
+                        from: account.address,
+                        gas: 50000,
+                        gasPrice: 3000,
+                        chainId: 1,
+                        nonce: 1,
+                    })
+                    .on('transactionHash', function (value) {
+                        assert.equal('0x5550000000000000000000000000000000000000000000000000000000000032', value);
+                    })
+                    .on('receipt', function (receipt) {
+                        assert.equal(address, receipt.contractAddress);
+                        assert.isNull(contract.options.address);
+                    })
+                    .then(function(newContract) {
+                        // console.log(newContract);
+                        assert.equal(newContract.options.address, address);
+                        assert.isTrue(newContract !== contract, 'contract objects shouldn\'t the same');
+
+                        setTimeout(function () {
+                            done();
+                        }, 1);
+                    });
+                // .on('error', function (value) {
+                //     console.log('error', value);
+                //     done();
+                // });
+
+            }).timeout(4000);
 
         // TODO add error check
     });
