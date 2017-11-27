@@ -498,7 +498,8 @@ Contract.prototype.deploy = function(options, callback){
     return this._createTxObject.apply({
         method: constructor,
         parent: this,
-        deployData: options.data
+        deployData: options.data,
+        _ethAccounts: this.constructor._ethAccounts
     }, options.arguments);
 
 };
@@ -695,6 +696,7 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.arguments = args || [];
     txObject._method = this.method;
     txObject._parent = this.parent;
+    txObject._ethAccounts = this.constructor._ethAccounts || this._ethAccounts;
 
     if(this.deployData) {
         txObject._deployData = this.deployData;
@@ -756,8 +758,8 @@ Contract.prototype._processExecuteArguments = function _processExecuteArguments(
 Contract.prototype._executeMethod = function _executeMethod(){
     var _this = this,
         args = this._parent._processExecuteArguments.call(this, Array.prototype.slice.call(arguments), defer),
-        defer = promiEvent((args.type !== 'send'));
-
+        defer = promiEvent((args.type !== 'send')),
+        ethAccounts = _this.constructor._ethAccounts || _this._ethAccounts;
 
     // simple return request for batch requests
     if(args.generateRequest) {
@@ -788,7 +790,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     inputFormatter: [formatters.inputCallFormatter],
                     outputFormatter: utils.hexToNumber,
                     requestManager: _this._parent._requestManager,
-                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock
                 })).createFunction();
@@ -809,7 +811,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                         return _this._parent._decodeMethodReturn(_this._method.outputs, result);
                     },
                     requestManager: _this._parent._requestManager,
-                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock
                 })).createFunction();
@@ -879,7 +881,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     params: 1,
                     inputFormatter: [formatters.inputTransactionFormatter],
                     requestManager: _this._parent._requestManager,
-                    accounts: _this.constructor._ethAccounts, // is eth.accounts (necessary for wallet signing)
+                    accounts: _this.constructor._ethAccounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.defaultAccount,
                     defaultBlock: _this._parent.defaultBlock,
                     extraFormatters: extraFormatters
