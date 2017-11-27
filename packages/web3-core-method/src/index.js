@@ -491,10 +491,12 @@ Method.prototype.buildCall = function() {
         // SENDS the SIGNED SIGNATURE
         var sendSignedTx = function(sign){
 
-            payload.method = 'eth_sendRawTransaction';
-            payload.params = [sign.rawTransaction];
+            var signedPayload = _.extend({}, payload, {
+                method: 'eth_sendRawTransaction',
+                params: [sign.rawTransaction]
+            });
 
-            method.requestManager.send(payload, sendTxCallback);
+            method.requestManager.send(signedPayload, sendTxCallback);
         };
 
 
@@ -511,9 +513,7 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        delete tx.from;
-
-                        var signature = method.accounts.signTransaction(tx, wallet.privateKey);
+                        var signature = method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey);
 
                         return (_.isFunction(signature.then)) ? signature.then(sendSignedTx) : sendSignedTx(signature);
                     }
