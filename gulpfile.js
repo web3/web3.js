@@ -2,7 +2,7 @@
 
 'use strict';
 
-var version = require('./lerna.json');
+var lernaJSON = require('./lerna.json');
 var path = require('path');
 
 var del = require('del');
@@ -24,74 +24,74 @@ var packages = [{
     fileName: 'web3',
     expose: 'Web3',
     src: './packages/web3/src/index.js',
-    ignore: ['xmlhttprequest','websocket']
-},{
+    ignore: ['xmlhttprequest', 'websocket']
+}, {
     fileName: 'web3-utils',
     expose: 'Web3Utils',
     src: './packages/web3-utils/src/index.js'
-},{
+}, {
     fileName: 'web3-eth',
     expose: 'Web3Eth',
     src: './packages/web3-eth/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-accounts',
     expose: 'Web3EthAccounts',
     src: './packages/web3-eth-accounts/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-contract',
     expose: 'Web3EthContract',
     src: './packages/web3-eth-contract/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-personal',
     expose: 'Web3EthPersonal',
     src: './packages/web3-eth-personal/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-iban',
     expose: 'Web3EthIban',
     src: './packages/web3-eth-iban/src/index.js'
-},{
+}, {
     fileName: 'web3-eth-abi',
     expose: 'Web3EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
-},{
+}, {
     fileName: 'web3-net',
     expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
-},{
+}, {
     fileName: 'web3-shh',
     expose: 'Web3Shh',
     src: './packages/web3-shh/src/index.js'
-},{
+}, {
     fileName: 'web3-bzz',
     expose: 'Web3Bzz',
     src: './packages/web3-bzz/src/index.js'
-},{
+}, {
     fileName: 'web3-providers-ipc',
     expose: 'Web3IpcProvider',
     src: './packages/web3-providers-ipc/src/index.js'
-},{
+}, {
     fileName: 'web3-providers-http',
     expose: 'Web3HttpProvider',
     src: './packages/web3-providers-http/src/index.js',
     ignore: ['xmlhttprequest']
-},{
+}, {
     fileName: 'web3-providers-ws',
     expose: 'Web3WsProvider',
     src: './packages/web3-providers-ws/src/index.js',
     ignore: ['websocket']
-},{
+}, {
     fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscriptions',
     src: './packages/web3-core-subscriptions/src/index.js'
-},{
+}, {
     fileName: 'web3-core-requestmanager',
     expose: 'Web3RequestManager',
     src: './packages/web3-core-requestmanager/src/index.js'
-},{
+}, {
     fileName: 'web3-core-promievent',
     expose: 'Web3PromiEvent',
     src: './packages/web3-core-promievent/src/index.js'
-},{
+}, {
     fileName: 'web3-core-method',
     expose: 'Web3Method',
     src: './packages/web3-core-method/src/index.js'
@@ -107,71 +107,77 @@ var browserifyOptions = {
 };
 
 var ugliyOptions = {
-    compress:{
-        dead_code     : true,  // jshint ignore:line
-        drop_debugger : true,  // jshint ignore:line
-        global_defs   : {      // jshint ignore:line
+    compress: {
+        dead_code: true,  // jshint ignore:line
+        drop_debugger: true,  // jshint ignore:line
+        global_defs: {      // jshint ignore:line
             "DEBUG": false      // matters for some libraries
         }
     }
 };
 
-gulp.task('version', function(){
-  if(!version.version) return;
+gulp.task('version', function () {
+    if (!lernaJSON.version) {
+        throw new Error("version property is missing from lerna.json");
+    }
 
-  gulp.src(['./package.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
-    .pipe(gulp.dest('./'));
-  gulp.src(['./bower.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9\-a-z]*)\"/, '"version": "'+ version.version + '"'))
-    .pipe(gulp.dest('./'));
-  gulp.src(['./package.js'])
-    .pipe(replace(/version\: \'([\.0-9\-a-z]*)\'/, "version: '"+ version.version + "'"))
-    .pipe(gulp.dest('./'));
+    var version = lernaJSON.version;
+    var jsonPattern = /"version": "[.0-9\-a-z]*"/;
+    var jsPattern = /version: '[.0-9\-a-z]*'/;
+    var glob = [
+        './package.json',
+        './bower.json',
+        './package.js'
+    ];
+
+    gulp.src(glob, {base: './'})
+        .pipe(replace(jsonPattern, '"version": "' + version + '"'))
+        .pipe(replace(jsPattern, "version: '" + version + "'"))
+        .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', ['version'], function(cb){
-    bower.commands.install().on('end', function (installed){
+gulp.task('bower', ['version'], function (cb) {
+    bower.commands.install().on('end', function (installed) {
         console.log(installed);
         cb();
     });
 });
 
-gulp.task('lint', [], function(){
+gulp.task('lint', [], function () {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', ['lint'], function(cb) {
-    del([ DEST ]).then(cb.bind(null, null));
+gulp.task('clean', ['lint'], function (cb) {
+    del([DEST]).then(cb.bind(null, null));
 });
 
-packages.forEach(function(pckg, i){
-    var prevPckg = (!i) ? 'clean' : packages[i-1].fileName;
+packages.forEach(function (pckg, i) {
+    var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
     gulp.task(pckg.fileName, [prevPckg], function () {
         browserifyOptions.standalone = pckg.expose;
 
         var pipe = browserify(browserifyOptions)
-            .require(pckg.src, {expose: pckg.expose})
-            .require('bn.js', {expose: 'BN'}) // expose it to dapp developers
+            .require(pckg.src, { expose: pckg.expose })
+            .require('bn.js', { expose: 'BN' }) // expose it to dapp developers
             .add(pckg.src);
 
-        if(pckg.ignore) {
+        if (pckg.ignore) {
             pckg.ignore.forEach(function (ignore) {
                 pipe.ignore(ignore);
             });
         }
 
         return pipe.bundle()
-            .pipe(exorcist(path.join( DEST, pckg.fileName + '.js.map')))
+            .pipe(exorcist(path.join(DEST, pckg.fileName + '.js.map')))
             .pipe(source(pckg.fileName + '.js'))
             .pipe(streamify(babel({
                 compact: false,
                 presets: ['env']
             })))
-            .pipe(gulp.dest( DEST ))
+            .pipe(gulp.dest(DEST))
             .pipe(streamify(babel({
                 compact: true,
                 presets: ['env']
@@ -179,16 +185,15 @@ packages.forEach(function(pckg, i){
             .pipe(streamify(uglify(ugliyOptions)))
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
-            .pipe(gulp.dest( DEST ));
+            .pipe(gulp.dest(DEST));
     });
 });
 
-
-gulp.task('watch', function() {
+gulp.task('watch', function () {
     gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
 });
 
-gulp.task('all', ['version', 'lint', 'clean', packages[packages.length-1].fileName]);
+gulp.task('all', ['version', 'lint', 'clean', packages[packages.length - 1].fileName]);
 
 gulp.task('default', ['version', 'lint', 'clean', packages[0].fileName]);
 

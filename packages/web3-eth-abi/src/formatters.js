@@ -166,7 +166,7 @@ var formatOutputInt = function (param) {
 var formatOutputUInt = function (param, name) {
     var value = param.staticPart();
 
-    if(!value) {
+    if(!value && param.rawValue) {
         throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
     }
 
