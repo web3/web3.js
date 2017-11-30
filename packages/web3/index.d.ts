@@ -22,7 +22,6 @@ declare class Web3 {
   providers: t.Providers
   setProvider(provider: t.Provider): void
   utils: t.Utils
-
 }
 
-export default Web3
+export = Web3;
