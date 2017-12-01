@@ -542,7 +542,7 @@ describe('contract', () => {
                         gasUsed: 0
                     });
                     done();
-                }).catch(console.log); // eslint-disable-line no-console
+                });
         });
 
         it('_executeMethod should call and return values', (done) => {
@@ -1641,10 +1641,6 @@ describe('contract', () => {
 
             contract.methods.mySend(address, 10).send({ from: address2, gasPrice: '21345678654321' })
                 .on('receipt', (receipt) => {
-                // console.log(receipt);
-                // console.log(receipt.events[0].raw);
-                // console.log(receipt.events[1].raw);
-
                 // wont throw if it errors ?!
                     assert.deepEqual(receipt, {
                         contractAddress: null,
@@ -1950,10 +1946,6 @@ describe('contract', () => {
 
             contract.methods.mySend(address, 10).send({ from: address2, gasPrice: '21345678654321' })
                 .on('receipt', (receipt) => {
-                    // console.log(receipt);
-                    // console.log(receipt.events[0].raw);
-                    // console.log(receipt.events[1].raw);
-
                     // wont throw if it errors ?!
                     assert.deepEqual(receipt, {
                         contractAddress: null,
@@ -2697,10 +2689,6 @@ describe('contract', () => {
                         done();
                     }, 1);
                 });
-            // .on('error', function (value) {
-            //     console.log('error', value);
-            //     done();
-            // });
         });
 
         // TODO add error check
