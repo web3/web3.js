@@ -1,21 +1,23 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Iban = require('../packages/web3-eth-iban');
+import { assert } from 'chai';
+import Iban from '../packages/web3-eth-iban';
 
-var tests = [
-    { institution: 'XREG', identifier: 'GAVOFYORK', expected: 'XE81ETHXREGGAVOFYORK'}
+const tests = [
+    {
+        institution: 'XREG',
+        identifier: 'GAVOFYORK',
+        expected: 'XE81ETHXREGGAVOFYORK'
+    }
 ];
 
-describe('lib/web3/iban', function () {
-    describe('createIndirect', function () {
-        tests.forEach(function (test) {
-            it('shoud create indirect iban: ' +  test.expected, function () {
+describe('lib/web3/iban', () => {
+    describe('createIndirect', () => {
+        tests.forEach((test) => {
+            it(`shoud create indirect iban: ${test.expected}`, () => {
                 assert.deepEqual(Iban.createIndirect({
                     institution: test.institution,
-                    identifier:  test.identifier
+                    identifier: test.identifier
                 }), new Iban(test.expected));
             });
         });
     });
 });
-

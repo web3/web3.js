@@ -1,16 +1,14 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
+import { assert } from 'chai';
+import Jsonrpc from '../packages/web3-core-requestmanager/src/jsonrpc';
 
-describe('jsonrpc', function () {
-    describe('toPayload', function () {
-        it('should create basic payload', function () {
-
+describe('jsonrpc', () => {
+    describe('toPayload', () => {
+        it('should create basic payload', () => {
             // given
-            var method = 'helloworld';
+            const method = 'helloworld';
 
             // when
-            var payload = Jsonrpc.toPayload(method);
+            const payload = Jsonrpc.toPayload(method);
 
             // then
             assert.equal(payload.jsonrpc, '2.0');
@@ -20,14 +18,13 @@ describe('jsonrpc', function () {
             assert.equal(typeof payload.id, 'number');
         });
 
-        it('should create payload with params', function () {
-
+        it('should create payload with params', () => {
             // given
-            var method = 'helloworld1';
-            var params = [123, 'test'];
+            const method = 'helloworld1';
+            const params = [123, 'test'];
 
             // when
-            var payload = Jsonrpc.toPayload(method, params);
+            const payload = Jsonrpc.toPayload(method, params);
 
             // then
             assert.equal(payload.jsonrpc, '2.0');

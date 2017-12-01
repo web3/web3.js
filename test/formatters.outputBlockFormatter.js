@@ -1,13 +1,10 @@
-var chai = require('chai');
-var assert = chai.assert;
-var formatters = require('../packages/web3-core-helpers/src/formatters.js');
+import { assert } from 'chai';
+import formatters from '../packages/web3-core-helpers/src/formatters.js';
 
-
-describe('formatters', function () {
-    describe('outputBlockFormatter', function () {
-        it('should return the correct value', function () {
-
-            assert.deepEqual(formatters.outputBlockFormatter({
+describe('formatters', () => {
+    describe('outputBlockFormatter', () => {
+        it('should return the correct value', () => {
+            const actual = formatters.outputBlockFormatter({
                 hash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
                 miner: '0xdcc6960376d6c6dea93647383ffb245cfced97cf',
@@ -23,7 +20,9 @@ describe('formatters', function () {
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 size: '0x3e8'
-            }), {
+            });
+
+            const expected = {
                 hash: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
                 miner: '0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf',
@@ -39,11 +38,12 @@ describe('formatters', function () {
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 size: 1000
-            });
-        });
-        it('should return the correct value, when null values are present', function () {
+            };
 
-            assert.deepEqual(formatters.outputBlockFormatter({
+            assert.deepEqual(actual, expected);
+        });
+        it('should return the correct value, when null values are present', () => {
+            const actual = formatters.outputBlockFormatter({
                 hash: null,
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
                 miner: null,
@@ -59,7 +59,9 @@ describe('formatters', function () {
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: null,
                 size: '0x3e8'
-            }), {
+            });
+
+            const expected = {
                 hash: null,
                 parentHash: '0x83ffb245cfced97ccc5c75253d6960376d6c6dea93647397a543a72fdaea5265',
                 miner: null,
@@ -75,7 +77,9 @@ describe('formatters', function () {
                 extraData: '0xd6960376d6c6dea93647383ffb245cfced97ccc5c7525397a543a72fdaea5265',
                 nonce: null,
                 size: 1000
-            });
+            };
+
+            assert.deepEqual(actual, expected);
         });
     });
 });

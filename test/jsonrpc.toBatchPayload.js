@@ -1,12 +1,11 @@
-var assert = require('assert');
-var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
+import { assert } from 'chai';
+import Jsonrpc from '../packages/web3-core-requestmanager/src/jsonrpc';
 
-describe('jsonrpc', function () {
-    describe('toBatchPayload', function () {
-        it('should create basic batch payload', function () {
-
+describe('jsonrpc', () => {
+    describe('toBatchPayload', () => {
+        it('should create basic batch payload', () => {
             // given
-            var messages = [{
+            const messages = [{
                 method: 'helloworld'
             }, {
                 method: 'test2',
@@ -14,7 +13,7 @@ describe('jsonrpc', function () {
             }];
 
             // when
-            var payload = Jsonrpc.toBatchPayload(messages);
+            const payload = Jsonrpc.toBatchPayload(messages);
 
             // then
             assert.equal(Array.isArray(payload), true);
@@ -31,13 +30,12 @@ describe('jsonrpc', function () {
             assert.equal(payload[0].id + 1, payload[1].id);
         });
 
-        it('should create batch payload for empty input array', function () {
-
+        it('should create batch payload for empty input array', () => {
             // given
-            var messages = [];
+            const messages = [];
 
             // when
-            var payload = Jsonrpc.toBatchPayload(messages);
+            const payload = Jsonrpc.toBatchPayload(messages);
 
             // then
             assert.equal(Array.isArray(payload), true);

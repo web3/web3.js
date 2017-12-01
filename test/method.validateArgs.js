@@ -1,45 +1,51 @@
-var chai = require('chai');
-var assert = chai.assert;
-var Method = require('../packages/web3-core-method');
-var errors = require('../packages/web3-core-helpers/src/errors');
+import { assert } from 'chai';
+import Method from '../packages/web3-core-method';
+import errors from '../packages/web3-core-helpers/src/errors';
 
-describe('lib/web3/method', function () {
-    describe('validateArgs', function () {
-        it('should pass', function () {
-
+describe('lib/web3/method', () => {
+    describe('validateArgs', () => {
+        it('should pass', () => {
             // given
-            var method = new Method({
-                name: 'something', call: 'eth_something',
+            const method = new Method({
+                name: 'something',
+                call: 'eth_something',
                 params: 1
             });
 
-            var args = [1];
-            var args2 = ['heloas'];
+            const args = [1];
+            const args2 = ['heloas'];
 
             // when
-            var test = function () { method.validateArgs(args); };
-            var test2 = function () { method.validateArgs(args2); };
+            const test = () => {
+                method.validateArgs(args);
+            };
+            const test2 = () => {
+                method.validateArgs(args2);
+            };
 
             // then
             assert.doesNotThrow(test);
             assert.doesNotThrow(test2);
         });
 
-        it('should return call based on args', function () {
-
+        it('should return call based on args', () => {
             // given
-            var method = new Method({
+            const method = new Method({
                 name: 'something',
                 call: 'eth_something',
                 params: 2
             });
 
-            var args = [1];
-            var args2 = ['heloas', '12', 3];
+            const args = [1];
+            const args2 = ['heloas', '12', 3];
 
             // when
-            var test = function () { method.validateArgs(args); };
-            var test2 = function () { method.validateArgs(args2); };
+            const test = () => {
+                method.validateArgs(args);
+            };
+            const test2 = () => {
+                method.validateArgs(args2);
+            };
 
             // then
             assert.throws(test, errors.InvalidNumberOfParams(1, 2, 'something').message);

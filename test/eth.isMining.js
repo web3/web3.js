@@ -1,13 +1,14 @@
-var testMethod = require('./helpers/test.method.js');
+import testMethod from './helpers/test.method.js';
 
-var method = 'isMining';
-var call = 'eth_mining';
+const method = 'isMining';
+const call = 'eth_mining';
 
-var tests = [{
-    result: true,
-    formattedResult: true,
-    call: call
-}];
-
+const tests = [
+    {
+        result: true,
+        formattedResult: true,
+        call
+    }
+];
 
 testMethod.runTests('eth', method, tests);

@@ -228,9 +228,6 @@ var soliditySha3 = function () {
 
     var hexArgs = _.map(args, _processSoliditySha3Args);
 
-    // console.log(args, hexArgs);
-    // console.log('0x'+ hexArgs.join(''));
-
     return utils.sha3('0x'+ hexArgs.join(''));
 };
 

@@ -1,22 +1,21 @@
-var chai = require('chai');
-var assert = chai.assert;
-var SandboxedModule = require('sandboxed-module');
+import { assert } from 'chai';
+import SandboxedModule from 'sandboxed-module';
+import xhr2 from './helpers/FakeXHR2';
 
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
+const HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
     requires: {
-        'xhr2': require('./helpers/FakeXHR2'),
-        // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
+        xhr2
     },
     singleOnly: true
 });
 
-describe('web3-providers-http', function () {
-    describe('send', function () {
-        it('should send basic async request', function (done) {
-            var provider = new HttpProvider();
+describe('web3-providers-http', () => {
+    describe('send', () => {
+        it('should send basic async request', (done) => {
+            const provider = new HttpProvider();
 
-            provider.send({}, function (err, result) {
+            provider.send({}, (_err, result) => {
                 assert.equal(typeof result, 'object');
                 done();
             });

@@ -1,9 +1,7 @@
-var chai = require('chai');
-var utils = require('../packages/web3-utils');
+import { assert } from 'chai';
+import utils from '../packages/web3-utils';
 
-var assert = chai.assert;
-
-var tests = [
+const tests = [
     { value: '0x52908400098527886E0F7030069857D2E4169EE7', is: true },
     { value: '0x8617E340B3D01FA5F11F306F4090FD50E238070D', is: true },
     { value: '0xde709f2102306220921060314715629080e2fb77', is: true },
@@ -16,13 +14,12 @@ var tests = [
     { value: '0xd1220a0cf47c7b9be7a2e6ba89f429762e7b9adb', is: false }
 ];
 
-describe('lib/utils/utils', function () {
-    describe('checkAddressChecksum', function () {
-        tests.forEach(function (test) {
-            it('shoud test if address ' + test.value + ' passes checksum: ' + test.is, function () {
+describe('lib/utils/utils', () => {
+    describe('checkAddressChecksum', () => {
+        tests.forEach((test) => {
+            it(`shoud test if address ${test.value} passes checksum: ${test.is}`, () => {
                 assert.equal(utils.checkAddressChecksum(test.value), test.is);
             });
         });
     });
 });
-

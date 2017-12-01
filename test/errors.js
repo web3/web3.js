@@ -1,18 +1,13 @@
-var chai = require('chai');
-var assert = chai.assert;
+import _ from 'lodash';
+import { assert } from 'chai';
+import errors from '../packages/web3-core-helpers/src/errors.js';
 
-var errors = require('../packages/web3-core-helpers/src/errors.js');
-
-describe('lib/web3/method', function () {
-    describe('getCall', function () {
-
-        for(var key in errors) {
-            it('should return and error', function () {
-
-                assert.instanceOf(errors[key](), Error);
+describe('lib/web3/method', () => {
+    describe('getCall', () => {
+        _.each(errors, (value) => {
+            it('should return and error', () => {
+                assert.instanceOf(value(), Error);
             });
-        }
-
+        });
     });
 });
-

@@ -1,9 +1,10 @@
-var u = require('./helpers/test.utils.js');
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+import u from './helpers/test.utils.js';
+import Web3 from '../packages/web3';
 
-describe('web3', function() {
-    describe('methods', function () {
+const web3 = new Web3();
+
+describe('web3', () => {
+    describe('methods', () => {
         u.methodExists(web3, 'setProvider');
 
         u.propertyExists(web3, 'givenProvider');
@@ -15,4 +16,3 @@ describe('web3', function() {
         u.propertyExists(web3, 'utils');
     });
 });
-

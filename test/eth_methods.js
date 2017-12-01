@@ -1,12 +1,10 @@
-var chai = require('chai');
-var assert = chai.assert;
-var u = require('./helpers/test.utils.js');
+import u from './helpers/test.utils.js';
+import Eth from '../packages/web3-eth';
 
-var Eth = require('../packages/web3-eth');
-var eth = new Eth();
+const eth = new Eth();
 
-describe('eth', function() {
-    describe('methods', function() {
+describe('eth', () => {
+    describe('methods', () => {
         u.methodExists(eth, 'getBalance');
         u.methodExists(eth, 'getStorageAt');
         u.methodExists(eth, 'getTransactionCount');
@@ -26,7 +24,6 @@ describe('eth', function() {
         u.methodExists(eth, 'subscribe');
         u.methodExists(eth, 'Contract');
         u.methodExists(eth, 'Iban');
-
 
         u.methodExists(eth, 'isMining');
         u.methodExists(eth, 'getCoinbase');
@@ -53,4 +50,3 @@ describe('eth', function() {
         u.methodExists(eth.personal, 'unlockAccount');
     });
 });
-
