@@ -186,7 +186,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Returns synchronously if nonce, chainId and price are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
-        return signed(tx);
+        return Promise.resolve(signed(tx));
     }
 
 
