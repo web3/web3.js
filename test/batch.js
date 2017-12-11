@@ -237,6 +237,47 @@ describe('lib/web3/batch', function () {
             provider.injectBatchResults([result, result2], true); // injects error
             batch.execute();
         });
+
+        it('should execute batch request with provider that supports sendAsync', function (done) {
+
+            var provider = new FakeIpcProvider();
+            var web3 = new Web3(provider);
+
+            provider.sendAsync = provider.send
+            provider.send = () => { throw new Error('send was called instead of sendAsync') }
+            var result = '0x126';
+            var resultVal = '294';
+            var result2 = '0x127';
+            var result2Val = '295';
+            provider.injectBatchResults([result, result2]);
+
+            var counter = 0;
+            var callback = function (err, r) {
+                counter++;
+                assert.deepEqual(r, resultVal);
+            };
+
+            var callback2 = function (err, r) {
+                assert.equal(counter, 1);
+                assert.deepEqual(r, result2Val);
+                done();
+            };
+
+            provider.injectValidation(function (payload) {
+                var first = payload[0];
+                var second = payload[1];
+
+                assert.equal(first.method, 'eth_getBalance');
+                assert.deepEqual(first.params, ['0x0000000000000000000000000000000000000000', 'latest']);
+                assert.equal(second.method, 'eth_getBalance');
+                assert.deepEqual(second.params, ['0x0000000000000000000000000000000000000005', 'latest']);
+            });
+
+            var batch = new web3.BatchRequest();
+            batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000000', 'latest', callback));
+            batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000005', 'latest', callback2));
+            batch.execute();
+        });
+
     });
 });
-
