@@ -158,7 +158,7 @@ RequestManager.prototype.sendBatch = function (data, callback) {
     }
 
     var payload = Jsonrpc.toBatchPayload(data);
-    this.provider.send(payload, function (err, results) {
+    this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
         if (err) {
             return callback(err);
         }
@@ -241,4 +241,3 @@ module.exports = {
     Manager: RequestManager,
     BatchManager: BatchManager
 };
-
