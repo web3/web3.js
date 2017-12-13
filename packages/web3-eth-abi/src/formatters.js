@@ -144,7 +144,7 @@ var signedIsNegative = function (value) {
 var formatOutputInt = function (param) {
     var value = param.staticPart();
 
-    if(!value) {
+    if(!value && !param.rawValue) {
         throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
     }
 
@@ -166,7 +166,7 @@ var formatOutputInt = function (param) {
 var formatOutputUInt = function (param, name) {
     var value = param.staticPart();
 
-    if(!value && param.rawValue) {
+    if(!value && !param.rawValue) {
         throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
     }
 
@@ -186,7 +186,7 @@ var formatOutputUInt = function (param, name) {
 var formatOutputBool = function (param, name) {
     var value = param.staticPart();
 
-    if(!value) {
+    if(!value && !param.rawValue) {
         throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
     }
 
