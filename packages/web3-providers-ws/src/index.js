@@ -216,6 +216,7 @@ WebsocketProvider.prototype.send = function (payload, callback) {
         } else {
             console.error('no error callback');
         }
+        callback(new Error('connection not open'));
         return;
     }
 
