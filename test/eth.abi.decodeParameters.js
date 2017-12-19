@@ -25,12 +25,68 @@ var tests = [{
         myNumber: '234',
         "__length__": 2
     }
+},{
+    params: [['string'], '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': "", "__length__": 1}
+},{
+    params: [['int256'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': "0", "__length__": 1}
+},{
+    params: [['uint256'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': "0", "__length__": 1}
+},{
+    params: [['bytes'], '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': null, "__length__": 1}
+},{
+    params: [['address'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': "0x0000000000000000000000000000000000000000", "__length__": 1}
+},{
+    params: [['bytes32'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': "0x0000000000000000000000000000000000000000000000000000000000000000", "__length__": 1}
+},{
+    params: [['bool'], '0x0000000000000000000000000000000000000000000000000000000000000000'],
+    result: {'0': false, "__length__": 1}
 }];
 
 describe('decodeParameters', function () {
     tests.forEach(function (test) {
         it('should convert correctly', function () {
             assert.deepEqual(web3.eth.abi.decodeParameters.apply(web3.eth.abi, test.params), test.result);
+        });
+    });
+});
+
+
+var failures = [{
+    params: [['string', 'uint256'], '0x']
+},{
+    params: [[{
+        type: 'string',
+        name: 'myString'
+    },{
+        type: 'uint256',
+        name: 'myNumber'
+    }], '0x']
+},{
+    params: [['string'], '0x']
+},{
+    params: [['int256'], '0x']
+},{
+    params: [['uint256'], '0x']
+},{
+    params: [['bytes'], '0x']
+},{
+    params: [['address'], '0x']
+},{
+    params: [['bytes32'], '0x']
+},{
+    params: [['bool'], '0x']
+}];
+
+describe('decodeParameters', function () {
+    failures.forEach(function (test) {
+        it('should not convert '+test.params[1]+' to '+test.params[0], function () {
+            assert.throws(_ => {web3.eth.abi.decodeParameters.apply(web3.eth.abi, test.params)});
         });
     });
 });
