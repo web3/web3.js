@@ -31,7 +31,7 @@ var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
 var Nat = require("eth-lib/lib/nat");
 var Bytes = require("eth-lib/lib/bytes");
-var cryp = require('crypto');
+var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
