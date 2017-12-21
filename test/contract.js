@@ -2816,26 +2816,26 @@ var runTests = function(contractFactory) {
 describe('typical usage', function() {
     runTests(getEthContractInstance);
 
-    it('should deploy a contract, sign transaction, and return contract instance', function (done) {
+    it('should deploy a contract, sign transaction, and return contract instance', void async function (done) {
         var provider = new FakeIpcProvider();
         var eth = new Eth(provider);
         eth.accounts.wallet.add(account.privateKey);
 
-        provider.injectValidation(function (payload) {
+        await ((async () => {
+            provider.injectValidation(async function (payload) {
+                var expected = (await eth.accounts.wallet[0].signTransaction({
+                    data: '0x1234567000000000000000000000000' + account.address.toLowerCase().replace('0x', '') + '00000000000000000000000000000000000000000000000000000000000000c8',
+                    from: account.address.toLowerCase(),
+                    gas: '0xc350',
+                    gasPrice: '0xbb8',
+                    chainId: '0x1',
+                    nonce: '0x1',
+                })).rawTransaction;
 
-            var expected = eth.accounts.wallet[0].signTransaction({
-                data: '0x1234567000000000000000000000000' + account.address.toLowerCase().replace('0x', '') + '00000000000000000000000000000000000000000000000000000000000000c8',
-                from: account.address.toLowerCase(),
-                gas: '0xc350',
-                gasPrice: '0xbb8',
-                chainId: '0x1',
-                nonce: '0x1',
-            }).rawTransaction;
-
-            assert.equal(payload.method, 'eth_sendRawTransaction');
-            assert.deepEqual(payload.params, [expected]);
-
-        });
+                assert.equal(payload.method, 'eth_sendRawTransaction');
+                assert.deepEqual(payload.params, [expected]);
+            });
+        })());
         provider.injectResult('0x5550000000000000000000000000000000000000000000000000000000000032');
 
         provider.injectValidation(function (payload) {
@@ -2843,7 +2843,6 @@ describe('typical usage', function() {
             assert.deepEqual(payload.params, ['0x5550000000000000000000000000000000000000000000000000000000000032']);
         });
         provider.injectResult(null);
-
 
         provider.injectValidation(function (payload) {
             assert.equal(payload.method, 'eth_subscribe');
