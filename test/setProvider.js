@@ -54,7 +54,11 @@ describe('lib/web3/setProvider', function () {
         provider1.bzz = 'http://localhost:8500';
         provider2.bzz = 'http://swarm-gateways.net';
 
+        var provider3 = new FakeHttpProvider();
+        provider3.bzz = 'http://localhost2:8500';
+
         var lib = new Web3(provider1);
+        var lib2 = new Web3(provider3);
 
         assert.equal(lib.eth.currentProvider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.net.currentProvider.constructor.name, provider1.constructor.name);
@@ -70,6 +74,21 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.Contract._requestManager.provider.constructor.name, provider1.constructor.name);
         assert.equal(lib.eth.accounts._requestManager.provider.constructor.name, provider1.constructor.name);
         assert.equal(lib.shh._requestManager.provider.constructor.name, provider1.constructor.name);
+
+        assert.equal(lib2.eth.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.net.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.personal.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.Contract.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.accounts.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.shh.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.bzz.currentProvider, provider3.bzz);
+
+        assert.equal(lib2.eth._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.net._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.personal._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.Contract._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.accounts._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.shh._requestManager.provider.constructor.name, provider3.constructor.name);
 
 
         lib.setProvider(provider2);
@@ -88,6 +107,21 @@ describe('lib/web3/setProvider', function () {
         assert.equal(lib.eth.Contract._requestManager.provider.constructor.name, provider2.constructor.name);
         assert.equal(lib.eth.accounts._requestManager.provider.constructor.name, provider2.constructor.name);
         assert.equal(lib.shh._requestManager.provider.constructor.name, provider2.constructor.name);
+
+        assert.equal(lib2.eth.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.net.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.personal.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.Contract.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.accounts.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.shh.currentProvider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.bzz.currentProvider, provider3.bzz);
+
+        assert.equal(lib2.eth._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.net._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.personal._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.Contract._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.eth.accounts._requestManager.provider.constructor.name, provider3.constructor.name);
+        assert.equal(lib2.shh._requestManager.provider.constructor.name, provider3.constructor.name);
 
 
     });

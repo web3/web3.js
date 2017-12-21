@@ -31,7 +31,7 @@ var utils = require('web3-utils');
 var Net = require('web3-net');
 
 var Personal = require('web3-eth-personal');
-var Contract = require('web3-eth-contract');
+var BaseContract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 var Accounts = require('web3-eth-accounts');
 var abi = require('web3-eth-abi');
@@ -137,6 +137,24 @@ var Eth = function Eth() {
     // add personal
     this.personal = new Personal(this.currentProvider);
     this.personal.defaultAccount = this.defaultAccount;
+
+    // create a proxy Contract type for this instance, as a Contract's provider
+    // is stored as a class member rather than an instance variable. If we do
+    // not create this proxy type, changing the provider in one instance of
+    // web3-eth would subsequently change the provider for _all_ contract
+    // instances!
+    var Contract = function Contract() {
+        BaseContract.apply(this, arguments);
+    };
+
+    Contract.setProvider = function() {
+        BaseContract.setProvider.apply(this, arguments);
+    };
+
+    // make our proxy Contract inherit from web3-eth-contract so that it has all
+    // the right functionality and so that instanceof and friends work properly
+    Contract.prototype = Object.create(BaseContract.prototype);
+    Contract.prototype.constructor = Contract;
 
     // add contract
     this.Contract = Contract;
