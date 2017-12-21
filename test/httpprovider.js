@@ -18,7 +18,7 @@ describe('lib/web3/httpprovider', function () {
             var result = provider.prepareRequest(true);
 
             assert.equal(typeof result, 'object');
-            assert.equal(result.getRequestHeader('Access-Control-Allow-Origin'), '*');
+            assert.equal(result.headers['Access-Control-Allow-Origin'], '*');
         });
     });
 
