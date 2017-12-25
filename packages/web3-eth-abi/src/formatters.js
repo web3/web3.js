@@ -103,6 +103,10 @@ var formatInputDynamicBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
+    if(!_.isString(value)) {
+        throw new Error('Given parameter is not a valid string: "'+ value + '"');
+    }
+
     var result = utils.utf8ToHex(value).replace(/^0x/i,'');
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
