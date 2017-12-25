@@ -104,7 +104,7 @@ var formatInputDynamicBytes = function (value) {
  */
 var formatInputString = function (value) {
     if(!_.isString(value)) {
-        throw new Error('Given parameter is not a valid string: "'+ value + '"');
+        throw new Error('Given parameter is not a valid string: ' + value);
     }
 
     var result = utils.utf8ToHex(value).replace(/^0x/i,'');
