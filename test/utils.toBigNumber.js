@@ -28,6 +28,7 @@ var tests = [
     { value: 0, expected: '0'},
     { value: '0', expected: '0'},
     { value: '0x0', expected: '0'},
+    { value: '0x', expected: '0'},
     { value: -0, expected: '0'},
     { value: '-0', expected: '0'},
     { value: '-0x0', expected: '0'},
