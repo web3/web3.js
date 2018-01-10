@@ -24,6 +24,7 @@ var tests = [
     { value: 0, expected: new BigNumber(0)},
     { value: '0', expected: new BigNumber(0)},
     { value: '0x0', expected: new BigNumber(0)},
+    { value: '0x', expected: new BigNumber(0)},
     { value: -0, expected: new BigNumber(0)},
     { value: '-0', expected: new BigNumber(0)},
     { value: '-0x0', expected: new BigNumber(0)},
