@@ -41,6 +41,21 @@ var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
 
+var trimLeadingZero = function (hex) {
+    while (hex && hex.startsWith('0x00')) {
+        hex = '0x' + hex.slice(4);
+    }
+    return hex;
+};
+
+var makeEven = function (hex) {
+    if(hex % 2 === 1) {
+        hex = hex.replace('0x', '0x0');
+    }
+    return hex;
+};
+
+
 var Accounts = function Accounts() {
     var _this = this;
 
@@ -150,23 +165,17 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
 
-        var trimLeadingZero = function (hex) {
-            while (hex && hex.startsWith('0x00')) {
-                hex = '0x' + hex.slice(4);
-            }
-            return hex;
-        }
         rawTx[7] = trimLeadingZero(rawTx[7]);
         rawTx[8] = trimLeadingZero(rawTx[8]);
 
-        var rawTransaction = RLP.encode(rawTx)
+        var rawTransaction = RLP.encode(rawTx);
 
         var values = RLP.decode(rawTransaction);
         var result = {
             messageHash: hash,
-            v: values[6],
-            r: values[7],
-            s: values[8],
+            v: makeEven(values[6]),
+            r: makeEven(values[7]),
+            s: makeEven(values[8]),
             rawTransaction: rawTransaction
         };
         if (_.isFunction(callback)) {
