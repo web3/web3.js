@@ -40,7 +40,7 @@ Generates an account object with private key and public key.
 Parameters
 ----------
 
-1. ``entropy`` - ``String`` (optional): A random strong to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using :ref:`randomhex <randomhex>`.
+1. ``entropy`` - ``String`` (optional): A random string to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using :ref:`randomhex <randomhex>`.
 
 .. _eth-accounts-create-return:
 
