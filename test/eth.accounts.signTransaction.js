@@ -69,19 +69,21 @@ describe("eth", function () {
 
         // For each test
         tests.forEach(function (test, i) {
-            it("signTransaction must compare to eth_signTransaction", async function() {
+            it("signTransaction must compare to eth_signTransaction", function(done) {
                 var ethAccounts = new Accounts();
 
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                 assert.equal(testAccount.address, test.address);
 
-                var tx = await testAccount.signTransaction(test.transaction);
-                assert.equal(tx.rawTransaction, test.rawTransaction);
+                testAccount.signTransaction(test.transaction).then(function (tx) {
+                    assert.equal(tx.rawTransaction, test.rawTransaction);
+                    done();
+                });
             });
         });
 
         tests.forEach(function (test, i) {
-            it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", async function() {
+            it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function(done) {
                 var ethAccounts = new Accounts();
 
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
@@ -90,9 +92,10 @@ describe("eth", function () {
                 var transaction = clone(test.transaction);
                 transaction.to = transaction.toIban;
                 delete transaction.toIban;
-                var tx = await testAccount.signTransaction(transaction);
-
-                assert.equal(tx.rawTransaction, test.rawTransaction);
+                testAccount.signTransaction(transaction).then(function (tx) {
+                    assert.equal(tx.rawTransaction, test.rawTransaction);
+                    done();
+                });
             });
         });
 
@@ -224,14 +227,15 @@ describe("eth", function () {
         });
 
         tests.forEach(function (test, i) {
-            it("recoverTransaction, must recover signature", async function() {
+            it("recoverTransaction, must recover signature", function() {
                 var ethAccounts = new Accounts();
 
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                 assert.equal(testAccount.address, test.address);
 
-                var tx = await testAccount.signTransaction(test.transaction);
-                assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                testAccount.signTransaction(test.transaction).then(function (tx) {
+                    assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                });
             });
         });
 
