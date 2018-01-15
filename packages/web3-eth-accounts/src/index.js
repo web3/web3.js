@@ -42,14 +42,14 @@ var isNot = function(value) {
 };
 
 var trimLeadingZero = function (hex) {
-    while (hex && hex.startsWith('0x00')) {
-        hex = '0x' + hex.slice(4);
+    while (hex && hex.startsWith('0x0')) {
+        hex = '0x' + hex.slice(3);
     }
     return hex;
 };
 
 var makeEven = function (hex) {
-    if(hex % 2 === 1) {
+    if(hex.length % 2 === 1) {
         hex = hex.replace('0x', '0x0');
     }
     return hex;
@@ -165,17 +165,17 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
 
-        rawTx[7] = trimLeadingZero(rawTx[7]);
-        rawTx[8] = trimLeadingZero(rawTx[8]);
+        rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+        rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
 
         var rawTransaction = RLP.encode(rawTx);
 
         var values = RLP.decode(rawTransaction);
         var result = {
             messageHash: hash,
-            v: makeEven(values[6]),
-            r: makeEven(values[7]),
-            s: makeEven(values[8]),
+            v: trimLeadingZero(values[6]),
+            r: trimLeadingZero(values[7]),
+            s: trimLeadingZero(values[8]),
             rawTransaction: rawTransaction
         };
         if (_.isFunction(callback)) {
@@ -412,7 +412,7 @@ Wallet.prototype.add = function (account) {
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
 
-    if (account) {
+    if (account && account.address) {
         // address
         this[account.address].privateKey = null;
         delete this[account.address];
