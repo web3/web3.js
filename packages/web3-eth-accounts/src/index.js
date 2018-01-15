@@ -412,7 +412,7 @@ Wallet.prototype.add = function (account) {
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
 
-    if (account) {
+    if (account && account.address) {
         // address
         this[account.address].privateKey = null;
         delete this[account.address];
