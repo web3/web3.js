@@ -268,8 +268,11 @@ var inputLogFormatter = function(options) {
 
     toTopic = null;
 
-    if(options.address)
-        options.address = inputAddressFormatter(options.address);
+    if (options.address) {
+        options.address = (_.isArray(options.address)) ? options.address.map(function (addr) {
+            return inputAddressFormatter(addr);
+        }) : inputAddressFormatter(options.address);
+    }
 
     return options;
 };
@@ -300,8 +303,9 @@ var outputLogFormatter = function(log) {
     if (log.logIndex !== null)
         log.logIndex = utils.hexToNumber(log.logIndex);
 
-    if (log.address)
+    if (log.address) {
         log.address = utils.toChecksumAddress(log.address);
+    }
 
     return log;
 };
