@@ -20760,7 +20760,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         toTopic = null;
 
-        if (options.address) options.address = inputAddressFormatter(options.address);
+        if (options.address) {
+          options.address = _.isArray(options.address) ? options.address.map(function (addr) {
+            return inputAddressFormatter(addr);
+          }) : inputAddressFormatter(options.address);
+        }
 
         return options;
       };
@@ -20786,7 +20790,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (log.transactionIndex !== null) log.transactionIndex = utils.hexToNumber(log.transactionIndex);
         if (log.logIndex !== null) log.logIndex = utils.hexToNumber(log.logIndex);
 
-        if (log.address) log.address = utils.toChecksumAddress(log.address);
+        if (log.address) {
+          log.address = utils.toChecksumAddress(log.address);
+        }
 
         return log;
       };
@@ -31413,6 +31419,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @returns {SolidityParam}
        */
       var formatInputString = function formatInputString(value) {
+        if (!_.isString(value)) {
+          throw new Error('Given parameter is not a valid string: ' + value);
+        }
+
         var result = utils.utf8ToHex(value).replace(/^0x/i, '');
         var length = result.length / 2;
         var l = Math.floor((result.length + 63) / 64);
@@ -42255,8 +42265,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var encodeSignature = function encodeSignature(_ref) {
           var _ref2 = _slicedToArray(_ref, 3),
               v = _ref2[0],
-              r = _ref2[1],
-              s = _ref2[2];
+              r = Bytes.pad(32, _ref2[1]),
+              s = Bytes.pad(32, _ref2[2]);
 
           return Bytes.flatten([r, s, v]);
         };
@@ -44141,6 +44151,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return _.isUndefined(value) || _.isNull(value);
         };
 
+        var trimLeadingZero = function trimLeadingZero(hex) {
+          while (hex && hex.startsWith('0x0')) {
+            hex = '0x' + hex.slice(3);
+          }
+          return hex;
+        };
+
+        var makeEven = function makeEven(hex) {
+          if (hex.length % 2 === 1) {
+            hex = hex.replace('0x', '0x0');
+          }
+          return hex;
+        };
+
         var Accounts = function Accounts() {
           var _this = this;
 
@@ -44234,15 +44258,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             var hash = Hash.keccak256(rlpEncoded);
 
             var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+
             var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+
+            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+
             var rawTransaction = RLP.encode(rawTx);
 
             var values = RLP.decode(rawTransaction);
             var result = {
               messageHash: hash,
-              v: values[6],
-              r: values[7],
-              s: values[8],
+              v: trimLeadingZero(values[6]),
+              r: trimLeadingZero(values[7]),
+              s: trimLeadingZero(values[8]),
               rawTransaction: rawTransaction
             };
             if (_.isFunction(callback)) {
@@ -44475,7 +44504,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         Wallet.prototype.remove = function (addressOrIndex) {
           var account = this[addressOrIndex];
 
-          if (account) {
+          if (account && account.address) {
             // address
             this[account.address].privateKey = null;
             delete this[account.address];
@@ -49769,10 +49798,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * HttpProvider should be used to send rpc calls over http
        */
-      var HttpProvider = function HttpProvider(host, timeout) {
+      var HttpProvider = function HttpProvider(host, timeout, headers) {
         this.host = host || 'http://localhost:8545';
         this.timeout = timeout || 0;
         this.connected = false;
+        this.headers = headers;
+      };
+
+      HttpProvider.prototype._prepareRequest = function () {
+        var request = new XHR2();
+
+        request.open('POST', this.host, true);
+        request.setRequestHeader('Content-Type', 'application/json');
+
+        if (this.headers) {
+          this.headers.forEach(function (header) {
+            request.setRequestHeader(header.name, header.value);
+          });
+        }
+
+        return request;
       };
 
       /**
@@ -49784,10 +49829,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        */
       HttpProvider.prototype.send = function (payload, callback) {
         var _this = this;
-        var request = new XHR2();
-
-        request.open('POST', this.host, true);
-        request.setRequestHeader('Content-Type', 'application/json');
+        var request = this._prepareRequest();
 
         request.onreadystatechange = function () {
           if (request.readyState === 4 && request.timeout !== 1) {
@@ -54609,7 +54651,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       module.exports = {
         "name": "web3",
         "namespace": "ethereum",
-        "version": "1.0.0-beta.27",
+        "version": "1.0.0-beta.28",
         "description": "Ethereum JavaScript API",
         "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3",
         "license": "LGPL-3.0",
@@ -54641,13 +54683,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           "url": "https://github.com/obscuren"
         }],
         "dependencies": {
-          "web3-bzz": "1.0.0-beta.27",
-          "web3-core": "1.0.0-beta.27",
-          "web3-eth": "1.0.0-beta.27",
-          "web3-eth-personal": "1.0.0-beta.27",
-          "web3-net": "1.0.0-beta.27",
-          "web3-shh": "1.0.0-beta.27",
-          "web3-utils": "1.0.0-beta.27"
+          "web3-bzz": "1.0.0-beta.28",
+          "web3-core": "1.0.0-beta.28",
+          "web3-eth": "1.0.0-beta.28",
+          "web3-eth-personal": "1.0.0-beta.28",
+          "web3-net": "1.0.0-beta.28",
+          "web3-shh": "1.0.0-beta.28",
+          "web3-utils": "1.0.0-beta.28"
         }
       };
     }, {}], "BN": [function (require, module, exports) {
