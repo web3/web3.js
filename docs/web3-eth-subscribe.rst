@@ -322,7 +322,7 @@ Parameters
 1. ``"logs"`` - ``String``, the type of the subscription.
 2. ``Object`` - The subscription options
   - ``fromBlock`` - ``Number``: The number of the earliest block. By default ``null``.
-  - ``address`` - ``String``: An address or a list of addresses to only get logs from particular account(s).
+  - ``address`` - ``String|Array``: An address or a list of addresses to only get logs from particular account(s).
   - ``topics`` - ``Array``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x00...']``. You can also pass another array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second. Will be called for each incoming subscription.
 
