@@ -153,9 +153,10 @@ Example
 
     var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
         if (!error)
-            console.log(transaction);
+            console.log(result);
     })
     .on("data", function(transaction){
+        console.log(transaction);    
     });
 
     // unsubscribes the subscription
@@ -357,9 +358,10 @@ Example
         topics: ['0x12345...']
     }, function(error, result){
         if (!error)
-            console.log(log);
+            console.log(result);
     })
     .on("data", function(log){
+        console.log(log);
     })
     .on("changed", function(log){
     });
