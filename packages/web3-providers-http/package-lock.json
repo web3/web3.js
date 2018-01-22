@@ -1,0 +1,11 @@
+{
+	"requires": true,
+	"lockfileVersion": 1,
+	"dependencies": {
+		"xhr2": {
+			"version": "0.1.4",
+			"resolved": "https://registry.npmjs.org/xhr2/-/xhr2-0.1.4.tgz",
+			"integrity": "sha1-f4dliEdxbbUCYyOBL4GMras4el8="
+		}
+	}
+}

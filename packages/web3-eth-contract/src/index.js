@@ -696,7 +696,7 @@ Contract.prototype._createTxObject =  function _createTxObject(){
     txObject.arguments = args || [];
     txObject._method = this.method;
     txObject._parent = this.parent;
-    txObject._ethAccounts = this.constructor._ethAccounts || this._ethAccounts;
+    txObject._ethAccounts = this.parent.constructor._ethAccounts || this._ethAccounts;
 
     if(this.deployData) {
         txObject._deployData = this.deployData;
