@@ -1323,7 +1323,7 @@ Parameters
 1. ``Object`` - The filter options as follows:
   - ``fromBlock`` - ``Number|String``: The number of the earliest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
   - ``toBlock`` -  ``Number|String``: The number of the latest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
-  - ``address`` -  ``String``: An address or a list of addresses to only get logs from particular account(s).
+  - ``address`` -  ``String|Array``: An address or a list of addresses to only get logs from particular account(s).
   - ``topics`` - ``Array``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x12...']``. You can also pass an array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
 
 
