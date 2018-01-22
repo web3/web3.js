@@ -370,7 +370,7 @@ export declare class Eth {
     encodeFunctionCall(jsonInterface: object, parameters: any[]): string
     encodeFunctionSignature(name: string | object): string
     decodeParameter(type: string, hex: string): any
-    decodeParameters(types: string[], hex: string): any
+    decodeParameters(types: string[] | { name: string; type: string; }[], hex: string): any
   }
   accounts: {
     'new'(entropy?: string): Account
