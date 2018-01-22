@@ -39,7 +39,7 @@ Returns
     - ``subscription.arguments``: The subscription arguments, used when re-subscribing.
     - ``on("data")`` returns ``Object``: Fires on each incoming log with the log object as argument.
     - ``on("changed")`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
-    - ``on("error")`` returns ``Object``: Fires when an error in the subscription occours.
+    - ``on("error")`` returns ``Object``: Fires when an error in the subscription occurs.
 
 ----------------
 Notification returns
@@ -133,7 +133,7 @@ Returns
 ``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
 - ``"data"`` returns ``Object``: Fires on each incoming pending transaction.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 For the structure of the returned object see :ref:`web3.eth.getTransaction() return values <eth-gettransaction-return>`.
 
@@ -153,9 +153,10 @@ Example
 
     var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
         if (!error)
-            console.log(transaction);
+            console.log(result);
     })
     .on("data", function(transaction){
+        console.log(transaction);    
     });
 
     // unsubscribes the subscription
@@ -191,7 +192,7 @@ Returns
 ``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
 - ``"data"`` returns ``Object``: Fires on each incoming block header.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 The structure of a returned block header is as follows:
 
@@ -264,7 +265,7 @@ Returns
 
 - ``"data"`` returns ``Object``: Fires on each incoming sync object as argument.
 - ``"changed"`` returns ``Object``: Fires when the synchronisation is started with ``true`` and when finsihed with ``false``.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 For the structure of a returned event ``Object`` see :ref:`web3.eth.isSyncing return values <eth-issyncing-return>`.
 
@@ -334,7 +335,7 @@ Returns
 
 - ``"data"`` returns ``Object``: Fires on each incoming log with the log object as argument.
 - ``"changed"`` returns ``Object``: Fires on each log which was removed from the blockchain. The log will have the additional property ``"removed: true"``.
-- ``"error"`` returns ``Object``: Fires when an error in the subscription occours.
+- ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 For the structure of a returned event ``Object`` see :ref:`web3.eth.getPastEvents return values <eth-getpastlogs-return>`.
 
@@ -357,9 +358,10 @@ Example
         topics: ['0x12345...']
     }, function(error, result){
         if (!error)
-            console.log(log);
+            console.log(result);
     })
     .on("data", function(log){
+        console.log(log);
     })
     .on("changed", function(log){
     });
