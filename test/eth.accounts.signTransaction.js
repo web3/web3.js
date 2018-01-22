@@ -111,35 +111,21 @@ describe("eth", function () {
 
         // For each test
         tests.forEach(function (test, i) {
-            it("signTransaction must compare to eth_signTransaction", function() {
+            it("signTransaction must compare to eth_signTransaction", function(done) {
                 var ethAccounts = new Accounts();
 
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                 assert.equal(testAccount.address, test.address);
 
-                var tx = testAccount.signTransaction(test.transaction);
-
-
-                assert.equal(tx.rawTransaction, test.rawTransaction);
+                testAccount.signTransaction(test.transaction).then(function (tx) {
+                    assert.equal(tx.rawTransaction, test.rawTransaction);
+                    done();
+                });
             });
         });
 
         tests.forEach(function (test, i) {
-            it("signTransaction must produce r and s as quantities, not data", function() {
-                if (!('r' in test)) {
-                    return ;
-                }
-                var ethAccounts = new Accounts();
-
-                var signature = ethAccounts.signTransaction(test.transaction, test.privateKey);
-
-                assert.equal(signature.r, test.r);
-                assert.equal(signature.s, test.s);
-            });
-        });
-
-        tests.forEach(function (test, i) {
-            it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function() {
+            it("signTransaction using the iban as \"to\" must compare to eth_signTransaction", function(done) {
                 var ethAccounts = new Accounts();
 
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
@@ -148,9 +134,10 @@ describe("eth", function () {
                 var transaction = clone(test.transaction);
                 transaction.to = transaction.toIban;
                 delete transaction.toIban;
-                var tx = testAccount.signTransaction(transaction);
-
-                assert.equal(tx.rawTransaction, test.rawTransaction);
+                testAccount.signTransaction(transaction).then(function (tx) {
+                    assert.equal(tx.rawTransaction, test.rawTransaction);
+                    done();
+                });
             });
         });
 
@@ -288,8 +275,9 @@ describe("eth", function () {
                 var testAccount = ethAccounts.privateKeyToAccount(test.privateKey);
                 assert.equal(testAccount.address, test.address);
 
-                var tx = testAccount.signTransaction(test.transaction);
-                assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                testAccount.signTransaction(test.transaction).then(function (tx) {
+                    assert.equal(ethAccounts.recoverTransaction(tx.rawTransaction), test.address);
+                });
             });
         });
 
