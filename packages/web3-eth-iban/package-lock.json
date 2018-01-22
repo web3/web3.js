@@ -1,0 +1,11 @@
+{
+	"requires": true,
+	"lockfileVersion": 1,
+	"dependencies": {
+		"bn.js": {
+			"version": "4.11.8",
+			"resolved": "https://registry.npmjs.org/bn.js/-/bn.js-4.11.8.tgz",
+			"integrity": "sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA=="
+		}
+	}
+}
