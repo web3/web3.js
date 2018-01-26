@@ -484,6 +484,7 @@ If it returns a single value, it&#8217;s returned as is. If it has multiple retu
 <li><code class="docutils literal"><span class="pre">from</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The address the transaction should be sent from.</li>
 <li><code class="docutils literal"><span class="pre">gasPrice</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional): The gas price in wei to use for this transaction.</li>
 <li><code class="docutils literal"><span class="pre">gas</span></code> - <code class="docutils literal"><span class="pre">Number</span></code> (optional): The maximum gas provided for this transaction (gas limit).</li>
+<li><code class="docutils literal"><span class="pre">value</span></code> - <a href="#id20"><span class="problematic" id="id21">``</span></a>Number|String|BN|BigNumber``(optional): The value transferred for the transaction in wei.</li>
 </ul>
 </dd>
 </dl>
@@ -492,8 +493,8 @@ If it returns a single value, it&#8217;s returned as is. If it has multiple retu
 </li>
 </ol>
 </div>
-<div class="section" id="id20">
-<h3>Returns<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id22">
+<h3>Returns<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
 <p>The <strong>callback</strong> will return the 32 bytes transaction hash.</p>
 <p><code class="docutils literal"><span class="pre">PromiEvent</span></code>: A <a class="reference internal" href="callbacks-promises-events.html#promievent"><span class="std std-ref">promise combined event emitter</span></a>. Will be resolved when the transaction <em>receipt</em> is available, OR if this <code class="docutils literal"><span class="pre">send()</span></code> is called from a <code class="docutils literal"><span class="pre">someContract.deploy()</span></code>, then the promise will resolve with the <em>new contract instance</em>. Additionally the following events are available:</p>
 <ul class="simple">
@@ -503,8 +504,8 @@ If it returns a single value, it&#8217;s returned as is. If it has multiple retu
 <li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Error</span></code>: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.</li>
 </ul>
 </div>
-<div class="section" id="id21">
-<h3>Example<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id23">
+<h3>Example<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="c1">// using the callback</span>
 <span class="nx">myContract</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">myMethod</span><span class="p">(</span><span class="mi">123</span><span class="p">).</span><span class="nx">send</span><span class="p">({</span><span class="nx">from</span><span class="o">:</span> <span class="s1">&#39;0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe&#39;</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">transactionHash</span><span class="p">){</span>
     <span class="p">...</span>
@@ -558,7 +559,8 @@ If it returns a single value, it&#8217;s returned as is. If it has multiple retu
             <span class="p">},</span>
             <span class="s2">&quot;MyOtherEvent&quot;</span><span class="o">:</span> <span class="p">{</span>
                 <span class="p">...</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;MyMultipleEvent&quot;</span><span class="o">:</span><span class="p">[{...},</span> <span class="p">{...}]</span> <span class="c1">// If there are multiple of the same event, they will be in an array</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">})</span>
@@ -575,8 +577,8 @@ If it returns a single value, it&#8217;s returned as is. If it has multiple retu
 </div>
 <p>Will call estimate the gas a method execution will take when executed in the EVM without.
 The estimation can differ from the actual gas used when later sending a transaction, as the state of the smart contract can be different at that time.</p>
-<div class="section" id="id22">
-<h3>Parameters<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id24">
+<h3>Parameters<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><dl class="first docutils">
 <dt><code class="docutils literal"><span class="pre">options</span></code> - <code class="docutils literal"><span class="pre">Object</span></code> (optional): The options used for calling.</dt>
@@ -591,12 +593,12 @@ The estimation can differ from the actual gas used when later sending a transact
 </li>
 </ol>
 </div>
-<div class="section" id="id23">
-<h3>Returns<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id25">
+<h3>Returns<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">Number</span></code>: The gas amount estimated.</p>
 </div>
-<div class="section" id="id24">
-<h3>Example<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id26">
+<h3>Example<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="c1">// using the callback</span>
 <span class="nx">myContract</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">myMethod</span><span class="p">(</span><span class="mi">123</span><span class="p">).</span><span class="nx">estimateGas</span><span class="p">({</span><span class="nx">gas</span><span class="o">:</span> <span class="mi">5000000</span><span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">gasAmount</span><span class="p">){</span>
     <span class="k">if</span><span class="p">(</span><span class="nx">gasAmount</span> <span class="o">==</span> <span class="mi">5000000</span><span class="p">)</span>
@@ -622,16 +624,16 @@ The estimation can differ from the actual gas used when later sending a transact
 </pre></div>
 </div>
 <p>Encodes the ABI for this method. This can be used to send a transaction, call a method, or pass it into another smart contracts method as arguments.</p>
-<div class="section" id="id25">
-<h3>Parameters<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id27">
+<h3>Parameters<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
 <p>none</p>
 </div>
-<div class="section" id="id26">
-<h3>Returns<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id28">
+<h3>Returns<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">String</span></code>: The encoded ABI byte code to send via a transaction or call.</p>
 </div>
-<div class="section" id="id27">
-<h3>Example<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id29">
+<h3>Example<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">myContract</span><span class="p">.</span><span class="nx">methods</span><span class="p">.</span><span class="nx">myMethod</span><span class="p">(</span><span class="mi">123</span><span class="p">).</span><span class="nx">encodeABI</span><span class="p">();</span>
 <span class="o">&gt;</span> <span class="s1">&#39;0x58cf5f1000000000000000000000000000000000000000000000000000000000000007B&#39;</span>
 </pre></div>
@@ -649,8 +651,8 @@ The estimation can differ from the actual gas used when later sending a transact
 </pre></div>
 </div>
 <p>Subscribes to an event and unsubscribes immediately after the first event or error. Will only fire for a single event.</p>
-<div class="section" id="id28">
-<h3>Parameters<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id30">
+<h3>Parameters<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p class="first"><code class="docutils literal"><span class="pre">event</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The name of the event in the contract, or <code class="docutils literal"><span class="pre">&quot;allEvents&quot;</span></code> to get all events.</p>
 </li>
@@ -667,12 +669,12 @@ The estimation can differ from the actual gas used when later sending a transact
 </li>
 </ol>
 </div>
-<div class="section" id="id29">
-<h3>Returns<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id31">
+<h3>Returns<a class="headerlink" href="#id31" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">undefined</span></code></p>
 </div>
-<div class="section" id="id30">
-<h3>Example<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id32">
+<h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">myContract</span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">filter</span><span class="o">:</span> <span class="p">{</span><span class="nx">myIndexedParam</span><span class="o">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">23</span><span class="p">],</span> <span class="nx">myOtherIndexedParam</span><span class="o">:</span> <span class="s1">&#39;0x123456789...&#39;</span><span class="p">},</span> <span class="c1">// Using an array means OR: e.g. 20 or 23</span>
     <span class="nx">fromBlock</span><span class="o">:</span> <span class="mi">0</span>
@@ -704,13 +706,13 @@ The estimation can differ from the actual gas used when later sending a transact
 </div>
 </div>
 <div class="section" id="contract-events">
-<span id="id31"></span><h2>events<a class="headerlink" href="#contract-events" title="Permalink to this headline">¶</a></h2>
+<span id="id33"></span><h2>events<a class="headerlink" href="#contract-events" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">myContract</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">MyEvent</span><span class="p">([</span><span class="nx">options</span><span class="p">][,</span> <span class="nx">callback</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Subscribe to an event</p>
-<div class="section" id="id32">
-<h3>Parameters<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id34">
+<h3>Parameters<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><dl class="first docutils">
 <dt><code class="docutils literal"><span class="pre">options</span></code> - <code class="docutils literal"><span class="pre">Object</span></code> (optional): The options used for deployment.</dt>
@@ -727,7 +729,7 @@ The estimation can differ from the actual gas used when later sending a transact
 </ol>
 </div>
 <div class="section" id="contract-events-return">
-<span id="id33"></span><h3>Returns<a class="headerlink" href="#contract-events-return" title="Permalink to this headline">¶</a></h3>
+<span id="id35"></span><h3>Returns<a class="headerlink" href="#contract-events-return" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">EventEmitter</span></code>: The event emitter has the following events:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">&quot;data&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming event with the event object as argument.</li>
@@ -749,8 +751,8 @@ The estimation can differ from the actual gas used when later sending a transact
 <li><code class="docutils literal"><span class="pre">raw.topics</span></code> - <code class="docutils literal"><span class="pre">Array</span></code>: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.</li>
 </ul>
 </div>
-<div class="section" id="id34">
-<h3>Example<a class="headerlink" href="#id34" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id36">
+<h3>Example<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">myContract</span><span class="p">.</span><span class="nx">events</span><span class="p">.</span><span class="nx">MyEvent</span><span class="p">({</span>
     <span class="nx">filter</span><span class="o">:</span> <span class="p">{</span><span class="nx">myIndexedParam</span><span class="o">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">23</span><span class="p">],</span> <span class="nx">myOtherIndexedParam</span><span class="o">:</span> <span class="s1">&#39;0x123456789...&#39;</span><span class="p">},</span> <span class="c1">// Using an array means OR: e.g. 20 or 23</span>
     <span class="nx">fromBlock</span><span class="o">:</span> <span class="mi">0</span>
@@ -803,8 +805,8 @@ Optionally the filter property can filter those events.</p>
 </pre></div>
 </div>
 <p>Gets past events for this contract.</p>
-<div class="section" id="id35">
-<h3>Parameters<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id37">
+<h3>Parameters<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic">
 <li><p class="first"><code class="docutils literal"><span class="pre">event</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The name of the event in the contract, or <code class="docutils literal"><span class="pre">&quot;allEvents&quot;</span></code> to get all events.</p>
 </li>
@@ -823,13 +825,13 @@ Optionally the filter property can filter those events.</p>
 </li>
 </ol>
 </div>
-<div class="section" id="id36">
-<h3>Returns<a class="headerlink" href="#id36" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id38">
+<h3>Returns<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
 <p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">Array</span></code>: An array with the past event <code class="docutils literal"><span class="pre">Objects</span></code>, matching the given event name and filter.</p>
 <p>For the structure of a returned event <code class="docutils literal"><span class="pre">Object</span></code> see <a class="reference internal" href="#contract-events-return"><span class="std std-ref">getPastEvents return values</span></a>.</p>
 </div>
-<div class="section" id="id37">
-<h3>Example<a class="headerlink" href="#id37" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id39">
+<h3>Example<a class="headerlink" href="#id39" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">myContract</span><span class="p">.</span><span class="nx">getPastEvents</span><span class="p">(</span><span class="s1">&#39;MyEvent&#39;</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">filter</span><span class="o">:</span> <span class="p">{</span><span class="nx">myIndexedParam</span><span class="o">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">23</span><span class="p">],</span> <span class="nx">myOtherIndexedParam</span><span class="o">:</span> <span class="s1">&#39;0x123456789...&#39;</span><span class="p">},</span> <span class="c1">// Using an array means OR: e.g. 20 or 23</span>
     <span class="nx">fromBlock</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
@@ -924,40 +926,40 @@ Optionally the filter property can filter those events.</p>
 </li>
 <li><a class="reference internal" href="#methods-mymethod-send">methods.myMethod.send</a><ul>
 <li><a class="reference internal" href="#id19">Parameters</a></li>
-<li><a class="reference internal" href="#id20">Returns</a></li>
-<li><a class="reference internal" href="#id21">Example</a></li>
+<li><a class="reference internal" href="#id22">Returns</a></li>
+<li><a class="reference internal" href="#id23">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#methods-mymethod-estimategas">methods.myMethod.estimateGas</a><ul>
-<li><a class="reference internal" href="#id22">Parameters</a></li>
-<li><a class="reference internal" href="#id23">Returns</a></li>
-<li><a class="reference internal" href="#id24">Example</a></li>
+<li><a class="reference internal" href="#id24">Parameters</a></li>
+<li><a class="reference internal" href="#id25">Returns</a></li>
+<li><a class="reference internal" href="#id26">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#methods-mymethod-encodeabi">methods.myMethod.encodeABI</a><ul>
-<li><a class="reference internal" href="#id25">Parameters</a></li>
-<li><a class="reference internal" href="#id26">Returns</a></li>
-<li><a class="reference internal" href="#id27">Example</a></li>
+<li><a class="reference internal" href="#id27">Parameters</a></li>
+<li><a class="reference internal" href="#id28">Returns</a></li>
+<li><a class="reference internal" href="#id29">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#events">= Events =</a></li>
 <li><a class="reference internal" href="#once">once</a><ul>
-<li><a class="reference internal" href="#id28">Parameters</a></li>
-<li><a class="reference internal" href="#id29">Returns</a></li>
-<li><a class="reference internal" href="#id30">Example</a></li>
+<li><a class="reference internal" href="#id30">Parameters</a></li>
+<li><a class="reference internal" href="#id31">Returns</a></li>
+<li><a class="reference internal" href="#id32">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#contract-events">events</a><ul>
-<li><a class="reference internal" href="#id32">Parameters</a></li>
+<li><a class="reference internal" href="#id34">Parameters</a></li>
 <li><a class="reference internal" href="#contract-events-return">Returns</a></li>
-<li><a class="reference internal" href="#id34">Example</a></li>
+<li><a class="reference internal" href="#id36">Example</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#events-allevents">events.allEvents</a></li>
 <li><a class="reference internal" href="#getpastevents">getPastEvents</a><ul>
-<li><a class="reference internal" href="#id35">Parameters</a></li>
-<li><a class="reference internal" href="#id36">Returns</a></li>
-<li><a class="reference internal" href="#id37">Example</a></li>
+<li><a class="reference internal" href="#id37">Parameters</a></li>
+<li><a class="reference internal" href="#id38">Returns</a></li>
+<li><a class="reference internal" href="#id39">Example</a></li>
 </ul>
 </li>
 </ul>

@@ -82,7 +82,7 @@
 <li><code class="docutils literal"><span class="pre">subscription.arguments</span></code>: The subscription arguments, used when re-subscribing.</li>
 <li><code class="docutils literal"><span class="pre">on(&quot;data&quot;)</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming log with the log object as argument.</li>
 <li><code class="docutils literal"><span class="pre">on(&quot;changed&quot;)</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each log which was removed from the blockchain. The log will have the additional property <code class="docutils literal"><span class="pre">&quot;removed:</span> <span class="pre">true&quot;</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">on(&quot;error&quot;)</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occours.</li>
+<li><code class="docutils literal"><span class="pre">on(&quot;error&quot;)</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occurs.</li>
 </ul>
 </div></blockquote>
 </div>
@@ -162,7 +162,7 @@
 <p><code class="docutils literal"><span class="pre">EventEmitter</span></code>: An <a class="reference internal" href="#eth-subscription-return"><span class="std std-ref">subscription instance</span></a> as an event emitter with the following events:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">&quot;data&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming pending transaction.</li>
-<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occours.</li>
+<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occurs.</li>
 </ul>
 <p>For the structure of the returned object see <a class="reference internal" href="web3-eth.html#eth-gettransaction-return"><span class="std std-ref">web3.eth.getTransaction() return values</span></a>.</p>
 </div>
@@ -177,9 +177,10 @@
 <h3>Example<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">subscription</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">subscribe</span><span class="p">(</span><span class="s1">&#39;pendingTransactions&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span><span class="p">)</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">transaction</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
 <span class="p">})</span>
 <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">transaction</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">transaction</span><span class="p">);</span>
 <span class="p">});</span>
 
 <span class="c1">// unsubscribes the subscription</span>
@@ -210,7 +211,7 @@
 <p><code class="docutils literal"><span class="pre">EventEmitter</span></code>: An <a class="reference internal" href="#eth-subscription-return"><span class="std std-ref">subscription instance</span></a> as an event emitter with the following events:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">&quot;data&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming block header.</li>
-<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occours.</li>
+<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occurs.</li>
 </ul>
 <p>The structure of a returned block header is as follows:</p>
 <blockquote>
@@ -277,7 +278,7 @@
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">&quot;data&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming sync object as argument.</li>
 <li><code class="docutils literal"><span class="pre">&quot;changed&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when the synchronisation is started with <code class="docutils literal"><span class="pre">true</span></code> and when finsihed with <code class="docutils literal"><span class="pre">false</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occours.</li>
+<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occurs.</li>
 </ul>
 <p>For the structure of a returned event <code class="docutils literal"><span class="pre">Object</span></code> see <a class="reference internal" href="web3-eth.html#eth-issyncing-return"><span class="std std-ref">web3.eth.isSyncing return values</span></a>.</p>
 </div>
@@ -330,7 +331,7 @@
 <blockquote>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">fromBlock</span></code> - <code class="docutils literal"><span class="pre">Number</span></code>: The number of the earliest block. By default <code class="docutils literal"><span class="pre">null</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: An address or a list of addresses to only get logs from particular account(s).</li>
+<li><code class="docutils literal"><span class="pre">address</span></code> - <code class="docutils literal"><span class="pre">String|Array</span></code>: An address or a list of addresses to only get logs from particular account(s).</li>
 <li><code class="docutils literal"><span class="pre">topics</span></code> - <code class="docutils literal"><span class="pre">Array</span></code>: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use <code class="docutils literal"><span class="pre">null</span></code>, e.g. <code class="docutils literal"><span class="pre">[null,</span> <span class="pre">'0x00...']</span></code>. You can also pass another array for each topic with options for that topic e.g. <code class="docutils literal"><span class="pre">[null,</span> <span class="pre">['option1',</span> <span class="pre">'option2']]</span></code></li>
 </ul>
 </div></blockquote>
@@ -344,7 +345,7 @@
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">&quot;data&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each incoming log with the log object as argument.</li>
 <li><code class="docutils literal"><span class="pre">&quot;changed&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires on each log which was removed from the blockchain. The log will have the additional property <code class="docutils literal"><span class="pre">&quot;removed:</span> <span class="pre">true&quot;</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occours.</li>
+<li><code class="docutils literal"><span class="pre">&quot;error&quot;</span></code> returns <code class="docutils literal"><span class="pre">Object</span></code>: Fires when an error in the subscription occurs.</li>
 </ul>
 <p>For the structure of a returned event <code class="docutils literal"><span class="pre">Object</span></code> see <a class="reference internal" href="web3-eth.html#eth-getpastlogs-return"><span class="std std-ref">web3.eth.getPastEvents return values</span></a>.</p>
 </div>
@@ -362,9 +363,10 @@
     <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0x12345...&#39;</span><span class="p">]</span>
 <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">result</span><span class="p">){</span>
     <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">error</span><span class="p">)</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
 <span class="p">})</span>
 <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">log</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">log</span><span class="p">);</span>
 <span class="p">})</span>
 <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;changed&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">log</span><span class="p">){</span>
 <span class="p">});</span>

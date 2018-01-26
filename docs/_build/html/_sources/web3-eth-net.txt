@@ -37,7 +37,7 @@ Returns
     - ``"main"`` for main network
     - ``"morden"`` for the morden test network
     - ``"ropsten"`` for the morden test network
-    - ``"private"`` for un deteacable networks.
+    - ``"private"`` for undetectable networks.
 
 
 -------
