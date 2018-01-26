@@ -343,7 +343,7 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <div class="section" id="id14">
 <h3>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getId</span><span class="p">()</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">net</span><span class="p">.</span><span class="nx">getId</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="mi">1</span>
 </pre></div>
@@ -518,7 +518,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id32">
 <h3>Example<a class="headerlink" href="#id32" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">setMinPoW</span><span class="p">(</span><span class="mf">0.9</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">setMinPoW</span><span class="p">(</span><span class="mf">0.9</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -549,7 +549,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id35">
 <h3>Example<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">markTrustedPeer</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">markTrustedPeer</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -575,7 +575,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id38">
 <h3>Example<a class="headerlink" href="#id38" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newKeyPair</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newKeyPair</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;5e57b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
 </pre></div>
@@ -602,7 +602,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id41">
 <h3>Example<a class="headerlink" href="#id41" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addPrivateKey</span><span class="p">(</span><span class="s1">&#39;0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addPrivateKey</span><span class="p">(</span><span class="s1">&#39;0x8bda3abeb454847b515fa9b404cede50b1cc63cfdeddd4999d074284b4c21e15&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
 </pre></div>
@@ -629,7 +629,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id44">
 <h3>Example<a class="headerlink" href="#id44" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteKeyPair</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteKeyPair</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -656,7 +656,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id47">
 <h3>Example<a class="headerlink" href="#id47" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasKeyPair</span><span class="p">(</span><span class="s1">&#39;fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasKeyPair</span><span class="p">(</span><span class="s1">&#39;fe22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -683,7 +683,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id50">
 <h3>Example<a class="headerlink" href="#id50" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPublicKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPublicKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6&quot;</span>
 </pre></div>
@@ -710,7 +710,7 @@ The new value should be set relative to the old value (e.g. double). The old val
 </div>
 <div class="section" id="id53">
 <h3>Example<a class="headerlink" href="#id53" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPrivateKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getPrivateKey</span><span class="p">(</span><span class="s1">&#39;3e22b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x234234e22b9ffc2387e18636e0534534a3d0c56b0243567432453264c16e78a2adc&quot;</span>
 </pre></div>
@@ -737,7 +737,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id56">
 <h3>Example<a class="headerlink" href="#id56" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newSymKey</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">newSymKey</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;cec94d139ff51d7df1d228812b90c23ec1f909afa0840ed80f1e04030bb681e4&quot;</span>
 </pre></div>
@@ -764,7 +764,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id59">
 <h3>Example<a class="headerlink" href="#id59" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addSymKey</span><span class="p">(</span><span class="s1">&#39;0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">addSymKey</span><span class="p">(</span><span class="s1">&#39;0x5e11b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;fea94d139ff51d7df1d228812b90c23ec1f909afa0840ed80f1e04030bb681e4&quot;</span>
 </pre></div>
@@ -791,7 +791,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id62">
 <h3>Example<a class="headerlink" href="#id62" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">generateSymKeyFromPassword</span><span class="p">(</span><span class="s1">&#39;Never use this password - password!&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">generateSymKeyFromPassword</span><span class="p">(</span><span class="s1">&#39;Never use this password - password!&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;2e57b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&quot;</span>
 </pre></div>
@@ -818,7 +818,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id65">
 <h3>Example<a class="headerlink" href="#id65" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasSymKey</span><span class="p">(</span><span class="s1">&#39;f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">hasSymKey</span><span class="p">(</span><span class="s1">&#39;f6dcf21ed6a17bd78d8c4c63195ab997b3b65ea683705501eae82d32667adc92&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -845,7 +845,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id68">
 <h3>Example<a class="headerlink" href="#id68" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getSymKey</span><span class="p">(</span><span class="s1">&#39;af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">getSymKey</span><span class="p">(</span><span class="s1">&#39;af33b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0xa82a520aff70f7a989098376e48ec128f25f767085e84d7fb995a9815eebff0a&quot;</span>
 </pre></div>
@@ -872,7 +872,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
 </div>
 <div class="section" id="id71">
 <h3>Example<a class="headerlink" href="#id71" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteSymKey</span><span class="p">(</span><span class="s1">&#39;bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">shh</span><span class="p">.</span><span class="nx">deleteSymKey</span><span class="p">(</span><span class="s1">&#39;bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>
@@ -998,7 +998,7 @@ Will be used for encrypting and decrypting of messages where the sym key is know
     <span class="nx">symKeyID</span><span class="o">:</span> <span class="s1">&#39;bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f&#39;</span><span class="p">,</span>
     <span class="nx">sig</span><span class="o">:</span> <span class="s1">&#39;0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6&#39;</span>
     <span class="nx">ttl</span><span class="o">:</span> <span class="mi">20</span><span class="p">,</span>
-    <span class="nx">topic</span><span class="o">:</span> <span class="s1">&#39;0xffddaa11&#39;</span><span class="p">,</span>
+    <span class="nx">topics</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;0xffddaa11&#39;</span><span class="p">],</span>
     <span class="nx">minPow</span><span class="o">:</span> <span class="mf">0.8</span><span class="p">,</span>
 <span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">error</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">subscription</span><span class="p">){</span>
 

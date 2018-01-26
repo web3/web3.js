@@ -346,13 +346,13 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 </div>
 <div class="section" id="id13">
 <h3>Returns<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">Boolean</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if the account was created, otherwise <code class="docutils literal"><span class="pre">false</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">String</span></code>: The address of the newly created account.</p>
 </div>
 <div class="section" id="id14">
 <h3>Example<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">newAccount</span><span class="p">(</span><span class="s1">&#39;!@superpassword&#39;</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
-<span class="o">&gt;</span> <span class="kc">true</span>
+<span class="o">&gt;</span> <span class="s1">&#39;0x1234567891011121314151617181920212223456&#39;</span>
 </pre></div>
 </div>
 </div>
@@ -393,9 +393,36 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <span class="o">&gt;</span> <span class="s2">&quot;0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400&quot;</span>
 </pre></div>
 </div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="ecrecover">
+<h2>ecRecover<a class="headerlink" href="#ecrecover" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">ecRecover</span><span class="p">(</span><span class="nx">dataThatWasSigned</span><span class="p">,</span> <span class="nx">signature</span> <span class="p">[,</span> <span class="nx">callback</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Recovers the account that signed the data.</p>
+<div class="section" id="id18">
+<h3>Parameters<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><code class="docutils literal"><span class="pre">String</span></code> - Data that was signed. If String it will be converted using <a class="reference internal" href="web3-utils.html#utils-utf8tohex"><span class="std std-ref">web3.utils.utf8ToHex</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">String</span></code> - The signature.</li>
+<li><code class="docutils literal"><span class="pre">Function</span></code> - (optional) Optional callback, returns an error object as first parameter and the result as second.</li>
+</ol>
+</div>
+<div class="section" id="id19">
+<h3>Returns<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">String</span></code> - The account.</p>
+</div>
+<div class="section" id="id20">
+<h3>Example<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">personal</span><span class="p">.</span><span class="nx">ecRecover</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400&quot;</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="s2">&quot;0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe&quot;</span>
+</pre></div>
+</div>
 <hr class="docutils" />
 <p>// TODO</p>
-<p>getAccounts, unlockAccount, lockAccount, sendTransaction, ecRecover</p>
+<p>getAccounts, unlockAccount, lockAccount, sendTransaction</p>
 </div>
 </div>
 </div>
@@ -452,6 +479,12 @@ Will return the given provider by the (browser) environment, otherwise <code cla
 <li><a class="reference internal" href="#id15">Parameters</a></li>
 <li><a class="reference internal" href="#id16">Returns</a></li>
 <li><a class="reference internal" href="#id17">Example</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#ecrecover">ecRecover</a><ul>
+<li><a class="reference internal" href="#id18">Parameters</a></li>
+<li><a class="reference internal" href="#id19">Returns</a></li>
+<li><a class="reference internal" href="#id20">Example</a></li>
 </ul>
 </li>
 </ul>
