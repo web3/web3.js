@@ -19,7 +19,7 @@ var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
 var exec = require('child_process').exec;
 
-var DEST = path.join(__dirname, 'dist/');
+var DEST = path.join(__dirname, 'packages', 'web3', 'dist/');
 
 var packages = [{
     fileName: 'web3',
