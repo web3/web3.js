@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "0.20.2",
+  "version": "0.20.4",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
@@ -39,8 +39,8 @@
   "scripts": {
     "build": "gulp",
     "watch": "gulp watch",
-    "lint": "jshint *.js lib",
-    "test": "mocha; jshint *.js lib",
+    "lint": "jshint lib",
+    "test": "mocha && jshint lib",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {

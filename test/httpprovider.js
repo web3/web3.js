@@ -12,6 +12,16 @@ var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
 });
 
 describe('lib/web3/httpprovider', function () {
+    describe('prepareRequest', function () {
+        it('should set request header', function () {
+            var provider = new HttpProvider('http://localhost:8545', 0 , null, null, [{name: 'Access-Control-Allow-Origin',  value: '*'}]);
+            var result = provider.prepareRequest(true);
+
+            assert.equal(typeof result, 'object');
+            assert.equal(result.headers['Access-Control-Allow-Origin'], '*');
+        });
+    });
+
     describe('send', function () {
         it('should send basic request', function () {
             var provider = new HttpProvider();

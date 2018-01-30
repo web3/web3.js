@@ -1887,8 +1887,8 @@ var unitMap = {
     'microether':   '1000000000000',
     'micro':        '1000000000000',
     'finney':       '1000000000000000',
-    'milliether':    '1000000000000000',
-    'milli':         '1000000000000000',
+    'milliether':   '1000000000000000',
+    'milli':        '1000000000000000',
     'ether':        '1000000000000000000',
     'kether':       '1000000000000000000000',
     'grand':        '1000000000000000000000',
@@ -2458,7 +2458,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.2"
+    "version": "0.20.4"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2893,7 +2893,7 @@ var checkForContractAddress = function(contract, callback){
             } else {
 
                 contract._eth.getTransactionReceipt(contract.transactionHash, function(e, receipt){
-                    if(receipt && !callbackFired) {
+                    if(receipt && receipt.blockHash && !callbackFired) {
 
                         contract._eth.getCode(receipt.contractAddress, function(e, code){
                             /*jshint maxcomplexity: 6 */
@@ -2954,7 +2954,7 @@ var ContractFactory = function (eth, abi) {
      */
     this.new = function () {
         /*jshint maxcomplexity: 7 */
-        
+
         var contract = new Contract(this.eth, this.abi);
 
         // parse arguments
@@ -2986,7 +2986,7 @@ var ContractFactory = function (eth, abi) {
 
         if (callback) {
 
-            // wait for the contract address adn check if the code was deployed
+            // wait for the contract address and check if the code was deployed
             this.eth.sendTransaction(options, function (err, hash) {
                 if (err) {
                     callback(err);
@@ -4270,8 +4270,8 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
   XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest; // jshint ignore: line
 }
 
-if(typeof Meteor !== 'undefined' && Meteor.isServer) {
-	var XHR2 = Npm.require('xhr2');
+if(typeof Meteor !== 'undefined' && Meteor.isServer) { // jshint ignore: line
+	var XHR2 = Npm.require('xhr2'); // jshint ignore: line
 } else {
 	var XHR2 = require('xhr2'); // jshint ignore: line
 }
@@ -4279,11 +4279,12 @@ if(typeof Meteor !== 'undefined' && Meteor.isServer) {
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function (host, timeout, user, password) {
+var HttpProvider = function (host, timeout, user, password, headers) {
   this.host = host || 'http://localhost:8545';
   this.timeout = timeout || 0;
   this.user = user;
   this.password = password;
+  this.headers = headers;
 };
 
 /**
@@ -4308,6 +4309,11 @@ HttpProvider.prototype.prepareRequest = function (async) {
     var auth = 'Basic ' + new Buffer(this.user + ':' + this.password).toString('base64');
     request.setRequestHeader('Authorization', auth);
   } request.setRequestHeader('Content-Type', 'application/json');
+  if(this.headers) {
+      this.headers.forEach(function(header) {
+          request.setRequestHeader(header.name, header.value);
+      });
+  }
   return request;
 };
 
