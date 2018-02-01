@@ -351,6 +351,10 @@ export declare interface Providers {
   IpcProvider: new (path: string, net: any) => IpcProvider
 }
 
+export type EthAbiDecodeParametersType = { name: string; type: string; }
+export type EthAbiDecodeParametersResultArray = { [index: number]: any }
+export type EthAbiDecodeParametersResultObject = EthAbiDecodeParametersResultArray & { [key: string]: any }
+
 export declare class Eth {
   defaultAccount: string
   defaultBlock: BlockType
@@ -370,7 +374,8 @@ export declare class Eth {
     encodeFunctionCall(jsonInterface: object, parameters: any[]): string
     encodeFunctionSignature(name: string | object): string
     decodeParameter(type: string, hex: string): any
-    decodeParameters(types: string[] | { name: string; type: string; }[], hex: string): any
+    decodeParameters(types: string[], hex: string): EthAbiDecodeParametersResultArray
+    decodeParameters(types: EthAbiDecodeParametersType[], hex: string): EthAbiDecodeParametersResultObject
   }
   accounts: {
     'new'(entropy?: string): Account
