@@ -148,6 +148,16 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             chainId: utils.numberToHex(tx.chainId)
         };
 
+        if (!utils.isHex(transaction.data)) {
+            throw new Error('"data" must be a hex string');
+        }
+
+        Object.values(transaction).map(function(val) {
+          if(val.startsWith("-")) {
+            throw new Error('negative numbers not allowed in transaction data');
+          }
+        });
+
         var rlpEncoded = RLP.encode([
             Bytes.fromNat(transaction.nonce),
             Bytes.fromNat(transaction.gasPrice),
@@ -165,6 +175,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
 
+        rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
         rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
         rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
 
