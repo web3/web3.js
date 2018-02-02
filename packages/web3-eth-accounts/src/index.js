@@ -152,8 +152,8 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
             throw new Error('"data" must be a hex string');
         }
 
-        Object.values(transaction).map(function(val) {
-          if(val.startsWith("-")) {
+        Object.keys(transaction).map(function(key) {
+          if(transaction[key].startsWith("-")) {
             throw new Error('negative numbers not allowed in transaction data');
           }
         });
