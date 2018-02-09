@@ -58,6 +58,10 @@
 <div class="section" id="web3-eth-accounts">
 <h1>web3.eth.accounts<a class="headerlink" href="#web3-eth-accounts" title="Permalink to this headline">¶</a></h1>
 <p>The <code class="docutils literal"><span class="pre">web3.eth.accounts</span></code> contains functions to generate Ethereum accounts and sign transactions and data.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This package has NOT been audited and might potentially be unsafe. Take precautions to clear memory properly, store the private keys safely, and test transaction receiving and sending functionality properly before using in production!</p>
+</div>
 <p>To use this package standalone use:</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">Accounts</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;web3-eth-accounts&#39;</span><span class="p">);</span>
 
@@ -76,7 +80,7 @@
 <div class="section" id="parameters">
 <h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
 <ol class="arabic simple">
-<li><code class="docutils literal"><span class="pre">entropy</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional): A random strong to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using <span class="xref std std-ref">randomhex</span>.</li>
+<li><code class="docutils literal"><span class="pre">entropy</span></code> - <code class="docutils literal"><span class="pre">String</span></code> (optional): A random string to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using <span class="xref std std-ref">randomhex</span>.</li>
 </ol>
 </div>
 <div class="section" id="returns">
@@ -181,8 +185,8 @@
 <li><code class="docutils literal"><span class="pre">to</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) The recevier of the transaction, can be empty when deploying a contract.</li>
 <li><code class="docutils literal"><span class="pre">data</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) The call data of the transaction, can be empty for simple value transfers.</li>
 <li><code class="docutils literal"><span class="pre">value</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) The value of the transaction in wei.</li>
-<li><code class="docutils literal"><span class="pre">gas</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The gas provided by the transaction.</li>
 <li><code class="docutils literal"><span class="pre">gasPrice</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: (optional) The gas price set by this transaction, if empty, it will use <a class="reference internal" href="web3-eth.html#eth-gasprice"><span class="std std-ref">web3.eth.gasPrice()</span></a></li>
+<li><code class="docutils literal"><span class="pre">gas</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The gas provided by the transaction.</li>
 </ul>
 </dd>
 </dl>
@@ -196,7 +200,7 @@
 <div class="section" id="id5">
 <h3>Returns<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <dl class="docutils">
-<dt><code class="docutils literal"><span class="pre">Promise|Object</span></code> returning <code class="docutils literal"><span class="pre">Object</span></code>: The signed data RLP encoded transaction, or if <code class="docutils literal"><span class="pre">returnSignature</span></code> is <code class="docutils literal"><span class="pre">true</span></code> the signature values as follows:</dt>
+<dt><code class="docutils literal"><span class="pre">Promise</span></code> returning <code class="docutils literal"><span class="pre">Object</span></code>: The signed data RLP encoded transaction, or if <code class="docutils literal"><span class="pre">returnSignature</span></code> is <code class="docutils literal"><span class="pre">true</span></code> the signature values as follows:</dt>
 <dd><ul class="first last simple">
 <li><code class="docutils literal"><span class="pre">messageHash</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: The hash of the given message.</li>
 <li><code class="docutils literal"><span class="pre">r</span></code> - <code class="docutils literal"><span class="pre">String</span></code>: First 32 bytes of the signature</li>
@@ -206,10 +210,6 @@
 </ul>
 </dd>
 </dl>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">If <code class="docutils literal"><span class="pre">nonce</span></code>, <code class="docutils literal"><span class="pre">chainId</span></code>, <code class="docutils literal"><span class="pre">gas</span></code> and <code class="docutils literal"><span class="pre">gasPrice</span></code> is given, it returns the signed transaction <em>directly</em> as <code class="docutils literal"><span class="pre">Object</span></code>.</p>
-</div>
 </div>
 <div class="section" id="id6">
 <h3>Example<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
@@ -227,7 +227,6 @@
     <span class="nx">rawTransaction</span><span class="o">:</span> <span class="s1">&#39;0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68&#39;</span>
 <span class="p">}</span>
 
-<span class="c1">// if nonce, chainId, gas and gasPrice is given it returns synchronous</span>
 <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">accounts</span><span class="p">.</span><span class="nx">signTransaction</span><span class="p">({</span>
     <span class="nx">to</span><span class="o">:</span> <span class="s1">&#39;0xF0109fC8DF283027b6285cc889F5aA624EaC1F55&#39;</span><span class="p">,</span>
     <span class="nx">value</span><span class="o">:</span> <span class="s1">&#39;1000000000&#39;</span><span class="p">,</span>
@@ -236,9 +235,10 @@
     <span class="nx">nonce</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nx">chainId</span><span class="o">:</span> <span class="mi">1</span>
 <span class="p">},</span> <span class="s1">&#39;0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">{</span>
     <span class="nx">messageHash</span><span class="o">:</span> <span class="s1">&#39;0x6893a6ee8df79b0f5d64a180cd1ef35d030f3e296a5361cf04d02ce720d32ec5&#39;</span><span class="p">,</span>
-    <span class="nx">r</span><span class="o">:</span> <span class="s1">&#39;0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c&#39;</span><span class="p">,</span>
+    <span class="nx">r</span><span class="o">:</span> <span class="s1">&#39;0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c&#39;</span><span class="p">,</span>
     <span class="nx">s</span><span class="o">:</span> <span class="s1">&#39;0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428&#39;</span><span class="p">,</span>
     <span class="nx">v</span><span class="o">:</span> <span class="s1">&#39;0x25&#39;</span><span class="p">,</span>
     <span class="nx">rawTransaction</span><span class="o">:</span> <span class="s1">&#39;0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428&#39;</span>
