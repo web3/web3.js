@@ -295,6 +295,8 @@ Subscription.prototype.subscribe = function() {
         } else if (_.isFunction(_this.callback)) {
             _this.callback(err, null, _this);
             _this.emit('error', err);
+        } else {
+            _this.emit('error', err);
         }
     });
 
