@@ -131,6 +131,7 @@ npm test
  - Haskell [hs-web3](https://github.com/airalab/hs-web3)
  - Java [web3j](https://github.com/web3j/web3j)
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
+ - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
 
 
 [npm-image]: https://badge.fury.io/js/web3.png
