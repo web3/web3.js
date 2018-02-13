@@ -266,19 +266,25 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     };
 };
 
-Accounts.prototype.recover = function recover(hash, signature) {
+Accounts.prototype.recover = function recover(message, signature, preFixed) {
+    var args = [].slice.apply(arguments);
 
-    if (_.isObject(hash)) {
-        return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
+
+    if (_.isObject(message)) {
+        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
-    if (!utils.isHexStrict(hash))
-        throw new Error('The parameter "'+ hash +'" must be a valid HEX string.');
-
-    if (arguments.length === 4) {
-        return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
+    if (!preFixed) {
+        message = this.hashMessage(message);
     }
-    return Account.recover(hash, signature);
+
+    if (args.length >= 4) {
+        preFixed = args.slice(-1)[0];
+        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+
+        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
+    }
+    return Account.recover(message, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
