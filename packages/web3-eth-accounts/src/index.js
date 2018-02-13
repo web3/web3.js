@@ -244,13 +244,15 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 /* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
-    var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
+    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+    var messageBuffer = Buffer.from(message);
+    var preamble = "\x19Ethereum Signed Message:\n" + message.length;
+    var preambleBuffer = Buffer.from(preamble);
+    var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
-
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
@@ -270,9 +272,8 @@ Accounts.prototype.recover = function recover(hash, signature) {
         return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
     }
 
-    if (!utils.isHexStrict(hash)) {
-        hash = this.hashMessage(hash);
-    }
+    if (!utils.isHexStrict(hash))
+        throw new Error('The parameter "'+ hash +'" must be a valid HEX string.');
 
     if (arguments.length === 4) {
         return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
