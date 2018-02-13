@@ -342,7 +342,8 @@ export declare interface Contract {
       topics?: string[]
     },
     cb?: Callback<EventLog[]>
-  ): Promise<EventLog[]>
+  ): Promise<EventLog[]>,
+  setProvider(provider: IProvider): void
 }
 export declare interface Request { }
 export declare interface Providers {
