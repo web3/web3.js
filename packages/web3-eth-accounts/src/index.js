@@ -188,6 +188,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
             var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
 
+            rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
             rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
             rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
 
