@@ -352,8 +352,8 @@ recover
 .. code-block:: javascript
 
     web3.eth.accounts.recover(signatureObject);
-    web3.eth.accounts.recover(message, signature [, preFixed]);
-    web3.eth.accounts.recover(message, v, r, s [, preFixed]);
+    web3.eth.accounts.recover(message, signature, preFixed);
+    web3.eth.accounts.recover(message, v, r, s, preFixed);
 
 Recovers the Ethereum address which was used to sign the given data.
 
@@ -367,7 +367,7 @@ Parameters
     - ``s`` - ``String``: Next 32 bytes of the signature
     - ``v`` - ``String``: Recovery value + 27
 2. ``signature`` - ``String``: The raw RLP encoded signature, OR parameter 2-4 as v, r, s values.
-3. ``preFixed`` - ``Boolean`` (optional, default: ``false``): If the last parameter is ``true``, the given message will NOT automatically be prefixed with ``"\x19Ethereum Signed Message:\n" + message.length + message``, and assumed to be already prefixed.
+3. ``preFixed`` - ``Boolean`` (default: ``false``): If the last parameter is ``true``, the given message will NOT be prefixed automatically with ``"\x19Ethereum Signed Message:\n" + message.length + message``, and assumed to be already prefixed.
 
 
 -------
