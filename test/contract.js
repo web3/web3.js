@@ -2901,9 +2901,7 @@ describe('typical usage', function() {
                 assert.equal(newContract.options.address, address);
                 assert.isTrue(newContract !== contract, 'contract objects shouldn\'t the same');
 
-                setTimeout(function () {
-                    done();
-                }, 1);
+                done();
             });
         // .on('error', function (value) {
         //     console.log('error', value);
