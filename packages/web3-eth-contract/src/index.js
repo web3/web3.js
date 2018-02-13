@@ -552,7 +552,7 @@ Contract.prototype._generateEventOptions = function() {
  * @return {Object} the event subscription
  */
 Contract.prototype.clone = function() {
-    return new Contract(this.options.jsonInterface, this.options.address, this.options);
+    return new this.constructor(this.options.jsonInterface, this.options.address, this.options);
 };
 
 
