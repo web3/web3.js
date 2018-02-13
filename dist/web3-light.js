@@ -2458,7 +2458,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.4"
+    "version": "0.20.5"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2668,16 +2668,15 @@ AllSolidityEvents.prototype.encode = function (options) {
 
 AllSolidityEvents.prototype.decode = function (data) {
     data.data = data.data || '';
-    data.topics = data.topics || [];
 
-    var eventTopic = data.topics[0].slice(2);
+
+    var eventTopic = (utils.isArray(data.topics) && utils.isString(data.topics[0])) ? data.topics[0].slice(2) : '';
     var match = this._json.filter(function (j) {
         return eventTopic === sha3(utils.transformToFullName(j));
     })[0];
 
     if (!match) { // cannot find matching event?
-        console.warn('cannot find event for log');
-        return data;
+        return formatters.outputLogFormatter(data);
     }
 
     var event = new SolidityEvent(this._requestManager, match, this._address);
@@ -3274,6 +3273,7 @@ SolidityEvent.prototype.decode = function (data) {
 
     data.data = data.data || '';
     data.topics = data.topics || [];
+
 
     var argTopics = this._anonymous ? data.topics : data.topics.slice(1);
     var indexedData = argTopics.map(function (topics) { return topics.slice(2); }).join("");
