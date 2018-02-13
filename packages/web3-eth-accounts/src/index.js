@@ -130,61 +130,88 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
-    var _this = this;
+    var _this = this,
+        error = false,
+        result;
+
+    callback = callback || function () {};
+
+    if (!tx) {
+        error = new Error('No transaction object given!');
+
+        callback(error);
+        return Promise.reject(error);
+    }
 
     function signed (tx) {
 
         if (!tx.gas && !tx.gasLimit) {
-            throw new Error('"gas" is missing');
+            error = new Error('"gas" is missing');
         }
 
-        var transaction = {
-            nonce: utils.numberToHex(tx.nonce),
-            to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
-            data: tx.data || '0x',
-            value: tx.value ? utils.numberToHex(tx.value) : "0x",
-            gas: utils.numberToHex(tx.gasLimit || tx.gas),
-            gasPrice: utils.numberToHex(tx.gasPrice),
-            chainId: utils.numberToHex(tx.chainId)
-        };
-
-        var rlpEncoded = RLP.encode([
-            Bytes.fromNat(transaction.nonce),
-            Bytes.fromNat(transaction.gasPrice),
-            Bytes.fromNat(transaction.gas),
-            transaction.to.toLowerCase(),
-            Bytes.fromNat(transaction.value),
-            transaction.data,
-            Bytes.fromNat(transaction.chainId || "0x1"),
-            "0x",
-            "0x"]);
-
-        var hash = Hash.keccak256(rlpEncoded);
-
-        var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
-
-        var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
-
-        rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
-        rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
-
-        var rawTransaction = RLP.encode(rawTx);
-
-        var values = RLP.decode(rawTransaction);
-        var result = {
-            messageHash: hash,
-            v: trimLeadingZero(values[6]),
-            r: trimLeadingZero(values[7]),
-            s: trimLeadingZero(values[8]),
-            rawTransaction: rawTransaction
-        };
-        if (_.isFunction(callback)) {
-            callback(null, result);
+        if (tx.nonce  < 0 ||
+            tx.gas  < 0 ||
+            tx.gasPrice  < 0 ||
+            tx.chainId  < 0) {
+            error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
         }
+
+        if (error) {
+            callback(error);
+            return Promise.reject(new Error('"gas" is missing'));
+        }
+
+        try {
+            tx = helpers.formatters.inputCallFormatter(tx);
+
+            var transaction = tx;
+            transaction.to = tx.to || '0x';
+            transaction.data = tx.data || '0x';
+            transaction.value = tx.value || '0x';
+            transaction.chainId = utils.numberToHex(tx.chainId);
+
+            var rlpEncoded = RLP.encode([
+                Bytes.fromNat(transaction.nonce),
+                Bytes.fromNat(transaction.gasPrice),
+                Bytes.fromNat(transaction.gas),
+                transaction.to.toLowerCase(),
+                Bytes.fromNat(transaction.value),
+                transaction.data,
+                Bytes.fromNat(transaction.chainId || "0x1"),
+                "0x",
+                "0x"]);
+
+
+            var hash = Hash.keccak256(rlpEncoded);
+
+            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+
+            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+
+            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+
+            var rawTransaction = RLP.encode(rawTx);
+
+            var values = RLP.decode(rawTransaction);
+            result = {
+                messageHash: hash,
+                v: trimLeadingZero(values[6]),
+                r: trimLeadingZero(values[7]),
+                s: trimLeadingZero(values[8]),
+                rawTransaction: rawTransaction
+            };
+
+        } catch(e) {
+            callback(e);
+            return Promise.reject(e);
+        }
+
+        callback(null, result);
         return result;
     }
 
-    // Returns synchronously if nonce, chainId and price are provided
+    // Resolve immediately if nonce, chainId and price are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
         return Promise.resolve(signed(tx));
     }
