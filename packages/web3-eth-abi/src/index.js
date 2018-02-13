@@ -351,6 +351,8 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
+    data = data || '';
+
     var notIndexedInputs = [];
     var indexedInputs = [];
 
