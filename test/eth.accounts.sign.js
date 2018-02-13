@@ -52,15 +52,24 @@ describe("eth", function () {
             it("recover signature using a string", function() {
                 var ethAccounts = new Accounts();
 
-                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), test.signature);
+                var address = ethAccounts.recover(test.data, test.signature);
 
                 assert.equal(address, test.address);
             });
 
-            it("recover signature using a hashed message", function() {
+            it("recover signature using a string and preFixed", function() {
                 var ethAccounts = new Accounts();
 
-                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), test.signature);
+                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), test.signature, true);
+
+                assert.equal(address, test.address);
+            });
+
+            it("recover signature using a hash and r s v values and preFixed", function() {
+                var ethAccounts = new Accounts();
+
+                var sig = ethAccounts.sign(test.data, test.privateKey);
+                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), sig.v, sig.r, sig.s, true);
 
                 assert.equal(address, test.address);
             });
@@ -89,7 +98,7 @@ describe("eth", function () {
 
                 var data = web3.utils.isHexStrict(test.data) ? test.data : web3.utils.utf8ToHex(test.data);
                 var sig = ethAccounts.sign(data, test.privateKey);
-                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), sig.v, sig.r, sig.s);
+                var address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
 
                 assert.equal(address, test.address);
             });
@@ -98,7 +107,7 @@ describe("eth", function () {
                 var ethAccounts = new Accounts();
 
                 var sig = ethAccounts.sign(test.data, test.privateKey);
-                var address = ethAccounts.recover(ethAccounts.hashMessage(test.data), sig.v, sig.r, sig.s);
+                var address = ethAccounts.recover(test.data, sig.v, sig.r, sig.s);
 
                 assert.equal(address, test.address);
             });
