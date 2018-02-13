@@ -29,8 +29,8 @@ First you need to get web3.js into your project. This can be done using the foll
 - pure js: link the ``dist/web3.min.js``
 
 After that you need to create a web3 instance and set a provider.
-Ethereum supported Browsers like Mist or MetaMask will have a ``ethereumProvider`` or ``web3.currentProvider`` available, web3.js is setting this one to ``Web3.givenProvider``.
-If this property is ``null`` you need to connect to a remote/local node.
+Ethereum supported Browsers like Mist or MetaMask will have a ``ethereumProvider`` or ``web3.currentProvider`` available. For  web3.js, check ``Web3.givenProvider``.
+If this property is ``null`` you should connect to a remote/local node.
 
 .. code-block:: javascript
 
