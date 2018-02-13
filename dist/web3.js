@@ -20567,21 +20567,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Formats the input of a transaction and converts all values to HEX
        *
-       * @method inputCallFormatter
+       * @method _txInputFormatter
        * @param {Object} transaction options
        * @returns object
-      */
-      var inputCallFormatter = function inputCallFormatter(options) {
-
-        var from = options.from || (this ? this.defaultAccount : null);
-
-        if (from) {
-          options.from = inputAddressFormatter(from);
-        }
+       */
+      var _txInputFormatter = function _txInputFormatter(options) {
 
         if (options.to) {
           // it might be contract creation
           options.to = inputAddressFormatter(options.to);
+        }
+
+        if (options.data && options.input) {
+          throw new Error('You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.');
+        }
+
+        if (!options.data && options.input) {
+          options.data = options.input;
+          delete options.input;
+        }
+
+        if (options.data && !utils.isHex(options.data)) {
+          throw new Error('The data field must be HEX encoded data.');
         }
 
         // allow both
@@ -20601,11 +20608,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Formats the input of a transaction and converts all values to HEX
        *
+       * @method inputCallFormatter
+       * @param {Object} transaction options
+       * @returns object
+      */
+      var inputCallFormatter = function inputCallFormatter(options) {
+
+        options = _txInputFormatter(options);
+
+        var from = options.from || (this ? this.defaultAccount : null);
+
+        if (from) {
+          options.from = inputAddressFormatter(from);
+        }
+
+        return options;
+      };
+
+      /**
+       * Formats the input of a transaction and converts all values to HEX
+       *
        * @method inputTransactionFormatter
        * @param {Object} options
        * @returns object
       */
       var inputTransactionFormatter = function inputTransactionFormatter(options) {
+
+        options = _txInputFormatter(options);
 
         // check from, only if not number, or object
         if (!_.isNumber(options.from) && !_.isObject(options.from)) {
@@ -20617,22 +20646,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           options.from = inputAddressFormatter(options.from);
         }
-
-        if (options.to) {
-          // it might be contract creation
-          options.to = inputAddressFormatter(options.to);
-        }
-
-        // allow both
-        if (options.gas || options.gasLimit) {
-          options.gas = options.gas || options.gasLimit;
-        }
-
-        ['gasPrice', 'gas', 'value', 'nonce'].filter(function (key) {
-          return options[key] !== undefined;
-        }).forEach(function (key) {
-          options[key] = utils.numberToHex(options[key]);
-        });
 
         return options;
       };
@@ -21291,7 +21304,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               if (timeoutCount - 1 >= TIMEOUTBLOCK) {
                 sub.unsubscribe();
                 promiseResolved = true;
-                return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
               }
             });
           } else {
@@ -21420,9 +21433,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
                 // If wallet was found, sign tx, and send using sendRawTransaction
                 if (wallet && wallet.privateKey) {
-                  var signature = method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey);
-
-                  return _.isFunction(signature.then) ? signature.then(sendSignedTx) : sendSignedTx(signature);
+                  return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx);
                 }
 
                 // ETH_SIGN
@@ -27796,6 +27807,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           } else if (_.isFunction(_this.callback)) {
             _this.callback(err, null, _this);
             _this.emit('error', err);
+          } else {
+            // emit the event even if no callback was provided
+            _this.emit('error', err);
           }
         });
 
@@ -31937,6 +31951,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {Array} array of plain params
        */
       ABICoder.prototype.decodeLog = function (inputs, data, topics) {
+
+        data = data || '';
 
         var notIndexedInputs = [];
         var indexedInputs = [];
@@ -44235,52 +44251,75 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         };
 
         Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
-          var _this = this;
+          var _this = this,
+              error = false,
+              result;
+
+          callback = callback || function () {};
+
+          if (!tx) {
+            error = new Error('No transaction object given!');
+
+            callback(error);
+            return Promise.reject(error);
+          }
 
           function signed(tx) {
 
             if (!tx.gas && !tx.gasLimit) {
-              throw new Error('"gas" is missing');
+              error = new Error('"gas" is missing');
             }
 
-            var transaction = {
-              nonce: utils.numberToHex(tx.nonce),
-              to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
-              data: tx.data || '0x',
-              value: tx.value ? utils.numberToHex(tx.value) : "0x",
-              gas: utils.numberToHex(tx.gasLimit || tx.gas),
-              gasPrice: utils.numberToHex(tx.gasPrice),
-              chainId: utils.numberToHex(tx.chainId)
-            };
-
-            var rlpEncoded = RLP.encode([Bytes.fromNat(transaction.nonce), Bytes.fromNat(transaction.gasPrice), Bytes.fromNat(transaction.gas), transaction.to.toLowerCase(), Bytes.fromNat(transaction.value), transaction.data, Bytes.fromNat(transaction.chainId || "0x1"), "0x", "0x"]);
-
-            var hash = Hash.keccak256(rlpEncoded);
-
-            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
-
-            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
-
-            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
-            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
-
-            var rawTransaction = RLP.encode(rawTx);
-
-            var values = RLP.decode(rawTransaction);
-            var result = {
-              messageHash: hash,
-              v: trimLeadingZero(values[6]),
-              r: trimLeadingZero(values[7]),
-              s: trimLeadingZero(values[8]),
-              rawTransaction: rawTransaction
-            };
-            if (_.isFunction(callback)) {
-              callback(null, result);
+            if (tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0 || tx.chainId < 0) {
+              error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
             }
+
+            if (error) {
+              callback(error);
+              return Promise.reject(new Error('"gas" is missing'));
+            }
+
+            try {
+              tx = helpers.formatters.inputCallFormatter(tx);
+
+              var transaction = tx;
+              transaction.to = tx.to || '0x';
+              transaction.data = tx.data || '0x';
+              transaction.value = tx.value || '0x';
+              transaction.chainId = utils.numberToHex(tx.chainId);
+
+              var rlpEncoded = RLP.encode([Bytes.fromNat(transaction.nonce), Bytes.fromNat(transaction.gasPrice), Bytes.fromNat(transaction.gas), transaction.to.toLowerCase(), Bytes.fromNat(transaction.value), transaction.data, Bytes.fromNat(transaction.chainId || "0x1"), "0x", "0x"]);
+
+              var hash = Hash.keccak256(rlpEncoded);
+
+              var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+
+              var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+
+              rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
+              rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+              rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+
+              var rawTransaction = RLP.encode(rawTx);
+
+              var values = RLP.decode(rawTransaction);
+              result = {
+                messageHash: hash,
+                v: trimLeadingZero(values[6]),
+                r: trimLeadingZero(values[7]),
+                s: trimLeadingZero(values[8]),
+                rawTransaction: rawTransaction
+              };
+            } catch (e) {
+              callback(e);
+              return Promise.reject(e);
+            }
+
+            callback(null, result);
             return result;
           }
 
-          // Returns synchronously if nonce, chainId and price are provided
+          // Resolve immediately if nonce, chainId and price are provided
           if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
             return Promise.resolve(signed(tx));
           }
@@ -45118,7 +45157,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {Object} the event subscription
        */
       Contract.prototype.clone = function () {
-        return new Contract(this.options.jsonInterface, this.options.address, this.options);
+        return new this.constructor(this.options.jsonInterface, this.options.address, this.options);
       };
 
       /**
@@ -54448,8 +54487,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String}
        */
       var numberToHex = function numberToHex(value) {
-        if (!isFinite(value) && !_.isString(value)) {
+        if (_.isNull(value) || _.isUndefined(value)) {
           return value;
+        }
+
+        if (!isFinite(value) && !isHexStrict(value)) {
+          throw new Error('Given input "' + value + '" is not a number.');
         }
 
         var number = toBN(value);
@@ -54558,7 +54601,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @returns {Boolean}
        */
       var isHex = function isHex(hex) {
-        return (_.isString(hex) || _.isNumber(hex)) && /^(-0x)?(0x)?[0-9a-f]*$/i.test(hex);
+        return (_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex);
       };
 
       /**
@@ -54651,7 +54694,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       module.exports = {
         "name": "web3",
         "namespace": "ethereum",
-        "version": "1.0.0-beta.29",
+        "version": "1.0.0-beta.30",
         "description": "Ethereum JavaScript API",
         "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3",
         "license": "LGPL-3.0",
@@ -54683,13 +54726,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           "url": "https://github.com/obscuren"
         }],
         "dependencies": {
-          "web3-bzz": "1.0.0-beta.29",
-          "web3-core": "1.0.0-beta.29",
-          "web3-eth": "1.0.0-beta.29",
-          "web3-eth-personal": "1.0.0-beta.29",
-          "web3-net": "1.0.0-beta.29",
-          "web3-shh": "1.0.0-beta.29",
-          "web3-utils": "1.0.0-beta.29"
+          "web3-bzz": "1.0.0-beta.30",
+          "web3-core": "1.0.0-beta.30",
+          "web3-eth": "1.0.0-beta.30",
+          "web3-eth-personal": "1.0.0-beta.30",
+          "web3-net": "1.0.0-beta.30",
+          "web3-shh": "1.0.0-beta.30",
+          "web3-utils": "1.0.0-beta.30"
         }
       };
     }, {}], "BN": [function (require, module, exports) {
