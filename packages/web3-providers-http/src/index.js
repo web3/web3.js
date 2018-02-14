@@ -28,12 +28,27 @@ var XHR2 = require('xhr2'); // jshint ignore: line
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function HttpProvider(host, timeout) {
+var HttpProvider = function HttpProvider(host, timeout, headers) {
     this.host = host || 'http://localhost:8545';
     this.timeout = timeout || 0;
     this.connected = false;
+    this.headers = headers;
 };
 
+HttpProvider.prototype._prepareRequest = function(){
+    var request = new XHR2();
+
+    request.open('POST', this.host, true);
+    request.setRequestHeader('Content-Type','application/json');
+
+    if(this.headers) {
+        this.headers.forEach(function(header) {
+            request.setRequestHeader(header.name, header.value);
+        });
+    }
+
+    return request;
+};
 
 /**
  * Should be used to make async request
@@ -44,10 +59,8 @@ var HttpProvider = function HttpProvider(host, timeout) {
  */
 HttpProvider.prototype.send = function (payload, callback) {
     var _this = this;
-    var request = new XHR2();
+    var request = this._prepareRequest();
 
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type','application/json');
 
     request.onreadystatechange = function() {
         if (request.readyState === 4 && request.timeout !== 1) {

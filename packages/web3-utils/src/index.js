@@ -61,18 +61,28 @@ var _fireError = function (error, emitter, reject, callback) {
     }
     if (_.isFunction(reject)) {
         // suppress uncatched error if an error listener is present
-        if(emitter &&
-           _.isFunction(emitter.listeners) &&
-           emitter.listeners('error').length &&
-           _.isFunction(emitter.suppressUnhandledRejections)) {
+        if (emitter &&
+            _.isFunction(emitter.listeners) &&
+            emitter.listeners('error').length &&
+            _.isFunction(emitter.suppressUnhandledRejections)) {
+            emitter.suppressUnhandledRejections();
+        // OR suppress uncatched error if an callback listener is present
+        } else if(_.isFunction(callback) &&
+            _.isFunction(emitter.suppressUnhandledRejections)) {
             emitter.suppressUnhandledRejections();
         }
-        reject(error);
+        // reject later, to be able to return emitter
+        setTimeout(function () {
+            reject(error);
+        }, 1);
     }
 
     if(emitter && _.isFunction(emitter.emit)) {
-        emitter.emit('error', error);
-        emitter.removeAllListeners();
+        // emit later, to be able to return emitter
+        setTimeout(function () {
+            emitter.emit('error', error);
+            emitter.removeAllListeners();
+        }, 1);
     }
 
     return emitter;
@@ -104,7 +114,7 @@ var _jsonInterfaceMethodToString = function (json) {
  * @returns {String} ascii string representation of hex value
  */
 var hexToAscii = function(hex) {
-    if (!utils.isHex(hex))
+    if (!utils.isHexStrict(hex))
         throw new Error('The parameter must be a valid HEX string.');
 
     var str = "";
@@ -128,6 +138,8 @@ var hexToAscii = function(hex) {
  * @returns {String} hex representation of input string
  */
 var asciiToHex = function(str) {
+    if(!str)
+        return "0x00";
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
@@ -180,6 +192,10 @@ var getUnitValue = function (unit) {
 var fromWei = function(number, unit) {
     unit = getUnitValue(unit);
 
+    if(!utils.isBN(number) && !_.isString(number)) {
+        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+    }
+
     return utils.isBN(number) ? ethjsUnit.fromWei(number, unit) : ethjsUnit.fromWei(number, unit).toString(10);
 };
 
@@ -207,6 +223,10 @@ var fromWei = function(number, unit) {
  */
 var toWei = function(number, unit) {
     unit = getUnitValue(unit);
+
+    if(!utils.isBN(number) && !_.isString(number)) {
+        throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
+    }
 
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
 };
@@ -257,6 +277,7 @@ module.exports = {
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,
     isHex: utils.isHex,
+    isHexStrict: utils.isHexStrict,
     sha3: utils.sha3,
     keccak256: utils.sha3,
     soliditySha3: soliditySha3,
@@ -297,6 +318,7 @@ module.exports = {
     padLeft: utils.leftPad,
     leftPad: utils.leftPad,
     padRight: utils.rightPad,
-    rightPad: utils.rightPad
+    rightPad: utils.rightPad,
+    toTwosComplement: utils.toTwosComplement
 };
 

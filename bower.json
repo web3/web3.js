@@ -1,7 +1,7 @@
 {
   "namespace": "ethereum",
   "name": "web3",
-  "version": "1.0.0-beta.11",
+  "version": "1.0.0-beta.30",
   "description": "Ethereum JavaScript API",
   "license": "LGPL-3.0",
   "main": [
@@ -29,30 +29,30 @@
     "API"
   ],
   "authors": [
-      {
-          "name": "Fabian Vogelsteller",
-          "email": "fabian@ethereum.org",
-          "homepage": "http://frozeman.de"
-      },
-      {
-          "name": "Marek Kotewicz",
-          "email": "marek@parity.io",
-          "url": "https://github.com/debris"
-      },
-      {
-          "name": "Marian Oancea",
-          "url": "https://github.com/cubedro"
-      },
-      {
-          "name": "Gav Wood",
-          "email": "g@parity.io",
-          "homepage": "http://gavwood.com"
-      },
-      {
-          "name": "Jeffery Wilcke",
-          "email": "jeffrey.wilcke@ethereum.org",
-          "url": "https://github.com/obscuren"
-      }
+    {
+      "name": "Fabian Vogelsteller",
+      "email": "fabian@ethereum.org",
+      "homepage": "http://frozeman.de"
+    },
+    {
+      "name": "Marek Kotewicz",
+      "email": "marek@parity.io",
+      "url": "https://github.com/debris"
+    },
+    {
+      "name": "Marian Oancea",
+      "url": "https://github.com/cubedro"
+    },
+    {
+      "name": "Gav Wood",
+      "email": "g@parity.io",
+      "homepage": "http://gavwood.com"
+    },
+    {
+      "name": "Jeffery Wilcke",
+      "email": "jeffrey.wilcke@ethereum.org",
+      "url": "https://github.com/obscuren"
+    }
   ],
   "ignore": [
     "test",

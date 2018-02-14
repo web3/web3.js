@@ -41,7 +41,8 @@ var sub = new Web3Subscriptions({
             outputFormatter: formatters.outputBlockFormatter
         },
         'pendingTransactions': {
-            params: 0
+            params: 0,
+            outputFormatter: formatters.outputTransactionFormatter
         }
     }
 });

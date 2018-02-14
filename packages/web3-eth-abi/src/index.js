@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var f = require('./types/formatters');
+var f = require('./formatters');
 
 var SolidityTypeAddress = require('./types/address');
 var SolidityTypeBool = require('./types/bool');
@@ -65,7 +65,7 @@ ABICoder.prototype._requireType = function (type) {
     })[0];
 
     if (!solidityType) {
-        throw Error('invalid solidity type!: ' + type);
+        throw Error('Invalid solidity type: ' + type);
     }
 
     return solidityType;
@@ -290,6 +290,11 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
+
+    if (!_.isString(type)) {
+        throw new Error('Given parameter type is not a string: '+ type);
+    }
+
     return this.decodeParameters([{type: type}], bytes)[0];
 };
 
@@ -346,6 +351,8 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
+    data = data || '';
+
     var notIndexedInputs = [];
     var indexedInputs = [];
 
@@ -368,6 +375,8 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     returnValue.__length__ = 0;
 
     inputs.forEach(function (res, i) {
+        returnValue[i] = (res.type === 'string') ? '' : null;
+
         if (notIndexedParams[i]) {
             returnValue[i] = notIndexedParams[i];
         }

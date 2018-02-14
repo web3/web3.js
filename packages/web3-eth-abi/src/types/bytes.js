@@ -1,5 +1,5 @@
-var f = require('./formatters');
-var SolidityType = require('./type');
+var f = require('../formatters');
+var SolidityType = require('../type');
 
 /**
  * SolidityTypeBytes is a prototype that represents the bytes type.

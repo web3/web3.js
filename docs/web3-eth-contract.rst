@@ -12,6 +12,21 @@ and web3 will auto convert all calls into low level ABI calls over RPC for you.
 
 This allows you to interact with smart contracts as if they were JavaScript objects.
 
+To use it standalone:
+
+.. code-block:: javascript
+    var Contract = require('web3-eth-contract');
+
+    // set provider for all later instances to use
+    Contract.setProvider('ws://localhost:8546');
+
+    var contract = new Contract(jsonInterface, address);
+
+    contract.methods.somFunc().send({from: ....})
+    .on('receipt', function(){
+        ...
+    });
+
 
 ------------------------------------------------------------------------------
 
@@ -53,8 +68,8 @@ Example
 .. code-block:: javascript
 
     var myContract = new web3.eth.Contract([...], '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', {
-        from: '0x1234567890123456789012345678901234567891' // default from address
-        gasPrice: '20000000000000' // default gas price in wei
+        from: '0x1234567890123456789012345678901234567891', // default from address
+        gasPrice: '20000000000' // default gas price in wei, 20 gwei in this case
     });
 
 
@@ -131,7 +146,7 @@ The address will be stored in lowercase.
 Property
 -------
 
-``address`` - ``String|null``: The address for this contract, or ``null`` if its not yet set.
+``address`` - ``String|null``: The address for this contract, or ``null`` if it's not yet set.
 
 
 -------
@@ -143,7 +158,7 @@ Example
     myContract.options.address;
     > '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae'
 
-    // ste a new address
+    // set a new address
     myContract.options.address = '0x1234FFDD...';
 
 
@@ -250,13 +265,13 @@ deploy
     myContract.deploy(options)
 
 Call this function to deploy the contract to the blockchain.
-After successfull deployment the promise will resolve with a new contract instance.
+After successful deployment the promise will resolve with a new contract instance.
 
 ----------
 Parameters
 ----------
 
-1. ``options`` - ``Object``: The options used for deployemnt.
+1. ``options`` - ``Object``: The options used for deployment.
     * ``data`` - ``String``: The byte code of the contract.
     * ``arguments`` - ``Array`` (optional): The arguments which get passed to the constructor on deployment.
 
@@ -436,7 +451,7 @@ Returns
 -------
 
 ``Promise`` returns ``Mixed``: The return value(s) of the smart contract method.
-If its a single return value its returned as is, if its multiple return values they are returned as object with properties and indexeds additionally:
+If it returns a single value, it's returned as is. If it has multiple return values they are returned as an object with properties and indices:
 
 -------
 Example
@@ -472,7 +487,7 @@ Example
     > Result {
         myNumber: '23456',
         myString: 'Hello!%',
-        0: '23456', // those are here as fallback, if the name is not know or given
+        0: '23456', // these are here as fallbacks if the name is not know or given
         1: 'Hello!%'
     }
 
@@ -513,9 +528,10 @@ Parameters
 ----------
 
 1. ``options`` - ``Object``: The options used for sending.
-    * ``from`` - ``String``: The address the transaction should be send from.
+    * ``from`` - ``String``: The address the transaction should be sent from.
     * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+    * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the transaction in wei.
 2. ``callback`` - ``Function`` (optional): This callback will be fired first with the "transactionHash", or with an error object as the first argument.
 
 -------
@@ -524,11 +540,11 @@ Returns
 
 The **callback** will return the 32 bytes transaction hash.
 
-``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available, OR If this ``send()`` is is called from a ``someContract.deploy()`` then the promise will resolve with the *new contract instance*. Additionally the following events are available:
+``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction *receipt* is available, OR if this ``send()`` is called from a ``someContract.deploy()``, then the promise will resolve with the *new contract instance*. Additionally the following events are available:
 
-- ``"transactionHash"`` returns ``String``: is fired right after the transaction is send and a transaction hash is available.
-- ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead a ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
-- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 0 on, which is the block where its minded.
+- ``"transactionHash"`` returns ``String``: is fired right after the transaction is sent and a transaction hash is available.
+- ``"receipt"`` returns ``Object``: is fired when the transaction *receipt* is available. Receipts from contracts will have no ``logs`` property, but instead an ``events`` property with event names as keys and events as properties. See :ref:`getPastEvents return values <contract-events-return>` for details about the returned event object.
+- ``"confirmation"`` returns ``Number``, ``Object``: is fired for every confirmation up to the 24th confirmation. Receives the confirmation number as the first and the receipt as the second argument. Fired from confirmation 0 on, which is the block where it's minded.
 - ``"error"`` returns ``Error``: is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
 
 
@@ -591,11 +607,12 @@ Example
                 },
                 "MyOtherEvent": {
                     ...
-                }
+                },
+                "MyMultipleEvent":[{...}, {...}] // If there are multiple of the same event, they will be in an array
             }
         }
     })
-    .on('error', console.error); // If a out of gas error, the second parameter is the receipt.
+    .on('error', console.error); // If there's an out of gas error the second parameter is the receipt.
 
 
 ------------------------------------------------------------------------------
@@ -662,7 +679,7 @@ methods.myMethod.encodeABI
 
     myContract.methods.myMethod([param1[, param2[, ...]]]).encodeABI()
 
-Encodes the ABI for this method. This can be used to send a transaction, call a method or pass it into another smart contracts method as argument.
+Encodes the ABI for this method. This can be used to send a transaction, call a method, or pass it into another smart contracts method as arguments.
 
 
 ----------
@@ -704,7 +721,7 @@ once
 
     myContract.once(event[, options], callback)
 
-Subscribes to an event, and unsubscribes immediately after the first event or error. Will fire only for one event.
+Subscribes to an event and unsubscribes immediately after the first event or error. Will only fire for a single event.
 
 ----------
 Parameters
@@ -712,8 +729,8 @@ Parameters
 
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
-    * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
-    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+    * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``topics`` - ``Array`` (optional): This allows you to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function``: This callback will be fired for the first *event* as the second argument, or an error as the first argument. See :ref:`getPastEvents return values <contract-events-return>` for details about the event structure.
 
 -------
@@ -766,7 +783,7 @@ events
 
     myContract.events.MyEvent([options][, callback])
 
-Subscribe to a event
+Subscribe to an event
 
 ----------
 Parameters
@@ -775,7 +792,7 @@ Parameters
 1. ``options`` - ``Object`` (optional): The options used for deployment.
     * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
-    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 2. ``callback`` - ``Function`` (optional): This callback will be fired for each *event* as the second argument, or an error as the first argument.
 
 .. _contract-events-return:
@@ -794,14 +811,14 @@ Returns
 The structure of the returned event ``Object`` looks as follows:
 
 - ``event`` - ``String``: The event name.
-- ``signature`` - ``String|Null``: The event signature, ``null`` if its an anonymous event.
-- ``address`` - ``String``: From which this event originated from.
+- ``signature`` - ``String|Null``: The event signature, ``null`` if it's an anonymous event.
+- ``address`` - ``String``: Address this event originated from.
 - ``returnValues`` - ``Object``: The return values coming from the event, e.g. ``{myVar: 1, myVar2: '0x234...'}``.
 - ``logIndex`` - ``Number``: Integer of the event index position in the block.
-- ``transactionIndex`` - ``Number``: Integer of the transaction's index position, the event was created in.
+- ``transactionIndex`` - ``Number``: Integer of the transaction's index position the event was created in.
 - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction this event was created in.
-- ``blockHash`` 32 Bytes - ``String``: Hash of the block where this event was created in. ``null`` when its still pending.
-- ``blockNumber`` - ``Number``: The block number where this log was created in. ``null`` when still pending.
+- ``blockHash`` 32 Bytes - ``String``: Hash of the block this event was created in. ``null`` when it's still pending.
+- ``blockNumber`` - ``Number``: The block number this log was created in. ``null`` when still pending.
 - ``raw.data`` - ``String``: The data containing non-indexed log parameter.
 - ``raw.topics`` - ``Array``: An array with max 4 32 Byte topics, topic 1-3 contains indexed parameters of the event.
 
@@ -876,10 +893,10 @@ Parameters
 
 1. ``event`` - ``String``: The name of the event in the contract, or ``"allEvents"`` to get all events.
 2. ``options`` - ``Object`` (optional): The options used for deployment.
-    * ``filter`` - ``Object`` (optional): Let you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
+    * ``filter`` - ``Object`` (optional): Lets you filter events by indexed parameters, e.g. ``{filter: {myNumber: [12,13]}}`` means all events where "myNumber" is 12 or 13.
     * ``fromBlock`` - ``Number`` (optional): The block number from which to get events on.
-    * ``toBlock`` - ``Number`` (optional): The block number until events to get (Defaults to ``"latest"``).
-    * ``topics`` - ``Array`` (optional): This allows to manually set the topics for the event filter. If given the filter property and event signature (topic[0]) will not be set automatically.
+    * ``toBlock`` - ``Number`` (optional): The block number to get events up to (Defaults to ``"latest"``).
+    * ``topics`` - ``Array`` (optional): This allows manually setting the topics for the event filter. If given the filter property and event signature, (topic[0]) will not be set automatically.
 3. ``callback`` - ``Function`` (optional): This callback will be fired with an array of event logs as the second argument, or an error as the first argument.
 
 

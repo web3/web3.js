@@ -28,20 +28,6 @@ var SolidityParam = require('./param');
 
 
 
-
-
-/**
- * Takes and input transforms it into BN and if it is negative value, into two's complement
- *
- * @method toTwosComplement
- * @param {Number|String|BN} number
- * @return {String}
- */
-var toTwosComplement = function (number) {
-    return utils.toBN(number).toTwos(256).toString(16, 64);
-};
-
-
 /**
  * Formats input value to byte representation of int
  * If value is negative, return it's two's complement
@@ -55,7 +41,7 @@ var formatInputInt = function (value) {
     if(_.isNumber(value)) {
         value = Math.trunc(value);
     }
-    return new SolidityParam(toTwosComplement(value));
+    return new SolidityParam(utils.toTwosComplement(value).replace('0x',''));
 };
 
 /**
@@ -66,7 +52,20 @@ var formatInputInt = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputBytes = function (value) {
+    if(!utils.isHexStrict(value)) {
+        throw new Error('Given parameter is not bytes: "'+ value + '"');
+    }
+
     var result = value.replace(/^0x/i,'');
+
+    if(result.length % 2 !== 0) {
+        throw new Error('Given parameter bytes has an invalid length: "'+ value + '"');
+    }
+
+    if (result.length > 64) {
+        throw new Error('Given parameter bytes is too long: "' + value + '"');
+    }
+
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
     return new SolidityParam(result);
@@ -80,7 +79,16 @@ var formatInputBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputDynamicBytes = function (value) {
+    if(!utils.isHexStrict(value)) {
+        throw new Error('Given parameter is not bytes: "'+ value + '"');
+    }
+
     var result = value.replace(/^0x/i,'');
+
+    if(result.length % 2 !== 0) {
+        throw new Error('Given parameter bytes has an invalid length: "'+ value + '"');
+    }
+
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
     result = utils.padRight(result, l * 64);
@@ -95,6 +103,10 @@ var formatInputDynamicBytes = function (value) {
  * @returns {SolidityParam}
  */
 var formatInputString = function (value) {
+    if(!_.isString(value)) {
+        throw new Error('Given parameter is not a valid string: ' + value);
+    }
+
     var result = utils.utf8ToHex(value).replace(/^0x/i,'');
     var length = result.length / 2;
     var l = Math.floor((result.length + 63) / 64);
@@ -134,7 +146,11 @@ var signedIsNegative = function (value) {
  * @returns {BN} right-aligned output bytes formatted to big number
  */
 var formatOutputInt = function (param) {
-    var value = param.staticPart() || "0";
+    var value = param.staticPart();
+
+    if(!value && !param.rawValue) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
 
     // check if it's negative number
     // it it is, return two's complement
@@ -151,8 +167,13 @@ var formatOutputInt = function (param) {
  * @param {SolidityParam} param
  * @returns {BN} right-aligned output bytes formatted to uint
  */
-var formatOutputUInt = function (param) {
-    var value = param.staticPart() || "0";
+var formatOutputUInt = function (param, name) {
+    var value = param.staticPart();
+
+    if(!value && !param.rawValue) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
     return new BN(value, 16).toString(10);
 };
 
@@ -163,10 +184,17 @@ var formatOutputUInt = function (param) {
  *
  * @method formatOutputBool
  * @param {SolidityParam} param
+ * @param {String} name type name
  * @returns {Boolean} right-aligned input bytes formatted to bool
  */
-var formatOutputBool = function (param) {
-    return (param.staticPart() === '0000000000000000000000000000000000000000000000000000000000000001');
+var formatOutputBool = function (param, name) {
+    var value = param.staticPart();
+
+    if(!value && !param.rawValue) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
+    return (value === '0000000000000000000000000000000000000000000000000000000000000001');
 };
 
 /**
@@ -180,6 +208,11 @@ var formatOutputBool = function (param) {
 var formatOutputBytes = function (param, name) {
     var matches = name.match(/^bytes([0-9]*)/);
     var size = parseInt(matches[1]);
+
+    if(param.staticPart().slice(0, 2 * size).length !== size * 2) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue + ' The size doesn\'t match.');
+    }
+
     return '0x' + param.staticPart().slice(0, 2 * size);
 };
 
@@ -188,10 +221,17 @@ var formatOutputBytes = function (param, name) {
  *
  * @method formatOutputDynamicBytes
  * @param {SolidityParam} param left-aligned hex representation of string
+ * @param {String} name type name
  * @returns {String} hex string
  */
-var formatOutputDynamicBytes = function (param) {
-    var length = (new BN(param.dynamicPart().slice(0, 64), 16)).toNumber() * 2;
+var formatOutputDynamicBytes = function (param, name) {
+    var hex = param.dynamicPart().slice(0, 64);
+
+    if (!hex) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
+    var length = (new BN(hex, 16)).toNumber() * 2;
     return '0x' + param.dynamicPart().substr(64, length);
 };
 
@@ -204,23 +244,30 @@ var formatOutputDynamicBytes = function (param) {
  */
 var formatOutputString = function (param) {
     var hex = param.dynamicPart().slice(0, 64);
-    if(hex) {
-        var length = (new BN(hex, 16)).toNumber() * 2;
-        return utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, ''));
-    } else {
-        return "ERROR: Strings are not yet supported as return values";
+
+    if(!hex) {
+        throw new Error('ERROR: The returned value is not a convertible string:'+ hex);
     }
+
+    var length = (new BN(hex, 16)).toNumber() * 2;
+    return length ? utils.hexToUtf8('0x'+ param.dynamicPart().substr(64, length).replace(/^0x/i, '')) : '';
 };
 
 /**
  * Should be used to format output address
  *
  * @method formatOutputAddress
- * @param {Object} param right-aligned input bytes
+ * @param {SolidityParam} param right-aligned input bytes
+ * @param {String} name type name
  * @returns {String} address
  */
-var formatOutputAddress = function (param) {
+var formatOutputAddress = function (param, name) {
     var value = param.staticPart();
+
+    if (!value) {
+        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+    }
+
     return utils.toChecksumAddress("0x" + value.slice(value.length - 40, value.length));
 };
 
@@ -237,5 +284,5 @@ module.exports = {
     formatOutputDynamicBytes: formatOutputDynamicBytes,
     formatOutputString: formatOutputString,
     formatOutputAddress: formatOutputAddress,
-    toTwosComplement: toTwosComplement
+    toTwosComplement: utils.toTwosComplement
 };

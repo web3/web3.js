@@ -28,8 +28,6 @@ var _ = require('underscore');
 var utils = require('web3-utils');
 var Iban = require('web3-eth-iban');
 
-var config = require('./config');
-
 /**
  * Should the format output to a big number
  *
@@ -46,8 +44,8 @@ var isPredefinedBlockNumber = function (blockNumber) {
 };
 
 var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    if (blockNumber === undefined || blockNumber === null) {
-        return config.defaultBlock;
+    if (this && (blockNumber === undefined || blockNumber === null)) {
+        return this.defaultBlock;
     }
     if (blockNumber === 'genesis' || blockNumber === 'earliest') {
         return '0x0';
@@ -61,59 +59,33 @@ var inputBlockNumberFormatter = function (blockNumber) {
     } else if (isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
-    return utils.numberToHex(blockNumber);
+    return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
 };
 
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
- * @method inputCallFormatter
+ * @method _txInputFormatter
  * @param {Object} transaction options
  * @returns object
-*/
-var inputCallFormatter = function (options){
-
-    var from = options.from || config.defaultAccount;
-
-    if (from) {
-        options.from = inputAddressFormatter(from);
-    }
+ */
+var _txInputFormatter = function (options){
 
     if (options.to) { // it might be contract creation
         options.to = inputAddressFormatter(options.to);
     }
 
-    ['gasPrice', 'gas', 'gasLimit', 'value', 'nonce'].filter(function (key) {
-        return options[key] !== undefined;
-    }).forEach(function(key){
-        options[key] = utils.numberToHex(options[key]);
-    });
-
-    return options;
-};
-
-/**
- * Formats the input of a transaction and converts all values to HEX
- *
- * @method inputTransactionFormatter
- * @param {Object} options
- * @returns object
-*/
-var inputTransactionFormatter = function (options) {
-
-    // check from, only if not number, or object
-    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
-        options.from = options.from || config.defaultAccount;
-
-        if (!options.from && !_.isNumber(options.from)) {
-            throw new Error('The send transactions "from" field must be defined!');
-        }
-
-        options.from = inputAddressFormatter(options.from);
+    if (options.data && options.input) {
+        throw new Error('You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.');
     }
 
-    if (options.to) { // it might be contract creation
-        options.to = inputAddressFormatter(options.to);
+    if (!options.data && options.input) {
+        options.data = options.input;
+        delete options.input;
+    }
+
+    if(options.data && !utils.isHex(options.data)) {
+        throw new Error('The data field must be HEX encoded data.');
     }
 
     // allow both
@@ -131,6 +103,52 @@ var inputTransactionFormatter = function (options) {
 };
 
 /**
+ * Formats the input of a transaction and converts all values to HEX
+ *
+ * @method inputCallFormatter
+ * @param {Object} transaction options
+ * @returns object
+*/
+var inputCallFormatter = function (options){
+
+    options = _txInputFormatter(options);
+
+    var from = options.from || (this ? this.defaultAccount : null);
+
+    if (from) {
+        options.from = inputAddressFormatter(from);
+    }
+
+
+    return options;
+};
+
+/**
+ * Formats the input of a transaction and converts all values to HEX
+ *
+ * @method inputTransactionFormatter
+ * @param {Object} options
+ * @returns object
+*/
+var inputTransactionFormatter = function (options) {
+
+    options = _txInputFormatter(options);
+
+    // check from, only if not number, or object
+    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
+        options.from = options.from || (this ? this.defaultAccount : null);
+
+        if (!options.from && !_.isNumber(options.from)) {
+            throw new Error('The send transactions "from" field must be defined!');
+        }
+
+        options.from = inputAddressFormatter(options.from);
+    }
+
+    return options;
+};
+
+/**
  * Hex encodes the data passed to eth_sign and personal_sign
  *
  * @method inputSignFormatter
@@ -138,7 +156,7 @@ var inputTransactionFormatter = function (options) {
  * @returns {String}
  */
 var inputSignFormatter = function (data) {
-    return (utils.isHex(data)) ? data : utils.utf8ToHex(data);
+    return (utils.isHexStrict(data)) ? data : utils.utf8ToHex(data);
 };
 
 /**
@@ -158,9 +176,12 @@ var outputTransactionFormatter = function (tx){
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
-    if(tx.to) {
+    if(tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
         tx.to = utils.toChecksumAddress(tx.to);
+    } else {
+        tx.to = null; // set to `null` if invalid address
     }
+
     if(tx.from) {
         tx.from = utils.toChecksumAddress(tx.from);
     }
@@ -262,8 +283,11 @@ var inputLogFormatter = function(options) {
 
     toTopic = null;
 
-    if(options.address)
-        options.address = inputAddressFormatter(options.address);
+    if (options.address) {
+        options.address = (_.isArray(options.address)) ? options.address.map(function (addr) {
+            return inputAddressFormatter(addr);
+        }) : inputAddressFormatter(options.address);
+    }
 
     return options;
 };
@@ -294,8 +318,9 @@ var outputLogFormatter = function(log) {
     if (log.logIndex !== null)
         log.logIndex = utils.hexToNumber(log.logIndex);
 
-    if (log.address)
+    if (log.address) {
         log.address = utils.toChecksumAddress(log.address);
+    }
 
     return log;
 };

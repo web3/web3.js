@@ -66,57 +66,73 @@
 <h3>Specification<a class="headerlink" href="#specification" title="Permalink to this headline">¶</a></h3>
 <p>Functions:</p>
 <ul class="simple">
-<li><code class="docutils literal"><span class="pre">type</span></code>: <code class="docutils literal"><span class="pre">&quot;function&quot;</span></code> or <code class="docutils literal"><span class="pre">&quot;constructor&quot;</span></code> (can be omitted, defaulting to <code class="docutils literal"><span class="pre">&quot;function&quot;</span></code>);</li>
+<li><code class="docutils literal"><span class="pre">type</span></code>: <code class="docutils literal"><span class="pre">&quot;function&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;constructor&quot;</span></code> (can be omitted, defaulting to <code class="docutils literal"><span class="pre">&quot;function&quot;</span></code>; <code class="docutils literal"><span class="pre">&quot;fallback&quot;</span></code> also possible but not relevant in web3.js);</li>
 <li><code class="docutils literal"><span class="pre">name</span></code>: the name of the function (only present for function types);</li>
-<li><code class="docutils literal"><span class="pre">inputs</span></code>: an array of objects, each of which contains:
-* <code class="docutils literal"><span class="pre">name</span></code>: the name of the parameter;
-* <code class="docutils literal"><span class="pre">type</span></code>: the canonical type of the parameter.</li>
+<li><code class="docutils literal"><span class="pre">constant</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if function is specified to not modify the blockchain state;</li>
+<li><code class="docutils literal"><span class="pre">payable</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if function accepts ether, defaults to <code class="docutils literal"><span class="pre">false</span></code>;</li>
+<li><code class="docutils literal"><span class="pre">stateMutability</span></code>: a string with one of the following values: <code class="docutils literal"><span class="pre">pure</span></code> (specified to not read blockchain state), <code class="docutils literal"><span class="pre">view</span></code> (same as <code class="docutils literal"><span class="pre">constant</span></code> above), <code class="docutils literal"><span class="pre">nonpayable</span></code> and <code class="docutils literal"><span class="pre">payable</span></code> (same as <code class="docutils literal"><span class="pre">payable</span></code> above);</li>
+<li><code class="docutils literal"><span class="pre">inputs</span></code>: an array of objects, each of which contains:<ul>
+<li><code class="docutils literal"><span class="pre">name</span></code>: the name of the parameter;</li>
+<li><code class="docutils literal"><span class="pre">type</span></code>: the canonical type of the parameter.</li>
+</ul>
+</li>
 <li><code class="docutils literal"><span class="pre">outputs</span></code>: an array of objects same as <code class="docutils literal"><span class="pre">inputs</span></code>, can be omitted if no outputs exist.</li>
 </ul>
 <p>Events:</p>
 <ul class="simple">
 <li><code class="docutils literal"><span class="pre">type</span></code>: always <code class="docutils literal"><span class="pre">&quot;event&quot;</span></code></li>
 <li><code class="docutils literal"><span class="pre">name</span></code>: the name of the event;</li>
-<li><code class="docutils literal"><span class="pre">inputs</span></code>: an array of objects, each of which contains:
-* <code class="docutils literal"><span class="pre">name</span></code>: the name of the parameter;
-* <code class="docutils literal"><span class="pre">type</span></code>: the canonical type of the parameter.
-* <code class="docutils literal"><span class="pre">indexed</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if the field is part of the log&#8217;s topics, <code class="docutils literal"><span class="pre">false</span></code> if it one of the log&#8217;s data segment.</li>
+<li><code class="docutils literal"><span class="pre">inputs</span></code>: an array of objects, each of which contains:<ul>
+<li><code class="docutils literal"><span class="pre">name</span></code>: the name of the parameter;</li>
+<li><code class="docutils literal"><span class="pre">type</span></code>: the canonical type of the parameter.</li>
+<li><code class="docutils literal"><span class="pre">indexed</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if the field is part of the log&#8217;s topics, <code class="docutils literal"><span class="pre">false</span></code> if it one of the log&#8217;s data segment.</li>
+</ul>
+</li>
 <li><code class="docutils literal"><span class="pre">anonymous</span></code>: <code class="docutils literal"><span class="pre">true</span></code> if the event was declared as <code class="docutils literal"><span class="pre">anonymous</span></code>.</li>
 </ul>
 </div>
 <div class="section" id="example">
 <h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">contract</span> <span class="nx">Test</span> <span class="p">{</span>
-    <span class="nx">bytes32</span> <span class="nx">b</span><span class="p">;</span>
+    <span class="nx">uint</span> <span class="nx">a</span><span class="p">;</span>
+    <span class="nx">address</span> <span class="nx">d</span> <span class="o">=</span> <span class="mh">0x12345678901234567890123456789012</span><span class="p">;</span>
 
-    <span class="kd">function</span> <span class="nx">Test</span><span class="p">()</span> <span class="nx">returns</span><span class="p">(</span><span class="nx">address</span> <span class="nx">b</span><span class="p">){</span> <span class="nx">b</span> <span class="o">=</span> <span class="mh">0x12345678901234567890123456789012</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">Test</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">testInt</span><span class="p">)</span>  <span class="p">{</span> <span class="nx">a</span> <span class="o">=</span> <span class="nx">testInt</span><span class="p">;}</span>
 
-    <span class="nx">event</span> <span class="nx">Event</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">indexed</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="nx">event</span> <span class="nx">Event</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">indexed</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">c</span><span class="p">);</span>
 
-    <span class="nx">event</span> <span class="nx">Event2</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">indexed</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">b</span><span class="p">)</span>
+    <span class="nx">event</span> <span class="nx">Event2</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">indexed</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">c</span><span class="p">);</span>
 
-    <span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">a</span><span class="p">)</span> <span class="p">{</span> <span class="nx">Event</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">);</span> <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">foo</span><span class="p">(</span><span class="nx">uint</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">bytes32</span> <span class="nx">c</span><span class="p">)</span> <span class="nx">returns</span><span class="p">(</span><span class="nx">address</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">Event</span><span class="p">(</span><span class="nx">b</span><span class="p">,</span> <span class="nx">c</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">d</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="c1">// would result in the JSON:</span>
-
 <span class="p">[{</span>
+    <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;constructor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;payable&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;stateMutability&quot;</span><span class="o">:</span><span class="s2">&quot;nonpayable&quot;</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;testInt&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">}],</span>
+  <span class="p">},{</span>
     <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;function&quot;</span><span class="p">,</span>
     <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;foo&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">}],</span>
-    <span class="s2">&quot;outputs&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;address&quot;</span><span class="p">}]</span>
-<span class="p">},{</span>
+    <span class="s2">&quot;constant&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;payable&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span>
+    <span class="s2">&quot;stateMutability&quot;</span><span class="o">:</span><span class="s2">&quot;nonpayable&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;c&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;outputs&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;address&quot;</span><span class="p">}]</span>
+  <span class="p">},{</span>
     <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;event&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Event&quot;</span>
-    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">},{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">}],</span>
-<span class="p">},</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Event&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;c&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;anonymous&quot;</span><span class="o">:</span><span class="kc">false</span>
+  <span class="p">},{</span>
     <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;event&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Event2&quot;</span>
-    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">},{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">}],</span>
-<span class="p">},</span> <span class="p">{</span>
-    <span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;event&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Event2&quot;</span>
-    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span> <span class="p">[{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;a&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">},{</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">,</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">}],</span>
+    <span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;Event2&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;inputs&quot;</span><span class="o">:</span><span class="p">[{</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">true</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;b&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;uint256&quot;</span><span class="p">},{</span><span class="s2">&quot;indexed&quot;</span><span class="o">:</span><span class="kc">false</span><span class="p">,</span><span class="s2">&quot;name&quot;</span><span class="o">:</span><span class="s2">&quot;c&quot;</span><span class="p">,</span><span class="s2">&quot;type&quot;</span><span class="o">:</span><span class="s2">&quot;bytes32&quot;</span><span class="p">}],</span>
+    <span class="s2">&quot;anonymous&quot;</span><span class="o">:</span><span class="kc">false</span>
 <span class="p">}]</span>
 </pre></div>
 </div>

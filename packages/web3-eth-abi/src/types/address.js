@@ -1,6 +1,6 @@
-var f = require('./formatters');
+var f = require('../formatters');
 var formatters = require('web3-core-helpers').formatters;
-var SolidityType = require('./type');
+var SolidityType = require('../type');
 
 /**
  * SolidityTypeAddress is a protoype that represents address type
@@ -15,7 +15,7 @@ var SolidityType = require('./type');
 var SolidityTypeAddress = function () {
     this._inputFormatter = function(){
         var args = Array.prototype.slice.call(arguments);
-        args[0] = formatters.inputAddressFormatter(args[0]);
+        args[0] = (!args[0] || args[0] === '0x0') ? '' : formatters.inputAddressFormatter(args[0]);
         return f.formatInputInt.apply(this, args);
     };
     this._outputFormatter = f.formatOutputAddress;

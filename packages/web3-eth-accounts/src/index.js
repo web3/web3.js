@@ -23,11 +23,15 @@
 "use strict";
 
 var _ = require("underscore");
+var core = require('web3-core');
+var Method = require('web3-core-method');
 var Promise = require('bluebird');
-var Account = require("eth-lib/src/account");
-var Hash = require("eth-lib/src/hash");
-var RLP = require("eth-lib/src/rlp");
-var crypto = require('crypto');
+var Account = require("eth-lib/lib/account");
+var Hash = require("eth-lib/lib/hash");
+var RLP = require("eth-lib/lib/rlp");
+var Nat = require("eth-lib/lib/nat");
+var Bytes = require("eth-lib/lib/bytes");
+var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
@@ -37,11 +41,64 @@ var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
 
-var Accounts = function Accounts(eth) {
-
-    if (eth) {
-        this.eth = (eth.eth) ? eth.eth : eth;
+var trimLeadingZero = function (hex) {
+    while (hex && hex.startsWith('0x0')) {
+        hex = '0x' + hex.slice(3);
     }
+    return hex;
+};
+
+var makeEven = function (hex) {
+    if(hex.length % 2 === 1) {
+        hex = hex.replace('0x', '0x0');
+    }
+    return hex;
+};
+
+
+var Accounts = function Accounts() {
+    var _this = this;
+
+    // sets _requestmanager
+    core.packageInit(this, arguments);
+
+    // remove unecessary core functions
+    delete this.BatchRequest;
+    delete this.extend;
+
+    var _ethereumCall = [
+        new Method({
+            name: 'getId',
+            call: 'net_version',
+            params: 0,
+            outputFormatter: utils.hexToNumber
+        }),
+        new Method({
+            name: 'getGasPrice',
+            call: 'eth_gasPrice',
+            params: 0
+        }),
+        new Method({
+            name: 'getTransactionCount',
+            call: 'eth_getTransactionCount',
+            params: 2,
+            inputFormatter: [function (address) {
+                if (utils.isAddress(address)) {
+                    return address;
+                } else {
+                    throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
+                }
+            }, function () { return 'latest'; }]
+        })
+    ];
+    // attach methods to this._ethereumCall
+    this._ethereumCall = {};
+    _.each(_ethereumCall, function (method) {
+        method.attachToObject(_this._ethereumCall);
+        method.setRequestManager(_this._requestManager);
+    });
+
+
     this.wallet = new Wallet(this);
 };
 
@@ -73,56 +130,99 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
-    var _this = this;
+    var _this = this,
+        error = false,
+        result;
+
+    callback = callback || function () {};
+
+    if (!tx) {
+        error = new Error('No transaction object given!');
+
+        callback(error);
+        return Promise.reject(error);
+    }
 
     function signed (tx) {
 
         if (!tx.gas && !tx.gasLimit) {
-            throw new Error('"gas" is missing');
+            error = new Error('"gas" is missing');
         }
 
-        var transaction = {
-            nonce: utils.numberToHex(tx.nonce),
-            to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
-            data: tx.data || '0x',
-            value: tx.value ? utils.numberToHex(tx.value) : "0x",
-            gas: utils.numberToHex(tx.gasLimit || tx.gas),
-            gasPrice: utils.numberToHex(tx.gasPrice),
-            chainId: utils.numberToHex(tx.chainId)
-        };
-
-
-
-        var hash = Hash.keccak256(Account.transactionSigningData(transaction));
-        var rawTransaction = Account.signTransaction(transaction, privateKey);
-        var values = RLP.decode(rawTransaction);
-        var result = {
-            messageHash: hash,
-            v: values[6],
-            r: values[7],
-            s: values[8],
-            rawTransaction: rawTransaction
-        };
-        if (_.isFunction(callback)) {
-            callback(null, result);
+        if (tx.nonce  < 0 ||
+            tx.gas  < 0 ||
+            tx.gasPrice  < 0 ||
+            tx.chainId  < 0) {
+            error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
         }
+
+        if (error) {
+            callback(error);
+            return Promise.reject(new Error('"gas" is missing'));
+        }
+
+        try {
+            tx = helpers.formatters.inputCallFormatter(tx);
+
+            var transaction = tx;
+            transaction.to = tx.to || '0x';
+            transaction.data = tx.data || '0x';
+            transaction.value = tx.value || '0x';
+            transaction.chainId = utils.numberToHex(tx.chainId);
+
+            var rlpEncoded = RLP.encode([
+                Bytes.fromNat(transaction.nonce),
+                Bytes.fromNat(transaction.gasPrice),
+                Bytes.fromNat(transaction.gas),
+                transaction.to.toLowerCase(),
+                Bytes.fromNat(transaction.value),
+                transaction.data,
+                Bytes.fromNat(transaction.chainId || "0x1"),
+                "0x",
+                "0x"]);
+
+
+            var hash = Hash.keccak256(rlpEncoded);
+
+            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+
+            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+
+            rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
+            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+
+            var rawTransaction = RLP.encode(rawTx);
+
+            var values = RLP.decode(rawTransaction);
+            result = {
+                messageHash: hash,
+                v: trimLeadingZero(values[6]),
+                r: trimLeadingZero(values[7]),
+                s: trimLeadingZero(values[8]),
+                rawTransaction: rawTransaction
+            };
+
+        } catch(e) {
+            callback(e);
+            return Promise.reject(e);
+        }
+
+        callback(null, result);
         return result;
     }
 
-    // Returns synchronously if nonce, chainId and price are provided
+    // Resolve immediately if nonce, chainId and price are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
-        return signed(tx);
+        return Promise.resolve(signed(tx));
     }
 
-    if (!_this || !_this.eth || !_this.eth.net) {
-        return Promise.reject(new Error('The Eth package is set bound. Please set using "accounts.eth = eth", or provide "nonce", "chainId" and "gasPrice" in the transaction yourself.'));
-    }
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this.eth.net.getId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this.eth.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this.eth.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
+        isNot(tx.chainId) ? _this._ethereumCall.getId() : tx.chainId,
+        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
+        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
             throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
@@ -131,18 +231,28 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
     });
 };
 
+/* jshint ignore:start */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
-    return Account.recoverTransaction(rawTx);
+    var values = RLP.decode(rawTx);
+    var signature = Account.encodeSignature(values.slice(6,9));
+    var recovery = Bytes.toNumber(values[6]);
+    var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
+    var signingData = values.slice(0,6).concat(extraData);
+    var signingDataHex = RLP.encode(signingData);
+    return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
+/* jshint ignore:end */
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHex(data) ? utils.hexToUtf8(data) : data;
-    var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
+    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+    var messageBuffer = Buffer.from(message);
+    var preamble = "\x19Ethereum Signed Message:\n" + message.length;
+    var preambleBuffer = Buffer.from(preamble);
+    var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
-
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
@@ -156,20 +266,25 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     };
 };
 
-Accounts.prototype.recover = function recover(hash, signature) {
+Accounts.prototype.recover = function recover(message, signature, preFixed) {
+    var args = [].slice.apply(arguments);
 
-    if (_.isObject(hash)) {
-        return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
+
+    if (_.isObject(message)) {
+        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
-    if (!utils.isHex(hash)) {
-        hash = this.hashMessage(hash);
+    if (!preFixed) {
+        message = this.hashMessage(message);
     }
 
-    if (arguments.length === 4) {
-        return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
+    if (args.length >= 4) {
+        preFixed = args.slice(-1)[0];
+        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+
+        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
-    return Account.recover(hash, signature);
+    return Account.recover(message, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
@@ -200,7 +315,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
             throw new Error('Unsupported parameters to PBKDF2');
         }
 
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
     } else {
         throw new Error('Unsupported key derivation scheme');
     }
@@ -212,7 +327,7 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
         throw new Error('Key derivation failed - possibly wrong password');
     }
 
-    var decipher = crypto.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+    var decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
     var seed = '0x'+ Buffer.concat([ decipher.update(ciphertext), decipher.final() ]).toString('hex');
 
     return this.privateKeyToAccount(seed);
@@ -223,8 +338,8 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     var account = this.privateKeyToAccount(privateKey);
 
     options = options || {};
-    var salt = options.salt || crypto.randomBytes(32);
-    var iv = options.iv || crypto.randomBytes(16);
+    var salt = options.salt || cryp.randomBytes(32);
+    var iv = options.iv || cryp.randomBytes(16);
 
     var derivedKey;
     var kdf = options.kdf || 'scrypt';
@@ -236,7 +351,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
     if (kdf === 'pbkdf2') {
         kdfparams.c = options.c || 262144;
         kdfparams.prf = 'hmac-sha256';
-        derivedKey = crypto.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+        derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
     } else if (kdf === 'scrypt') {
         // FIXME: support progress reporting callback
         kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
@@ -247,7 +362,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         throw new Error('Unsupported kdf');
     }
 
-    var cipher = crypto.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
+    var cipher = cryp.createCipheriv(options.cipher || 'aes-128-ctr', derivedKey.slice(0, 16), iv);
     if (!cipher) {
         throw new Error('Unsupported cipher');
     }
@@ -258,7 +373,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 
     return {
         version: 3,
-        id: uuid.v4({ random: options.uuid || crypto.randomBytes(16) }),
+        id: uuid.v4({ random: options.uuid || cryp.randomBytes(16) }),
         address: account.address.toLowerCase().replace('0x',''),
         crypto: {
             ciphertext: ciphertext.toString('hex'),
@@ -278,10 +393,28 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
 
 function Wallet(accounts) {
-    this.length = 0;
     this._accounts = accounts;
+    this.length = 0;
     this.defaultKeyName = "web3js_wallet";
 }
+
+Wallet.prototype._findSafeIndex = function (pointer) {
+    pointer = pointer || 0;
+    if (_.has(this, pointer)) {
+        return this._findSafeIndex(pointer + 1);
+    } else {
+        return pointer;
+    }
+};
+
+Wallet.prototype._currentIndexes = function () {
+    var keys = Object.keys(this);
+    var indexes = keys
+        .map(function(key) { return parseInt(key); })
+        .filter(function(n) { return (n < 9e20); });
+
+    return indexes;
+};
 
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
@@ -297,9 +430,9 @@ Wallet.prototype.add = function (account) {
     }
     if (!this[account.address]) {
         account = this._accounts.privateKeyToAccount(account.privateKey);
-        account.index = this.length;
+        account.index = this._findSafeIndex();
 
-        this[this.length] = account;
+        this[account.index] = account;
         this[account.address] = account;
         this[account.address.toLowerCase()] = account;
 
@@ -314,7 +447,7 @@ Wallet.prototype.add = function (account) {
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
 
-    if (account) {
+    if (account && account.address) {
         // address
         this[account.address].privateKey = null;
         delete this[account.address];
@@ -334,19 +467,24 @@ Wallet.prototype.remove = function (addressOrIndex) {
 };
 
 Wallet.prototype.clear = function () {
-    var length = this.length;
-    for (var i = 0; i < length; i++) {
-        this.remove(i);
-    }
+    var _this = this;
+    var indexes = this._currentIndexes();
+
+    indexes.forEach(function(index) {
+        _this.remove(index);
+    });
 
     return this;
 };
 
 Wallet.prototype.encrypt = function (password, options) {
-    var accounts = [];
-    for (var i = 0; i < this.length; i++) {
-        accounts[i] = this[i].encrypt(password, options);
-    }
+    var _this = this;
+    var indexes = this._currentIndexes();
+
+    var accounts = indexes.map(function(index) {
+        return _this[index].encrypt(password, options);
+    });
+
     return accounts;
 };
 

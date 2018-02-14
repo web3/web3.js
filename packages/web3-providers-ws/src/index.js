@@ -24,8 +24,12 @@
 
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
-if (typeof global !== 'undefined') {
-    var WebSocket = require('websocket').w3cwebsocket;
+
+var Ws = null;
+if (typeof window !== 'undefined') {
+    Ws = window.WebSocket;
+} else {
+    Ws = require('websocket').w3cwebsocket;
 }
 // Default connection ws://localhost:8546
 
@@ -35,7 +39,7 @@ var WebsocketProvider = function WebsocketProvider(url)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-    this.connection = new WebSocket(url);
+    this.connection = new Ws(url);
 
 
     this.addDefaultEvents();
@@ -205,6 +209,16 @@ WebsocketProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     // if(!this.connection.writable)
     //     this.connection.connect({url: this.url});
+    if (this.connection.readyState !== this.connection.OPEN) {
+        console.error('connection not open on send()');
+        if (typeof this.connection.onerror === 'function') {
+            this.connection.onerror(new Error('connection not open'));
+        } else {
+            console.error('no error callback');
+        }
+        callback(new Error('connection not open'));
+        return;
+    }
 
     this.connection.send(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);
