@@ -1,0 +1,16 @@
+{
+	"requires": true,
+	"lockfileVersion": 1,
+	"dependencies": {
+		"eventemitter3": {
+			"version": "1.1.1",
+			"resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-1.1.1.tgz",
+			"integrity": "sha1-R3hr2qCHyvext15zq8XH1UAVjNA="
+		},
+		"underscore": {
+			"version": "1.8.3",
+			"resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz",
+			"integrity": "sha1-Tz+1OxBuYJf8+ctBCfKl6b36UCI="
+		}
+	}
+}

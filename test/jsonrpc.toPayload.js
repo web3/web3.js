@@ -15,7 +15,7 @@ describe('jsonrpc', function () {
             // then
             assert.equal(payload.jsonrpc, '2.0');
             assert.equal(payload.method, method);
-            assert.equal(payload.params instanceof Array, true);
+            assert.equal(Array.isArray(payload.params), true);
             assert.equal(payload.params.length, 0);
             assert.equal(typeof payload.id, 'number');
         });

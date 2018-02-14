@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the contract package to be used in the `web-eth` package.
+This is the contract package to be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -29,17 +29,14 @@ This will expose the `Web3EthContract` object on the window object.
 
 ```js
 // in node.js
-var Eth = require('web3-eth');
 var Web3EthContract = require('web3-eth-contract');
 
-var eth = new Eth('ws://localhost:8546');
-
-// add the eth package
-Web3EthContract.prototype._eth = this;
+// set provider for all later instances to use
+Web3EthContract.setProvider('ws://localhost:8546');
 
 var contract = new Web3EthContract(jsonInterface, address);
 contract.methods.somFunc().send({from: ....})
-.on('receipt', funciton(){
+.on('receipt', function(){
     ...
 });
 ```

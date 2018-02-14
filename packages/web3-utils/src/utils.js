@@ -24,7 +24,7 @@ var _ = require('underscore');
 var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
-var Hash = require("eth-lib/src/hash");
+var Hash = require("eth-lib/lib/hash");
 
 
 /**
@@ -65,6 +65,17 @@ var toBN = function(number){
     }
 };
 
+
+/**
+ * Takes and input transforms it into BN and if it is negative value, into two's complement
+ *
+ * @method toTwosComplement
+ * @param {Number|String|BN} number
+ * @return {String}
+ */
+var toTwosComplement = function (number) {
+    return '0x'+ toBN(number).toTwos(256).toString(16, 64);
+};
 
 /**
  * Checks if the given string is an address
@@ -182,7 +193,7 @@ var utf8ToHex = function(str) {
  * @returns {String} ascii string representation of hex value
  */
 var hexToUtf8 = function(hex) {
-    if (!isHex(hex))
+    if (!isHexStrict(hex))
         throw new Error('The parameter "'+ hex +'" must be a valid HEX string.');
 
     var str = "";
@@ -245,8 +256,12 @@ var hexToNumberString = function (value) {
  * @return {String}
  */
 var numberToHex = function (value) {
-    if (!isFinite(value) && !_.isString(value)) {
+    if (_.isNull(value) || _.isUndefined(value)) {
         return value;
+    }
+
+    if (!isFinite(value) && !isHexStrict(value)) {
+        throw new Error('Given input "'+value+'" is not a number.');
     }
 
     var number = toBN(value);
@@ -287,7 +302,7 @@ var bytesToHex = function(bytes) {
 var hexToBytes = function(hex) {
     hex = hex.toString(16);
 
-    if (!isHex(hex)) {
+    if (!isHexStrict(hex)) {
         throw new Error('Given value "'+ hex +'" is not a valid hex string.');
     }
 
@@ -340,6 +355,17 @@ var toHex = function (value, returnType) {
 
 
 /**
+ * Check if string is HEX, requires a 0x in front
+ *
+ * @method isHexStrict
+ * @param {String} hex to be checked
+ * @returns {Boolean}
+ */
+var isHexStrict = function (hex) {
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+};
+
+/**
  * Check if string is HEX
  *
  * @method isHex
@@ -347,7 +373,7 @@ var toHex = function (value, returnType) {
  * @returns {Boolean}
  */
 var isHex = function (hex) {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]+$/i.test(hex));
+    return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 };
 
 
@@ -399,7 +425,7 @@ var isTopic = function (topic) {
 var SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
 var sha3 = function (value) {
-    if (isHex(value) && /^0x/i.test((value).toString())) {
+    if (isHexStrict(value) && /^0x/i.test((value).toString())) {
         value = hexToBytes(value);
     }
 
@@ -433,7 +459,9 @@ module.exports = {
     hexToBytes: hexToBytes,
     bytesToHex: bytesToHex,
     isHex: isHex,
+    isHexStrict: isHexStrict,
     leftPad: leftPad,
     rightPad: rightPad,
+    toTwosComplement: toTwosComplement,
     sha3: sha3
 };

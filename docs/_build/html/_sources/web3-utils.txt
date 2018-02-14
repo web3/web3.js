@@ -17,7 +17,7 @@ randomHex
 
     web3.utils.randomHex(size)
 
-The `randomHex <https://github.com/frozeman/randomHex`_ library to generate cryptographically strong pseudo-random HEX strings from a given byte size.
+The `randomHex <https://github.com/frozeman/randomHex>`_ library to generate cryptographically strong pseudo-random HEX strings from a given byte size.
 
 ----------
 Parameters
@@ -64,9 +64,9 @@ _
 
     web3.utils._()
 
-The `underscore <http://underscorejs.org`_ library for many convenience JavaScript functions.
+The `underscore <http://underscorejs.org>`_ library for many convenience JavaScript functions.
 
-See the `underscore API reference <http://underscorejs.org`_ for details.
+See the `underscore API reference <http://underscorejs.org>`_ for details.
 
 -------
 Example
@@ -96,10 +96,10 @@ BN
 
     web3.utils.BN(mixed)
 
-The `BN.js <https://github.com/indutny/bn.js/`_ library for calculating with big numbers in JavaScript.
-See the `BN.js documentation <https://github.com/indutny/bn.js/` for details.
+The `BN.js <https://github.com/indutny/bn.js/>`_ library for calculating with big numbers in JavaScript.
+See the `BN.js documentation <https://github.com/indutny/bn.js/>`_ for details.
 
-.. note:: For safe conversion of many types, incl `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ use :ref:`utils.toBN <utils-tobn>`
+.. note:: For safe conversion of many types, incl `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ use :ref:`utils.toBN <utils-tobn>`
 
 ----------
 Parameters
@@ -111,7 +111,7 @@ Parameters
 Returns
 -------
 
-``Object``: The `BN.js <https://github.com/indutny/bn.js/`_ instance.
+``Object``: The `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Example
@@ -141,14 +141,14 @@ isBN
     web3.utils.isBN(bn)
 
 
-Checks if a given value is a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+Checks if a given value is a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 
 ----------
 Parameters
 ----------
 
-1. ``bn`` - ``Object``: An `BN.js <https://github.com/indutny/bn.js/`_ instance.
+1. ``bn`` - ``Object``: An `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Returns
@@ -178,14 +178,14 @@ isBigNumber
     web3.utils.isBigNumber(bignumber)
 
 
-Checks if a given value is a `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instance.
+Checks if a given value is a `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
 
 
 ----------
 Parameters
 ----------
 
-1. ``bignumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instance.
+1. ``bignumber`` - ``Object``: A `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instance.
 
 -------
 Returns
@@ -217,7 +217,7 @@ sha3
 
 Will calculate the sha3 of the input.
 
-.. note::  To mimick the sha3 behaviour of solidity use :ref:`soliditySah3 <utils-soliditysha3>`
+.. note::  To mimic the sha3 behaviour of solidity use :ref:`soliditySha3 <utils-soliditysha3>`
 
 ----------
 Parameters
@@ -265,6 +265,7 @@ soliditySha3
     web3.utils.soliditySha3(param1 [, param2, ...])
 
 Will calculate the sha3 of given input parameters in the same way solidity would.
+This means arguments will be ABI converted and tightly packed before being hashed.
 
 ----------
 Parameters
@@ -383,6 +384,52 @@ Example
     web3.utils.isHex('Hello');
     > false
 
+------------------------------------------------------------------------------
+
+isHexStrict
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.isHexStrict(hex)
+
+Checks if a given string is a HEX string. Difference to ``web3.utils.isHex()`` is that it expects HEX to be prefixed with ``0x``.
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String|HEX``: The given HEX string.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.isHexStrict('0xc1912');
+    > true
+
+    web3.utils.isHexStrict(0xc1912);
+    > false
+
+    web3.utils.isHexStrict('c1912');
+    > false
+
+    web3.utils.isHexStrict(345);
+    > false // this is tricky, as 345 can be a a HEX representation or a number, be careful when not having a 0x in front!
+
+    web3.utils.isHexStrict('0xZ1912');
+    > false
+
+    web3.utils.isHex('Hello');
+    > false
 
 ------------------------------------------------------------------------------
 
@@ -559,9 +606,9 @@ toBN
 
     web3.utils.toBN(number)
 
-Will safly convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/`_ instances) into a `BN.js <https://github.com/indutny/bn.js/`_ instance, for handling big numbers in JavaScript.
+Will safly convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instances) into a `BN.js <https://github.com/indutny/bn.js/>`_ instance, for handling big numbers in JavaScript.
 
-.. note:: For just the `BN.js <https://github.com/indutny/bn.js/`_ class use :ref:`utils.BN <utils-bn>`
+.. note:: For just the `BN.js <https://github.com/indutny/bn.js/>`_ class use :ref:`utils.BN <utils-bn>`
 
 ----------
 Parameters
@@ -573,7 +620,7 @@ Parameters
 Returns
 -------
 
-``Object``: The `BN.js <https://github.com/indutny/bn.js/`_ instance.
+``Object``: The `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Example
@@ -922,7 +969,7 @@ toWei
     web3.utils.toWei(number [, unit])
 
 
-Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_.
+Converts any `ether value <http://ethdocs.org/en/latest/ether.html>`_ value into `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_.
 
 .. note:: "wei" are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.
 
@@ -964,7 +1011,7 @@ Parameters
 Returns
 -------
 
-``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Example
@@ -996,7 +1043,7 @@ fromWei
     web3.utils.fromWei(number [, unit])
 
 
-Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_ value into a `ether value <http://ethdocs.org/en/latest/ether.html>`_.
+Converts any `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_ value into a `ether value <http://ethdocs.org/en/latest/ether.html>`_.
 
 .. note:: "wei" are the smallest ethere unit, and you should always make calculations in wei and convert only for display reasons.
 
@@ -1038,7 +1085,7 @@ Parameters
 Returns
 -------
 
-``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/`_ instance.
+``String|BN``: If a number, or string is given it returns a number string, otherwise a `BN.js <https://github.com/indutny/bn.js/>`_ instance.
 
 -------
 Example
@@ -1068,7 +1115,7 @@ unitMap
     web3.utils.unitMap
 
 
-Shows all possible `ether value <http://ethdocs.org/en/latest/ether.html>`_ and their amount in `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na`_.
+Shows all possible `ether value <http://ethdocs.org/en/latest/ether.html>`_ and their amount in `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_.
 
 ----------
 Retrun value
@@ -1143,12 +1190,12 @@ Example
 
 ------------------------------------------------------------------------------
 
-leftPad
+padLeft
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.leftPad(string, characterAmount [, sign])
+    web3.utils.padLeft(string, characterAmount [, sign])
     web3.utils.leftPad(string, characterAmount [, sign]) // ALIAS
 
 
@@ -1175,23 +1222,23 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.leftPad('0x3456ff', 20);
+    web3.utils.padLeft('0x3456ff', 20);
     > "0x000000000000003456ff"
 
-    web3.utils.leftPad(0x3456ff, 20);
+    web3.utils.padLeft(0x3456ff, 20);
     > "0x000000000000003456ff"
 
-    web3.utils.leftPad('Hello', 20, 'x');
+    web3.utils.padLeft('Hello', 20, 'x');
     > "xxxxxxxxxxxxxxxHello"
 
 ------------------------------------------------------------------------------
 
-rightPad
+padRight
 =====================
 
 .. code-block:: javascript
 
-    web3.utils.rightPad(string, characterAmount [, sign])
+    web3.utils.padRight(string, characterAmount [, sign])
     web3.utils.rightPad(string, characterAmount [, sign]) // ALIAS
 
 
@@ -1218,11 +1265,58 @@ Example
 
 .. code-block:: javascript
 
-    web3.utils.rightPad('0x3456ff', 20);
+    web3.utils.padRight('0x3456ff', 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.rightPad(0x3456ff, 20);
+    web3.utils.padRight(0x3456ff, 20);
     > "0x3456ff00000000000000"
 
-    web3.utils.rightPad('Hello', 20, 'x');
+    web3.utils.padRight('Hello', 20, 'x');
     > "Helloxxxxxxxxxxxxxxx"
+
+------------------------------------------------------------------------------
+
+toTwosComplement
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.toTwosComplement(number)
+
+
+Converts a negative numer into a two's complement.
+
+
+----------
+Parameters
+----------
+
+1. ``number`` - ``Number|String|BigNumber``: The number to convert.
+
+-------
+Returns
+-------
+
+``String``: The converted hex string.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.toTwosComplement('-1');
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+    web3.utils.toTwosComplement(-1);
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+
+    web3.utils.toTwosComplement('0x1');
+    > "0x0000000000000000000000000000000000000000000000000000000000000001"
+
+    web3.utils.toTwosComplement(-15);
+    > "0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1"
+
+    web3.utils.toTwosComplement('-0x1');
+    > "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+

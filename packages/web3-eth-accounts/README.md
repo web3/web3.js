@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the accounts package to be used in the `web-eth` package.
+This is the accounts package to be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -29,12 +29,9 @@ This will expose the `Web3EthAccounts` object on the window object.
 
 ```js
 // in node.js
-var Eth = require('web3-eth');
 var Web3EthAccounts = require('web3-eth-accounts');
 
-var eth = new Eth('ws://localhost:8546');
-
-var account = new Web3EthAccounts(eth);
+var account = new Web3EthAccounts('ws://localhost:8546');
 account.create();
 > {
   address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
