@@ -189,7 +189,7 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 WebsocketProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
         if(this.responseCallbacks.hasOwnProperty(key)){
-            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
+            this.responseCallbacks[key](errors.InvalidConnection('on WS'));
             delete this.responseCallbacks[key];
         }
     }
@@ -336,4 +336,3 @@ WebsocketProvider.prototype.reset = function () {
 };
 
 module.exports = WebsocketProvider;
-
