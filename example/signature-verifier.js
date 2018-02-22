@@ -142,7 +142,7 @@ function execute(){
     console.log("\n\n**********************************************************************");
     console.log("Steps to Run");
     console.log("**********************************************************************");
-    console.log("1. Deploy the following conract in your ethereum environment");
+    console.log("1. Deploy the following contract in your ethereum environment");
     console.log(signatureContractCodeReadable);
     console.log("2. Set the following parameters (i.e. at the end of the code)");
     console.log("\ta. Ethereum URL");
@@ -204,11 +204,11 @@ function execute(){
 //setAccount('<Provide the account address>');
 
 // Value 2- Please provide the password of the accound to be used 
-//setPassword('<Provide teh password>');
+//setPassword('<Provide the password>');
 
 // Value 3- Please update the address of the contract after deployment
 // The contract code is made available at the top under signatureContractCodeReadable variable
-// Please deploy teh contract and update the contract address here
+// Please deploy the contract and update the contract address here
 //setContractAddress('<Provide the deployed contract address>');
 
 // Value 4- If required please update with a different message
