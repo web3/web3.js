@@ -28,6 +28,7 @@ var tests = [
     { value: {test: 'test'}, expected: '0x7b2274657374223a2274657374227d'},
     { value: '{"test": "test"}', expected: '0x7b2274657374223a202274657374227d'},
     { value: 'myString', expected: '0x6d79537472696e67'},
+    { value: '내가 제일 잘 나가', expected:'0xeb82b4eab08020eca09cec9dbc20ec9e9820eb8298eab080'},
     { value: new BigNumber(15), expected: '0xf'},
     { value: true, expected: '0x1'},
     { value: false, expected: '0x0'},
