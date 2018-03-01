@@ -95,18 +95,18 @@ RequestManager.prototype.setProvider = function (p, net) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(err, result){
-            if(!err) {
-                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
-                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
-            } else {
-
-                Object.keys(_this.subscriptions).forEach(function(id){
-                    if(_this.subscriptions[id].callback)
-                        _this.subscriptions[id].callback(err);
-                });
+        this.provider.on('data', function requestManagerNotification(result){
+            if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+                _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
+        // TODO add error, end, timeout, connect??
+        // this.provider.on('error', function requestManagerNotification(result){
+        //     Object.keys(_this.subscriptions).forEach(function(id){
+        //         if(_this.subscriptions[id].callback)
+        //             _this.subscriptions[id].callback(err);
+        //     });
+        // }
     }
 };
 
