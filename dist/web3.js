@@ -27250,20 +27250,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // listen to incoming notifications
         if (this.provider && this.provider.on) {
-          this.provider.on('data', function requestManagerNotification(result) {
-            // err,
-            // if(!err) {
-            if (_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+          this.provider.on('data', function requestManagerNotification(result, deprecatedResult) {
+            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+
+            // check for result.method, to prevent old providers errors to pass as result
+            if (result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
               _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
-            // } else {
-            //
-            //     Object.keys(_this.subscriptions).forEach(function(id){
-            //         if(_this.subscriptions[id].callback)
-            //             _this.subscriptions[id].callback(err);
-            //     });
-            // }
           });
+          // TODO add error, end, timeout, connect??
+          // this.provider.on('error', function requestManagerNotification(result){
+          //     Object.keys(_this.subscriptions).forEach(function(id){
+          //         if(_this.subscriptions[id].callback)
+          //             _this.subscriptions[id].callback(err);
+          //     });
+          // }
         }
       };
 
@@ -52543,7 +52544,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           // notification
           if (!id && result.method.indexOf('_subscription') !== -1) {
             _this.notificationCallbacks.forEach(function (callback) {
-              if (_.isFunction(callback)) callback(null, result);
+              if (_.isFunction(callback)) callback(result);
             });
 
             // fire the callback
@@ -52579,11 +52580,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this.connection.on('end', function () {
           _this._timeout();
-
-          // inform notifications
-          _this.notificationCallbacks.forEach(function (callback) {
-            if (_.isFunction(callback)) callback(new Error('IPC socket connection closed'));
-          });
         });
 
         this.connection.on('timeout', function () {
@@ -52704,6 +52700,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.notificationCallbacks.push(callback);
             break;
 
+          // adds error, end, timeout, connect
           default:
             this.connection.on(type, callback);
             break;
@@ -52850,7 +52847,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // notification
             if (!id && result.method.indexOf('_subscription') !== -1) {
               _this.notificationCallbacks.forEach(function (callback) {
-                if (_.isFunction(callback)) callback(null, result);
+                if (_.isFunction(callback)) callback(result);
               });
 
               // fire the callback
@@ -52874,18 +52871,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           _this._timeout();
         };
 
-        this.connection.onclose = function (e) {
+        this.connection.onclose = function () {
           _this._timeout();
-
-          var noteCb = _this.notificationCallbacks;
 
           // reset all requests and callbacks
           _this.reset();
-
-          // cancel subscriptions
-          noteCb.forEach(function (callback) {
-            if (_.isFunction(callback)) callback(e);
-          });
         };
 
         // this.connection.on('timeout', function(){
