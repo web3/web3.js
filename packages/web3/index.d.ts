@@ -25,3 +25,5 @@ declare class Web3 {
 }
 
 export default Web3;
+
+export = Web3;
