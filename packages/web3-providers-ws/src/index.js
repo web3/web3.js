@@ -92,7 +92,7 @@ WebsocketProvider.prototype.addDefaultEvents = function(){
         _this._timeout();
     };
 
-    this.connection.onclose = function(e){
+    this.connection.onclose = function(){
         _this._timeout();
 
         // reset all requests and callbacks

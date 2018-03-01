@@ -42362,20 +42362,21 @@ function finallyHandler(reasonOrValue) {
 
         // listen to incoming notifications
         if (this.provider && this.provider.on) {
-          this.provider.on('data', function requestManagerNotification(result) {
-            // err,
-            // if(!err) {
-            if (_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+          this.provider.on('data', function requestManagerNotification(result, deprecatedResult) {
+            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+
+            // check for result.method, to prevent old providers errors to pass as result
+            if (result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
               _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
-            // } else {
-            //
-            //     Object.keys(_this.subscriptions).forEach(function(id){
-            //         if(_this.subscriptions[id].callback)
-            //             _this.subscriptions[id].callback(err);
-            //     });
-            // }
           });
+          // TODO add error, end, timeout, connect??
+          // this.provider.on('error', function requestManagerNotification(result){
+          //     Object.keys(_this.subscriptions).forEach(function(id){
+          //         if(_this.subscriptions[id].callback)
+          //             _this.subscriptions[id].callback(err);
+          //     });
+          // }
         }
       };
 
@@ -71986,9 +71987,11 @@ module.exports = Eth;
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
+          // notification
+          if (!id && result.method.indexOf('_subscription') !== -1) {
+            _this.notificationCallbacks.forEach(function (callback) {
+              if (_.isFunction(callback)) callback(result);
+            });
 
 
 var Net = function () {
@@ -72003,9 +72006,9 @@ var Net = function () {
         method.setRequestManager(_this._requestManager);
     });
 
-};
-
-core.addProviders(Net);
+        this.connection.on('end', function () {
+          _this._timeout();
+        });
 
 
 var methods = function () {
@@ -73896,177 +73899,12 @@ var jsonPathCompiler = jsonPathSyntax(function (pathNodeSyntax,
              return cases(ascent);
           }),
 
-          cases = lazyUnion(
-                     terminalCaseWhenArrivingAtRoot
-                  ,  terminalCaseWhenPreviousExpressionIsSatisfied
-                  ,  recursiveCase  
-                  );
-      
-      return cases;
-   }      
-   
-   /**
-    * Generate an evaluator for ! - matches only the root element of the json
-    * and ignores any previous expressions since nothing may precede !. 
-    */   
-   function rootExpr() {
-      
-      return function(ascent){
-         return headKey(ascent) == ROOT_PATH;
+          // adds error, end, timeout, connect
+          default:
+            this.connection.on(type, callback);
+            break;
+        }
       };
-   }   
-         
-   /**
-    * Generate a statement wrapper to sit around the outermost 
-    * clause evaluator.
-    * 
-    * Handles the case where the capturing is implicit because the JSONPath
-    * did not contain a '$' by returning the last node.
-    */   
-   function statementExpr(lastClause) {
-      
-      return function(ascent) {
-   
-         // kick off the evaluation by passing through to the last clause
-         var exprMatch = lastClause(ascent);
-                                                     
-         return exprMatch === true ? head(ascent) : exprMatch;
-      };
-   }      
-                          
-   /**
-    * For when a token has been found in the JSONPath input.
-    * Compiles the parser for that token and returns in combination with the
-    * parser already generated.
-    * 
-    * @param {Function} exprs  a list of the clause evaluator generators for
-    *                          the token that was found
-    * @param {Function} parserGeneratedSoFar the parser already found
-    * @param {Array} detection the match given by the regex engine when 
-    *                          the feature was found
-    */
-   function expressionsReader( exprs, parserGeneratedSoFar, detection ) {
-                     
-      // if exprs is zero-length foldR will pass back the 
-      // parserGeneratedSoFar as-is so we don't need to treat 
-      // this as a special case
-      
-      return   foldR( 
-                  function( parserGeneratedSoFar, expr ){
-         
-                     return expr(parserGeneratedSoFar, detection);
-                  }, 
-                  parserGeneratedSoFar, 
-                  exprs
-               );                     
-
-   }
-
-   /** 
-    *  If jsonPath matches the given detector function, creates a function which
-    *  evaluates against every clause in the clauseEvaluatorGenerators. The
-    *  created function is propagated to the onSuccess function, along with
-    *  the remaining unparsed JSONPath substring.
-    *  
-    *  The intended use is to create a clauseMatcher by filling in
-    *  the first two arguments, thus providing a function that knows
-    *  some syntax to match and what kind of generator to create if it
-    *  finds it. The parameter list once completed is:
-    *  
-    *    (jsonPath, parserGeneratedSoFar, onSuccess)
-    *  
-    *  onSuccess may be compileJsonPathToFunction, to recursively continue 
-    *  parsing after finding a match or returnFoundParser to stop here.
-    */
-   function generateClauseReaderIfTokenFound (
-     
-                        tokenDetector, clauseEvaluatorGenerators,
-                         
-                        jsonPath, parserGeneratedSoFar, onSuccess) {
-                        
-      var detected = tokenDetector(jsonPath);
-
-      if(detected) {
-         var compiledParser = expressionsReader(
-                                 clauseEvaluatorGenerators, 
-                                 parserGeneratedSoFar, 
-                                 detected
-                              ),
-         
-             remainingUnparsedJsonPath = jsonPath.substr(len(detected[0]));                
-                               
-         return onSuccess(remainingUnparsedJsonPath, compiledParser);
-      }         
-   }
-                 
-   /**
-    * Partially completes generateClauseReaderIfTokenFound above. 
-    */
-   function clauseMatcher(tokenDetector, exprs) {
-        
-      return   partialComplete( 
-                  generateClauseReaderIfTokenFound, 
-                  tokenDetector, 
-                  exprs 
-               );
-   }
-
-   /**
-    * clauseForJsonPath is a function which attempts to match against 
-    * several clause matchers in order until one matches. If non match the
-    * jsonPath expression is invalid and an error is thrown.
-    * 
-    * The parameter list is the same as a single clauseMatcher:
-    * 
-    *    (jsonPath, parserGeneratedSoFar, onSuccess)
-    */     
-   var clauseForJsonPath = lazyUnion(
-
-      clauseMatcher(pathNodeSyntax   , list( capture, 
-                                             duckTypeClause, 
-                                             nameClause, 
-                                             skip1 ))
-                                                     
-   ,  clauseMatcher(doubleDotSyntax  , list( skipMany))
-       
-       // dot is a separator only (like whitespace in other languages) but 
-       // rather than make it a special case, use an empty list of 
-       // expressions when this token is found
-   ,  clauseMatcher(dotSyntax        , list() )  
-                                                                                      
-   ,  clauseMatcher(bangSyntax       , list( capture,
-                                             rootExpr))
-                                                          
-   ,  clauseMatcher(emptySyntax      , list( statementExpr))
-   
-   ,  function (jsonPath) {
-         throw Error('"' + jsonPath + '" could not be tokenised')      
-      }
-   );
-
-
-   /**
-    * One of two possible values for the onSuccess argument of 
-    * generateClauseReaderIfTokenFound.
-    * 
-    * When this function is used, generateClauseReaderIfTokenFound simply 
-    * returns the compiledParser that it made, regardless of if there is 
-    * any remaining jsonPath to be compiled.
-    */
-   function returnFoundParser(_remainingJsonPath, compiledParser){ 
-      return compiledParser 
-   }     
-              
-   /**
-    * Recursively compile a JSONPath expression.
-    * 
-    * This function serves as one of two possible values for the onSuccess 
-    * argument of generateClauseReaderIfTokenFound, meaning continue to
-    * recursively compile. Otherwise, returnFoundParser is given and
-    * compilation terminates.
-    */
-   function compileJsonPathToFunction( uncompiledJsonPath, 
-                                       parserGeneratedSoFar ) {
 
       /**
        * On finding a match, if there is remaining text to be compiled
@@ -74483,8 +74321,20 @@ function instanceApi(oboeBus, contentSource){
                }
             }
 
-            return oboeApi; // chaining
-       }),
+            // notification
+            if (!id && result.method.indexOf('_subscription') !== -1) {
+              _this.notificationCallbacks.forEach(function (callback) {
+                if (_.isFunction(callback)) callback(result);
+              });
+
+              // fire the callback
+            } else if (_this.responseCallbacks[id]) {
+              _this.responseCallbacks[id](null, result);
+              delete _this.responseCallbacks[id];
+            }
+          });
+        };
+      };
 
        /**
         * Remove any kind of listener that the instance api exposes
@@ -74493,19 +74343,12 @@ function instanceApi(oboeBus, contentSource){
 
             if( eventId == 'done' ) {
 
-               rootNodeFinishedEvent.un(p2);
+        this.connection.onclose = function () {
+          _this._timeout();
 
-            } else if( eventId == 'node' || eventId == 'path' ) {
-
-               // allow removal of node and path
-               oboeBus.un(eventId + ':' + p2, p3);
-            } else {
-
-               // we have a standard Node.js EventEmitter 2-argument call.
-               // The second parameter is the listener. This may be a call
-               // to remove a fully-qualified node/path listener but requires
-               // no special handling
-               var listener = p2;
+          // reset all requests and callbacks
+          _this.reset();
+        };
 
                oboeBus(eventId).un(listener);
             }

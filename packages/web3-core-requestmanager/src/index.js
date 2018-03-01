@@ -95,8 +95,11 @@ RequestManager.prototype.setProvider = function (p, net) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(result){
-            if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+        this.provider.on('data', function requestManagerNotification(result, deprecatedResult){
+            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+
+            // check for result.method, to prevent old providers errors to pass as result
+            if(result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
                 _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
