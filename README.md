@@ -134,7 +134,7 @@ npm test
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
 
 
-[npm-image]: https://badge.fury.io/js/web3.png
+[npm-image]: https://badge.fury.io/js/web3.svg
 [npm-url]: https://npmjs.org/package/web3
 [travis-image]: https://travis-ci.org/ethereum/web3.js.svg
 [travis-url]: https://travis-ci.org/ethereum/web3.js
