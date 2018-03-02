@@ -276,7 +276,9 @@ Subscription.prototype.subscribe = function() {
                     if(_this.options.requestManager.provider.once) {
                         _this._reconnectIntervalId = setInterval(function () {
                             // TODO check if that makes sense!
-                            _this.options.requestManager.provider.reconnect();
+                            if (_this.options.requestManager.provider.reconnect) {
+                                _this.options.requestManager.provider.reconnect();
+                            }
                         }, 500);
 
                         _this.options.requestManager.provider.once('connect', function () {

@@ -19,19 +19,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }g.Web3 = f();
   }
 })(function () {
-  var define, module, exports;return function e(t, n, r) {
-    function s(o, u) {
-      if (!n[o]) {
-        if (!t[o]) {
-          var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
-        }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
-          var n = t[o][1][e];return s(n ? n : e);
-        }, l, l.exports, e, t, n, r);
-      }return n[o].exports;
-    }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
-      s(r[o]);
-    }return s;
-  }({ 1: [function (require, module, exports) {
+  var define, module, exports;return function () {
+    function e(t, n, r) {
+      function s(o, u) {
+        if (!n[o]) {
+          if (!t[o]) {
+            var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
+          }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
+            var n = t[o][1][e];return s(n ? n : e);
+          }, l, l.exports, e, t, n, r);
+        }return n[o].exports;
+      }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
+        s(r[o]);
+      }return s;
+    }return e;
+  }()({ 1: [function (require, module, exports) {
       var asn1 = exports;
 
       asn1.bignum = require('bn.js');
@@ -9622,15 +9624,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }, { "bn.js": "BN", "minimalistic-assert": 107, "minimalistic-crypto-utils": 108 }], 82: [function (require, module, exports) {
       module.exports = {
         "_args": [[{
-          "raw": "elliptic@^6.2.3",
+          "raw": "elliptic@^6.0.0",
           "scope": null,
           "escapedName": "elliptic",
           "name": "elliptic",
-          "rawSpec": "^6.2.3",
-          "spec": ">=6.2.3 <7.0.0",
+          "rawSpec": "^6.0.0",
+          "spec": ">=6.0.0 <7.0.0",
           "type": "range"
-        }, "/Users/frozeman/Sites/_ethereum/web3/node_modules/secp256k1"]],
-        "_from": "elliptic@>=6.2.3 <7.0.0",
+        }, "/Users/frozeman/Sites/_ethereum/web3/node_modules/browserify-sign"]],
+        "_from": "elliptic@>=6.0.0 <7.0.0",
         "_id": "elliptic@6.4.0",
         "_inCache": true,
         "_location": "/elliptic",
@@ -9646,20 +9648,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "_npmVersion": "3.10.8",
         "_phantomChildren": {},
         "_requested": {
-          "raw": "elliptic@^6.2.3",
+          "raw": "elliptic@^6.0.0",
           "scope": null,
           "escapedName": "elliptic",
           "name": "elliptic",
-          "rawSpec": "^6.2.3",
-          "spec": ">=6.2.3 <7.0.0",
+          "rawSpec": "^6.0.0",
+          "spec": ">=6.0.0 <7.0.0",
           "type": "range"
         },
         "_requiredBy": ["/browserify-sign", "/create-ecdh", "/secp256k1"],
         "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
         "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
         "_shrinkwrap": null,
-        "_spec": "elliptic@^6.2.3",
-        "_where": "/Users/frozeman/Sites/_ethereum/web3/node_modules/secp256k1",
+        "_spec": "elliptic@^6.0.0",
+        "_where": "/Users/frozeman/Sites/_ethereum/web3/node_modules/browserify-sign",
         "author": {
           "name": "Fedor Indutny",
           "email": "fedor@indutny.com"
@@ -12267,9 +12269,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         'use strict';
 
         if (!process.version || process.version.indexOf('v0.') === 0 || process.version.indexOf('v1.') === 0 && process.version.indexOf('v1.8.') !== 0) {
-          module.exports = nextTick;
+          module.exports = { nextTick: nextTick };
         } else {
-          module.exports = process.nextTick;
+          module.exports = process;
         }
 
         function nextTick(fn, arg1, arg2, arg3) {
@@ -12755,7 +12757,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         'use strict';
 
         function oldBrowser() {
-          throw new Error('secure random number generation not supported by this browser\nuse chrome, FireFox or Internet Explorer 11');
+          throw new Error('Secure random number generation is not supported by this browser.\nUse Chrome, Firefox or Internet Explorer 11');
         }
 
         var Buffer = require('safe-buffer').Buffer;
@@ -12938,7 +12940,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       /*<replacement>*/
 
-      var processNextTick = require('process-nextick-args');
+      var processNextTick = require('process-nextick-args').nextTick;
       /*</replacement>*/
 
       /*<replacement>*/
@@ -13107,7 +13109,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         /*<replacement>*/
 
-        var processNextTick = require('process-nextick-args');
+        var processNextTick = require('process-nextick-args').nextTick;
         /*</replacement>*/
 
         module.exports = Readable;
@@ -13134,9 +13136,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var Stream = require('./internal/streams/stream');
         /*</replacement>*/
 
-        // TODO(bmeurer): Change this back to const once hole checks are
-        // properly optimized away early in Ignition+TurboFan.
         /*<replacement>*/
+
         var Buffer = require('safe-buffer').Buffer;
         var OurUint8Array = global.Uint8Array || function () {};
         function _uint8ArrayToBuffer(chunk) {
@@ -13145,6 +13146,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function _isUint8Array(obj) {
           return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
         }
+
         /*</replacement>*/
 
         /*<replacement>*/
@@ -13173,15 +13175,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function prependListener(emitter, event, fn) {
           // Sadly this is not cacheable as some libraries bundle their own
           // event emitter implementation with them.
-          if (typeof emitter.prependListener === 'function') {
-            return emitter.prependListener(event, fn);
-          } else {
-            // This is a hack to make sure that our error handler is attached before any
-            // userland ones.  NEVER DO THIS. This is here only because this code needs
-            // to continue to work with older versions of Node.js that do not include
-            // the prependListener() method. The goal is to eventually remove this hack.
-            if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
-          }
+          if (typeof emitter.prependListener === 'function') return emitter.prependListener(event, fn);
+
+          // This is a hack to make sure that our error handler is attached before any
+          // userland ones.  NEVER DO THIS. This is here only because this code needs
+          // to continue to work with older versions of Node.js that do not include
+          // the prependListener() method. The goal is to eventually remove this hack.
+          if (!emitter._events || !emitter._events[event]) emitter.on(event, fn);else if (isArray(emitter._events[event])) emitter._events[event].unshift(fn);else emitter._events[event] = [fn, emitter._events[event]];
         }
 
         function ReadableState(options, stream) {
@@ -13189,17 +13189,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           options = options || {};
 
+          // Duplex streams are both readable and writable, but share
+          // the same options object.
+          // However, some cases require setting options to different
+          // values for the readable and the writable sides of the duplex stream.
+          // These options can be provided separately as readableXXX and writableXXX.
+          var isDuplex = stream instanceof Duplex;
+
           // object stream flag. Used to make read(n) ignore n and to
           // make all the buffer merging and length checks go away
           this.objectMode = !!options.objectMode;
 
-          if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
+          if (isDuplex) this.objectMode = this.objectMode || !!options.readableObjectMode;
 
           // the point at which it stops calling _read() to fill the buffer
           // Note: 0 is a valid value, means "don't call _read preemptively ever"
           var hwm = options.highWaterMark;
+          var readableHwm = options.readableHighWaterMark;
           var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-          this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
+
+          if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (readableHwm || readableHwm === 0)) this.highWaterMark = readableHwm;else this.highWaterMark = defaultHwm;
 
           // cast to ints.
           this.highWaterMark = Math.floor(this.highWaterMark);
@@ -13894,18 +13903,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // This is *not* part of the readable stream interface.
         // It is an ugly unfortunate mess of history.
         Readable.prototype.wrap = function (stream) {
+          var _this = this;
+
           var state = this._readableState;
           var paused = false;
 
-          var self = this;
           stream.on('end', function () {
             debug('wrapped end');
             if (state.decoder && !state.ended) {
               var chunk = state.decoder.end();
-              if (chunk && chunk.length) self.push(chunk);
+              if (chunk && chunk.length) _this.push(chunk);
             }
 
-            self.push(null);
+            _this.push(null);
           });
 
           stream.on('data', function (chunk) {
@@ -13915,7 +13925,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // don't skip over falsy values in objectMode
             if (state.objectMode && (chunk === null || chunk === undefined)) return;else if (!state.objectMode && (!chunk || !chunk.length)) return;
 
-            var ret = self.push(chunk);
+            var ret = _this.push(chunk);
             if (!ret) {
               paused = true;
               stream.pause();
@@ -13936,12 +13946,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           // proxy certain important events.
           for (var n = 0; n < kProxyEvents.length; n++) {
-            stream.on(kProxyEvents[n], self.emit.bind(self, kProxyEvents[n]));
+            stream.on(kProxyEvents[n], this.emit.bind(this, kProxyEvents[n]));
           }
 
           // when we try to consume some more bytes, simply unpause the
           // underlying stream.
-          self._read = function (n) {
+          this._read = function (n) {
             debug('wrapped _read', n);
             if (paused) {
               paused = false;
@@ -13949,7 +13959,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             }
           };
 
-          return self;
+          return this;
         };
 
         // exposed for testing purposes only.
@@ -14167,39 +14177,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       util.inherits(Transform, Duplex);
 
-      function TransformState(stream) {
-        this.afterTransform = function (er, data) {
-          return afterTransform(stream, er, data);
-        };
-
-        this.needTransform = false;
-        this.transforming = false;
-        this.writecb = null;
-        this.writechunk = null;
-        this.writeencoding = null;
-      }
-
-      function afterTransform(stream, er, data) {
-        var ts = stream._transformState;
+      function afterTransform(er, data) {
+        var ts = this._transformState;
         ts.transforming = false;
 
         var cb = ts.writecb;
 
         if (!cb) {
-          return stream.emit('error', new Error('write callback called multiple times'));
+          return this.emit('error', new Error('write callback called multiple times'));
         }
 
         ts.writechunk = null;
         ts.writecb = null;
 
-        if (data !== null && data !== undefined) stream.push(data);
+        if (data != null) // single equals check for both `null` and `undefined`
+          this.push(data);
 
         cb(er);
 
-        var rs = stream._readableState;
+        var rs = this._readableState;
         rs.reading = false;
         if (rs.needReadable || rs.length < rs.highWaterMark) {
-          stream._read(rs.highWaterMark);
+          this._read(rs.highWaterMark);
         }
       }
 
@@ -14208,9 +14207,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         Duplex.call(this, options);
 
-        this._transformState = new TransformState(this);
-
-        var stream = this;
+        this._transformState = {
+          afterTransform: afterTransform.bind(this),
+          needTransform: false,
+          transforming: false,
+          writecb: null,
+          writechunk: null,
+          writeencoding: null
+        };
 
         // start out asking for a readable event once data is transformed.
         this._readableState.needReadable = true;
@@ -14227,11 +14231,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         // When the writable side finishes, then flush out anything remaining.
-        this.once('prefinish', function () {
-          if (typeof this._flush === 'function') this._flush(function (er, data) {
-            done(stream, er, data);
-          });else done(stream);
-        });
+        this.on('prefinish', prefinish);
+      }
+
+      function prefinish() {
+        var _this = this;
+
+        if (typeof this._flush === 'function') {
+          this._flush(function (er, data) {
+            done(_this, er, data);
+          });
+        } else {
+          done(this, null, null);
+        }
       }
 
       Transform.prototype.push = function (chunk, encoding) {
@@ -14281,27 +14293,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       Transform.prototype._destroy = function (err, cb) {
-        var _this = this;
+        var _this2 = this;
 
         Duplex.prototype._destroy.call(this, err, function (err2) {
           cb(err2);
-          _this.emit('close');
+          _this2.emit('close');
         });
       };
 
       function done(stream, er, data) {
         if (er) return stream.emit('error', er);
 
-        if (data !== null && data !== undefined) stream.push(data);
+        if (data != null) // single equals check for both `null` and `undefined`
+          stream.push(data);
 
         // if there's nothing in the write buffer, then that means
         // that nothing more will ever be provided
-        var ws = stream._writableState;
-        var ts = stream._transformState;
+        if (stream._writableState.length) throw new Error('Calling transform done when ws.length != 0');
 
-        if (ws.length) throw new Error('Calling transform done when ws.length != 0');
-
-        if (ts.transforming) throw new Error('Calling transform done when still transforming');
+        if (stream._transformState.transforming) throw new Error('Calling transform done when still transforming');
 
         return stream.push(null);
       }
@@ -14336,7 +14346,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         /*<replacement>*/
 
-        var processNextTick = require('process-nextick-args');
+        var processNextTick = require('process-nextick-args').nextTick;
         /*</replacement>*/
 
         module.exports = Writable;
@@ -14388,6 +14398,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /*</replacement>*/
 
         /*<replacement>*/
+
         var Buffer = require('safe-buffer').Buffer;
         var OurUint8Array = global.Uint8Array || function () {};
         function _uint8ArrayToBuffer(chunk) {
@@ -14396,6 +14407,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function _isUint8Array(obj) {
           return Buffer.isBuffer(obj) || obj instanceof OurUint8Array;
         }
+
         /*</replacement>*/
 
         var destroyImpl = require('./internal/streams/destroy');
@@ -14409,18 +14421,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           options = options || {};
 
+          // Duplex streams are both readable and writable, but share
+          // the same options object.
+          // However, some cases require setting options to different
+          // values for the readable and the writable sides of the duplex stream.
+          // These options can be provided separately as readableXXX and writableXXX.
+          var isDuplex = stream instanceof Duplex;
+
           // object stream flag to indicate whether or not this stream
           // contains buffers or objects.
           this.objectMode = !!options.objectMode;
 
-          if (stream instanceof Duplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
+          if (isDuplex) this.objectMode = this.objectMode || !!options.writableObjectMode;
 
           // the point at which write() starts returning false
           // Note: 0 is a valid value, means that we always return false if
           // the entire buffer is not flushed immediately on write()
           var hwm = options.highWaterMark;
+          var writableHwm = options.writableHighWaterMark;
           var defaultHwm = this.objectMode ? 16 : 16 * 1024;
-          this.highWaterMark = hwm || hwm === 0 ? hwm : defaultHwm;
+
+          if (hwm || hwm === 0) this.highWaterMark = hwm;else if (isDuplex && (writableHwm || writableHwm === 0)) this.highWaterMark = writableHwm;else this.highWaterMark = defaultHwm;
 
           // cast to ints.
           this.highWaterMark = Math.floor(this.highWaterMark);
@@ -14534,6 +14555,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           Object.defineProperty(Writable, Symbol.hasInstance, {
             value: function value(object) {
               if (realHasInstance.call(this, object)) return true;
+              if (this !== Writable) return false;
 
               return object && object._writableState instanceof WritableState;
             }
@@ -14611,7 +14633,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         Writable.prototype.write = function (chunk, encoding, cb) {
           var state = this._writableState;
           var ret = false;
-          var isBuf = _isUint8Array(chunk) && !state.objectMode;
+          var isBuf = !state.objectMode && _isUint8Array(chunk);
 
           if (isBuf && !Buffer.isBuffer(chunk)) {
             chunk = _uint8ArrayToBuffer(chunk);
@@ -14823,6 +14845,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             } else {
               state.corkedRequestsFree = new CorkedRequest(state);
             }
+            state.bufferedRequestCount = 0;
           } else {
             // Slow case, write chunks one-by-one
             while (entry) {
@@ -14833,6 +14856,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
               doWrite(stream, state, false, len, chunk, encoding, cb);
               entry = entry.next;
+              state.bufferedRequestCount--;
               // if we didn't call the onwrite immediately, then
               // it means that we need to wait until it does.
               // also, that means that the chunk and cb are currently
@@ -14845,7 +14869,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (entry === null) state.lastBufferedRequest = null;
           }
 
-          state.bufferedRequestCount = 0;
           state.bufferedRequest = entry;
           state.bufferProcessing = false;
         }
@@ -14975,8 +14998,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }, { "./_stream_duplex": 130, "./internal/streams/destroy": 136, "./internal/streams/stream": 137, "_process": 120, "core-util-is": 49, "inherits": 101, "process-nextick-args": 119, "safe-buffer": 143, "util-deprecate": 154 }], 135: [function (require, module, exports) {
       'use strict';
 
-      /*<replacement>*/
-
       function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
           throw new TypeError("Cannot call a class as a function");
@@ -14984,7 +15005,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       var Buffer = require('safe-buffer').Buffer;
-      /*</replacement>*/
+      var util = require('util');
 
       function copyBuffer(src, target, offset) {
         src.copy(target, offset);
@@ -15051,12 +15072,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return BufferList;
       }();
-    }, { "safe-buffer": 143 }], 136: [function (require, module, exports) {
+
+      if (util && util.inspect && util.inspect.custom) {
+        module.exports.prototype[util.inspect.custom] = function () {
+          var obj = util.inspect({ length: this.length });
+          return this.constructor.name + ' ' + obj;
+        };
+      }
+    }, { "safe-buffer": 143, "util": 17 }], 136: [function (require, module, exports) {
       'use strict';
 
       /*<replacement>*/
 
-      var processNextTick = require('process-nextick-args');
+      var processNextTick = require('process-nextick-args').nextTick;
       /*</replacement>*/
 
       // undocumented cb() API, needed for core, not for public API
@@ -15072,7 +15100,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           } else if (err && (!this._writableState || !this._writableState.errorEmitted)) {
             processNextTick(emitErrorNT, this, err);
           }
-          return;
+          return this;
         }
 
         // we set destroyed to true before firing error callbacks in order
@@ -15097,6 +15125,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             cb(err);
           }
         });
+
+        return this;
       }
 
       function undestroy() {
@@ -15562,7 +15592,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           // uint64
         } else {
-          var lowBits = bits & 0xffffffff;
+          var lowBits = (bits & 0xffffffff) >>> 0;
           var highBits = (bits - lowBits) / 0x100000000;
 
           this._block.writeUInt32BE(highBits, this._blockSize - 8);
@@ -27220,16 +27250,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // listen to incoming notifications
         if (this.provider && this.provider.on) {
-          this.provider.on('data', function requestManagerNotification(err, result) {
-            if (!err) {
-              if (_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) _this.subscriptions[result.params.subscription].callback(null, result.params.result);
-            } else {
+          this.provider.on('data', function requestManagerNotification(result, deprecatedResult) {
+            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-              Object.keys(_this.subscriptions).forEach(function (id) {
-                if (_this.subscriptions[id].callback) _this.subscriptions[id].callback(err);
-              });
+            // check for result.method, to prevent old providers errors to pass as result
+            if (result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+              _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
           });
+          // TODO add error, end, timeout, connect??
+          // this.provider.on('error', function requestManagerNotification(result){
+          //     Object.keys(_this.subscriptions).forEach(function(id){
+          //         if(_this.subscriptions[id].callback)
+          //             _this.subscriptions[id].callback(err);
+          //     });
+          // }
         }
       };
 
@@ -27788,7 +27823,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 if (_this.options.requestManager.provider.once) {
                   _this._reconnectIntervalId = setInterval(function () {
                     // TODO check if that makes sense!
-                    _this.options.requestManager.provider.reconnect();
+                    if (_this.options.requestManager.provider.reconnect) {
+                      _this.options.requestManager.provider.reconnect();
+                    }
                   }, 500);
 
                   _this.options.requestManager.provider.once('connect', function () {
@@ -43894,8 +43931,88 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         module.exports = scrypt;
       }).call(this, require("buffer").Buffer);
     }, { "buffer": 47, "pbkdf2": 332 }], 350: [function (require, module, exports) {
-      arguments[4][144][0].apply(exports, arguments);
-    }, { "dup": 144, "safe-buffer": 347 }], 351: [function (require, module, exports) {
+      var Buffer = require('safe-buffer').Buffer;
+
+      // prototype class for hash functions
+      function Hash(blockSize, finalSize) {
+        this._block = Buffer.alloc(blockSize);
+        this._finalSize = finalSize;
+        this._blockSize = blockSize;
+        this._len = 0;
+      }
+
+      Hash.prototype.update = function (data, enc) {
+        if (typeof data === 'string') {
+          enc = enc || 'utf8';
+          data = Buffer.from(data, enc);
+        }
+
+        var block = this._block;
+        var blockSize = this._blockSize;
+        var length = data.length;
+        var accum = this._len;
+
+        for (var offset = 0; offset < length;) {
+          var assigned = accum % blockSize;
+          var remainder = Math.min(length - offset, blockSize - assigned);
+
+          for (var i = 0; i < remainder; i++) {
+            block[assigned + i] = data[offset + i];
+          }
+
+          accum += remainder;
+          offset += remainder;
+
+          if (accum % blockSize === 0) {
+            this._update(block);
+          }
+        }
+
+        this._len += length;
+        return this;
+      };
+
+      Hash.prototype.digest = function (enc) {
+        var rem = this._len % this._blockSize;
+
+        this._block[rem] = 0x80;
+
+        // zero (rem + 1) trailing bits, where (rem + 1) is the smallest
+        // non-negative solution to the equation (length + 1 + (rem + 1)) === finalSize mod blockSize
+        this._block.fill(0, rem + 1);
+
+        if (rem >= this._finalSize) {
+          this._update(this._block);
+          this._block.fill(0);
+        }
+
+        var bits = this._len * 8;
+
+        // uint32
+        if (bits <= 0xffffffff) {
+          this._block.writeUInt32BE(bits, this._blockSize - 4);
+
+          // uint64
+        } else {
+          var lowBits = bits & 0xffffffff;
+          var highBits = (bits - lowBits) / 0x100000000;
+
+          this._block.writeUInt32BE(highBits, this._blockSize - 8);
+          this._block.writeUInt32BE(lowBits, this._blockSize - 4);
+        }
+
+        this._update(this._block);
+        var hash = this._hash();
+
+        return enc ? hash.toString(enc) : hash;
+      };
+
+      Hash.prototype._update = function () {
+        throw new Error('_update must be implemented by subclass');
+      };
+
+      module.exports = Hash;
+    }, { "safe-buffer": 347 }], 351: [function (require, module, exports) {
       arguments[4][145][0].apply(exports, arguments);
     }, { "./sha": 352, "./sha1": 353, "./sha224": 354, "./sha256": 355, "./sha384": 356, "./sha512": 357, "dup": 145 }], 352: [function (require, module, exports) {
       arguments[4][146][0].apply(exports, arguments);
@@ -44346,13 +44463,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /* jshint ignore:end */
 
         Accounts.prototype.hashMessage = function hashMessage(data) {
-          var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
-          var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
+          var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+          var messageBuffer = Buffer.from(message);
+          var preamble = "\x19Ethereum Signed Message:\n" + message.length;
+          var preambleBuffer = Buffer.from(preamble);
+          var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
           return Hash.keccak256s(ethMessage);
         };
 
         Accounts.prototype.sign = function sign(data, privateKey) {
-
           var hash = this.hashMessage(data);
           var signature = Account.sign(hash, privateKey);
           var vrs = Account.decodeSignature(signature);
@@ -44366,20 +44485,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           };
         };
 
-        Accounts.prototype.recover = function recover(hash, signature) {
+        Accounts.prototype.recover = function recover(message, signature, preFixed) {
+          var args = [].slice.apply(arguments);
 
-          if (_.isObject(hash)) {
-            return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
+          if (_.isObject(message)) {
+            return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
           }
 
-          if (!utils.isHexStrict(hash)) {
-            hash = this.hashMessage(hash);
+          if (!preFixed) {
+            message = this.hashMessage(message);
           }
 
-          if (arguments.length === 4) {
-            return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
+          if (args.length >= 4) {
+            preFixed = args.slice(-1)[0];
+            preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+
+            return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
           }
-          return Account.recover(hash, signature);
+          return Account.recover(message, signature);
         };
 
         // Taken from https://github.com/ethereumjs/ethereumjs-wallet
@@ -52421,7 +52544,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           // notification
           if (!id && result.method.indexOf('_subscription') !== -1) {
             _this.notificationCallbacks.forEach(function (callback) {
-              if (_.isFunction(callback)) callback(null, result);
+              if (_.isFunction(callback)) callback(result);
             });
 
             // fire the callback
@@ -52457,11 +52580,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this.connection.on('end', function () {
           _this._timeout();
-
-          // inform notifications
-          _this.notificationCallbacks.forEach(function (callback) {
-            if (_.isFunction(callback)) callback(new Error('IPC socket connection closed'));
-          });
         });
 
         this.connection.on('timeout', function () {
@@ -52582,6 +52700,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             this.notificationCallbacks.push(callback);
             break;
 
+          // adds error, end, timeout, connect
           default:
             this.connection.on(type, callback);
             break;
@@ -52728,7 +52847,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             // notification
             if (!id && result.method.indexOf('_subscription') !== -1) {
               _this.notificationCallbacks.forEach(function (callback) {
-                if (_.isFunction(callback)) callback(null, result);
+                if (_.isFunction(callback)) callback(result);
               });
 
               // fire the callback
@@ -52752,18 +52871,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           _this._timeout();
         };
 
-        this.connection.onclose = function (e) {
+        this.connection.onclose = function () {
           _this._timeout();
-
-          var noteCb = _this.notificationCallbacks;
 
           // reset all requests and callbacks
           _this.reset();
-
-          // cancel subscriptions
-          noteCb.forEach(function (callback) {
-            if (_.isFunction(callback)) callback(e);
-          });
         };
 
         // this.connection.on('timeout', function(){
