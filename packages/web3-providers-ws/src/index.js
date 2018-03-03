@@ -68,7 +68,7 @@ var WebsocketProvider = function WebsocketProvider(url)  {
             if(!id && result.method.indexOf('_subscription') !== -1) {
                 _this.notificationCallbacks.forEach(function(callback){
                     if(_.isFunction(callback))
-                        callback(null, result);
+                        callback(result);
                 });
 
                 // fire the callback
@@ -92,19 +92,11 @@ WebsocketProvider.prototype.addDefaultEvents = function(){
         _this._timeout();
     };
 
-    this.connection.onclose = function(e){
+    this.connection.onclose = function(){
         _this._timeout();
-
-        var noteCb = _this.notificationCallbacks;
 
         // reset all requests and callbacks
         _this.reset();
-
-        // cancel subscriptions
-        noteCb.forEach(function (callback) {
-            if (_.isFunction(callback))
-                callback(e);
-        });
     };
 
     // this.connection.on('timeout', function(){
