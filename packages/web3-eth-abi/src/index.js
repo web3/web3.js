@@ -34,9 +34,35 @@ var SolidityTypeDynamicBytes = require('./types/dynamicbytes');
 var SolidityTypeString = require('./types/string');
 var SolidityTypeBytes = require('./types/bytes');
 
+var ethersAbi = require('ethers-contracts/interface');
+
+
 var isDynamic = function (solidityType, type) {
     return solidityType.isDynamicType(type) ||
         solidityType.isDynamicArray(type);
+};
+
+var transformOutput = function (result) {
+    // transform BigNumber
+    if (_.isObject(result) && result.constructor.name === 'BigNumber') {
+        return result.toString();
+    // transform Array
+    } else if (_.isArray(result)) {
+        return result.map(transformOutput);
+    // transform Object
+    } else if (_.isObject(result)) {
+        for (var property in result) {
+            if (result.hasOwnProperty(property)) {
+                result[property] = transformOutput(result[property]);
+            }
+        }
+        return result;
+    // stringify number
+    } else if (isFinite(result) && !_.isBoolean(result)) {
+        return String(result);
+    } else {
+        return result;
+    }
 };
 
 
@@ -295,7 +321,9 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
         throw new Error('Given parameter type is not a string: '+ type);
     }
 
-    return this.decodeParameters([{type: type}], bytes)[0];
+    return transformOutput(ethersAbi.decodeParams([type], '0x'+ bytes.replace(/0x/i,''))[0]);
+
+    // return this.decodeParameters([{type: type}], bytes)[0];
 };
 
 /**
