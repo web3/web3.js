@@ -68,7 +68,7 @@ var WebsocketProvider = function WebsocketProvider(url)  {
             if(!id && result.method.indexOf('_subscription') !== -1) {
                 _this.notificationCallbacks.forEach(function(callback){
                     if(_.isFunction(callback))
-                        callback(result);
+                        callback(null, result);
                 });
 
                 // fire the callback
