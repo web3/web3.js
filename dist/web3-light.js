@@ -1,4 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+require=(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 module.exports=[
   {
     "constant": true,
@@ -1974,18 +1974,24 @@ var toAscii = function(hex) {
  *
  * @method fromUtf8
  * @param {String} string
- * @param {Number} optional padding
+ * @param {Boolean} allowZero to convert code point zero to 00 instead of end of string
  * @returns {String} hex representation of input string
  */
-var fromUtf8 = function(str) {
+var fromUtf8 = function(str, allowZero) {
     str = utf8.encode(str);
     var hex = "";
     for(var i = 0; i < str.length; i++) {
         var code = str.charCodeAt(i);
-        if (code === 0)
-            break;
-        var n = code.toString(16);
-        hex += n.length < 2 ? '0' + n : n;
+        if (code === 0) {
+            if (allowZero) {
+                hex += '00';
+            } else {
+                break;
+            }
+        } else {
+            var n = code.toString(16);
+            hex += n.length < 2 ? '0' + n : n;
+        }
     }
 
     return "0x" + hex;
@@ -2034,15 +2040,22 @@ var transformToFullName = function (json) {
  * @returns {String} display name for function/event eg. multiply(uint256) -> multiply
  */
 var extractDisplayName = function (name) {
-    var length = name.indexOf('(');
-    return length !== -1 ? name.substr(0, length) : name;
+    var stBracket = name.indexOf('(');
+    var endBracket = name.indexOf(')');
+    return (stBracket !== -1 && endBracket !== -1) ? name.substr(0, stBracket) : name;
 };
 
-/// @returns overloaded part of function/event name
+/**
+ * Should be called to get type name of contract function
+ *
+ * @method extractTypeName
+ * @param {String} name of function/event
+ * @returns {String} type name for function/event eg. multiply(uint256) -> uint256
+ */
 var extractTypeName = function (name) {
-    /// TODO: make it invulnerable
-    var length = name.indexOf('(');
-    return length !== -1 ? name.substr(length + 1, name.length - 1 - (length + 1)).replace(' ', '') : "";
+    var stBracket = name.indexOf('(');
+    var endBracket = name.indexOf(')');
+    return (stBracket !== -1 && endBracket !== -1) ? name.substr(stBracket + 1, endBracket - stBracket - 1).replace(' ', '') : "";
 };
 
 /**
@@ -2098,7 +2111,7 @@ var toHex = function (val) {
         else if(val.indexOf('0x') === 0)
             return val;
         else if (!isFinite(val))
-            return fromAscii(val);
+            return fromUtf8(val,1);
     }
 
     return fromDecimal(val);
@@ -2458,7 +2471,7 @@ module.exports = {
 
 },{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":85}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.5"
+    "version": "0.20.6"
 }
 
 },{}],22:[function(require,module,exports){

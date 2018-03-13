@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 Package.describe({
   name: 'ethereum:web3',
-  version: '0.20.5',
+  version: '0.20.6',
   summary: 'Ethereum JavaScript API, middleware to talk to a ethreum node over RPC',
   git: 'https://github.com/ethereum/ethereum.js',
   // By default, Meteor will default to using README.md for documentation.
