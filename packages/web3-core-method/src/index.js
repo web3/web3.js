@@ -241,7 +241,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, blockHeader, sub, existingReceipt, isPolling) {
+    var checkConfirmation = function (existingReceipt, err, blockHeader, sub, isPolling) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -261,7 +261,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
-
                 if (!receipt || !receipt.blockHash) {
                     throw new Error('Receipt missing or blockHash null');
                 }
@@ -274,7 +273,12 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 // check if confirmation listener exists
                 if (defer.eventEmitter.listeners('confirmation').length > 0) {
 
-                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                    // If there was an immediately retrieved receipt, it's already
+                    // been confirmed by the direct call to checkConfirmation needed
+                    // for parity instant-seal
+                    if (existingReceipt === undefined || confirmationCount !== 0){
+                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                    }
 
                     canUnsubscribe = false;
                     confirmationCount++;
@@ -396,15 +400,12 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
     };
 
   // start watching for confirmation depending on the support features of the provider
-  var startWatching = function() {
+  var startWatching = function(existingReceipt) {
       // if provider allows PUB/SUB
       if (_.isFunction(this.requestManager.provider.on)) {
-          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
+          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt));
       } else {
-          // if provider is http and polling
-          intervalId = setInterval(function() {
-              checkConfirmation(null, null, null, null, true);
-          }, 1000);
+          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, null, null, null, true), 1000);
       }
   }.bind(this);
 
@@ -414,13 +415,11 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
   .then(function(receipt) {
       if (receipt && receipt.blockHash) {
           if (defer.eventEmitter.listeners('confirmation').length > 0) {
-              // if the promise has not been resolved we must keep on watching for new Blocks, if a confrimation listener is present
-              setTimeout(function(){
-                  if (!promiseResolved) startWatching();
-              }, 1000);
+              // We must keep on watching for new Blocks, if a confirmation listener is present
+              startWatching(receipt);
           }
+          checkConfirmation(receipt, null, null, null);
 
-          return checkConfirmation(null, null, null, receipt);
       } else if (!promiseResolved) {
           startWatching();
       }
