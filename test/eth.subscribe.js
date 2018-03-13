@@ -163,6 +163,74 @@ var tests = [{
         '0000000000000000000000000000000000000000000000000000000000000008'
     }]
 },
+    {
+        protocol: 'eth',
+        args: ['logs',{address: ['0xDdf4d0A3c12e86b4B5f39B213f7E19d048276dAE','0xAaf4D0a3C12e86B4B5f39b213f7E19d048276daE']}],
+        firstResult: '0x4444',
+        firstPayload: {
+            method: "eth_subscribe",
+            params: ['logs',{address: ['0xddf4d0a3c12e86b4b5f39b213f7e19d048276dae','0xaaf4d0a3c12e86b4b5f39b213f7e19d048276dae'], topics: []}]
+        },
+        secondResult: true,
+        secondPayload: {
+            method: "eth_unsubscribe"
+        },
+        subscriptions: [{
+            subscription: '0x4444',
+            result: [{
+                logIndex: '0x23',
+                transactionHash: '0x2345fdfdf',
+                blockHash: '0x43534ffddd',
+                transactionIndex: '0x1',
+                blockNumber: '0x3222',
+                address: '0xddf4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                topics: [
+                    '0x0000000000000000000000000000000000000000000000000000000005656565'
+                ],
+                data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                '0000000000000000000000000000000000000000000000000000000000000008'
+            },{
+                logIndex: '0x23',
+                transactionHash: '0x2345fdfdd',
+                blockHash: '0x43534ffddd',
+                transactionIndex: '0x1',
+                blockNumber: '0x3222',
+                address: '0xddf4d0a3c12e86b4b5f39b213f7e19d048276dae',
+                topics: [
+                    '0x0000000000000000000000000000000000000000000000000000000005656565'
+                ],
+                data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+                '0000000000000000000000000000000000000000000000000000000000000008'
+            }]
+        }],
+        subscriptionResults: [{
+            id: "log_d43624aa",
+            blockHash: "0x43534ffddd",
+            blockNumber: 12834,
+            logIndex: 35,
+            transactionHash: '0x2345fdfdf',
+            transactionIndex: 1,
+            address: '0xDdf4d0A3c12e86b4B5f39B213f7E19d048276dAE', // checksum address
+            topics: [
+                '0x0000000000000000000000000000000000000000000000000000000005656565'
+            ],
+            data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+            '0000000000000000000000000000000000000000000000000000000000000008'
+        },{
+            id: "log_b20551f9",
+            blockHash: "0x43534ffddd",
+            blockNumber: 12834,
+            logIndex: 35,
+            transactionHash: '0x2345fdfdd',
+            transactionIndex: 1,
+            address: '0xDdf4d0A3c12e86b4B5f39B213f7E19d048276dAE', // checksum address
+            topics: [
+                '0x0000000000000000000000000000000000000000000000000000000005656565'
+            ],
+            data: '0x0000000000000000000000000000000000000000000000000000000000000001' +
+            '0000000000000000000000000000000000000000000000000000000000000008'
+        }]
+    },
 {
     protocol: 'eth',
     args: ['logs',{address: ['0xDdf4d0A3c12e86b4B5f39B213f7E19d048276dAE','0xAaf4D0a3C12e86B4B5f39b213f7E19d048276daE']}],
