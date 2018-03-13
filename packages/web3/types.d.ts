@@ -379,7 +379,7 @@ export declare class Eth {
     decodeParameters(types: EthAbiDecodeParametersType[], hex: string): EthAbiDecodeParametersResultObject
   }
   accounts: {
-    'new'(entropy?: string): Account
+    create(entropy?: string): Account
     privateKeyToAccount(privKey: string): Account
     publicToAddress(key: string): string
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
@@ -389,7 +389,7 @@ export declare class Eth {
     encrypt(privateKey: string, password: string): PrivateKey
     decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
-      'new'(numberOfAccounts: number, entropy: string): Account[]
+      create(numberOfAccounts: number, entropy: string): Account[]
       add(account: string | Account): any
       remove(account: string | number): any
       save(password: string, keyname?: string): string
