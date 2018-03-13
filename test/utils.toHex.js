@@ -28,11 +28,12 @@ var tests = [
     { value: {test: 'test'}, expected: '0x7b2274657374223a2274657374227d'},
     { value: '{"test": "test"}', expected: '0x7b2274657374223a202274657374227d'},
     { value: 'myString', expected: '0x6d79537472696e67'},
+    { value: '내가 제일 잘 나가', expected:'0xeb82b4eab08020eca09cec9dbc20ec9e9820eb8298eab080'},
     { value: new BigNumber(15), expected: '0xf'},
     { value: true, expected: '0x1'},
     { value: false, expected: '0x0'},
     { value: '\u0003\u0000\u0000\u00005èÆÕL]\u0012|Î¾\u001a7«\u00052\u0011(ÐY\n<\u0010\u0000\u0000\u0000\u0000\u0000\u0000e!ßd/ñõì\f:z¦Î¦±ç·÷Í¢Ëß\u00076*\bñùC1ÉUÀé2\u001aÓB',
-      expected: '0x0300000035e8c6d54c5d127c9dcebe9e1a37ab9b05321128d097590a3c100000000000006521df642ff1f5ec0c3a7aa6cea6b1e7b7f7cda2cbdf07362a85088e97f19ef94331c955c0e9321ad386428c'}
+      expected: '0x0300000035c3a8c386c3954c5d127cc29dc38ec2bec29e1a37c2abc29b05321128c390c297590a3c100000000000006521c39f642fc3b1c3b5c3ac0c3a7ac2a6c38ec2a6c2b1c3a7c2b7c3b7c38dc2a2c38bc39f07362ac28508c28ec297c3b1c29ec3b94331c38955c380c3a9321ac393c28642c28c'}
 ];
 
 describe('lib/utils/utils', function () {
