@@ -3004,7 +3004,7 @@ describe('typical usage', function() {
         //     done();
         // });
 
-    }).timeout(4000);
+    }).timeout(6000);
         // TODO add error check
 });
 

@@ -31,6 +31,7 @@ var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
 var TIMEOUTBLOCK = 50;
+var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEOUTBLOCK
 var CONFIRMATIONBLOCKS = 24;
 
 var Method = function Method(options) {
@@ -240,7 +241,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (existingReceipt, err, blockHeader, sub) {
+    var checkConfirmation = function (existingReceipt, err, blockHeader, sub, isPolling) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -373,10 +374,20 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             .catch(function () {
                 timeoutCount++;
 
-                if (timeoutCount - 1 >= TIMEOUTBLOCK) {
-                    sub.unsubscribe();
-                    promiseResolved = true;
-                    return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                // check to see if we are http polling
+                if(!!isPolling) {
+                    // polling timeout is different than TIMEOUTBLOCK blocks since we are triggering every second
+                    if (timeoutCount - 1 >= POLLINGTIMEOUT) {
+                        sub.unsubscribe();
+                        promiseResolved = true;
+                        return utils._fireError(new Error('Transaction was not mined within' + POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                    }
+                } else {
+                    if (timeoutCount - 1 >= TIMEOUTBLOCK) {
+                        sub.unsubscribe();
+                        promiseResolved = true;
+                        return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                    }
                 }
             });
 
@@ -394,7 +405,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
       if (_.isFunction(this.requestManager.provider.on)) {
           _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt));
       } else {
-          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt), 1000);
+          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, null, null, null, true), 1000);
       }
   }.bind(this);
 
