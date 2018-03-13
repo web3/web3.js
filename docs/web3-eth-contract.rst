@@ -637,6 +637,7 @@ Parameters
 1. ``options`` - ``Object`` (optional): The options used for calling.
     * ``from`` - ``String`` (optional): The address the call "transaction" should be made from.
     * ``gas`` - ``Number`` (optional): The maximum gas provided for this call "transaction" (gas limit). Setting a specific value helps to detect out of gas errors. If all gas is used it will return the same number.
+    * ``value`` - ``Number|String|BN|BigNumber``(optional): The value transferred for the call "transaction" in wei.
 2. ``callback`` - ``Function`` (optional): This callback will be fired with the result of the gas estimation as the second argument, or with an error object as the first argument.
 
 -------
