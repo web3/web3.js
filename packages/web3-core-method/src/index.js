@@ -241,7 +241,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (existingReceipt, err, blockHeader, sub, isPolling) {
+    var checkConfirmation = function (existingReceipt, isPolling, err, blockHeader, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -403,9 +403,9 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
   var startWatching = function(existingReceipt) {
       // if provider allows PUB/SUB
       if (_.isFunction(this.requestManager.provider.on)) {
-          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt));
+          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
       } else {
-          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, null, null, null, true), 1000);
+          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
       }
   }.bind(this);
 
@@ -418,7 +418,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
               // We must keep on watching for new Blocks, if a confirmation listener is present
               startWatching(receipt);
           }
-          checkConfirmation(receipt, null, null, null);
+          checkConfirmation(receipt, false);
 
       } else if (!promiseResolved) {
           startWatching();
