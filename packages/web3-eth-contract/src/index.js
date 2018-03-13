@@ -765,11 +765,12 @@ Contract.prototype._executeMethod = function _executeMethod(){
     if(args.generateRequest) {
 
         var payload = {
-            params: [formatters.inputCallFormatter.call(this._parent, args.options), formatters.inputDefaultBlockNumberFormatter.call(this._parent, args.defaultBlock)],
+            params: [formatters.inputCallFormatter.call(this._parent, args.options)],
             callback: args.callback
         };
 
         if(args.type === 'call') {
+            payload.params.push(formatters.inputDefaultBlockNumberFormatter.call(this._parent, args.defaultBlock));
             payload.method = 'eth_call';
             payload.format = this._parent._decodeMethodReturn.bind(null, this._method.outputs);
         } else {
