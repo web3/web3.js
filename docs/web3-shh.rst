@@ -769,7 +769,7 @@ Example
         web3.shh.newSymKey().then((id) => {identities.push(id);}),
         web3.shh.newKeyPair().then((id) => {identities.push(id);})
 
-    }).then(() => {
+    ]).then(() => {
 
         // will receive also its own message send, below
         subscription = shh.subscribe("messages", {
@@ -778,7 +778,7 @@ Example
         }).on('data', console.log);
 
     }).then(() => {
-       shh.post({
+       web3.shh.post({
             symKeyID: identities[0], // encrypts using the sym key ID
             sig: identities[1], // signs the message using the keyPair ID
             ttl: 10,
