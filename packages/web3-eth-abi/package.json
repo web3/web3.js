@@ -8,9 +8,9 @@
   "main": "src/index.js",
   "dependencies": {
     "bn.js": "4.11.6",
-    "ethers-contracts": "2.2.1",
+    "ethers": "3.0.4",
     "underscore": "1.8.3",
-    "web3-core-helpers": "1.0.0-beta.30",
-    "web3-utils": "1.0.0-beta.30"
+    "web3-core-helpers": "1.0.0-beta.31",
+    "web3-utils": "1.0.0-beta.31"
   }
 }
