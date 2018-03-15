@@ -156,7 +156,7 @@ Example
             console.log(result);
     })
     .on("data", function(transaction){
-        console.log(transaction);    
+        console.log(transaction);
     });
 
     // unsubscribes the subscription
@@ -226,7 +226,7 @@ Example
 .. code-block:: javascript
 
     var subscription = web3.eth.subscribe('newBlockHeaders', function(error, result){
-        if (!error)
+        if (error)
             console.log(error);
     })
     .on("data", function(blockHeader){
