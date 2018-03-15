@@ -68,7 +68,7 @@ var isDynamic = function (solidityType, type) {
 
 
 var ethersAbiCoder = new EthersAbi(function (type, value) {
-    if (type.match(/^u?int/) && !_.isArray(value) && !_.isObject(value)) { return value.toString(); }
+    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) { return value.toString(); }
     return value;
 });
 
@@ -351,15 +351,23 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         });
     }
 
-    var solidityTypes = this._getSolidityTypes(types);
-    var offsets = this._getOffsets(types, solidityTypes);
+    if (!bytes || bytes === '0x' || bytes === '0X') {
+        throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+    }
+
+    // var solidityTypes = this._getSolidityTypes(types);
+    // var offsets = this._getOffsets(types, solidityTypes);
+
+
+    var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
     var count = 0;
 
     outputs.forEach(function (output, i) {
-        var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
+        // var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
+        var decodedValue = res[i];
         decodedValue = (decodedValue === '0x') ? null : decodedValue;
 
         returnValue[i] = decodedValue;
