@@ -115,6 +115,12 @@ var Personal = function Personal() {
             inputFormatter: [formatters.inputTransactionFormatter, null]
         }),
         new Method({
+            name: 'signTransaction',
+            call: 'personal_signTransaction',
+            params: 2,
+            inputFormatter: [formatters.inputTransactionFormatter, null]
+        }),
+        new Method({
             name: 'sign',
             call: 'personal_sign',
             params: 3,
