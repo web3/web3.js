@@ -17,6 +17,7 @@ var exorcist = require('exorcist');
 var bower = require('bower');
 var streamify = require('gulp-streamify');
 var replace = require('gulp-replace');
+var exec = require('child_process').exec;
 
 var DEST = path.join(__dirname, 'dist/');
 
@@ -187,6 +188,11 @@ packages.forEach(function (pckg, i) {
             .pipe(rename(pckg.fileName + '.min.js'))
             .pipe(gulp.dest(DEST));
     });
+});
+
+
+gulp.task('publishTag', [], function () {
+    exec("git commit -am \"add tag "+ lernaJSON.version +"\"; git tag "+ lernaJSON.version +"; git push origin "+ lernaJSON.version +";");
 });
 
 gulp.task('watch', function () {
