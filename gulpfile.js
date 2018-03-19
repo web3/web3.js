@@ -191,8 +191,8 @@ packages.forEach(function (pckg, i) {
 });
 
 
-gulp.task('publishTag', [], function () {
-    exec("git commit -am \"add tag "+ lernaJSON.version +"\"; git tag "+ lernaJSON.version +"; git push origin "+ lernaJSON.version +";");
+gulp.task('publishTag', function () {
+    exec("git commit -am \"add tag v"+ lernaJSON.version +"\"; git tag v"+ lernaJSON.version +"; git push origin v"+ lernaJSON.version +";");
 });
 
 gulp.task('watch', function () {
