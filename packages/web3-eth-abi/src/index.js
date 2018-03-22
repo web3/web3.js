@@ -356,16 +356,14 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
     // var solidityTypes = this._getSolidityTypes(types);
     // var offsets = this._getOffsets(types, solidityTypes);
 
-
     var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
-    var count = 0;
 
     outputs.forEach(function (output, i) {
         // var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
-        var decodedValue = res[i];
+        var decodedValue = res[returnValue.__length__];
         decodedValue = (decodedValue === '0x') ? null : decodedValue;
 
         returnValue[i] = decodedValue;
@@ -375,7 +373,6 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         }
 
         returnValue.__length__++;
-        count++;
     });
 
     return returnValue;
@@ -411,9 +408,9 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     var notIndexedParams = this.decodeParameters(notIndexedInputs, nonIndexedData);
     var indexedParams = this.decodeParameters(indexedInputs, indexedData);
 
-
     var returnValue = new Result();
     returnValue.__length__ = 0;
+    
 
     inputs.forEach(function (res, i) {
         returnValue[i] = (res.type === 'string') ? '' : null;
