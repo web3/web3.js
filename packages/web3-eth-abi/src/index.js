@@ -328,9 +328,7 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
         throw new Error('Given parameter type is not a string: '+ type);
     }
 
-    return ethersAbiCoder.decode([type], '0x'+ bytes.replace(/0x/i,''))[0];
-
-    // return this.decodeParameters([{type: type}], bytes)[0];
+    return this.decodeParameters([{type: type}], bytes)[0];
 };
 
 /**
