@@ -886,6 +886,7 @@ Returns
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
   - ``blockNumber`` - ``Number``: Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
+  - ``status`` - ``String``: Status of transaction. ``0x1`` if successful, ``0x0`` if failed.
   - ``transactionIndex``- ``Number``: Integer of the transactions index position in the block.
   - ``from`` - ``String``: Address of the sender.
   - ``to`` - ``String``: Address of the receiver. ``null`` when its a contract creation transaction.
