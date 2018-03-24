@@ -355,7 +355,6 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
 
     // var solidityTypes = this._getSolidityTypes(types);
     // var offsets = this._getOffsets(types, solidityTypes);
-
     var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
 
     var returnValue = new Result();
@@ -405,12 +404,12 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     var nonIndexedData = data.slice(2);
     var indexedData = _.isArray(topics) ? topics.map(function (topic) { return topic.slice(2); }).join('') : topics;
 
-    var notIndexedParams = this.decodeParameters(notIndexedInputs, nonIndexedData);
-    var indexedParams = this.decodeParameters(indexedInputs, indexedData);
+    var notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+    var indexedParams = (indexedData) ? this.decodeParameters(indexedInputs, indexedData) : [];
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
-    
+
 
     inputs.forEach(function (res, i) {
         returnValue[i] = (res.type === 'string') ? '' : null;

@@ -1653,7 +1653,7 @@ var runTests = function(contractFactory) {
                 }, 'latest']);
             });
 
-            provider.injectResult('0x0');
+            provider.injectResult('0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000');
 
             contract.methods.getStr().call({from: address2}, function (err, result) {
                 assert.equal(result, '');
@@ -2767,6 +2767,7 @@ var runTests = function(contractFactory) {
             var provider = new FakeIpcProvider();
             var signature = 'owner()';
 
+
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
@@ -2776,7 +2777,7 @@ var runTests = function(contractFactory) {
                     'latest'
                 ]);
             });
-            provider.injectResult(addressLowercase);
+            provider.injectResult('0x000000000000000000000000'+ addressLowercase);
 
             var contract = contractFactory(abi, address, provider);
 
