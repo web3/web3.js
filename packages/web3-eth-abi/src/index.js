@@ -18,55 +18,13 @@
  * @file index.js
  * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@frozeman.de>
- * @date 2017
+ * @date 2018
  */
 
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var f = require('./formatters');
-
-var SolidityTypeAddress = require('./types/address');
-var SolidityTypeBool = require('./types/bool');
-var SolidityTypeInt = require('./types/int');
-var SolidityTypeUInt = require('./types/uint');
-var SolidityTypeDynamicBytes = require('./types/dynamicbytes');
-var SolidityTypeString = require('./types/string');
-var SolidityTypeBytes = require('./types/bytes');
-
 var EthersAbi = require('ethers/utils/abi-coder');
-
-
-var isDynamic = function (solidityType, type) {
-    return solidityType.isDynamicType(type) ||
-        solidityType.isDynamicArray(type);
-};
-
-// var transformOutput = function (result) {
-//     // transform BigNumber
-//     if (_.isObject(result) && result.constructor.name === 'BigNumber') {
-//         return result.toString();
-//     // transform Array
-//     } else if (_.isArray(result)) {
-//         return result.map(transformOutput);
-//     // transform Object
-//     } else if (_.isObject(result)) {
-//         for (var property in result) {
-//             if (result.hasOwnProperty(property)) {
-//                 result[property] = transformOutput(result[property]);
-//             }
-//         }
-//         return result;
-//     // stringify number
-//     } else if (isFinite(result) && !_.isBoolean(result)) {
-//         return String(result);
-//     } else {
-//         return result;
-//     }
-// };
-
-
-
 var ethersAbiCoder = new EthersAbi(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) { return value.toString(); }
     return value;
@@ -80,145 +38,7 @@ function Result() {}
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var ABICoder = function (types) {
-    this._types = types;
-};
-
-/**
- * This method should be used to transform type to SolidityType
- *
- * @method _requireType
- * @param {String} type
- * @returns {SolidityType}
- * @throws {Error} throws if no matching type is found
- */
-ABICoder.prototype._requireType = function (type) {
-    var solidityType = this._types.filter(function (t) {
-        return t.isType(type);
-    })[0];
-
-    if (!solidityType) {
-        throw Error('Invalid solidity type: ' + type);
-    }
-
-    return solidityType;
-};
-
-
-
-ABICoder.prototype._getOffsets = function (types, solidityTypes) {
-    var lengths =  solidityTypes.map(function (solidityType, index) {
-        return solidityType.staticPartLength(types[index]);
-    });
-
-    for (var i = 1; i < lengths.length; i++) {
-        // sum with length of previous element
-        lengths[i] += lengths[i - 1];
-    }
-
-    return lengths.map(function (length, index) {
-        // remove the current length, so the length is sum of previous elements
-        var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
-        return length - staticPartLength;
-    });
-};
-
-ABICoder.prototype._getSolidityTypes = function (types) {
-    var self = this;
-    return types.map(function (type) {
-        return self._requireType(type);
-    });
-};
-
-
-ABICoder.prototype._encodeMultiWithOffset = function (types, solidityTypes, encodeds, dynamicOffset) {
-    var result = "";
-    var self = this;
-
-    types.forEach(function (type, i) {
-        if (isDynamic(solidityTypes[i], types[i])) {
-            result += f.formatInputInt(dynamicOffset).encode();
-            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-            dynamicOffset += e.length / 2;
-        } else {
-            // don't add length to dynamicOffset. it's already counted
-            result += self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-        }
-
-        // TODO: figure out nested arrays
-    });
-
-    types.forEach(function (type, i) {
-        if (isDynamic(solidityTypes[i], types[i])) {
-            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-            dynamicOffset += e.length / 2;
-            result += e;
-        }
-    });
-    return result;
-};
-
-// TODO: refactor whole encoding!
-ABICoder.prototype._encodeWithOffset = function (type, solidityType, encoded, offset) {
-    var self = this;
-    if (solidityType.isDynamicArray(type)) {
-        return (function () {
-            // offset was already set
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = encoded[0];
-
-            (function () {
-                var previousLength = 2; // in int
-                if (solidityType.isDynamicArray(nestedName)) {
-                    for (var i = 1; i < encoded.length; i++) {
-                        previousLength += +(encoded[i - 1])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
-                }
-            })();
-
-            // first element is length, skip it
-            (function () {
-                for (var i = 0; i < encoded.length - 1; i++) {
-                    var additionalOffset = result / 2;
-                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i + 1], offset +  additionalOffset);
-                }
-            })();
-
-            return result;
-        })();
-
-    } else if (solidityType.isStaticArray(type)) {
-        return (function () {
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = "";
-
-
-            if (solidityType.isDynamicArray(nestedName)) {
-                (function () {
-                    var previousLength = 0; // in int
-                    for (var i = 0; i < encoded.length; i++) {
-                        // calculate length of previous item
-                        previousLength += +(encoded[i - 1] || [])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
-                })();
-            }
-
-            (function () {
-                for (var i = 0; i < encoded.length; i++) {
-                    var additionalOffset = result / 2;
-                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i], offset + additionalOffset);
-                }
-            })();
-
-            return result;
-        })();
-    }
-
-    return encoded;
+var ABICoder = function () {
 };
 
 
@@ -276,31 +96,14 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
     // given a json interface
-    if(_.isObject(types) && types.inputs) {
+    if (_.isObject(types) && types.inputs) {
         types = _.map(types.inputs, function (input) {
             return input.type;
         });
     }
 
-    var solidityTypes = this._getSolidityTypes(types);
-
-    // var encodeds = solidityTypes.map(function (solidityType, index) {
-    //     return solidityType.encode(params[index], types[index]);
-    // });
-
     return ethersAbiCoder.encode(types, params);
-
-    // var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
-    //     var staticPartLength = solidityType.staticPartLength(types[index]);
-    //     var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
-    //
-    //     return acc + (isDynamic(solidityTypes[index], types[index]) ?
-    //             32 :
-    //             roundedStaticPartLength);
-    // }, 0);
-
-    // return '0x'+ this._encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
-};
+}
 
 
 /**
@@ -355,15 +158,12 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    // var solidityTypes = this._getSolidityTypes(types);
-    // var offsets = this._getOffsets(types, solidityTypes);
     var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
     outputs.forEach(function (output, i) {
-        // var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
         var decodedValue = res[returnValue.__length__];
         decodedValue = (decodedValue === '0x') ? null : decodedValue;
 
@@ -434,14 +234,6 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 };
 
 
-var coder = new ABICoder([
-    new SolidityTypeAddress(),
-    new SolidityTypeBool(),
-    new SolidityTypeInt(),
-    new SolidityTypeUInt(),
-    new SolidityTypeDynamicBytes(),
-    new SolidityTypeBytes(),
-    new SolidityTypeString()
-]);
+var coder = new ABICoder();
 
 module.exports = coder;
