@@ -103,7 +103,7 @@ ABICoder.prototype.encodeParameters = function (types, params) {
     }
 
     return ethersAbiCoder.encode(types, params);
-}
+};
 
 
 /**

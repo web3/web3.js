@@ -2777,7 +2777,7 @@ var runTests = function(contractFactory) {
                     'latest'
                 ]);
             });
-            provider.injectResult('0x000000000000000000000000'+ addressLowercase);
+            provider.injectResult('0x000000000000000000000000'+ addressLowercase.replace('0x',''));
 
             var contract = contractFactory(abi, address, provider);
 
