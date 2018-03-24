@@ -284,20 +284,22 @@ ABICoder.prototype.encodeParameters = function (types, params) {
 
     var solidityTypes = this._getSolidityTypes(types);
 
-    var encodeds = solidityTypes.map(function (solidityType, index) {
-        return solidityType.encode(params[index], types[index]);
-    });
+    // var encodeds = solidityTypes.map(function (solidityType, index) {
+    //     return solidityType.encode(params[index], types[index]);
+    // });
 
-    var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
-        var staticPartLength = solidityType.staticPartLength(types[index]);
-        var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
+    return ethersAbiCoder.encode(types, params);
 
-        return acc + (isDynamic(solidityTypes[index], types[index]) ?
-                32 :
-                roundedStaticPartLength);
-    }, 0);
+    // var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
+    //     var staticPartLength = solidityType.staticPartLength(types[index]);
+    //     var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
+    //
+    //     return acc + (isDynamic(solidityTypes[index], types[index]) ?
+    //             32 :
+    //             roundedStaticPartLength);
+    // }, 0);
 
-    return '0x'+ this._encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
+    // return '0x'+ this._encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
 };
 
 

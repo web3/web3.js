@@ -71,8 +71,8 @@ describe('contract', function () {
             var contract = new eth.Contract(abi);
 
             var test = function () {
-                contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(63)), '0x'.concat('b'.repeat(63))).encodeABI();
-            }
+                return contract.methods.takesTwoBytes32('0x'.concat('a'.repeat(63)), '0x'.concat('b'.repeat(63))).encodeABI();
+            };
 
             assert.throws(test, 'Given parameter bytes has an invalid length: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"');
         });
