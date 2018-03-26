@@ -264,7 +264,7 @@ Returns
 ``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
 - ``"data"`` returns ``Object``: Fires on each incoming sync object as argument.
-- ``"changed"`` returns ``Object``: Fires when the synchronisation is started with ``true`` and when finsihed with ``false``.
+- ``"changed"`` returns ``Object``: Fires when the synchronisation is started with ``true`` and when finished with ``false``.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
 
 For the structure of a returned event ``Object`` see :ref:`web3.eth.isSyncing return values <eth-issyncing-return>`.
