@@ -5,7 +5,8 @@
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC",
   "main": "./index.js",
   "directories": {
-    "lib": "./lib"
+    "lib": "./lib",
+    "dist": "./dist"
   },
   "dependencies": {
     "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",

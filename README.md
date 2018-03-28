@@ -46,6 +46,13 @@ meteor add ethereum:web3
 ```
 
 ### As Browser module
+
+CDN
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/web3@0.20.6/dist/web3.min.js"></script>
+```
+
 Bower
 
 ```bash
