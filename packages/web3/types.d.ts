@@ -459,11 +459,11 @@ export declare class Net {
 export declare class Personal {
   newAccount(password: string, cb?: Callback<boolean>): Promise<string>
   importRawKey(): Promise<string>
-  lockAccount(): void
+  lockAccount(): Promise<boolean>
   unlockAccount(): void
   sign(): Promise<string>
   ecRecover(message:string, sig:string):void
-  sendTransaction(tx:Transaction, passphrase:string):string
+  sendTransaction(tx:Tx, passphrase:string):Promise<string>
 }
 export declare class Shh { }
 export declare class Bzz { }
