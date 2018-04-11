@@ -26,21 +26,38 @@ var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 
 var Ws = null;
+var _btoa = null;
+var _URL = null;
 if (typeof window !== 'undefined') {
     Ws = window.WebSocket;
+    _btoa = btoa;
+    _URL = URL;
 } else {
     Ws = require('websocket').w3cwebsocket;
+    _btoa = function(str) {
+      return Buffer(str).toString('base64');
+    };
+    _URL = require('url').URL;
 }
 // Default connection ws://localhost:8546
 
 
 
-var WebsocketProvider = function WebsocketProvider(url)  {
+var WebsocketProvider = function WebsocketProvider(url, headers)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-    this.connection = new Ws(url);
 
+    // The w3cwebsocket implementation does not support Basic Auth
+    // username/password in the URL. So generate the basic auth header, and
+    // pass through with any additional headers supplied in constructor
+    var parsedURL = new _URL(url);
+    headers = headers || {};
+    if (parsedURL.username && parsedURL.password) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
+    }
+
+    this.connection = new Ws(url, undefined, undefined, headers);
 
     this.addDefaultEvents();
 
