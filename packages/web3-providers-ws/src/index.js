@@ -27,17 +27,20 @@ var errors = require('web3-core-helpers').errors;
 
 var Ws = null;
 var _btoa = null;
-var _URL = null;
+var parseURL = null;
 if (typeof window !== 'undefined') {
     Ws = window.WebSocket;
     _btoa = btoa;
-    _URL = URL;
+    parseURL = function(url) {
+        return new URL(url);
+    };
 } else {
     Ws = require('websocket').w3cwebsocket;
     _btoa = function(str) {
       return Buffer(str).toString('base64');
     };
-    _URL = require('url').URL;
+    // Web3 supports Node.js 5, so we need to use the legacy URL API
+    parseURL = require('url').parse;
 }
 // Default connection ws://localhost:8546
 
@@ -51,7 +54,7 @@ var WebsocketProvider = function WebsocketProvider(url, headers)  {
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
-    var parsedURL = new _URL(url);
+    var parsedURL = parseURL(url);
     headers = headers || {};
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
