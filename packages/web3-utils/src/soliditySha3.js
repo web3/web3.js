@@ -181,8 +181,8 @@ var _processSoliditySha3Args = function (arg) {
 
     // if type is given
     if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
-        type = arg.t || arg.type;
-        value = arg.v || arg.value;
+        type = arg.hasOwnProperty('t') ? arg.t : arg.type;
+        value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 
     // otherwise try to guess the type
     } else {
