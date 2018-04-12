@@ -25,6 +25,10 @@ var tests = [{
     providerType: 'WebsocketProvider',
     package: Web3
 },{
+    providerParams: ['wss://user1:passw0rd@localhost:8546'],
+    providerType: 'WebsocketProvider',
+    package: Web3
+},{
     providerParams: ['/.ethereum/my/path/geth.ipc', net],
     providerType: 'IpcProvider',
     package: Web3
