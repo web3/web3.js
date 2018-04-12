@@ -133,6 +133,7 @@ npm test
  - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)
+ - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
 
 
 [npm-image]: https://badge.fury.io/js/web3.svg
