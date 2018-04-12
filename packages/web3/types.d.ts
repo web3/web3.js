@@ -88,7 +88,7 @@ export declare interface Transaction {
 export declare interface EventLog {
   event: string
   address: string
-  returnValues: object
+  returnValues: any
   logIndex: number
   transactionIndex: number
   transactionHash: string
