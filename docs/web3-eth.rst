@@ -1060,7 +1060,7 @@ sendSignedTransaction
 
     web3.eth.sendSignedTransaction(signedTransactionData [, callback])
 
-Sends an already signed transaction. For example can be signed using: `ethereumjs-accounts <https://github.com/SilentCicero/ethereumjs-accounts>`_
+Sends an already signed transaction, generated for example using :ref:`web3.eth.accounts.signTransaction <eth-accounts-signtransaction>`.
 
 ----------
 Parameters
