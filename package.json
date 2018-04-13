@@ -1,7 +1,7 @@
 {
   "name": "web3",
   "namespace": "ethereum",
-  "version": "1.0.0-beta.33",
+  "version": "1.0.0-beta.34",
   "description": "Ethereum JavaScript API wrapper repository",
   "license": "LGPL-3.0",
   "main": "./packages/web3/src/index.js",
@@ -13,7 +13,7 @@
     "postinstall": "lerna bootstrap",
     "build": "gulp",
     "build-all": "gulp all",
-    "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag",
+    "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
     "watch": "gulp watch",
     "docs": "cd docs; make html;",
     "lint": "jshint *.js packages",
