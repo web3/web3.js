@@ -52,7 +52,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
 
-    options = options || {}
+    options = options || {};
     this._customTimeout = options.timeout;
 
     // The w3cwebsocket implementation does not support Basic Auth
