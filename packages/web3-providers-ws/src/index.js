@@ -50,54 +50,7 @@ var WebsocketProvider = function WebsocketProvider(url, headers)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-
-    // The w3cwebsocket implementation does not support Basic Auth
-    // username/password in the URL. So generate the basic auth header, and
-    // pass through with any additional headers supplied in constructor
-    var parsedURL = parseURL(url);
-    headers = headers || {};
-    if (parsedURL.username && parsedURL.password) {
-        headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
-    }
-
-    this.connection = new Ws(url, undefined, undefined, headers);
-
-    this.addDefaultEvents();
-
-
-    // LISTEN FOR CONNECTION RESPONSES
-    this.connection.onmessage = function(e) {
-        /*jshint maxcomplexity: 6 */
-        var data = (typeof e.data === 'string') ? e.data : '';
-
-        _this._parseResponse(data).forEach(function(result){
-
-            var id = null;
-
-            // get the id which matches the returned id
-            if(_.isArray(result)) {
-                result.forEach(function(load){
-                    if(_this.responseCallbacks[load.id])
-                        id = load.id;
-                });
-            } else {
-                id = result.id;
-            }
-
-            // notification
-            if(!id && result.method.indexOf('_subscription') !== -1) {
-                _this.notificationCallbacks.forEach(function(callback){
-                    if(_.isFunction(callback))
-                        callback(result);
-                });
-
-                // fire the callback
-            } else if(_this.responseCallbacks[id]) {
-                _this.responseCallbacks[id](null, result);
-                delete _this.responseCallbacks[id];
-            }
-        });
-    };
+    this.connect(url, headers);
 };
 
 /**
@@ -117,6 +70,11 @@ WebsocketProvider.prototype.addDefaultEvents = function(){
 
         // reset all requests and callbacks
         _this.reset();
+
+        // Automatically attempt re-connect every second
+        setTimeout(function() {
+            _this.connect(_this.url, _this.headers);
+        }, 1000);
     };
 
     // this.connection.on('timeout', function(){
@@ -346,5 +304,65 @@ WebsocketProvider.prototype.reset = function () {
 
     this.addDefaultEvents();
 };
+
+/**
+ connect to the given URL
+
+ @method connect
+ @param {String} url
+ @param {Object} headers
+ */
+WebsocketProvider.prototype.connect = function(url, headers){
+    var _this = this;
+    this.url = url;
+    this.headers = headers;
+
+    // The w3cwebsocket implementation does not support Basic Auth
+    // username/password in the URL. So generate the basic auth header, and
+    // pass through with any additional headers supplied in constructor
+    var parsedURL = parseURL(url);
+    headers = headers || {};
+    if (parsedURL.username && parsedURL.password) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
+    }
+
+    this.connection = new Ws(url, undefined, undefined, headers);
+
+    this.addDefaultEvents();
+
+    // LISTEN FOR CONNECTION RESPONSES
+    this.connection.onmessage = function(e) {
+        /*jshint maxcomplexity: 6 */
+        var data = (typeof e.data === 'string') ? e.data : '';
+
+        _this._parseResponse(data).forEach(function(result){
+
+            var id = null;
+
+            // get the id which matches the returned id
+            if(_.isArray(result)) {
+                result.forEach(function(load){
+                    if(_this.responseCallbacks[load.id])
+                        id = load.id;
+                });
+            } else {
+                id = result.id;
+            }
+
+            // notification
+            if(!id && result.method.indexOf('_subscription') !== -1) {
+                _this.notificationCallbacks.forEach(function(callback){
+                    if(_.isFunction(callback))
+                        callback(result);
+                });
+
+                // fire the callback
+            } else if(_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](null, result);
+                delete _this.responseCallbacks[id];
+            }
+        });
+    };
+}
 
 module.exports = WebsocketProvider;
