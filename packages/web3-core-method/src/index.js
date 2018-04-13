@@ -348,7 +348,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 if (!isContractDeployment && !promiseResolved) {
 
                     if(!receipt.outOfGas &&
-                       (!gasProvided || gasProvided !== receipt.gasUsed)) {
+                       (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                        receipt.status !== '0x0') {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
 
@@ -361,7 +362,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         if(receipt) {
                             receipt = JSON.stringify(receipt, null, 2);
                         }
-                        utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n"+ receipt), defer.eventEmitter, defer.reject);
+                        if (receipt.status === '0x0') {
+                            utils._fireError(new Error("Transaction has been reverted by contract:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        } else {
+                            utils._fireError(
+                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        }
                     }
 
                     if (canUnsubscribe) {
