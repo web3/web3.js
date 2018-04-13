@@ -46,16 +46,20 @@ if (typeof window !== 'undefined') {
 
 
 
-var WebsocketProvider = function WebsocketProvider(url, headers)  {
+
+var WebsocketProvider = function WebsocketProvider(url, options)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
+
+    options = options || {}
+    this._customTimeout = options.timeout;
 
     // The w3cwebsocket implementation does not support Basic Auth
     // username/password in the URL. So generate the basic auth header, and
     // pass through with any additional headers supplied in constructor
     var parsedURL = parseURL(url);
-    headers = headers || {};
+    var headers = options.headers || {};
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
@@ -180,7 +184,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
 
 /**
- Get the adds a callback to the responseCallbacks object,
+ Adds a callback to the responseCallbacks object,
  which will be called if a response matching the response Id will arrive.
 
  @method _addResponseCallback
@@ -191,6 +195,18 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 
     this.responseCallbacks[id] = callback;
     this.responseCallbacks[id].method = method;
+
+    var _this = this;
+
+    // schedule triggering the error response if a custom timeout is set
+    if (this._customTimeout) {
+        setTimeout(function () {
+            if (_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](errors.ConnectionTimeout(_this._customTimeout));
+                delete _this.responseCallbacks[id];
+            }
+        }, this._customTimeout);
+    }
 };
 
 /**
