@@ -753,7 +753,7 @@ Parameters
 Returns
 -------
 
-``Boolean`` - returns ``true`` if the message was send, otherwise ``false`` or error.
+``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
 
 
 -------
@@ -786,7 +786,8 @@ Example
             payload: '0xffffffdddddd1122',
             powTime: 3,
             powTarget: 0.5
-        })
+        }).then(h => console.log(`Message with hash ${h} was successfuly sent`))
+        .catch(err => console.log("Error: ", err));
     });
 
 
