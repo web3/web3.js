@@ -88,7 +88,7 @@ export declare interface Transaction {
 export declare interface EventLog {
   event: string
   address: string
-  returnValues: object
+  returnValues: any
   logIndex: number
   transactionIndex: number
   transactionHash: string
@@ -230,7 +230,7 @@ export declare interface Tx {
 
 }
 export declare interface IProvider {
-  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
+  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void): any
 }
 export declare interface WebsocketProvider extends IProvider {
   responseCallbacks: object
@@ -272,10 +272,10 @@ export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
 export declare interface Utils {
   BN: BigNumber // TODO only static-definition
-  isBN(any): boolean
-  isBigNumber(any): boolean
-  isAddress(any): boolean
-  isHex(any): boolean
+  isBN(any: any): boolean
+  isBigNumber(any: any): boolean
+  isAddress(any: any): boolean
+  isHex(any: any): boolean
   _: us.UnderscoreStatic
   asciiToHex(val: string): string
   hexToAscii(val: string): string
@@ -296,12 +296,12 @@ export declare interface Utils {
   padLeft(string: string, chars: number, sign: string): string
   rightPad(string: string, chars: number, sign: string): string
   padRight(string: string, chars: number, sign: string): string
-  sha3(val: string, val2?:string, val3?:string, val4?:string, val5?:string): string
+  sha3(val: string, val2?: string, val3?: string, val4?: string, val5?: string): string
   soliditySha3(val: string): string
   randomHex(bytes: number): string
   stringToHex(val: string): string
   toAscii(hex: string): string
-  toBN(any): BigNumber
+  toBN(any: any): BigNumber
   toChecksumAddress(val: string): string
   toDecimal(val: any): number
   toHex(val: any): string
@@ -319,7 +319,7 @@ export declare interface Contract {
     gas: number
   }
   methods: {
-    [fnName: string]: (...args) => TransactionObject<any>
+    [fnName: string]: (...args: any[]) => TransactionObject<any>
   }
   deploy(options: {
     data: string
@@ -385,7 +385,7 @@ export declare class Eth {
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
     sign(data: string, privateKey: string, returnSignature?: boolean): string | Signature
-    recover(sigOrHash: string | Signature, sigOrV ?: string, r ?: string, s ?: string): string
+    recover(sigOrHash: string | Signature, sigOrV?: string, r?: string, s?: string): string
     encrypt(privateKey: string, password: string): PrivateKey
     decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
@@ -457,12 +457,13 @@ export declare class Net {
   getPeerCount(cb?: Callback<number>): Promise<number>
 }
 export declare class Personal {
-  newAccount(password: string, cb?: Callback<boolean>): Promise<boolean>
-  getAccounts(cb?: Callback<Array<string>>): Promise<Array<string>>
-  importRawKey()
-  lockAccount()
-  unlockAccount()
-  sign()
+  newAccount(password: string, cb?: Callback<boolean>): Promise<string>
+  importRawKey(): Promise<string>
+  lockAccount(): Promise<boolean>
+  unlockAccount(): void
+  sign(): Promise<string>
+  ecRecover(message:string, sig:string):void
+  sendTransaction(tx:Tx, passphrase:string):Promise<string>
 }
 export declare class Shh { }
 export declare class Bzz { }

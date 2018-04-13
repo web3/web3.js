@@ -348,7 +348,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 if (!isContractDeployment && !promiseResolved) {
 
                     if(!receipt.outOfGas &&
-                       (!gasProvided || gasProvided !== receipt.gasUsed)) {
+                        (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                        (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
 
@@ -361,7 +362,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         if(receipt) {
                             receipt = JSON.stringify(receipt, null, 2);
                         }
-                        utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n"+ receipt), defer.eventEmitter, defer.reject);
+                        if (receipt.status === false || receipt.status === '0x0') {
+                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        } else {
+                            utils._fireError(
+                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        }
                     }
 
                     if (canUnsubscribe) {
@@ -400,34 +408,34 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         }
     };
 
-  // start watching for confirmation depending on the support features of the provider
-  var startWatching = function(existingReceipt) {
-      // if provider allows PUB/SUB
-      if (_.isFunction(this.requestManager.provider.on)) {
-          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
-      } else {
-          intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
-      }
-  }.bind(this);
+    // start watching for confirmation depending on the support features of the provider
+    var startWatching = function(existingReceipt) {
+        // if provider allows PUB/SUB
+        if (_.isFunction(this.requestManager.provider.on)) {
+            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
+        } else {
+            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+    }.bind(this);
 
 
-  // first check if we already have a confirmed transaction
-  _ethereumCall.getTransactionReceipt(result)
-  .then(function(receipt) {
-      if (receipt && receipt.blockHash) {
-          if (defer.eventEmitter.listeners('confirmation').length > 0) {
-              // We must keep on watching for new Blocks, if a confirmation listener is present
-              startWatching(receipt);
-          }
-          checkConfirmation(receipt, false);
+    // first check if we already have a confirmed transaction
+    _ethereumCall.getTransactionReceipt(result)
+    .then(function(receipt) {
+        if (receipt && receipt.blockHash) {
+            if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                // We must keep on watching for new Blocks, if a confirmation listener is present
+                startWatching(receipt);
+            }
+            checkConfirmation(receipt, false);
 
-      } else if (!promiseResolved) {
-          startWatching();
-      }
-  })
-  .catch(function(){
-      if (!promiseResolved) startWatching();
-  });
+        } else if (!promiseResolved) {
+            startWatching();
+        }
+    })
+    .catch(function(){
+        if (!promiseResolved) startWatching();
+    });
 
 };
 
@@ -493,7 +501,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-            // return PROMIEVENT
+                // return PROMIEVENT
             } else {
                 defer.eventEmitter.emit('transactionHash', result);
 
@@ -530,7 +538,7 @@ Method.prototype.buildCall = function() {
                         return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx);
                     }
 
-                // ETH_SIGN
+                    // ETH_SIGN
                 } else if (payload.method === 'eth_sign') {
                     var data = payload.params[1];
                     wallet = getWallet(payload.params[0], method.accounts);

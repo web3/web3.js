@@ -169,6 +169,10 @@ var tests = [{
     ], expected: '0x1dcd26e646452836052e2a57400510aa63e07aede06fa43660cb6054edacfce0'
 },{
     values: [
+        {v: 0, t: 'uint'}
+    ], expected: '0x290decd9548b62a8d60345a988386fc84ba6bc95484008f6362f93160ef3e563'
+},{
+    values: [
         ['someValue'] // should error
     ], expected: ''
 }];
