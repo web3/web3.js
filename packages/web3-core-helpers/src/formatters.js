@@ -216,6 +216,10 @@ var outputTransactionReceiptFormatter = function (receipt){
         receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
     }
 
+    if(typeof receipt.status !== 'undefined') {
+        receipt.status = Boolean(parseInt(receipt.status));
+    }
+
     return receipt;
 };
 
