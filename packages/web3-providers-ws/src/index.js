@@ -28,7 +28,7 @@ var errors = require('web3-core-helpers').errors;
 var Ws = null;
 var _btoa = null;
 var parseURL = null;
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     Ws = window.WebSocket;
     _btoa = btoa;
     parseURL = function(url) {
