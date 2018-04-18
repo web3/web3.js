@@ -10,9 +10,11 @@ To migrate to this version, please follow the guide:
 ```
 
 
-# Ethereum JavaScript API
+# Ethereum JavaScript API, middleware to talk to a ethereum node over RPC with ZSL and Quorum functions
 
-[![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+This is a forked version of the web3 API for ethereum which provides extensions for quorum and the zsl library.
+
+You will need to run Quorum with the ZSL precompiles installed to get full functionality.
 
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
 which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
@@ -119,6 +121,40 @@ npm run-script build
 
 ```bash
 npm test
+```
+
+
+### Quorum functions
+
+```
+web3.quorum.nodeInfo
+web3.quorum.isBlockMaker(address)
+web3.quorum.isVoter(address)
+web3.quorum.canonicalHash(blockHash)
+web3.quorum.makeBlock()
+web3.quorum.vote()
+web3.quorum.pauseBlockMaker()
+web3.quorum.resumeBlockMaker()
+```
+
+### ZSL functions
+
+```
+web3.zsl.loadTracker(filename) returns JSON
+web3.zsl.saveTracker(filename, JSON) returns bool
+web3.zsl.getCommitment(rho, pk, value) returns hash
+web3.zsl.getSendNullifier(rho) returns hash
+web3.zsl.createShielding(rho, pk, value) returns proof
+web3.zsl.createUnshielding(rho, sk, value, treeIndex, authPath) returns proof
+web3.zsl.createShieldedTransfer(rho1, sk1, value1, treeIndex1, authPath1, rho2, sk2, value2, treeIndex2, authPath2, outrho1, outpk1, outvalue1, outrho2, outpk2, outvalue2) returns proof
+web3.zsl.verifyShieldedTransfer(proof, anchor, spend_nf1, spend_nf2, send_nf1, send_nf2, commitment1, commitment2) returns bool
+web3.zsl.verifyShielding(proof, send_nf, commitment, value) returns bool
+web3.zsl.verifyUnshielding(proof, spend_nf, root, value) returns bool
+web3.zsl.getNewAddress() returns keypair
+web3.zsl.getRandomness() returns buffer
+web3.zsl.debugShielding() returns bool
+web3.zsl.debugUnshielding() returns bool
+web3.zsl.debugShieldedTransfer90 returns bool
 ```
 
 ### Community
