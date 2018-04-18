@@ -1,7 +1,7 @@
 {
   "name": "zsl-web3",
   "namespace": "ethereum",
-  "version": "0.1.0",
+  "version": "0.20.6",
   "description": "Ethereum JavaScript API, middleware to talk to a ethereum node over RPC with ZSL and quorum functions",
   "main": "./index.js",
   "directories": {

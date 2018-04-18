@@ -1,18 +1,7 @@
-# Migration 0.13.0 -> 0.14.0
 
-web3.js version 0.14.0 supports [multiple instances of web3](https://github.com/ethereum/web3.js/issues/297) object.
-To migrate to this version, please follow the guide:
+# Quorum JavaScript API, middleware to talk with a Quorum node over RPC with ZSL functions
 
-```diff
--var web3 = require('web3');
-+var Web3 = require('web3');
-+var web3 = new Web3();
-```
-
-
-# Ethereum JavaScript API, middleware to talk to a ethereum node over RPC with ZSL and Quorum functions
-
-This is a forked version of the web3 API for ethereum which provides extensions for quorum and the zsl library.
+This is a forked version of the web3 API form ethereum which provides extensions for quorum and the zsl library.
 
 You will need to run Quorum with the ZSL precompiles installed to get full functionality.
 
@@ -156,6 +145,19 @@ web3.zsl.debugShielding() returns bool
 web3.zsl.debugUnshielding() returns bool
 web3.zsl.debugShieldedTransfer90 returns bool
 ```
+
+## Migration 0.13.0 -> 0.14.0
+
+web3.js version 0.14.0 supports [multiple instances of web3](https://github.com/ethereum/web3.js/issues/297) object.
+To migrate to this version, please follow the guide:
+
+```diff
+-var web3 = require('web3');
++var Web3 = require('web3');
++var web3 = new Web3();
+```
+
+
 
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
