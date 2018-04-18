@@ -50,7 +50,7 @@ meteor add ethereum:web3
 CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/web3@0.20.6/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
 ```
 
 Bower
