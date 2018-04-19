@@ -143,7 +143,7 @@ web3.zsl.getNewAddress() returns keypair
 web3.zsl.getRandomness() returns buffer
 web3.zsl.debugShielding() returns bool
 web3.zsl.debugUnshielding() returns bool
-web3.zsl.debugShieldedTransfer90 returns bool
+web3.zsl.debugShieldedTransfer() returns bool
 ```
 
 ## Migration 0.13.0 -> 0.14.0
