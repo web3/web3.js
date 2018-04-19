@@ -40,6 +40,7 @@ HttpProvider.prototype._prepareRequest = function(){
 
     request.open('POST', this.host, true);
     request.setRequestHeader('Content-Type','application/json');
+    request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
 
     if(this.headers) {
         this.headers.forEach(function(header) {
