@@ -42,9 +42,9 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     var url = require('url');
     if (url.URL) {
         // Use the new Node 6+ API for parsing URLs that supports username/password
-        var URL = url.URL;
+        var newURL = url.URL;
         parseURL = function(url) {
-            return new URL(url);
+            return new newURL(url);
         };
     }
     else {
