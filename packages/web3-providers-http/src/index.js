@@ -34,6 +34,21 @@ var HttpProvider = function HttpProvider(host, timeout) {
     this.connected = false;
 };
 
+HttpProvider.prototype._prepareRequest = function(){
+    var request = new XHR2();
+
+    request.open('POST', this.host, true);
+    request.setRequestHeader('Content-Type','application/json');
+    request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
+
+    if(this.headers) {
+        this.headers.forEach(function(header) {
+            request.setRequestHeader(header.name, header.value);
+        });
+    }
+
+    return request;
+};
 
 /**
  * Should be used to make async request
