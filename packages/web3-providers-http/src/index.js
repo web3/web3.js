@@ -28,11 +28,12 @@ var XHR2 = require('xhr2'); // jshint ignore: line
 /**
  * HttpProvider should be used to send rpc calls over http
  */
-var HttpProvider = function HttpProvider(host, timeout, headers) {
+var HttpProvider = function HttpProvider(host, options) {
+    options = options || {};
     this.host = host || 'http://localhost:8545';
-    this.timeout = timeout || 0;
+    this.timeout = options.timeout || 0;
+    this.headers = options.headers;
     this.connected = false;
-    this.headers = headers;
 };
 
 HttpProvider.prototype._prepareRequest = function(){
