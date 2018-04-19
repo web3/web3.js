@@ -31,6 +31,7 @@ var promiEvent = require('web3-core-promievent');
 var Subscriptions = require('web3-core-subscriptions').subscriptions;
 
 var TIMEOUTBLOCK = 50;
+var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEOUTBLOCK
 var CONFIRMATIONBLOCKS = 24;
 
 var Method = function Method(options) {
@@ -240,7 +241,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
 
     // fire "receipt" and confirmation events and resolve after
-    var checkConfirmation = function (err, blockHeader, sub, existingReceipt) {
+    var checkConfirmation = function (existingReceipt, isPolling, err, blockHeader, sub) {
         if (!err) {
             // create fake unsubscribe
             if (!sub) {
@@ -260,7 +261,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
-
                 if (!receipt || !receipt.blockHash) {
                     throw new Error('Receipt missing or blockHash null');
                 }
@@ -273,7 +273,12 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 // check if confirmation listener exists
                 if (defer.eventEmitter.listeners('confirmation').length > 0) {
 
-                    defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                    // If there was an immediately retrieved receipt, it's already
+                    // been confirmed by the direct call to checkConfirmation needed
+                    // for parity instant-seal
+                    if (existingReceipt === undefined || confirmationCount !== 0){
+                        defer.eventEmitter.emit('confirmation', confirmationCount, receipt);
+                    }
 
                     canUnsubscribe = false;
                     confirmationCount++;
@@ -298,7 +303,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                             promiseResolved = true;
                         }
 
-                        return utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
+                        utils._fireError(new Error('The transaction receipt didn\'t contain a contract address.'), defer.eventEmitter, defer.reject);
+                        return;
                     }
 
                     _ethereumCall.getCode(receipt.contractAddress, function (e, code) {
@@ -342,7 +348,8 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                 if (!isContractDeployment && !promiseResolved) {
 
                     if(!receipt.outOfGas &&
-                       (!gasProvided || gasProvided !== receipt.gasUsed)) {
+                        (!gasProvided || gasProvided !== receipt.gasUsed) &&
+                        (receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined')) {
                         defer.eventEmitter.emit('receipt', receipt);
                         defer.resolve(receipt);
 
@@ -355,7 +362,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         if(receipt) {
                             receipt = JSON.stringify(receipt, null, 2);
                         }
-                        utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n"+ receipt), defer.eventEmitter, defer.reject);
+                        if (receipt.status === false || receipt.status === '0x0') {
+                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        } else {
+                            utils._fireError(
+                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt),
+                                defer.eventEmitter, defer.reject);
+                        }
                     }
 
                     if (canUnsubscribe) {
@@ -369,10 +383,20 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             .catch(function () {
                 timeoutCount++;
 
-                if (timeoutCount - 1 >= TIMEOUTBLOCK) {
-                    sub.unsubscribe();
-                    promiseResolved = true;
-                    return utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly send. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                // check to see if we are http polling
+                if(!!isPolling) {
+                    // polling timeout is different than TIMEOUTBLOCK blocks since we are triggering every second
+                    if (timeoutCount - 1 >= POLLINGTIMEOUT) {
+                        sub.unsubscribe();
+                        promiseResolved = true;
+                        utils._fireError(new Error('Transaction was not mined within' + POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                    }
+                } else {
+                    if (timeoutCount - 1 >= TIMEOUTBLOCK) {
+                        sub.unsubscribe();
+                        promiseResolved = true;
+                        utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                    }
                 }
             });
 
@@ -380,40 +404,38 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         } else {
             sub.unsubscribe();
             promiseResolved = true;
-            return utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.', data: err}, defer.eventEmitter, defer.reject);
+            utils._fireError({message: 'Failed to subscribe to new newBlockHeaders to confirm the transaction receipts.', data: err}, defer.eventEmitter, defer.reject);
         }
     };
 
-  // start watching for confirmation depending on the support features of the provider
-  var startWatching = function() {
-      // if provider allows PUB/SUB
-      if (_.isFunction(this.requestManager.provider.on)) {
-          _ethereumCall.subscribe('newBlockHeaders', checkConfirmation);
-      } else {
-          intervalId = setInterval(checkConfirmation, 1000);
-      }
-  }.bind(this);
+    // start watching for confirmation depending on the support features of the provider
+    var startWatching = function(existingReceipt) {
+        // if provider allows PUB/SUB
+        if (_.isFunction(this.requestManager.provider.on)) {
+            _ethereumCall.subscribe('newBlockHeaders', checkConfirmation.bind(null, existingReceipt, false));
+        } else {
+            intervalId = setInterval(checkConfirmation.bind(null, existingReceipt, true), 1000);
+        }
+    }.bind(this);
 
 
-  // first check if we already have a confirmed transaction
-  _ethereumCall.getTransactionReceipt(result)
-  .then(function(receipt) {
-      if (receipt && receipt.blockHash) {
-          if (defer.eventEmitter.listeners('confirmation').length > 0) {
-              // if the promise has not been resolved we must keep on watching for new Blocks, if a confrimation listener is present
-              setTimeout(function(){
-                  if (!promiseResolved) startWatching();
-              }, 1000);
-          }
+    // first check if we already have a confirmed transaction
+    _ethereumCall.getTransactionReceipt(result)
+    .then(function(receipt) {
+        if (receipt && receipt.blockHash) {
+            if (defer.eventEmitter.listeners('confirmation').length > 0) {
+                // We must keep on watching for new Blocks, if a confirmation listener is present
+                startWatching(receipt);
+            }
+            checkConfirmation(receipt, false);
 
-          return checkConfirmation(null, null, null, receipt);
-      } else if (!promiseResolved) {
-          startWatching();
-      }
-  })
-  .catch(function(){
-      if (!promiseResolved) startWatching();
-  });
+        } else if (!promiseResolved) {
+            startWatching();
+        }
+    })
+    .catch(function(){
+        if (!promiseResolved) startWatching();
+    });
 
 };
 
@@ -479,7 +501,7 @@ Method.prototype.buildCall = function() {
 
                 }
 
-            // return PROMIEVENT
+                // return PROMIEVENT
             } else {
                 defer.eventEmitter.emit('transactionHash', result);
 
@@ -491,10 +513,12 @@ Method.prototype.buildCall = function() {
         // SENDS the SIGNED SIGNATURE
         var sendSignedTx = function(sign){
 
-            payload.method = 'eth_sendRawTransaction';
-            payload.params = [sign.rawTransaction];
+            var signedPayload = _.extend({}, payload, {
+                method: 'eth_sendRawTransaction',
+                params: [sign.rawTransaction]
+            });
 
-            method.requestManager.send(payload, sendTxCallback);
+            method.requestManager.send(signedPayload, sendTxCallback);
         };
 
 
@@ -511,14 +535,10 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        delete tx.from;
-
-                        var signature = method.accounts.signTransaction(tx, wallet.privateKey);
-
-                        return (_.isFunction(signature.then)) ? signature.then(sendSignedTx) : sendSignedTx(signature);
+                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx);
                     }
 
-                // ETH_SIGN
+                    // ETH_SIGN
                 } else if (payload.method === 'eth_sign') {
                     var data = payload.params[1];
                     wallet = getWallet(payload.params[0], method.accounts);

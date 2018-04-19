@@ -40,7 +40,7 @@ Generates an account object with private key and public key.
 Parameters
 ----------
 
-1. ``entropy`` - ``String`` (optional): A random strong to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using :ref:`randomhex <randomhex>`.
+1. ``entropy`` - ``String`` (optional): A random string to increase entropy. If given it should be at least 32 characters. If none is given a random string will be generated using :ref:`randomhex <randomhex>`.
 
 .. _eth-accounts-create-return:
 
@@ -127,7 +127,7 @@ Example
         encrypt: function(password){...}
     }
 
-    web3.eth.accounts.privateKeyToAccount('348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
+    web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
     > {
         address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
         privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
@@ -160,8 +160,8 @@ Parameters
     - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
-    - ``gas`` - ``String``: The gas provided by the transaction.
     - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
+    - ``gas`` - ``String``: The gas provided by the transaction.
 2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
 
@@ -170,14 +170,13 @@ Parameters
 Returns
 -------
 
-``Promise|Object`` returning ``Object``: The signed data RLP encoded transaction, or if ``returnSignature`` is ``true`` the signature values as follows:
+``Promise`` returning ``Object``: The signed data RLP encoded transaction, or if ``returnSignature`` is ``true`` the signature values as follows:
     - ``messageHash`` - ``String``: The hash of the given message.
     - ``r`` - ``String``: First 32 bytes of the signature
     - ``s`` - ``String``: Next 32 bytes of the signature
     - ``v`` - ``String``: Recovery value + 27
     - ``rawTransaction`` - ``String``: The RLP encoded transaction, ready to be send using :ref:`web3.eth.sendSignedTransaction <eth-sendsignedtransaction>`.
 
-.. note:: If ``nonce``, ``chainId``, ``gas`` and ``gasPrice`` is given, it returns the signed transaction *directly* as ``Object``.
 
 -------
 Example
@@ -199,7 +198,6 @@ Example
         rawTransaction: '0xf869808504e3b29200831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a0c9cf86333bcb065d140032ecaab5d9281bde80f21b9687b3e94161de42d51895a0727a108a0b8d101465414033c3f705a9c7b826e596766046ee1183dbc8aeaa68'
     }
 
-    // if nonce, chainId, gas and gasPrice is given it returns synchronous
     web3.eth.accounts.signTransaction({
         to: '0xF0109fC8DF283027b6285cc889F5aA624EaC1F55',
         value: '1000000000',
@@ -208,9 +206,10 @@ Example
         nonce: 0,
         chainId: 1
     }, '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318')
+    .then(console.log);
     > {
         messageHash: '0x6893a6ee8df79b0f5d64a180cd1ef35d030f3e296a5361cf04d02ce720d32ec5',
-        r: '0x09ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',
+        r: '0x9ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9c',
         s: '0x440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428',
         v: '0x25',
         rawTransaction: '0xf86a8086d55698372431831e848094f0109fc8df283027b6285cc889f5aa624eac1f55843b9aca008025a009ebb6ca057a0535d6186462bc0b465b561c94a295bdb0621fc19208ab149a9ca0440ffd775ce91a833ab410777204d5341a6f9fa91216a6f3ee2c051fea6a0428'
@@ -353,8 +352,8 @@ recover
 .. code-block:: javascript
 
     web3.eth.accounts.recover(signatureObject);
-    web3.eth.accounts.recover(hash, signature);
-    web3.eth.accounts.recover(hash, v, r, s);
+    web3.eth.accounts.recover(message, signature [, preFixed]);
+    web3.eth.accounts.recover(message, v, r, s [, preFixed]);
 
 Recovers the Ethereum address which was used to sign the given data.
 
@@ -362,11 +361,13 @@ Recovers the Ethereum address which was used to sign the given data.
 Parameters
 ----------
 
-1. ``signature`` - ``String|Object``: Either the encoded signature, the v, r, s values as separate parameters, or an object with the following values:
-    - ``messageHash`` - ``String``: The hash of the given message.
+1. ``message|signatureObject`` - ``String|Object``: Either signed message or hash, or the signature object as following values:
+    - ``messageHash`` - ``String``: The hash of the given message already prefixed with ``"\x19Ethereum Signed Message:\n" + message.length + message``.
     - ``r`` - ``String``: First 32 bytes of the signature
     - ``s`` - ``String``: Next 32 bytes of the signature
     - ``v`` - ``String``: Recovery value + 27
+2. ``signature`` - ``String``: The raw RLP encoded signature, OR parameter 2-4 as v, r, s values.
+3. ``preFixed`` - ``Boolean`` (optional, default: ``false``): If the last parameter is ``true``, the given message will NOT automatically be prefixed with ``"\x19Ethereum Signed Message:\n" + message.length + message``, and assumed to be already prefixed.
 
 
 -------

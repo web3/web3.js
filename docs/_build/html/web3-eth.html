@@ -746,7 +746,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 </div>
 <div class="section" id="id43">
 <h3>Example<a class="headerlink" href="#id43" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBlock</span><span class="p">(</span><span class="mi">3150</span><span class="p">);</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getBlock</span><span class="p">(</span><span class="mi">3150</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
 <span class="o">&gt;</span> <span class="p">{</span>
@@ -1129,7 +1129,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 <span class="c1">// console.log(serializedTx.toString(&#39;hex&#39;));</span>
 <span class="c1">// 0xf889808609184e72a00082271094000000000000000000000000000000000000000080a47f74657374320000000000000000000000000000000000000000000000000000006000571ca08a8bbf888cfa37bbf0bb965423625641fc956967b81d12e23709cead01446075a01ce999b56a8a88504be365442ea61239198e23d1fce7d00fcfc5cd3b44b7215f</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">sendSignedTransaction</span><span class="p">(</span><span class="nx">serializedTx</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">))</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">sendSignedTransaction</span><span class="p">(</span><span class="s1">&#39;0x&#39;</span> <span class="o">+</span> <span class="nx">serializedTx</span><span class="p">.</span><span class="nx">toString</span><span class="p">(</span><span class="s1">&#39;hex&#39;</span><span class="p">))</span>
 <span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;receipt&#39;</span><span class="p">,</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
 <span class="o">&gt;</span> <span class="c1">// see eth.getTransactionReceipt() for details</span>
@@ -1299,7 +1299,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 <div><ul class="simple">
 <li><code class="docutils literal"><span class="pre">fromBlock</span></code> - <code class="docutils literal"><span class="pre">Number|String</span></code>: The number of the earliest block (<code class="docutils literal"><span class="pre">&quot;latest&quot;</span></code> may be given to mean the most recent and <code class="docutils literal"><span class="pre">&quot;pending&quot;</span></code> currently mining, block). By default <code class="docutils literal"><span class="pre">&quot;latest&quot;</span></code>.</li>
 <li><code class="docutils literal"><span class="pre">toBlock</span></code> -  <code class="docutils literal"><span class="pre">Number|String</span></code>: The number of the latest block (<code class="docutils literal"><span class="pre">&quot;latest&quot;</span></code> may be given to mean the most recent and <code class="docutils literal"><span class="pre">&quot;pending&quot;</span></code> currently mining, block). By default <code class="docutils literal"><span class="pre">&quot;latest&quot;</span></code>.</li>
-<li><code class="docutils literal"><span class="pre">address</span></code> -  <code class="docutils literal"><span class="pre">String</span></code>: An address or a list of addresses to only get logs from particular account(s).</li>
+<li><code class="docutils literal"><span class="pre">address</span></code> -  <code class="docutils literal"><span class="pre">String|Array</span></code>: An address or a list of addresses to only get logs from particular account(s).</li>
 <li><code class="docutils literal"><span class="pre">topics</span></code> - <code class="docutils literal"><span class="pre">Array</span></code>: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use <code class="docutils literal"><span class="pre">null</span></code>, e.g. <code class="docutils literal"><span class="pre">[null,</span> <span class="pre">'0x12...']</span></code>. You can also pass an array for each topic with options for that topic e.g. <code class="docutils literal"><span class="pre">[null,</span> <span class="pre">['option1',</span> <span class="pre">'option2']]</span></code></li>
 </ul>
 </div></blockquote>
@@ -1360,7 +1360,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 </div>
 <div class="section" id="id85">
 <h3>Example<a class="headerlink" href="#id85" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getCompilers</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getCompilers</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span><span class="s2">&quot;lll&quot;</span><span class="p">,</span> <span class="s2">&quot;solidity&quot;</span><span class="p">,</span> <span class="s2">&quot;serpent&quot;</span><span class="p">]</span>
 </pre></div>
@@ -1394,7 +1394,7 @@ The gas price is determined by the last few blocks median gas price.</p>
     <span class="s2">&quot;   }\n&quot;</span> <span class="o">+</span>
     <span class="s2">&quot;}\n&quot;</span><span class="p">;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">solidity</span><span class="p">(</span><span class="nx">source</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">solidity</span><span class="p">(</span><span class="nx">source</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 
 <span class="o">&gt;</span> <span class="p">{</span>
@@ -1459,7 +1459,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 <h3>Example<a class="headerlink" href="#id91" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">source</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span><span class="p">;</span>
 
-<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">lll</span><span class="p">(</span><span class="nx">source</span><span class="p">);</span>
+<span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">lll</span><span class="p">(</span><span class="nx">source</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056&quot;</span>
 </pre></div>
@@ -1485,7 +1485,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 <p><code class="docutils literal"><span class="pre">Promise</span></code> returns <code class="docutils literal"><span class="pre">String</span></code> - The compiled serpent code as HEX string.</p>
 <div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">source</span> <span class="o">=</span> <span class="s2">&quot;...&quot;</span><span class="p">;</span>
 
-<span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">serpent</span><span class="p">(</span><span class="nx">source</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">code</span> <span class="o">=</span> <span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">compile</span><span class="p">.</span><span class="nx">serpent</span><span class="p">(</span><span class="nx">source</span><span class="p">)</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="s2">&quot;0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056&quot;</span>
 </pre></div>
@@ -1518,7 +1518,7 @@ The gas price is determined by the last few blocks median gas price.</p>
 </div>
 <div class="section" id="id96">
 <h3>Example<a class="headerlink" href="#id96" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getWork</span><span class="p">();</span>
+<div class="highlight-javascript"><div class="highlight"><pre><span></span><span class="nx">web3</span><span class="p">.</span><span class="nx">eth</span><span class="p">.</span><span class="nx">getWork</span><span class="p">()</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="p">[</span>
   <span class="s2">&quot;0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef&quot;</span><span class="p">,</span>
@@ -1555,7 +1555,7 @@ The gas price is determined by the last few blocks median gas price.</p>
     <span class="s2">&quot;0x0000000000000001&quot;</span><span class="p">,</span>
     <span class="s2">&quot;0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef&quot;</span><span class="p">,</span>
     <span class="s2">&quot;0xD1FE5700000000000000000000000000D1FE5700000000000000000000000000&quot;</span>
-<span class="p">]);</span>
+<span class="p">])</span>
 <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">);</span>
 <span class="o">&gt;</span> <span class="kc">true</span>
 </pre></div>

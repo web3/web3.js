@@ -384,6 +384,52 @@ Example
     web3.utils.isHex('Hello');
     > false
 
+------------------------------------------------------------------------------
+
+isHexStrict
+=====================
+
+.. code-block:: javascript
+
+    web3.utils.isHexStrict(hex)
+
+Checks if a given string is a HEX string. Difference to ``web3.utils.isHex()`` is that it expects HEX to be prefixed with ``0x``.
+
+----------
+Parameters
+----------
+
+1. ``hex`` - ``String|HEX``: The given HEX string.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.utils.isHexStrict('0xc1912');
+    > true
+
+    web3.utils.isHexStrict(0xc1912);
+    > false
+
+    web3.utils.isHexStrict('c1912');
+    > false
+
+    web3.utils.isHexStrict(345);
+    > false // this is tricky, as 345 can be a a HEX representation or a number, be careful when not having a 0x in front!
+
+    web3.utils.isHexStrict('0xZ1912');
+    > false
+
+    web3.utils.isHex('Hello');
+    > false
 
 ------------------------------------------------------------------------------
 
@@ -1238,7 +1284,7 @@ toTwosComplement
     web3.utils.toTwosComplement(number)
 
 
-Conversta negative numer into a twos complement.
+Converts a negative numer into a two's complement.
 
 
 ----------

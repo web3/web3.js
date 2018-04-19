@@ -55,7 +55,7 @@ var IpcProvider = function IpcProvider(path, net) {
         if(!id && result.method.indexOf('_subscription') !== -1) {
             _this.notificationCallbacks.forEach(function(callback){
                 if(_.isFunction(callback))
-                    callback(null, result);
+                    callback(result);
             });
 
             // fire the callback
@@ -93,12 +93,6 @@ IpcProvider.prototype.addDefaultEvents = function(){
 
     this.connection.on('end', function(){
         _this._timeout();
-
-        // inform notifications
-        _this.notificationCallbacks.forEach(function (callback) {
-            if (_.isFunction(callback))
-                callback(new Error('IPC socket connection closed'));
-        });
     });
 
     this.connection.on('timeout', function(){
@@ -229,6 +223,7 @@ IpcProvider.prototype.on = function (type, callback) {
             this.notificationCallbacks.push(callback);
             break;
 
+        // adds error, end, timeout, connect
         default:
             this.connection.on(type, callback);
             break;

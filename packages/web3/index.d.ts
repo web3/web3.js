@@ -10,7 +10,7 @@ declare class Web3 {
     Shh: new (provider: t.Provider) => t.Shh
     Bzz: new (provider: t.Provider) => t.Bzz
   }
-  constructor(provider: t.Provider | string)
+  constructor(provider?: t.Provider | string)
   version: string
   BatchRequest: new () => t.BatchRequest
   extend(methods: any): any // TODO
@@ -22,7 +22,6 @@ declare class Web3 {
   providers: t.Providers
   setProvider(provider: t.Provider): void
   utils: t.Utils
-
 }
 
-export default Web3
+export default Web3;

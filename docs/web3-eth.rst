@@ -31,7 +31,7 @@ Note on checksum addresses
 All Ethereum addresses returned by functions of this package are returned as checksum addresses.
 This means some letters are uppercase and some are lowercase.
 Based on that it will calculate a checksum for the address and prove its correctness.
-Incorrect checksum address will throw an error when passed into functions.
+Incorrect checksum addresses will throw an error when passed into functions.
 If you want to circumvent the checksum check you can make an address all lower- or uppercase.
 
 
@@ -883,6 +883,7 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
+  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was susccessfull, ``FALSE``, if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
   - ``blockNumber`` - ``Number``: Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
@@ -904,6 +905,7 @@ Example
     .then(console.log);
 
     > {
+      "status": true,
       "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
       "transactionIndex": 0,
       "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
@@ -1060,7 +1062,7 @@ sendSignedTransaction
 
     web3.eth.sendSignedTransaction(signedTransactionData [, callback])
 
-Sends an already signed transaction. For example can be signed using: `ethereumjs-accounts <https://github.com/SilentCicero/ethereumjs-accounts>`_
+Sends an already signed transaction, generated for example using :ref:`web3.eth.accounts.signTransaction <eth-accounts-signtransaction>`.
 
 ----------
 Parameters
@@ -1323,7 +1325,7 @@ Parameters
 1. ``Object`` - The filter options as follows:
   - ``fromBlock`` - ``Number|String``: The number of the earliest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
   - ``toBlock`` -  ``Number|String``: The number of the latest block (``"latest"`` may be given to mean the most recent and ``"pending"`` currently mining, block). By default ``"latest"``.
-  - ``address`` -  ``String``: An address or a list of addresses to only get logs from particular account(s).
+  - ``address`` -  ``String|Array``: An address or a list of addresses to only get logs from particular account(s).
   - ``topics`` - ``Array``: An array of values which must each appear in the log entries. The order is important, if you want to leave topics out use ``null``, e.g. ``[null, '0x12...']``. You can also pass an array for each topic with options for that topic e.g. ``[null, ['option1', 'option2']]``
 
 

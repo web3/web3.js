@@ -88,13 +88,13 @@ export declare interface Transaction {
 export declare interface EventLog {
   event: string
   address: string
-  returnValues: object
+  returnValues: any
   logIndex: number
   transactionIndex: number
   transactionHash: string
   blockHash: string
   blockNumber: number
-  raw?: { data: string, topics: any[] }
+  raw?: { data: string, topics: string[] }
 }
 export declare interface TransactionReceipt {
   transactionHash: string
@@ -230,7 +230,7 @@ export declare interface Tx {
 
 }
 export declare interface IProvider {
-  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
+  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void): any
 }
 export declare interface WebsocketProvider extends IProvider {
   responseCallbacks: object
@@ -272,10 +272,10 @@ export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
 export declare interface Utils {
   BN: BigNumber // TODO only static-definition
-  isBN(any): boolean
-  isBigNumber(any): boolean
-  isAddress(any): boolean
-  isHex(any): boolean
+  isBN(any: any): boolean
+  isBigNumber(any: any): boolean
+  isAddress(any: any): boolean
+  isHex(any: any): boolean
   _: us.UnderscoreStatic
   asciiToHex(val: string): string
   hexToAscii(val: string): string
@@ -296,12 +296,12 @@ export declare interface Utils {
   padLeft(string: string, chars: number, sign: string): string
   rightPad(string: string, chars: number, sign: string): string
   padRight(string: string, chars: number, sign: string): string
-  sha3(val: string, val2?:string, val3?:string, val4?:string, val5?:string): string
+  sha3(val: string, val2?: string, val3?: string, val4?: string, val5?: string): string
   soliditySha3(val: string): string
   randomHex(bytes: number): string
   stringToHex(val: string): string
   toAscii(hex: string): string
-  toBN(any): BigNumber
+  toBN(any: any): BigNumber
   toChecksumAddress(val: string): string
   toDecimal(val: any): number
   toHex(val: any): string
@@ -319,7 +319,7 @@ export declare interface Contract {
     gas: number
   }
   methods: {
-    [fnName: string]: (...args) => TransactionObject<any>
+    [fnName: string]: (...args: any[]) => TransactionObject<any>
   }
   deploy(options: {
     data: string
@@ -329,11 +329,21 @@ export declare interface Contract {
     [eventName: string]: (options?: {
       filter?: object
       fromBlock?: BlockType
-      topics?: any[]
+      topics?: string[]
     }, cb?: Callback<EventLog>) => EventEmitter
-    allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: any[] }, cb?: Callback<EventLog>) => EventEmitter
-  }
-
+    allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: string[] }, cb?: Callback<EventLog>) => EventEmitter
+  },
+  getPastEvents(
+    event: string,
+    options?: {
+      filter?: object,
+      fromBlock?: BlockType,
+      toBlock?: BlockType,
+      topics?: string[]
+    },
+    cb?: Callback<EventLog[]>
+  ): Promise<EventLog[]>,
+  setProvider(provider: IProvider): void
 }
 export declare interface Request { }
 export declare interface Providers {
@@ -341,6 +351,10 @@ export declare interface Providers {
   HttpProvider: new (host: string, timeout?: number) => HttpProvider
   IpcProvider: new (path: string, net: any) => IpcProvider
 }
+
+export type EthAbiDecodeParametersType = { name: string; type: string; }
+export type EthAbiDecodeParametersResultArray = { [index: number]: any }
+export type EthAbiDecodeParametersResultObject = EthAbiDecodeParametersResultArray & { [key: string]: any }
 
 export declare class Eth {
   defaultAccount: string
@@ -361,20 +375,21 @@ export declare class Eth {
     encodeFunctionCall(jsonInterface: object, parameters: any[]): string
     encodeFunctionSignature(name: string | object): string
     decodeParameter(type: string, hex: string): any
-    decodeParameters(types: string[], hex: string): any
+    decodeParameters(types: string[], hex: string): EthAbiDecodeParametersResultArray
+    decodeParameters(types: EthAbiDecodeParametersType[], hex: string): EthAbiDecodeParametersResultObject
   }
   accounts: {
-    'new'(entropy?: string): Account
+    create(entropy?: string): Account
     privateKeyToAccount(privKey: string): Account
     publicToAddress(key: string): string
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
     sign(data: string, privateKey: string, returnSignature?: boolean): string | Signature
-    recover(signature: string | Signature): string
+    recover(sigOrHash: string | Signature, sigOrV?: string, r?: string, s?: string): string
     encrypt(privateKey: string, password: string): PrivateKey
     decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
-      'new'(numberOfAccounts: number, entropy: string): Account[]
+      create(numberOfAccounts: number, entropy: string): Account[]
       add(account: string | Account): any
       remove(account: string | number): any
       save(password: string, keyname?: string): string
@@ -442,12 +457,13 @@ export declare class Net {
   getPeerCount(cb?: Callback<number>): Promise<number>
 }
 export declare class Personal {
-  newAccount(password: string, cb?: Callback<boolean>): Promise<boolean>
-  getAccounts(cb?: Callback<Array<string>>): Promise<Array<string>>
-  importRawKey()
-  lockAccount()
-  unlockAccount()
-  sign()
+  newAccount(password: string, cb?: Callback<boolean>): Promise<string>
+  importRawKey(): Promise<string>
+  lockAccount(): Promise<boolean>
+  unlockAccount(): void
+  sign(): Promise<string>
+  ecRecover(message:string, sig:string):void
+  sendTransaction(tx:Tx, passphrase:string):Promise<string>
 }
 export declare class Shh { }
 export declare class Bzz { }

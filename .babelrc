@@ -3,7 +3,7 @@
         "env"
     ],
     "plugins": [
-        "lodash",
+        "babel-plugin-lodash",
         "transform-class-properties",
         [
             "transform-runtime",

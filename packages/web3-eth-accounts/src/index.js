@@ -25,13 +25,13 @@
 var _ = require("underscore");
 var core = require('web3-core');
 var Method = require('web3-core-method');
-var Promise = require('bluebird');
+var Promise = require('any-promise');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");
 var Nat = require("eth-lib/lib/nat");
 var Bytes = require("eth-lib/lib/bytes");
-var cryp = require('crypto');
+var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
@@ -40,6 +40,21 @@ var helpers = require('web3-core-helpers');
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
+
+var trimLeadingZero = function (hex) {
+    while (hex && hex.startsWith('0x0')) {
+        hex = '0x' + hex.slice(3);
+    }
+    return hex;
+};
+
+var makeEven = function (hex) {
+    if(hex.length % 2 === 1) {
+        hex = hex.replace('0x', '0x0');
+    }
+    return hex;
+};
+
 
 var Accounts = function Accounts() {
     var _this = this;
@@ -115,59 +130,91 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 };
 
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
-    var _this = this;
+    var _this = this,
+        error = false,
+        result;
+
+    callback = callback || function () {};
+
+    if (!tx) {
+        error = new Error('No transaction object given!');
+
+        callback(error);
+        return Promise.reject(error);
+    }
 
     function signed (tx) {
 
         if (!tx.gas && !tx.gasLimit) {
-            throw new Error('"gas" is missing');
+            error = new Error('"gas" is missing');
         }
 
-        var transaction = {
-            nonce: utils.numberToHex(tx.nonce),
-            to: tx.to ? helpers.formatters.inputAddressFormatter(tx.to) : '0x',
-            data: tx.data || '0x',
-            value: tx.value ? utils.numberToHex(tx.value) : "0x",
-            gas: utils.numberToHex(tx.gasLimit || tx.gas),
-            gasPrice: utils.numberToHex(tx.gasPrice),
-            chainId: utils.numberToHex(tx.chainId)
-        };
-
-        var rlpEncoded = RLP.encode([
-            Bytes.fromNat(transaction.nonce),
-            Bytes.fromNat(transaction.gasPrice),
-            Bytes.fromNat(transaction.gas),
-            transaction.to.toLowerCase(),
-            Bytes.fromNat(transaction.value),
-            transaction.data,
-            Bytes.fromNat(transaction.chainId || "0x1"),
-            "0x",
-            "0x"]);
-
-        var hash = Hash.keccak256(rlpEncoded);
-
-
-        var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
-        var rawTx = RLP.decode(rlpEncoded).slice(0,6).concat(Account.decodeSignature(signature));
-        var rawTransaction = RLP.encode(rawTx);
-
-        var values = RLP.decode(rawTransaction);
-        var result = {
-            messageHash: hash,
-            v: values[6],
-            r: values[7],
-            s: values[8],
-            rawTransaction: rawTransaction
-        };
-        if (_.isFunction(callback)) {
-            callback(null, result);
+        if (tx.nonce  < 0 ||
+            tx.gas  < 0 ||
+            tx.gasPrice  < 0 ||
+            tx.chainId  < 0) {
+            error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
         }
+
+        if (error) {
+            callback(error);
+            return Promise.reject(new Error('"gas" is missing'));
+        }
+
+        try {
+            tx = helpers.formatters.inputCallFormatter(tx);
+
+            var transaction = tx;
+            transaction.to = tx.to || '0x';
+            transaction.data = tx.data || '0x';
+            transaction.value = tx.value || '0x';
+            transaction.chainId = utils.numberToHex(tx.chainId);
+
+            var rlpEncoded = RLP.encode([
+                Bytes.fromNat(transaction.nonce),
+                Bytes.fromNat(transaction.gasPrice),
+                Bytes.fromNat(transaction.gas),
+                transaction.to.toLowerCase(),
+                Bytes.fromNat(transaction.value),
+                transaction.data,
+                Bytes.fromNat(transaction.chainId || "0x1"),
+                "0x",
+                "0x"]);
+
+
+            var hash = Hash.keccak256(rlpEncoded);
+
+            var signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+
+            var rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+
+            rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
+            rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
+            rawTx[8] = makeEven(trimLeadingZero(rawTx[8]));
+
+            var rawTransaction = RLP.encode(rawTx);
+
+            var values = RLP.decode(rawTransaction);
+            result = {
+                messageHash: hash,
+                v: trimLeadingZero(values[6]),
+                r: trimLeadingZero(values[7]),
+                s: trimLeadingZero(values[8]),
+                rawTransaction: rawTransaction
+            };
+
+        } catch(e) {
+            callback(e);
+            return Promise.reject(e);
+        }
+
+        callback(null, result);
         return result;
     }
 
-    // Returns synchronously if nonce, chainId and price are provided
+    // Resolve immediately if nonce, chainId and price are provided
     if (tx.nonce !== undefined && tx.chainId !== undefined && tx.gasPrice !== undefined) {
-        return signed(tx);
+        return Promise.resolve(signed(tx));
     }
 
 
@@ -196,13 +243,15 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 };
 
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToUtf8(data) : data;
-    var ethMessage = "\x19Ethereum Signed Message:\n" + message.length + message;
+    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+    var messageBuffer = Buffer.from(message);
+    var preamble = "\x19Ethereum Signed Message:\n" + message.length;
+    var preambleBuffer = Buffer.from(preamble);
+    var ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
     return Hash.keccak256s(ethMessage);
 };
 
 Accounts.prototype.sign = function sign(data, privateKey) {
-
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
@@ -216,20 +265,25 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     };
 };
 
-Accounts.prototype.recover = function recover(hash, signature) {
+Accounts.prototype.recover = function recover(message, signature, preFixed) {
+    var args = [].slice.apply(arguments);
 
-    if (_.isObject(hash)) {
-        return this.recover(hash.messageHash, Account.encodeSignature([hash.v, hash.r, hash.s]));
+
+    if (_.isObject(message)) {
+        return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
     }
 
-    if (!utils.isHexStrict(hash)) {
-        hash = this.hashMessage(hash);
+    if (!preFixed) {
+        message = this.hashMessage(message);
     }
 
-    if (arguments.length === 4) {
-        return this.recover(hash, Account.encodeSignature([].slice.call(arguments, 1, 4))); // v, r, s
+    if (args.length >= 4) {
+        preFixed = args.slice(-1)[0];
+        preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+
+        return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
     }
-    return Account.recover(hash, signature);
+    return Account.recover(message, signature);
 };
 
 // Taken from https://github.com/ethereumjs/ethereumjs-wallet
@@ -390,7 +444,7 @@ Wallet.prototype.add = function (account) {
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
 
-    if (account) {
+    if (account && account.address) {
         // address
         this[account.address].privateKey = null;
         delete this[account.address];
