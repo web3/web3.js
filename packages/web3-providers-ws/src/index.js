@@ -70,11 +70,12 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     // pass through with any additional headers supplied in constructor
     var parsedURL = parseURL(url);
     var headers = options.headers || {};
+    var protocol = options.protocol || undefined;
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
-    this.connection = new Ws(url, undefined, undefined, headers);
+    this.connection = new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
 
