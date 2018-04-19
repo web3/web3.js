@@ -40,7 +40,7 @@
     "build": "gulp",
     "watch": "gulp watch",
     "lint": "jshint *.js lib",
-    "test": "mocha; jshint *.js lib",
+    "test": "mocha test",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {

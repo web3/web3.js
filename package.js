@@ -1,9 +1,9 @@
 /* jshint ignore:start */
 Package.describe({
   name: 'ethereum:zsl-web3',
-  version: '0.20.6',
+  version: '0.1.0',
   summary: 'Ethereum JavaScript API, middleware to talk to a ethereum node over RPC with ZSL and quorum functions',
-  git: 'https://github.com/ethereum/ethereum.js',
+  git: 'https://github.com/burnscapital/zsl-web3.js',
   // By default, Meteor will default to using README.md for documentation.
   // To avoid submitting documentation, set this field to null.
   documentation: 'README.md'
