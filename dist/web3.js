@@ -3138,7 +3138,7 @@ module.exports = {
         return new Error(message);
     },
     ConnectionTimeout: function (ms){
-        return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+        return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achieved');
     }
 };
 
