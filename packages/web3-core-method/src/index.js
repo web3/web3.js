@@ -57,6 +57,16 @@ var Method = function Method(options) {
     this.defaultAccount = options.defaultAccount || null;
 };
 
+Method.prototype.setTimeoutBlock = function (count) {
+    if (typeof count !== 'undefined') {
+        TIMEOUTBLOCK = count;
+    }
+};
+
+Method.prototype.getTimeoutBlock = function () {
+    return TIMEOUTBLOCK;
+};
+
 Method.prototype.setRequestManager = function (requestManager, accounts) {
     this.requestManager = requestManager;
 
@@ -395,7 +405,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                     if (timeoutCount - 1 >= TIMEOUTBLOCK) {
                         sub.unsubscribe();
                         promiseResolved = true;
-                        utils._fireError(new Error('Transaction was not mined within 50 blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
+                        utils._fireError(new Error('Transaction was not mined within' + TIMEOUTBLOCK + 'blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!'), defer.eventEmitter, defer.reject);
                     }
                 }
             });

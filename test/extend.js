@@ -3,6 +3,7 @@ var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeIpcProvider');
 var Web3 = require('../packages/web3');
 var web3 = new Web3();
+web3.setTimeoutBlock(300);
 
 
 var tests = [{

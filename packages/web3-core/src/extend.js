@@ -47,7 +47,8 @@ var extend = function (pckg) {
                 if(!(method instanceof Method)) {
                     method = new Method(method);
                 }
-
+                
+                method.setTimeoutBlock(extendedObject.timeoutblock);
                 method.attachToObject(extendedObject);
                 method.setRequestManager(pckg._requestManager);
             });

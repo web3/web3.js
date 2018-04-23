@@ -697,7 +697,7 @@ describe('lib/web3/method', function () {
             provider.injectResult('0x1234567'); // subscription id
 
             // fire 50 fake newBlocks
-            for (i = 0; i < 51; i++) {
+            for (i = 0; i < method.getTimeoutBlock() + 1; i++) {
                 setTimeout(function () {
                     provider.injectNotification({
                         method: 'eth_subscription',
@@ -724,6 +724,7 @@ describe('lib/web3/method', function () {
         };
 
         it('should fail with promise when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
+            this.timeout(20000);
             var send = failOnTimeout();
 
             send({
@@ -736,6 +737,7 @@ describe('lib/web3/method', function () {
             });
         });
         it('should fail with on("error", ...) when subscribing and check for receipt and code if "sendTransaction" and deploying contract: if not receipt after 50 blocks', function (done) {
+            this.timeout(20000);
             var send = failOnTimeout();
 
             send({

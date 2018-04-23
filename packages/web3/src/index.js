@@ -39,6 +39,7 @@ var utils = require('web3-utils');
 
 var Web3 = function Web3() {
     var _this = this;
+    this.timeoutblock = 50;
 
     // sets _requestmanager etc
     core.packageInit(this, arguments);
@@ -54,12 +55,17 @@ var Web3 = function Web3() {
     var setProvider = this.setProvider;
     this.setProvider = function (provider, net) {
         setProvider.apply(_this, arguments);
-
+        
         this.eth.setProvider(provider, net);
         this.shh.setProvider(provider, net);
         this.bzz.setProvider(provider);
 
         return true;
+    };
+
+    this.setTimeoutBlock = function (count) {
+        if (typeof count !== 'undefined') this.timeoutblock = count;
+        core.packageInit(this, arguments);
     };
 };
 

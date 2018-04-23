@@ -1,0 +1,742 @@
+0 silly input []
+1 silly flags { _: [ 'bootstrap' ],
+1 silly flags   'reject-cycles': false,
+1 silly flags   rejectCycles: false,
+1 silly flags   args: [] }
+2 verbose rootPath /Users/fanyshu/Documents/Projects/DC/web3.js
+3 info version 2.10.2
+4 silly existsSync /Users/fanyshu/Documents/Projects/DC/web3.js/VERSION
+5 silly initialize attempt
+6 silly npmConfig { registry: undefined,
+6 silly npmConfig   npmClient: undefined,
+6 silly npmConfig   npmClientArgs: undefined,
+6 silly npmConfig   mutex: undefined }
+7 silly initialize success
+8 silly execute attempt
+9 info Bootstrapping 20 packages
+10 info lifecycle preinstall
+11 silly runScript preinstall web3-bzz
+12 silly web3-bzz
+13 silly runScript preinstall web3-core-promievent
+14 silly web3-core-promievent
+15 silly runScript preinstall web3-utils
+16 silly web3-utils
+17 silly runScript preinstall web3-eth-iban
+18 silly web3-eth-iban
+19 silly runScript preinstall web3-core-helpers
+20 silly web3-core-helpers
+21 silly runScript preinstall web3-core-subscriptions
+22 silly web3-core-subscriptions
+23 silly runScript preinstall web3-eth-abi
+24 silly web3-eth-abi
+25 silly runScript preinstall web3-providers-http
+26 silly web3-providers-http
+27 silly runScript preinstall web3-providers-ipc
+28 silly web3-providers-ipc
+29 silly runScript preinstall web3-providers-ws
+30 silly web3-providers-ws
+31 silly runScript preinstall web3-core-method
+32 silly web3-core-method
+33 silly runScript preinstall web3-core-requestmanager
+34 silly web3-core-requestmanager
+35 silly runScript preinstall web3-core
+36 silly web3-core
+37 silly runScript preinstall web3-eth-accounts
+38 silly web3-eth-accounts
+39 silly runScript preinstall web3-eth-contract
+40 silly web3-eth-contract
+41 silly runScript preinstall web3-net
+42 silly web3-net
+43 silly runScript preinstall web3-eth-personal
+44 silly web3-eth-personal
+45 silly runScript preinstall web3-shh
+46 silly web3-shh
+47 silly runScript preinstall web3-eth
+48 silly web3-eth
+49 silly runScript preinstall web3
+50 silly web3
+51 silly hasMatchingDependency web3-core-helpers web3-eth-iban
+52 silly hasMatchingDependency web3-core-helpers web3-utils
+53 silly hasMatchingDependency web3-core-method web3-core-helpers
+54 silly hasMatchingDependency web3-core-method web3-core-promievent
+55 silly hasMatchingDependency web3-core-method web3-core-subscriptions
+56 silly hasMatchingDependency web3-core-method web3-utils
+57 silly hasMatchingDependency web3-core-requestmanager web3-core-helpers
+58 silly hasMatchingDependency web3-core-requestmanager web3-providers-http
+59 silly hasMatchingDependency web3-core-requestmanager web3-providers-ipc
+60 silly hasMatchingDependency web3-core-requestmanager web3-providers-ws
+61 silly hasMatchingDependency web3-core-subscriptions web3-core-helpers
+62 silly hasMatchingDependency web3-core web3-core-helpers
+63 silly hasMatchingDependency web3-core web3-core-requestmanager
+64 silly hasMatchingDependency web3-core web3-utils
+65 silly hasMatchingDependency web3-eth-abi web3-core-helpers
+66 silly hasMatchingDependency web3-eth-abi web3-utils
+67 silly hasMatchingDependency web3-eth-accounts web3-core
+68 silly hasMatchingDependency web3-eth-accounts web3-core-helpers
+69 silly hasMatchingDependency web3-eth-accounts web3-utils
+70 silly hasMatchingDependency web3-eth-contract web3-core
+71 silly hasMatchingDependency web3-eth-contract web3-core-helpers
+72 silly hasMatchingDependency web3-eth-contract web3-core-promievent
+73 silly hasMatchingDependency web3-eth-contract web3-core-subscriptions
+74 silly hasMatchingDependency web3-eth-contract web3-eth-abi
+75 silly hasMatchingDependency web3-eth-contract web3-utils
+76 silly hasMatchingDependency web3-eth-iban web3-utils
+77 silly hasMatchingDependency web3-eth-personal web3-core
+78 silly hasMatchingDependency web3-eth-personal web3-core-helpers
+79 silly hasMatchingDependency web3-eth-personal web3-net
+80 silly hasMatchingDependency web3-eth-personal web3-utils
+81 silly hasMatchingDependency web3-eth web3-core
+82 silly hasMatchingDependency web3-eth web3-core-helpers
+83 silly hasMatchingDependency web3-eth web3-core-subscriptions
+84 silly hasMatchingDependency web3-eth web3-eth-abi
+85 silly hasMatchingDependency web3-eth web3-eth-accounts
+86 silly hasMatchingDependency web3-eth web3-eth-contract
+87 silly hasMatchingDependency web3-eth web3-eth-iban
+88 silly hasMatchingDependency web3-eth web3-eth-personal
+89 silly hasMatchingDependency web3-eth web3-net
+90 silly hasMatchingDependency web3-eth web3-utils
+91 silly hasMatchingDependency web3-net web3-core
+92 silly hasMatchingDependency web3-net web3-utils
+93 silly hasMatchingDependency web3-providers-http web3-core-helpers
+94 silly hasMatchingDependency web3-providers-ipc web3-core-helpers
+95 silly hasMatchingDependency web3-providers-ws web3-core-helpers
+96 silly hasMatchingDependency web3-shh web3-core
+97 silly hasMatchingDependency web3-shh web3-core-subscriptions
+98 silly hasMatchingDependency web3-shh web3-net
+99 silly hasMatchingDependency web3 web3-bzz
+100 silly hasMatchingDependency web3 web3-core
+101 silly hasMatchingDependency web3 web3-eth
+102 silly hasMatchingDependency web3 web3-eth-personal
+103 silly hasMatchingDependency web3 web3-net
+104 silly hasMatchingDependency web3 web3-shh
+105 silly hasMatchingDependency web3 web3-utils
+106 silly hasDependencyInstalled web3-eth-abi bn.js
+107 silly dependencyIsSatisfied [ 'bn.js',
+107 silly dependencyIsSatisfied   '4.11.6',
+107 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/node_modules' ]
+108 verbose dependencyIsSatisfied bn.js false
+109 silly hasDependencyInstalled web3-eth-iban bn.js
+110 silly dependencyIsSatisfied [ 'bn.js',
+110 silly dependencyIsSatisfied   '4.11.6',
+110 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/node_modules' ]
+111 verbose dependencyIsSatisfied bn.js false
+112 silly hasDependencyInstalled web3-utils bn.js
+113 silly dependencyIsSatisfied [ 'bn.js',
+113 silly dependencyIsSatisfied   '4.11.6',
+113 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+114 verbose dependencyIsSatisfied bn.js false
+115 silly hasDependencyInstalled web3-bzz underscore
+116 silly dependencyIsSatisfied [ 'underscore',
+116 silly dependencyIsSatisfied   '1.8.3',
+116 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/node_modules' ]
+117 verbose dependencyIsSatisfied underscore false
+118 silly hasDependencyInstalled web3-core-helpers underscore
+119 silly dependencyIsSatisfied [ 'underscore',
+119 silly dependencyIsSatisfied   '1.8.3',
+119 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/node_modules' ]
+120 verbose dependencyIsSatisfied underscore false
+121 silly hasDependencyInstalled web3-core-method underscore
+122 silly dependencyIsSatisfied [ 'underscore',
+122 silly dependencyIsSatisfied   '1.8.3',
+122 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules' ]
+123 verbose dependencyIsSatisfied underscore false
+124 silly hasDependencyInstalled web3-core-requestmanager underscore
+125 silly dependencyIsSatisfied [ 'underscore',
+125 silly dependencyIsSatisfied   '1.8.3',
+125 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/node_modules' ]
+126 verbose dependencyIsSatisfied underscore false
+127 silly hasDependencyInstalled web3-core-subscriptions underscore
+128 silly dependencyIsSatisfied [ 'underscore',
+128 silly dependencyIsSatisfied   '1.8.3',
+128 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/node_modules' ]
+129 verbose dependencyIsSatisfied underscore false
+130 silly hasDependencyInstalled web3-eth-abi underscore
+131 silly dependencyIsSatisfied [ 'underscore',
+131 silly dependencyIsSatisfied   '1.8.3',
+131 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/node_modules' ]
+132 verbose dependencyIsSatisfied underscore false
+133 silly hasDependencyInstalled web3-eth-accounts underscore
+134 silly dependencyIsSatisfied [ 'underscore',
+134 silly dependencyIsSatisfied   '1.8.3',
+134 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+135 verbose dependencyIsSatisfied underscore false
+136 silly hasDependencyInstalled web3-eth-contract underscore
+137 silly dependencyIsSatisfied [ 'underscore',
+137 silly dependencyIsSatisfied   '1.8.3',
+137 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/node_modules' ]
+138 verbose dependencyIsSatisfied underscore false
+139 silly hasDependencyInstalled web3-eth underscore
+140 silly dependencyIsSatisfied [ 'underscore',
+140 silly dependencyIsSatisfied   '1.8.3',
+140 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth/node_modules' ]
+141 verbose dependencyIsSatisfied underscore false
+142 silly hasDependencyInstalled web3-providers-ipc underscore
+143 silly dependencyIsSatisfied [ 'underscore',
+143 silly dependencyIsSatisfied   '1.8.3',
+143 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/node_modules' ]
+144 verbose dependencyIsSatisfied underscore false
+145 silly hasDependencyInstalled web3-providers-ws underscore
+146 silly dependencyIsSatisfied [ 'underscore',
+146 silly dependencyIsSatisfied   '1.8.3',
+146 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws/node_modules' ]
+147 verbose dependencyIsSatisfied underscore false
+148 silly hasDependencyInstalled web3-utils underscore
+149 silly dependencyIsSatisfied [ 'underscore',
+149 silly dependencyIsSatisfied   '1.8.3',
+149 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+150 verbose dependencyIsSatisfied underscore false
+151 silly hasDependencyInstalled web3-bzz got
+152 silly dependencyIsSatisfied [ 'got',
+152 silly dependencyIsSatisfied   '7.1.0',
+152 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/node_modules' ]
+153 verbose dependencyIsSatisfied got false
+154 silly hasDependencyInstalled web3-bzz swarm-js
+155 silly dependencyIsSatisfied [ 'swarm-js',
+155 silly dependencyIsSatisfied   '0.1.37',
+155 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/node_modules' ]
+156 verbose dependencyIsSatisfied swarm-js false
+157 silly hasDependencyInstalled web3-core-promievent any-promise
+158 silly dependencyIsSatisfied [ 'any-promise',
+158 silly dependencyIsSatisfied   '1.3.0',
+158 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-promievent/node_modules' ]
+159 verbose dependencyIsSatisfied any-promise false
+160 silly hasDependencyInstalled web3-eth-accounts any-promise
+161 silly dependencyIsSatisfied [ 'any-promise',
+161 silly dependencyIsSatisfied   '1.3.0',
+161 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+162 verbose dependencyIsSatisfied any-promise false
+163 silly hasDependencyInstalled web3-core-promievent eventemitter3
+164 silly dependencyIsSatisfied [ 'eventemitter3',
+164 silly dependencyIsSatisfied   '1.1.1',
+164 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-promievent/node_modules' ]
+165 verbose dependencyIsSatisfied eventemitter3 false
+166 silly hasDependencyInstalled web3-core-subscriptions eventemitter3
+167 silly dependencyIsSatisfied [ 'eventemitter3',
+167 silly dependencyIsSatisfied   '1.1.1',
+167 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/node_modules' ]
+168 verbose dependencyIsSatisfied eventemitter3 false
+169 silly hasDependencyInstalled web3-core web3-core-method
+170 silly dependencyIsSatisfied [ 'web3-core-method',
+170 silly dependencyIsSatisfied   'file:../web3-core-method',
+170 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core/node_modules' ]
+171 verbose dependencyIsSatisfied web3-core-method false
+172 silly hasDependencyInstalled web3-eth-accounts web3-core-method
+173 silly dependencyIsSatisfied [ 'web3-core-method',
+173 silly dependencyIsSatisfied   'file:../web3-core-method',
+173 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+174 verbose dependencyIsSatisfied web3-core-method false
+175 silly hasDependencyInstalled web3-eth-contract web3-core-method
+176 silly dependencyIsSatisfied [ 'web3-core-method',
+176 silly dependencyIsSatisfied   'file:../web3-core-method',
+176 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/node_modules' ]
+177 verbose dependencyIsSatisfied web3-core-method false
+178 silly hasDependencyInstalled web3-eth-personal web3-core-method
+179 silly dependencyIsSatisfied [ 'web3-core-method',
+179 silly dependencyIsSatisfied   'file:../web3-core-method',
+179 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-personal/node_modules' ]
+180 verbose dependencyIsSatisfied web3-core-method false
+181 silly hasDependencyInstalled web3-eth web3-core-method
+182 silly dependencyIsSatisfied [ 'web3-core-method',
+182 silly dependencyIsSatisfied   'file:../web3-core-method',
+182 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth/node_modules' ]
+183 verbose dependencyIsSatisfied web3-core-method false
+184 silly hasDependencyInstalled web3-net web3-core-method
+185 silly dependencyIsSatisfied [ 'web3-core-method',
+185 silly dependencyIsSatisfied   'file:../web3-core-method',
+185 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-net/node_modules' ]
+186 verbose dependencyIsSatisfied web3-core-method false
+187 silly hasDependencyInstalled web3-shh web3-core-method
+188 silly dependencyIsSatisfied [ 'web3-core-method',
+188 silly dependencyIsSatisfied   'file:../web3-core-method',
+188 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-shh/node_modules' ]
+189 verbose dependencyIsSatisfied web3-core-method false
+190 silly hasDependencyInstalled web3-eth-accounts crypto-browserify
+191 silly dependencyIsSatisfied [ 'crypto-browserify',
+191 silly dependencyIsSatisfied   '3.12.0',
+191 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+192 verbose dependencyIsSatisfied crypto-browserify false
+193 silly hasDependencyInstalled web3-eth-accounts eth-lib
+194 silly dependencyIsSatisfied [ 'eth-lib',
+194 silly dependencyIsSatisfied   '0.2.7',
+194 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+195 verbose dependencyIsSatisfied eth-lib false
+196 silly hasDependencyInstalled web3-utils eth-lib
+197 silly dependencyIsSatisfied [ 'eth-lib',
+197 silly dependencyIsSatisfied   '0.1.27',
+197 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+198 verbose dependencyIsSatisfied eth-lib false
+199 silly hasDependencyInstalled web3-eth-accounts scrypt.js
+200 silly dependencyIsSatisfied [ 'scrypt.js',
+200 silly dependencyIsSatisfied   '0.2.0',
+200 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+201 verbose dependencyIsSatisfied scrypt.js false
+202 silly hasDependencyInstalled web3-eth-accounts uuid
+203 silly dependencyIsSatisfied [ 'uuid',
+203 silly dependencyIsSatisfied   '2.0.1',
+203 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/node_modules' ]
+204 verbose dependencyIsSatisfied uuid false
+205 silly hasDependencyInstalled web3-providers-http xhr2
+206 silly dependencyIsSatisfied [ 'xhr2',
+206 silly dependencyIsSatisfied   '0.1.4',
+206 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-http/node_modules' ]
+207 verbose dependencyIsSatisfied xhr2 false
+208 silly hasDependencyInstalled web3-providers-ipc oboe
+209 silly dependencyIsSatisfied [ 'oboe',
+209 silly dependencyIsSatisfied   '2.1.3',
+209 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/node_modules' ]
+210 verbose dependencyIsSatisfied oboe false
+211 silly hasDependencyInstalled web3-providers-ws websocket
+212 silly dependencyIsSatisfied [ 'websocket',
+212 silly dependencyIsSatisfied   'git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible',
+212 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws/node_modules' ]
+213 verbose dependencyIsSatisfied websocket false
+214 silly hasDependencyInstalled web3-utils ethjs-unit
+215 silly dependencyIsSatisfied [ 'ethjs-unit',
+215 silly dependencyIsSatisfied   '0.1.6',
+215 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+216 verbose dependencyIsSatisfied ethjs-unit false
+217 silly hasDependencyInstalled web3-utils number-to-bn
+218 silly dependencyIsSatisfied [ 'number-to-bn',
+218 silly dependencyIsSatisfied   '1.7.0',
+218 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+219 verbose dependencyIsSatisfied number-to-bn false
+220 silly hasDependencyInstalled web3-utils randomhex
+221 silly dependencyIsSatisfied [ 'randomhex',
+221 silly dependencyIsSatisfied   '0.1.5',
+221 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+222 verbose dependencyIsSatisfied randomhex false
+223 silly hasDependencyInstalled web3-utils utf8
+224 silly dependencyIsSatisfied [ 'utf8',
+224 silly dependencyIsSatisfied   '2.1.1',
+224 silly dependencyIsSatisfied   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/node_modules' ]
+225 verbose dependencyIsSatisfied utf8 false
+226 silly root dependencies []
+227 silly leaf dependencies {
+227 silly leaf dependencies   "web3-eth-abi": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "bn.js@4.11.6",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-eth-iban": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "bn.js@4.11.6",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-utils": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "bn.js@4.11.6",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "eth-lib@0.1.27",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "ethjs-unit@0.1.6",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "number-to-bn@1.7.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "randomhex@0.1.5",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "utf8@2.1.1",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-bzz": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "got@7.1.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "swarm-js@0.1.37",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core-helpers": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core-method": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core-requestmanager": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core-subscriptions": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "eventemitter3@1.1.1",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-eth-accounts": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "any-promise@1.3.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "crypto-browserify@3.12.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "eth-lib@0.2.7",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "scrypt.js@0.2.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "uuid@2.0.1",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-eth-contract": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-eth": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-providers-ipc": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "oboe@2.1.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-providers-ws": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "underscore@1.8.3",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "websocket@git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core-promievent": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "any-promise@1.3.0",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     },
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "eventemitter3@1.1.1",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-core": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-eth-personal": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-net": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-shh": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "web3-core-method@file:../web3-core-method",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ],
+227 silly leaf dependencies   "web3-providers-http": [
+227 silly leaf dependencies     {
+227 silly leaf dependencies       "dependency": "xhr2@0.1.4",
+227 silly leaf dependencies       "isSatisfied": false
+227 silly leaf dependencies     }
+227 silly leaf dependencies   ]
+227 silly leaf dependencies }
+228 info Installing external dependencies
+229 verbose actions 19 actions, concurrency 4
+230 silly installInDir web3-eth-abi [ 'bn.js@4.11.6', 'underscore@1.8.3' ]
+231 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json
+232 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json',
+232 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json.lerna_backup' ]
+233 silly installInDir web3-eth-iban [ 'bn.js@4.11.6' ]
+234 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json
+235 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json',
+235 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json.lerna_backup' ]
+236 silly installInDir web3-utils [ 'bn.js@4.11.6',
+236 silly installInDir   'underscore@1.8.3',
+236 silly installInDir   'eth-lib@0.1.27',
+236 silly installInDir   'ethjs-unit@0.1.6',
+236 silly installInDir   'number-to-bn@1.7.0',
+236 silly installInDir   'randomhex@0.1.5',
+236 silly installInDir   'utf8@2.1.1' ]
+237 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json
+238 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json',
+238 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json.lerna_backup' ]
+239 silly installInDir web3-bzz [ 'underscore@1.8.3', 'got@7.1.0', 'swarm-js@0.1.37' ]
+240 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json
+241 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json',
+241 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json.lerna_backup' ]
+242 silly installInDir writing tempJson { dependencies: { 'bn.js': '4.11.6', underscore: '1.8.3' } }
+243 silly installInDir writing tempJson { dependencies: { 'bn.js': '4.11.6' } }
+244 silly installInDir writing tempJson { dependencies:
+244 silly installInDir    { 'bn.js': '4.11.6',
+244 silly installInDir      underscore: '1.8.3',
+244 silly installInDir      'eth-lib': '0.1.27',
+244 silly installInDir      'ethjs-unit': '0.1.6',
+244 silly installInDir      'number-to-bn': '1.7.0',
+244 silly installInDir      randomhex: '0.1.5',
+244 silly installInDir      utf8: '2.1.1' } }
+245 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3', got: '7.1.0', 'swarm-js': '0.1.37' } }
+246 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz' }
+247 silly installInDir [ 'npm', [ 'install' ] ]
+248 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi' }
+249 silly installInDir [ 'npm', [ 'install' ] ]
+250 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils' }
+251 silly installInDir [ 'npm', [ 'install' ] ]
+252 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban' }
+253 silly installInDir [ 'npm', [ 'install' ] ]
+254 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json
+255 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json.lerna_backup',
+255 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-iban/package.json' ]
+256 verbose installed leaf web3-eth-iban
+257 silly installInDir web3-core-helpers [ 'underscore@1.8.3' ]
+258 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json
+259 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json',
+259 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json.lerna_backup' ]
+260 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3' } }
+261 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers' }
+262 silly installInDir [ 'npm', [ 'install' ] ]
+263 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json
+264 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json.lerna_backup',
+264 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-abi/package.json' ]
+265 verbose installed leaf web3-eth-abi
+266 silly installInDir web3-core-method [ 'underscore@1.8.3' ]
+267 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json
+268 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json',
+268 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json.lerna_backup' ]
+269 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3' } }
+270 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method' }
+271 silly installInDir [ 'npm', [ 'install' ] ]
+272 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json
+273 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json.lerna_backup',
+273 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/package.json' ]
+274 verbose installed leaf web3-core-method
+275 silly installInDir web3-core-requestmanager [ 'underscore@1.8.3' ]
+276 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json
+277 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json',
+277 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json.lerna_backup' ]
+278 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3' } }
+279 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager' }
+280 silly installInDir [ 'npm', [ 'install' ] ]
+281 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json
+282 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json.lerna_backup',
+282 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-helpers/package.json' ]
+283 verbose installed leaf web3-core-helpers
+284 silly installInDir web3-core-subscriptions [ 'underscore@1.8.3', 'eventemitter3@1.1.1' ]
+285 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json
+286 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json',
+286 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json.lerna_backup' ]
+287 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3', eventemitter3: '1.1.1' } }
+288 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions' }
+289 silly installInDir [ 'npm', [ 'install' ] ]
+290 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json
+291 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json.lerna_backup',
+291 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-requestmanager/package.json' ]
+292 verbose installed leaf web3-core-requestmanager
+293 silly installInDir web3-eth-accounts [ 'underscore@1.8.3',
+293 silly installInDir   'any-promise@1.3.0',
+293 silly installInDir   'web3-core-method@file:../web3-core-method',
+293 silly installInDir   'crypto-browserify@3.12.0',
+293 silly installInDir   'eth-lib@0.2.7',
+293 silly installInDir   'scrypt.js@0.2.0',
+293 silly installInDir   'uuid@2.0.1' ]
+294 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/package.json
+295 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/package.json',
+295 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts/package.json.lerna_backup' ]
+296 silly installInDir writing tempJson { dependencies:
+296 silly installInDir    { underscore: '1.8.3',
+296 silly installInDir      'any-promise': '1.3.0',
+296 silly installInDir      'web3-core-method': 'file:../web3-core-method',
+296 silly installInDir      'crypto-browserify': '3.12.0',
+296 silly installInDir      'eth-lib': '0.2.7',
+296 silly installInDir      'scrypt.js': '0.2.0',
+296 silly installInDir      uuid: '2.0.1' } }
+297 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-accounts' }
+298 silly installInDir [ 'npm', [ 'install' ] ]
+299 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json
+300 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json.lerna_backup',
+300 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-subscriptions/package.json' ]
+301 verbose installed leaf web3-core-subscriptions
+302 silly installInDir web3-eth-contract [ 'underscore@1.8.3',
+302 silly installInDir   'web3-core-method@file:../web3-core-method' ]
+303 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json
+304 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json',
+304 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json.lerna_backup' ]
+305 silly installInDir writing tempJson { dependencies:
+305 silly installInDir    { underscore: '1.8.3',
+305 silly installInDir      'web3-core-method': 'file:../web3-core-method' } }
+306 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract' }
+307 silly installInDir [ 'npm', [ 'install' ] ]
+308 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json
+309 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json.lerna_backup',
+309 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-utils/package.json' ]
+310 verbose installed leaf web3-utils
+311 silly installInDir web3-eth [ 'underscore@1.8.3',
+311 silly installInDir   'web3-core-method@file:../web3-core-method' ]
+312 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth/package.json
+313 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth/package.json',
+313 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth/package.json.lerna_backup' ]
+314 silly installInDir writing tempJson { dependencies:
+314 silly installInDir    { underscore: '1.8.3',
+314 silly installInDir      'web3-core-method': 'file:../web3-core-method' } }
+315 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth' }
+316 silly installInDir [ 'npm', [ 'install' ] ]
+317 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json
+318 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json.lerna_backup',
+318 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-bzz/package.json' ]
+319 verbose installed leaf web3-bzz
+320 silly installInDir web3-providers-ipc [ 'underscore@1.8.3', 'oboe@2.1.3' ]
+321 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json
+322 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json',
+322 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json.lerna_backup' ]
+323 silly installInDir writing tempJson { dependencies: { underscore: '1.8.3', oboe: '2.1.3' } }
+324 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc' }
+325 silly installInDir [ 'npm', [ 'install' ] ]
+326 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json
+327 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json.lerna_backup',
+327 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ipc/package.json' ]
+328 verbose installed leaf web3-providers-ipc
+329 silly installInDir web3-providers-ws [ 'underscore@1.8.3',
+329 silly installInDir   'websocket@git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible' ]
+330 silly installInDir backup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws/package.json
+331 silly rename [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws/package.json',
+331 silly rename   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws/package.json.lerna_backup' ]
+332 silly installInDir writing tempJson { dependencies:
+332 silly installInDir    { underscore: '1.8.3',
+332 silly installInDir      websocket: 'git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible' } }
+333 silly getExecOpts { cwd: '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-providers-ws' }
+334 silly installInDir [ 'npm', [ 'install' ] ]
+335 silly installInDir cleanup /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json
+336 silly renameSync [ '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json.lerna_backup',
+336 silly renameSync   '/Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract/package.json' ]
+337 verbose installed leaf web3-eth-contract
+338 error execute callback with error
+339 error Error: Command failed: npm install
+339 error xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+339 error
+339 error xcode-select: error: tool 'xcodebuild' requires Xcode, but active developer directory '/Library/Developer/CommandLineTools' is a command line tools instance
+339 error
+339 error ../src/addon.cpp:59:36: warning: 'NewInstance' is deprecated [-Wdeprecated-declarations]
+339 error                         info.GetReturnValue().Set(cons->NewInstance(argc, argv));
+339 error                                                         ^
+339 error /Users/fanyshu/.node-gyp/9.11.1/include/node/v8.h:3893:3: note: 'NewInstance' has been explicitly marked deprecated here
+339 error   V8_DEPRECATED("Use maybe version",
+339 error   ^
+339 error /Users/fanyshu/.node-gyp/9.11.1/include/node/v8config.h:321:29: note: expanded from macro 'V8_DEPRECATED'
+339 error   declarator __attribute__((deprecated))
+339 error                             ^
+339 error 1 warning generated.
+339 error error: error opening './Release/.deps/Release/obj.target/sha3/src/KeccakF-1600-reference.o.d.raw': No such file or directory
+339 error 1 error generated.
+339 error make: *** [Release/obj.target/sha3/src/KeccakF-1600-reference.o] Error 1
+339 error gyp ERR! build error
+339 error gyp ERR! stack Error: `make` failed with exit code: 2
+339 error gyp ERR! stack     at ChildProcess.onExit (/Users/fanyshu/.nvm/versions/node/v9.11.1/lib/node_modules/npm/node_modules/node-gyp/lib/build.js:258:23)
+339 error gyp ERR! stack     at ChildProcess.emit (events.js:180:13)
+339 error gyp ERR! stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:209:12)
+339 error gyp ERR! System Darwin 17.4.0
+339 error gyp ERR! command "/Users/fanyshu/.nvm/versions/node/v9.11.1/bin/node" "/Users/fanyshu/.nvm/versions/node/v9.11.1/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
+339 error gyp ERR! cwd /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/sha3
+339 error gyp ERR! node -v v9.11.1
+339 error gyp ERR! node-gyp -v v3.6.2
+339 error gyp ERR! not ok
+339 error npm WARN rollback Rolling back nan@2.10.0 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/nan is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back sha3@1.2.0 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/sha3 is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back keccakjs@0.2.1 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/keccakjs is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back eth-lib@0.1.27 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/eth-lib is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back web3-utils@1.0.0-beta.34 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/web3-utils is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back web3-eth-iban@1.0.0-beta.34 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/web3-eth-iban is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back web3-core-helpers@1.0.0-beta.34 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/web3-core-helpers is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN rollback Rolling back web3-core-subscriptions@1.0.0-beta.34 failed (this is probably harmless): /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/web3-core-subscriptions is not a child of /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-eth-contract
+339 error npm WARN web3-eth-contract No repository field.
+339 error npm WARN web3-eth-contract No license field.
+339 error
+339 error npm ERR! code ELIFECYCLE
+339 error npm ERR! errno 1
+339 error npm ERR! sha3@1.2.0 install: `node-gyp rebuild`
+339 error npm ERR! Exit status 1
+339 error npm ERR!
+339 error npm ERR! Failed at the sha3@1.2.0 install script.
+339 error npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+339 error
+339 error npm ERR! A complete log of this run can be found in:
+339 error npm ERR!     /Users/fanyshu/.npm/_logs/2018-04-20T03_45_15_249Z-debug.log
+339 error
+339 error > sha3@1.2.0 install /Users/fanyshu/Documents/Projects/DC/web3.js/packages/web3-core-method/node_modules/sha3
+339 error > node-gyp rebuild
+339 error
+339 error   CXX(target) Release/obj.target/sha3/src/addon.o
+339 error   CXX(target) Release/obj.target/sha3/src/displayIntermediateValues.o
+339 error   CXX(target) Release/obj.target/sha3/src/KeccakF-1600-reference.o
+339 error
+339 error     at Promise.all.then.arr (/Users/fanyshu/Documents/Projects/DC/web3.js/node_modules/execa/index.js:236:11)
+339 error     at <anonymous>
