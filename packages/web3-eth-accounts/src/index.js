@@ -32,6 +32,10 @@ var RLP = require("eth-lib/lib/rlp");
 var Nat = require("eth-lib/lib/nat");
 var Bytes = require("eth-lib/lib/bytes");
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
+if (_.isEmpty(cryp)) {
+    console.warn("Using `crypto-browserify` instead of browser `crypto`. See: https://github.com/ethereum/web3.js/issues/1582");
+    cryp = require('crypto-browserify');
+}
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
