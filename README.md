@@ -115,6 +115,16 @@ npm test
 
 ### Quorum functions
 
+'privateSendTransaction' for sending `privateFor` transactions:
+
+```
+web3.eth.privateSendTransaction({"from": "0xed9d02e382b34818e88b88a309c7fe71e65f419d", "to": "0xed9d02e382b34818e88b88a309c7fe71e65f419d", "data":
+"0x00", "privateFor" : ["QfeDAys9MPDs2XHExtc84jKGHxZg/aj52DTh0vtA3Xc="]})
+```
+
+Commands for dynamic-raft branch of Quorum:
+
+from web3-quorum
 ```
 web3.quorum.nodeInfo
 web3.quorum.isBlockMaker(address)
