@@ -136,6 +136,18 @@ web3.quorum.pauseBlockMaker()
 web3.quorum.resumeBlockMaker()
 ```
 
+## Istanbul functions
+
+```
+web3.istanbul.getSnapshot(blockHashOrBlockNumber) returns [object]
+web3.istanbul.getSnapshotAtHash(blockHash) returns [object]
+web3.istanbul.getValidators(blockHashOrBlockNumber) returns []string
+web3.istanbul.getValidatorsAtHash(blockHash) returns []string
+web3.istanbul.propose(address, auth)
+web3.istanbul.discard(address)
+web3.istanbul.candidates returns map[string] boolean
+```
+
 ### ZSL functions
 
 ```

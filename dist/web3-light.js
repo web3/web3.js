@@ -2537,6 +2537,7 @@ function Web3 (provider) {
     this.bzz = new Swarm(this);
     this.zsl = new Zsl(this);
     this.quorum = new Quorum(this);
+    this.geth = new Geth(this);
     this.settings = new Settings();
     this.version = {
         api: version.version
@@ -5523,7 +5524,7 @@ var methods = function () {
         compileSerpent,
         submitWork,
         getWork,
-        qSendTransaction
+        privateSendTransaction
     ];
 };
 
