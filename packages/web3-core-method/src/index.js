@@ -533,7 +533,9 @@ Method.prototype.buildCall = function() {
 
                     // If wallet was found, sign tx, and send using sendRawTransaction
                     if (wallet && wallet.privateKey) {
-                        return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx);
+                      return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey).then(sendSignedTx).catch(function(err) {
+                        sendTxCallback(err);
+                      });
                     }
 
                     // ETH_SIGN
