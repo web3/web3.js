@@ -46,7 +46,7 @@ Creates a new contract instance with all its methods and events defined in its :
 Parameters
 ----------
 
-1. ``jsonInterface`` - ``Object``: The json interface for the contract to instantiate
+1. ``jsonInterface`` - ``Array``: The json interface for the contract to instantiate
 2. ``address`` - ``String`` (optional): The address of the smart contract to call, can be added later using ``myContract.options.address = '0x1234..'``
 3. ``options`` - ``Object`` (optional): The options of the contract. Some are used as fallbacks for calls and transactions:
     * ``from`` - ``String``: The address transactions should be made from.
