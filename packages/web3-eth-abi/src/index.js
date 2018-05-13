@@ -377,10 +377,10 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     inputs.forEach(function (res, i) {
         returnValue[i] = (res.type === 'string') ? '' : null;
 
-        if (notIndexedParams[i]) {
+        if (notIndexedParams[i] !== undefined) {
             returnValue[i] = notIndexedParams[i];
         }
-        if (indexedParams[i]) {
+        if (indexedParams[i] !== undefined) {
             returnValue[i] = indexedParams[i];
         }
 
