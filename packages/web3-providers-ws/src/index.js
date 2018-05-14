@@ -75,7 +75,10 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
-    this.connection = new Ws(url, protocol, undefined, headers);
+    // Allow a custom client configuration
+    var clientConfig = options.clientConfig || undefined;
+
+    this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
 
     this.addDefaultEvents();
 
