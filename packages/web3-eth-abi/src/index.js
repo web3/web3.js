@@ -189,29 +189,28 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
-    var _this = _this;
+    var _this = this;
+    topics = _.isArray(topics) ? topics : [topics];
 
     data = data || '';
 
     var notIndexedInputs = [];
-    var indexedInputs = [];
+    var indexedParams = [];
+    var topicCount = 0;
 
     // TODO check for anonymous logs?
 
     inputs.forEach(function (input, i) {
         if (input.indexed) {
-            indexedInputs[i] = input;
+            indexedParams[i] = (['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(function(staticType) {return input.type.indexOf(staticType) !== -1; })) ? _this.decodeParameter(input.type, topics[topicCount]) : topics[topicCount];
+            topicCount++;
         } else {
             notIndexedInputs[i] = input;
         }
     });
 
-    var nonIndexedData = data.slice(2);
-    // TODO prevent decoding for string, tuple, and dynamic types
-    var indexedParams = _.isArray(topics) ? topics.map(function (topic, i) {
-        return _this.decodeParameters([indexedInputs[i]], topic.slice(2));
-    }) : (_this.decodeParameters([indexedInputs], topics) || []);
 
+    var nonIndexedData = data;
     var notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
 
     var returnValue = new Result();
@@ -221,10 +220,10 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     inputs.forEach(function (res, i) {
         returnValue[i] = (res.type === 'string') ? '' : null;
 
-        if (notIndexedParams[i]) {
+        if (typeof notIndexedParams[i] !== 'undefined') {
             returnValue[i] = notIndexedParams[i];
         }
-        if (indexedParams[i]) {
+        if (typeof indexedParams[i] !== 'undefined') {
             returnValue[i] = indexedParams[i];
         }
 
