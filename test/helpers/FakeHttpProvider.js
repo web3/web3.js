@@ -29,6 +29,7 @@ var FakeHttpProvider = function HttpProvider() {
     this.response = [];
     this.error = [];
     this.validation = [];
+    this.listeners = {};
 };
 
 

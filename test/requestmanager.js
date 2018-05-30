@@ -24,5 +24,22 @@ describe('lib/web3/requestmanager', function () {
             });
         });
     });
+    describe('destroy', function() {
+        it('should unset internal properties', function() {
+            var provider = new FakeHttpProvider();
+            var manager = new requestManager.Manager(provider);
+            manager.destroy();
+            assert.isTrue(manager.destroyed);
+            assert.isUndefined(manager.provider);
+        });
+        it('should remove DATA listeners', function() {
+            var provider = new FakeHttpProvider();
+            var dataEventCount = provider.listenerCount('data');
+            var manager = new requestManager.Manager(provider);
+            assert.equal(provider.listenerCount('data'), dataEventCount + 1);
+            manager.destroy();
+            assert.equal(provider.listenerCount('data'), dataEventCount);
+        });
+    });
 });
 

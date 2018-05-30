@@ -294,6 +294,36 @@ var runTests = function(contractFactory) {
         });
     });
 
+    describe('destroy', function() {
+        it('should unset internal properties', function() {
+            var provider = new FakeIpcProvider();
+
+            var contract = contractFactory(abi, address, provider);
+
+            contract.destroy();
+
+            assert.isTrue(contract.destroyed);
+            assert.isUndefined(contract.options);
+            assert.isUndefined(contract.methods);
+            assert.isUndefined(contract.events);
+            assert.isUndefined(contract._requestManager);
+        });
+        it('should destroy internal RequestManager', function() {
+            var provider = new FakeIpcProvider();
+
+            var contract = contractFactory(abi, address, provider);
+
+            var requestManager = contract._requestManager;
+
+            assert.isDefined(requestManager);
+
+            contract.destroy();
+
+            assert.isTrue(requestManager.destroyed);
+            assert.isUndefined(contract._requestManager);
+        });
+    });
+
     describe('provider assignment', function() {
         it('should assign a provider to a new instance without modifying old instance', function () {
             var provider1 = new FakeIpcProvider();

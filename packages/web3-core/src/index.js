@@ -26,6 +26,20 @@
 var requestManager = require('web3-core-requestmanager');
 var extend = require('./extend.js');
 
+function packageDestroy(pkg) {
+    if (pkg._requestManager) {
+        pkg._requestManager.destroy();
+    }
+    delete pkg._requestManager;
+    delete pkg._provider;
+    delete pkg.providers;
+    delete pkg.givenProvider;
+    Object.defineProperty(pkg, 'destroyed', {
+        enumerable: true,
+        value: true
+    });
+}
+
 module.exports = {
     packageInit: function (pkg, args) {
         args = Array.prototype.slice.call(args);
@@ -72,12 +86,21 @@ module.exports = {
             };
         }
 
+        // add destroy function (don't overwrite if already existing)
+        if (!pkg.destroy) {
+            pkg.destroy = function () {
+                packageDestroy(pkg);
+                return true;
+            };
+        }
+
         // attach batch request creation
         pkg.BatchRequest = requestManager.BatchManager.bind(null, pkg._requestManager);
 
         // attach extend function
         pkg.extend = extend(pkg);
     },
+    packageDestroy: packageDestroy,
     addProviders: function (pkg) {
         pkg.givenProvider = requestManager.Manager.givenProvider;
         pkg.providers = requestManager.Manager.providers;

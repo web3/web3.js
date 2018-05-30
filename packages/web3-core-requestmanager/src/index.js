@@ -95,14 +95,16 @@ RequestManager.prototype.setProvider = function (p, net) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(result, deprecatedResult){
+        this._requestManagerNotification = function requestManagerNotification(result, deprecatedResult){
             result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
             // check for result.method, to prevent old providers errors to pass as result
             if(result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
                 _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
-        });
+        };
+    
+        this.provider.on('data', this._requestManagerNotification);
         // TODO add error, end, timeout, connect??
         // this.provider.on('error', function requestManagerNotification(result){
         //     Object.keys(_this.subscriptions).forEach(function(id){
@@ -185,6 +187,10 @@ RequestManager.prototype.sendBatch = function (data, callback) {
  * @param {Function} callback   the callback to call for incoming notifications
  */
 RequestManager.prototype.addSubscription = function (id, name, type, callback) {
+    if (!this.provider) {
+        return callback(errors.InvalidProvider());
+    }
+
     if(this.provider.on) {
         this.subscriptions[id] = {
             callback: callback,
@@ -206,6 +212,10 @@ RequestManager.prototype.addSubscription = function (id, name, type, callback) {
  */
 RequestManager.prototype.removeSubscription = function (id, callback) {
     var _this = this;
+
+    if (!this.provider) {
+        return callback(errors.InvalidProvider());
+    }
 
     if(this.subscriptions[id]) {
 
@@ -236,8 +246,23 @@ RequestManager.prototype.clearSubscriptions = function (keepIsSyncing) {
 
 
     //  reset notification callbacks etc.
-    if(this.provider.reset)
+    if(this.provider && this.provider.reset)
         this.provider.reset();
+};
+
+RequestManager.prototype.destroy = function () {
+    if(this.provider){
+        this.clearSubscriptions();
+        if(this.provider.removeListener && this._requestManagerNotification){
+            this.provider.removeListener('data', this._requestManagerNotification);
+            delete this._requestManagerNotification;
+        }
+        delete this.provider;
+    }
+    Object.defineProperty(this, 'destroyed', {
+        enumerable: true,
+        value: true
+    });
 };
 
 module.exports = {

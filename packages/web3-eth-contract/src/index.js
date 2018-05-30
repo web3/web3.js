@@ -663,6 +663,22 @@ Contract.prototype.getPastEvents = function(){
     return call(subOptions.params, subOptions.callback);
 };
 
+/**
+ * Destroy contract (unset all internal properties)
+ *
+ * @method destroy
+ * @return {Boolean} success
+ */
+Contract.prototype.destroy = function(){
+    core.packageDestroy(this);
+    delete this.methods;
+    delete this.events;
+    delete this._address;
+    delete this._jsonInterface;
+    delete this.options;
+    return true;
+};
+
 
 /**
  * returns the an object with call, send, estimate functions

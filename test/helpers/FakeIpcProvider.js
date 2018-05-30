@@ -67,6 +67,20 @@ FakeIpcProvider.prototype.on = function (type, callback) {
     }
 };
 
+FakeIpcProvider.prototype.removeListener = function (type, callback) {
+    if(type === 'data'){
+        var idx = this.notificationCallbacks.indexOf(callback);
+        if(idx >= 0){
+            this.notificationCallbacks.splice(idx, 1);
+        }
+    }
+};
+
+FakeIpcProvider.prototype.listenerCount = function (type) {
+    return this.notificationCallbacks.length;
+};
+
+
 FakeIpcProvider.prototype.getResponseOrError = function (type, payload) {
     var _this = this;
     var response;
