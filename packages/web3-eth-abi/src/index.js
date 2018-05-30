@@ -96,8 +96,8 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
     // given a json interface
-    if (_.isObject(types) && types.inputs) {
-        types = utils._flattenTypes(true, types.inputs);
+    if (_.isArray(types) && _.isObject(types[0])) {
+        types = utils._flattenTypes(true, types);
     }
 
     return ethersAbiCoder.encode(types, params);
@@ -113,7 +113,7 @@ ABICoder.prototype.encodeParameters = function (types, params) {
  * @return {String} The encoded ABI for this function call
  */
 ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
-    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface, params).replace('0x','');
+    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x','');
 };
 
 
