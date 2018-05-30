@@ -28,7 +28,7 @@ var errors = require('web3-core-helpers').errors;
 var Ws = null;
 var _btoa = null;
 var parseURL = null;
-if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     Ws = window.WebSocket;
     _btoa = btoa;
     parseURL = function(url) {
@@ -39,8 +39,18 @@ if (typeof window !== 'undefined') {
     _btoa = function(str) {
       return Buffer(str).toString('base64');
     };
-    // Web3 supports Node.js 5, so we need to use the legacy URL API
-    parseURL = require('url').parse;
+    var url = require('url');
+    if (url.URL) {
+        // Use the new Node 6+ API for parsing URLs that supports username/password
+        var newURL = url.URL;
+        parseURL = function(url) {
+            return new newURL(url);
+        };
+    }
+    else {
+        // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
+        parseURL = require('url').parse;
+    }
 }
 // Default connection ws://localhost:8546
 
@@ -60,11 +70,12 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     // pass through with any additional headers supplied in constructor
     var parsedURL = parseURL(url);
     var headers = options.headers || {};
+    var protocol = options.protocol || undefined;
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
-    this.connection = new Ws(url, undefined, undefined, headers);
+    this.connection = new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
 
