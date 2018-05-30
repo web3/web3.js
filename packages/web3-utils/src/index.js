@@ -104,7 +104,7 @@ var _jsonInterfaceMethodToString = function (json) {
  * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
  *
  * @method _flattenTypes
- * @param {bool} includeTuple 
+ * @param {bool} includeTuple
  * @param {Object} puts
  * @return {Array} parameters as strings
  */
@@ -114,7 +114,7 @@ var _flattenTypes = function(includeTuple, puts)
     var types = [];
 
     puts.forEach(function(param) {
-        if (param.components != null) {
+        if (typeof param.components === 'object') {
             if (param.type.substring(0, 5) !== 'tuple') {
                 throw new Error('components found but type is not tuple; report on GitHub');
             }
@@ -125,15 +125,15 @@ var _flattenTypes = function(includeTuple, puts)
             // console.log("result should have things: " + result)
             if(_.isArray(result) && includeTuple) {
                 // console.log("include tuple word, and its an array. joining...: " + result.types)
-                types.push('tuple(' + result.join(',') + ')' + suffix)
+                types.push('tuple(' + result.join(',') + ')' + suffix);
             }
             else if(!includeTuple) {
                 // console.log("don't include tuple, but its an array. joining...: " + result)
-                types.push('(' + result.join(',') + ')' + suffix)
+                types.push('(' + result.join(',') + ')' + suffix);
             }
             else {
                 // console.log("its a single type within a tuple: " + result.types)
-                types.push('(' + result + ')')
+                types.push('(' + result + ')');
             }
         } else {
             // console.log("its a type and not directly in a tuple: " + param.type)
@@ -142,7 +142,7 @@ var _flattenTypes = function(includeTuple, puts)
     });
 
     return types;
-}
+};
 
 
 /**
