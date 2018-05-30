@@ -97,9 +97,7 @@ ABICoder.prototype.encodeParameter = function (type, param) {
 ABICoder.prototype.encodeParameters = function (types, params) {
     // given a json interface
     if (_.isObject(types) && types.inputs) {
-        types = _.map(types.inputs, function (input) {
-            return input.type;
-        });
+        types = utils._flattenTypes(true, types.inputs);
     }
 
     return ethersAbiCoder.encode(types, params);
@@ -149,9 +147,7 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
     var types = (isTypeArray) ? outputs : [];
 
     if(!isTypeArray) {
-        outputs.forEach(function (output) {
-            types.push(output.type);
-        });
+        types = utils._flattenTypes(true, outputs);
     }
 
     if (!bytes || bytes === '0x' || bytes === '0X') {
