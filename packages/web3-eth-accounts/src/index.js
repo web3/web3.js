@@ -525,7 +525,12 @@ Wallet.prototype.load = function (password, keyName) {
     return this.decrypt(keystore || [], password);
 };
 
-if (typeof localStorage === 'undefined') {
+try {
+    if (typeof localStorage === 'undefined') {
+        delete Wallet.prototype.save;
+        delete Wallet.prototype.load;
+    }
+} catch(e) {
     delete Wallet.prototype.save;
     delete Wallet.prototype.load;
 }
