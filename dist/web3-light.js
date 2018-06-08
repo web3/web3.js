@@ -1826,7 +1826,7 @@ module.exports = function (value, options) {
 };
 
 
-},{"crypto-js":62,"crypto-js/sha3":83}],20:[function(require,module,exports){
+},{"crypto-js":64,"crypto-js/sha3":85}],20:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2469,9 +2469,9 @@ module.exports = {
     isTopic: isTopic,
 };
 
-},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":88}],21:[function(require,module,exports){
+},{"./sha3.js":19,"bignumber.js":"bignumber.js","utf8":90}],21:[function(require,module,exports){
 module.exports={
-    "version": "0.20.6"
+    "version": "0.21.11"
 }
 
 },{}],22:[function(require,module,exports){
@@ -2504,6 +2504,7 @@ module.exports={
 
 var RequestManager = require('./web3/requestmanager');
 var Iban = require('./web3/iban');
+
 var Eth = require('./web3/methods/eth');
 var DB = require('./web3/methods/db');
 var Shh = require('./web3/methods/shh');
@@ -2513,6 +2514,9 @@ var Quorum = require('./web3/methods/quorum');
 var Swarm = require('./web3/methods/swarm');
 var Zsl = require('./web3/methods/zsl');
 var Geth = require('./web3/methods/geth');
+var Istanbul = require('./web3/methods/istanbul.js');
+var Debug = require('./web3/methods/debug.js');
+
 var Settings = require('./web3/settings');
 var version = require('./version.json');
 var utils = require('./utils/utils');
@@ -2523,8 +2527,6 @@ var Property = require('./web3/property');
 var HttpProvider = require('./web3/httpprovider');
 var IpcProvider = require('./web3/ipcprovider');
 var BigNumber = require('bignumber.js');
-
-
 
 function Web3 (provider) {
     this._requestManager = new RequestManager(provider);
@@ -2539,6 +2541,8 @@ function Web3 (provider) {
     this.quorum = new Quorum(this);
     this.geth = new Geth(this);
     this.settings = new Settings();
+    this.istanbul = new Istanbul();
+    this.debug = new Debug();
     this.version = {
         api: version.version
     };
@@ -2633,7 +2637,7 @@ Web3.prototype.createBatch = function () {
 
 module.exports = Web3;
 
-},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/eth":38,"./web3/methods/geth":39,"./web3/methods/net":40,"./web3/methods/personal":41,"./web3/methods/quorum":42,"./web3/methods/shh":43,"./web3/methods/swarm":44,"./web3/methods/zsl":46,"./web3/property":48,"./web3/requestmanager":49,"./web3/settings":50,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
+},{"./utils/sha3":19,"./utils/utils":20,"./version.json":21,"./web3/batch":24,"./web3/extend":28,"./web3/httpprovider":32,"./web3/iban":33,"./web3/ipcprovider":34,"./web3/methods/db":37,"./web3/methods/debug.js":38,"./web3/methods/eth":39,"./web3/methods/geth":40,"./web3/methods/istanbul.js":41,"./web3/methods/net":42,"./web3/methods/personal":43,"./web3/methods/quorum":44,"./web3/methods/shh":45,"./web3/methods/swarm":46,"./web3/methods/zsl":48,"./web3/property":50,"./web3/requestmanager":51,"./web3/settings":52,"bignumber.js":"bignumber.js"}],23:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -2722,7 +2726,7 @@ AllSolidityEvents.prototype.attachToContract = function (contract) {
 module.exports = AllSolidityEvents;
 
 
-},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":45}],24:[function(require,module,exports){
+},{"../utils/sha3":19,"../utils/utils":20,"./event":27,"./filter":29,"./formatters":30,"./methods/watches":47}],24:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -3358,7 +3362,7 @@ SolidityEvent.prototype.attachToContract = function (contract) {
 module.exports = SolidityEvent;
 
 
-},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./methods/watches":45}],28:[function(require,module,exports){
+},{"../solidity/coder":7,"../utils/sha3":19,"../utils/utils":20,"./filter":29,"./formatters":30,"./methods/watches":47}],28:[function(require,module,exports){
 var formatters = require('./formatters');
 var utils = require('./../utils/utils');
 var Method = require('./method');
@@ -3408,7 +3412,7 @@ var extend = function (web3) {
 module.exports = extend;
 
 
-},{"./../utils/utils":20,"./formatters":30,"./method":36,"./property":48}],29:[function(require,module,exports){
+},{"./../utils/utils":20,"./formatters":30,"./method":36,"./property":50}],29:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -4466,7 +4470,7 @@ HttpProvider.prototype.isConnected = function () {
 
 module.exports = HttpProvider;
 
-},{"./errors":26,"xhr2":89,"xmlhttprequest":17}],33:[function(require,module,exports){
+},{"./errors":26,"xhr2":91,"xmlhttprequest":17}],33:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5242,6 +5246,266 @@ module.exports = DB;
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+/** @file debug.js
+ * @author Cody Burns <Cody.w.Burns@gmail.com>
+ * @date 2018
+ */
+
+ "use strict";
+ var Method = require('../method');
+
+
+ function debug(web3) {
+     this._requestManager = web3._requestManager;
+
+     var self = this;
+
+     methods().forEach(function(method) {
+         method.attachToObject(self);
+         method.setRequestManager(self._requestManager);
+     });
+
+ }
+
+var methods = function () {
+
+  var printBlock  =  new Method({
+ 			name: 'printBlock',
+ 			call: 'debug_printBlock',
+ 			params: 1
+ 		});
+
+  var getBlockRlp =  new Method({
+ 			name: 'getBlockRlp',
+ 			call: 'debug_getBlockRlp',
+ 			params: 1
+ 		});
+
+  var setHead =  new Method({
+    	name: 'setHead',
+ 			call: 'debug_setHead',
+ 			params: 1
+ 		});
+
+  var traceBlock =  new Method({
+ 			name: 'traceBlock',
+ 			call: 'debug_traceBlock',
+ 			params: 1
+ 		});
+
+  var traceBlockFromFile =  new Method({
+  		name: 'traceBlockFromFile',
+ 			call: 'debug_traceBlockFromFile',
+ 			params: 1
+ 		});
+
+  var traceBlockByNumber =  new Method({
+    	name: 'traceBlockByNumber',
+ 			call: 'debug_traceBlockByNumber',
+ 			params: 1
+ 		});
+ 	var traceBlockByHash =  new Method({
+    	name: 'traceBlockByHash',
+ 			call: 'debug_traceBlockByHash',
+ 			params: 1
+ 		});
+
+var seedHash =  new Method({
+  		name: 'seedHash',
+ 			call: 'debug_seedHash',
+ 			params: 1
+ 		});
+
+var dumpBlock =  new Method({
+  		name: 'dumpBlock',
+ 			call: 'debug_dumpBlock',
+ 			params: 1
+ 		});
+ 	var chaindbProperty =  new Method({
+    	name: 'chaindbProperty',
+ 			call: 'debug_chaindbProperty',
+ 			params: 1,
+ 			outputFormatter: console.log
+ 		});
+ 		var chaindbCompact =  new Method({
+ 			name: 'chaindbCompact',
+ 			call: 'debug_chaindbCompact',
+ 		});
+ 		var metrics =  new Method({
+ 			name: 'metrics',
+ 			call: 'debug_metrics',
+ 			params: 1
+ 		});
+ 		var verbosity =  new Method({
+ 			name: 'verbosity',
+ 			call: 'debug_verbosity',
+ 			params: 1
+ 		});
+ 		var vmodule =  new Method({
+ 			name: 'vmodule',
+ 			call: 'debug_vmodule',
+ 			params: 1
+ 		});
+ 		var backtraceAt =  new Method({
+ 			name: 'backtraceAt',
+ 			call: 'debug_backtraceAt',
+ 			params: 1,
+ 		});
+ 		var stacks =  new Method({
+ 			name: 'stacks',
+ 			call: 'debug_stacks',
+ 			params: 0,
+ 			outputFormatter: console.log
+ 		});
+ 		var freeOSMemory =  new Method({
+ 			name: 'freeOSMemory',
+ 			call: 'debug_freeOSMemory',
+ 			params: 0,
+ 		});
+ 		var setGCPercent  =  new Method({
+ 			name: 'setGCPercent',
+ 			call: 'debug_setGCPercent',
+ 			params: 1,
+ 		});
+ 		var memStats =  new Method({
+ 			name: 'memStats',
+ 			call: 'debug_memStats',
+ 			params: 0,
+ 		});
+ 		var gcStats  =  new Method({
+ 			name: 'gcStats',
+ 			call: 'debug_gcStats',
+ 			params: 0,
+ 		});
+ 		var cpuProfile =  new Method({
+ 			name: 'cpuProfile',
+ 			call: 'debug_cpuProfile',
+ 			params: 2
+ 		});
+ 		var startCPUProfile =  new Method({
+ 			name: 'startCPUProfile',
+ 			call: 'debug_startCPUProfile',
+ 			params: 1
+ 		});
+ 		var stopCPUProfile =  new Method({
+ 			name: 'stopCPUProfile',
+ 			call: 'debug_stopCPUProfile',
+ 			params: 0
+ 		});
+ 		var goTrace =  new Method({
+ 			name: 'goTrace',
+ 			call: 'debug_goTrace',
+ 			params: 2
+ 		});
+ 		var startGoTrace =  new Method({
+ 			name: 'startGoTrace',
+ 			call: 'debug_startGoTrace',
+ 			params: 1
+ 		});
+ 		var stopGoTrace =  new Method({
+ 			name: 'stopGoTrace',
+ 			call: 'debug_stopGoTrace',
+ 			params: 0
+ 		});
+ 		var blockProfile =  new Method({
+ 			name: 'blockProfile',
+ 			call: 'debug_blockProfile',
+ 			params: 2
+ 		});
+ 		var setBlockProfileRate =  new Method({
+ 			name: 'setBlockProfileRate',
+ 			call: 'debug_setBlockProfileRate',
+ 			params: 1
+ 		});
+ 		var writeBlockProfile =  new Method({
+ 			name: 'writeBlockProfile',
+ 			call: 'debug_writeBlockProfile',
+ 			params: 1
+ 		});
+ 		var writeMemProfile =  new Method({
+ 			name: 'writeMemProfile',
+ 			call: 'debug_writeMemProfile',
+ 			params: 1
+ 		});
+ 		var traceTransaction =  new Method({
+ 			name: 'traceTransaction',
+ 			call: 'debug_traceTransaction',
+ 			params: 2,
+ 			inputFormatter: [null, null]
+ 		});
+ 		var preimage =  new Method({
+ 			name: 'preimage',
+ 			call: 'debug_preimage',
+ 			params: 1,
+ 			inputFormatter: [null]
+ 		});
+ 		var getBadBlocks =  new Method({
+ 			name: 'getBadBlocks',
+ 			call: 'debug_getBadBlocks',
+ 			params: 0,
+ 		});
+ 		var storageRangeAt =  new Method({
+ 			name: 'storageRangeAt',
+ 			call: 'debug_storageRangeAt',
+ 			params: 5,
+ 		});
+ return [
+   printBlock,
+   getBlockRlp,
+   setHead,
+   traceBlock,
+   traceBlockFromFile,
+   traceBlockByNumber,
+   traceBlockByHash,
+   seedHash,
+   dumpBlock,
+   chaindbProperty,
+   chaindbCompact,
+   metrics,
+   verbosity,
+   vmodule,
+   backtraceAt,
+   stacks,
+   freeOSMemory,
+   setGCPercent,
+   memStats,
+   gcStats,
+   cpuProfile,
+   startCPUProfile,
+   stopCPUProfile,
+   goTrace,
+   startGoTrace,
+   stopGoTrace,
+   blockProfile,
+   setBlockProfileRate,
+   writeBlockProfile,
+   writeMemProfile,
+   traceTransaction,
+   preimage,
+   getBadBlocks,
+   storageRangeAt
+  ];
+ };
+
+ module.exports = debug;
+
+},{"../method":36}],39:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * @file eth.js
  * @author Marek Kotewicz <marek@ethdev.com>
@@ -5593,7 +5857,7 @@ Eth.prototype.isSyncing = function (callback) {
 
 module.exports = Eth;
 
-},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":47,"../property":48,"../syncing":51,"../transfer":52,"./watches":45}],39:[function(require,module,exports){
+},{"../../utils/config":18,"../../utils/utils":20,"../contract":25,"../filter":29,"../formatters":30,"../iban":33,"../method":36,"../namereg":49,"../property":50,"../syncing":53,"../transfer":54,"./watches":47}],40:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5649,7 +5913,99 @@ module.exports = Eth;
 
  module.exports = geth;
 
-},{"../formatters":30,"../method":36}],40:[function(require,module,exports){
+},{"../formatters":30,"../method":36}],41:[function(require,module,exports){
+/*
+    This file is part of web3.js.
+
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/** @file istanbul.js
+ * @author Cody Burns <Cody.w.Burns@gmail.com>
+ * @date 2018
+ */
+
+ "use strict";
+ var Method = require('../method');
+ var Property = require('../property');
+
+
+ function Istanbul(web3) {
+     this._requestManager = web3._requestManager;
+
+     var self = this;
+
+     methods().forEach(function(method) {
+         method.attachToObject(self);
+         method.setRequestManager(self._requestManager);
+     });
+
+ }
+
+
+ var methods = function () {
+    var getSnapshot =  new Method({
+     name: 'getSnapshot',
+     call: 'istanbul_getSnapshot',
+     params: 1
+    });
+    var getSnapshotAtHash =  new Methodd({
+     name: 'getSnapshotAtHash',
+     call: 'istanbul_getSnapshotAtHash',
+     params: 1
+   });
+    var getValidators =  new Method({
+     name: 'getValidators',
+     call: 'istanbul_getValidators',
+     params: 1
+    });
+    var getValidatorsAtHash =  new Method({
+     name: 'getValidatorsAtHash',
+     call: 'istanbul_getValidatorsAtHash',
+     params: 1
+   });
+    var propose  =  new Method({
+     name: 'propose',
+     call: 'istanbul_propose',
+     params: 2
+   });
+    var discard  =  new Methodd({
+     name: 'discard',
+     call: 'istanbul_discard',
+     params: 1
+   })
+   return [
+     getSnapshot,
+     getSnapshotAtHash,
+     getValidators,
+     getValidatorsAtHash,
+     propose,
+     discard
+   ];
+};
+
+var properties = function () {
+    return [
+        new Property({
+            name: 'candidates',
+            getter: 'istanbul_candidates'
+        })
+    ];
+};
+
+module.exports = Istanbul;
+
+},{"../method":36,"../property":50}],42:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5703,7 +6059,7 @@ var properties = function () {
 
 module.exports = Net;
 
-},{"../../utils/utils":20,"../property":48}],41:[function(require,module,exports){
+},{"../../utils/utils":20,"../property":50}],43:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -5820,7 +6176,7 @@ var properties = function () {
 
 module.exports = Personal;
 
-},{"../formatters":30,"../method":36,"../property":48}],42:[function(require,module,exports){
+},{"../formatters":30,"../method":36,"../property":50}],44:[function(require,module,exports){
 //#########################################################################################
 // QUORUM FUNCTIONS
 // Created by H.M Tran Diep - July 2017
@@ -5924,7 +6280,7 @@ var properties = function () {
 
 module.exports = Quorum;
 
-},{"../formatters":30,"../method":36,"../property":48}],43:[function(require,module,exports){
+},{"../formatters":30,"../method":36,"../property":50}],45:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6070,7 +6426,7 @@ var methods = function () {
 module.exports = Shh;
 
 
-},{"../filter":29,"../method":36,"./watches":45}],44:[function(require,module,exports){
+},{"../filter":29,"../method":36,"./watches":47}],46:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6217,7 +6573,7 @@ var properties = function () {
 
 module.exports = Swarm;
 
-},{"../method":36,"../property":48}],45:[function(require,module,exports){
+},{"../method":36,"../property":50}],47:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6326,7 +6682,7 @@ module.exports = {
 };
 
 
-},{"../method":36}],46:[function(require,module,exports){
+},{"../method":36}],48:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6344,7 +6700,7 @@ module.exports = {
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /** @file zsl.js
- * @author Cody Burns <Cody.w.BUrns@gmail.com>
+ * @author Cody Burns <Cody.w.Burns@gmail.com>
  * @date 2018
  */
 
@@ -6482,7 +6838,7 @@ module.exports = {
 
  module.exports = zsl;
 
-},{"../method":36}],47:[function(require,module,exports){
+},{"../method":36}],49:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6523,7 +6879,7 @@ module.exports = {
 };
 
 
-},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],48:[function(require,module,exports){
+},{"../contracts/GlobalRegistrar.json":1,"../contracts/ICAPRegistrar.json":2}],50:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6669,7 +7025,7 @@ Property.prototype.request = function () {
 module.exports = Property;
 
 
-},{"../utils/utils":20}],49:[function(require,module,exports){
+},{"../utils/utils":20}],51:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -6936,7 +7292,7 @@ RequestManager.prototype.poll = function () {
 module.exports = RequestManager;
 
 
-},{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":35}],50:[function(require,module,exports){
+},{"../utils/config":18,"../utils/utils":20,"./errors":26,"./jsonrpc":35}],52:[function(require,module,exports){
 
 
 var Settings = function () {
@@ -6947,7 +7303,7 @@ var Settings = function () {
 module.exports = Settings;
 
 
-},{}],51:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7042,7 +7398,7 @@ IsSyncing.prototype.stopWatching = function () {
 module.exports = IsSyncing;
 
 
-},{"../utils/utils":20,"./formatters":30}],52:[function(require,module,exports){
+},{"../utils/utils":20,"./formatters":30}],54:[function(require,module,exports){
 /*
     This file is part of web3.js.
 
@@ -7136,9 +7492,9 @@ var deposit = function (eth, from, to, value, client, callback) {
 module.exports = transfer;
 
 
-},{"../contracts/SmartExchange.json":3,"./iban":33}],53:[function(require,module,exports){
+},{"../contracts/SmartExchange.json":3,"./iban":33}],55:[function(require,module,exports){
 
-},{}],54:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -7371,7 +7727,7 @@ module.exports = transfer;
 	return CryptoJS.AES;
 
 }));
-},{"./cipher-core":55,"./core":56,"./enc-base64":57,"./evpkdf":59,"./md5":64}],55:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58,"./enc-base64":59,"./evpkdf":61,"./md5":66}],57:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -8247,7 +8603,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":56}],56:[function(require,module,exports){
+},{"./core":58}],58:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9008,7 +9364,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{}],57:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9144,7 +9500,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Base64;
 
 }));
-},{"./core":56}],58:[function(require,module,exports){
+},{"./core":58}],60:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9294,7 +9650,7 @@ module.exports = transfer;
 	return CryptoJS.enc.Utf16;
 
 }));
-},{"./core":56}],59:[function(require,module,exports){
+},{"./core":58}],61:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9427,7 +9783,7 @@ module.exports = transfer;
 	return CryptoJS.EvpKDF;
 
 }));
-},{"./core":56,"./hmac":61,"./sha1":80}],60:[function(require,module,exports){
+},{"./core":58,"./hmac":63,"./sha1":82}],62:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9494,7 +9850,7 @@ module.exports = transfer;
 	return CryptoJS.format.Hex;
 
 }));
-},{"./cipher-core":55,"./core":56}],61:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],63:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9638,7 +9994,7 @@ module.exports = transfer;
 
 
 }));
-},{"./core":56}],62:[function(require,module,exports){
+},{"./core":58}],64:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9657,7 +10013,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./aes":54,"./cipher-core":55,"./core":56,"./enc-base64":57,"./enc-utf16":58,"./evpkdf":59,"./format-hex":60,"./hmac":61,"./lib-typedarrays":63,"./md5":64,"./mode-cfb":65,"./mode-ctr":67,"./mode-ctr-gladman":66,"./mode-ecb":68,"./mode-ofb":69,"./pad-ansix923":70,"./pad-iso10126":71,"./pad-iso97971":72,"./pad-nopadding":73,"./pad-zeropadding":74,"./pbkdf2":75,"./rabbit":77,"./rabbit-legacy":76,"./rc4":78,"./ripemd160":79,"./sha1":80,"./sha224":81,"./sha256":82,"./sha3":83,"./sha384":84,"./sha512":85,"./tripledes":86,"./x64-core":87}],63:[function(require,module,exports){
+},{"./aes":56,"./cipher-core":57,"./core":58,"./enc-base64":59,"./enc-utf16":60,"./evpkdf":61,"./format-hex":62,"./hmac":63,"./lib-typedarrays":65,"./md5":66,"./mode-cfb":67,"./mode-ctr":69,"./mode-ctr-gladman":68,"./mode-ecb":70,"./mode-ofb":71,"./pad-ansix923":72,"./pad-iso10126":73,"./pad-iso97971":74,"./pad-nopadding":75,"./pad-zeropadding":76,"./pbkdf2":77,"./rabbit":79,"./rabbit-legacy":78,"./rc4":80,"./ripemd160":81,"./sha1":82,"./sha224":83,"./sha256":84,"./sha3":85,"./sha384":86,"./sha512":87,"./tripledes":88,"./x64-core":89}],65:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -9734,7 +10090,7 @@ module.exports = transfer;
 	return CryptoJS.lib.WordArray;
 
 }));
-},{"./core":56}],64:[function(require,module,exports){
+},{"./core":58}],66:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10003,7 +10359,7 @@ module.exports = transfer;
 	return CryptoJS.MD5;
 
 }));
-},{"./core":56}],65:[function(require,module,exports){
+},{"./core":58}],67:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10082,7 +10438,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CFB;
 
 }));
-},{"./cipher-core":55,"./core":56}],66:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],68:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10199,7 +10555,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTRGladman;
 
 }));
-},{"./cipher-core":55,"./core":56}],67:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],69:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10258,7 +10614,7 @@ module.exports = transfer;
 	return CryptoJS.mode.CTR;
 
 }));
-},{"./cipher-core":55,"./core":56}],68:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],70:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10299,7 +10655,7 @@ module.exports = transfer;
 	return CryptoJS.mode.ECB;
 
 }));
-},{"./cipher-core":55,"./core":56}],69:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],71:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10354,7 +10710,7 @@ module.exports = transfer;
 	return CryptoJS.mode.OFB;
 
 }));
-},{"./cipher-core":55,"./core":56}],70:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],72:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10404,7 +10760,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Ansix923;
 
 }));
-},{"./cipher-core":55,"./core":56}],71:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],73:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10449,7 +10805,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso10126;
 
 }));
-},{"./cipher-core":55,"./core":56}],72:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],74:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10490,7 +10846,7 @@ module.exports = transfer;
 	return CryptoJS.pad.Iso97971;
 
 }));
-},{"./cipher-core":55,"./core":56}],73:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],75:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10521,7 +10877,7 @@ module.exports = transfer;
 	return CryptoJS.pad.NoPadding;
 
 }));
-},{"./cipher-core":55,"./core":56}],74:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],76:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10567,7 +10923,7 @@ module.exports = transfer;
 	return CryptoJS.pad.ZeroPadding;
 
 }));
-},{"./cipher-core":55,"./core":56}],75:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58}],77:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10713,7 +11069,7 @@ module.exports = transfer;
 	return CryptoJS.PBKDF2;
 
 }));
-},{"./core":56,"./hmac":61,"./sha1":80}],76:[function(require,module,exports){
+},{"./core":58,"./hmac":63,"./sha1":82}],78:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -10904,7 +11260,7 @@ module.exports = transfer;
 	return CryptoJS.RabbitLegacy;
 
 }));
-},{"./cipher-core":55,"./core":56,"./enc-base64":57,"./evpkdf":59,"./md5":64}],77:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58,"./enc-base64":59,"./evpkdf":61,"./md5":66}],79:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11097,7 +11453,7 @@ module.exports = transfer;
 	return CryptoJS.Rabbit;
 
 }));
-},{"./cipher-core":55,"./core":56,"./enc-base64":57,"./evpkdf":59,"./md5":64}],78:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58,"./enc-base64":59,"./evpkdf":61,"./md5":66}],80:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11237,7 +11593,7 @@ module.exports = transfer;
 	return CryptoJS.RC4;
 
 }));
-},{"./cipher-core":55,"./core":56,"./enc-base64":57,"./evpkdf":59,"./md5":64}],79:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58,"./enc-base64":59,"./evpkdf":61,"./md5":66}],81:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11505,7 +11861,7 @@ module.exports = transfer;
 	return CryptoJS.RIPEMD160;
 
 }));
-},{"./core":56}],80:[function(require,module,exports){
+},{"./core":58}],82:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11656,7 +12012,7 @@ module.exports = transfer;
 	return CryptoJS.SHA1;
 
 }));
-},{"./core":56}],81:[function(require,module,exports){
+},{"./core":58}],83:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11737,7 +12093,7 @@ module.exports = transfer;
 	return CryptoJS.SHA224;
 
 }));
-},{"./core":56,"./sha256":82}],82:[function(require,module,exports){
+},{"./core":58,"./sha256":84}],84:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -11937,7 +12293,7 @@ module.exports = transfer;
 	return CryptoJS.SHA256;
 
 }));
-},{"./core":56}],83:[function(require,module,exports){
+},{"./core":58}],85:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12261,7 +12617,7 @@ module.exports = transfer;
 	return CryptoJS.SHA3;
 
 }));
-},{"./core":56,"./x64-core":87}],84:[function(require,module,exports){
+},{"./core":58,"./x64-core":89}],86:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12345,7 +12701,7 @@ module.exports = transfer;
 	return CryptoJS.SHA384;
 
 }));
-},{"./core":56,"./sha512":85,"./x64-core":87}],85:[function(require,module,exports){
+},{"./core":58,"./sha512":87,"./x64-core":89}],87:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -12669,7 +13025,7 @@ module.exports = transfer;
 	return CryptoJS.SHA512;
 
 }));
-},{"./core":56,"./x64-core":87}],86:[function(require,module,exports){
+},{"./core":58,"./x64-core":89}],88:[function(require,module,exports){
 ;(function (root, factory, undef) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13440,7 +13796,7 @@ module.exports = transfer;
 	return CryptoJS.TripleDES;
 
 }));
-},{"./cipher-core":55,"./core":56,"./enc-base64":57,"./evpkdf":59,"./md5":64}],87:[function(require,module,exports){
+},{"./cipher-core":57,"./core":58,"./enc-base64":59,"./evpkdf":61,"./md5":66}],89:[function(require,module,exports){
 ;(function (root, factory) {
 	if (typeof exports === "object") {
 		// CommonJS
@@ -13745,7 +14101,7 @@ module.exports = transfer;
 	return CryptoJS;
 
 }));
-},{"./core":56}],88:[function(require,module,exports){
+},{"./core":58}],90:[function(require,module,exports){
 /*! https://mths.be/utf8js v2.1.2 by @mathias */
 ;(function(root) {
 
@@ -13991,7 +14347,7 @@ module.exports = transfer;
 
 }(this));
 
-},{}],89:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 module.exports = XMLHttpRequest;
 
 },{}],"bignumber.js":[function(require,module,exports){
