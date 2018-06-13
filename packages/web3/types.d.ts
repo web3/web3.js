@@ -110,7 +110,7 @@ export declare interface TransactionReceipt {
   events?: {
     [eventName: string]: EventLog
   },
-  status: string
+  status: boolean
 }
 export declare interface EncodedTransaction {
   raw: string,
