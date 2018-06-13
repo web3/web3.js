@@ -212,8 +212,8 @@ export declare interface PrivateKey {
 }
 
 export declare interface Signature {
-  message: string
-  hash: string
+  messageHash: string
+  rawTransaction: string
   r: string
   s: string
   v: string
