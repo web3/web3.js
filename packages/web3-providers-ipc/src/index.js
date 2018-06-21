@@ -32,6 +32,7 @@ var IpcProvider = function IpcProvider(path, net) {
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
     this.path = path;
+    this.connected = false;
 
     this.connection = net.connect({path: this.path});
 
@@ -87,6 +88,11 @@ IpcProvider.prototype.addDefaultEvents = function(){
     var _this = this;
 
     this.connection.on('connect', function(){
+        _this.connected = true;
+    });
+
+    this.connection.on('close', function(){
+        _this.connected = false;
     });
 
     this.connection.on('error', function(){
