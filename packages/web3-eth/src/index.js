@@ -143,8 +143,20 @@ var Eth = function Eth() {
     // not create this proxy type, changing the provider in one instance of
     // web3-eth would subsequently change the provider for _all_ contract
     // instances!
+    var self = this;
     var Contract = function Contract() {
         BaseContract.apply(this, arguments);
+
+        // when Eth.setProvider is called, call packageInit
+        // on all contract instances instantiated via this Eth
+        // instances. This will update the currentProvider for
+        // the contract instances
+        var _this = this;
+        var setProvider = self.setProvider;
+        self.setProvider = function() {
+          setProvider.apply(self, arguments);
+          core.packageInit(_this, [self.currentProvider]);
+        };
     };
 
     Contract.setProvider = function() {
