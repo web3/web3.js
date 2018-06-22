@@ -265,7 +265,7 @@ var formatOutputAddress = function (param, name) {
     var value = param.staticPart();
 
     if (!value) {
-        throw new Error('Couldn\'t decode '+ name +' from ABI: 0x'+ param.rawValue);
+        return '0x';
     }
 
     return utils.toChecksumAddress("0x" + value.slice(value.length - 40, value.length));
