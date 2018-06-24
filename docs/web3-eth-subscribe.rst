@@ -57,8 +57,11 @@ Example
         address: '0x123456..',
         topics: ['0x12345...']
     }, function(error, result){
-        if (!error)
-            console.log(log);
+        if (error)
+            console.log(error);
+    })
+    .on("data", function(logs){
+        console.log(logs);
     });
 
     // unsubscribes the subscription
@@ -152,8 +155,8 @@ Example
 .. code-block:: javascript
 
     var subscription = web3.eth.subscribe('pendingTransactions', function(error, result){
-        if (!error)
-            console.log(result);
+        if (error)
+            console.log(error);
     })
     .on("data", function(transaction){
         console.log(transaction);
@@ -230,6 +233,7 @@ Example
             console.log(error);
     })
     .on("data", function(blockHeader){
+        console.log(blockHeader);
     });
 
     // unsubscribes the subscription
@@ -284,8 +288,8 @@ Example
 .. code-block:: javascript
 
     var subscription = web3.eth.subscribe('syncing', function(error, sync){
-        if (!error)
-            console.log(sync);
+        if (error)
+            console.log(error);
     })
     .on("data", function(sync){
         // show some syncing stats
@@ -357,8 +361,8 @@ Example
         address: '0x123456..',
         topics: ['0x12345...']
     }, function(error, result){
-        if (!error)
-            console.log(result);
+        if (error)
+            console.log(error);
     })
     .on("data", function(log){
         console.log(log);
