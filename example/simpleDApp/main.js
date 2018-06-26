@@ -12,8 +12,8 @@ web3.eth.defaultAccount = web3.eth.accounts[0];
 
 //the contract ABI (remix.ethereum.org can generate this for you)
 var simpleContractCode = web3.eth.contract([{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"data","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"value","type":"string"}],"name":"addData","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]);
-//the contract's address
-var simpleContract = simpleContractCode.at('0x1F1446a4a8665E942236BB4FFE3376d462c135fD');
+//the contract's address --> https://ropsten.etherscan.io/address/0xecb2ea404cb3226781500d655140063e20da07c6
+var simpleContract = simpleContractCode.at('0xEcb2eA404cb3226781500d655140063e20dA07C6');
 
 function addData(){
 	var value = document.getElementById("fAdd").value;
@@ -24,10 +24,8 @@ function addData(){
 }
 function getData(){
 	var address = document.getElementById("fGet").value;
-	console.log(address);
 	//calling the data variable
 	simpleContract.data(address,function (err, res) {
-		console.log(res);
 		document.getElementById("dataIn").innerHTML = "Retreived data:  " + res;
 	});
 }
