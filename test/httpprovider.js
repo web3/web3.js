@@ -5,7 +5,7 @@ var SandboxedModule = require('sandboxed-module');
 SandboxedModule.registerBuiltInSourceTransformer('istanbul');
 var HttpProvider = SandboxedModule.require('../lib/web3/httpprovider', {
     requires: {
-        'xhr2': require('./helpers/FakeXHR2'),
+        'xhr2-cookies': require('./helpers/FakeXHR2'),
         'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
