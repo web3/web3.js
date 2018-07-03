@@ -159,8 +159,6 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         returnValue.__length__++;
     });
 
-    console.log('FUNCTION_RESULT_MAPPED_TO_RESULT_OBJECT: ', returnValue);
-
     return returnValue;
 };
 
