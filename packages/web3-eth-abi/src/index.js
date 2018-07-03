@@ -95,11 +95,6 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    // given a json interface
-    // if (_.isArray(types) && _.isObject(types[0])) {
-    //     types = utils._flattenTypes(true, types);
-    // }
-
     return ethersAbiCoder.encode(types, params);
 };
 
