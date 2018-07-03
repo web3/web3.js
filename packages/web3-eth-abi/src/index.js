@@ -96,9 +96,9 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
     // given a json interface
-    if (_.isArray(types) && _.isObject(types[0])) {
-        types = utils._flattenTypes(true, types);
-    }
+    // if (_.isArray(types) && _.isObject(types[0])) {
+    //     types = utils._flattenTypes(true, types);
+    // }
 
     return ethersAbiCoder.encode(types, params);
 };
@@ -143,19 +143,11 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
-    var isTypeArray = _.isArray(outputs) && _.isString(outputs[0]);
-    var types = (isTypeArray) ? outputs : [];
-
-    if(!isTypeArray) {
-        types = utils._flattenTypes(true, outputs);
-    }
-
     if (!bytes || bytes === '0x' || bytes === '0X') {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
-
+    var res = ethersAbiCoder.decode(outputs, '0x'+ bytes.replace(/0x/i,''));
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
@@ -171,6 +163,8 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
 
         returnValue.__length__++;
     });
+
+    console.log('FUNCTION_RESULT_MAPPED_TO_RESULT_OBJECT: ', returnValue);
 
     return returnValue;
 };
