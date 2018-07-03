@@ -459,6 +459,8 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
     var result = abi.decodeParameters(outputs, returnValues);
 
+    console.log('CONTRACT_OBJECT_RESULT: ', result);
+
     if (result.__length__ === 1) {
         return result[0];
     } else {
