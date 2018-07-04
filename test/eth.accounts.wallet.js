@@ -43,7 +43,20 @@ describe("eth", function () {
                 assert.isTrue(web3.utils.isAddress(wallet[1].address));
                 assert.isTrue(web3.utils.isAddress(ethAccounts.wallet[2].address));
             });
+            it("creates wallets using mnemonic", function() {
+                var ethAccounts = new Accounts();
 
+                assert.equal(ethAccounts.wallet.length, 0);
+                var mnemonic = "task shell stairs force pear spike local dial add eagle secret dynamic"
+                var numberOfAccounts = 5
+                var wallet = ethAccounts.wallet.create(numberOfAccounts, mnemonic);
+
+                assert.equal(ethAccounts.wallet.length, numberOfAccounts);
+                assert.equal(wallet.length, numberOfAccounts);
+
+                assert.isTrue(web3.utils.isAddress(wallet[1].address));
+                assert.isTrue(web3.utils.isAddress(ethAccounts.wallet[2].address));
+            });
             it("add wallet using a privatekey", function() {
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
