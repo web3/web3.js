@@ -36,7 +36,9 @@ var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
 var utils = require('web3-utils');
 var helpers = require('web3-core-helpers');
-
+var bip39 = require('bip39');
+var HDKey = require('hdkey');
+var wallet_hdpath = "m/44'/60'/0'/0/";
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
 };
@@ -416,15 +418,22 @@ Wallet.prototype._currentIndexes = function () {
     return indexes;
 };
 
-Wallet.prototype.create = function (numberOfAccounts, entropy) {
-    for (var i = 0; i < numberOfAccounts; ++i) {
-        this.add(this._accounts.create(entropy).privateKey);
+Wallet.prototype.create = function (numberOfAccounts, entropyOrMnemonic) {
+    if (bip39.validateMnemonic(entropyOrMnemonic)) {
+        var hdwallet = HDKey.fromMasterSeed(new Buffer.from(bip39.mnemonicToSeed(entropyOrMnemonic), 'hex'))
+        for (let i = 0; i < numberOfAccounts; i++) {
+            var wallet = hdwallet.derive(wallet_hdpath + i);
+            this.add(wallet.privateKey.toString('hex'))
+        }
+    } else {
+        for (var i = 0; i < numberOfAccounts; ++i) {
+            this.add(this._accounts.create(entropyOrMnemonic).privateKey);
+        }
     }
     return this;
 };
 
 Wallet.prototype.add = function (account) {
-
     if (_.isString(account)) {
         account = this._accounts.privateKeyToAccount(account);
     }

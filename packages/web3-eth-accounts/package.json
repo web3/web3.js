@@ -8,8 +8,10 @@
   "main": "src/index.js",
   "dependencies": {
     "any-promise": "1.3.0",
+    "bip39": "2.5.0",
     "crypto-browserify": "3.12.0",
     "eth-lib": "0.2.7",
+    "hdkey": "1.0.0",
     "scrypt.js": "0.2.0",
     "underscore": "1.8.3",
     "uuid": "2.0.1",
