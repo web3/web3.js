@@ -420,10 +420,10 @@ Wallet.prototype._currentIndexes = function () {
 
 Wallet.prototype.create = function (numberOfAccounts, entropyOrMnemonic) {
     if (bip39.validateMnemonic(entropyOrMnemonic)) {
-        var hdwallet = HDKey.fromMasterSeed(new Buffer.from(bip39.mnemonicToSeed(entropyOrMnemonic), 'hex'))
-        for (let i = 0; i < numberOfAccounts; i++) {
-            var wallet = hdwallet.derive(wallet_hdpath + i);
-            this.add(wallet.privateKey.toString('hex'))
+        var hdkey = HDKey.fromMasterSeed(new Buffer.from(bip39.mnemonicToSeed(entropyOrMnemonic), 'hex'))
+        for (var i = 0; i < numberOfAccounts; i++) {
+            var childkey = hdkey.derive(wallet_hdpath + i);
+            this.add(childkey.privateKey.toString('hex'))
         }
     } else {
         for (var i = 0; i < numberOfAccounts; ++i) {
