@@ -54,7 +54,11 @@ var packages = [{
     fileName: 'web3-eth-abi',
     expose: 'Web3EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
-}, {
+},{
+    fileName: 'web3-eth-ens',
+    expose: 'EthEns',
+    src: './packages/web3-eth-ens/src/index.js'
+},{
     fileName: 'web3-net',
     expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
