@@ -96,7 +96,7 @@ FakeIpcProvider.prototype.injectNotification = function (notification) {
     setTimeout(function(){
         _this.notificationCallbacks.forEach(function(cb){
             if(notification && cb)
-                cb(null, notification);
+                cb(notification);
         });
     }, 100 + this.notificationCount);
 

@@ -95,18 +95,21 @@ RequestManager.prototype.setProvider = function (p, net) {
 
     // listen to incoming notifications
     if(this.provider && this.provider.on) {
-        this.provider.on('data', function requestManagerNotification(err, result){
-            if(!err) {
-                if(_this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback)
-                    _this.subscriptions[result.params.subscription].callback(null, result.params.result);
-            } else {
+        this.provider.on('data', function requestManagerNotification(result, deprecatedResult){
+            result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
 
-                Object.keys(_this.subscriptions).forEach(function(id){
-                    if(_this.subscriptions[id].callback)
-                        _this.subscriptions[id].callback(err);
-                });
+            // check for result.method, to prevent old providers errors to pass as result
+            if(result.method && _this.subscriptions[result.params.subscription] && _this.subscriptions[result.params.subscription].callback) {
+                _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
+        // TODO add error, end, timeout, connect??
+        // this.provider.on('error', function requestManagerNotification(result){
+        //     Object.keys(_this.subscriptions).forEach(function(id){
+        //         if(_this.subscriptions[id].callback)
+        //             _this.subscriptions[id].callback(err);
+        //     });
+        // }
     }
 };
 

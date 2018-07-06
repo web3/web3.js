@@ -7,7 +7,7 @@ web3.shh
 ========
 
 
-The ``web3-shh`` package allows you to interact with an the whisper protocol for broadcasting.
+The ``web3-shh`` package allows you to interact with the whisper protocol for broadcasting.
 For more see `Whisper  Overview <https://github.com/ethereum/go-ethereum/wiki/Whisper>`_.
 
 
@@ -753,7 +753,7 @@ Parameters
 Returns
 -------
 
-``Boolean`` - returns ``true`` if the message was send, otherwise ``false`` or error.
+``Promise`` - returns a promise. Upon success, the ``then`` function will be passed a string representing the hash of the sent message. On error, the ``catch`` function will be passed a string containing the reason for the error.
 
 
 -------
@@ -769,7 +769,7 @@ Example
         web3.shh.newSymKey().then((id) => {identities.push(id);}),
         web3.shh.newKeyPair().then((id) => {identities.push(id);})
 
-    }).then(() => {
+    ]).then(() => {
 
         // will receive also its own message send, below
         subscription = shh.subscribe("messages", {
@@ -778,7 +778,7 @@ Example
         }).on('data', console.log);
 
     }).then(() => {
-       shh.post({
+       web3.shh.post({
             symKeyID: identities[0], // encrypts using the sym key ID
             sig: identities[1], // signs the message using the keyPair ID
             ttl: 10,
@@ -786,7 +786,8 @@ Example
             payload: '0xffffffdddddd1122',
             powTime: 3,
             powTarget: 0.5
-        })
+        }).then(h => console.log(`Message with hash ${h} was successfuly sent`))
+        .catch(err => console.log("Error: ", err));
     });
 
 
@@ -848,7 +849,7 @@ Example
 
     web3.shh.subscribe('messages', {
         symKeyID: 'bf31b9ffc2387e18636e0a3d0c56b023264c16e78a2adcba1303cefc685e610f',
-        sig: '0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6'
+        sig: '0x04d1574d4eab8f3dde4d2dc7ed2c4d699d77cbbdd09167b8fffa099652ce4df00c4c6e0263eafe05007a46fdf0c8d32b11aeabcd3abbc7b2bc2bb967368a68e9c6',
         ttl: 20,
         topics: ['0xffddaa11'],
         minPow: 0.8,

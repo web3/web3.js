@@ -883,6 +883,7 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
+  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was susccessfull, ``FALSE``, if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
   - ``blockNumber`` - ``Number``: Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
@@ -904,6 +905,7 @@ Example
     .then(console.log);
 
     > {
+      "status": true,
       "transactionHash": "0x9fc76417374aa880d4449a1f7f31ec597f00b1f6f3dd2d66f4c9c6c445836d8b",
       "transactionIndex": 0,
       "blockHash": "0xef95f2f1ed3ca60b048b4bf67cde2195961e0bba6f70bcbea9a2c4e133e34b46",
@@ -1060,7 +1062,7 @@ sendSignedTransaction
 
     web3.eth.sendSignedTransaction(signedTransactionData [, callback])
 
-Sends an already signed transaction. For example can be signed using: `ethereumjs-accounts <https://github.com/SilentCicero/ethereumjs-accounts>`_
+Sends an already signed transaction, generated for example using :ref:`web3.eth.accounts.signTransaction <eth-accounts-signtransaction>`.
 
 ----------
 Parameters

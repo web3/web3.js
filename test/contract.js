@@ -2142,6 +2142,102 @@ var runTests = function(contractFactory) {
 
         });
 
+        it('should sendTransaction and receive multiple confirmations', function(done){
+            var provider = new FakeIpcProvider();
+            var signature = sha3('mySend(address,uint256)').slice(0, 10);
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: signature +'000000000000000000000000'+ addressLowercase.replace('0x','') +'000000000000000000000000000000000000000000000000000000000000000a',
+                    from: address2,
+                    to: addressLowercase,
+                    gasPrice: "0x1369ed97fb71"
+                }]);
+            });
+            provider.injectResult('0x1234000000000000000000000000000000000000000000000000000000056789');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_getTransactionReceipt');
+                assert.deepEqual(payload.params, ['0x1234000000000000000000000000000000000000000000000000000000056789']);
+            });
+
+            provider.injectResult({
+                contractAddress: null,
+                cumulativeGasUsed: '0xa',
+                transactionIndex: '0x3',
+                transactionHash: '0x1234',
+                blockNumber: '0xa',
+                blockHash: '0x1234',
+                gasUsed: '0x0',
+                logs: []
+            });
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_subscribe');
+                assert.deepEqual(payload.params, ['newHeads']);
+            });
+            provider.injectResult('0x1234567');
+
+            var contract = contractFactory(abi, address, provider);
+
+            var count = 0;
+            contract.methods.mySend(address, 10).send({from: address2, gasPrice: '21345678654321'})
+            .on('confirmation', function (confirmationNumber, receipt) {
+                count++;
+                if(count === 1) {
+                    assert.deepEqual(receipt, {
+                        contractAddress: null,
+                        cumulativeGasUsed: 10,
+                        transactionIndex: 3,
+                        transactionHash: '0x1234',
+                        blockNumber: 10,
+                        blockHash: '0x1234',
+                        gasUsed: 0,
+                        events: {}
+                    });
+
+                    assert.equal(confirmationNumber, 0)
+                }
+                if(count === 2) {
+                    assert.deepEqual(receipt, {
+                        contractAddress: null,
+                        cumulativeGasUsed: 10,
+                        transactionIndex: 3,
+                        transactionHash: '0x1234',
+                        blockNumber: 10,
+                        blockHash: '0x1234',
+                        gasUsed: 0,
+                        events: {}
+                    });
+
+                    assert.equal(confirmationNumber, 1)
+                    done();
+                };
+            });
+
+            // fake newBlocks
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x10'
+                    }
+                }
+            });
+
+            provider.injectNotification({
+                method: 'eth_subscription',
+                params: {
+                    subscription: '0x1234567',
+                    result: {
+                        blockNumber: '0x11'
+                    }
+                }
+            });
+        });
+
         it('should sendTransaction to contract function', function () {
             var provider = new FakeIpcProvider();
             var signature = 'mySend(address,uint256)';
@@ -2908,7 +3004,7 @@ describe('typical usage', function() {
         //     done();
         // });
 
-    }).timeout(4000);
+    }).timeout(6000);
         // TODO add error check
 });
 

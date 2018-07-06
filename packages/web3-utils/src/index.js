@@ -61,15 +61,11 @@ var _fireError = function (error, emitter, reject, callback) {
     }
     if (_.isFunction(reject)) {
         // suppress uncatched error if an error listener is present
-        if (emitter &&
-            _.isFunction(emitter.listeners) &&
-            emitter.listeners('error').length &&
-            _.isFunction(emitter.suppressUnhandledRejections)) {
-            emitter.suppressUnhandledRejections();
         // OR suppress uncatched error if an callback listener is present
-        } else if(_.isFunction(callback) &&
-            _.isFunction(emitter.suppressUnhandledRejections)) {
-            emitter.suppressUnhandledRejections();
+        if (emitter &&
+            (_.isFunction(emitter.listeners) &&
+            emitter.listeners('error').length) || _.isFunction(callback)) {
+            emitter.catch(function(){});
         }
         // reject later, to be able to return emitter
         setTimeout(function () {
