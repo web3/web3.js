@@ -7,10 +7,10 @@
     "main": "src/index.js",
     "dependencies": {
         "eth-ens-namehash": "^2.0.0",
-        "web3-core-helpers": "^1.0.0",
-        "web3-eth-abi": "^1.0.0",
-        "web3-eth-contract": "^1.0.0",
-        "web3-utils": "^1.0.0",
+        "web3-core-helpers": "1.0.0-beta.34",
+        "web3-eth-abi": "1.0.0-beta.34",
+        "web3-eth-contract": "1.0.0-beta.34",
+        "web3-utils": "1.0.0-beta.34",
         "underscore": "^1.8.3",
         "bn.js": "^4.11.6"
     }

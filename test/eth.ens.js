@@ -1,7 +1,7 @@
 var chai = require('chai');
 var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
-var Web3 = require('../src/index.js');
+var Web3 = require('../packages/web3');
 var sha3 = require('../packages/web3-utils').sha3;
 
 describe('ens', function () {
@@ -147,7 +147,7 @@ describe('ens', function () {
             });
             provider.injectResult("0x0000000000000000000000001234567012345670123456701234567012345670");
 
-            web3.eth.ens.address('foobar.eth')
+            web3.eth.ens.getAddress('foobar.eth')
             .then(function(addr) {
                 assert.equal(addr, "0x1234567012345670123456701234567012345670");
                 done();
@@ -188,7 +188,7 @@ describe('ens', function () {
             assert.deepEqual(payload.params, ['0x0', false]);
         });
 
-        web3.eth.ens.address('foobar.eth')
+        web3.eth.ens.getAddress('foobar.eth')
         .then(function() {
             assert.isTrue(false, 'Should throw error');
             done();
@@ -212,7 +212,7 @@ describe('ens', function () {
             assert.deepEqual(payload.params, ['latest', false]);
         });
 
-        web3.eth.ens.address('foobar.eth')
+        web3.eth.ens.getAddress('foobar.eth')
         .then(function() {
             assert.isTrue(false, 'Should throw error');
             done();

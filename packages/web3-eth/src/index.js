@@ -181,6 +181,8 @@ var Eth = function Eth() {
     // add ABI
     this.abi = abi;
 
+    // add ENS
+    this.ens = new ENS(this);
 
     // add guess chain
     this.net.getNetworkType = getNetworkType.bind(this);
