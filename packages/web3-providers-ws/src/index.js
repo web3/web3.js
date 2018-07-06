@@ -26,21 +26,56 @@ var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 
 var Ws = null;
-if (typeof window !== 'undefined') {
+var _btoa = null;
+var parseURL = null;
+if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     Ws = window.WebSocket;
+    _btoa = btoa;
+    parseURL = function(url) {
+        return new URL(url);
+    };
 } else {
     Ws = require('websocket').w3cwebsocket;
+    _btoa = function(str) {
+      return Buffer(str).toString('base64');
+    };
+    var url = require('url');
+    if (url.URL) {
+        // Use the new Node 6+ API for parsing URLs that supports username/password
+        var newURL = url.URL;
+        parseURL = function(url) {
+            return new newURL(url);
+        };
+    }
+    else {
+        // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
+        parseURL = require('url').parse;
+    }
 }
 // Default connection ws://localhost:8546
 
 
 
-var WebsocketProvider = function WebsocketProvider(url)  {
+
+var WebsocketProvider = function WebsocketProvider(url, options)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
-    this.connection = new Ws(url);
 
+    options = options || {};
+    this._customTimeout = options.timeout;
+
+    // The w3cwebsocket implementation does not support Basic Auth
+    // username/password in the URL. So generate the basic auth header, and
+    // pass through with any additional headers supplied in constructor
+    var parsedURL = parseURL(url);
+    var headers = options.headers || {};
+    var protocol = options.protocol || undefined;
+    if (parsedURL.username && parsedURL.password) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
+    }
+
+    this.connection = new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
 
@@ -68,7 +103,7 @@ var WebsocketProvider = function WebsocketProvider(url)  {
             if(!id && result.method.indexOf('_subscription') !== -1) {
                 _this.notificationCallbacks.forEach(function(callback){
                     if(_.isFunction(callback))
-                        callback(null, result);
+                        callback(result);
                 });
 
                 // fire the callback
@@ -92,19 +127,11 @@ WebsocketProvider.prototype.addDefaultEvents = function(){
         _this._timeout();
     };
 
-    this.connection.onclose = function(e){
+    this.connection.onclose = function(){
         _this._timeout();
-
-        var noteCb = _this.notificationCallbacks;
 
         // reset all requests and callbacks
         _this.reset();
-
-        // cancel subscriptions
-        noteCb.forEach(function (callback) {
-            if (_.isFunction(callback))
-                callback(e);
-        });
     };
 
     // this.connection.on('timeout', function(){
@@ -168,7 +195,7 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
 
 /**
- Get the adds a callback to the responseCallbacks object,
+ Adds a callback to the responseCallbacks object,
  which will be called if a response matching the response Id will arrive.
 
  @method _addResponseCallback
@@ -179,6 +206,18 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 
     this.responseCallbacks[id] = callback;
     this.responseCallbacks[id].method = method;
+
+    var _this = this;
+
+    // schedule triggering the error response if a custom timeout is set
+    if (this._customTimeout) {
+        setTimeout(function () {
+            if (_this.responseCallbacks[id]) {
+                _this.responseCallbacks[id](errors.ConnectionTimeout(_this._customTimeout));
+                delete _this.responseCallbacks[id];
+            }
+        }, this._customTimeout);
+    }
 };
 
 /**
@@ -189,7 +228,7 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 WebsocketProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
         if(this.responseCallbacks.hasOwnProperty(key)){
-            this.responseCallbacks[key](errors.InvalidConnection('on IPC'));
+            this.responseCallbacks[key](errors.InvalidConnection('on WS'));
             delete this.responseCallbacks[key];
         }
     }
@@ -336,4 +375,3 @@ WebsocketProvider.prototype.reset = function () {
 };
 
 module.exports = WebsocketProvider;
-

@@ -560,7 +560,9 @@ var Contract = require('web3-eth-contract');
 var ENSRegistry = function ENSRegistry(ens) {
     this._ens = ens;
     this._contract = ens.checkNetwork().then(function (address) {
-        return new Contract(ENS_ABI, address);
+        var ensContract = new Contract(ENS_ABI, address);
+        ensContract.setProvider(ens._eth.currentProvider);
+        return ensContract;
     });
 };
 
@@ -594,6 +596,7 @@ ENSRegistry.prototype.owner = function owner(name, callback) {
  */
 ENSRegistry.prototype.resolver = function resolver(name, callback) {
     var node = namehash.hash(name);
+    var _this = this;
 
     return this._contract
     .then(function(contract) {
@@ -601,6 +604,7 @@ ENSRegistry.prototype.resolver = function resolver(name, callback) {
     })
     .then(function(addr) {
         var contract = new Contract(RESOLVER_ABI, addr);
+        contract.setProvider(_this._ens._eth.currentProvider);
         _.each(contract.methods, function(method, name) {
             if(name === 'supportsInterface') return;
             contract.methods[name] = _.partial(method, node);
@@ -614,6 +618,8 @@ ENSRegistry.prototype.resolver = function resolver(name, callback) {
     });
 };
 
+var core = require('web3-core');
+
 /**
  * Constructs a new ENS instance.
  *
@@ -623,6 +629,13 @@ ENSRegistry.prototype.resolver = function resolver(name, callback) {
  */
 var ENS = function ENS(eth) {
     this._eth = eth;
+    var _this = this;
+    if (arguments[0] && arguments[0].currentProvider) {
+      var args = Array.prototype.slice.apply(arguments);
+      args[0] = args[0].currentProvider;
+    }
+    core.packageInit(this, arguments);
+    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
 };
 
 /**

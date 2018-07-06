@@ -31,11 +31,10 @@ This will expose the `Web3WsProvider` object on the window object.
 // in node.js
 var Web3WsProvider = require('web3-providers-ws');
 
-var ws = new Web3WsProvider('ws://localhost:8546');
+var options = { timeout: 30000, headers: {authorization: 'Basic username:password'} } // set a custom timeout at 30 seconds, and credentials (you can also add the credentials to the URL: ws://username:password@localhost:8546)
+var ws = new Web3WsProvider('ws://localhost:8546', options);
 ```
 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-
