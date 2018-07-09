@@ -628,15 +628,9 @@ var core = require('web3-core');
  * @param {Object} eth
  */
 var ENS = function ENS(eth) {
-    var _eth = eth;
-    var _this = this;
-    if (arguments[0] && arguments[0].currentProvider) {
-      var args = Array.prototype.slice.apply(arguments);
-      args[0] = args[0].currentProvider
-    }
-    core.packageInit(this, arguments);
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
     this._eth = eth;
+    core.packageInit(this, [eth.currentProvider]);
+    this.clearSubscriptions = this._requestManager.clearSubscriptions;
 };
 
 /**
