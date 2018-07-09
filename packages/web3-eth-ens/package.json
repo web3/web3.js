@@ -6,12 +6,13 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
+        "bn.js": "^4.11.6",
         "eth-ens-namehash": "^2.0.0",
+        "underscore": "^1.8.3",
+        "web3-core": "^1.0.0-beta.34",
         "web3-core-helpers": "1.0.0-beta.34",
         "web3-eth-abi": "1.0.0-beta.34",
         "web3-eth-contract": "1.0.0-beta.34",
-        "web3-utils": "1.0.0-beta.34",
-        "underscore": "^1.8.3",
-        "bn.js": "^4.11.6"
+        "web3-utils": "1.0.0-beta.34"
     }
 }
