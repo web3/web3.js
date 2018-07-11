@@ -93,6 +93,27 @@ var tests = [{
         narrative: '',
         __length__: 4
     }
+},{
+    params: [[{
+                indexed: false, name: "falseBool", type: "bool"
+            },
+            {
+                indexed: false, name: "trueBool", type: "bool"
+            },
+            {
+                indexed: true, name: "indexedBool", type: "bool"
+            }], '0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001',
+            ['0x0000000000000000000000000000000000000000000000000000000000000001']
+    ],
+    result: {
+        '0': false,
+        '1': true,
+        '2': true,
+        falseBool: false,
+        trueBool: true,
+        indexedBool: true,
+        __length__: 3
+    }
 }];
 
 describe('decodeLog', function () {
