@@ -11,6 +11,7 @@
         "web3-core-helpers": "1.0.0-beta.34",
         "web3-providers-http": "1.0.0-beta.34",
         "web3-providers-ipc": "1.0.0-beta.34",
-        "web3-providers-ws": "1.0.0-beta.34"
+        "web3-providers-ws": "1.0.0-beta.34",
+        "web3-providers-ethereum": "1.0.0-beta.34"
     }
 }

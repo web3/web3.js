@@ -1,0 +1,11 @@
+{
+    "name": "web3-providers-ethereum",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.34",
+    "description": "Module to handle web3 RPC connections over the ethereumProvider.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-providers-ethereum",
+    "license": "LGPL-3.0",
+    "main": "src/index.js",
+    "dependencies": {
+    }
+}

@@ -52,7 +52,8 @@ RequestManager.givenProvider = givenProvider;
 RequestManager.providers = {
     WebsocketProvider: require('web3-providers-ws'),
     HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc')
+    IpcProvider: require('web3-providers-ipc'),
+    EthereumProvider: require('web3-providers-ethereum')
 };
 
 
@@ -73,11 +74,11 @@ RequestManager.prototype.setProvider = function (p, net) {
         if(/^http(s)?:\/\//i.test(p)) {
             p = new this.providers.HttpProvider(p);
 
-            // WS
+        // WS
         } else if(/^ws(s)?:\/\//i.test(p)) {
             p = new this.providers.WebsocketProvider(p);
 
-            // IPC
+        // IPC
         } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
             p = new this.providers.IpcProvider(p, net);
 
@@ -86,10 +87,11 @@ RequestManager.prototype.setProvider = function (p, net) {
         }
     }
 
-    // reset the old one before changing, if still connected
-    if(this.provider && this.provider.connected)
-        this.clearSubscriptions();
 
+    // reset the old one before changing, if still connected
+    if(this.provider && this.provider.connected) {
+        this.clearSubscriptions();
+    }
 
     this.provider = p || null;
 
