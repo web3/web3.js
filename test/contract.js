@@ -2912,6 +2912,20 @@ var runTests = function(contractFactory) {
 describe('typical usage', function() {
     runTests(getEthContractInstance);
 
+    it('should update contract instance provider when assigned a provider to eth instance that contract instance came from', function () {
+        var provider1 = new FakeIpcProvider();
+        var provider2 = new FakeHttpProvider();
+
+        var eth = new Eth(provider1);
+        var contract = new eth.Contract(abi, address);
+        assert.deepEqual(contract.currentProvider, provider1);
+        assert.deepEqual(eth.currentProvider, provider1);
+
+        eth.setProvider(provider2);
+        assert.deepEqual(contract.currentProvider, provider2);
+        assert.deepEqual(eth.currentProvider, provider2);
+    });
+
     it('should deploy a contract, sign transaction, and return contract instance', function (done) {
         var provider = new FakeIpcProvider();
         var eth = new Eth(provider);
