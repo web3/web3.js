@@ -131,33 +131,33 @@ gulp.task('version', function () {
         './package.js'
     ];
 
-    gulp.src(glob, {base: './'})
+    return gulp.src(glob, {base: './'})
         .pipe(replace(jsonPattern, '"version": "' + version + '"'))
         .pipe(replace(jsPattern, "version: '" + version + "'"))
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', ['version'], function (cb) {
+gulp.task('bower', gulp.series('version'), function (cb) {
     bower.commands.install().on('end', function (installed) {
         console.log(installed);
         cb();
     });
 });
 
-gulp.task('lint', [], function () {
+gulp.task('lint', function () {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', ['lint'], function (cb) {
+gulp.task('clean', gulp.series('lint'), function (cb) {
     del([DEST]).then(cb.bind(null, null));
 });
 
 packages.forEach(function (pckg, i) {
     var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
-    gulp.task(pckg.fileName, [prevPckg], function () {
+    gulp.task(pckg.fileName, gulp.series(prevPckg), function () {
         browserifyOptions.standalone = pckg.expose;
 
         var pipe = browserify(browserifyOptions)
@@ -199,7 +199,7 @@ gulp.task('watch', function () {
     gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
 });
 
-gulp.task('all', ['version', 'lint', 'clean', packages[packages.length - 1].fileName]);
+gulp.task('all', gulp.series('version', 'lint', 'clean', packages[packages.length - 1].fileName));
 
-gulp.task('default', ['version', 'lint', 'clean', packages[0].fileName]);
+gulp.task('default', gulp.series('version', 'lint', 'clean', packages[0].fileName));
 
