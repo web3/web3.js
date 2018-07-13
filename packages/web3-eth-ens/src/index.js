@@ -17,8 +17,8 @@
 /**
  * @file index.js
  *
- * @author Nick Johnson <nick@notdot.net>
- * @date 2017
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
