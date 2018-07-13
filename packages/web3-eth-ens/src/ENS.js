@@ -14,7 +14,7 @@
 /**
  * @file ENS.js
  *
- * @author Samuel Furter <sam@tokenate.io>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
