@@ -30,12 +30,14 @@ var Resolver = require('./Resolver');
  * A wrapper around the ENS registry contract.
  *
  * @method ENSRegistry
- * @varructor
  * @param {Object} ens
+ * @constructor
  */
 function Registry(ens) {
+    var self = this;
     this.ens = ens;
-    this.registry = ens.checkNetwork().then(function (address) {
+    this.contract = ens.checkNetwork().then(function (address) {
+        Contract.setProvider(self.ens.eth.currentProvider);
         return new Contract(REGISTRY_ABI, address);
     });
 }
@@ -47,8 +49,8 @@ function Registry(ens) {
  * @param {string} name
  * @return {Promise<any>}
  */
-Registry.prototype.owner = function(name) {
-    return this.registry.then(function (contract) {
+Registry.prototype.owner = function (name) {
+    return this.contract.then(function (contract) {
         return contract.methods.owner(namehash.hash(name)).call();
     }).catch(function (error) {
         throw error;
@@ -63,11 +65,12 @@ Registry.prototype.owner = function(name) {
  * @return {Promise<Resolver>}
  */
 Registry.prototype.resolver = function(name) {
+    var self = this;
     var node = namehash.hash(name);
-    return this.registry.then(function (contract) {
+    return this.contract.then(function (contract) {
         return contract.methods.resolver(node).call();
     }).then(function (address) {
-        return new Resolver(address, node);
+        return new Resolver(address, node, self.ens);
     }).catch(function (error) {
         throw error;
     });

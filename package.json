@@ -76,7 +76,7 @@
     "ethereumjs-wallet": "^0.6.0",
     "ethjs-signer": "^0.1.1",
     "exorcist": "^0.4.0",
-    "gulp": ">=3.9.0",
+    "gulp": "^3.9.0",
     "gulp-babel": "^6.1.2",
     "gulp-jshint": "^2.0.4",
     "gulp-rename": "^1.2.2",

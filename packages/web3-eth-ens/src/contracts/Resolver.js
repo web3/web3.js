@@ -28,12 +28,15 @@ var Contract = require('web3-eth-contract');
  *
  * @param {string} address
  * @param {string} node
- * @varructor
+ * @param {ENS} ens
+ * @constructor
  */
-function Resolver(address, node) {
+function Resolver(address, node, ens) {
     var self = this;
     self.node = node;
-    self.resolver = new Contract(RESOLVER_ABI, address);
+    self.ens = ens;
+    Contract.setProvider(self.ens.eth.currentProvider);
+    self.contract = new Contract(RESOLVER_ABI, address);
 }
 
 /**
@@ -43,7 +46,7 @@ function Resolver(address, node) {
  * @returns {Promise<any>}
  */
 Resolver.prototype.addr = function () {
-    return this.resolver.methods.addr(this.node).call();
+    return this.contract.methods.addr(this.node).call();
 };
 
 /**
@@ -54,7 +57,7 @@ Resolver.prototype.addr = function () {
  * @returns {Promise<Transaction>}
  */
 Resolver.prototype.setAddr = function(address) {
-    return this.resolver.methods.setAddr(this.node, address).send();
+    return this.contract.methods.setAddr(this.node, address).send();
 };
 
 /**
@@ -63,7 +66,7 @@ Resolver.prototype.setAddr = function(address) {
  * @returns {Promise<any>}
  */
 Resolver.prototype.pubkey = function() {
-    return this.resolver.method.pubkey(this.node).call();
+    return this.contract.methods.pubkey(this.node).call();
 };
 
 /**
@@ -75,7 +78,7 @@ Resolver.prototype.pubkey = function() {
  * @returns {Promise<Transaction>}
  */
 Resolver.prototype.setPubkey = function(x, y) {
-    return this.resolver.methods.setPubkey(this.node, y, y).send();
+    return this.contract.methods.setPubkey(this.node, y, y).send();
 };
 
 /**
@@ -85,7 +88,7 @@ Resolver.prototype.setPubkey = function(x, y) {
  * @returns {Promise<any>}
  */
 Resolver.prototype.content = function() {
-    return this.resolver.methods.content(this.node).call();
+    return this.contract.methods.content(this.node).call();
 };
 
 /**
@@ -95,7 +98,7 @@ Resolver.prototype.content = function() {
  * @returns {Promise<Transaction>}
  */
 Resolver.prototype.setContent = function(hash) {
-    return this.resolver.method.setContent(this.node, hash).send();
+    return this.contract.methods.setContent(this.node, hash).send();
 };
 
 module.exports = Resolver;
