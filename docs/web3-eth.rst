@@ -1123,7 +1123,7 @@ sign
 
     web3.eth.sign(dataToSign, address [, callback])
 
-Signs data using a specific account. This account needs to be unlocked.
+Signs data using a specific account. This account needs to be unlocked. Data will be prefixed with ``"\x19Ethereum Signed Message:\n" + message.length`` and hashed with ``web3.utils.soliditySha3()`` before it's signed.
 
 ----------
 Parameters
@@ -1161,6 +1161,15 @@ Example
     .then(console.log);
     > "0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400"
 
+Example for recovering signer address in Solidity:
+
+.. code-block:: solidity
+
+    function recoverSigner(bytes32 _msg, uint8 _v, bytes32 _r, bytes32 _s) public pure returns (address) {
+        bytes32 prefixedHash = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _msg));
+        address signer = ecrecover(prefixedHash, _v, _r, _s);
+        return signer;
+    }
 
 ------------------------------------------------------------------------------
 
