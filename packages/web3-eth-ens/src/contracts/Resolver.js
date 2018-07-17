@@ -35,8 +35,8 @@ function Resolver(address, node, ens) {
     var self = this;
     self.node = node;
     self.ens = ens;
-    Contract.setProvider(self.ens.eth.currentProvider);
     self.contract = new Contract(RESOLVER_ABI, address);
+    self.contract.setProvider(self.ens.eth.currentProvider);
 }
 
 /**
@@ -54,10 +54,11 @@ Resolver.prototype.addr = function () {
  *
  * @method setAddr
  * @param {string} address
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setAddr = function(address) {
-    return this.contract.methods.setAddr(this.node, address).send();
+Resolver.prototype.setAddr = function(address, from) {
+    return this.contract.methods.setAddr(this.node, address).send({from: from});
 };
 
 /**
@@ -73,12 +74,13 @@ Resolver.prototype.pubkey = function() {
  * Sets a new public key
  *
  * @method setPubkey
- * @param x
- * @param y
+ * @param {string} x
+ * @param {string} y
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setPubkey = function(x, y) {
-    return this.contract.methods.setPubkey(this.node, y, y).send();
+Resolver.prototype.setPubkey = function(x, y, from) {
+    return this.contract.methods.setPubkey(this.node, y, y).send({from: from});
 };
 
 /**
@@ -95,10 +97,11 @@ Resolver.prototype.content = function() {
  * Set the content of this resolver
  *
  * @param {string} hash
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setContent = function(hash) {
-    return this.contract.methods.setContent(this.node, hash).send();
+Resolver.prototype.setContent = function(hash, from) {
+    return this.contract.methods.setContent(this.node, hash).send({from: from});
 };
 
 module.exports = Resolver;
