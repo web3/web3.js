@@ -40,6 +40,7 @@ var formatters = require('web3-core-helpers').formatters;
 var errors = require('web3-core-helpers').errors;
 var promiEvent = require('web3-core-promievent');
 var abi = require('web3-eth-abi');
+var ens = require('web3-eth-ens');
 
 
 /**
@@ -89,7 +90,20 @@ var Contract = function Contract(jsonInterface, address, options) {
     Object.defineProperty(this.options, 'address', {
         set: function(value){
             if(value) {
-                _this._address = utils.toChecksumAddress(formatters.inputAddressFormatter(value));
+                try {
+                    _this._address = utils.toChecksumAddress(formatters.inputAddressFormatter(value));
+                } catch (error) {
+                    if (value.match(/^[a-z]+([\.\-]?[a-z]+)?$/)) {
+                        ens.getAddress(value).then(function (address) {
+                            _this._address = address;
+                        }).catch(function () {
+                            throw new Error('Given ENS address "'+ value +'" does not exist.');
+                        });
+                    } else {
+                        throw error;
+                    }
+
+                }
             }
         },
         get: function(){
