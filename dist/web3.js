@@ -38853,11 +38853,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        *
        * @param {string} name
        * @param {string} address
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      ENS.prototype.setAddress = function (name, address) {
+      ENS.prototype.setAddress = function (name, address, from) {
         return this.registry.resolver(name).then(function (resolver) {
-          return resolver.setAddr(address).send();
+          return resolver.setAddr(address, from);
         }).catch(function (error) {
           throw error;
         });
@@ -38883,11 +38884,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @param {string} name
        * @param {string} x
        * @param {string} y
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      ENS.prototype.setPubkey = function (name, x, y) {
+      ENS.prototype.setPubkey = function (name, x, y, from) {
         return this.registry.resolver(name).then(function (resolver) {
-          return resolver.setPubkey(x, y).send();
+          return resolver.setPubkey(x, y, from);
         }).catch(function (error) {
           throw error;
         });
@@ -38912,11 +38914,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        *
        * @param {string} name
        * @param {string} hash
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      ENS.prototype.setContent = function (name, hash) {
+      ENS.prototype.setContent = function (name, hash, from) {
         return this.registry.resolver(name).then(function (resolver) {
-          return resolver.setContent(hash);
+          return resolver.setContent(hash, from);
         }).catch(function (error) {
           throw error;
         });
@@ -38999,8 +39002,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
         this.ens = ens;
         this.contract = ens.checkNetwork().then(function (address) {
-          Contract.setProvider(self.ens.eth.currentProvider);
-          return new Contract(REGISTRY_ABI, address);
+          var contract = new Contract(REGISTRY_ABI, address);
+          contract.setProvider(self.ens.eth.currentProvider);
+
+          return contract;
         });
       }
 
@@ -39077,8 +39082,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var self = this;
         self.node = node;
         self.ens = ens;
-        Contract.setProvider(self.ens.eth.currentProvider);
         self.contract = new Contract(RESOLVER_ABI, address);
+        self.contract.setProvider(self.ens.eth.currentProvider);
       }
 
       /**
@@ -39096,10 +39101,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        *
        * @method setAddr
        * @param {string} address
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      Resolver.prototype.setAddr = function (address) {
-        return this.contract.methods.setAddr(this.node, address).send();
+      Resolver.prototype.setAddr = function (address, from) {
+        return this.contract.methods.setAddr(this.node, address).send({ from: from });
       };
 
       /**
@@ -39115,12 +39121,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * Sets a new public key
        *
        * @method setPubkey
-       * @param x
-       * @param y
+       * @param {string} x
+       * @param {string} y
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      Resolver.prototype.setPubkey = function (x, y) {
-        return this.contract.methods.setPubkey(this.node, y, y).send();
+      Resolver.prototype.setPubkey = function (x, y, from) {
+        return this.contract.methods.setPubkey(this.node, y, y).send({ from: from });
       };
 
       /**
@@ -39137,10 +39144,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * Set the content of this resolver
        *
        * @param {string} hash
+       * @param {string} from
        * @returns {Promise<Transaction>}
        */
-      Resolver.prototype.setContent = function (hash) {
-        return this.contract.methods.setContent(this.node, hash).send();
+      Resolver.prototype.setContent = function (hash, from) {
+        return this.contract.methods.setContent(this.node, hash).send({ from: from });
       };
 
       module.exports = Resolver;

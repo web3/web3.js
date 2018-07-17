@@ -61,11 +61,12 @@ ENS.prototype.getAddress = function (name) {
  *
  * @param {string} name
  * @param {string} address
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setAddress = function (name, address) {
+ENS.prototype.setAddress = function (name, address, from) {
     return this.registry.resolver(name).then(function(resolver) {
-        return resolver.setAddr(address).send();
+        return resolver.setAddr(address, from);
     }).catch(function(error) {
         throw error;
     });
@@ -91,11 +92,12 @@ ENS.prototype.getPubkey = function(name) {
  * @param {string} name
  * @param {string} x
  * @param {string} y
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setPubkey = function(name, x, y) {
+ENS.prototype.setPubkey = function(name, x, y, from) {
   return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setPubkey(x, y).send();
+      return resolver.setPubkey(x, y, from);
   }).catch(function(error) {
       throw error;
   });
@@ -120,11 +122,12 @@ ENS.prototype.getContent = function(name) {
  *
  * @param {string} name
  * @param {string} hash
+ * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setContent = function(name, hash) {
+ENS.prototype.setContent = function(name, hash, from) {
   return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setContent(hash);
+      return resolver.setContent(hash, from);
   }).catch(function(error) {
       throw error;
   });
