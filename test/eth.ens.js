@@ -3,6 +3,7 @@ var assert = chai.assert;
 var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 var Web3 = require('../packages/web3');
 var sha3 = require('../packages/web3-utils').sha3;
+var asciiToHex = require('../packages/web3-utils').asciiToHex;
 
 describe('ens', function () {
     var provider;
@@ -108,9 +109,7 @@ describe('ens', function () {
             });
             provider.injectResult('0x0000000000000000000000001234567012345670123456701234567012345670');
 
-            web3.eth.ens.registry.resolver('foobar.eth').then(function (resolver) {
-                return resolver.addr();
-            }).then(function (addr) {
+            web3.eth.ens.getAddress('foobar.eth').then(function (addr) {
                 assert.equal(addr, '0x1234567012345670123456701234567012345670');
                 done();
             }).catch(function (err) {
@@ -118,15 +117,15 @@ describe('ens', function () {
             });
         });
 
-        it('supports address', function (done) {
-            var resolverSig = 'resolver(bytes32)';
-            var addrSig = 'addr(bytes32)';
+        it('should return x and y from an public key for en specific ens name', function (done) {
+            var resolverSignature = 'resolver(bytes32)';
+            var pubkeySignature = 'pubkey(bytes32)';
 
             provider.injectValidation(function (payload) {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(resolverSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
                     to: '0x314159265dd8dbb310642f98f50c066173c1259b',
                 }, 'latest']);
             });
@@ -136,20 +135,56 @@ describe('ens', function () {
                 assert.equal(payload.jsonrpc, '2.0');
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
-                    data: sha3(addrSig).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    data: sha3(pubkeySignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
                     to: '0x0123456701234567012345670123456701234567',
                 }, 'latest']);
             });
-            provider.injectResult('0x0000000000000000000000001234567012345670123456701234567012345670');
 
-            web3.eth.ens.getAddress('foobar.eth').then(function (addr) {
-                assert.equal(addr, '0x1234567012345670123456701234567012345670');
+            var pubkeyCoordinateAsHex = asciiToHex('0x0000000000000000000000000000000000000000000000000000000000000000');
+            provider.injectResult([
+                pubkeyCoordinateAsHex,
+                pubkeyCoordinateAsHex
+            ]);
+
+            web3.eth.ens.getPubkey('foobar.eth').then(function (result) {
+                assert.equal(result[0][0], '0x3078303030303030303030303030303030303030303030303030303030303030');
+                assert.equal(result[0][1], '0x3030303030303030303030303030303030303030303030303030303030303030');
                 done();
-            }).catch(function (err) {
-                throw err;
+            });
+        });
+
+        it('should get the content of an resolver', function (done) {
+            var resolverSignature = 'resolver(bytes32)';
+            var contentSignature = 'content(bytes32)';
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(resolverSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x314159265dd8dbb310642f98f50c066173c1259b',
+                }, 'latest']);
+            });
+            provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.jsonrpc, '2.0');
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: sha3(contentSignature).slice(0, 10) + '1757b5941987904c18c7594de32c1726cda093fdddacb738cfbc4a7cd1ef4370',
+                    to: '0x0123456701234567012345670123456701234567',
+                }, 'latest']);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000000');
+
+            web3.eth.ens.getContent('foobar.eth').then(function (result) {
+                assert.equal(result, '0x0000000000000000000000000000000000000000000000000000000000000000');
+                done();
             });
         });
     });
+
 
     it("won't resolve on an unknown network", function (done) {
         provider = new FakeHttpProvider();
