@@ -24,8 +24,8 @@
 
 var errors = require('web3-core-helpers').errors;
 var XHR2 = require('xhr2-cookies').XMLHttpRequest // jshint ignore: line
-const http = require('http');
-const https = require('https');
+var http = require('http');
+var https = require('https');
 
 
 /**
@@ -34,7 +34,7 @@ const https = require('https');
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
     this.host = host || 'http://localhost:8545';
-    if (this.host.substring(0,5) == "https"){
+    if (this.host.substring(0,5) === "https"){
         this.httpsAgent = new https.Agent({ keepAlive: true });
     }else{
         this.httpAgent = new http.Agent({ keepAlive: true });
