@@ -36,7 +36,6 @@ var BaseContract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 var Accounts = require('web3-eth-accounts');
 var abi = require('web3-eth-abi');
-var ens = require('web3-eth-ens');
 
 var getNetworkType = require('./getNetworkType.js');
 var formatter = helpers.formatters;
@@ -87,22 +86,9 @@ var Eth = function Eth() {
         get: function () {
             return defaultAccount;
         },
-        set: function (value) {
-            if(value) {
-                try {
-                    defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(value));
-                } catch(error) {
-                    if (value.match(/^[a-z]+([\.\-]?[a-z]+)?$/)) {
-                        ens.getAddress(value).then(function (address) {
-                            _this._address = address;
-                            value = address;
-                        }).catch(function () {
-                            throw new Error('Given ENS address "'+ value +'" does not exist.');
-                        });
-                    } else {
-                        throw error;
-                    }
-                }
+        set: function (val) {
+            if(val) {
+                defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
             }
 
             // also set on the Contract object
@@ -114,7 +100,7 @@ var Eth = function Eth() {
                 method.defaultAccount = defaultAccount;
             });
 
-            return value;
+            return val;
         },
         enumerable: true
     });
