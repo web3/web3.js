@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var EthersAbi = require('ethers/utils/abi-coder');
+var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
 var ethersAbiCoder = new EthersAbi(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) { return value.toString(); }
     return value;
@@ -38,8 +38,7 @@ function Result() {}
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var ABICoder = function () {
-};
+var ABICoder = function () {};
 
 
 /**

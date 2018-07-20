@@ -9,7 +9,9 @@ describe('lib/solidity/coder', function () {
     describe('decodeParam', function () {
         var test = function (t) {
             it('should turn ' + t.type +': ' + t.value + ' to ' + t.expected, function () {
-                console.log(coder.decodeParameter(t.type, t.value));
+                if (t.type === 'tuple') {
+                    console.log(t);
+                }
                 assert.deepEqual(coder.decodeParameter(t.type, t.value), t.expected);
             });
         };
