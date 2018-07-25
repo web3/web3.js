@@ -83,7 +83,7 @@ var abi = [{
         "type": "uint256"
     }],
     "outputs": [],
-    "payable": true
+    "stateMutability": "payable"
 },{
     "name": "myDisallowedSend",
     "type": "function",
