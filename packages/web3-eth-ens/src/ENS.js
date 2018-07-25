@@ -24,11 +24,11 @@ var config = require('./config');
 var Registry = require('./contracts/Registry');
 
 /**
- * varructs a new instance of ENS
+ * Constructs a new instance of ENS
  *
  * @method ENS
  * @param {Object} eth
- * @varructor
+ * @constructor
  */
 function ENS(eth) {
     this.eth = eth;
