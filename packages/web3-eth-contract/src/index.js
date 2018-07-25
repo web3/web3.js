@@ -108,6 +108,11 @@ var Contract = function Contract(jsonInterface, address, options) {
                 var func,
                     funcName;
 
+                // make constant and payable backwards compatible
+                method.constant = (method.stateMutability === "view" || method.stateMutability === "pure" || method.constant);
+                method.payable = (method.stateMutability === "payable" || method.payable);
+
+
                 if (method.name) {
                     funcName = utils._jsonInterfaceMethodToString(method);
                 }
