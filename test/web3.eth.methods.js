@@ -3,9 +3,13 @@ var assert = chai.assert;
 var Web3 = require('../index.js');
 var web3 = new Web3();
 var u = require('./helpers/test.utils.js');
+var FakeHttpProvider = require('./helpers/FakeHttpProvider');
 
 describe('web3.eth', function() {
     describe('methods', function() {
+        // set dummy providor, to prevent error
+        web3.setProvider(new FakeHttpProvider());
+
         u.methodExists(web3.eth, 'getBalance');
         u.methodExists(web3.eth, 'getStorageAt');
         u.methodExists(web3.eth, 'getTransactionCount');

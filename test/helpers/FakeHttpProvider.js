@@ -55,7 +55,7 @@ FakeHttpProvider.prototype.sendAsync = function (payload, callback) {
     var error = this.error;
     setTimeout(function(){
         callback(error, response);
-    },1);
+    }, 1);
 };
 
 FakeHttpProvider.prototype.injectResponse = function (response) {
