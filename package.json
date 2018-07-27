@@ -8,7 +8,7 @@
     "lib": "./lib"
   },
   "dependencies": {
-    "bignumber.js": "git+https://github.com/frozeman/bignumber.js-nolookahead.git",
+    "bignumber.js": "git+https://github.com/dharmaprotocol/bignumber.js-nolookahead.git",
     "crypto-js": "^3.1.4",
     "utf8": "^2.1.1",
     "xhr2": "*",
@@ -84,6 +84,5 @@
       "url": "https://github.com/obscuren"
     }
   ],
-
   "license": "LGPL-3.0"
 }
