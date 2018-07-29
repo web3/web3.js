@@ -46,6 +46,7 @@ var runTests = function (obj, method, tests) {
                     // given
                     var provider = new FakeHttpProvider();
                     var web3 = new Web3(provider);
+
                     provider.injectResult(test.result);
                     provider.injectValidation(function (payload) {
                         assert.equal(payload.jsonrpc, '2.0');
