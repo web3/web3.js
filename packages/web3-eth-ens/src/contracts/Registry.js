@@ -39,7 +39,7 @@ function Registry(ens) {
     this.contract = ens.checkNetwork().then(function (address) {
         var contract = new Contract(REGISTRY_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
-        
+
         return contract;
     });
 }
@@ -54,8 +54,6 @@ function Registry(ens) {
 Registry.prototype.owner = function (name) {
     return this.contract.then(function (contract) {
         return contract.methods.owner(namehash.hash(name)).call();
-    }).catch(function (error) {
-        throw error;
     });
 };
 
@@ -73,8 +71,6 @@ Registry.prototype.resolver = function(name) {
         return contract.methods.resolver(node).call();
     }).then(function (address) {
         return new Resolver(address, node, self.ens);
-    }).catch(function (error) {
-        throw error;
     });
 };
 
