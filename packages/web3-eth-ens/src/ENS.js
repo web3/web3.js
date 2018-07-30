@@ -51,14 +51,13 @@ Object.defineProperty(ENS.prototype, 'registry', {
 ENS.prototype.getAddress = function (name) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.addr();
-    }).catch(function(error) {
-        throw error;
     });
 };
 
 /**
  * Sets a new address
  *
+ * @method setAddress
  * @param {string} name
  * @param {string} address
  * @param {string} from
@@ -67,69 +66,91 @@ ENS.prototype.getAddress = function (name) {
 ENS.prototype.setAddress = function (name, address, from) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.setAddr(address, from);
-    }).catch(function(error) {
-        throw error;
     });
 };
 
 /**
  * Returns the public key
  *
+ * @method getPubkey
  * @param {string} name
- * @returns {Promise<T>}
+ * @returns {Promise<any>}
  */
-ENS.prototype.getPubkey = function(name) {
+ENS.prototype.getPubkey = function (name) {
   return this.registry.resolver(name).then(function(resolver) {
       return resolver.pubkey();
-  }).catch(function(error) {
-      throw error;
   });
 };
 
 /**
  * Set the new public key
  *
+ * @method setPubkey
  * @param {string} name
  * @param {string} x
  * @param {string} y
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setPubkey = function(name, x, y, from) {
+ENS.prototype.setPubkey = function (name, x, y, from) {
   return this.registry.resolver(name).then(function(resolver) {
       return resolver.setPubkey(x, y, from);
-  }).catch(function(error) {
-      throw error;
   });
 };
 
 /**
  * Returns the content
  *
+ * @method getContent
  * @param {string} name
- * @returns {Promise<T>}
+ * @returns {Promise<any>}
  */
-ENS.prototype.getContent = function(name) {
+ENS.prototype.getContent = function (name) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.content();
-    }).catch(function(error) {
-        throw error;
     });
 };
 
 /**
- * Sets the new content
+ * Set the content
  *
+ * @method setContent
  * @param {string} name
  * @param {string} hash
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setContent = function(name, hash, from) {
+ENS.prototype.setContent = function (name, hash, from) {
   return this.registry.resolver(name).then(function(resolver) {
       return resolver.setContent(hash, from);
-  }).catch(function(error) {
-      throw error;
+  });
+};
+
+/**
+ * Get the multihash
+ *
+ * @method getMultihash
+ * @param {string} name
+ * @returns {Promise<any>}
+ */
+ENS.prototype.getMultihash = function (name) {
+    return this.registry.resolver(name).then(function (resolver) {
+        return resolver.multihash();
+    });
+};
+
+/**
+ * Set the multihash
+ *
+ * @method setMultihash
+ * @param {string} name
+ * @param {string} hash
+ * @param {string} from
+ * @returns {Promise<Transaction>}
+ */
+ENS.prototype.setMultihash = function (name, hash, from) {
+  return this.registry.resolver(name).then(function (resolver) {
+      return resolver.setMultihash(hash, from);
   });
 };
 
@@ -154,8 +175,6 @@ ENS.prototype.checkNetwork = function () {
         }
 
         return addr;
-    }).catch(function (err) {
-        throw err;
     });
 };
 
