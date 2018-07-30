@@ -57,16 +57,17 @@ Resolver.prototype.addr = function () {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setAddr = function(address, from) {
+Resolver.prototype.setAddr = function (address, from) {
     return this.contract.methods.setAddr(this.node, address).send({from: from});
 };
 
 /**
  * Returns the public key
  *
+ * @method pubkey
  * @returns {Promise<any>}
  */
-Resolver.prototype.pubkey = function() {
+Resolver.prototype.pubkey = function () {
     return this.contract.methods.pubkey(this.node).call();
 };
 
@@ -79,29 +80,52 @@ Resolver.prototype.pubkey = function() {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setPubkey = function(x, y, from) {
+Resolver.prototype.setPubkey = function (x, y, from) {
     return this.contract.methods.setPubkey(this.node, y, y).send({from: from});
 };
 
 /**
  * Returns the content of this resolver
  *
- * @method getContent
+ * @method content
  * @returns {Promise<any>}
  */
-Resolver.prototype.content = function() {
+Resolver.prototype.content = function () {
     return this.contract.methods.content(this.node).call();
 };
 
 /**
  * Set the content of this resolver
  *
+ * @method setContent
  * @param {string} hash
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setContent = function(hash, from) {
+Resolver.prototype.setContent = function (hash, from) {
     return this.contract.methods.setContent(this.node, hash).send({from: from});
+};
+
+/**
+ * Returns the multihash of this resolver
+ *
+ * @method multihash
+ * @returns {Promise<any>}
+ */
+Resolver.prototype.multihash = function () {
+    return this.contract.methods.multihash(this.node).call();
+}
+
+/**
+ * Set the multihash for this resolver
+ *
+ * @method setMultihash
+ * @param {string} hash
+ * @param {string} from
+ * @returns {Promise<Transaction>}
+ */
+Resolver.prototype.setMultihash = function (hash, from) {
+    return this.contract.methods.setMultihash(this.node).send({from: from});
 };
 
 module.exports = Resolver;
