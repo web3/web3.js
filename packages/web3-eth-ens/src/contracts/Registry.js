@@ -29,7 +29,7 @@ var Resolver = require('./Resolver');
 /**
  * A wrapper around the ENS registry contract.
  *
- * @method ENSRegistry
+ * @method Registry
  * @param {Object} ens
  * @constructor
  */
@@ -64,7 +64,7 @@ Registry.prototype.owner = function (name) {
  * @param {string} name
  * @return {Promise<Resolver>}
  */
-Registry.prototype.resolver = function(name) {
+Registry.prototype.resolver = function (name) {
     var self = this;
     var node = namehash.hash(name);
     return this.contract.then(function (contract) {
