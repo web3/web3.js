@@ -114,7 +114,7 @@ Resolver.prototype.setContent = function (hash, from) {
  */
 Resolver.prototype.multihash = function () {
     return this.contract.methods.multihash(this.node).call();
-}
+};
 
 /**
  * Set the multihash for this resolver
