@@ -37354,6 +37354,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _this._jsonInterface = value.map(function (method) {
               var func, funcName;
 
+              // make constant and payable backwards compatible
+              method.constant = method.stateMutability === "view" || method.stateMutability === "pure" || method.constant;
+              method.payable = method.stateMutability === "payable" || method.payable;
+
               if (method.name) {
                 funcName = utils._jsonInterfaceMethodToString(method);
               }
@@ -38816,11 +38820,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var Registry = require('./contracts/Registry');
 
       /**
-       * varructs a new instance of ENS
+       * Constructs a new instance of ENS
        *
        * @method ENS
        * @param {Object} eth
-       * @varructor
+       * @constructor
        */
       function ENS(eth) {
         this.eth = eth;
@@ -38843,14 +38847,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       ENS.prototype.getAddress = function (name) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.addr();
-        }).catch(function (error) {
-          throw error;
         });
       };
 
       /**
        * Sets a new address
        *
+       * @method setAddress
        * @param {string} name
        * @param {string} address
        * @param {string} from
@@ -38859,28 +38862,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       ENS.prototype.setAddress = function (name, address, from) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.setAddr(address, from);
-        }).catch(function (error) {
-          throw error;
         });
       };
 
       /**
        * Returns the public key
        *
+       * @method getPubkey
        * @param {string} name
-       * @returns {Promise<T>}
+       * @returns {Promise<any>}
        */
       ENS.prototype.getPubkey = function (name) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.pubkey();
-        }).catch(function (error) {
-          throw error;
         });
       };
 
       /**
        * Set the new public key
        *
+       * @method setPubkey
        * @param {string} name
        * @param {string} x
        * @param {string} y
@@ -38890,28 +38891,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       ENS.prototype.setPubkey = function (name, x, y, from) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.setPubkey(x, y, from);
-        }).catch(function (error) {
-          throw error;
         });
       };
 
       /**
        * Returns the content
        *
+       * @method getContent
        * @param {string} name
-       * @returns {Promise<T>}
+       * @returns {Promise<any>}
        */
       ENS.prototype.getContent = function (name) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.content();
-        }).catch(function (error) {
-          throw error;
         });
       };
 
       /**
-       * Sets the new content
+       * Set the content
        *
+       * @method setContent
        * @param {string} name
        * @param {string} hash
        * @param {string} from
@@ -38920,8 +38919,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       ENS.prototype.setContent = function (name, hash, from) {
         return this.registry.resolver(name).then(function (resolver) {
           return resolver.setContent(hash, from);
-        }).catch(function (error) {
-          throw error;
+        });
+      };
+
+      /**
+       * Get the multihash
+       *
+       * @method getMultihash
+       * @param {string} name
+       * @returns {Promise<any>}
+       */
+      ENS.prototype.getMultihash = function (name) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.multihash();
+        });
+      };
+
+      /**
+       * Set the multihash
+       *
+       * @method setMultihash
+       * @param {string} name
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      ENS.prototype.setMultihash = function (name, hash, from) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.setMultihash(hash, from);
         });
       };
 
@@ -38946,8 +38971,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
 
           return addr;
-        }).catch(function (err) {
-          throw err;
         });
       };
 
@@ -38958,7 +38981,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var config = {
         addresses: {
           main: "0x314159265dD8dbb310642f98f50C066173C1259b",
-          ropsten: "0x112234455c3a32fd11230c42e7bccd4a84e02010"
+          ropsten: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
+          rinkeby: "0xe7410170f87102df0055eb195163a03b7f2bff4a"
         }
       };
 
@@ -38994,7 +39018,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * A wrapper around the ENS registry contract.
        *
-       * @method ENSRegistry
+       * @method Registry
        * @param {Object} ens
        * @constructor
        */
@@ -39019,8 +39043,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       Registry.prototype.owner = function (name) {
         return this.contract.then(function (contract) {
           return contract.methods.owner(namehash.hash(name)).call();
-        }).catch(function (error) {
-          throw error;
         });
       };
 
@@ -39038,8 +39060,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return contract.methods.resolver(node).call();
         }).then(function (address) {
           return new Resolver(address, node, self.ens);
-        }).catch(function (error) {
-          throw error;
         });
       };
 
@@ -39111,6 +39131,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Returns the public key
        *
+       * @method pubkey
        * @returns {Promise<any>}
        */
       Resolver.prototype.pubkey = function () {
@@ -39133,7 +39154,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Returns the content of this resolver
        *
-       * @method getContent
+       * @method content
        * @returns {Promise<any>}
        */
       Resolver.prototype.content = function () {
@@ -39143,12 +39164,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Set the content of this resolver
        *
+       * @method setContent
        * @param {string} hash
        * @param {string} from
        * @returns {Promise<Transaction>}
        */
       Resolver.prototype.setContent = function (hash, from) {
         return this.contract.methods.setContent(this.node, hash).send({ from: from });
+      };
+
+      /**
+       * Returns the multihash of this resolver
+       *
+       * @method multihash
+       * @returns {Promise<any>}
+       */
+      Resolver.prototype.multihash = function () {
+        return this.contract.methods.multihash(this.node).call();
+      };
+
+      /**
+       * Set the multihash for this resolver
+       *
+       * @method setMultihash
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      Resolver.prototype.setMultihash = function (hash, from) {
+        return this.contract.methods.setMultihash(this.node).send({ from: from });
       };
 
       module.exports = Resolver;
@@ -39368,6 +39412,34 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           "type": "bytes"
         }],
         "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "hash",
+          "type": "bytes"
+        }],
+        "name": "setMultihash",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "multihash",
+        "outputs": [{
+          "name": "",
+          "type": "bytes"
+        }],
+        "payable": false,
+        "stateMutability": "view",
         "type": "function"
       }, {
         "constant": false,
