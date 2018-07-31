@@ -24488,8 +24488,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (!this.provider) {
           return callback(errors.InvalidProvider());
         }
-
         var payload = Jsonrpc.toPayload(data.method, data.params);
+        console.log('payload', payload);
         this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, result) {
           if (result && result.id && payload.id !== result.id) return callback(new Error('Wrong response id "' + result.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload)));
 
@@ -24504,7 +24504,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!Jsonrpc.isValidResponse(result)) {
             return callback(errors.InvalidResponse(result));
           }
-
+          console.log('result', result);
           callback(null, result.result);
         });
       };
