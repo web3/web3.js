@@ -198,6 +198,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         timeoutCount = 0,
         confirmationCount = 0,
         intervalId = null,
+        receiptString = '',
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
@@ -360,14 +361,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
 
                     } else {
                         if(receipt) {
-                            receipt = JSON.stringify(receipt, null, 2);
+                            receiptString = JSON.stringify(receipt, null, 2);
                         }
                         if (receipt.status === false || receipt.status === '0x0') {
-                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receipt),
+                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptString),
                                 defer.eventEmitter, defer.reject);
                         } else {
                             utils._fireError(
-                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt),
+                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptString),
                                 defer.eventEmitter, defer.reject);
                         }
                     }
