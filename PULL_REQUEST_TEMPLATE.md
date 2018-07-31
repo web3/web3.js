@@ -9,7 +9,7 @@ Fixes #(issue)
 
 ## Type of change
 
-Please delete options that are not relevant.
+<!--- Please delete options that are not relevant. -->
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
@@ -18,9 +18,11 @@ Please delete options that are not relevant.
 ## Checklist:
 
 - [ ] I have selected the correct base branch.
-- [ ] I have fixed the tests and extended if necessary.
 - [ ] I have performed a self-review of my own code.
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no new warnings.
 - [ ] Any dependent changes have been merged and published in downstream modules.
+- [ ] I ran ```npm run test``` with success and extended the tests if necessary.
+- [ ] I ran ```npm run build``` and tested the resulting file from ```dist``` folder in a browser.
+- [ ] I have tested my code on the live network.
