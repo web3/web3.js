@@ -24,7 +24,7 @@
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var EthersAbi = require('ethers/utils/abi-coder');
+var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
 var ethersAbiCoder = new EthersAbi(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) { return value.toString(); }
     return value;
@@ -38,8 +38,7 @@ function Result() {}
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var ABICoder = function () {
-};
+var ABICoder = function () {};
 
 
 /**
@@ -95,11 +94,6 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    // given a json interface
-    if (_.isArray(types) && _.isObject(types[0])) {
-        types = utils._flattenTypes(true, types);
-    }
-
     return ethersAbiCoder.encode(types, params);
 };
 
@@ -126,12 +120,11 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
-
     if (!_.isString(type)) {
         throw new Error('Given parameter type is not a string: '+ type);
     }
 
-    return this.decodeParameters([{type: type}], bytes)[0];
+    return this.decodeParameters([type], bytes)[0];
 };
 
 /**
@@ -143,19 +136,11 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
-    var isTypeArray = _.isArray(outputs) && _.isString(outputs[0]);
-    var types = (isTypeArray) ? outputs : [];
-
-    if(!isTypeArray) {
-        types = utils._flattenTypes(true, outputs);
-    }
-
     if (!bytes || bytes === '0x' || bytes === '0X') {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    var res = ethersAbiCoder.decode(types, '0x'+ bytes.replace(/0x/i,''));
-
+    var res = ethersAbiCoder.decode(outputs, '0x'+ bytes.replace(/0x/i,''));
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
