@@ -26,5 +26,5 @@ This way developers can watch for additional events like on "receipt" or "transa
     .on('confirmation', function(confNumber, receipt){ ... })
     .on('error', function(error){ ... })
     .then(function(receipt){
-        // will be fired once the receipt its mined
+        // will be fired once the receipt is mined
     });
