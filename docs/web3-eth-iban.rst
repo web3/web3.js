@@ -262,7 +262,7 @@ isValid
 
 .. code-block:: javascript
 
-    web3.eth.Iban.isValid()
+    web3.eth.Iban.isValid(ibanAddress)
 
 Singleton: Checks if an IBAN address is valid.
 
