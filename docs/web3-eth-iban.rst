@@ -18,7 +18,7 @@ Iban
 
     new web3.eth.Iban(ibanAddress)
 
-Generates a iban object with conversion methods and vailidity checks. Also has singleton functions for conversion like
+Generates a iban object with conversion methods and validity checks. Also has singleton functions for conversion like
 :ref:`Iban.toAddress() <_eth-iban-toaddress>`,
 :ref:`Iban.toIban() <_eth-iban-toiban>`,
 :ref:`Iban.fromEthereumAddress() <_eth-iban-fromethereumaddress>`,
