@@ -359,15 +359,13 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         }
 
                     } else {
-                        if(receipt) {
-                            receipt = JSON.stringify(receipt, null, 2);
-                        }
+                        receiptJSON = JSON.stringify(receipt, null, 2);
                         if (receipt.status === false || receipt.status === '0x0') {
-                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receipt),
+                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
                                 defer.eventEmitter, defer.reject);
                         } else {
                             utils._fireError(
-                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt),
+                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
                                 defer.eventEmitter, defer.reject);
                         }
                     }
