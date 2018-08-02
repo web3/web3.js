@@ -24,7 +24,6 @@ npm run-script build-all
 Then include `dist/web3-core-promievent.js` in your html file.
 This will expose the `Web3PromiEvent` object on the window object.
 
-
 ## Usage
 
 ```js
@@ -33,12 +32,12 @@ var Web3PromiEvent = require('web3-core-promievent');
 
 var myFunc = function(){
     var promiEvent = Web3PromiEvent();
-    
+
     setTimeout(function() {
         promiEvent.eventEmitter.emit('done', 'Hello!');
         promiEvent.resolve('Hello!');
     }, 10);
-    
+
     return promiEvent.eventEmitter;
 };
 
@@ -49,8 +48,5 @@ myFunc()
 .on('done', console.log);
 ```
 
-
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

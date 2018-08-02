@@ -24,19 +24,17 @@ npm run-script build-all
 Then include `dist/web3-core-requestmanager.js` in your html file.
 This will expose the `Web3RequestManager` object on the window object.
 
-
 ## Usage
 
 ```js
 // in node.js
-var Web3WsProvider = require('web3-providers-ws');
-var Web3RequestManager = require('web3-core-requestmanager');
+var Web3WsProvider = require("web3-providers-ws");
+var Web3RequestManager = require("web3-core-requestmanager");
 
-var requestManager = new Web3RequestManager(new Web3WsProvider('ws://localhost:8546'));
+var requestManager = new Web3RequestManager(
+    new Web3WsProvider("ws://localhost:8546")
+);
 ```
-
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-

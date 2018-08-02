@@ -1,4 +1,4 @@
-**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
+**PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0
 
 <img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
 
@@ -10,7 +10,6 @@
 
 This is the Ethereum [JavaScript API][docs]
 which connects to the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec.
-
 
 You need to run a local or remote Ethereum node to use this library.
 
@@ -32,7 +31,7 @@ yarn add web3
 
 ### Meteor
 
-*Note*: works only in the Browser for now. (PR welcome).
+_Note_: works only in the Browser for now. (PR welcome).
 
 ```bash
 meteor add ethereum:web3
@@ -40,7 +39,7 @@ meteor add ethereum:web3
 
 ### In the Browser
 
-Use the prebuild ``dist/web3.min.js``, or
+Use the prebuild `dist/web3.min.js`, or
 build using the [web3.js][repo] repository:
 
 ```bash
@@ -69,29 +68,27 @@ console.log(web3);
 Additionally you can set a provider using `web3.setProvider()` (e.g. WebsocketProvider)
 
 ```js
-web3.setProvider('ws://localhost:8546');
+web3.setProvider("ws://localhost:8546");
 // or
-web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+web3.setProvider(new Web3.providers.WebsocketProvider("ws://localhost:8546"));
 ```
 
 There you go, now you can use it:
 
 ```js
-web3.eth.getAccounts()
-.then(console.log);
+web3.eth.getAccounts().then(console.log);
 ```
 
 ## Documentation
 
 Documentation can be found at [read the docs][docs]
 
-
 ## Building
 
 ### Requirements
 
-* [Node.js](https://nodejs.org)
-* npm
+-   [Node.js](https://nodejs.org)
+-   npm
 
 ```bash
 sudo apt-get update
@@ -115,7 +112,6 @@ npm run-script build-all
 
 This will put all the browser build files into the `dist` folder.
 
-
 ### Testing (mocha)
 
 ```bash
@@ -124,22 +120,22 @@ npm test
 
 ### Contributing
 
-- All contributions have to go into develop, or the 1.0 branch
-- Please follow the code style of the other files, we use 4 spaces as tabs.
+-   All contributions have to go into develop, or the 1.0 branch
+-   Please follow the code style of the other files, we use 4 spaces as tabs.
 
 ### Community
- - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
- - [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
+-   [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+-   [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 ### Similar libraries in other languages
- - Python [Web3.py](https://github.com/pipermerriam/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)		   - Haskell [hs-web3](https://github.com/airalab/hs-web3)
- - Java [web3j](https://github.com/web3j/web3j)		   - Java [web3j](https://github.com/web3j/web3j)
- - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
- - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
- - PHP [web3.php](https://github.com/sc0Vu/web3.php)
 
+-   Python [Web3.py](https://github.com/pipermerriam/web3.py)
+-   Haskell [hs-web3](https://github.com/airalab/hs-web3) - Haskell [hs-web3](https://github.com/airalab/hs-web3)
+-   Java [web3j](https://github.com/web3j/web3j) - Java [web3j](https://github.com/web3j/web3j)
+-   Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
+-   Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+-   PHP [web3.php](https://github.com/sc0Vu/web3.php)
 
 [repo]: https://github.com/ethereum/web3.js
 [docs]: http://web3js.readthedocs.io/en/1.0/
