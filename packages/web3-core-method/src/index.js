@@ -205,7 +205,6 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             payload.params[0].from &&
             !payload.params[0].to;
 
-
     // add custom send Methods
     var _ethereumCalls = [
         new Method({
