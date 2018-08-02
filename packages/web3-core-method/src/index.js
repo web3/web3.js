@@ -198,7 +198,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         timeoutCount = 0,
         confirmationCount = 0,
         intervalId = null,
-        receiptString = '',
+        receiptJSON = '',
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
