@@ -20,19 +20,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }
 })(function () {
   var define, module, exports;return function () {
-    function e(t, n, r) {
-      function s(o, u) {
-        if (!n[o]) {
-          if (!t[o]) {
-            var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);var f = new Error("Cannot find module '" + o + "'");throw f.code = "MODULE_NOT_FOUND", f;
-          }var l = n[o] = { exports: {} };t[o][0].call(l.exports, function (e) {
-            var n = t[o][1][e];return s(n ? n : e);
-          }, l, l.exports, e, t, n, r);
-        }return n[o].exports;
-      }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) {
-        s(r[o]);
-      }return s;
-    }return e;
+    function r(e, n, t) {
+      function o(i, f) {
+        if (!n[i]) {
+          if (!e[i]) {
+            var c = "function" == typeof require && require;if (!f && c) return c(i, !0);if (u) return u(i, !0);var a = new Error("Cannot find module '" + i + "'");throw a.code = "MODULE_NOT_FOUND", a;
+          }var p = n[i] = { exports: {} };e[i][0].call(p.exports, function (r) {
+            var n = e[i][1][r];return o(n || r);
+          }, p, p.exports, r, e, n, t);
+        }return n[i].exports;
+      }for (var u = "function" == typeof require && require, i = 0; i < t.length; i++) {
+        o(t[i]);
+      }return o;
+    }return r;
   }()({ 1: [function (require, module, exports) {
       var asn1 = exports;
 
@@ -99,7 +99,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       Entity.prototype.encode = function encode(data, enc, /* internal */reporter) {
         return this._getEncoder(enc).encode(data, reporter);
       };
-    }, { "../asn1": 1, "inherits": 101, "vm": 161 }], 3: [function (require, module, exports) {
+    }, { "../asn1": 1, "inherits": 102, "vm": 169 }], 3: [function (require, module, exports) {
       var inherits = require('inherits');
       var Reporter = require('../base').Reporter;
       var Buffer = require('buffer').Buffer;
@@ -202,7 +202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return out;
       };
-    }, { "../base": 4, "buffer": 47, "inherits": 101 }], 4: [function (require, module, exports) {
+    }, { "../base": 4, "buffer": 47, "inherits": 102 }], 4: [function (require, module, exports) {
       var base = exports;
 
       base.Reporter = require('./reporter').Reporter;
@@ -850,7 +850,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return this;
       };
-    }, { "inherits": 101 }], 7: [function (require, module, exports) {
+    }, { "inherits": 102 }], 7: [function (require, module, exports) {
       var constants = require('../constants');
 
       exports.tagClass = {
@@ -1187,7 +1187,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return len;
       }
-    }, { "../../asn1": 1, "inherits": 101 }], 10: [function (require, module, exports) {
+    }, { "../../asn1": 1, "inherits": 102 }], 10: [function (require, module, exports) {
       var decoders = exports;
 
       decoders.der = require('./der');
@@ -1237,7 +1237,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var input = new Buffer(base64, 'base64');
         return DERDecoder.prototype.decode.call(this, input, options);
       };
-    }, { "./der": 9, "buffer": 47, "inherits": 101 }], 12: [function (require, module, exports) {
+    }, { "./der": 9, "buffer": 47, "inherits": 102 }], 12: [function (require, module, exports) {
       var inherits = require('inherits');
       var Buffer = require('buffer').Buffer;
 
@@ -1479,7 +1479,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return res;
       }
-    }, { "../../asn1": 1, "buffer": 47, "inherits": 101 }], 13: [function (require, module, exports) {
+    }, { "../../asn1": 1, "buffer": 47, "inherits": 102 }], 13: [function (require, module, exports) {
       var encoders = exports;
 
       encoders.der = require('./der');
@@ -1506,7 +1506,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }out.push('-----END ' + options.label + '-----');
         return out.join('\n');
       };
-    }, { "./der": 12, "inherits": 101 }], 15: [function (require, module, exports) {
+    }, { "./der": 12, "inherits": 102 }], 15: [function (require, module, exports) {
       'use strict';
 
       exports.byteLength = byteLength;
@@ -1523,54 +1523,69 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         revLookup[code.charCodeAt(i)] = i;
       }
 
+      // Support decoding URL-safe base64 strings, as Node.js does.
+      // See: https://en.wikipedia.org/wiki/Base64#URL_applications
       revLookup['-'.charCodeAt(0)] = 62;
       revLookup['_'.charCodeAt(0)] = 63;
 
-      function placeHoldersCount(b64) {
+      function getLens(b64) {
         var len = b64.length;
+
         if (len % 4 > 0) {
           throw new Error('Invalid string. Length must be a multiple of 4');
         }
 
-        // the number of equal signs (place holders)
-        // if there are two placeholders, than the two characters before it
-        // represent one byte
-        // if there is only one, then the three characters before it represent 2 bytes
-        // this is just a cheap hack to not do indexOf twice
-        return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
+        // Trim off extra bytes after placeholder bytes are found
+        // See: https://github.com/beatgammit/base64-js/issues/42
+        var validLen = b64.indexOf('=');
+        if (validLen === -1) validLen = len;
+
+        var placeHoldersLen = validLen === len ? 0 : 4 - validLen % 4;
+
+        return [validLen, placeHoldersLen];
       }
 
+      // base64 is 4/3 + up to two characters of the original data
       function byteLength(b64) {
-        // base64 is 4/3 + up to two characters of the original data
-        return b64.length * 3 / 4 - placeHoldersCount(b64);
+        var lens = getLens(b64);
+        var validLen = lens[0];
+        var placeHoldersLen = lens[1];
+        return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
+      }
+
+      function _byteLength(b64, validLen, placeHoldersLen) {
+        return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
       }
 
       function toByteArray(b64) {
-        var i, l, tmp, placeHolders, arr;
-        var len = b64.length;
-        placeHolders = placeHoldersCount(b64);
+        var tmp;
+        var lens = getLens(b64);
+        var validLen = lens[0];
+        var placeHoldersLen = lens[1];
 
-        arr = new Arr(len * 3 / 4 - placeHolders);
+        var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen));
+
+        var curByte = 0;
 
         // if there are placeholders, only get up to the last complete 4 chars
-        l = placeHolders > 0 ? len - 4 : len;
+        var len = placeHoldersLen > 0 ? validLen - 4 : validLen;
 
-        var L = 0;
-
-        for (i = 0; i < l; i += 4) {
+        for (var i = 0; i < len; i += 4) {
           tmp = revLookup[b64.charCodeAt(i)] << 18 | revLookup[b64.charCodeAt(i + 1)] << 12 | revLookup[b64.charCodeAt(i + 2)] << 6 | revLookup[b64.charCodeAt(i + 3)];
-          arr[L++] = tmp >> 16 & 0xFF;
-          arr[L++] = tmp >> 8 & 0xFF;
-          arr[L++] = tmp & 0xFF;
+          arr[curByte++] = tmp >> 16 & 0xFF;
+          arr[curByte++] = tmp >> 8 & 0xFF;
+          arr[curByte++] = tmp & 0xFF;
         }
 
-        if (placeHolders === 2) {
+        if (placeHoldersLen === 2) {
           tmp = revLookup[b64.charCodeAt(i)] << 2 | revLookup[b64.charCodeAt(i + 1)] >> 4;
-          arr[L++] = tmp & 0xFF;
-        } else if (placeHolders === 1) {
+          arr[curByte++] = tmp & 0xFF;
+        }
+
+        if (placeHoldersLen === 1) {
           tmp = revLookup[b64.charCodeAt(i)] << 10 | revLookup[b64.charCodeAt(i + 1)] << 4 | revLookup[b64.charCodeAt(i + 2)] >> 2;
-          arr[L++] = tmp >> 8 & 0xFF;
-          arr[L++] = tmp & 0xFF;
+          arr[curByte++] = tmp >> 8 & 0xFF;
+          arr[curByte++] = tmp & 0xFF;
         }
 
         return arr;
@@ -1584,7 +1599,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var tmp;
         var output = [];
         for (var i = start; i < end; i += 3) {
-          tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + uint8[i + 2];
+          tmp = (uint8[i] << 16 & 0xFF0000) + (uint8[i + 1] << 8 & 0xFF00) + (uint8[i + 2] & 0xFF);
           output.push(tripletToBase64(tmp));
         }
         return output.join('');
@@ -1594,7 +1609,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var tmp;
         var len = uint8.length;
         var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
-        var output = '';
         var parts = [];
         var maxChunkLength = 16383; // must be multiple of 3
 
@@ -1606,18 +1620,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // pad the end with zeros, but make sure to not forget the extra bytes
         if (extraBytes === 1) {
           tmp = uint8[len - 1];
-          output += lookup[tmp >> 2];
-          output += lookup[tmp << 4 & 0x3F];
-          output += '==';
+          parts.push(lookup[tmp >> 2] + lookup[tmp << 4 & 0x3F] + '==');
         } else if (extraBytes === 2) {
           tmp = (uint8[len - 2] << 8) + uint8[len - 1];
-          output += lookup[tmp >> 10];
-          output += lookup[tmp >> 4 & 0x3F];
-          output += lookup[tmp << 2 & 0x3F];
-          output += '=';
+          parts.push(lookup[tmp >> 10] + lookup[tmp >> 4 & 0x3F] + lookup[tmp << 2 & 0x3F] + '=');
         }
-
-        parts.push(output);
 
         return parts.join('');
       }
@@ -1900,7 +1907,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports.AES = AES;
-    }, { "safe-buffer": 147 }], 19: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 19: [function (require, module, exports) {
       var aes = require('./aes');
       var Buffer = require('safe-buffer').Buffer;
       var Transform = require('cipher-base');
@@ -2018,7 +2025,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = StreamCipher;
-    }, { "./aes": 18, "./ghash": 23, "./incr32": 24, "buffer-xor": 46, "cipher-base": 48, "inherits": 101, "safe-buffer": 147 }], 20: [function (require, module, exports) {
+    }, { "./aes": 18, "./ghash": 23, "./incr32": 24, "buffer-xor": 46, "cipher-base": 49, "inherits": 102, "safe-buffer": 149 }], 20: [function (require, module, exports) {
       var ciphers = require('./encrypter');
       var deciphers = require('./decrypter');
       var modes = require('./modes/list.json');
@@ -2114,6 +2121,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       function unpad(last) {
         var padded = last[15];
+        if (padded < 1 || padded > 16) {
+          throw new Error('unable to decrypt data');
+        }
         var i = -1;
         while (++i < padded) {
           if (last[i + (16 - padded)] !== padded) {
@@ -2154,7 +2164,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       exports.createDecipher = createDecipher;
       exports.createDecipheriv = createDecipheriv;
-    }, { "./aes": 18, "./authCipher": 19, "./modes": 31, "./streamCipher": 34, "cipher-base": 48, "evp_bytestokey": 84, "inherits": 101, "safe-buffer": 147 }], 22: [function (require, module, exports) {
+    }, { "./aes": 18, "./authCipher": 19, "./modes": 31, "./streamCipher": 34, "cipher-base": 49, "evp_bytestokey": 84, "inherits": 102, "safe-buffer": 149 }], 22: [function (require, module, exports) {
       var MODES = require('./modes');
       var AuthCipher = require('./authCipher');
       var Buffer = require('safe-buffer').Buffer;
@@ -2269,7 +2279,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       exports.createCipheriv = createCipheriv;
       exports.createCipher = createCipher;
-    }, { "./aes": 18, "./authCipher": 19, "./modes": 31, "./streamCipher": 34, "cipher-base": 48, "evp_bytestokey": 84, "inherits": 101, "safe-buffer": 147 }], 23: [function (require, module, exports) {
+    }, { "./aes": 18, "./authCipher": 19, "./modes": 31, "./streamCipher": 34, "cipher-base": 49, "evp_bytestokey": 84, "inherits": 102, "safe-buffer": 149 }], 23: [function (require, module, exports) {
       var Buffer = require('safe-buffer').Buffer;
       var ZEROES = Buffer.alloc(16, 0);
 
@@ -2354,7 +2364,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = GHASH;
-    }, { "safe-buffer": 147 }], 24: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 24: [function (require, module, exports) {
       function incr32(iv) {
         var len = iv.length;
         var item;
@@ -2422,7 +2432,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return out;
       };
-    }, { "buffer-xor": 46, "safe-buffer": 147 }], 27: [function (require, module, exports) {
+    }, { "buffer-xor": 46, "safe-buffer": 149 }], 27: [function (require, module, exports) {
       var Buffer = require('safe-buffer').Buffer;
 
       function encryptByte(self, byteParam, decrypt) {
@@ -2465,7 +2475,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return out;
       };
-    }, { "safe-buffer": 147 }], 28: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 28: [function (require, module, exports) {
       var Buffer = require('safe-buffer').Buffer;
 
       function encryptByte(self, byteParam, decrypt) {
@@ -2488,7 +2498,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return out;
       };
-    }, { "safe-buffer": 147 }], 29: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 29: [function (require, module, exports) {
       var xor = require('buffer-xor');
       var Buffer = require('safe-buffer').Buffer;
       var incr32 = require('../incr32');
@@ -2516,7 +2526,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         self._cache = self._cache.slice(chunk.length);
         return xor(chunk, pad);
       };
-    }, { "../incr32": 24, "buffer-xor": 46, "safe-buffer": 147 }], 30: [function (require, module, exports) {
+    }, { "../incr32": 24, "buffer-xor": 46, "safe-buffer": 149 }], 30: [function (require, module, exports) {
       exports.encrypt = function (self, block) {
         return self._cipher.encryptBlock(block);
       };
@@ -2782,15 +2792,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = StreamCipher;
-    }, { "./aes": 18, "cipher-base": 48, "inherits": 101, "safe-buffer": 147 }], 35: [function (require, module, exports) {
-      var ebtk = require('evp_bytestokey');
-      var aes = require('browserify-aes/browser');
+    }, { "./aes": 18, "cipher-base": 49, "inherits": 102, "safe-buffer": 149 }], 35: [function (require, module, exports) {
       var DES = require('browserify-des');
-      var desModes = require('browserify-des/modes');
+      var aes = require('browserify-aes/browser');
       var aesModes = require('browserify-aes/modes');
+      var desModes = require('browserify-des/modes');
+      var ebtk = require('evp_bytestokey');
+
       function createCipher(suite, password) {
-        var keyLen, ivLen;
         suite = suite.toLowerCase();
+
+        var keyLen, ivLen;
         if (aesModes[suite]) {
           keyLen = aesModes[suite].key;
           ivLen = aesModes[suite].iv;
@@ -2800,12 +2812,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
           throw new TypeError('invalid suite type');
         }
+
         var keys = ebtk(password, false, keyLen, ivLen);
         return createCipheriv(suite, keys.key, keys.iv);
       }
+
       function createDecipher(suite, password) {
-        var keyLen, ivLen;
         suite = suite.toLowerCase();
+
+        var keyLen, ivLen;
         if (aesModes[suite]) {
           keyLen = aesModes[suite].key;
           ivLen = aesModes[suite].iv;
@@ -2815,46 +2830,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
           throw new TypeError('invalid suite type');
         }
+
         var keys = ebtk(password, false, keyLen, ivLen);
         return createDecipheriv(suite, keys.key, keys.iv);
       }
 
       function createCipheriv(suite, key, iv) {
         suite = suite.toLowerCase();
-        if (aesModes[suite]) {
-          return aes.createCipheriv(suite, key, iv);
-        } else if (desModes[suite]) {
-          return new DES({
-            key: key,
-            iv: iv,
-            mode: suite
-          });
-        } else {
-          throw new TypeError('invalid suite type');
-        }
+        if (aesModes[suite]) return aes.createCipheriv(suite, key, iv);
+        if (desModes[suite]) return new DES({ key: key, iv: iv, mode: suite });
+
+        throw new TypeError('invalid suite type');
       }
+
       function createDecipheriv(suite, key, iv) {
         suite = suite.toLowerCase();
-        if (aesModes[suite]) {
-          return aes.createDecipheriv(suite, key, iv);
-        } else if (desModes[suite]) {
-          return new DES({
-            key: key,
-            iv: iv,
-            mode: suite,
-            decrypt: true
-          });
-        } else {
-          throw new TypeError('invalid suite type');
-        }
+        if (aesModes[suite]) return aes.createDecipheriv(suite, key, iv);
+        if (desModes[suite]) return new DES({ key: key, iv: iv, mode: suite, decrypt: true });
+
+        throw new TypeError('invalid suite type');
       }
+
+      function getCiphers() {
+        return Object.keys(desModes).concat(aes.getCiphers());
+      }
+
       exports.createCipher = exports.Cipher = createCipher;
       exports.createCipheriv = exports.Cipheriv = createCipheriv;
       exports.createDecipher = exports.Decipher = createDecipher;
       exports.createDecipheriv = exports.Decipheriv = createDecipheriv;
-      function getCiphers() {
-        return Object.keys(desModes).concat(aes.getCiphers());
-      }
       exports.listCiphers = exports.getCiphers = getCiphers;
     }, { "browserify-aes/browser": 20, "browserify-aes/modes": 31, "browserify-des": 36, "browserify-des/modes": 37, "evp_bytestokey": 84 }], 36: [function (require, module, exports) {
       (function (Buffer) {
@@ -2902,7 +2906,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return new Buffer(this._des.final());
         };
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "cipher-base": 48, "des.js": 57, "inherits": 101 }], 37: [function (require, module, exports) {
+    }, { "buffer": 47, "cipher-base": 49, "des.js": 57, "inherits": 102 }], 37: [function (require, module, exports) {
       exports['des-ecb'] = {
         key: 8,
         iv: 0
@@ -2969,7 +2973,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return r;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": "BN", "buffer": 47, "randombytes": 131 }], 39: [function (require, module, exports) {
+    }, { "bn.js": "BN", "buffer": 47, "randombytes": 132 }], 39: [function (require, module, exports) {
       module.exports = require('./browser/algorithms.json');
     }, { "./browser/algorithms.json": 40 }], 40: [function (require, module, exports) {
       module.exports = {
@@ -3227,7 +3231,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           createVerify: createVerify
         };
       }).call(this, require("buffer").Buffer);
-    }, { "./algorithms.json": 40, "./sign": 43, "./verify": 44, "buffer": 47, "create-hash": 51, "inherits": 101, "stream": 156 }], 43: [function (require, module, exports) {
+    }, { "./algorithms.json": 40, "./sign": 43, "./verify": 44, "buffer": 47, "create-hash": 52, "inherits": 102, "stream": 158 }], 43: [function (require, module, exports) {
       (function (Buffer) {
         // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
         var createHmac = require('create-hmac');
@@ -3376,7 +3380,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         module.exports.getKey = getKey;
         module.exports.makeKey = makeKey;
       }).call(this, require("buffer").Buffer);
-    }, { "./curves.json": 41, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hmac": 54, "elliptic": 67, "parse-asn1": 113 }], 44: [function (require, module, exports) {
+    }, { "./curves.json": 41, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hmac": 54, "elliptic": 67, "parse-asn1": 114 }], 44: [function (require, module, exports) {
       (function (Buffer) {
         // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
         var BN = require('bn.js');
@@ -3458,7 +3462,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = verify;
       }).call(this, require("buffer").Buffer);
-    }, { "./curves.json": 41, "bn.js": "BN", "buffer": 47, "elliptic": 67, "parse-asn1": 113 }], 45: [function (require, module, exports) {
+    }, { "./curves.json": 41, "bn.js": "BN", "buffer": 47, "elliptic": 67, "parse-asn1": 114 }], 45: [function (require, module, exports) {
       arguments[4][17][0].apply(exports, arguments);
     }, { "dup": 17 }], 46: [function (require, module, exports) {
       (function (Buffer) {
@@ -3527,6 +3531,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
 
+      Object.defineProperty(Buffer.prototype, 'parent', {
+        get: function get() {
+          if (!(this instanceof Buffer)) {
+            return undefined;
+          }
+          return this.buffer;
+        }
+      });
+
+      Object.defineProperty(Buffer.prototype, 'offset', {
+        get: function get() {
+          if (!(this instanceof Buffer)) {
+            return undefined;
+          }
+          return this.byteOffset;
+        }
+      });
+
       function createBuffer(length) {
         if (length > K_MAX_LENGTH) {
           throw new RangeError('Invalid typed array length');
@@ -3575,7 +3597,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           throw new TypeError('"value" argument must not be a number');
         }
 
-        if (isArrayBuffer(value)) {
+        if (isArrayBuffer(value) || value && isArrayBuffer(value.buffer)) {
           return fromArrayBuffer(value, encodingOrOffset, length);
         }
 
@@ -3605,7 +3627,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       function assertSize(size) {
         if (typeof size !== 'number') {
-          throw new TypeError('"size" argument must be a number');
+          throw new TypeError('"size" argument must be of type number');
         } else if (size < 0) {
           throw new RangeError('"size" argument must not be negative');
         }
@@ -3657,7 +3679,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         if (!Buffer.isEncoding(encoding)) {
-          throw new TypeError('"encoding" must be a valid string encoding');
+          throw new TypeError('Unknown encoding: ' + encoding);
         }
 
         var length = byteLength(string, encoding) | 0;
@@ -3686,11 +3708,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       function fromArrayBuffer(array, byteOffset, length) {
         if (byteOffset < 0 || array.byteLength < byteOffset) {
-          throw new RangeError('\'offset\' is out of bounds');
+          throw new RangeError('"offset" is outside of buffer bounds');
         }
 
         if (array.byteLength < byteOffset + (length || 0)) {
-          throw new RangeError('\'length\' is out of bounds');
+          throw new RangeError('"length" is outside of buffer bounds');
         }
 
         var buf;
@@ -3721,7 +3743,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         if (obj) {
-          if (isArrayBufferView(obj) || 'length' in obj) {
+          if (ArrayBuffer.isView(obj) || 'length' in obj) {
             if (typeof obj.length !== 'number' || numberIsNaN(obj.length)) {
               return createBuffer(0);
             }
@@ -3733,7 +3755,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
 
-        throw new TypeError('First argument must be a string, Buffer, ArrayBuffer, Array, or array-like object.');
+        throw new TypeError('The first argument must be one of type string, Buffer, ArrayBuffer, Array, or Array-like Object.');
       }
 
       function checked(length) {
@@ -3820,6 +3842,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var pos = 0;
         for (i = 0; i < list.length; ++i) {
           var buf = list[i];
+          if (ArrayBuffer.isView(buf)) {
+            buf = Buffer.from(buf);
+          }
           if (!Buffer.isBuffer(buf)) {
             throw new TypeError('"list" argument must be an Array of Buffers');
           }
@@ -3833,7 +3858,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (Buffer.isBuffer(string)) {
           return string.length;
         }
-        if (isArrayBufferView(string) || isArrayBuffer(string)) {
+        if (ArrayBuffer.isView(string) || isArrayBuffer(string)) {
           return string.byteLength;
         }
         if (typeof string !== 'string') {
@@ -4000,6 +4025,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (arguments.length === 0) return utf8Slice(this, 0, length);
         return slowToString.apply(this, arguments);
       };
+
+      Buffer.prototype.toLocaleString = Buffer.prototype.toString;
 
       Buffer.prototype.equals = function equals(b) {
         if (!Buffer.isBuffer(b)) throw new TypeError('Argument must be a Buffer');
@@ -4218,9 +4245,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
 
-        // must be an even number of digits
         var strLen = string.length;
-        if (strLen % 2 !== 0) throw new TypeError('Invalid hex string');
 
         if (length > strLen / 2) {
           length = strLen / 2;
@@ -4893,6 +4918,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       // copy(targetBuffer, targetStart=0, sourceStart=0, sourceEnd=buffer.length)
       Buffer.prototype.copy = function copy(target, targetStart, start, end) {
+        if (!Buffer.isBuffer(target)) throw new TypeError('argument should be a Buffer');
         if (!start) start = 0;
         if (!end && end !== 0) end = this.length;
         if (targetStart >= target.length) targetStart = target.length;
@@ -4907,7 +4933,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (targetStart < 0) {
           throw new RangeError('targetStart out of bounds');
         }
-        if (start < 0 || start >= this.length) throw new RangeError('sourceStart out of bounds');
+        if (start < 0 || start >= this.length) throw new RangeError('Index out of range');
         if (end < 0) throw new RangeError('sourceEnd out of bounds');
 
         // Are we oob?
@@ -4917,20 +4943,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         var len = end - start;
-        var i;
 
-        if (this === target && start < targetStart && targetStart < end) {
+        if (this === target && typeof Uint8Array.prototype.copyWithin === 'function') {
+          // Use built-in when available, missing from IE11
+          this.copyWithin(targetStart, start, end);
+        } else if (this === target && start < targetStart && targetStart < end) {
           // descending copy from end
-          for (i = len - 1; i >= 0; --i) {
-            target[i + targetStart] = this[i + start];
-          }
-        } else if (len < 1000) {
-          // ascending copy from start
-          for (i = 0; i < len; ++i) {
+          for (var i = len - 1; i >= 0; --i) {
             target[i + targetStart] = this[i + start];
           }
         } else {
-          Uint8Array.prototype.set.call(target, this.subarray(start, start + len), targetStart);
+          Uint8Array.prototype.set.call(target, this.subarray(start, end), targetStart);
         }
 
         return len;
@@ -4951,17 +4974,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             encoding = end;
             end = this.length;
           }
-          if (val.length === 1) {
-            var code = val.charCodeAt(0);
-            if (code < 256) {
-              val = code;
-            }
-          }
           if (encoding !== undefined && typeof encoding !== 'string') {
             throw new TypeError('encoding must be a string');
           }
           if (typeof encoding === 'string' && !Buffer.isEncoding(encoding)) {
             throw new TypeError('Unknown encoding: ' + encoding);
+          }
+          if (val.length === 1) {
+            var code = val.charCodeAt(0);
+            if (encoding === 'utf8' && code < 128 || encoding === 'latin1') {
+              // Fast path: If `val` fits into a single byte, use that numeric value.
+              val = code;
+            }
           }
         } else if (typeof val === 'number') {
           val = val & 255;
@@ -4989,6 +5013,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         } else {
           var bytes = Buffer.isBuffer(val) ? val : new Buffer(val, encoding);
           var len = bytes.length;
+          if (len === 0) {
+            throw new TypeError('The value "' + val + '" is invalid for argument "value"');
+          }
           for (i = 0; i < end - start; ++i) {
             this[i + start] = bytes[i % len];
           }
@@ -5003,6 +5030,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var INVALID_BASE64_RE = /[^+/0-9A-Za-z-_]/g;
 
       function base64clean(str) {
+        // Node takes equal signs as end of the Base64 encoding
+        str = str.split('=')[0];
         // Node strips out invalid characters like \n and \t from the string, base64-js does not
         str = str.trim().replace(INVALID_BASE64_RE, '');
         // Node converts strings with length < 2 to ''
@@ -5130,15 +5159,75 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return obj instanceof ArrayBuffer || obj != null && obj.constructor != null && obj.constructor.name === 'ArrayBuffer' && typeof obj.byteLength === 'number';
       }
 
-      // Node 0.10 supports `ArrayBuffer` but lacks `ArrayBuffer.isView`
-      function isArrayBufferView(obj) {
-        return typeof ArrayBuffer.isView === 'function' && ArrayBuffer.isView(obj);
-      }
-
       function numberIsNaN(obj) {
         return obj !== obj; // eslint-disable-line no-self-compare
       }
-    }, { "base64-js": 15, "ieee754": 99 }], 48: [function (require, module, exports) {
+    }, { "base64-js": 15, "ieee754": 100 }], 48: [function (require, module, exports) {
+      module.exports = {
+        "100": "Continue",
+        "101": "Switching Protocols",
+        "102": "Processing",
+        "200": "OK",
+        "201": "Created",
+        "202": "Accepted",
+        "203": "Non-Authoritative Information",
+        "204": "No Content",
+        "205": "Reset Content",
+        "206": "Partial Content",
+        "207": "Multi-Status",
+        "208": "Already Reported",
+        "226": "IM Used",
+        "300": "Multiple Choices",
+        "301": "Moved Permanently",
+        "302": "Found",
+        "303": "See Other",
+        "304": "Not Modified",
+        "305": "Use Proxy",
+        "307": "Temporary Redirect",
+        "308": "Permanent Redirect",
+        "400": "Bad Request",
+        "401": "Unauthorized",
+        "402": "Payment Required",
+        "403": "Forbidden",
+        "404": "Not Found",
+        "405": "Method Not Allowed",
+        "406": "Not Acceptable",
+        "407": "Proxy Authentication Required",
+        "408": "Request Timeout",
+        "409": "Conflict",
+        "410": "Gone",
+        "411": "Length Required",
+        "412": "Precondition Failed",
+        "413": "Payload Too Large",
+        "414": "URI Too Long",
+        "415": "Unsupported Media Type",
+        "416": "Range Not Satisfiable",
+        "417": "Expectation Failed",
+        "418": "I'm a teapot",
+        "421": "Misdirected Request",
+        "422": "Unprocessable Entity",
+        "423": "Locked",
+        "424": "Failed Dependency",
+        "425": "Unordered Collection",
+        "426": "Upgrade Required",
+        "428": "Precondition Required",
+        "429": "Too Many Requests",
+        "431": "Request Header Fields Too Large",
+        "451": "Unavailable For Legal Reasons",
+        "500": "Internal Server Error",
+        "501": "Not Implemented",
+        "502": "Bad Gateway",
+        "503": "Service Unavailable",
+        "504": "Gateway Timeout",
+        "505": "HTTP Version Not Supported",
+        "506": "Variant Also Negotiates",
+        "507": "Insufficient Storage",
+        "508": "Loop Detected",
+        "509": "Bandwidth Limit Exceeded",
+        "510": "Not Extended",
+        "511": "Network Authentication Required"
+      };
+    }, {}], 49: [function (require, module, exports) {
       var Buffer = require('safe-buffer').Buffer;
       var Transform = require('stream').Transform;
       var StringDecoder = require('string_decoder').StringDecoder;
@@ -5238,7 +5327,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = CipherBase;
-    }, { "inherits": 101, "safe-buffer": 147, "stream": 156, "string_decoder": 157 }], 49: [function (require, module, exports) {
+    }, { "inherits": 102, "safe-buffer": 149, "stream": 158, "string_decoder": 163 }], 50: [function (require, module, exports) {
       (function (Buffer) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
@@ -5344,7 +5433,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return Object.prototype.toString.call(o);
         }
       }).call(this, { "isBuffer": require("../../is-buffer/index.js") });
-    }, { "../../is-buffer/index.js": 102 }], 50: [function (require, module, exports) {
+    }, { "../../is-buffer/index.js": 103 }], 51: [function (require, module, exports) {
       (function (Buffer) {
         var elliptic = require('elliptic');
         var BN = require('bn.js');
@@ -5397,7 +5486,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               name: curve
             };
           }
-          this.curve = new elliptic.ec(this.curveType.name);
+          this.curve = new elliptic.ec(this.curveType.name); // eslint-disable-line new-cap
           this.keys = void 0;
         }
 
@@ -5446,8 +5535,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!Buffer.isBuffer(priv)) {
             priv = new Buffer(priv, enc);
           }
+
           var _priv = new BN(priv);
           _priv = _priv.toString(16);
+          this.keys = this.curve.genKeyPair();
           this.keys._importPrivate(_priv);
           return this;
         };
@@ -5469,249 +5560,45 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": "BN", "buffer": 47, "elliptic": 67 }], 51: [function (require, module, exports) {
-      (function (Buffer) {
-        'use strict';
-
-        var inherits = require('inherits');
-        var md5 = require('./md5');
-        var RIPEMD160 = require('ripemd160');
-        var sha = require('sha.js');
-
-        var Base = require('cipher-base');
-
-        function HashNoConstructor(hash) {
-          Base.call(this, 'digest');
-
-          this._hash = hash;
-          this.buffers = [];
-        }
-
-        inherits(HashNoConstructor, Base);
-
-        HashNoConstructor.prototype._update = function (data) {
-          this.buffers.push(data);
-        };
-
-        HashNoConstructor.prototype._final = function () {
-          var buf = Buffer.concat(this.buffers);
-          var r = this._hash(buf);
-          this.buffers = null;
-
-          return r;
-        };
-
-        function Hash(hash) {
-          Base.call(this, 'digest');
-
-          this._hash = hash;
-        }
-
-        inherits(Hash, Base);
-
-        Hash.prototype._update = function (data) {
-          this._hash.update(data);
-        };
-
-        Hash.prototype._final = function () {
-          return this._hash.digest();
-        };
-
-        module.exports = function createHash(alg) {
-          alg = alg.toLowerCase();
-          if (alg === 'md5') return new HashNoConstructor(md5);
-          if (alg === 'rmd160' || alg === 'ripemd160') return new Hash(new RIPEMD160());
-
-          return new Hash(sha(alg));
-        };
-      }).call(this, require("buffer").Buffer);
-    }, { "./md5": 53, "buffer": 47, "cipher-base": 48, "inherits": 101, "ripemd160": 146, "sha.js": 149 }], 52: [function (require, module, exports) {
-      (function (Buffer) {
-        'use strict';
-
-        var intSize = 4;
-        var zeroBuffer = new Buffer(intSize);
-        zeroBuffer.fill(0);
-
-        var charSize = 8;
-        var hashSize = 16;
-
-        function toArray(buf) {
-          if (buf.length % intSize !== 0) {
-            var len = buf.length + (intSize - buf.length % intSize);
-            buf = Buffer.concat([buf, zeroBuffer], len);
-          }
-
-          var arr = new Array(buf.length >>> 2);
-          for (var i = 0, j = 0; i < buf.length; i += intSize, j++) {
-            arr[j] = buf.readInt32LE(i);
-          }
-
-          return arr;
-        }
-
-        module.exports = function hash(buf, fn) {
-          var arr = fn(toArray(buf), buf.length * charSize);
-          buf = new Buffer(hashSize);
-          for (var i = 0; i < arr.length; i++) {
-            buf.writeInt32LE(arr[i], i << 2, true);
-          }
-          return buf;
-        };
-      }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47 }], 53: [function (require, module, exports) {
+    }, { "bn.js": "BN", "buffer": 47, "elliptic": 67 }], 52: [function (require, module, exports) {
       'use strict';
-      /*
-       * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
-       * Digest Algorithm, as defined in RFC 1321.
-       * Version 2.1 Copyright (C) Paul Johnston 1999 - 2002.
-       * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
-       * Distributed under the BSD License
-       * See http://pajhome.org.uk/crypt/md5 for more info.
-       */
 
-      var makeHash = require('./make-hash');
+      var inherits = require('inherits');
+      var MD5 = require('md5.js');
+      var RIPEMD160 = require('ripemd160');
+      var sha = require('sha.js');
+      var Base = require('cipher-base');
 
-      /*
-       * Calculate the MD5 of an array of little-endian words, and a bit length
-       */
-      function core_md5(x, len) {
-        /* append padding */
-        x[len >> 5] |= 0x80 << len % 32;
-        x[(len + 64 >>> 9 << 4) + 14] = len;
+      function Hash(hash) {
+        Base.call(this, 'digest');
 
-        var a = 1732584193;
-        var b = -271733879;
-        var c = -1732584194;
-        var d = 271733878;
-
-        for (var i = 0; i < x.length; i += 16) {
-          var olda = a;
-          var oldb = b;
-          var oldc = c;
-          var oldd = d;
-
-          a = md5_ff(a, b, c, d, x[i + 0], 7, -680876936);
-          d = md5_ff(d, a, b, c, x[i + 1], 12, -389564586);
-          c = md5_ff(c, d, a, b, x[i + 2], 17, 606105819);
-          b = md5_ff(b, c, d, a, x[i + 3], 22, -1044525330);
-          a = md5_ff(a, b, c, d, x[i + 4], 7, -176418897);
-          d = md5_ff(d, a, b, c, x[i + 5], 12, 1200080426);
-          c = md5_ff(c, d, a, b, x[i + 6], 17, -1473231341);
-          b = md5_ff(b, c, d, a, x[i + 7], 22, -45705983);
-          a = md5_ff(a, b, c, d, x[i + 8], 7, 1770035416);
-          d = md5_ff(d, a, b, c, x[i + 9], 12, -1958414417);
-          c = md5_ff(c, d, a, b, x[i + 10], 17, -42063);
-          b = md5_ff(b, c, d, a, x[i + 11], 22, -1990404162);
-          a = md5_ff(a, b, c, d, x[i + 12], 7, 1804603682);
-          d = md5_ff(d, a, b, c, x[i + 13], 12, -40341101);
-          c = md5_ff(c, d, a, b, x[i + 14], 17, -1502002290);
-          b = md5_ff(b, c, d, a, x[i + 15], 22, 1236535329);
-
-          a = md5_gg(a, b, c, d, x[i + 1], 5, -165796510);
-          d = md5_gg(d, a, b, c, x[i + 6], 9, -1069501632);
-          c = md5_gg(c, d, a, b, x[i + 11], 14, 643717713);
-          b = md5_gg(b, c, d, a, x[i + 0], 20, -373897302);
-          a = md5_gg(a, b, c, d, x[i + 5], 5, -701558691);
-          d = md5_gg(d, a, b, c, x[i + 10], 9, 38016083);
-          c = md5_gg(c, d, a, b, x[i + 15], 14, -660478335);
-          b = md5_gg(b, c, d, a, x[i + 4], 20, -405537848);
-          a = md5_gg(a, b, c, d, x[i + 9], 5, 568446438);
-          d = md5_gg(d, a, b, c, x[i + 14], 9, -1019803690);
-          c = md5_gg(c, d, a, b, x[i + 3], 14, -187363961);
-          b = md5_gg(b, c, d, a, x[i + 8], 20, 1163531501);
-          a = md5_gg(a, b, c, d, x[i + 13], 5, -1444681467);
-          d = md5_gg(d, a, b, c, x[i + 2], 9, -51403784);
-          c = md5_gg(c, d, a, b, x[i + 7], 14, 1735328473);
-          b = md5_gg(b, c, d, a, x[i + 12], 20, -1926607734);
-
-          a = md5_hh(a, b, c, d, x[i + 5], 4, -378558);
-          d = md5_hh(d, a, b, c, x[i + 8], 11, -2022574463);
-          c = md5_hh(c, d, a, b, x[i + 11], 16, 1839030562);
-          b = md5_hh(b, c, d, a, x[i + 14], 23, -35309556);
-          a = md5_hh(a, b, c, d, x[i + 1], 4, -1530992060);
-          d = md5_hh(d, a, b, c, x[i + 4], 11, 1272893353);
-          c = md5_hh(c, d, a, b, x[i + 7], 16, -155497632);
-          b = md5_hh(b, c, d, a, x[i + 10], 23, -1094730640);
-          a = md5_hh(a, b, c, d, x[i + 13], 4, 681279174);
-          d = md5_hh(d, a, b, c, x[i + 0], 11, -358537222);
-          c = md5_hh(c, d, a, b, x[i + 3], 16, -722521979);
-          b = md5_hh(b, c, d, a, x[i + 6], 23, 76029189);
-          a = md5_hh(a, b, c, d, x[i + 9], 4, -640364487);
-          d = md5_hh(d, a, b, c, x[i + 12], 11, -421815835);
-          c = md5_hh(c, d, a, b, x[i + 15], 16, 530742520);
-          b = md5_hh(b, c, d, a, x[i + 2], 23, -995338651);
-
-          a = md5_ii(a, b, c, d, x[i + 0], 6, -198630844);
-          d = md5_ii(d, a, b, c, x[i + 7], 10, 1126891415);
-          c = md5_ii(c, d, a, b, x[i + 14], 15, -1416354905);
-          b = md5_ii(b, c, d, a, x[i + 5], 21, -57434055);
-          a = md5_ii(a, b, c, d, x[i + 12], 6, 1700485571);
-          d = md5_ii(d, a, b, c, x[i + 3], 10, -1894986606);
-          c = md5_ii(c, d, a, b, x[i + 10], 15, -1051523);
-          b = md5_ii(b, c, d, a, x[i + 1], 21, -2054922799);
-          a = md5_ii(a, b, c, d, x[i + 8], 6, 1873313359);
-          d = md5_ii(d, a, b, c, x[i + 15], 10, -30611744);
-          c = md5_ii(c, d, a, b, x[i + 6], 15, -1560198380);
-          b = md5_ii(b, c, d, a, x[i + 13], 21, 1309151649);
-          a = md5_ii(a, b, c, d, x[i + 4], 6, -145523070);
-          d = md5_ii(d, a, b, c, x[i + 11], 10, -1120210379);
-          c = md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
-          b = md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
-
-          a = safe_add(a, olda);
-          b = safe_add(b, oldb);
-          c = safe_add(c, oldc);
-          d = safe_add(d, oldd);
-        }
-
-        return [a, b, c, d];
+        this._hash = hash;
       }
 
-      /*
-       * These functions implement the four basic operations the algorithm uses.
-       */
-      function md5_cmn(q, a, b, x, s, t) {
-        return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b);
-      }
+      inherits(Hash, Base);
 
-      function md5_ff(a, b, c, d, x, s, t) {
-        return md5_cmn(b & c | ~b & d, a, b, x, s, t);
-      }
-
-      function md5_gg(a, b, c, d, x, s, t) {
-        return md5_cmn(b & d | c & ~d, a, b, x, s, t);
-      }
-
-      function md5_hh(a, b, c, d, x, s, t) {
-        return md5_cmn(b ^ c ^ d, a, b, x, s, t);
-      }
-
-      function md5_ii(a, b, c, d, x, s, t) {
-        return md5_cmn(c ^ (b | ~d), a, b, x, s, t);
-      }
-
-      /*
-       * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-       * to work around bugs in some JS interpreters.
-       */
-      function safe_add(x, y) {
-        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
-        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-        return msw << 16 | lsw & 0xFFFF;
-      }
-
-      /*
-       * Bitwise rotate a 32-bit number to the left.
-       */
-      function bit_rol(num, cnt) {
-        return num << cnt | num >>> 32 - cnt;
-      }
-
-      module.exports = function md5(buf) {
-        return makeHash(buf, core_md5);
+      Hash.prototype._update = function (data) {
+        this._hash.update(data);
       };
-    }, { "./make-hash": 52 }], 54: [function (require, module, exports) {
+
+      Hash.prototype._final = function () {
+        return this._hash.digest();
+      };
+
+      module.exports = function createHash(alg) {
+        alg = alg.toLowerCase();
+        if (alg === 'md5') return new MD5();
+        if (alg === 'rmd160' || alg === 'ripemd160') return new RIPEMD160();
+
+        return new Hash(sha(alg));
+      };
+    }, { "cipher-base": 49, "inherits": 102, "md5.js": 105, "ripemd160": 148, "sha.js": 151 }], 53: [function (require, module, exports) {
+      var MD5 = require('md5.js');
+
+      module.exports = function (buffer) {
+        return new MD5().update(buffer).digest();
+      };
+    }, { "md5.js": 105 }], 54: [function (require, module, exports) {
       'use strict';
 
       var inherits = require('inherits');
@@ -5775,7 +5662,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return new Hmac(alg, key);
       };
-    }, { "./legacy": 55, "cipher-base": 48, "create-hash/md5": 53, "inherits": 101, "ripemd160": 146, "safe-buffer": 147, "sha.js": 149 }], 55: [function (require, module, exports) {
+    }, { "./legacy": 55, "cipher-base": 49, "create-hash/md5": 53, "inherits": 102, "ripemd160": 148, "safe-buffer": 149, "sha.js": 151 }], 55: [function (require, module, exports) {
       'use strict';
 
       var inherits = require('inherits');
@@ -5823,7 +5710,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return this._alg(Buffer.concat([this._opad, h]));
       };
       module.exports = Hmac;
-    }, { "cipher-base": 48, "inherits": 101, "safe-buffer": 147 }], 56: [function (require, module, exports) {
+    }, { "cipher-base": 49, "inherits": 102, "safe-buffer": 149 }], 56: [function (require, module, exports) {
       'use strict';
 
       exports.randomBytes = exports.rng = exports.pseudoRandomBytes = exports.prng = require('randombytes');
@@ -5917,7 +5804,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         'POINT_CONVERSION_UNCOMPRESSED': 4,
         'POINT_CONVERSION_HYBRID': 6
       };
-    }, { "browserify-cipher": 35, "browserify-sign": 42, "browserify-sign/algos": 39, "create-ecdh": 50, "create-hash": 51, "create-hmac": 54, "diffie-hellman": 63, "pbkdf2": 114, "public-encrypt": 121, "randombytes": 131, "randomfill": 132 }], 57: [function (require, module, exports) {
+    }, { "browserify-cipher": 35, "browserify-sign": 42, "browserify-sign/algos": 39, "create-ecdh": 51, "create-hash": 52, "create-hmac": 54, "diffie-hellman": 63, "pbkdf2": 115, "public-encrypt": 122, "randombytes": 132, "randomfill": 133 }], 57: [function (require, module, exports) {
       'use strict';
 
       exports.utils = require('./des/utils');
@@ -5992,7 +5879,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       };
-    }, { "inherits": 101, "minimalistic-assert": 107 }], 59: [function (require, module, exports) {
+    }, { "inherits": 102, "minimalistic-assert": 107 }], 59: [function (require, module, exports) {
       'use strict';
 
       var assert = require('minimalistic-assert');
@@ -6254,7 +6141,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // Reverse Initial Permutation
         utils.rip(l, r, out, off);
       };
-    }, { "../des": 57, "inherits": 101, "minimalistic-assert": 107 }], 61: [function (require, module, exports) {
+    }, { "../des": 57, "inherits": 102, "minimalistic-assert": 107 }], 61: [function (require, module, exports) {
       'use strict';
 
       var assert = require('minimalistic-assert');
@@ -6302,7 +6189,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       EDE.prototype._pad = DES.prototype._pad;
       EDE.prototype._unpad = DES.prototype._unpad;
-    }, { "../des": 57, "inherits": 101, "minimalistic-assert": 107 }], 62: [function (require, module, exports) {
+    }, { "../des": 57, "inherits": 102, "minimalistic-assert": 107 }], 62: [function (require, module, exports) {
       'use strict';
 
       exports.readUInt32BE = function readUInt32BE(bytes, off) {
@@ -6716,7 +6603,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./generatePrime": 65, "bn.js": "BN", "buffer": 47, "miller-rabin": 106, "randombytes": 131 }], 65: [function (require, module, exports) {
+    }, { "./generatePrime": 65, "bn.js": "BN", "buffer": 47, "miller-rabin": 106, "randombytes": 132 }], 65: [function (require, module, exports) {
       var randomBytes = require('randombytes');
       module.exports = findPrime;
       findPrime.simpleSieve = simpleSieve;
@@ -6814,7 +6701,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }
-    }, { "bn.js": "BN", "miller-rabin": 106, "randombytes": 131 }], 66: [function (require, module, exports) {
+    }, { "bn.js": "BN", "miller-rabin": 106, "randombytes": 132 }], 66: [function (require, module, exports) {
       module.exports = {
         "modp1": {
           "gen": "02",
@@ -7581,7 +7468,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       // Compatibility with BaseCurve
       Point.prototype.toP = Point.prototype.normalize;
       Point.prototype.mixedAdd = Point.prototype.add;
-    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 101 }], 70: [function (require, module, exports) {
+    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 102 }], 70: [function (require, module, exports) {
       'use strict';
 
       var curve = exports;
@@ -7766,7 +7653,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return this.x.fromRed();
       };
-    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 101 }], 72: [function (require, module, exports) {
+    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 102 }], 72: [function (require, module, exports) {
       'use strict';
 
       var curve = require('../curve');
@@ -8630,7 +8517,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // XXX This code assumes that zero is always zero in red
         return this.z.cmpn(0) === 0;
       };
-    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 101 }], 73: [function (require, module, exports) {
+    }, { "../../elliptic": 67, "../curve": 70, "bn.js": "BN", "inherits": 102 }], 73: [function (require, module, exports) {
       'use strict';
 
       var curves = exports;
@@ -9623,45 +9510,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       utils.intFromLE = intFromLE;
     }, { "bn.js": "BN", "minimalistic-assert": 107, "minimalistic-crypto-utils": 108 }], 82: [function (require, module, exports) {
       module.exports = {
-        "_args": [[{
-          "raw": "elliptic@^6.0.0",
-          "scope": null,
-          "escapedName": "elliptic",
-          "name": "elliptic",
-          "rawSpec": "^6.0.0",
-          "spec": ">=6.0.0 <7.0.0",
-          "type": "range"
-        }, "/Users/frozeman/Sites/_ethereum/web3/node_modules/browserify-sign"]],
-        "_from": "elliptic@>=6.0.0 <7.0.0",
+        "_args": [["elliptic@6.4.0", "/Users/sam/Development/foundation/web3.js"]],
+        "_development": true,
+        "_from": "elliptic@6.4.0",
         "_id": "elliptic@6.4.0",
-        "_inCache": true,
+        "_inBundle": false,
+        "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
         "_location": "/elliptic",
-        "_nodeVersion": "7.0.0",
-        "_npmOperationalInternal": {
-          "host": "packages-18-east.internal.npmjs.com",
-          "tmp": "tmp/elliptic-6.4.0.tgz_1487798866428_0.30510620190761983"
-        },
-        "_npmUser": {
-          "name": "indutny",
-          "email": "fedor@indutny.com"
-        },
-        "_npmVersion": "3.10.8",
         "_phantomChildren": {},
         "_requested": {
-          "raw": "elliptic@^6.0.0",
-          "scope": null,
-          "escapedName": "elliptic",
+          "type": "version",
+          "registry": true,
+          "raw": "elliptic@6.4.0",
           "name": "elliptic",
-          "rawSpec": "^6.0.0",
-          "spec": ">=6.0.0 <7.0.0",
-          "type": "range"
+          "escapedName": "elliptic",
+          "rawSpec": "6.4.0",
+          "saveSpec": null,
+          "fetchSpec": "6.4.0"
         },
         "_requiredBy": ["/browserify-sign", "/create-ecdh", "/secp256k1"],
         "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
-        "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
-        "_shrinkwrap": null,
-        "_spec": "elliptic@^6.0.0",
-        "_where": "/Users/frozeman/Sites/_ethereum/web3/node_modules/browserify-sign",
+        "_spec": "6.4.0",
+        "_where": "/Users/sam/Development/foundation/web3.js",
         "author": {
           "name": "Fedor Indutny",
           "email": "fedor@indutny.com"
@@ -9695,24 +9565,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           "jshint": "^2.6.0",
           "mocha": "^2.1.0"
         },
-        "directories": {},
-        "dist": {
-          "shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
-          "tarball": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz"
-        },
         "files": ["lib"],
-        "gitHead": "6b0d2b76caae91471649c8e21f0b1d3ba0f96090",
         "homepage": "https://github.com/indutny/elliptic",
         "keywords": ["EC", "Elliptic", "curve", "Cryptography"],
         "license": "MIT",
         "main": "lib/elliptic.js",
-        "maintainers": [{
-          "name": "indutny",
-          "email": "fedor@indutny.com"
-        }],
         "name": "elliptic",
-        "optionalDependencies": {},
-        "readme": "ERROR: No README data found!",
         "repository": {
           "type": "git",
           "url": "git+ssh://git@github.com/indutny/elliptic.git"
@@ -10043,95 +9901,105 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       module.exports = EVP_BytesToKey;
-    }, { "md5.js": 104, "safe-buffer": 147 }], 85: [function (require, module, exports) {
-      (function (Buffer) {
-        'use strict';
+    }, { "md5.js": 105, "safe-buffer": 149 }], 85: [function (require, module, exports) {
+      'use strict';
 
-        var Transform = require('stream').Transform;
-        var inherits = require('inherits');
+      var Buffer = require('safe-buffer').Buffer;
+      var Transform = require('stream').Transform;
+      var inherits = require('inherits');
 
-        function HashBase(blockSize) {
-          Transform.call(this);
+      function throwIfNotStringOrBuffer(val, prefix) {
+        if (!Buffer.isBuffer(val) && typeof val !== 'string') {
+          throw new TypeError(prefix + ' must be a string or a buffer');
+        }
+      }
 
-          this._block = new Buffer(blockSize);
-          this._blockSize = blockSize;
-          this._blockOffset = 0;
-          this._length = [0, 0, 0, 0];
+      function HashBase(blockSize) {
+        Transform.call(this);
 
-          this._finalized = false;
+        this._block = Buffer.allocUnsafe(blockSize);
+        this._blockSize = blockSize;
+        this._blockOffset = 0;
+        this._length = [0, 0, 0, 0];
+
+        this._finalized = false;
+      }
+
+      inherits(HashBase, Transform);
+
+      HashBase.prototype._transform = function (chunk, encoding, callback) {
+        var error = null;
+        try {
+          this.update(chunk, encoding);
+        } catch (err) {
+          error = err;
         }
 
-        inherits(HashBase, Transform);
+        callback(error);
+      };
 
-        HashBase.prototype._transform = function (chunk, encoding, callback) {
-          var error = null;
-          try {
-            if (encoding !== 'buffer') chunk = new Buffer(chunk, encoding);
-            this.update(chunk);
-          } catch (err) {
-            error = err;
-          }
+      HashBase.prototype._flush = function (callback) {
+        var error = null;
+        try {
+          this.push(this.digest());
+        } catch (err) {
+          error = err;
+        }
 
-          callback(error);
-        };
+        callback(error);
+      };
 
-        HashBase.prototype._flush = function (callback) {
-          var error = null;
-          try {
-            this.push(this._digest());
-          } catch (err) {
-            error = err;
-          }
+      HashBase.prototype.update = function (data, encoding) {
+        throwIfNotStringOrBuffer(data, 'Data');
+        if (this._finalized) throw new Error('Digest already called');
+        if (!Buffer.isBuffer(data)) data = Buffer.from(data, encoding);
 
-          callback(error);
-        };
+        // consume data
+        var block = this._block;
+        var offset = 0;
+        while (this._blockOffset + data.length - offset >= this._blockSize) {
+          for (var i = this._blockOffset; i < this._blockSize;) {
+            block[i++] = data[offset++];
+          }this._update();
+          this._blockOffset = 0;
+        }
+        while (offset < data.length) {
+          block[this._blockOffset++] = data[offset++];
+        } // update length
+        for (var j = 0, carry = data.length * 8; carry > 0; ++j) {
+          this._length[j] += carry;
+          carry = this._length[j] / 0x0100000000 | 0;
+          if (carry > 0) this._length[j] -= 0x0100000000 * carry;
+        }
 
-        HashBase.prototype.update = function (data, encoding) {
-          if (!Buffer.isBuffer(data) && typeof data !== 'string') throw new TypeError('Data must be a string or a buffer');
-          if (this._finalized) throw new Error('Digest already called');
-          if (!Buffer.isBuffer(data)) data = new Buffer(data, encoding || 'binary');
+        return this;
+      };
 
-          // consume data
-          var block = this._block;
-          var offset = 0;
-          while (this._blockOffset + data.length - offset >= this._blockSize) {
-            for (var i = this._blockOffset; i < this._blockSize;) {
-              block[i++] = data[offset++];
-            }this._update();
-            this._blockOffset = 0;
-          }
-          while (offset < data.length) {
-            block[this._blockOffset++] = data[offset++];
-          } // update length
-          for (var j = 0, carry = data.length * 8; carry > 0; ++j) {
-            this._length[j] += carry;
-            carry = this._length[j] / 0x0100000000 | 0;
-            if (carry > 0) this._length[j] -= 0x0100000000 * carry;
-          }
+      HashBase.prototype._update = function () {
+        throw new Error('_update is not implemented');
+      };
 
-          return this;
-        };
+      HashBase.prototype.digest = function (encoding) {
+        if (this._finalized) throw new Error('Digest already called');
+        this._finalized = true;
 
-        HashBase.prototype._update = function (data) {
-          throw new Error('_update is not implemented');
-        };
+        var digest = this._digest();
+        if (encoding !== undefined) digest = digest.toString(encoding);
 
-        HashBase.prototype.digest = function (encoding) {
-          if (this._finalized) throw new Error('Digest already called');
-          this._finalized = true;
+        // reset state
+        this._block.fill(0);
+        this._blockOffset = 0;
+        for (var i = 0; i < 4; ++i) {
+          this._length[i] = 0;
+        }return digest;
+      };
 
-          var digest = this._digest();
-          if (encoding !== undefined) digest = digest.toString(encoding);
-          return digest;
-        };
+      HashBase.prototype._digest = function () {
+        throw new Error('_digest is not implemented');
+      };
 
-        HashBase.prototype._digest = function () {
-          throw new Error('_digest is not implemented');
-        };
-
-        module.exports = HashBase;
-      }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "inherits": 101, "stream": 156 }], 86: [function (require, module, exports) {
+      module.exports = HashBase;
+    }, { "inherits": 102, "safe-buffer": 149, "stream": 158 }], 86: [function (require, module, exports) {
       var hash = exports;
 
       hash.utils = require('./hash/utils');
@@ -11086,7 +10954,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return r >>> 0;
       }
       exports.shr64_lo = shr64_lo;
-    }, { "inherits": 101, "minimalistic-assert": 107 }], 98: [function (require, module, exports) {
+    }, { "inherits": 102, "minimalistic-assert": 107 }], 98: [function (require, module, exports) {
       'use strict';
 
       var hash = require('hash.js');
@@ -11189,6 +11057,38 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return utils.encode(res, enc);
       };
     }, { "hash.js": 86, "minimalistic-assert": 107, "minimalistic-crypto-utils": 108 }], 99: [function (require, module, exports) {
+      var http = require('http');
+      var url = require('url');
+
+      var https = module.exports;
+
+      for (var key in http) {
+        if (http.hasOwnProperty(key)) https[key] = http[key];
+      }
+
+      https.request = function (params, cb) {
+        params = validateParams(params);
+        return http.request.call(this, params, cb);
+      };
+
+      https.get = function (params, cb) {
+        params = validateParams(params);
+        return http.get.call(this, params, cb);
+      };
+
+      function validateParams(params) {
+        if (typeof params === 'string') {
+          params = url.parse(params);
+        }
+        if (!params.protocol) {
+          params.protocol = 'https:';
+        }
+        if (params.protocol !== 'https:') {
+          throw new Error('Protocol "' + params.protocol + '" not supported. Expected "https:"');
+        }
+        return params;
+      }
+    }, { "http": 159, "url": 166 }], 100: [function (require, module, exports) {
       exports.read = function (buffer, offset, isLE, mLen, nBytes) {
         var e, m;
         var eLen = nBytes * 8 - mLen - 1;
@@ -11273,7 +11173,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         buffer[offset + i - d] |= s * 128;
       };
-    }, {}], 100: [function (require, module, exports) {
+    }, {}], 101: [function (require, module, exports) {
 
       var indexOf = [].indexOf;
 
@@ -11284,7 +11184,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return -1;
       };
-    }, {}], 101: [function (require, module, exports) {
+    }, {}], 102: [function (require, module, exports) {
       if (typeof Object.create === 'function') {
         // implementation from standard node.js 'util' module
         module.exports = function inherits(ctor, superCtor) {
@@ -11308,7 +11208,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           ctor.prototype.constructor = ctor;
         };
       }
-    }, {}], 102: [function (require, module, exports) {
+    }, {}], 103: [function (require, module, exports) {
       /*!
        * Determine if an object is a Buffer
        *
@@ -11330,13 +11230,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       function isSlowBuffer(obj) {
         return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0));
       }
-    }, {}], 103: [function (require, module, exports) {
+    }, {}], 104: [function (require, module, exports) {
       var toString = {}.toString;
 
       module.exports = Array.isArray || function (arr) {
         return toString.call(arr) == '[object Array]';
       };
-    }, {}], 104: [function (require, module, exports) {
+    }, {}], 105: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -11485,105 +11385,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = MD5;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "hash-base": 105, "inherits": 101 }], 105: [function (require, module, exports) {
-      'use strict';
-
-      var Buffer = require('safe-buffer').Buffer;
-      var Transform = require('stream').Transform;
-      var inherits = require('inherits');
-
-      function throwIfNotStringOrBuffer(val, prefix) {
-        if (!Buffer.isBuffer(val) && typeof val !== 'string') {
-          throw new TypeError(prefix + ' must be a string or a buffer');
-        }
-      }
-
-      function HashBase(blockSize) {
-        Transform.call(this);
-
-        this._block = Buffer.allocUnsafe(blockSize);
-        this._blockSize = blockSize;
-        this._blockOffset = 0;
-        this._length = [0, 0, 0, 0];
-
-        this._finalized = false;
-      }
-
-      inherits(HashBase, Transform);
-
-      HashBase.prototype._transform = function (chunk, encoding, callback) {
-        var error = null;
-        try {
-          this.update(chunk, encoding);
-        } catch (err) {
-          error = err;
-        }
-
-        callback(error);
-      };
-
-      HashBase.prototype._flush = function (callback) {
-        var error = null;
-        try {
-          this.push(this.digest());
-        } catch (err) {
-          error = err;
-        }
-
-        callback(error);
-      };
-
-      HashBase.prototype.update = function (data, encoding) {
-        throwIfNotStringOrBuffer(data, 'Data');
-        if (this._finalized) throw new Error('Digest already called');
-        if (!Buffer.isBuffer(data)) data = Buffer.from(data, encoding);
-
-        // consume data
-        var block = this._block;
-        var offset = 0;
-        while (this._blockOffset + data.length - offset >= this._blockSize) {
-          for (var i = this._blockOffset; i < this._blockSize;) {
-            block[i++] = data[offset++];
-          }this._update();
-          this._blockOffset = 0;
-        }
-        while (offset < data.length) {
-          block[this._blockOffset++] = data[offset++];
-        } // update length
-        for (var j = 0, carry = data.length * 8; carry > 0; ++j) {
-          this._length[j] += carry;
-          carry = this._length[j] / 0x0100000000 | 0;
-          if (carry > 0) this._length[j] -= 0x0100000000 * carry;
-        }
-
-        return this;
-      };
-
-      HashBase.prototype._update = function () {
-        throw new Error('_update is not implemented');
-      };
-
-      HashBase.prototype.digest = function (encoding) {
-        if (this._finalized) throw new Error('Digest already called');
-        this._finalized = true;
-
-        var digest = this._digest();
-        if (encoding !== undefined) digest = digest.toString(encoding);
-
-        // reset state
-        this._block.fill(0);
-        this._blockOffset = 0;
-        for (var i = 0; i < 4; ++i) {
-          this._length[i] = 0;
-        }return digest;
-      };
-
-      HashBase.prototype._digest = function () {
-        throw new Error('_digest is not implemented');
-      };
-
-      module.exports = HashBase;
-    }, { "inherits": 101, "safe-buffer": 147, "stream": 156 }], 106: [function (require, module, exports) {
+    }, { "buffer": 47, "hash-base": 85, "inherits": 102 }], 106: [function (require, module, exports) {
       var bn = require('bn.js');
       var brorand = require('brorand');
 
@@ -11747,6 +11549,69 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         if (enc === 'hex') return toHex(arr);else return arr;
       };
     }, {}], 109: [function (require, module, exports) {
+      exports.endianness = function () {
+        return 'LE';
+      };
+
+      exports.hostname = function () {
+        if (typeof location !== 'undefined') {
+          return location.hostname;
+        } else return '';
+      };
+
+      exports.loadavg = function () {
+        return [];
+      };
+
+      exports.uptime = function () {
+        return 0;
+      };
+
+      exports.freemem = function () {
+        return Number.MAX_VALUE;
+      };
+
+      exports.totalmem = function () {
+        return Number.MAX_VALUE;
+      };
+
+      exports.cpus = function () {
+        return [];
+      };
+
+      exports.type = function () {
+        return 'Browser';
+      };
+
+      exports.release = function () {
+        if (typeof navigator !== 'undefined') {
+          return navigator.appVersion;
+        }
+        return '';
+      };
+
+      exports.networkInterfaces = exports.getNetworkInterfaces = function () {
+        return {};
+      };
+
+      exports.arch = function () {
+        return 'javascript';
+      };
+
+      exports.platform = function () {
+        return 'browser';
+      };
+
+      exports.tmpdir = exports.tmpDir = function () {
+        return '/tmp';
+      };
+
+      exports.EOL = '\n';
+
+      exports.homedir = function () {
+        return '/';
+      };
+    }, {}], 110: [function (require, module, exports) {
       module.exports = { "2.16.840.1.101.3.4.1.1": "aes-128-ecb",
         "2.16.840.1.101.3.4.1.2": "aes-128-cbc",
         "2.16.840.1.101.3.4.1.3": "aes-128-ofb",
@@ -11760,7 +11625,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         "2.16.840.1.101.3.4.1.43": "aes-256-ofb",
         "2.16.840.1.101.3.4.1.44": "aes-256-cfb"
       };
-    }, {}], 110: [function (require, module, exports) {
+    }, {}], 111: [function (require, module, exports) {
       // from https://github.com/indutny/self-signed/blob/gh-pages/lib/asn1.js
       // Fedor, you are amazing.
       'use strict';
@@ -11821,7 +11686,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       exports.signature = asn1.define('signature', function () {
         this.seq().obj(this.key('r').int(), this.key('s').int());
       });
-    }, { "./certificate": 111, "asn1.js": 1 }], 111: [function (require, module, exports) {
+    }, { "./certificate": 112, "asn1.js": 1 }], 112: [function (require, module, exports) {
       // from https://github.com/Rantanen/node-dtls/blob/25a7dc861bda38cfeac93a723500eea4f0ac2e86/Certificate.js
       // thanks to @Rantanen
 
@@ -11879,12 +11744,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       });
 
       module.exports = X509Certificate;
-    }, { "asn1.js": 1 }], 112: [function (require, module, exports) {
+    }, { "asn1.js": 1 }], 113: [function (require, module, exports) {
       (function (Buffer) {
         // adapted from https://github.com/apatil/pemstrip
-        var findProc = /Proc-Type: 4,ENCRYPTED\n\r?DEK-Info: AES-((?:128)|(?:192)|(?:256))-CBC,([0-9A-H]+)\n\r?\n\r?([0-9A-z\n\r\+\/\=]+)\n\r?/m;
-        var startRegex = /^-----BEGIN ((?:.* KEY)|CERTIFICATE)-----\n/m;
-        var fullRegex = /^-----BEGIN ((?:.* KEY)|CERTIFICATE)-----\n\r?([0-9A-z\n\r\+\/\=]+)\n\r?-----END \1-----$/m;
+        var findProc = /Proc-Type: 4,ENCRYPTED[\n\r]+DEK-Info: AES-((?:128)|(?:192)|(?:256))-CBC,([0-9A-H]+)[\n\r]+([0-9A-z\n\r\+\/\=]+)[\n\r]+/m;
+        var startRegex = /^-----BEGIN ((?:.* KEY)|CERTIFICATE)-----/m;
+        var fullRegex = /^-----BEGIN ((?:.* KEY)|CERTIFICATE)-----([0-9A-z\n\r\+\/\=]+)-----END \1-----$/m;
         var evp = require('evp_bytestokey');
         var ciphers = require('browserify-aes');
         module.exports = function (okey, password) {
@@ -11893,11 +11758,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var decrypted;
           if (!match) {
             var match2 = key.match(fullRegex);
-            decrypted = new Buffer(match2[2].replace(/\r?\n/g, ''), 'base64');
+            decrypted = new Buffer(match2[2].replace(/[\r\n]/g, ''), 'base64');
           } else {
             var suite = 'aes' + match[1];
             var iv = new Buffer(match[2], 'hex');
-            var cipherText = new Buffer(match[3].replace(/\r?\n/g, ''), 'base64');
+            var cipherText = new Buffer(match[3].replace(/[\r\n]/g, ''), 'base64');
             var cipherKey = evp(password, iv.slice(0, 8), parseInt(match[1], 10)).key;
             var out = [];
             var cipher = ciphers.createDecipheriv(suite, cipherKey, iv);
@@ -11912,7 +11777,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           };
         };
       }).call(this, require("buffer").Buffer);
-    }, { "browserify-aes": 20, "buffer": 47, "evp_bytestokey": 84 }], 113: [function (require, module, exports) {
+    }, { "browserify-aes": 20, "buffer": 47, "evp_bytestokey": 84 }], 114: [function (require, module, exports) {
       (function (Buffer) {
         var asn1 = require('./asn1');
         var aesid = require('./aesid.json');
@@ -12024,12 +11889,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return Buffer.concat(out);
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./aesid.json": 109, "./asn1": 110, "./fixProc": 112, "browserify-aes": 20, "buffer": 47, "pbkdf2": 114 }], 114: [function (require, module, exports) {
-
+    }, { "./aesid.json": 110, "./asn1": 111, "./fixProc": 113, "browserify-aes": 20, "buffer": 47, "pbkdf2": 115 }], 115: [function (require, module, exports) {
       exports.pbkdf2 = require('./lib/async');
-
       exports.pbkdf2Sync = require('./lib/sync');
-    }, { "./lib/async": 115, "./lib/sync": 118 }], 115: [function (require, module, exports) {
+    }, { "./lib/async": 116, "./lib/sync": 119 }], 116: [function (require, module, exports) {
       (function (process, global) {
         var checkParameters = require('./precondition');
         var defaultEncoding = require('./default-encoding');
@@ -12069,6 +11932,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           checks[algo] = prom;
           return prom;
         }
+
         function browserPbkdf2(password, salt, iterations, length, algo) {
           return subtle.importKey('raw', password, { name: 'PBKDF2' }, false, ['deriveBits']).then(function (key) {
             return subtle.deriveBits({
@@ -12083,6 +11947,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return Buffer.from(res);
           });
         }
+
         function resolvePromise(promise, callback) {
           promise.then(function (out) {
             process.nextTick(function () {
@@ -12095,18 +11960,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           });
         }
         module.exports = function (password, salt, iterations, keylen, digest, callback) {
-          if (!Buffer.isBuffer(password)) password = Buffer.from(password, defaultEncoding);
-          if (!Buffer.isBuffer(salt)) salt = Buffer.from(salt, defaultEncoding);
-
-          checkParameters(iterations, keylen);
           if (typeof digest === 'function') {
             callback = digest;
             digest = undefined;
           }
-          if (typeof callback !== 'function') throw new Error('No callback provided to pbkdf2');
 
           digest = digest || 'sha1';
           var algo = toBrowser[digest.toLowerCase()];
+
           if (!algo || typeof global.Promise !== 'function') {
             return process.nextTick(function () {
               var out;
@@ -12118,16 +11979,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               callback(null, out);
             });
           }
+
+          checkParameters(password, salt, iterations, keylen);
+          if (typeof callback !== 'function') throw new Error('No callback provided to pbkdf2');
+          if (!Buffer.isBuffer(password)) password = Buffer.from(password, defaultEncoding);
+          if (!Buffer.isBuffer(salt)) salt = Buffer.from(salt, defaultEncoding);
+
           resolvePromise(checkNative(algo).then(function (resp) {
-            if (resp) {
-              return browserPbkdf2(password, salt, iterations, keylen, algo);
-            } else {
-              return sync(password, salt, iterations, keylen, digest);
-            }
+            if (resp) return browserPbkdf2(password, salt, iterations, keylen, algo);
+
+            return sync(password, salt, iterations, keylen, digest);
           }), callback);
         };
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "./default-encoding": 116, "./precondition": 117, "./sync": 118, "_process": 120, "safe-buffer": 147 }], 116: [function (require, module, exports) {
+    }, { "./default-encoding": 117, "./precondition": 118, "./sync": 119, "_process": 121, "safe-buffer": 149 }], 117: [function (require, module, exports) {
       (function (process) {
         var defaultEncoding;
         /* istanbul ignore next */
@@ -12140,27 +12005,39 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         module.exports = defaultEncoding;
       }).call(this, require('_process'));
-    }, { "_process": 120 }], 117: [function (require, module, exports) {
-      var MAX_ALLOC = Math.pow(2, 30) - 1; // default in iojs
-      module.exports = function (iterations, keylen) {
-        if (typeof iterations !== 'number') {
-          throw new TypeError('Iterations not a number');
+    }, { "_process": 121 }], 118: [function (require, module, exports) {
+      (function (Buffer) {
+        var MAX_ALLOC = Math.pow(2, 30) - 1; // default in iojs
+
+        function checkBuffer(buf, name) {
+          if (typeof buf !== 'string' && !Buffer.isBuffer(buf)) {
+            throw new TypeError(name + ' must be a buffer or string');
+          }
         }
 
-        if (iterations < 0) {
-          throw new TypeError('Bad iterations');
-        }
+        module.exports = function (password, salt, iterations, keylen) {
+          checkBuffer(password, 'Password');
+          checkBuffer(salt, 'Salt');
 
-        if (typeof keylen !== 'number') {
-          throw new TypeError('Key length not a number');
-        }
+          if (typeof iterations !== 'number') {
+            throw new TypeError('Iterations not a number');
+          }
 
-        if (keylen < 0 || keylen > MAX_ALLOC || keylen !== keylen) {
-          /* eslint no-self-compare: 0 */
-          throw new TypeError('Bad key length');
-        }
-      };
-    }, {}], 118: [function (require, module, exports) {
+          if (iterations < 0) {
+            throw new TypeError('Bad iterations');
+          }
+
+          if (typeof keylen !== 'number') {
+            throw new TypeError('Key length not a number');
+          }
+
+          if (keylen < 0 || keylen > MAX_ALLOC || keylen !== keylen) {
+            /* eslint no-self-compare: 0 */
+            throw new TypeError('Bad key length');
+          }
+        };
+      }).call(this, { "isBuffer": require("../../is-buffer/index.js") });
+    }, { "../../is-buffer/index.js": 103 }], 119: [function (require, module, exports) {
       var md5 = require('create-hash/md5');
       var rmd160 = require('ripemd160');
       var sha = require('sha.js');
@@ -12226,10 +12103,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       function pbkdf2(password, salt, iterations, keylen, digest) {
+        checkParameters(password, salt, iterations, keylen);
+
         if (!Buffer.isBuffer(password)) password = Buffer.from(password, defaultEncoding);
         if (!Buffer.isBuffer(salt)) salt = Buffer.from(salt, defaultEncoding);
-
-        checkParameters(iterations, keylen);
 
         digest = digest || 'sha1';
 
@@ -12264,7 +12141,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       module.exports = pbkdf2;
-    }, { "./default-encoding": 116, "./precondition": 117, "create-hash/md5": 53, "ripemd160": 146, "safe-buffer": 147, "sha.js": 149 }], 119: [function (require, module, exports) {
+    }, { "./default-encoding": 117, "./precondition": 118, "create-hash/md5": 53, "ripemd160": 148, "safe-buffer": 149, "sha.js": 151 }], 120: [function (require, module, exports) {
       (function (process) {
         'use strict';
 
@@ -12308,7 +12185,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }).call(this, require('_process'));
-    }, { "_process": 120 }], 120: [function (require, module, exports) {
+    }, { "_process": 121 }], 121: [function (require, module, exports) {
       // shim for using process in browser
       var process = module.exports = {};
 
@@ -12494,7 +12371,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       process.umask = function () {
         return 0;
       };
-    }, {}], 121: [function (require, module, exports) {
+    }, {}], 122: [function (require, module, exports) {
       exports.publicEncrypt = require('./publicEncrypt');
       exports.privateDecrypt = require('./privateDecrypt');
 
@@ -12505,7 +12382,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       exports.publicDecrypt = function publicDecrypt(key, buf) {
         return exports.privateDecrypt(key, buf, true);
       };
-    }, { "./privateDecrypt": 123, "./publicEncrypt": 124 }], 122: [function (require, module, exports) {
+    }, { "./privateDecrypt": 124, "./publicEncrypt": 125 }], 123: [function (require, module, exports) {
       (function (Buffer) {
         var createHash = require('create-hash');
         module.exports = function (seed, len) {
@@ -12525,7 +12402,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return out;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "create-hash": 51 }], 123: [function (require, module, exports) {
+    }, { "buffer": 47, "create-hash": 52 }], 124: [function (require, module, exports) {
       (function (Buffer) {
         var parseKeys = require('parse-asn1');
         var mgf = require('./mgf');
@@ -12636,7 +12513,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return dif;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./mgf": 122, "./withPublic": 125, "./xor": 126, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hash": 51, "parse-asn1": 113 }], 124: [function (require, module, exports) {
+    }, { "./mgf": 123, "./withPublic": 126, "./xor": 127, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hash": 52, "parse-asn1": 114 }], 125: [function (require, module, exports) {
       (function (Buffer) {
         var parseKeys = require('parse-asn1');
         var randomBytes = require('randombytes');
@@ -12734,7 +12611,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return out;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./mgf": 122, "./withPublic": 125, "./xor": 126, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hash": 51, "parse-asn1": 113, "randombytes": 131 }], 125: [function (require, module, exports) {
+    }, { "./mgf": 123, "./withPublic": 126, "./xor": 127, "bn.js": "BN", "browserify-rsa": 38, "buffer": 47, "create-hash": 52, "parse-asn1": 114, "randombytes": 132 }], 126: [function (require, module, exports) {
       (function (Buffer) {
         var bn = require('bn.js');
         function withPublic(paddedMsg, key) {
@@ -12743,7 +12620,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = withPublic;
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": "BN", "buffer": 47 }], 126: [function (require, module, exports) {
+    }, { "bn.js": "BN", "buffer": 47 }], 127: [function (require, module, exports) {
       module.exports = function xor(a, b) {
         var len = a.length;
         var i = -1;
@@ -12752,7 +12629,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return a;
       };
-    }, {}], 127: [function (require, module, exports) {
+    }, {}], 128: [function (require, module, exports) {
       (function (global) {
         /*! https://mths.be/punycode v1.4.1 by @mathias */
         ;(function (root) {
@@ -13280,7 +13157,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         })(this);
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, {}], 128: [function (require, module, exports) {
+    }, {}], 129: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13369,7 +13246,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var isArray = Array.isArray || function (xs) {
         return Object.prototype.toString.call(xs) === '[object Array]';
       };
-    }, {}], 129: [function (require, module, exports) {
+    }, {}], 130: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13453,12 +13330,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return res;
       };
-    }, {}], 130: [function (require, module, exports) {
+    }, {}], 131: [function (require, module, exports) {
       'use strict';
 
       exports.decode = exports.parse = require('./decode');
       exports.encode = exports.stringify = require('./encode');
-    }, { "./decode": 128, "./encode": 129 }], 131: [function (require, module, exports) {
+    }, { "./decode": 129, "./encode": 130 }], 132: [function (require, module, exports) {
       (function (process, global) {
         'use strict';
 
@@ -13500,7 +13377,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return bytes;
         }
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "_process": 120, "safe-buffer": 147 }], 132: [function (require, module, exports) {
+    }, { "_process": 121, "safe-buffer": 149 }], 133: [function (require, module, exports) {
       (function (process, global) {
         'use strict';
 
@@ -13613,9 +13490,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return actualFill(buf, offset, size);
         }
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "_process": 120, "randombytes": 131, "safe-buffer": 147 }], 133: [function (require, module, exports) {
+    }, { "_process": 121, "randombytes": 132, "safe-buffer": 149 }], 134: [function (require, module, exports) {
       module.exports = require('./lib/_stream_duplex.js');
-    }, { "./lib/_stream_duplex.js": 134 }], 134: [function (require, module, exports) {
+    }, { "./lib/_stream_duplex.js": 135 }], 135: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13646,7 +13523,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       /*<replacement>*/
 
-      var processNextTick = require('process-nextick-args').nextTick;
+      var pna = require('process-nextick-args');
       /*</replacement>*/
 
       /*<replacement>*/
@@ -13670,10 +13547,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       util.inherits(Duplex, Readable);
 
-      var keys = objectKeys(Writable.prototype);
-      for (var v = 0; v < keys.length; v++) {
-        var method = keys[v];
-        if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+      {
+        // avoid scope creep, the keys array can then be collected
+        var keys = objectKeys(Writable.prototype);
+        for (var v = 0; v < keys.length; v++) {
+          var method = keys[v];
+          if (!Duplex.prototype[method]) Duplex.prototype[method] = Writable.prototype[method];
+        }
       }
 
       function Duplex(options) {
@@ -13692,6 +13572,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.once('end', onend);
       }
 
+      Object.defineProperty(Duplex.prototype, 'writableHighWaterMark', {
+        // making it explicit this property is not enumerable
+        // because otherwise some prototype manipulation in
+        // userland will fail
+        enumerable: false,
+        get: function get() {
+          return this._writableState.highWaterMark;
+        }
+      });
+
       // the no-half-open enforcer
       function onend() {
         // if we allow half-open state, or if the writable side ended,
@@ -13700,7 +13590,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // no more data can be written.
         // But allow more writes to happen in this tick.
-        processNextTick(onEndNT, this);
+        pna.nextTick(onEndNT, this);
       }
 
       function onEndNT(self) {
@@ -13732,15 +13622,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.push(null);
         this.end();
 
-        processNextTick(cb, err);
+        pna.nextTick(cb, err);
       };
-
-      function forEach(xs, f) {
-        for (var i = 0, l = xs.length; i < l; i++) {
-          f(xs[i], i);
-        }
-      }
-    }, { "./_stream_readable": 136, "./_stream_writable": 138, "core-util-is": 49, "inherits": 101, "process-nextick-args": 119 }], 135: [function (require, module, exports) {
+    }, { "./_stream_readable": 137, "./_stream_writable": 139, "core-util-is": 50, "inherits": 102, "process-nextick-args": 120 }], 136: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -13788,7 +13672,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       PassThrough.prototype._transform = function (chunk, encoding, cb) {
         cb(null, chunk);
       };
-    }, { "./_stream_transform": 137, "core-util-is": 49, "inherits": 101 }], 136: [function (require, module, exports) {
+    }, { "./_stream_transform": 138, "core-util-is": 50, "inherits": 102 }], 137: [function (require, module, exports) {
       (function (process, global) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
@@ -13815,7 +13699,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         /*<replacement>*/
 
-        var processNextTick = require('process-nextick-args').nextTick;
+        var pna = require('process-nextick-args');
         /*</replacement>*/
 
         module.exports = Readable;
@@ -14287,7 +14171,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!state.emittedReadable) {
             debug('emitReadable', state.flowing);
             state.emittedReadable = true;
-            if (state.sync) processNextTick(emitReadable_, stream);else emitReadable_(stream);
+            if (state.sync) pna.nextTick(emitReadable_, stream);else emitReadable_(stream);
           }
         }
 
@@ -14306,7 +14190,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function maybeReadMore(stream, state) {
           if (!state.readingMore) {
             state.readingMore = true;
-            processNextTick(maybeReadMore_, stream, state);
+            pna.nextTick(maybeReadMore_, stream, state);
           }
         }
 
@@ -14351,7 +14235,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var doEnd = (!pipeOpts || pipeOpts.end !== false) && dest !== process.stdout && dest !== process.stderr;
 
           var endFn = doEnd ? onend : unpipe;
-          if (state.endEmitted) processNextTick(endFn);else src.once('end', endFn);
+          if (state.endEmitted) pna.nextTick(endFn);else src.once('end', endFn);
 
           dest.on('unpipe', onunpipe);
           function onunpipe(readable, unpipeInfo) {
@@ -14541,7 +14425,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               state.readableListening = state.needReadable = true;
               state.emittedReadable = false;
               if (!state.reading) {
-                processNextTick(nReadingNextTick, this);
+                pna.nextTick(nReadingNextTick, this);
               } else if (state.length) {
                 emitReadable(this);
               }
@@ -14572,7 +14456,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         function resume(stream, state) {
           if (!state.resumeScheduled) {
             state.resumeScheduled = true;
-            processNextTick(resume_, stream, state);
+            pna.nextTick(resume_, stream, state);
           }
         }
 
@@ -14667,6 +14551,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           return this;
         };
+
+        Object.defineProperty(Readable.prototype, 'readableHighWaterMark', {
+          // making it explicit this property is not enumerable
+          // because otherwise some prototype manipulation in
+          // userland will fail
+          enumerable: false,
+          get: function get() {
+            return this._readableState.highWaterMark;
+          }
+        });
 
         // exposed for testing purposes only.
         Readable._fromList = fromList;
@@ -14780,7 +14674,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           if (!state.endEmitted) {
             state.ended = true;
-            processNextTick(endReadableNT, state, stream);
+            pna.nextTick(endReadableNT, state, stream);
           }
         }
 
@@ -14793,12 +14687,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
 
-        function forEach(xs, f) {
-          for (var i = 0, l = xs.length; i < l; i++) {
-            f(xs[i], i);
-          }
-        }
-
         function indexOf(xs, x) {
           for (var i = 0, l = xs.length; i < l; i++) {
             if (xs[i] === x) return i;
@@ -14806,7 +14694,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return -1;
         }
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "./_stream_duplex": 134, "./internal/streams/BufferList": 139, "./internal/streams/destroy": 140, "./internal/streams/stream": 141, "_process": 120, "core-util-is": 49, "events": 83, "inherits": 101, "isarray": 103, "process-nextick-args": 119, "safe-buffer": 147, "string_decoder/": 157, "util": 17 }], 137: [function (require, module, exports) {
+    }, { "./_stream_duplex": 135, "./internal/streams/BufferList": 140, "./internal/streams/destroy": 141, "./internal/streams/stream": 142, "_process": 121, "core-util-is": 50, "events": 83, "inherits": 102, "isarray": 104, "process-nextick-args": 120, "safe-buffer": 149, "string_decoder/": 143, "util": 17 }], 138: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15021,8 +14909,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return stream.push(null);
       }
-    }, { "./_stream_duplex": 134, "core-util-is": 49, "inherits": 101 }], 138: [function (require, module, exports) {
-      (function (process, global) {
+    }, { "./_stream_duplex": 135, "core-util-is": 50, "inherits": 102 }], 139: [function (require, module, exports) {
+      (function (process, global, setImmediate) {
         // Copyright Joyent, Inc. and other Node contributors.
         //
         // Permission is hereby granted, free of charge, to any person obtaining a
@@ -15052,7 +14940,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         /*<replacement>*/
 
-        var processNextTick = require('process-nextick-args').nextTick;
+        var pna = require('process-nextick-args');
         /*</replacement>*/
 
         module.exports = Writable;
@@ -15079,7 +14967,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         /* </replacement> */
 
         /*<replacement>*/
-        var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : processNextTick;
+        var asyncWrite = !process.browser && ['v0.10', 'v0.9.'].indexOf(process.version.slice(0, 5)) > -1 ? setImmediate : pna.nextTick;
         /*</replacement>*/
 
         /*<replacement>*/
@@ -15313,7 +15201,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var er = new Error('write after end');
           // TODO: defer error events consistently everywhere, not just the cb
           stream.emit('error', er);
-          processNextTick(cb, er);
+          pna.nextTick(cb, er);
         }
 
         // Checks that a user-supplied chunk is valid, especially for the particular
@@ -15330,7 +15218,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
           if (er) {
             stream.emit('error', er);
-            processNextTick(cb, er);
+            pna.nextTick(cb, er);
             valid = false;
           }
           return valid;
@@ -15393,6 +15281,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return chunk;
         }
 
+        Object.defineProperty(Writable.prototype, 'writableHighWaterMark', {
+          // making it explicit this property is not enumerable
+          // because otherwise some prototype manipulation in
+          // userland will fail
+          enumerable: false,
+          get: function get() {
+            return this._writableState.highWaterMark;
+          }
+        });
+
         // if we're already writing something, then just put this
         // in the queue, and wait our turn.  Otherwise, call _write
         // If we return false, then we need a drain event, so set that flag.
@@ -15450,10 +15348,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (sync) {
             // defer the callback if we are being called synchronously
             // to avoid piling up things on the stack
-            processNextTick(cb, er);
+            pna.nextTick(cb, er);
             // this can emit finish, and it will always happen
             // after error
-            processNextTick(finishMaybe, stream, state);
+            pna.nextTick(finishMaybe, stream, state);
             stream._writableState.errorEmitted = true;
             stream.emit('error', er);
           } else {
@@ -15628,7 +15526,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             if (typeof stream._final === 'function') {
               state.pendingcb++;
               state.finalCalled = true;
-              processNextTick(callFinal, stream, state);
+              pna.nextTick(callFinal, stream, state);
             } else {
               state.prefinished = true;
               stream.emit('prefinish');
@@ -15652,7 +15550,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           state.ending = true;
           finishMaybe(stream, state);
           if (cb) {
-            if (state.finished) processNextTick(cb);else stream.once('finish', cb);
+            if (state.finished) pna.nextTick(cb);else stream.once('finish', cb);
           }
           state.ended = true;
           stream.writable = false;
@@ -15700,8 +15598,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           this.end();
           cb(err);
         };
-      }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "./_stream_duplex": 134, "./internal/streams/destroy": 140, "./internal/streams/stream": 141, "_process": 120, "core-util-is": 49, "inherits": 101, "process-nextick-args": 119, "safe-buffer": 147, "util-deprecate": 160 }], 139: [function (require, module, exports) {
+      }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("timers").setImmediate);
+    }, { "./_stream_duplex": 135, "./internal/streams/destroy": 141, "./internal/streams/stream": 142, "_process": 121, "core-util-is": 50, "inherits": 102, "process-nextick-args": 120, "safe-buffer": 149, "timers": 164, "util-deprecate": 168 }], 140: [function (require, module, exports) {
       'use strict';
 
       function _classCallCheck(instance, Constructor) {
@@ -15785,12 +15683,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return this.constructor.name + ' ' + obj;
         };
       }
-    }, { "safe-buffer": 147, "util": 17 }], 140: [function (require, module, exports) {
+    }, { "safe-buffer": 149, "util": 17 }], 141: [function (require, module, exports) {
       'use strict';
 
       /*<replacement>*/
 
-      var processNextTick = require('process-nextick-args').nextTick;
+      var pna = require('process-nextick-args');
       /*</replacement>*/
 
       // undocumented cb() API, needed for core, not for public API
@@ -15804,7 +15702,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (cb) {
             cb(err);
           } else if (err && (!this._writableState || !this._writableState.errorEmitted)) {
-            processNextTick(emitErrorNT, this, err);
+            pna.nextTick(emitErrorNT, this, err);
           }
           return this;
         }
@@ -15823,7 +15721,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         this._destroy(err || null, function (err) {
           if (!cb && err) {
-            processNextTick(emitErrorNT, _this, err);
+            pna.nextTick(emitErrorNT, _this, err);
             if (_this._writableState) {
               _this._writableState.errorEmitted = true;
             }
@@ -15860,11 +15758,308 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         destroy: destroy,
         undestroy: undestroy
       };
-    }, { "process-nextick-args": 119 }], 141: [function (require, module, exports) {
+    }, { "process-nextick-args": 120 }], 142: [function (require, module, exports) {
       module.exports = require('events').EventEmitter;
-    }, { "events": 83 }], 142: [function (require, module, exports) {
+    }, { "events": 83 }], 143: [function (require, module, exports) {
+      // Copyright Joyent, Inc. and other Node contributors.
+      //
+      // Permission is hereby granted, free of charge, to any person obtaining a
+      // copy of this software and associated documentation files (the
+      // "Software"), to deal in the Software without restriction, including
+      // without limitation the rights to use, copy, modify, merge, publish,
+      // distribute, sublicense, and/or sell copies of the Software, and to permit
+      // persons to whom the Software is furnished to do so, subject to the
+      // following conditions:
+      //
+      // The above copyright notice and this permission notice shall be included
+      // in all copies or substantial portions of the Software.
+      //
+      // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+      // OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+      // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+      // NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+      // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+      // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+      // USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+      'use strict';
+
+      /*<replacement>*/
+
+      var Buffer = require('safe-buffer').Buffer;
+      /*</replacement>*/
+
+      var isEncoding = Buffer.isEncoding || function (encoding) {
+        encoding = '' + encoding;
+        switch (encoding && encoding.toLowerCase()) {
+          case 'hex':case 'utf8':case 'utf-8':case 'ascii':case 'binary':case 'base64':case 'ucs2':case 'ucs-2':case 'utf16le':case 'utf-16le':case 'raw':
+            return true;
+          default:
+            return false;
+        }
+      };
+
+      function _normalizeEncoding(enc) {
+        if (!enc) return 'utf8';
+        var retried;
+        while (true) {
+          switch (enc) {
+            case 'utf8':
+            case 'utf-8':
+              return 'utf8';
+            case 'ucs2':
+            case 'ucs-2':
+            case 'utf16le':
+            case 'utf-16le':
+              return 'utf16le';
+            case 'latin1':
+            case 'binary':
+              return 'latin1';
+            case 'base64':
+            case 'ascii':
+            case 'hex':
+              return enc;
+            default:
+              if (retried) return; // undefined
+              enc = ('' + enc).toLowerCase();
+              retried = true;
+          }
+        }
+      };
+
+      // Do not cache `Buffer.isEncoding` when checking encoding names as some
+      // modules monkey-patch it to support additional encodings
+      function normalizeEncoding(enc) {
+        var nenc = _normalizeEncoding(enc);
+        if (typeof nenc !== 'string' && (Buffer.isEncoding === isEncoding || !isEncoding(enc))) throw new Error('Unknown encoding: ' + enc);
+        return nenc || enc;
+      }
+
+      // StringDecoder provides an interface for efficiently splitting a series of
+      // buffers into a series of JS strings without breaking apart multi-byte
+      // characters.
+      exports.StringDecoder = StringDecoder;
+      function StringDecoder(encoding) {
+        this.encoding = normalizeEncoding(encoding);
+        var nb;
+        switch (this.encoding) {
+          case 'utf16le':
+            this.text = utf16Text;
+            this.end = utf16End;
+            nb = 4;
+            break;
+          case 'utf8':
+            this.fillLast = utf8FillLast;
+            nb = 4;
+            break;
+          case 'base64':
+            this.text = base64Text;
+            this.end = base64End;
+            nb = 3;
+            break;
+          default:
+            this.write = simpleWrite;
+            this.end = simpleEnd;
+            return;
+        }
+        this.lastNeed = 0;
+        this.lastTotal = 0;
+        this.lastChar = Buffer.allocUnsafe(nb);
+      }
+
+      StringDecoder.prototype.write = function (buf) {
+        if (buf.length === 0) return '';
+        var r;
+        var i;
+        if (this.lastNeed) {
+          r = this.fillLast(buf);
+          if (r === undefined) return '';
+          i = this.lastNeed;
+          this.lastNeed = 0;
+        } else {
+          i = 0;
+        }
+        if (i < buf.length) return r ? r + this.text(buf, i) : this.text(buf, i);
+        return r || '';
+      };
+
+      StringDecoder.prototype.end = utf8End;
+
+      // Returns only complete characters in a Buffer
+      StringDecoder.prototype.text = utf8Text;
+
+      // Attempts to complete a partial non-UTF-8 character using bytes from a Buffer
+      StringDecoder.prototype.fillLast = function (buf) {
+        if (this.lastNeed <= buf.length) {
+          buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, this.lastNeed);
+          return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+        }
+        buf.copy(this.lastChar, this.lastTotal - this.lastNeed, 0, buf.length);
+        this.lastNeed -= buf.length;
+      };
+
+      // Checks the type of a UTF-8 byte, whether it's ASCII, a leading byte, or a
+      // continuation byte. If an invalid byte is detected, -2 is returned.
+      function utf8CheckByte(byte) {
+        if (byte <= 0x7F) return 0;else if (byte >> 5 === 0x06) return 2;else if (byte >> 4 === 0x0E) return 3;else if (byte >> 3 === 0x1E) return 4;
+        return byte >> 6 === 0x02 ? -1 : -2;
+      }
+
+      // Checks at most 3 bytes at the end of a Buffer in order to detect an
+      // incomplete multi-byte UTF-8 character. The total number of bytes (2, 3, or 4)
+      // needed to complete the UTF-8 character (if applicable) are returned.
+      function utf8CheckIncomplete(self, buf, i) {
+        var j = buf.length - 1;
+        if (j < i) return 0;
+        var nb = utf8CheckByte(buf[j]);
+        if (nb >= 0) {
+          if (nb > 0) self.lastNeed = nb - 1;
+          return nb;
+        }
+        if (--j < i || nb === -2) return 0;
+        nb = utf8CheckByte(buf[j]);
+        if (nb >= 0) {
+          if (nb > 0) self.lastNeed = nb - 2;
+          return nb;
+        }
+        if (--j < i || nb === -2) return 0;
+        nb = utf8CheckByte(buf[j]);
+        if (nb >= 0) {
+          if (nb > 0) {
+            if (nb === 2) nb = 0;else self.lastNeed = nb - 3;
+          }
+          return nb;
+        }
+        return 0;
+      }
+
+      // Validates as many continuation bytes for a multi-byte UTF-8 character as
+      // needed or are available. If we see a non-continuation byte where we expect
+      // one, we "replace" the validated continuation bytes we've seen so far with
+      // a single UTF-8 replacement character ('\ufffd'), to match v8's UTF-8 decoding
+      // behavior. The continuation byte check is included three times in the case
+      // where all of the continuation bytes for a character exist in the same buffer.
+      // It is also done this way as a slight performance increase instead of using a
+      // loop.
+      function utf8CheckExtraBytes(self, buf, p) {
+        if ((buf[0] & 0xC0) !== 0x80) {
+          self.lastNeed = 0;
+          return "\uFFFD";
+        }
+        if (self.lastNeed > 1 && buf.length > 1) {
+          if ((buf[1] & 0xC0) !== 0x80) {
+            self.lastNeed = 1;
+            return "\uFFFD";
+          }
+          if (self.lastNeed > 2 && buf.length > 2) {
+            if ((buf[2] & 0xC0) !== 0x80) {
+              self.lastNeed = 2;
+              return "\uFFFD";
+            }
+          }
+        }
+      }
+
+      // Attempts to complete a multi-byte UTF-8 character using bytes from a Buffer.
+      function utf8FillLast(buf) {
+        var p = this.lastTotal - this.lastNeed;
+        var r = utf8CheckExtraBytes(this, buf, p);
+        if (r !== undefined) return r;
+        if (this.lastNeed <= buf.length) {
+          buf.copy(this.lastChar, p, 0, this.lastNeed);
+          return this.lastChar.toString(this.encoding, 0, this.lastTotal);
+        }
+        buf.copy(this.lastChar, p, 0, buf.length);
+        this.lastNeed -= buf.length;
+      }
+
+      // Returns all complete UTF-8 characters in a Buffer. If the Buffer ended on a
+      // partial character, the character's bytes are buffered until the required
+      // number of bytes are available.
+      function utf8Text(buf, i) {
+        var total = utf8CheckIncomplete(this, buf, i);
+        if (!this.lastNeed) return buf.toString('utf8', i);
+        this.lastTotal = total;
+        var end = buf.length - (total - this.lastNeed);
+        buf.copy(this.lastChar, 0, end);
+        return buf.toString('utf8', i, end);
+      }
+
+      // For UTF-8, a replacement character is added when ending on a partial
+      // character.
+      function utf8End(buf) {
+        var r = buf && buf.length ? this.write(buf) : '';
+        if (this.lastNeed) return r + "\uFFFD";
+        return r;
+      }
+
+      // UTF-16LE typically needs two bytes per character, but even if we have an even
+      // number of bytes available, we need to check if we end on a leading/high
+      // surrogate. In that case, we need to wait for the next two bytes in order to
+      // decode the last character properly.
+      function utf16Text(buf, i) {
+        if ((buf.length - i) % 2 === 0) {
+          var r = buf.toString('utf16le', i);
+          if (r) {
+            var c = r.charCodeAt(r.length - 1);
+            if (c >= 0xD800 && c <= 0xDBFF) {
+              this.lastNeed = 2;
+              this.lastTotal = 4;
+              this.lastChar[0] = buf[buf.length - 2];
+              this.lastChar[1] = buf[buf.length - 1];
+              return r.slice(0, -1);
+            }
+          }
+          return r;
+        }
+        this.lastNeed = 1;
+        this.lastTotal = 2;
+        this.lastChar[0] = buf[buf.length - 1];
+        return buf.toString('utf16le', i, buf.length - 1);
+      }
+
+      // For UTF-16LE we do not explicitly append special replacement characters if we
+      // end on a partial character, we simply let v8 handle that.
+      function utf16End(buf) {
+        var r = buf && buf.length ? this.write(buf) : '';
+        if (this.lastNeed) {
+          var end = this.lastTotal - this.lastNeed;
+          return r + this.lastChar.toString('utf16le', 0, end);
+        }
+        return r;
+      }
+
+      function base64Text(buf, i) {
+        var n = (buf.length - i) % 3;
+        if (n === 0) return buf.toString('base64', i);
+        this.lastNeed = 3 - n;
+        this.lastTotal = 3;
+        if (n === 1) {
+          this.lastChar[0] = buf[buf.length - 1];
+        } else {
+          this.lastChar[0] = buf[buf.length - 2];
+          this.lastChar[1] = buf[buf.length - 1];
+        }
+        return buf.toString('base64', i, buf.length - n);
+      }
+
+      function base64End(buf) {
+        var r = buf && buf.length ? this.write(buf) : '';
+        if (this.lastNeed) return r + this.lastChar.toString('base64', 0, 3 - this.lastNeed);
+        return r;
+      }
+
+      // Pass bytes on through for single-byte encodings (e.g. ascii, latin1, hex)
+      function simpleWrite(buf) {
+        return buf.toString(this.encoding);
+      }
+
+      function simpleEnd(buf) {
+        return buf && buf.length ? this.write(buf) : '';
+      }
+    }, { "safe-buffer": 149 }], 144: [function (require, module, exports) {
       module.exports = require('./readable').PassThrough;
-    }, { "./readable": 143 }], 143: [function (require, module, exports) {
+    }, { "./readable": 145 }], 145: [function (require, module, exports) {
       exports = module.exports = require('./lib/_stream_readable.js');
       exports.Stream = exports;
       exports.Readable = exports;
@@ -15872,306 +16067,153 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       exports.Duplex = require('./lib/_stream_duplex.js');
       exports.Transform = require('./lib/_stream_transform.js');
       exports.PassThrough = require('./lib/_stream_passthrough.js');
-    }, { "./lib/_stream_duplex.js": 134, "./lib/_stream_passthrough.js": 135, "./lib/_stream_readable.js": 136, "./lib/_stream_transform.js": 137, "./lib/_stream_writable.js": 138 }], 144: [function (require, module, exports) {
+    }, { "./lib/_stream_duplex.js": 135, "./lib/_stream_passthrough.js": 136, "./lib/_stream_readable.js": 137, "./lib/_stream_transform.js": 138, "./lib/_stream_writable.js": 139 }], 146: [function (require, module, exports) {
       module.exports = require('./readable').Transform;
-    }, { "./readable": 143 }], 145: [function (require, module, exports) {
+    }, { "./readable": 145 }], 147: [function (require, module, exports) {
       module.exports = require('./lib/_stream_writable.js');
-    }, { "./lib/_stream_writable.js": 138 }], 146: [function (require, module, exports) {
-      (function (Buffer) {
-        'use strict';
+    }, { "./lib/_stream_writable.js": 139 }], 148: [function (require, module, exports) {
+      'use strict';
 
-        var inherits = require('inherits');
-        var HashBase = require('hash-base');
+      var Buffer = require('buffer').Buffer;
+      var inherits = require('inherits');
+      var HashBase = require('hash-base');
 
-        function RIPEMD160() {
-          HashBase.call(this, 64);
+      var ARRAY16 = new Array(16);
 
-          // state
-          this._a = 0x67452301;
-          this._b = 0xefcdab89;
-          this._c = 0x98badcfe;
-          this._d = 0x10325476;
-          this._e = 0xc3d2e1f0;
-        }
+      var zl = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 7, 4, 13, 1, 10, 6, 15, 3, 12, 0, 9, 5, 2, 14, 11, 8, 3, 10, 14, 4, 9, 15, 8, 1, 2, 7, 0, 6, 13, 11, 5, 12, 1, 9, 11, 10, 0, 8, 12, 4, 13, 3, 7, 15, 14, 5, 6, 2, 4, 0, 5, 9, 7, 12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13];
 
-        inherits(RIPEMD160, HashBase);
+      var zr = [5, 14, 7, 0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12, 6, 11, 3, 7, 0, 13, 5, 10, 14, 15, 8, 12, 4, 9, 1, 2, 15, 5, 1, 3, 7, 14, 6, 9, 11, 8, 12, 2, 10, 0, 4, 13, 8, 6, 4, 1, 3, 11, 15, 0, 5, 12, 2, 13, 9, 7, 10, 14, 12, 15, 10, 4, 1, 5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11];
 
-        RIPEMD160.prototype._update = function () {
-          var m = new Array(16);
-          for (var i = 0; i < 16; ++i) {
-            m[i] = this._block.readInt32LE(i * 4);
-          }var al = this._a;
-          var bl = this._b;
-          var cl = this._c;
-          var dl = this._d;
-          var el = this._e;
+      var sl = [11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8, 7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12, 11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5, 11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12, 9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6];
 
-          // Mj = 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
-          // K = 0x00000000
-          // Sj = 11, 14, 15, 12, 5, 8, 7, 9, 11, 13, 14, 15, 6, 7, 9, 8
-          al = fn1(al, bl, cl, dl, el, m[0], 0x00000000, 11);cl = rotl(cl, 10);
-          el = fn1(el, al, bl, cl, dl, m[1], 0x00000000, 14);bl = rotl(bl, 10);
-          dl = fn1(dl, el, al, bl, cl, m[2], 0x00000000, 15);al = rotl(al, 10);
-          cl = fn1(cl, dl, el, al, bl, m[3], 0x00000000, 12);el = rotl(el, 10);
-          bl = fn1(bl, cl, dl, el, al, m[4], 0x00000000, 5);dl = rotl(dl, 10);
-          al = fn1(al, bl, cl, dl, el, m[5], 0x00000000, 8);cl = rotl(cl, 10);
-          el = fn1(el, al, bl, cl, dl, m[6], 0x00000000, 7);bl = rotl(bl, 10);
-          dl = fn1(dl, el, al, bl, cl, m[7], 0x00000000, 9);al = rotl(al, 10);
-          cl = fn1(cl, dl, el, al, bl, m[8], 0x00000000, 11);el = rotl(el, 10);
-          bl = fn1(bl, cl, dl, el, al, m[9], 0x00000000, 13);dl = rotl(dl, 10);
-          al = fn1(al, bl, cl, dl, el, m[10], 0x00000000, 14);cl = rotl(cl, 10);
-          el = fn1(el, al, bl, cl, dl, m[11], 0x00000000, 15);bl = rotl(bl, 10);
-          dl = fn1(dl, el, al, bl, cl, m[12], 0x00000000, 6);al = rotl(al, 10);
-          cl = fn1(cl, dl, el, al, bl, m[13], 0x00000000, 7);el = rotl(el, 10);
-          bl = fn1(bl, cl, dl, el, al, m[14], 0x00000000, 9);dl = rotl(dl, 10);
-          al = fn1(al, bl, cl, dl, el, m[15], 0x00000000, 8);cl = rotl(cl, 10);
+      var sr = [8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6, 9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11, 9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5, 15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8, 8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11];
 
-          // Mj = 7, 4, 13, 1, 10, 6, 15, 3, 12, 0, 9, 5, 2, 14, 11, 8
-          // K = 0x5a827999
-          // Sj = 7, 6, 8, 13, 11, 9, 7, 15, 7, 12, 15, 9, 11, 7, 13, 12
-          el = fn2(el, al, bl, cl, dl, m[7], 0x5a827999, 7);bl = rotl(bl, 10);
-          dl = fn2(dl, el, al, bl, cl, m[4], 0x5a827999, 6);al = rotl(al, 10);
-          cl = fn2(cl, dl, el, al, bl, m[13], 0x5a827999, 8);el = rotl(el, 10);
-          bl = fn2(bl, cl, dl, el, al, m[1], 0x5a827999, 13);dl = rotl(dl, 10);
-          al = fn2(al, bl, cl, dl, el, m[10], 0x5a827999, 11);cl = rotl(cl, 10);
-          el = fn2(el, al, bl, cl, dl, m[6], 0x5a827999, 9);bl = rotl(bl, 10);
-          dl = fn2(dl, el, al, bl, cl, m[15], 0x5a827999, 7);al = rotl(al, 10);
-          cl = fn2(cl, dl, el, al, bl, m[3], 0x5a827999, 15);el = rotl(el, 10);
-          bl = fn2(bl, cl, dl, el, al, m[12], 0x5a827999, 7);dl = rotl(dl, 10);
-          al = fn2(al, bl, cl, dl, el, m[0], 0x5a827999, 12);cl = rotl(cl, 10);
-          el = fn2(el, al, bl, cl, dl, m[9], 0x5a827999, 15);bl = rotl(bl, 10);
-          dl = fn2(dl, el, al, bl, cl, m[5], 0x5a827999, 9);al = rotl(al, 10);
-          cl = fn2(cl, dl, el, al, bl, m[2], 0x5a827999, 11);el = rotl(el, 10);
-          bl = fn2(bl, cl, dl, el, al, m[14], 0x5a827999, 7);dl = rotl(dl, 10);
-          al = fn2(al, bl, cl, dl, el, m[11], 0x5a827999, 13);cl = rotl(cl, 10);
-          el = fn2(el, al, bl, cl, dl, m[8], 0x5a827999, 12);bl = rotl(bl, 10);
+      var hl = [0x00000000, 0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xa953fd4e];
+      var hr = [0x50a28be6, 0x5c4dd124, 0x6d703ef3, 0x7a6d76e9, 0x00000000];
 
-          // Mj = 3, 10, 14, 4, 9, 15, 8, 1, 2, 7, 0, 6, 13, 11, 5, 12
-          // K = 0x6ed9eba1
-          // Sj = 11, 13, 6, 7, 14, 9, 13, 15, 14, 8, 13, 6, 5, 12, 7, 5
-          dl = fn3(dl, el, al, bl, cl, m[3], 0x6ed9eba1, 11);al = rotl(al, 10);
-          cl = fn3(cl, dl, el, al, bl, m[10], 0x6ed9eba1, 13);el = rotl(el, 10);
-          bl = fn3(bl, cl, dl, el, al, m[14], 0x6ed9eba1, 6);dl = rotl(dl, 10);
-          al = fn3(al, bl, cl, dl, el, m[4], 0x6ed9eba1, 7);cl = rotl(cl, 10);
-          el = fn3(el, al, bl, cl, dl, m[9], 0x6ed9eba1, 14);bl = rotl(bl, 10);
-          dl = fn3(dl, el, al, bl, cl, m[15], 0x6ed9eba1, 9);al = rotl(al, 10);
-          cl = fn3(cl, dl, el, al, bl, m[8], 0x6ed9eba1, 13);el = rotl(el, 10);
-          bl = fn3(bl, cl, dl, el, al, m[1], 0x6ed9eba1, 15);dl = rotl(dl, 10);
-          al = fn3(al, bl, cl, dl, el, m[2], 0x6ed9eba1, 14);cl = rotl(cl, 10);
-          el = fn3(el, al, bl, cl, dl, m[7], 0x6ed9eba1, 8);bl = rotl(bl, 10);
-          dl = fn3(dl, el, al, bl, cl, m[0], 0x6ed9eba1, 13);al = rotl(al, 10);
-          cl = fn3(cl, dl, el, al, bl, m[6], 0x6ed9eba1, 6);el = rotl(el, 10);
-          bl = fn3(bl, cl, dl, el, al, m[13], 0x6ed9eba1, 5);dl = rotl(dl, 10);
-          al = fn3(al, bl, cl, dl, el, m[11], 0x6ed9eba1, 12);cl = rotl(cl, 10);
-          el = fn3(el, al, bl, cl, dl, m[5], 0x6ed9eba1, 7);bl = rotl(bl, 10);
-          dl = fn3(dl, el, al, bl, cl, m[12], 0x6ed9eba1, 5);al = rotl(al, 10);
+      function RIPEMD160() {
+        HashBase.call(this, 64);
 
-          // Mj = 1, 9, 11, 10, 0, 8, 12, 4, 13, 3, 7, 15, 14, 5, 6, 2
-          // K = 0x8f1bbcdc
-          // Sj = 11, 12, 14, 15, 14, 15, 9, 8, 9, 14, 5, 6, 8, 6, 5, 12
-          cl = fn4(cl, dl, el, al, bl, m[1], 0x8f1bbcdc, 11);el = rotl(el, 10);
-          bl = fn4(bl, cl, dl, el, al, m[9], 0x8f1bbcdc, 12);dl = rotl(dl, 10);
-          al = fn4(al, bl, cl, dl, el, m[11], 0x8f1bbcdc, 14);cl = rotl(cl, 10);
-          el = fn4(el, al, bl, cl, dl, m[10], 0x8f1bbcdc, 15);bl = rotl(bl, 10);
-          dl = fn4(dl, el, al, bl, cl, m[0], 0x8f1bbcdc, 14);al = rotl(al, 10);
-          cl = fn4(cl, dl, el, al, bl, m[8], 0x8f1bbcdc, 15);el = rotl(el, 10);
-          bl = fn4(bl, cl, dl, el, al, m[12], 0x8f1bbcdc, 9);dl = rotl(dl, 10);
-          al = fn4(al, bl, cl, dl, el, m[4], 0x8f1bbcdc, 8);cl = rotl(cl, 10);
-          el = fn4(el, al, bl, cl, dl, m[13], 0x8f1bbcdc, 9);bl = rotl(bl, 10);
-          dl = fn4(dl, el, al, bl, cl, m[3], 0x8f1bbcdc, 14);al = rotl(al, 10);
-          cl = fn4(cl, dl, el, al, bl, m[7], 0x8f1bbcdc, 5);el = rotl(el, 10);
-          bl = fn4(bl, cl, dl, el, al, m[15], 0x8f1bbcdc, 6);dl = rotl(dl, 10);
-          al = fn4(al, bl, cl, dl, el, m[14], 0x8f1bbcdc, 8);cl = rotl(cl, 10);
-          el = fn4(el, al, bl, cl, dl, m[5], 0x8f1bbcdc, 6);bl = rotl(bl, 10);
-          dl = fn4(dl, el, al, bl, cl, m[6], 0x8f1bbcdc, 5);al = rotl(al, 10);
-          cl = fn4(cl, dl, el, al, bl, m[2], 0x8f1bbcdc, 12);el = rotl(el, 10);
+        // state
+        this._a = 0x67452301;
+        this._b = 0xefcdab89;
+        this._c = 0x98badcfe;
+        this._d = 0x10325476;
+        this._e = 0xc3d2e1f0;
+      }
 
-          // Mj = 4, 0, 5, 9, 7, 12, 2, 10, 14, 1, 3, 8, 11, 6, 15, 13
-          // K = 0xa953fd4e
-          // Sj = 9, 15, 5, 11, 6, 8, 13, 12, 5, 12, 13, 14, 11, 8, 5, 6
-          bl = fn5(bl, cl, dl, el, al, m[4], 0xa953fd4e, 9);dl = rotl(dl, 10);
-          al = fn5(al, bl, cl, dl, el, m[0], 0xa953fd4e, 15);cl = rotl(cl, 10);
-          el = fn5(el, al, bl, cl, dl, m[5], 0xa953fd4e, 5);bl = rotl(bl, 10);
-          dl = fn5(dl, el, al, bl, cl, m[9], 0xa953fd4e, 11);al = rotl(al, 10);
-          cl = fn5(cl, dl, el, al, bl, m[7], 0xa953fd4e, 6);el = rotl(el, 10);
-          bl = fn5(bl, cl, dl, el, al, m[12], 0xa953fd4e, 8);dl = rotl(dl, 10);
-          al = fn5(al, bl, cl, dl, el, m[2], 0xa953fd4e, 13);cl = rotl(cl, 10);
-          el = fn5(el, al, bl, cl, dl, m[10], 0xa953fd4e, 12);bl = rotl(bl, 10);
-          dl = fn5(dl, el, al, bl, cl, m[14], 0xa953fd4e, 5);al = rotl(al, 10);
-          cl = fn5(cl, dl, el, al, bl, m[1], 0xa953fd4e, 12);el = rotl(el, 10);
-          bl = fn5(bl, cl, dl, el, al, m[3], 0xa953fd4e, 13);dl = rotl(dl, 10);
-          al = fn5(al, bl, cl, dl, el, m[8], 0xa953fd4e, 14);cl = rotl(cl, 10);
-          el = fn5(el, al, bl, cl, dl, m[11], 0xa953fd4e, 11);bl = rotl(bl, 10);
-          dl = fn5(dl, el, al, bl, cl, m[6], 0xa953fd4e, 8);al = rotl(al, 10);
-          cl = fn5(cl, dl, el, al, bl, m[15], 0xa953fd4e, 5);el = rotl(el, 10);
-          bl = fn5(bl, cl, dl, el, al, m[13], 0xa953fd4e, 6);dl = rotl(dl, 10);
+      inherits(RIPEMD160, HashBase);
 
-          var ar = this._a;
-          var br = this._b;
-          var cr = this._c;
-          var dr = this._d;
-          var er = this._e;
+      RIPEMD160.prototype._update = function () {
+        var words = ARRAY16;
+        for (var j = 0; j < 16; ++j) {
+          words[j] = this._block.readInt32LE(j * 4);
+        }var al = this._a | 0;
+        var bl = this._b | 0;
+        var cl = this._c | 0;
+        var dl = this._d | 0;
+        var el = this._e | 0;
 
-          // M'j = 5, 14, 7, 0, 9, 2, 11, 4, 13, 6, 15, 8, 1, 10, 3, 12
-          // K' = 0x50a28be6
-          // S'j = 8, 9, 9, 11, 13, 15, 15, 5, 7, 7, 8, 11, 14, 14, 12, 6
-          ar = fn5(ar, br, cr, dr, er, m[5], 0x50a28be6, 8);cr = rotl(cr, 10);
-          er = fn5(er, ar, br, cr, dr, m[14], 0x50a28be6, 9);br = rotl(br, 10);
-          dr = fn5(dr, er, ar, br, cr, m[7], 0x50a28be6, 9);ar = rotl(ar, 10);
-          cr = fn5(cr, dr, er, ar, br, m[0], 0x50a28be6, 11);er = rotl(er, 10);
-          br = fn5(br, cr, dr, er, ar, m[9], 0x50a28be6, 13);dr = rotl(dr, 10);
-          ar = fn5(ar, br, cr, dr, er, m[2], 0x50a28be6, 15);cr = rotl(cr, 10);
-          er = fn5(er, ar, br, cr, dr, m[11], 0x50a28be6, 15);br = rotl(br, 10);
-          dr = fn5(dr, er, ar, br, cr, m[4], 0x50a28be6, 5);ar = rotl(ar, 10);
-          cr = fn5(cr, dr, er, ar, br, m[13], 0x50a28be6, 7);er = rotl(er, 10);
-          br = fn5(br, cr, dr, er, ar, m[6], 0x50a28be6, 7);dr = rotl(dr, 10);
-          ar = fn5(ar, br, cr, dr, er, m[15], 0x50a28be6, 8);cr = rotl(cr, 10);
-          er = fn5(er, ar, br, cr, dr, m[8], 0x50a28be6, 11);br = rotl(br, 10);
-          dr = fn5(dr, er, ar, br, cr, m[1], 0x50a28be6, 14);ar = rotl(ar, 10);
-          cr = fn5(cr, dr, er, ar, br, m[10], 0x50a28be6, 14);er = rotl(er, 10);
-          br = fn5(br, cr, dr, er, ar, m[3], 0x50a28be6, 12);dr = rotl(dr, 10);
-          ar = fn5(ar, br, cr, dr, er, m[12], 0x50a28be6, 6);cr = rotl(cr, 10);
+        var ar = this._a | 0;
+        var br = this._b | 0;
+        var cr = this._c | 0;
+        var dr = this._d | 0;
+        var er = this._e | 0;
 
-          // M'j = 6, 11, 3, 7, 0, 13, 5, 10, 14, 15, 8, 12, 4, 9, 1, 2
-          // K' = 0x5c4dd124
-          // S'j = 9, 13, 15, 7, 12, 8, 9, 11, 7, 7, 12, 7, 6, 15, 13, 11
-          er = fn4(er, ar, br, cr, dr, m[6], 0x5c4dd124, 9);br = rotl(br, 10);
-          dr = fn4(dr, er, ar, br, cr, m[11], 0x5c4dd124, 13);ar = rotl(ar, 10);
-          cr = fn4(cr, dr, er, ar, br, m[3], 0x5c4dd124, 15);er = rotl(er, 10);
-          br = fn4(br, cr, dr, er, ar, m[7], 0x5c4dd124, 7);dr = rotl(dr, 10);
-          ar = fn4(ar, br, cr, dr, er, m[0], 0x5c4dd124, 12);cr = rotl(cr, 10);
-          er = fn4(er, ar, br, cr, dr, m[13], 0x5c4dd124, 8);br = rotl(br, 10);
-          dr = fn4(dr, er, ar, br, cr, m[5], 0x5c4dd124, 9);ar = rotl(ar, 10);
-          cr = fn4(cr, dr, er, ar, br, m[10], 0x5c4dd124, 11);er = rotl(er, 10);
-          br = fn4(br, cr, dr, er, ar, m[14], 0x5c4dd124, 7);dr = rotl(dr, 10);
-          ar = fn4(ar, br, cr, dr, er, m[15], 0x5c4dd124, 7);cr = rotl(cr, 10);
-          er = fn4(er, ar, br, cr, dr, m[8], 0x5c4dd124, 12);br = rotl(br, 10);
-          dr = fn4(dr, er, ar, br, cr, m[12], 0x5c4dd124, 7);ar = rotl(ar, 10);
-          cr = fn4(cr, dr, er, ar, br, m[4], 0x5c4dd124, 6);er = rotl(er, 10);
-          br = fn4(br, cr, dr, er, ar, m[9], 0x5c4dd124, 15);dr = rotl(dr, 10);
-          ar = fn4(ar, br, cr, dr, er, m[1], 0x5c4dd124, 13);cr = rotl(cr, 10);
-          er = fn4(er, ar, br, cr, dr, m[2], 0x5c4dd124, 11);br = rotl(br, 10);
-
-          // M'j = 15, 5, 1, 3, 7, 14, 6, 9, 11, 8, 12, 2, 10, 0, 4, 13
-          // K' = 0x6d703ef3
-          // S'j = 9, 7, 15, 11, 8, 6, 6, 14, 12, 13, 5, 14, 13, 13, 7, 5
-          dr = fn3(dr, er, ar, br, cr, m[15], 0x6d703ef3, 9);ar = rotl(ar, 10);
-          cr = fn3(cr, dr, er, ar, br, m[5], 0x6d703ef3, 7);er = rotl(er, 10);
-          br = fn3(br, cr, dr, er, ar, m[1], 0x6d703ef3, 15);dr = rotl(dr, 10);
-          ar = fn3(ar, br, cr, dr, er, m[3], 0x6d703ef3, 11);cr = rotl(cr, 10);
-          er = fn3(er, ar, br, cr, dr, m[7], 0x6d703ef3, 8);br = rotl(br, 10);
-          dr = fn3(dr, er, ar, br, cr, m[14], 0x6d703ef3, 6);ar = rotl(ar, 10);
-          cr = fn3(cr, dr, er, ar, br, m[6], 0x6d703ef3, 6);er = rotl(er, 10);
-          br = fn3(br, cr, dr, er, ar, m[9], 0x6d703ef3, 14);dr = rotl(dr, 10);
-          ar = fn3(ar, br, cr, dr, er, m[11], 0x6d703ef3, 12);cr = rotl(cr, 10);
-          er = fn3(er, ar, br, cr, dr, m[8], 0x6d703ef3, 13);br = rotl(br, 10);
-          dr = fn3(dr, er, ar, br, cr, m[12], 0x6d703ef3, 5);ar = rotl(ar, 10);
-          cr = fn3(cr, dr, er, ar, br, m[2], 0x6d703ef3, 14);er = rotl(er, 10);
-          br = fn3(br, cr, dr, er, ar, m[10], 0x6d703ef3, 13);dr = rotl(dr, 10);
-          ar = fn3(ar, br, cr, dr, er, m[0], 0x6d703ef3, 13);cr = rotl(cr, 10);
-          er = fn3(er, ar, br, cr, dr, m[4], 0x6d703ef3, 7);br = rotl(br, 10);
-          dr = fn3(dr, er, ar, br, cr, m[13], 0x6d703ef3, 5);ar = rotl(ar, 10);
-
-          // M'j = 8, 6, 4, 1, 3, 11, 15, 0, 5, 12, 2, 13, 9, 7, 10, 14
-          // K' = 0x7a6d76e9
-          // S'j = 15, 5, 8, 11, 14, 14, 6, 14, 6, 9, 12, 9, 12, 5, 15, 8
-          cr = fn2(cr, dr, er, ar, br, m[8], 0x7a6d76e9, 15);er = rotl(er, 10);
-          br = fn2(br, cr, dr, er, ar, m[6], 0x7a6d76e9, 5);dr = rotl(dr, 10);
-          ar = fn2(ar, br, cr, dr, er, m[4], 0x7a6d76e9, 8);cr = rotl(cr, 10);
-          er = fn2(er, ar, br, cr, dr, m[1], 0x7a6d76e9, 11);br = rotl(br, 10);
-          dr = fn2(dr, er, ar, br, cr, m[3], 0x7a6d76e9, 14);ar = rotl(ar, 10);
-          cr = fn2(cr, dr, er, ar, br, m[11], 0x7a6d76e9, 14);er = rotl(er, 10);
-          br = fn2(br, cr, dr, er, ar, m[15], 0x7a6d76e9, 6);dr = rotl(dr, 10);
-          ar = fn2(ar, br, cr, dr, er, m[0], 0x7a6d76e9, 14);cr = rotl(cr, 10);
-          er = fn2(er, ar, br, cr, dr, m[5], 0x7a6d76e9, 6);br = rotl(br, 10);
-          dr = fn2(dr, er, ar, br, cr, m[12], 0x7a6d76e9, 9);ar = rotl(ar, 10);
-          cr = fn2(cr, dr, er, ar, br, m[2], 0x7a6d76e9, 12);er = rotl(er, 10);
-          br = fn2(br, cr, dr, er, ar, m[13], 0x7a6d76e9, 9);dr = rotl(dr, 10);
-          ar = fn2(ar, br, cr, dr, er, m[9], 0x7a6d76e9, 12);cr = rotl(cr, 10);
-          er = fn2(er, ar, br, cr, dr, m[7], 0x7a6d76e9, 5);br = rotl(br, 10);
-          dr = fn2(dr, er, ar, br, cr, m[10], 0x7a6d76e9, 15);ar = rotl(ar, 10);
-          cr = fn2(cr, dr, er, ar, br, m[14], 0x7a6d76e9, 8);er = rotl(er, 10);
-
-          // M'j = 12, 15, 10, 4, 1, 5, 8, 7, 6, 2, 13, 14, 0, 3, 9, 11
-          // K' = 0x00000000
-          // S'j = 8, 5, 12, 9, 12, 5, 14, 6, 8, 13, 6, 5, 15, 13, 11, 11
-          br = fn1(br, cr, dr, er, ar, m[12], 0x00000000, 8);dr = rotl(dr, 10);
-          ar = fn1(ar, br, cr, dr, er, m[15], 0x00000000, 5);cr = rotl(cr, 10);
-          er = fn1(er, ar, br, cr, dr, m[10], 0x00000000, 12);br = rotl(br, 10);
-          dr = fn1(dr, er, ar, br, cr, m[4], 0x00000000, 9);ar = rotl(ar, 10);
-          cr = fn1(cr, dr, er, ar, br, m[1], 0x00000000, 12);er = rotl(er, 10);
-          br = fn1(br, cr, dr, er, ar, m[5], 0x00000000, 5);dr = rotl(dr, 10);
-          ar = fn1(ar, br, cr, dr, er, m[8], 0x00000000, 14);cr = rotl(cr, 10);
-          er = fn1(er, ar, br, cr, dr, m[7], 0x00000000, 6);br = rotl(br, 10);
-          dr = fn1(dr, er, ar, br, cr, m[6], 0x00000000, 8);ar = rotl(ar, 10);
-          cr = fn1(cr, dr, er, ar, br, m[2], 0x00000000, 13);er = rotl(er, 10);
-          br = fn1(br, cr, dr, er, ar, m[13], 0x00000000, 6);dr = rotl(dr, 10);
-          ar = fn1(ar, br, cr, dr, er, m[14], 0x00000000, 5);cr = rotl(cr, 10);
-          er = fn1(er, ar, br, cr, dr, m[0], 0x00000000, 15);br = rotl(br, 10);
-          dr = fn1(dr, er, ar, br, cr, m[3], 0x00000000, 13);ar = rotl(ar, 10);
-          cr = fn1(cr, dr, er, ar, br, m[9], 0x00000000, 11);er = rotl(er, 10);
-          br = fn1(br, cr, dr, er, ar, m[11], 0x00000000, 11);dr = rotl(dr, 10);
-
-          // change state
-          var t = this._b + cl + dr | 0;
-          this._b = this._c + dl + er | 0;
-          this._c = this._d + el + ar | 0;
-          this._d = this._e + al + br | 0;
-          this._e = this._a + bl + cr | 0;
-          this._a = t;
-        };
-
-        RIPEMD160.prototype._digest = function () {
-          // create padding and handle blocks
-          this._block[this._blockOffset++] = 0x80;
-          if (this._blockOffset > 56) {
-            this._block.fill(0, this._blockOffset, 64);
-            this._update();
-            this._blockOffset = 0;
+        // computation
+        for (var i = 0; i < 80; i += 1) {
+          var tl;
+          var tr;
+          if (i < 16) {
+            tl = fn1(al, bl, cl, dl, el, words[zl[i]], hl[0], sl[i]);
+            tr = fn5(ar, br, cr, dr, er, words[zr[i]], hr[0], sr[i]);
+          } else if (i < 32) {
+            tl = fn2(al, bl, cl, dl, el, words[zl[i]], hl[1], sl[i]);
+            tr = fn4(ar, br, cr, dr, er, words[zr[i]], hr[1], sr[i]);
+          } else if (i < 48) {
+            tl = fn3(al, bl, cl, dl, el, words[zl[i]], hl[2], sl[i]);
+            tr = fn3(ar, br, cr, dr, er, words[zr[i]], hr[2], sr[i]);
+          } else if (i < 64) {
+            tl = fn4(al, bl, cl, dl, el, words[zl[i]], hl[3], sl[i]);
+            tr = fn2(ar, br, cr, dr, er, words[zr[i]], hr[3], sr[i]);
+          } else {
+            // if (i<80) {
+            tl = fn5(al, bl, cl, dl, el, words[zl[i]], hl[4], sl[i]);
+            tr = fn1(ar, br, cr, dr, er, words[zr[i]], hr[4], sr[i]);
           }
 
-          this._block.fill(0, this._blockOffset, 56);
-          this._block.writeUInt32LE(this._length[0], 56);
-          this._block.writeUInt32LE(this._length[1], 60);
+          al = el;
+          el = dl;
+          dl = rotl(cl, 10);
+          cl = bl;
+          bl = tl;
+
+          ar = er;
+          er = dr;
+          dr = rotl(cr, 10);
+          cr = br;
+          br = tr;
+        }
+
+        // update state
+        var t = this._b + cl + dr | 0;
+        this._b = this._c + dl + er | 0;
+        this._c = this._d + el + ar | 0;
+        this._d = this._e + al + br | 0;
+        this._e = this._a + bl + cr | 0;
+        this._a = t;
+      };
+
+      RIPEMD160.prototype._digest = function () {
+        // create padding and handle blocks
+        this._block[this._blockOffset++] = 0x80;
+        if (this._blockOffset > 56) {
+          this._block.fill(0, this._blockOffset, 64);
           this._update();
-
-          // produce result
-          var buffer = new Buffer(20);
-          buffer.writeInt32LE(this._a, 0);
-          buffer.writeInt32LE(this._b, 4);
-          buffer.writeInt32LE(this._c, 8);
-          buffer.writeInt32LE(this._d, 12);
-          buffer.writeInt32LE(this._e, 16);
-          return buffer;
-        };
-
-        function rotl(x, n) {
-          return x << n | x >>> 32 - n;
+          this._blockOffset = 0;
         }
 
-        function fn1(a, b, c, d, e, m, k, s) {
-          return rotl(a + (b ^ c ^ d) + m + k | 0, s) + e | 0;
-        }
+        this._block.fill(0, this._blockOffset, 56);
+        this._block.writeUInt32LE(this._length[0], 56);
+        this._block.writeUInt32LE(this._length[1], 60);
+        this._update();
 
-        function fn2(a, b, c, d, e, m, k, s) {
-          return rotl(a + (b & c | ~b & d) + m + k | 0, s) + e | 0;
-        }
+        // produce result
+        var buffer = Buffer.alloc ? Buffer.alloc(20) : new Buffer(20);
+        buffer.writeInt32LE(this._a, 0);
+        buffer.writeInt32LE(this._b, 4);
+        buffer.writeInt32LE(this._c, 8);
+        buffer.writeInt32LE(this._d, 12);
+        buffer.writeInt32LE(this._e, 16);
+        return buffer;
+      };
 
-        function fn3(a, b, c, d, e, m, k, s) {
-          return rotl(a + ((b | ~c) ^ d) + m + k | 0, s) + e | 0;
-        }
+      function rotl(x, n) {
+        return x << n | x >>> 32 - n;
+      }
 
-        function fn4(a, b, c, d, e, m, k, s) {
-          return rotl(a + (b & d | c & ~d) + m + k | 0, s) + e | 0;
-        }
+      function fn1(a, b, c, d, e, m, k, s) {
+        return rotl(a + (b ^ c ^ d) + m + k | 0, s) + e | 0;
+      }
 
-        function fn5(a, b, c, d, e, m, k, s) {
-          return rotl(a + (b ^ (c | ~d)) + m + k | 0, s) + e | 0;
-        }
+      function fn2(a, b, c, d, e, m, k, s) {
+        return rotl(a + (b & c | ~b & d) + m + k | 0, s) + e | 0;
+      }
 
-        module.exports = RIPEMD160;
-      }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "hash-base": 85, "inherits": 101 }], 147: [function (require, module, exports) {
+      function fn3(a, b, c, d, e, m, k, s) {
+        return rotl(a + ((b | ~c) ^ d) + m + k | 0, s) + e | 0;
+      }
+
+      function fn4(a, b, c, d, e, m, k, s) {
+        return rotl(a + (b & d | c & ~d) + m + k | 0, s) + e | 0;
+      }
+
+      function fn5(a, b, c, d, e, m, k, s) {
+        return rotl(a + (b ^ (c | ~d)) + m + k | 0, s) + e | 0;
+      }
+
+      module.exports = RIPEMD160;
+    }, { "buffer": 47, "hash-base": 85, "inherits": 102 }], 149: [function (require, module, exports) {
       /* eslint-disable node/no-deprecated-api */
       var buffer = require('buffer');
       var Buffer = buffer.Buffer;
@@ -16234,7 +16276,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return buffer.SlowBuffer(size);
       };
-    }, { "buffer": 47 }], 148: [function (require, module, exports) {
+    }, { "buffer": 47 }], 150: [function (require, module, exports) {
       var Buffer = require('safe-buffer').Buffer;
 
       // prototype class for hash functions
@@ -16316,7 +16358,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Hash;
-    }, { "safe-buffer": 147 }], 149: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 151: [function (require, module, exports) {
       var exports = module.exports = function SHA(algorithm) {
         algorithm = algorithm.toLowerCase();
 
@@ -16332,7 +16374,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       exports.sha256 = require('./sha256');
       exports.sha384 = require('./sha384');
       exports.sha512 = require('./sha512');
-    }, { "./sha": 150, "./sha1": 151, "./sha224": 152, "./sha256": 153, "./sha384": 154, "./sha512": 155 }], 150: [function (require, module, exports) {
+    }, { "./sha": 152, "./sha1": 153, "./sha224": 154, "./sha256": 155, "./sha384": 156, "./sha512": 157 }], 152: [function (require, module, exports) {
       /*
        * A JavaScript implementation of the Secure Hash Algorithm, SHA-0, as defined
        * in FIPS PUB 180-1
@@ -16426,7 +16468,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha;
-    }, { "./hash": 148, "inherits": 101, "safe-buffer": 147 }], 151: [function (require, module, exports) {
+    }, { "./hash": 150, "inherits": 102, "safe-buffer": 149 }], 153: [function (require, module, exports) {
       /*
        * A JavaScript implementation of the Secure Hash Algorithm, SHA-1, as defined
        * in FIPS PUB 180-1
@@ -16525,7 +16567,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha1;
-    }, { "./hash": 148, "inherits": 101, "safe-buffer": 147 }], 152: [function (require, module, exports) {
+    }, { "./hash": 150, "inherits": 102, "safe-buffer": 149 }], 154: [function (require, module, exports) {
       /**
        * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
        * in FIPS 180-2
@@ -16579,7 +16621,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha224;
-    }, { "./hash": 148, "./sha256": 153, "inherits": 101, "safe-buffer": 147 }], 153: [function (require, module, exports) {
+    }, { "./hash": 150, "./sha256": 155, "inherits": 102, "safe-buffer": 149 }], 155: [function (require, module, exports) {
       /**
        * A JavaScript implementation of the Secure Hash Algorithm, SHA-256, as defined
        * in FIPS 180-2
@@ -16699,7 +16741,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha256;
-    }, { "./hash": 148, "inherits": 101, "safe-buffer": 147 }], 154: [function (require, module, exports) {
+    }, { "./hash": 150, "inherits": 102, "safe-buffer": 149 }], 156: [function (require, module, exports) {
       var inherits = require('inherits');
       var SHA512 = require('./sha512');
       var Hash = require('./hash');
@@ -16757,7 +16799,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha384;
-    }, { "./hash": 148, "./sha512": 155, "inherits": 101, "safe-buffer": 147 }], 155: [function (require, module, exports) {
+    }, { "./hash": 150, "./sha512": 157, "inherits": 102, "safe-buffer": 149 }], 157: [function (require, module, exports) {
       var inherits = require('inherits');
       var Hash = require('./hash');
       var Buffer = require('safe-buffer').Buffer;
@@ -16977,7 +17019,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Sha512;
-    }, { "./hash": 148, "inherits": 101, "safe-buffer": 147 }], 156: [function (require, module, exports) {
+    }, { "./hash": 150, "inherits": 102, "safe-buffer": 149 }], 158: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -17102,7 +17144,651 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // Allow for unix-like usage: A.pipe(B).pipe(C)
         return dest;
       };
-    }, { "events": 83, "inherits": 101, "readable-stream/duplex.js": 133, "readable-stream/passthrough.js": 142, "readable-stream/readable.js": 143, "readable-stream/transform.js": 144, "readable-stream/writable.js": 145 }], 157: [function (require, module, exports) {
+    }, { "events": 83, "inherits": 102, "readable-stream/duplex.js": 134, "readable-stream/passthrough.js": 144, "readable-stream/readable.js": 145, "readable-stream/transform.js": 146, "readable-stream/writable.js": 147 }], 159: [function (require, module, exports) {
+      (function (global) {
+        var ClientRequest = require('./lib/request');
+        var response = require('./lib/response');
+        var extend = require('xtend');
+        var statusCodes = require('builtin-status-codes');
+        var url = require('url');
+
+        var http = exports;
+
+        http.request = function (opts, cb) {
+          if (typeof opts === 'string') opts = url.parse(opts);else opts = extend(opts);
+
+          // Normally, the page is loaded from http or https, so not specifying a protocol
+          // will result in a (valid) protocol-relative url. However, this won't work if
+          // the protocol is something else, like 'file:'
+          var defaultProtocol = global.location.protocol.search(/^https?:$/) === -1 ? 'http:' : '';
+
+          var protocol = opts.protocol || defaultProtocol;
+          var host = opts.hostname || opts.host;
+          var port = opts.port;
+          var path = opts.path || '/';
+
+          // Necessary for IPv6 addresses
+          if (host && host.indexOf(':') !== -1) host = '[' + host + ']';
+
+          // This may be a relative url. The browser should always be able to interpret it correctly.
+          opts.url = (host ? protocol + '//' + host : '') + (port ? ':' + port : '') + path;
+          opts.method = (opts.method || 'GET').toUpperCase();
+          opts.headers = opts.headers || {};
+
+          // Also valid opts.auth, opts.mode
+
+          var req = new ClientRequest(opts);
+          if (cb) req.on('response', cb);
+          return req;
+        };
+
+        http.get = function get(opts, cb) {
+          var req = http.request(opts, cb);
+          req.end();
+          return req;
+        };
+
+        http.ClientRequest = ClientRequest;
+        http.IncomingMessage = response.IncomingMessage;
+
+        http.Agent = function () {};
+        http.Agent.defaultMaxSockets = 4;
+
+        http.globalAgent = new http.Agent();
+
+        http.STATUS_CODES = statusCodes;
+
+        http.METHODS = ['CHECKOUT', 'CONNECT', 'COPY', 'DELETE', 'GET', 'HEAD', 'LOCK', 'M-SEARCH', 'MERGE', 'MKACTIVITY', 'MKCOL', 'MOVE', 'NOTIFY', 'OPTIONS', 'PATCH', 'POST', 'PROPFIND', 'PROPPATCH', 'PURGE', 'PUT', 'REPORT', 'SEARCH', 'SUBSCRIBE', 'TRACE', 'UNLOCK', 'UNSUBSCRIBE'];
+      }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+    }, { "./lib/request": 161, "./lib/response": 162, "builtin-status-codes": 48, "url": 166, "xtend": 170 }], 160: [function (require, module, exports) {
+      (function (global) {
+        exports.fetch = isFunction(global.fetch) && isFunction(global.ReadableStream);
+
+        exports.writableStream = isFunction(global.WritableStream);
+
+        exports.abortController = isFunction(global.AbortController);
+
+        exports.blobConstructor = false;
+        try {
+          new Blob([new ArrayBuffer(1)]);
+          exports.blobConstructor = true;
+        } catch (e) {}
+
+        // The xhr request to example.com may violate some restrictive CSP configurations,
+        // so if we're running in a browser that supports `fetch`, avoid calling getXHR()
+        // and assume support for certain features below.
+        var xhr;
+        function getXHR() {
+          // Cache the xhr value
+          if (xhr !== undefined) return xhr;
+
+          if (global.XMLHttpRequest) {
+            xhr = new global.XMLHttpRequest();
+            // If XDomainRequest is available (ie only, where xhr might not work
+            // cross domain), use the page location. Otherwise use example.com
+            // Note: this doesn't actually make an http request.
+            try {
+              xhr.open('GET', global.XDomainRequest ? '/' : 'https://example.com');
+            } catch (e) {
+              xhr = null;
+            }
+          } else {
+            // Service workers don't have XHR
+            xhr = null;
+          }
+          return xhr;
+        }
+
+        function checkTypeSupport(type) {
+          var xhr = getXHR();
+          if (!xhr) return false;
+          try {
+            xhr.responseType = type;
+            return xhr.responseType === type;
+          } catch (e) {}
+          return false;
+        }
+
+        // For some strange reason, Safari 7.0 reports typeof global.ArrayBuffer === 'object'.
+        // Safari 7.1 appears to have fixed this bug.
+        var haveArrayBuffer = typeof global.ArrayBuffer !== 'undefined';
+        var haveSlice = haveArrayBuffer && isFunction(global.ArrayBuffer.prototype.slice);
+
+        // If fetch is supported, then arraybuffer will be supported too. Skip calling
+        // checkTypeSupport(), since that calls getXHR().
+        exports.arraybuffer = exports.fetch || haveArrayBuffer && checkTypeSupport('arraybuffer');
+
+        // These next two tests unavoidably show warnings in Chrome. Since fetch will always
+        // be used if it's available, just return false for these to avoid the warnings.
+        exports.msstream = !exports.fetch && haveSlice && checkTypeSupport('ms-stream');
+        exports.mozchunkedarraybuffer = !exports.fetch && haveArrayBuffer && checkTypeSupport('moz-chunked-arraybuffer');
+
+        // If fetch is supported, then overrideMimeType will be supported too. Skip calling
+        // getXHR().
+        exports.overrideMimeType = exports.fetch || (getXHR() ? isFunction(getXHR().overrideMimeType) : false);
+
+        exports.vbArray = isFunction(global.VBArray);
+
+        function isFunction(value) {
+          return typeof value === 'function';
+        }
+
+        xhr = null; // Help gc
+      }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+    }, {}], 161: [function (require, module, exports) {
+      (function (process, global, Buffer) {
+        var capability = require('./capability');
+        var inherits = require('inherits');
+        var response = require('./response');
+        var stream = require('readable-stream');
+        var toArrayBuffer = require('to-arraybuffer');
+
+        var IncomingMessage = response.IncomingMessage;
+        var rStates = response.readyStates;
+
+        function decideMode(preferBinary, useFetch) {
+          if (capability.fetch && useFetch) {
+            return 'fetch';
+          } else if (capability.mozchunkedarraybuffer) {
+            return 'moz-chunked-arraybuffer';
+          } else if (capability.msstream) {
+            return 'ms-stream';
+          } else if (capability.arraybuffer && preferBinary) {
+            return 'arraybuffer';
+          } else if (capability.vbArray && preferBinary) {
+            return 'text:vbarray';
+          } else {
+            return 'text';
+          }
+        }
+
+        var ClientRequest = module.exports = function (opts) {
+          var self = this;
+          stream.Writable.call(self);
+
+          self._opts = opts;
+          self._body = [];
+          self._headers = {};
+          if (opts.auth) self.setHeader('Authorization', 'Basic ' + new Buffer(opts.auth).toString('base64'));
+          Object.keys(opts.headers).forEach(function (name) {
+            self.setHeader(name, opts.headers[name]);
+          });
+
+          var preferBinary;
+          var useFetch = true;
+          if (opts.mode === 'disable-fetch' || 'requestTimeout' in opts && !capability.abortController) {
+            // If the use of XHR should be preferred. Not typically needed.
+            useFetch = false;
+            preferBinary = true;
+          } else if (opts.mode === 'prefer-streaming') {
+            // If streaming is a high priority but binary compatibility and
+            // the accuracy of the 'content-type' header aren't
+            preferBinary = false;
+          } else if (opts.mode === 'allow-wrong-content-type') {
+            // If streaming is more important than preserving the 'content-type' header
+            preferBinary = !capability.overrideMimeType;
+          } else if (!opts.mode || opts.mode === 'default' || opts.mode === 'prefer-fast') {
+            // Use binary if text streaming may corrupt data or the content-type header, or for speed
+            preferBinary = true;
+          } else {
+            throw new Error('Invalid value for opts.mode');
+          }
+          self._mode = decideMode(preferBinary, useFetch);
+          self._fetchTimer = null;
+
+          self.on('finish', function () {
+            self._onFinish();
+          });
+        };
+
+        inherits(ClientRequest, stream.Writable);
+
+        ClientRequest.prototype.setHeader = function (name, value) {
+          var self = this;
+          var lowerName = name.toLowerCase();
+          // This check is not necessary, but it prevents warnings from browsers about setting unsafe
+          // headers. To be honest I'm not entirely sure hiding these warnings is a good thing, but
+          // http-browserify did it, so I will too.
+          if (unsafeHeaders.indexOf(lowerName) !== -1) return;
+
+          self._headers[lowerName] = {
+            name: name,
+            value: value
+          };
+        };
+
+        ClientRequest.prototype.getHeader = function (name) {
+          var header = this._headers[name.toLowerCase()];
+          if (header) return header.value;
+          return null;
+        };
+
+        ClientRequest.prototype.removeHeader = function (name) {
+          var self = this;
+          delete self._headers[name.toLowerCase()];
+        };
+
+        ClientRequest.prototype._onFinish = function () {
+          var self = this;
+
+          if (self._destroyed) return;
+          var opts = self._opts;
+
+          var headersObj = self._headers;
+          var body = null;
+          if (opts.method !== 'GET' && opts.method !== 'HEAD') {
+            if (capability.arraybuffer) {
+              body = toArrayBuffer(Buffer.concat(self._body));
+            } else if (capability.blobConstructor) {
+              body = new global.Blob(self._body.map(function (buffer) {
+                return toArrayBuffer(buffer);
+              }), {
+                type: (headersObj['content-type'] || {}).value || ''
+              });
+            } else {
+              // get utf8 string
+              body = Buffer.concat(self._body).toString();
+            }
+          }
+
+          // create flattened list of headers
+          var headersList = [];
+          Object.keys(headersObj).forEach(function (keyName) {
+            var name = headersObj[keyName].name;
+            var value = headersObj[keyName].value;
+            if (Array.isArray(value)) {
+              value.forEach(function (v) {
+                headersList.push([name, v]);
+              });
+            } else {
+              headersList.push([name, value]);
+            }
+          });
+
+          if (self._mode === 'fetch') {
+            var signal = null;
+            var fetchTimer = null;
+            if (capability.abortController) {
+              var controller = new AbortController();
+              signal = controller.signal;
+              self._fetchAbortController = controller;
+
+              if ('requestTimeout' in opts && opts.requestTimeout !== 0) {
+                self._fetchTimer = global.setTimeout(function () {
+                  self.emit('requestTimeout');
+                  if (self._fetchAbortController) self._fetchAbortController.abort();
+                }, opts.requestTimeout);
+              }
+            }
+
+            global.fetch(self._opts.url, {
+              method: self._opts.method,
+              headers: headersList,
+              body: body || undefined,
+              mode: 'cors',
+              credentials: opts.withCredentials ? 'include' : 'same-origin',
+              signal: signal
+            }).then(function (response) {
+              self._fetchResponse = response;
+              self._connect();
+            }, function (reason) {
+              global.clearTimeout(self._fetchTimer);
+              if (!self._destroyed) self.emit('error', reason);
+            });
+          } else {
+            var xhr = self._xhr = new global.XMLHttpRequest();
+            try {
+              xhr.open(self._opts.method, self._opts.url, true);
+            } catch (err) {
+              process.nextTick(function () {
+                self.emit('error', err);
+              });
+              return;
+            }
+
+            // Can't set responseType on really old browsers
+            if ('responseType' in xhr) xhr.responseType = self._mode.split(':')[0];
+
+            if ('withCredentials' in xhr) xhr.withCredentials = !!opts.withCredentials;
+
+            if (self._mode === 'text' && 'overrideMimeType' in xhr) xhr.overrideMimeType('text/plain; charset=x-user-defined');
+
+            if ('requestTimeout' in opts) {
+              xhr.timeout = opts.requestTimeout;
+              xhr.ontimeout = function () {
+                self.emit('requestTimeout');
+              };
+            }
+
+            headersList.forEach(function (header) {
+              xhr.setRequestHeader(header[0], header[1]);
+            });
+
+            self._response = null;
+            xhr.onreadystatechange = function () {
+              switch (xhr.readyState) {
+                case rStates.LOADING:
+                case rStates.DONE:
+                  self._onXHRProgress();
+                  break;
+              }
+            };
+            // Necessary for streaming in Firefox, since xhr.response is ONLY defined
+            // in onprogress, not in onreadystatechange with xhr.readyState = 3
+            if (self._mode === 'moz-chunked-arraybuffer') {
+              xhr.onprogress = function () {
+                self._onXHRProgress();
+              };
+            }
+
+            xhr.onerror = function () {
+              if (self._destroyed) return;
+              self.emit('error', new Error('XHR error'));
+            };
+
+            try {
+              xhr.send(body);
+            } catch (err) {
+              process.nextTick(function () {
+                self.emit('error', err);
+              });
+              return;
+            }
+          }
+        };
+
+        /**
+         * Checks if xhr.status is readable and non-zero, indicating no error.
+         * Even though the spec says it should be available in readyState 3,
+         * accessing it throws an exception in IE8
+         */
+        function statusValid(xhr) {
+          try {
+            var status = xhr.status;
+            return status !== null && status !== 0;
+          } catch (e) {
+            return false;
+          }
+        }
+
+        ClientRequest.prototype._onXHRProgress = function () {
+          var self = this;
+
+          if (!statusValid(self._xhr) || self._destroyed) return;
+
+          if (!self._response) self._connect();
+
+          self._response._onXHRProgress();
+        };
+
+        ClientRequest.prototype._connect = function () {
+          var self = this;
+
+          if (self._destroyed) return;
+
+          self._response = new IncomingMessage(self._xhr, self._fetchResponse, self._mode, self._fetchTimer);
+          self._response.on('error', function (err) {
+            self.emit('error', err);
+          });
+
+          self.emit('response', self._response);
+        };
+
+        ClientRequest.prototype._write = function (chunk, encoding, cb) {
+          var self = this;
+
+          self._body.push(chunk);
+          cb();
+        };
+
+        ClientRequest.prototype.abort = ClientRequest.prototype.destroy = function () {
+          var self = this;
+          self._destroyed = true;
+          global.clearTimeout(self._fetchTimer);
+          if (self._response) self._response._destroyed = true;
+          if (self._xhr) self._xhr.abort();else if (self._fetchAbortController) self._fetchAbortController.abort();
+        };
+
+        ClientRequest.prototype.end = function (data, encoding, cb) {
+          var self = this;
+          if (typeof data === 'function') {
+            cb = data;
+            data = undefined;
+          }
+
+          stream.Writable.prototype.end.call(self, data, encoding, cb);
+        };
+
+        ClientRequest.prototype.flushHeaders = function () {};
+        ClientRequest.prototype.setTimeout = function () {};
+        ClientRequest.prototype.setNoDelay = function () {};
+        ClientRequest.prototype.setSocketKeepAlive = function () {};
+
+        // Taken from http://www.w3.org/TR/XMLHttpRequest/#the-setrequestheader%28%29-method
+        var unsafeHeaders = ['accept-charset', 'accept-encoding', 'access-control-request-headers', 'access-control-request-method', 'connection', 'content-length', 'cookie', 'cookie2', 'date', 'dnt', 'expect', 'host', 'keep-alive', 'origin', 'referer', 'te', 'trailer', 'transfer-encoding', 'upgrade', 'user-agent', 'via'];
+      }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer);
+    }, { "./capability": 160, "./response": 162, "_process": 121, "buffer": 47, "inherits": 102, "readable-stream": 145, "to-arraybuffer": 165 }], 162: [function (require, module, exports) {
+      (function (process, global, Buffer) {
+        var capability = require('./capability');
+        var inherits = require('inherits');
+        var stream = require('readable-stream');
+
+        var rStates = exports.readyStates = {
+          UNSENT: 0,
+          OPENED: 1,
+          HEADERS_RECEIVED: 2,
+          LOADING: 3,
+          DONE: 4
+        };
+
+        var IncomingMessage = exports.IncomingMessage = function (xhr, response, mode, fetchTimer) {
+          var self = this;
+          stream.Readable.call(self);
+
+          self._mode = mode;
+          self.headers = {};
+          self.rawHeaders = [];
+          self.trailers = {};
+          self.rawTrailers = [];
+
+          // Fake the 'close' event, but only once 'end' fires
+          self.on('end', function () {
+            // The nextTick is necessary to prevent the 'request' module from causing an infinite loop
+            process.nextTick(function () {
+              self.emit('close');
+            });
+          });
+
+          if (mode === 'fetch') {
+            var read = function read() {
+              reader.read().then(function (result) {
+                if (self._destroyed) return;
+                if (result.done) {
+                  global.clearTimeout(fetchTimer);
+                  self.push(null);
+                  return;
+                }
+                self.push(new Buffer(result.value));
+                read();
+              }).catch(function (err) {
+                global.clearTimeout(fetchTimer);
+                if (!self._destroyed) self.emit('error', err);
+              });
+            };
+
+            self._fetchResponse = response;
+
+            self.url = response.url;
+            self.statusCode = response.status;
+            self.statusMessage = response.statusText;
+
+            response.headers.forEach(function (header, key) {
+              self.headers[key.toLowerCase()] = header;
+              self.rawHeaders.push(key, header);
+            });
+
+            if (capability.writableStream) {
+              var writable = new WritableStream({
+                write: function write(chunk) {
+                  return new Promise(function (resolve, reject) {
+                    if (self._destroyed) {
+                      reject();
+                    } else if (self.push(new Buffer(chunk))) {
+                      resolve();
+                    } else {
+                      self._resumeFetch = resolve;
+                    }
+                  });
+                },
+                close: function close() {
+                  global.clearTimeout(fetchTimer);
+                  if (!self._destroyed) self.push(null);
+                },
+                abort: function abort(err) {
+                  if (!self._destroyed) self.emit('error', err);
+                }
+              });
+
+              try {
+                response.body.pipeTo(writable).catch(function (err) {
+                  global.clearTimeout(fetchTimer);
+                  if (!self._destroyed) self.emit('error', err);
+                });
+                return;
+              } catch (e) {} // pipeTo method isn't defined. Can't find a better way to feature test this
+            }
+            // fallback for when writableStream or pipeTo aren't available
+            var reader = response.body.getReader();
+
+            read();
+          } else {
+            self._xhr = xhr;
+            self._pos = 0;
+
+            self.url = xhr.responseURL;
+            self.statusCode = xhr.status;
+            self.statusMessage = xhr.statusText;
+            var headers = xhr.getAllResponseHeaders().split(/\r?\n/);
+            headers.forEach(function (header) {
+              var matches = header.match(/^([^:]+):\s*(.*)/);
+              if (matches) {
+                var key = matches[1].toLowerCase();
+                if (key === 'set-cookie') {
+                  if (self.headers[key] === undefined) {
+                    self.headers[key] = [];
+                  }
+                  self.headers[key].push(matches[2]);
+                } else if (self.headers[key] !== undefined) {
+                  self.headers[key] += ', ' + matches[2];
+                } else {
+                  self.headers[key] = matches[2];
+                }
+                self.rawHeaders.push(matches[1], matches[2]);
+              }
+            });
+
+            self._charset = 'x-user-defined';
+            if (!capability.overrideMimeType) {
+              var mimeType = self.rawHeaders['mime-type'];
+              if (mimeType) {
+                var charsetMatch = mimeType.match(/;\s*charset=([^;])(;|$)/);
+                if (charsetMatch) {
+                  self._charset = charsetMatch[1].toLowerCase();
+                }
+              }
+              if (!self._charset) self._charset = 'utf-8'; // best guess
+            }
+          }
+        };
+
+        inherits(IncomingMessage, stream.Readable);
+
+        IncomingMessage.prototype._read = function () {
+          var self = this;
+
+          var resolve = self._resumeFetch;
+          if (resolve) {
+            self._resumeFetch = null;
+            resolve();
+          }
+        };
+
+        IncomingMessage.prototype._onXHRProgress = function () {
+          var self = this;
+
+          var xhr = self._xhr;
+
+          var response = null;
+          switch (self._mode) {
+            case 'text:vbarray':
+              // For IE9
+              if (xhr.readyState !== rStates.DONE) break;
+              try {
+                // This fails in IE8
+                response = new global.VBArray(xhr.responseBody).toArray();
+              } catch (e) {}
+              if (response !== null) {
+                self.push(new Buffer(response));
+                break;
+              }
+            // Falls through in IE8	
+            case 'text':
+              try {
+                // This will fail when readyState = 3 in IE9. Switch mode and wait for readyState = 4
+                response = xhr.responseText;
+              } catch (e) {
+                self._mode = 'text:vbarray';
+                break;
+              }
+              if (response.length > self._pos) {
+                var newData = response.substr(self._pos);
+                if (self._charset === 'x-user-defined') {
+                  var buffer = new Buffer(newData.length);
+                  for (var i = 0; i < newData.length; i++) {
+                    buffer[i] = newData.charCodeAt(i) & 0xff;
+                  }self.push(buffer);
+                } else {
+                  self.push(newData, self._charset);
+                }
+                self._pos = response.length;
+              }
+              break;
+            case 'arraybuffer':
+              if (xhr.readyState !== rStates.DONE || !xhr.response) break;
+              response = xhr.response;
+              self.push(new Buffer(new Uint8Array(response)));
+              break;
+            case 'moz-chunked-arraybuffer':
+              // take whole
+              response = xhr.response;
+              if (xhr.readyState !== rStates.LOADING || !response) break;
+              self.push(new Buffer(new Uint8Array(response)));
+              break;
+            case 'ms-stream':
+              response = xhr.response;
+              if (xhr.readyState !== rStates.LOADING) break;
+              var reader = new global.MSStreamReader();
+              reader.onprogress = function () {
+                if (reader.result.byteLength > self._pos) {
+                  self.push(new Buffer(new Uint8Array(reader.result.slice(self._pos))));
+                  self._pos = reader.result.byteLength;
+                }
+              };
+              reader.onload = function () {
+                self.push(null);
+              };
+              // reader.onerror = ??? // TODO: this
+              reader.readAsArrayBuffer(response);
+              break;
+          }
+
+          // The ms-stream case handles end separately in reader.onload()
+          if (self._xhr.readyState === rStates.DONE && self._mode !== 'ms-stream') {
+            self.push(null);
+          }
+        };
+      }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer);
+    }, { "./capability": 160, "_process": 121, "buffer": 47, "inherits": 102, "readable-stream": 145 }], 163: [function (require, module, exports) {
       'use strict';
 
       var Buffer = require('safe-buffer').Buffer;
@@ -17375,7 +18061,114 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       function simpleEnd(buf) {
         return buf && buf.length ? this.write(buf) : '';
       }
-    }, { "safe-buffer": 147 }], 158: [function (require, module, exports) {
+    }, { "safe-buffer": 149 }], 164: [function (require, module, exports) {
+      (function (setImmediate, clearImmediate) {
+        var nextTick = require('process/browser.js').nextTick;
+        var apply = Function.prototype.apply;
+        var slice = Array.prototype.slice;
+        var immediateIds = {};
+        var nextImmediateId = 0;
+
+        // DOM APIs, for completeness
+
+        exports.setTimeout = function () {
+          return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
+        };
+        exports.setInterval = function () {
+          return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
+        };
+        exports.clearTimeout = exports.clearInterval = function (timeout) {
+          timeout.close();
+        };
+
+        function Timeout(id, clearFn) {
+          this._id = id;
+          this._clearFn = clearFn;
+        }
+        Timeout.prototype.unref = Timeout.prototype.ref = function () {};
+        Timeout.prototype.close = function () {
+          this._clearFn.call(window, this._id);
+        };
+
+        // Does not start the time, just sets up the members needed.
+        exports.enroll = function (item, msecs) {
+          clearTimeout(item._idleTimeoutId);
+          item._idleTimeout = msecs;
+        };
+
+        exports.unenroll = function (item) {
+          clearTimeout(item._idleTimeoutId);
+          item._idleTimeout = -1;
+        };
+
+        exports._unrefActive = exports.active = function (item) {
+          clearTimeout(item._idleTimeoutId);
+
+          var msecs = item._idleTimeout;
+          if (msecs >= 0) {
+            item._idleTimeoutId = setTimeout(function onTimeout() {
+              if (item._onTimeout) item._onTimeout();
+            }, msecs);
+          }
+        };
+
+        // That's not how node.js implements it but the exposed api is the same.
+        exports.setImmediate = typeof setImmediate === "function" ? setImmediate : function (fn) {
+          var id = nextImmediateId++;
+          var args = arguments.length < 2 ? false : slice.call(arguments, 1);
+
+          immediateIds[id] = true;
+
+          nextTick(function onNextTick() {
+            if (immediateIds[id]) {
+              // fn.call() is faster so we optimize for the common use-case
+              // @see http://jsperf.com/call-apply-segu
+              if (args) {
+                fn.apply(null, args);
+              } else {
+                fn.call(null);
+              }
+              // Prevent ids from leaking
+              exports.clearImmediate(id);
+            }
+          });
+
+          return id;
+        };
+
+        exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate : function (id) {
+          delete immediateIds[id];
+        };
+      }).call(this, require("timers").setImmediate, require("timers").clearImmediate);
+    }, { "process/browser.js": 121, "timers": 164 }], 165: [function (require, module, exports) {
+      var Buffer = require('buffer').Buffer;
+
+      module.exports = function (buf) {
+        // If the buffer is backed by a Uint8Array, a faster version will work
+        if (buf instanceof Uint8Array) {
+          // If the buffer isn't a subarray, return the underlying ArrayBuffer
+          if (buf.byteOffset === 0 && buf.byteLength === buf.buffer.byteLength) {
+            return buf.buffer;
+          } else if (typeof buf.buffer.slice === 'function') {
+            // Otherwise we need to get a proper copy
+            return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+          }
+        }
+
+        if (Buffer.isBuffer(buf)) {
+          // This is the slow version that will work with any Buffer
+          // implementation (even in old browsers)
+          var arrayCopy = new Uint8Array(buf.length);
+          var len = buf.length;
+          for (var i = 0; i < len; i++) {
+            arrayCopy[i] = buf[i];
+          }
+          return arrayCopy.buffer;
+        } else {
+          throw new Error('Argument must be a Buffer');
+        }
+      };
+    }, { "buffer": 47 }], 166: [function (require, module, exports) {
       // Copyright Joyent, Inc. and other Node contributors.
       //
       // Permission is hereby granted, free of charge, to any person obtaining a
@@ -18083,7 +18876,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         if (host) this.hostname = host;
       };
-    }, { "./util": 159, "punycode": 127, "querystring": 130 }], 159: [function (require, module, exports) {
+    }, { "./util": 167, "punycode": 128, "querystring": 131 }], 167: [function (require, module, exports) {
       'use strict';
 
       module.exports = {
@@ -18100,7 +18893,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return arg == null;
         }
       };
-    }, {}], 160: [function (require, module, exports) {
+    }, {}], 168: [function (require, module, exports) {
       (function (global) {
 
         /**
@@ -18170,7 +18963,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return String(val).toLowerCase() === 'true';
         }
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, {}], 161: [function (require, module, exports) {
+    }, {}], 169: [function (require, module, exports) {
       var indexOf = require('indexof');
 
       var Object_keys = function Object_keys(obj) {
@@ -18305,103 +19098,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return copy;
       };
-    }, { "indexof": 100 }], 162: [function (require, module, exports) {
-      'use strict';
+    }, { "indexof": 101 }], 170: [function (require, module, exports) {
+      module.exports = extend;
 
-      var token = '%[a-f0-9]{2}';
-      var singleMatcher = new RegExp(token, 'gi');
-      var multiMatcher = new RegExp('(' + token + ')+', 'gi');
+      var hasOwnProperty = Object.prototype.hasOwnProperty;
 
-      function decodeComponents(components, split) {
-        try {
-          // Try to decode the entire string first
-          return decodeURIComponent(components.join(''));
-        } catch (err) {
-          // Do nothing
-        }
+      function extend() {
+        var target = {};
 
-        if (components.length === 1) {
-          return components;
-        }
+        for (var i = 0; i < arguments.length; i++) {
+          var source = arguments[i];
 
-        split = split || 1;
-
-        // Split the array in 2 parts
-        var left = components.slice(0, split);
-        var right = components.slice(split);
-
-        return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
-      }
-
-      function decode(input) {
-        try {
-          return decodeURIComponent(input);
-        } catch (err) {
-          var tokens = input.match(singleMatcher);
-
-          for (var i = 1; i < tokens.length; i++) {
-            input = decodeComponents(tokens, i).join('');
-
-            tokens = input.match(singleMatcher);
-          }
-
-          return input;
-        }
-      }
-
-      function customDecodeURIComponent(input) {
-        // Keep track of all the replacements and prefill the map with the `BOM`
-        var replaceMap = {
-          '%FE%FF': "\uFFFD\uFFFD",
-          '%FF%FE': "\uFFFD\uFFFD"
-        };
-
-        var match = multiMatcher.exec(input);
-        while (match) {
-          try {
-            // Decode as big chunks as possible
-            replaceMap[match[0]] = decodeURIComponent(match[0]);
-          } catch (err) {
-            var result = decode(match[0]);
-
-            if (result !== match[0]) {
-              replaceMap[match[0]] = result;
+          for (var key in source) {
+            if (hasOwnProperty.call(source, key)) {
+              target[key] = source[key];
             }
           }
-
-          match = multiMatcher.exec(input);
         }
 
-        // Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
-        replaceMap['%C2'] = "\uFFFD";
-
-        var entries = Object.keys(replaceMap);
-
-        for (var i = 0; i < entries.length; i++) {
-          // Replace all decoded components
-          var key = entries[i];
-          input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
-        }
-
-        return input;
+        return target;
       }
-
-      module.exports = function (encodedURI) {
-        if (typeof encodedURI !== 'string') {
-          throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + (typeof encodedURI === "undefined" ? "undefined" : _typeof(encodedURI)) + '`');
-        }
-
-        try {
-          encodedURI = encodedURI.replace(/\+/g, ' ');
-
-          // Try the built in decoder first
-          return decodeURIComponent(encodedURI);
-        } catch (err) {
-          // Fallback to a more advanced decoder
-          return customDecodeURIComponent(encodedURI);
-        }
-      };
-    }, {}], 163: [function (require, module, exports) {
+    }, {}], 171: [function (require, module, exports) {
       var generate = function generate(num, fn) {
         var a = [];
         for (var i = 0; i < num; ++i) {
@@ -18442,7 +19159,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         flatten: flatten,
         chunksOf: chunksOf
       };
-    }, {}], 164: [function (require, module, exports) {
+    }, {}], 172: [function (require, module, exports) {
       var A = require("./array.js");
 
       var at = function at(bytes, index) {
@@ -18631,7 +19348,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         fromUint8Array: fromUint8Array,
         toUint8Array: toUint8Array
       };
-    }, { "./array.js": 163 }], 165: [function (require, module, exports) {
+    }, { "./array.js": 171 }], 173: [function (require, module, exports) {
       // This was ported from https://github.com/emn178/js-sha3, with some minor
       // modifications and pruning. It is licensed under MIT:
       //
@@ -18971,7 +19688,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         keccak256s: keccak(256),
         keccak512s: keccak(512)
       };
-    }, {}], 166: [function (require, module, exports) {
+    }, {}], 174: [function (require, module, exports) {
       var isFunction = require('is-function');
 
       module.exports = forEach;
@@ -19013,7 +19730,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }
-    }, { "is-function": 168 }], 167: [function (require, module, exports) {
+    }, { "is-function": 176 }], 175: [function (require, module, exports) {
       (function (global) {
         var win;
 
@@ -19029,7 +19746,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = win;
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, {}], 168: [function (require, module, exports) {
+    }, {}], 176: [function (require, module, exports) {
       module.exports = isFunction;
 
       var toString = Object.prototype.toString;
@@ -19040,98 +19757,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // IE8 and below
         fn === window.setTimeout || fn === window.alert || fn === window.confirm || fn === window.prompt);
       };
-    }, {}], 169: [function (require, module, exports) {
-      /*
-      object-assign
-      (c) Sindre Sorhus
-      @license MIT
-      */
-
-      'use strict';
-      /* eslint-disable no-unused-vars */
-
-      var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-      var hasOwnProperty = Object.prototype.hasOwnProperty;
-      var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-      function toObject(val) {
-        if (val === null || val === undefined) {
-          throw new TypeError('Object.assign cannot be called with null or undefined');
-        }
-
-        return Object(val);
-      }
-
-      function shouldUseNative() {
-        try {
-          if (!Object.assign) {
-            return false;
-          }
-
-          // Detect buggy property enumeration order in older V8 versions.
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=4118
-          var test1 = new String('abc'); // eslint-disable-line no-new-wrappers
-          test1[5] = 'de';
-          if (Object.getOwnPropertyNames(test1)[0] === '5') {
-            return false;
-          }
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=3056
-          var test2 = {};
-          for (var i = 0; i < 10; i++) {
-            test2['_' + String.fromCharCode(i)] = i;
-          }
-          var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-            return test2[n];
-          });
-          if (order2.join('') !== '0123456789') {
-            return false;
-          }
-
-          // https://bugs.chromium.org/p/v8/issues/detail?id=3056
-          var test3 = {};
-          'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-            test3[letter] = letter;
-          });
-          if (Object.keys(Object.assign({}, test3)).join('') !== 'abcdefghijklmnopqrst') {
-            return false;
-          }
-
-          return true;
-        } catch (err) {
-          // We don't expect any of the above to throw, but better to be safe.
-          return false;
-        }
-      }
-
-      module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-        var from;
-        var to = toObject(target);
-        var symbols;
-
-        for (var s = 1; s < arguments.length; s++) {
-          from = Object(arguments[s]);
-
-          for (var key in from) {
-            if (hasOwnProperty.call(from, key)) {
-              to[key] = from[key];
-            }
-          }
-
-          if (getOwnPropertySymbols) {
-            symbols = getOwnPropertySymbols(from);
-            for (var i = 0; i < symbols.length; i++) {
-              if (propIsEnumerable.call(from, symbols[i])) {
-                to[symbols[i]] = from[symbols[i]];
-              }
-            }
-          }
-        }
-
-        return to;
-      };
-    }, {}], 170: [function (require, module, exports) {
+    }, {}], 177: [function (require, module, exports) {
       var trim = require('trim'),
           forEach = require('for-each'),
           isArray = function isArray(arg) {
@@ -19159,214 +19785,67 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return result;
       };
-    }, { "for-each": 166, "trim": 177 }], 171: [function (require, module, exports) {
+    }, { "for-each": 174, "trim": 184 }], 178: [function (require, module, exports) {
       'use strict';
 
       var strictUriEncode = require('strict-uri-encode');
-      var objectAssign = require('object-assign');
-      var decodeComponent = require('decode-uri-component');
 
-      function encoderForArrayFormat(opts) {
-        switch (opts.arrayFormat) {
-          case 'index':
-            return function (key, value, index) {
-              return value === null ? [encode(key, opts), '[', index, ']'].join('') : [encode(key, opts), '[', encode(index, opts), ']=', encode(value, opts)].join('');
-            };
+      exports.extract = function (str) {
+        return str.split('?')[1] || '';
+      };
 
-          case 'bracket':
-            return function (key, value) {
-              return value === null ? encode(key, opts) : [encode(key, opts), '[]=', encode(value, opts)].join('');
-            };
-
-          default:
-            return function (key, value) {
-              return value === null ? encode(key, opts) : [encode(key, opts), '=', encode(value, opts)].join('');
-            };
-        }
-      }
-
-      function parserForArrayFormat(opts) {
-        var result;
-
-        switch (opts.arrayFormat) {
-          case 'index':
-            return function (key, value, accumulator) {
-              result = /\[(\d*)\]$/.exec(key);
-
-              key = key.replace(/\[\d*\]$/, '');
-
-              if (!result) {
-                accumulator[key] = value;
-                return;
-              }
-
-              if (accumulator[key] === undefined) {
-                accumulator[key] = {};
-              }
-
-              accumulator[key][result[1]] = value;
-            };
-
-          case 'bracket':
-            return function (key, value, accumulator) {
-              result = /(\[\])$/.exec(key);
-              key = key.replace(/\[\]$/, '');
-
-              if (!result) {
-                accumulator[key] = value;
-                return;
-              } else if (accumulator[key] === undefined) {
-                accumulator[key] = [value];
-                return;
-              }
-
-              accumulator[key] = [].concat(accumulator[key], value);
-            };
-
-          default:
-            return function (key, value, accumulator) {
-              if (accumulator[key] === undefined) {
-                accumulator[key] = value;
-                return;
-              }
-
-              accumulator[key] = [].concat(accumulator[key], value);
-            };
-        }
-      }
-
-      function encode(value, opts) {
-        if (opts.encode) {
-          return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
-        }
-
-        return value;
-      }
-
-      function keysSorter(input) {
-        if (Array.isArray(input)) {
-          return input.sort();
-        } else if ((typeof input === "undefined" ? "undefined" : _typeof(input)) === 'object') {
-          return keysSorter(Object.keys(input)).sort(function (a, b) {
-            return Number(a) - Number(b);
-          }).map(function (key) {
-            return input[key];
-          });
-        }
-
-        return input;
-      }
-
-      function extract(str) {
-        var queryStart = str.indexOf('?');
-        if (queryStart === -1) {
-          return '';
-        }
-        return str.slice(queryStart + 1);
-      }
-
-      function parse(str, opts) {
-        opts = objectAssign({ arrayFormat: 'none' }, opts);
-
-        var formatter = parserForArrayFormat(opts);
-
-        // Create an object with no prototype
-        // https://github.com/sindresorhus/query-string/issues/47
-        var ret = Object.create(null);
-
+      exports.parse = function (str) {
         if (typeof str !== 'string') {
-          return ret;
+          return {};
         }
 
-        str = str.trim().replace(/^[?#&]/, '');
+        str = str.trim().replace(/^(\?|#|&)/, '');
 
         if (!str) {
-          return ret;
+          return {};
         }
 
-        str.split('&').forEach(function (param) {
+        return str.split('&').reduce(function (ret, param) {
           var parts = param.replace(/\+/g, ' ').split('=');
           // Firefox (pre 40) decodes `%3D` to `=`
           // https://github.com/sindresorhus/query-string/pull/37
           var key = parts.shift();
           var val = parts.length > 0 ? parts.join('=') : undefined;
 
+          key = decodeURIComponent(key);
+
           // missing `=` should be `null`:
           // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-          val = val === undefined ? null : decodeComponent(val);
+          val = val === undefined ? null : decodeURIComponent(val);
 
-          formatter(decodeComponent(key), val, ret);
-        });
-
-        return Object.keys(ret).sort().reduce(function (result, key) {
-          var val = ret[key];
-          if (Boolean(val) && (typeof val === "undefined" ? "undefined" : _typeof(val)) === 'object' && !Array.isArray(val)) {
-            // Sort object keys, not values
-            result[key] = keysSorter(val);
+          if (!ret.hasOwnProperty(key)) {
+            ret[key] = val;
+          } else if (Array.isArray(ret[key])) {
+            ret[key].push(val);
           } else {
-            result[key] = val;
+            ret[key] = [ret[key], val];
           }
 
-          return result;
-        }, Object.create(null));
-      }
+          return ret;
+        }, {});
+      };
 
-      exports.extract = extract;
-      exports.parse = parse;
-
-      exports.stringify = function (obj, opts) {
-        var defaults = {
-          encode: true,
-          strict: true,
-          arrayFormat: 'none'
-        };
-
-        opts = objectAssign(defaults, opts);
-
-        if (opts.sort === false) {
-          opts.sort = function () {};
-        }
-
-        var formatter = encoderForArrayFormat(opts);
-
-        return obj ? Object.keys(obj).sort(opts.sort).map(function (key) {
+      exports.stringify = function (obj) {
+        return obj ? Object.keys(obj).sort().map(function (key) {
           var val = obj[key];
 
-          if (val === undefined) {
-            return '';
-          }
-
-          if (val === null) {
-            return encode(key, opts);
-          }
-
           if (Array.isArray(val)) {
-            var result = [];
-
-            val.slice().forEach(function (val2) {
-              if (val2 === undefined) {
-                return;
-              }
-
-              result.push(formatter(key, val2, result.length));
-            });
-
-            return result.join('&');
+            return val.sort().map(function (val2) {
+              return strictUriEncode(key) + '=' + strictUriEncode(val2);
+            }).join('&');
           }
 
-          return encode(key, opts) + '=' + encode(val, opts);
+          return strictUriEncode(key) + '=' + strictUriEncode(val);
         }).filter(function (x) {
           return x.length > 0;
         }).join('&') : '';
       };
-
-      exports.parseUrl = function (str, opts) {
-        return {
-          url: str.split('?')[0] || '',
-          query: parse(extract(str), opts)
-        };
-      };
-    }, { "decode-uri-component": 162, "object-assign": 169, "strict-uri-encode": 172 }], 172: [function (require, module, exports) {
+    }, { "strict-uri-encode": 179 }], 179: [function (require, module, exports) {
       'use strict';
 
       module.exports = function (str) {
@@ -19374,7 +19853,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return '%' + c.charCodeAt(0).toString(16).toUpperCase();
         });
       };
-    }, {}], 173: [function (require, module, exports) {
+    }, {}], 180: [function (require, module, exports) {
       var unavailable = function unavailable() {
         throw "This swarm.js function isn't available on the browser.";
       };
@@ -19407,7 +19886,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         hash: hash,
         pick: pick
       });
-    }, { "./pick.js": 174, "./swarm": 176, "./swarm-hash.js": 175, "eth-lib/lib/bytes": 164, "xhr-request-promise": 180 }], 174: [function (require, module, exports) {
+    }, { "./pick.js": 181, "./swarm": 183, "./swarm-hash.js": 182, "eth-lib/lib/bytes": 172, "xhr-request-promise": 187 }], 181: [function (require, module, exports) {
       var picker = function picker(type) {
         return function () {
           return new Promise(function (resolve, reject) {
@@ -19465,7 +19944,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         file: picker("file"),
         directory: picker("directory")
       };
-    }, {}], 175: [function (require, module, exports) {
+    }, {}], 182: [function (require, module, exports) {
       // Thanks https://github.com/axic/swarmhash
 
       var keccak = require("eth-lib/lib/hash").keccak256;
@@ -19506,7 +19985,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = swarmHash;
-    }, { "eth-lib/lib/bytes": 164, "eth-lib/lib/hash": 165 }], 176: [function (require, module, exports) {
+    }, { "eth-lib/lib/bytes": 172, "eth-lib/lib/hash": 173 }], 183: [function (require, module, exports) {
       // TODO: this is a temporary fix to hide those libraries from the browser. A
       // slightly better long-term solution would be to split this file into two,
       // separating the functions that are used on Node.js from the functions that
@@ -20129,7 +20608,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           toString: toString
         };
       };
-    }, {}], 177: [function (require, module, exports) {
+    }, {}], 184: [function (require, module, exports) {
 
       exports = module.exports = trim;
 
@@ -20144,7 +20623,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       exports.right = function (str) {
         return str.replace(/\s*$/, '');
       };
-    }, {}], 178: [function (require, module, exports) {
+    }, {}], 185: [function (require, module, exports) {
       //     Underscore.js 1.8.3
       //     http://underscorejs.org
       //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -21713,7 +22192,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           });
         }
       }).call(this);
-    }, {}], 179: [function (require, module, exports) {
+    }, {}], 186: [function (require, module, exports) {
       module.exports = urlSetQuery;
       function urlSetQuery(url, query) {
         if (query) {
@@ -21738,7 +22217,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         return url;
       }
-    }, {}], 180: [function (require, module, exports) {
+    }, {}], 187: [function (require, module, exports) {
       var request = require('xhr-request');
 
       module.exports = function (url, options) {
@@ -21748,7 +22227,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           });
         });
       };
-    }, { "xhr-request": 181 }], 181: [function (require, module, exports) {
+    }, { "xhr-request": 188 }], 188: [function (require, module, exports) {
       var queryString = require('query-string');
       var setQuery = require('url-set-query');
       var assign = require('object-assign');
@@ -21808,7 +22287,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return request(opt, cb);
       }
-    }, { "./lib/ensure-header.js": 182, "./lib/request.js": 184, "object-assign": 169, "query-string": 171, "url-set-query": 179 }], 182: [function (require, module, exports) {
+    }, { "./lib/ensure-header.js": 189, "./lib/request.js": 191, "object-assign": 192, "query-string": 178, "url-set-query": 186 }], 189: [function (require, module, exports) {
       module.exports = ensureHeader;
       function ensureHeader(headers, key, value) {
         var lower = key.toLowerCase();
@@ -21816,7 +22295,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           headers[key] = value;
         }
       }
-    }, {}], 183: [function (require, module, exports) {
+    }, {}], 190: [function (require, module, exports) {
       module.exports = getResponse;
       function getResponse(opt, resp) {
         if (!resp) return null;
@@ -21829,10 +22308,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           rawRequest: resp.rawRequest ? resp.rawRequest : resp
         };
       }
-    }, {}], 184: [function (require, module, exports) {
+    }, {}], 191: [function (require, module, exports) {
       var xhr = require('xhr');
       var normalize = require('./normalize-response');
-      var noop = function noop() {};
 
       module.exports = xhrRequest;
       function xhrRequest(opt, cb) {
@@ -21845,7 +22323,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           useJson = true;
         }
 
-        var req = xhr(opt, function xhrRequestResult(err, resp, body) {
+        return xhr(opt, function xhrRequestResult(err, resp, body) {
           if (useJson && !err) {
             try {
               var text = resp.rawRequest.responseText;
@@ -21857,21 +22335,50 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
           resp = normalize(opt, resp);
           if (err) cb(err, null, resp);else cb(err, body, resp);
-          cb = noop;
         });
-
-        // Patch abort() so that it also calls the callback, but with an error
-        var onabort = req.onabort;
-        req.onabort = function () {
-          var ret = onabort.apply(req, Array.prototype.slice.call(arguments));
-          cb(new Error('XHR Aborted'));
-          cb = noop;
-          return ret;
-        };
-
-        return req;
       }
-    }, { "./normalize-response": 183, "xhr": 185 }], 185: [function (require, module, exports) {
+    }, { "./normalize-response": 190, "xhr": 193 }], 192: [function (require, module, exports) {
+      'use strict';
+
+      var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+      function ToObject(val) {
+        if (val == null) {
+          throw new TypeError('Object.assign cannot be called with null or undefined');
+        }
+
+        return Object(val);
+      }
+
+      function ownEnumerableKeys(obj) {
+        var keys = Object.getOwnPropertyNames(obj);
+
+        if (Object.getOwnPropertySymbols) {
+          keys = keys.concat(Object.getOwnPropertySymbols(obj));
+        }
+
+        return keys.filter(function (key) {
+          return propIsEnumerable.call(obj, key);
+        });
+      }
+
+      module.exports = Object.assign || function (target, source) {
+        var from;
+        var keys;
+        var to = ToObject(target);
+
+        for (var s = 1; s < arguments.length; s++) {
+          from = arguments[s];
+          keys = ownEnumerableKeys(Object(from));
+
+          for (var i = 0; i < keys.length; i++) {
+            to[keys[i]] = from[keys[i]];
+          }
+        }
+
+        return to;
+      };
+    }, {}], 193: [function (require, module, exports) {
       "use strict";
 
       var window = require("global/window");
@@ -22115,27 +22622,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }
 
       function noop() {}
-    }, { "global/window": 167, "is-function": 168, "parse-headers": 170, "xtend": 186 }], 186: [function (require, module, exports) {
-      module.exports = extend;
-
-      var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-      function extend() {
-        var target = {};
-
-        for (var i = 0; i < arguments.length; i++) {
-          var source = arguments[i];
-
-          for (var key in source) {
-            if (hasOwnProperty.call(source, key)) {
-              target[key] = source[key];
-            }
-          }
-        }
-
-        return target;
-      }
-    }, {}], 187: [function (require, module, exports) {
+    }, { "global/window": 175, "is-function": 176, "parse-headers": 177, "xtend": 194 }], 194: [function (require, module, exports) {
+      arguments[4][170][0].apply(exports, arguments);
+    }, { "dup": 170 }], 195: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -22221,9 +22710,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Bzz;
-    }, { "swarm-js": 173, "underscore": 178 }], 188: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 189: [function (require, module, exports) {
+    }, { "swarm-js": 180, "underscore": 185 }], 196: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 197: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -22271,7 +22760,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
         }
       };
-    }, {}], 190: [function (require, module, exports) {
+    }, {}], 198: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -22685,7 +23174,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         outputPostFormatter: outputPostFormatter,
         outputSyncingFormatter: outputSyncingFormatter
       };
-    }, { "underscore": 188, "web3-eth-iban": 368, "web3-utils": 393 }], 191: [function (require, module, exports) {
+    }, { "underscore": 196, "web3-eth-iban": 387, "web3-utils": 418 }], 199: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -22717,9 +23206,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         errors: errors,
         formatters: formatters
       };
-    }, { "./errors": 189, "./formatters": 190 }], 192: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 193: [function (require, module, exports) {
+    }, { "./errors": 197, "./formatters": 198 }], 200: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 201: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -22918,6 +23407,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             timeoutCount = 0,
             confirmationCount = 0,
             intervalId = null,
+            receiptString = '',
             gasProvided = _.isObject(payload.params[0]) && payload.params[0].gas ? payload.params[0].gas : null,
             isContractDeployment = _.isObject(payload.params[0]) && payload.params[0].data && payload.params[0].from && !payload.params[0].to;
 
@@ -23067,12 +23557,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                   }
                 } else {
                   if (receipt) {
-                    receipt = JSON.stringify(receipt, null, 2);
+                    receiptString = JSON.stringify(receipt, null, 2);
                   }
                   if (receipt.status === false || receipt.status === '0x0') {
-                    utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receipt), defer.eventEmitter, defer.reject);
+                    utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptString), defer.eventEmitter, defer.reject);
                   } else {
-                    utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n" + receipt), defer.eventEmitter, defer.reject);
+                    utils._fireError(new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptString), defer.eventEmitter, defer.reject);
                   }
                 }
 
@@ -23293,9 +23783,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Method;
-    }, { "underscore": 192, "web3-core-helpers": 191, "web3-core-promievent": 198, "web3-core-subscriptions": 206, "web3-utils": 393 }], 194: [function (require, module, exports) {
+    }, { "underscore": 200, "web3-core-helpers": 199, "web3-core-promievent": 206, "web3-core-subscriptions": 214, "web3-utils": 418 }], 202: [function (require, module, exports) {
       module.exports = require('./register')().Promise;
-    }, { "./register": 196 }], 195: [function (require, module, exports) {
+    }, { "./register": 204 }], 203: [function (require, module, exports) {
       "use strict";
       // global key for user preferred registration
 
@@ -23372,7 +23862,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return registered;
         };
       };
-    }, {}], 196: [function (require, module, exports) {
+    }, {}], 204: [function (require, module, exports) {
       "use strict";
 
       module.exports = require('./loader')(window, loadImplementation);
@@ -23391,7 +23881,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           implementation: 'window.Promise'
         };
       }
-    }, { "./loader": 195 }], 197: [function (require, module, exports) {
+    }, { "./loader": 203 }], 205: [function (require, module, exports) {
       'use strict';
 
       //
@@ -23647,7 +24137,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       if ('undefined' !== typeof module) {
         module.exports = EventEmitter;
       }
-    }, {}], 198: [function (require, module, exports) {
+    }, {}], 206: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -23724,9 +24214,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = PromiEvent;
-    }, { "any-promise": 194, "eventemitter3": 197 }], 199: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 200: [function (require, module, exports) {
+    }, { "any-promise": 202, "eventemitter3": 205 }], 207: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 208: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -23782,7 +24272,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return results[index] || {};
           }).forEach(function (result, index) {
             if (requests[index].callback) {
-
               if (result && result.error) {
                 return requests[index].callback(errors.ErrorResponse(result));
               }
@@ -23791,14 +24280,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
                 return requests[index].callback(errors.InvalidResponse(result));
               }
 
-              requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
+              try {
+                requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
+              } catch (err) {
+                requests[index].callback(err);
+              }
             }
           });
         });
       };
 
       module.exports = Batch;
-    }, { "./jsonrpc": 203, "web3-core-helpers": 191 }], 201: [function (require, module, exports) {
+    }, { "./jsonrpc": 211, "web3-core-helpers": 199 }], 209: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -23880,7 +24373,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /* jshint ignore:end */
 
       module.exports = givenProvider;
-    }, {}], 202: [function (require, module, exports) {
+    }, {}], 210: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -23961,8 +24454,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
 
-        // reset the old one before changing
-        if (this.provider) this.clearSubscriptions();
+        // reset the old one before changing, if still connected
+        if (this.provider && this.provider.connected) this.clearSubscriptions();
 
         this.provider = p || null;
 
@@ -24110,7 +24603,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         Manager: RequestManager,
         BatchManager: BatchManager
       };
-    }, { "./batch.js": 200, "./givenProvider.js": 201, "./jsonrpc.js": 203, "underscore": 199, "web3-core-helpers": 191, "web3-providers-http": 375, "web3-providers-ipc": 378, "web3-providers-ws": 380 }], 203: [function (require, module, exports) {
+    }, { "./batch.js": 208, "./givenProvider.js": 209, "./jsonrpc.js": 211, "underscore": 207, "web3-core-helpers": 199, "web3-providers-http": 400, "web3-providers-ipc": 403, "web3-providers-ws": 405 }], 211: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -24196,11 +24689,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Jsonrpc;
-    }, {}], 204: [function (require, module, exports) {
-      arguments[4][197][0].apply(exports, arguments);
-    }, { "dup": 197 }], 205: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 206: [function (require, module, exports) {
+    }, {}], 212: [function (require, module, exports) {
+      arguments[4][205][0].apply(exports, arguments);
+    }, { "dup": 205 }], 213: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 214: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -24272,7 +24765,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         subscriptions: Subscriptions,
         subscription: Subscription
       };
-    }, { "./subscription.js": 207 }], 207: [function (require, module, exports) {
+    }, { "./subscription.js": 215 }], 215: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -24580,7 +25073,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Subscription;
-    }, { "eventemitter3": 204, "underscore": 205, "web3-core-helpers": 191 }], 208: [function (require, module, exports) {
+    }, { "eventemitter3": 212, "underscore": 213, "web3-core-helpers": 199 }], 216: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -24645,7 +25138,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = extend;
-    }, { "web3-core-helpers": 191, "web3-core-method": 193, "web3-utils": 393 }], 209: [function (require, module, exports) {
+    }, { "web3-core-helpers": 199, "web3-core-method": 201, "web3-utils": 418 }], 217: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -24729,7 +25222,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           pkg.providers = requestManager.Manager.providers;
         }
       };
-    }, { "./extend.js": 208, "web3-core-requestmanager": 202 }], 210: [function (require, module, exports) {
+    }, { "./extend.js": 216, "web3-core-requestmanager": 210 }], 218: [function (require, module, exports) {
       (function (module, exports) {
         'use strict';
 
@@ -28089,9 +28582,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return res._forceRed(this);
         };
       })(typeof module === 'undefined' || module, this);
-    }, {}], 211: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 212: [function (require, module, exports) {
+    }, {}], 219: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 220: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -28375,7 +28868,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         formatOutputAddress: formatOutputAddress,
         toTwosComplement: utils.toTwosComplement
       };
-    }, { "./param": 214, "bn.js": 210, "underscore": 211, "web3-utils": 393 }], 213: [function (require, module, exports) {
+    }, { "./param": 222, "bn.js": 218, "underscore": 219, "web3-utils": 418 }], 221: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -28761,7 +29254,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var coder = new ABICoder([new SolidityTypeAddress(), new SolidityTypeBool(), new SolidityTypeInt(), new SolidityTypeUInt(), new SolidityTypeDynamicBytes(), new SolidityTypeBytes(), new SolidityTypeString()]);
 
       module.exports = coder;
-    }, { "./formatters": 212, "./types/address": 216, "./types/bool": 217, "./types/bytes": 218, "./types/dynamicbytes": 219, "./types/int": 220, "./types/string": 221, "./types/uint": 222, "underscore": 211, "web3-utils": 393 }], 214: [function (require, module, exports) {
+    }, { "./formatters": 220, "./types/address": 224, "./types/bool": 225, "./types/bytes": 226, "./types/dynamicbytes": 227, "./types/int": 228, "./types/string": 229, "./types/uint": 230, "underscore": 219, "web3-utils": 418 }], 222: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -28912,7 +29405,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityParam;
-    }, { "./formatters.js": 212 }], 215: [function (require, module, exports) {
+    }, { "./formatters.js": 220 }], 223: [function (require, module, exports) {
       var f = require('./formatters');
       var SolidityParam = require('./param');
 
@@ -29163,7 +29656,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityType;
-    }, { "./formatters": 212, "./param": 214 }], 216: [function (require, module, exports) {
+    }, { "./formatters": 220, "./param": 222 }], 224: [function (require, module, exports) {
       var f = require('../formatters');
       var formatters = require('web3-core-helpers').formatters;
       var SolidityType = require('../type');
@@ -29195,7 +29688,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeAddress;
-    }, { "../formatters": 212, "../type": 215, "web3-core-helpers": 191 }], 217: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223, "web3-core-helpers": 199 }], 225: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29222,7 +29715,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeBool;
-    }, { "../formatters": 212, "../type": 215 }], 218: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 226: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29252,7 +29745,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeBytes;
-    }, { "../formatters": 212, "../type": 215 }], 219: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 227: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29273,7 +29766,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeDynamicBytes;
-    }, { "../formatters": 212, "../type": 215 }], 220: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 228: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29306,7 +29799,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeInt;
-    }, { "../formatters": 212, "../type": 215 }], 221: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 229: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29327,7 +29820,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeString;
-    }, { "../formatters": 212, "../type": 215 }], 222: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 230: [function (require, module, exports) {
       var f = require('../formatters');
       var SolidityType = require('../type');
 
@@ -29360,41 +29853,41 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = SolidityTypeUInt;
-    }, { "../formatters": 212, "../type": 215 }], 223: [function (require, module, exports) {
-      arguments[4][194][0].apply(exports, arguments);
-    }, { "./register": 225, "dup": 194 }], 224: [function (require, module, exports) {
-      arguments[4][195][0].apply(exports, arguments);
-    }, { "dup": 195 }], 225: [function (require, module, exports) {
-      arguments[4][196][0].apply(exports, arguments);
-    }, { "./loader": 224, "dup": 196 }], 226: [function (require, module, exports) {
+    }, { "../formatters": 220, "../type": 223 }], 231: [function (require, module, exports) {
+      arguments[4][202][0].apply(exports, arguments);
+    }, { "./register": 233, "dup": 202 }], 232: [function (require, module, exports) {
+      arguments[4][203][0].apply(exports, arguments);
+    }, { "dup": 203 }], 233: [function (require, module, exports) {
+      arguments[4][204][0].apply(exports, arguments);
+    }, { "./loader": 232, "dup": 204 }], 234: [function (require, module, exports) {
       arguments[4][1][0].apply(exports, arguments);
-    }, { "./asn1/api": 227, "./asn1/base": 229, "./asn1/constants": 233, "./asn1/decoders": 235, "./asn1/encoders": 238, "bn.js": 240, "dup": 1 }], 227: [function (require, module, exports) {
+    }, { "./asn1/api": 235, "./asn1/base": 237, "./asn1/constants": 241, "./asn1/decoders": 243, "./asn1/encoders": 246, "bn.js": 248, "dup": 1 }], 235: [function (require, module, exports) {
       arguments[4][2][0].apply(exports, arguments);
-    }, { "../asn1": 226, "dup": 2, "inherits": 325, "vm": 161 }], 228: [function (require, module, exports) {
+    }, { "../asn1": 234, "dup": 2, "inherits": 333, "vm": 169 }], 236: [function (require, module, exports) {
       arguments[4][3][0].apply(exports, arguments);
-    }, { "../base": 229, "buffer": 47, "dup": 3, "inherits": 325 }], 229: [function (require, module, exports) {
+    }, { "../base": 237, "buffer": 47, "dup": 3, "inherits": 333 }], 237: [function (require, module, exports) {
       arguments[4][4][0].apply(exports, arguments);
-    }, { "./buffer": 228, "./node": 230, "./reporter": 231, "dup": 4 }], 230: [function (require, module, exports) {
+    }, { "./buffer": 236, "./node": 238, "./reporter": 239, "dup": 4 }], 238: [function (require, module, exports) {
       arguments[4][5][0].apply(exports, arguments);
-    }, { "../base": 229, "dup": 5, "minimalistic-assert": 329 }], 231: [function (require, module, exports) {
+    }, { "../base": 237, "dup": 5, "minimalistic-assert": 337 }], 239: [function (require, module, exports) {
       arguments[4][6][0].apply(exports, arguments);
-    }, { "dup": 6, "inherits": 325 }], 232: [function (require, module, exports) {
+    }, { "dup": 6, "inherits": 333 }], 240: [function (require, module, exports) {
       arguments[4][7][0].apply(exports, arguments);
-    }, { "../constants": 233, "dup": 7 }], 233: [function (require, module, exports) {
+    }, { "../constants": 241, "dup": 7 }], 241: [function (require, module, exports) {
       arguments[4][8][0].apply(exports, arguments);
-    }, { "./der": 232, "dup": 8 }], 234: [function (require, module, exports) {
+    }, { "./der": 240, "dup": 8 }], 242: [function (require, module, exports) {
       arguments[4][9][0].apply(exports, arguments);
-    }, { "../../asn1": 226, "dup": 9, "inherits": 325 }], 235: [function (require, module, exports) {
+    }, { "../../asn1": 234, "dup": 9, "inherits": 333 }], 243: [function (require, module, exports) {
       arguments[4][10][0].apply(exports, arguments);
-    }, { "./der": 234, "./pem": 236, "dup": 10 }], 236: [function (require, module, exports) {
+    }, { "./der": 242, "./pem": 244, "dup": 10 }], 244: [function (require, module, exports) {
       arguments[4][11][0].apply(exports, arguments);
-    }, { "./der": 234, "buffer": 47, "dup": 11, "inherits": 325 }], 237: [function (require, module, exports) {
+    }, { "./der": 242, "buffer": 47, "dup": 11, "inherits": 333 }], 245: [function (require, module, exports) {
       arguments[4][12][0].apply(exports, arguments);
-    }, { "../../asn1": 226, "buffer": 47, "dup": 12, "inherits": 325 }], 238: [function (require, module, exports) {
+    }, { "../../asn1": 234, "buffer": 47, "dup": 12, "inherits": 333 }], 246: [function (require, module, exports) {
       arguments[4][13][0].apply(exports, arguments);
-    }, { "./der": 237, "./pem": 239, "dup": 13 }], 239: [function (require, module, exports) {
+    }, { "./der": 245, "./pem": 247, "dup": 13 }], 247: [function (require, module, exports) {
       arguments[4][14][0].apply(exports, arguments);
-    }, { "./der": 237, "dup": 14, "inherits": 325 }], 240: [function (require, module, exports) {
+    }, { "./der": 245, "dup": 14, "inherits": 333 }], 248: [function (require, module, exports) {
       (function (module, exports) {
         'use strict';
 
@@ -32754,39 +33247,159 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return res._forceRed(this);
         };
       })(typeof module === 'undefined' || module, this);
-    }, { "buffer": 17 }], 241: [function (require, module, exports) {
+    }, { "buffer": 17 }], 249: [function (require, module, exports) {
       arguments[4][16][0].apply(exports, arguments);
-    }, { "crypto": 17, "dup": 16 }], 242: [function (require, module, exports) {
+    }, { "crypto": 17, "dup": 16 }], 250: [function (require, module, exports) {
       arguments[4][18][0].apply(exports, arguments);
-    }, { "dup": 18, "safe-buffer": 350 }], 243: [function (require, module, exports) {
+    }, { "dup": 18, "safe-buffer": 358 }], 251: [function (require, module, exports) {
       arguments[4][19][0].apply(exports, arguments);
-    }, { "./aes": 242, "./ghash": 247, "./incr32": 248, "buffer-xor": 269, "cipher-base": 270, "dup": 19, "inherits": 325, "safe-buffer": 350 }], 244: [function (require, module, exports) {
+    }, { "./aes": 250, "./ghash": 255, "./incr32": 256, "buffer-xor": 277, "cipher-base": 278, "dup": 19, "inherits": 333, "safe-buffer": 358 }], 252: [function (require, module, exports) {
       arguments[4][20][0].apply(exports, arguments);
-    }, { "./decrypter": 245, "./encrypter": 246, "./modes/list.json": 256, "dup": 20 }], 245: [function (require, module, exports) {
-      arguments[4][21][0].apply(exports, arguments);
-    }, { "./aes": 242, "./authCipher": 243, "./modes": 255, "./streamCipher": 258, "cipher-base": 270, "dup": 21, "evp_bytestokey": 310, "inherits": 325, "safe-buffer": 350 }], 246: [function (require, module, exports) {
+    }, { "./decrypter": 253, "./encrypter": 254, "./modes/list.json": 264, "dup": 20 }], 253: [function (require, module, exports) {
+      var AuthCipher = require('./authCipher');
+      var Buffer = require('safe-buffer').Buffer;
+      var MODES = require('./modes');
+      var StreamCipher = require('./streamCipher');
+      var Transform = require('cipher-base');
+      var aes = require('./aes');
+      var ebtk = require('evp_bytestokey');
+      var inherits = require('inherits');
+
+      function Decipher(mode, key, iv) {
+        Transform.call(this);
+
+        this._cache = new Splitter();
+        this._last = void 0;
+        this._cipher = new aes.AES(key);
+        this._prev = Buffer.from(iv);
+        this._mode = mode;
+        this._autopadding = true;
+      }
+
+      inherits(Decipher, Transform);
+
+      Decipher.prototype._update = function (data) {
+        this._cache.add(data);
+        var chunk;
+        var thing;
+        var out = [];
+        while (chunk = this._cache.get(this._autopadding)) {
+          thing = this._mode.decrypt(this, chunk);
+          out.push(thing);
+        }
+        return Buffer.concat(out);
+      };
+
+      Decipher.prototype._final = function () {
+        var chunk = this._cache.flush();
+        if (this._autopadding) {
+          return unpad(this._mode.decrypt(this, chunk));
+        } else if (chunk) {
+          throw new Error('data not multiple of block length');
+        }
+      };
+
+      Decipher.prototype.setAutoPadding = function (setTo) {
+        this._autopadding = !!setTo;
+        return this;
+      };
+
+      function Splitter() {
+        this.cache = Buffer.allocUnsafe(0);
+      }
+
+      Splitter.prototype.add = function (data) {
+        this.cache = Buffer.concat([this.cache, data]);
+      };
+
+      Splitter.prototype.get = function (autoPadding) {
+        var out;
+        if (autoPadding) {
+          if (this.cache.length > 16) {
+            out = this.cache.slice(0, 16);
+            this.cache = this.cache.slice(16);
+            return out;
+          }
+        } else {
+          if (this.cache.length >= 16) {
+            out = this.cache.slice(0, 16);
+            this.cache = this.cache.slice(16);
+            return out;
+          }
+        }
+
+        return null;
+      };
+
+      Splitter.prototype.flush = function () {
+        if (this.cache.length) return this.cache;
+      };
+
+      function unpad(last) {
+        var padded = last[15];
+        var i = -1;
+        while (++i < padded) {
+          if (last[i + (16 - padded)] !== padded) {
+            throw new Error('unable to decrypt data');
+          }
+        }
+        if (padded === 16) return;
+
+        return last.slice(0, 16 - padded);
+      }
+
+      function createDecipheriv(suite, password, iv) {
+        var config = MODES[suite.toLowerCase()];
+        if (!config) throw new TypeError('invalid suite type');
+
+        if (typeof iv === 'string') iv = Buffer.from(iv);
+        if (config.mode !== 'GCM' && iv.length !== config.iv) throw new TypeError('invalid iv length ' + iv.length);
+
+        if (typeof password === 'string') password = Buffer.from(password);
+        if (password.length !== config.key / 8) throw new TypeError('invalid key length ' + password.length);
+
+        if (config.type === 'stream') {
+          return new StreamCipher(config.module, password, iv, true);
+        } else if (config.type === 'auth') {
+          return new AuthCipher(config.module, password, iv, true);
+        }
+
+        return new Decipher(config.module, password, iv);
+      }
+
+      function createDecipher(suite, password) {
+        var config = MODES[suite.toLowerCase()];
+        if (!config) throw new TypeError('invalid suite type');
+
+        var keys = ebtk(password, false, config.key, config.iv);
+        return createDecipheriv(suite, keys.key, keys.iv);
+      }
+
+      exports.createDecipher = createDecipher;
+      exports.createDecipheriv = createDecipheriv;
+    }, { "./aes": 250, "./authCipher": 251, "./modes": 263, "./streamCipher": 266, "cipher-base": 278, "evp_bytestokey": 318, "inherits": 333, "safe-buffer": 358 }], 254: [function (require, module, exports) {
       arguments[4][22][0].apply(exports, arguments);
-    }, { "./aes": 242, "./authCipher": 243, "./modes": 255, "./streamCipher": 258, "cipher-base": 270, "dup": 22, "evp_bytestokey": 310, "inherits": 325, "safe-buffer": 350 }], 247: [function (require, module, exports) {
+    }, { "./aes": 250, "./authCipher": 251, "./modes": 263, "./streamCipher": 266, "cipher-base": 278, "dup": 22, "evp_bytestokey": 318, "inherits": 333, "safe-buffer": 358 }], 255: [function (require, module, exports) {
       arguments[4][23][0].apply(exports, arguments);
-    }, { "dup": 23, "safe-buffer": 350 }], 248: [function (require, module, exports) {
+    }, { "dup": 23, "safe-buffer": 358 }], 256: [function (require, module, exports) {
       arguments[4][24][0].apply(exports, arguments);
-    }, { "dup": 24 }], 249: [function (require, module, exports) {
+    }, { "dup": 24 }], 257: [function (require, module, exports) {
       arguments[4][25][0].apply(exports, arguments);
-    }, { "buffer-xor": 269, "dup": 25 }], 250: [function (require, module, exports) {
+    }, { "buffer-xor": 277, "dup": 25 }], 258: [function (require, module, exports) {
       arguments[4][26][0].apply(exports, arguments);
-    }, { "buffer-xor": 269, "dup": 26, "safe-buffer": 350 }], 251: [function (require, module, exports) {
+    }, { "buffer-xor": 277, "dup": 26, "safe-buffer": 358 }], 259: [function (require, module, exports) {
       arguments[4][27][0].apply(exports, arguments);
-    }, { "dup": 27, "safe-buffer": 350 }], 252: [function (require, module, exports) {
+    }, { "dup": 27, "safe-buffer": 358 }], 260: [function (require, module, exports) {
       arguments[4][28][0].apply(exports, arguments);
-    }, { "dup": 28, "safe-buffer": 350 }], 253: [function (require, module, exports) {
+    }, { "dup": 28, "safe-buffer": 358 }], 261: [function (require, module, exports) {
       arguments[4][29][0].apply(exports, arguments);
-    }, { "../incr32": 248, "buffer-xor": 269, "dup": 29, "safe-buffer": 350 }], 254: [function (require, module, exports) {
+    }, { "../incr32": 256, "buffer-xor": 277, "dup": 29, "safe-buffer": 358 }], 262: [function (require, module, exports) {
       arguments[4][30][0].apply(exports, arguments);
-    }, { "dup": 30 }], 255: [function (require, module, exports) {
+    }, { "dup": 30 }], 263: [function (require, module, exports) {
       arguments[4][31][0].apply(exports, arguments);
-    }, { "./cbc": 249, "./cfb": 250, "./cfb1": 251, "./cfb8": 252, "./ctr": 253, "./ecb": 254, "./list.json": 256, "./ofb": 257, "dup": 31 }], 256: [function (require, module, exports) {
+    }, { "./cbc": 257, "./cfb": 258, "./cfb1": 259, "./cfb8": 260, "./ctr": 261, "./ecb": 262, "./list.json": 264, "./ofb": 265, "dup": 31 }], 264: [function (require, module, exports) {
       arguments[4][32][0].apply(exports, arguments);
-    }, { "dup": 32 }], 257: [function (require, module, exports) {
+    }, { "dup": 32 }], 265: [function (require, module, exports) {
       (function (Buffer) {
         var xor = require('buffer-xor');
 
@@ -32805,11 +33418,83 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return xor(chunk, pad);
         };
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "buffer-xor": 269 }], 258: [function (require, module, exports) {
+    }, { "buffer": 47, "buffer-xor": 277 }], 266: [function (require, module, exports) {
       arguments[4][34][0].apply(exports, arguments);
-    }, { "./aes": 242, "cipher-base": 270, "dup": 34, "inherits": 325, "safe-buffer": 350 }], 259: [function (require, module, exports) {
-      arguments[4][35][0].apply(exports, arguments);
-    }, { "browserify-aes/browser": 244, "browserify-aes/modes": 255, "browserify-des": 260, "browserify-des/modes": 261, "dup": 35, "evp_bytestokey": 310 }], 260: [function (require, module, exports) {
+    }, { "./aes": 250, "cipher-base": 278, "dup": 34, "inherits": 333, "safe-buffer": 358 }], 267: [function (require, module, exports) {
+      var ebtk = require('evp_bytestokey');
+      var aes = require('browserify-aes/browser');
+      var DES = require('browserify-des');
+      var desModes = require('browserify-des/modes');
+      var aesModes = require('browserify-aes/modes');
+      function createCipher(suite, password) {
+        var keyLen, ivLen;
+        suite = suite.toLowerCase();
+        if (aesModes[suite]) {
+          keyLen = aesModes[suite].key;
+          ivLen = aesModes[suite].iv;
+        } else if (desModes[suite]) {
+          keyLen = desModes[suite].key * 8;
+          ivLen = desModes[suite].iv;
+        } else {
+          throw new TypeError('invalid suite type');
+        }
+        var keys = ebtk(password, false, keyLen, ivLen);
+        return createCipheriv(suite, keys.key, keys.iv);
+      }
+      function createDecipher(suite, password) {
+        var keyLen, ivLen;
+        suite = suite.toLowerCase();
+        if (aesModes[suite]) {
+          keyLen = aesModes[suite].key;
+          ivLen = aesModes[suite].iv;
+        } else if (desModes[suite]) {
+          keyLen = desModes[suite].key * 8;
+          ivLen = desModes[suite].iv;
+        } else {
+          throw new TypeError('invalid suite type');
+        }
+        var keys = ebtk(password, false, keyLen, ivLen);
+        return createDecipheriv(suite, keys.key, keys.iv);
+      }
+
+      function createCipheriv(suite, key, iv) {
+        suite = suite.toLowerCase();
+        if (aesModes[suite]) {
+          return aes.createCipheriv(suite, key, iv);
+        } else if (desModes[suite]) {
+          return new DES({
+            key: key,
+            iv: iv,
+            mode: suite
+          });
+        } else {
+          throw new TypeError('invalid suite type');
+        }
+      }
+      function createDecipheriv(suite, key, iv) {
+        suite = suite.toLowerCase();
+        if (aesModes[suite]) {
+          return aes.createDecipheriv(suite, key, iv);
+        } else if (desModes[suite]) {
+          return new DES({
+            key: key,
+            iv: iv,
+            mode: suite,
+            decrypt: true
+          });
+        } else {
+          throw new TypeError('invalid suite type');
+        }
+      }
+      exports.createCipher = exports.Cipher = createCipher;
+      exports.createCipheriv = exports.Cipheriv = createCipheriv;
+      exports.createDecipher = exports.Decipher = createDecipher;
+      exports.createDecipheriv = exports.Decipheriv = createDecipheriv;
+      function getCiphers() {
+        return Object.keys(desModes).concat(aes.getCiphers());
+      }
+      exports.listCiphers = exports.getCiphers = getCiphers;
+    }, { "browserify-aes/browser": 252, "browserify-aes/modes": 263, "browserify-des": 268, "browserify-des/modes": 269, "evp_bytestokey": 318 }], 268: [function (require, module, exports) {
       (function (Buffer) {
         var CipherBase = require('cipher-base');
         var des = require('des.js');
@@ -32855,9 +33540,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return new Buffer(this._des.final());
         };
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "cipher-base": 270, "des.js": 278, "inherits": 325 }], 261: [function (require, module, exports) {
+    }, { "buffer": 47, "cipher-base": 278, "des.js": 286, "inherits": 333 }], 269: [function (require, module, exports) {
       arguments[4][37][0].apply(exports, arguments);
-    }, { "dup": 37 }], 262: [function (require, module, exports) {
+    }, { "dup": 37 }], 270: [function (require, module, exports) {
       (function (Buffer) {
         var bn = require('bn.js');
         var randomBytes = require('randombytes');
@@ -32899,13 +33584,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return r;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": 240, "buffer": 47, "randombytes": 347 }], 263: [function (require, module, exports) {
+    }, { "bn.js": 248, "buffer": 47, "randombytes": 355 }], 271: [function (require, module, exports) {
       arguments[4][39][0].apply(exports, arguments);
-    }, { "./browser/algorithms.json": 264, "dup": 39 }], 264: [function (require, module, exports) {
+    }, { "./browser/algorithms.json": 272, "dup": 39 }], 272: [function (require, module, exports) {
       arguments[4][40][0].apply(exports, arguments);
-    }, { "dup": 40 }], 265: [function (require, module, exports) {
+    }, { "dup": 40 }], 273: [function (require, module, exports) {
       arguments[4][41][0].apply(exports, arguments);
-    }, { "dup": 41 }], 266: [function (require, module, exports) {
+    }, { "dup": 41 }], 274: [function (require, module, exports) {
       (function (Buffer) {
         var createHash = require('create-hash');
         var stream = require('stream');
@@ -32999,7 +33684,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           createVerify: createVerify
         };
       }).call(this, require("buffer").Buffer);
-    }, { "./algorithms.json": 264, "./sign": 267, "./verify": 268, "buffer": 47, "create-hash": 272, "inherits": 325, "stream": 156 }], 267: [function (require, module, exports) {
+    }, { "./algorithms.json": 272, "./sign": 275, "./verify": 276, "buffer": 47, "create-hash": 280, "inherits": 333, "stream": 158 }], 275: [function (require, module, exports) {
       (function (Buffer) {
         // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
         var createHmac = require('create-hmac');
@@ -33148,7 +33833,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         module.exports.getKey = getKey;
         module.exports.makeKey = makeKey;
       }).call(this, require("buffer").Buffer);
-    }, { "./curves.json": 265, "bn.js": 240, "browserify-rsa": 262, "buffer": 47, "create-hmac": 275, "elliptic": 288, "parse-asn1": 335 }], 268: [function (require, module, exports) {
+    }, { "./curves.json": 273, "bn.js": 248, "browserify-rsa": 270, "buffer": 47, "create-hmac": 283, "elliptic": 296, "parse-asn1": 343 }], 276: [function (require, module, exports) {
       (function (Buffer) {
         // much of this based on https://github.com/indutny/self-signed/blob/gh-pages/lib/rsa.js
         var BN = require('bn.js');
@@ -33230,7 +33915,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = verify;
       }).call(this, require("buffer").Buffer);
-    }, { "./curves.json": 265, "bn.js": 240, "buffer": 47, "elliptic": 288, "parse-asn1": 335 }], 269: [function (require, module, exports) {
+    }, { "./curves.json": 273, "bn.js": 248, "buffer": 47, "elliptic": 296, "parse-asn1": 343 }], 277: [function (require, module, exports) {
       (function (Buffer) {
         module.exports = function xor(a, b) {
           var length = Math.min(a.length, b.length);
@@ -33243,9 +33928,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return buffer;
         };
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47 }], 270: [function (require, module, exports) {
-      arguments[4][48][0].apply(exports, arguments);
-    }, { "dup": 48, "inherits": 325, "safe-buffer": 350, "stream": 156, "string_decoder": 157 }], 271: [function (require, module, exports) {
+    }, { "buffer": 47 }], 278: [function (require, module, exports) {
+      arguments[4][49][0].apply(exports, arguments);
+    }, { "dup": 49, "inherits": 333, "safe-buffer": 358, "stream": 158, "string_decoder": 163 }], 279: [function (require, module, exports) {
       (function (Buffer) {
         var elliptic = require('elliptic');
         var BN = require('bn.js');
@@ -33370,7 +34055,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": 240, "buffer": 47, "elliptic": 288 }], 272: [function (require, module, exports) {
+    }, { "bn.js": 248, "buffer": 47, "elliptic": 296 }], 280: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -33426,7 +34111,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return new Hash(sha(alg));
         };
       }).call(this, require("buffer").Buffer);
-    }, { "./md5": 274, "buffer": 47, "cipher-base": 270, "inherits": 325, "ripemd160": 349, "sha.js": 354 }], 273: [function (require, module, exports) {
+    }, { "./md5": 282, "buffer": 47, "cipher-base": 278, "inherits": 333, "ripemd160": 357, "sha.js": 362 }], 281: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -33460,27 +34145,177 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return buf;
         };
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47 }], 274: [function (require, module, exports) {
-      arguments[4][53][0].apply(exports, arguments);
-    }, { "./make-hash": 273, "dup": 53 }], 275: [function (require, module, exports) {
+    }, { "buffer": 47 }], 282: [function (require, module, exports) {
+      'use strict';
+      /*
+       * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+       * Digest Algorithm, as defined in RFC 1321.
+       * Version 2.1 Copyright (C) Paul Johnston 1999 - 2002.
+       * Other contributors: Greg Holt, Andrew Kepert, Ydnar, Lostinet
+       * Distributed under the BSD License
+       * See http://pajhome.org.uk/crypt/md5 for more info.
+       */
+
+      var makeHash = require('./make-hash');
+
+      /*
+       * Calculate the MD5 of an array of little-endian words, and a bit length
+       */
+      function core_md5(x, len) {
+        /* append padding */
+        x[len >> 5] |= 0x80 << len % 32;
+        x[(len + 64 >>> 9 << 4) + 14] = len;
+
+        var a = 1732584193;
+        var b = -271733879;
+        var c = -1732584194;
+        var d = 271733878;
+
+        for (var i = 0; i < x.length; i += 16) {
+          var olda = a;
+          var oldb = b;
+          var oldc = c;
+          var oldd = d;
+
+          a = md5_ff(a, b, c, d, x[i + 0], 7, -680876936);
+          d = md5_ff(d, a, b, c, x[i + 1], 12, -389564586);
+          c = md5_ff(c, d, a, b, x[i + 2], 17, 606105819);
+          b = md5_ff(b, c, d, a, x[i + 3], 22, -1044525330);
+          a = md5_ff(a, b, c, d, x[i + 4], 7, -176418897);
+          d = md5_ff(d, a, b, c, x[i + 5], 12, 1200080426);
+          c = md5_ff(c, d, a, b, x[i + 6], 17, -1473231341);
+          b = md5_ff(b, c, d, a, x[i + 7], 22, -45705983);
+          a = md5_ff(a, b, c, d, x[i + 8], 7, 1770035416);
+          d = md5_ff(d, a, b, c, x[i + 9], 12, -1958414417);
+          c = md5_ff(c, d, a, b, x[i + 10], 17, -42063);
+          b = md5_ff(b, c, d, a, x[i + 11], 22, -1990404162);
+          a = md5_ff(a, b, c, d, x[i + 12], 7, 1804603682);
+          d = md5_ff(d, a, b, c, x[i + 13], 12, -40341101);
+          c = md5_ff(c, d, a, b, x[i + 14], 17, -1502002290);
+          b = md5_ff(b, c, d, a, x[i + 15], 22, 1236535329);
+
+          a = md5_gg(a, b, c, d, x[i + 1], 5, -165796510);
+          d = md5_gg(d, a, b, c, x[i + 6], 9, -1069501632);
+          c = md5_gg(c, d, a, b, x[i + 11], 14, 643717713);
+          b = md5_gg(b, c, d, a, x[i + 0], 20, -373897302);
+          a = md5_gg(a, b, c, d, x[i + 5], 5, -701558691);
+          d = md5_gg(d, a, b, c, x[i + 10], 9, 38016083);
+          c = md5_gg(c, d, a, b, x[i + 15], 14, -660478335);
+          b = md5_gg(b, c, d, a, x[i + 4], 20, -405537848);
+          a = md5_gg(a, b, c, d, x[i + 9], 5, 568446438);
+          d = md5_gg(d, a, b, c, x[i + 14], 9, -1019803690);
+          c = md5_gg(c, d, a, b, x[i + 3], 14, -187363961);
+          b = md5_gg(b, c, d, a, x[i + 8], 20, 1163531501);
+          a = md5_gg(a, b, c, d, x[i + 13], 5, -1444681467);
+          d = md5_gg(d, a, b, c, x[i + 2], 9, -51403784);
+          c = md5_gg(c, d, a, b, x[i + 7], 14, 1735328473);
+          b = md5_gg(b, c, d, a, x[i + 12], 20, -1926607734);
+
+          a = md5_hh(a, b, c, d, x[i + 5], 4, -378558);
+          d = md5_hh(d, a, b, c, x[i + 8], 11, -2022574463);
+          c = md5_hh(c, d, a, b, x[i + 11], 16, 1839030562);
+          b = md5_hh(b, c, d, a, x[i + 14], 23, -35309556);
+          a = md5_hh(a, b, c, d, x[i + 1], 4, -1530992060);
+          d = md5_hh(d, a, b, c, x[i + 4], 11, 1272893353);
+          c = md5_hh(c, d, a, b, x[i + 7], 16, -155497632);
+          b = md5_hh(b, c, d, a, x[i + 10], 23, -1094730640);
+          a = md5_hh(a, b, c, d, x[i + 13], 4, 681279174);
+          d = md5_hh(d, a, b, c, x[i + 0], 11, -358537222);
+          c = md5_hh(c, d, a, b, x[i + 3], 16, -722521979);
+          b = md5_hh(b, c, d, a, x[i + 6], 23, 76029189);
+          a = md5_hh(a, b, c, d, x[i + 9], 4, -640364487);
+          d = md5_hh(d, a, b, c, x[i + 12], 11, -421815835);
+          c = md5_hh(c, d, a, b, x[i + 15], 16, 530742520);
+          b = md5_hh(b, c, d, a, x[i + 2], 23, -995338651);
+
+          a = md5_ii(a, b, c, d, x[i + 0], 6, -198630844);
+          d = md5_ii(d, a, b, c, x[i + 7], 10, 1126891415);
+          c = md5_ii(c, d, a, b, x[i + 14], 15, -1416354905);
+          b = md5_ii(b, c, d, a, x[i + 5], 21, -57434055);
+          a = md5_ii(a, b, c, d, x[i + 12], 6, 1700485571);
+          d = md5_ii(d, a, b, c, x[i + 3], 10, -1894986606);
+          c = md5_ii(c, d, a, b, x[i + 10], 15, -1051523);
+          b = md5_ii(b, c, d, a, x[i + 1], 21, -2054922799);
+          a = md5_ii(a, b, c, d, x[i + 8], 6, 1873313359);
+          d = md5_ii(d, a, b, c, x[i + 15], 10, -30611744);
+          c = md5_ii(c, d, a, b, x[i + 6], 15, -1560198380);
+          b = md5_ii(b, c, d, a, x[i + 13], 21, 1309151649);
+          a = md5_ii(a, b, c, d, x[i + 4], 6, -145523070);
+          d = md5_ii(d, a, b, c, x[i + 11], 10, -1120210379);
+          c = md5_ii(c, d, a, b, x[i + 2], 15, 718787259);
+          b = md5_ii(b, c, d, a, x[i + 9], 21, -343485551);
+
+          a = safe_add(a, olda);
+          b = safe_add(b, oldb);
+          c = safe_add(c, oldc);
+          d = safe_add(d, oldd);
+        }
+
+        return [a, b, c, d];
+      }
+
+      /*
+       * These functions implement the four basic operations the algorithm uses.
+       */
+      function md5_cmn(q, a, b, x, s, t) {
+        return safe_add(bit_rol(safe_add(safe_add(a, q), safe_add(x, t)), s), b);
+      }
+
+      function md5_ff(a, b, c, d, x, s, t) {
+        return md5_cmn(b & c | ~b & d, a, b, x, s, t);
+      }
+
+      function md5_gg(a, b, c, d, x, s, t) {
+        return md5_cmn(b & d | c & ~d, a, b, x, s, t);
+      }
+
+      function md5_hh(a, b, c, d, x, s, t) {
+        return md5_cmn(b ^ c ^ d, a, b, x, s, t);
+      }
+
+      function md5_ii(a, b, c, d, x, s, t) {
+        return md5_cmn(c ^ (b | ~d), a, b, x, s, t);
+      }
+
+      /*
+       * Add integers, wrapping at 2^32. This uses 16-bit operations internally
+       * to work around bugs in some JS interpreters.
+       */
+      function safe_add(x, y) {
+        var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return msw << 16 | lsw & 0xFFFF;
+      }
+
+      /*
+       * Bitwise rotate a 32-bit number to the left.
+       */
+      function bit_rol(num, cnt) {
+        return num << cnt | num >>> 32 - cnt;
+      }
+
+      module.exports = function md5(buf) {
+        return makeHash(buf, core_md5);
+      };
+    }, { "./make-hash": 281 }], 283: [function (require, module, exports) {
       arguments[4][54][0].apply(exports, arguments);
-    }, { "./legacy": 276, "cipher-base": 270, "create-hash/md5": 274, "dup": 54, "inherits": 325, "ripemd160": 349, "safe-buffer": 350, "sha.js": 354 }], 276: [function (require, module, exports) {
+    }, { "./legacy": 284, "cipher-base": 278, "create-hash/md5": 282, "dup": 54, "inherits": 333, "ripemd160": 357, "safe-buffer": 358, "sha.js": 362 }], 284: [function (require, module, exports) {
       arguments[4][55][0].apply(exports, arguments);
-    }, { "cipher-base": 270, "dup": 55, "inherits": 325, "safe-buffer": 350 }], 277: [function (require, module, exports) {
+    }, { "cipher-base": 278, "dup": 55, "inherits": 333, "safe-buffer": 358 }], 285: [function (require, module, exports) {
       arguments[4][56][0].apply(exports, arguments);
-    }, { "browserify-cipher": 259, "browserify-sign": 266, "browserify-sign/algos": 263, "create-ecdh": 271, "create-hash": 272, "create-hmac": 275, "diffie-hellman": 284, "dup": 56, "pbkdf2": 336, "public-encrypt": 341, "randombytes": 347, "randomfill": 348 }], 278: [function (require, module, exports) {
+    }, { "browserify-cipher": 267, "browserify-sign": 274, "browserify-sign/algos": 271, "create-ecdh": 279, "create-hash": 280, "create-hmac": 283, "diffie-hellman": 292, "dup": 56, "pbkdf2": 344, "public-encrypt": 349, "randombytes": 355, "randomfill": 356 }], 286: [function (require, module, exports) {
       arguments[4][57][0].apply(exports, arguments);
-    }, { "./des/cbc": 279, "./des/cipher": 280, "./des/des": 281, "./des/ede": 282, "./des/utils": 283, "dup": 57 }], 279: [function (require, module, exports) {
+    }, { "./des/cbc": 287, "./des/cipher": 288, "./des/des": 289, "./des/ede": 290, "./des/utils": 291, "dup": 57 }], 287: [function (require, module, exports) {
       arguments[4][58][0].apply(exports, arguments);
-    }, { "dup": 58, "inherits": 325, "minimalistic-assert": 329 }], 280: [function (require, module, exports) {
+    }, { "dup": 58, "inherits": 333, "minimalistic-assert": 337 }], 288: [function (require, module, exports) {
       arguments[4][59][0].apply(exports, arguments);
-    }, { "dup": 59, "minimalistic-assert": 329 }], 281: [function (require, module, exports) {
+    }, { "dup": 59, "minimalistic-assert": 337 }], 289: [function (require, module, exports) {
       arguments[4][60][0].apply(exports, arguments);
-    }, { "../des": 278, "dup": 60, "inherits": 325, "minimalistic-assert": 329 }], 282: [function (require, module, exports) {
+    }, { "../des": 286, "dup": 60, "inherits": 333, "minimalistic-assert": 337 }], 290: [function (require, module, exports) {
       arguments[4][61][0].apply(exports, arguments);
-    }, { "../des": 278, "dup": 61, "inherits": 325, "minimalistic-assert": 329 }], 283: [function (require, module, exports) {
+    }, { "../des": 286, "dup": 61, "inherits": 333, "minimalistic-assert": 337 }], 291: [function (require, module, exports) {
       arguments[4][62][0].apply(exports, arguments);
-    }, { "dup": 62 }], 284: [function (require, module, exports) {
+    }, { "dup": 62 }], 292: [function (require, module, exports) {
       (function (Buffer) {
         var generatePrime = require('./lib/generatePrime');
         var primes = require('./lib/primes.json');
@@ -33525,7 +34360,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         exports.DiffieHellmanGroup = exports.createDiffieHellmanGroup = exports.getDiffieHellman = getDiffieHellman;
         exports.createDiffieHellman = exports.DiffieHellman = createDiffieHellman;
       }).call(this, require("buffer").Buffer);
-    }, { "./lib/dh": 285, "./lib/generatePrime": 286, "./lib/primes.json": 287, "buffer": 47 }], 285: [function (require, module, exports) {
+    }, { "./lib/dh": 293, "./lib/generatePrime": 294, "./lib/primes.json": 295, "buffer": 47 }], 293: [function (require, module, exports) {
       (function (Buffer) {
         var BN = require('bn.js');
         var MillerRabin = require('miller-rabin');
@@ -33689,81 +34524,63 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./generatePrime": 286, "bn.js": 240, "buffer": 47, "miller-rabin": 328, "randombytes": 347 }], 286: [function (require, module, exports) {
+    }, { "./generatePrime": 294, "bn.js": 248, "buffer": 47, "miller-rabin": 336, "randombytes": 355 }], 294: [function (require, module, exports) {
       arguments[4][65][0].apply(exports, arguments);
-    }, { "bn.js": 240, "dup": 65, "miller-rabin": 328, "randombytes": 347 }], 287: [function (require, module, exports) {
+    }, { "bn.js": 248, "dup": 65, "miller-rabin": 336, "randombytes": 355 }], 295: [function (require, module, exports) {
       arguments[4][66][0].apply(exports, arguments);
-    }, { "dup": 66 }], 288: [function (require, module, exports) {
+    }, { "dup": 66 }], 296: [function (require, module, exports) {
       arguments[4][67][0].apply(exports, arguments);
-    }, { "../package.json": 303, "./elliptic/curve": 291, "./elliptic/curves": 294, "./elliptic/ec": 295, "./elliptic/eddsa": 298, "./elliptic/utils": 302, "brorand": 241, "dup": 67 }], 289: [function (require, module, exports) {
+    }, { "../package.json": 311, "./elliptic/curve": 299, "./elliptic/curves": 302, "./elliptic/ec": 303, "./elliptic/eddsa": 306, "./elliptic/utils": 310, "brorand": 249, "dup": 67 }], 297: [function (require, module, exports) {
       arguments[4][68][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "bn.js": 240, "dup": 68 }], 290: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "bn.js": 248, "dup": 68 }], 298: [function (require, module, exports) {
       arguments[4][69][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "../curve": 291, "bn.js": 240, "dup": 69, "inherits": 325 }], 291: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "../curve": 299, "bn.js": 248, "dup": 69, "inherits": 333 }], 299: [function (require, module, exports) {
       arguments[4][70][0].apply(exports, arguments);
-    }, { "./base": 289, "./edwards": 290, "./mont": 292, "./short": 293, "dup": 70 }], 292: [function (require, module, exports) {
+    }, { "./base": 297, "./edwards": 298, "./mont": 300, "./short": 301, "dup": 70 }], 300: [function (require, module, exports) {
       arguments[4][71][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "../curve": 291, "bn.js": 240, "dup": 71, "inherits": 325 }], 293: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "../curve": 299, "bn.js": 248, "dup": 71, "inherits": 333 }], 301: [function (require, module, exports) {
       arguments[4][72][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "../curve": 291, "bn.js": 240, "dup": 72, "inherits": 325 }], 294: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "../curve": 299, "bn.js": 248, "dup": 72, "inherits": 333 }], 302: [function (require, module, exports) {
       arguments[4][73][0].apply(exports, arguments);
-    }, { "../elliptic": 288, "./precomputed/secp256k1": 301, "dup": 73, "hash.js": 312 }], 295: [function (require, module, exports) {
+    }, { "../elliptic": 296, "./precomputed/secp256k1": 309, "dup": 73, "hash.js": 320 }], 303: [function (require, module, exports) {
       arguments[4][74][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "./key": 296, "./signature": 297, "bn.js": 240, "dup": 74, "hmac-drbg": 324 }], 296: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "./key": 304, "./signature": 305, "bn.js": 248, "dup": 74, "hmac-drbg": 332 }], 304: [function (require, module, exports) {
       arguments[4][75][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "bn.js": 240, "dup": 75 }], 297: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "bn.js": 248, "dup": 75 }], 305: [function (require, module, exports) {
       arguments[4][76][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "bn.js": 240, "dup": 76 }], 298: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "bn.js": 248, "dup": 76 }], 306: [function (require, module, exports) {
       arguments[4][77][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "./key": 299, "./signature": 300, "dup": 77, "hash.js": 312 }], 299: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "./key": 307, "./signature": 308, "dup": 77, "hash.js": 320 }], 307: [function (require, module, exports) {
       arguments[4][78][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "dup": 78 }], 300: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "dup": 78 }], 308: [function (require, module, exports) {
       arguments[4][79][0].apply(exports, arguments);
-    }, { "../../elliptic": 288, "bn.js": 240, "dup": 79 }], 301: [function (require, module, exports) {
+    }, { "../../elliptic": 296, "bn.js": 248, "dup": 79 }], 309: [function (require, module, exports) {
       arguments[4][80][0].apply(exports, arguments);
-    }, { "dup": 80 }], 302: [function (require, module, exports) {
+    }, { "dup": 80 }], 310: [function (require, module, exports) {
       arguments[4][81][0].apply(exports, arguments);
-    }, { "bn.js": 240, "dup": 81, "minimalistic-assert": 329, "minimalistic-crypto-utils": 330 }], 303: [function (require, module, exports) {
+    }, { "bn.js": 248, "dup": 81, "minimalistic-assert": 337, "minimalistic-crypto-utils": 338 }], 311: [function (require, module, exports) {
       module.exports = {
-        "_args": [[{
-          "raw": "elliptic@^6.0.0",
-          "scope": null,
-          "escapedName": "elliptic",
-          "name": "elliptic",
-          "rawSpec": "^6.0.0",
-          "spec": ">=6.0.0 <7.0.0",
-          "type": "range"
-        }, "/Users/frozeman/Sites/_ethereum/web3/packages/web3-eth-accounts/node_modules/browserify-sign"]],
-        "_from": "elliptic@>=6.0.0 <7.0.0",
+        "_args": [["elliptic@6.4.0", "/Users/sam/Development/foundation/web3.js/packages/web3-eth-accounts"]],
+        "_from": "elliptic@6.4.0",
         "_id": "elliptic@6.4.0",
-        "_inCache": true,
+        "_inBundle": false,
+        "_integrity": "sha1-ysmvh2LIWDYYcAPI3+GT5eLq5d8=",
         "_location": "/elliptic",
-        "_nodeVersion": "7.0.0",
-        "_npmOperationalInternal": {
-          "host": "packages-18-east.internal.npmjs.com",
-          "tmp": "tmp/elliptic-6.4.0.tgz_1487798866428_0.30510620190761983"
-        },
-        "_npmUser": {
-          "name": "indutny",
-          "email": "fedor@indutny.com"
-        },
-        "_npmVersion": "3.10.8",
         "_phantomChildren": {},
         "_requested": {
-          "raw": "elliptic@^6.0.0",
-          "scope": null,
-          "escapedName": "elliptic",
+          "type": "version",
+          "registry": true,
+          "raw": "elliptic@6.4.0",
           "name": "elliptic",
-          "rawSpec": "^6.0.0",
-          "spec": ">=6.0.0 <7.0.0",
-          "type": "range"
+          "escapedName": "elliptic",
+          "rawSpec": "6.4.0",
+          "saveSpec": null,
+          "fetchSpec": "6.4.0"
         },
         "_requiredBy": ["/browserify-sign", "/create-ecdh", "/eth-lib"],
         "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz",
-        "_shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
-        "_shrinkwrap": null,
-        "_spec": "elliptic@^6.0.0",
-        "_where": "/Users/frozeman/Sites/_ethereum/web3/packages/web3-eth-accounts/node_modules/browserify-sign",
+        "_spec": "6.4.0",
+        "_where": "/Users/sam/Development/foundation/web3.js/packages/web3-eth-accounts",
         "author": {
           "name": "Fedor Indutny",
           "email": "fedor@indutny.com"
@@ -33797,24 +34614,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           "jshint": "^2.6.0",
           "mocha": "^2.1.0"
         },
-        "directories": {},
-        "dist": {
-          "shasum": "cac9af8762c85836187003c8dfe193e5e2eae5df",
-          "tarball": "https://registry.npmjs.org/elliptic/-/elliptic-6.4.0.tgz"
-        },
         "files": ["lib"],
-        "gitHead": "6b0d2b76caae91471649c8e21f0b1d3ba0f96090",
         "homepage": "https://github.com/indutny/elliptic",
         "keywords": ["EC", "Elliptic", "curve", "Cryptography"],
         "license": "MIT",
         "main": "lib/elliptic.js",
-        "maintainers": [{
-          "name": "indutny",
-          "email": "fedor@indutny.com"
-        }],
         "name": "elliptic",
-        "optionalDependencies": {},
-        "readme": "ERROR: No README data found!",
         "repository": {
           "type": "git",
           "url": "git+ssh://git@github.com/indutny/elliptic.git"
@@ -33829,7 +34634,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         "version": "6.4.0"
       };
-    }, {}], 304: [function (require, module, exports) {
+    }, {}], 312: [function (require, module, exports) {
       (function (Buffer) {
         var _slicedToArray = function () {
           function sliceIterator(arr, i) {
@@ -33937,13 +34742,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           decodeSignature: decodeSignature
         };
       }).call(this, require("buffer").Buffer);
-    }, { "./bytes": 306, "./hash": 307, "./nat": 308, "./rlp": 309, "buffer": 47, "elliptic": 288 }], 305: [function (require, module, exports) {
-      arguments[4][163][0].apply(exports, arguments);
-    }, { "dup": 163 }], 306: [function (require, module, exports) {
-      arguments[4][164][0].apply(exports, arguments);
-    }, { "./array.js": 305, "dup": 164 }], 307: [function (require, module, exports) {
-      arguments[4][165][0].apply(exports, arguments);
-    }, { "dup": 165 }], 308: [function (require, module, exports) {
+    }, { "./bytes": 314, "./hash": 315, "./nat": 316, "./rlp": 317, "buffer": 47, "elliptic": 296 }], 313: [function (require, module, exports) {
+      arguments[4][171][0].apply(exports, arguments);
+    }, { "dup": 171 }], 314: [function (require, module, exports) {
+      arguments[4][172][0].apply(exports, arguments);
+    }, { "./array.js": 313, "dup": 172 }], 315: [function (require, module, exports) {
+      arguments[4][173][0].apply(exports, arguments);
+    }, { "dup": 173 }], 316: [function (require, module, exports) {
       var BN = require("bn.js");
       var Bytes = require("./bytes");
 
@@ -34008,7 +34813,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         div: div,
         sub: sub
       };
-    }, { "./bytes": 306, "bn.js": 240 }], 309: [function (require, module, exports) {
+    }, { "./bytes": 314, "bn.js": 248 }], 317: [function (require, module, exports) {
       // The RLP format
       // Serialization and deserialization for the BytesTree type, under the following grammar:
       // | First byte | Meaning                                                                    |
@@ -34082,9 +34887,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = { encode: encode, decode: decode };
-    }, {}], 310: [function (require, module, exports) {
+    }, {}], 318: [function (require, module, exports) {
       arguments[4][84][0].apply(exports, arguments);
-    }, { "dup": 84, "md5.js": 326, "safe-buffer": 350 }], 311: [function (require, module, exports) {
+    }, { "dup": 84, "md5.js": 334, "safe-buffer": 358 }], 319: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -34172,35 +34977,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = HashBase;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "inherits": 325, "stream": 156 }], 312: [function (require, module, exports) {
+    }, { "buffer": 47, "inherits": 333, "stream": 158 }], 320: [function (require, module, exports) {
       arguments[4][86][0].apply(exports, arguments);
-    }, { "./hash/common": 313, "./hash/hmac": 314, "./hash/ripemd": 315, "./hash/sha": 316, "./hash/utils": 323, "dup": 86 }], 313: [function (require, module, exports) {
+    }, { "./hash/common": 321, "./hash/hmac": 322, "./hash/ripemd": 323, "./hash/sha": 324, "./hash/utils": 331, "dup": 86 }], 321: [function (require, module, exports) {
       arguments[4][87][0].apply(exports, arguments);
-    }, { "./utils": 323, "dup": 87, "minimalistic-assert": 329 }], 314: [function (require, module, exports) {
+    }, { "./utils": 331, "dup": 87, "minimalistic-assert": 337 }], 322: [function (require, module, exports) {
       arguments[4][88][0].apply(exports, arguments);
-    }, { "./utils": 323, "dup": 88, "minimalistic-assert": 329 }], 315: [function (require, module, exports) {
+    }, { "./utils": 331, "dup": 88, "minimalistic-assert": 337 }], 323: [function (require, module, exports) {
       arguments[4][89][0].apply(exports, arguments);
-    }, { "./common": 313, "./utils": 323, "dup": 89 }], 316: [function (require, module, exports) {
+    }, { "./common": 321, "./utils": 331, "dup": 89 }], 324: [function (require, module, exports) {
       arguments[4][90][0].apply(exports, arguments);
-    }, { "./sha/1": 317, "./sha/224": 318, "./sha/256": 319, "./sha/384": 320, "./sha/512": 321, "dup": 90 }], 317: [function (require, module, exports) {
+    }, { "./sha/1": 325, "./sha/224": 326, "./sha/256": 327, "./sha/384": 328, "./sha/512": 329, "dup": 90 }], 325: [function (require, module, exports) {
       arguments[4][91][0].apply(exports, arguments);
-    }, { "../common": 313, "../utils": 323, "./common": 322, "dup": 91 }], 318: [function (require, module, exports) {
+    }, { "../common": 321, "../utils": 331, "./common": 330, "dup": 91 }], 326: [function (require, module, exports) {
       arguments[4][92][0].apply(exports, arguments);
-    }, { "../utils": 323, "./256": 319, "dup": 92 }], 319: [function (require, module, exports) {
+    }, { "../utils": 331, "./256": 327, "dup": 92 }], 327: [function (require, module, exports) {
       arguments[4][93][0].apply(exports, arguments);
-    }, { "../common": 313, "../utils": 323, "./common": 322, "dup": 93, "minimalistic-assert": 329 }], 320: [function (require, module, exports) {
+    }, { "../common": 321, "../utils": 331, "./common": 330, "dup": 93, "minimalistic-assert": 337 }], 328: [function (require, module, exports) {
       arguments[4][94][0].apply(exports, arguments);
-    }, { "../utils": 323, "./512": 321, "dup": 94 }], 321: [function (require, module, exports) {
+    }, { "../utils": 331, "./512": 329, "dup": 94 }], 329: [function (require, module, exports) {
       arguments[4][95][0].apply(exports, arguments);
-    }, { "../common": 313, "../utils": 323, "dup": 95, "minimalistic-assert": 329 }], 322: [function (require, module, exports) {
+    }, { "../common": 321, "../utils": 331, "dup": 95, "minimalistic-assert": 337 }], 330: [function (require, module, exports) {
       arguments[4][96][0].apply(exports, arguments);
-    }, { "../utils": 323, "dup": 96 }], 323: [function (require, module, exports) {
+    }, { "../utils": 331, "dup": 96 }], 331: [function (require, module, exports) {
       arguments[4][97][0].apply(exports, arguments);
-    }, { "dup": 97, "inherits": 325, "minimalistic-assert": 329 }], 324: [function (require, module, exports) {
+    }, { "dup": 97, "inherits": 333, "minimalistic-assert": 337 }], 332: [function (require, module, exports) {
       arguments[4][98][0].apply(exports, arguments);
-    }, { "dup": 98, "hash.js": 312, "minimalistic-assert": 329, "minimalistic-crypto-utils": 330 }], 325: [function (require, module, exports) {
-      arguments[4][101][0].apply(exports, arguments);
-    }, { "dup": 101 }], 326: [function (require, module, exports) {
+    }, { "dup": 98, "hash.js": 320, "minimalistic-assert": 337, "minimalistic-crypto-utils": 338 }], 333: [function (require, module, exports) {
+      arguments[4][102][0].apply(exports, arguments);
+    }, { "dup": 102 }], 334: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -34349,21 +35154,21 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = MD5;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "hash-base": 327, "inherits": 325 }], 327: [function (require, module, exports) {
-      arguments[4][105][0].apply(exports, arguments);
-    }, { "dup": 105, "inherits": 325, "safe-buffer": 350, "stream": 156 }], 328: [function (require, module, exports) {
+    }, { "buffer": 47, "hash-base": 335, "inherits": 333 }], 335: [function (require, module, exports) {
+      arguments[4][85][0].apply(exports, arguments);
+    }, { "dup": 85, "inherits": 333, "safe-buffer": 358, "stream": 158 }], 336: [function (require, module, exports) {
       arguments[4][106][0].apply(exports, arguments);
-    }, { "bn.js": 240, "brorand": 241, "dup": 106 }], 329: [function (require, module, exports) {
+    }, { "bn.js": 248, "brorand": 249, "dup": 106 }], 337: [function (require, module, exports) {
       arguments[4][107][0].apply(exports, arguments);
-    }, { "dup": 107 }], 330: [function (require, module, exports) {
+    }, { "dup": 107 }], 338: [function (require, module, exports) {
       arguments[4][108][0].apply(exports, arguments);
-    }, { "dup": 108 }], 331: [function (require, module, exports) {
-      arguments[4][109][0].apply(exports, arguments);
-    }, { "dup": 109 }], 332: [function (require, module, exports) {
+    }, { "dup": 108 }], 339: [function (require, module, exports) {
       arguments[4][110][0].apply(exports, arguments);
-    }, { "./certificate": 333, "asn1.js": 226, "dup": 110 }], 333: [function (require, module, exports) {
+    }, { "dup": 110 }], 340: [function (require, module, exports) {
       arguments[4][111][0].apply(exports, arguments);
-    }, { "asn1.js": 226, "dup": 111 }], 334: [function (require, module, exports) {
+    }, { "./certificate": 341, "asn1.js": 234, "dup": 111 }], 341: [function (require, module, exports) {
+      arguments[4][112][0].apply(exports, arguments);
+    }, { "asn1.js": 234, "dup": 112 }], 342: [function (require, module, exports) {
       (function (Buffer) {
         // adapted from https://github.com/apatil/pemstrip
         var findProc = /Proc-Type: 4,ENCRYPTED\n\r?DEK-Info: AES-((?:128)|(?:192)|(?:256))-CBC,([0-9A-H]+)\n\r?\n\r?([0-9A-z\n\r\+\/\=]+)\n\r?/m;
@@ -34396,7 +35201,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           };
         };
       }).call(this, require("buffer").Buffer);
-    }, { "browserify-aes": 244, "buffer": 47, "evp_bytestokey": 310 }], 335: [function (require, module, exports) {
+    }, { "browserify-aes": 252, "buffer": 47, "evp_bytestokey": 318 }], 343: [function (require, module, exports) {
       (function (Buffer) {
         var asn1 = require('./asn1');
         var aesid = require('./aesid.json');
@@ -34508,9 +35313,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return Buffer.concat(out);
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./aesid.json": 331, "./asn1": 332, "./fixProc": 334, "browserify-aes": 244, "buffer": 47, "pbkdf2": 336 }], 336: [function (require, module, exports) {
-      arguments[4][114][0].apply(exports, arguments);
-    }, { "./lib/async": 337, "./lib/sync": 340, "dup": 114 }], 337: [function (require, module, exports) {
+    }, { "./aesid.json": 339, "./asn1": 340, "./fixProc": 342, "browserify-aes": 252, "buffer": 47, "pbkdf2": 344 }], 344: [function (require, module, exports) {
+
+      exports.pbkdf2 = require('./lib/async');
+
+      exports.pbkdf2Sync = require('./lib/sync');
+    }, { "./lib/async": 345, "./lib/sync": 348 }], 345: [function (require, module, exports) {
       (function (process, global) {
         var checkParameters = require('./precondition');
         var defaultEncoding = require('./default-encoding');
@@ -34608,7 +35416,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }), callback);
         };
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "./default-encoding": 338, "./precondition": 339, "./sync": 340, "_process": 120, "safe-buffer": 350 }], 338: [function (require, module, exports) {
+    }, { "./default-encoding": 346, "./precondition": 347, "./sync": 348, "_process": 121, "safe-buffer": 358 }], 346: [function (require, module, exports) {
       (function (process) {
         var defaultEncoding;
         /* istanbul ignore next */
@@ -34621,13 +35429,133 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
         module.exports = defaultEncoding;
       }).call(this, require('_process'));
-    }, { "_process": 120 }], 339: [function (require, module, exports) {
-      arguments[4][117][0].apply(exports, arguments);
-    }, { "dup": 117 }], 340: [function (require, module, exports) {
-      arguments[4][118][0].apply(exports, arguments);
-    }, { "./default-encoding": 338, "./precondition": 339, "create-hash/md5": 274, "dup": 118, "ripemd160": 349, "safe-buffer": 350, "sha.js": 354 }], 341: [function (require, module, exports) {
-      arguments[4][121][0].apply(exports, arguments);
-    }, { "./privateDecrypt": 343, "./publicEncrypt": 344, "dup": 121 }], 342: [function (require, module, exports) {
+    }, { "_process": 121 }], 347: [function (require, module, exports) {
+      var MAX_ALLOC = Math.pow(2, 30) - 1; // default in iojs
+      module.exports = function (iterations, keylen) {
+        if (typeof iterations !== 'number') {
+          throw new TypeError('Iterations not a number');
+        }
+
+        if (iterations < 0) {
+          throw new TypeError('Bad iterations');
+        }
+
+        if (typeof keylen !== 'number') {
+          throw new TypeError('Key length not a number');
+        }
+
+        if (keylen < 0 || keylen > MAX_ALLOC || keylen !== keylen) {
+          /* eslint no-self-compare: 0 */
+          throw new TypeError('Bad key length');
+        }
+      };
+    }, {}], 348: [function (require, module, exports) {
+      var md5 = require('create-hash/md5');
+      var rmd160 = require('ripemd160');
+      var sha = require('sha.js');
+
+      var checkParameters = require('./precondition');
+      var defaultEncoding = require('./default-encoding');
+      var Buffer = require('safe-buffer').Buffer;
+      var ZEROS = Buffer.alloc(128);
+      var sizes = {
+        md5: 16,
+        sha1: 20,
+        sha224: 28,
+        sha256: 32,
+        sha384: 48,
+        sha512: 64,
+        rmd160: 20,
+        ripemd160: 20
+      };
+
+      function Hmac(alg, key, saltLen) {
+        var hash = getDigest(alg);
+        var blocksize = alg === 'sha512' || alg === 'sha384' ? 128 : 64;
+
+        if (key.length > blocksize) {
+          key = hash(key);
+        } else if (key.length < blocksize) {
+          key = Buffer.concat([key, ZEROS], blocksize);
+        }
+
+        var ipad = Buffer.allocUnsafe(blocksize + sizes[alg]);
+        var opad = Buffer.allocUnsafe(blocksize + sizes[alg]);
+        for (var i = 0; i < blocksize; i++) {
+          ipad[i] = key[i] ^ 0x36;
+          opad[i] = key[i] ^ 0x5C;
+        }
+
+        var ipad1 = Buffer.allocUnsafe(blocksize + saltLen + 4);
+        ipad.copy(ipad1, 0, 0, blocksize);
+        this.ipad1 = ipad1;
+        this.ipad2 = ipad;
+        this.opad = opad;
+        this.alg = alg;
+        this.blocksize = blocksize;
+        this.hash = hash;
+        this.size = sizes[alg];
+      }
+
+      Hmac.prototype.run = function (data, ipad) {
+        data.copy(ipad, this.blocksize);
+        var h = this.hash(ipad);
+        h.copy(this.opad, this.blocksize);
+        return this.hash(this.opad);
+      };
+
+      function getDigest(alg) {
+        function shaFunc(data) {
+          return sha(alg).update(data).digest();
+        }
+
+        if (alg === 'rmd160' || alg === 'ripemd160') return rmd160;
+        if (alg === 'md5') return md5;
+        return shaFunc;
+      }
+
+      function pbkdf2(password, salt, iterations, keylen, digest) {
+        if (!Buffer.isBuffer(password)) password = Buffer.from(password, defaultEncoding);
+        if (!Buffer.isBuffer(salt)) salt = Buffer.from(salt, defaultEncoding);
+
+        checkParameters(iterations, keylen);
+
+        digest = digest || 'sha1';
+
+        var hmac = new Hmac(digest, password, salt.length);
+
+        var DK = Buffer.allocUnsafe(keylen);
+        var block1 = Buffer.allocUnsafe(salt.length + 4);
+        salt.copy(block1, 0, 0, salt.length);
+
+        var destPos = 0;
+        var hLen = sizes[digest];
+        var l = Math.ceil(keylen / hLen);
+
+        for (var i = 1; i <= l; i++) {
+          block1.writeUInt32BE(i, salt.length);
+
+          var T = hmac.run(block1, hmac.ipad1);
+          var U = T;
+
+          for (var j = 1; j < iterations; j++) {
+            U = hmac.run(U, hmac.ipad2);
+            for (var k = 0; k < hLen; k++) {
+              T[k] ^= U[k];
+            }
+          }
+
+          T.copy(DK, destPos);
+          destPos += hLen;
+        }
+
+        return DK;
+      }
+
+      module.exports = pbkdf2;
+    }, { "./default-encoding": 346, "./precondition": 347, "create-hash/md5": 282, "ripemd160": 357, "safe-buffer": 358, "sha.js": 362 }], 349: [function (require, module, exports) {
+      arguments[4][122][0].apply(exports, arguments);
+    }, { "./privateDecrypt": 351, "./publicEncrypt": 352, "dup": 122 }], 350: [function (require, module, exports) {
       (function (Buffer) {
         var createHash = require('create-hash');
         module.exports = function (seed, len) {
@@ -34647,7 +35575,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return out;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "create-hash": 272 }], 343: [function (require, module, exports) {
+    }, { "buffer": 47, "create-hash": 280 }], 351: [function (require, module, exports) {
       (function (Buffer) {
         var parseKeys = require('parse-asn1');
         var mgf = require('./mgf');
@@ -34758,7 +35686,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return dif;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./mgf": 342, "./withPublic": 345, "./xor": 346, "bn.js": 240, "browserify-rsa": 262, "buffer": 47, "create-hash": 272, "parse-asn1": 335 }], 344: [function (require, module, exports) {
+    }, { "./mgf": 350, "./withPublic": 353, "./xor": 354, "bn.js": 248, "browserify-rsa": 270, "buffer": 47, "create-hash": 280, "parse-asn1": 343 }], 352: [function (require, module, exports) {
       (function (Buffer) {
         var parseKeys = require('parse-asn1');
         var randomBytes = require('randombytes');
@@ -34856,7 +35784,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return out;
         }
       }).call(this, require("buffer").Buffer);
-    }, { "./mgf": 342, "./withPublic": 345, "./xor": 346, "bn.js": 240, "browserify-rsa": 262, "buffer": 47, "create-hash": 272, "parse-asn1": 335, "randombytes": 347 }], 345: [function (require, module, exports) {
+    }, { "./mgf": 350, "./withPublic": 353, "./xor": 354, "bn.js": 248, "browserify-rsa": 270, "buffer": 47, "create-hash": 280, "parse-asn1": 343, "randombytes": 355 }], 353: [function (require, module, exports) {
       (function (Buffer) {
         var bn = require('bn.js');
         function withPublic(paddedMsg, key) {
@@ -34865,9 +35793,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = withPublic;
       }).call(this, require("buffer").Buffer);
-    }, { "bn.js": 240, "buffer": 47 }], 346: [function (require, module, exports) {
-      arguments[4][126][0].apply(exports, arguments);
-    }, { "dup": 126 }], 347: [function (require, module, exports) {
+    }, { "bn.js": 248, "buffer": 47 }], 354: [function (require, module, exports) {
+      arguments[4][127][0].apply(exports, arguments);
+    }, { "dup": 127 }], 355: [function (require, module, exports) {
       (function (process, global) {
         'use strict';
 
@@ -34909,7 +35837,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return bytes;
         }
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "_process": 120, "safe-buffer": 350 }], 348: [function (require, module, exports) {
+    }, { "_process": 121, "safe-buffer": 358 }], 356: [function (require, module, exports) {
       (function (process, global) {
         'use strict';
 
@@ -35022,7 +35950,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return actualFill(buf, offset, size);
         }
       }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, { "_process": 120, "randombytes": 347, "safe-buffer": 350 }], 349: [function (require, module, exports) {
+    }, { "_process": 121, "randombytes": 355, "safe-buffer": 358 }], 357: [function (require, module, exports) {
       (function (Buffer) {
         'use strict';
 
@@ -35317,11 +36245,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = RIPEMD160;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "hash-base": 311, "inherits": 325 }], 350: [function (require, module, exports) {
-      arguments[4][147][0].apply(exports, arguments);
-    }, { "buffer": 47, "dup": 147 }], 351: [function (require, module, exports) {
+    }, { "buffer": 47, "hash-base": 319, "inherits": 333 }], 358: [function (require, module, exports) {
+      arguments[4][149][0].apply(exports, arguments);
+    }, { "buffer": 47, "dup": 149 }], 359: [function (require, module, exports) {
       module.exports = require('scryptsy');
-    }, { "scryptsy": 352 }], 352: [function (require, module, exports) {
+    }, { "scryptsy": 360 }], 360: [function (require, module, exports) {
       (function (Buffer) {
         var pbkdf2Sync = require('pbkdf2').pbkdf2Sync;
 
@@ -35503,25 +36431,105 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = scrypt;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "pbkdf2": 336 }], 353: [function (require, module, exports) {
-      arguments[4][148][0].apply(exports, arguments);
-    }, { "dup": 148, "safe-buffer": 350 }], 354: [function (require, module, exports) {
-      arguments[4][149][0].apply(exports, arguments);
-    }, { "./sha": 355, "./sha1": 356, "./sha224": 357, "./sha256": 358, "./sha384": 359, "./sha512": 360, "dup": 149 }], 355: [function (require, module, exports) {
-      arguments[4][150][0].apply(exports, arguments);
-    }, { "./hash": 353, "dup": 150, "inherits": 325, "safe-buffer": 350 }], 356: [function (require, module, exports) {
+    }, { "buffer": 47, "pbkdf2": 344 }], 361: [function (require, module, exports) {
+      var Buffer = require('safe-buffer').Buffer;
+
+      // prototype class for hash functions
+      function Hash(blockSize, finalSize) {
+        this._block = Buffer.alloc(blockSize);
+        this._finalSize = finalSize;
+        this._blockSize = blockSize;
+        this._len = 0;
+      }
+
+      Hash.prototype.update = function (data, enc) {
+        if (typeof data === 'string') {
+          enc = enc || 'utf8';
+          data = Buffer.from(data, enc);
+        }
+
+        var block = this._block;
+        var blockSize = this._blockSize;
+        var length = data.length;
+        var accum = this._len;
+
+        for (var offset = 0; offset < length;) {
+          var assigned = accum % blockSize;
+          var remainder = Math.min(length - offset, blockSize - assigned);
+
+          for (var i = 0; i < remainder; i++) {
+            block[assigned + i] = data[offset + i];
+          }
+
+          accum += remainder;
+          offset += remainder;
+
+          if (accum % blockSize === 0) {
+            this._update(block);
+          }
+        }
+
+        this._len += length;
+        return this;
+      };
+
+      Hash.prototype.digest = function (enc) {
+        var rem = this._len % this._blockSize;
+
+        this._block[rem] = 0x80;
+
+        // zero (rem + 1) trailing bits, where (rem + 1) is the smallest
+        // non-negative solution to the equation (length + 1 + (rem + 1)) === finalSize mod blockSize
+        this._block.fill(0, rem + 1);
+
+        if (rem >= this._finalSize) {
+          this._update(this._block);
+          this._block.fill(0);
+        }
+
+        var bits = this._len * 8;
+
+        // uint32
+        if (bits <= 0xffffffff) {
+          this._block.writeUInt32BE(bits, this._blockSize - 4);
+
+          // uint64
+        } else {
+          var lowBits = bits & 0xffffffff;
+          var highBits = (bits - lowBits) / 0x100000000;
+
+          this._block.writeUInt32BE(highBits, this._blockSize - 8);
+          this._block.writeUInt32BE(lowBits, this._blockSize - 4);
+        }
+
+        this._update(this._block);
+        var hash = this._hash();
+
+        return enc ? hash.toString(enc) : hash;
+      };
+
+      Hash.prototype._update = function () {
+        throw new Error('_update must be implemented by subclass');
+      };
+
+      module.exports = Hash;
+    }, { "safe-buffer": 358 }], 362: [function (require, module, exports) {
       arguments[4][151][0].apply(exports, arguments);
-    }, { "./hash": 353, "dup": 151, "inherits": 325, "safe-buffer": 350 }], 357: [function (require, module, exports) {
+    }, { "./sha": 363, "./sha1": 364, "./sha224": 365, "./sha256": 366, "./sha384": 367, "./sha512": 368, "dup": 151 }], 363: [function (require, module, exports) {
       arguments[4][152][0].apply(exports, arguments);
-    }, { "./hash": 353, "./sha256": 358, "dup": 152, "inherits": 325, "safe-buffer": 350 }], 358: [function (require, module, exports) {
+    }, { "./hash": 361, "dup": 152, "inherits": 333, "safe-buffer": 358 }], 364: [function (require, module, exports) {
       arguments[4][153][0].apply(exports, arguments);
-    }, { "./hash": 353, "dup": 153, "inherits": 325, "safe-buffer": 350 }], 359: [function (require, module, exports) {
+    }, { "./hash": 361, "dup": 153, "inherits": 333, "safe-buffer": 358 }], 365: [function (require, module, exports) {
       arguments[4][154][0].apply(exports, arguments);
-    }, { "./hash": 353, "./sha512": 360, "dup": 154, "inherits": 325, "safe-buffer": 350 }], 360: [function (require, module, exports) {
+    }, { "./hash": 361, "./sha256": 366, "dup": 154, "inherits": 333, "safe-buffer": 358 }], 366: [function (require, module, exports) {
       arguments[4][155][0].apply(exports, arguments);
-    }, { "./hash": 353, "dup": 155, "inherits": 325, "safe-buffer": 350 }], 361: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 362: [function (require, module, exports) {
+    }, { "./hash": 361, "dup": 155, "inherits": 333, "safe-buffer": 358 }], 367: [function (require, module, exports) {
+      arguments[4][156][0].apply(exports, arguments);
+    }, { "./hash": 361, "./sha512": 368, "dup": 156, "inherits": 333, "safe-buffer": 358 }], 368: [function (require, module, exports) {
+      arguments[4][157][0].apply(exports, arguments);
+    }, { "./hash": 361, "dup": 157, "inherits": 333, "safe-buffer": 358 }], 369: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 370: [function (require, module, exports) {
       (function (global) {
 
         var rng;
@@ -35554,7 +36562,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = rng;
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, {}], 363: [function (require, module, exports) {
+    }, {}], 371: [function (require, module, exports) {
       //     uuid.js
       //
       //     Copyright (c) 2010-2012 Robert Kieffer
@@ -35732,7 +36740,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       uuid.unparse = unparse;
 
       module.exports = uuid;
-    }, { "./rng": 362 }], 364: [function (require, module, exports) {
+    }, { "./rng": 370 }], 372: [function (require, module, exports) {
       (function (global, Buffer) {
         /*
          This file is part of web3.js.
@@ -36241,9 +37249,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = Accounts;
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {}, require("buffer").Buffer);
-    }, { "any-promise": 223, "buffer": 47, "crypto": 56, "crypto-browserify": 277, "eth-lib/lib/account": 304, "eth-lib/lib/bytes": 306, "eth-lib/lib/hash": 307, "eth-lib/lib/nat": 308, "eth-lib/lib/rlp": 309, "scrypt.js": 351, "underscore": 361, "uuid": 363, "web3-core": 209, "web3-core-helpers": 191, "web3-core-method": 193, "web3-utils": 393 }], 365: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 366: [function (require, module, exports) {
+    }, { "any-promise": 231, "buffer": 47, "crypto": 56, "crypto-browserify": 285, "eth-lib/lib/account": 312, "eth-lib/lib/bytes": 314, "eth-lib/lib/hash": 315, "eth-lib/lib/nat": 316, "eth-lib/lib/rlp": 317, "scrypt.js": 359, "underscore": 369, "uuid": 371, "web3-core": 217, "web3-core-helpers": 199, "web3-core-method": 201, "web3-utils": 418 }], 373: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 374: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -36345,6 +37353,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
             _this._jsonInterface = value.map(function (method) {
               var func, funcName;
+
+              // make constant and payable backwards compatible
+              method.constant = method.stateMutability === "view" || method.stateMutability === "pure" || method.constant;
+              method.payable = method.stateMutability === "payable" || method.payable;
 
               if (method.name) {
                 funcName = utils._jsonInterfaceMethodToString(method);
@@ -37104,9 +38116,1539 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Contract;
-    }, { "underscore": 365, "web3-core": 209, "web3-core-helpers": 191, "web3-core-method": 193, "web3-core-promievent": 198, "web3-core-subscriptions": 206, "web3-eth-abi": 213, "web3-utils": 393 }], 367: [function (require, module, exports) {
-      arguments[4][210][0].apply(exports, arguments);
-    }, { "dup": 210 }], 368: [function (require, module, exports) {
+    }, { "underscore": 373, "web3-core": 217, "web3-core-helpers": 199, "web3-core-method": 201, "web3-core-promievent": 206, "web3-core-subscriptions": 214, "web3-eth-abi": 221, "web3-utils": 418 }], 375: [function (require, module, exports) {
+      (function (Buffer) {
+        var sha3 = require('js-sha3').keccak_256;
+        var uts46 = require('idna-uts46-hx');
+
+        function namehash(inputName) {
+          // Reject empty names:
+          var node = '';
+          for (var i = 0; i < 32; i++) {
+            node += '00';
+          }
+
+          name = normalize(inputName);
+
+          if (name) {
+            var labels = name.split('.');
+
+            for (var i = labels.length - 1; i >= 0; i--) {
+              var labelSha = sha3(labels[i]);
+              node = sha3(new Buffer(node + labelSha, 'hex'));
+            }
+          }
+
+          return '0x' + node;
+        }
+
+        function normalize(name) {
+          return name ? uts46.toUnicode(name, { useStd3ASCII: true, transitional: false }) : name;
+        }
+
+        exports.hash = namehash;
+        exports.normalize = normalize;
+      }).call(this, require("buffer").Buffer);
+    }, { "buffer": 47, "idna-uts46-hx": 377, "js-sha3": 378 }], 376: [function (require, module, exports) {
+      /* This file is generated from the Unicode IDNA table, using
+         the build-unicode-tables.py script. Please edit that
+         script instead of this file. */
+
+      /* istanbul ignore next */
+      (function (root, factory) {
+        if (typeof define === 'function' && define.amd) {
+          define([], function () {
+            return factory();
+          });
+        } else if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
+          module.exports = factory();
+        } else {
+          root.uts46_map = factory();
+        }
+      })(this, function () {
+        var blocks = [new Uint32Array([2157250, 2157314, 2157378, 2157442, 2157506, 2157570, 2157634, 0, 2157698, 2157762, 2157826, 2157890, 2157954, 0, 2158018, 0]), new Uint32Array([2179041, 6291456, 2179073, 6291456, 2179105, 6291456, 2179137, 6291456, 2179169, 6291456, 2179201, 6291456, 2179233, 6291456, 2179265, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 14680064, 14680064, 14680064, 14680064, 14680064]), new Uint32Array([0, 2113729, 2197345, 2197377, 2113825, 2197409, 2197441, 2113921, 2197473, 2114017, 2197505, 2197537, 2197569, 2197601, 2197633, 2197665]), new Uint32Array([6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 23068672, 23068672, 23068672, 0, 0, 0, 0, 23068672]), new Uint32Array([14680064, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 14680064, 14680064]), new Uint32Array([2196001, 2196033, 2196065, 2196097, 2196129, 2196161, 2196193, 2196225, 2196257, 2196289, 2196321, 2196353, 2196385, 2196417, 2196449, 2196481]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 0, 0, 0, 0, 0]), new Uint32Array([2097281, 2105921, 2097729, 2106081, 0, 2097601, 2162337, 2106017, 2133281, 2097505, 2105889, 2097185, 2097697, 2135777, 2097633, 2097441]), new Uint32Array([2177025, 6291456, 2177057, 6291456, 2177089, 6291456, 2177121, 6291456, 2177153, 6291456, 2177185, 6291456, 2177217, 6291456, 2177249, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 0, 6291456, 6291456, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456]), new Uint32Array([0, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456]), new Uint32Array([2134435, 2134531, 2134627, 2134723, 2134723, 2134819, 2134819, 2134915, 2134915, 2135011, 2105987, 2135107, 2135203, 2135299, 2131587, 2135395]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 6291456, 2168673, 2169249, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2147906, 2147970, 2148034, 2148098, 2148162, 2148226, 2148290, 2148354, 2147906, 2147970, 2148034, 2148098, 2148162, 2148226, 2148290, 2148354]), new Uint32Array([2125219, 2125315, 2152834, 2152898, 2125411, 2152962, 2153026, 2125506, 2125507, 2125603, 2153090, 2153154, 2153218, 2153282, 2153346, 2105348]), new Uint32Array([2203393, 6291456, 2203425, 6291456, 2203457, 6291456, 2203489, 6291456, 6291456, 6291456, 6291456, 2203521, 6291456, 2181281, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 23068672, 6291456, 2145538, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 6291456]), new Uint32Array([2139426, 2160834, 2160898, 2160962, 2134242, 2161026, 2161090, 2161154, 2161218, 2161282, 2161346, 2161410, 2138658, 2161474, 2161538, 2134722]), new Uint32Array([2119939, 2124930, 2125026, 2106658, 2125218, 2128962, 2129058, 2129154, 2129250, 2129346, 2129442, 2108866, 2108770, 2150466, 2150530, 2150594]), new Uint32Array([2201601, 6291456, 2201633, 6291456, 2201665, 6291456, 2201697, 6291456, 2201729, 6291456, 2201761, 6291456, 2201793, 6291456, 2201825, 6291456]), new Uint32Array([2193537, 2193569, 2193601, 2193633, 2193665, 2193697, 2193729, 2193761, 2193793, 2193825, 2193857, 2193889, 2193921, 2193953, 2193985, 2194017]), new Uint32Array([6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2190561, 6291456, 2190593, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2190625, 6291456, 2190657, 6291456, 23068672]), new Uint32Array([2215905, 2215937, 2215969, 2216001, 2216033, 2216065, 2216097, 2216129, 2216161, 2216193, 2216225, 2216257, 2105441, 2216289, 2216321, 2216353]), new Uint32Array([23068672, 18884130, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2191233, 2191265, 2191297, 2191329, 2191361, 2191393, 2191425, 2117377, 2191457, 2191489, 2191521, 2191553, 2191585, 2191617, 2191649, 2117953]), new Uint32Array([2132227, 2132323, 2132419, 2132419, 2132515, 2132515, 2132611, 2132707, 2132707, 2132803, 2132899, 2132899, 2132995, 2132995, 2133091, 2133187]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 0, 0]), new Uint32Array([2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 10609889, 10610785, 10609921, 10610817, 2222241]), new Uint32Array([6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 0, 0]), new Uint32Array([2219969, 2157121, 2157441, 2157505, 2157889, 2157953, 2220001, 2158465, 2158529, 10575617, 2156994, 2157058, 2129923, 2130019, 2157122, 2157186]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0]), new Uint32Array([2185249, 6291456, 2185281, 6291456, 2185313, 6291456, 2185345, 6291456, 2185377, 6291456, 2185409, 6291456, 2185441, 6291456, 2185473, 6291456]), new Uint32Array([0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 6291456, 0]), new Uint32Array([2183361, 6291456, 2183393, 6291456, 2183425, 6291456, 2183457, 6291456, 2183489, 6291456, 2183521, 6291456, 2183553, 6291456, 2183585, 6291456]), new Uint32Array([2192161, 2192193, 2192225, 2192257, 2192289, 2192321, 2192353, 2192385, 2192417, 2192449, 2192481, 2192513, 2192545, 2192577, 2192609, 2192641]), new Uint32Array([2212001, 2212033, 2212065, 2212097, 2212129, 2212161, 2212193, 2212225, 2212257, 2212289, 2212321, 2212353, 2212385, 2212417, 2212449, 2207265]), new Uint32Array([2249825, 2249857, 2249889, 2249921, 2249954, 2250018, 2250082, 2250145, 2250177, 2250209, 2250241, 2250274, 2250337, 2250370, 2250433, 2250465]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2147905, 2147969, 2148033, 2148097, 2148161, 2148225, 2148289, 2148353]), new Uint32Array([10485857, 6291456, 2197217, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 23068672, 23068672]), new Uint32Array([0, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([2180353, 2180385, 2144033, 2180417, 2180449, 2180481, 2180513, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 10610209, 10610465, 10610241, 10610753, 10609857]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 0, 0]), new Uint32Array([2223842, 2223906, 2223970, 2224034, 2224098, 2224162, 2224226, 2224290, 2224354, 2224418, 2224482, 2224546, 2224610, 2224674, 2224738, 2224802]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 18923650, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 18923714, 23068672, 23068672]), new Uint32Array([2126179, 2125538, 2126275, 2126371, 2126467, 2125634, 2126563, 2105603, 2105604, 2125346, 2126659, 2126755, 2126851, 2098179, 2098181, 2098182]), new Uint32Array([2227426, 2227490, 2227554, 2227618, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2192353, 2240642, 2240642, 2240705, 2240737, 2240737, 2240769, 2240802, 2240866, 2240929, 2240961, 2240993, 2241025, 2241057, 2241089, 2241121]), new Uint32Array([6291456, 2170881, 2170913, 2170945, 6291456, 2170977, 6291456, 2171009, 2171041, 6291456, 6291456, 6291456, 2171073, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2132226, 2132514, 2163586, 2132610, 2160386, 2133090, 2133186, 2160450, 2160514, 2160578, 2133570, 2106178, 2160642, 2133858, 2160706, 2160770]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 10532162, 10532226, 10532290, 10532354, 10532418, 10532482, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 23068672]), new Uint32Array([2098209, 2108353, 2108193, 2108481, 2170241, 2111713, 2105473, 2105569, 2105601, 2112289, 2112481, 2098305, 2108321, 0, 0, 0]), new Uint32Array([2209121, 2209153, 2209185, 2209217, 2209249, 2209281, 2209313, 2209345, 2209377, 2209409, 2209441, 2209473, 2207265, 2209505, 2209537, 2209569]), new Uint32Array([2189025, 6291456, 2189057, 6291456, 2189089, 6291456, 2189121, 6291456, 2189153, 6291456, 2189185, 6291456, 2189217, 6291456, 2189249, 6291456]), new Uint32Array([2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2173761, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233057]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2165764, 2140004]), new Uint32Array([2215105, 6291456, 2215137, 6291456, 6291456, 2215169, 2215201, 6291456, 6291456, 6291456, 2215233, 2215265, 2215297, 2215329, 2215361, 2215393]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 6291456, 6291456, 6291456, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([10505091, 10505187, 10505283, 10505379, 10505475, 10505571, 10505667, 10505763, 10505859, 10505955, 10506051, 10506147, 10506243, 10506339, 10506435, 10506531]), new Uint32Array([2229730, 2229794, 2229858, 2229922, 2229986, 2230050, 2230114, 2230178, 2230242, 2230306, 2230370, 2230434, 2230498, 2230562, 2230626, 2230690]), new Uint32Array([2105505, 2098241, 2108353, 2108417, 2105825, 0, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 10502115, 10502178, 10502211, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456]), new Uint32Array([2190305, 6291456, 2190337, 6291456, 2190369, 6291456, 2190401, 6291456, 2190433, 6291456, 2190465, 6291456, 2190497, 6291456, 2190529, 6291456]), new Uint32Array([2173793, 2173985, 2174017, 6291456, 2173761, 2173697, 6291456, 2174689, 6291456, 2174017, 2174721, 6291456, 6291456, 2174753, 2174785, 2174817]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2099521, 2099105, 2120705, 2098369, 2120801, 2103361, 2097985, 2098433, 2121377, 2121473, 2099169, 2099873, 2098401, 2099393, 2152609, 2100033]), new Uint32Array([2132898, 2163842, 2163906, 2133282, 2132034, 2131938, 2137410, 2132802, 2132706, 2164866, 2133282, 2160578, 2165186, 2165186, 6291456, 6291456]), new Uint32Array([10500003, 10500099, 10500195, 10500291, 10500387, 10500483, 10500579, 10500675, 10500771, 10500867, 10500963, 10501059, 10501155, 10501251, 10501347, 10501443]), new Uint32Array([2163458, 2130978, 2131074, 2131266, 2131362, 2163522, 2160130, 2132066, 2131010, 2131106, 2106018, 2131618, 2131298, 2132034, 2131938, 2137410]), new Uint32Array([2212961, 2116993, 2212993, 2213025, 2213057, 2213089, 2213121, 2213153, 2213185, 2213217, 2213249, 2209633, 2213281, 2213313, 2213345, 2213377]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([2113729, 2113825, 2113921, 2114017, 2114113, 2114209, 2114305, 2114401, 2114497, 2114593, 2114689, 2114785, 2114881, 2114977, 2115073, 2115169]), new Uint32Array([2238177, 2238209, 2238241, 2238273, 2238305, 2238337, 2238337, 2217537, 2238369, 2238401, 2238433, 2238465, 2215649, 2238497, 2238529, 2238561]), new Uint32Array([2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905]), new Uint32Array([6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 0]), new Uint32Array([6291456, 0, 6291456, 2145026, 0, 6291456, 2145090, 0, 6291456, 6291456, 0, 0, 23068672, 0, 23068672, 23068672]), new Uint32Array([2099233, 2122017, 2200673, 2098113, 2121537, 2103201, 2200705, 2104033, 2121857, 2121953, 2122401, 2099649, 2099969, 2123009, 2100129, 2100289]), new Uint32Array([6291456, 23068672, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0]), new Uint32Array([2187681, 2187713, 2187745, 2187777, 2187809, 2187841, 2187873, 2187905, 2187937, 2187969, 2188001, 2188033, 2188065, 2188097, 2188129, 2188161]), new Uint32Array([0, 10554498, 10554562, 10554626, 10554690, 10554754, 10554818, 10554882, 10554946, 10555010, 10555074, 6291456, 6291456, 0, 0, 0]), new Uint32Array([2235170, 2235234, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2181153, 6291456, 2188897, 6291456, 6291456, 2188929, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2111905, 2100865, 2188961, 2188993]), new Uint32Array([2100833, 2100897, 0, 0, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 10575617, 2187041, 10502177, 10489601, 10489697, 2112289]), new Uint32Array([6291456, 2172833, 6291456, 2172865, 2172897, 2172929, 2172961, 6291456, 2172993, 6291456, 2173025, 6291456, 2173057, 6291456, 2173089, 6291456]), new Uint32Array([6291456, 0, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 23068672, 6291456, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 2190721]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456]), new Uint32Array([2184993, 6291456, 2185025, 6291456, 2185057, 6291456, 2185089, 6291456, 2185121, 6291456, 2185153, 6291456, 2185185, 6291456, 2185217, 6291456]), new Uint32Array([2115265, 2115361, 2115457, 2115553, 2115649, 2115745, 2115841, 2115937, 2116033, 2116129, 2116225, 2116321, 2150658, 2150722, 2200225, 6291456]), new Uint32Array([2168321, 6291456, 2168353, 6291456, 2168385, 6291456, 2168417, 6291456, 2168449, 6291456, 2168481, 6291456, 2168513, 6291456, 2168545, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 0, 6291456, 0, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 2186625, 0, 0, 6291456, 6291456, 2186657, 2186689, 2186721, 2173505, 0, 10496067, 10496163, 10496259]), new Uint32Array([2178785, 6291456, 2178817, 6291456, 2178849, 6291456, 2178881, 6291456, 2178913, 6291456, 2178945, 6291456, 2178977, 6291456, 2179009, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0]), new Uint32Array([2097152, 0, 0, 0, 2097152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 2197857, 2197889, 2197921, 2197953, 2197985, 2198017, 0, 0, 2198049, 2198081, 2198113, 2198145, 2198177, 2198209]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2098209, 2167297, 2111137, 6291456]), new Uint32Array([2171393, 6291456, 2171425, 6291456, 2171457, 6291456, 2171489, 6291456, 2171521, 6291456, 2171553, 6291456, 2171585, 6291456, 2171617, 6291456]), new Uint32Array([2206753, 2206785, 2195457, 2206817, 2206849, 2206881, 2206913, 2197153, 2197153, 2206945, 2117857, 2206977, 2207009, 2207041, 2207073, 2207105]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 23068672, 0, 0, 0, 0, 2144834, 2144898, 0, 2144962]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 23068672]), new Uint32Array([2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 0, 2105505, 2098241]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 2202049, 6291456, 2202081, 6291456, 2202113, 6291456, 2202145, 6291456, 2202177, 6291456, 2202209, 6291456, 2202241, 6291456]), new Uint32Array([10501155, 10501251, 10501347, 10501443, 10501539, 10501635, 10501731, 10501827, 10501923, 10502019, 2141731, 2105505, 2098177, 2155586, 2166530, 0]), new Uint32Array([2102081, 2102209, 2100833, 2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 2100833, 2100737, 2098337, 2101441]), new Uint32Array([2146882, 2146946, 2147010, 2147074, 2147138, 2147202, 2147266, 2147330, 2146882, 2146946, 2147010, 2147074, 2147138, 2147202, 2147266, 2147330]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([10502307, 10502403, 10502499, 10502595, 10502691, 10502787, 10502883, 10502979, 10503075, 10503171, 10503267, 10503363, 10503459, 10503555, 10503651, 10503747]), new Uint32Array([2179937, 2179969, 2180001, 2180033, 2156545, 2180065, 2156577, 2180097, 2180129, 2180161, 2180193, 2180225, 2180257, 2180289, 2156737, 2180321]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 0, 0, 0, 6291456, 0, 0, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0]), new Uint32Array([2227682, 2227746, 2227810, 2227874, 2227938, 2228002, 2228066, 2228130, 2228194, 2228258, 2228322, 2228386, 2228450, 2228514, 2228578, 2228642]), new Uint32Array([2105601, 2169121, 2108193, 2170049, 2181025, 2181057, 2112481, 2108321, 2108289, 2181089, 2170497, 2100865, 2181121, 2173601, 2173633, 2173665]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2180641, 6291456, 6291456, 6291456]), new Uint32Array([0, 6291456, 6291456, 6291456, 0, 6291456, 0, 6291456, 0, 0, 6291456, 6291456, 0, 6291456, 6291456, 6291456]), new Uint32Array([2178273, 6291456, 2178305, 6291456, 2178337, 6291456, 2178369, 6291456, 2178401, 6291456, 2178433, 6291456, 2178465, 6291456, 2178497, 6291456]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456]), new Uint32Array([2237377, 2237409, 2236225, 2237441, 2237473, 2217441, 2215521, 2215553, 2217473, 2237505, 2237537, 2209697, 2237569, 2215585, 2237601, 2237633]), new Uint32Array([2221985, 2165601, 2165601, 2165665, 2165665, 2222017, 2222017, 2165729, 2165729, 2158913, 2158913, 2158913, 2158913, 2097281, 2097281, 2105921]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2149634, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2176897, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 2176929, 6291456, 2176961, 6291456, 2176993, 6291456]), new Uint32Array([2172641, 6291456, 2172673, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2172705, 2172737, 6291456, 2172769, 2172801, 6291456]), new Uint32Array([2099173, 2104196, 2121667, 2099395, 2121763, 2152258, 2152322, 2098946, 2152386, 2121859, 2121955, 2099333, 2122051, 2104324, 2099493, 2122147]), new Uint32Array([6291456, 6291456, 6291456, 2145794, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 2145858, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 0, 0, 6291456, 0]), new Uint32Array([0, 2105921, 2097729, 0, 2097377, 0, 0, 2106017, 0, 2097505, 2105889, 2097185, 2097697, 2135777, 2097633, 2097441]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2239074, 2239138, 2239201, 2239233, 2239265, 2239297, 2239329, 2239361, 0, 2239393, 2239425, 2239425, 2239458, 2239521, 2239553, 2209569]), new Uint32Array([14680064, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 6291456, 23068672]), new Uint32Array([2108321, 2108289, 2113153, 2098209, 2180897, 2180929, 2180961, 2111137, 2098241, 2108353, 2170241, 2170273, 2180993, 2105825, 6291456, 2105473]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2146114, 6291456, 6291456, 6291456, 0, 0, 0]), new Uint32Array([2105921, 2105921, 2105921, 2222049, 2222049, 2130977, 2130977, 2130977, 2130977, 2160065, 2160065, 2160065, 2160065, 2097729, 2097729, 2097729]), new Uint32Array([2218145, 2214785, 2207937, 2218177, 2218209, 2192993, 2210113, 2212769, 2218241, 2218273, 2216129, 2218305, 2216161, 2218337, 2218369, 2218401]), new Uint32Array([0, 0, 0, 2156546, 2156610, 2156674, 2156738, 2156802, 0, 0, 0, 0, 0, 2156866, 23068672, 2156930]), new Uint32Array([23068672, 23068672, 23068672, 0, 0, 0, 0, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([2213409, 2213441, 2213473, 2213505, 2213537, 2213569, 2213601, 2213633, 2213665, 2195681, 2213697, 2213729, 2213761, 2213793, 2213825, 2213857]), new Uint32Array([2100033, 2099233, 2122017, 2200673, 2098113, 2121537, 2103201, 2200705, 2104033, 2121857, 2121953, 2122401, 2099649, 2099969, 2123009, 2100129]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2201857, 6291456, 2201889, 6291456, 2201921, 6291456, 2201953, 6291456, 2201985, 6291456, 2202017, 6291456, 2176193, 2176257, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2188193, 2188225, 2188257, 2188289, 2188321, 2188353, 2188385, 2188417, 2188449, 2188481, 2188513, 2188545, 2188577, 2188609, 2188641, 0]), new Uint32Array([10554529, 2221089, 0, 10502113, 10562017, 10537921, 10538049, 2221121, 2221153, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2213889, 2213921, 2213953, 2213985, 2214017, 2214049, 2214081, 2194177, 2214113, 2214145, 2214177, 2214209, 2214241, 2214273, 2214305, 2214337]), new Uint32Array([2166978, 2167042, 2099169, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2180545, 6291456, 6291456, 6291456]), new Uint32Array([10518915, 10519011, 10519107, 10519203, 2162242, 2162306, 2159554, 2162370, 2159362, 2159618, 2105922, 2162434, 2159746, 2162498, 2159810, 2159874]), new Uint32Array([2161730, 2161794, 2135586, 2161858, 2161922, 2137186, 2131810, 2160290, 2135170, 2161986, 2137954, 2162050, 2162114, 2162178, 10518723, 10518819]), new Uint32Array([10506627, 10506723, 10506819, 10506915, 10507011, 10507107, 10507203, 10507299, 10507395, 10507491, 10507587, 10507683, 10507779, 10507875, 10507971, 10508067]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 0, 0, 0, 0, 0, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0]), new Uint32Array([2175873, 2175905, 2175937, 2175969, 2176001, 2176033, 2176065, 2176097, 2176129, 2176161, 2176193, 2176225, 2176257, 2176289, 2176321, 2176353]), new Uint32Array([2140006, 2140198, 2140390, 2140582, 2140774, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672]), new Uint32Array([2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241]), new Uint32Array([0, 23068672, 0, 0, 0, 0, 0, 0, 0, 2145154, 2145218, 2145282, 6291456, 0, 2145346, 0]), new Uint32Array([0, 0, 0, 0, 10531458, 10495395, 2148545, 2143201, 2173473, 2148865, 2173505, 0, 2173537, 0, 2173569, 2149121]), new Uint32Array([10537282, 10495683, 2148738, 2148802, 2148866, 0, 6291456, 2148930, 2186593, 2173473, 2148737, 2148865, 2148802, 10495779, 10495875, 10495971]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2215425, 2215457, 2215489, 2215521, 2215553, 2215585, 2215617, 2215649, 2215681, 2215713, 2215745, 2215777, 2192033, 2215809, 2215841, 2215873]), new Uint32Array([2242049, 2242081, 2242113, 2242145, 2242177, 2242209, 2242241, 2242273, 2215937, 2242305, 2242338, 2242401, 2242433, 2242465, 2242497, 2216001]), new Uint32Array([10554529, 2221089, 0, 0, 10562017, 10502113, 10538049, 10537921, 2221185, 10489601, 10489697, 10609889, 10609921, 2141729, 2141793, 10610273]), new Uint32Array([2141923, 2142019, 2142115, 2142211, 2142307, 2142403, 2142499, 2142595, 2142691, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([0, 2221185, 2221217, 10609857, 10609857, 10489601, 10489697, 10609889, 10609921, 2141729, 2141793, 2221345, 2221377, 2221409, 2221441, 2187105]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 18923970, 23068672, 23068672, 23068672, 0, 6291456, 6291456]), new Uint32Array([2183105, 6291456, 2183137, 6291456, 2183169, 6291456, 2183201, 6291456, 2183233, 6291456, 2183265, 6291456, 2183297, 6291456, 2183329, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2134434, 2134818, 2097666, 2097186, 2097474, 2097698, 2105986, 2131586, 2132450, 2131874, 2131778, 2135970, 2135778, 2161602, 2136162, 2161666]), new Uint32Array([2236865, 2236897, 2236930, 2236993, 2237025, 2235681, 2237058, 2237121, 2237153, 2237185, 2237217, 2217281, 2237250, 2191233, 2237313, 2237345]), new Uint32Array([2190049, 6291456, 2190081, 6291456, 2190113, 6291456, 2190145, 6291456, 2190177, 6291456, 2190209, 6291456, 2190241, 6291456, 2190273, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2101922, 2102050, 2102178, 2102306, 10498755, 10498851, 10498947, 10499043, 10499139, 10499235, 10499331, 10499427, 10499523, 10489604, 10489732, 10489860]), new Uint32Array([2166914, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0]), new Uint32Array([2181601, 2170561, 2181633, 2181665, 2170753, 2181697, 2172897, 2170881, 2181729, 2170913, 2172929, 2113441, 2181761, 2181793, 2171009, 2173761]), new Uint32Array([0, 2105921, 2097729, 2106081, 0, 2097601, 2162337, 2106017, 2133281, 2097505, 0, 2097185, 2097697, 2135777, 2097633, 2097441]), new Uint32Array([6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0]), new Uint32Array([2248001, 2248033, 2248066, 2248130, 2248193, 2248226, 2248289, 2248322, 2248385, 2248417, 2216673, 2248450, 2248514, 2248577, 2248610, 2248673]), new Uint32Array([6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 0, 0, 0]), new Uint32Array([2169729, 6291456, 2169761, 6291456, 2169793, 6291456, 2169825, 6291456, 2169857, 2169889, 6291456, 2169921, 6291456, 2143329, 6291456, 2098305]), new Uint32Array([2162178, 2163202, 2163266, 2135170, 2136226, 2161986, 2137954, 2159426, 2159490, 2163330, 2159554, 2163394, 2159682, 2139522, 2136450, 2159746]), new Uint32Array([2173953, 2173985, 0, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2174209, 2174241, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 4271169, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2174273]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 6291456, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 2190785, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2189793, 6291456, 2189825, 6291456, 2189857, 6291456, 2189889, 6291456, 2189921, 6291456, 2189953, 6291456, 2189985, 6291456, 2190017, 6291456]), new Uint32Array([2105601, 2112289, 2108193, 2112481, 2112577, 0, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 0, 2098209, 2111137]), new Uint32Array([2172129, 6291456, 2172161, 6291456, 2172193, 6291456, 2172225, 6291456, 2172257, 6291456, 2172289, 6291456, 2172321, 6291456, 2172353, 6291456]), new Uint32Array([2214753, 6291456, 2214785, 6291456, 6291456, 2214817, 2214849, 2214881, 2214913, 2214945, 2214977, 2215009, 2215041, 2215073, 2194401, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([0, 0, 0, 0, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([10610305, 10610337, 10575617, 2221761, 10610401, 10610433, 10502177, 0, 10610465, 10610497, 10610529, 10610561, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 23068672, 0, 0, 0, 0, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2187105, 2187137, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2199393, 2199425, 2199457, 2199489, 2199521, 2199553, 2199585, 2199617, 2199649, 2199681, 2199713, 2199745, 2199777, 2199809, 2199841, 0]), new Uint32Array([2217249, 2217281, 2217313, 2217345, 2217377, 2217409, 2217441, 2217473, 2215617, 2217505, 2217537, 2217569, 2214753, 2217601, 2217633, 2217665]), new Uint32Array([2170273, 2170305, 6291456, 2170337, 2170369, 6291456, 2170401, 2170433, 2170465, 6291456, 6291456, 6291456, 2170497, 2170529, 6291456, 2170561]), new Uint32Array([2188673, 6291456, 2188705, 2188737, 2188769, 6291456, 6291456, 2188801, 6291456, 2188833, 6291456, 2188865, 6291456, 2180929, 2181505, 2180897]), new Uint32Array([10489988, 10490116, 10490244, 10490372, 10490500, 10490628, 10490756, 10490884, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2147393, 2147457, 2147521, 2147585, 2147649, 2147713, 2147777, 2147841]), new Uint32Array([23068672, 23068672, 0, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0]), new Uint32Array([2241153, 2241185, 2241217, 2215809, 2241250, 2241313, 2241345, 2241377, 2217921, 2241377, 2241409, 2215873, 2241441, 2241473, 2241505, 2241537]), new Uint32Array([23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2220417, 2220417, 2220449, 2220449, 2220481, 2220481, 2220513, 2220513, 2220545, 2220545, 2220577, 2220577, 2220609, 2220609, 2220641, 2220641]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2144002, 0, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456]), new Uint32Array([2167105, 2167137, 2167169, 2167201, 2167233, 2167265, 2167297, 2167329, 2167361, 2167393, 2167425, 2167457, 2167489, 2167521, 2167553, 2167585]), new Uint32Array([10575521, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193]), new Uint32Array([2234146, 2234210, 2234274, 2234338, 2234402, 2234466, 2234530, 2234594, 2234658, 2234722, 2234786, 2234850, 2234914, 2234978, 2235042, 2235106]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 2180577, 0, 0, 0, 0, 0, 2180609, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 6291456, 6291456]), new Uint32Array([2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2242529, 2242561, 2242593, 2242625, 2242657, 2242689, 2242721, 2242753, 2207937, 2218177, 2242785, 2242817, 2242849, 2242882, 2242945, 2242977]), new Uint32Array([2118049, 2105345, 2118241, 2105441, 2118433, 2118529, 2118625, 2118721, 2118817, 2200257, 2200289, 2191809, 2200321, 2200353, 2200385, 2200417]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0]), new Uint32Array([2185505, 6291456, 2185537, 6291456, 2185569, 6291456, 2185601, 6291456, 2185633, 6291456, 2185665, 6291456, 2185697, 6291456, 2185729, 6291456]), new Uint32Array([2231970, 2232034, 2232098, 2232162, 2232226, 2232290, 2232354, 2232418, 2232482, 2232546, 2232610, 2232674, 2232738, 2232802, 2232866, 2232930]), new Uint32Array([2218625, 2246402, 2246466, 2246530, 2246594, 2246657, 2246689, 2246689, 2218657, 2219681, 2246721, 2246753, 2246785, 2246818, 2246881, 2208481]), new Uint32Array([2197025, 2197057, 2197089, 2197121, 2197153, 2197185, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2219137, 2216961, 2219169, 2219201, 2219233, 2219265, 2219297, 2217025, 2215041, 2219329, 2217057, 2219361, 2217089, 2219393, 2197153, 2219426]), new Uint32Array([23068672, 23068672, 23068672, 0, 0, 0, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713]), new Uint32Array([2243522, 2243585, 2243617, 2243649, 2243681, 2210113, 2243713, 2243746, 2243810, 2243874, 2243937, 2243970, 2244033, 2244065, 2244097, 2244129]), new Uint32Array([2178017, 6291456, 2178049, 6291456, 2178081, 6291456, 2178113, 6291456, 2178145, 6291456, 2178177, 6291456, 2178209, 6291456, 2178241, 6291456]), new Uint32Array([10553858, 2165314, 10518722, 6291456, 10518818, 0, 10518914, 2130690, 10519010, 2130786, 10519106, 2130882, 10519202, 2165378, 10554050, 2165506]), new Uint32Array([0, 0, 2135491, 2135587, 2135683, 2135779, 2135875, 2135971, 2135971, 2136067, 2136163, 2136259, 2136355, 2136355, 2136451, 2136547]), new Uint32Array([23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2220033, 2220033, 2220065, 2220065, 2220065, 2220065, 2220097, 2220097, 2220097, 2220097, 2220129, 2220129, 2220129, 2220129, 2220161, 2220161]), new Uint32Array([6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2100897, 2100898, 2100899, 2150018, 2100865, 2100866, 2100867, 2100868, 2150082, 2108481, 2109858, 2109859, 2105569, 2105505, 2098241, 2105601]), new Uint32Array([2097217, 2097505, 2097505, 2097505, 2097505, 2165570, 2165570, 2165634, 2165634, 2165698, 2165698, 2097858, 2097858, 0, 0, 2097152]), new Uint32Array([23068672, 6291456, 23068672, 23068672, 23068672, 6291456, 6291456, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([10503843, 10503939, 10504035, 10504131, 10504227, 10504323, 10504419, 10504515, 10504611, 10504707, 10504803, 10504899, 10504995, 10491140, 10491268, 0]), new Uint32Array([2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2173761, 2174017, 2174049]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2134145, 2097153, 2134241, 2105953, 2132705, 2130977, 2160065, 2131297, 2162049, 2133089, 2160577, 2133857, 2235297, 2220769, 2235329, 2235361]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2222401, 2222433, 2222465, 10531394, 2222497, 2222529, 2222561, 0, 2222593, 2222625, 2222657, 2222689, 2222721, 2222753, 2222785, 0]), new Uint32Array([2184481, 6291456, 2184513, 6291456, 2184545, 6291456, 2184577, 6291456, 2184609, 6291456, 2184641, 6291456, 2184673, 6291456, 2184705, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2105570, 2156034, 2126947, 2156098, 2153666, 2127043, 2127139, 2156162, 0, 2127235, 2156226, 2156290, 2156354, 2156418, 2127331, 2127427]), new Uint32Array([2215905, 2207041, 2153185, 2241569, 2241601, 2241633, 2241665, 2241697, 2241730, 2241793, 2241825, 2241857, 2241889, 2241921, 2241954, 2242017]), new Uint32Array([2203777, 6291456, 2203809, 6291456, 2203841, 6291456, 2203873, 6291456, 2203905, 6291456, 2173121, 2180993, 2181249, 2203937, 2181313, 0]), new Uint32Array([2168577, 6291456, 2168609, 6291456, 2168641, 6291456, 2168673, 6291456, 2168705, 6291456, 2168737, 6291456, 2168769, 6291456, 2168801, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 23068672, 23068672, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([2210113, 2195521, 2210145, 2210177, 2210209, 2210241, 2210273, 2210305, 2210337, 2210369, 2210401, 2210433, 2210465, 2210497, 2210529, 2210561]), new Uint32Array([6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0]), new Uint32Array([2228706, 2228770, 2228834, 2228898, 2228962, 2229026, 2229090, 2229154, 2229218, 2229282, 2229346, 2229410, 2229474, 2229538, 2229602, 2229666]), new Uint32Array([23068672, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 18874368, 18874368, 18874368, 0, 0]), new Uint32Array([2133089, 2133281, 2133281, 2133281, 2133281, 2160577, 2160577, 2160577, 2160577, 2097441, 2097441, 2097441, 2097441, 2133857, 2133857, 2133857]), new Uint32Array([6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2174017, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233089]), new Uint32Array([2178529, 6291456, 2178561, 6291456, 2178593, 6291456, 2178625, 6291456, 2178657, 6291456, 2178689, 6291456, 2178721, 6291456, 2178753, 6291456]), new Uint32Array([2221025, 2221025, 2221057, 2221057, 2159329, 2159329, 2159329, 2159329, 2097217, 2097217, 2158914, 2158914, 2158978, 2158978, 2159042, 2159042]), new Uint32Array([2208161, 2208193, 2208225, 2208257, 2194433, 2208289, 2208321, 2208353, 2208385, 2208417, 2208449, 2208481, 2208513, 2208545, 2208577, 2208609]), new Uint32Array([2169217, 6291456, 2169249, 6291456, 2169281, 6291456, 2169313, 6291456, 2169345, 6291456, 2169377, 6291456, 2169409, 6291456, 2169441, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2133187, 2133283, 2133283, 2133379, 2133475, 2133571, 2133667, 2133667, 2133763, 2133859, 2133955, 2134051, 2134147, 2134147, 2134243, 2134339]), new Uint32Array([2197697, 2114113, 2114209, 2197729, 2197761, 2114305, 2197793, 2114401, 2114497, 2197825, 2114593, 2114689, 2114785, 2114881, 2114977, 0]), new Uint32Array([2193089, 2193121, 2193153, 2193185, 2117665, 2117569, 2193217, 2193249, 2193281, 2193313, 2193345, 2193377, 2193409, 2193441, 2193473, 2193505]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2184225, 6291456, 2184257, 6291456, 2184289, 6291456, 2184321, 6291456, 2184353, 6291456, 2184385, 6291456, 2184417, 6291456, 2184449, 6291456]), new Uint32Array([2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2100833, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2098657, 2098049, 2200737, 2123489, 2123681, 2200769, 2098625, 2100321, 2098145, 2100449, 2098017, 2098753, 2200801, 2200833, 2200865, 0]), new Uint32Array([23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0]), new Uint32Array([2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 0, 2098241, 2108353, 2108417, 2105825, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2181153, 2105505, 2181185, 2167617, 2180993]), new Uint32Array([2160002, 2160066, 2160130, 2160194, 2160258, 2132066, 2131010, 2131106, 2106018, 2131618, 2160322, 2131298, 2132034, 2131938, 2137410, 2132226]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456]), new Uint32Array([2183617, 6291456, 2183649, 6291456, 2183681, 6291456, 2183713, 6291456, 2183745, 6291456, 2183777, 6291456, 2183809, 6291456, 2183841, 6291456]), new Uint32Array([0, 6291456, 6291456, 0, 6291456, 0, 0, 6291456, 6291456, 0, 6291456, 0, 0, 6291456, 0, 0]), new Uint32Array([2250977, 2251009, 2251041, 2251073, 2195009, 2251106, 2251169, 2251201, 2251233, 2251265, 2251297, 2251330, 2251394, 2251457, 2251489, 2251521]), new Uint32Array([2205729, 2205761, 2205793, 2205825, 2205857, 2205889, 2205921, 2205953, 2205985, 2206017, 2206049, 2206081, 2206113, 2206145, 2206177, 2206209]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2143170, 2168993, 6291456, 2169025, 6291456, 2169057, 6291456, 2169089, 6291456, 2143234, 2169121, 6291456, 2169153, 6291456, 2169185, 6291456]), new Uint32Array([23068672, 23068672, 2190689, 6291456, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2248706, 2248769, 2248801, 2248833, 2248865, 2248897, 2248929, 2248962, 2249026, 2249090, 2249154, 2240705, 2249217, 2249249, 2249281, 2249313]), new Uint32Array([10485857, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 10495394, 6291456, 2098209, 6291456, 6291456, 2097152, 6291456, 10531394]), new Uint32Array([0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0]), new Uint32Array([14680064, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2173985, 2173953, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889]), new Uint32Array([6291456, 2186977, 6291456, 6291456, 6291456, 6291456, 6291456, 10537858, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2209601, 2209633, 2209665, 2209697, 2209729, 2209761, 2209793, 2209825, 2209857, 2209889, 2209921, 2209953, 2209985, 2210017, 2210049, 2210081]), new Uint32Array([10501539, 10501635, 10501731, 10501827, 10501923, 10502019, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905]), new Uint32Array([2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2174017, 2174017, 2174049]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2194561, 2194593, 2194625, 2119777, 2119873, 2194657, 2194689, 2194721, 2194753, 2194785, 2194817, 2194849, 2194881, 2194913, 2194945, 2194977]), new Uint32Array([2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569]), new Uint32Array([2222818, 2222882, 2222946, 2223010, 2223074, 2223138, 2223202, 2223266, 2223330, 2223394, 2223458, 2223522, 2223586, 2223650, 2223714, 2223778]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672]), new Uint32Array([0, 2179553, 2179585, 2179617, 2179649, 2144001, 2179681, 2179713, 2179745, 2179777, 2179809, 2156705, 2179841, 2156833, 2179873, 2179905]), new Uint32Array([6291456, 23068672, 6291456, 2145602, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 6291456, 0, 0]), new Uint32Array([2196513, 2196545, 2196577, 2196609, 2196641, 2196673, 2196705, 2196737, 2196769, 2196801, 2196833, 2196865, 2196897, 2196929, 2196961, 2196993]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2177281, 6291456, 2177313, 6291456, 2177345, 6291456, 2177377, 6291456, 2177409, 6291456, 2177441, 6291456, 2177473, 6291456, 2177505, 6291456]), new Uint32Array([2187137, 2221473, 2221505, 2221537, 2221569, 6291456, 6291456, 10610209, 10610241, 10537986, 10537986, 10537986, 10537986, 10609857, 10609857, 10609857]), new Uint32Array([2243009, 2243041, 2216033, 2243074, 2243137, 2243169, 2243201, 2219617, 2243233, 2243265, 2243297, 2243329, 2243362, 2243425, 2243457, 2243489]), new Uint32Array([10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 10485857, 2097152, 4194304, 4194304, 0, 0]), new Uint32Array([2143042, 6291456, 2143106, 2143106, 2168833, 6291456, 2168865, 6291456, 6291456, 2168897, 6291456, 2168929, 6291456, 2168961, 6291456, 2143170]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2204193, 2204225, 2204257, 2204289, 2204321, 2204353, 2204385, 2204417, 2204449, 2204481, 2204513, 2204545, 2204577, 2204609, 2204641, 2204673]), new Uint32Array([2202753, 6291456, 2202785, 6291456, 2202817, 6291456, 2202849, 6291456, 2202881, 6291456, 2202913, 6291456, 2202945, 6291456, 2202977, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177, 2098305, 2108321]), new Uint32Array([2147394, 2147458, 2147522, 2147586, 2147650, 2147714, 2147778, 2147842, 2147394, 2147458, 2147522, 2147586, 2147650, 2147714, 2147778, 2147842]), new Uint32Array([2253313, 2253346, 2253409, 2253441, 2253473, 2253505, 2253537, 2253569, 2253601, 2253634, 2219393, 2253697, 2253729, 2253761, 2253793, 2253825]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([2162562, 2162626, 2131362, 2162690, 2159938, 2160002, 2162754, 2162818, 2160130, 2162882, 2160194, 2160258, 2160834, 2160898, 2161026, 2161090]), new Uint32Array([2175361, 2175393, 2175425, 2175457, 2175489, 2175521, 2175553, 2175585, 2175617, 2175649, 2175681, 2175713, 2175745, 2175777, 2175809, 2175841]), new Uint32Array([2253858, 2253921, 2253954, 2254018, 2254082, 2196737, 2254145, 2196865, 2254177, 2254209, 2254241, 2254273, 2197025, 2254306, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2202113, 2204129, 2188705, 2204161]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([2173985, 2174017, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233089, 2173697, 2173761, 2173793, 2174113, 2173985, 2173953]), new Uint32Array([2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 2100833, 2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209]), new Uint32Array([2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 0, 2108417, 0, 2111713, 2100897, 2111905]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2175425, 2175489, 2175809, 2175905, 2175937, 2175937, 2176193, 2176417, 2180865, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 2143298, 2143298, 2143298, 2143362, 2143362, 2143362, 2143426, 2143426, 2143426, 2171105, 6291456, 2171137]), new Uint32Array([2120162, 2120258, 2151618, 2151682, 2151746, 2151810, 2151874, 2151938, 2152002, 2120035, 2120131, 2120227, 2152066, 2120323, 2152130, 2120419]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2195361, 2142433, 2236065, 2236097, 2236129, 2236161, 2118241, 2117473, 2236193, 2236225, 2236257, 2236289, 0, 0, 0, 0]), new Uint32Array([2189281, 6291456, 2189313, 6291456, 2189345, 6291456, 2189377, 6291456, 2189409, 6291456, 2189441, 6291456, 2189473, 6291456, 2189505, 6291456]), new Uint32Array([6291456, 6291456, 2145922, 6291456, 6291456, 6291456, 6291456, 2145986, 6291456, 6291456, 6291456, 6291456, 2146050, 6291456, 6291456, 6291456]), new Uint32Array([2100833, 2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 10502113, 10562017, 10610401, 10502177, 10610433, 10538049]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 2186401, 0, 2186433, 0, 2186465, 0, 2186497]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 23068672, 23068672, 23068672]), new Uint32Array([0, 0, 2198241, 2198273, 2198305, 2198337, 2198369, 2198401, 0, 0, 2198433, 2198465, 2198497, 0, 0, 0]), new Uint32Array([6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 23068672, 6291456, 23068672, 23068672]), new Uint32Array([0, 2105921, 2097729, 0, 2097377, 0, 0, 2106017, 2133281, 2097505, 2105889, 0, 2097697, 2135777, 2097633, 2097441]), new Uint32Array([2197889, 2197921, 2197953, 2197985, 2198017, 2198049, 2198081, 2198113, 2198145, 2198177, 2198209, 2198241, 2198273, 2198305, 2198337, 2198369]), new Uint32Array([2132514, 2132610, 2160386, 2133090, 2133186, 2160450, 2160514, 2133282, 2160578, 2133570, 2106178, 2160642, 2133858, 2160706, 2160770, 2134146]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 23068672, 23068672, 6291456, 23068672, 23068672, 6291456, 23068672, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2184737, 6291456, 2184769, 6291456, 2184801, 6291456, 2184833, 6291456, 2184865, 6291456, 2184897, 6291456, 2184929, 6291456, 2184961, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 6291456]), new Uint32Array([6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 2186753, 6291456, 6291456, 6291456, 6291456, 2186785, 2186817, 2186849, 2173569, 2186881, 10496355, 10495395, 10575521]), new Uint32Array([0, 0, 2097729, 0, 0, 0, 0, 2106017, 0, 2097505, 0, 2097185, 0, 2135777, 2097633, 2097441]), new Uint32Array([2189537, 6291456, 2189569, 6291456, 2189601, 6291456, 2189633, 6291456, 2189665, 6291456, 2189697, 6291456, 2189729, 6291456, 2189761, 6291456]), new Uint32Array([2202497, 6291456, 2202529, 6291456, 2202561, 6291456, 2202593, 6291456, 2202625, 6291456, 2202657, 6291456, 2202689, 6291456, 2202721, 6291456]), new Uint32Array([2245217, 2218369, 2245249, 2245282, 2245345, 2245377, 2245410, 2245474, 2245537, 2245569, 2245601, 2245633, 2245665, 2245665, 2245697, 2245729]), new Uint32Array([6291456, 0, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 0, 0, 0, 0, 0, 0, 23068672, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 23068672, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672]), new Uint32Array([0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2097281, 2105921, 2097729, 2106081, 2097377, 2097601, 2162337, 2106017, 2133281, 2097505, 0, 2097185, 2097697, 2135777, 2097633, 2097441]), new Uint32Array([2176641, 6291456, 2176673, 6291456, 2176705, 6291456, 2176737, 6291456, 2176769, 6291456, 2176801, 6291456, 2176833, 6291456, 2176865, 6291456]), new Uint32Array([2174145, 2174177, 2149057, 2233089, 2173697, 2173761, 2173793, 2174113, 2173985, 2173953, 2174369, 2174369, 0, 0, 2100833, 2100737]), new Uint32Array([2116513, 2190817, 2190849, 2190881, 2190913, 2190945, 2116609, 2190977, 2191009, 2191041, 2191073, 2117185, 2191105, 2191137, 2191169, 2191201]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456]), new Uint32Array([2167617, 2167649, 2167681, 2167713, 2167745, 2167777, 2167809, 6291456, 2167841, 2167873, 2167905, 2167937, 2167969, 2168001, 2168033, 4240130]), new Uint32Array([2165122, 2163970, 2164034, 2164098, 2164162, 2164226, 2164290, 2164354, 2164418, 2164482, 2164546, 2133122, 2134562, 2132162, 2132834, 2136866]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 2186209, 2186241, 2186273, 2186305, 2186337, 2186369, 0, 0]), new Uint32Array([2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 14680064, 14680064, 14680064, 14680064, 14680064]), new Uint32Array([0, 0, 23068672, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456]), new Uint32Array([0, 10537921, 10610689, 10610273, 10610497, 10610529, 10610305, 10610721, 10489601, 10489697, 10610337, 10575617, 10554529, 2221761, 2197217, 10496577]), new Uint32Array([2105473, 2105569, 2105601, 2112289, 0, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441]), new Uint32Array([2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481]), new Uint32Array([2125346, 2153410, 2153474, 2127394, 2153538, 2153602, 2153666, 2153730, 2105507, 2105476, 2153794, 2153858, 2153922, 2153986, 2154050, 2105794]), new Uint32Array([2200449, 2119681, 2200481, 2153313, 2199873, 2199905, 2199937, 2200513, 2200545, 2200577, 2200609, 2119105, 2119201, 2119297, 2119393, 2119489]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2175777, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2222273, 2197217, 2221473, 2221505, 2221089, 2222305, 2200865, 2099681, 2104481, 2222337, 2099905, 2120737, 2222369, 2103713, 2100225, 2098785]), new Uint32Array([2201377, 6291456, 2201409, 6291456, 2201441, 6291456, 2201473, 6291456, 2201505, 6291456, 2201537, 6291456, 2201569, 6291456, 6291456, 23068672]), new Uint32Array([2174081, 2174113, 2174145, 2174177, 2149057, 2233057, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793]), new Uint32Array([2200897, 6291456, 2200929, 6291456, 2200961, 6291456, 2200993, 6291456, 2201025, 6291456, 2180865, 6291456, 2201057, 6291456, 2201089, 6291456]), new Uint32Array([0, 0, 0, 0, 0, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0]), new Uint32Array([2161154, 2161410, 2138658, 2161474, 2161538, 2097666, 2097186, 2097474, 2162946, 2132450, 2163010, 2163074, 2136162, 2163138, 2161666, 2161730]), new Uint32Array([2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921, 2173953]), new Uint32Array([0, 0, 0, 0, 0, 0, 23068672, 23068672, 0, 0, 0, 0, 2145410, 2145474, 0, 6291456]), new Uint32Array([2244161, 2216065, 2212769, 2244193, 2244225, 2244257, 2244290, 2244353, 2244385, 2244417, 2244449, 2218273, 2244481, 2244514, 2244577, 2244609]), new Uint32Array([2125730, 2125699, 2125795, 2125891, 2125987, 2154114, 2154178, 2154242, 2154306, 2154370, 2154434, 2154498, 2126082, 2126178, 2126274, 2126083]), new Uint32Array([2237665, 2237697, 2237697, 2237697, 2237730, 2237793, 2237825, 2237857, 2237890, 2237953, 2237985, 2238017, 2238049, 2238081, 2238113, 2238145]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2150146, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 0, 0]), new Uint32Array([2214369, 2238593, 2238625, 2238657, 2238689, 2238721, 2238753, 2238785, 2238817, 2238850, 2238913, 2238945, 2238977, 2235457, 2239009, 2239041]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([2252066, 2252130, 2252193, 2252225, 2252257, 2252290, 2252353, 2252385, 2252417, 2252449, 2252481, 2252513, 2252545, 2252578, 2252641, 2252673]), new Uint32Array([2197697, 2114113, 2114209, 2197729, 2197761, 2114305, 2197793, 2114401, 2114497, 2197825, 2114593, 2114689, 2114785, 2114881, 2114977, 2197857]), new Uint32Array([2224866, 2224930, 2224994, 2225058, 2225122, 2225186, 2225250, 2225314, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2219490, 2219554, 2219617, 2219649, 2219681, 2219714, 2219778, 2219842, 2219905, 2219937, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456]), new Uint32Array([2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289]), new Uint32Array([2174081, 2174113, 2174145, 2174177, 2149057, 2233089, 2173697, 2173761, 2173793, 2174113, 2173985, 2173953, 2148481, 2173601, 2173633, 2173665]), new Uint32Array([2220161, 2220161, 2220193, 2220193, 2220193, 2220193, 2220225, 2220225, 2220225, 2220225, 2220257, 2220257, 2220257, 2220257, 2220289, 2220289]), new Uint32Array([2192673, 2192705, 2192737, 2192769, 2192801, 2192833, 2192865, 2118049, 2192897, 2117473, 2117761, 2192929, 2192961, 2192993, 2193025, 2193057]), new Uint32Array([2179297, 6291456, 2179329, 6291456, 2179361, 6291456, 2179393, 6291456, 2179425, 6291456, 2179457, 6291456, 2179489, 6291456, 2179521, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2235745, 2235777, 2193633, 2235809, 2235841, 2235873, 2235905, 2235937, 2235969, 2116513, 2116705, 2236001, 2200513, 2199905, 2200545, 2236033]), new Uint32Array([2113153, 2108481, 2113345, 2113441, 2232993, 2233025, 0, 0, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761]), new Uint32Array([2170593, 6291456, 2170625, 6291456, 2170657, 6291456, 2170689, 2170721, 6291456, 2170753, 6291456, 6291456, 2170785, 6291456, 2170817, 2170849]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2166786, 2166850, 0, 0, 0, 0]), new Uint32Array([23068672, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([2100833, 2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 10575617, 2187041, 10502177, 10489601, 10489697, 0]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2134562, 2132162, 2132834, 2136866, 2136482, 2164610, 2164674, 2164738, 2164802, 2132802, 2132706, 2164866, 2132898, 2164930, 2164994, 2165058]), new Uint32Array([6291456, 6291456, 2098337, 2101441, 10531458, 2153473, 6291456, 6291456, 10531522, 2100737, 2108193, 6291456, 2106499, 2106595, 2106691, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2233122, 2233186, 2233250, 2233314, 2233378, 2233442, 2233506, 2233570, 2233634, 2233698, 2233762, 2233826, 2233890, 2233954, 2234018, 2234082]), new Uint32Array([23068672, 6291456, 23068672, 23068672, 23068672, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2205217, 2205249, 2205281, 2205313, 2205345, 2205377, 2205409, 2205441, 2205473, 2205505, 2205537, 2205569, 2205601, 2205633, 2205665, 2205697]), new Uint32Array([6291456, 0, 6291456, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 0, 0, 23068672, 6291456, 23068672, 23068672]), new Uint32Array([2173601, 2173761, 2174081, 2173569, 2174241, 2174113, 2173953, 6291456, 2174305, 6291456, 2174337, 6291456, 2174369, 6291456, 2174401, 6291456]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([2152450, 2152514, 2099653, 2104452, 2099813, 2122243, 2099973, 2152578, 2122339, 2122435, 2122531, 2122627, 2122723, 2104580, 2122819, 2152642]), new Uint32Array([2236385, 2236417, 2236449, 2236482, 2236545, 2215425, 2236577, 2236609, 2236641, 2236673, 2215457, 2236705, 2236737, 2236770, 2215489, 2236833]), new Uint32Array([2163394, 2159746, 2163458, 2131362, 2163522, 2160130, 2163778, 2132226, 2163842, 2132898, 2163906, 2161410, 2138658, 2097666, 2136162, 2163650]), new Uint32Array([2218721, 2246913, 2246946, 2216385, 2247010, 2247074, 2215009, 2247137, 2247169, 2216481, 2247201, 2247233, 2247266, 2247330, 2247330, 0]), new Uint32Array([2129730, 2129762, 2129858, 2129731, 2129827, 2156482, 2156482, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 0, 0, 0, 0, 6291456, 0, 0]), new Uint32Array([2203969, 2204001, 2181377, 2204033, 2204065, 6291456, 2204097, 6291456, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2169473, 6291456, 2169505, 6291456, 2169537, 6291456, 2169569, 6291456, 2169601, 6291456, 2169633, 6291456, 2169665, 6291456, 2169697, 6291456]), new Uint32Array([2141542, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2220801, 2220801, 2220801, 2220801, 2220833, 2220833, 2220865, 2220865, 2220865, 2220865, 2220897, 2220897, 2220897, 2220897, 2139873, 2139873]), new Uint32Array([0, 0, 0, 0, 0, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 6291456, 0]), new Uint32Array([2214849, 2218433, 2218465, 2218497, 2218529, 2218561, 2214881, 2218593, 2218625, 2218657, 2218689, 2218721, 2218753, 2216545, 2218785, 2218817]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6291456]), new Uint32Array([2136482, 2164610, 2164674, 2164738, 2164802, 2132802, 2132706, 2164866, 2132898, 2164930, 2164994, 2165058, 2165122, 2132802, 2132706, 2164866]), new Uint32Array([2207649, 2207681, 2207713, 2207745, 2207777, 2207809, 2207841, 2207873, 2207905, 2207937, 2207969, 2208001, 2208033, 2208065, 2208097, 2208129]), new Uint32Array([2123683, 2105092, 2152706, 2123779, 2105220, 2152770, 2100453, 2098755, 2123906, 2124002, 2124098, 2124194, 2124290, 2124386, 2124482, 2124578]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 0, 0, 0, 0, 0, 0, 0, 10485857]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([10508163, 10508259, 10508355, 10508451, 2200129, 2200161, 2192737, 2200193, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2203553, 6291456, 2203585, 6291456, 6291456, 6291456, 2203617, 6291456, 2203649, 6291456, 2203681, 6291456, 2203713, 6291456, 2203745, 6291456]), new Uint32Array([18884449, 18884065, 23068672, 18884417, 18884034, 18921185, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 18874368]), new Uint32Array([2247393, 2247426, 2247489, 2247521, 2247553, 2247586, 2247649, 2247681, 2247713, 2247745, 2247777, 2247810, 2247873, 2247905, 2247937, 2247969]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 23068672]), new Uint32Array([2134145, 2097153, 2134241, 0, 2132705, 2130977, 2160065, 2131297, 0, 2133089, 2160577, 2133857, 2235297, 0, 2235329, 0]), new Uint32Array([2182593, 6291456, 2182625, 6291456, 2182657, 6291456, 2182689, 6291456, 2182721, 6291456, 2182753, 6291456, 2182785, 6291456, 2182817, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2102402, 2102403, 6291456, 2110050]), new Uint32Array([2149890, 2108323, 2149954, 6291456, 2113441, 6291456, 2149057, 6291456, 2113441, 6291456, 2105473, 2167265, 2111137, 2105505, 6291456, 2108353]), new Uint32Array([2219105, 2219137, 2195233, 2251554, 2251617, 2251649, 2251681, 2251713, 2251746, 2251810, 2251873, 2251905, 2251937, 2251970, 2252033, 2219169]), new Uint32Array([2203009, 6291456, 2203041, 6291456, 2203073, 6291456, 2203105, 6291456, 2203137, 6291456, 2203169, 6291456, 2203201, 6291456, 2203233, 6291456]), new Uint32Array([2128195, 2128291, 2128387, 2128483, 2128579, 2128675, 2128771, 2128867, 2128963, 2129059, 2129155, 2129251, 2129347, 2129443, 2129539, 2129635]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2140964, 2141156, 2140966, 2141158, 2141350]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2225378, 2225442, 2225506, 2225570, 2225634, 2225698, 2225762, 2225826, 2225890, 2225954, 2226018, 2226082, 2226146, 2226210, 2226274, 2226338]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417]), new Uint32Array([2108353, 2108417, 0, 2105601, 2108193, 2157121, 2157313, 2157377, 2157441, 2100897, 6291456, 2108419, 2173953, 2173633, 2173633, 2173953]), new Uint32Array([2111713, 2173121, 2111905, 2098177, 2173153, 2173185, 2173217, 2113153, 2113345, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 2190753]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2197249, 6291456, 2117377, 2197281, 2197313, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 0, 0, 0, 0, 0, 0, 23068672, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456]), new Uint32Array([2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 2100833, 2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0]), new Uint32Array([0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 23068672, 23068672, 23068672]), new Uint32Array([2173281, 6291456, 2173313, 6291456, 2173345, 6291456, 2173377, 6291456, 0, 0, 10532546, 6291456, 6291456, 6291456, 10562017, 2173441]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 0, 0]), new Uint32Array([23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2159426, 2159490, 2159554, 2159362, 2159618, 2159682, 2139522, 2136450, 2159746, 2159810, 2159874, 2130978, 2131074, 2131266, 2131362, 2159938]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2203233, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2203265, 6291456, 2203297, 6291456, 2203329, 2203361, 6291456]), new Uint32Array([6291456, 6291456, 2148418, 2148482, 2148546, 0, 6291456, 2148610, 2186529, 2186561, 2148417, 2148545, 2148482, 10495778, 2143969, 10495778]), new Uint32Array([2134146, 2139426, 2160962, 2134242, 2161218, 2161282, 2161346, 2161410, 2138658, 2134722, 2134434, 2134818, 2097666, 2097346, 2097698, 2105986]), new Uint32Array([2198881, 2198913, 2198945, 2198977, 2199009, 2199041, 2199073, 2199105, 2199137, 2199169, 2199201, 2199233, 2199265, 2199297, 2199329, 2199361]), new Uint32Array([0, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456]), new Uint32Array([10610561, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193]), new Uint32Array([2183873, 6291456, 2183905, 6291456, 2183937, 6291456, 2183969, 6291456, 2184001, 6291456, 2184033, 6291456, 2184065, 6291456, 2184097, 6291456]), new Uint32Array([2244642, 2244706, 2244769, 2244801, 2218305, 2244833, 2244865, 2244897, 2244929, 2244961, 2244993, 2245026, 2245089, 2245122, 2245185, 0]), new Uint32Array([6291456, 6291456, 2116513, 2116609, 2116705, 2116801, 2199873, 2199905, 2199937, 2199969, 2190913, 2200001, 2200033, 2200065, 2200097, 2191009]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 2180673, 2180705, 2180737, 2180769, 2180801, 2180833, 0, 0]), new Uint32Array([2098081, 2099521, 2099105, 2120705, 2098369, 2120801, 2103361, 2097985, 2098433, 2121377, 2121473, 2099169, 2099873, 2098401, 2099393, 2152609]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2150402]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 2145666, 2145730, 6291456, 6291456]), new Uint32Array([2173921, 2173953, 2173985, 2173761, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233057, 2148481, 2173601, 2173633, 2173665]), new Uint32Array([2187073, 6291456, 6291456, 6291456, 6291456, 2098241, 2098241, 2108353, 2100897, 2111905, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2102404, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2100612, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 10485857]), new Uint32Array([2149057, 2233057, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889]), new Uint32Array([2217697, 2217729, 2217761, 2217793, 2217825, 2217857, 2217889, 2217921, 2217953, 2215873, 2217985, 2215905, 2218017, 2218049, 2218081, 2218113]), new Uint32Array([2211233, 2218849, 2216673, 2218881, 2218913, 2218945, 2218977, 2219009, 2216833, 2219041, 2215137, 2219073, 2216865, 2209505, 2219105, 2216897]), new Uint32Array([2240097, 2240129, 2240161, 2240193, 2240225, 2240257, 2240289, 2240321, 2240353, 2240386, 2240449, 2240481, 2240513, 2240545, 2207905, 2240578]), new Uint32Array([6291456, 6291456, 2202273, 6291456, 2202305, 6291456, 2202337, 6291456, 2202369, 6291456, 2202401, 6291456, 2202433, 6291456, 2202465, 6291456]), new Uint32Array([0, 23068672, 23068672, 18923394, 23068672, 18923458, 18923522, 18884099, 18923586, 18884195, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2201121, 6291456, 2201153, 6291456, 2201185, 6291456, 2201217, 6291456, 2201249, 6291456, 2201281, 6291456, 2201313, 6291456, 2201345, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456]), new Uint32Array([2211041, 2211073, 2211105, 2211137, 2211169, 2211201, 2211233, 2211265, 2211297, 2211329, 2211361, 2211393, 2211425, 2211457, 2211489, 2211521]), new Uint32Array([2181825, 6291456, 2181857, 6291456, 2181889, 6291456, 2181921, 6291456, 2181953, 6291456, 2181985, 6291456, 2182017, 6291456, 2182049, 6291456]), new Uint32Array([2162337, 2097633, 2097633, 2097633, 2097633, 2132705, 2132705, 2132705, 2132705, 2097153, 2097153, 2097153, 2097153, 2133089, 2133089, 2133089]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 2148545, 6291456, 2173473, 6291456, 2148865, 6291456, 2173505, 6291456, 2173537, 6291456, 2173569, 6291456, 2149121, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 0, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0]), new Uint32Array([2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2174017, 2174017, 2174049, 2174081, 2174113]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2207137, 2207169, 2207201, 2207233, 2207265, 2207297, 2207329, 2207361, 2207393, 2207425, 2207457, 2207489, 2207521, 2207553, 2207585, 2207617]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 6291456, 0, 23068672, 23068672, 0, 0, 0, 0, 0, 0]), new Uint32Array([2198401, 2198433, 2198465, 2198497, 0, 2198529, 2198561, 2198593, 2198625, 2198657, 2198689, 2198721, 2198753, 2198785, 2198817, 2198849]), new Uint32Array([2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 0, 0]), new Uint32Array([2216385, 2118721, 2216417, 2216449, 2216481, 2216513, 2216545, 2211233, 2216577, 2216609, 2216641, 2216673, 2216705, 2216737, 2216737, 2216769]), new Uint32Array([2216801, 2216833, 2216865, 2216897, 2216929, 2216961, 2216993, 2215169, 2217025, 2217057, 2217089, 2217121, 2217154, 2217217, 0, 0]), new Uint32Array([2210593, 2191809, 2210625, 2210657, 2210689, 2210721, 2210753, 2210785, 2210817, 2210849, 2191297, 2210881, 2210913, 2210945, 2210977, 2211009]), new Uint32Array([0, 0, 2105825, 0, 0, 2111905, 2105473, 0, 0, 2112289, 2108193, 2112481, 2112577, 0, 2098305, 2108321]), new Uint32Array([0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 2097153, 2134241, 0, 2132705, 0, 0, 2131297, 0, 2133089, 0, 2133857, 0, 2220769, 0, 2235361]), new Uint32Array([14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 6291456, 6291456, 14680064]), new Uint32Array([23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2171873, 6291456, 2171905, 6291456, 2171937, 6291456, 2171969, 6291456, 2172001, 6291456, 2172033, 6291456, 2172065, 6291456, 2172097, 6291456]), new Uint32Array([2220929, 2220929, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2133857, 2134145, 2134145, 2134145, 2134145, 2134241, 2134241, 2134241, 2134241, 2105889, 2105889, 2105889, 2105889, 2097185, 2097185, 2097185]), new Uint32Array([2173697, 2173761, 2173793, 2174113, 2173985, 2173953, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10499619, 10499715, 10499811, 10499907]), new Uint32Array([0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 0, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 0, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 23068672, 23068672]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 2144322, 2144386, 2144450, 2144514, 2144578, 2144642, 2144706, 2144770]), new Uint32Array([23068672, 23068672, 23068672, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2113153, 2108481, 2113345, 2113441, 2098209, 2111137, 0, 2098241, 2108353, 2108417, 2105825, 0, 0, 2111905, 2105473, 2105569]), new Uint32Array([2236321, 2236353, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2152194, 2121283, 2103684, 2103812, 2097986, 2098533, 2097990, 2098693, 2098595, 2098853, 2099013, 2103940, 2121379, 2121475, 2121571, 2104068]), new Uint32Array([2206241, 2206273, 2206305, 2206337, 2206369, 2206401, 2206433, 2206465, 2206497, 2206529, 2206561, 2206593, 2206625, 2206657, 2206689, 2206721]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 16777216, 16777216, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 23068672, 23068672, 10538818, 10538882, 6291456, 6291456, 2150338]), new Uint32Array([6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2214369, 2214401, 2214433, 2214465, 2214497, 2214529, 2214561, 2214593, 2194977, 2214625, 2195073, 2214657, 2214689, 2214721, 6291456, 6291456]), new Uint32Array([2097152, 2097152, 2097152, 2097152, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2182081, 6291456, 2182113, 6291456, 2182145, 6291456, 2182177, 6291456, 2182209, 6291456, 2182241, 6291456, 2182273, 6291456, 2182305, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2146881, 2146945, 2147009, 2147073, 2147137, 2147201, 2147265, 2147329]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 23068672, 23068672]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2122915, 2123011, 2123107, 2104708, 2123203, 2123299, 2123395, 2100133, 2104836, 2100290, 2100293, 2104962, 2104964, 2098052, 2123491, 2123587]), new Uint32Array([23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456]), new Uint32Array([6291456, 2171169, 6291456, 2171201, 6291456, 2171233, 6291456, 2171265, 6291456, 2171297, 6291456, 2171329, 6291456, 6291456, 2171361, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 2148994, 2149058, 2149122, 0, 6291456, 2149186, 2186945, 2173537, 2148993, 2149121, 2149058, 10531458, 10496066, 0]), new Uint32Array([2195009, 2195041, 2195073, 2195105, 2195137, 2195169, 2195201, 2195233, 2195265, 2195297, 2195329, 2195361, 2195393, 2195425, 2195457, 2195489]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 0, 0, 6291456, 6291456]), new Uint32Array([2182849, 6291456, 2182881, 6291456, 2182913, 6291456, 2182945, 6291456, 2182977, 6291456, 2183009, 6291456, 2183041, 6291456, 2183073, 6291456]), new Uint32Array([2211553, 2210081, 2211585, 2211617, 2211649, 2211681, 2211713, 2211745, 2211777, 2211809, 2209569, 2211841, 2211873, 2211905, 2211937, 2211969]), new Uint32Array([2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2166594, 2127298, 2166658, 2142978, 2141827, 2166722]), new Uint32Array([2173985, 2173761, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233057, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 2185761, 2185793, 2185825, 2185857, 2185889, 2185921, 0, 0]), new Uint32Array([6291456, 2148481, 2173601, 2173633, 2173665, 2173697, 2173729, 2148801, 2173761, 2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 6291456]), new Uint32Array([0, 0, 0, 2220961, 2220961, 2220961, 2220961, 2144193, 2144193, 2159201, 2159201, 2159265, 2159265, 2144194, 2220993, 2220993]), new Uint32Array([2192641, 2235393, 2235425, 2152257, 2116609, 2235457, 2235489, 2200065, 2235521, 2235553, 2235585, 2212449, 2235617, 2235649, 2235681, 2235713]), new Uint32Array([2194049, 2194081, 2194113, 2194145, 2194177, 2194209, 2194241, 2194273, 2194305, 2194337, 2194369, 2194401, 2194433, 2194465, 2194497, 2194529]), new Uint32Array([2196673, 2208641, 2208673, 2208705, 2208737, 2208769, 2208801, 2208833, 2208865, 2208897, 2208929, 2208961, 2208993, 2209025, 2209057, 2209089]), new Uint32Array([2191681, 2191713, 2191745, 2191777, 2153281, 2191809, 2191841, 2191873, 2191905, 2191937, 2191969, 2192001, 2192033, 2192065, 2192097, 2192129]), new Uint32Array([2230946, 2231010, 2231074, 2231138, 2231202, 2231266, 2231330, 2231394, 2231458, 2231522, 2231586, 2231650, 2231714, 2231778, 2231842, 2231906]), new Uint32Array([14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064, 14680064]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 2185953, 2185985, 2186017, 2186049, 2186081, 2186113, 2186145, 2186177]), new Uint32Array([2139811, 2139907, 2097284, 2105860, 2105988, 2106116, 2106244, 2097444, 2097604, 2097155, 10485778, 10486344, 2106372, 6291456, 0, 0]), new Uint32Array([2110051, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2172385, 6291456, 2172417, 6291456, 2172449, 6291456, 2172481, 6291456, 2172513, 6291456, 2172545, 6291456, 2172577, 6291456, 2172609, 6291456]), new Uint32Array([0, 0, 23068672, 23068672, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2249345, 2249377, 2249409, 2249441, 2249473, 2249505, 2249537, 2249570, 2210209, 2249633, 2249665, 2249697, 2249729, 2249761, 2249793, 2216769]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2187169, 2187201, 2187233, 2187265, 2187297, 2187329, 2187361, 2187393, 2187425, 2187457, 2187489, 2187521, 2187553, 2187585, 2187617, 2187649]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([0, 0, 0, 6291456, 6291456, 0, 0, 0, 6291456, 6291456, 6291456, 0, 0, 0, 6291456, 6291456]), new Uint32Array([2182337, 6291456, 2182369, 6291456, 2182401, 6291456, 2182433, 6291456, 2182465, 6291456, 2182497, 6291456, 2182529, 6291456, 2182561, 6291456]), new Uint32Array([2138179, 2138275, 2138371, 2138467, 2134243, 2134435, 2138563, 2138659, 2138755, 2138851, 2138947, 2139043, 2138947, 2138755, 2139139, 2139235]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([0, 0, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2250498, 2250562, 2250625, 2250657, 2208321, 2250689, 2250721, 2250753, 2250785, 2250817, 2250849, 2218945, 2250881, 2250913, 2250945, 0]), new Uint32Array([2170369, 2105569, 2098305, 2108481, 2173249, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456]), new Uint32Array([2100897, 2111905, 2105473, 2105569, 2105601, 0, 2108193, 0, 0, 0, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481]), new Uint32Array([2100897, 2100897, 2105569, 2105569, 6291456, 2112289, 2149826, 6291456, 6291456, 2112481, 2112577, 2098177, 2098177, 2098177, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 2169953, 2169985, 6291456, 2170017, 6291456, 2170049, 2170081, 6291456, 2170113, 2170145, 2170177, 6291456, 6291456, 2170209, 2170241]), new Uint32Array([6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([0, 0, 0, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2220641, 2220641, 2220673, 2220673, 2220673, 2220673, 2220705, 2220705, 2220705, 2220705, 2220737, 2220737, 2220737, 2220737, 2220769, 2220769]), new Uint32Array([2127650, 2127746, 2127842, 2127938, 2128034, 2128130, 2128226, 2128322, 2128418, 2127523, 2127619, 2127715, 2127811, 2127907, 2128003, 2128099]), new Uint32Array([2143969, 2173793, 2173825, 2153473, 2173857, 2173889, 2173921, 2173953, 2173985, 2173761, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177]), new Uint32Array([0, 0, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([2204705, 2204737, 2204769, 2204801, 2204833, 2204865, 2204897, 2204929, 2204961, 2204993, 2205025, 2205057, 2205089, 2205121, 2205153, 2205185]), new Uint32Array([2176385, 6291456, 2176417, 6291456, 2176449, 6291456, 2176481, 6291456, 2176513, 6291456, 2176545, 6291456, 2176577, 6291456, 2176609, 6291456]), new Uint32Array([2195521, 2195553, 2195585, 2195617, 2195649, 2195681, 2117857, 2195713, 2195745, 2195777, 2195809, 2195841, 2195873, 2195905, 2195937, 2195969]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456]), new Uint32Array([2173921, 2173953, 2173985, 2174017, 2174017, 2174049, 2174081, 2174113, 2174145, 2174177, 2149057, 2233089, 2173697, 2173761, 2173793, 2174113]), new Uint32Array([2131586, 2132450, 2135970, 2135778, 2161602, 2136162, 2163650, 2161794, 2135586, 2163714, 2137186, 2131810, 2160290, 2135170, 2097506, 2159554]), new Uint32Array([2134145, 2097153, 2134241, 2105953, 2132705, 2130977, 2160065, 2131297, 2162049, 2133089, 2160577, 2133857, 0, 0, 0, 0]), new Uint32Array([2116513, 2116609, 2116705, 2116801, 2116897, 2116993, 2117089, 2117185, 2117281, 2117377, 2117473, 2117569, 2117665, 2117761, 2117857, 2117953]), new Uint32Array([2100737, 2098337, 2101441, 2101569, 2101697, 2101825, 2101953, 2102081, 2102209, 2100802, 2101154, 2101282, 2101410, 2101538, 2101666, 2101794]), new Uint32Array([2100289, 2098657, 2098049, 2200737, 2123489, 2123681, 2200769, 2098625, 2100321, 2098145, 2100449, 2098017, 2098753, 2098977, 2150241, 2150305]), new Uint32Array([6291456, 6291456, 6291456, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 2109955, 6291456, 6291456, 0, 0, 0, 0]), new Uint32Array([18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368, 18874368]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 6291456, 0, 6291456, 0, 0]), new Uint32Array([2130979, 2131075, 2131075, 2131171, 2131267, 2131363, 2131459, 2131555, 2131651, 2131651, 2131747, 2131843, 2131939, 2132035, 2132131, 2132227]), new Uint32Array([0, 2177793, 6291456, 2177825, 6291456, 2177857, 6291456, 2177889, 6291456, 2177921, 6291456, 2177953, 6291456, 2177985, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672]), new Uint32Array([6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2113345, 0, 2098209, 2111137, 2105505, 2098241, 2108353, 2108417, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289]), new Uint32Array([2136643, 2136739, 2136835, 2136931, 2137027, 2137123, 2137219, 2137315, 2137411, 2137507, 2137603, 2137699, 2137795, 2137891, 2137987, 2138083]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0]), new Uint32Array([2174433, 6291456, 2174465, 6291456, 2174497, 6291456, 2174529, 6291456, 2174561, 6291456, 2174593, 6291456, 2174625, 6291456, 2174657, 6291456]), new Uint32Array([0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441]), new Uint32Array([10496547, 10496643, 2105505, 2149698, 6291456, 10496739, 10496835, 2170273, 6291456, 2149762, 2105825, 2111713, 2111713, 2111713, 2111713, 2168673]), new Uint32Array([6291456, 2143490, 2143490, 2143490, 2171649, 6291456, 2171681, 2171713, 2171745, 6291456, 2171777, 6291456, 2171809, 6291456, 2171841, 6291456]), new Uint32Array([2159106, 2159106, 2159170, 2159170, 2159234, 2159234, 2159298, 2159298, 2159298, 2159362, 2159362, 2159362, 2106401, 2106401, 2106401, 2106401]), new Uint32Array([2105601, 2112289, 2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865, 2113153, 2108481, 2113345, 2113441, 2098209, 2111137]), new Uint32Array([2108417, 2181217, 2181249, 2181281, 2170433, 2170401, 2181313, 2181345, 2181377, 2181409, 2181441, 2181473, 2181505, 2181537, 2170529, 2181569]), new Uint32Array([2218433, 2245761, 2245793, 2245825, 2245857, 2245890, 2245953, 2245986, 2209665, 2246050, 2246113, 2246146, 2246210, 2246274, 2246337, 2246369]), new Uint32Array([2230754, 2230818, 2230882, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([6291456, 0, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 0, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2184129, 6291456, 2184161, 6291456, 2184193, 6291456, 6291456, 6291456, 6291456, 6291456, 2146818, 2183361, 6291456, 6291456, 2142978, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2135170, 2097506, 2130691, 2130787, 2130883, 2163970, 2164034, 2164098, 2164162, 2164226, 2164290, 2164354, 2164418, 2164482, 2164546, 2133122]), new Uint32Array([2108515, 2108611, 2100740, 2108707, 2108803, 2108899, 2108995, 2109091, 2109187, 2109283, 2109379, 2109475, 2109571, 2109667, 2109763, 2100738]), new Uint32Array([2102788, 2102916, 2103044, 2120515, 2103172, 2120611, 2120707, 2098373, 2103300, 2120803, 2120899, 2120995, 2103428, 2103556, 2121091, 2121187]), new Uint32Array([2158082, 2158146, 0, 2158210, 2158274, 0, 2158338, 2158402, 2158466, 2129922, 2158530, 2158594, 2158658, 2158722, 2158786, 2158850]), new Uint32Array([10499619, 10499715, 10499811, 10499907, 10500003, 10500099, 10500195, 10500291, 10500387, 10500483, 10500579, 10500675, 10500771, 10500867, 10500963, 10501059]), new Uint32Array([2239585, 2239618, 2239681, 2239713, 0, 2191969, 2239745, 2239777, 2192033, 2239809, 2239841, 2239874, 2239937, 2239970, 2240033, 2240065]), new Uint32Array([2252705, 2252738, 2252801, 2252833, 2252865, 2252897, 2252930, 2252994, 2253057, 2253089, 2253121, 2253154, 2253217, 2253250, 2219361, 2219361]), new Uint32Array([2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 2108193, 2112481, 2112577, 2098177, 2098305, 2108321, 2108289, 2100865]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 10538050, 10538114, 10538178, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([2226402, 2226466, 2226530, 2226594, 2226658, 2226722, 2226786, 2226850, 2226914, 2226978, 2227042, 2227106, 2227170, 2227234, 2227298, 2227362]), new Uint32Array([23068672, 6291456, 6291456, 6291456, 6291456, 2144066, 2144130, 2144194, 2144258, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 23068672, 23068672]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2124674, 2124770, 2123875, 2123971, 2124067, 2124163, 2124259, 2124355, 2124451, 2124547, 2124643, 2124739, 2124835, 2124931, 2125027, 2125123]), new Uint32Array([2168065, 6291456, 2168097, 6291456, 2168129, 6291456, 2168161, 6291456, 2168193, 6291456, 2168225, 6291456, 2168257, 6291456, 2168289, 6291456]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0]), new Uint32Array([23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 2100610, 2100611, 6291456, 2107842, 2107843, 6291456, 6291456, 6291456, 6291456, 10537922, 6291456, 10537986, 6291456]), new Uint32Array([2174849, 2174881, 2174913, 2174945, 2174977, 2175009, 2175041, 2175073, 2175105, 2175137, 2175169, 2175201, 2175233, 2175265, 2175297, 2175329]), new Uint32Array([2154562, 2154626, 2154690, 2154754, 2141858, 2154818, 2154882, 2127298, 2154946, 2127298, 2155010, 2155074, 2155138, 2155202, 2155266, 2155202]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 23068672, 0]), new Uint32Array([2200641, 2150786, 2150850, 2150914, 2150978, 2151042, 2106562, 2151106, 2150562, 2151170, 2151234, 2151298, 2151362, 2151426, 2151490, 2151554]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 0, 0, 0, 0, 0, 0, 0, 0, 6291456, 6291456]), new Uint32Array([2220289, 2220289, 2220321, 2220321, 2220321, 2220321, 2220353, 2220353, 2220353, 2220353, 2220385, 2220385, 2220385, 2220385, 2220417, 2220417]), new Uint32Array([2155330, 2155394, 0, 2155458, 2155522, 2155586, 2105732, 0, 2155650, 2155714, 2155778, 2125314, 2155842, 2155906, 2126274, 2155970]), new Uint32Array([23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456, 23068672, 23068672, 6291456, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0]), new Uint32Array([2097729, 2106017, 2106017, 2106017, 2106017, 2131297, 2131297, 2131297, 2131297, 2106081, 2106081, 2162049, 2162049, 2105953, 2105953, 2162337]), new Uint32Array([2097185, 2097697, 2097697, 2097697, 2097697, 2135777, 2135777, 2135777, 2135777, 2097377, 2097377, 2097377, 2097377, 2097601, 2097601, 2097217]), new Uint32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23068672]), new Uint32Array([2139331, 2139427, 2139523, 2139043, 2133571, 2132611, 2139619, 2139715, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2174113, 2174145, 2100897, 2098177, 2108289, 2100865, 2173601, 2173633, 2173985, 2174113, 2174145, 6291456, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456, 23068672, 6291456, 6291456, 6291456, 6291456]), new Uint32Array([23068672, 23068672, 18923778, 23068672, 23068672, 23068672, 23068672, 18923842, 23068672, 23068672, 23068672, 23068672, 18923906, 23068672, 23068672, 23068672]), new Uint32Array([2134145, 2097153, 2134241, 0, 2132705, 2130977, 2160065, 2131297, 0, 2133089, 0, 2133857, 0, 0, 0, 0]), new Uint32Array([6291456, 6291456, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2177537, 6291456, 2177569, 6291456, 2177601, 6291456, 2177633, 6291456, 2177665, 6291456, 2177697, 6291456, 2177729, 6291456, 2177761, 6291456]), new Uint32Array([2212481, 2212513, 2212545, 2212577, 2197121, 2212609, 2212641, 2212673, 2212705, 2212737, 2212769, 2212801, 2212833, 2212865, 2212897, 2212929]), new Uint32Array([6291456, 6291456, 23068672, 23068672, 23068672, 6291456, 6291456, 0, 0, 0, 0, 0, 0, 0, 0, 0]), new Uint32Array([2098241, 2108353, 2170209, 2105825, 2111713, 2100897, 2111905, 2105473, 2105569, 2105601, 2112289, 6291456, 2108193, 2172417, 2112481, 2098177]), new Uint32Array([6291456, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 23068672, 6291456, 6291456])];
+        var blockIdxes = new Uint16Array([616, 616, 565, 147, 161, 411, 330, 2, 131, 131, 328, 454, 241, 408, 86, 86, 696, 113, 285, 350, 325, 301, 473, 214, 639, 232, 447, 64, 369, 598, 124, 672, 567, 223, 621, 154, 107, 86, 86, 86, 86, 86, 86, 505, 86, 68, 634, 86, 218, 218, 218, 218, 486, 218, 218, 513, 188, 608, 216, 86, 217, 463, 668, 85, 700, 360, 184, 86, 86, 86, 647, 402, 153, 10, 346, 718, 662, 260, 145, 298, 117, 1, 443, 342, 138, 54, 563, 86, 240, 572, 218, 70, 387, 86, 118, 460, 641, 602, 86, 86, 306, 218, 86, 692, 86, 86, 86, 86, 86, 162, 707, 86, 458, 26, 86, 218, 638, 86, 86, 86, 86, 86, 65, 449, 86, 86, 306, 183, 86, 58, 391, 667, 86, 157, 131, 131, 131, 131, 86, 433, 131, 406, 31, 218, 247, 86, 86, 693, 218, 581, 351, 86, 438, 295, 69, 462, 45, 126, 173, 650, 14, 295, 69, 97, 168, 187, 641, 78, 523, 390, 69, 108, 287, 664, 173, 219, 83, 295, 69, 108, 431, 426, 173, 694, 412, 115, 628, 52, 257, 398, 641, 118, 501, 121, 69, 579, 151, 423, 173, 620, 464, 121, 69, 382, 151, 476, 173, 27, 53, 121, 86, 594, 578, 226, 173, 86, 632, 130, 86, 96, 228, 268, 641, 622, 563, 86, 86, 21, 148, 650, 131, 131, 321, 43, 144, 343, 381, 531, 131, 131, 178, 20, 86, 399, 156, 375, 164, 541, 30, 60, 715, 198, 92, 118, 131, 131, 86, 86, 306, 407, 86, 280, 457, 196, 488, 358, 131, 131, 244, 86, 86, 143, 86, 86, 86, 86, 86, 667, 563, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 336, 363, 86, 86, 336, 86, 86, 380, 678, 67, 86, 86, 86, 678, 86, 86, 86, 512, 86, 307, 86, 708, 86, 86, 86, 86, 86, 528, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 563, 307, 86, 86, 86, 86, 86, 104, 450, 337, 86, 720, 86, 32, 450, 397, 86, 86, 86, 587, 218, 558, 708, 708, 293, 708, 86, 86, 86, 86, 86, 694, 205, 86, 8, 86, 86, 86, 86, 549, 86, 667, 697, 697, 679, 86, 458, 460, 86, 86, 650, 86, 708, 543, 86, 86, 86, 245, 86, 86, 86, 140, 218, 127, 708, 708, 458, 197, 131, 131, 131, 131, 500, 86, 86, 483, 251, 86, 306, 510, 515, 86, 722, 86, 86, 86, 65, 201, 86, 86, 483, 580, 470, 86, 86, 86, 368, 131, 131, 131, 694, 114, 110, 555, 86, 86, 123, 721, 163, 142, 713, 418, 86, 317, 675, 209, 218, 218, 218, 371, 545, 592, 629, 490, 603, 199, 46, 320, 525, 680, 310, 279, 388, 111, 42, 252, 593, 607, 235, 617, 410, 377, 50, 548, 135, 356, 17, 520, 189, 116, 392, 600, 349, 332, 482, 699, 690, 535, 119, 106, 451, 71, 152, 667, 131, 218, 218, 265, 671, 637, 492, 504, 533, 683, 269, 269, 658, 86, 86, 86, 86, 86, 86, 86, 86, 86, 491, 619, 86, 86, 6, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 229, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 667, 86, 86, 171, 131, 118, 131, 656, 206, 234, 571, 89, 334, 670, 246, 311, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 534, 86, 86, 86, 86, 86, 86, 82, 86, 86, 86, 86, 86, 430, 86, 86, 86, 86, 86, 86, 86, 86, 86, 599, 86, 324, 86, 470, 69, 640, 264, 131, 626, 101, 174, 86, 86, 667, 233, 105, 73, 374, 394, 221, 204, 84, 28, 326, 86, 86, 471, 86, 86, 86, 109, 573, 86, 171, 200, 200, 200, 200, 218, 218, 86, 86, 86, 86, 460, 131, 131, 131, 86, 506, 86, 86, 86, 86, 86, 220, 404, 34, 614, 47, 442, 305, 25, 612, 338, 601, 648, 7, 344, 255, 131, 131, 51, 86, 312, 507, 563, 86, 86, 86, 86, 588, 86, 86, 86, 86, 86, 530, 511, 86, 458, 3, 435, 384, 556, 522, 230, 527, 86, 118, 86, 86, 717, 86, 137, 273, 79, 181, 484, 23, 93, 112, 655, 249, 417, 703, 370, 87, 98, 313, 684, 585, 155, 465, 596, 481, 695, 18, 416, 428, 61, 701, 706, 282, 643, 495, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 549, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 549, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 307, 86, 86, 86, 171, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 650, 131, 422, 542, 420, 263, 24, 172, 86, 86, 86, 86, 86, 566, 86, 86, 132, 540, 395, 353, 494, 519, 19, 485, 284, 472, 131, 131, 131, 16, 714, 86, 211, 708, 86, 86, 86, 694, 698, 86, 86, 483, 704, 708, 218, 272, 86, 86, 120, 86, 159, 478, 86, 307, 247, 86, 86, 663, 597, 459, 627, 667, 86, 86, 277, 455, 39, 302, 86, 250, 86, 86, 86, 271, 99, 452, 306, 281, 329, 400, 200, 86, 86, 362, 549, 352, 646, 461, 323, 586, 86, 86, 4, 708, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 717, 86, 518, 86, 86, 650, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 125, 554, 480, 300, 613, 72, 333, 288, 561, 544, 604, 48, 719, 91, 169, 176, 590, 224, 76, 191, 29, 559, 560, 231, 537, 166, 477, 538, 256, 437, 131, 131, 469, 167, 40, 0, 685, 266, 441, 705, 239, 642, 475, 568, 640, 610, 299, 673, 517, 318, 385, 22, 202, 180, 179, 359, 424, 215, 90, 66, 521, 653, 467, 682, 453, 409, 479, 88, 131, 661, 35, 303, 15, 262, 666, 630, 712, 131, 131, 618, 659, 175, 218, 195, 347, 193, 227, 261, 150, 165, 709, 546, 294, 569, 710, 270, 413, 376, 524, 55, 242, 38, 419, 529, 170, 657, 3, 304, 122, 379, 278, 131, 651, 86, 67, 576, 458, 458, 131, 131, 86, 86, 86, 86, 86, 86, 86, 118, 309, 86, 86, 547, 86, 86, 86, 86, 667, 650, 664, 131, 131, 86, 86, 56, 131, 131, 131, 131, 131, 131, 131, 131, 86, 307, 86, 86, 86, 664, 238, 650, 86, 86, 717, 86, 118, 86, 86, 315, 86, 59, 86, 86, 574, 549, 131, 131, 340, 57, 436, 86, 86, 86, 86, 86, 86, 458, 708, 499, 691, 62, 86, 650, 86, 86, 694, 86, 86, 86, 319, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 171, 86, 549, 694, 131, 131, 131, 131, 131, 131, 131, 131, 131, 77, 86, 86, 139, 86, 502, 86, 86, 86, 667, 595, 131, 131, 131, 86, 12, 86, 13, 86, 609, 131, 131, 131, 131, 86, 86, 86, 625, 86, 669, 86, 86, 182, 129, 86, 5, 694, 104, 86, 86, 86, 86, 131, 131, 86, 86, 386, 171, 86, 86, 86, 345, 86, 324, 86, 589, 86, 213, 36, 131, 131, 131, 131, 131, 86, 86, 86, 86, 104, 131, 131, 131, 141, 290, 80, 677, 86, 86, 86, 267, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 667, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 515, 86, 86, 33, 136, 669, 86, 711, 515, 86, 86, 550, 640, 86, 104, 708, 515, 86, 159, 372, 717, 86, 86, 444, 515, 86, 86, 663, 37, 86, 563, 460, 86, 390, 624, 702, 131, 131, 131, 131, 389, 59, 708, 86, 86, 341, 208, 708, 635, 295, 69, 108, 431, 508, 100, 190, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 649, 516, 660, 131, 131, 86, 86, 86, 218, 631, 708, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 341, 575, 238, 514, 131, 131, 86, 86, 86, 218, 291, 708, 307, 131, 86, 86, 306, 367, 708, 131, 131, 131, 86, 378, 697, 86, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 615, 253, 86, 86, 86, 292, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 104, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 69, 86, 341, 553, 549, 86, 307, 86, 86, 645, 275, 455, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 708, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 667, 460, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 717, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 667, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 171, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 104, 86, 667, 459, 131, 131, 131, 131, 131, 131, 86, 458, 225, 86, 86, 86, 516, 549, 11, 390, 405, 86, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 460, 44, 218, 197, 711, 515, 131, 131, 131, 131, 664, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 307, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 308, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 640, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 118, 307, 104, 286, 591, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 549, 86, 86, 681, 86, 86, 75, 185, 314, 582, 86, 358, 496, 474, 86, 104, 131, 86, 86, 86, 86, 146, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 171, 86, 640, 131, 131, 131, 131, 131, 131, 131, 131, 246, 503, 689, 339, 674, 81, 258, 415, 439, 128, 562, 366, 414, 246, 503, 689, 583, 222, 557, 316, 636, 665, 186, 355, 95, 670, 246, 503, 689, 339, 674, 557, 258, 415, 439, 186, 355, 95, 670, 246, 503, 689, 446, 644, 536, 652, 331, 532, 335, 440, 274, 421, 297, 570, 74, 425, 364, 425, 606, 552, 403, 509, 134, 365, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 218, 218, 218, 498, 218, 218, 577, 627, 551, 497, 572, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 553, 354, 236, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 296, 455, 131, 131, 456, 243, 103, 86, 41, 459, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 9, 276, 158, 716, 393, 564, 383, 489, 401, 654, 210, 654, 131, 131, 131, 640, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 650, 86, 86, 86, 86, 86, 86, 717, 667, 563, 563, 563, 86, 549, 102, 686, 133, 246, 605, 86, 448, 86, 86, 207, 307, 131, 131, 131, 641, 86, 177, 611, 445, 373, 194, 584, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 308, 307, 171, 86, 86, 86, 86, 86, 86, 86, 717, 86, 86, 86, 86, 86, 460, 131, 131, 650, 86, 86, 86, 694, 708, 86, 86, 694, 86, 458, 131, 131, 131, 131, 131, 131, 667, 694, 289, 650, 667, 131, 131, 86, 640, 131, 131, 664, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 171, 131, 131, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 460, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 458, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 86, 640, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 466, 203, 149, 429, 94, 432, 160, 687, 539, 63, 237, 283, 192, 248, 348, 259, 427, 526, 396, 676, 254, 468, 487, 212, 327, 623, 49, 633, 322, 493, 434, 688, 357, 361, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131, 131]);
+        var mappingStr = "صلى الله عليه وسلمجل جلالهキロメートルrad∕s2エスクードキログラムキロワットグラムトンクルゼイロサンチームパーセントピアストルファラッドブッシェルヘクタールマンションミリバールレントゲン′′′′1⁄10viii(10)(11)(12)(13)(14)(15)(16)(17)(18)(19)(20)∫∫∫∫(오전)(오후)アパートアルファアンペアイニングエーカーカラットカロリーキュリーギルダークローネサイクルシリングバーレルフィートポイントマイクロミクロンメガトンリットルルーブル株式会社kcalm∕s2c∕kgاكبرمحمدصلعمرسولریال1⁄41⁄23⁄4 ̈́ྲཱྀླཱྀ ̈͂ ̓̀ ̓́ ̓͂ ̔̀ ̔́ ̔͂ ̈̀‵‵‵a/ca/sc/oc/utelfax1⁄71⁄91⁄32⁄31⁄52⁄53⁄54⁄51⁄65⁄61⁄83⁄85⁄87⁄8xii0⁄3∮∮∮(1)(2)(3)(4)(5)(6)(7)(8)(9)(a)(b)(c)(d)(e)(f)(g)(h)(i)(j)(k)(l)(m)(n)(o)(p)(q)(r)(s)(t)(u)(v)(w)(x)(y)(z)::====(ᄀ)(ᄂ)(ᄃ)(ᄅ)(ᄆ)(ᄇ)(ᄉ)(ᄋ)(ᄌ)(ᄎ)(ᄏ)(ᄐ)(ᄑ)(ᄒ)(가)(나)(다)(라)(마)(바)(사)(아)(자)(차)(카)(타)(파)(하)(주)(一)(二)(三)(四)(五)(六)(七)(八)(九)(十)(月)(火)(水)(木)(金)(土)(日)(株)(有)(社)(名)(特)(財)(祝)(労)(代)(呼)(学)(監)(企)(資)(協)(祭)(休)(自)(至)pte10月11月12月ergltdアールインチウォンオンスオームカイリガロンガンマギニーケースコルナコーポセンチダースノットハイツパーツピクルフランペニヒヘルツペンスページベータボルトポンドホールホーンマイルマッハマルクヤードヤールユアンルピー10点11点12点13点14点15点16点17点18点19点20点21点22点23点24点hpabardm2dm3khzmhzghzthzmm2cm2km2mm3cm3km3kpampagpalogmilmolppmv∕ma∕m10日11日12日13日14日15日16日17日18日19日20日21日22日23日24日25日26日27日28日29日30日31日galffifflשּׁשּׂ ٌّ ٍّ َّ ُّ ِّ ّٰـَّـُّـِّتجمتحجتحمتخمتمجتمحتمخجمححميحمىسحجسجحسجىسمحسمجسممصححصممشحمشجيشمخشممضحىضخمطمحطممطميعجمعممعمىغممغميغمىفخمقمحقمملحملحيلحىلججلخملمحمحجمحيمجحمجممخممجخهمجهممنحمنحىنجمنجىنمينمىيممبخيتجيتجىتخيتخىتميتمىجميجحىجمىسخىصحيشحيضحيلجيلمييحييجييميمميقمينحيعميكمينجحمخيلجمكممجحيحجيمجيفميبحيسخينجيصلےقلے𝅘𝅥𝅮𝅘𝅥𝅯𝅘𝅥𝅰𝅘𝅥𝅱𝅘𝅥𝅲𝆹𝅥𝅮𝆺𝅥𝅮𝆹𝅥𝅯𝆺𝅥𝅯〔s〕ppv〔本〕〔三〕〔二〕〔安〕〔点〕〔打〕〔盗〕〔勝〕〔敗〕 ̄ ́ ̧ssi̇ijl·ʼndžljnjdz ̆ ̇ ̊ ̨ ̃ ̋ ιեւاٴوٴۇٴيٴक़ख़ग़ज़ड़ढ़फ़य़ড়ঢ়য়ਲ਼ਸ਼ਖ਼ਗ਼ਜ਼ਫ਼ଡ଼ଢ଼ําໍາຫນຫມགྷཌྷདྷབྷཛྷཀྵཱཱིུྲྀླྀྒྷྜྷྡྷྦྷྫྷྐྵaʾἀιἁιἂιἃιἄιἅιἆιἇιἠιἡιἢιἣιἤιἥιἦιἧιὠιὡιὢιὣιὤιὥιὦιὧιὰιαιάιᾶι ͂ὴιηιήιῆιὼιωιώιῶι ̳!! ̅???!!?rs°c°fnosmtmivix⫝̸ ゙ ゚よりコト333435참고주의363738394042444546474849503月4月5月6月7月8月9月hgevギガデシドルナノピコビルペソホンリラレムdaauovpciu平成昭和大正明治naμakakbmbgbpfnfμfμgmgμlmldlklfmnmμmpsnsμsmsnvμvkvpwnwμwmwkwkωmωbqcccddbgyhainkkktlnlxphprsrsvwbstմնմեմիվնմխיִײַשׁשׂאַאָאּבּגּדּהּוּזּטּיּךּכּלּמּנּסּףּפּצּקּרּתּוֹבֿכֿפֿאלئائەئوئۇئۆئۈئېئىئجئحئمئيبجبمبىبيتىتيثجثمثىثيخحضجضمطحظمغجفجفحفىفيقحقىقيكاكجكحكخكلكىكينخنىنيهجهىهييىذٰرٰىٰئرئزئنبزبنترتزتنثرثزثنمانرنزننيريزئخئهبهتهصخنههٰثهسهشهطىطيعىعيغىغيسىسيشىشيصىصيضىضيشخشرسرصرضراً ًـًـّ ْـْلآلألإ𝅗𝅥0,1,2,3,4,5,6,7,8,9,wzhvsdwcmcmddjほかココàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįĵķĺļľłńņňŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷÿźżɓƃƅɔƈɖɗƌǝəɛƒɠɣɩɨƙɯɲɵơƣƥʀƨʃƭʈưʊʋƴƶʒƹƽǎǐǒǔǖǘǚǜǟǡǣǥǧǩǫǭǯǵƕƿǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟƞȣȥȧȩȫȭȯȱȳⱥȼƚⱦɂƀʉʌɇɉɋɍɏɦɹɻʁʕͱͳʹͷ;ϳέίόύβγδεζθκλνξοπρστυφχψϊϋϗϙϛϝϟϡϣϥϧϩϫϭϯϸϻͻͼͽѐёђѓєѕіїјљњћќѝўџабвгдежзийклмнопрстуфхцчшщъыьэюяѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧԩԫԭԯաբգդզէըթժլծկհձղճյշոչպջռստրցփքօֆ་ⴧⴭნᏰᏱᏲᏳᏴᏵꙋɐɑᴂɜᴖᴗᴝᴥɒɕɟɡɥɪᵻʝɭᶅʟɱɰɳɴɸʂƫᴜʐʑḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿἐἑἒἓἔἕἰἱἲἳἴἵἶἷὀὁὂὃὄὅὑὓὕὗᾰᾱὲΐῐῑὶΰῠῡὺῥ`ὸ‐+−∑〈〉ⰰⰱⰲⰳⰴⰵⰶⰷⰸⰹⰺⰻⰼⰽⰾⰿⱀⱁⱂⱃⱄⱅⱆⱇⱈⱉⱊⱋⱌⱍⱎⱏⱐⱑⱒⱓⱔⱕⱖⱗⱘⱙⱚⱛⱜⱝⱞⱡɫᵽɽⱨⱪⱬⱳⱶȿɀⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳬⳮⳳⵡ母龟丨丶丿乙亅亠人儿入冂冖冫几凵刀力勹匕匚匸卜卩厂厶又口囗士夂夊夕女子宀寸小尢尸屮山巛工己巾干幺广廴廾弋弓彐彡彳心戈戶手支攴文斗斤方无曰欠止歹殳毋比毛氏气爪父爻爿片牙牛犬玄玉瓜瓦甘生用田疋疒癶白皮皿目矛矢石示禸禾穴立竹米糸缶网羊羽老而耒耳聿肉臣臼舌舛舟艮色艸虍虫血行衣襾見角言谷豆豕豸貝赤走足身車辛辰辵邑酉釆里長門阜隶隹雨靑非面革韋韭音頁風飛食首香馬骨高髟鬥鬯鬲鬼魚鳥鹵鹿麥麻黃黍黑黹黽鼎鼓鼠鼻齊齒龍龜龠.〒卄卅ᄁᆪᆬᆭᄄᆰᆱᆲᆳᆴᆵᄚᄈᄡᄊ짜ᅢᅣᅤᅥᅦᅧᅨᅩᅪᅫᅬᅭᅮᅯᅰᅱᅲᅳᅴᅵᄔᄕᇇᇈᇌᇎᇓᇗᇙᄜᇝᇟᄝᄞᄠᄢᄣᄧᄩᄫᄬᄭᄮᄯᄲᄶᅀᅇᅌᇱᇲᅗᅘᅙᆄᆅᆈᆑᆒᆔᆞᆡ上中下甲丙丁天地問幼箏우秘男適優印注項写左右医宗夜テヌモヨヰヱヲꙁꙃꙅꙇꙉꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꚙꚛꜣꜥꜧꜩꜫꜭꜯꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯꝺꝼᵹꝿꞁꞃꞅꞇꞌꞑꞓꞗꞙꞛꞝꞟꞡꞣꞥꞧꞩɬʞʇꭓꞵꞷꬷꭒᎠᎡᎢᎣᎤᎥᎦᎧᎨᎩᎪᎫᎬᎭᎮᎯᎰᎱᎲᎳᎴᎵᎶᎷᎸᎹᎺᎻᎼᎽᎾᎿᏀᏁᏂᏃᏄᏅᏆᏇᏈᏉᏊᏋᏌᏍᏎᏏᏐᏑᏒᏓᏔᏕᏖᏗᏘᏙᏚᏛᏜᏝᏞᏟᏠᏡᏢᏣᏤᏥᏦᏧᏨᏩᏪᏫᏬᏭᏮᏯ豈更賈滑串句契喇奈懶癩羅蘿螺裸邏樂洛烙珞落酪駱亂卵欄爛蘭鸞嵐濫藍襤拉臘蠟廊朗浪狼郎來冷勞擄櫓爐盧蘆虜路露魯鷺碌祿綠菉錄論壟弄籠聾牢磊賂雷壘屢樓淚漏累縷陋勒肋凜凌稜綾菱陵讀拏諾丹寧怒率異北磻便復不泌數索參塞省葉說殺沈拾若掠略亮兩凉梁糧良諒量勵呂廬旅濾礪閭驪麗黎曆歷轢年憐戀撚漣煉璉秊練聯輦蓮連鍊列劣咽烈裂廉念捻殮簾獵令囹嶺怜玲瑩羚聆鈴零靈領例禮醴隸惡了僚寮尿料燎療蓼遼暈阮劉杻柳流溜琉留硫紐類戮陸倫崙淪輪律慄栗隆利吏履易李梨泥理痢罹裏裡離匿溺吝燐璘藺隣鱗麟林淋臨笠粒狀炙識什茶刺切度拓糖宅洞暴輻降廓兀嗀塚晴凞猪益礼神祥福靖精蘒諸逸都飯飼館鶴郞隷侮僧免勉勤卑喝嘆器塀墨層悔慨憎懲敏既暑梅海渚漢煮爫琢碑祉祈祐祖禍禎穀突節縉繁署者臭艹著褐視謁謹賓贈辶難響頻恵𤋮舘並况全侀充冀勇勺啕喙嗢墳奄奔婢嬨廒廙彩徭惘慎愈慠戴揄搜摒敖望杖滛滋瀞瞧爵犯瑱甆画瘝瘟盛直睊着磌窱类絛缾荒華蝹襁覆調請諭變輸遲醙鉶陼韛頋鬒𢡊𢡄𣏕㮝䀘䀹𥉉𥳐𧻓齃龎עםٱٻپڀٺٿٹڤڦڄڃچڇڍڌڎڈژڑکگڳڱںڻۀہھۓڭۋۅۉ、〖〗—–_{}【】《》「」『』[]#&*-<>\\$%@ءؤة\"'^|~⦅⦆・ゥャ¢£¬¦¥₩│←↑→↓■○𐐨𐐩𐐪𐐫𐐬𐐭𐐮𐐯𐐰𐐱𐐲𐐳𐐴𐐵𐐶𐐷𐐸𐐹𐐺𐐻𐐼𐐽𐐾𐐿𐑀𐑁𐑂𐑃𐑄𐑅𐑆𐑇𐑈𐑉𐑊𐑋𐑌𐑍𐑎𐑏𐓘𐓙𐓚𐓛𐓜𐓝𐓞𐓟𐓠𐓡𐓢𐓣𐓤𐓥𐓦𐓧𐓨𐓩𐓪𐓫𐓬𐓭𐓮𐓯𐓰𐓱𐓲𐓳𐓴𐓵𐓶𐓷𐓸𐓹𐓺𐓻𐳀𐳁𐳂𐳃𐳄𐳅𐳆𐳇𐳈𐳉𐳊𐳋𐳌𐳍𐳎𐳏𐳐𐳑𐳒𐳓𐳔𐳕𐳖𐳗𐳘𐳙𐳚𐳛𐳜𐳝𐳞𐳟𐳠𐳡𐳢𐳣𐳤𐳥𐳦𐳧𐳨𐳩𐳪𐳫𐳬𐳭𐳮𐳯𐳰𐳱𐳲𑣀𑣁𑣂𑣃𑣄𑣅𑣆𑣇𑣈𑣉𑣊𑣋𑣌𑣍𑣎𑣏𑣐𑣑𑣒𑣓𑣔𑣕𑣖𑣗𑣘𑣙𑣚𑣛𑣜𑣝𑣞𑣟ıȷ∇∂𞤢𞤣𞤤𞤥𞤦𞤧𞤨𞤩𞤪𞤫𞤬𞤭𞤮𞤯𞤰𞤱𞤲𞤳𞤴𞤵𞤶𞤷𞤸𞤹𞤺𞤻𞤼𞤽𞤾𞤿𞥀𞥁𞥂𞥃ٮڡٯ字双多解交映無前後再新初終販声吹演投捕遊指禁空合満申割営配得可丽丸乁𠄢你侻倂偺備像㒞𠘺兔兤具𠔜㒹內𠕋冗冤仌冬𩇟刃㓟刻剆剷㔕包匆卉博即卽卿𠨬灰及叟𠭣叫叱吆咞吸呈周咢哶唐啓啣善喫喳嗂圖圗噑噴壮城埴堍型堲報墬𡓤売壷夆夢奢𡚨𡛪姬娛娧姘婦㛮嬈嬾𡧈寃寘寳𡬘寿将㞁屠峀岍𡷤嵃𡷦嵮嵫嵼巡巢㠯巽帨帽幩㡢𢆃㡼庰庳庶𪎒𢌱舁弢㣇𣊸𦇚形彫㣣徚忍志忹悁㤺㤜𢛔惇慈慌慺憲憤憯懞戛扝抱拔捐𢬌挽拼捨掃揤𢯱搢揅掩㨮摩摾撝摷㩬敬𣀊旣書晉㬙㬈㫤冒冕最暜肭䏙朡杞杓𣏃㭉柺枅桒𣑭梎栟椔楂榣槪檨𣚣櫛㰘次𣢧歔㱎歲殟殻𣪍𡴋𣫺汎𣲼沿泍汧洖派浩浸涅𣴞洴港湮㴳滇𣻑淹潮𣽞𣾎濆瀹瀛㶖灊災灷炭𠔥煅𤉣熜爨牐𤘈犀犕𤜵𤠔獺王㺬玥㺸瑇瑜璅瓊㼛甤𤰶甾𤲒𢆟瘐𤾡𤾸𥁄㿼䀈𥃳𥃲𥄙𥄳眞真瞋䁆䂖𥐝硎䃣𥘦𥚚𥛅秫䄯穊穏𥥼𥪧䈂𥮫篆築䈧𥲀糒䊠糨糣紀𥾆絣䌁緇縂繅䌴𦈨𦉇䍙𦋙罺𦌾羕翺𦓚𦔣聠𦖨聰𣍟䏕育脃䐋脾媵𦞧𦞵𣎓𣎜舄辞䑫芑芋芝劳花芳芽苦𦬼茝荣莭茣莽菧荓菊菌菜𦰶𦵫𦳕䔫蓱蓳蔖𧏊蕤𦼬䕝䕡𦾱𧃒䕫虐虧虩蚩蚈蜎蛢蜨蝫螆蟡蠁䗹衠𧙧裗裞䘵裺㒻𧢮𧥦䚾䛇誠𧲨貫賁贛起𧼯𠠄跋趼跰𠣞軔𨗒𨗭邔郱鄑𨜮鄛鈸鋗鋘鉼鏹鐕𨯺開䦕閷𨵷䧦雃嶲霣𩅅𩈚䩮䩶韠𩐊䪲𩒖頩𩖶飢䬳餩馧駂駾䯎𩬰鱀鳽䳎䳭鵧𪃎䳸𪄅𪈎𪊑䵖黾鼅鼏鼖𪘀";
+
+        function mapChar(codePoint) {
+          if (codePoint >= 0x30000) {
+            // High planes are special cased.
+            if (codePoint >= 0xE0100 && codePoint <= 0xE01EF) return 18874368;
+            return 0;
+          }
+          return blocks[blockIdxes[codePoint >> 4]][codePoint & 15];
+        }
+
+        return {
+          mapStr: mappingStr,
+          mapChar: mapChar
+        };
+      });
+    }, {}], 377: [function (require, module, exports) {
+      (function (root, factory) {
+        /* istanbul ignore next */
+        if (typeof define === 'function' && define.amd) {
+          define(['punycode', './idna-map'], function (punycode, idna_map) {
+            return factory(punycode, idna_map);
+          });
+        } else if ((typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
+          module.exports = factory(require('punycode'), require('./idna-map'));
+        } else {
+          root.uts46 = factory(root.punycode, root.idna_map);
+        }
+      })(this, function (punycode, idna_map) {
+
+        function mapLabel(label, useStd3ASCII, transitional) {
+          var mapped = [];
+          var chars = punycode.ucs2.decode(label);
+          for (var i = 0; i < chars.length; i++) {
+            var cp = chars[i];
+            var ch = punycode.ucs2.encode([chars[i]]);
+            var composite = idna_map.mapChar(cp);
+            var flags = composite >> 23;
+            var kind = composite >> 21 & 3;
+            var index = composite >> 5 & 0xffff;
+            var length = composite & 0x1f;
+            var value = idna_map.mapStr.substr(index, length);
+            if (kind === 0 || useStd3ASCII && flags & 1) {
+              throw new Error("Illegal char " + ch);
+            } else if (kind === 1) {
+              mapped.push(value);
+            } else if (kind === 2) {
+              mapped.push(transitional ? value : ch);
+            }
+            /* istanbul ignore next */
+            else if (kind === 3) {
+                mapped.push(ch);
+              }
+          }
+
+          var newLabel = mapped.join("").normalize("NFC");
+          return newLabel;
+        }
+
+        function process(domain, transitional, useStd3ASCII) {
+          /* istanbul ignore if */
+          if (useStd3ASCII === undefined) useStd3ASCII = false;
+          var mappedIDNA = mapLabel(domain, useStd3ASCII, transitional);
+
+          // Step 3. Break
+          var labels = mappedIDNA.split(".");
+
+          // Step 4. Convert/Validate
+          labels = labels.map(function (label) {
+            if (label.startsWith("xn--")) {
+              label = punycode.decode(label.substring(4));
+              validateLabel(label, useStd3ASCII, false);
+            } else {
+              validateLabel(label, useStd3ASCII, transitional);
+            }
+            return label;
+          });
+
+          return labels.join(".");
+        }
+
+        function validateLabel(label, useStd3ASCII, transitional) {
+          // 2. The label must not contain a U+002D HYPHEN-MINUS character in both the
+          // third position and fourth positions.
+          if (label[2] === '-' && label[3] === '-') throw new Error("Failed to validate " + label);
+
+          // 3. The label must neither begin nor end with a U+002D HYPHEN-MINUS
+          // character.
+          if (label.startsWith('-') || label.endsWith('-')) throw new Error("Failed to validate " + label);
+
+          // 4. The label must not contain a U+002E ( . ) FULL STOP.
+          // this should nerver happen as label is chunked internally by this character
+          /* istanbul ignore if */
+          if (label.includes('.')) throw new Error("Failed to validate " + label);
+
+          if (mapLabel(label, useStd3ASCII, transitional) !== label) throw new Error("Failed to validate " + label);
+
+          // 5. The label must not begin with a combining mark, that is:
+          // General_Category=Mark.
+          var ch = label.codePointAt(0);
+          if (idna_map.mapChar(ch) & 0x2 << 23) throw new Error("Label contains illegal character: " + ch);
+        }
+
+        function toAscii(domain, options) {
+          if (options === undefined) options = {};
+          var transitional = 'transitional' in options ? options.transitional : true;
+          var useStd3ASCII = 'useStd3ASCII' in options ? options.useStd3ASCII : false;
+          var verifyDnsLength = 'verifyDnsLength' in options ? options.verifyDnsLength : false;
+          var labels = process(domain, transitional, useStd3ASCII).split('.');
+          var asciiLabels = labels.map(punycode.toASCII);
+          var asciiString = asciiLabels.join('.');
+          var i;
+          if (verifyDnsLength) {
+            if (asciiString.length < 1 || asciiString.length > 253) {
+              throw new Error("DNS name has wrong length: " + asciiString);
+            }
+            for (i = 0; i < asciiLabels.length; i++) {
+              //for .. of replacement
+              var label = asciiLabels[i];
+              if (label.length < 1 || label.length > 63) throw new Error("DNS label has wrong length: " + label);
+            }
+          }
+          return asciiString;
+        }
+
+        function toUnicode(domain, options) {
+          if (options === undefined) options = {};
+          var useStd3ASCII = 'useStd3ASCII' in options ? options.useStd3ASCII : false;
+          return process(domain, false, useStd3ASCII);
+        }
+
+        return {
+          toUnicode: toUnicode,
+          toAscii: toAscii
+        };
+      });
+    }, { "./idna-map": 376, "punycode": 128 }], 378: [function (require, module, exports) {
+      (function (process, global) {
+        /**
+         * [js-sha3]{@link https://github.com/emn178/js-sha3}
+         *
+         * @version 0.5.7
+         * @author Chen, Yi-Cyuan [emn178@gmail.com]
+         * @copyright Chen, Yi-Cyuan 2015-2016
+         * @license MIT
+         */
+        /*jslint bitwise: true */
+        (function () {
+          'use strict';
+
+          var root = (typeof window === "undefined" ? "undefined" : _typeof(window)) === 'object' ? window : {};
+          var NODE_JS = !root.JS_SHA3_NO_NODE_JS && (typeof process === "undefined" ? "undefined" : _typeof(process)) === 'object' && process.versions && process.versions.node;
+          if (NODE_JS) {
+            root = global;
+          }
+          var COMMON_JS = !root.JS_SHA3_NO_COMMON_JS && (typeof module === "undefined" ? "undefined" : _typeof(module)) === 'object' && module.exports;
+          var HEX_CHARS = '0123456789abcdef'.split('');
+          var SHAKE_PADDING = [31, 7936, 2031616, 520093696];
+          var KECCAK_PADDING = [1, 256, 65536, 16777216];
+          var PADDING = [6, 1536, 393216, 100663296];
+          var SHIFT = [0, 8, 16, 24];
+          var RC = [1, 0, 32898, 0, 32906, 2147483648, 2147516416, 2147483648, 32907, 0, 2147483649, 0, 2147516545, 2147483648, 32777, 2147483648, 138, 0, 136, 0, 2147516425, 0, 2147483658, 0, 2147516555, 0, 139, 2147483648, 32905, 2147483648, 32771, 2147483648, 32770, 2147483648, 128, 2147483648, 32778, 0, 2147483658, 2147483648, 2147516545, 2147483648, 32896, 2147483648, 2147483649, 0, 2147516424, 2147483648];
+          var BITS = [224, 256, 384, 512];
+          var SHAKE_BITS = [128, 256];
+          var OUTPUT_TYPES = ['hex', 'buffer', 'arrayBuffer', 'array'];
+
+          var createOutputMethod = function createOutputMethod(bits, padding, outputType) {
+            return function (message) {
+              return new Keccak(bits, padding, bits).update(message)[outputType]();
+            };
+          };
+
+          var createShakeOutputMethod = function createShakeOutputMethod(bits, padding, outputType) {
+            return function (message, outputBits) {
+              return new Keccak(bits, padding, outputBits).update(message)[outputType]();
+            };
+          };
+
+          var createMethod = function createMethod(bits, padding) {
+            var method = createOutputMethod(bits, padding, 'hex');
+            method.create = function () {
+              return new Keccak(bits, padding, bits);
+            };
+            method.update = function (message) {
+              return method.create().update(message);
+            };
+            for (var i = 0; i < OUTPUT_TYPES.length; ++i) {
+              var type = OUTPUT_TYPES[i];
+              method[type] = createOutputMethod(bits, padding, type);
+            }
+            return method;
+          };
+
+          var createShakeMethod = function createShakeMethod(bits, padding) {
+            var method = createShakeOutputMethod(bits, padding, 'hex');
+            method.create = function (outputBits) {
+              return new Keccak(bits, padding, outputBits);
+            };
+            method.update = function (message, outputBits) {
+              return method.create(outputBits).update(message);
+            };
+            for (var i = 0; i < OUTPUT_TYPES.length; ++i) {
+              var type = OUTPUT_TYPES[i];
+              method[type] = createShakeOutputMethod(bits, padding, type);
+            }
+            return method;
+          };
+
+          var algorithms = [{ name: 'keccak', padding: KECCAK_PADDING, bits: BITS, createMethod: createMethod }, { name: 'sha3', padding: PADDING, bits: BITS, createMethod: createMethod }, { name: 'shake', padding: SHAKE_PADDING, bits: SHAKE_BITS, createMethod: createShakeMethod }];
+
+          var methods = {},
+              methodNames = [];
+
+          for (var i = 0; i < algorithms.length; ++i) {
+            var algorithm = algorithms[i];
+            var bits = algorithm.bits;
+            for (var j = 0; j < bits.length; ++j) {
+              var methodName = algorithm.name + '_' + bits[j];
+              methodNames.push(methodName);
+              methods[methodName] = algorithm.createMethod(bits[j], algorithm.padding);
+            }
+          }
+
+          function Keccak(bits, padding, outputBits) {
+            this.blocks = [];
+            this.s = [];
+            this.padding = padding;
+            this.outputBits = outputBits;
+            this.reset = true;
+            this.block = 0;
+            this.start = 0;
+            this.blockCount = 1600 - (bits << 1) >> 5;
+            this.byteCount = this.blockCount << 2;
+            this.outputBlocks = outputBits >> 5;
+            this.extraBytes = (outputBits & 31) >> 3;
+
+            for (var i = 0; i < 50; ++i) {
+              this.s[i] = 0;
+            }
+          }
+
+          Keccak.prototype.update = function (message) {
+            var notString = typeof message !== 'string';
+            if (notString && message.constructor === ArrayBuffer) {
+              message = new Uint8Array(message);
+            }
+            var length = message.length,
+                blocks = this.blocks,
+                byteCount = this.byteCount,
+                blockCount = this.blockCount,
+                index = 0,
+                s = this.s,
+                i,
+                code;
+
+            while (index < length) {
+              if (this.reset) {
+                this.reset = false;
+                blocks[0] = this.block;
+                for (i = 1; i < blockCount + 1; ++i) {
+                  blocks[i] = 0;
+                }
+              }
+              if (notString) {
+                for (i = this.start; index < length && i < byteCount; ++index) {
+                  blocks[i >> 2] |= message[index] << SHIFT[i++ & 3];
+                }
+              } else {
+                for (i = this.start; index < length && i < byteCount; ++index) {
+                  code = message.charCodeAt(index);
+                  if (code < 0x80) {
+                    blocks[i >> 2] |= code << SHIFT[i++ & 3];
+                  } else if (code < 0x800) {
+                    blocks[i >> 2] |= (0xc0 | code >> 6) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code & 0x3f) << SHIFT[i++ & 3];
+                  } else if (code < 0xd800 || code >= 0xe000) {
+                    blocks[i >> 2] |= (0xe0 | code >> 12) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code >> 6 & 0x3f) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code & 0x3f) << SHIFT[i++ & 3];
+                  } else {
+                    code = 0x10000 + ((code & 0x3ff) << 10 | message.charCodeAt(++index) & 0x3ff);
+                    blocks[i >> 2] |= (0xf0 | code >> 18) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code >> 12 & 0x3f) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code >> 6 & 0x3f) << SHIFT[i++ & 3];
+                    blocks[i >> 2] |= (0x80 | code & 0x3f) << SHIFT[i++ & 3];
+                  }
+                }
+              }
+              this.lastByteIndex = i;
+              if (i >= byteCount) {
+                this.start = i - byteCount;
+                this.block = blocks[blockCount];
+                for (i = 0; i < blockCount; ++i) {
+                  s[i] ^= blocks[i];
+                }
+                f(s);
+                this.reset = true;
+              } else {
+                this.start = i;
+              }
+            }
+            return this;
+          };
+
+          Keccak.prototype.finalize = function () {
+            var blocks = this.blocks,
+                i = this.lastByteIndex,
+                blockCount = this.blockCount,
+                s = this.s;
+            blocks[i >> 2] |= this.padding[i & 3];
+            if (this.lastByteIndex === this.byteCount) {
+              blocks[0] = blocks[blockCount];
+              for (i = 1; i < blockCount + 1; ++i) {
+                blocks[i] = 0;
+              }
+            }
+            blocks[blockCount - 1] |= 0x80000000;
+            for (i = 0; i < blockCount; ++i) {
+              s[i] ^= blocks[i];
+            }
+            f(s);
+          };
+
+          Keccak.prototype.toString = Keccak.prototype.hex = function () {
+            this.finalize();
+
+            var blockCount = this.blockCount,
+                s = this.s,
+                outputBlocks = this.outputBlocks,
+                extraBytes = this.extraBytes,
+                i = 0,
+                j = 0;
+            var hex = '',
+                block;
+            while (j < outputBlocks) {
+              for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
+                block = s[i];
+                hex += HEX_CHARS[block >> 4 & 0x0F] + HEX_CHARS[block & 0x0F] + HEX_CHARS[block >> 12 & 0x0F] + HEX_CHARS[block >> 8 & 0x0F] + HEX_CHARS[block >> 20 & 0x0F] + HEX_CHARS[block >> 16 & 0x0F] + HEX_CHARS[block >> 28 & 0x0F] + HEX_CHARS[block >> 24 & 0x0F];
+              }
+              if (j % blockCount === 0) {
+                f(s);
+                i = 0;
+              }
+            }
+            if (extraBytes) {
+              block = s[i];
+              if (extraBytes > 0) {
+                hex += HEX_CHARS[block >> 4 & 0x0F] + HEX_CHARS[block & 0x0F];
+              }
+              if (extraBytes > 1) {
+                hex += HEX_CHARS[block >> 12 & 0x0F] + HEX_CHARS[block >> 8 & 0x0F];
+              }
+              if (extraBytes > 2) {
+                hex += HEX_CHARS[block >> 20 & 0x0F] + HEX_CHARS[block >> 16 & 0x0F];
+              }
+            }
+            return hex;
+          };
+
+          Keccak.prototype.arrayBuffer = function () {
+            this.finalize();
+
+            var blockCount = this.blockCount,
+                s = this.s,
+                outputBlocks = this.outputBlocks,
+                extraBytes = this.extraBytes,
+                i = 0,
+                j = 0;
+            var bytes = this.outputBits >> 3;
+            var buffer;
+            if (extraBytes) {
+              buffer = new ArrayBuffer(outputBlocks + 1 << 2);
+            } else {
+              buffer = new ArrayBuffer(bytes);
+            }
+            var array = new Uint32Array(buffer);
+            while (j < outputBlocks) {
+              for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
+                array[j] = s[i];
+              }
+              if (j % blockCount === 0) {
+                f(s);
+              }
+            }
+            if (extraBytes) {
+              array[i] = s[i];
+              buffer = buffer.slice(0, bytes);
+            }
+            return buffer;
+          };
+
+          Keccak.prototype.buffer = Keccak.prototype.arrayBuffer;
+
+          Keccak.prototype.digest = Keccak.prototype.array = function () {
+            this.finalize();
+
+            var blockCount = this.blockCount,
+                s = this.s,
+                outputBlocks = this.outputBlocks,
+                extraBytes = this.extraBytes,
+                i = 0,
+                j = 0;
+            var array = [],
+                offset,
+                block;
+            while (j < outputBlocks) {
+              for (i = 0; i < blockCount && j < outputBlocks; ++i, ++j) {
+                offset = j << 2;
+                block = s[i];
+                array[offset] = block & 0xFF;
+                array[offset + 1] = block >> 8 & 0xFF;
+                array[offset + 2] = block >> 16 & 0xFF;
+                array[offset + 3] = block >> 24 & 0xFF;
+              }
+              if (j % blockCount === 0) {
+                f(s);
+              }
+            }
+            if (extraBytes) {
+              offset = j << 2;
+              block = s[i];
+              if (extraBytes > 0) {
+                array[offset] = block & 0xFF;
+              }
+              if (extraBytes > 1) {
+                array[offset + 1] = block >> 8 & 0xFF;
+              }
+              if (extraBytes > 2) {
+                array[offset + 2] = block >> 16 & 0xFF;
+              }
+            }
+            return array;
+          };
+
+          var f = function f(s) {
+            var h, l, n, c0, c1, c2, c3, c4, c5, c6, c7, c8, c9, b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32, b33, b34, b35, b36, b37, b38, b39, b40, b41, b42, b43, b44, b45, b46, b47, b48, b49;
+            for (n = 0; n < 48; n += 2) {
+              c0 = s[0] ^ s[10] ^ s[20] ^ s[30] ^ s[40];
+              c1 = s[1] ^ s[11] ^ s[21] ^ s[31] ^ s[41];
+              c2 = s[2] ^ s[12] ^ s[22] ^ s[32] ^ s[42];
+              c3 = s[3] ^ s[13] ^ s[23] ^ s[33] ^ s[43];
+              c4 = s[4] ^ s[14] ^ s[24] ^ s[34] ^ s[44];
+              c5 = s[5] ^ s[15] ^ s[25] ^ s[35] ^ s[45];
+              c6 = s[6] ^ s[16] ^ s[26] ^ s[36] ^ s[46];
+              c7 = s[7] ^ s[17] ^ s[27] ^ s[37] ^ s[47];
+              c8 = s[8] ^ s[18] ^ s[28] ^ s[38] ^ s[48];
+              c9 = s[9] ^ s[19] ^ s[29] ^ s[39] ^ s[49];
+
+              h = c8 ^ (c2 << 1 | c3 >>> 31);
+              l = c9 ^ (c3 << 1 | c2 >>> 31);
+              s[0] ^= h;
+              s[1] ^= l;
+              s[10] ^= h;
+              s[11] ^= l;
+              s[20] ^= h;
+              s[21] ^= l;
+              s[30] ^= h;
+              s[31] ^= l;
+              s[40] ^= h;
+              s[41] ^= l;
+              h = c0 ^ (c4 << 1 | c5 >>> 31);
+              l = c1 ^ (c5 << 1 | c4 >>> 31);
+              s[2] ^= h;
+              s[3] ^= l;
+              s[12] ^= h;
+              s[13] ^= l;
+              s[22] ^= h;
+              s[23] ^= l;
+              s[32] ^= h;
+              s[33] ^= l;
+              s[42] ^= h;
+              s[43] ^= l;
+              h = c2 ^ (c6 << 1 | c7 >>> 31);
+              l = c3 ^ (c7 << 1 | c6 >>> 31);
+              s[4] ^= h;
+              s[5] ^= l;
+              s[14] ^= h;
+              s[15] ^= l;
+              s[24] ^= h;
+              s[25] ^= l;
+              s[34] ^= h;
+              s[35] ^= l;
+              s[44] ^= h;
+              s[45] ^= l;
+              h = c4 ^ (c8 << 1 | c9 >>> 31);
+              l = c5 ^ (c9 << 1 | c8 >>> 31);
+              s[6] ^= h;
+              s[7] ^= l;
+              s[16] ^= h;
+              s[17] ^= l;
+              s[26] ^= h;
+              s[27] ^= l;
+              s[36] ^= h;
+              s[37] ^= l;
+              s[46] ^= h;
+              s[47] ^= l;
+              h = c6 ^ (c0 << 1 | c1 >>> 31);
+              l = c7 ^ (c1 << 1 | c0 >>> 31);
+              s[8] ^= h;
+              s[9] ^= l;
+              s[18] ^= h;
+              s[19] ^= l;
+              s[28] ^= h;
+              s[29] ^= l;
+              s[38] ^= h;
+              s[39] ^= l;
+              s[48] ^= h;
+              s[49] ^= l;
+
+              b0 = s[0];
+              b1 = s[1];
+              b32 = s[11] << 4 | s[10] >>> 28;
+              b33 = s[10] << 4 | s[11] >>> 28;
+              b14 = s[20] << 3 | s[21] >>> 29;
+              b15 = s[21] << 3 | s[20] >>> 29;
+              b46 = s[31] << 9 | s[30] >>> 23;
+              b47 = s[30] << 9 | s[31] >>> 23;
+              b28 = s[40] << 18 | s[41] >>> 14;
+              b29 = s[41] << 18 | s[40] >>> 14;
+              b20 = s[2] << 1 | s[3] >>> 31;
+              b21 = s[3] << 1 | s[2] >>> 31;
+              b2 = s[13] << 12 | s[12] >>> 20;
+              b3 = s[12] << 12 | s[13] >>> 20;
+              b34 = s[22] << 10 | s[23] >>> 22;
+              b35 = s[23] << 10 | s[22] >>> 22;
+              b16 = s[33] << 13 | s[32] >>> 19;
+              b17 = s[32] << 13 | s[33] >>> 19;
+              b48 = s[42] << 2 | s[43] >>> 30;
+              b49 = s[43] << 2 | s[42] >>> 30;
+              b40 = s[5] << 30 | s[4] >>> 2;
+              b41 = s[4] << 30 | s[5] >>> 2;
+              b22 = s[14] << 6 | s[15] >>> 26;
+              b23 = s[15] << 6 | s[14] >>> 26;
+              b4 = s[25] << 11 | s[24] >>> 21;
+              b5 = s[24] << 11 | s[25] >>> 21;
+              b36 = s[34] << 15 | s[35] >>> 17;
+              b37 = s[35] << 15 | s[34] >>> 17;
+              b18 = s[45] << 29 | s[44] >>> 3;
+              b19 = s[44] << 29 | s[45] >>> 3;
+              b10 = s[6] << 28 | s[7] >>> 4;
+              b11 = s[7] << 28 | s[6] >>> 4;
+              b42 = s[17] << 23 | s[16] >>> 9;
+              b43 = s[16] << 23 | s[17] >>> 9;
+              b24 = s[26] << 25 | s[27] >>> 7;
+              b25 = s[27] << 25 | s[26] >>> 7;
+              b6 = s[36] << 21 | s[37] >>> 11;
+              b7 = s[37] << 21 | s[36] >>> 11;
+              b38 = s[47] << 24 | s[46] >>> 8;
+              b39 = s[46] << 24 | s[47] >>> 8;
+              b30 = s[8] << 27 | s[9] >>> 5;
+              b31 = s[9] << 27 | s[8] >>> 5;
+              b12 = s[18] << 20 | s[19] >>> 12;
+              b13 = s[19] << 20 | s[18] >>> 12;
+              b44 = s[29] << 7 | s[28] >>> 25;
+              b45 = s[28] << 7 | s[29] >>> 25;
+              b26 = s[38] << 8 | s[39] >>> 24;
+              b27 = s[39] << 8 | s[38] >>> 24;
+              b8 = s[48] << 14 | s[49] >>> 18;
+              b9 = s[49] << 14 | s[48] >>> 18;
+
+              s[0] = b0 ^ ~b2 & b4;
+              s[1] = b1 ^ ~b3 & b5;
+              s[10] = b10 ^ ~b12 & b14;
+              s[11] = b11 ^ ~b13 & b15;
+              s[20] = b20 ^ ~b22 & b24;
+              s[21] = b21 ^ ~b23 & b25;
+              s[30] = b30 ^ ~b32 & b34;
+              s[31] = b31 ^ ~b33 & b35;
+              s[40] = b40 ^ ~b42 & b44;
+              s[41] = b41 ^ ~b43 & b45;
+              s[2] = b2 ^ ~b4 & b6;
+              s[3] = b3 ^ ~b5 & b7;
+              s[12] = b12 ^ ~b14 & b16;
+              s[13] = b13 ^ ~b15 & b17;
+              s[22] = b22 ^ ~b24 & b26;
+              s[23] = b23 ^ ~b25 & b27;
+              s[32] = b32 ^ ~b34 & b36;
+              s[33] = b33 ^ ~b35 & b37;
+              s[42] = b42 ^ ~b44 & b46;
+              s[43] = b43 ^ ~b45 & b47;
+              s[4] = b4 ^ ~b6 & b8;
+              s[5] = b5 ^ ~b7 & b9;
+              s[14] = b14 ^ ~b16 & b18;
+              s[15] = b15 ^ ~b17 & b19;
+              s[24] = b24 ^ ~b26 & b28;
+              s[25] = b25 ^ ~b27 & b29;
+              s[34] = b34 ^ ~b36 & b38;
+              s[35] = b35 ^ ~b37 & b39;
+              s[44] = b44 ^ ~b46 & b48;
+              s[45] = b45 ^ ~b47 & b49;
+              s[6] = b6 ^ ~b8 & b0;
+              s[7] = b7 ^ ~b9 & b1;
+              s[16] = b16 ^ ~b18 & b10;
+              s[17] = b17 ^ ~b19 & b11;
+              s[26] = b26 ^ ~b28 & b20;
+              s[27] = b27 ^ ~b29 & b21;
+              s[36] = b36 ^ ~b38 & b30;
+              s[37] = b37 ^ ~b39 & b31;
+              s[46] = b46 ^ ~b48 & b40;
+              s[47] = b47 ^ ~b49 & b41;
+              s[8] = b8 ^ ~b0 & b2;
+              s[9] = b9 ^ ~b1 & b3;
+              s[18] = b18 ^ ~b10 & b12;
+              s[19] = b19 ^ ~b11 & b13;
+              s[28] = b28 ^ ~b20 & b22;
+              s[29] = b29 ^ ~b21 & b23;
+              s[38] = b38 ^ ~b30 & b32;
+              s[39] = b39 ^ ~b31 & b33;
+              s[48] = b48 ^ ~b40 & b42;
+              s[49] = b49 ^ ~b41 & b43;
+
+              s[0] ^= RC[n];
+              s[1] ^= RC[n + 1];
+            }
+          };
+
+          if (COMMON_JS) {
+            module.exports = methods;
+          } else {
+            for (var i = 0; i < methodNames.length; ++i) {
+              root[methodNames[i]] = methods[methodNames[i]];
+            }
+          }
+        })();
+      }).call(this, require('_process'), typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+    }, { "_process": 121 }], 379: [function (require, module, exports) {
+      /*
+          This file is part of web3.js.
+          web3.js is free software: you can redistribute it and/or modify
+          it under the terms of the GNU Lesser General Public License as published by
+          the Free Software Foundation, either version 3 of the License, or
+          (at your option) any later version.
+          web3.js is distributed in the hope that it will be useful,
+          but WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          GNU Lesser General Public License for more details.
+          You should have received a copy of the GNU Lesser General Public License
+          along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+      */
+      /**
+       * @file ENS.js
+       *
+       * @author Samuel Furter <samuel@ethereum.org>
+       * @date 2018
+       */
+
+      "use strict";
+
+      var config = require('./config');
+      var Registry = require('./contracts/Registry');
+
+      /**
+       * Constructs a new instance of ENS
+       *
+       * @method ENS
+       * @param {Object} eth
+       * @constructor
+       */
+      function ENS(eth) {
+        this.eth = eth;
+      }
+
+      Object.defineProperty(ENS.prototype, 'registry', {
+        get: function get() {
+          return new Registry(this);
+        },
+        enumerable: true
+      });
+
+      /**
+       * Returns the address record associated with a name.
+       *
+       * @method getAddress
+       * @param {string} name
+       * @return {Promise<string>} a promise
+       */
+      ENS.prototype.getAddress = function (name) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.addr();
+        });
+      };
+
+      /**
+       * Sets a new address
+       *
+       * @method setAddress
+       * @param {string} name
+       * @param {string} address
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      ENS.prototype.setAddress = function (name, address, from) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.setAddr(address, from);
+        });
+      };
+
+      /**
+       * Returns the public key
+       *
+       * @method getPubkey
+       * @param {string} name
+       * @returns {Promise<any>}
+       */
+      ENS.prototype.getPubkey = function (name) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.pubkey();
+        });
+      };
+
+      /**
+       * Set the new public key
+       *
+       * @method setPubkey
+       * @param {string} name
+       * @param {string} x
+       * @param {string} y
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      ENS.prototype.setPubkey = function (name, x, y, from) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.setPubkey(x, y, from);
+        });
+      };
+
+      /**
+       * Returns the content
+       *
+       * @method getContent
+       * @param {string} name
+       * @returns {Promise<any>}
+       */
+      ENS.prototype.getContent = function (name) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.content();
+        });
+      };
+
+      /**
+       * Set the content
+       *
+       * @method setContent
+       * @param {string} name
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      ENS.prototype.setContent = function (name, hash, from) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.setContent(hash, from);
+        });
+      };
+
+      /**
+       * Get the multihash
+       *
+       * @method getMultihash
+       * @param {string} name
+       * @returns {Promise<any>}
+       */
+      ENS.prototype.getMultihash = function (name) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.multihash();
+        });
+      };
+
+      /**
+       * Set the multihash
+       *
+       * @method setMultihash
+       * @param {string} name
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      ENS.prototype.setMultihash = function (name, hash, from) {
+        return this.registry.resolver(name).then(function (resolver) {
+          return resolver.setMultihash(hash, from);
+        });
+      };
+
+      /**
+       * Checks if the current used network is synced and looks for ENS support there.
+       * Throws an error if not.
+       *
+       * @returns {Promise<Block>}
+       */
+      ENS.prototype.checkNetwork = function () {
+        var self = this;
+        return self.eth.getBlock('latest').then(function (block) {
+          var headAge = new Date() / 1000 - block.timestamp;
+          if (headAge > 3600) {
+            throw new Error("Network not synced; last block was " + headAge + " seconds ago");
+          }
+          return self.eth.net.getNetworkType();
+        }).then(function (networkType) {
+          var addr = config.addresses[networkType];
+          if (typeof addr === 'undefined') {
+            throw new Error("ENS is not supported on network " + networkType);
+          }
+
+          return addr;
+        });
+      };
+
+      module.exports = ENS;
+    }, { "./config": 380, "./contracts/Registry": 381 }], 380: [function (require, module, exports) {
+      "use strict";
+
+      var config = {
+        addresses: {
+          main: "0x314159265dD8dbb310642f98f50C066173C1259b",
+          ropsten: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
+          rinkeby: "0xe7410170f87102df0055eb195163a03b7f2bff4a"
+        }
+      };
+
+      module.exports = config;
+    }, {}], 381: [function (require, module, exports) {
+      /*
+          This file is part of web3.js.
+          web3.js is free software: you can redistribute it and/or modify
+          it under the terms of the GNU Lesser General Public License as published by
+          the Free Software Foundation, either version 3 of the License, or
+          (at your option) any later version.
+          web3.js is distributed in the hope that it will be useful,
+          but WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          GNU Lesser General Public License for more details.
+          You should have received a copy of the GNU Lesser General Public License
+          along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+      */
+      /**
+       * @file Registry.js
+       *
+       * @author Samuel Furter <samuel@ethereum.org>
+       * @date 2018
+       */
+
+      "use strict";
+
+      var Contract = require('web3-eth-contract');
+      var namehash = require('eth-ens-namehash');
+      var REGISTRY_ABI = require('../ressources/ABI/Registry');
+      var Resolver = require('./Resolver');
+
+      /**
+       * A wrapper around the ENS registry contract.
+       *
+       * @method Registry
+       * @param {Object} ens
+       * @constructor
+       */
+      function Registry(ens) {
+        var self = this;
+        this.ens = ens;
+        this.contract = ens.checkNetwork().then(function (address) {
+          var contract = new Contract(REGISTRY_ABI, address);
+          contract.setProvider(self.ens.eth.currentProvider);
+
+          return contract;
+        });
+      }
+
+      /**
+       * Returns the address of the owner of an ENS name.
+       *
+       * @method owner
+       * @param {string} name
+       * @return {Promise<any>}
+       */
+      Registry.prototype.owner = function (name) {
+        return this.contract.then(function (contract) {
+          return contract.methods.owner(namehash.hash(name)).call();
+        });
+      };
+
+      /**
+       * Returns the resolver contract associated with a name.
+       *
+       * @method resolver
+       * @param {string} name
+       * @return {Promise<Resolver>}
+       */
+      Registry.prototype.resolver = function (name) {
+        var self = this;
+        var node = namehash.hash(name);
+        return this.contract.then(function (contract) {
+          return contract.methods.resolver(node).call();
+        }).then(function (address) {
+          return new Resolver(address, node, self.ens);
+        });
+      };
+
+      module.exports = Registry;
+    }, { "../ressources/ABI/Registry": 384, "./Resolver": 382, "eth-ens-namehash": 375, "web3-eth-contract": 374 }], 382: [function (require, module, exports) {
+      /*
+          This file is part of web3.js.
+          web3.js is free software: you can redistribute it and/or modify
+          it under the terms of the GNU Lesser General Public License as published by
+          the Free Software Foundation, either version 3 of the License, or
+          (at your option) any later version.
+          web3.js is distributed in the hope that it will be useful,
+          but WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          GNU Lesser General Public License for more details.
+          You should have received a copy of the GNU Lesser General Public License
+          along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+      */
+      /**
+       * @file Resolver.js
+       *
+       * @author Samuel Furter <samuel@ethereum.org>
+       * @date 2018
+       */
+
+      "use strict";
+
+      var RESOLVER_ABI = require('../ressources/ABI/Resolver');
+      var Contract = require('web3-eth-contract');
+
+      /**
+       * Creates an instance of Resolver
+       *
+       * @param {string} address
+       * @param {string} node
+       * @param {ENS} ens
+       * @constructor
+       */
+      function Resolver(address, node, ens) {
+        var self = this;
+        self.node = node;
+        self.ens = ens;
+        self.contract = new Contract(RESOLVER_ABI, address);
+        self.contract.setProvider(self.ens.eth.currentProvider);
+      }
+
+      /**
+       * Returns the address
+       *
+       * @method addr
+       * @returns {Promise<any>}
+       */
+      Resolver.prototype.addr = function () {
+        return this.contract.methods.addr(this.node).call();
+      };
+
+      /**
+       * Sets a new address
+       *
+       * @method setAddr
+       * @param {string} address
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      Resolver.prototype.setAddr = function (address, from) {
+        return this.contract.methods.setAddr(this.node, address).send({ from: from });
+      };
+
+      /**
+       * Returns the public key
+       *
+       * @method pubkey
+       * @returns {Promise<any>}
+       */
+      Resolver.prototype.pubkey = function () {
+        return this.contract.methods.pubkey(this.node).call();
+      };
+
+      /**
+       * Sets a new public key
+       *
+       * @method setPubkey
+       * @param {string} x
+       * @param {string} y
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      Resolver.prototype.setPubkey = function (x, y, from) {
+        return this.contract.methods.setPubkey(this.node, y, y).send({ from: from });
+      };
+
+      /**
+       * Returns the content of this resolver
+       *
+       * @method content
+       * @returns {Promise<any>}
+       */
+      Resolver.prototype.content = function () {
+        return this.contract.methods.content(this.node).call();
+      };
+
+      /**
+       * Set the content of this resolver
+       *
+       * @method setContent
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      Resolver.prototype.setContent = function (hash, from) {
+        return this.contract.methods.setContent(this.node, hash).send({ from: from });
+      };
+
+      /**
+       * Returns the multihash of this resolver
+       *
+       * @method multihash
+       * @returns {Promise<any>}
+       */
+      Resolver.prototype.multihash = function () {
+        return this.contract.methods.multihash(this.node).call();
+      };
+
+      /**
+       * Set the multihash for this resolver
+       *
+       * @method setMultihash
+       * @param {string} hash
+       * @param {string} from
+       * @returns {Promise<Transaction>}
+       */
+      Resolver.prototype.setMultihash = function (hash, from) {
+        return this.contract.methods.setMultihash(this.node).send({ from: from });
+      };
+
+      module.exports = Resolver;
+    }, { "../ressources/ABI/Resolver": 385, "web3-eth-contract": 374 }], 383: [function (require, module, exports) {
+      /*
+          This file is part of web3.js.
+          web3.js is free software: you can redistribute it and/or modify
+          it under the terms of the GNU Lesser General Public License as published by
+          the Free Software Foundation, either version 3 of the License, or
+          (at your option) any later version.
+          web3.js is distributed in the hope that it will be useful,
+          but WITHOUT ANY WARRANTY; without even the implied warranty of
+          MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+          GNU Lesser General Public License for more details.
+          You should have received a copy of the GNU Lesser General Public License
+          along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+      */
+      /**
+       * @file index.js
+       *
+       * @author Samuel Furter <samuel@ethereum.org>
+       * @date 2018
+       */
+
+      "use strict";
+
+      var ENS = require('./ENS');
+
+      module.exports = ENS;
+    }, { "./ENS": 379 }], 384: [function (require, module, exports) {
+      "use strict";
+
+      var REGISTRY = [{
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "resolver",
+        "outputs": [{
+          "name": "",
+          "type": "address"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "owner",
+        "outputs": [{
+          "name": "",
+          "type": "address"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "label",
+          "type": "bytes32"
+        }, {
+          "name": "owner",
+          "type": "address"
+        }],
+        "name": "setSubnodeOwner",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "ttl",
+          "type": "uint64"
+        }],
+        "name": "setTTL",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "ttl",
+        "outputs": [{
+          "name": "",
+          "type": "uint64"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "resolver",
+          "type": "address"
+        }],
+        "name": "setResolver",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "owner",
+          "type": "address"
+        }],
+        "name": "setOwner",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "owner",
+          "type": "address"
+        }],
+        "name": "Transfer",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": true,
+          "name": "label",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "owner",
+          "type": "address"
+        }],
+        "name": "NewOwner",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "resolver",
+          "type": "address"
+        }],
+        "name": "NewResolver",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "ttl",
+          "type": "uint64"
+        }],
+        "name": "NewTTL",
+        "type": "event"
+      }];
+
+      module.exports = REGISTRY;
+    }, {}], 385: [function (require, module, exports) {
+      "use strict";
+
+      var RESOLVER = [{
+        "constant": true,
+        "inputs": [{
+          "name": "interfaceID",
+          "type": "bytes4"
+        }],
+        "name": "supportsInterface",
+        "outputs": [{
+          "name": "",
+          "type": "bool"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "contentTypes",
+          "type": "uint256"
+        }],
+        "name": "ABI",
+        "outputs": [{
+          "name": "contentType",
+          "type": "uint256"
+        }, {
+          "name": "data",
+          "type": "bytes"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "hash",
+          "type": "bytes"
+        }],
+        "name": "setMultihash",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "multihash",
+        "outputs": [{
+          "name": "",
+          "type": "bytes"
+        }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "x",
+          "type": "bytes32"
+        }, {
+          "name": "y",
+          "type": "bytes32"
+        }],
+        "name": "setPubkey",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "content",
+        "outputs": [{
+          "name": "ret",
+          "type": "bytes32"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "addr",
+        "outputs": [{
+          "name": "ret",
+          "type": "address"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "contentType",
+          "type": "uint256"
+        }, {
+          "name": "data",
+          "type": "bytes"
+        }],
+        "name": "setABI",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "name",
+        "outputs": [{
+          "name": "ret",
+          "type": "string"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "name",
+          "type": "string"
+        }],
+        "name": "setName",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "hash",
+          "type": "bytes32"
+        }],
+        "name": "setContent",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }],
+        "name": "pubkey",
+        "outputs": [{
+          "name": "x",
+          "type": "bytes32"
+        }, {
+          "name": "y",
+          "type": "bytes32"
+        }],
+        "payable": false,
+        "type": "function"
+      }, {
+        "constant": false,
+        "inputs": [{
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "name": "addr",
+          "type": "address"
+        }],
+        "name": "setAddr",
+        "outputs": [],
+        "payable": false,
+        "type": "function"
+      }, {
+        "inputs": [{
+          "name": "ensAddr",
+          "type": "address"
+        }],
+        "payable": false,
+        "type": "constructor"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "a",
+          "type": "address"
+        }],
+        "name": "AddrChanged",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "hash",
+          "type": "bytes32"
+        }],
+        "name": "ContentChanged",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "name",
+          "type": "string"
+        }],
+        "name": "NameChanged",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": true,
+          "name": "contentType",
+          "type": "uint256"
+        }],
+        "name": "ABIChanged",
+        "type": "event"
+      }, {
+        "anonymous": false,
+        "inputs": [{
+          "indexed": true,
+          "name": "node",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "x",
+          "type": "bytes32"
+        }, {
+          "indexed": false,
+          "name": "y",
+          "type": "bytes32"
+        }],
+        "name": "PubkeyChanged",
+        "type": "event"
+      }];
+
+      module.exports = RESOLVER;
+    }, {}], 386: [function (require, module, exports) {
+      arguments[4][218][0].apply(exports, arguments);
+    }, { "dup": 218 }], 387: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -37373,7 +39915,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = Iban;
-    }, { "bn.js": 367, "web3-utils": 393 }], 369: [function (require, module, exports) {
+    }, { "bn.js": 386, "web3-utils": 418 }], 388: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -37508,9 +40050,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       core.addProviders(Personal);
 
       module.exports = Personal;
-    }, { "web3-core": 209, "web3-core-helpers": 191, "web3-core-method": 193, "web3-net": 373, "web3-utils": 393 }], 370: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 371: [function (require, module, exports) {
+    }, { "web3-core": 217, "web3-core-helpers": 199, "web3-core-method": 201, "web3-net": 392, "web3-utils": 418 }], 389: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 390: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -37580,7 +40122,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = getNetworkType;
-    }, { "underscore": 370 }], 372: [function (require, module, exports) {
+    }, { "underscore": 389 }], 391: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -37613,6 +40155,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var utils = require('web3-utils');
       var Net = require('web3-net');
 
+      var ENS = require('web3-eth-ens');
       var Personal = require('web3-eth-personal');
       var BaseContract = require('web3-eth-contract');
       var Iban = require('web3-eth-iban');
@@ -37722,8 +40265,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         // not create this proxy type, changing the provider in one instance of
         // web3-eth would subsequently change the provider for _all_ contract
         // instances!
+        var self = this;
         var Contract = function Contract() {
           BaseContract.apply(this, arguments);
+
+          // when Eth.setProvider is called, call packageInit
+          // on all contract instances instantiated via this Eth
+          // instances. This will update the currentProvider for
+          // the contract instances
+          var _this = this;
+          var setProvider = self.setProvider;
+          self.setProvider = function () {
+            setProvider.apply(self, arguments);
+            core.packageInit(_this, [self.currentProvider]);
+          };
         };
 
         Contract.setProvider = function () {
@@ -37746,6 +40301,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         // add ABI
         this.abi = abi;
+
+        // add ENS
+        this.ens = new ENS(this);
 
         var methods = [new Method({
           name: 'getNodeInfo',
@@ -38012,7 +40570,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       core.addProviders(Eth);
 
       module.exports = Eth;
-    }, { "./getNetworkType.js": 371, "underscore": 370, "web3-core": 209, "web3-core-helpers": 191, "web3-core-method": 193, "web3-core-subscriptions": 206, "web3-eth-abi": 213, "web3-eth-accounts": 364, "web3-eth-contract": 366, "web3-eth-iban": 368, "web3-eth-personal": 369, "web3-net": 373, "web3-utils": 393 }], 373: [function (require, module, exports) {
+    }, { "./getNetworkType.js": 390, "underscore": 389, "web3-core": 217, "web3-core-helpers": 199, "web3-core-method": 201, "web3-core-subscriptions": 214, "web3-eth-abi": 221, "web3-eth-accounts": 372, "web3-eth-contract": 374, "web3-eth-ens": 383, "web3-eth-iban": 387, "web3-eth-personal": 388, "web3-net": 392, "web3-utils": 418 }], 392: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -38070,9 +40628,953 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       core.addProviders(Net);
 
       module.exports = Net;
-    }, { "web3-core": 209, "web3-core-method": 193, "web3-utils": 393 }], 374: [function (require, module, exports) {
-      module.exports = XMLHttpRequest;
-    }, {}], 375: [function (require, module, exports) {
+    }, { "web3-core": 217, "web3-core-method": 201, "web3-utils": 418 }], 393: [function (require, module, exports) {
+      /* jshint node: true */
+      (function () {
+        "use strict";
+
+        function CookieAccessInfo(domain, path, secure, script) {
+          if (this instanceof CookieAccessInfo) {
+            this.domain = domain || undefined;
+            this.path = path || "/";
+            this.secure = !!secure;
+            this.script = !!script;
+            return this;
+          }
+          return new CookieAccessInfo(domain, path, secure, script);
+        }
+        CookieAccessInfo.All = Object.freeze(Object.create(null));
+        exports.CookieAccessInfo = CookieAccessInfo;
+
+        function Cookie(cookiestr, request_domain, request_path) {
+          if (cookiestr instanceof Cookie) {
+            return cookiestr;
+          }
+          if (this instanceof Cookie) {
+            this.name = null;
+            this.value = null;
+            this.expiration_date = Infinity;
+            this.path = String(request_path || "/");
+            this.explicit_path = false;
+            this.domain = request_domain || null;
+            this.explicit_domain = false;
+            this.secure = false; //how to define default?
+            this.noscript = false; //httponly
+            if (cookiestr) {
+              this.parse(cookiestr, request_domain, request_path);
+            }
+            return this;
+          }
+          return new Cookie(cookiestr, request_domain, request_path);
+        }
+        exports.Cookie = Cookie;
+
+        Cookie.prototype.toString = function toString() {
+          var str = [this.name + "=" + this.value];
+          if (this.expiration_date !== Infinity) {
+            str.push("expires=" + new Date(this.expiration_date).toGMTString());
+          }
+          if (this.domain) {
+            str.push("domain=" + this.domain);
+          }
+          if (this.path) {
+            str.push("path=" + this.path);
+          }
+          if (this.secure) {
+            str.push("secure");
+          }
+          if (this.noscript) {
+            str.push("httponly");
+          }
+          return str.join("; ");
+        };
+
+        Cookie.prototype.toValueString = function toValueString() {
+          return this.name + "=" + this.value;
+        };
+
+        var cookie_str_splitter = /[:](?=\s*[a-zA-Z0-9_\-]+\s*[=])/g;
+        Cookie.prototype.parse = function parse(str, request_domain, request_path) {
+          if (this instanceof Cookie) {
+            var parts = str.split(";").filter(function (value) {
+              return !!value;
+            });
+            var i;
+
+            var pair = parts[0].match(/([^=]+)=([\s\S]*)/);
+            if (!pair) {
+              console.warn("Invalid cookie header encountered. Header: '" + str + "'");
+              return;
+            }
+
+            var key = pair[1];
+            var value = pair[2];
+            if (typeof key !== 'string' || key.length === 0 || typeof value !== 'string') {
+              console.warn("Unable to extract values from cookie header. Cookie: '" + str + "'");
+              return;
+            }
+
+            this.name = key;
+            this.value = value;
+
+            for (i = 1; i < parts.length; i += 1) {
+              pair = parts[i].match(/([^=]+)(?:=([\s\S]*))?/);
+              key = pair[1].trim().toLowerCase();
+              value = pair[2];
+              switch (key) {
+                case "httponly":
+                  this.noscript = true;
+                  break;
+                case "expires":
+                  this.expiration_date = value ? Number(Date.parse(value)) : Infinity;
+                  break;
+                case "path":
+                  this.path = value ? value.trim() : "";
+                  this.explicit_path = true;
+                  break;
+                case "domain":
+                  this.domain = value ? value.trim() : "";
+                  this.explicit_domain = !!this.domain;
+                  break;
+                case "secure":
+                  this.secure = true;
+                  break;
+              }
+            }
+
+            if (!this.explicit_path) {
+              this.path = request_path || "/";
+            }
+            if (!this.explicit_domain) {
+              this.domain = request_domain;
+            }
+
+            return this;
+          }
+          return new Cookie().parse(str, request_domain, request_path);
+        };
+
+        Cookie.prototype.matches = function matches(access_info) {
+          if (access_info === CookieAccessInfo.All) {
+            return true;
+          }
+          if (this.noscript && access_info.script || this.secure && !access_info.secure || !this.collidesWith(access_info)) {
+            return false;
+          }
+          return true;
+        };
+
+        Cookie.prototype.collidesWith = function collidesWith(access_info) {
+          if (this.path && !access_info.path || this.domain && !access_info.domain) {
+            return false;
+          }
+          if (this.path && access_info.path.indexOf(this.path) !== 0) {
+            return false;
+          }
+          if (this.explicit_path && access_info.path.indexOf(this.path) !== 0) {
+            return false;
+          }
+          var access_domain = access_info.domain && access_info.domain.replace(/^[\.]/, '');
+          var cookie_domain = this.domain && this.domain.replace(/^[\.]/, '');
+          if (cookie_domain === access_domain) {
+            return true;
+          }
+          if (cookie_domain) {
+            if (!this.explicit_domain) {
+              return false; // we already checked if the domains were exactly the same
+            }
+            var wildcard = access_domain.indexOf(cookie_domain);
+            if (wildcard === -1 || wildcard !== access_domain.length - cookie_domain.length) {
+              return false;
+            }
+            return true;
+          }
+          return true;
+        };
+
+        function CookieJar() {
+          var cookies, cookies_list, collidable_cookie;
+          if (this instanceof CookieJar) {
+            cookies = Object.create(null); //name: [Cookie]
+
+            this.setCookie = function setCookie(cookie, request_domain, request_path) {
+              var remove, i;
+              cookie = new Cookie(cookie, request_domain, request_path);
+              //Delete the cookie if the set is past the current time
+              remove = cookie.expiration_date <= Date.now();
+              if (cookies[cookie.name] !== undefined) {
+                cookies_list = cookies[cookie.name];
+                for (i = 0; i < cookies_list.length; i += 1) {
+                  collidable_cookie = cookies_list[i];
+                  if (collidable_cookie.collidesWith(cookie)) {
+                    if (remove) {
+                      cookies_list.splice(i, 1);
+                      if (cookies_list.length === 0) {
+                        delete cookies[cookie.name];
+                      }
+                      return false;
+                    }
+                    cookies_list[i] = cookie;
+                    return cookie;
+                  }
+                }
+                if (remove) {
+                  return false;
+                }
+                cookies_list.push(cookie);
+                return cookie;
+              }
+              if (remove) {
+                return false;
+              }
+              cookies[cookie.name] = [cookie];
+              return cookies[cookie.name];
+            };
+            //returns a cookie
+            this.getCookie = function getCookie(cookie_name, access_info) {
+              var cookie, i;
+              cookies_list = cookies[cookie_name];
+              if (!cookies_list) {
+                return;
+              }
+              for (i = 0; i < cookies_list.length; i += 1) {
+                cookie = cookies_list[i];
+                if (cookie.expiration_date <= Date.now()) {
+                  if (cookies_list.length === 0) {
+                    delete cookies[cookie.name];
+                  }
+                  continue;
+                }
+
+                if (cookie.matches(access_info)) {
+                  return cookie;
+                }
+              }
+            };
+            //returns a list of cookies
+            this.getCookies = function getCookies(access_info) {
+              var matches = [],
+                  cookie_name,
+                  cookie;
+              for (cookie_name in cookies) {
+                cookie = this.getCookie(cookie_name, access_info);
+                if (cookie) {
+                  matches.push(cookie);
+                }
+              }
+              matches.toString = function toString() {
+                return matches.join(":");
+              };
+              matches.toValueString = function toValueString() {
+                return matches.map(function (c) {
+                  return c.toValueString();
+                }).join(';');
+              };
+              return matches;
+            };
+
+            return this;
+          }
+          return new CookieJar();
+        }
+        exports.CookieJar = CookieJar;
+
+        //returns list of cookies that were set correctly. Cookies that are expired and removed are not returned.
+        CookieJar.prototype.setCookies = function setCookies(cookies, request_domain, request_path) {
+          cookies = Array.isArray(cookies) ? cookies : cookies.split(cookie_str_splitter);
+          var successful = [],
+              i,
+              cookie;
+          cookies = cookies.map(function (item) {
+            return new Cookie(item, request_domain, request_path);
+          });
+          for (i = 0; i < cookies.length; i += 1) {
+            cookie = cookies[i];
+            if (this.setCookie(cookie, request_domain, request_path)) {
+              successful.push(cookie);
+            }
+          }
+          return successful;
+        };
+      })();
+    }, {}], 394: [function (require, module, exports) {
+      "use strict";
+
+      var __extends = this && this.__extends || function () {
+        var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+          d.__proto__ = b;
+        } || function (d, b) {
+          for (var p in b) {
+            if (b.hasOwnProperty(p)) d[p] = b[p];
+          }
+        };
+        return function (d, b) {
+          extendStatics(d, b);
+          function __() {
+            this.constructor = d;
+          }
+          d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+        };
+      }();
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var SecurityError = /** @class */function (_super) {
+        __extends(SecurityError, _super);
+        function SecurityError() {
+          return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return SecurityError;
+      }(Error);
+      exports.SecurityError = SecurityError;
+      var InvalidStateError = /** @class */function (_super) {
+        __extends(InvalidStateError, _super);
+        function InvalidStateError() {
+          return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return InvalidStateError;
+      }(Error);
+      exports.InvalidStateError = InvalidStateError;
+      var NetworkError = /** @class */function (_super) {
+        __extends(NetworkError, _super);
+        function NetworkError() {
+          return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return NetworkError;
+      }(Error);
+      exports.NetworkError = NetworkError;
+      var SyntaxError = /** @class */function (_super) {
+        __extends(SyntaxError, _super);
+        function SyntaxError() {
+          return _super !== null && _super.apply(this, arguments) || this;
+        }
+        return SyntaxError;
+      }(Error);
+      exports.SyntaxError = SyntaxError;
+    }, {}], 395: [function (require, module, exports) {
+      "use strict";
+
+      function __export(m) {
+        for (var p in m) {
+          if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+        }
+      }
+      Object.defineProperty(exports, "__esModule", { value: true });
+      __export(require("./xml-http-request"));
+      var xml_http_request_event_target_1 = require("./xml-http-request-event-target");
+      exports.XMLHttpRequestEventTarget = xml_http_request_event_target_1.XMLHttpRequestEventTarget;
+    }, { "./xml-http-request": 399, "./xml-http-request-event-target": 397 }], 396: [function (require, module, exports) {
+      "use strict";
+
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var ProgressEvent = /** @class */function () {
+        function ProgressEvent(type) {
+          this.type = type;
+          this.bubbles = false;
+          this.cancelable = false;
+          this.loaded = 0;
+          this.lengthComputable = false;
+          this.total = 0;
+        }
+        return ProgressEvent;
+      }();
+      exports.ProgressEvent = ProgressEvent;
+    }, {}], 397: [function (require, module, exports) {
+      "use strict";
+
+      Object.defineProperty(exports, "__esModule", { value: true });
+      var XMLHttpRequestEventTarget = /** @class */function () {
+        function XMLHttpRequestEventTarget() {
+          this.listeners = {};
+        }
+        XMLHttpRequestEventTarget.prototype.addEventListener = function (eventType, listener) {
+          eventType = eventType.toLowerCase();
+          this.listeners[eventType] = this.listeners[eventType] || [];
+          this.listeners[eventType].push(listener.handleEvent || listener);
+        };
+        XMLHttpRequestEventTarget.prototype.removeEventListener = function (eventType, listener) {
+          eventType = eventType.toLowerCase();
+          if (!this.listeners[eventType]) {
+            return;
+          }
+          var index = this.listeners[eventType].indexOf(listener.handleEvent || listener);
+          if (index < 0) {
+            return;
+          }
+          this.listeners[eventType].splice(index, 1);
+        };
+        XMLHttpRequestEventTarget.prototype.dispatchEvent = function (event) {
+          var eventType = event.type.toLowerCase();
+          event.target = this; // TODO: set event.currentTarget?
+          if (this.listeners[eventType]) {
+            for (var _i = 0, _a = this.listeners[eventType]; _i < _a.length; _i++) {
+              var listener_1 = _a[_i];
+              listener_1.call(this, event);
+            }
+          }
+          var listener = this["on" + eventType];
+          if (listener) {
+            listener.call(this, event);
+          }
+          return true;
+        };
+        return XMLHttpRequestEventTarget;
+      }();
+      exports.XMLHttpRequestEventTarget = XMLHttpRequestEventTarget;
+    }, {}], 398: [function (require, module, exports) {
+      (function (Buffer) {
+        "use strict";
+
+        var __extends = this && this.__extends || function () {
+          var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+            d.__proto__ = b;
+          } || function (d, b) {
+            for (var p in b) {
+              if (b.hasOwnProperty(p)) d[p] = b[p];
+            }
+          };
+          return function (d, b) {
+            extendStatics(d, b);
+            function __() {
+              this.constructor = d;
+            }
+            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+          };
+        }();
+        Object.defineProperty(exports, "__esModule", { value: true });
+        var xml_http_request_event_target_1 = require("./xml-http-request-event-target");
+        var XMLHttpRequestUpload = /** @class */function (_super) {
+          __extends(XMLHttpRequestUpload, _super);
+          function XMLHttpRequestUpload() {
+            var _this = _super.call(this) || this;
+            _this._contentType = null;
+            _this._body = null;
+            _this._reset();
+            return _this;
+          }
+          XMLHttpRequestUpload.prototype._reset = function () {
+            this._contentType = null;
+            this._body = null;
+          };
+          XMLHttpRequestUpload.prototype._setData = function (data) {
+            if (data == null) {
+              return;
+            }
+            if (typeof data === 'string') {
+              if (data.length !== 0) {
+                this._contentType = 'text/plain;charset=UTF-8';
+              }
+              this._body = new Buffer(data, 'utf-8');
+            } else if (Buffer.isBuffer(data)) {
+              this._body = data;
+            } else if (data instanceof ArrayBuffer) {
+              var body = new Buffer(data.byteLength);
+              var view = new Uint8Array(data);
+              for (var i = 0; i < data.byteLength; i++) {
+                body[i] = view[i];
+              }
+              this._body = body;
+            } else if (data.buffer && data.buffer instanceof ArrayBuffer) {
+              var body = new Buffer(data.byteLength);
+              var offset = data.byteOffset;
+              var view = new Uint8Array(data.buffer);
+              for (var i = 0; i < data.byteLength; i++) {
+                body[i] = view[i + offset];
+              }
+              this._body = body;
+            } else {
+              throw new Error("Unsupported send() data " + data);
+            }
+          };
+          XMLHttpRequestUpload.prototype._finalizeHeaders = function (headers, loweredHeaders) {
+            if (this._contentType && !loweredHeaders['content-type']) {
+              headers['Content-Type'] = this._contentType;
+            }
+            if (this._body) {
+              headers['Content-Length'] = this._body.length.toString();
+            }
+          };
+          XMLHttpRequestUpload.prototype._startUpload = function (request) {
+            if (this._body) {
+              request.write(this._body);
+            }
+            request.end();
+          };
+          return XMLHttpRequestUpload;
+        }(xml_http_request_event_target_1.XMLHttpRequestEventTarget);
+        exports.XMLHttpRequestUpload = XMLHttpRequestUpload;
+      }).call(this, require("buffer").Buffer);
+    }, { "./xml-http-request-event-target": 397, "buffer": 47 }], 399: [function (require, module, exports) {
+      (function (process, Buffer) {
+        "use strict";
+
+        var __extends = this && this.__extends || function () {
+          var extendStatics = Object.setPrototypeOf || { __proto__: [] } instanceof Array && function (d, b) {
+            d.__proto__ = b;
+          } || function (d, b) {
+            for (var p in b) {
+              if (b.hasOwnProperty(p)) d[p] = b[p];
+            }
+          };
+          return function (d, b) {
+            extendStatics(d, b);
+            function __() {
+              this.constructor = d;
+            }
+            d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+          };
+        }();
+        var __assign = this && this.__assign || Object.assign || function (t) {
+          for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) {
+              if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+            }
+          }
+          return t;
+        };
+        Object.defineProperty(exports, "__esModule", { value: true });
+        var http = require("http");
+        var https = require("https");
+        var os = require("os");
+        var url = require("url");
+        var progress_event_1 = require("./progress-event");
+        var errors_1 = require("./errors");
+        var xml_http_request_event_target_1 = require("./xml-http-request-event-target");
+        var xml_http_request_upload_1 = require("./xml-http-request-upload");
+        var Cookie = require("cookiejar");
+        var XMLHttpRequest = /** @class */function (_super) {
+          __extends(XMLHttpRequest, _super);
+          function XMLHttpRequest(options) {
+            if (options === void 0) {
+              options = {};
+            }
+            var _this = _super.call(this) || this;
+            _this.UNSENT = XMLHttpRequest.UNSENT;
+            _this.OPENED = XMLHttpRequest.OPENED;
+            _this.HEADERS_RECEIVED = XMLHttpRequest.HEADERS_RECEIVED;
+            _this.LOADING = XMLHttpRequest.LOADING;
+            _this.DONE = XMLHttpRequest.DONE;
+            _this.onreadystatechange = null;
+            _this.readyState = XMLHttpRequest.UNSENT;
+            _this.response = null;
+            _this.responseText = '';
+            _this.responseType = '';
+            _this.status = 0; // TODO: UNSENT?
+            _this.statusText = '';
+            _this.timeout = 0;
+            _this.upload = new xml_http_request_upload_1.XMLHttpRequestUpload();
+            _this.responseUrl = '';
+            _this.withCredentials = false;
+            _this._method = null;
+            _this._url = null;
+            _this._sync = false;
+            _this._headers = {};
+            _this._loweredHeaders = {};
+            _this._mimeOverride = null; // TODO: is type right?
+            _this._request = null;
+            _this._response = null;
+            _this._responseParts = null;
+            _this._responseHeaders = null;
+            _this._aborting = null; // TODO: type?
+            _this._error = null; // TODO: type?
+            _this._loadedBytes = 0;
+            _this._totalBytes = 0;
+            _this._lengthComputable = false;
+            _this._restrictedMethods = { CONNECT: true, TRACE: true, TRACK: true };
+            _this._restrictedHeaders = {
+              'accept-charset': true,
+              'accept-encoding': true,
+              'access-control-request-headers': true,
+              'access-control-request-method': true,
+              connection: true,
+              'content-length': true,
+              cookie: true,
+              cookie2: true,
+              date: true,
+              dnt: true,
+              expect: true,
+              host: true,
+              'keep-alive': true,
+              origin: true,
+              referer: true,
+              te: true,
+              trailer: true,
+              'transfer-encoding': true,
+              upgrade: true,
+              'user-agent': true,
+              via: true
+            };
+            _this._privateHeaders = { 'set-cookie': true, 'set-cookie2': true };
+            _this._userAgent = "Mozilla/5.0 (" + os.type() + " " + os.arch() + ") node.js/" + process.versions.node + " v8/" + process.versions.v8;
+            _this._anonymous = options.anon || false;
+            return _this;
+          }
+          XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+            if (async === void 0) {
+              async = true;
+            }
+            method = method.toUpperCase();
+            if (this._restrictedMethods[method]) {
+              throw new XMLHttpRequest.SecurityError("HTTP method " + method + " is not allowed in XHR");
+            }
+            ;
+            var xhrUrl = this._parseUrl(url, user, password);
+            if (this.readyState === XMLHttpRequest.HEADERS_RECEIVED || this.readyState === XMLHttpRequest.LOADING) {
+              // TODO(pwnall): terminate abort(), terminate send()
+            }
+            this._method = method;
+            this._url = xhrUrl;
+            this._sync = !async;
+            this._headers = {};
+            this._loweredHeaders = {};
+            this._mimeOverride = null;
+            this._setReadyState(XMLHttpRequest.OPENED);
+            this._request = null;
+            this._response = null;
+            this.status = 0;
+            this.statusText = '';
+            this._responseParts = [];
+            this._responseHeaders = null;
+            this._loadedBytes = 0;
+            this._totalBytes = 0;
+            this._lengthComputable = false;
+          };
+          XMLHttpRequest.prototype.setRequestHeader = function (name, value) {
+            if (this.readyState !== XMLHttpRequest.OPENED) {
+              throw new XMLHttpRequest.InvalidStateError('XHR readyState must be OPENED');
+            }
+            var loweredName = name.toLowerCase();
+            if (this._restrictedHeaders[loweredName] || /^sec-/.test(loweredName) || /^proxy-/.test(loweredName)) {
+              console.warn("Refused to set unsafe header \"" + name + "\"");
+              return;
+            }
+            value = value.toString();
+            if (this._loweredHeaders[loweredName] != null) {
+              name = this._loweredHeaders[loweredName];
+              this._headers[name] = this._headers[name] + ", " + value;
+            } else {
+              this._loweredHeaders[loweredName] = name;
+              this._headers[name] = value;
+            }
+          };
+          XMLHttpRequest.prototype.send = function (data) {
+            if (this.readyState !== XMLHttpRequest.OPENED) {
+              throw new XMLHttpRequest.InvalidStateError('XHR readyState must be OPENED');
+            }
+            if (this._request) {
+              throw new XMLHttpRequest.InvalidStateError('send() already called');
+            }
+            switch (this._url.protocol) {
+              case 'file:':
+                return this._sendFile(data);
+              case 'http:':
+              case 'https:':
+                return this._sendHttp(data);
+              default:
+                throw new XMLHttpRequest.NetworkError("Unsupported protocol " + this._url.protocol);
+            }
+          };
+          XMLHttpRequest.prototype.abort = function () {
+            if (this._request == null) {
+              return;
+            }
+            this._request.abort();
+            this._setError();
+            this._dispatchProgress('abort');
+            this._dispatchProgress('loadend');
+          };
+          XMLHttpRequest.prototype.getResponseHeader = function (name) {
+            if (this._responseHeaders == null || name == null) {
+              return null;
+            }
+            var loweredName = name.toLowerCase();
+            return this._responseHeaders.hasOwnProperty(loweredName) ? this._responseHeaders[name.toLowerCase()] : null;
+          };
+          XMLHttpRequest.prototype.getAllResponseHeaders = function () {
+            var _this = this;
+            if (this._responseHeaders == null) {
+              return '';
+            }
+            return Object.keys(this._responseHeaders).map(function (key) {
+              return key + ": " + _this._responseHeaders[key];
+            }).join('\r\n');
+          };
+          XMLHttpRequest.prototype.overrideMimeType = function (mimeType) {
+            if (this.readyState === XMLHttpRequest.LOADING || this.readyState === XMLHttpRequest.DONE) {
+              throw new XMLHttpRequest.InvalidStateError('overrideMimeType() not allowed in LOADING or DONE');
+            }
+            this._mimeOverride = mimeType.toLowerCase();
+          };
+          XMLHttpRequest.prototype.nodejsSet = function (options) {
+            this.nodejsHttpAgent = options.httpAgent || this.nodejsHttpAgent;
+            this.nodejsHttpsAgent = options.httpsAgent || this.nodejsHttpsAgent;
+            if (options.hasOwnProperty('baseUrl')) {
+              if (options.baseUrl != null) {
+                var parsedUrl = url.parse(options.baseUrl, false, true);
+                if (!parsedUrl.protocol) {
+                  throw new XMLHttpRequest.SyntaxError("baseUrl must be an absolute URL");
+                }
+              }
+              this.nodejsBaseUrl = options.baseUrl;
+            }
+          };
+          XMLHttpRequest.nodejsSet = function (options) {
+            XMLHttpRequest.prototype.nodejsSet(options);
+          };
+          XMLHttpRequest.prototype._setReadyState = function (readyState) {
+            this.readyState = readyState;
+            this.dispatchEvent(new progress_event_1.ProgressEvent('readystatechange'));
+          };
+          XMLHttpRequest.prototype._sendFile = function (data) {
+            // TODO
+            throw new Error('Protocol file: not implemented');
+          };
+          XMLHttpRequest.prototype._sendHttp = function (data) {
+            if (this._sync) {
+              throw new Error('Synchronous XHR processing not implemented');
+            }
+            if (data && (this._method === 'GET' || this._method === 'HEAD')) {
+              console.warn("Discarding entity body for " + this._method + " requests");
+              data = null;
+            } else {
+              data = data || '';
+            }
+            this.upload._setData(data);
+            this._finalizeHeaders();
+            this._sendHxxpRequest();
+          };
+          XMLHttpRequest.prototype._sendHxxpRequest = function () {
+            var _this = this;
+            if (this.withCredentials) {
+              var cookie = XMLHttpRequest.cookieJar.getCookies(Cookie.CookieAccessInfo(this._url.hostname, this._url.pathname, this._url.protocol === 'https:')).toValueString();
+              this._headers.cookie = this._headers.cookie2 = cookie;
+            }
+            var _a = this._url.protocol === 'http:' ? [http, this.nodejsHttpAgent] : [https, this.nodejsHttpsAgent],
+                hxxp = _a[0],
+                agent = _a[1];
+            var requestMethod = hxxp.request.bind(hxxp);
+            var request = requestMethod({
+              hostname: this._url.hostname,
+              port: +this._url.port,
+              path: this._url.path,
+              auth: this._url.auth,
+              method: this._method,
+              headers: this._headers,
+              agent: agent
+            });
+            this._request = request;
+            if (this.timeout) {
+              request.setTimeout(this.timeout, function () {
+                return _this._onHttpTimeout(request);
+              });
+            }
+            request.on('response', function (response) {
+              return _this._onHttpResponse(request, response);
+            });
+            request.on('error', function (error) {
+              return _this._onHttpRequestError(request, error);
+            });
+            this.upload._startUpload(request);
+            if (this._request === request) {
+              this._dispatchProgress('loadstart');
+            }
+          };
+          XMLHttpRequest.prototype._finalizeHeaders = function () {
+            this._headers = __assign({}, this._headers, { Connection: 'keep-alive', Host: this._url.host, 'User-Agent': this._userAgent }, this._anonymous ? { Referer: 'about:blank' } : {});
+            this.upload._finalizeHeaders(this._headers, this._loweredHeaders);
+          };
+          XMLHttpRequest.prototype._onHttpResponse = function (request, response) {
+            var _this = this;
+            if (this._request !== request) {
+              return;
+            }
+            if (this.withCredentials && (response.headers['set-cookie'] || response.headers['set-cookie2'])) {
+              XMLHttpRequest.cookieJar.setCookies(response.headers['set-cookie'] || response.headers['set-cookie2']);
+            }
+            if ([301, 302, 303, 307, 308].indexOf(response.statusCode) >= 0) {
+              this._url = this._parseUrl(response.headers.location);
+              this._method = 'GET';
+              if (this._loweredHeaders['content-type']) {
+                delete this._headers[this._loweredHeaders['content-type']];
+                delete this._loweredHeaders['content-type'];
+              }
+              if (this._headers['Content-Type'] != null) {
+                delete this._headers['Content-Type'];
+              }
+              delete this._headers['Content-Length'];
+              this.upload._reset();
+              this._finalizeHeaders();
+              this._sendHxxpRequest();
+              return;
+            }
+            this._response = response;
+            this._response.on('data', function (data) {
+              return _this._onHttpResponseData(response, data);
+            });
+            this._response.on('end', function () {
+              return _this._onHttpResponseEnd(response);
+            });
+            this._response.on('close', function () {
+              return _this._onHttpResponseClose(response);
+            });
+            this.responseUrl = this._url.href.split('#')[0];
+            this.status = response.statusCode;
+            this.statusText = http.STATUS_CODES[this.status];
+            this._parseResponseHeaders(response);
+            var lengthString = this._responseHeaders['content-length'] || '';
+            this._totalBytes = +lengthString;
+            this._lengthComputable = !!lengthString;
+            this._setReadyState(XMLHttpRequest.HEADERS_RECEIVED);
+          };
+          XMLHttpRequest.prototype._onHttpResponseData = function (response, data) {
+            if (this._response !== response) {
+              return;
+            }
+            this._responseParts.push(new Buffer(data));
+            this._loadedBytes += data.length;
+            if (this.readyState !== XMLHttpRequest.LOADING) {
+              this._setReadyState(XMLHttpRequest.LOADING);
+            }
+            this._dispatchProgress('progress');
+          };
+          XMLHttpRequest.prototype._onHttpResponseEnd = function (response) {
+            if (this._response !== response) {
+              return;
+            }
+            this._parseResponse();
+            this._request = null;
+            this._response = null;
+            this._setReadyState(XMLHttpRequest.DONE);
+            this._dispatchProgress('load');
+            this._dispatchProgress('loadend');
+          };
+          XMLHttpRequest.prototype._onHttpResponseClose = function (response) {
+            if (this._response !== response) {
+              return;
+            }
+            var request = this._request;
+            this._setError();
+            request.abort();
+            this._setReadyState(XMLHttpRequest.DONE);
+            this._dispatchProgress('error');
+            this._dispatchProgress('loadend');
+          };
+          XMLHttpRequest.prototype._onHttpTimeout = function (request) {
+            if (this._request !== request) {
+              return;
+            }
+            this._setError();
+            request.abort();
+            this._setReadyState(XMLHttpRequest.DONE);
+            this._dispatchProgress('timeout');
+            this._dispatchProgress('loadend');
+          };
+          XMLHttpRequest.prototype._onHttpRequestError = function (request, error) {
+            if (this._request !== request) {
+              return;
+            }
+            this._setError();
+            request.abort();
+            this._setReadyState(XMLHttpRequest.DONE);
+            this._dispatchProgress('error');
+            this._dispatchProgress('loadend');
+          };
+          XMLHttpRequest.prototype._dispatchProgress = function (eventType) {
+            var event = new XMLHttpRequest.ProgressEvent(eventType);
+            event.lengthComputable = this._lengthComputable;
+            event.loaded = this._loadedBytes;
+            event.total = this._totalBytes;
+            this.dispatchEvent(event);
+          };
+          XMLHttpRequest.prototype._setError = function () {
+            this._request = null;
+            this._response = null;
+            this._responseHeaders = null;
+            this._responseParts = null;
+          };
+          XMLHttpRequest.prototype._parseUrl = function (urlString, user, password) {
+            var absoluteUrl = this.nodejsBaseUrl == null ? urlString : url.resolve(this.nodejsBaseUrl, urlString);
+            var xhrUrl = url.parse(absoluteUrl, false, true);
+            xhrUrl.hash = null;
+            var _a = (xhrUrl.auth || '').split(':'),
+                xhrUser = _a[0],
+                xhrPassword = _a[1];
+            if (xhrUser || xhrPassword || user || password) {
+              xhrUrl.auth = (user || xhrUser || '') + ":" + (password || xhrPassword || '');
+            }
+            return xhrUrl;
+          };
+          XMLHttpRequest.prototype._parseResponseHeaders = function (response) {
+            this._responseHeaders = {};
+            for (var name_1 in response.headers) {
+              var loweredName = name_1.toLowerCase();
+              if (this._privateHeaders[loweredName]) {
+                continue;
+              }
+              this._responseHeaders[loweredName] = response.headers[name_1];
+            }
+            if (this._mimeOverride != null) {
+              this._responseHeaders['content-type'] = this._mimeOverride;
+            }
+          };
+          XMLHttpRequest.prototype._parseResponse = function () {
+            var buffer = Buffer.concat(this._responseParts);
+            this._responseParts = null;
+            switch (this.responseType) {
+              case 'json':
+                this.responseText = null;
+                try {
+                  this.response = JSON.parse(buffer.toString('utf-8'));
+                } catch (_a) {
+                  this.response = null;
+                }
+                return;
+              case 'buffer':
+                this.responseText = null;
+                this.response = buffer;
+                return;
+              case 'arraybuffer':
+                this.responseText = null;
+                var arrayBuffer = new ArrayBuffer(buffer.length);
+                var view = new Uint8Array(arrayBuffer);
+                for (var i = 0; i < buffer.length; i++) {
+                  view[i] = buffer[i];
+                }
+                this.response = arrayBuffer;
+                return;
+              case 'text':
+              default:
+                try {
+                  this.responseText = buffer.toString(this._parseResponseEncoding());
+                } catch (_b) {
+                  this.responseText = buffer.toString('binary');
+                }
+                this.response = this.responseText;
+            }
+          };
+          XMLHttpRequest.prototype._parseResponseEncoding = function () {
+            return (/;\s*charset=(.*)$/.exec(this._responseHeaders['content-type'] || '')[1] || 'utf-8'
+            );
+          };
+          XMLHttpRequest.ProgressEvent = progress_event_1.ProgressEvent;
+          XMLHttpRequest.InvalidStateError = errors_1.InvalidStateError;
+          XMLHttpRequest.NetworkError = errors_1.NetworkError;
+          XMLHttpRequest.SecurityError = errors_1.SecurityError;
+          XMLHttpRequest.SyntaxError = errors_1.SyntaxError;
+          XMLHttpRequest.XMLHttpRequestUpload = xml_http_request_upload_1.XMLHttpRequestUpload;
+          XMLHttpRequest.UNSENT = 0;
+          XMLHttpRequest.OPENED = 1;
+          XMLHttpRequest.HEADERS_RECEIVED = 2;
+          XMLHttpRequest.LOADING = 3;
+          XMLHttpRequest.DONE = 4;
+          XMLHttpRequest.cookieJar = Cookie.CookieJar();
+          return XMLHttpRequest;
+        }(xml_http_request_event_target_1.XMLHttpRequestEventTarget);
+        exports.XMLHttpRequest = XMLHttpRequest;
+        XMLHttpRequest.prototype.nodejsHttpAgent = http.globalAgent;
+        XMLHttpRequest.prototype.nodejsHttpsAgent = https.globalAgent;
+        XMLHttpRequest.prototype.nodejsBaseUrl = null;
+      }).call(this, require('_process'), require("buffer").Buffer);
+    }, { "./errors": 394, "./progress-event": 396, "./xml-http-request-event-target": 397, "./xml-http-request-upload": 398, "_process": 121, "buffer": 47, "cookiejar": 393, "http": 159, "https": 99, "os": 109, "url": 166 }], 400: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -38098,16 +41600,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        */
 
       var errors = require('web3-core-helpers').errors;
-      var XHR2 = require('xhr2'); // jshint ignore: line
+      var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
 
       /**
        * HttpProvider should be used to send rpc calls over http
        */
-      var HttpProvider = function HttpProvider(host, timeout, headers) {
+      var HttpProvider = function HttpProvider(host, options) {
+        options = options || {};
         this.host = host || 'http://localhost:8545';
-        this.timeout = timeout || 0;
+        this.timeout = options.timeout || 0;
+        this.headers = options.headers;
         this.connected = false;
-        this.headers = headers;
       };
 
       HttpProvider.prototype._prepareRequest = function () {
@@ -38115,6 +41618,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         request.open('POST', this.host, true);
         request.setRequestHeader('Content-Type', 'application/json');
+        request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
+        request.withCredentials = true;
 
         if (this.headers) {
           this.headers.forEach(function (header) {
@@ -38166,7 +41671,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = HttpProvider;
-    }, { "web3-core-helpers": 191, "xhr2": 374 }], 376: [function (require, module, exports) {
+    }, { "web3-core-helpers": 199, "xhr2-cookies": 395 }], 401: [function (require, module, exports) {
       // This file is the concatenation of many js files.
       // See http://github.com/jimhigson/oboe.js for the raw source
 
@@ -40628,9 +44133,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           return self;
         }
       }(), Object, Array, Error, JSON);
-    }, {}], 377: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 378: [function (require, module, exports) {
+    }, {}], 402: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 403: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -40664,6 +44169,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         this.responseCallbacks = {};
         this.notificationCallbacks = [];
         this.path = path;
+        this.connected = false;
 
         this.connection = net.connect({ path: this.path });
 
@@ -40715,7 +44221,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       IpcProvider.prototype.addDefaultEvents = function () {
         var _this = this;
 
-        this.connection.on('connect', function () {});
+        this.connection.on('connect', function () {
+          _this.connected = true;
+        });
+
+        this.connection.on('close', function () {
+          _this.connected = false;
+        });
 
         this.connection.on('error', function () {
           _this._timeout();
@@ -40922,9 +44434,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = IpcProvider;
-    }, { "oboe": 376, "underscore": 377, "web3-core-helpers": 191 }], 379: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 380: [function (require, module, exports) {
+    }, { "oboe": 401, "underscore": 402, "web3-core-helpers": 199 }], 404: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 405: [function (require, module, exports) {
       (function (Buffer) {
         /*
          This file is part of web3.js.
@@ -40956,7 +44468,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         var Ws = null;
         var _btoa = null;
         var parseURL = null;
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
           Ws = window.WebSocket;
           _btoa = btoa;
           parseURL = function parseURL(url) {
@@ -40967,8 +44479,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           _btoa = function _btoa(str) {
             return Buffer(str).toString('base64');
           };
-          // Web3 supports Node.js 5, so we need to use the legacy URL API
-          parseURL = require('url').parse;
+          var url = require('url');
+          if (url.URL) {
+            // Use the new Node 6+ API for parsing URLs that supports username/password
+            var newURL = url.URL;
+            parseURL = function parseURL(url) {
+              return new newURL(url);
+            };
+          } else {
+            // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
+            parseURL = require('url').parse;
+          }
         }
         // Default connection ws://localhost:8546
 
@@ -40986,11 +44507,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           // pass through with any additional headers supplied in constructor
           var parsedURL = parseURL(url);
           var headers = options.headers || {};
+          var protocol = options.protocol || undefined;
           if (parsedURL.username && parsedURL.password) {
             headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
           }
 
-          this.connection = new Ws(url, undefined, undefined, headers);
+          this.connection = new Ws(url, protocol, undefined, headers);
 
           this.addDefaultEvents();
 
@@ -41025,6 +44547,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               }
             });
           };
+
+          // make property `connected` which will return the current connection status
+          Object.defineProperty(this, 'connected', {
+            get: function get() {
+              return this.connection && this.connection.readyState === this.connection.OPEN;
+            },
+            enumerable: true
+          });
         };
 
         /**
@@ -41280,7 +44810,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         module.exports = WebsocketProvider;
       }).call(this, require("buffer").Buffer);
-    }, { "buffer": 47, "underscore": 379, "url": 158, "web3-core-helpers": 191, "websocket": 45 }], 381: [function (require, module, exports) {
+    }, { "buffer": 47, "underscore": 404, "url": 166, "web3-core-helpers": 199, "websocket": 45 }], 406: [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -41432,11 +44962,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       core.addProviders(Shh);
 
       module.exports = Shh;
-    }, { "web3-core": 209, "web3-core-method": 193, "web3-core-subscriptions": 206, "web3-net": 373 }], 382: [function (require, module, exports) {
-      arguments[4][210][0].apply(exports, arguments);
-    }, { "dup": 210 }], 383: [function (require, module, exports) {
-      arguments[4][165][0].apply(exports, arguments);
-    }, { "dup": 165 }], 384: [function (require, module, exports) {
+    }, { "web3-core": 217, "web3-core-method": 201, "web3-core-subscriptions": 214, "web3-net": 392 }], 407: [function (require, module, exports) {
+      arguments[4][218][0].apply(exports, arguments);
+    }, { "dup": 218 }], 408: [function (require, module, exports) {
+      arguments[4][173][0].apply(exports, arguments);
+    }, { "dup": 173 }], 409: [function (require, module, exports) {
       'use strict';
 
       var BN = require('bn.js');
@@ -41605,7 +45135,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         fromWei: fromWei,
         toWei: toWei
       };
-    }, { "bn.js": 382, "number-to-bn": 386 }], 385: [function (require, module, exports) {
+    }, { "bn.js": 407, "number-to-bn": 411 }], 410: [function (require, module, exports) {
       /**
        * Returns a `Boolean` on whether or not the a `String` starts with '0x'
        * @param {String} str the string input value
@@ -41619,7 +45149,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return str.slice(0, 2) === '0x';
       };
-    }, {}], 386: [function (require, module, exports) {
+    }, {}], 411: [function (require, module, exports) {
       var BN = require('bn.js');
       var stripHexPrefix = require('strip-hex-prefix');
 
@@ -41656,11 +45186,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         throw new Error('[number-to-bn] while converting number ' + JSON.stringify(arg) + ' to BN.js instance, error: invalid number value. Value must be an integer, hex string, BN or BigNumber instance. Note, decimals are not supported.');
       };
-    }, { "bn.js": 382, "strip-hex-prefix": 390 }], 387: [function (require, module, exports) {
+    }, { "bn.js": 407, "strip-hex-prefix": 415 }], 412: [function (require, module, exports) {
       module.exports = window.crypto;
-    }, {}], 388: [function (require, module, exports) {
+    }, {}], 413: [function (require, module, exports) {
       module.exports = require('crypto');
-    }, { "crypto": 387 }], 389: [function (require, module, exports) {
+    }, { "crypto": 412 }], 414: [function (require, module, exports) {
       var randomHex = function randomHex(size, callback) {
         var crypto = require('./crypto.js');
         var isCallback = typeof callback === 'function';
@@ -41724,7 +45254,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = randomHex;
-    }, { "./crypto.js": 388 }], 390: [function (require, module, exports) {
+    }, { "./crypto.js": 413 }], 415: [function (require, module, exports) {
       var isHexPrefixed = require('is-hex-prefixed');
 
       /**
@@ -41739,9 +45269,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
         return isHexPrefixed(str) ? str.slice(2) : str;
       };
-    }, { "is-hex-prefixed": 385 }], 391: [function (require, module, exports) {
-      arguments[4][178][0].apply(exports, arguments);
-    }, { "dup": 178 }], 392: [function (require, module, exports) {
+    }, { "is-hex-prefixed": 410 }], 416: [function (require, module, exports) {
+      arguments[4][185][0].apply(exports, arguments);
+    }, { "dup": 185 }], 417: [function (require, module, exports) {
       (function (global) {
         /*! https://mths.be/utf8js v2.0.0 by @mathias */
         ;(function (root) {
@@ -41984,7 +45514,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
         })(this);
       }).call(this, typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-    }, {}], 393: [function (require, module, exports) {
+    }, {}], 418: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -42288,7 +45818,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         rightPad: utils.rightPad,
         toTwosComplement: utils.toTwosComplement
       };
-    }, { "./soliditySha3.js": 394, "./utils.js": 395, "ethjs-unit": 384, "randomhex": 389, "underscore": 391 }], 394: [function (require, module, exports) {
+    }, { "./soliditySha3.js": 419, "./utils.js": 420, "ethjs-unit": 409, "randomhex": 414, "underscore": 416 }], 419: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -42528,7 +46058,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
 
       module.exports = soliditySha3;
-    }, { "./utils.js": 395, "bn.js": 382, "underscore": 391 }], 395: [function (require, module, exports) {
+    }, { "./utils.js": 420, "bn.js": 407, "underscore": 416 }], 420: [function (require, module, exports) {
       /*
        This file is part of web3.js.
       
@@ -42981,7 +46511,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         toTwosComplement: toTwosComplement,
         sha3: sha3
       };
-    }, { "bn.js": 382, "eth-lib/lib/hash": 383, "number-to-bn": 386, "underscore": 391, "utf8": 392 }], 396: [function (require, module, exports) {
+    }, { "bn.js": 407, "eth-lib/lib/hash": 408, "number-to-bn": 411, "underscore": 416, "utf8": 417 }], 421: [function (require, module, exports) {
       module.exports = {
         "name": "web3",
         "namespace": "ethereum",
@@ -43027,8 +46557,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       };
     }, {}], "BN": [function (require, module, exports) {
-      arguments[4][240][0].apply(exports, arguments);
-    }, { "buffer": 17, "dup": 240 }], "Web3": [function (require, module, exports) {
+      arguments[4][248][0].apply(exports, arguments);
+    }, { "buffer": 17, "dup": 248 }], "Web3": [function (require, module, exports) {
       /*
           This file is part of web3.js.
       
@@ -43106,6 +46636,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       core.addProviders(Web3);
 
       module.exports = Web3;
-    }, { "../package.json": 396, "web3-bzz": 187, "web3-core": 209, "web3-eth": 372, "web3-eth-personal": 369, "web3-net": 373, "web3-shh": 381, "web3-utils": 393 }] }, {}, ["Web3"])("Web3");
+    }, { "../package.json": 421, "web3-bzz": 195, "web3-core": 217, "web3-eth": 391, "web3-eth-personal": 388, "web3-net": 392, "web3-shh": 406, "web3-utils": 418 }] }, {}, ["Web3"])("Web3");
 });
 //# sourceMappingURL=web3.js.map
