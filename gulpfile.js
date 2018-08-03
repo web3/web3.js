@@ -141,12 +141,12 @@ gulp.task('version', function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', gulp.series('version'), function (cb) {
+gulp.task('bower', gulp.series('version', function (cb) {
     bower.commands.install().on('end', function (installed) {
         console.log(installed);
         cb();
     });
-});
+}));
 
 gulp.task('lint', function () {
     return gulp.src(['./*.js', './lib/*.js'])
@@ -154,14 +154,14 @@ gulp.task('lint', function () {
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', gulp.series('lint'), function (cb) {
+gulp.task('clean', gulp.series('lint', function (cb) {
     del([DEST]).then(cb.bind(null, null));
-});
+}));
 
 packages.forEach(function (pckg, i) {
     var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
-    gulp.task(pckg.fileName, gulp.series(prevPckg), function () {
+    gulp.task(pckg.fileName, gulp.series(prevPckg, function () {
         browserifyOptions.standalone = pckg.expose;
 
         var pipe = browserify(browserifyOptions)
@@ -191,7 +191,7 @@ packages.forEach(function (pckg, i) {
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
             .pipe(gulp.dest(DEST));
-    });
+    }));
 });
 
 
