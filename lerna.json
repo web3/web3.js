@@ -1,16 +1,14 @@
 {
-  "version": "1.0.0-beta.34",
-  "lerna": "2.0.0",
-  "command": {
-    "init": {
-      "exact": true
+    "version": "1.0.0-beta.34",
+    "lerna": "2.0.0",
+    "command": {
+        "init": {
+            "exact": true
+        },
+        "publish": {
+            "exact": true,
+            "skipGit": true
+        }
     },
-    "publish": {
-      "exact": true,
-      "skipGit": true
-    }
-  },
-  "packages": [
-    "packages/*"
-  ]
+    "packages": ["packages/*"]
 }

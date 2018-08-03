@@ -1,6 +1,6 @@
 <!---
 
-Steps before creating an issue: 
+Steps before creating an issue:
 
 1. I've read the documentation.
 2. I was looking for an solution on stackoverflow or something else.
@@ -21,4 +21,5 @@ Steps before creating an issue:
 #### Logs
 
 #### Versions
+
 [NPM, Node, Web3.js, OS, device...]

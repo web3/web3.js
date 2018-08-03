@@ -1,33 +1,35 @@
-var chai = require('chai');
+var chai = require("chai");
 var assert = chai.assert;
-var SandboxedModule = require('sandboxed-module');
+var SandboxedModule = require("sandboxed-module");
 
-SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var HttpProvider = SandboxedModule.require('../packages/web3-providers-http', {
+SandboxedModule.registerBuiltInSourceTransformer("istanbul");
+var HttpProvider = SandboxedModule.require("../packages/web3-providers-http", {
     requires: {
-        'xhr2-cookies': require('./helpers/FakeXHR2'),
+        "xhr2-cookies": require("./helpers/FakeXHR2")
         // 'xmlhttprequest': require('./helpers/FakeXMLHttpRequest')
     },
     singleOnly: true
 });
 
-describe('web3-providers-http', function () {
-    describe('prepareRequest', function () {
-        it('should set request header', function () {
-            var provider = new HttpProvider('http://localhost:8545', {headers: [{name: 'Access-Control-Allow-Origin',  value: '*'}]});
+describe("web3-providers-http", function() {
+    describe("prepareRequest", function() {
+        it("should set request header", function() {
+            var provider = new HttpProvider("http://localhost:8545", {
+                headers: [{ name: "Access-Control-Allow-Origin", value: "*" }]
+            });
             var result = provider._prepareRequest();
 
-            assert.equal(typeof result, 'object');
-            assert.equal(result.headers['Access-Control-Allow-Origin'], '*');
+            assert.equal(typeof result, "object");
+            assert.equal(result.headers["Access-Control-Allow-Origin"], "*");
         });
     });
 
-    describe('send', function () {
-        it('should send basic async request', function (done) {
+    describe("send", function() {
+        it("should send basic async request", function(done) {
             var provider = new HttpProvider();
 
-            provider.send({}, function (err, result) {
-                assert.equal(typeof result, 'object');
+            provider.send({}, function(err, result) {
+                assert.equal(typeof result, "object");
                 done();
             });
         });

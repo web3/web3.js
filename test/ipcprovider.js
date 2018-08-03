@@ -1,20 +1,19 @@
-var chai = require('chai');
+var chai = require("chai");
 var assert = chai.assert;
-var SandboxedModule = require('sandboxed-module');
+var SandboxedModule = require("sandboxed-module");
 
-var FakeIpcRequest = require('./helpers/FakeIpcRequest')
+var FakeIpcRequest = require("./helpers/FakeIpcRequest");
 var net = new FakeIpcRequest();
 
-SandboxedModule.registerBuiltInSourceTransformer('istanbul');
-var IpcProvider = SandboxedModule.require('../packages/web3-providers-ipc', {
+SandboxedModule.registerBuiltInSourceTransformer("istanbul");
+var IpcProvider = SandboxedModule.require("../packages/web3-providers-ipc", {
     requires: {
-        'bn.js': require('bn.js'),
+        "bn.js": require("bn.js")
     },
     singleOnly: true
 });
 
-describe('web3-providers-ipc', function () {
-
+describe("web3-providers-ipc", function() {
     // oboe.js DOESNT WORK with FakeIpcProvider
     // describe('send', function () {
     //     it('should send basic async request', function (done) {
@@ -25,7 +24,6 @@ describe('web3-providers-ipc', function () {
     //         });
     //     });
     // });
-
     // describe('isConnected', function () {
     //     it('should return a boolean', function () {
     //         var provider = new IpcProvider('', net);
@@ -50,4 +48,3 @@ describe('web3-providers-ipc', function () {
     //     });
     // });
 });
-
