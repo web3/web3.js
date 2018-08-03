@@ -31081,6 +31081,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String} encoded plain param
        */
       ABICoder.prototype.encodeParameter = function (type, param) {
+        console.log('encodeParameter', type);
         return this.encodeParameters([type], [param]);
       };
 
@@ -31093,7 +31094,81 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String} encoded list of params
        */
       ABICoder.prototype.encodeParameters = function (types, params) {
-        return ethersAbiCoder.encode(types, params);
+        return ethersAbiCoder.encode(this.mapTypes(types), params);
+      };
+
+      /**
+       * Map types if simplified format is used
+       *
+       * @param {Array} types
+       * @returns {Array}
+       */
+      ABICoder.prototype.mapTypes = function (types) {
+        var self = this;
+        var mappedTypes = [];
+        types.forEach(function (type) {
+          if (typeof type === 'string' || typeof type.components !== 'undefined') {
+            mappedTypes.push(type);
+
+            return;
+          }
+
+          if ((typeof type === "undefined" ? "undefined" : _typeof(type)) === 'object') {
+            var structName = Object.keys(type)[0];
+
+            mappedTypes.push(Object.assign(self.mapStructNameAndType(structName), {
+              components: self.mapStructToCoderFormat(type[structName])
+            }));
+          }
+        });
+
+        console.log('MAPPED_TYPES', mappedTypes);
+
+        return mappedTypes;
+      };
+
+      /**
+       * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
+       *
+       * @param {string} structName
+       * @returns {{type: string, name: *}}
+       */
+      ABICoder.prototype.mapStructNameAndType = function (structName) {
+        var type = 'tuple';
+
+        if (structName.indexOf('[]') > -1) {
+          type = 'tuple[]';
+          structName = structName.slice(0, -2);
+        }
+
+        return { type: type, name: structName };
+      };
+
+      /**
+       * Maps the simplified format in to the expected format of the ABICoder
+       *
+       * @param {Object} struct
+       * @returns {Array}
+       */
+      ABICoder.prototype.mapStructToCoderFormat = function (struct) {
+        var self = this;
+        var components = [];
+        Object.keys(struct).forEach(function (key) {
+          if (_typeof(struct[key]) === 'object') {
+            components.push(Object.assign(self.mapStructNameAndType(key), {
+              components: self.mapStructToCoderFormat(struct[key])
+            }));
+
+            return;
+          }
+
+          components.push({
+            name: key,
+            type: struct[key]
+          });
+        });
+
+        return components;
       };
 
       /**

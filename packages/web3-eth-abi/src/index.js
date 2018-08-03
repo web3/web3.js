@@ -26,20 +26,21 @@ var utils = require('web3-utils');
 
 var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
 var ethersAbiCoder = new EthersAbi(function (type, value) {
-    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) { return value.toString(); }
+    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
+        return value.toString();
+    }
     return value;
 });
 
-
 // result method
-function Result() {}
-
+function Result() {
+}
 
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var ABICoder = function () {};
-
+var ABICoder = function () {
+};
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -49,13 +50,12 @@ var ABICoder = function () {};
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
-    if(_.isObject(functionName)) {
+    if (_.isObject(functionName)) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
     return utils.sha3(functionName).slice(0, 10);
 };
-
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -65,13 +65,12 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
-    if(_.isObject(functionName)) {
+    if (_.isObject(functionName)) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
     return utils.sha3(functionName);
 };
-
 
 /**
  * Should be used to encode plain param
@@ -94,9 +93,92 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    return ethersAbiCoder.encode(types, params);
+    return ethersAbiCoder.encode(this.mapTypes(types), params);
 };
 
+/**
+ * Map types if simplified format is used
+ *
+ * @param {Array} types
+ * @returns {Array}
+ */
+ABICoder.prototype.mapTypes = function(types) {
+    var self = this;
+    var mappedTypes = [];
+    types.forEach(function (type) {
+        if (typeof type === 'string' || typeof type.components !== 'undefined') {
+            mappedTypes.push(type);
+
+            return;
+        }
+
+        if (typeof type === 'object') {
+            var structName = Object.keys(type)[0];
+
+            mappedTypes.push(
+                Object.assign(
+                    self.mapStructNameAndType(structName),
+                    {
+                        components: self.mapStructToCoderFormat(type[structName])
+                    }
+                )
+            );
+        }
+    });
+
+    console.log('MAPPED_TYPES', mappedTypes);
+
+    return mappedTypes;
+};
+
+/**
+ * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
+ *
+ * @param {string} structName
+ * @returns {{type: string, name: *}}
+ */
+ABICoder.prototype.mapStructNameAndType = function (structName) {
+    var type = 'tuple';
+
+    if (structName.indexOf('[]') > -1) {
+        type = 'tuple[]';
+        structName = structName.slice(0, -2);
+    }
+
+    return {type: type, name: structName};
+};
+
+/**
+ * Maps the simplified format in to the expected format of the ABICoder
+ *
+ * @param {Object} struct
+ * @returns {Array}
+ */
+ABICoder.prototype.mapStructToCoderFormat = function (struct) {
+    var self = this;
+    var components = [];
+    Object.keys(struct).forEach(function (key) {
+        if (typeof struct[key] === 'object') {
+            components.push(
+                Object.assign(
+                    self.mapStructNameAndType(key),
+                    {
+                        components: self.mapStructToCoderFormat(struct[key])
+                    }
+                )
+            );
+
+            return;
+        }
+
+        components.push({
+            name: key,
+            type: struct[key]
+        });
+    });
+
+    return components;
+};
 
 /**
  * Encodes a function call from its json interface and parameters.
@@ -107,9 +189,8 @@ ABICoder.prototype.encodeParameters = function (types, params) {
  * @return {String} The encoded ABI for this function call
  */
 ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
-    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x','');
+    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x', '');
 };
-
 
 /**
  * Should be used to decode bytes to plain param
@@ -121,7 +202,7 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
     if (!_.isString(type)) {
-        throw new Error('Given parameter type is not a string: '+ type);
+        throw new Error('Given parameter type is not a string: ' + type);
     }
 
     return this.decodeParameters([type], bytes)[0];
@@ -140,7 +221,7 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    var res = ethersAbiCoder.decode(outputs, '0x'+ bytes.replace(/0x/i,''));
+    var res = ethersAbiCoder.decode(outputs, '0x' + bytes.replace(/0x/i, ''));
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
@@ -183,7 +264,9 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
     inputs.forEach(function (input, i) {
         if (input.indexed) {
-            indexedParams[i] = (['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(function(staticType) {return input.type.indexOf(staticType) !== -1; })) ? _this.decodeParameter(input.type, topics[topicCount]) : topics[topicCount];
+            indexedParams[i] = (['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(function (staticType) {
+                return input.type.indexOf(staticType) !== -1;
+            })) ? _this.decodeParameter(input.type, topics[topicCount]) : topics[topicCount];
             topicCount++;
         } else {
             notIndexedInputs[i] = input;
@@ -208,7 +291,7 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
             returnValue[i] = indexedParams[i];
         }
 
-        if(res.name) {
+        if (res.name) {
             returnValue[res.name] = returnValue[i];
         }
 
@@ -217,7 +300,6 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
     return returnValue;
 };
-
 
 var coder = new ABICoder();
 
