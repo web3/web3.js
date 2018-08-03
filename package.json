@@ -66,7 +66,7 @@
     "babel-preset-env": "^1.6.0",
     "bignumber.js": "^4.0.0",
     "bluebird": "3.3.1",
-    "bn.js": "^4.11.6",
+    "bn.js": "^4.11.8",
     "bower": ">=1.4.1",
     "browserify": "^14.4.0",
     "chai": "^4.0.0",
@@ -89,6 +89,6 @@
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
     "underscore": "^1.8.3",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^2.0.0"
   }
 }
