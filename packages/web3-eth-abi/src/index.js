@@ -99,8 +99,9 @@ ABICoder.prototype.encodeParameters = function (types, params) {
 /**
  * Map types if simplified format is used
  *
+ * @method mapTypes
  * @param {Array} types
- * @returns {Array}
+ * @return {Array}
  */
 ABICoder.prototype.mapTypes = function(types) {
     var self = this;
@@ -126,16 +127,15 @@ ABICoder.prototype.mapTypes = function(types) {
         }
     });
 
-    console.log('MAPPED_TYPES', mappedTypes);
-
     return mappedTypes;
 };
 
 /**
  * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
  *
+ * @method mapStructNameAndType
  * @param {string} structName
- * @returns {{type: string, name: *}}
+ * @return {{type: string, name: *}}
  */
 ABICoder.prototype.mapStructNameAndType = function (structName) {
     var type = 'tuple';
@@ -151,8 +151,9 @@ ABICoder.prototype.mapStructNameAndType = function (structName) {
 /**
  * Maps the simplified format in to the expected format of the ABICoder
  *
+ * @method mapStructToCoderFormat
  * @param {Object} struct
- * @returns {Array}
+ * @return {Array}
  */
 ABICoder.prototype.mapStructToCoderFormat = function (struct) {
     var self = this;
@@ -247,7 +248,7 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  * @method decodeLog
  * @param {Object} inputs
  * @param {String} data
- * * @param {Array} topics
+ * @param {Array} topics
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
