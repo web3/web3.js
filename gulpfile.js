@@ -200,7 +200,7 @@ gulp.task('publishTag', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
+    gulp.watch(['./packages/web3/src/*.js'], gulp.series('lint', 'default'));
 });
 
 gulp.task('all', gulp.series('version', 'lint', 'clean', packages[packages.length - 1].fileName));
