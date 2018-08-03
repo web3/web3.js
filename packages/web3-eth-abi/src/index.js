@@ -103,19 +103,12 @@ ABICoder.prototype.encodeParameters = function (types, params) {
  * @param {Array} types
  * @return {Array}
  */
-ABICoder.prototype.mapTypes = function(types) {
+ABICoder.prototype.mapTypes = function (types) {
     var self = this;
     var mappedTypes = [];
     types.forEach(function (type) {
-        if (typeof type === 'string' || typeof type.components !== 'undefined') {
-            mappedTypes.push(type);
-
-            return;
-        }
-
-        if (typeof type === 'object') {
+        if (self.isSimplifiedStructFormat(type)) {
             var structName = Object.keys(type)[0];
-
             mappedTypes.push(
                 Object.assign(
                     self.mapStructNameAndType(structName),
@@ -124,10 +117,25 @@ ABICoder.prototype.mapTypes = function(types) {
                     }
                 )
             );
+
+            return;
         }
+
+        mappedTypes.push(type);
     });
 
     return mappedTypes;
+};
+
+/**
+ * Check if type is simplified struct format
+ *
+ * @method isSimplifiedStructFormat
+ * @param {string | Object} type
+ * @returns {boolean}
+ */
+ABICoder.prototype.isSimplifiedStructFormat = function (type) {
+    return typeof type === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
 };
 
 /**
