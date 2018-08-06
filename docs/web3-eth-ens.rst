@@ -93,7 +93,7 @@ Parameters
 2. ``address`` - ``String``: The address to set.
 3. ``from`` - ``String``: Current account address.
 
-Emits an ```AddrChanged``` event.
+Emits an ``AddrChanged`` event.
 
 -------
 Example
@@ -169,7 +169,7 @@ Parameters
 3. ``y`` - ``String``: The Y coordinate of the public key.
 4. ``from`` - ``String``: The current address.
 
-Emits an ```PubkeyChanged``` event.
+Emits an ``PubkeyChanged`` event.
 
 -------
 Example
@@ -240,7 +240,7 @@ Parameters
 2. ``hash`` - ``String``: The content hash to set.
 2. ``from`` - ``String``: The current address.
 
-Emits an ```ContentChanged``` event.
+Emits an ``ContentChanged`` event.
 
 -------
 Example
