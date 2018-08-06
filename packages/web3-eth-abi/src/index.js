@@ -210,10 +210,6 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
-    if (!_.isString(type)) {
-        throw new Error('Given parameter type is not a string: ' + type);
-    }
-
     return this.decodeParameters([type], bytes)[0];
 };
 

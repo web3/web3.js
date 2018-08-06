@@ -31093,7 +31093,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String} encoded list of params
        */
       ABICoder.prototype.encodeParameters = function (types, params) {
-        console.log('ENCODE_PARAMETERS', ethersAbiCoder.encode(this.mapTypes(types), params));
         return ethersAbiCoder.encode(this.mapTypes(types), params);
       };
 
@@ -31201,10 +31200,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {Object} plain param
        */
       ABICoder.prototype.decodeParameter = function (type, bytes) {
-        if (!_.isString(type)) {
-          throw new Error('Given parameter type is not a string: ' + type);
-        }
-
         return this.decodeParameters([type], bytes)[0];
       };
 
