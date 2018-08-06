@@ -326,3 +326,4 @@ Example
         console.log(result.events);
     });
     > MultihashChanged(...)
+

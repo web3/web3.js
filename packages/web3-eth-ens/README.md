@@ -28,7 +28,7 @@ This will expose the `EthEns` object on the window object.
 
 ```js
     var eth = new Web3Eth(web3.currentProvider);
-    var ens = new window.EthEns(eth);
+    var ens = new EthEns(eth);
     
     ens.getAddress('ethereum.eth').then(function (result) {
       console.log(result);
