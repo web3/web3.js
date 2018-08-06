@@ -358,7 +358,10 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
     inputs.forEach(function (input, i) {
         if (input.indexed) {
-            indexedInputs[i] = input;
+            // skip decoding indexed strings because they're stored as hashed values
+            if(input.type !== 'string') {
+                indexedInputs[i] = input;
+            }
         } else {
             notIndexedInputs[i] = input;
         }
