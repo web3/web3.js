@@ -31081,7 +31081,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String} encoded plain param
        */
       ABICoder.prototype.encodeParameter = function (type, param) {
-        console.log('encodeParameter', type);
         return this.encodeParameters([type], [param]);
       };
 
@@ -31094,44 +31093,53 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @return {String} encoded list of params
        */
       ABICoder.prototype.encodeParameters = function (types, params) {
+        console.log('ENCODE_PARAMETERS', ethersAbiCoder.encode(this.mapTypes(types), params));
         return ethersAbiCoder.encode(this.mapTypes(types), params);
       };
 
       /**
        * Map types if simplified format is used
        *
+       * @method mapTypes
        * @param {Array} types
-       * @returns {Array}
+       * @return {Array}
        */
       ABICoder.prototype.mapTypes = function (types) {
         var self = this;
         var mappedTypes = [];
         types.forEach(function (type) {
-          if (typeof type === 'string' || typeof type.components !== 'undefined') {
-            mappedTypes.push(type);
+          if (self.isSimplifiedStructFormat(type)) {
+            var structName = Object.keys(type)[0];
+            mappedTypes.push(Object.assign(self.mapStructNameAndType(structName), {
+              components: self.mapStructToCoderFormat(type[structName])
+            }));
 
             return;
           }
 
-          if ((typeof type === "undefined" ? "undefined" : _typeof(type)) === 'object') {
-            var structName = Object.keys(type)[0];
-
-            mappedTypes.push(Object.assign(self.mapStructNameAndType(structName), {
-              components: self.mapStructToCoderFormat(type[structName])
-            }));
-          }
+          mappedTypes.push(type);
         });
-
-        console.log('MAPPED_TYPES', mappedTypes);
 
         return mappedTypes;
       };
 
       /**
+       * Check if type is simplified struct format
+       *
+       * @method isSimplifiedStructFormat
+       * @param {string | Object} type
+       * @returns {boolean}
+       */
+      ABICoder.prototype.isSimplifiedStructFormat = function (type) {
+        return (typeof type === "undefined" ? "undefined" : _typeof(type)) === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
+      };
+
+      /**
        * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
        *
+       * @method mapStructNameAndType
        * @param {string} structName
-       * @returns {{type: string, name: *}}
+       * @return {{type: string, name: *}}
        */
       ABICoder.prototype.mapStructNameAndType = function (structName) {
         var type = 'tuple';
@@ -31147,8 +31155,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       /**
        * Maps the simplified format in to the expected format of the ABICoder
        *
+       * @method mapStructToCoderFormat
        * @param {Object} struct
-       * @returns {Array}
+       * @return {Array}
        */
       ABICoder.prototype.mapStructToCoderFormat = function (struct) {
         var self = this;
@@ -31212,7 +31221,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
         }
 
-        var res = ethersAbiCoder.decode(outputs, '0x' + bytes.replace(/0x/i, ''));
+        var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
         var returnValue = new Result();
         returnValue.__length__ = 0;
 
@@ -31238,7 +31247,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
        * @method decodeLog
        * @param {Object} inputs
        * @param {String} data
-       * * @param {Array} topics
+       * @param {Array} topics
        * @return {Array} array of plain params
        */
       ABICoder.prototype.decodeLog = function (inputs, data, topics) {
