@@ -21,7 +21,7 @@ Build running the following in the [web3.js][repo] repository:
 npm run-script build-all
 ```
 
-Then include `dist/web3-ens-contract.js` in your html file.
+Then include `dist/web3-eth-ens.rst` in your html file.
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
