@@ -123,7 +123,7 @@ Encodes a parameter based on its type to its ABI representation.
 Parameters
 ----------
 
-1. ``type`` - ``String``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``type`` - ``String|Object``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``parameter`` - ``Mixed``: The actual parameter to encode.
 
 -------
@@ -189,7 +189,7 @@ Encodes a function parameters based on its :ref:`JSON interface <glossary-json-i
 Parameters
 ----------
 
-1. ``typesArray`` - ``Array|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` of a function. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``typesArray`` - ``Array<String|Object>|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` of a function. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``parameters`` - ``Array``: The parameters to encode.
 
 -------
@@ -296,7 +296,7 @@ Decodes an ABI encoded parameter to its JavaScript type.
 Parameters
 ----------
 
-1. ``type`` - ``String``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``type`` - ``String|Object``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code to decode.
 
 -------
@@ -387,7 +387,7 @@ Decodes ABI encoded parameters to its JavaScript types.
 Parameters
 ----------
 
-1. ``typesArray`` - ``Array|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` outputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``typesArray`` - ``Array<String|Object>|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` outputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code to decode.
 
 -------
