@@ -253,16 +253,10 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
             }
             // if we have a valid receipt we don't need to send a request
             return (existingReceipt ? promiEvent.resolve(existingReceipt) : _ethereumCall.getTransactionReceipt(result))
-            // catch error from requesting receipt
-            .catch(function (err) {
-                sub.unsubscribe();
-                promiseResolved = true;
-                utils._fireError({message: 'Failed to check for transaction receipt:', data: err}, defer.eventEmitter, defer.reject);
-            })
             // if CONFIRMATION listener exists check for confirmations, by setting canUnsubscribe = false
             .then(function(receipt) {
-                if (!receipt || !receipt.blockHash) {
-                    throw new Error('Receipt missing or blockHash null');
+                if (!receipt.blockHash) {
+                    throw new Error('blockHash null');
                 }
 
                 // apply extra formatters
