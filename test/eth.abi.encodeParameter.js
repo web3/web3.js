@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+var Abi = require('../packages/web3-eth-abi');
 
 var tests = [{
     params: ['uint256', '2345675643'],
@@ -17,7 +16,7 @@ var tests = [{
 describe('encodeParameter', function () {
     tests.forEach(function (test) {
         it('should convert correctly', function () {
-            assert.equal(web3.eth.abi.encodeParameter.apply(web3.eth.abi, test.params), test.result);
+            assert.equal(Abi.encodeParameter.apply(Abi, test.params), test.result);
         });
     });
 });
