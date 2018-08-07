@@ -17,6 +17,7 @@
     "web3-eth-contract": "1.0.0-beta.35",
     "web3-eth-iban": "1.0.0-beta.35",
     "web3-eth-personal": "1.0.0-beta.35",
+    "web3-eth-ens": "1.0.0-beta.35",
     "web3-net": "1.0.0-beta.35",
     "web3-utils": "1.0.0-beta.35"
   }

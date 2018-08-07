@@ -323,6 +323,7 @@ Contract.prototype._encodeEventABI = function (event, options) {
                 }
 
                 // TODO: https://github.com/ethereum/web3.js/issues/344
+                // TODO: deal properly with components
 
                 if (_.isArray(value)) {
                     return value.map(function (v) {
@@ -420,9 +421,9 @@ Contract.prototype._encodeMethodABI = function _encodeMethodABI() {
             if (json.type === 'function') {
                 signature = json.signature;
             }
-            return _.isArray(json.inputs) ? json.inputs.map(function (input) { return input.type; }) : [];
-        }).map(function (types) {
-            return abi.encodeParameters(types, args).replace('0x','');
+            return _.isArray(json.inputs) ? json.inputs : [];
+        }).map(function (inputs) {
+            return abi.encodeParameters(inputs, args).replace('0x','');
         })[0] || '';
 
     // return constructor

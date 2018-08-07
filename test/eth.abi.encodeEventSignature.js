@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+var Abi = require('../packages/web3-eth-abi');
 
 var tests = [{
     params: [{
@@ -41,7 +40,7 @@ var tests = [{
 describe('encodeEventSignature', function () {
     tests.forEach(function (test) {
         it('should convert correctly', function () {
-            assert.equal(web3.eth.abi.encodeEventSignature.apply(web3.eth.abi, test.params), test.result);
+            assert.equal(Abi.encodeEventSignature.apply(Abi, test.params), test.result);
         });
     });
 });

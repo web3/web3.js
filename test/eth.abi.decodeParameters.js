@@ -1,7 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var Web3 = require('../packages/web3');
-var web3 = new Web3();
+var Abi = require('../packages/web3-eth-abi');
 
 var tests = [{
     params: [['string', 'uint256'], '0x000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000ea000000000000000000000000000000000000000000000000000000000000000848656c6c6f212521000000000000000000000000000000000000000000000000'],
@@ -51,7 +50,7 @@ var tests = [{
 describe('decodeParameters', function () {
     tests.forEach(function (test) {
         it('should convert correctly', function () {
-            assert.deepEqual(web3.eth.abi.decodeParameters.apply(web3.eth.abi, test.params), test.result);
+            assert.deepEqual(Abi.decodeParameters.apply(Abi, test.params), test.result);
         });
     });
 });
@@ -86,7 +85,7 @@ var failures = [{
 describe('decodeParameters', function () {
     failures.forEach(function (test) {
         it('should not convert '+test.params[1]+' to '+test.params[0], function () {
-            assert.throws(_ => {web3.eth.abi.decodeParameters.apply(web3.eth.abi, test.params)});
+            assert.throws(_ => {Abi.decodeParameters.apply(Abi, test.params)});
         });
     });
 });

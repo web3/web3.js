@@ -18,6 +18,43 @@ var abi = [{
         "type": "uint256"
     }]
 },{
+    "constant": false,
+    "inputs": [
+        {
+            "components": [
+                {"name": "status", "type": "bool"}
+            ],
+            "name": "nestedStruct",
+            "type": "tuple"
+        }
+    ],
+    "name": "addStruct",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+},{
+    "constant": true,
+    "inputs": [
+        {
+            "name": "",
+            "type": "address"
+        }
+    ],
+    "name": "listOfNestedStructs",
+    "outputs": [
+        {
+            "components": [
+                {"name": "status", "type": "bool"}
+            ],
+            "name": "nestedStruct",
+            "type": "tuple"
+        }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+},{
     "name": "balance",
     "type": "function",
     "inputs": [{
@@ -1653,7 +1690,7 @@ var runTests = function(contractFactory) {
                 }, 'latest']);
             });
 
-            provider.injectResult('0x0');
+            provider.injectResult('0x00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000000');
 
             contract.methods.getStr().call({from: address2}, function (err, result) {
                 assert.equal(result, '');
@@ -2767,6 +2804,7 @@ var runTests = function(contractFactory) {
             var provider = new FakeIpcProvider();
             var signature = 'owner()';
 
+
             provider.injectValidation(function (payload) {
                 assert.equal(payload.method, 'eth_call');
                 assert.deepEqual(payload.params, [{
@@ -2776,7 +2814,7 @@ var runTests = function(contractFactory) {
                     'latest'
                 ]);
             });
-            provider.injectResult(addressLowercase);
+            provider.injectResult('0x000000000000000000000000'+ addressLowercase.replace('0x',''));
 
             var contract = contractFactory(abi, address, provider);
 
@@ -2785,6 +2823,59 @@ var runTests = function(contractFactory) {
                 done();
             });
 
+        });
+
+
+        it('should decode an struct correctly', function (done) {
+            var provider = new FakeIpcProvider();
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_call');
+                assert.deepEqual(payload.params, [{
+                    data: '0x2a4aedd50000000000000000000000009cc9a2c777605af16872e0997b3aeb91d96d5d8c',
+                    to: addressLowercase
+                },
+                    'latest'
+                ]);
+            });
+
+            provider.injectResult('0x0000000000000000000000000000000000000000000000000000000000000001');
+
+            var contract = contractFactory(abi, address, provider);
+
+            contract.methods.listOfNestedStructs('0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c').call().then(function(result) {
+                var expectedArray = [];
+                expectedArray[0] = true;
+                expectedArray['status'] = true;
+
+                assert.deepEqual(result, expectedArray);
+                done();
+            });
+        });
+
+        it('should call an contract method with an struct as parameter', function (done) {
+            var provider = new FakeIpcProvider();
+
+            provider.injectValidation(function (payload) {
+                assert.equal(payload.method, 'eth_sendTransaction');
+                assert.deepEqual(payload.params, [{
+                    data: '0x814a4d160000000000000000000000000000000000000000000000000000000000000001',
+                    from: addressLowercase,
+                    gas: '0xc350',
+                    gasPrice: '0xbb8',
+                    to: addressLowercase
+                }]);
+
+                done();
+            });
+
+            var contract = contractFactory(abi, address, provider);
+
+            contract.methods.addStruct({status: true}).send({
+                from: address,
+                gas: 50000,
+                gasPrice: 3000
+            });
         });
     });
     describe('with data', function () {
