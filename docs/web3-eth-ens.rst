@@ -30,7 +30,6 @@ Example
 
 .. code-block:: javascript
 
-    // From a JSON interface object
     web3.eth.ens.registry;
     > {
         ens: ENS,
@@ -68,7 +67,6 @@ Example
 
 .. code-block:: javascript
 
-    // From a JSON interface object
     web3.eth.ens.getAddress('ethereum.eth').then(function (address) {
         console.log(address);
     });
