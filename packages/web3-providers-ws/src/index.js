@@ -76,6 +76,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     }
 
     this.connection = new Ws(url, protocol, undefined, headers);
+    this.reconnect = () => new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
 
@@ -263,7 +264,9 @@ WebsocketProvider.prototype.send = function (payload, callback) {
         } else {
             console.error('no error callback');
         }
-        callback(new Error('connection not open'));
+        // try reconnect, when connection is gone
+        this.reconnect();
+        callback(new Error('connection not open. try reconnecting...'));
         return;
     }
 
