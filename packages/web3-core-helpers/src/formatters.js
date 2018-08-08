@@ -279,6 +279,13 @@ var inputLogFormatter = function(options) {
             return utils.fromUtf8(value);
     };
 
+    if (options.fromBlock)
+        options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+
+    if (options.toBlock)
+        options.toBlock = inputBlockNumberFormatter(options.toBlock);
+
+
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(function(topic){
