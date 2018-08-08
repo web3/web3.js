@@ -72,7 +72,7 @@ ENS.prototype.getAddress = function (name, callback) {
  * @returns {eventifiedPromise}
  */
 ENS.prototype.setAddress = function (name, address, from, callback) {
-    return this.resolverMethodHandler.method(name, 'setAddress', [address]).send(from, callback);
+    return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(from, callback);
 };
 
 /**
