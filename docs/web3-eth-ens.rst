@@ -69,7 +69,7 @@ Example
 
     web3.eth.ens.getAddress('ethereum.eth').then(function (address) {
         console.log(address);
-    });
+    })
     > 0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359
 
 ------------------------------------------------------------------------------
@@ -107,6 +107,24 @@ Example
              console.log(result.events);
     });
     > AddrChanged(...)
+
+    // Or using the event emitter
+
+    web3.eth.ens.setAddress(
+        'ethereum.eth',
+        '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359',
+        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
 
 ------------------------------------------------------------------------------
 
@@ -185,6 +203,25 @@ Example
     });
     > PubkeyChanged(...)
 
+    // Or using the event emitter
+
+    web3.eth.ens.setPubkey(
+        'ethereum.eth',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
 ------------------------------------------------------------------------------
 
 getContent
@@ -255,6 +292,24 @@ Example
      });
     > ContentChanged(...)
 
+    // Or using the event emitter
+
+    web3.eth.ens.setContent(
+        'ethereum.eth',
+        '0x0000000000000000000000000000000000000000000000000000000000000000',
+        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
+
 ------------------------------------------------------------------------------
 
 getMultihash
@@ -324,4 +379,22 @@ Example
         console.log(result.events);
     });
     > MultihashChanged(...)
+
+    // Or using the event emitter
+
+    web3.eth.ens.setMultihash(
+        'ethereum.eth',
+        'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
+        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+    )
+    .on('transactionHash', function(hash){
+        ...
+    })
+    .on('confirmation', function(confirmationNumber, receipt){
+        ...
+    })
+    .on('receipt', function(receipt){
+        ...
+    })
+    .on('error', console.error);
 
