@@ -1,4 +1,4 @@
-import { BigNumber } from 'bn.js'
+import { BigNumber } from 'bignumber.js'
 import * as us from 'underscore'
 
 
@@ -270,6 +270,13 @@ export type Provider = WebsocketProvider | IpcProvider | HttpProvider;
 type Unit = "kwei" | "femtoether" | "babbage" | "mwei" | "picoether" | "lovelace" | "qwei" | "nanoether" | "shannon" | "microether" | "szabo" | "nano" | "micro" | "milliether" | "finney" | "milli" | "ether" | "kether" | "grand" | "mether" | "gether" | "tether"
 export type BlockType = "latest" | "pending" | "genesis" | number
 export declare interface Iban { }
+interface SoliditySha3ObjectArg {
+  type?: string;
+  t?: string;
+  value?: string|number|boolean;
+  v?: string|number|boolean;
+}
+type SoliditySha3Arg = string | number | boolean | SoliditySha3ObjectArg
 export declare interface Utils {
   BN: BigNumber // TODO only static-definition
   isBN(any: any): boolean
@@ -297,7 +304,7 @@ export declare interface Utils {
   rightPad(string: string, chars: number, sign: string): string
   padRight(string: string, chars: number, sign: string): string
   sha3(val: string, val2?: string, val3?: string, val4?: string, val5?: string): string
-  soliditySha3(val: string): string
+  soliditySha3(...args: SoliditySha3Arg[]): string
   randomHex(bytes: number): string
   stringToHex(val: string): string
   toAscii(hex: string): string
