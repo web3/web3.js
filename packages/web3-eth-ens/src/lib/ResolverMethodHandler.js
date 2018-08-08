@@ -176,7 +176,9 @@ ResolverMethodHandler.prototype.prepareArguments = function (name, methodArgumen
     var node = namehash.hash(name);
 
     if (methodArguments.length > 0) {
-        return methodArguments.unshift(node);
+        methodArguments.unshift(node);
+        
+        return methodArguments;
     }
 
     return [node];
