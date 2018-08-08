@@ -35,25 +35,62 @@ function ResolverMethodHandler(registry) {
 /**
  * Executes an resolver method and returns an eventifiedPromise
  *
- * @param {string} methodType
  * @param {string} ensName
  * @param {string} methodName
  * @param {array} methodArguments
  * @param {function} callback
+ * @returns {Object}
+ */
+ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments, callback) {
+    return {
+        call: this.call.bind({
+            ensName: ensName,
+            methodName: methodName,
+            methodArguments: methodArguments,
+            callback: callback
+        }),
+        send: this.send.bind({
+            ensName: ensName,
+            methodName: methodName,
+            methodArguments: methodArguments,
+            callback: callback
+        })
+    };
+};
+
+/**
+ * Executes call
+ *
+ * @returns {eventifiedPromise}
+ */
+ResolverMethodHandler.prototype.call = function (callback) {
+    var self = this;
+    var promiEvent = new PromiEvent();
+    var preparedArguments = this.prepareArguments(this.ensName, this.methodArguments);
+
+    this.registry.resolver().then(function (resolver) {
+        self.handleCall(promiEvent, resolver.methods[this.methodName], preparedArguments, callback);
+    }).catch(function (error) {
+        promiEvent.reject(error);
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+
+/**
+ * Executes send
+ *
  * @param {string} from
  * @returns {eventifiedPromise}
  */
-ResolverMethodHandler.prototype.executeMethod = function (methodType, ensName, methodName, methodArguments, callback, from) {
+ResolverMethodHandler.prototype.send = function (from, callback) {
     var self = this;
     var promiEvent = new PromiEvent();
-    var preparedArguments = this.prepareArguments(ensName, methodArguments);
+    var preparedArguments = this.prepareArguments(this.ensName, this.methodArguments);
 
     this.registry.resolver().then(function (resolver) {
-        if (methodType === 'call') {
-            self.handleCall(promiEvent, resolver.methods[methodName], preparedArguments, callback);
-        } else {
-            self.handleSend(promiEvent, resolver.methods[methodName], preparedArguments, from, callback);
-        }
+        self.handleSend(promiEvent, resolver.methods[this.methodName], preparedArguments, from, callback);
     }).catch(function (error) {
         promiEvent.reject(error);
     });
@@ -100,9 +137,10 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, from, callback) {
-    method.send({from: from}).on('transactionHash', function (hash) {
-        promiEvent.eventEmitter.emit('transactionHash', hash);
-    })
+    method.send({from: from})
+        .on('transactionHash', function (hash) {
+            promiEvent.eventEmitter.emit('transactionHash', hash);
+        })
         .on('confirmation', function (confirmationNumber, receipt) {
             promiEvent.eventEmitter.emit('confirmation', confirmationNumber, receipt);
         })
