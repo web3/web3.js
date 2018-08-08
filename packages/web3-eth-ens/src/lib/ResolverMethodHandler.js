@@ -83,17 +83,17 @@ ResolverMethodHandler.prototype.call = function (callback) {
 /**
  * Executes send
  *
- * @param {string} from
+ * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ResolverMethodHandler.prototype.send = function (from, callback) {
+ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     var self = this;
     var promiEvent = new PromiEvent();
     var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.parent.registry.resolver().then(function (resolver) {
-        self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, from, callback);
+        self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
     }).catch(function (error) {
         promiEvent.reject(error);
     });
@@ -135,12 +135,12 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
  * @param {eventifiedPromise} promiEvent
  * @param {function} method
  * @param {array} preparedArguments
- * @param {string} from
+ * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
-ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, from, callback) {
-    method.apply(this, preparedArguments).send({from: from})
+ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, sendOptions, callback) {
+    method.apply(this, preparedArguments).send(sendOptions)
         .on('transactionHash', function (hash) {
             promiEvent.eventEmitter.emit('transactionHash', hash);
         })
