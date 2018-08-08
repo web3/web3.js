@@ -1,4 +1,4 @@
-import { BigNumber } from 'bn.js'
+import { BigNumber } from 'bignumber.js'
 import * as us from 'underscore'
 
 
