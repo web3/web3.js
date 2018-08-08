@@ -29,7 +29,9 @@ var Ws = null;
 var _btoa = null;
 var parseURL = null;
 if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-    Ws = window.WebSocket;
+    Ws = function(url, protocols) {
+      return new window.WebSocket(url, protocols);
+    };
     _btoa = btoa;
     parseURL = function(url) {
         return new URL(url);
@@ -74,7 +76,11 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
-
+    // When all node core implementations that do not have the
+    // WHATWG compatible URL parser go out of service this line can be removed.
+    if (parsedURL.auth) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
+    }
     this.connection = new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
@@ -113,6 +119,14 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
             }
         });
     };
+
+    // make property `connected` which will return the current connection status
+    Object.defineProperty(this, 'connected', {
+      get: function () {
+        return this.connection && this.connection.readyState === this.connection.OPEN;
+      },
+      enumerable: true,
+  });
 };
 
 /**

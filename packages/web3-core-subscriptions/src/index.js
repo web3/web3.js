@@ -40,7 +40,6 @@ Subscriptions.prototype.setRequestManager = function (rm) {
 
 Subscriptions.prototype.attachToObject = function (obj) {
     var func = this.buildCall();
-    func.call = this.call;
     var name = this.name.split('.');
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};

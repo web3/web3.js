@@ -96,10 +96,53 @@ var _jsonInterfaceMethodToString = function (json) {
         return json.name;
     }
 
-    var typeName = json.inputs.map(function(i){return i.type; }).join(',');
-    return json.name + '(' + typeName + ')';
+    return json.name + '(' + _flattenTypes(false, json.inputs).join(',') + ')';
 };
 
+
+/**
+ * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
+ *
+ * @method _flattenTypes
+ * @param {bool} includeTuple
+ * @param {Object} puts
+ * @return {Array} parameters as strings
+ */
+var _flattenTypes = function(includeTuple, puts)
+{
+    // console.log("entered _flattenTypes. inputs/outputs: " + puts)
+    var types = [];
+
+    puts.forEach(function(param) {
+        if (typeof param.components === 'object') {
+            if (param.type.substring(0, 5) !== 'tuple') {
+                throw new Error('components found but type is not tuple; report on GitHub');
+            }
+            var suffix = '';
+            var arrayBracket = param.type.indexOf('[');
+            if (arrayBracket >= 0) { suffix = param.type.substring(arrayBracket); }
+            var result = _flattenTypes(includeTuple, param.components);
+            // console.log("result should have things: " + result)
+            if(_.isArray(result) && includeTuple) {
+                // console.log("include tuple word, and its an array. joining...: " + result.types)
+                types.push('tuple(' + result.join(',') + ')' + suffix);
+            }
+            else if(!includeTuple) {
+                // console.log("don't include tuple, but its an array. joining...: " + result)
+                types.push('(' + result.join(',') + ')' + suffix);
+            }
+            else {
+                // console.log("its a single type within a tuple: " + result.types)
+                types.push('(' + result + ')');
+            }
+        } else {
+            // console.log("its a type and not directly in a tuple: " + param.type)
+            types.push(param.type);
+        }
+    });
+
+    return types;
+};
 
 
 /**
@@ -265,6 +308,7 @@ var toChecksumAddress = function (address) {
 module.exports = {
     _fireError: _fireError,
     _jsonInterfaceMethodToString: _jsonInterfaceMethodToString,
+    _flattenTypes: _flattenTypes,
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     randomHex: randomHex,
