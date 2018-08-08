@@ -123,7 +123,7 @@ Encodes a parameter based on its type to its ABI representation.
 Parameters
 ----------
 
-1. ``type`` - ``String``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``type`` - ``String|Object``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``parameter`` - ``Mixed``: The actual parameter to encode.
 
 -------
@@ -153,6 +153,27 @@ Example
     web3.eth.abi.encodeParameter('bytes32[]', ['0xdf3234', '0xfdfd']);
     > "00000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000002df32340000000000000000000000000000000000000000000000000000000000fdfd000000000000000000000000000000000000000000000000000000000000"
 
+    web3.eth.abi.encodeParameter(
+        {
+            "ParentStruct": {
+                "propertyOne": 'uint256',
+                "propertyTwo": 'uint256',
+                "childStruct": {
+                    "propertyOne": 'uint256',
+                    "propertyTwo": 'uint256'
+                }
+            }
+        },
+        {
+            "propertyOne": 42,
+            "propertyTwo": 56,
+            "childStruct": {
+                "propertyOne": 45,
+                "propertyTwo": 78
+            }
+        }
+    );
+    > "0x000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e"
 ------------------------------------------------------------------------------
 
 encodeParameters
@@ -168,7 +189,7 @@ Encodes a function parameters based on its :ref:`JSON interface <glossary-json-i
 Parameters
 ----------
 
-1. ``typesArray`` - ``Array|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` of a function. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``typesArray`` - ``Array<String|Object>|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` of a function. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``parameters`` - ``Array``: The parameters to encode.
 
 -------
@@ -187,7 +208,35 @@ Example
     > "0x000000000000000000000000000000000000000000000000000000008bd02b7b0000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000748656c6c6f212500000000000000000000000000000000000000000000000000"
 
     web3.eth.abi.encodeParameters(['uint8[]','bytes32'], [['34','434'], '0x324567fff']);
-    > "0x0000000000000000000000000000000000000000000000000000000000000040324567fff00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002200000000000000000000000000000000000000000000000000000000000001b2"
+    > "0x0
+
+    web3.eth.abi.encodeParameters(
+        [
+            'uint8[]',
+            {
+                "ParentStruct": {
+                    "propertyOne": 'uint256',
+                    "propertyTwo": 'uint256',
+                    "ChildStruct": {
+                        "propertyOne": 'uint256',
+                        "propertyTwo": 'uint256'
+                    }
+                }
+            }
+        ],
+        [
+            ['34','434'],
+            {
+                "propertyOne": '42',
+                "propertyTwo": '56',
+                "ChildStruct": {
+                    "propertyOne": '45',
+                    "propertyTwo": '78'
+                }
+            }
+        ]
+    );
+    > "0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000018"
 
 ------------------------------------------------------------------------------
 
@@ -247,7 +296,7 @@ Decodes an ABI encoded parameter to its JavaScript type.
 Parameters
 ----------
 
-1. ``type`` - ``String``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``type`` - ``String|Object``: The type of the parameter, see the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code to decode.
 
 -------
@@ -268,6 +317,61 @@ Example
     web3.eth.abi.decodeParameter('string', '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000848656c6c6f212521000000000000000000000000000000000000000000000000');
     > "Hello!%!"
 
+    web3.eth.abi.decodeParameter('string', '0x0000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000000848656c6c6f212521000000000000000000000000000000000000000000000000');
+    > "Hello!%!"
+
+    web3.eth.abi.decodeParameter(
+        {
+            "ParentStruct": {
+              "propertyOne": 'uint256',
+              "propertyTwo": 'uint256',
+              "childStruct": {
+                "propertyOne": 'uint256',
+                "propertyTwo": 'uint256'
+              }
+            }
+        },
+
+    , '0x000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e');
+    > {
+        '0': {
+            '0': '42',
+            '1': '56',
+            '2': {
+                '0': '45',
+                '1': '78',
+                'propertyOne': '45',
+                'propertyTwo': '78'
+            },
+            'childStruct': {
+                '0': '45',
+                '1': '78',
+                'propertyOne': '45',
+                'propertyTwo': '78'
+            },
+            'propertyOne': '42',
+            'propertyTwo': '56'
+        },
+        'ParentStruct': {
+            '0': '42',
+            '1': '56',
+            '2': {
+                '0': '45',
+                '1': '78',
+                'propertyOne': '45',
+                'propertyTwo': '78'
+            },
+            'childStruct': {
+                '0': '45',
+                '1': '78',
+                'propertyOne': '45',
+                'propertyTwo': '78'
+            },
+            'propertyOne': '42',
+            'propertyTwo': '56'
+        }
+    }
+
 ------------------------------------------------------------------------------
 
 decodeParameters
@@ -283,7 +387,7 @@ Decodes ABI encoded parameters to its JavaScript types.
 Parameters
 ----------
 
-1. ``typesArray`` - ``Array|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` outputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
+1. ``typesArray`` - ``Array<String|Object>|Object``: An array with types or a :ref:`JSON interface <glossary-json-interface>` outputs array. See the `solidity documentation <http://solidity.readthedocs.io/en/develop/types.html>`_  for a list of types.
 2. ``hexString`` - ``String``: The ABI byte code to decode.
 
 -------
@@ -315,6 +419,42 @@ Example
         myNumber: '234'
     }
 
+    web3.eth.abi.decodeParameters([
+      'uint8[]',
+      {
+        "ParentStruct": {
+          "propertyOne": 'uint256',
+          "propertyTwo": 'uint256',
+          "childStruct": {
+            "propertyOne": 'uint256',
+            "propertyTwo": 'uint256'
+          }
+        }
+      }
+    ], '0x00000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000038000000000000000000000000000000000000000000000000000000000000002d000000000000000000000000000000000000000000000000000000000000004e0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000002a0000000000000000000000000000000000000000000000000000000000000018');
+    > Result {
+        '0': ['42', '24'],
+        '1': {
+            '0': '42',
+            '1': '56',
+            '2':
+                {
+                    '0': '45',
+                    '1': '78',
+                    'propertyOne': '45',
+                    'propertyTwo': '78'
+                },
+            'childStruct':
+                {
+                    '0': '45',
+                    '1': '78',
+                    'propertyOne': '45',
+                    'propertyTwo': '78'
+                },
+            'propertyOne': '42',
+            'propertyTwo': '56'
+        }
+    }
 
 ------------------------------------------------------------------------------
 
