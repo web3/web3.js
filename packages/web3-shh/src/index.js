@@ -167,6 +167,12 @@ var Shh = function Shh() {
             call: 'shh_post',
             params: 1,
             inputFormatter: [null]
+        }),
+
+        new Method({
+            name: 'unsubscribe',
+            call: 'shh_unsubscribe',
+            params: 1
         })
     ].forEach(function(method) {
         method.attachToObject(_this);
