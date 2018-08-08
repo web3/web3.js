@@ -47,13 +47,15 @@ ResolverMethodHandler.prototype.method = function (ensName, methodName, methodAr
             ensName: ensName,
             methodName: methodName,
             methodArguments: methodArguments,
-            callback: callback
+            callback: callback,
+            parent: this
         }),
         send: this.send.bind({
             ensName: ensName,
             methodName: methodName,
             methodArguments: methodArguments,
-            callback: callback
+            callback: callback,
+            parent: this
         })
     };
 };
@@ -66,7 +68,7 @@ ResolverMethodHandler.prototype.method = function (ensName, methodName, methodAr
 ResolverMethodHandler.prototype.call = function (callback) {
     var self = this;
     var promiEvent = new PromiEvent();
-    var preparedArguments = this.prepareArguments(this.ensName, this.methodArguments);
+    var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.registry.resolver().then(function (resolver) {
         self.handleCall(promiEvent, resolver.methods[this.methodName], preparedArguments, callback);
@@ -88,7 +90,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
 ResolverMethodHandler.prototype.send = function (from, callback) {
     var self = this;
     var promiEvent = new PromiEvent();
-    var preparedArguments = this.prepareArguments(this.ensName, this.methodArguments);
+    var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.registry.resolver().then(function (resolver) {
         self.handleSend(promiEvent, resolver.methods[this.methodName], preparedArguments, from, callback);
@@ -96,7 +98,7 @@ ResolverMethodHandler.prototype.send = function (from, callback) {
         promiEvent.reject(error);
     });
 
-    return promiEvent.eventEmitter;
+    return promiEvent;
 };
 
 /**
@@ -177,7 +179,7 @@ ResolverMethodHandler.prototype.prepareArguments = function (name, methodArgumen
 
     if (methodArguments.length > 0) {
         methodArguments.unshift(node);
-        
+
         return methodArguments;
     }
 
