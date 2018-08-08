@@ -33,4 +33,6 @@ FakeXHR2.prototype.send = function (payload) {
     }
 };
 
-module.exports = FakeXHR2;
+FakeXHR2.prototype.nodejsSet = Function.prototype;
+
+module.exports = {XMLHttpRequest: FakeXHR2};
