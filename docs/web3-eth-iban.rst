@@ -6,13 +6,24 @@
 web3.eth.Iban
 =========
 
-The ``web3.eth.Iban`` function lets convert ethereum addresses from and to IBAN and BBAN.
+The ``web3.eth.Iban`` function lets convert Ethereum addresses from and to IBAN and BBAN.
 
 
 ------------------------------------------------------------------------------
 
-Iban
-=========
+Iban instance
+=====================
+
+This's instance of Iban
+
+.. code-block:: javascript
+
+    > Iban { _iban: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS' }
+
+------------------------------------------------------------------------------
+
+Iban contructor
+=====================
 
 .. code-block:: javascript
 
@@ -21,7 +32,7 @@ Iban
 Generates a iban object with conversion methods and validity checks. Also has singleton functions for conversion like
 :ref:`Iban.toAddress() <_eth-iban-toaddress>`,
 :ref:`Iban.toIban() <_eth-iban-toiban>`,
-:ref:`Iban.fromEthereumAddress() <_eth-iban-fromethereumaddress>`,
+:ref:`Iban.fromAddress() <_eth-iban-fromaddress>`,
 :ref:`Iban.fromBban() <_eth-iban-frombban>`,
 :ref:`Iban.createIndirect() <_eth-iban-createindirect>`,
 :ref:`Iban.isValid() <_eth-iban-isvalid>`.
@@ -44,7 +55,8 @@ Example
 
 .. code-block:: javascript
 
-    var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
+    var iban = new web3.eth.Iban("XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS");
+    > Iban { _iban: 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS' }
 
 
 ------------------------------------------------------------------------------
@@ -54,11 +66,13 @@ Example
 toAddress
 =====================
 
+    static function
+
 .. code-block:: javascript
 
     web3.eth.Iban.toAddress(ibanAddress)
 
-Singleton: Converts a direct IBAN address into an ethereum address.
+Singleton: Converts a direct IBAN address into an Ethereum address.
 
 .. note:: This method also exists on the IBAN instance.
 
@@ -72,7 +86,7 @@ Parameters
 Returns
 -------
 
-``String`` - The ethereum address.
+``String`` - The Ethereum address.
 
 -------
 Example
@@ -91,17 +105,19 @@ Example
 toIban
 =====================
 
+    static function
+
 .. code-block:: javascript
 
     web3.eth.Iban.toIban(address)
 
-Singleton: Converts an ethereum address to a direct IBAN address.
+Singleton: Converts an Ethereum address to a direct IBAN address.
 
 ----------
 Parameters
 ----------
 
-1. ``String``: the ethereum address to convert.
+1. ``String``: the Ethereum address to convert.
 
 -------
 Returns
@@ -121,22 +137,24 @@ Example
 
 ------------------------------------------------------------------------------
 
-.. _eth-iban-fromethereumaddress:
+.. _eth-iban-fromaddress:
 
-fromEthereumAddress
+    static function, return IBAN instance
+
+fromAddress
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.Iban.fromEthereumAddress(address)
+    web3.eth.Iban.fromAddress(address)
 
-Singleton: Converts an ethereum address to a direct IBAN instance.
+Singleton: Converts an Ethereum address to a direct IBAN instance.
 
 ----------
 Parameters
 ----------
 
-1. ``String``: the ethereum address to convert.
+1. ``String``: the Ethereum address to convert.
 
 -------
 Returns
@@ -150,13 +168,15 @@ Example
 
 .. code-block:: javascript
 
-    web3.eth.Iban.fromEthereumAddress("0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
+    web3.eth.Iban.fromAddress("0x00c5496aEe77C1bA1f0854206A26DdA82a81D6D8");
     > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 
 
 ------------------------------------------------------------------------------
 
 .. _eth-iban-frombban:
+
+    static function, return IBAN instance
 
 fromBban
 =====================
@@ -193,6 +213,8 @@ Example
 
 .. _eth-iban-createindirect:
 
+    static function, return IBAN instance
+
 createIndirect
 =====================
 
@@ -223,8 +245,8 @@ Example
 .. code-block:: javascript
 
     web3.eth.Iban.createIndirect({
-      institution: "XREG",
-      identifier: "GAVOFYORK"
+        institution: "XREG",
+        identifier: "GAVOFYORK"
     });
     > Iban {_iban: "XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS"}
 
@@ -233,12 +255,14 @@ Example
 
 .. _eth-iban-isvalid:
 
+    static function, return boolean
+
 isValid
 =====================
 
 .. code-block:: javascript
 
-    web3.eth.Iban.isValid(address)
+    web3.eth.Iban.isValid(ibanAddress)
 
 Singleton: Checks if an IBAN address is valid.
 
@@ -268,6 +292,40 @@ Example
     web3.eth.Iban.isValid("XE82ETHXREGGAVOFYORK");
     > false // because the checksum is incorrect
 
+
+------------------------------------------------------------------------------
+
+prototype.isValid
+=====================
+
+    method of Iban instance
+
+.. code-block:: javascript
+
+    web3.eth.Iban.prototype.isValid()
+
+Singleton: Checks if an IBAN address is valid.
+
+.. note:: This method also exists on the IBAN instance.
+
+----------
+Parameters
+----------
+
+1. ``String``: the IBAN address to check.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
     var iban = new web3.eth.Iban("XE81ETHXREGGAVOFYORK");
     iban.isValid();
     > true
@@ -275,12 +333,14 @@ Example
 
 ------------------------------------------------------------------------------
 
-isDirect
+prototype.isDirect
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.isDirect()
+    web3.eth.Iban.prototype.isDirect()
 
 Checks if the IBAN instance is direct.
 
@@ -306,15 +366,16 @@ Example
     iban.isDirect();
     > false
 
-
 ------------------------------------------------------------------------------
 
-isIndirect
+prototype.isIndirect
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.isIndirect()
+    web3.eth.Iban.prototype.isIndirect()
 
 Checks if the IBAN instance is indirect.
 
@@ -340,15 +401,16 @@ Example
     iban.isIndirect();
     > true
 
-
 ------------------------------------------------------------------------------
 
-checksum
+prototype.checksum
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.checksum()
+    web3.eth.Iban.prototype.checksum()
 
 Returns the checksum of the IBAN instance.
 
@@ -377,13 +439,15 @@ Example
 
 ------------------------------------------------------------------------------
 
-institution
+prototype.institution
 =====================
+
+    method of Iban instance
 
 
 .. code-block:: javascript
 
-    web3.eth.Iban.institution()
+    web3.eth.Iban.prototype.institution()
 
 Returns the institution of the IBAN instance.
 
@@ -412,12 +476,14 @@ Example
 
 ------------------------------------------------------------------------------
 
-client
+prototype.client
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.client()
+    web3.eth.Iban.prototype.client()
 
 Returns the client of the IBAN instance.
 
@@ -443,17 +509,18 @@ Example
     iban.client();
     > 'GAVOFYORK'
 
-
 ------------------------------------------------------------------------------
 
-toAddress
+prototype.toAddress
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.toAddress()
+    web3.eth.Iban.prototype.toString()
 
-Returns the ethereum address of the IBAN instance.
+Returns the Ethereum address of the IBAN instance.
 
 ----------
 Parameters
@@ -465,7 +532,7 @@ none
 Returns
 -------
 
-``String``: The ethereum address of the IBAN
+``String``: The Ethereum address of the IBAN
 
 -------
 Example
@@ -480,12 +547,14 @@ Example
 
 ------------------------------------------------------------------------------
 
-toString
+prototype.toString
 =====================
+
+    method of Iban instance
 
 .. code-block:: javascript
 
-    web3.eth.Iban.toString()
+    web3.eth.Iban.prototype.toString()
 
 Returns the IBAN address of the IBAN instance.
 
