@@ -75,7 +75,7 @@ Registry.prototype.owner = function (name, callback) {
             });
     });
 
-    return promiEvent;
+    return promiEvent.eventEmitter;
 };
 
 /**

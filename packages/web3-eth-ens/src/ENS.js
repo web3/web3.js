@@ -109,7 +109,7 @@ ENS.prototype.setPubkey = function (name, x, y, from, callback) {
  * @returns {eventifiedPromise}
  */
 ENS.prototype.getContent = function (name, callback) {
-    return this.resolverMethodHandler.method(name, 'setPubkey', []).call(callback);
+    return this.resolverMethodHandler.method(name, 'content', []).call(callback);
 };
 
 /**
