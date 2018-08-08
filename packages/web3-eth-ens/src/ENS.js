@@ -22,6 +22,7 @@
 
 var config = require('./config');
 var Registry = require('./contracts/Registry');
+var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 
 /**
  * Constructs a new instance of ENS
@@ -35,8 +36,16 @@ function ENS(eth) {
 }
 
 Object.defineProperty(ENS.prototype, 'registry', {
-    get: function(){
+    get: function () {
+        console.log(this);
         return new Registry(this);
+    },
+    enumerable: true
+});
+
+Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
+    get: function () {
+        return new ResolverMethodHandler(this.registry);
     },
     enumerable: true
 });
@@ -46,12 +55,11 @@ Object.defineProperty(ENS.prototype, 'registry', {
  *
  * @method getAddress
  * @param {string} name
- * @return {Promise<string>} a promise
+ * @param {function} callback
+ * @return {eventifiedPromise}
  */
-ENS.prototype.getAddress = function (name) {
-    return this.registry.resolver(name).then(function(resolver) {
-        return resolver.addr();
-    });
+ENS.prototype.getAddress = function (name, callback) {
+    return this.resolverMethodHandler.executeMethod('call', name, 'addr', [], callback);
 };
 
 /**
@@ -61,12 +69,11 @@ ENS.prototype.getAddress = function (name) {
  * @param {string} name
  * @param {string} address
  * @param {string} from
- * @returns {Promise<Transaction>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.setAddress = function (name, address, from) {
-    return this.registry.resolver(name).then(function(resolver) {
-        return resolver.setAddr(address, from);
-    });
+ENS.prototype.setAddress = function (name, address, from, callback) {
+    return this.resolverMethodHandler.executeMethod('send', name, 'setAddress', [address], callback, from);
 };
 
 /**
@@ -74,12 +81,11 @@ ENS.prototype.setAddress = function (name, address, from) {
  *
  * @method getPubkey
  * @param {string} name
- * @returns {Promise<any>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.getPubkey = function (name) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.pubkey();
-  });
+ENS.prototype.getPubkey = function (name, callback) {
+    return this.resolverMethodHandler.executeMethod('call', name, 'pubkey', [], callback);
 };
 
 /**
@@ -90,12 +96,11 @@ ENS.prototype.getPubkey = function (name) {
  * @param {string} x
  * @param {string} y
  * @param {string} from
- * @returns {Promise<Transaction>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.setPubkey = function (name, x, y, from) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setPubkey(x, y, from);
-  });
+ENS.prototype.setPubkey = function (name, x, y, from, callback) {
+    return this.resolverMethodHandler.executeMethod('send', name, 'setPubkey', [x, y], callback, from);
 };
 
 /**
@@ -103,12 +108,11 @@ ENS.prototype.setPubkey = function (name, x, y, from) {
  *
  * @method getContent
  * @param {string} name
- * @returns {Promise<any>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.getContent = function (name) {
-    return this.registry.resolver(name).then(function(resolver) {
-        return resolver.content();
-    });
+ENS.prototype.getContent = function (name, callback) {
+    return this.resolverMethodHandler.executeMethod('call', name, 'setPubkey', [], callback);
 };
 
 /**
@@ -117,13 +121,12 @@ ENS.prototype.getContent = function (name) {
  * @method setContent
  * @param {string} name
  * @param {string} hash
+ * @param {function} callback
  * @param {string} from
- * @returns {Promise<Transaction>}
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.setContent = function (name, hash, from) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setContent(hash, from);
-  });
+ENS.prototype.setContent = function (name, hash, from, callback) {
+    return this.resolverMethodHandler.executeMethod('send', name, 'setContent', [hash], callback, from);
 };
 
 /**
@@ -131,12 +134,11 @@ ENS.prototype.setContent = function (name, hash, from) {
  *
  * @method getMultihash
  * @param {string} name
- * @returns {Promise<any>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.getMultihash = function (name) {
-    return this.registry.resolver(name).then(function (resolver) {
-        return resolver.multihash();
-    });
+ENS.prototype.getMultihash = function (name, callback) {
+    return this.resolverMethodHandler.executeMethod('call', name, 'multihash', [], callback);
 };
 
 /**
@@ -146,12 +148,11 @@ ENS.prototype.getMultihash = function (name) {
  * @param {string} name
  * @param {string} hash
  * @param {string} from
- * @returns {Promise<Transaction>}
+ * @param {function} callback
+ * @returns {eventifiedPromise}
  */
-ENS.prototype.setMultihash = function (name, hash, from) {
-  return this.registry.resolver(name).then(function (resolver) {
-      return resolver.setMultihash(hash, from);
-  });
+ENS.prototype.setMultihash = function (name, hash, from, callback) {
+    return this.resolverMethodHandler.executeMethod('send', name, 'multihash', [hash], callback, from);
 };
 
 /**
