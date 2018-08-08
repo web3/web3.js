@@ -37,7 +37,6 @@ function ENS(eth) {
 
 Object.defineProperty(ENS.prototype, 'registry', {
     get: function () {
-        console.log(this);
         return new Registry(this);
     },
     enumerable: true

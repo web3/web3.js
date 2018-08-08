@@ -82,6 +82,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
  * Executes send
  *
  * @param {string} from
+ * @param {function} callback
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.send = function (from, callback) {
