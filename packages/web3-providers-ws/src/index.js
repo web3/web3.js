@@ -74,7 +74,11 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     if (parsedURL.username && parsedURL.password) {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
-
+    // When all node core implementations that do not have the
+    // WHATWG compatible URL parser go out of service this line can be removed.
+    if (parsedURL.auth) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
+    }
     this.connection = new Ws(url, protocol, undefined, headers);
 
     this.addDefaultEvents();
