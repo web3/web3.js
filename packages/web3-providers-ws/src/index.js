@@ -29,7 +29,9 @@ var Ws = null;
 var _btoa = null;
 var parseURL = null;
 if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-    Ws = window.WebSocket;
+    Ws = function(url, protocols) {
+      return new window.WebSocket(url, protocols);
+    };
     _btoa = btoa;
     parseURL = function(url) {
         return new URL(url);
