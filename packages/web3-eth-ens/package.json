@@ -12,6 +12,7 @@
         "web3-core-helpers": "1.0.0-beta.35",
         "web3-eth-abi": "1.0.0-beta.35",
         "web3-eth-contract": "1.0.0-beta.35",
+        "web3-core-promievent": "1.0.0-beta.35",
         "web3-utils": "1.0.0-beta.35"
     }
 }
