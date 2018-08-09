@@ -89,7 +89,10 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``address`` - ``String``: The address to set.
-3. ``from`` - ``String``: Current account address.
+3. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
 
 Emits an ``AddrChanged`` event.
 
@@ -102,7 +105,9 @@ Example
     web3.eth.ens.setAddress(
         'ethereum.eth',
         '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     ).then(function (result) {
              console.log(result.events);
     });
@@ -113,7 +118,9 @@ Example
     web3.eth.ens.setAddress(
         'ethereum.eth',
         '0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     )
     .on('transactionHash', function(hash){
         ...
@@ -183,7 +190,11 @@ Parameters
 1. ``name`` - ``String``: The ENS name.
 2. ``x`` - ``String``: The X coordinate of the public key.
 3. ``y`` - ``String``: The Y coordinate of the public key.
-4. ``from`` - ``String``: The current address.
+4. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+
 
 Emits an ``PubkeyChanged`` event.
 
@@ -197,7 +208,9 @@ Example
         'ethereum.eth',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     ).then(function (result) {
         console.log(result.events);
     });
@@ -209,7 +222,9 @@ Example
         'ethereum.eth',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     )
     .on('transactionHash', function(hash){
         ...
@@ -273,7 +288,11 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The content hash to set.
-2. ``from`` - ``String``: The current address.
+3. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+
 
 Emits an ``ContentChanged`` event.
 
@@ -286,7 +305,9 @@ Example
     web3.eth.ens.setContent(
         'ethereum.eth',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     ).then(function (result) {
              console.log(result.events);
      });
@@ -297,7 +318,9 @@ Example
     web3.eth.ens.setContent(
         'ethereum.eth',
         '0x0000000000000000000000000000000000000000000000000000000000000000',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     )
     .on('transactionHash', function(hash){
         ...
@@ -361,7 +384,11 @@ Parameters
 
 1. ``name`` - ``String``: The ENS name.
 2. ``hash`` - ``String``: The multihash to set.
-2. ``from`` - ``String``: The current account.
+3. ``options`` - ``Object``: The options used for sending.
+    * ``from`` - ``String``: The address the transaction should be sent from.
+    * ``gasPrice`` - ``String`` (optional): The gas price in wei to use for this transaction.
+    * ``gas`` - ``Number`` (optional): The maximum gas provided for this transaction (gas limit).
+
 
 Emits an ``MultihashChanged``event.
 
@@ -374,7 +401,9 @@ Example
     web3.eth.ens.setMultihash(
         'ethereum.eth',
         'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     ).then(function (result) {
         console.log(result.events);
     });
@@ -385,7 +414,9 @@ Example
     web3.eth.ens.setMultihash(
         'ethereum.eth',
         'QmXpSwxdmgWaYrgMUzuDWCnjsZo5RxphE3oW7VhTMSCoKK',
-        '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        {
+            from: '0x9CC9a2c777605Af16872E0997b3Aeb91d96D5D8c'
+        }
     )
     .on('transactionHash', function(hash){
         ...
