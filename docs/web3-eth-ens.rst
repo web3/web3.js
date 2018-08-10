@@ -79,7 +79,7 @@ setAddress
 
 .. code-block:: javascript
 
-    web3.eth.ens.setAddress(name, address, from);
+    web3.eth.ens.setAddress(name, address, options);
 
 Sets the address of an ENS name in his resolver.
 
@@ -179,7 +179,7 @@ setPubkey
 
 .. code-block:: javascript
 
-    web3.eth.ens.setPubkey(name, x, y, from);
+    web3.eth.ens.setPubkey(name, x, y, options);
 
 Sets the SECP256k1 public key associated with an ENS node
 
@@ -278,7 +278,7 @@ setContent
 
 .. code-block:: javascript
 
-    web3.eth.ens.setContent(name, hash, from);
+    web3.eth.ens.setContent(name, hash, options);
 
 Sets the content hash associated with an ENS node.
 
@@ -374,7 +374,7 @@ setMultihash
 
 .. code-block:: javascript
 
-    web3.eth.ens.setMultihash(name, hash, from);
+    web3.eth.ens.setMultihash(name, hash, options);
 
 Sets the multihash associated with an ENS node.
 
