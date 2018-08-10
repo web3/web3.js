@@ -16,8 +16,8 @@
     "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
     "watch": "gulp watch",
     "docs": "cd docs; make html;",
-    "lint": "jshint *.js packages",
-    "test": "mocha; jshint *.js packages",
+    "lint": "eslint .",
+    "test": "mocha",
     "test-coveralls": "istanbul cover _mocha -- -R spec && cat coverage/lcov.info | coveralls --verbose"
   },
   "repository": {
@@ -89,6 +89,8 @@
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
     "underscore": "^1.8.3",
-    "vinyl-source-stream": "^2.0.0"
+    "vinyl-source-stream": "^2.0.0",
+    "eslint": "^5.3.0",
+    "eslint-plugin-mocha": "^5.1.0"
   }
 }
