@@ -22,16 +22,13 @@
 
 "use strict";
 
+var formatters = require("web3-core-helpers").formatters;
+var Method = require("web3-core-method");
+var utils = require("web3-utils");
 
-var formatters = require('web3-core-helpers').formatters;
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-
-
-var extend = function (pckg) {
+var extend = function(pckg) {
     /* jshint maxcomplexity:5 */
-    var ex = function (extension) {
-
+    var ex = function(extension) {
         var extendedObject;
         if (extension.property) {
             if (!pckg[extension.property]) {
@@ -43,8 +40,8 @@ var extend = function (pckg) {
         }
 
         if (extension.methods) {
-            extension.methods.forEach(function (method) {
-                if(!(method instanceof Method)) {
+            extension.methods.forEach(function(method) {
+                if (!(method instanceof Method)) {
                     method = new Method(method);
                 }
 
@@ -63,7 +60,4 @@ var extend = function (pckg) {
     return ex;
 };
 
-
-
 module.exports = extend;
-

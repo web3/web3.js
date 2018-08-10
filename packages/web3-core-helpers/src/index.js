@@ -22,11 +22,10 @@
 
 "use strict";
 
-var errors = require('./errors');
-var formatters = require('./formatters');
+var errors = require("./errors");
+var formatters = require("./formatters");
 
 module.exports = {
     errors: errors,
     formatters: formatters
 };
-

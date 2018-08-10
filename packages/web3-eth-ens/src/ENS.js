@@ -20,8 +20,8 @@
 
 "use strict";
 
-var config = require('./config');
-var Registry = require('./contracts/Registry');
+var config = require("./config");
+var Registry = require("./contracts/Registry");
 
 /**
  * Constructs a new instance of ENS
@@ -34,8 +34,8 @@ function ENS(eth) {
     this.eth = eth;
 }
 
-Object.defineProperty(ENS.prototype, 'registry', {
-    get: function(){
+Object.defineProperty(ENS.prototype, "registry", {
+    get: function() {
         return new Registry(this);
     },
     enumerable: true
@@ -48,7 +48,7 @@ Object.defineProperty(ENS.prototype, 'registry', {
  * @param {string} name
  * @return {Promise<string>} a promise
  */
-ENS.prototype.getAddress = function (name) {
+ENS.prototype.getAddress = function(name) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.addr();
     });
@@ -63,7 +63,7 @@ ENS.prototype.getAddress = function (name) {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setAddress = function (name, address, from) {
+ENS.prototype.setAddress = function(name, address, from) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.setAddr(address, from);
     });
@@ -76,10 +76,10 @@ ENS.prototype.setAddress = function (name, address, from) {
  * @param {string} name
  * @returns {Promise<any>}
  */
-ENS.prototype.getPubkey = function (name) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.pubkey();
-  });
+ENS.prototype.getPubkey = function(name) {
+    return this.registry.resolver(name).then(function(resolver) {
+        return resolver.pubkey();
+    });
 };
 
 /**
@@ -92,10 +92,10 @@ ENS.prototype.getPubkey = function (name) {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setPubkey = function (name, x, y, from) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setPubkey(x, y, from);
-  });
+ENS.prototype.setPubkey = function(name, x, y, from) {
+    return this.registry.resolver(name).then(function(resolver) {
+        return resolver.setPubkey(x, y, from);
+    });
 };
 
 /**
@@ -105,7 +105,7 @@ ENS.prototype.setPubkey = function (name, x, y, from) {
  * @param {string} name
  * @returns {Promise<any>}
  */
-ENS.prototype.getContent = function (name) {
+ENS.prototype.getContent = function(name) {
     return this.registry.resolver(name).then(function(resolver) {
         return resolver.content();
     });
@@ -120,10 +120,10 @@ ENS.prototype.getContent = function (name) {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setContent = function (name, hash, from) {
-  return this.registry.resolver(name).then(function(resolver) {
-      return resolver.setContent(hash, from);
-  });
+ENS.prototype.setContent = function(name, hash, from) {
+    return this.registry.resolver(name).then(function(resolver) {
+        return resolver.setContent(hash, from);
+    });
 };
 
 /**
@@ -133,8 +133,8 @@ ENS.prototype.setContent = function (name, hash, from) {
  * @param {string} name
  * @returns {Promise<any>}
  */
-ENS.prototype.getMultihash = function (name) {
-    return this.registry.resolver(name).then(function (resolver) {
+ENS.prototype.getMultihash = function(name) {
+    return this.registry.resolver(name).then(function(resolver) {
         return resolver.multihash();
     });
 };
@@ -148,10 +148,10 @@ ENS.prototype.getMultihash = function (name) {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-ENS.prototype.setMultihash = function (name, hash, from) {
-  return this.registry.resolver(name).then(function (resolver) {
-      return resolver.setMultihash(hash, from);
-  });
+ENS.prototype.setMultihash = function(name, hash, from) {
+    return this.registry.resolver(name).then(function(resolver) {
+        return resolver.setMultihash(hash, from);
+    });
 };
 
 /**
@@ -160,22 +160,31 @@ ENS.prototype.setMultihash = function (name, hash, from) {
  *
  * @returns {Promise<Block>}
  */
-ENS.prototype.checkNetwork = function () {
+ENS.prototype.checkNetwork = function() {
     var self = this;
-    return self.eth.getBlock('latest').then(function (block) {
-        var headAge = new Date() / 1000 - block.timestamp;
-        if (headAge > 3600) {
-            throw new Error("Network not synced; last block was " + headAge + " seconds ago");
-        }
-        return self.eth.net.getNetworkType();
-    }).then(function (networkType) {
-        var addr = config.addresses[networkType];
-        if (typeof addr === 'undefined') {
-            throw new Error("ENS is not supported on network " + networkType);
-        }
+    return self.eth
+        .getBlock("latest")
+        .then(function(block) {
+            var headAge = new Date() / 1000 - block.timestamp;
+            if (headAge > 3600) {
+                throw new Error(
+                    "Network not synced; last block was " +
+                        headAge +
+                        " seconds ago"
+                );
+            }
+            return self.eth.net.getNetworkType();
+        })
+        .then(function(networkType) {
+            var addr = config.addresses[networkType];
+            if (typeof addr === "undefined") {
+                throw new Error(
+                    "ENS is not supported on network " + networkType
+                );
+            }
 
-        return addr;
-    });
+            return addr;
+        });
 };
 
 module.exports = ENS;

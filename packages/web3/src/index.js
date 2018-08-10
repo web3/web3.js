@@ -27,15 +27,14 @@
 
 "use strict";
 
-
-var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
-var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
+var version = require("../package.json").version;
+var core = require("web3-core");
+var Eth = require("web3-eth");
+var Net = require("web3-net");
+var Personal = require("web3-eth-personal");
+var Shh = require("web3-shh");
+var Bzz = require("web3-bzz");
+var utils = require("web3-utils");
 
 var Web3 = function Web3() {
     var _this = this;
@@ -52,7 +51,7 @@ var Web3 = function Web3() {
 
     // overwrite package setProvider
     var setProvider = this.setProvider;
-    this.setProvider = function (provider, net) {
+    this.setProvider = function(provider, net) {
         setProvider.apply(_this, arguments);
 
         this.eth.setProvider(provider, net);
@@ -76,4 +75,3 @@ Web3.modules = {
 core.addProviders(Web3);
 
 module.exports = Web3;
-

@@ -22,7 +22,7 @@
 
 "use strict";
 
-var EventEmitter = require('eventemitter3');
+var EventEmitter = require("eventemitter3");
 var Promise = require("any-promise");
 
 /**
@@ -31,13 +31,14 @@ var Promise = require("any-promise");
  * @method eventifiedPromise
  */
 var PromiEvent = function PromiEvent(justPromise) {
-    var resolve, reject,
+    var resolve,
+        reject,
         eventEmitter = new Promise(function() {
             resolve = arguments[0];
             reject = arguments[1];
         });
 
-    if(justPromise) {
+    if (justPromise) {
         return {
             resolve: resolve,
             reject: reject,

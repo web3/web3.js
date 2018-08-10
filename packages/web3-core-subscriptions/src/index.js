@@ -22,8 +22,7 @@
 
 "use strict";
 
-var Subscription = require('./subscription.js');
-
+var Subscription = require("./subscription.js");
 
 var Subscriptions = function Subscriptions(options) {
     this.name = options.name;
@@ -32,15 +31,13 @@ var Subscriptions = function Subscriptions(options) {
     this.requestManager = null;
 };
 
-
-Subscriptions.prototype.setRequestManager = function (rm) {
+Subscriptions.prototype.setRequestManager = function(rm) {
     this.requestManager = rm;
 };
 
-
-Subscriptions.prototype.attachToObject = function (obj) {
+Subscriptions.prototype.attachToObject = function(obj) {
     var func = this.buildCall();
-    var name = this.name.split('.');
+    var name = this.name.split(".");
     if (name.length > 1) {
         obj[name[0]] = obj[name[0]] || {};
         obj[name[0]][name[1]] = func;
@@ -49,13 +46,16 @@ Subscriptions.prototype.attachToObject = function (obj) {
     }
 };
 
-
 Subscriptions.prototype.buildCall = function() {
     var _this = this;
 
-    return function(){
-        if(!_this.subscriptions[arguments[0]]) {
-            console.warn('Subscription '+ JSON.stringify(arguments[0]) +' doesn\'t exist. Subscribing anyway.');
+    return function() {
+        if (!_this.subscriptions[arguments[0]]) {
+            console.warn(
+                "Subscription " +
+                    JSON.stringify(arguments[0]) +
+                    " doesn't exist. Subscribing anyway."
+            );
         }
 
         var subscription = new Subscription({
@@ -67,7 +67,6 @@ Subscriptions.prototype.buildCall = function() {
         return subscription.subscribe.apply(subscription, arguments);
     };
 };
-
 
 module.exports = {
     subscriptions: Subscriptions,

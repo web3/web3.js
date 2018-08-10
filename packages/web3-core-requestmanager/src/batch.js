@@ -22,10 +22,10 @@
 
 "use strict";
 
-var Jsonrpc = require('./jsonrpc');
-var errors = require('web3-core-helpers').errors;
+var Jsonrpc = require("./jsonrpc");
+var errors = require("web3-core-helpers").errors;
 
-var Batch = function (requestManager) {
+var Batch = function(requestManager) {
     this.requestManager = requestManager;
     this.requests = [];
 };
@@ -36,7 +36,7 @@ var Batch = function (requestManager) {
  * @method add
  * @param {Object} jsonrpc requet object
  */
-Batch.prototype.add = function (request) {
+Batch.prototype.add = function(request) {
     this.requests.push(request);
 };
 
@@ -45,31 +45,41 @@ Batch.prototype.add = function (request) {
  *
  * @method execute
  */
-Batch.prototype.execute = function () {
+Batch.prototype.execute = function() {
     var requests = this.requests;
-    this.requestManager.sendBatch(requests, function (err, results) {
+    this.requestManager.sendBatch(requests, function(err, results) {
         results = results || [];
-        requests.map(function (request, index) {
-            return results[index] || {};
-        }).forEach(function (result, index) {
-            if (requests[index].callback) {
-                if (result && result.error) {
-                    return requests[index].callback(errors.ErrorResponse(result));
-                }
+        requests
+            .map(function(request, index) {
+                return results[index] || {};
+            })
+            .forEach(function(result, index) {
+                if (requests[index].callback) {
+                    if (result && result.error) {
+                        return requests[index].callback(
+                            errors.ErrorResponse(result)
+                        );
+                    }
 
-                if (!Jsonrpc.isValidResponse(result)) {
-                    return requests[index].callback(errors.InvalidResponse(result));
-                }
+                    if (!Jsonrpc.isValidResponse(result)) {
+                        return requests[index].callback(
+                            errors.InvalidResponse(result)
+                        );
+                    }
 
-                try {
-                    requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
-                } catch (err) {
-                    requests[index].callback(err);
+                    try {
+                        requests[index].callback(
+                            null,
+                            requests[index].format
+                                ? requests[index].format(result.result)
+                                : result.result
+                        );
+                    } catch (err) {
+                        requests[index].callback(err);
+                    }
                 }
-            }
-        });
+            });
     });
 };
 
 module.exports = Batch;
-

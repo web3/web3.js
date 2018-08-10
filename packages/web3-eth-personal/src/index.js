@@ -22,13 +22,12 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Net = require('web3-net');
+var core = require("web3-core");
+var Method = require("web3-core-method");
+var utils = require("web3-utils");
+var Net = require("web3-net");
 
-var formatters = require('web3-core-helpers').formatters;
-
+var formatters = require("web3-core-helpers").formatters;
 
 var Personal = function Personal() {
     var _this = this;
@@ -39,15 +38,17 @@ var Personal = function Personal() {
     this.net = new Net(this.currentProvider);
 
     var defaultAccount = null;
-    var defaultBlock = 'latest';
+    var defaultBlock = "latest";
 
-    Object.defineProperty(this, 'defaultAccount', {
-        get: function () {
+    Object.defineProperty(this, "defaultAccount", {
+        get: function() {
             return defaultAccount;
         },
-        set: function (val) {
-            if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+        set: function(val) {
+            if (val) {
+                defaultAccount = utils.toChecksumAddress(
+                    formatters.inputAddressFormatter(val)
+                );
             }
 
             // update defaultBlock
@@ -59,11 +60,11 @@ var Personal = function Personal() {
         },
         enumerable: true
     });
-    Object.defineProperty(this, 'defaultBlock', {
-        get: function () {
+    Object.defineProperty(this, "defaultBlock", {
+        get: function() {
             return defaultBlock;
         },
-        set: function (val) {
+        set: function(val) {
             defaultBlock = val;
 
             // update defaultBlock
@@ -76,59 +77,62 @@ var Personal = function Personal() {
         enumerable: true
     });
 
-
     var methods = [
         new Method({
-            name: 'getAccounts',
-            call: 'personal_listAccounts',
+            name: "getAccounts",
+            call: "personal_listAccounts",
             params: 0,
             outputFormatter: utils.toChecksumAddress
         }),
         new Method({
-            name: 'newAccount',
-            call: 'personal_newAccount',
+            name: "newAccount",
+            call: "personal_newAccount",
             params: 1,
             inputFormatter: [null],
             outputFormatter: utils.toChecksumAddress
         }),
         new Method({
-            name: 'unlockAccount',
-            call: 'personal_unlockAccount',
+            name: "unlockAccount",
+            call: "personal_unlockAccount",
             params: 3,
             inputFormatter: [formatters.inputAddressFormatter, null, null]
         }),
         new Method({
-            name: 'lockAccount',
-            call: 'personal_lockAccount',
+            name: "lockAccount",
+            call: "personal_lockAccount",
             params: 1,
             inputFormatter: [formatters.inputAddressFormatter]
         }),
         new Method({
-            name: 'importRawKey',
-            call: 'personal_importRawKey',
+            name: "importRawKey",
+            call: "personal_importRawKey",
             params: 2
         }),
         new Method({
-            name: 'sendTransaction',
-            call: 'personal_sendTransaction',
+            name: "sendTransaction",
+            call: "personal_sendTransaction",
             params: 2,
             inputFormatter: [formatters.inputTransactionFormatter, null]
         }),
         new Method({
-            name: 'signTransaction',
-            call: 'personal_signTransaction',
+            name: "signTransaction",
+            call: "personal_signTransaction",
             params: 2,
             inputFormatter: [formatters.inputTransactionFormatter, null]
         }),
         new Method({
-            name: 'sign',
-            call: 'personal_sign',
+            name: "sign",
+            call: "personal_sign",
             params: 3,
-            inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter, null]
+            inputFormatter: [
+                formatters.inputSignFormatter,
+                formatters.inputAddressFormatter,
+                null
+            ]
         }),
         new Method({
-            name: 'ecRecover',
-            call: 'personal_ecRecover',
+            name: "ecRecover",
+            call: "personal_ecRecover",
             params: 2,
             inputFormatter: [formatters.inputSignFormatter, null]
         })
@@ -143,8 +147,4 @@ var Personal = function Personal() {
 
 core.addProviders(Personal);
 
-
-
 module.exports = Personal;
-
-

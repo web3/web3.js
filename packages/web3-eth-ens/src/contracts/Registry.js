@@ -20,11 +20,10 @@
 
 "use strict";
 
-var Contract = require('web3-eth-contract');
-var namehash = require('eth-ens-namehash');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var Resolver = require('./Resolver');
-
+var Contract = require("web3-eth-contract");
+var namehash = require("eth-ens-namehash");
+var REGISTRY_ABI = require("../ressources/ABI/Registry");
+var Resolver = require("./Resolver");
 
 /**
  * A wrapper around the ENS registry contract.
@@ -36,7 +35,7 @@ var Resolver = require('./Resolver');
 function Registry(ens) {
     var self = this;
     this.ens = ens;
-    this.contract = ens.checkNetwork().then(function (address) {
+    this.contract = ens.checkNetwork().then(function(address) {
         var contract = new Contract(REGISTRY_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
 
@@ -51,8 +50,8 @@ function Registry(ens) {
  * @param {string} name
  * @return {Promise<any>}
  */
-Registry.prototype.owner = function (name) {
-    return this.contract.then(function (contract) {
+Registry.prototype.owner = function(name) {
+    return this.contract.then(function(contract) {
         return contract.methods.owner(namehash.hash(name)).call();
     });
 };
@@ -64,14 +63,16 @@ Registry.prototype.owner = function (name) {
  * @param {string} name
  * @return {Promise<Resolver>}
  */
-Registry.prototype.resolver = function (name) {
+Registry.prototype.resolver = function(name) {
     var self = this;
     var node = namehash.hash(name);
-    return this.contract.then(function (contract) {
-        return contract.methods.resolver(node).call();
-    }).then(function (address) {
-        return new Resolver(address, node, self.ens);
-    });
+    return this.contract
+        .then(function(contract) {
+            return contract.methods.resolver(node).call();
+        })
+        .then(function(address) {
+            return new Resolver(address, node, self.ens);
+        });
 };
 
 module.exports = Registry;

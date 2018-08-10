@@ -24,24 +24,42 @@
 "use strict";
 
 module.exports = {
-    ErrorResponse: function (result) {
-        var message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
-        return new Error('Returned error: ' + message);
+    ErrorResponse: function(result) {
+        var message =
+            !!result && !!result.error && !!result.error.message
+                ? result.error.message
+                : JSON.stringify(result);
+        return new Error("Returned error: " + message);
     },
-    InvalidNumberOfParams: function (got, expected, method) {
-        return new Error('Invalid number of parameters for "'+ method +'". Got '+ got +' expected '+ expected +'!');
+    InvalidNumberOfParams: function(got, expected, method) {
+        return new Error(
+            'Invalid number of parameters for "' +
+                method +
+                '". Got ' +
+                got +
+                " expected " +
+                expected +
+                "!"
+        );
     },
-    InvalidConnection: function (host){
-        return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
+    InvalidConnection: function(host) {
+        return new Error(
+            "CONNECTION ERROR: Couldn't connect to node " + host + "."
+        );
     },
-    InvalidProvider: function () {
-        return new Error('Provider not set or invalid');
+    InvalidProvider: function() {
+        return new Error("Provider not set or invalid");
     },
-    InvalidResponse: function (result){
-        var message = !!result && !!result.error && !!result.error.message ? result.error.message : 'Invalid JSON RPC response: ' + JSON.stringify(result);
+    InvalidResponse: function(result) {
+        var message =
+            !!result && !!result.error && !!result.error.message
+                ? result.error.message
+                : "Invalid JSON RPC response: " + JSON.stringify(result);
         return new Error(message);
     },
-    ConnectionTimeout: function (ms){
-        return new Error('CONNECTION TIMEOUT: timeout of ' + ms + ' ms achived');
+    ConnectionTimeout: function(ms) {
+        return new Error(
+            "CONNECTION TIMEOUT: timeout of " + ms + " ms achived"
+        );
     }
 };

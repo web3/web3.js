@@ -20,8 +20,8 @@
 
 "use strict";
 
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
-var Contract = require('web3-eth-contract');
+var RESOLVER_ABI = require("../ressources/ABI/Resolver");
+var Contract = require("web3-eth-contract");
 
 /**
  * Creates an instance of Resolver
@@ -45,7 +45,7 @@ function Resolver(address, node, ens) {
  * @method addr
  * @returns {Promise<any>}
  */
-Resolver.prototype.addr = function () {
+Resolver.prototype.addr = function() {
     return this.contract.methods.addr(this.node).call();
 };
 
@@ -57,8 +57,10 @@ Resolver.prototype.addr = function () {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setAddr = function (address, from) {
-    return this.contract.methods.setAddr(this.node, address).send({from: from});
+Resolver.prototype.setAddr = function(address, from) {
+    return this.contract.methods
+        .setAddr(this.node, address)
+        .send({ from: from });
 };
 
 /**
@@ -67,7 +69,7 @@ Resolver.prototype.setAddr = function (address, from) {
  * @method pubkey
  * @returns {Promise<any>}
  */
-Resolver.prototype.pubkey = function () {
+Resolver.prototype.pubkey = function() {
     return this.contract.methods.pubkey(this.node).call();
 };
 
@@ -80,8 +82,10 @@ Resolver.prototype.pubkey = function () {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setPubkey = function (x, y, from) {
-    return this.contract.methods.setPubkey(this.node, y, y).send({from: from});
+Resolver.prototype.setPubkey = function(x, y, from) {
+    return this.contract.methods
+        .setPubkey(this.node, y, y)
+        .send({ from: from });
 };
 
 /**
@@ -90,7 +94,7 @@ Resolver.prototype.setPubkey = function (x, y, from) {
  * @method content
  * @returns {Promise<any>}
  */
-Resolver.prototype.content = function () {
+Resolver.prototype.content = function() {
     return this.contract.methods.content(this.node).call();
 };
 
@@ -102,8 +106,10 @@ Resolver.prototype.content = function () {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setContent = function (hash, from) {
-    return this.contract.methods.setContent(this.node, hash).send({from: from});
+Resolver.prototype.setContent = function(hash, from) {
+    return this.contract.methods
+        .setContent(this.node, hash)
+        .send({ from: from });
 };
 
 /**
@@ -112,7 +118,7 @@ Resolver.prototype.setContent = function (hash, from) {
  * @method multihash
  * @returns {Promise<any>}
  */
-Resolver.prototype.multihash = function () {
+Resolver.prototype.multihash = function() {
     return this.contract.methods.multihash(this.node).call();
 };
 
@@ -124,8 +130,8 @@ Resolver.prototype.multihash = function () {
  * @param {string} from
  * @returns {Promise<Transaction>}
  */
-Resolver.prototype.setMultihash = function (hash, from) {
-    return this.contract.methods.setMultihash(this.node).send({from: from});
+Resolver.prototype.setMultihash = function(hash, from) {
+    return this.contract.methods.setMultihash(this.node).send({ from: from });
 };
 
 module.exports = Resolver;

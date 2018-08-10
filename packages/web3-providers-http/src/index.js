@@ -22,21 +22,20 @@
  * @date 2015
  */
 
-var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest // jshint ignore: line
-var http = require('http');
-var https = require('https');
-
+var errors = require("web3-core-helpers").errors;
+var XHR2 = require("xhr2-cookies").XMLHttpRequest; // jshint ignore: line
+var http = require("http");
+var https = require("https");
 
 /**
  * HttpProvider should be used to send rpc calls over http
  */
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
-    this.host = host || 'http://localhost:8545';
-    if (this.host.substring(0,5) === "https"){
+    this.host = host || "http://localhost:8545";
+    if (this.host.substring(0, 5) === "https") {
         this.httpsAgent = new https.Agent({ keepAlive: true });
-    }else{
+    } else {
         this.httpAgent = new http.Agent({ keepAlive: true });
     }
     this.timeout = options.timeout || 0;
@@ -44,19 +43,19 @@ var HttpProvider = function HttpProvider(host, options) {
     this.connected = false;
 };
 
-HttpProvider.prototype._prepareRequest = function(){
+HttpProvider.prototype._prepareRequest = function() {
     var request = new XHR2();
     request.nodejsSet({
-        httpsAgent:this.httpsAgent,
-        httpAgent:this.httpAgent
+        httpsAgent: this.httpsAgent,
+        httpAgent: this.httpAgent
     });
-    
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type','application/json');
+
+    request.open("POST", this.host, true);
+    request.setRequestHeader("Content-Type", "application/json");
     request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
     request.withCredentials = true;
 
-    if(this.headers) {
+    if (this.headers) {
         this.headers.forEach(function(header) {
             request.setRequestHeader(header.name, header.value);
         });
@@ -72,7 +71,7 @@ HttpProvider.prototype._prepareRequest = function(){
  * @param {Object} payload
  * @param {Function} callback triggered on end with (err, result)
  */
-HttpProvider.prototype.send = function (payload, callback) {
+HttpProvider.prototype.send = function(payload, callback) {
     var _this = this;
     var request = this._prepareRequest();
 
@@ -83,7 +82,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 
             try {
                 result = JSON.parse(result);
-            } catch(e) {
+            } catch (e) {
                 error = errors.InvalidResponse(request.responseText);
             }
 
@@ -99,11 +98,10 @@ HttpProvider.prototype.send = function (payload, callback) {
 
     try {
         request.send(JSON.stringify(payload));
-    } catch(error) {
+    } catch (error) {
         this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
 };
-
 
 module.exports = HttpProvider;

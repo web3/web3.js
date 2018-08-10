@@ -25,14 +25,13 @@
 
 "use strict";
 
-var utils = require('web3-utils');
-var BigNumber = require('bn.js');
+var utils = require("web3-utils");
+var BigNumber = require("bn.js");
 
-
-var leftPad = function (string, bytes) {
+var leftPad = function(string, bytes) {
     var result = string;
     while (result.length < bytes * 2) {
-        result = '0' + result;
+        result = "0" + result;
     }
     return result;
 };
@@ -45,22 +44,25 @@ var leftPad = function (string, bytes) {
  * @param {String} iban the IBAN
  * @returns {String} the prepared IBAN
  */
-var iso13616Prepare = function (iban) {
-    var A = 'A'.charCodeAt(0);
-    var Z = 'Z'.charCodeAt(0);
+var iso13616Prepare = function(iban) {
+    var A = "A".charCodeAt(0);
+    var Z = "Z".charCodeAt(0);
 
     iban = iban.toUpperCase();
-    iban = iban.substr(4) + iban.substr(0,4);
+    iban = iban.substr(4) + iban.substr(0, 4);
 
-    return iban.split('').map(function(n){
-        var code = n.charCodeAt(0);
-        if (code >= A && code <= Z){
-            // A = 10, B = 11, ... Z = 35
-            return code - A + 10;
-        } else {
-            return n;
-        }
-    }).join('');
+    return iban
+        .split("")
+        .map(function(n) {
+            var code = n.charCodeAt(0);
+            if (code >= A && code <= Z) {
+                // A = 10, B = 11, ... Z = 35
+                return code - A + 10;
+            } else {
+                return n;
+            }
+        })
+        .join("");
 };
 
 /**
@@ -70,13 +72,13 @@ var iso13616Prepare = function (iban) {
  * @param {String} iban
  * @returns {Number}
  */
-var mod9710 = function (iban) {
+var mod9710 = function(iban) {
     var remainder = iban,
         block;
 
-    while (remainder.length > 2){
+    while (remainder.length > 2) {
         block = remainder.slice(0, 9);
-        remainder = parseInt(block, 10) % 97 + remainder.slice(block.length);
+        remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
     }
 
     return parseInt(remainder, 10) % 97;
@@ -98,11 +100,11 @@ var Iban = function Iban(iban) {
  * @param {String} iban address
  * @return {String} the ethereum address
  */
-Iban.toAddress = function (ib) {
+Iban.toAddress = function(ib) {
     ib = new Iban(ib);
 
-    if(!ib.isDirect()) {
-        throw new Error('IBAN is indirect and can\'t be converted');
+    if (!ib.isDirect()) {
+        throw new Error("IBAN is indirect and can't be converted");
     }
 
     return ib.toAddress();
@@ -115,7 +117,7 @@ Iban.toAddress = function (ib) {
  * @param {String} address
  * @return {String} the IBAN address
  */
-Iban.toIban = function (address) {
+Iban.toIban = function(address) {
     return Iban.fromAddress(address).toString();
 };
 
@@ -126,12 +128,12 @@ Iban.toIban = function (address) {
  * @param {String} address
  * @return {Iban} the IBAN object
  */
-Iban.fromAddress = function (address) {
-    if(!utils.isAddress(address)){
-        throw new Error('Provided address is not a valid address: '+ address);
+Iban.fromAddress = function(address) {
+    if (!utils.isAddress(address)) {
+        throw new Error("Provided address is not a valid address: " + address);
     }
 
-    address = address.replace('0x','').replace('0X','');
+    address = address.replace("0x", "").replace("0X", "");
 
     var asBn = new BigNumber(address, 16);
     var base36 = asBn.toString(36);
@@ -148,11 +150,11 @@ Iban.fromAddress = function (address) {
  * @param {String} bban the BBAN to convert to IBAN
  * @returns {Iban} the IBAN object
  */
-Iban.fromBban = function (bban) {
-    var countryCode = 'XE';
+Iban.fromBban = function(bban) {
+    var countryCode = "XE";
 
-    var remainder = mod9710(iso13616Prepare(countryCode + '00' + bban));
-    var checkDigit = ('0' + (98 - remainder)).slice(-2);
+    var remainder = mod9710(iso13616Prepare(countryCode + "00" + bban));
+    var checkDigit = ("0" + (98 - remainder)).slice(-2);
 
     return new Iban(countryCode + checkDigit + bban);
 };
@@ -164,8 +166,8 @@ Iban.fromBban = function (bban) {
  * @param {Object} options, required options are "institution" and "identifier"
  * @return {Iban} the IBAN object
  */
-Iban.createIndirect = function (options) {
-    return Iban.fromBban('ETH' + options.institution + options.identifier);
+Iban.createIndirect = function(options) {
+    return Iban.fromBban("ETH" + options.institution + options.identifier);
 };
 
 /**
@@ -175,7 +177,7 @@ Iban.createIndirect = function (options) {
  * @param {String} iban string
  * @return {Boolean} true if it is valid IBAN
  */
-Iban.isValid = function (iban) {
+Iban.isValid = function(iban) {
     var i = new Iban(iban);
     return i.isValid();
 };
@@ -186,9 +188,11 @@ Iban.isValid = function (iban) {
  * @method isValid
  * @returns {Boolean} true if it is, otherwise false
  */
-Iban.prototype.isValid = function () {
-    return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-        mod9710(iso13616Prepare(this._iban)) === 1;
+Iban.prototype.isValid = function() {
+    return (
+        /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
+        mod9710(iso13616Prepare(this._iban)) === 1
+    );
 };
 
 /**
@@ -197,7 +201,7 @@ Iban.prototype.isValid = function () {
  * @method isDirect
  * @returns {Boolean} true if it is, otherwise false
  */
-Iban.prototype.isDirect = function () {
+Iban.prototype.isDirect = function() {
     return this._iban.length === 34 || this._iban.length === 35;
 };
 
@@ -207,7 +211,7 @@ Iban.prototype.isDirect = function () {
  * @method isIndirect
  * @returns {Boolean} true if it is, otherwise false
  */
-Iban.prototype.isIndirect = function () {
+Iban.prototype.isIndirect = function() {
     return this._iban.length === 20;
 };
 
@@ -218,7 +222,7 @@ Iban.prototype.isIndirect = function () {
  * @method checksum
  * @returns {String} checksum
  */
-Iban.prototype.checksum = function () {
+Iban.prototype.checksum = function() {
     return this._iban.substr(2, 2);
 };
 
@@ -229,8 +233,8 @@ Iban.prototype.checksum = function () {
  * @method institution
  * @returns {String} institution identifier
  */
-Iban.prototype.institution = function () {
-    return this.isIndirect() ? this._iban.substr(7, 4) : '';
+Iban.prototype.institution = function() {
+    return this.isIndirect() ? this._iban.substr(7, 4) : "";
 };
 
 /**
@@ -240,8 +244,8 @@ Iban.prototype.institution = function () {
  * @method client
  * @returns {String} client identifier
  */
-Iban.prototype.client = function () {
-    return this.isIndirect() ? this._iban.substr(11) : '';
+Iban.prototype.client = function() {
+    return this.isIndirect() ? this._iban.substr(11) : "";
 };
 
 /**
@@ -250,17 +254,17 @@ Iban.prototype.client = function () {
  * @method toAddress
  * @returns {String} ethereum address
  */
-Iban.prototype.toAddress = function () {
+Iban.prototype.toAddress = function() {
     if (this.isDirect()) {
         var base36 = this._iban.substr(4);
         var asBn = new BigNumber(base36, 36);
         return utils.toChecksumAddress(asBn.toString(16, 20));
     }
 
-    return '';
+    return "";
 };
 
-Iban.prototype.toString = function () {
+Iban.prototype.toString = function() {
     return this._iban;
 };
 
