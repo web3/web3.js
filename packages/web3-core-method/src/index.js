@@ -561,7 +561,7 @@ Method.prototype.buildCall = function() {
         };
 
         // Send the actual transaction
-        if(isSendTx && _.isObject(payload.params[0]) && !payload.params[0].gasPrice) {
+        if(isSendTx && _.isObject(payload.params[0]) && typeof payload.params[0].gasPrice === 'undefined') {
 
             var getGasPrice = (new Method({
                 name: 'getGasPrice',
