@@ -25,7 +25,7 @@ var lightDst = 'web3-light';
 var browserifyOptions = {
     debug: true,
     insert_global_vars: false, // jshint ignore:line
-    detectGlobals: false,
+    detectGlobals: true,
     bundleExternal: true
 };
 
