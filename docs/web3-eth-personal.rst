@@ -226,6 +226,38 @@ Example
 
 ------------------------------------------------------------------------------
 
+
+unlockAccount
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.unlockAccount(address, password, unlockDuraction [, callback])
+
+Signs data using a specific account.
+
+.. note:: Sending your account password over an unsecured HTTP RPC connection is highly unsecure.
+
+----------
+Parameters
+----------
+
+
+1. ``address`` - ``String``: The account address.
+2. ``password`` - ``String`` - The password of the account.
+3. ``unlockDuration`` - ``Number`` - The duration for the account to remain unlocked.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.personal.unlockAccount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!", 600)
+    .then(console.log('Account unlocked!'));
+    > "Account unlocked!"
+
 // TODO
 
-getAccounts, unlockAccount, lockAccount, sendTransaction
+getAccounts, lockAccount, sendTransaction
