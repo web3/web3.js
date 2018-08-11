@@ -14,7 +14,7 @@ var methodExists = function (object, method) {
 var propertyExists = function (object, property) {
     it('should have property ' + property + ' implemented', function() {
         // set dummy providor, to prevent error
-        //web3.setProvider(new FakeHttpProvider());
+        // web3.setProvider(new FakeHttpProvider());
         assert.notEqual('undefined', typeof object[property], 'property ' + property + ' is not implemented');
     });
 };
