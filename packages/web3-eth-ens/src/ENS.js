@@ -50,6 +50,14 @@ Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
 });
 
 /**
+ * @param {string} name
+ * @returns {Promise<Contract>}
+ */
+ENS.prototype.resolver = function (name) {
+    return this.registry.resolver(name);
+};
+
+/**
  * Returns the address record associated with a name.
  *
  * @method getAddress

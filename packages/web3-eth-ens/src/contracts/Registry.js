@@ -85,11 +85,11 @@ Registry.prototype.owner = function (name, callback) {
  * @param {string} name
  * @return {Promise<Contract>}
  */
-Registry.prototype.resolver = function () {
+Registry.prototype.resolver = function (name) {
     var self = this;
-    var node = namehash.hash(name);
+
     return this.contract.then(function (contract) {
-        return contract.methods.resolver(node).call();
+        return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
         var contract = new Contract(RESOLVER_ABI, address);
         contract.setProvider(self.ens.eth.currentProvider);
