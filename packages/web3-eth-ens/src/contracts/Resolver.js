@@ -125,7 +125,7 @@ Resolver.prototype.multihash = function () {
  * @returns {Promise<Transaction>}
  */
 Resolver.prototype.setMultihash = function (hash, from) {
-    return this.contract.methods.setMultihash(this.node).send({from: from});
+    return this.contract.methods.setMultihash(this.node, hash).send({from: from});
 };
 
 module.exports = Resolver;
