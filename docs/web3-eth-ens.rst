@@ -9,6 +9,7 @@ web3.eth.ens
 The ``web3.eth.ens`` functions let you interacting with ENS.
 
 ------------------------------------------------------------------------------
+
 registry
 =====================
 
@@ -37,6 +38,34 @@ Example
         owner: Function(name),
         resolve: Function(name)
     }
+
+------------------------------------------------------------------------------
+
+resolver
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.resolver(name);
+
+Returns the resolver contract to an Ethereum address.
+
+-------
+Returns
+-------
+
+``Reslver`` - The ENS resolver for this name.
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.resolver(name).then(function (contract) {
+        console.log(contract);
+    });
+    > Contract<Resolver>
 
 ------------------------------------------------------------------------------
 
@@ -428,4 +457,56 @@ Example
         ...
     })
     .on('error', console.error);
+
+------------------------------------------------------------------------------
+
+ENS events
+=====================
+
+The ENS API provides the possibility for listening to all ENS related events.
+
+------------
+Known resolver events
+------------
+
+1. AddrChanged(node bytes32, a address)
+2. ContentChanged(node bytes32, hash bytes32)
+4. NameChanged(node bytes32, name string)
+5. ABIChanged(node bytes32, contentType uint256)
+6. PubkeyChanged(node bytes32, x bytes32, y bytes32)
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.resolver(name).then(function (contract) {
+        contract.events.AddrChange(options, callback);
+    });
+
+------------
+Known registry events
+------------
+
+1. Transfer(node bytes32, owner address)
+2. NewOwner(node bytes32, label bytes32, owner address)
+4. NewResolver(node bytes32, resolver address)
+5. NewTTL(node bytes32, ttl uint64)
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    web3.eth.ens.resistry.then(function (contract) {
+        contract.events.Transfer(options, callback); //
+    });
+
+
+
+For further information on the handling of contract events please see here contract-events_.
+
+------------------------------------------------------------------------------
 
