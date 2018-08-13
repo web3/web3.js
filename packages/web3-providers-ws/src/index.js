@@ -110,7 +110,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
             }
 
             // notification
-            if(!id && result.method.indexOf('_subscription') !== -1) {
+            if(!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
                 _this.notificationCallbacks.forEach(function(callback){
                     if(_.isFunction(callback))
                         callback(result);
