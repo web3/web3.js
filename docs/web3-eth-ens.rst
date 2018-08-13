@@ -501,9 +501,8 @@ Example
 .. code-block:: javascript
 
     web3.eth.ens.resistry.then(function (contract) {
-        contract.events.Transfer(options, callback); 
+        contract.events.Transfer(options, callback);
     });
-
 
 
 For further information on the handling of contract events please see here contract-events_.
