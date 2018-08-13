@@ -359,15 +359,22 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         }
 
                     } else {
-                        receiptJSON = JSON.stringify(receipt, null, 2);
-                        if (receipt.status === false || receipt.status === '0x0') {
-                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
-                        } else {
-                            utils._fireError(
-                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
-                        }
+                      receiptJSON = JSON.stringify(receipt, null, 2);
+                      if (receipt.gasUsed >= gasProvided) {
+                        utils._fireError(
+                            new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
+                            defer.eventEmitter, defer.reject);
+                      } else if (receipt.status === false || receipt.status === '0x0') {
+                          utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
+                              defer.eventEmitter, defer.reject);
+                      } else {
+                          // TODO:
+                          // When it is not 'Transaction ran out of gas' error or 'Reverted' error,
+                          // What error message should we show?
+                          utils._fireError(
+                              new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
+                              defer.eventEmitter, defer.reject);
+                      }
                     }
 
                     if (canUnsubscribe) {
