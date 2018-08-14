@@ -20,17 +20,19 @@
 
 "use strict";
 
+var _ = require('underscore');
 var Contract = require('web3-eth-contract');
 var namehash = require('eth-ens-namehash');
+var PromiEvent = require('web3-core-promievent');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var Resolver = require('./Resolver');
+var RESOLVER_ABI = require('../ressources/ABI/Resolver');
 
 
 /**
  * A wrapper around the ENS registry contract.
  *
  * @method Registry
- * @param {Object} ens
+ * @param {Ens} ens
  * @constructor
  */
 function Registry(ens) {
@@ -49,12 +51,31 @@ function Registry(ens) {
  *
  * @method owner
  * @param {string} name
+ * @param {function} callback
  * @return {Promise<any>}
  */
-Registry.prototype.owner = function (name) {
-    return this.contract.then(function (contract) {
-        return contract.methods.owner(namehash.hash(name)).call();
+Registry.prototype.owner = function (name, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.owner(namehash.hash(name)).call()
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
     });
+
+    return promiEvent.eventEmitter;
 };
 
 /**
@@ -62,15 +83,17 @@ Registry.prototype.owner = function (name) {
  *
  * @method resolver
  * @param {string} name
- * @return {Promise<Resolver>}
+ * @return {Promise<Contract>}
  */
 Registry.prototype.resolver = function (name) {
     var self = this;
-    var node = namehash.hash(name);
+
     return this.contract.then(function (contract) {
-        return contract.methods.resolver(node).call();
+        return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
-        return new Resolver(address, node, self.ens);
+        var contract = new Contract(RESOLVER_ABI, address);
+        contract.setProvider(self.ens.eth.currentProvider);
+        return contract;
     });
 };
 

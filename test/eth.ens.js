@@ -78,7 +78,7 @@ describe('ens', function () {
             provider.injectResult('0x0000000000000000000000000123456701234567012345670123456701234567');
 
             web3.eth.ens.registry.resolver('foobar.eth').then(function (resolver) {
-                assert.equal(resolver.contract.options.address, '0x0123456701234567012345670123456701234567');
+                assert.equal(resolver.options.address, '0x0123456701234567012345670123456701234567');
                 done();
             }).catch(function (err) {
                 throw err;
