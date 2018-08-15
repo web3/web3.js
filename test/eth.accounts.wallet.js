@@ -233,7 +233,7 @@ describe("eth", function () {
                 assert.equal(ethAccounts.wallet.length, 0);
             });
 
-            it("remove accounts then clear wallet", function() {
+            it("remove accounts then clear wallet", function(done) {
                 var count = 10;
                 var ethAccounts = new Accounts();
                 assert.equal(ethAccounts.wallet.length, 0);
@@ -251,17 +251,20 @@ describe("eth", function () {
                 ethAccounts.wallet.remove(5);
                 assert.isUndefined(ethAccounts.wallet[5])
 
-                ethAccounts.wallet.clear();
+                setTimeout(function () {
 
-                for (var i = 0; i < count; i++) {
-                    assert.isUndefined(ethAccounts.wallet[i]);
-                    assert.isUndefined(ethAccounts.wallet[addresses[i]]);
-                    assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
-                }
+                    ethAccounts.wallet.clear();
 
+                    for (var i = 0; i < count; i++) {
+                        assert.isUndefined(ethAccounts.wallet[i]);
+                        assert.isUndefined(ethAccounts.wallet[addresses[i]]);
+                        assert.isUndefined(ethAccounts.wallet[addresses[i].toLowerCase()]);
+                    }
 
+                    assert.equal(ethAccounts.wallet.length, 0);
 
-                assert.equal(ethAccounts.wallet.length, 0);
+                    done();
+                }, 1);
             });
 
             it("encrypt then decrypt wallet", function() {
