@@ -1,5 +1,5 @@
 var chai = require('chai');
-var assert = chai.assert; 
+var assert = chai.assert;
 var Web3 = require('../index.js');
 var web3 = new Web3();
 var u = require('./helpers/test.utils.js');
@@ -19,10 +19,6 @@ describe('web3.eth', function() {
         u.methodExists(web3.eth, 'getBlock');
         u.methodExists(web3.eth, 'getTransaction');
         u.methodExists(web3.eth, 'getUncle');
-        u.methodExists(web3.eth, 'getCompilers');
-        u.methodExists(web3.eth.compile, 'lll');
-        u.methodExists(web3.eth.compile, 'solidity');
-        u.methodExists(web3.eth.compile, 'serpent');
         u.methodExists(web3.eth, 'getBlockTransactionCount');
         u.methodExists(web3.eth, 'getBlockUncleCount');
         u.methodExists(web3.eth, 'filter');
