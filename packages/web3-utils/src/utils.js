@@ -287,7 +287,10 @@ var bytesToHex = function(bytes) {
         hex.push((bytes[i] & 0xF).toString(16));
         /* jshint ignore:end */
     }
-    return '0x'+ hex.join("");
+
+    hex = hex.join("").replace(/^0+/, "");
+
+    return '0x'+ hex;
 };
 
 /**
@@ -307,6 +310,8 @@ var hexToBytes = function(hex) {
     }
 
     hex = hex.replace(/^0x/i,'');
+
+    hex = hex.length % 2 ? '0' + hex : hex;
 
     for (var bytes = [], c = 0; c < hex.length; c += 2)
         bytes.push(parseInt(hex.substr(c, 2), 16));
