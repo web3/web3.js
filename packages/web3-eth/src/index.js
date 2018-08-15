@@ -352,26 +352,6 @@ var Eth = function Eth() {
             outputFormatter: utils.hexToNumber
         }),
         new Method({
-            name: 'getCompilers',
-            call: 'eth_getCompilers',
-            params: 0
-        }),
-        new Method({
-            name: 'compile.solidity',
-            call: 'eth_compileSolidity',
-            params: 1
-        }),
-        new Method({
-            name: 'compile.lll',
-            call: 'eth_compileLLL',
-            params: 1
-        }),
-        new Method({
-            name: 'compile.serpent',
-            call: 'eth_compileSerpent',
-            params: 1
-        }),
-        new Method({
             name: 'submitWork',
             call: 'eth_submitWork',
             params: 3
