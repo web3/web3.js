@@ -105,6 +105,10 @@ HttpProvider.prototype.send = function (payload, callback) {
     }
 };
 
+HttpProvider.prototype.disconnect = function () {
+    //NO OP
+}
+
 
 module.exports = HttpProvider;
 
