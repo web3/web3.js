@@ -1118,7 +1118,7 @@ unitMap
 Shows all possible `ether value <http://ethdocs.org/en/latest/ether.html>`_ and their amount in `wei <http://ethereum.stackexchange.com/questions/253/the-ether-denominations-are-called-finney-szabo-and-wei-what-who-are-these-na>`_.
 
 ----------
-Retrun value
+Return value
 ----------
 
 - ``Object`` with the following properties:
