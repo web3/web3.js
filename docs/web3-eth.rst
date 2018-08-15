@@ -883,7 +883,7 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
-  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was susccessfull, ``FALSE``, if the EVM reverted the transaction.
+  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was successful, ``FALSE``, if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
   - ``blockNumber`` - ``Number``: Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
