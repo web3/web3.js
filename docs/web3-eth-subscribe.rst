@@ -58,7 +58,7 @@ Example
         topics: ['0x12345...']
     }, function(error, result){
         if (!error)
-            console.log(log);
+            console.log(result);
     });
 
     // unsubscribes the subscription
@@ -132,17 +132,15 @@ Returns
 
 ``EventEmitter``: An :ref:`subscription instance <eth-subscription-return>` as an event emitter with the following events:
 
-- ``"data"`` returns ``Object``: Fires on each incoming pending transaction.
+- ``"data"`` returns ``String``: Fires on each incoming pending transaction and returns the transaction hash.
 - ``"error"`` returns ``Object``: Fires when an error in the subscription occurs.
-
-For the structure of the returned object see :ref:`web3.eth.getTransaction() return values <eth-gettransaction-return>`.
 
 ----------------
 Notification returns
 ----------------
 
 1. ``Object|Null`` - First parameter is an error object if the subscription failed.
-2. ``Object`` - The block header object like above.
+2. ``String`` - Second parameter is the transaction hash.
 
 -------
 Example
@@ -204,7 +202,7 @@ The structure of a returned block header is as follows:
     - ``logsBloom`` 256 Bytes - ``String``: The bloom filter for the logs of the block. ``null`` when its pending block.
     - ``transactionsRoot`` 32 Bytes - ``String``: The root of the transaction trie of the block
     - ``stateRoot`` 32 Bytes - ``String``: The root of the final state trie of the block.
-    - ``receiptRoot`` 32 Bytes - ``String``: The root of the receipts.
+    - ``receiptsRoot`` 32 Bytes - ``String``: The root of the receipts.
     - ``miner`` - ``String``: The address of the beneficiary to whom the mining rewards were given.
     - ``extraData`` - ``String``: The "extra data" field of this block.
     - ``gasLimit`` - ``Number``: The maximum gas allowed in this block.
@@ -226,16 +224,24 @@ Example
 .. code-block:: javascript
 
     var subscription = web3.eth.subscribe('newBlockHeaders', function(error, result){
-        if (error)
-            console.log(error);
+        if (!error) {
+            console.log(result);
+
+            return;
+        }
+
+        console.error(error);
     })
     .on("data", function(blockHeader){
-    });
+        console.log(blockHeader);
+    })
+    .on("error", console.error);
 
     // unsubscribes the subscription
     subscription.unsubscribe(function(error, success){
-        if(success)
+        if (success) {
             console.log('Successfully unsubscribed!');
+        }
     });
 
 ------------------------------------------------------------------------------

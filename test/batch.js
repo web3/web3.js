@@ -238,6 +238,46 @@ describe('lib/web3/batch', function () {
             batch.execute();
         });
 
+        it('should propagate output formatter error to callback', function(done) {
+            const provider = new FakeIpcProvider();
+            const web3 = new Web3(provider);
+
+            const abi = [{
+                name: 'symbol',
+                type: 'function',
+                inputs: [],
+                constant: true,
+                outputs: [{
+                    name: 'symbol',
+                    type: 'string'
+                }]
+            }];
+
+            const address = '0x1000000000000000000000000000000000000001';
+            const result = '0x0000000000000000000000000000000000000000000000000000000000000123';
+
+            const callback = (err, _r) => {
+                assert.isNotNull(err);
+                done();
+            };
+
+            provider.injectValidation((payload) => {
+                assert.equal(payload[0].method, 'eth_call');
+                assert.deepEqual(payload[0].params, [{
+                    to: '0x1000000000000000000000000000000000000001',
+                    data: '0x95d89b41'
+                },
+                'latest']);
+            });
+
+            const batch = new web3.BatchRequest();
+            batch.add(new web3.eth.Contract(abi, address)
+                .methods.symbol()
+                .call.request(callback));
+            provider.injectBatchResults([result]); // no explicit error, it'll be thrown when formatting
+            batch.execute();
+        });
+
         it('should execute batch request with provider that supports sendAsync', function (done) {
 
             var provider = new FakeIpcProvider();

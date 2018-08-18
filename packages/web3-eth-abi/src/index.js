@@ -18,176 +18,29 @@
  * @file index.js
  * @author Marek Kotewicz <marek@parity.io>
  * @author Fabian Vogelsteller <fabian@frozeman.de>
- * @date 2017
+ * @date 2018
  */
 
 var _ = require('underscore');
 var utils = require('web3-utils');
 
-var f = require('./formatters');
-
-var SolidityTypeAddress = require('./types/address');
-var SolidityTypeBool = require('./types/bool');
-var SolidityTypeInt = require('./types/int');
-var SolidityTypeUInt = require('./types/uint');
-var SolidityTypeDynamicBytes = require('./types/dynamicbytes');
-var SolidityTypeString = require('./types/string');
-var SolidityTypeBytes = require('./types/bytes');
-
-var isDynamic = function (solidityType, type) {
-    return solidityType.isDynamicType(type) ||
-        solidityType.isDynamicArray(type);
-};
-
+var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
+var ethersAbiCoder = new EthersAbi(function (type, value) {
+    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
+        return value.toString();
+    }
+    return value;
+});
 
 // result method
-function Result() {}
-
+function Result() {
+}
 
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
  */
-var ABICoder = function (types) {
-    this._types = types;
+var ABICoder = function () {
 };
-
-/**
- * This method should be used to transform type to SolidityType
- *
- * @method _requireType
- * @param {String} type
- * @returns {SolidityType}
- * @throws {Error} throws if no matching type is found
- */
-ABICoder.prototype._requireType = function (type) {
-    var solidityType = this._types.filter(function (t) {
-        return t.isType(type);
-    })[0];
-
-    if (!solidityType) {
-        throw Error('Invalid solidity type: ' + type);
-    }
-
-    return solidityType;
-};
-
-
-
-ABICoder.prototype._getOffsets = function (types, solidityTypes) {
-    var lengths =  solidityTypes.map(function (solidityType, index) {
-        return solidityType.staticPartLength(types[index]);
-    });
-
-    for (var i = 1; i < lengths.length; i++) {
-        // sum with length of previous element
-        lengths[i] += lengths[i - 1];
-    }
-
-    return lengths.map(function (length, index) {
-        // remove the current length, so the length is sum of previous elements
-        var staticPartLength = solidityTypes[index].staticPartLength(types[index]);
-        return length - staticPartLength;
-    });
-};
-
-ABICoder.prototype._getSolidityTypes = function (types) {
-    var self = this;
-    return types.map(function (type) {
-        return self._requireType(type);
-    });
-};
-
-
-ABICoder.prototype._encodeMultiWithOffset = function (types, solidityTypes, encodeds, dynamicOffset) {
-    var result = "";
-    var self = this;
-
-    types.forEach(function (type, i) {
-        if (isDynamic(solidityTypes[i], types[i])) {
-            result += f.formatInputInt(dynamicOffset).encode();
-            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-            dynamicOffset += e.length / 2;
-        } else {
-            // don't add length to dynamicOffset. it's already counted
-            result += self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-        }
-
-        // TODO: figure out nested arrays
-    });
-
-    types.forEach(function (type, i) {
-        if (isDynamic(solidityTypes[i], types[i])) {
-            var e = self._encodeWithOffset(types[i], solidityTypes[i], encodeds[i], dynamicOffset);
-            dynamicOffset += e.length / 2;
-            result += e;
-        }
-    });
-    return result;
-};
-
-// TODO: refactor whole encoding!
-ABICoder.prototype._encodeWithOffset = function (type, solidityType, encoded, offset) {
-    var self = this;
-    if (solidityType.isDynamicArray(type)) {
-        return (function () {
-            // offset was already set
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = encoded[0];
-
-            (function () {
-                var previousLength = 2; // in int
-                if (solidityType.isDynamicArray(nestedName)) {
-                    for (var i = 1; i < encoded.length; i++) {
-                        previousLength += +(encoded[i - 1])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
-                }
-            })();
-
-            // first element is length, skip it
-            (function () {
-                for (var i = 0; i < encoded.length - 1; i++) {
-                    var additionalOffset = result / 2;
-                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i + 1], offset +  additionalOffset);
-                }
-            })();
-
-            return result;
-        })();
-
-    } else if (solidityType.isStaticArray(type)) {
-        return (function () {
-            var nestedName = solidityType.nestedName(type);
-            var nestedStaticPartLength = solidityType.staticPartLength(nestedName);
-            var result = "";
-
-
-            if (solidityType.isDynamicArray(nestedName)) {
-                (function () {
-                    var previousLength = 0; // in int
-                    for (var i = 0; i < encoded.length; i++) {
-                        // calculate length of previous item
-                        previousLength += +(encoded[i - 1] || [])[0] || 0;
-                        result += f.formatInputInt(offset + i * nestedStaticPartLength + previousLength * 32).encode();
-                    }
-                })();
-            }
-
-            (function () {
-                for (var i = 0; i < encoded.length; i++) {
-                    var additionalOffset = result / 2;
-                    result += self._encodeWithOffset(nestedName, solidityType, encoded[i], offset + additionalOffset);
-                }
-            })();
-
-            return result;
-        })();
-    }
-
-    return encoded;
-};
-
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -197,13 +50,12 @@ ABICoder.prototype._encodeWithOffset = function (type, solidityType, encoded, of
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
-    if(_.isObject(functionName)) {
+    if (_.isObject(functionName)) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
     return utils.sha3(functionName).slice(0, 10);
 };
-
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -213,13 +65,12 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  * @return {String} encoded function name
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
-    if(_.isObject(functionName)) {
+    if (_.isObject(functionName)) {
         functionName = utils._jsonInterfaceMethodToString(functionName);
     }
 
     return utils.sha3(functionName);
 };
-
 
 /**
  * Should be used to encode plain param
@@ -242,31 +93,101 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * @return {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
-    // given a json interface
-    if(_.isObject(types) && types.inputs) {
-        types = _.map(types.inputs, function (input) {
-            return input.type;
-        });
-    }
-
-    var solidityTypes = this._getSolidityTypes(types);
-
-    var encodeds = solidityTypes.map(function (solidityType, index) {
-        return solidityType.encode(params[index], types[index]);
-    });
-
-    var dynamicOffset = solidityTypes.reduce(function (acc, solidityType, index) {
-        var staticPartLength = solidityType.staticPartLength(types[index]);
-        var roundedStaticPartLength = Math.floor((staticPartLength + 31) / 32) * 32;
-
-        return acc + (isDynamic(solidityTypes[index], types[index]) ?
-                32 :
-                roundedStaticPartLength);
-    }, 0);
-
-    return '0x'+ this._encodeMultiWithOffset(types, solidityTypes, encodeds, dynamicOffset);
+    return ethersAbiCoder.encode(this.mapTypes(types), params);
 };
 
+/**
+ * Map types if simplified format is used
+ *
+ * @method mapTypes
+ * @param {Array} types
+ * @return {Array}
+ */
+ABICoder.prototype.mapTypes = function (types) {
+    var self = this;
+    var mappedTypes = [];
+    types.forEach(function (type) {
+        if (self.isSimplifiedStructFormat(type)) {
+            var structName = Object.keys(type)[0];
+            mappedTypes.push(
+                Object.assign(
+                    self.mapStructNameAndType(structName),
+                    {
+                        components: self.mapStructToCoderFormat(type[structName])
+                    }
+                )
+            );
+
+            return;
+        }
+
+        mappedTypes.push(type);
+    });
+
+    return mappedTypes;
+};
+
+/**
+ * Check if type is simplified struct format
+ *
+ * @method isSimplifiedStructFormat
+ * @param {string | Object} type
+ * @returns {boolean}
+ */
+ABICoder.prototype.isSimplifiedStructFormat = function (type) {
+    return typeof type === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
+};
+
+/**
+ * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
+ *
+ * @method mapStructNameAndType
+ * @param {string} structName
+ * @return {{type: string, name: *}}
+ */
+ABICoder.prototype.mapStructNameAndType = function (structName) {
+    var type = 'tuple';
+
+    if (structName.indexOf('[]') > -1) {
+        type = 'tuple[]';
+        structName = structName.slice(0, -2);
+    }
+
+    return {type: type, name: structName};
+};
+
+/**
+ * Maps the simplified format in to the expected format of the ABICoder
+ *
+ * @method mapStructToCoderFormat
+ * @param {Object} struct
+ * @return {Array}
+ */
+ABICoder.prototype.mapStructToCoderFormat = function (struct) {
+    var self = this;
+    var components = [];
+    Object.keys(struct).forEach(function (key) {
+        if (typeof struct[key] === 'object') {
+            components.push(
+                Object.assign(
+                    self.mapStructNameAndType(key),
+                    {
+                        components: self.mapStructToCoderFormat(struct[key])
+                    }
+                )
+            );
+
+            return;
+        }
+
+        components.push({
+            name: key,
+            type: struct[key]
+        });
+    });
+
+    return components;
+};
 
 /**
  * Encodes a function call from its json interface and parameters.
@@ -277,9 +198,8 @@ ABICoder.prototype.encodeParameters = function (types, params) {
  * @return {String} The encoded ABI for this function call
  */
 ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
-    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface, params).replace('0x','');
+    return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x', '');
 };
-
 
 /**
  * Should be used to decode bytes to plain param
@@ -290,12 +210,7 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * @return {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
-
-    if (!_.isString(type)) {
-        throw new Error('Given parameter type is not a string: '+ type);
-    }
-
-    return this.decodeParameters([{type: type}], bytes)[0];
+    return this.decodeParameters([type], bytes)[0];
 };
 
 /**
@@ -307,24 +222,16 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
-    var isTypeArray = _.isArray(outputs) && _.isString(outputs[0]);
-    var types = (isTypeArray) ? outputs : [];
-
-    if(!isTypeArray) {
-        outputs.forEach(function (output) {
-            types.push(output.type);
-        });
+    if (!bytes || bytes === '0x' || bytes === '0X') {
+        throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    var solidityTypes = this._getSolidityTypes(types);
-    var offsets = this._getOffsets(types, solidityTypes);
-
+    var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
     var returnValue = new Result();
     returnValue.__length__ = 0;
-    var count = 0;
 
     outputs.forEach(function (output, i) {
-        var decodedValue = solidityTypes[count].decode(bytes.replace(/^0x/i,''), offsets[count],  types[count], count);
+        var decodedValue = res[returnValue.__length__];
         decodedValue = (decodedValue === '0x') ? null : decodedValue;
 
         returnValue[i] = decodedValue;
@@ -334,7 +241,6 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         }
 
         returnValue.__length__++;
-        count++;
     });
 
     return returnValue;
@@ -346,45 +252,51 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  * @method decodeLog
  * @param {Object} inputs
  * @param {String} data
- * * @param {Array} topics
+ * @param {Array} topics
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
+    var _this = this;
+    topics = _.isArray(topics) ? topics : [topics];
 
     data = data || '';
 
     var notIndexedInputs = [];
-    var indexedInputs = [];
+    var indexedParams = [];
+    var topicCount = 0;
+
+    // TODO check for anonymous logs?
 
     inputs.forEach(function (input, i) {
         if (input.indexed) {
-            indexedInputs[i] = input;
+            indexedParams[i] = (['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(function (staticType) {
+                return input.type.indexOf(staticType) !== -1;
+            })) ? _this.decodeParameter(input.type, topics[topicCount]) : topics[topicCount];
+            topicCount++;
         } else {
             notIndexedInputs[i] = input;
         }
     });
 
-    var nonIndexedData = data.slice(2);
-    var indexedData = _.isArray(topics) ? topics.map(function (topic) { return topic.slice(2); }).join('') : topics;
 
-    var notIndexedParams = this.decodeParameters(notIndexedInputs, nonIndexedData);
-    var indexedParams = this.decodeParameters(indexedInputs, indexedData);
-
+    var nonIndexedData = data;
+    var notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
 
+
     inputs.forEach(function (res, i) {
         returnValue[i] = (res.type === 'string') ? '' : null;
 
-        if (notIndexedParams[i]) {
+        if (typeof notIndexedParams[i] !== 'undefined') {
             returnValue[i] = notIndexedParams[i];
         }
-        if (indexedParams[i]) {
+        if (typeof indexedParams[i] !== 'undefined') {
             returnValue[i] = indexedParams[i];
         }
 
-        if(res.name) {
+        if (res.name) {
             returnValue[res.name] = returnValue[i];
         }
 
@@ -394,15 +306,6 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     return returnValue;
 };
 
-
-var coder = new ABICoder([
-    new SolidityTypeAddress(),
-    new SolidityTypeBool(),
-    new SolidityTypeInt(),
-    new SolidityTypeUInt(),
-    new SolidityTypeDynamicBytes(),
-    new SolidityTypeBytes(),
-    new SolidityTypeString()
-]);
+var coder = new ABICoder();
 
 module.exports = coder;
