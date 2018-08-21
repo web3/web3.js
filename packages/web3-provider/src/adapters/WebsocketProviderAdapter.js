@@ -41,12 +41,3 @@ WebsocketProviderAdapter.unsubscribe = function (subscriptionId) {
 WebsocketProviderAdapter.isConnected = function () {
     return this.provider.isConnected();
 };
-
-/**
- * @param {Object} payload
- * @param {function} callback
- * @returns {Promise}
- */
-WebsocketProviderAdapter.sendAync = function (payload, callback) {
-    return this.provider.sendAsync(); // TODO: Check if this is necessary
-};

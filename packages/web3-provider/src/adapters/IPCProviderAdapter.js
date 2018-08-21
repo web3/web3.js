@@ -41,12 +41,3 @@ IPCProviderAdapter.unsubscribe = function (subscriptionId) {
 IPCProviderAdapter.isConnected = function () {
     return this.provider.isConnected();
 };
-
-/**
- * @param {Object} payload
- * @param {function} callback
- * @returns {Promise}
- */
-IPCProviderAdapter.sendAync = function (payload, callback) {
-    return this.provider.sendAsync(); // TODO: Check if this is necessary
-};
