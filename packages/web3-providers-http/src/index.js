@@ -50,7 +50,7 @@ HttpProvider.prototype._prepareRequest = function(){
         httpsAgent:this.httpsAgent,
         httpAgent:this.httpAgent
     });
-    
+
     request.open('POST', this.host, true);
     request.setRequestHeader('Content-Type','application/json');
     request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
@@ -107,7 +107,7 @@ HttpProvider.prototype.send = function (payload, callback) {
 
 HttpProvider.prototype.disconnect = function () {
     //NO OP
-}
+};
 
 
 module.exports = HttpProvider;
