@@ -396,6 +396,6 @@ WebsocketProvider.prototype.disconnect = function () {
     if (this.connection) {
         this.connection.close();
     }
-}
+};
 
 module.exports = WebsocketProvider;
