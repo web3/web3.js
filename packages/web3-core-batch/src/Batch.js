@@ -15,18 +15,18 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file batch.js
+ * @file Batch.js
  * @author Marek Kotewicz <marek@ethdev.com>
  * @date 2015
  */
 
 "use strict";
 
-var Jsonrpc = require('./jsonrpc');
+var JSONRpcResponseValidator = require('web3-provider').JSONRpcResponseValidator;
 var errors = require('web3-core-helpers').errors;
 
-var Batch = function (requestManager) {
-    this.requestManager = requestManager;
+var Batch = function (provider) {
+    this.provider = provider;
     this.requests = [];
 };
 
@@ -34,7 +34,7 @@ var Batch = function (requestManager) {
  * Should be called to add create new request to batch request
  *
  * @method add
- * @param {Object} jsonrpc requet object
+ * @param {Object} request
  */
 Batch.prototype.add = function (request) {
     this.requests.push(request);
@@ -47,7 +47,7 @@ Batch.prototype.add = function (request) {
  */
 Batch.prototype.execute = function () {
     var requests = this.requests;
-    this.requestManager.sendBatch(requests, function (err, results) {
+    this.provider.sendBatch(requests, function (err, results) {
         results = results || [];
         requests.map(function (request, index) {
             return results[index] || {};
@@ -57,7 +57,7 @@ Batch.prototype.execute = function () {
                     return requests[index].callback(errors.ErrorResponse(result));
                 }
 
-                if (!Jsonrpc.isValidResponse(result)) {
+                if (!JSONRpcResponseValidator.isValid(result)) {
                     return requests[index].callback(errors.InvalidResponse(result));
                 }
 
