@@ -104,3 +104,5 @@ SocketProviderAdapter.prototype.isConnected = function () {
 };
 
 SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+
+module.exports = SocketProviderAdapter;

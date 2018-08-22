@@ -14,12 +14,10 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file JSONRpcMapper.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Marek Kotewicz <marek@ethdev.com>
- *   Aaron Kumavis <aaron@kumavis.me>
- * @date 2015
+/**
+ * @file JSONRpcMapper.js
+ * @authors: Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
@@ -53,25 +51,6 @@ JSONRpcMapper.toPayload = function (method, params) {
         method: method,
         params: params || []
     };
-};
-
-/**
- * Should be called to check if jsonrpc response is valid
- *
- * @method isValidResponse
- * @param {Object} response
- * @returns {Boolean} true if response is valid, otherwise false
- */
-JSONRpcMapper.isValidResponse = function (response) {
-    return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
-
-    function validateSingleMessage(message){
-      return !!message &&
-        !message.error &&
-        message.jsonrpc === '2.0' &&
-        (typeof message.id === 'number' || typeof message.id === 'string') &&
-        message.result !== undefined; // only undefined is not valid json object
-    }
 };
 
 /**

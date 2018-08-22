@@ -73,5 +73,6 @@ InpageProviderAdapter.prototype.unsubscribe = function () {
  * @returns {boolean}
  */
 InpageProviderAdapter.prototype.isConnected = this.provider.isConnected;
-
 InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+
+module.exports = InpageProviderAdapter;

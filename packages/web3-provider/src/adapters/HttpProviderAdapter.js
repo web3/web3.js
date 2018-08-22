@@ -58,6 +58,6 @@ HttpProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;
 };
 
-
-
 HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+
+module.exports = HttpProviderAdapter;

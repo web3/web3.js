@@ -36,3 +36,4 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
     }
 };
 
+module.exports = ProviderAdapterResolver;
