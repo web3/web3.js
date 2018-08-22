@@ -39,7 +39,7 @@ function LegacyProviderAdapter(legacyProvider) {
  */
 LegacyProviderAdapter.prototype.send = function (method, parameters) {
     return new Promise(function (resolve, reject) {
-        this.provider.sendAsync(Jsonrpc.toPayload(method, parameters), function (result, error) {
+        this.provider.sendAsync(Jsonrpc.toPayload(method, parameters), function (error, result) {
             if (!error) {
                 resolve(result);
                 return;
@@ -48,6 +48,23 @@ LegacyProviderAdapter.prototype.send = function (method, parameters) {
             reject(error);
         });
 
+    });
+};
+
+/**
+ * @param {Array} payloadBatch
+ * @returns {Promise}
+ */
+LegacyProviderAdapter.prototype.sendBatch = function (payloadBatch) {
+    return new Promise(function (resolve, reject) {
+        this.provider.sendAsync(Jsonrpc.toBatchPayload(payloadBatch), function (error, result) {
+            if (!error) {
+                resolve(result);
+                return;
+            }
+
+            reject(error);
+        });
     });
 };
 
