@@ -23,6 +23,7 @@
 "use strict";
 
 var JSONRpcMapper = require('./JSONRpcMapper.js');
+var errors = require('web3-core-helpers').errors;
 
 /**
  * @param {InpageProvider} inpageProvider
@@ -40,10 +41,14 @@ function InpageProviderAdapter(inpageProvider) {
  */
 InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
     return new Promise(function (resolve, reject) {
-        this.provider.send(JSONRpcMapper.toBatchPayload(payloadBatch), function (error, result) {
+        this.provider.send(JSONRpcMapper.toBatchPayload(payloadBatch), function (error, response) {
             if (!error) {
-                resolve(result);
+                resolve(response);
                 return;
+            }
+
+            if (!_.isArray(response)) {
+                reject(errors.InvalidResponse(response));
             }
 
             reject(error);
@@ -73,6 +78,7 @@ InpageProviderAdapter.prototype.unsubscribe = function () {
  * @returns {boolean}
  */
 InpageProviderAdapter.prototype.isConnected = this.provider.isConnected;
+
 InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
 
 module.exports = InpageProviderAdapter;

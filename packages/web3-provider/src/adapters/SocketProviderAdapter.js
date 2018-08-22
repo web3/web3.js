@@ -68,12 +68,12 @@ SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
  */
 SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
     var self = this;
-    this.provider.on('data', function (result, deprecatedResult) {
-        result = result || deprecatedResult; // this is for possible old providers, which may had the error first handler
+    this.provider.on('data', function (response, deprecatedResponse) {
+        response = response || deprecatedResponse; // this is for possible old providers, which may had the error first handler
 
         // check for result.method, to prevent old providers errors to pass as result
-        if (result.method && self.subscriptions[result.params.subscription]) {
-            self.emit(result.params.subscription, result.params.result);
+        if (response.method && self.subscriptions[response.params.subscription]) {
+            self.emit(response.params.subscription, response.params.result);
         }
     });
 };
