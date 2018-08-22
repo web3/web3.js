@@ -12,10 +12,10 @@
     GNU Lesser General Public License for more details.
 
     You should have received a copy of the GNU Lesser General Public License
-    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    along with web3.js.  If not, see <Legacy://www.gnu.org/licenses/>.
 */
 /**
- * @file HttpProviderAdapter.js
+ * @file LegacyProviderAdapter.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -25,11 +25,11 @@
 var Jsonrpc = require('./jsonrpc.js'); //TODO:  Fix import
 
 /**
- * @param {HttpProvider} httpProvider
+ * @param {LegacyProvider} legacyProvider
  * @constructor
  */
-function HttpProviderAdapter (httpProvider) {
-    this.provider = httpProvider;
+function LegacyProviderAdapter(legacyProvider) {
+    this.provider = legacyProvider;
 }
 
 /**
@@ -37,10 +37,10 @@ function HttpProviderAdapter (httpProvider) {
  * @param {Array} parameters
  * @returns {Promise}
  */
-HttpProviderAdapter.prototype.send = function (method, parameters) {
-    return new Promise(function(resolve, reject) {
-        this.provider.send(Jsonrpc.toPayload(method, parameters), function(result, error) {
-            if(!error) {
+LegacyProviderAdapter.prototype.send = function (method, parameters) {
+    return new Promise(function (resolve, reject) {
+        this.provider.sendAsync(Jsonrpc.toPayload(method, parameters), function (result, error) {
+            if (!error) {
                 resolve(result);
                 return;
             }
@@ -54,8 +54,8 @@ HttpProviderAdapter.prototype.send = function (method, parameters) {
 /**
  * @returns {Promise<Error>}
  */
-HttpProviderAdapter.prototype.subscribe = function () {
-    return new Promise(function(resolve, reject) {
+LegacyProviderAdapter.prototype.subscribe = function () {
+    return new Promise(function (resolve, reject) {
         reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
     });
 };
@@ -63,8 +63,8 @@ HttpProviderAdapter.prototype.subscribe = function () {
 /**
  * @returns {Promise<Error>}
  */
-HttpProviderAdapter.prototype.unsubscribe = function () {
-    return new Promise(function(resolve, reject) {
+LegacyProviderAdapter.prototype.unsubscribe = function () {
+    return new Promise(function (resolve, reject) {
         reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
     });
 };
@@ -72,6 +72,4 @@ HttpProviderAdapter.prototype.unsubscribe = function () {
 /**
  * @returns {boolean}
  */
-HttpProviderAdapter.prototype.isConnected = function () {
-    return this.provider.connected;
-};
+LegacyProviderAdapter.prototype.isConnected = this.provider.isConnected;
