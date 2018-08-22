@@ -142,6 +142,10 @@ npm test
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)
  - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
 
+## License
+
+[LGPL-3.0+](LICENSE.md) © 2015 Contributors
+
 
 [npm-image]: https://badge.fury.io/js/web3.svg
 [npm-url]: https://npmjs.org/package/web3
