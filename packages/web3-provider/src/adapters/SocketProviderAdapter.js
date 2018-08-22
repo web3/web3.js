@@ -55,7 +55,7 @@ SocketProviderAdapter.prototype.send = function (method, parameters) {
  * @returns {Promise<string|Error>}
  */
 SocketProviderAdapter.prototype.subscribe = function (subscriptionType, parameters) {
-    return this.send('eth_subscribe', parameters.shift(subscriptionType)).then(function (error, subscriptionId) {
+    return this.send('eth_subscribe', parameters.unshift(subscriptionType)).then(function (error, subscriptionId) {
         if (!error) {
             this.subscriptions[subscriptionId]({subscriptionType: subscriptionType, type: 'eth'});
 
