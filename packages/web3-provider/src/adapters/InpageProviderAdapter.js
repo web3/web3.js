@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <Legacy://www.gnu.org/licenses/>.
 */
 /**
- * @file LegacyProviderAdapter.js
+ * @file InpageProviderAdapter.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
