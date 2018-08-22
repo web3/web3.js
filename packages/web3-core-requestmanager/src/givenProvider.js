@@ -34,12 +34,6 @@ if(typeof global.ethereumProvider !== 'undefined') {
 
 // Legacy web3.currentProvider
 } else if(typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-
-    if(global.web3.currentProvider.sendAsync) {
-        global.web3.currentProvider.send = global.web3.currentProvider.sendAsync;
-        delete global.web3.currentProvider.sendAsync;
-    }
-
     // if connection is 'ipcProviderWrapper', add subscription support
     if(!global.web3.currentProvider.on &&
         global.web3.currentProvider.connection &&
