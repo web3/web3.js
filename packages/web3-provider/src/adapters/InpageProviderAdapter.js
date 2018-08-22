@@ -25,11 +25,11 @@
 var JSONRpcMapper = require('./JSONRpcMapper.js');
 
 /**
- * @param {InpageProvider} legacyProvider
+ * @param {InpageProvider} inpageProvider
  * @constructor
  */
-function InpageProviderAdapter(legacyProvider) {
-    AbstractProviderAdapter.call(legacyProvider);
+function InpageProviderAdapter(inpageProvider) {
+    AbstractProviderAdapter.call(inpageProvider);
     this.provider.send = this.provider.sendAsync;
     delete this.provider.sendAsync;
 }
