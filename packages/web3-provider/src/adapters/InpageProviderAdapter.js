@@ -25,10 +25,10 @@
 var Jsonrpc = require('./jsonrpc.js'); //TODO:  Fix import
 
 /**
- * @param {LegacyProvider} legacyProvider
+ * @param {InpageProvider} legacyProvider
  * @constructor
  */
-function LegacyProviderAdapter(legacyProvider) {
+function InpageProviderAdapter(legacyProvider) {
     this.provider = legacyProvider;
 }
 
@@ -37,7 +37,7 @@ function LegacyProviderAdapter(legacyProvider) {
  * @param {Array} parameters
  * @returns {Promise}
  */
-LegacyProviderAdapter.prototype.send = function (method, parameters) {
+InpageProviderAdapter.prototype.send = function (method, parameters) {
     return new Promise(function (resolve, reject) {
         this.provider.sendAsync(Jsonrpc.toPayload(method, parameters), function (error, result) {
             if (!error) {
@@ -55,7 +55,7 @@ LegacyProviderAdapter.prototype.send = function (method, parameters) {
  * @param {Array} payloadBatch
  * @returns {Promise}
  */
-LegacyProviderAdapter.prototype.sendBatch = function (payloadBatch) {
+InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
     return new Promise(function (resolve, reject) {
         this.provider.sendAsync(Jsonrpc.toBatchPayload(payloadBatch), function (error, result) {
             if (!error) {
@@ -71,7 +71,7 @@ LegacyProviderAdapter.prototype.sendBatch = function (payloadBatch) {
 /**
  * @returns {Promise<Error>}
  */
-LegacyProviderAdapter.prototype.subscribe = function () {
+InpageProviderAdapter.prototype.subscribe = function () {
     return new Promise(function (resolve, reject) {
         reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
     });
@@ -80,7 +80,7 @@ LegacyProviderAdapter.prototype.subscribe = function () {
 /**
  * @returns {Promise<Error>}
  */
-LegacyProviderAdapter.prototype.unsubscribe = function () {
+InpageProviderAdapter.prototype.unsubscribe = function () {
     return new Promise(function (resolve, reject) {
         reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
     });
@@ -89,4 +89,4 @@ LegacyProviderAdapter.prototype.unsubscribe = function () {
 /**
  * @returns {boolean}
  */
-LegacyProviderAdapter.prototype.isConnected = this.provider.isConnected;
+InpageProviderAdapter.prototype.isConnected = this.provider.isConnected;
