@@ -52,8 +52,7 @@ RequestManager.givenProvider = givenProvider;
 RequestManager.providers = {
     WebsocketProvider: require('web3-providers-ws'),
     HttpProvider: require('web3-providers-http'),
-    IpcProvider: require('web3-providers-ipc'),
-    EthereumProvider: require('web3-providers-ethereum')
+    IpcProvider: require('web3-providers-ipc')
 };
 
 

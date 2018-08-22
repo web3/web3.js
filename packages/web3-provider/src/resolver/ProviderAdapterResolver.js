@@ -1,33 +1,38 @@
 
-function ProviderAdapterResolver (provider) {
-    this.providerAdapter = this.resolveProvider(provider);
-}
+var _ = require('underscore');
+var HttpProviderAdapter = require('../adapters/HttpProviderAdapter');
+var SocketProviderAdapter = require('../adapters/SocketProviderAdapter');
+var InpageProviderAdapter = require('../adapters/InpageProviderAdapter');
+var WebsocketProvider = require('web3-providers-ws');
+var HttpProvider = require('web3-providers-http');
+var IpcProvider = require('web3-providers-ipc');
 
+function ProviderAdapterResolver() {}
 
-ProviderAdapterResolver.prototype.resolveProvider = function () {
-    // Check if http ws ipc or ethereum provider
-    // Instantiate the correct provider and set it to this.provider
-    // autodetect provider
-    // if(p && typeof p === 'string' && this.providers) {
-    //
-    //     // HTTP
-    //     if(/^http(s)?:\/\//i.test(p)) {
-    //         p = new this.providers.HttpProvider(p);
-    //
-    //     // WS
-    //     } else if(/^ws(s)?:\/\//i.test(p)) {
-    //         p = new this.providers.WebsocketProvider(p);
-    //
-    //     // IPC
-    //     } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
-    //         p = new this.providers.IpcProvider(p, net);
-    //
-    //     } else if(p) {
-    //         throw new Error('Can\'t autodetect provider for "'+ p +'"');
-    //     }
-    // }
+ProviderAdapterResolver.prototype.resolve = function (provider, net) {
+
+    if (typeof provider === 'string') {
+        // HTTP
+        if (/^http(s)?:\/\//i.test(provider)) {
+            return new HttpProviderAdapter(new HttpProvider(provider));
+        }
+        // WS
+        if (/^ws(s)?:\/\//i.test(provider)) {
+            return new SocketProviderAdapter(new WebsocketProvider(provider));
+        }
+
+        // IPC
+        if (provider && _.isObject(net) && _.isFunction(net.connect)) {
+            return new SocketProviderAdapter(new IpcProvider(provider, net));
+        }
+    }
+
+    if (provider.constructor.name === 'EthereumProvider') {
+        return provider;
+    }
+
+    if (_.isFunction(provider.sendAsync)) {
+        return new InpageProviderAdapter(provider);
+    }
 };
 
-ProviderAdapterResolver.prototype.getProvider = function () {
-    return this.provider;
-};
