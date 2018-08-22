@@ -22,33 +22,11 @@
 
 "use strict";
 
-var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
-var EventEmitter = require('eventemitter3');
-
 function SocketProviderAdapter(provider) {
-    this.provider = provider;
+    AbstractProviderAdapter.call(provider);
     this.subscriptions = [];
     this.registerSubscriptionListener();
 }
-
-/**
- * @param {string} method
- * @param {Array} parameters
- * @returns {Promise}
- */
-SocketProviderAdapter.prototype.send = function (method, parameters) {
-    return new Promise(function (resolve, reject) {
-        this.provider.send(JSONRpcMapper.toPayload(method, parameters), function (result, error) {
-            if (!error) {
-                resolve(result);
-                return;
-            }
-
-            reject(error);
-        });
-
-    });
-};
 
 /**
  * @param {string} subscriptionType
@@ -125,5 +103,4 @@ SocketProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;
 };
 
-SocketProviderAdapter.prototype = Object.create(EventEmitter.prototype);
-SocketProviderAdapter.prototype.constructor = SocketProviderAdapter;
+SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);

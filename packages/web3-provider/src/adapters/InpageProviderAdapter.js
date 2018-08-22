@@ -22,34 +22,17 @@
 
 "use strict";
 
-var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
+var JSONRpcMapper = require('./JSONRpcMapper.js');
 
 /**
  * @param {InpageProvider} legacyProvider
  * @constructor
  */
 function InpageProviderAdapter(legacyProvider) {
-    this.provider = legacyProvider;
+    AbstractProviderAdapter.call(legacyProvider);
+    this.provider.send = this.provider.sendAsync;
+    delete this.provider.sendAsync;
 }
-
-/**
- * @param {string} method
- * @param {Array} parameters
- * @returns {Promise}
- */
-InpageProviderAdapter.prototype.send = function (method, parameters) {
-    return new Promise(function (resolve, reject) {
-        this.provider.sendAsync(Jsonrpc.toPayload(method, parameters), function (error, result) {
-            if (!error) {
-                resolve(result);
-                return;
-            }
-
-            reject(error);
-        });
-
-    });
-};
 
 /**
  * @param {Array} payloadBatch
@@ -57,7 +40,7 @@ InpageProviderAdapter.prototype.send = function (method, parameters) {
  */
 InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
     return new Promise(function (resolve, reject) {
-        this.provider.sendAsync(Jsonrpc.toBatchPayload(payloadBatch), function (error, result) {
+        this.provider.send(JSONRpcMapper.toBatchPayload(payloadBatch), function (error, result) {
             if (!error) {
                 resolve(result);
                 return;
@@ -90,3 +73,5 @@ InpageProviderAdapter.prototype.unsubscribe = function () {
  * @returns {boolean}
  */
 InpageProviderAdapter.prototype.isConnected = this.provider.isConnected;
+
+InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);

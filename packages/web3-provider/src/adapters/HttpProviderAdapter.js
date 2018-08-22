@@ -22,41 +22,22 @@
 
 "use strict";
 
-var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
-
 /**
  * @param {HttpProvider} httpProvider
  * @constructor
  */
 function HttpProviderAdapter (httpProvider) {
-    this.provider = httpProvider;
+    AbstractProviderAdapter.call(httpProvider);
 }
 
-/**
- * @param {string} method
- * @param {Array} parameters
- * @returns {Promise}
- */
-HttpProviderAdapter.prototype.send = function (method, parameters) {
-    return new Promise(function(resolve, reject) {
-        this.provider.send(JSONRpcMapper.toPayload(method, parameters), function(result, error) {
-            if(!error) {
-                resolve(result);
-                return;
-            }
-
-            reject(error);
-        });
-
-    });
-};
 
 /**
  * @returns {Promise<Error>}
  */
 HttpProviderAdapter.prototype.subscribe = function () {
+    var self = this;
     return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
+        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
     });
 };
 
@@ -64,8 +45,9 @@ HttpProviderAdapter.prototype.subscribe = function () {
  * @returns {Promise<Error>}
  */
 HttpProviderAdapter.prototype.unsubscribe = function () {
+    var self = this;
     return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
+        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
     });
 };
 
@@ -75,3 +57,7 @@ HttpProviderAdapter.prototype.unsubscribe = function () {
 HttpProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;
 };
+
+
+
+HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
