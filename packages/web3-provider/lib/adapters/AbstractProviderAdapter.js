@@ -1,5 +1,5 @@
 
-var JSONRpcMapper = require('./JSONRpcMapper.js');
+var JSONRpcMapper = require('../mappers/JSONRpcMapper.js');
 var errors = require('web3-core-helpers').errors;
 
 function AbstractProviderAdapter(provider) {
