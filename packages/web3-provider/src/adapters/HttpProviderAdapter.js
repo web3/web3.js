@@ -22,7 +22,7 @@
 
 "use strict";
 
-var Jsonrpc = require('./jsonrpc.js'); //TODO:  Fix import
+var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
 
 /**
  * @param {HttpProvider} httpProvider
@@ -39,7 +39,7 @@ function HttpProviderAdapter (httpProvider) {
  */
 HttpProviderAdapter.prototype.send = function (method, parameters) {
     return new Promise(function(resolve, reject) {
-        this.provider.send(Jsonrpc.toPayload(method, parameters), function(result, error) {
+        this.provider.send(JSONRpcMapper.toPayload(method, parameters), function(result, error) {
             if(!error) {
                 resolve(result);
                 return;

@@ -14,7 +14,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-/** @file jsonrpc.js
+/** @file JSONRpcMapper.js
  * @authors:
  *   Fabian Vogelsteller <fabian@ethereum.org>
  *   Marek Kotewicz <marek@ethdev.com>
@@ -24,8 +24,10 @@
 
 "use strict";
 
-// Initialize Jsonrpc as a simple object with utility functions.
-var Jsonrpc = {
+/**
+ * @constructor
+ */
+var JSONRpcMapper = {
     messageId: 0
 };
 
@@ -37,17 +39,17 @@ var Jsonrpc = {
  * @param {Array} params, an array of method params, optional
  * @returns {Object} valid jsonrpc payload object
  */
-Jsonrpc.toPayload = function (method, params) {
+JSONRpcMapper.toPayload = function (method, params) {
     if (!method) {
         throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
     }
 
     // advance message ID
-    Jsonrpc.messageId++;
+    JSONRpcMapper.messageId++;
 
     return {
         jsonrpc: '2.0',
-        id: Jsonrpc.messageId,
+        id: JSONRpcMapper.messageId,
         method: method,
         params: params || []
     };
@@ -57,10 +59,10 @@ Jsonrpc.toPayload = function (method, params) {
  * Should be called to check if jsonrpc response is valid
  *
  * @method isValidResponse
- * @param {Object}
+ * @param {Object} response
  * @returns {Boolean} true if response is valid, otherwise false
  */
-Jsonrpc.isValidResponse = function (response) {
+JSONRpcMapper.isValidResponse = function (response) {
     return Array.isArray(response) ? response.every(validateSingleMessage) : validateSingleMessage(response);
 
     function validateSingleMessage(message){
@@ -79,11 +81,11 @@ Jsonrpc.isValidResponse = function (response) {
  * @param {Array} messages, an array of objects with method (required) and params (optional) fields
  * @returns {Array} batch payload
  */
-Jsonrpc.toBatchPayload = function (messages) {
+JSONRpcMapper.toBatchPayload = function (messages) {
     return messages.map(function (message) {
         return Jsonrpc.toPayload(message.method, message.params);
     });
 };
 
-module.exports = Jsonrpc;
+module.exports = JSONRpcMapper;
 

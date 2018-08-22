@@ -22,7 +22,7 @@
 
 "use strict";
 
-var Jsonrpc = require('./jsonrpc.js'); //TODO:  Fix import
+var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
 
 /**
  * @param {InpageProvider} legacyProvider

@@ -22,6 +22,7 @@
 
 "use strict";
 
+var JSONRpcMapper = require('./JSONRpcMapperMapper.js');
 var EventEmitter = require('eventemitter3');
 
 function SocketProviderAdapter(provider) {
@@ -37,7 +38,7 @@ function SocketProviderAdapter(provider) {
  */
 SocketProviderAdapter.prototype.send = function (method, parameters) {
     return new Promise(function (resolve, reject) {
-        this.provider.send(Jsonrpc.toPayload(method, parameters), function (result, error) {
+        this.provider.send(JSONRpcMapper.toPayload(method, parameters), function (result, error) {
             if (!error) {
                 resolve(result);
                 return;
