@@ -24,7 +24,7 @@
 
 var EventEmitter = require('eventemitter3');
 
-function SocketProviderAdapter (provider) {
+function SocketProviderAdapter(provider) {
     this.provider = provider;
     this.subscriptions = [];
     this.registerSubscriptionListener();
@@ -36,9 +36,9 @@ function SocketProviderAdapter (provider) {
  * @returns {Promise}
  */
 SocketProviderAdapter.prototype.send = function (method, parameters) {
-    return new Promise(function(resolve, reject) {
-        this.provider.send(Jsonrpc.toPayload(method, parameters), function(result, error) {
-            if(!error) {
+    return new Promise(function (resolve, reject) {
+        this.provider.send(Jsonrpc.toPayload(method, parameters), function (result, error) {
+            if (!error) {
                 resolve(result);
                 return;
             }
@@ -67,6 +67,24 @@ SocketProviderAdapter.prototype.subscribe = function (subscriptionType, paramete
 };
 
 /**
+ * @param {string} subscriptionId
+ * @returns {Promise<Boolean|Error>}
+ */
+SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
+    return this.send('eth_unsubscribe', [subscriptionId]).then(function (result) {
+        if (result) {
+            this.subscriptions = this.subscriptions.filter(function (subscription) {
+                return subscription !== subscriptionId;
+            });
+
+            return true;
+        }
+
+        return false;
+    });
+};
+
+/**
  * Emits an event with the subscription id
  */
 SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
@@ -82,20 +100,20 @@ SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
 };
 
 /**
- * @param {string} subscriptionId
- * @returns {Promise<Boolean|Error>}
+ * @param {boolean} keepIsSyncing
  */
-SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
-    return this.send('eth_unsubscribe', [subscriptionId]).then(function (result) {
-        if (result) {
-            this.subscriptions = this.subscriptions.filter(function (subscription) {
-                return subscription !== subscriptionId;
-            });
+SocketProviderAdapter.prototype.clearSubscriptions = function (keepIsSyncing) {
+    var self = this;
+    var unsubscribePromises = [];
 
-            return true;
+    Object.keys(this.subscriptions).forEach(function (subscriptionId) {
+        if (!keepIsSyncing || self.subscriptions[subscriptionId].name !== 'syncing') {
+            unsubscribePromises.push(self.unsubscribe(subscriptionId));
         }
+    });
 
-        return false;
+    Promise.all(unsubscribePromises).then(function () {
+        this.provider.reset();
     });
 };
 
