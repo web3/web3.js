@@ -29,7 +29,9 @@ var Ws = null;
 var _btoa = null;
 var parseURL = null;
 if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-    Ws = window.WebSocket;
+    Ws = function(url, protocols) {
+      return new window.WebSocket(url, protocols);
+    };
     _btoa = btoa;
     parseURL = function(url) {
         return new URL(url);
@@ -75,7 +77,15 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
         headers.authorization = 'Basic ' + _btoa(parsedURL.username + ':' + parsedURL.password);
     }
 
-    this.connection = new Ws(url, protocol, undefined, headers);
+    // Allow a custom client configuration
+    var clientConfig = options.clientConfig || undefined;
+
+    // When all node core implementations that do not have the
+    // WHATWG compatible URL parser go out of service this line can be removed.
+    if (parsedURL.auth) {
+        headers.authorization = 'Basic ' + _btoa(parsedURL.auth);
+    }
+    this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
 
     this.addDefaultEvents();
 
@@ -100,7 +110,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
             }
 
             // notification
-            if(!id && result.method.indexOf('_subscription') !== -1) {
+            if(!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
                 _this.notificationCallbacks.forEach(function(callback){
                     if(_.isFunction(callback))
                         callback(result);
@@ -380,6 +390,12 @@ WebsocketProvider.prototype.reset = function () {
     // this.connection.removeAllListeners('timeout');
 
     this.addDefaultEvents();
+};
+
+WebsocketProvider.prototype.disconnect = function () {
+    if (this.connection) {
+        this.connection.close();
+    }
 };
 
 module.exports = WebsocketProvider;
