@@ -36,7 +36,17 @@ function SocketProviderAdapter (provider) {
  * @returns {Promise}
  */
 SocketProviderAdapter.prototype.send = function (method, parameters) {
-    return this.provider.send(method, parameters);
+    return new Promise(function(resolve, reject) {
+        this.provider.send(Jsonrpc.toPayload(method, parameters), function(result, error) {
+            if(!error) {
+                resolve(result);
+                return;
+            }
+
+            reject(error);
+        });
+
+    });
 };
 
 /**
