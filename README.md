@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 This is the Ethereum compatible [JavaScript API](https://github.com/ethereum/wiki/wiki/JavaScript-API)
-which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for bower and component as an embeddable js and as a meteor.js package.
+which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JSON-RPC) spec. It's available on npm as a node module, for Bower and component as embeddable scripts, and as a meteor.js package.
 
 [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![dependency status][dep-image]][dep-url] [![dev dependency status][dep-dev-image]][dep-dev-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Stories in Ready][waffle-image]][waffle-url]
 
@@ -12,6 +12,23 @@ which implements the [Generic JSON RPC](https://github.com/ethereum/wiki/wiki/JS
 You need to run a local Ethereum node to use this library.
 
 [Documentation](https://github.com/ethereum/wiki/wiki/JavaScript-API)
+
+## Table of Contents
+
+- [Installation](#installation)
+  - [Node.js](#nodejs)
+  - [Yarn](#yarn)
+  - [Meteor.js](#meteorjs)
+  - [As a Browser module](#as-a-browser-module)
+- [Usage](#usage)
+  - [Migration from 0.13.0 to 0.14.0](#migration-from-0130-to-0140)
+- [Contribute!](#contribute)
+  - [Requirements](#requirements)
+  - [Building (gulp)](#building-gulp)
+  - [Testing (mocha)](#testing-mocha)
+  - [Community](#community)
+  - [Other implementations](#other-implementations)
+- [License](#license)
 
 ## Installation
 
@@ -33,7 +50,7 @@ yarn add web3
 meteor add ethereum:web3
 ```
 
-### As Browser module
+### As a Browser module
 
 CDN
 
@@ -56,24 +73,25 @@ component install ethereum/web3.js
 * Include `web3.min.js` in your html file. (not required for the meteor package)
 
 ## Usage
-Use the `web3` object directly from global namespace:
+
+Use the `web3` object directly from the global namespace:
 
 ```js
-console.log(web3); // {eth: .., shh: ...} // it's here!
+console.log(web3); // {eth: .., shh: ...} // It's here!
 ```
 
-Set a provider (HttpProvider)
+Set a provider (`HttpProvider`):
 
 ```js
 if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider);
 } else {
-  // set the provider you want from Web3.providers
+  // Set the provider you want from Web3.providers
   web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 }
 ```
 
-Set a provider (HttpProvider using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication))
+Set a provider (`HttpProvider` using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication)):
 
 ```js
 web3.setProvider(new web3.providers.HttpProvider('http://' + BasicAuthUsername + ':' + BasicAuthPassword + '@localhost:8545'));
@@ -106,6 +124,7 @@ To migrate to this version, please follow the guide:
 * npm
 
 ```bash
+# On Linux:
 sudo apt-get update
 sudo apt-get install nodejs
 sudo apt-get install npm
