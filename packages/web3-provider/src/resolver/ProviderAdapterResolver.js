@@ -14,11 +14,11 @@ ProviderAdapterResolver.prototype.resolveProvider = function () {
     //     if(/^http(s)?:\/\//i.test(p)) {
     //         p = new this.providers.HttpProvider(p);
     //
-    //         // WS
+    //     // WS
     //     } else if(/^ws(s)?:\/\//i.test(p)) {
     //         p = new this.providers.WebsocketProvider(p);
     //
-    //         // IPC
+    //     // IPC
     //     } else if(p && typeof net === 'object'  && typeof net.connect === 'function') {
     //         p = new this.providers.IpcProvider(p, net);
     //
