@@ -37,6 +37,7 @@ var Accounts = require('web3-eth-accounts');
 var ABI = require('web3-eth-abi');
 
 var getNetworkType = require('./getNetworkType.js');
+var EthSubscriptionResolver = require('./resolvers/EthSubscriptionResolver');
 var formatter = helpers.formatters;
 
 
@@ -70,6 +71,8 @@ var Eth = function Eth() {
     this.setABIPackage(ABI);
     this.setENSPackage(new ENS(this));
     this.setMethods();
+
+    this.subscriptionResolver = new EthSubscriptionResolver(this.currentProvider);
 
     // sets _requestmanager
     core.packageInit(this, arguments);
@@ -245,53 +248,14 @@ Object.defineProperty(Eth, 'defaultBlock', {
 });
 
 /**
- * Starts subscription for an given type
+ * Gets and executes subscription for an given type
  *
  * @param {string} type
- * @param {Object} parameters
+ * @param {*} parameters
  * @param {Function} callback
  */
 Eth.prototype.subscribe = function (type, parameters, callback) {
-    switch (type) {
-        case 'newBlockHeaders':
-            return this.getSubscriptionWithoutParameters('newHeads', inputFormatter, outputFormatter, callback);
-            break;
-        case 'pendingTransactions':
-            return this.getSubscriptionWithoutParameters('newHeads', inputFormatter, outputFormatter, callback);
-            break;
-        case 'logs':// Special behaviour see subscriptions package
-            break;
-        case 'syncing':// Special behaviour see subscriptionPackage
-            break;
-        default:
-            throw Error('Unknown subscription: ' + type);
-    }
-};
-
-/**
- * @param {string} type
- * @param {Function} inputFormatter
- * @param {Function} outputFormatter
- * @param {Function} callback
- * @returns {Object}
- */
-Eth.prototype.getSubscriptionWithoutParameters = function (type, inputFormatter, outputFormatter, callback) {
-    return new Subscription(
-        this.provider,
-        type,
-        [],
-        inputFormatter,
-        outputFormatter,
-        callback
-    ).subscribe();
-};
-
-Eth.prototype.getLogs = function () {
- // Todo: implement get logs
-};
-
-Eth.prototype.getSyncing = function () {
-// Todo: implement syncing subscription
+   return this.subscriptionResolver.resolve(type, parameters).subscribe(callback);
 };
 
 /**

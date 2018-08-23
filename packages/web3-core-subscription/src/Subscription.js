@@ -31,40 +31,42 @@ var EventEmitter = require('eventemitter3');
  * @param {Array} parameters
  * @param {Function} inputFormatter
  * @param {Function} outputFormatter
- * @param {Function} callback
  * @constructor
  */
-function Subscription(provider, type, parameters, inputFormatter, outputFormatter, callback) {
+function Subscription(provider, type, parameters, inputFormatter, outputFormatter) {
     this.provider = provider;
     this.type = type;
     this.parameters = parameters;
     this.inputFormatter = inputFormatter;
     this.outputFormatter = outputFormatter;
-    this.callback = callback;
     this.subscriptionId = null;
 }
 
 /**
  * Sends the JSON-RPC request, emits the required events and executes the callback method.
  *
+ * @param {Function} callback
+ *
  * @returns {Object} Subscription
  */
-Subscription.prototype.subscribe = function () {
+Subscription.prototype.subscribe = function (callback) {
     var self = this;
     this.provider.subscribe(this.type, this.formatInput(this.parameters)).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
         self.provider.on(self.subscriptionId, function (error, response) {
             if (!error) {
-                self.handleSubscriptionResponse(response, self.callback);
+                self.handleSubscriptionResponse(response, callback);
 
                 return;
             }
 
-            if(self.provider.once) {
-                self.reconnect(type, parameters, subscriptionId, self.callback);
+            if (self.provider.once) {
+                self.reconnect(type, parameters, subscriptionId, callback);
             }
 
-            callback(error, null);
+            if (_.isFunction(callback)) {
+                callback(error, null);
+            }
             self.emit('error', error);
         });
     });
@@ -85,7 +87,9 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
     response.forEach(function (item) {
         var formattedOutput = this.formatOutput(item);
         this.emit('data', formattedOutput);
-        callback(false, formattedOutput);
+        if (_.isFunction(callback)) {
+            callback(false, formattedOutput);
+        }
     });
 };
 
@@ -108,12 +112,14 @@ Subscription.prototype.reconnect = function (type, parameters, subscriptionId, c
 
     self.provider.once('connect', function () {
         clearInterval(interval);
-        self.unsubscribe(function(error, result) {
+        self.unsubscribe(function (error, result) {
             if (result) {
                 self.subscribe(type, parameters, callback);
             }
 
-            callback(error, null);
+            if (_.isFunction(callback)) {
+                callback(error, null);
+            }
         });
     });
 };
@@ -162,7 +168,9 @@ Subscription.prototype.unsubscribe = function (callback) {
             return true;
         }
 
-        callback(false, true);
+        if (_.isFunction(callback)) {
+            callback(false, true);
+        }
 
         return false;
     });
