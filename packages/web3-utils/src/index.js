@@ -26,6 +26,7 @@ var _ = require('underscore');
 var ethjsUnit = require('ethjs-unit');
 var utils = require('./utils.js');
 var soliditySha3 = require('./soliditySha3.js');
+var soliditySha256 = require('./soliditySha256.js');
 var randomHex = require('randomhex');
 
 
@@ -322,6 +323,7 @@ module.exports = {
     sha256: utils.sha256,
     keccak256: utils.sha3,
     soliditySha3: soliditySha3,
+    soliditySha256: soliditySha256,
     isAddress: utils.isAddress,
     checkAddressChecksum: utils.checkAddressChecksum,
     toChecksumAddress: toChecksumAddress,
