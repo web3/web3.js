@@ -25,7 +25,6 @@
 var _ = require('underscore');
 var core = require('web3-core');
 var helpers = require('web3-core-helpers');
-var Subscriptions = require('web3-core-subscriptions').subscriptions;
 var Method = require('web3-core-method');
 var utils = require('web3-utils');
 var Net = require('web3-net');
@@ -35,7 +34,7 @@ var Personal = require('web3-eth-personal');
 var BaseContract = require('web3-eth-contract');
 var Iban = require('web3-eth-iban');
 var Accounts = require('web3-eth-accounts');
-var abi = require('web3-eth-abi');
+var ABI = require('web3-eth-abi');
 
 var getNetworkType = require('./getNetworkType.js');
 var formatter = helpers.formatters;
@@ -63,82 +62,43 @@ var uncleCountCall = function (args) {
 
 
 var Eth = function Eth() {
-    var _this = this;
+    this.setContractPackage(BaseContract);
+    this.setNetPackage(new Net(this.currentProvider));
+    this.setAccountsPackage(new Accounts(this.currentProvider));
+    this.setPersonalPackage(new Personal(this.currentProvider));
+    this.setIBANPackage(Iban);
+    this.setABIPackage(ABI);
+    this.setENSPackage(new ENS(this));
+    this.setMethods();
 
     // sets _requestmanager
     core.packageInit(this, arguments);
+};
 
-    // overwrite setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function () {
-        setProvider.apply(_this, arguments);
-        _this.net.setProvider.apply(_this, arguments);
-        _this.personal.setProvider.apply(_this, arguments);
-        _this.accounts.setProvider.apply(_this, arguments);
-        _this.Contract.setProvider(_this.currentProvider, _this.accounts);
-    };
+core.addProviders(Eth);
 
+/**
+ * PACKAGE INIT (core.packageInit) overwrites setProvider!
+ *
+ * // overwrite setProvider
+ var setProvider = this.setProvider;
+ *
+ *
+ */
+Eth.prototype.setProvider = function () {
+    setProvider.apply(this, arguments);
+    this.net.setProvider.apply(this, arguments);
+    this.personal.setProvider.apply(this, arguments);
+    this.accounts.setProvider.apply(this, arguments);
+    this.Contract.setProvider(this.currentProvider, this.accounts);
+};
 
-    var defaultAccount = null;
-    var defaultBlock = 'latest';
-
-    Object.defineProperty(this, 'defaultAccount', {
-        get: function () {
-            return defaultAccount;
-        },
-        set: function (val) {
-            if(val) {
-                defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
-            }
-
-            // also set on the Contract object
-            _this.Contract.defaultAccount = defaultAccount;
-            _this.personal.defaultAccount = defaultAccount;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultAccount = defaultAccount;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultBlock', {
-        get: function () {
-            return defaultBlock;
-        },
-        set: function (val) {
-            defaultBlock = val;
-            // also set on the Contract object
-            _this.Contract.defaultBlock = defaultBlock;
-            _this.personal.defaultBlock = defaultBlock;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultBlock = defaultBlock;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-
-
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
-
-    // add net
-    this.net = new Net(this.currentProvider);
-    // add chain detection
-    this.net.getNetworkType = getNetworkType.bind(this);
-
-    // add accounts
-    this.accounts = new Accounts(this.currentProvider);
-
-    // add personal
-    this.personal = new Personal(this.currentProvider);
-    this.personal.defaultAccount = this.defaultAccount;
-
+/**
+ * Sets the Contract package as property of Eth
+ *
+ * @param {Object} contractPackage
+ */
+Eth.prototype.setContractPackage = function (contractPackage) {
     // create a proxy Contract type for this instance, as a Contract's provider
     // is stored as a class member rather than an instance variable. If we do
     // not create this proxy type, changing the provider in one instance of
@@ -146,7 +106,7 @@ var Eth = function Eth() {
     // instances!
     var self = this;
     var Contract = function Contract() {
-        BaseContract.apply(this, arguments);
+        contractPackage.apply(this, arguments);
 
         // when Eth.setProvider is called, call packageInit
         // on all contract instances instantiated via this Eth
@@ -155,18 +115,18 @@ var Eth = function Eth() {
         var _this = this;
         var setProvider = self.setProvider;
         self.setProvider = function() {
-          setProvider.apply(self, arguments);
-          core.packageInit(_this, [self.currentProvider]);
+            setProvider.apply(self, arguments);
+            core.packageInit(_this, [self.currentProvider]);
         };
     };
 
     Contract.setProvider = function() {
-        BaseContract.setProvider.apply(this, arguments);
+        contractPackage.setProvider.apply(this, arguments);
     };
 
     // make our proxy Contract inherit from web3-eth-contract so that it has all
     // the right functionality and so that instanceof and friends work properly
-    Contract.prototype = Object.create(BaseContract.prototype);
+    Contract.prototype = Object.create(contractPackage.prototype);
     Contract.prototype.constructor = Contract;
 
     // add contract
@@ -175,15 +135,161 @@ var Eth = function Eth() {
     this.Contract.defaultBlock = this.defaultBlock;
     this.Contract.setProvider(this.currentProvider, this.accounts);
 
-    // add IBAN
-    this.Iban = Iban;
+};
 
-    // add ABI
+/**
+ * Sets the Net package as property of Eth
+ *
+ * @param {Object} net
+ */
+Eth.prototype.setNetPackage = function (net) {
+    this.net = net;
+    this.net.getNetworkType = getNetworkType.bind(this);
+};
+
+/**
+ * Sets the Accounts package as property of Eth
+ *
+ * @param {Object} accounts
+ */
+Eth.prototype.setAccountsPackage = function (accounts) {
+    this.accounts = accounts;
+};
+
+/**
+ * Sets the Personal package as property of Eth
+ *
+ * @param {Object} personal
+ */
+Eth.prototype.setPersonalPackage = function (personal) {
+    this.personal = personal;
+    this.personal.defaultAccount = this.defaultAccount;
+};
+
+/**
+ * Sets the Iban package as property of Eth
+ *
+ * @param {Object} iban
+ */
+Eth.prototype.setIBANPackage = function (iban) {
+    this.Iban = iban;
+};
+
+/**
+ * Sets the ABI package as property of Eth
+ *
+ * @param {Object} abi
+ */
+Eth.prototype.setABIPackage = function (abi) {
     this.abi = abi;
+};
 
-    // add ENS
-    this.ens = new ENS(this);
+/**
+ * Sets the ENS package as property of Eth
+ *
+ * @param {Object} ens
+ */
+Eth.prototype.setENSPackage = function (ens) {
+    this.ens = ens;
+};
 
+/**
+ * Defines accessors for defaultAccount
+ */
+Object.defineProperty(Eth, 'defaultAccount', {
+    get: function () {
+        return this.defaultAccount ? this.defaultAccount : null;
+    },
+    set: function (val) {
+        if(val) {
+            this.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
+        }
+
+        // also set on the Contract object
+        _this.Contract.defaultAccount = defaultAccount;
+        _this.personal.defaultAccount = defaultAccount;
+
+        // update defaultBlock
+        methods.forEach(function(method) {
+            method.defaultAccount = defaultAccount;
+        });
+
+        return val;
+    },
+    enumerable: true
+});
+
+/**
+ * Defines accessors for defaultBlock
+ */
+Object.defineProperty(Eth, 'defaultBlock', {
+    get: function () {
+        return this.defaultBlock ? this.defaultBlock : 'latest';
+    },
+    set: function (val) {
+        var self = this;
+        this.defaultBlock = val;
+
+        // also set on the Contract object
+        this.Contract.defaultBlock = this.defaultBlock;
+        this.personal.defaultBlock = this.defaultBlock;
+
+        // update defaultBlock
+        methods.forEach(function(method) {
+            method.defaultBlock = self.defaultBlock;
+        });
+
+        return val;
+    },
+    enumerable: true
+});
+
+/**
+ * Starts subscription for an given type
+ *
+ * @param {string} type
+ * @param {Object} parameters
+ * @param {Function} callback
+ */
+Eth.prototype.subscribe = function (type, parameters, callback) {
+    switch (type) {
+        case 'newBlockHeaders':
+            this.subscribeNewHeads(callback);
+            break;
+        case 'pendingTransactions':
+            this.subscribeNewPendingTransactions(callback);
+            break;
+        case 'logs':// Special behaviour see subscriptions package
+            this.subscribeLogs(parameters, callback);
+            break;
+        case 'syncing':// Special behaviour see subscriptionPackage
+            this.subscribeSyncing(callback);
+            break;
+        default:
+            throw Error('Unknown subscription: ' + type);
+    }
+};
+
+Eth.prototype.subscribeNewHeads = function (callback) {
+    this.createSubscription('newHeads', outputFormatter, inputFormatter, callback);
+};
+
+Eth.prototype.subscribeNewPendingTransactions = function (callback) {
+    this.createSubscription('newPendingTransactions', outputFormatter, inputFormatter, callback);
+};
+
+Eth.prototype.subscribeLogs = function (parameters, callback) {
+    this.createSubscription('logs', parameters, outputFormatter, inputFormatter, callback);
+};
+
+Eth.prototype.subscribeSyncing = function (callback) {
+
+};
+
+/**
+ * Appends rpc methods to Eth
+ */
+Eth.prototype.setMethods = function () {
     var methods = [
         new Method({
             name: 'getNodeInfo',
@@ -368,86 +474,6 @@ var Eth = function Eth() {
             inputFormatter: [formatter.inputLogFormatter],
             outputFormatter: formatter.outputLogFormatter
         }),
-
-        // subscriptions
-        new Subscriptions({
-            name: 'subscribe',
-            type: 'eth',
-            subscriptions: {
-                'newBlockHeaders': {
-                    // TODO rename on RPC side?
-                    subscriptionName: 'newHeads', // replace subscription with this name
-                    params: 0,
-                    outputFormatter: formatter.outputBlockFormatter
-                },
-                'pendingTransactions': {
-                    subscriptionName: 'newPendingTransactions', // replace subscription with this name
-                    params: 0
-                },
-                'logs': {
-                    params: 1,
-                    inputFormatter: [formatter.inputLogFormatter],
-                    outputFormatter: formatter.outputLogFormatter,
-                    // DUBLICATE, also in web3-eth-contract
-                    subscriptionHandler: function (output) {
-                        if(output.removed) {
-                            this.emit('changed', output);
-                        } else {
-                            this.emit('data', output);
-                        }
-
-                        if (_.isFunction(this.callback)) {
-                            this.callback(null, output, this);
-                        }
-                    }
-                },
-                'syncing': {
-                    params: 0,
-                    outputFormatter: formatter.outputSyncingFormatter,
-                    subscriptionHandler: function (output) {
-                        var _this = this;
-
-                        // fire TRUE at start
-                        if(this._isSyncing !== true) {
-                            this._isSyncing = true;
-                            this.emit('changed', _this._isSyncing);
-
-                            if (_.isFunction(this.callback)) {
-                                this.callback(null, _this._isSyncing, this);
-                            }
-
-                            setTimeout(function () {
-                                _this.emit('data', output);
-
-                                if (_.isFunction(_this.callback)) {
-                                    _this.callback(null, output, _this);
-                                }
-                            }, 0);
-
-                            // fire sync status
-                        } else {
-                            this.emit('data', output);
-                            if (_.isFunction(_this.callback)) {
-                                this.callback(null, output, this);
-                            }
-
-                            // wait for some time before fireing the FALSE
-                            clearTimeout(this._isSyncingTimeout);
-                            this._isSyncingTimeout = setTimeout(function () {
-                                if(output.currentBlock > output.highestBlock - 200) {
-                                    _this._isSyncing = false;
-                                    _this.emit('changed', _this._isSyncing);
-
-                                    if (_.isFunction(_this.callback)) {
-                                        _this.callback(null, _this._isSyncing, _this);
-                                    }
-                                }
-                            }, 500);
-                        }
-                    }
-                }
-            }
-        })
     ];
 
     methods.forEach(function(method) {
@@ -459,8 +485,9 @@ var Eth = function Eth() {
 
 };
 
-core.addProviders(Eth);
-
+/**
+ * Extends Eth with clearSubscriptions from the current provider
+ */
+Eth.prototype.clearSubscriptions = this.currentProvider.clearSubscriptions;
 
 module.exports = Eth;
-

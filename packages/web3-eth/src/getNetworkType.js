@@ -24,6 +24,8 @@
 
 var _ = require('underscore');
 
+// TODO: move this in the correct package (Net)
+
 var getNetworkType = function (callback) {
     var _this = this,
         id;

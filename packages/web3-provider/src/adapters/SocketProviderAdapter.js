@@ -34,14 +34,16 @@ function SocketProviderAdapter(provider) {
  * @returns {Promise<string|Error>}
  */
 SocketProviderAdapter.prototype.subscribe = function (subscriptionType, parameters) {
+    var self = this;
+
     return this.send('eth_subscribe', parameters.unshift(subscriptionType)).then(function (error, subscriptionId) {
         if (!error) {
-            this.subscriptions[subscriptionId]({subscriptionType: subscriptionType, type: 'eth'});
+            self.subscriptions[subscriptionId]({subscriptionType: subscriptionType, type: 'eth'});
 
             return subscriptionId;
         }
 
-        throw new Error('SUB ERROR');
+        throw new Error('Provider error: ' + error);
     });
 };
 
@@ -79,20 +81,36 @@ SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
 };
 
 /**
- * @param {boolean} keepIsSyncing
+ * Clears all subscriptions and listeners
  */
-SocketProviderAdapter.prototype.clearSubscriptions = function (keepIsSyncing) {
+SocketProviderAdapter.prototype.clearSubscriptions = function () {
     var self = this;
     var unsubscribePromises = [];
 
     Object.keys(this.subscriptions).forEach(function (subscriptionId) {
-        if (!keepIsSyncing || self.subscriptions[subscriptionId].name !== 'syncing') {
-            unsubscribePromises.push(self.unsubscribe(subscriptionId));
-        }
+        unsubscribePromises.push(self.unsubscribe(subscriptionId));
     });
 
     Promise.all(unsubscribePromises).then(function () {
         this.provider.reset();
+        self.subscriptions = [];
+    });
+};
+
+/**
+ * @param {string} subscriptionId
+ * @returns {Promise<boolean>}
+ */
+SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
+    var self = this;
+    return this.subscriptions[subscriptionId].unsubscribe().then(function(result) {
+        if (result) {
+            delete self.subscriptions[subscriptionId];
+
+            return true;
+        }
+
+        return false;
     });
 };
 
