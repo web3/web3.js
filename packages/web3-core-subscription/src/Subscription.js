@@ -29,35 +29,39 @@ var EventEmitter = require('eventemitter3');
  * @param {Object} provider
  * @param {Function} inputFormatter
  * @param {Function} outputFormatter
+ * @param {String} type
+ * @param {Array} parameters
+ * @param {Function} callback
  * @constructor
  */
-function Subscription(provider, inputFormatter, outputFormatter) {
+function Subscription(provider, inputFormatter, outputFormatter, type, parameters, callback) {
     this.provider = provider;
     this.inputFormatter = inputFormatter;
     this.outputFormatter = outputFormatter;
     this.subscriptionId = null;
+    this.type = type;
+    this.parameters = parameters;
+    this.callback = callback;
 }
 
 /**
  * Sends the JSON-RPC request, emits the required events and executes the callback method.
  *
- * @param {string} type
- * @param {*} parameters
- * @param {Function} callback
+ * @returns {Object} Subscription
  */
-Subscription.prototype.subscribe = function (type, parameters, callback) {
+Subscription.prototype.subscribe = function () {
     var self = this;
-    this.provider.subscribe(type, this.formatInput(parameters)).then(function (subscriptionId) {
+    this.provider.subscribe(this.type, this.formatInput(this.parameters)).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
         self.provider.on(self.subscriptionId, function (error, response) {
             if (!error) {
-                self.handleSubscriptionResponse(response, callback);
+                self.handleSubscriptionResponse(response, self.callback);
 
                 return;
             }
 
             if(self.provider.once) {
-                self.reconnect(type, parameters, subscriptionId, callback);
+                self.reconnect(type, parameters, subscriptionId, self.callback);
             }
 
             callback(error, null);

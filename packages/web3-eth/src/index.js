@@ -271,7 +271,14 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
 };
 
 Eth.prototype.subscribeNewHeads = function (callback) {
-    this.createSubscription('newHeads', outputFormatter, inputFormatter, callback);
+    return new Subscription(
+        this.currentProvider,
+        inputFormatter,
+        outputFormatter,
+        'newHeads',
+        null,
+        callback
+    ).subscribe();
 };
 
 Eth.prototype.subscribeNewPendingTransactions = function (callback) {
