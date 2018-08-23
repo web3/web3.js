@@ -25,6 +25,7 @@ var BN = require('bn.js');
 var numberToBN = require('number-to-bn');
 var utf8 = require('utf8');
 var Hash = require("eth-lib/lib/hash");
+var libsha256 = require('sha256');
 
 
 /**
@@ -440,6 +441,21 @@ var sha3 = function (value) {
 // expose the under the hood keccak256
 sha3._Hash = Hash;
 
+/**
+ * Hashes values to a sha256 hash
+ *
+ * To hash a HEX string the hex must have 0x in front.
+ *
+ * @method sha256
+ * @return {String} the sha256 string
+ */
+var sha256 = function (value) {
+    if (isHexStrict(value) && /^0x/i.test((value).toString())) {
+        value = hexToBytes(value);
+    }
+
+    return '0x' + libsha256(value);
+};
 
 module.exports = {
     BN: BN,
@@ -463,5 +479,6 @@ module.exports = {
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
-    sha3: sha3
+    sha3: sha3,
+    sha256: sha256
 };

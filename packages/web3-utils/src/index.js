@@ -319,6 +319,7 @@ module.exports = {
     isHex: utils.isHex,
     isHexStrict: utils.isHexStrict,
     sha3: utils.sha3,
+    sha256: utils.sha256,
     keccak256: utils.sha3,
     soliditySha3: soliditySha3,
     isAddress: utils.isAddress,
