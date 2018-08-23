@@ -37,7 +37,7 @@ ProviderDetector.prototype.detect = function () {
     if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
 
         if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
-            global.web3.currentProvider = this.addSubscriptionToIpcProviderWrapper(global.web3.currentProvider);
+            global.web3.currentProvider = this.addSubscriptionsToIpcProviderWrapper(global.web3.currentProvider);
         }
 
         return global.web3.currentProvider;
@@ -60,7 +60,7 @@ ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
  * @param {Object} provider ipcProviderWrapper
  * @returns {Object} ipcProviderWrapper
  */
-ProviderDetector.prototype.addSubscriptionToIpcProviderWrapper = function (provider) {
+ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (provider) {
     provider.on = function (type, callback) {
 
         if (typeof callback !== 'function')
