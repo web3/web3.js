@@ -47,8 +47,8 @@ ProviderDetector.prototype.detect = function () {
 /**
  * Checks if the given provider it is of type ipcProviderWrapper
  *
- * @param currentProvider
- * @returns {boolean|*|{encrypted: boolean}|connection|{encrypted}|null}
+ * @param {Object} currentProvider
+ * @returns {boolean}
  */
 ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
     return !currentProvider.on && currentProvider.connection && currentProvider.connection.constructor.name === 'ipcProviderWrapper';
@@ -57,8 +57,8 @@ ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
 /**
  * Adds the on method for the subscriptions to the ipcProviderWrapper
  *
- * @param {ipcProviderWrapper} provider
- * @returns {ipcProviderWrapper}
+ * @param {Object} provider ipcProviderWrapper
+ * @returns {Object} ipcProviderWrapper
  */
 ProviderDetector.prototype.addSubscriptionToIpcProviderWrapper = function (provider) {
     provider.on = function (type, callback) {
