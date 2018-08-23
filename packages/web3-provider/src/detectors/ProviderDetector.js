@@ -20,59 +20,78 @@
  * @date 2018
  */
 
+var global = Function('return this')();
 
-function ProviderDetector() {
+function ProviderDetector() { }
 
-}
-
+/**
+ * Detects which provider is given with web3.currentProvider
+ *
+ * @returns {Object} provider
+ */
 ProviderDetector.prototype.detect = function () {
-    // // EthereumProvider
-    // if (typeof global.ethereumProvider !== 'undefined') {
-    //     return global.ethereumProvider;
-    //
-    // }
-    //
-    // // Legacy web3.currentProvider
-    // if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-    //
-    //     // if connection is 'ipcProviderWrapper', add subscription support
-    //     if (!global.web3.currentProvider.on &&
-    //         global.web3.currentProvider.connection &&
-    //         global.web3.currentProvider.connection.constructor.name === 'ipcProviderWrapper') {
-    //
-    //         global.web3.currentProvider.on = function (type, callback) {
-    //
-    //             if (typeof callback !== 'function')
-    //                 throw new Error('The second parameter callback must be a function.');
-    //
-    //             switch (type) {
-    //                 case 'data':
-    //                     this.connection.on('data', function (data) {
-    //                         var result = '';
-    //
-    //                         data = data.toString();
-    //
-    //                         try {
-    //                             result = JSON.parse(data);
-    //                         } catch (e) {
-    //                             return callback(new Error('Couldn\'t parse response data' + data));
-    //                         }
-    //
-    //                         // notification
-    //                         if (!result.id && result.method.indexOf('_subscription') !== -1) {
-    //                             callback(null, result);
-    //                         }
-    //
-    //                     });
-    //                     break;
-    //
-    //                 default:
-    //                     this.connection.on(type, callback);
-    //                     break;
-    //             }
-    //         };
-    //     }
-    //
-    //     return global.web3.currentProvider;
-    // }
+    if (typeof global.ethereumProvider !== 'undefined') {
+        return global.ethereumProvider;
+    }
+
+    if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
+
+        if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
+            global.web3.currentProvider = this.addSubscriptionToIpcProviderWrapper(global.web3.currentProvider);
+        }
+
+        return global.web3.currentProvider;
+    }
+};
+
+/**
+ * Checks if the given provider it is of type ipcProviderWrapper
+ *
+ * @param currentProvider
+ * @returns {boolean|*|{encrypted: boolean}|connection|{encrypted}|null}
+ */
+ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
+    return !currentProvider.on && currentProvider.connection && currentProvider.connection.constructor.name === 'ipcProviderWrapper';
+};
+
+/**
+ * Adds the on method for the subscriptions to the ipcProviderWrapper
+ *
+ * @param {ipcProviderWrapper} provider
+ * @returns {ipcProviderWrapper}
+ */
+ProviderDetector.prototype.addSubscriptionToIpcProviderWrapper = function (provider) {
+    provider.on = function (type, callback) {
+
+        if (typeof callback !== 'function')
+            throw new Error('The second parameter callback must be a function.');
+
+        switch (type) {
+            case 'data':
+                this.connection.on('data', function (data) {
+                    var result = '';
+
+                    data = data.toString();
+
+                    try {
+                        result = JSON.parse(data);
+                    } catch (e) {
+                        return callback(new Error('Couldn\'t parse response data' + data));
+                    }
+
+                    // notification
+                    if (!result.id && result.method.indexOf('_subscription') !== -1) {
+                        callback(null, result);
+                    }
+
+                });
+                break;
+
+            default:
+                this.connection.on(type, callback);
+                break;
+        }
+    };
+
+    return provider;
 };
