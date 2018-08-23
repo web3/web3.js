@@ -254,43 +254,44 @@ Object.defineProperty(Eth, 'defaultBlock', {
 Eth.prototype.subscribe = function (type, parameters, callback) {
     switch (type) {
         case 'newBlockHeaders':
-            this.subscribeNewHeads(callback);
+            return this.getSubscriptionWithoutParameters('newHeads', inputFormatter, outputFormatter, callback);
             break;
         case 'pendingTransactions':
-            this.subscribeNewPendingTransactions(callback);
+            return this.getSubscriptionWithoutParameters('newHeads', inputFormatter, outputFormatter, callback);
             break;
         case 'logs':// Special behaviour see subscriptions package
-            this.subscribeLogs(parameters, callback);
             break;
         case 'syncing':// Special behaviour see subscriptionPackage
-            this.subscribeSyncing(callback);
             break;
         default:
             throw Error('Unknown subscription: ' + type);
     }
 };
 
-Eth.prototype.subscribeNewHeads = function (callback) {
+/**
+ * @param {string} type
+ * @param {Function} inputFormatter
+ * @param {Function} outputFormatter
+ * @param {Function} callback
+ * @returns {Object}
+ */
+Eth.prototype.getSubscriptionWithoutParameters = function (type, inputFormatter, outputFormatter, callback) {
     return new Subscription(
-        this.currentProvider,
+        this.provider,
+        type,
+        [],
         inputFormatter,
         outputFormatter,
-        'newHeads',
-        null,
         callback
     ).subscribe();
 };
 
-Eth.prototype.subscribeNewPendingTransactions = function (callback) {
-    this.createSubscription('newPendingTransactions', outputFormatter, inputFormatter, callback);
+Eth.prototype.getLogs = function () {
+ // Todo: implement get logs
 };
 
-Eth.prototype.subscribeLogs = function (parameters, callback) {
-    this.createSubscription('logs', parameters, outputFormatter, inputFormatter, callback);
-};
-
-Eth.prototype.subscribeSyncing = function (callback) {
-
+Eth.prototype.getSyncing = function () {
+// Todo: implement syncing subscription
 };
 
 /**

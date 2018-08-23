@@ -27,21 +27,21 @@ var EventEmitter = require('eventemitter3');
 
 /**
  * @param {Object} provider
- * @param {Function} inputFormatter
- * @param {Function} outputFormatter
  * @param {String} type
  * @param {Array} parameters
+ * @param {Function} inputFormatter
+ * @param {Function} outputFormatter
  * @param {Function} callback
  * @constructor
  */
-function Subscription(provider, inputFormatter, outputFormatter, type, parameters, callback) {
+function Subscription(provider, type, parameters, inputFormatter, outputFormatter, callback) {
     this.provider = provider;
-    this.inputFormatter = inputFormatter;
-    this.outputFormatter = outputFormatter;
-    this.subscriptionId = null;
     this.type = type;
     this.parameters = parameters;
+    this.inputFormatter = inputFormatter;
+    this.outputFormatter = outputFormatter;
     this.callback = callback;
+    this.subscriptionId = null;
 }
 
 /**
