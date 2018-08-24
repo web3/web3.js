@@ -62,57 +62,14 @@ var uncleCountCall = function (args) {
 };
 
 
-var Eth = function Eth(
-    batchRequest,
-    givenProvider,
-    providers,
-    extend,
-    baseContract,
-    net,
-    accounts,
-    personal,
-    iban,
-    abi,
-    ens,
-    method,
-    utils,
-    helpers,
-    networkType,
-    underscore,
-    formatters,
-    subscriptionResolver
-) {
-    this.setContractPackage(BaseContract);
-    this.setNetPackage(new Net(this.currentProvider));
-    this.setAccountsPackage(new Accounts(this.currentProvider));
-    this.setPersonalPackage(new Personal(this.currentProvider));
-    this.setIBANPackage(Iban);
-    this.setABIPackage(ABI);
-    this.setENSPackage(new ENS(this));
-    this.setMethods();
-    this.setSubscriptionsResolver(new SubscriptionsResolver(this.currentProvider));
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-};
-
-core.addProviders(Eth);
-
-/**
- * PACKAGE INIT (core.packageInit) overwrites setProvider!
- *
- * // overwrite setProvider
- var setProvider = this.setProvider;
- *
- *
- */
-Eth.prototype.setProvider = function () {
-    setProvider.apply(this, arguments);
-    this.net.setProvider.apply(this, arguments);
-    this.personal.setProvider.apply(this, arguments);
-    this.accounts.setProvider.apply(this, arguments);
-    this.Contract.setProvider(this.currentProvider, this.accounts);
-    this.subscriptionsResolver.setProvider(this.currentProvider);
+var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptionsResolver) {
+    this.net = connectionModel.getNetworkMethods();
+    this.accounts = this.packageFactory.createAccountsPackage();
+    this.personal = this.packageFactory.createPersonalPackage();
+    this.iban = this.packageFactory.createIbanPackage();
+    this.abi = this.packageFactory.createAbiPackage();
+    this.ens = this.packageFactory.createEnsPackage();
+    this.subscriptionsResolver = subscriptionsResolver;
 };
 
 /**
@@ -120,7 +77,7 @@ Eth.prototype.setProvider = function () {
  *
  * @param {Object} contractPackage
  */
-Eth.prototype.setContractPackage = function (contractPackage) {
+Eth.prototype.setContractPackage = function (contractPackage) {// TODO: check if this could be removed because of the ConnectionModel
     // create a proxy Contract type for this instance, as a Contract's provider
     // is stored as a class member rather than an instance variable. If we do
     // not create this proxy type, changing the provider in one instance of
@@ -160,74 +117,9 @@ Eth.prototype.setContractPackage = function (contractPackage) {
 };
 
 /**
- * Sets the Net package as property of Eth
- *
- * @param {Object} net
- */
-Eth.prototype.setNetPackage = function (net) {
-    this.net = net;
-    this.net.getNetworkType = getNetworkType.bind(this);
-};
-
-/**
- * Sets the Accounts package as property of Eth
- *
- * @param {Object} accounts
- */
-Eth.prototype.setAccountsPackage = function (accounts) {
-    this.accounts = accounts;
-};
-
-/**
- * Sets the Personal package as property of Eth
- *
- * @param {Object} personal
- */
-Eth.prototype.setPersonalPackage = function (personal) {
-    this.personal = personal;
-    this.personal.defaultAccount = this.defaultAccount;
-};
-
-/**
- * Sets the Iban package as property of Eth
- *
- * @param {Object} iban
- */
-Eth.prototype.setIBANPackage = function (iban) {
-    this.Iban = iban;
-};
-
-/**
- * Sets the ABI package as property of Eth
- *
- * @param {Object} abi
- */
-Eth.prototype.setABIPackage = function (abi) {
-    this.abi = abi;
-};
-
-/**
- * Sets the ENS package as property of Eth
- *
- * @param {Object} ens
- */
-Eth.prototype.setENSPackage = function (ens) {
-    this.ens = ens;
-};
-
-/**
- * Sets the SubscriptionsResolver
- *
- * @param subscriptionsResolver
- */
-Eth.prototype.setSubscriptionsResolver = function (subscriptionsResolver) {
-    this.subscriptionsResolver = subscriptionsResolver;
-};
-
-/**
  * Defines accessors for defaultAccount
  */
-Object.defineProperty(Eth, 'defaultAccount', {
+Object.defineProperty(Eth, 'defaultAccount', { // Todo: Move this getter and setter to ConnectionModel and only set here the defaultAccount
     get: function () {
         return this.defaultAccount ? this.defaultAccount : null;
     },
@@ -236,6 +128,7 @@ Object.defineProperty(Eth, 'defaultAccount', {
             this.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
         }
 
+        //TODO: remove the lines below this will now longer required because of the ConnectionModel singleton
         // also set on the Contract object
         _this.Contract.defaultAccount = defaultAccount;
         _this.personal.defaultAccount = defaultAccount;
@@ -253,7 +146,7 @@ Object.defineProperty(Eth, 'defaultAccount', {
 /**
  * Defines accessors for defaultBlock
  */
-Object.defineProperty(Eth, 'defaultBlock', {
+Object.defineProperty(Eth, 'defaultBlock', { // Todo: Move this getter and setter to ConnectionModel and only set here the defaultBlock
     get: function () {
         return this.defaultBlock ? this.defaultBlock : 'latest';
     },
@@ -261,6 +154,7 @@ Object.defineProperty(Eth, 'defaultBlock', {
         var self = this;
         this.defaultBlock = val;
 
+        //TODO: remove the lines below this will now longer required because of the ConnectionModel singleton
         // also set on the Contract object
         this.Contract.defaultBlock = this.defaultBlock;
         this.personal.defaultBlock = this.defaultBlock;
@@ -288,6 +182,7 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
 
 /**
  * Appends rpc methods to Eth
+ * TODO: Refactor methods package and remove that ugly array and write the methods instead of generating it over the constructor.
  */
 Eth.prototype.setMethods = function () {
     var methods = [
@@ -490,6 +385,6 @@ Eth.prototype.setMethods = function () {
 /**
  * Extends Eth with clearSubscriptions from the current provider
  */
-Eth.prototype.clearSubscriptions = this.currentProvider.clearSubscriptions;
+Eth.prototype.clearSubscriptions = this.connectionModel.provider.clearSubscriptions;
 
 module.exports = Eth;
