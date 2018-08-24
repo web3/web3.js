@@ -1,5 +1,5 @@
 {
-    "name": "web3-core",
+    "name": "web3-core-package",
     "namespace": "ethereum",
     "version": "1.0.0-beta.35",
     "description": "Web3 core tools for sub packages. This is an internal package.",
@@ -9,7 +9,6 @@
     "dependencies": {
         "web3-core-helpers": "1.0.0-beta.35",
         "web3-core-method": "1.0.0-beta.35",
-        "web3-core-requestmanager": "1.0.0-beta.35",
         "web3-utils": "1.0.0-beta.35"
     }
 }
