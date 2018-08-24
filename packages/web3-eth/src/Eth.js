@@ -117,59 +117,6 @@ Eth.prototype.setContractPackage = function (contractPackage) {// TODO: check if
 };
 
 /**
- * Defines accessors for defaultAccount
- */
-Object.defineProperty(Eth, 'defaultAccount', { // Todo: Move this getter and setter to ConnectionModel and only set here the defaultAccount
-    get: function () {
-        return this.defaultAccount ? this.defaultAccount : null;
-    },
-    set: function (val) {
-        if (val) {
-            this.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
-        }
-
-        //TODO: remove the lines below this will now longer required because of the ConnectionModel singleton
-        // also set on the Contract object
-        _this.Contract.defaultAccount = defaultAccount;
-        _this.personal.defaultAccount = defaultAccount;
-
-        // update defaultBlock
-        methods.forEach(function (method) {
-            method.defaultAccount = defaultAccount;
-        });
-
-        return val;
-    },
-    enumerable: true
-});
-
-/**
- * Defines accessors for defaultBlock
- */
-Object.defineProperty(Eth, 'defaultBlock', { // Todo: Move this getter and setter to ConnectionModel and only set here the defaultBlock
-    get: function () {
-        return this.defaultBlock ? this.defaultBlock : 'latest';
-    },
-    set: function (val) {
-        var self = this;
-        this.defaultBlock = val;
-
-        //TODO: remove the lines below this will now longer required because of the ConnectionModel singleton
-        // also set on the Contract object
-        this.Contract.defaultBlock = this.defaultBlock;
-        this.personal.defaultBlock = this.defaultBlock;
-
-        // update defaultBlock
-        methods.forEach(function (method) {
-            method.defaultBlock = self.defaultBlock;
-        });
-
-        return val;
-    },
-    enumerable: true
-});
-
-/**
  * Gets and executes subscription for an given type
  *
  * @param {string} type

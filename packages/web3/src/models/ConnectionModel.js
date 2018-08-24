@@ -1,47 +1,27 @@
-
 /**
  * @param {Object} provider
  * @constructor
  */
 function ConnectionModel(provider) {
-    this.setProvider(provider);
+    this.provider = provider;
+    this.givenProvider = null;
+    this.defaultBlock = null;
 }
 
 /**
- * Sets the provider object
- *
- * @param {Object} provider
+ * Defines accessors for defaultAccount
  */
-ConnectionModel.prototype.setProvider = function (provider) {
-    this.provider = provider;
-};
-
-/**
- * Gets the provider Object
- *
- * @returns {Object} provider
- */
-ConnectionModel.prototype.getProvider = function () {
-    return this.provider;
-};
-
-/**
- * Sets givenProvider
- *
- * @param {Object} givenProvider
- */
-ConnectionModel.prototype.setGivenProvider = function (givenProvider) {
-    this.givenProvider = givenProvider;
-};
-
-/**
- * Gets the givenProvider (currentProvider, ipcWrapperProvider or ethereumProvider)
- *
- * @returns {Object|*}
- */
-ConnectionModel.prototype.getGivenProvider = function () {
-    return this.givenProvider;
-};
+Object.defineProperty(Eth, 'defaultAccount', {
+    get: function () {
+        return this.defaultAccount;
+    },
+    set: function (val) {
+        if (val) {
+            this.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
+        }
+    },
+    enumerable: true
+});
 
 ConnectionModel.prototype.getNetworkType = function () {
     // return network type (main, ropsten, kovan etc.)
