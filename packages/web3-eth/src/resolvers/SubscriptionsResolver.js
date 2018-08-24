@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EthSubscriptionResolver.js
+ * @file SubscriptionsResolver.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -29,7 +29,7 @@ var formatters = require('web3-core-helpers').formatters;
  * @param {Object} provider
  * @constructor
  */
-function EthSubscriptionResolver(provider) {
+function SubscriptionsResolver(provider) {
     this.provider = provider;
 }
 
@@ -41,7 +41,7 @@ function EthSubscriptionResolver(provider) {
  * @param {Function} callback
  * @returns {Object}
  */
-EthSubscriptionResolver.prototype.resolve = function (type, parameters, callback) {
+SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) {
     switch (type) {
         case 'newBlockHeaders':
             return this.getSubscription('newHeads', null, null, formatters.outputBlockFormatter, callback);
@@ -70,7 +70,7 @@ EthSubscriptionResolver.prototype.resolve = function (type, parameters, callback
  * @param {Function} callback
  * @returns {Subscription}
  */
-EthSubscriptionResolver.prototype.getSubscription = function (type, parameters, inputFormatter, outputFormatter, callback) {
+SubscriptionsResolver.prototype.getSubscription = function (type, parameters, inputFormatter, outputFormatter, callback) {
     if (!parameters) {
         parameters = [];
     }
@@ -87,14 +87,14 @@ EthSubscriptionResolver.prototype.getSubscription = function (type, parameters, 
 /**
  * @param parameters
  */
-EthSubscriptionResolver.prototype.getLogsSubscription = function (parameters) {
+SubscriptionsResolver.prototype.getLogsSubscription = function (parameters) {
     // implementation on hold
 };
 
 /**
  * @param {Function} callback
  */
-EthSubscriptionResolver.prototype.getSyncingSubscription = function (callback) {
+SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
     var subscription = new Subscription(
         this.provider,
         'syncing',
@@ -147,4 +147,13 @@ EthSubscriptionResolver.prototype.getSyncingSubscription = function (callback) {
     return subscription;
 };
 
-module.exports = EthSubscriptionResolver;
+/**
+ * Sets the provider
+ *
+ * @param {Object} provider
+ */
+SubscriptionsResolver.prototype.setProvider = function (provider) {
+    this.provider = provider;
+};
+
+module.exports = SubscriptionsResolver;

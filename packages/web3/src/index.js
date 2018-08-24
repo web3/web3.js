@@ -16,64 +16,80 @@
 */
 /**
  * @file index.js
- * @authors:
- *   Fabian Vogelsteller <fabian@ethereum.org>
- *   Gav Wood <gav@parity.io>
- *   Jeffrey Wilcke <jeffrey.wilcke@ethereum.org>
- *   Marek Kotewicz <marek@parity.io>
- *   Marian Oancea <marian@ethereum.org>
- * @date 2017
+ * @authors: Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
 
-
+var PackageFactory = require('./factories/PackageFactory');
+var CoreFactory = require('./factories/CoreFactory');
 var version = require('../package.json').version;
-var core = require('web3-core');
-var Eth = require('web3-eth');
-var Net = require('web3-net');
-var Personal = require('web3-eth-personal');
-var Shh = require('web3-shh');
-var Bzz = require('web3-bzz');
-var utils = require('web3-utils');
 
-var Web3 = function Web3() {
-    var _this = this;
-
-    // sets _requestmanager etc
-    core.packageInit(this, arguments);
+/**
+ * @param {Object} provider
+ * @param {Object} net
+ * @constructor
+ */
+var Web3 = function Web3(provider, net) {
+    this.connectionModel = new ConnectionModel(provider);
+    this.coreFactory = new CoreFactory();
+    this.packageFactory = new PackageFactory(this.coreFactory, this.connectionModel);
 
     this.version = version;
-    this.utils = utils;
 
-    this.eth = new Eth(this);
-    this.shh = new Shh(this);
-    this.bzz = new Bzz(this);
-
-    // overwrite package setProvider
-    var setProvider = this.setProvider;
-    this.setProvider = function (provider, net) {
-        setProvider.apply(_this, arguments);
-
-        this.eth.setProvider(provider, net);
-        this.shh.setProvider(provider, net);
-        this.bzz.setProvider(provider);
-
-        return true;
-    };
+    this.utils = this.coreFactory.createUtils();
+    this.eth = this.packageFactory.createEthPackage();
+    this.shh = this.packageFactory.createShhPackage();
+    this.bzz = this.packageFactory.createBzzPackage();
 };
+
+/**
+ * Defines accessors for connectionModel
+ */
+Object.defineProperty(Web3, 'connectionModel', {
+    get: function () {
+        return this.connectionModel;
+    },
+    set: function (connectionModel) {
+        if (this.connectionModel) {
+            return;
+        }
+
+        this.connectionModel = connectionModel;
+    },
+    enumerable: true
+});
 
 Web3.version = version;
-Web3.utils = utils;
+
+Web3.utils = new CoreFactory().createUtils();
+
 Web3.modules = {
-    Eth: Eth,
-    Net: Net,
-    Personal: Personal,
-    Shh: Shh,
-    Bzz: Bzz
+    Eth: function (provider) {
+        return new PackageFactory(new CoreFactory(), new ConnectionModel(provider)).createEthPackage();
+    },
+    Net: function (provider) {
+        return new PackageFactory(new CoreFactory(), new ConnectionModel(provider)).createEthPackage();
+    },
+    Personal: function (provider) {
+        return new PackageFactory(new CoreFactory(), new ConnectionModel(provider)).createPersonalPackage();
+    },
+    Shh: function (provider) {
+        return new PackageFactory(new CoreFactory(), new ConnectionModel(provider)).createShhPackage();
+    },
+    Bzz: function (provider) {
+        return new PackageFactory(new CoreFactory(), new ConnectionModel(provider)).createBzzPackage();
+    }
 };
 
-core.addProviders(Web3);
+Web3.providers = {
+    HttpProvider: require('web3-provider-http'),
+    WebsocketProvider: require('web3-provider-ws'),
+    IpcProvider: require('web3-provider-ipc')
+};
+
+// Web3.givenProvider = this.providerDetector.detect();
 
 module.exports = Web3;
 

@@ -21,5 +21,9 @@
 "use strict";
 
 var ProviderAdapterResolver = require('./resolvers/ProviderAdapterResolver');
+var ProviderDetector = require('./detectors/ProviderDetector');
 
-module.exports = ProviderAdapterResolver;
+module.exports = {
+    ProviderAdapterResolver: ProviderAdapterResolver,
+    ProviderDetector: ProviderDetector
+};
