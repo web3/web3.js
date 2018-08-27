@@ -66,10 +66,12 @@ PackageFactory.prototype.createEthPackage = function () {
 };
 
 /**
- * @returns {Contract}
+ * Bind ConnectionModel and Accounts package to Contract and return the uninstantiated Contract object.
+ *
+ * @returns {Contract} // TODO: Refactor Contract for usage of binded properties
  */
 PackageFactory.prototype.createContractPackage = function () {
-    return Contract;// have a closer look later
+    return Contract.bind({connectionModel: this.connectionModel, accounts: this.createAccountsPackage()});
 };
 
 /**

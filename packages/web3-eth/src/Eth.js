@@ -16,8 +16,8 @@
  */
 /**
  * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
@@ -52,57 +52,14 @@ var uncleCountCall = function (args) {
 
 
 var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptionsResolver) {
-    this.net = connectionModel.getNetworkMethods();
+    this.net = connectionModel.getNetworkMethodsAsObject();
+    this.Contract = this.packageFactory.createContractPackage();
     this.accounts = this.packageFactory.createAccountsPackage();
     this.personal = this.packageFactory.createPersonalPackage();
     this.iban = this.packageFactory.createIbanPackage();
     this.abi = this.packageFactory.createAbiPackage();
     this.ens = this.packageFactory.createEnsPackage();
     this.subscriptionsResolver = subscriptionsResolver;
-};
-
-/**
- * Sets the Contract package as property of Eth
- *
- * @param {Object} contractPackage
- */
-Eth.prototype.setContractPackage = function (contractPackage) {// TODO: check if this could be removed because of the ConnectionModel
-    // create a proxy Contract type for this instance, as a Contract's provider
-    // is stored as a class member rather than an instance variable. If we do
-    // not create this proxy type, changing the provider in one instance of
-    // web3-eth would subsequently change the provider for _all_ contract
-    // instances!
-    var self = this;
-    var Contract = function Contract() {
-        contractPackage.apply(this, arguments);
-
-        // when Eth.setProvider is called, call packageInit
-        // on all contract instances instantiated via this Eth
-        // instances. This will update the currentProvider for
-        // the contract instances
-        var _this = this;
-        var setProvider = self.setProvider;
-        self.setProvider = function () {
-            setProvider.apply(self, arguments);
-            core.packageInit(_this, [self.currentProvider]);
-        };
-    };
-
-    Contract.setProvider = function () {
-        contractPackage.setProvider.apply(this, arguments);
-    };
-
-    // make our proxy Contract inherit from web3-eth-contract so that it has all
-    // the right functionality and so that instanceof and friends work properly
-    Contract.prototype = Object.create(contractPackage.prototype);
-    Contract.prototype.constructor = Contract;
-
-    // add contract
-    this.Contract = Contract;
-    this.Contract.defaultAccount = this.defaultAccount;
-    this.Contract.defaultBlock = this.defaultBlock;
-    this.Contract.setProvider(this.currentProvider, this.accounts);
-
 };
 
 /**
