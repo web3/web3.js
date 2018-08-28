@@ -125,6 +125,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (// TODO: check ext
 /**
  * Handle contract deployment
  *
+ * TODO: Create AbstractWorkflow and determine in the Method object which workflow should be executed.
  * @param {Object} receipt
  * @param {Object} promiEvent
  * @param {Function} callback
