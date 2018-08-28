@@ -31,7 +31,7 @@
  * @param {Function} outputFormatter
  * @param {Function} extraFormatters
  * @param {Object} promiEvent
- * @param {Object} transactionConfirmationHandler
+ * @param {Object} transactionConfirmationWorkflow
  * @constructor
  */
 function Method(
@@ -42,7 +42,7 @@ function Method(
     outputFormatter,
     extraFormatters,
     promiEvent,
-    transactionConfirmationHandler
+    transactionConfirmationWorkflow
 ) {
     this.provider = provider;
     this.rpcMethod = rpcMethod;
@@ -63,11 +63,11 @@ function Method(
  * @returns {Promise | eventifiedPromise}
  */
 Method.prototype.send = function (callback) {
-    if (this.isCall(this.rpcMethod)) {
-        return this.call(callback);
+    if (this.isSendTransaction(this.rpcMethod)) {
+        return this.sendTransaction(callback);
     }
 
-    return this.sendTransaction(callback);
+    return this.call(callback);
 };
 
 /**
@@ -94,8 +94,8 @@ Method.prototype.call = function (callback) {
 Method.prototype.formatOutput = function (response, callback) {
     var self = this;
 
-    if(_.isArray(response)) {
-        response = response.map(function(responseItem){
+    if (_.isArray(response)) {
+        response = response.map(function (responseItem) {
             if (self.outputFormatter && responseItem) {
                 return self.outputFormatter(responseItem);
             }
@@ -129,7 +129,7 @@ Method.prototype.sendTransaction = function (callback) {
         self.transactionConfirmationWorkflow.execute(
             response,
             self.outputFormatter,
-            self.extraFormatters,
+            self.isContractDeployment(self.parameters),
             self.promiEvent,
             callback
         );
@@ -150,8 +150,8 @@ Method.prototype.sendTransaction = function (callback) {
  * @returns {array}
  */
 Method.prototype.formatInput = function (parameters) {
-    return this.inputFormatters.map(function(formatter, key) {
-       return formatter ? formatter(parameters[key]) : parameters[key];
+    return this.inputFormatters.map(function (formatter, key) {
+        return formatter ? formatter(parameters[key]) : parameters[key];
     });
 };
 
@@ -161,6 +161,16 @@ Method.prototype.formatInput = function (parameters) {
  * @param {string} rpcMethod
  * @returns {boolean}
  */
-Method.prototype.isCall = function (rpcMethod) {
-    return rpcMethod.indexOf('eth_call') > -1;
+Method.prototype.isSendTransaction = function (rpcMethod) {
+    return rpcMethod === 'eth_sendTransaction' || rpcMethod === 'eth_sendRawTransaction';
+};
+
+/**
+ * Check if this method deploys a contract
+ *
+ * @param {array} parameters
+ * @returns {boolean}
+ */
+Method.prototype.isContractDeployment = function (parameters) {
+    return _.isObject(parameters[0]) && parameters[0].data && parameters[0].from && !parameters[0].to;
 };

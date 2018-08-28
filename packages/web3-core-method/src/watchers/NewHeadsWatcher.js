@@ -65,11 +65,11 @@ NewHeadsWatcher.prototype.watch = function (transactionHash) {
 NewHeadsWatcher.prototype.stop = function () {
     if(this.confirmationSubscription) {
         this.confirmationSubscription.unsubscribe();
-
-        return;
     }
 
-    clearInterval(this.confirmationInterval);
+    if(this.confirmationInterval) {
+        clearInterval(this.confirmationInterval);
+    }
 };
 
 // Inherit EventEmitter
