@@ -69,17 +69,20 @@ AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, er
 
     if (response && response.error) {
         reject(errors.ErrorResponse(response));
+
         return;
     }
 
 
     if(!JSONRpcResponseValidator.isValid(response.result)) {
         reject(errors.InvalidResponse(response));
+
         return;
     }
 
     if(!error) {
         resolve(response.result);
+
         return;
     }
 

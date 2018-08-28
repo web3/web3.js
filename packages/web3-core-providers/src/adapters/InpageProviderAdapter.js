@@ -22,11 +22,12 @@
 
 "use strict";
 
+var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
 var JSONRpcMapper = require('./JSONRpcMapper.js');
 var errors = require('web3-core-helpers').errors;
 
 /**
- * @param {InpageProvider} inpageProvider
+ * @param {Object} inpageProvider
  * @constructor
  */
 function InpageProviderAdapter(inpageProvider) {

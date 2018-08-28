@@ -22,6 +22,12 @@
 
 "use strict";
 
+var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
+
+/**
+ * @param {Object} provider
+ * @constructor
+ */
 function SocketProviderAdapter(provider) {
     AbstractProviderAdapter.call(provider);
     this.subscriptions = [];

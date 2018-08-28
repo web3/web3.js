@@ -23,11 +23,6 @@
 "use strict";
 
 var _ = require('underscore');
-var core = require('web3-core');
-var helpers = require('web3-core-helpers');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var formatter = helpers.formatters;
 
 
 var blockCall = function (args) {
@@ -59,6 +54,8 @@ var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptio
     this.iban = this.packageFactory.createIbanPackage();
     this.abi = this.packageFactory.createAbiPackage();
     this.ens = this.packageFactory.createEnsPackage();
+    this.utils = this.coreFactory.createUtils();
+    this.formatters = this.coreFactory.createFormatters();
     this.subscriptionsResolver = subscriptionsResolver;
 };
 
@@ -75,9 +72,10 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
 
 /**
  * Appends rpc methods to Eth
- * TODO: Refactor methods package and remove that ugly array and write the methods instead of generating it over the constructor.
+ *
  */
 Eth.prototype.setMethods = function () {
+    // TODO: change new Method(...) to this.coreFactory.createMethod(...);
     var methods = [
         new Method({
             name: 'getNodeInfo',
@@ -265,14 +263,6 @@ Eth.prototype.setMethods = function () {
             outputFormatter: formatter.outputLogFormatter
         }),
     ];
-
-    methods.forEach(function (method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager, _this.accounts); // second param means is eth.accounts (necessary for wallet signing)
-        method.defaultBlock = _this.defaultBlock;
-        method.defaultAccount = _this.defaultAccount;
-    });
-
 };
 
 /**

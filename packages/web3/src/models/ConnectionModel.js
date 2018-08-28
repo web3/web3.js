@@ -4,7 +4,7 @@
  */
 function ConnectionModel(provider) {
     this.provider = provider; //TODO: add provider resolver
-    this.givenProvider = null;
+    this.givenProvider = null; //TODO: add provider detection maybe this cant be here
 }
 
 /**
@@ -12,7 +12,7 @@ function ConnectionModel(provider) {
  */
 Object.defineProperty(Eth, 'defaultAccount', {
     get: function () {
-        return this.defaultAccount;
+        return this.defaultAccount || null;
     },
     set: function (val) {
         if (val) {

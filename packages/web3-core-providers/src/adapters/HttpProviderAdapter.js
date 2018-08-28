@@ -22,8 +22,10 @@
 
 "use strict";
 
+var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
+
 /**
- * @param {HttpProvider} httpProvider
+ * @param {Object} httpProvider
  * @constructor
  */
 function HttpProviderAdapter (httpProvider) {

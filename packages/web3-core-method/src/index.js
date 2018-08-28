@@ -34,7 +34,7 @@ var TIMEOUTBLOCK = 50;
 var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEOUTBLOCK
 var CONFIRMATIONBLOCKS = 24;
 
-var Method = function Method(options) {
+var Method = function Method(connectionModel, coreFactory, options) {
 
     if(!options.call || !options.name) {
         throw new Error('When creating a method you need to provide at least the "name" and "call" property.');
@@ -48,69 +48,68 @@ var Method = function Method(options) {
     this.transformPayload = options.transformPayload;
     this.extraFormatters = options.extraFormatters;
 
-    this.requestManager = options.requestManager;
+    this.connectionModel = connectionModel;
 
-    // reference to eth.accounts
-    this.accounts = options.accounts;
+    this.accounts = this.coreFactory.createAccountsPackage();
 
-    this.defaultBlock = options.defaultBlock || 'latest';
-    this.defaultAccount = options.defaultAccount || null;
+    // this.defaultBlock = this.connectionModel.defaultBlock;
+    // this.defaultAccount = this.connectionModel.defaultAccount;
 };
 
-Method.prototype.setRequestManager = function (requestManager, accounts) {
-    this.requestManager = requestManager;
+// Method.prototype.setRequestManager = function (requestManager, accounts) {
+//     this.requestManager = requestManager;
+//
+//     // reference to eth.accounts
+//     if (accounts) {
+//         this.accounts = accounts;
+//     }
+//
+// };
 
-    // reference to eth.accounts
-    if (accounts) {
-        this.accounts = accounts;
-    }
+// Method.prototype.createFunction = function (requestManager, accounts) {// Check where this parameters are used
+//     var func = this.buildCall();
+//     func.call = this.call;
+//
+//     this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
+//
+//     return func;
+// };
 
-};
+// Method.prototype.attachToObject = function (obj) {
+// //     var func = this.buildCall();
+// //     func.call = this.call;
+// //     var name = this.name.split('.');
+// //     if (name.length > 1) {
+// //         obj[name[0]] = obj[name[0]] || {};
+// //         obj[name[0]][name[1]] = func;
+// //     } else {
+// //         obj[name[0]] = func;
+// //     }
+// // };
 
-Method.prototype.createFunction = function (requestManager, accounts) {
-    var func = this.buildCall();
-    func.call = this.call;
-
-    this.setRequestManager(requestManager || this.requestManager, accounts || this.accounts);
-
-    return func;
-};
-
-Method.prototype.attachToObject = function (obj) {
-    var func = this.buildCall();
-    func.call = this.call;
-    var name = this.name.split('.');
-    if (name.length > 1) {
-        obj[name[0]] = obj[name[0]] || {};
-        obj[name[0]][name[1]] = func;
-    } else {
-        obj[name[0]] = func;
-    }
-};
-
-/**
- * Should be used to determine name of the jsonrpc method based on arguments
- *
- * @method getCall
- * @param {Array} arguments
- * @return {String} name of jsonrpc method
- */
-Method.prototype.getCall = function (args) {
-    return _.isFunction(this.call) ? this.call(args) : this.call;
-};
-
-/**
- * Should be used to extract callback from array of arguments. Modifies input param
- *
- * @method extractCallback
- * @param {Array} arguments
- * @return {Function|Null} callback, if exists
- */
-Method.prototype.extractCallback = function (args) {
-    if (_.isFunction(args[args.length - 1])) {
-        return args.pop(); // modify the args array!
-    }
-};
+// /**
+//  * Should be used to determine name of the jsonrpc method based on arguments
+//  *
+//  * @method getCall
+//  * @param {Array} arguments
+//  * @return {String} name of jsonrpc method
+//  */
+// Method.prototype.getCall = function (args) {
+//     return _.isFunction(this.call) ? this.call(args) : this.call;
+// };
+//
+// /**
+//  * Should be used to extract callback from array of arguments. Modifies input param
+//  *
+//  * @method extractCallback
+//  * @param {Array} arguments
+//  * @return {Function|Null} callback, if exists
+//  */
+// Method.prototype.extractCallback = function (args) {
+//     if (_.isFunction(args[args.length - 1])) {
+//         return args.pop(); // modify the args array!
+//     }
+// };
 
 /**
  * Should be called to check if the number of arguments is correct
@@ -164,31 +163,31 @@ Method.prototype.formatOutput = function (result) {
     }
 };
 
-/**
- * Should create payload from given input args
- *
- * @method toPayload
- * @param {Array} args
- * @return {Object}
- */
-Method.prototype.toPayload = function (args) {
-    var call = this.getCall(args);
-    var callback = this.extractCallback(args);
-    var params = this.formatInput(args);
-    this.validateArgs(params);
-
-    var payload = {
-        method: call,
-        params: params,
-        callback: callback
-    };
-
-    if (this.transformPayload) {
-        payload = this.transformPayload(payload);
-    }
-
-    return payload;
-};
+// /**
+//  * Should create payload from given input args
+//  *
+//  * @method toPayload
+//  * @param {Array} args
+//  * @return {Object}
+//  */
+// Method.prototype.toPayload = function (args) {
+//     var call = this.getCall(args);
+//     var callback = this.extractCallback(args);
+//     var params = this.formatInput(args);
+//     this.validateArgs(params);
+//
+//     var payload = {
+//         method: call,
+//         params: params,
+//         callback: callback
+//     };
+//
+//     if (this.transformPayload) {
+//         payload = this.transformPayload(payload);
+//     }
+//
+//     return payload;
+// };
 
 
 Method.prototype._confirmTransaction = function (defer, result, payload) {
