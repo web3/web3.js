@@ -29,18 +29,18 @@
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
- * @param {Function} extraFormatters
+ * @param {Function} extraFormatter
  * @param {Object} promiEvent
  * @param {Object} transactionConfirmationWorkflow
  * @constructor
  */
-function Method(
+function Method(// TODO: Add transaction signing
     provider,
     rpcMethod,
     parameters,
     inputFormatters,
     outputFormatter,
-    extraFormatters,
+    extraFormatter,
     promiEvent,
     transactionConfirmationWorkflow
 ) {
@@ -49,7 +49,7 @@ function Method(
     this.parameters = parameters;
     this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
-    this.extraFormatters = extraFormatters;
+    this.extraFormatter = extraFormatter;
     this.promiEvent = promiEvent;
     this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
 }
@@ -128,7 +128,7 @@ Method.prototype.sendTransaction = function (callback) {
     this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             response,
-            self.outputFormatter,
+            self.extraFormatter,
             self.isContractDeployment(self.parameters),
             self.promiEvent,
             callback

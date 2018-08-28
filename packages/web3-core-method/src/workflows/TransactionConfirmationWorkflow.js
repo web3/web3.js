@@ -50,14 +50,14 @@ function TransactionConfirmationWorkflow(// TODO: Timeout handling, remove event
  * Executes the transaction confirmation workflow
  *
  * @param {string} transactionHash
- * @param {Function} outputFormatter
+ * @param {Object} extraFormatters
  * @param {boolean} isContractDeployment
  * @param {Object} promiEvent
  * @param {Function} callback
  */
-TransactionConfirmationWorkflow.prototype.execute = function (// TODO: check extraFormatters
+TransactionConfirmationWorkflow.prototype.execute = function (
     transactionHash,
-    outputFormatter,
+    extraFormatters,
     isContractDeployment,
     promiEvent,
     callback
@@ -69,12 +69,12 @@ TransactionConfirmationWorkflow.prototype.execute = function (// TODO: check ext
             if (validationResult === true) {
 
                 if (isContractDeployment) {
-                    self.handleContractDeployment(receipt, promiEvent, callback);
+                    self.handleContractDeployment(receipt, extraFormatters, promiEvent, callback);
 
                     return;
                 }
 
-                this.handleSuccessState(receipt, promiEvent, callback);
+                this.handleSuccessState(this.executeExtraReceiptFormatter(receipt, extraFormatters), promiEvent, callback);
 
                 return;
             }
@@ -90,12 +90,12 @@ TransactionConfirmationWorkflow.prototype.execute = function (// TODO: check ext
                 if (validationResult === true) {
 
                     if (isContractDeployment) {
-                        self.handleContractDeployment(receipt, promiEvent, callback);
+                        self.handleContractDeployment(receipt, extraFormatters, promiEvent, callback);
 
                         return;
                     }
 
-                    var formattedReceipt = outputFormatter(receipt);
+                    var formattedReceipt = self.executeExtraReceiptFormatter(receipt, extraFormatters);
 
                     self.transactionConfirmationModel.addConfirmation(formattedReceipt);
                     var confirmationsCount = self.transactionConfirmationModel.getConfirmationsCount();
@@ -128,9 +128,10 @@ TransactionConfirmationWorkflow.prototype.execute = function (// TODO: check ext
  * TODO: Create AbstractWorkflow and determine in the Method object which workflow should be executed.
  * @param {Object} receipt
  * @param {Object} promiEvent
+ * @param {Object} extraFormatters
  * @param {Function} callback
  */
-TransactionConfirmationWorkflow.prototype.handleContractDeployment = function (receipt, promiEvent, callback) {
+TransactionConfirmationWorkflow.prototype.handleContractDeployment = function (receipt, extraFormatters, promiEvent, callback) {
     var self = this;
 
     if (!receipt.contractAddress) {
@@ -145,8 +146,8 @@ TransactionConfirmationWorkflow.prototype.handleContractDeployment = function (r
         if (contractCode.length > 2) {
             var result = receipt;
 
-            if (method.extraFormatters && method.extraFormatters.contractDeployFormatter) {
-                result = method.extraFormatters.contractDeployFormatter(receipt);
+            if (extraFormatters && extraFormatters.contractDeployFormatter) {
+                result = extraFormatters.contractDeployFormatter(receipt);
             }
 
             self.newHeadsWatcher.stop();
@@ -223,4 +224,21 @@ TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, pr
     promiEvent.eventEmitter.emit('error', error);
     promiEvent.eventEmitter.removeAllListeners();
     callback(error, null);
+};
+
+/**
+ * Execute receipt extra formatter on receipt if its defined.
+ *
+ * TODO: This sounds strange maybe it could be removed with a small refactoring
+ *
+ * @param {Object} receipt
+ * @param {Object} formatters
+ * @returns {Object}
+ */
+TransactionConfirmationWorkflow.prototype.executeExtraReceiptFormatter = function (receipt, formatters) {
+    if (formatters && formatters.receiptFormatter) {
+        receipt = formatters.receiptFormatter(receipt);
+    }
+
+    return receipt;
 };
