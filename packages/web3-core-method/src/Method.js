@@ -23,13 +23,14 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
  * @param {Object} provider
  * @param {string} rpcMethod
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
- * @param {Function} extraFormatter
  * @param {Object} promiEvent
  * @param {Object} transactionConfirmationWorkflow
  * @constructor
@@ -40,7 +41,6 @@ function Method(// TODO: Add transaction signing
     parameters,
     inputFormatters,
     outputFormatter,
-    extraFormatter,
     promiEvent,
     transactionConfirmationWorkflow
 ) {
@@ -49,7 +49,6 @@ function Method(// TODO: Add transaction signing
     this.parameters = parameters;
     this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
-    this.extraFormatter = extraFormatter;
     this.promiEvent = promiEvent;
     this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
 }
@@ -128,8 +127,6 @@ Method.prototype.sendTransaction = function (callback) {
     this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             response,
-            self.extraFormatter,
-            self.isContractDeployment(self.parameters),
             self.promiEvent,
             callback
         );
@@ -138,6 +135,7 @@ Method.prototype.sendTransaction = function (callback) {
     }).catch(function (error) {
         self.promiEvent.reject(error);
         self.promiEvent.on('error', error);
+        self.promiEvent.eventEmitter.removeAllListeners();
     });
 
     return this.promiEvent;
@@ -167,6 +165,8 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
 
 /**
  * Check if this method deploys a contract
+ *
+ * TODO: Move this to contract package
  *
  * @param {array} parameters
  * @returns {boolean}
