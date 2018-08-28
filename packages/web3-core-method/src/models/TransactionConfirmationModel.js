@@ -14,13 +14,22 @@
  You should have received a copy of the GNU Lesser General Public License
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
- * @file Method.js
+ * @file TransactionConfirmationModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-var Method = require('./Method');
+function TransactionConfirmationModel() {
+    this.confirmations = [];
+}
 
-module.exports = Method;
+TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
+    this.confirmations.push(receipt);
+};
+
+TransactionConfirmationModel.prototype.getConfirmationsCount = function () {
+    return this.confirmations.length;
+};
+
+

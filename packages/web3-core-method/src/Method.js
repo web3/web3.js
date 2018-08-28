@@ -51,7 +51,7 @@ function Method(
     this.outputFormatter = outputFormatter;
     this.extraFormatters = extraFormatters;
     this.promiEvent = promiEvent;
-    this.transactionConfirmationHandler = transactionConfirmationHandler;
+    this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
 }
 
 /**
@@ -79,7 +79,7 @@ Method.prototype.send = function (callback) {
 Method.prototype.call = function (callback) {
     var self = this;
     return this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
-        return self.handleCallResponse(response, callback)
+        return self.formatOutput(response, callback)
     });
 };
 
@@ -91,7 +91,7 @@ Method.prototype.call = function (callback) {
  * @param callback
  * @returns {*}
  */
-Method.prototype.handleCallResponse = function (response, callback) {
+Method.prototype.formatOutput = function (response, callback) {
     var self = this;
 
     if(_.isArray(response)) {
@@ -126,13 +126,15 @@ Method.prototype.handleCallResponse = function (response, callback) {
 Method.prototype.sendTransaction = function (callback) {
     var self = this;
     this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
-        self.promiEvent.resolve(this.transactionConfirmationHandler.handle(
+        self.transactionConfirmationWorkflow.execute(
             response,
             self.outputFormatter,
             self.extraFormatters,
-            callback,
-            self.promiEvent
-        ));
+            self.promiEvent,
+            callback
+        );
+
+        self.promiEvent.eventEmitter.emit('transactionHash', response)
     }).catch(function (error) {
         self.promiEvent.reject(error);
         self.promiEvent.on('error', error);

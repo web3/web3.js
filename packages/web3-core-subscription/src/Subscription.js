@@ -131,7 +131,7 @@ Subscription.prototype.reconnect = function (type, parameters, subscriptionId, c
  * @returns {*}
  */
 Subscription.prototype.formatOutput = function (output) {
-    if (_.isFunction(this.outputFormmater) && output) {
+    if (_.isFunction(this.outputFormatter) && output) {
         return this.outputFormatter(output);
     }
 
