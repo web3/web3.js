@@ -27,12 +27,14 @@ var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEO
 var CONFIRMATIONBLOCKS = 24;
 
 /**
+ * @param {Object} provider
  * @param {Object} transactionConfirmationModel
  * @param {Object} transactionReceiptValidator
  * @param {Object} newHeadsWatcher
  * @constructor
  */
-function TransactionConfirmationWorkflow( // TODO: Timeout handling
+function TransactionConfirmationWorkflow(// TODO: Timeout handling, handling of contract deployment
+    provider,
     transactionConfirmationModel,
     transactionReceiptValidator,
     newHeadsWatcher
@@ -40,6 +42,7 @@ function TransactionConfirmationWorkflow( // TODO: Timeout handling
     this.transactionConfirmationModel = transactionConfirmationModel;
     this.transactionReceiptValidator = transactionReceiptValidator;
     this.newHeadsWatcher = newHeadsWatcher;
+    this.provider = provider;
 }
 
 /**
@@ -72,7 +75,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (transactionHash, o
         }
 
         self.newHeadsWatcher.watch().on('newHead', function () {
-            self.getTransactionReciept(transactionHash).then(function (receipt) {
+            self.getTransactionReceipt(transactionHash).then(function (receipt) {
                 var validationResult = self.transactionReceiptValidator.validate(receipt);
                 if (validationResult === true) {
                     var formattedReceipt = outputFormatter(receipt);
@@ -105,4 +108,15 @@ TransactionConfirmationWorkflow.prototype.execute = function (transactionHash, o
             });
         });
     });
+};
+
+/**
+ * Get receipt by transaction hash
+ *
+ * @param {string} transactionHash
+ */
+TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (transactionHash) {
+    this.provider.send('eth_getTransactionReceipt', transactionHash).then(function(receipt) {
+        return this.formatters.outputTransactionReceiptFormatter(receipt);
+    })
 };
