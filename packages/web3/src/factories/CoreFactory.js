@@ -1,7 +1,31 @@
+/*
+ This file is part of web3.js.
+
+ web3.js is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ web3.js is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * @file CoreFactory.js
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
+ */
+
+"use strict";
+
 var Subscription = require('web3-core-subscription');
 var PromiEvent = require('web3-core-promievent');
-var Net = require('web3-net');
 var helpers = require('web3-core-helpers');
+var MethodPackageFactory = require('web3-core-method');
 var Utils = require('web3-utils');
 
 function CoreFactory() { }
@@ -34,24 +58,19 @@ CoreFactory.prototype.createPromiEvent = function () {
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
+ *
  * @returns {Method}
  */
 CoreFactory.prototype.createMethod = function (provider, rpcMethod,  parameters, inputFormatters, outputFormatter) {
-    return new Method(
+    return new MethodPackageFactory().createMethod(
         provider,
+        this,
         rpcMethod,
         parameters,
         inputFormatters,
         outputFormatter,
-        this.createPromiEvent(),
-        this.createTransactionConfirmationWorkflow()
+        this.createPromiEvent()
     );
-};
-
-CoreFactory.prototype.createTransactionConfirmationWorkflow = function () {
- // TODO: overthink the implemented factory pattern. It is strange to create here an internal package object.
- // maybe each package will have his own PackageFactory and it will have an web3-core-factories package where I combine all the factories
- // to one "masterFactory" this master factory should be a proxy to all factories.
 };
 
 /**
@@ -65,32 +84,17 @@ CoreFactory.prototype.createUtils = function () { // maybe this can be in a glob
  * Creates Batch object
  *
  * @param {Object} connectionModel
+ *
  * @returns {Batch}
  */
 CoreFactory.prototype.createBatch = function (connectionModel) {
     return new Batch(connectionModel);
 };
 
-// This helpers things are strange.. maybe we can add this directly in the Web3 global scope.. something like helpers.X
-CoreFactory.prototype.createFormatters = function () {// helpers
+CoreFactory.prototype.createFormatters = function () {
     return helpers.formatters;
 };
 
-CoreFactory.prototype.createErrors = function () { // helpers
+CoreFactory.prototype.createErrors = function () {
     return helpers.errors;
 };
-
-//TODO: move this to connection model
-// /**
-//  * Creates Net object
-//  *
-//  * @param {Object} provider
-//  * @returns {Net}
-//  */
-// CoreFactory.prototype.createNet = function (provider) {
-//     if (provider) {
-//         this.connectionModel.setProvider(provider);
-//     }
-//
-//     return new Net(this.connectionModel);
-// };

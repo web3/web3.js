@@ -23,14 +23,14 @@
 "use strict";
 
 /**
- * @param {Object} connectionModel
+ * @param {Object} provider
  * @param {Object} transactionConfirmationModel
  * @param {Object} transactionReceiptValidator
  * @param {Object} newHeadsWatcher
  * @constructor
  */
 function TransactionConfirmationWorkflow(
-    connectionModel,
+    provider,
     transactionConfirmationModel,
     transactionReceiptValidator,
     newHeadsWatcher
@@ -38,8 +38,7 @@ function TransactionConfirmationWorkflow(
     this.transactionConfirmationModel = transactionConfirmationModel;
     this.transactionReceiptValidator = transactionReceiptValidator;
     this.newHeadsWatcher = newHeadsWatcher;
-    this.provider = connectionModel.provider;
-    this.connectionModel = connectionModel;
+    this.provider = provider;
 }
 
 /**

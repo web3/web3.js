@@ -16,11 +16,11 @@
  */
 
 /**
- * @file Method.js
+ * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-var Method = require('./Method');
+var MethodPackageFactory = require('./factories/MethodPackageFactory');
 
-module.exports = Method;
+module.exports = MethodPackageFactory;
