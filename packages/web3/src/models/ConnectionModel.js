@@ -166,7 +166,9 @@ ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransa
         this.provider,
         'eth_getBlockByNumber',
         [blockNumber, returnTransactionObjects],
-        [this.formatters.inputBlockNumberFormatter, function (val) { return !!val }],
+        [this.formatters.inputBlockNumberFormatter, function (val) {
+            return !!val
+        }],
         this.formatters.outputBlockFormatter
     ).send(callback);
 };

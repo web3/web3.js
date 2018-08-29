@@ -23,30 +23,36 @@
 "use strict";
 
 var _ = require('underscore');
-var HttpProviderAdapter = require('../adapters/HttpProviderAdapter');
-var SocketProviderAdapter = require('../adapters/SocketProviderAdapter');
-var InpageProviderAdapter = require('../adapters/InpageProviderAdapter');
-var WebsocketProvider = require('web3-providers-ws');
-var HttpProvider = require('web3-providers-http');
-var IpcProvider = require('web3-providers-ipc');
 
-var ProviderAdapterResolver = {};
+/**
+ * @param {ProviderPackageFactory} providerPackageFactory
+ * @constructor
+ */
+function ProviderAdapterResolver(providerPackageFactory) {
+    this.providerPackageFactory = providerPackageFactory;
+}
 
-ProviderAdapterResolver.resolve = function (provider, net) {
+ProviderAdapterResolver.prototype.resolve = function (provider, net) {
 
     if (typeof provider === 'string') {
         // HTTP
         if (/^http(s)?:\/\//i.test(provider)) {
-            return new HttpProviderAdapter(new HttpProvider(provider));
+            return this.providerPackageFactory.createHttpProviderAdapter(
+                this.providerPackageFactory.createHttpProvider(provider)
+            );
         }
         // WS
         if (/^ws(s)?:\/\//i.test(provider)) {
-            return new SocketProviderAdapter(new WebsocketProvider(provider));
+            return this.providerPackageFactory.createSocketProviderAdapter(
+                this.providerPackageFactory.createWebsocketProvider(provider)
+            );
         }
 
         // IPC
         if (provider && _.isObject(net) && _.isFunction(net.connect)) {
-            return new SocketProviderAdapter(new IpcProvider(provider, net));
+            return this.providerPackageFactory.createSocketProviderAdapter(
+                this.providerPackageFactory.createIpcProvider(provider, net)
+            );
         }
     }
 
@@ -55,7 +61,7 @@ ProviderAdapterResolver.resolve = function (provider, net) {
     }
 
     if (_.isFunction(provider.sendAsync)) {
-        return new InpageProviderAdapter(provider);
+        return this.providerPackageFactory.createInpageProviderAdapter(provider);
     }
 };
 
