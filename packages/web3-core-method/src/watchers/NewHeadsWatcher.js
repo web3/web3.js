@@ -76,3 +76,5 @@ NewHeadsWatcher.prototype.stop = function () {
 // Inherit EventEmitter
 NewHeadsWatcher.prototype = Object.create(EventEmitter.prototype);
 NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
+
+module.exports = NewHeadsWatcher;

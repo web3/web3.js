@@ -154,3 +154,5 @@ TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, pr
     promiEvent.eventEmitter.removeAllListeners();
     callback(error, null);
 };
+
+module.exports = TransactionConfirmationWorkflow;

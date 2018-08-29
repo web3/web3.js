@@ -195,3 +195,5 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
 Method.prototype.isGasPriceDefined = function () {
     return _.isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
 };
+
+module.exports = Method;

@@ -53,3 +53,5 @@ TransactionReceiptValidator.prototype.isValidReceiptStatus = function (receipt) 
 TransactionReceiptValidator.prototype.isValidGasUsage = function (receipt) {
     return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
 };
+
+module.exports = TransactionReceiptValidator;

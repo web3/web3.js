@@ -108,3 +108,5 @@ TransactionConfirmationModel.prototype.isTimeoutTimeExceeded = function (watcher
 
     return (this.timeoutCounter - 1) >= this.TIMEOUTBLOCK;
 };
+
+module.exports = TransactionConfirmationModel;
