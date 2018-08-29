@@ -61,7 +61,7 @@ CoreFactory.prototype.createPromiEvent = function () {
  *
  * @returns {Method}
  */
-CoreFactory.prototype.createMethod = function (provider, rpcMethod,  parameters, inputFormatters, outputFormatter) {
+CoreFactory.prototype.createMethod = function (provider, rpcMethod, parameters, inputFormatters, outputFormatter) {
     return new MethodPackageFactory().createMethod(
         provider,
         this,
@@ -78,8 +78,8 @@ CoreFactory.prototype.createMethod = function (provider, rpcMethod,  parameters,
  *
  * @returns {Object}
  */
-CoreFactory.prototype.createUtils = function () { // maybe this can be in a global scope
-  return Utils;
+CoreFactory.prototype.createUtils = function () {
+    return Utils;
 };
 
 /**
