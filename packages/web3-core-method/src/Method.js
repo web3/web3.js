@@ -107,7 +107,9 @@ Method.prototype.send = function (callback) {
 /**
  * Sends a JSON-RPC call request
  *
- * @param callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {Promise}
  */
 Method.prototype.call = function (callback) {
@@ -156,6 +158,8 @@ Method.prototype.formatOutput = function (response, callback) {
  *
  * @param {string} gasPrice
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 Method.prototype.sendTransaction = function (gasPrice, callback) {
@@ -195,6 +199,7 @@ Method.prototype.request = function () {
  * Formats the input parameters
  *
  * @param parameters
+ *
  * @returns {array}
  */
 Method.prototype.formatInput = function (parameters) {
@@ -205,6 +210,7 @@ Method.prototype.formatInput = function (parameters) {
 
 /**
  * Gets the gasPrice with the eth_gasPrice RPC call.
+ *
  * @returns {Promise<string>}
  */
 Method.prototype.getGasPrice = function () {
@@ -215,6 +221,7 @@ Method.prototype.getGasPrice = function () {
  * Determines if the JSON-RPC method is sendTransaction
  *
  * @param {string} rpcMethod
+ *
  * @returns {boolean}
  */
 Method.prototype.isSendTransaction = function (rpcMethod) {
@@ -225,6 +232,7 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
  * Determines if the JSON-RPC method is sendRawTransaction
  *
  * @param {string} rpcMethod
+ *
  * @returns {boolean}
  */
 Method.prototype.isSendRawTransaction = function (rpcMethod) {
@@ -235,6 +243,7 @@ Method.prototype.isSendRawTransaction = function (rpcMethod) {
  * Determines if the JSON-RPC method is sign.
  *
  * @param {string} rpcMethod
+ * 
  * @returns {boolean}
  */
 Method.prototype.isSign = function (rpcMethod) {
