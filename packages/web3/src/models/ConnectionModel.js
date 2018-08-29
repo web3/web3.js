@@ -1,10 +1,37 @@
+/*
+ This file is part of web3.js.
+
+ web3.js is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ web3.js is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+
+ You should have received a copy of the GNU Lesser General Public License
+ along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file ConnectionModel.js
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
+ */
+
 /**
  * @param {Object} provider
+ * @param {CoreFactory} coreFactory
  * @constructor
  */
-function ConnectionModel(provider) {
+function ConnectionModel(provider, coreFactory) {
     this.provider = provider; //TODO: add provider resolver
     this.givenProvider = null; //TODO: add provider detection maybe this cant be here
+    this.coreFactory = coreFactory;
+    this.utils = this.coreFactory.createUtils();
+    this.formatters = this.coreFactory.createFormatters();
 }
 
 /**
@@ -51,7 +78,7 @@ ConnectionModel.prototype.getNetworkType = function (callback) {
     return this.getId().then(function (givenId) {
         id = givenId;
 
-        return self.getBlock(0);
+        return self.getBlockByNumber(0, false);
     }).then(function (genesis) {
         var returnValue = 'private';
         switch (genesis) {
@@ -88,42 +115,60 @@ ConnectionModel.prototype.getNetworkType = function (callback) {
     });
 };
 
-ConnectionModel.prototype.getId = function () {
-    // new Method({
-    //     name: 'getId',
-    //     call: 'net_version',
-    //     params: 0,
-    //     outputFormatter: utils.hexToNumber
-    // })
+/**
+ * Executes the JSON-RPC method net_version
+ *
+ * @param callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise|eventifiedPromise}
+ */
+ConnectionModel.prototype.getId = function (callback) {
+    return this.coreFactory.createMethod(this.provider, 'net_version', [], null, this.utils.hexToNumber).send(callback);
 };
 
-ConnectionModel.prototype.isListening = function () {
-    // new Method({
-    //     name: 'isListening',
-    //     call: 'net_listening',
-    //     params: 0
-    // })
+/**
+ * Executes the JSON-RPC method net_listening
+ *
+ * @param callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise|eventifiedPromise}
+ */
+ConnectionModel.prototype.isListening = function (callback) {
+    return this.coreFactory.createMethod(this.provider, 'net_listening', [], null, null).send(callback);
 };
 
-ConnectionModel.prototype.getPeerCount = function () {
-    // new Method({
-    //     name: 'getPeerCount',
-    //     call: 'net_peerCount',
-    //     params: 0,
-    //     outputFormatter: utils.hexToNumber
-    // })
+/**
+ * Executes the JSON-RPC method net_peerCount
+ *
+ * @param callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise|eventifiedPromise}
+ */
+ConnectionModel.prototype.getPeerCount = function (callback) {
+    return this.coreFactory.createMethod(this.provider, 'net_peerCount', [], null, this.utils.hexToNumber).send(callback);
 };
 
-ConnectionModel.prototype.getBlock = function (blockNumber) {
-    // new Method({
-    //     name: 'getBlock',
-    //     call: blockCall,
-    //     params: 2,
-    //     inputFormatter: [formatter.inputBlockNumberFormatter, function (val) {
-    //         return !!val;
-    //     }],
-    //     outputFormatter: formatter.outputBlockFormatter
-    // })
+/**
+ * Gets a block by his number
+ *
+ * @param blockNumber
+ * @param returnTransactionObjects
+ * @param callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise|eventifiedPromise}
+ */
+ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
+    return this.coreFactory.createMethod(
+        this.provider,
+        'eth_getBlockByNumber',
+        [blockNumber, returnTransactionObjects],
+        [this.formatters.inputBlockNumberFormatter, function (val) { return !!val }],
+        this.formatters.outputBlockFormatter
+    ).send(callback);
 };
 
 /**
