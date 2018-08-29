@@ -88,7 +88,7 @@ TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
 };
 
 /**
- * Checks if enough confirmations are registered to set the transaction approved
+ * Checks if enough confirmations are registered to set the transaction as approved
  *
  * @returns {boolean}
  */
@@ -97,7 +97,7 @@ TransactionConfirmationModel.prototype.isConfirmed = function () {
 };
 
 /**
- * Checks if the the timeout time is exceeded
+ * Checks if the timeout time is exceeded
  *
  * @returns {boolean}
  */

@@ -243,7 +243,7 @@ Method.prototype.isSendRawTransaction = function (rpcMethod) {
  * Determines if the JSON-RPC method is sign.
  *
  * @param {string} rpcMethod
- * 
+ *
  * @returns {boolean}
  */
 Method.prototype.isSign = function (rpcMethod) {

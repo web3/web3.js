@@ -37,7 +37,8 @@ function NewHeadsWatcher(provider, coreFactory)  {
  * Starts subscription on newHeads if supported or creates an interval to get the newHeads
  *
  * @param {String} transactionHash
- * @returns {NewHeadsWatcher}
+ *
+ * @returns {this}
  */
 NewHeadsWatcher.prototype.watch = function (transactionHash) {
     var self = this;

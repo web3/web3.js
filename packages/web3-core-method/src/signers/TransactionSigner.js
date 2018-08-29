@@ -27,8 +27,11 @@ var AbstractSigner = require('../../lib/AbstractSigner');
 function TransactionSigner() { }
 
 /**
+ * Signs the given transaction
+ *
  * @param {Object} transaction
- * @returns {*}
+ *
+ * @returns {any}
  */
 TransactionSigner.prototype.sign = function (transaction) {
     var wallet = this.getWallet(transaction.from);

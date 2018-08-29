@@ -48,6 +48,8 @@ function TransactionConfirmationWorkflow(
  * @param {string} transactionHash
  * @param {Object} promiEvent
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 TransactionConfirmationWorkflow.prototype.execute = function (
     transactionHash,
@@ -131,6 +133,8 @@ TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (tran
  * @param {Object} receipt
  * @param {Object} promiEvent
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt, promiEvent, callback) {
     this.newHeadsWatcher.stop();
@@ -146,6 +150,8 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
  * @param {Object} error
  * @param {Object} promiEvent
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, promiEvent, callback) {
     this.newHeadsWatcher.stop();

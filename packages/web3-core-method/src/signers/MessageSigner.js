@@ -26,6 +26,14 @@ var AbstractSigner = require('../../AbstractSigner');
 
 function MessageSigner() { }
 
+/**
+ * Signs a given message
+ *
+ * @param {string} data
+ * @param {any} address
+ *
+ * @returns {any}
+ */
 MessageSigner.prototype.sign = function(data, address) {
     var wallet = this.getWallet(address);
     if (wallet && wallet.privateKey) {
