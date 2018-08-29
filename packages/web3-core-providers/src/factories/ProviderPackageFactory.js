@@ -114,3 +114,5 @@ ProviderPackageFactory.prototype.createSocketProviderAdapter = function (provide
 ProviderPackageFactory.prototype.createInpageProviderAdapter = function (provider) {
     return new InpageProviderAdapter(provider)
 };
+
+module.exports = ProviderPackageFactory;

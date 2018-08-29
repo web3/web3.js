@@ -20,15 +20,13 @@
 
 "use strict";
 
-var ProviderAdapterResolver = require('./resolvers/ProviderAdapterResolver');
-var ProviderDetector = require('./detectors/ProviderDetector');
+var ProviderPackageFactory = require('./factories/ProviderPackageFactory');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
 
 module.exports = {
-    ProviderAdapterResolver: ProviderAdapterResolver,
-    ProviderDetector: ProviderDetector,
+    ProviderPackageFactory: ProviderPackageFactory,
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
     WebsocketProvider: WebsocketProvider
