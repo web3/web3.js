@@ -74,6 +74,8 @@ CoreFactory.prototype.createMethod = function (provider, rpcMethod,  parameters,
 };
 
 /**
+ * Returns the web3 utilities
+ *
  * @returns {Object}
  */
 CoreFactory.prototype.createUtils = function () { // maybe this can be in a global scope
@@ -91,10 +93,20 @@ CoreFactory.prototype.createBatch = function (connectionModel) {
     return new Batch(connectionModel);
 };
 
+/**
+ * Returns the web3 formatters
+ *
+ * @returns {Object}
+ */
 CoreFactory.prototype.createFormatters = function () {
     return helpers.formatters;
 };
 
+/**
+ * Returns the default web3 errors
+ *
+ * @returns {Object}
+ */
 CoreFactory.prototype.createErrors = function () {
     return helpers.errors;
 };
