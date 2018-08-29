@@ -70,6 +70,10 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
     return this.subscriptionsResolver.resolve(type, parameters).subscribe(callback);
 };
 
+Eth.prototype.getNodeInfo = function () {
+  return this.coreFactory.createMethod(...).send();
+};
+
 /**
  * Appends rpc methods to Eth
  *

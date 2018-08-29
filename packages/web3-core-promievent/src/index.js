@@ -30,7 +30,7 @@ var Promise = require("any-promise");
  *
  * @method eventifiedPromise
  */
-var PromiEvent = function PromiEvent(justPromise) {
+var PromiEvent = function PromiEvent(justPromise) {// TODO: Just promise is no longer required
     var resolve, reject,
         eventEmitter = new Promise(function() {
             resolve = arguments[0];

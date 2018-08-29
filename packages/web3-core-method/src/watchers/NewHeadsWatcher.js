@@ -28,9 +28,9 @@
 function NewHeadsWatcher(provider, coreFactory)  {
     this.provider = provider;
     this.coreFactory = coreFactory;
-    this.formatters = this.coreFactory.createFormatters();
     this.confirmationInterval = null;
     this.confirmationSubscription = null;
+    this.isPolling = false;
 }
 
 /**
@@ -48,11 +48,12 @@ NewHeadsWatcher.prototype.watch = function (transactionHash) {
             'newHeads',
             transactionHash,
             null,
-            this.formatters.outputBlockFormatter
+            null
         ).subscribe(function () {
-            self.emit('newHead');// Check the return values
+            self.emit('newHead');
         });
     } catch (error) {
+        this.isPolling = true;
         this.confirmationInterval = setInterval(this.emit('newHead'), 1000);
     }
 

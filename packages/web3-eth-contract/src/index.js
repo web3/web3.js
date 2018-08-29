@@ -801,7 +801,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
 
 
                 // make sure receipt logs are decoded
-                var extraFormatters = {
+                var extraFormatters = {// TODO: The new method package does not support the extraFormatters
                     receiptFormatter: function (receipt) {
                         if (_.isArray(receipt.logs)) {
 
@@ -854,7 +854,7 @@ Contract.prototype._executeMethod = function _executeMethod(){
                     accounts: _this.accounts || _this._ethAccounts, // is eth.accounts (necessary for wallet signing)
                     defaultAccount: _this._parent.connectionModel.defaultAccount,
                     defaultBlock: _this._parent.connectionModel.defaultBlock,
-                    extraFormatters: extraFormatters
+                    extraFormatters: extraFormatters // TODO: the new method package does not support extraFormatters
                 })).createFunction();
 
                 return sendTransaction(args.options, args.callback);

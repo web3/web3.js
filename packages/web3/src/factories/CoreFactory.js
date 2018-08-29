@@ -9,35 +9,49 @@ function CoreFactory() { }
 /**
  * Creates Subscription object
  *
- * @param {Object} connectionModel
+ * @param {Object} provider
  * @param {string} type
  * @param {*} parameters
  * @param {Object} inputFormatter
  * @param {Object} outputFormatter
  */
-CoreFactory.prototype.createSubscription = function (connectionModel, type, parameters, inputFormatter, outputFormatter) {
-    return new Subscription(connectionModel, type, parameters, inputFormatter, outputFormatter);
+CoreFactory.prototype.createSubscription = function (provider, type, parameters, inputFormatter, outputFormatter) {
+    return new Subscription(provider, type, parameters, inputFormatter, outputFormatter);
 };
 
 /**
  * Creates PromiEvent object
- *
- * @param {boolean} justPromise
  */
-CoreFactory.prototype.createPromiEvent = function (justPromise) {
-    return new PromiEvent(justPromise);
+CoreFactory.prototype.createPromiEvent = function () {
+    return new PromiEvent();
 };
 
 /**
  * Creates Method object
  *
- * @param {ConnectionModel} connectionModel
- * @param {Object} options
- * @param {boolean} justPromise
+ * @param {Object} provider
+ * @param {string} rpcMethod
+ * @param {array} parameters
+ * @param {array} inputFormatters
+ * @param {Function} outputFormatter
  * @returns {Method}
  */
-CoreFactory.prototype.createMethod = function (connectionModel, options, justPromise) {
-    return new Method(connectionModel, this.createPromiEvent(justPromise), options);
+CoreFactory.prototype.createMethod = function (provider, rpcMethod,  parameters, inputFormatters, outputFormatter) {
+    return new Method(
+        provider,
+        rpcMethod,
+        parameters,
+        inputFormatters,
+        outputFormatter,
+        this.createPromiEvent(),
+        this.createTransactionConfirmationWorkflow()
+    );
+};
+
+CoreFactory.prototype.createTransactionConfirmationWorkflow = function () {
+ // TODO: overthink the implemented factory pattern. It is strange to create here an internal package object.
+ // maybe each package will have his own PackageFactory and it will have an web3-core-factories package where I combine all the factories
+ // to one "masterFactory" this master factory should be a proxy to all factories.
 };
 
 /**

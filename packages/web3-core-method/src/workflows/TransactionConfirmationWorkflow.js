@@ -22,10 +22,6 @@
 
 "use strict";
 
-var TIMEOUTBLOCK = 50;
-var POLLINGTIMEOUT = 15 * TIMEOUTBLOCK; // ~average block time (seconds) * TIMEOUTBLOCK
-var CONFIRMATIONBLOCKS = 24;
-
 /**
  * @param {Object} connectionModel
  * @param {Object} transactionConfirmationModel
@@ -33,7 +29,7 @@ var CONFIRMATIONBLOCKS = 24;
  * @param {Object} newHeadsWatcher
  * @constructor
  */
-function TransactionConfirmationWorkflow(// TODO: Timeout handling
+function TransactionConfirmationWorkflow(
     connectionModel,
     transactionConfirmationModel,
     transactionReceiptValidator,
@@ -59,11 +55,12 @@ TransactionConfirmationWorkflow.prototype.execute = function (
     callback
 ) {
     var self = this;
+
     this.getTransactionReceipt(transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
             var validationResult = this.transactionReceiptValidator.validate(receipt);
             if (validationResult === true) {
-                this.handleSuccessState(this.executeExtraReceiptFormatter(receipt, extraFormatters), promiEvent, callback);
+                this.handleSuccessState(receipt, promiEvent, callback);
 
                 return;
             }
@@ -74,81 +71,46 @@ TransactionConfirmationWorkflow.prototype.execute = function (
         }
 
         self.newHeadsWatcher.watch().on('newHead', function () {
-            self.getTransactionReceipt(transactionHash).then(function (receipt) {
-                var validationResult = self.transactionReceiptValidator.validate(receipt);
-                if (validationResult === true) {
-                    // TODO: remove this because it should be handled in the contract package
-                    var formattedReceipt = self.executeExtraReceiptFormatter(receipt, extraFormatters);
+            self.transactionConfirmationModel.timeoutCounter++;
+            if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
+                self.getTransactionReceipt(transactionHash).then(function (receipt) {
+                    var validationResult = self.transactionReceiptValidator.validate(receipt);
+                    if (validationResult === true) {
+                        self.transactionConfirmationModel.addConfirmation(receipt);
+                        self.promiEvent.eventEmitter.emit(
+                            'confirmation',
+                            self.transactionConfirmationModel.confirmationsCount,
+                            receipt
+                        );
 
-                    self.transactionConfirmationModel.addConfirmation(formattedReceipt);
-                    var confirmationsCount = self.transactionConfirmationModel.getConfirmationsCount();
+                        if (self.transactionConfirmationModel.isConfirmed()) {
+                            self.handleSuccessState(receipt, promiEvent, callback);
+                        }
 
-                    self.promiEvent.eventEmitter.emit(
-                        'confirmation',
-                        confirmationsCount,
-                        formattedReceipt
-                    );
-
-                    if (confirmationsCount === (CONFIRMATIONBLOCKS + 1)) {
-                        self.handleSuccessState(formattedReceipt, promiEvent, callback);
+                        return;
                     }
 
-                    return;
-                }
+                    promiEvent.reject(validationResult);
+                    promiEvent.eventEmitter.emit('error', validationResult, receipt);
+                    promiEvent.eventEmitter.removeAllListeners();
+                    callback(validationResult, null);
+                });
 
-                promiEvent.reject(validationResult);
-                promiEvent.eventEmitter.emit('error', validationResult, receipt);
-                promiEvent.eventEmitter.removeAllListeners();
-                callback(validationResult, null);
-            });
-        });
-    });
-};
-
-/**
- * Handle contract deployment
- *
- * TODO: Move this to the contract package because it is only used there
- * @param {Object} receipt
- * @param {Object} promiEvent
- * @param {Object} extraFormatters
- * @param {Function} callback
- */
-TransactionConfirmationWorkflow.prototype.handleContractDeployment = function (receipt, extraFormatters, promiEvent, callback) {
-    var self = this;
-
-    if (!receipt.contractAddress) {
-        self.handleErrorState(
-            new Error('The transaction receipt didn\'t contain a contract address.'),
-            promiEvent,
-            callback
-        );
-    }
-
-    this.getContractCode(receipt.contractAddress).then(function (contractCode) {
-        if (contractCode.length > 2) {
-            var result = receipt;
-
-            if (extraFormatters && extraFormatters.contractDeployFormatter) {
-                result = extraFormatters.contractDeployFormatter(receipt);
+                return;
             }
 
-            self.newHeadsWatcher.stop();
+            var error =  new Error('Transaction was not mined within '+ self.transactionConfirmationModel.TIMEOUTBLOCK +' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!');
 
-            promiEvent.resolve(result);
-            promiEvent.eventEmitter.emit('receipt', receipt);
-            promiEvent.eventEmitter.removeAllListeners();
-            callback(false, result);
+            if (self.newHeadsWatcher.isPolling) {
+                error = new Error('Transaction was not mined within' + self.transactionConfirmationModel.POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!')
+            }
 
-            return;
-        }
-
-        self.handleErrorState(
-            new Error('The contract code couldn\'t be stored, please check your gas limit.'),
-            promiEvent,
-            callback
-        );
-
+            self.handleErrorState(
+                error,
+                promiEvent,
+                callback
+            );
+        });
     });
 };
 
@@ -161,24 +123,6 @@ TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (tran
     this.provider.send('eth_getTransactionReceipt', transactionHash).then(function (receipt) {
         return this.formatters.outputTransactionReceiptFormatter(receipt);
     })
-};
-
-/**
- * Get code of contract by his address
- *
- * TODO: Move this to the contract package
- *
- * @param {string} contractAddress
- * @returns {Promise<string>}
- */
-TransactionConfirmationWorkflow.prototype.getContractCode = function (contractAddress) {
-    return this.provider.send(
-        'eth_getCode',
-        [
-            this.formatters.inputAddressFormatter(contractAddress),
-            this.formatters.inputDefaultBlockNumberFormatter() // have a closer look on this formatter it uses this.defaultBlock from a magic scope where ever it is defined.
-        ]
-    );
 };
 
 /**
@@ -209,21 +153,4 @@ TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, pr
     promiEvent.eventEmitter.emit('error', error);
     promiEvent.eventEmitter.removeAllListeners();
     callback(error, null);
-};
-
-/**
- * Execute receipt extra formatter on receipt if its defined.
- *
- * TODO: Move this to the contract package because its only used there!
- *
- * @param {Object} receipt
- * @param {Object} formatters
- * @returns {Object}
- */
-TransactionConfirmationWorkflow.prototype.executeExtraReceiptFormatter = function (receipt, formatters) {
-    if (formatters && formatters.receiptFormatter) {
-        receipt = formatters.receiptFormatter(receipt);
-    }
-
-    return receipt;
 };
