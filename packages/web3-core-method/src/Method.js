@@ -62,8 +62,18 @@ function Method(// TODO: Add transaction signing
  * @returns {Promise | eventifiedPromise}
  */
 Method.prototype.send = function (callback) {
+    var self = this;
+
     if (this.isSendTransaction(this.rpcMethod)) {
-        return this.sendTransaction(callback);
+        if (this.isGasPriceDefined()) {
+            return this.sendTransaction(null, callback);
+        }
+
+        this.getGasPrice().then(function (gasPrice) {
+            self.sendTransaction(gasPrice, callback)
+        });
+
+        return this.promiEvent;
     }
 
     return this.call(callback);
@@ -119,11 +129,17 @@ Method.prototype.formatOutput = function (response, callback) {
 /**
  * Handles an sendTransaction request
  *
- * @param callback
+ * @param {string} gasPrice
+ * @param {Function} callback
  * @returns {eventifiedPromise}
  */
-Method.prototype.sendTransaction = function (callback) {
+Method.prototype.sendTransaction = function (gasPrice, callback) {
     var self = this;
+
+    if (gasPrice && _.isObject(this.parameters[0])) {
+        this.parameters.gasPrice = gasPrice;
+    }
+
     this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             response,
@@ -154,7 +170,15 @@ Method.prototype.formatInput = function (parameters) {
 };
 
 /**
- * Determines if the JSON-RPC method is a call method
+ * Gets the gasPrice with the eth_gasPrice RPC call.
+ * @returns {Promise<string>}
+ */
+Method.prototype.getGasPrice = function () {
+  return this.provider.send('eth_gasPrice', []);
+};
+
+/**
+ * Determines if the JSON-RPC method is a sendTransaction method
  *
  * @param {string} rpcMethod
  * @returns {boolean}
@@ -164,13 +188,10 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
 };
 
 /**
- * Check if this method deploys a contract
+ * Determines if gasPrice is defined in method options
  *
- * TODO: Move this to contract package
- *
- * @param {array} parameters
  * @returns {boolean}
  */
-Method.prototype.isContractDeployment = function (parameters) {
-    return _.isObject(parameters[0]) && parameters[0].data && parameters[0].from && !parameters[0].to;
+Method.prototype.isGasPriceDefined = function () {
+    return _.isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
 };
