@@ -27,30 +27,39 @@ var _ = require('underscore');
 
 /**
  * @param {Object} provider
+ * @param {Object} accounts
  * @param {string} rpcMethod
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
  * @param {Object} promiEvent
  * @param {Object} transactionConfirmationWorkflow
+ * @param {Object} transactionSigner
+ * @param {Object} messageSigner
  * @constructor
  */
-function Method(// TODO: Add transaction signing
+function Method(
     provider,
+    accounts,
     rpcMethod,
     parameters,
     inputFormatters,
     outputFormatter,
     promiEvent,
-    transactionConfirmationWorkflow
+    transactionConfirmationWorkflow,
+    transactionSigner,
+    messageSigner
 ) {
     this.provider = provider;
+    this.accounts = accounts;
     this.rpcMethod = rpcMethod;
     this.parameters = parameters;
     this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
     this.promiEvent = promiEvent;
     this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
+    this.transactionSigner = transactionSigner;
+    this.messageSigner = messageSigner;
 }
 
 /**
@@ -64,7 +73,19 @@ function Method(// TODO: Add transaction signing
 Method.prototype.send = function (callback) {
     var self = this;
 
-    if (this.isSendTransaction(this.rpcMethod)) {
+    if (this.hasWallets()) {
+        if (this.isSign(this.rpcMethod)) {
+            return this.messageSigner.sign(this.parameters[0], this.parameters[1]);
+        }
+
+        if (this.isSendTransaction(this.rpcMethod)) {
+            this.rpcMethod = 'eth_sendRawTransaction';
+            this.parameters = [this.transactionSigner.sign(this.parameters[0]).rawTransaction];
+            return this.sendTransaction(null, callback);
+        }
+    }
+
+    if (this.isSendTransaction(this.rpcMethod) || this.isSendRawTransaction(this.rpcMethod)) {
         if (this.isGasPriceDefined()) {
             return this.sendTransaction(null, callback);
         }
@@ -74,6 +95,10 @@ Method.prototype.send = function (callback) {
         });
 
         return this.promiEvent;
+    }
+
+    if (this.isSign(this.rpcMethod)) {
+        return this.messageSigner.sign(this.parameters[0], this.parameters[1]);
     }
 
     return this.call(callback);
@@ -158,6 +183,15 @@ Method.prototype.sendTransaction = function (gasPrice, callback) {
 };
 
 /**
+ *  Should be called to get the request which can be used in a batch request
+ *
+ * @returns {Function}
+ */
+Method.prototype.request = function () {
+    return this.send.bind(this);
+};
+
+/**
  * Formatts the input parameters
  *
  * @param parameters
@@ -178,13 +212,33 @@ Method.prototype.getGasPrice = function () {
 };
 
 /**
- * Determines if the JSON-RPC method is a sendTransaction method
+ * Determines if the JSON-RPC method is sendTransaction
  *
  * @param {string} rpcMethod
  * @returns {boolean}
  */
 Method.prototype.isSendTransaction = function (rpcMethod) {
-    return rpcMethod === 'eth_sendTransaction' || rpcMethod === 'eth_sendRawTransaction';
+    return rpcMethod === 'eth_sendTransaction';
+};
+
+/**
+ * Determines if the JSON-RPC method is sendRawTransaction
+ *
+ * @param {string} rpcMethod
+ * @returns {boolean}
+ */
+Method.prototype.isSendRawTransaction = function (rpcMethod) {
+    return rpcMethod === 'eth_sendRawTransaction';
+};
+
+/**
+ * Determines if the JSON-RPC method is sign.
+ *
+ * @param {string} rpcMethod
+ * @returns {boolean}
+ */
+Method.prototype.isSign = function (rpcMethod) {
+    return rpcMethod === 'eth_sign';
 };
 
 /**
@@ -194,6 +248,15 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
  */
 Method.prototype.isGasPriceDefined = function () {
     return _.isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
+};
+
+/**
+ * Check if wallets are defined
+ *
+ * @returns {boolean}
+ */
+Method.prototype.hasWallets = function() {
+    return this.accounts.wallet.length > 0;
 };
 
 module.exports = Method;

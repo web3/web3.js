@@ -45,7 +45,7 @@ Batch.prototype.add = function (request) {
  *
  * @method execute
  */
-Batch.prototype.execute = function () {
+Batch.prototype.execute = function () {// TODO: refactore because of new method package
     var requests = this.requests;
     this.provider.sendBatch(requests, function (err, results) {
         results = results || [];
