@@ -63,7 +63,7 @@ function Method(
 }
 
 /**
- * Sends and rpc request
+ * Sends the JSON-RPC request
  *
  * @param {Function} callback
  *
@@ -105,7 +105,7 @@ Method.prototype.send = function (callback) {
 };
 
 /**
- * Handles a call request
+ * Sends a JSON-RPC call request
  *
  * @param callback
  * @returns {Promise}
@@ -119,7 +119,7 @@ Method.prototype.call = function (callback) {
 
 
 /**
- * Handle call response
+ * Formats the output of an JSON-RPC call request
  *
  * @param {array | string} response
  * @param callback
@@ -152,7 +152,7 @@ Method.prototype.formatOutput = function (response, callback) {
 };
 
 /**
- * Handles an sendTransaction request
+ * Sends the JSON-RPC sendTransaction request
  *
  * @param {string} gasPrice
  * @param {Function} callback
@@ -192,7 +192,7 @@ Method.prototype.request = function () {
 };
 
 /**
- * Formatts the input parameters
+ * Formats the input parameters
  *
  * @param parameters
  * @returns {array}
@@ -242,7 +242,7 @@ Method.prototype.isSign = function (rpcMethod) {
 };
 
 /**
- * Determines if gasPrice is defined in method options
+ * Determines if gasPrice is defined in the method options
  *
  * @returns {boolean}
  */
@@ -251,7 +251,7 @@ Method.prototype.isGasPriceDefined = function () {
 };
 
 /**
- * Check if wallets are defined
+ * Check if wallets are defined in the accounts package
  *
  * @returns {boolean}
  */
