@@ -7,61 +7,60 @@ var EthPackage = require('web3-eth');
 var Iban = require('web3-eth-iban');
 var Contract = require('web3-eth-contract');
 var ABI = require('web3-eth-abi');
+var ProvidersPackageFactory = require('web3-core-providers').ProvidersPackageFactory;
 
 /**
  * @param {Object} coreFactory
- * @param {Object} connectionModel
  * @constructor
  */
-function PackageFactory(coreFactory, connectionModel) {
+function PackageFactory(coreFactory) {
     this.coreFactory = coreFactory;
-    this.connectionModel = connectionModel;
 }
 
 /**
  * @returns {Shh}
  */
-PackageFactory.prototype.createShhPackage = function () {
-    return new Shh(this.connectionModel, this.coreFactory);
+PackageFactory.prototype.createShhPackage = function (connectionModel) {
+    return new Shh(connectionModel, this.coreFactory);
 };
 
 /**
  * @returns {Bzz}
  */
-PackageFactory.prototype.createBzzPackage = function () {
-    return new Bzz(this.connectionModel);
+PackageFactory.prototype.createBzzPackage = function (connectionModel) {
+    return new Bzz(connectionModel);
 };
 
 /**
  * @returns {ENS}
  */
-PackageFactory.prototype.createEnsPackage = function () {
-    return new ENS(this.connectionModel, this.createEthPackage());
+PackageFactory.prototype.createEnsPackage = function (connectionModel) {
+    return new ENS(connectionModel, this.createEthPackage());
 };
 
 /**
  * @returns {Accounts}
  */
-PackageFactory.prototype.createAccountsPackage = function () {
-    return new Accounts(this.connectionModel, this.coreFactory);
+PackageFactory.prototype.createAccountsPackage = function (connectionModel) {
+    return new Accounts(connectionModel, this.coreFactory);
 };
 
 /**
  * @returns {Personal}
  */
-PackageFactory.prototype.createPersonalPackage = function () {
-    return new Personal(this.connectionModel, this.coreFactory);
+PackageFactory.prototype.createPersonalPackage = function (connectionModel) {
+    return new Personal(connectionModel, this.coreFactory);
 };
 
 /**
  * @returns {Eth}
  */
-PackageFactory.prototype.createEthPackage = function () {
+PackageFactory.prototype.createEthPackage = function (connectionModel) {
     return new EthPackage.Eth(
-        this.connectionModel,
+        connectionModel,
         this,
         this.coreFactory,
-        new EthPackage.SubscriptionsResolver(this.connectionModel)
+        new EthPackage.SubscriptionsResolver(connectionModel)
     );
 };
 
@@ -70,8 +69,8 @@ PackageFactory.prototype.createEthPackage = function () {
  *
  * @returns {Contract} // TODO: Refactor Contract for usage of binded properties
  */
-PackageFactory.prototype.createContractPackage = function () {
-    return Contract.bind({connectionModel: this.connectionModel, accounts: this.createAccountsPackage()});
+PackageFactory.prototype.createContractPackage = function (connectionModel) {
+    return Contract.bind({connectionModel: connectionModel, accounts: this.createAccountsPackage()});
 };
 
 /**
@@ -86,4 +85,13 @@ PackageFactory.prototype.createIbanPackage = function () {
  */
 PackageFactory.prototype.createAbiPackage = function () {
     return new ABI(this.coreFactory.createUtils());
+};
+
+/**
+ * Return the ProvidersPackageFactory from web3-core-providers
+ *
+ * @returns ProvidersPackageFactory
+ */
+PackageFactory.prototype.createProvidersPackageFactory = function () {
+    return new ProvidersPackageFactory()
 };

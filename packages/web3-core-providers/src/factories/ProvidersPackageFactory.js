@@ -28,14 +28,14 @@ var WebsocketProvider = require('../providers/WebsocketProvider');
 var IpcProvider = require('../providers/IpcProvider');
 var HttpProvider = require('../providers/HttpProvider');
 
-function ProviderPackageFactory() { }
+function ProvidersPackageFactory() { }
 
 /**
  * Return ProviderAdapterResolver object
  *
  * @returns {ProviderAdapterResolver}
  */
-ProviderPackageFactory.prototype.createProviderAdapterResolver = function () {
+ProvidersPackageFactory.prototype.createProviderAdapterResolver = function () {
     return new ProviderAdapterResolver(this);
 };
 
@@ -44,7 +44,7 @@ ProviderPackageFactory.prototype.createProviderAdapterResolver = function () {
  *
  * @returns {ProviderDetector}
  */
-ProviderPackageFactory.prototype.createProviderDetector = function () {
+ProvidersPackageFactory.prototype.createProviderDetector = function () {
     return new ProviderDetector();
 };
 
@@ -55,7 +55,7 @@ ProviderPackageFactory.prototype.createProviderDetector = function () {
  *
  * @returns {HttpProvider}
  */
-ProviderPackageFactory.prototype.createHttpProvider = function (url) {
+ProvidersPackageFactory.prototype.createHttpProvider = function (url) {
     return new HttpProvider(url);
 };
 
@@ -66,7 +66,7 @@ ProviderPackageFactory.prototype.createHttpProvider = function (url) {
  *
  * @returns {WebsocketProvider}
  */
-ProviderPackageFactory.prototype.createWebsocketProvider = function (url) {
+ProvidersPackageFactory.prototype.createWebsocketProvider = function (url) {
     return new WebsocketProvider(url);
 };
 
@@ -78,7 +78,7 @@ ProviderPackageFactory.prototype.createWebsocketProvider = function (url) {
  *
  * @returns {IpcProvider}
  */
-ProviderPackageFactory.prototype.createIpcProvider = function (path, net) {
+ProvidersPackageFactory.prototype.createIpcProvider = function (path, net) {
     return new IpcProvider(path, net);
 };
 
@@ -89,7 +89,7 @@ ProviderPackageFactory.prototype.createIpcProvider = function (path, net) {
  *
  * @returns {HttpProviderAdapter}
  */
-ProviderPackageFactory.prototype.createHttpProviderAdapter = function (provider) {
+ProvidersPackageFactory.prototype.createHttpProviderAdapter = function (provider) {
     return new HttpProviderAdapter(provider);
 };
 
@@ -100,7 +100,7 @@ ProviderPackageFactory.prototype.createHttpProviderAdapter = function (provider)
  *
  * @returns {SocketProviderAdapter}
  */
-ProviderPackageFactory.prototype.createSocketProviderAdapter = function (provider) {
+ProvidersPackageFactory.prototype.createSocketProviderAdapter = function (provider) {
     return new SocketProviderAdapter(provider)
 };
 
@@ -111,8 +111,8 @@ ProviderPackageFactory.prototype.createSocketProviderAdapter = function (provide
  *
  * @returns {InpageProviderAdapter}
  */
-ProviderPackageFactory.prototype.createInpageProviderAdapter = function (provider) {
+ProvidersPackageFactory.prototype.createInpageProviderAdapter = function (provider) {
     return new InpageProviderAdapter(provider)
 };
 
-module.exports = ProviderPackageFactory;
+module.exports = ProvidersPackageFactory;

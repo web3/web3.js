@@ -20,13 +20,13 @@
 
 "use strict";
 
-var ProviderPackageFactory = require('./factories/ProviderPackageFactory');
+var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
 
 module.exports = {
-    ProviderPackageFactory: ProviderPackageFactory,
+    ProvidersPackageFactory: ProvidersPackageFactory,
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
     WebsocketProvider: WebsocketProvider

@@ -27,8 +27,7 @@
  * @constructor
  */
 function ConnectionModel(provider, coreFactory) {
-    this.provider = provider; //TODO: add provider resolver
-    this.givenProvider = null; //TODO: add provider detection maybe this cant be here
+    this.provider = provider;
     this.coreFactory = coreFactory;
     this.utils = this.coreFactory.createUtils();
     this.formatters = this.coreFactory.createFormatters();
@@ -43,7 +42,7 @@ Object.defineProperty(Eth, 'defaultAccount', {
     },
     set: function (val) {
         if (val) {
-            this.defaultAccount = utils.toChecksumAddress(formatter.inputAddressFormatter(val));
+            this.defaultAccount = utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
         }
     },
     enumerable: true
