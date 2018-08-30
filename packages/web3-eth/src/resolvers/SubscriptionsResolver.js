@@ -37,7 +37,7 @@ function SubscriptionsResolver(provider) {
  * Resolves the requested subscription
  *
  * @param {string} type
- * @param {any} parameters
+ * @param {array} parameters
  * @param {Function} callback
  * @returns {Object}
  */
@@ -64,10 +64,11 @@ SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) 
  * Create Subscription object
  *
  * @param {string} type
- * @param {any} parameters
+ * @param {array} parameters
  * @param {Function} inputFormatter
  * @param {Function} outputFormatter
  * @param {Function} callback
+ *
  * @returns {Subscription}
  */
 SubscriptionsResolver.prototype.getSubscription = function (type, parameters, inputFormatter, outputFormatter, callback) {

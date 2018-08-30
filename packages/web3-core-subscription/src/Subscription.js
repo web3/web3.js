@@ -47,7 +47,7 @@ function Subscription(provider, type, parameters, inputFormatter, outputFormatte
  *
  * @param {Function} callback
  *
- * @returns {Object} Subscription
+ * @returns {Subscription} Subscription
  */
 Subscription.prototype.subscribe = function (callback) {
     var self = this;
