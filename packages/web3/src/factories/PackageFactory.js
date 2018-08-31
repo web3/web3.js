@@ -10,7 +10,8 @@ var ABI = require('web3-eth-abi');
 var ProvidersPackageFactory = require('web3-core-providers').ProvidersPackageFactory;
 
 /**
- * @param {Object} coreFactory
+ * @param {CoreFactory} coreFactory
+ *
  * @constructor
  */
 function PackageFactory(coreFactory) {

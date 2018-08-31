@@ -8,7 +8,6 @@
   "main": "src/index.js",
   "dependencies": {
     "ethers": "4.0.0-beta.1",
-    "underscore": "1.8.3",
-    "web3-utils": "1.0.0-beta.35"
+    "underscore": "1.8.3"
   }
 }

@@ -8,6 +8,5 @@
     "main": "src/index.js",
     "dependencies": {
         "bn.js": "4.11.6",
-        "web3-utils": "1.0.0-beta.35"
     }
 }

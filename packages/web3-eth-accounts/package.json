@@ -13,9 +13,5 @@
     "scrypt.js": "0.2.0",
     "underscore": "1.8.3",
     "uuid": "2.0.1",
-    "web3-core": "1.0.0-beta.35",
-    "web3-core-helpers": "1.0.0-beta.35",
-    "web3-core-method": "1.0.0-beta.35",
-    "web3-utils": "1.0.0-beta.35"
   }
 }
