@@ -49,9 +49,14 @@ var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptio
 /**
  * Gets and executes subscription for an given type
  *
+ * @method subscribe
+ *
  * @param {String} type
  * @param {array} parameters
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {eventifiedPromise | Subscription}
  */
 Eth.prototype.subscribe = function (type, parameters, callback) {
     return this.subscriptionsResolver.resolve(type, parameters, callback);
@@ -59,6 +64,8 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
 
 /**
  * Sends the JSON-RPC request web3_clientVersion and gets the node information
+ *
+ * @method getNodeInfo
  *
  * @param {Function} callback
  *
@@ -72,6 +79,8 @@ Eth.prototype.getNodeInfo = function (callback) {
 /**
  * Sends the JSON-RPC request eth_protocolVersion and gets the protocol version.
  *
+ * @method getProtocolVersion
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -83,6 +92,8 @@ Eth.prototype.getProtocolVersion = function (callback) {
 
 /**
  * Sends the JSON-RPC request eth_coinbase and gets the coinbase
+ *
+ * @method getCoinbase
  *
  * @param {Function} callback
  *
@@ -96,6 +107,8 @@ Eth.prototype.getCoinbase = function (callback) {
 /**
  * Sends the JSON-RPC request eth_mining and checks if the node is mining
  *
+ * @method isMining
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -107,6 +120,8 @@ Eth.prototype.isMining = function (callback) {
 
 /**
  * Sends the JSON-RPC request eth_hashrate and returns the current hashrate
+ *
+ * @method getHashrate
  *
  * @param {Function} callback
  *
@@ -126,6 +141,8 @@ Eth.prototype.getHashrate = function (callback) {
 /**
  * Sends the JSON-RPC request eth_syncing and checks if the node is syncing
  *
+ * @method isSyncing
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -143,6 +160,8 @@ Eth.prototype.isSyncing = function (callback) {
 
 /**
  * Sends the JSON-RPC request eth_gasPrice and returns the current gasPrice from this node
+ *
+ * @method getGasPrice
  *
  * @param {Function} callback
  *
@@ -162,6 +181,8 @@ Eth.prototype.getGasPrice = function (callback) {
 /**
  * Sends the JSON-RPC request eth_accounts and returns a list of addresses owned by client.
  *
+ * @method getAccounts
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -180,6 +201,8 @@ Eth.prototype.getAccounts = function (callback) {
 /**
  * Sends the JSON-RPC request eth_blockNumber and returns the current block number.
  *
+ * @method getBlockNumber
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -197,6 +220,8 @@ Eth.prototype.getBlockNumber = function (callback) {
 
 /**
  * Sends the JSON-RPC request eth_getBalance and returns the balance of an address
+ *
+ * @method getBalance
  *
  * @param {String} address
  * @param {number} block
@@ -224,6 +249,8 @@ Eth.prototype.getBalance = function (address, block, callback) {
 
 /**
  * Sends the JSON-RPC request eth_getStorageAt and returns the value from a storage position at a given address
+ *
+ * @method getStorageAt
  *
  * @param {String} address
  * @param {number} position
@@ -254,6 +281,8 @@ Eth.prototype.getStorageAt = function (address, position, block, callback) {
 /**
  * Sends the JSON-RPC request eth_getCode and returns the code of a contract at a given address
  *
+ * @method getCode
+ *
  * @param {String} address
  * @param {number} block
  * @param {Function} callback
@@ -281,6 +310,8 @@ Eth.prototype.getCode = function (address, block, callback) {
 /**
  * Sends the JSON-RPC request eth_getBlockByNumber and returns a block by his number.
  *
+ * @method getBlockByNumber
+ *
  * @param {number} blockNumber
  * @param {boolean} returnTransactionObjects
  * @param {Function} callback
@@ -305,6 +336,8 @@ Eth.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects
 
 /**
  * Sends the JSON-RPC request eth_getBlockByHash and return a block by his hash.
+ *
+ * @method getBlockByHash
  *
  * @param {String} blockHash
  * @param {boolean} returnTransactionObjects
@@ -333,6 +366,8 @@ Eth.prototype.getBlockByHash = function (blockHash, returnTransactionObjects, ca
  *
  * TODO: Define this method as deprecated
  *
+ * @method getBlock
+ *
  * @param {String|number} blockHashOrBlockNumber
  * @param {boolean} returnTransactionObjects
  * @param {Function} callback
@@ -353,6 +388,8 @@ Eth.prototype.getBlock = function (blockHashOrBlockNumber, returnTransactionObje
  *
  * TODO: Define this method as deprecated
  *
+ * @method getUncle
+ *
  * @param {String|number} blockHashOrBlockNumber
  * @param {number} uncleIndex
  * @param {Function} callback
@@ -370,6 +407,8 @@ Eth.prototype.getUncle = function (blockHashOrBlockNumber, uncleIndex, callback)
 
 /**
  * Sends the JSON-RPC request eth_getUncleByBlockNumberAndIndex and returns the uncle block by his number and index
+ *
+ * @method getUncleByBlockNumber
  *
  * @param {number} blockNumber
  * @param {number} uncleIndex
@@ -393,6 +432,8 @@ Eth.prototype.getUncleByBlockNumber = function (blockNumber, uncleIndex, callbac
 
 /**
  * Sends the JSON-RPC request eth_getUncleByBlockHashAndIndex and returns the uncle block by his hash and index
+ *
+ * @method getUnlceByBlockHash
  *
  * @param {String} blockHash
  * @param {number} uncleIndex
@@ -419,6 +460,8 @@ Eth.prototype.getUnlceByBlockHash = function (blockHash, uncleIndex, callback) {
  *
  * TODO: Define this method as deprecated
  *
+ * @method getBlockTransactionCount
+ *
  * @param {String|number} blockHashOrBlockNumber
  * @param {Function} callback
  *
@@ -436,6 +479,8 @@ Eth.prototype.getBlockTransactionCount = function (blockHashOrBlockNumber, callb
 /**
  * Sends the JSON-RPC request eth_getBlockTransactionCountByNumber and returns the block transaction count
  * from a block by his number
+ *
+ * @method getBlockTransactionCountByBlockNumber
  *
  * @param {number} blockNumber
  * @param {Function} callback
@@ -458,6 +503,8 @@ Eth.prototype.getBlockTransactionCountByBlockNumber = function (blockNumber, cal
 /**
  * Sends the JSON-RPC request eth_getBlockTransactionCountByHash and returns the block transaction count
  * from a block by his hash
+ *
+ * @method getBlockTransactionCountByBlockHash
  *
  * @param {String} blockHash
  * @param {Function} callback
@@ -482,6 +529,8 @@ Eth.prototype.getBlockTransactionCountByBlockHash = function (blockHash, callbac
  *
  * TODO: Define this method as deprecated
  *
+ * @method getBlockUncleCount
+ *
  * @param {String|number} blockHashOrBlockNumber
  * @param {Function} callback
  *
@@ -498,6 +547,8 @@ Eth.prototype.getBlockUncleCount = function (blockHashOrBlockNumber, callback) {
 
 /**
  * Sends the JSON-RPC request eth_getUncleCountByBlockHash and returns the uncle count of a block by his hash
+ *
+ * @method getBlockUncleCountByBlockHash
  *
  * @param {String} blockHash
  * @param {Function} callback
@@ -520,6 +571,8 @@ Eth.prototype.getBlockUncleCountByBlockHash = function (blockHash, callback) {
 /**
  * Sends the JSON-RPC request eth_getUncleCountByBlockHash and returns the uncle count of a block by his number
  *
+ * @method getBlockUncleCountByBlockNumber
+ *
  * @param {number} blockNumber
  * @param {Function} callback
  *
@@ -540,6 +593,8 @@ Eth.prototype.getBlockUncleCountByBlockNumber = function (blockNumber, callback)
 
 /**
  * Sends the JSON-RPC request eth_getTransactionByHash and returns the transaction by his hash
+ *
+ * @method getTransaction
  *
  * @param {String} transactionHash
  * @param {Function} callback
@@ -562,6 +617,8 @@ Eth.prototype.getTransaction = function (transactionHash, callback) {
  *
  * TODO: Define this method as deprecated
  *
+ * @method getTransactionFromBlock
+ *
  * @param {String|number} hashStringOrNumber
  * @param {number} indexNumber
  * @param {Function} callback
@@ -579,6 +636,8 @@ Eth.prototype.getTransactionFromBlock = function (hashStringOrNumber, indexNumbe
 /**
  * Sends the JSON-RPC request eth_getTransactionByBlockHashAndIndex and returns a transaction
  * by his index from a block with the block hash.
+ *
+ * @method getTransactionFromBlockByBlockHash
  *
  * @param {String} transactionHash
  * @param {number} indexNumber
@@ -604,6 +663,8 @@ Eth.prototype.getTransactionFromBlockByBlockHash = function (transactionHash, in
  * Sends the JSON-RPC request eth_getTransactionByBlockHashAndIndex and returns a transaction
  * by his index from a block with the block number.
  *
+ * @method getTransactionFromBlockByBlockNumber
+ *
  * @param {number} blockNumber
  * @param {number} indexNumber
  * @param {Function} callback
@@ -627,6 +688,8 @@ Eth.prototype.getTransactionFromBlockByBlockNumber = function (blockNumber, inde
 /**
  * Sends the JSON-RPC request eth_getTransactionReceipt and returns the transaction receipt by his transaction hash
  *
+ * @method getTransactionReceipt
+ *
  * @param {String} transactionHash
  * @param {Function} callback
  *
@@ -645,6 +708,8 @@ Eth.prototype.getTransactionReceipt = function (transactionHash, callback) {
 
 /**
  * Sends the JSON-RPC request eth_getTransactionCount and returns the transaction count of an address
+ *
+ * @method getTransactionCount
  *
  * @param {String} address
  * @param {number} block
@@ -673,6 +738,8 @@ Eth.prototype.getTransactionCount = function (address, block, callback) {
 /**
  * Sends the JSON-RPC request eth_sendRawTransaction and returns the transaction hash
  *
+ * @method sendSignedTransaction
+ *
  * @param {String} signedTransactionData
  * @param {Function} callback
  *
@@ -691,6 +758,8 @@ Eth.prototype.sendSignedTransaction = function (signedTransactionData, callback)
 
 /**
  * Sends the JSON-RPC request eth_signTransaction and returns the signed transaction
+ *
+ * @method signTransaction
  *
  * @param {Object} transactionObject
  * @param {Function} callback
@@ -711,6 +780,8 @@ Eth.prototype.signTransaction = function (transactionObject, callback) {
 /**
  * Sends the JSON-RPC request eth_sendTransaction and returns the transaction hash
  *
+ * @method sendTransaction
+ *
  * @param {Object} transactionObject
  * @param {Function} callback
  *
@@ -729,6 +800,8 @@ Eth.prototype.sendTransaction = function (transactionObject, callback) {
 
 /**
  * Sends the JSON-RPC request eth_sign and returns the signed data
+ *
+ * @method sign
  *
  * @param {String} dataToSign
  * @param {String} address
@@ -752,6 +825,8 @@ Eth.prototype.sign = function (dataToSign, address, callback) {
 
 /**
  * Sends the JSON-RPC request eth_call and returns the return value of the executed contract
+ *
+ * @method call
  *
  * @param {Object} callObject
  * @param {Number|String} block
@@ -780,6 +855,8 @@ Eth.prototype.call = function (callObject, block, callback) {
 /**
  * Sends the JSON-RPC request eth_estimateGas and returns the estimated gas
  *
+ * @method estimateGas
+ *
  * @param {Object} callObject
  * @param {Function} callback
  *
@@ -798,6 +875,8 @@ Eth.prototype.estimateGas = function (callObject, callback) {
 
 /**
  * Sends the JSON-RPC request eth_submitWork and returns the validation result
+ *
+ * @method submitWork
  *
  * @param {String} nonce
  * @param {String} powHash
@@ -821,6 +900,8 @@ Eth.prototype.submitWork = function (nonce, powHash, digest, callback) {
  * Sends the JSON-RPC request eth_getWork and returns the hash of the current block, the seedHash, and the
  * boundary condition to be met ("target").
  *
+ * @method getWork
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -838,6 +919,8 @@ Eth.prototype.getWork = function (callback) {
 
 /**
  * Sends the JSON-RPC request eth_getLogs and returns an array of all logs matching a given filter object
+ *
+ * @method getPastLogs
  *
  * @param {Object} options
  * @param {Function} callback
@@ -858,6 +941,8 @@ Eth.prototype.getPastLogs = function (options, callback) {
 /**
  * Determines if given block parameter is of type hash or number
  *
+ * @method isBlockHash
+ * 
  * @param {String|Number} blockParameter
  * @returns {boolean}
  */

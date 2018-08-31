@@ -31,6 +31,8 @@ function EthPackageFactory () { }
 /**
  * Returns object of type SubscriptionsResolver
  *
+ * @method createSubscriptionsResolver
+ *
  * @param {Object} provider
  * @param {CoreFactory} coreFactory
  *
@@ -42,6 +44,8 @@ EthPackageFactory.prototype.createSubscriptionsResolver = function (provider, co
 
 /**
  * Returns object of type Eth
+ *
+ * @method createEth
  *
  * @param {ConnectionModel} connectionModel
  * @param {PackageFactory} packageFactory
