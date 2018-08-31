@@ -24,13 +24,17 @@
 
 /**
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {Object} formatters
+ * @param {SubscriptionPackageFactory} subscriptionPackageFactory
+ * @param {PromiEventPackageFactory} promiEventPackageFactory
+ *
  * @constructor
  */
-function SubscriptionsResolver(provider, coreFactory) {
+function SubscriptionsResolver(provider, formatters, subscriptionPackageFactory, promiEventPackageFactory) {
     this.provider = provider;
-    this.coreFactory = coreFactory;
-    this.formatters = this.coreFactory.createFormatters();
+    this.formatters = formatters;
+    this.subscriptionPackageFactory = subscriptionPackageFactory;
+    this.promiEventPackageFactory = promiEventPackageFactory;
 }
 
 /**
@@ -83,7 +87,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
         parameters = [];
     }
 
-    return this.coreFactory.createSubscription(
+    return this.subscriptionPackageFactory.createSubscription(
         this.provider,
         type,
         parameters,
@@ -104,7 +108,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, callback) {
-    var promiEvent = this.coreFactory.createPromiEvent();
+    var promiEvent = this.promiEventPackageFactory.createPromiEvent();
 
     if (this.hasFromBlockProperty(parameters[1])) {
         this.handleLogsSubscriptionWithFromBlock(parameters, promiEvent, callback);
@@ -129,25 +133,25 @@ SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, call
  * @callback callback callback(error, result)
  */
 SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEvent, callback) {
-    this.coreFactory.createSubscription(
-        this.provider,
+    this.getSubscription(
         'logs',
         parameters,
         null,
-        this.formatters.outputLogFormatter
-    ).subscribe(function (error, logs) {
-        if (error) {
-            callback(error, null);
-            promiEvent.eventEmitter.emit('error', error);
+        this.formatters.outputLogFormatter,
+        function (error, logs) {
+            if (error) {
+                callback(error, null);
+                promiEvent.eventEmitter.emit('error', error);
 
-            return;
+                return;
+            }
+
+            logs.forEach(function (log) {
+                callback(false, log);
+                promiEvent.eventEmitter.emit('data', log);
+            });
         }
-
-        logs.forEach(function(log) {
-            callback(false, log);
-            promiEvent.eventEmitter.emit('data', log);
-        });
-    });
+    );
 };
 
 /**
@@ -162,7 +166,7 @@ SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEve
  * @callback callback callback(error,result)
  */
 SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (parameters, promiEvent, callback) {
-    var self  = this;
+    var self = this;
     this.provider.send('eth_getLogs', parameters).then(function (logs) {
         logs.forEach(function (log) {
             var output = self.formatters.outputLogFormatter(log);
@@ -191,66 +195,63 @@ SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
-    var subscription = this.getSubscription(
+    var promiEvent = this.promiEventPackageFactory.createPromiEvent();
+
+    this.getSubscription(
         'syncing',
         null,
         null,
         this.formatters.outputSyncingFormatter,
-        callback
-    );
+        function (error, output) {
+            var self = this;
 
-    var promiEvent = this.coreFactory.createPromiEvent();
+            if (error) {
+                promiEvent.eventEmitter.emit('error', error);
+                callback(error, null, this);
 
-    subscription.subscribe(function (error, output) {
-        var self = this;
-
-        if (error) {
-            promiEvent.eventEmitter.emit('error', error);
-            callback(error, null, this);
-
-            return;
-        }
-
-        // fire TRUE at start
-        if (this.isSyncing !== true) {
-            this.isSyncing = true;
-            promiEvent.eventEmitter.emit('changed', this.isSyncing);
-
-            if (_.isFunction(callback)) {
-                callback(null, this.isSyncing, this);
+                return;
             }
 
-            setTimeout(function () {
-                promiEvent.eventEmitter.emit('data', output);
-
-                if (_.isFunction(self.callback)) {
-                    callback(null, output, self);
-                }
-            }, 0);
-
-            return;
-        }
-
-        // fire sync status
-        promiEvent.eventEmitter.emit('data', output);
-        if (_.isFunction(callback)) {
-            callback(null, output, this);
-        }
-
-        // wait for some time before fireing the FALSE
-        clearTimeout(this.isSyncingTimeout);
-        this.isSyncingTimeout = setTimeout(function () {
-            if (output.currentBlock > output.highestBlock - 200) {
-                self.isSyncing = false;
-                promiEvent.eventEmitter.emit('changed', self.isSyncing);
+            // fire TRUE at start
+            if (this.isSyncing !== true) {
+                this.isSyncing = true;
+                promiEvent.eventEmitter.emit('changed', this.isSyncing);
 
                 if (_.isFunction(callback)) {
-                    callback(null, self.isSyncing, self);
+                    callback(null, this.isSyncing, this);
                 }
-            }
-        }, 500);
 
-    });
+                setTimeout(function () {
+                    promiEvent.eventEmitter.emit('data', output);
+
+                    if (_.isFunction(self.callback)) {
+                        callback(null, output, self);
+                    }
+                }, 0);
+
+                return;
+            }
+
+            // fire sync status
+            promiEvent.eventEmitter.emit('data', output);
+            if (_.isFunction(callback)) {
+                callback(null, output, this);
+            }
+
+            // wait for some time before fireing the FALSE
+            clearTimeout(this.isSyncingTimeout);
+            this.isSyncingTimeout = setTimeout(function () {
+                if (output.currentBlock > output.highestBlock - 200) {
+                    self.isSyncing = false;
+                    promiEvent.eventEmitter.emit('changed', self.isSyncing);
+
+                    if (_.isFunction(callback)) {
+                        callback(null, self.isSyncing, self);
+                    }
+                }
+            }, 500);
+        }
+    );
 
     return promiEvent;
 };
@@ -265,7 +266,7 @@ SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
  * @returns {boolean}
  */
 SubscriptionsResolver.prototype.hasFromBlockProperty = function (parameter) {
-   return _.isObject(parameter) && parameter.hasOwnProperty('fromBlock') && _.isNumber(parameter.fromBlock);
+    return _.isObject(parameter) && parameter.hasOwnProperty('fromBlock') && _.isNumber(parameter.fromBlock);
 };
 
 module.exports = SubscriptionsResolver;

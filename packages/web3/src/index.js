@@ -70,7 +70,7 @@ Object.defineProperty(Web3, 'connectionModel', {
  */
 Object.defineProperty(Web3, 'givenProvider', {
     get: function () {
-        return this.connectionModel;
+        return this.connectionModel.givenProvider;
     },
     set: function (connectionModel) {
         if (this.connectionModel) {
@@ -114,10 +114,6 @@ Web3.providers = {
     HttpProvider: require('web3-core-providers').HttpProvider,
     WebsocketProvider: require('web3-core-providers').WebsocketProvider,
     IpcProvider: require('web3-core-providers').IpcProvider
-};
-
-Web3.givenProvider = function () {
-    return new PackageFactory(new CoreFactory()).createProvidersPackageFactory().createProviderDetector().detect();
 };
 
 module.exports = Web3;

@@ -26,23 +26,40 @@ var _ = require('underscore');
 
 /**
  * @param {ConnectionModel} connectionModel
- * @param {PackageFactory} packageFactory
- * @param {CoreFactory} coreFactory
+ * @param {Contract} contract
+ * @param {Accounts} accounts
+ * @param {Personal} personal
+ * @param {Iban} iban
+ * @param {Abi} abi
+ * @param {ENS} ens
+ * @param {Utils} utils
+ * @param {Object} formatters
  * @param {SubscriptionsResolver} subscriptionsResolver
+ *
  * @constructor
  */
-var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptionsResolver) {
+var Eth = function Eth(
+    connectionModel,
+    contract,
+    accounts,
+    personal,
+    iban,
+    abi,
+    ens,
+    utils,
+    formatters,
+    subscriptionsResolver
+) {
     this.connectionModel = connectionModel;
-    this.coreFactory = coreFactory;
     this.net = this.connectionModel.getNetworkMethodsAsObject();
-    this.Contract = packageFactory.createContractPackage();
-    this.accounts = packageFactory.createAccountsPackage();
-    this.personal = packageFactory.createPersonalPackage();
-    this.iban = packageFactory.createIbanPackage();
-    this.abi = packageFactory.createAbiPackage();
-    this.ens = packageFactory.createEnsPackage();
-    this.utils = this.coreFactory.createUtils();
-    this.formatters = this.coreFactory.createFormatters();
+    this.Contract = contract;
+    this.accounts = accounts;
+    this.personal = personal;
+    this.iban = iban;
+    this.abi = abi;
+    this.ens = ens;
+    this.utils = utils;
+    this.formatters = formatters;
     this.subscriptionsResolver = subscriptionsResolver;
 };
 

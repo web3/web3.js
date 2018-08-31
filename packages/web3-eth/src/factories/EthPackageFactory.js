@@ -34,12 +34,19 @@ function EthPackageFactory () { }
  * @method createSubscriptionsResolver
  *
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {Object} formatters
+ * @param {SubscriptionPackageFactory} subscriptionPackageFactory
+ * @param {PromiEventPackageFactory} promiEventPackageFactory
  *
  * @returns {SubscriptionsResolver}
  */
-EthPackageFactory.prototype.createSubscriptionsResolver = function (provider, coreFactory) {
-    return new SubscriptionsResolver(provider, coreFactory)
+EthPackageFactory.prototype.createSubscriptionsResolver = function (
+    provider,
+    formatters,
+    subscriptionPackageFactory,
+    promiEventPackageFactory
+) {
+    return new SubscriptionsResolver(provider, formatters, subscriptionPackageFactory, promiEventPackageFactory)
 };
 
 /**
@@ -48,16 +55,46 @@ EthPackageFactory.prototype.createSubscriptionsResolver = function (provider, co
  * @method createEth
  *
  * @param {ConnectionModel} connectionModel
- * @param {PackageFactory} packageFactory
- * @param {CoreFactory} coreFactory
+ * @param {Contract} contract
+ * @param {Accounts} accounts
+ * @param {Personal} personal
+ * @param {Iban} iban
+ * @param {Abi} abi
+ * @param {ENS} ens
+ * @param {Utils} utils
+ * @param {Object} formatters
+ * @param {SubscriptionPackageFactory} subscriptionPackageFactory
+ * @param {PromiEventPackageFactory} promiEventPackageFactory
  *
  * @returns {Eth}
  */
-EthPackageFactory.prototype.createEth = function (connectionModel, packageFactory, coreFactory) {
+EthPackageFactory.prototype.createEth = function (
+    connectionModel,
+    contract,
+    accounts,
+    personal,
+    iban,
+    abi,
+    ens,
+    utils,
+    formatters,
+    subscriptionPackageFactory,
+    promiEventPackageFactory
+) {
     return new Eth(
         connectionModel,
-        packageFactory,
-        coreFactory,
-        this.createSubscriptionsResolver(connectionModel.provider, coreFactory)
+        contract,
+        accounts,
+        personal,
+        iban,
+        abi,
+        ens,
+        utils,
+        formatters,
+        this.createSubscriptionsResolver(
+            connectionModel.provider,
+            subscriptionPackageFactory,
+            promiEventPackageFactory
+        )
     );
 };
