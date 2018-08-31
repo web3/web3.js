@@ -17,6 +17,10 @@ var tests = [
         data: 'Some data!%$$%&@*',
         // signature done with personal_sign
         signature: '0x05252412b097c5d080c994d1ea12abcee6f1cae23feb225517a0b691a66e12866b3f54292f9cfef98f390670b4d010fc4af7fcd46e41d72870602c117b14921c1c'
+    }, {
+        // address with lowercase checksum
+        address: '0x687638f12506b94916d2484436d4329d740969c4',
+        privateKey: '0x5a8bad40fd8e8e74a19e7817912b3d38ebeb3c9eff5c059f0e76f1ff3ff1dcd3',
     }
 ];
 

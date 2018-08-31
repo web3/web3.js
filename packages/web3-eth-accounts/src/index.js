@@ -452,8 +452,10 @@ Wallet.prototype.remove = function (addressOrIndex) {
         this[account.address].privateKey = null;
         delete this[account.address];
         // address lowercase
-        this[account.address.toLowerCase()].privateKey = null;
-        delete this[account.address.toLowerCase()];
+        if (this[account.address.toLowerCase()]) {
+            this[account.address.toLowerCase()].privateKey = null;
+            delete this[account.address.toLowerCase()];
+        }
         // index
         this[account.index].privateKey = null;
         delete this[account.index];
