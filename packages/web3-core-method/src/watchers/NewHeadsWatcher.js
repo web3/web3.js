@@ -22,7 +22,7 @@
 
 /**
  * @param {Object} provider
- * @param {Object} coreFactory
+ * @param {CoreFactory} coreFactory
  * @constructor
  */
 function NewHeadsWatcher(provider, coreFactory)  {
@@ -35,6 +35,8 @@ function NewHeadsWatcher(provider, coreFactory)  {
 
 /**
  * Starts subscription on newHeads if supported or creates an interval to get the newHeads
+ *
+ * @method watch
  *
  * @param {String} transactionHash
  *
@@ -63,6 +65,8 @@ NewHeadsWatcher.prototype.watch = function (transactionHash) {
 
 /**
  * Clears the interval and unsubscribes the subscription
+ *
+ * @method stop
  */
 NewHeadsWatcher.prototype.stop = function () {
     if(this.confirmationSubscription) {

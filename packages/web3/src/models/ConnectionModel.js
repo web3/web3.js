@@ -117,7 +117,9 @@ ConnectionModel.prototype.getNetworkType = function (callback) {
 /**
  * Executes the JSON-RPC method net_version
  *
- * @param callback
+ * @method getId
+ *
+ * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
@@ -129,7 +131,9 @@ ConnectionModel.prototype.getId = function (callback) {
 /**
  * Executes the JSON-RPC method net_listening
  *
- * @param callback
+ * @method isListening
+ *
+ * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
@@ -141,7 +145,9 @@ ConnectionModel.prototype.isListening = function (callback) {
 /**
  * Executes the JSON-RPC method net_peerCount
  *
- * @param callback
+ * @method getPeerCount
+ *
+ * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
@@ -153,9 +159,11 @@ ConnectionModel.prototype.getPeerCount = function (callback) {
 /**
  * Gets a block by his number
  *
- * @param blockNumber
- * @param returnTransactionObjects
- * @param callback
+ * @method getBlockByNumber
+ *
+ * @param {Number} blockNumber
+ * @param {Boolean} returnTransactionObjects
+ * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
@@ -174,6 +182,8 @@ ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransa
 
 /**
  * Returns the network methods for the public API
+ *
+ * @method getNetworkMethodsAsObject
  *
  * @returns {Object}
  */

@@ -54,11 +54,15 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
         parseURL = require('url').parse;
     }
 }
-// Default connection ws://localhost:8546
 
-
-
-
+/**
+ * Default connection ws://localhost:8546
+ *
+ * @param {String} url
+ * @param {Object} options
+ *
+ * @constructor
+ */
 var WebsocketProvider = function WebsocketProvider(url, options)  {
     var _this = this;
     this.responseCallbacks = {};
@@ -134,11 +138,11 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
 };
 
 /**
- Will add the error and end event to timeout existing calls
-
- @method addDefaultEvents
+ * Will add the error and end event to timeout existing calls
+ *
+ * @method addDefaultEvents
  */
-WebsocketProvider.prototype.addDefaultEvents = function(){
+WebsocketProvider.prototype.addDefaultEvents = function () {
     var _this = this;
 
     this.connection.onerror = function(){
@@ -158,12 +162,13 @@ WebsocketProvider.prototype.addDefaultEvents = function(){
 };
 
 /**
- Will parse the response and make an array out of it.
-
- @method _parseResponse
- @param {String} data
+ * Will parse the response and make an array out of it.
+ *
+ * @method _parseResponse
+ *
+ * @param {String} data
  */
-WebsocketProvider.prototype._parseResponse = function(data) {
+WebsocketProvider.prototype._parseResponse = function (data) {
     var _this = this,
         returnValues = [];
 
@@ -213,10 +218,15 @@ WebsocketProvider.prototype._parseResponse = function(data) {
 
 
 /**
- Adds a callback to the responseCallbacks object,
- which will be called if a response matching the response Id will arrive.
-
- @method _addResponseCallback
+ * Adds a callback to the responseCallbacks object,
+ * which will be called if a response matching the response Id will arrive.
+ *
+ * @method _addResponseCallback
+ *
+ * @param {Object} payload
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
     var id = payload.id || payload[0].id;
@@ -239,9 +249,9 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
 };
 
 /**
- Timeout all requests when the end/error event is fired
-
- @method _timeout
+ * Timeout all requests when the end/error event is fired
+ *
+ * @method _timeout
  */
 WebsocketProvider.prototype._timeout = function() {
     for(var key in this.responseCallbacks) {
@@ -252,7 +262,16 @@ WebsocketProvider.prototype._timeout = function() {
     }
 };
 
-
+/**
+ * Sends the JSON-RPC request
+ *
+ * @method send
+ *
+ * @param {Object} payload
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ */
 WebsocketProvider.prototype.send = function (payload, callback) {
     var _this = this;
 
@@ -282,11 +301,14 @@ WebsocketProvider.prototype.send = function (payload, callback) {
 };
 
 /**
- Subscribes to provider events.provider
-
- @method on
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
+ * Subscribes to provider events.provider
+ *
+ * @method on
+ *
+ * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 WebsocketProvider.prototype.on = function (type, callback) {
 
@@ -316,14 +338,17 @@ WebsocketProvider.prototype.on = function (type, callback) {
     }
 };
 
-// TODO add once
+// TODO: add once
 
 /**
- Removes event listener
-
- @method removeListener
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
- @param {Function} callback   the callback to call
+ * Removes event listener
+ *
+ * @method removeListener
+ *
+ * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 WebsocketProvider.prototype.removeListener = function (type, callback) {
     var _this = this;
@@ -345,10 +370,13 @@ WebsocketProvider.prototype.removeListener = function (type, callback) {
 };
 
 /**
- Removes all event listeners
-
- @method removeAllListeners
- @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ * Removes all event listeners
+ *
+ * @method removeAllListeners
+ *
+ * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
+ *
+ * @callback callback callback(error, result)
  */
 WebsocketProvider.prototype.removeAllListeners = function (type) {
     switch(type){
@@ -377,9 +405,11 @@ WebsocketProvider.prototype.removeAllListeners = function (type) {
 };
 
 /**
- Resets the providers, clears all callbacks
-
- @method reset
+ * Resets the providers, clears all callbacks
+ *
+ * @method reset
+ *
+ * @callback callback callback(error, result)
  */
 WebsocketProvider.prototype.reset = function () {
     this._timeout();
@@ -392,6 +422,11 @@ WebsocketProvider.prototype.reset = function () {
     this.addDefaultEvents();
 };
 
+/**
+ * Will close the socket connection
+ *
+ * @method disconnect
+ */
 WebsocketProvider.prototype.disconnect = function () {
     if (this.connection) {
         this.connection.close();

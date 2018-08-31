@@ -28,10 +28,15 @@ var WebsocketProvider = require('../providers/WebsocketProvider');
 var IpcProvider = require('../providers/IpcProvider');
 var HttpProvider = require('../providers/HttpProvider');
 
+/**
+ * @constructor
+ */
 function ProvidersPackageFactory() { }
 
 /**
  * Return ProviderAdapterResolver object
+ *
+ * @method createProviderAdapterResolver
  *
  * @returns {ProviderAdapterResolver}
  */
@@ -42,6 +47,8 @@ ProvidersPackageFactory.prototype.createProviderAdapterResolver = function () {
 /**
  * Return ProviderDetector object
  *
+ * @method createProviderDetector
+ *
  * @returns {ProviderDetector}
  */
 ProvidersPackageFactory.prototype.createProviderDetector = function () {
@@ -50,6 +57,8 @@ ProvidersPackageFactory.prototype.createProviderDetector = function () {
 
 /**
  * Return HttpProvider object
+ *
+ * @method createHttpProvider
  *
  * @param {string} url
  *
@@ -62,6 +71,8 @@ ProvidersPackageFactory.prototype.createHttpProvider = function (url) {
 /**
  * Return WebsocketProvider object
  *
+ * @method createWebsocketProvider
+ *
  * @param {string} url
  *
  * @returns {WebsocketProvider}
@@ -72,6 +83,8 @@ ProvidersPackageFactory.prototype.createWebsocketProvider = function (url) {
 
 /**
  * Return IpcProvider object
+ *
+ * @method createIpcProvider
  *
  * @param {string} path
  * @param {Net} net
@@ -85,6 +98,8 @@ ProvidersPackageFactory.prototype.createIpcProvider = function (path, net) {
 /**
  * Returns HttpProviderAdapter object
  *
+ * @method createHttpProviderAdapter
+ *
  * @param {HttpProvider} provider
  *
  * @returns {HttpProviderAdapter}
@@ -96,6 +111,8 @@ ProvidersPackageFactory.prototype.createHttpProviderAdapter = function (provider
 /**
  * Returns SocketProviderAdapter object
  *
+ * @method createSocketProviderAdapter
+ *
  * @param {WebsocketProvider | IpcProvider} provider
  *
  * @returns {SocketProviderAdapter}
@@ -106,6 +123,8 @@ ProvidersPackageFactory.prototype.createSocketProviderAdapter = function (provid
 
 /**
  * Returns InpageProviderAdapter object
+ *
+ * @method createInpageProviderAdapter
  *
  * @param {Object} provider
  *

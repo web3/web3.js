@@ -27,6 +27,8 @@ function ProviderDetector() { }
 /**
  * Detects which provider is given with web3.currentProvider
  *
+ * @method detect
+ *
  * @returns {Object} provider
  */
 ProviderDetector.prototype.detect = function () {
@@ -47,7 +49,10 @@ ProviderDetector.prototype.detect = function () {
 /**
  * Checks if the given provider it is of type ipcProviderWrapper
  *
+ * @method isIpcProviderWrapper
+ *
  * @param {Object} currentProvider
+ *
  * @returns {boolean}
  */
 ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
@@ -57,7 +62,10 @@ ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
 /**
  * Adds the on method for the subscriptions to the ipcProviderWrapper
  *
+ * @method addSubscriptionsToIpcProviderWrapper
+ *
  * @param {Object} provider ipcProviderWrapper
+ *
  * @returns {Object} ipcProviderWrapper
  */
 ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (provider) {

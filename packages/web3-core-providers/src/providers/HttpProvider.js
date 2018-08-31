@@ -23,13 +23,15 @@
  */
 
 var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest // jshint ignore: line
+var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
 var http = require('http');
 var https = require('https');
 
-
 /**
- * HttpProvider should be used to send rpc calls over http
+ * @param {string} host
+ * @param {Object} options
+ *
+ * @constructor
  */
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
@@ -44,7 +46,15 @@ var HttpProvider = function HttpProvider(host, options) {
     this.connected = false;
 };
 
-HttpProvider.prototype._prepareRequest = function(){
+/**
+ * Prepares the HTTP request
+ *
+ * @private
+ * @method _prepareRequest
+ *
+ * @returns {FakeXHR2}
+ */
+HttpProvider.prototype._prepareRequest = function () {
     var request = new XHR2();
     request.nodejsSet({
         httpsAgent:this.httpsAgent,
@@ -69,8 +79,12 @@ HttpProvider.prototype._prepareRequest = function(){
  * Should be used to make async request
  *
  * @method send
+ *
  * @param {Object} payload
- * @param {Function} callback triggered on end with (err, result)
+ *
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 HttpProvider.prototype.send = function (payload, callback) {
     var _this = this;
@@ -105,9 +119,10 @@ HttpProvider.prototype.send = function (payload, callback) {
     }
 };
 
-HttpProvider.prototype.disconnect = function () {
-    //NO OP
-};
+/**
+ * If this method does not exist it will throw en error.
+ */
+HttpProvider.prototype.disconnect = function () { };
 
 
 module.exports = HttpProvider;

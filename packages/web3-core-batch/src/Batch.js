@@ -34,6 +34,7 @@ var Batch = function (provider) {
  * Should be called to add create new request to batch request
  *
  * @method add
+ *
  * @param {Object} request
  */
 Batch.prototype.add = function (request) {

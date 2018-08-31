@@ -81,6 +81,8 @@ Object.defineProperty(TransactionConfirmationModel, 'confirmationsCount', {
 /**
  * Adds a receipt to the confirmation array
  *
+ * @method addConfirmation
+ *
  * @param {Object} receipt
  */
 TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
@@ -90,6 +92,8 @@ TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
 /**
  * Checks if enough confirmations are registered to set the transaction as approved
  *
+ * @method isConfirmed
+ *
  * @returns {boolean}
  */
 TransactionConfirmationModel.prototype.isConfirmed = function () {
@@ -98,6 +102,8 @@ TransactionConfirmationModel.prototype.isConfirmed = function () {
 
 /**
  * Checks if the timeout time is exceeded
+ *
+ * @method isTimeoutTimeExceeded
  *
  * @returns {boolean}
  */

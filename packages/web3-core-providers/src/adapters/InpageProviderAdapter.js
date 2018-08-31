@@ -28,6 +28,7 @@ var errors = require('web3-core-helpers').errors;
 
 /**
  * @param {Object} inpageProvider
+ *
  * @constructor
  */
 function InpageProviderAdapter(inpageProvider) {
@@ -37,8 +38,11 @@ function InpageProviderAdapter(inpageProvider) {
 }
 
 /**
- * @param {Array} payloadBatch
- * @returns {Promise}
+ * Sends batch request
+ *
+ * @param {array} payloadBatch
+ *
+ * @returns {Promise<any>}
  */
 InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
     return new Promise(function (resolve, reject) {
@@ -58,6 +62,10 @@ InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
 };
 
 /**
+ * Returns promise with an error because the inpageProvider does not support subscriptions
+ *
+ * @method subscribe
+ *
  * @returns {Promise<Error>}
  */
 InpageProviderAdapter.prototype.subscribe = function () {
@@ -67,6 +75,10 @@ InpageProviderAdapter.prototype.subscribe = function () {
 };
 
 /**
+ * Returns promise with an error because the inpageProvider does not support subscriptions
+ *
+ * @method unsubscribe
+ *
  * @returns {Promise<Error>}
  */
 InpageProviderAdapter.prototype.unsubscribe = function () {
@@ -76,6 +88,10 @@ InpageProviderAdapter.prototype.unsubscribe = function () {
 };
 
 /**
+ * Checks if the provider is connected
+ *
+ * @method isConnected
+ *
  * @returns {boolean}
  */
 InpageProviderAdapter.prototype.isConnected = this.provider.isConnected;

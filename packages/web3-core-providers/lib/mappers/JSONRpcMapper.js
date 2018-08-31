@@ -33,8 +33,10 @@ var JSONRpcMapper = {
  * Should be called to valid json create payload object
  *
  * @method toPayload
+ *
  * @param {Function} method of jsonrpc call, required
- * @param {Array} params, an array of method params, optional
+ * @param {array} params, an array of method params, optional
+ *
  * @returns {Object} valid jsonrpc payload object
  */
 JSONRpcMapper.toPayload = function (method, params) {
@@ -57,8 +59,10 @@ JSONRpcMapper.toPayload = function (method, params) {
  * Should be called to create batch payload object
  *
  * @method toBatchPayload
- * @param {Array} messages, an array of objects with method (required) and params (optional) fields
- * @returns {Array} batch payload
+ *
+ * @param {array} messages, an array of objects with method (required) and params (optional) fields
+ *
+ * @returns {array} batch payload
  */
 JSONRpcMapper.toBatchPayload = function (messages) {
     return messages.map(function (message) {

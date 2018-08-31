@@ -30,6 +30,7 @@ var oboe = require('oboe');
 /**
  * @param {string} path
  * @param {Net} net
+ *
  * @constructor
  */
 var IpcProvider = function IpcProvider(path, net) {
@@ -116,11 +117,12 @@ IpcProvider.prototype.addDefaultEvents = function () {
 
 /**
  * Will parse the response and make an array out of it.
- *
  * NOTE, this exists for backwards compatibility reasons.
  *
  * @method _parseResponse
+ *
  * @param {String} data
+ *
  * @returns {Array}
  */
 IpcProvider.prototype._parseResponse = function (data) {
@@ -178,6 +180,8 @@ IpcProvider.prototype._parseResponse = function (data) {
  * which will be called if a response matching the response Id will arrive.
  *
  * @method _addResponseCallback
+ *
+ * @callback callback callback(error, result)
  */
 IpcProvider.prototype._addResponseCallback = function (payload, callback) {
     var id = payload.id || payload[0].id;
@@ -211,6 +215,16 @@ IpcProvider.prototype.reconnect = function () {
 };
 
 
+/**
+ * Sends the JSON-RPC the request
+ *
+ * @method send
+ *
+ * @param {Object} payload
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ */
 IpcProvider.prototype.send = function (payload, callback) {
     // try reconnect, when connection is gone
     if (!this.connection.writable) {
@@ -225,8 +239,11 @@ IpcProvider.prototype.send = function (payload, callback) {
  * Subscribes to provider events.provider
  *
  * @method on
+ *
  * @param {String} type 'notification', 'connect', 'error', 'end' or 'data'
- * @param {Function} callback the callback to call
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 IpcProvider.prototype.on = function (type, callback) {
     if (typeof callback !== 'function') {
@@ -249,8 +266,11 @@ IpcProvider.prototype.on = function (type, callback) {
  * Subscribes to provider events.provider
  *
  * @method on
+ *
  * @param {String} type 'connect', 'error', 'end' or 'data'
- * @param {Function} callback the callback to call
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 IpcProvider.prototype.once = function (type, callback) {
     if (typeof callback !== 'function') {
@@ -264,8 +284,11 @@ IpcProvider.prototype.once = function (type, callback) {
  * Removes event listener
  *
  * @method removeListener
+ *
  * @param {String} type 'data', 'connect', 'error', 'end' or 'data'
- * @param {Function} callback the callback to call
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 IpcProvider.prototype.removeListener = function (type, callback) {
     var _this = this;
@@ -288,7 +311,10 @@ IpcProvider.prototype.removeListener = function (type, callback) {
  * Removes all event listeners
  *
  * @method removeAllListeners
+ *
  * @param {String} type 'data', 'connect', 'error', 'end' or 'data'
+ *
+ * @callback callback callback(error, result)
  */
 IpcProvider.prototype.removeAllListeners = function (type) {
     switch (type) {

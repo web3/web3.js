@@ -25,8 +25,7 @@
 var _ = require('underscore');
 
 /**
- *
- * @param {Object} accounts
+ * @param {Accounts} accounts
  * @constructor
  */
 function AbstractSigner(accounts) {

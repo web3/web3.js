@@ -31,6 +31,7 @@ var EventEmitter = require('eventemitter3');
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
+ *
  * @constructor
  */
 function Subscription(provider, type, parameters, inputFormatters, outputFormatter) {
@@ -45,8 +46,11 @@ function Subscription(provider, type, parameters, inputFormatters, outputFormatt
 /**
  * Sends the JSON-RPC request, emits the required events and executes the callback method.
  *
+ * @method subscribe
+ *
  * @param {Function} callback
  *
+ * @callback callback callback(error, result)
  * @returns {Subscription} Subscription
  */
 Subscription.prototype.subscribe = function (callback) {
@@ -76,8 +80,13 @@ Subscription.prototype.subscribe = function (callback) {
 
 /**
  * Iterates over each item in the response, formats the output, emits required events and executes the callback method.
+ *
+ * @method handleSubscriptionResponse
+ *
  * @param {any} response
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 Subscription.prototype.handleSubscriptionResponse = function (response, callback) {
     if (!_.isArray(response)) {
@@ -96,10 +105,14 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
 /**
  * Reconnects provider and restarts subscription
  *
+ * @method reconnect
+ *
  * @param {string} type
- * @param {*} parameters
+ * @param {array} parameters
  * @param {string} subscriptionId
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  */
 Subscription.prototype.reconnect = function (type, parameters, subscriptionId, callback) {
     var self = this;
@@ -127,8 +140,12 @@ Subscription.prototype.reconnect = function (type, parameters, subscriptionId, c
 /**
  * Executes outputFormatter if defined
  *
+ * @method formatOutput
+ *
  * @param {any} output
+ *
  * @returns {any}
+ * @callback callback callback(error, result)
  */
 Subscription.prototype.formatOutput = function (output) {
     if (_.isFunction(this.outputFormatter) && output) {
@@ -141,8 +158,11 @@ Subscription.prototype.formatOutput = function (output) {
 /**
  * Executes inputFormatters if defined
  *
+ * @method formatInput
+ *
  * @param {array} parameters
- * @returns {*}
+ *
+ * @returns {any}
  */
 Subscription.prototype.formatInput = function (parameters) {
     if (_.isArray(this.inputFormatters)) {
@@ -161,7 +181,11 @@ Subscription.prototype.formatInput = function (parameters) {
 /**
  * Unsubscribes subscription
  *
+ * @method unsubscribe
+ *
  * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {Promise<boolean>}
  */
 Subscription.prototype.unsubscribe = function (callback) {

@@ -25,33 +25,44 @@
 var _ = require('underscore');
 
 /**
- * @param {ProviderPackageFactory} providerPackageFactory
+ * @param {ProvidersPackageFactory} providersPackageFactory
+ *
  * @constructor
  */
-function ProviderAdapterResolver(providerPackageFactory) {
-    this.providerPackageFactory = providerPackageFactory;
+function ProviderAdapterResolver(providersPackageFactory) {
+    this.providersPackageFactory = providersPackageFactory;
 }
 
+/**
+ * Resolves the correct provider with his adapter
+ *
+ * @method resolve
+ *
+ * @param {Object} provider
+ * @param {Net} net
+ *
+ * @returns {Object}
+ */
 ProviderAdapterResolver.prototype.resolve = function (provider, net) {
 
     if (typeof provider === 'string') {
         // HTTP
         if (/^http(s)?:\/\//i.test(provider)) {
-            return this.providerPackageFactory.createHttpProviderAdapter(
-                this.providerPackageFactory.createHttpProvider(provider)
+            return this.providersPackageFactory.createHttpProviderAdapter(
+                this.providersPackageFactory.createHttpProvider(provider)
             );
         }
         // WS
         if (/^ws(s)?:\/\//i.test(provider)) {
-            return this.providerPackageFactory.createSocketProviderAdapter(
-                this.providerPackageFactory.createWebsocketProvider(provider)
+            return this.providersPackageFactory.createSocketProviderAdapter(
+                this.providersPackageFactory.createWebsocketProvider(provider)
             );
         }
 
         // IPC
         if (provider && _.isObject(net) && _.isFunction(net.connect)) {
-            return this.providerPackageFactory.createSocketProviderAdapter(
-                this.providerPackageFactory.createIpcProvider(provider, net)
+            return this.providersPackageFactory.createSocketProviderAdapter(
+                this.providersPackageFactory.createIpcProvider(provider, net)
             );
         }
     }
@@ -61,7 +72,7 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
     }
 
     if (_.isFunction(provider.sendAsync)) {
-        return this.providerPackageFactory.createInpageProviderAdapter(provider);
+        return this.providersPackageFactory.createInpageProviderAdapter(provider);
     }
 };
 

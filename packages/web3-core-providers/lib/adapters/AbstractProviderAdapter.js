@@ -28,6 +28,7 @@ var errors = require('web3-core-helpers').errors;
 
 /**
  * @param {Object} provider
+ *
  * @constructor
  */
 function AbstractProviderAdapter(provider) {
@@ -36,9 +37,13 @@ function AbstractProviderAdapter(provider) {
 
 /**
  * Sends the JSON-RPC request
+ *
+ * @method send
+ *
  * @param {string} method
- * @param {Array} parameters
- * @returns {Promise}
+ * @param {array} parameters
+ *
+ * @returns {Promise<any>}
  */
 AbstractProviderAdapter.prototype.send = function (method, parameters) {
     var self = this;
@@ -53,6 +58,10 @@ AbstractProviderAdapter.prototype.send = function (method, parameters) {
 };
 
 /**
+ * Handles the JSON-RPC response
+ *
+ * @method handleResponse
+ *
  * @param {Function} reject
  * @param {Function} resolve
  * @param {Object} error

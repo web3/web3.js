@@ -24,10 +24,15 @@
 
 var AbstractSigner = require('../../AbstractSigner');
 
+/**
+ * @constructor
+ */
 function MessageSigner() { }
 
 /**
  * Signs a given message
+ *
+ * @method sign
  *
  * @param {string} data
  * @param {any} address

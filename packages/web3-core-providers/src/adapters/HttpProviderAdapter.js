@@ -25,7 +25,8 @@
 var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
 
 /**
- * @param {Object} httpProvider
+ * @param {HttpProvider} httpProvider
+ *
  * @constructor
  */
 function HttpProviderAdapter (httpProvider) {
@@ -34,6 +35,10 @@ function HttpProviderAdapter (httpProvider) {
 
 
 /**
+ * Returns promise with an error because HTTP does not support subscriptions
+ *
+ * @method subscribe
+ *
  * @returns {Promise<Error>}
  */
 HttpProviderAdapter.prototype.subscribe = function () {
@@ -44,6 +49,10 @@ HttpProviderAdapter.prototype.subscribe = function () {
 };
 
 /**
+ * Returns promise with an error because HTTP does not support subscriptions
+ *
+ * @method unsubscribe
+ *
  * @returns {Promise<Error>}
  */
 HttpProviderAdapter.prototype.unsubscribe = function () {
@@ -54,6 +63,10 @@ HttpProviderAdapter.prototype.unsubscribe = function () {
 };
 
 /**
+ * Checks if the provider is connected
+ *
+ * @method isConnected
+ *
  * @returns {boolean}
  */
 HttpProviderAdapter.prototype.isConnected = function () {

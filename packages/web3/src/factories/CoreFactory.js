@@ -33,11 +33,15 @@ function CoreFactory() { }
 /**
  * Creates Subscription object
  *
+ * @method createSubscription
+ *
  * @param {Object} provider
  * @param {string} type
- * @param {*} parameters
+ * @param {array} parameters
  * @param {Object} inputFormatter
  * @param {Object} outputFormatter
+ *
+ * @returns {Subscription}
  */
 CoreFactory.prototype.createSubscription = function (provider, type, parameters, inputFormatter, outputFormatter) {
     return new Subscription(provider, type, parameters, inputFormatter, outputFormatter);
@@ -52,6 +56,8 @@ CoreFactory.prototype.createPromiEvent = function () {
 
 /**
  * Creates Method object
+ *
+ * @method createMethod
  *
  * @param {Object} provider
  * @param {string} rpcMethod
@@ -76,7 +82,9 @@ CoreFactory.prototype.createMethod = function (provider, rpcMethod, parameters, 
 /**
  * Returns the web3 utilities
  *
- * @returns {Object}
+ * @method createUtils
+ *
+ * @returns {Utils}
  */
 CoreFactory.prototype.createUtils = function () {
     return Utils;
@@ -85,7 +93,9 @@ CoreFactory.prototype.createUtils = function () {
 /**
  * Creates Batch object
  *
- * @param {Object} connectionModel
+ * @method createBatch
+ *
+ * @param {ConnectionModel} connectionModel
  *
  * @returns {Batch}
  */
@@ -96,6 +106,8 @@ CoreFactory.prototype.createBatch = function (connectionModel) {
 /**
  * Returns the web3 formatters
  *
+ * @method createFormatters
+ *
  * @returns {Object}
  */
 CoreFactory.prototype.createFormatters = function () {
@@ -104,6 +116,8 @@ CoreFactory.prototype.createFormatters = function () {
 
 /**
  * Returns the default web3 errors
+ *
+ * @method createErrors
  *
  * @returns {Object}
  */

@@ -942,7 +942,7 @@ Eth.prototype.getPastLogs = function (options, callback) {
  * Determines if given block parameter is of type hash or number
  *
  * @method isBlockHash
- * 
+ *
  * @param {String|Number} blockParameter
  * @returns {boolean}
  */

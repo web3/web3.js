@@ -24,9 +24,10 @@
 
 /**
  * @param {Object} provider
- * @param {Object} transactionConfirmationModel
- * @param {Object} transactionReceiptValidator
- * @param {Object} newHeadsWatcher
+ * @param {TransactionConfirmationModel} transactionConfirmationModel
+ * @param {TransactionReceiptValidator} transactionReceiptValidator
+ * @param {NewHeadsWatcher} newHeadsWatcher
+ *
  * @constructor
  */
 function TransactionConfirmationWorkflow(
@@ -43,6 +44,8 @@ function TransactionConfirmationWorkflow(
 
 /**
  * Executes the transaction confirmation workflow
+ *
+ * @method execute
  *
  * @param {string} transactionHash
  * @param {Object} promiEvent
@@ -118,10 +121,14 @@ TransactionConfirmationWorkflow.prototype.execute = function (
 /**
  * Get receipt by transaction hash
  *
+ * @method execute
+ *
  * @param {string} transactionHash
+ *
+ * @returns {Promise<Object>}
  */
 TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (transactionHash) {
-    this.provider.send('eth_getTransactionReceipt', transactionHash).then(function (receipt) {
+    return this.provider.send('eth_getTransactionReceipt', transactionHash).then(function (receipt) {
         return this.formatters.outputTransactionReceiptFormatter(receipt);
     })
 };
@@ -129,8 +136,10 @@ TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (tran
 /**
  * Resolves promise, emits receipt event, calls callback and removes all the listeners.
  *
+ * @method handleSuccessState
+ *
  * @param {Object} receipt
- * @param {Object} promiEvent
+ * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -146,8 +155,10 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
 /**
  * Rejects promise, emits error event, calls callback and removes all the listeners.
  *
- * @param {Object} error
- * @param {Object} promiEvent
+ * @method handleErrorState
+ *
+ * @param {Error} error
+ * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
  * @callback callback callback(error, result)

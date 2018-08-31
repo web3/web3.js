@@ -29,9 +29,11 @@ function TransactionSigner() { }
 /**
  * Signs the given transaction
  *
+ * @method sign
+ *
  * @param {Object} transaction
  *
- * @returns {any}
+ * @returns {boolean | string}
  */
 TransactionSigner.prototype.sign = function (transaction) {
     var wallet = this.getWallet(transaction.from);

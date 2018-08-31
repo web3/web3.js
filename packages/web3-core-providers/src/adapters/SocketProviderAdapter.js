@@ -26,6 +26,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
 
 /**
  * @param {Object} provider
+ *
  * @constructor
  */
 function SocketProviderAdapter(provider) {
@@ -35,8 +36,13 @@ function SocketProviderAdapter(provider) {
 }
 
 /**
+ * Subscribes to a given subscriptionType
+ *
+ * @method subscribe
+ *
  * @param {string} subscriptionType
  * @param {Array} parameters
+ *
  * @returns {Promise<string|Error>}
  */
 SocketProviderAdapter.prototype.subscribe = function (subscriptionType, parameters) {
@@ -54,7 +60,12 @@ SocketProviderAdapter.prototype.subscribe = function (subscriptionType, paramete
 };
 
 /**
+ * Unsubscribes the subscription by his id
+ *
+ * @method unsubscribe
+ *
  * @param {string} subscriptionId
+ *
  * @returns {Promise<Boolean|Error>}
  */
 SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
@@ -73,11 +84,14 @@ SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
 
 /**
  * Emits an event with the subscription id
+ *
+ * @method registerSubscriptionListener
  */
 SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
     var self = this;
     this.provider.on('data', function (response, deprecatedResponse) {
-        response = response || deprecatedResponse; // this is for possible old providers, which may had the error first handler
+        // this is for possible old providers, which may had the error first handler
+        response = response || deprecatedResponse;
 
         // check for result.method, to prevent old providers errors to pass as result
         if (response.method && self.subscriptions[response.params.subscription]) {
@@ -88,6 +102,8 @@ SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
 
 /**
  * Clears all subscriptions and listeners
+ *
+ * @method clearSubscriptions
  */
 SocketProviderAdapter.prototype.clearSubscriptions = function () {
     var self = this;
@@ -104,7 +120,12 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
 };
 
 /**
+ * Removes subscription from subscriptions list and unsubscribes it.
+ *
+ * @method removeSubscription
+ *
  * @param {string} subscriptionId
+ *
  * @returns {Promise<boolean>}
  */
 SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
@@ -121,6 +142,10 @@ SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
 };
 
 /**
+ * Checks if the provider is connected
+ *
+ * @method isConnected
+ *
  * @returns {boolean}
  */
 SocketProviderAdapter.prototype.isConnected = function () {

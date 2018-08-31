@@ -30,11 +30,16 @@ var TransactionReceiptValidator = require('../validators/TransactionReceiptValid
 var NewHeadsWatcher = require('../watchers/NewHeadsWatcher');
 
 
+/**
+ * @constructor
+ */
 function MethodPackageFactory() { }
 
 
 /**
  * Return Method object
+ *
+ * @method createMethod
  *
  * @param {Object} provider
  * @param {CoreFactory} coreFactory
@@ -70,10 +75,14 @@ MethodPackageFactory.prototype.createMethod = function (
 };
 
 /**
- * Return TransactionConfirmationWorkflow object
+ * Returns TransactionConfirmationWorkflow object
+ *
+ * @method createTransactionConfirmationWorkflow
  *
  * @param {Object} provider
  * @param {CoreFactory} coreFactory
+ *
+ * @returns {TransactionConfirmationWorkflow}
  */
 MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (provider, coreFactory) {
   new TransactionConfirmationWorkflow(
@@ -84,16 +93,32 @@ MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function 
   );
 };
 
+/**
+ * Returns TransactionSigner object
+ *
+ * @method createTransactionSigner
+ *
+ * @returns {TransactionSigner}
+ */
 MethodPackageFactory.prototype.createTransactionSigner = function () {
-  new TransactionSigner();
+  return new TransactionSigner();
 };
 
+/**
+ * Returns MessageSigner object
+ *
+ * @method createMessageSigner
+ *
+ * @returns {MessageSigner}
+ */
 MethodPackageFactory.prototype.createMessageSigner = function () {
   new MessageSigner();
 };
 
 /**
  * Returns TransactionConfirmationModel object
+ *
+ * @method createTransactionConfirmationModel
  *
  * @returns {TransactionConfirmationModel}
  */

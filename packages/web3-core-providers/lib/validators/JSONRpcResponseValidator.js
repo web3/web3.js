@@ -28,7 +28,9 @@ var JSONRpcResponseValidator = {};
  * Executes JSON-RPC response validation
  *
  * @method isValid
+ *
  * @param {Object} response
+ *
  * @returns {Boolean} true if response is valid, otherwise false
  */
 JSONRpcResponseValidator.isValid = function (response) {
@@ -43,7 +45,9 @@ JSONRpcResponseValidator.isValid = function (response) {
  * Checks if jsonrpc response is valid
  *
  * @method validateSingleMessage
+ *
  * @param {Object} response
+ *
  * @returns {Boolean} true if response is valid, otherwise false
  */
 JSONRpcResponseValidator.validateSingleMessage = function (response) {

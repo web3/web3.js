@@ -22,12 +22,17 @@
 
 "use strict";
 
+/**
+ * @constructor
+ */
 function TransactionReceiptValidator() { }
 
 /**
  * Validates the receipt
  *
- * @param {Obejct} receipt
+ * @method validate
+ *
+ * @param {Object} receipt
  *
  * @returns {Error | boolean}
  */
@@ -46,6 +51,10 @@ TransactionReceiptValidator.prototype.validate = function (receipt) {
 };
 
 /**
+ * Checks if receipt status is valid
+ *
+ * @method isValidReceiptStatus
+ *
  * @param {Object} receipt
  *
  * @returns {boolean}
@@ -55,6 +64,10 @@ TransactionReceiptValidator.prototype.isValidReceiptStatus = function (receipt) 
 };
 
 /**
+ * Checks it is a valid gas usage
+ *
+ * @method isValidGasUsage
+ *
  * @param {Object} receipt
  *
  * @returns {boolean}

@@ -27,15 +27,16 @@ var _ = require('underscore');
 
 /**
  * @param {Object} provider
- * @param {Object} accounts
+ * @param {Accounts} accounts
  * @param {string} rpcMethod
  * @param {array} parameters
  * @param {array} inputFormatters
  * @param {Function} outputFormatter
- * @param {Object} promiEvent
- * @param {Object} transactionConfirmationWorkflow
- * @param {Object} transactionSigner
- * @param {Object} messageSigner
+ * @param {PromiEvent} promiEvent
+ * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+ * @param {TransactionSigner} transactionSigner
+ * @param {MessageSigner} messageSigner
+ *
  * @constructor
  */
 function Method(
@@ -64,6 +65,8 @@ function Method(
 
 /**
  * Sends the JSON-RPC request
+ *
+ * @method send
  *
  * @param {Function} callback
  *
@@ -107,6 +110,8 @@ Method.prototype.send = function (callback) {
 /**
  * Sends a JSON-RPC call request
  *
+ * @method call
+ *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -123,9 +128,13 @@ Method.prototype.call = function (callback) {
 /**
  * Formats the output of an JSON-RPC call request
  *
+ * @method formatOutput
+ *
  * @param {array | string} response
- * @param callback
- * @returns {*}
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {array | string}
  */
 Method.prototype.formatOutput = function (response, callback) {
     var self = this;
@@ -155,6 +164,8 @@ Method.prototype.formatOutput = function (response, callback) {
 
 /**
  * Sends the JSON-RPC sendTransaction request
+ *
+ * @method sendTransaction
  *
  * @param {string} gasPrice
  * @param {Function} callback
@@ -187,7 +198,9 @@ Method.prototype.sendTransaction = function (gasPrice, callback) {
 };
 
 /**
- *  Should be called to get the request which can be used in a batch request
+ * Should be called to get the request which can be used in a batch request
+ *
+ * @method request
  *
  * @returns {Function}
  */
@@ -198,7 +211,9 @@ Method.prototype.request = function () {
 /**
  * Formats the input parameters
  *
- * @param parameters
+ * @method formatInput
+ *
+ * @param {array} parameters
  *
  * @returns {array}
  */
@@ -211,6 +226,8 @@ Method.prototype.formatInput = function (parameters) {
 /**
  * Gets the gasPrice with the eth_gasPrice RPC call.
  *
+ * @method getGasPrice
+ *
  * @returns {Promise<string>}
  */
 Method.prototype.getGasPrice = function () {
@@ -219,6 +236,8 @@ Method.prototype.getGasPrice = function () {
 
 /**
  * Determines if the JSON-RPC method is sendTransaction
+ *
+ * @method isSendTransaction
  *
  * @param {string} rpcMethod
  *
@@ -231,6 +250,8 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
 /**
  * Determines if the JSON-RPC method is sendRawTransaction
  *
+ * @method isSendRawTransaction
+ *
  * @param {string} rpcMethod
  *
  * @returns {boolean}
@@ -241,6 +262,8 @@ Method.prototype.isSendRawTransaction = function (rpcMethod) {
 
 /**
  * Determines if the JSON-RPC method is sign.
+ *
+ * @method isSign
  *
  * @param {string} rpcMethod
  *
@@ -253,6 +276,8 @@ Method.prototype.isSign = function (rpcMethod) {
 /**
  * Determines if gasPrice is defined in the method options
  *
+ * @method isGasPriceDefined
+ *
  * @returns {boolean}
  */
 Method.prototype.isGasPriceDefined = function () {
@@ -261,6 +286,8 @@ Method.prototype.isGasPriceDefined = function () {
 
 /**
  * Check if wallets are defined in the accounts package
+ *
+ * @method hasWallets
  *
  * @returns {boolean}
  */
