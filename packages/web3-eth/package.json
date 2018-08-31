@@ -1,12 +1,22 @@
 {
-  "name": "web3-eth",
-  "namespace": "ethereum",
-  "version": "1.0.0-beta.35",
-  "description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
-  "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth",
-  "license": "LGPL-3.0",
-  "main": "src/index.js",
-  "dependencies": {
-    "underscore": "1.8.3"
-  }
+    "name": "web3-eth",
+    "namespace": "ethereum",
+    "version": "1.0.0-beta.35",
+    "description": "Web3 module to interact with the Ethereum blockchain and smart contracts.",
+    "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth",
+    "license": "LGPL-3.0",
+    "main": "src/index.js",
+    "peerDependencies": {
+        "underscore": "1.8.3",
+        "web3-eth-contract": "1.0.0-beta.35",
+        "web3-eth-accounts": "1.0.0-beta.35",
+        "web3-eth-personal": "1.0.0-beta.35",
+        "web3-eth-iban": "1.0.0-beta.35",
+        "web3-eth-abi": "1.0.0-beta.35",
+        "web3-eth-ens": "1.0.0-beta.35",
+        "web3-utils": "1.0.0-beta.35",
+        "web3-core-helpers": "1.0.0-beta.35",
+        "web3-core-subscription": "1.0.0-beta.35",
+        "web3-core-promiEvent": "1.0.0-beta.35"
+    }
 }

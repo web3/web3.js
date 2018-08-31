@@ -25,16 +25,16 @@
 /**
  * @param {Object} provider
  * @param {Object} formatters
- * @param {SubscriptionPackageFactory} subscriptionPackageFactory
- * @param {PromiEventPackageFactory} promiEventPackageFactory
+ * @param {Subscription} subscriptionPackage
+ * @param {PromiEvent} promiEventPackage
  *
  * @constructor
  */
-function SubscriptionsResolver(provider, formatters, subscriptionPackageFactory, promiEventPackageFactory) {
+function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage) {
     this.provider = provider;
     this.formatters = formatters;
-    this.subscriptionPackageFactory = subscriptionPackageFactory;
-    this.promiEventPackageFactory = promiEventPackageFactory;
+    this.subscriptionPackage = subscriptionPackage;
+    this.promiEventPackage = promiEventPackage;
 }
 
 /**
@@ -87,7 +87,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
         parameters = [];
     }
 
-    return this.subscriptionPackageFactory.createSubscription(
+    return this.subscriptionPackage.create(
         this.provider,
         type,
         parameters,
@@ -108,7 +108,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, callback) {
-    var promiEvent = this.promiEventPackageFactory.createPromiEvent();
+    var promiEvent = this.promiEventPackage.create();
 
     if (this.hasFromBlockProperty(parameters[1])) {
         this.handleLogsSubscriptionWithFromBlock(parameters, promiEvent, callback);
@@ -195,7 +195,7 @@ SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
-    var promiEvent = this.promiEventPackageFactory.createPromiEvent();
+    var promiEvent = this.promiEventPackage.create();
 
     this.getSubscription(
         'syncing',

@@ -31,7 +31,7 @@ var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
  * @param {Object} eth
  * @constructor
  */
-function ENS(eth) {
+function ENS(eth) { // TODO: Remove circular dependency.
     this.eth = eth;
 }
 
