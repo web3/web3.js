@@ -28,9 +28,9 @@ var _ = require('underscore');
 /**
  * @param {Object} provider
  * @param {Accounts} accounts
- * @param {string} rpcMethod
- * @param {array} parameters
- * @param {array} inputFormatters
+ * @param {String} rpcMethod
+ * @param {Array} parameters
+ * @param {Array} inputFormatters
  * @param {Function} outputFormatter
  * @param {PromiEvent} promiEvent
  * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
@@ -130,11 +130,11 @@ Method.prototype.call = function (callback) {
  *
  * @method formatOutput
  *
- * @param {array | string} response
+ * @param {Array | String} response
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {array | string}
+ * @returns {Array | String}
  */
 Method.prototype.formatOutput = function (response, callback) {
     var self = this;
@@ -167,7 +167,7 @@ Method.prototype.formatOutput = function (response, callback) {
  *
  * @method sendTransaction
  *
- * @param {string} gasPrice
+ * @param {String} gasPrice
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -213,9 +213,9 @@ Method.prototype.request = function () {
  *
  * @method formatInput
  *
- * @param {array} parameters
+ * @param {Array} parameters
  *
- * @returns {array}
+ * @returns {Array}
  */
 Method.prototype.formatInput = function (parameters) {
     return this.inputFormatters.map(function (formatter, key) {
@@ -228,7 +228,7 @@ Method.prototype.formatInput = function (parameters) {
  *
  * @method getGasPrice
  *
- * @returns {Promise<string>}
+ * @returns {Promise<String>}
  */
 Method.prototype.getGasPrice = function () {
   return this.provider.send('eth_gasPrice', []);
@@ -239,7 +239,7 @@ Method.prototype.getGasPrice = function () {
  *
  * @method isSendTransaction
  *
- * @param {string} rpcMethod
+ * @param {String} rpcMethod
  *
  * @returns {boolean}
  */
@@ -252,7 +252,7 @@ Method.prototype.isSendTransaction = function (rpcMethod) {
  *
  * @method isSendRawTransaction
  *
- * @param {string} rpcMethod
+ * @param {String} rpcMethod
  *
  * @returns {boolean}
  */
@@ -265,7 +265,7 @@ Method.prototype.isSendRawTransaction = function (rpcMethod) {
  *
  * @method isSign
  *
- * @param {string} rpcMethod
+ * @param {String} rpcMethod
  *
  * @returns {boolean}
  */

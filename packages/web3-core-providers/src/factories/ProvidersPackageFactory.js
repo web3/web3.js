@@ -60,7 +60,7 @@ ProvidersPackageFactory.prototype.createProviderDetector = function () {
  *
  * @method createHttpProvider
  *
- * @param {string} url
+ * @param {String} url
  *
  * @returns {HttpProvider}
  */
@@ -73,7 +73,7 @@ ProvidersPackageFactory.prototype.createHttpProvider = function (url) {
  *
  * @method createWebsocketProvider
  *
- * @param {string} url
+ * @param {String} url
  *
  * @returns {WebsocketProvider}
  */
@@ -86,7 +86,7 @@ ProvidersPackageFactory.prototype.createWebsocketProvider = function (url) {
  *
  * @method createIpcProvider
  *
- * @param {string} path
+ * @param {String} path
  * @param {Net} net
  *
  * @returns {IpcProvider}

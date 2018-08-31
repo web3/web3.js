@@ -36,8 +36,8 @@ function CoreFactory() { }
  * @method createSubscription
  *
  * @param {Object} provider
- * @param {string} type
- * @param {array} parameters
+ * @param {String} type
+ * @param {Array} parameters
  * @param {Object} inputFormatter
  * @param {Object} outputFormatter
  *
@@ -60,9 +60,9 @@ CoreFactory.prototype.createPromiEvent = function () {
  * @method createMethod
  *
  * @param {Object} provider
- * @param {string} rpcMethod
- * @param {array} parameters
- * @param {array} inputFormatters
+ * @param {String} rpcMethod
+ * @param {Array} parameters
+ * @param {Array} inputFormatters
  * @param {Function} outputFormatter
  *
  * @returns {Method}

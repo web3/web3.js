@@ -28,7 +28,7 @@ var oboe = require('oboe');
 
 
 /**
- * @param {string} path
+ * @param {String} path
  * @param {Net} net
  *
  * @constructor

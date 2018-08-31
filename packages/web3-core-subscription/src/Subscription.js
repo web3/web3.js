@@ -28,8 +28,8 @@ var EventEmitter = require('eventemitter3');
 /**
  * @param {Object} provider
  * @param {String} type
- * @param {array} parameters
- * @param {array} inputFormatters
+ * @param {Array} parameters
+ * @param {Array} inputFormatters
  * @param {Function} outputFormatter
  *
  * @constructor
@@ -107,9 +107,9 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
  *
  * @method reconnect
  *
- * @param {string} type
- * @param {array} parameters
- * @param {string} subscriptionId
+ * @param {String} type
+ * @param {Array} parameters
+ * @param {String} subscriptionId
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -160,7 +160,7 @@ Subscription.prototype.formatOutput = function (output) {
  *
  * @method formatInput
  *
- * @param {array} parameters
+ * @param {Array} parameters
  *
  * @returns {any}
  */

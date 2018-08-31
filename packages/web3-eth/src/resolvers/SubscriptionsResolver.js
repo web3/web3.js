@@ -38,8 +38,8 @@ function SubscriptionsResolver(provider, coreFactory) {
  *
  * @method resolve
  *
- * @param {string} type
- * @param {array} parameters
+ * @param {String} type
+ * @param {Array} parameters
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -69,8 +69,8 @@ SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) 
  *
  * @method getSubscription
  *
- * @param {string} type
- * @param {array} parameters
+ * @param {String} type
+ * @param {Array} parameters
  * @param {Function} inputFormatter
  * @param {Function} outputFormatter
  * @param {Function} callback
@@ -97,7 +97,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
  *
  * @method getLogsSubscription
  *
- * @param {array} parameters
+ * @param {Array} parameters
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -122,7 +122,7 @@ SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, call
  *
  * @method subscribeToLogs
  *
- * @param {array} parameters
+ * @param {Array} parameters
  * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
@@ -155,7 +155,7 @@ SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEve
  *
  * @method handleLogsSubscriptionWithFromBlock
  *
- * @param {array} parameters
+ * @param {Array} parameters
  * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *

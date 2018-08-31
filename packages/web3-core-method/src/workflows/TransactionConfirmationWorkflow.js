@@ -47,7 +47,7 @@ function TransactionConfirmationWorkflow(
  *
  * @method execute
  *
- * @param {string} transactionHash
+ * @param {String} transactionHash
  * @param {Object} promiEvent
  * @param {Function} callback
  *
@@ -123,7 +123,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (
  *
  * @method execute
  *
- * @param {string} transactionHash
+ * @param {String} transactionHash
  *
  * @returns {Promise<Object>}
  */

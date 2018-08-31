@@ -28,7 +28,7 @@ var http = require('http');
 var https = require('https');
 
 /**
- * @param {string} host
+ * @param {String} host
  * @param {Object} options
  *
  * @constructor

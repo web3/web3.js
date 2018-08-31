@@ -50,7 +50,7 @@ Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
 });
 
 /**
- * @param {string} name
+ * @param {String} name
  * @returns {Promise<Contract>}
  */
 ENS.prototype.resolver = function (name) {
@@ -61,7 +61,7 @@ ENS.prototype.resolver = function (name) {
  * Returns the address record associated with a name.
  *
  * @method getAddress
- * @param {string} name
+ * @param {String} name
  * @param {function} callback
  * @return {eventifiedPromise}
  */
@@ -73,8 +73,8 @@ ENS.prototype.getAddress = function (name, callback) {
  * Sets a new address
  *
  * @method setAddress
- * @param {string} name
- * @param {string} address
+ * @param {String} name
+ * @param {String} address
  * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}
@@ -87,7 +87,7 @@ ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
  * Returns the public key
  *
  * @method getPubkey
- * @param {string} name
+ * @param {String} name
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
@@ -99,9 +99,9 @@ ENS.prototype.getPubkey = function (name, callback) {
  * Set the new public key
  *
  * @method setPubkey
- * @param {string} name
- * @param {string} x
- * @param {string} y
+ * @param {String} name
+ * @param {String} x
+ * @param {String} y
  * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}
@@ -114,7 +114,7 @@ ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
  * Returns the content
  *
  * @method getContent
- * @param {string} name
+ * @param {String} name
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
@@ -126,8 +126,8 @@ ENS.prototype.getContent = function (name, callback) {
  * Set the content
  *
  * @method setContent
- * @param {string} name
- * @param {string} hash
+ * @param {String} name
+ * @param {String} hash
  * @param {function} callback
  * @param {Object} sendOptions
  * @returns {eventifiedPromise}
@@ -140,7 +140,7 @@ ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
  * Get the multihash
  *
  * @method getMultihash
- * @param {string} name
+ * @param {String} name
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
@@ -152,8 +152,8 @@ ENS.prototype.getMultihash = function (name, callback) {
  * Set the multihash
  *
  * @method setMultihash
- * @param {string} name
- * @param {string} hash
+ * @param {String} name
+ * @param {String} hash
  * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}

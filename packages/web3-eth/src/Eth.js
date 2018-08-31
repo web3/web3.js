@@ -52,7 +52,7 @@ var Eth = function Eth(connectionModel, packageFactory, coreFactory, subscriptio
  * @method subscribe
  *
  * @param {String} type
- * @param {array} parameters
+ * @param {Array} parameters
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -224,7 +224,7 @@ Eth.prototype.getBlockNumber = function (callback) {
  * @method getBalance
  *
  * @param {String} address
- * @param {number} block
+ * @param {Number} block
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -253,8 +253,8 @@ Eth.prototype.getBalance = function (address, block, callback) {
  * @method getStorageAt
  *
  * @param {String} address
- * @param {number} position
- * @param {number} block
+ * @param {Number} position
+ * @param {Number} block
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -284,7 +284,7 @@ Eth.prototype.getStorageAt = function (address, position, block, callback) {
  * @method getCode
  *
  * @param {String} address
- * @param {number} block
+ * @param {Number} block
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -312,7 +312,7 @@ Eth.prototype.getCode = function (address, block, callback) {
  *
  * @method getBlockByNumber
  *
- * @param {number} blockNumber
+ * @param {Number} blockNumber
  * @param {boolean} returnTransactionObjects
  * @param {Function} callback
  *
@@ -368,7 +368,7 @@ Eth.prototype.getBlockByHash = function (blockHash, returnTransactionObjects, ca
  *
  * @method getBlock
  *
- * @param {String|number} blockHashOrBlockNumber
+ * @param {String|Number} blockHashOrBlockNumber
  * @param {boolean} returnTransactionObjects
  * @param {Function} callback
  *
@@ -390,8 +390,8 @@ Eth.prototype.getBlock = function (blockHashOrBlockNumber, returnTransactionObje
  *
  * @method getUncle
  *
- * @param {String|number} blockHashOrBlockNumber
- * @param {number} uncleIndex
+ * @param {String|Number} blockHashOrBlockNumber
+ * @param {Number} uncleIndex
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -410,8 +410,8 @@ Eth.prototype.getUncle = function (blockHashOrBlockNumber, uncleIndex, callback)
  *
  * @method getUncleByBlockNumber
  *
- * @param {number} blockNumber
- * @param {number} uncleIndex
+ * @param {Number} blockNumber
+ * @param {Number} uncleIndex
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -436,7 +436,7 @@ Eth.prototype.getUncleByBlockNumber = function (blockNumber, uncleIndex, callbac
  * @method getUnlceByBlockHash
  *
  * @param {String} blockHash
- * @param {number} uncleIndex
+ * @param {Number} uncleIndex
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -462,7 +462,7 @@ Eth.prototype.getUnlceByBlockHash = function (blockHash, uncleIndex, callback) {
  *
  * @method getBlockTransactionCount
  *
- * @param {String|number} blockHashOrBlockNumber
+ * @param {String|Number} blockHashOrBlockNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -482,7 +482,7 @@ Eth.prototype.getBlockTransactionCount = function (blockHashOrBlockNumber, callb
  *
  * @method getBlockTransactionCountByBlockNumber
  *
- * @param {number} blockNumber
+ * @param {Number} blockNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -573,7 +573,7 @@ Eth.prototype.getBlockUncleCountByBlockHash = function (blockHash, callback) {
  *
  * @method getBlockUncleCountByBlockNumber
  *
- * @param {number} blockNumber
+ * @param {Number} blockNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -619,8 +619,8 @@ Eth.prototype.getTransaction = function (transactionHash, callback) {
  *
  * @method getTransactionFromBlock
  *
- * @param {String|number} hashStringOrNumber
- * @param {number} indexNumber
+ * @param {String|Number} hashStringOrNumber
+ * @param {Number} indexNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -640,7 +640,7 @@ Eth.prototype.getTransactionFromBlock = function (hashStringOrNumber, indexNumbe
  * @method getTransactionFromBlockByBlockHash
  *
  * @param {String} transactionHash
- * @param {number} indexNumber
+ * @param {Number} indexNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -665,8 +665,8 @@ Eth.prototype.getTransactionFromBlockByBlockHash = function (transactionHash, in
  *
  * @method getTransactionFromBlockByBlockNumber
  *
- * @param {number} blockNumber
- * @param {number} indexNumber
+ * @param {Number} blockNumber
+ * @param {Number} indexNumber
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
@@ -712,7 +712,7 @@ Eth.prototype.getTransactionReceipt = function (transactionHash, callback) {
  * @method getTransactionCount
  *
  * @param {String} address
- * @param {number} block
+ * @param {Number} block
  * @param {Function} callback
  *
  * @callback callback callback(error, result)

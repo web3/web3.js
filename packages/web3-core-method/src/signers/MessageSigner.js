@@ -34,7 +34,7 @@ function MessageSigner() { }
  *
  * @method sign
  *
- * @param {string} data
+ * @param {String} data
  * @param {any} address
  *
  * @returns {any}

@@ -131,7 +131,7 @@ ABICoder.prototype.mapTypes = function (types) {
  * Check if type is simplified struct format
  *
  * @method isSimplifiedStructFormat
- * @param {string | Object} type
+ * @param {String | Object} type
  * @returns {boolean}
  */
 ABICoder.prototype.isSimplifiedStructFormat = function (type) {
@@ -142,7 +142,7 @@ ABICoder.prototype.isSimplifiedStructFormat = function (type) {
  * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
  *
  * @method mapStructNameAndType
- * @param {string} structName
+ * @param {String} structName
  * @return {{type: string, name: *}}
  */
 ABICoder.prototype.mapStructNameAndType = function (structName) {

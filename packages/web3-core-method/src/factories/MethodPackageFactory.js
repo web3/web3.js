@@ -43,9 +43,9 @@ function MethodPackageFactory() { }
  *
  * @param {Object} provider
  * @param {CoreFactory} coreFactory
- * @param {string} rpcMethod
- * @param {array} parameters
- * @param {array} inputFormatters
+ * @param {String} rpcMethod
+ * @param {Array} parameters
+ * @param {Array} inputFormatters
  * @param {Function} outputFormatter
  * @param {PromiEvent} promiEvent
  *

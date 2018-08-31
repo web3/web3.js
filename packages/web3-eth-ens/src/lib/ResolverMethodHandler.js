@@ -35,9 +35,9 @@ function ResolverMethodHandler(registry) {
 /**
  * Executes an resolver method and returns an eventifiedPromise
  *
- * @param {string} ensName
- * @param {string} methodName
- * @param {array} methodArguments
+ * @param {String} ensName
+ * @param {String} methodName
+ * @param {Array} methodArguments
  * @param {function} callback
  * @returns {Object}
  */
@@ -106,7 +106,7 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
  *
  * @param {eventifiedPromise} promiEvent
  * @param {function} method
- * @param {array} preparedArguments
+ * @param {Array} preparedArguments
  * @param {function} callback
  * @returns {eventifiedPromise}
  */
@@ -134,7 +134,7 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
  *
  * @param {eventifiedPromise} promiEvent
  * @param {function} method
- * @param {array} preparedArguments
+ * @param {Array} preparedArguments
  * @param {Object} sendOptions
  * @param {function} callback
  * @returns {eventifiedPromise}
@@ -170,9 +170,9 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
 /**
  * Adds the ENS node to the arguments
  *
- * @param {string} name
- * @param {array} methodArguments
- * @returns {array}
+ * @param {String} name
+ * @param {Array} methodArguments
+ * @returns {Array}
  */
 ResolverMethodHandler.prototype.prepareArguments = function (name, methodArguments) {
     var node = namehash.hash(name);

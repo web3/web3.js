@@ -50,7 +50,7 @@ function Registry(ens) {
  * Returns the address of the owner of an ENS name.
  *
  * @method owner
- * @param {string} name
+ * @param {String} name
  * @param {function} callback
  * @return {Promise<any>}
  */
@@ -82,7 +82,7 @@ Registry.prototype.owner = function (name, callback) {
  * Returns the resolver contract associated with a name.
  *
  * @method resolver
- * @param {string} name
+ * @param {String} name
  * @return {Promise<Contract>}
  */
 Registry.prototype.resolver = function (name) {

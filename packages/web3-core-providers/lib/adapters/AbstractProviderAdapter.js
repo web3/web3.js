@@ -40,8 +40,8 @@ function AbstractProviderAdapter(provider) {
  *
  * @method send
  *
- * @param {string} method
- * @param {array} parameters
+ * @param {String} method
+ * @param {Array} parameters
  *
  * @returns {Promise<any>}
  */

@@ -40,10 +40,10 @@ function SocketProviderAdapter(provider) {
  *
  * @method subscribe
  *
- * @param {string} subscriptionType
+ * @param {String} subscriptionType
  * @param {Array} parameters
  *
- * @returns {Promise<string|Error>}
+ * @returns {Promise<String|Error>}
  */
 SocketProviderAdapter.prototype.subscribe = function (subscriptionType, parameters) {
     var self = this;
@@ -64,7 +64,7 @@ SocketProviderAdapter.prototype.subscribe = function (subscriptionType, paramete
  *
  * @method unsubscribe
  *
- * @param {string} subscriptionId
+ * @param {String} subscriptionId
  *
  * @returns {Promise<Boolean|Error>}
  */
@@ -124,7 +124,7 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
  *
  * @method removeSubscription
  *
- * @param {string} subscriptionId
+ * @param {String} subscriptionId
  *
  * @returns {Promise<boolean>}
  */

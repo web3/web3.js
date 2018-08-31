@@ -40,7 +40,7 @@ function InpageProviderAdapter(inpageProvider) {
 /**
  * Sends batch request
  *
- * @param {array} payloadBatch
+ * @param {Array} payloadBatch
  *
  * @returns {Promise<any>}
  */

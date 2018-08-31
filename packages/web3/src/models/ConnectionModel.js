@@ -69,7 +69,7 @@ Object.defineProperty(Eth, 'defaultBlock', {
  * @param {Function} callback
  *
  * @callback callback(error, result)
- * @returns {Promise<string|Error>}
+ * @returns {Promise<String|Error>}
  */
 ConnectionModel.prototype.getNetworkType = function (callback) {
     var self = this, id;

@@ -296,7 +296,7 @@ var bytesToHex = function(bytes) {
  * Note: Implementation from crypto-js
  *
  * @method hexToBytes
- * @param {string} hex
+ * @param {String} hex
  * @return {Array} the byte array
  */
 var hexToBytes = function(hex) {
