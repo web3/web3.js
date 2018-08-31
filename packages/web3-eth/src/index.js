@@ -36,9 +36,18 @@ var Iban = require('web3-eth-iban').create();
 var formatters = require('web3-core-helpers').create().formatters;
 var Utils = require('web3-utils').create();
 
-
-var EthPackage = {
+module.exports = {
     version: version,
+
+    /**
+     * Creates the Eth object
+     *
+     * @method create
+     *
+     * @param {ConnectionModel} connectionModel
+     *
+     * @returns {Eth}
+     */
     create: function (connectionModel) {
         return new Eth(
             connectionModel,
@@ -54,6 +63,3 @@ var EthPackage = {
         );
     }
 };
-
-
-module.exports = EthPackage;

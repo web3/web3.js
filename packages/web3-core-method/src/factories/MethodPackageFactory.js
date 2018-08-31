@@ -42,7 +42,7 @@ function MethodPackageFactory() { }
  * @method createMethod
  *
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {Accounts} coreFactory
  * @param {String} rpcMethod
  * @param {Array} parameters
  * @param {Array} inputFormatters
@@ -53,7 +53,7 @@ function MethodPackageFactory() { }
  */
 MethodPackageFactory.prototype.createMethod = function (
     provider,
-    coreFactory,
+    accounts,
     rpcMethod,
     parameters,
     inputFormatters,
@@ -62,7 +62,7 @@ MethodPackageFactory.prototype.createMethod = function (
 ) {
     return new Method(
         provider,
-        coreFactory.createAccountsPackage(),
+        accounts,
         rpcMethod,
         parameters,
         inputFormatters,

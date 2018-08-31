@@ -21,6 +21,34 @@
  * @date 2018
  */
 
+"use strict";
+
+var version = require('./package.json');
+var AccountsPackage = require('web3-eth-accounts');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 
-module.exports = MethodPackageFactory;
+module.exports = {
+    version: version,
+
+    /**
+     * Creates the Method object
+     *
+     * @param {Object} provider
+     * @param {String} rpcMethod
+     * @param {Array} parameters
+     * @param {Function} inputFormatters
+     * @param {Function} outputFormatters
+     * @param (PromiEvent) promiEvent
+     */
+    create: function (provider, rpcMethod, parameters, inputFormatters, outputFormatters, promiEvent) {
+        new MethodPackageFactory().createMethod(
+            provider,
+            AccountsPackage.create(),
+            rpcMethod,
+            parameters,
+            inputFormatters,
+            outputFormatters,
+            promiEvent.create()
+        );
+    }
+};

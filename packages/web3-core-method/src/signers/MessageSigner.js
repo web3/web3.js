@@ -37,7 +37,7 @@ function MessageSigner() { }
  * @param {String} data
  * @param {any} address
  *
- * @returns {any}
+ * @returns {String | boolean}
  */
 MessageSigner.prototype.sign = function(data, address) {
     var wallet = this.getWallet(address);

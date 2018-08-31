@@ -20,14 +20,40 @@
 
 "use strict";
 
+var version = require('./package.json').version;
 var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
 
 module.exports = {
-    ProvidersPackageFactory: ProvidersPackageFactory,
+    version: version,
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
-    WebsocketProvider: WebsocketProvider
+    WebsocketProvider: WebsocketProvider,
+
+    /**
+     * Resolves the right provider adapter by the given parameters
+     *
+     * @method resolve
+     *
+     * @param {Object} provider
+     * @param {Net} net
+     *
+     * @returns {Object}
+     */
+    resolve: function (provider, net) {
+        return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
+    },
+
+    /**
+     * Detects the given provider in the global scope
+     *
+     * @method detect
+     *
+     * @returns {Object}
+     */
+    detect: function () {
+        return new ProvidersPackageFactory().createProviderDetector().detect();
+    }
 };

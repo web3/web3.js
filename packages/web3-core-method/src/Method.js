@@ -71,7 +71,7 @@ function Method(
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {Promise | eventifiedPromise}
+ * @returns {Promise | eventifiedPromise | String | boolean}
  */
 Method.prototype.send = function (callback) {
     var self = this;
