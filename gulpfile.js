@@ -58,10 +58,6 @@ var packages = [{
     fileName: 'web3-eth-ens',
     expose: 'EthEns',
     src: './packages/web3-eth-ens/src/index.js'
-},{
-    fileName: 'web3-net',
-    expose: 'Web3Net',
-    src: './packages/web3-net/src/index.js'
 }, {
     fileName: 'web3-shh',
     expose: 'Web3Shh',
@@ -71,27 +67,13 @@ var packages = [{
     expose: 'Web3Bzz',
     src: './packages/web3-bzz/src/index.js'
 }, {
-    fileName: 'web3-providers-ipc',
-    expose: 'Web3IpcProvider',
-    src: './packages/web3-providers-ipc/src/index.js'
+    fileName: 'web3-core-providers',
+    expose: 'Web3Providers',
+    src: './packages/web3-core-providers/src/index.js'
 }, {
-    fileName: 'web3-providers-http',
-    expose: 'Web3HttpProvider',
-    src: './packages/web3-providers-http/src/index.js',
-    ignore: ['xmlhttprequest']
-}, {
-    fileName: 'web3-providers-ws',
-    expose: 'Web3WsProvider',
-    src: './packages/web3-providers-ws/src/index.js',
-    ignore: ['websocket']
-}, {
-    fileName: 'web3-core-subscriptions',
-    expose: 'Web3Subscriptions',
-    src: './packages/web3-core-subscriptions/src/index.js'
-}, {
-    fileName: 'web3-core-requestmanager',
-    expose: 'Web3RequestManager',
-    src: './packages/web3-core-requestmanager/src/index.js'
+    fileName: 'web3-core-subscription',
+    expose: 'Web3Subscription',
+    src: './packages/web3-core-subscription/src/index.js'
 }, {
     fileName: 'web3-core-promievent',
     expose: 'Web3PromiEvent',

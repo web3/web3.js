@@ -28,7 +28,8 @@ var version = require('../package.json').version;
 
 /**
  * @param {Object} provider
- * @param {Object} net
+ * @param {Net} net
+ *
  * @constructor
  */
 var Web3 = function Web3(provider, net) {

@@ -13,5 +13,6 @@ bower_components
 .idea/
 .npm/
 .vscode/
+lerna-debug.log
 dist/
 !./dist/web3.min.js
