@@ -23,6 +23,7 @@
 "use strict";
 
 var version = require('./package.json').version;
+var SubscriptionsResolver = require('./resolvers/SubscriptionsResolver');
 var Eth = require('./Eth');
 var Contract = require('web3-eth-contract');
 var Accounts = require('web3-eth-accounts');

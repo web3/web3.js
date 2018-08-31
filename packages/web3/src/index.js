@@ -22,8 +22,8 @@
 
 "use strict";
 
-var PackageFactory = require('./factories/PackageFactory');
-var CoreFactory = require('./factories/CoreFactory');
+var ProvidersPackage = require('web3-core-providers');
+var EthPackage = require('web3-eth');
 var version = require('../package.json').version;
 
 /**
@@ -33,19 +33,14 @@ var version = require('../package.json').version;
  * @constructor
  */
 var Web3 = function Web3(provider, net) {
-    this.coreFactory = new CoreFactory();
-    this.packageFactory = new PackageFactory(this.coreFactory);
-    this.connectionModel = new ConnectionModel(
-        this.packageFactory.createProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net),
-        this.coreFactory
-    );
-
     this.version = version;
-
-    this.utils = this.coreFactory.createUtils();
-    this.eth = this.packageFactory.createEthPackage(this.connectionModel);
-    this.shh = this.packageFactory.createShhPackage(this.connectionModel);
-    this.bzz = this.packageFactory.createBzzPackage(this.connectionModel);
+    this.connectionModel = Web3.createConnectionModel(
+        ProvidersPackage.resolve(provider, net)
+    );
+    this.utils = UtilsPackage.create();
+    this.eth = EthPackage.create(this.connectionModel);
+    this.shh = ShhPackage.create(this.connectionModel);
+    this.bzz = BzzPackage.create(this.connectionModel);
 };
 
 /**
@@ -87,33 +82,35 @@ Web3.version = version;
 Web3.utils = new CoreFactory().createUtils();
 
 Web3.modules = {
-    Eth: function (provider) {
-        var coreFactory = new CoreFactory();
-        return new PackageFactory(coreFactory).createEthPackage(new ConnectionModel(provider, coreFactory));
+    Eth: function (provider, net) {
+        return EthPackage.create(this.createConnectionModel(provider, net));
     },
-    Net: function (provider) {
-        var coreFactory = new CoreFactory();
-        return new ConnectionModel(provider, coreFactory).getNetworkMethodsAsObject();
+    Net: function (provider, net) {
+        return this.createConnectionModel(provider, net).getNetworkMethodsAsObject();
     },
-    Personal: function (provider) {
-        var coreFactory = new CoreFactory();
-        return new PackageFactory(coreFactory).createPersonalPackage(new ConnectionModel(provider, coreFactory));
+    Personal: function (provider, net) {
+        return PersonalPackage.create(this.createConnectionModel(provider, net));
     },
-    Shh: function (provider) {
-        var coreFactory = new CoreFactory();
-        return new PackageFactory(coreFactory).createShhPackage(new ConnectionModel(provider, coreFactory));
+    Shh: function (provider, net) {
+        return ShhPackage.create(this.createConnectionModel(provider, net));
     },
-    Bzz: function (provider) {
-        var coreFactory = new CoreFactory();
-        return new PackageFactory(coreFactory).createBzzPackage(new ConnectionModel(provider, coreFactory));
+    Bzz: function (provider, net) {
+        return new BzzPackage.create(this.createConnectionModel(provider, net));
     }
+};
+
+Web3.createConnectionModel = function(provider, net) {
+    return new ConnectionModel(
+        ProvidersPackage.resolve(provider, net), UtilsPackage.create(),
+        HelpersPackage.create().formatters
+    )
 };
 
 
 Web3.providers = {
-    HttpProvider: require('web3-core-providers').HttpProvider,
-    WebsocketProvider: require('web3-core-providers').WebsocketProvider,
-    IpcProvider: require('web3-core-providers').IpcProvider
+    HttpProvider: ProvidersPackage.HttpProvider,
+    WebsocketProvider: ProvidersPackage.WebsocketProvider,
+    IpcProvider: ProvidersPackage.IpcProvider
 };
 
 module.exports = Web3;

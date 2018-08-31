@@ -23,14 +23,17 @@
 
 /**
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {MethodPackage} method
+ * @param {Utils} utils
+ * @param {Object} formatters
  * @constructor
  */
-function ConnectionModel(provider, coreFactory) {
+function ConnectionModel(provider, method, utils, formatters) {
     this.provider = provider;
     this.coreFactory = coreFactory;
-    this.utils = this.coreFactory.createUtils();
-    this.formatters = this.coreFactory.createFormatters();
+    this.utils = utils;
+    this.formatters = formatters;
+    this.method = method;
 }
 
 /**
@@ -125,7 +128,7 @@ ConnectionModel.prototype.getNetworkType = function (callback) {
  * @returns {Promise|eventifiedPromise}
  */
 ConnectionModel.prototype.getId = function (callback) {
-    return this.coreFactory.createMethod(this.provider, 'net_version', [], null, this.utils.hexToNumber).send(callback);
+    return this.method.create(this.provider, 'net_version', [], null, this.utils.hexToNumber).send(callback);
 };
 
 /**
@@ -139,7 +142,7 @@ ConnectionModel.prototype.getId = function (callback) {
  * @returns {Promise|eventifiedPromise}
  */
 ConnectionModel.prototype.isListening = function (callback) {
-    return this.coreFactory.createMethod(this.provider, 'net_listening', [], null, null).send(callback);
+    return this.method.create(this.provider, 'net_listening', [], null, null).send(callback);
 };
 
 /**
@@ -153,7 +156,7 @@ ConnectionModel.prototype.isListening = function (callback) {
  * @returns {Promise|eventifiedPromise}
  */
 ConnectionModel.prototype.getPeerCount = function (callback) {
-    return this.coreFactory.createMethod(this.provider, 'net_peerCount', [], null, this.utils.hexToNumber).send(callback);
+    return this.method.create(this.provider, 'net_peerCount', [], null, this.utils.hexToNumber).send(callback);
 };
 
 /**
@@ -169,7 +172,7 @@ ConnectionModel.prototype.getPeerCount = function (callback) {
  * @returns {Promise|eventifiedPromise}
  */
 ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
-    return this.coreFactory.createMethod(
+    return this.method.create(
         this.provider,
         'eth_getBlockByNumber',
         [blockNumber, returnTransactionObjects],
