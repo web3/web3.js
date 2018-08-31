@@ -28,16 +28,16 @@ var EventEmitter = require('eventemitter3');
 /**
  * @param {Object} provider
  * @param {String} type
- * @param {Array} parameters
- * @param {Function} inputFormatter
+ * @param {array} parameters
+ * @param {array} inputFormatters
  * @param {Function} outputFormatter
  * @constructor
  */
-function Subscription(provider, type, parameters, inputFormatter, outputFormatter) {
+function Subscription(provider, type, parameters, inputFormatters, outputFormatter) {
     this.provider = provider;
     this.type = type;
     this.parameters = parameters;
-    this.inputFormatter = inputFormatter;
+    this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
     this.subscriptionId = null;
 }
@@ -127,8 +127,8 @@ Subscription.prototype.reconnect = function (type, parameters, subscriptionId, c
 /**
  * Executes outputFormatter if defined
  *
- * @param output
- * @returns {*}
+ * @param {any} output
+ * @returns {any}
  */
 Subscription.prototype.formatOutput = function (output) {
     if (_.isFunction(this.outputFormatter) && output) {
@@ -139,17 +139,23 @@ Subscription.prototype.formatOutput = function (output) {
 };
 
 /**
- * Executes inputFormatter if defined
+ * Executes inputFormatters if defined
  *
- * @param input
+ * @param {array} parameters
  * @returns {*}
  */
-Subscription.prototype.formatInput = function (input) {
-    if (_.isFunction(this.inputFormatter) && input) {
-        return this.inputFormatter(input);
+Subscription.prototype.formatInput = function (parameters) {
+    if (_.isArray(this.inputFormatters)) {
+        return this.inputFormatters.map(function (formatter, index) {
+            if (_.isFunction(formatter)) {
+                return formatter(parameters[index]);
+            }
+
+            return parameters[index];
+        });
     }
 
-    return input;
+    return parameters;
 };
 
 /**
