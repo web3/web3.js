@@ -37,7 +37,7 @@ var version = require('../package.json').version;
  *
  * @constructor
  */
-var Web3 = function Web3(provider, net) {
+var Web3 = function Web3(provider, net) { // TODO: throw error if no provider is given and also no provider is found with the detector
     this.version = version;
     this.connectionModel = Web3.createConnectionModel(
         ProvidersPackage.resolve(provider, net)

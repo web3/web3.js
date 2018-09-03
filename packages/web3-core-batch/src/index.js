@@ -36,5 +36,4 @@ module.exports = {
     create: function (connectionModel) {
         return new Batch(connectionModel);
     }
-
 };

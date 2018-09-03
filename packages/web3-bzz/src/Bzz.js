@@ -25,21 +25,124 @@
 var _ = require('underscore');
 var swarm = require("swarm-js");
 
-
-var Bzz = function Bzz(provider) {
-
+/**
+ * @param {any} provider
+ *
+ * @constructor
+ */
+function Bzz(provider) {
     this.givenProvider = Bzz.givenProvider;
-
-    if (provider && provider._requestManager) {
-        provider = provider.currentProvider;
-    }
-
-    // only allow file picker when in browser
-    if(typeof document !== 'undefined') {
-        this.pick = swarm.pick;
-    }
-
+    this.currentProvider = null;
     this.setProvider(provider);
+}
+
+/**
+ * Gets the pick methods from swarm if it is executed in the browser
+ *
+ * @method pick
+ *
+ * @returns {Object|Boolean}
+ */
+Bzz.prototype.pick = function () {
+    if (typeof document !== 'undefined') {
+        return swarm.pick;
+    }
+
+    return false;
+};
+
+/**
+ * Downloads a file from the swarm network
+ *
+ * @method download
+ *
+ * @param {String} bzzHash
+ * @param {String} localPath
+ *
+ * @returns {Promise<Buffer|Object|String>}
+ */
+Bzz.prototype.download = function (bzzHash, localPath) {
+    if (this.hasProvider()) {
+        return this.swarm.download(bzzHash, localPath);
+    }
+
+    this.throwProviderError();
+};
+
+/**
+ * Uploads the given data to swarm
+ *
+ * @method upload
+ *
+ * @param {String|Buffer|Uint8Array|Object} data
+ *
+ * @returns {Promise<String>}
+ */
+Bzz.prototype.upload = function (data) {
+    if (this.hasProvider()) {
+        return this.swarm.upload(data);
+    }
+
+    this.throwProviderError();
+};
+
+/**
+ * Checks if swarm is available
+ *
+ * @returns {Promise<boolean>}
+ */
+Bzz.prototype.isAvailable = function () {
+    if (this.hasProvider()) {
+        return this.swarm.isAvailable();
+    }
+
+    this.throwProviderError();
+};
+
+/**
+ * Checks if currentProvider is set
+ *
+ * @method hasProvider
+ *
+ * @returns {boolean}
+ */
+Bzz.prototype.hasProvider = function () {
+    return !!this.currentProvider;
+};
+
+/**
+ * Throws the provider error
+ */
+Bzz.prototype.throwProviderError = function () {
+    throw new Error('No provider set, please set one using bzz.setProvider().');
+};
+
+/**
+ * Sets the provider for swarm
+ *
+ * @method setProvider
+ *
+ * @param {Object} provider
+ *
+ * @returns {boolean}
+ */
+Bzz.prototype.setProvider = function (provider) {
+    // is ethereum provider
+    if (_.isObject(provider) && _.isString(provider.bzz)) {
+        provider = provider.bzz;
+    }
+
+    if (_.isString(provider)) {
+        this.currentProvider = provider;
+        this.swarm = swarm.at(provider);
+
+        return true;
+    }
+
+    this.currentProvider = null;
+    this.throwProviderError();
+
+    return false;
 };
 
 // set default ethereum provider
@@ -50,39 +153,5 @@ if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
 }
 /* jshint ignore:end */
 
-Bzz.prototype.setProvider = function(provider) {
-    // is ethereum provider
-    if(_.isObject(provider) && _.isString(provider.bzz)) {
-        provider = provider.bzz;
-        // is no string, set default
-    }
-    // else if(!_.isString(provider)) {
-    //      provider = 'http://swarm-gateways.net'; // default to gateway
-    // }
-
-
-    if(_.isString(provider)) {
-        this.currentProvider = provider;
-    } else {
-        this.currentProvider = null;
-
-        var noProviderError = new Error('No provider set, please set one using bzz.setProvider().');
-
-        this.download = this.upload = this.isAvailable = function(){
-            throw noProviderError;
-        };
-
-        return false;
-    }
-
-    // add functions
-    this.download = swarm.at(provider).download;
-    this.upload = swarm.at(provider).upload;
-    this.isAvailable = swarm.at(provider).isAvailable;
-
-    return true;
-};
-
 
 module.exports = Bzz;
-

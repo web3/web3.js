@@ -37,7 +37,7 @@ module.exports = {
      *
      * @returns {Bzz}
      */
-    create: function (connectionModel) {//TODO: Refactor the bzz object
+    create: function (connectionModel) {
         return new Bzz(connectionModel.provider);
     }
 };
