@@ -25,16 +25,17 @@
 var version = require('./package.json').version;
 var SubscriptionsResolver = require('./resolvers/SubscriptionsResolver');
 var Eth = require('./Eth');
-var Contract = require('web3-eth-contract');
-var Accounts = require('web3-eth-accounts');
-var Personal = require('web3-eth-personal');
-var ENS = require('web3-eth-ens');
-var Abi = require('web3-eth-abi');
-var Subscription = require('web3-core-subscription');
-var PromiEvent = require('web3-core-promiEvent');
+var ContractPackage = require('web3-eth-contract');
+var AccountsPackage = require('web3-eth-accounts');
+var PersonalPackage = require('web3-eth-personal');
+var ENSPackage = require('web3-eth-ens');
+var AbiPackage = require('web3-eth-abi');
+var SubscriptionPackage = require('web3-core-subscription');
+var PromiEventPackage = require('web3-core-promiEvent');
 var Iban = require('web3-eth-iban').create();
-var formatters = require('web3-core-helpers').create().formatters;
-var Utils = require('web3-utils').create();
+var formatters = require('web3-core-helpers').formatters;
+var Utils = require('web3-utils');
+var MethodPackage = require('web3-core-method');
 
 module.exports = {
     version: version,
@@ -51,15 +52,16 @@ module.exports = {
     create: function (connectionModel) {
         return new Eth(
             connectionModel,
-            Contract.create(connectionModel),
-            Accounts.create(connectionModel),
-            Personal.create(connectionModel),
+            ContractPackage.create(connectionModel),
+            AccountsPackage.create(connectionModel),
+            PersonalPackage.create(connectionModel),
             Iban,
-            Abi.create(utils),
-            ENS.create(connectionModel),
+            AbiPackage.create(utils),
+            ENSPackage.create(connectionModel),
             Utils,
             formatters,
-            new SubscriptionsResolver(connectionModel.provider, formatters, Subscription, PromiEvent)
+            MethodPackage,
+            new SubscriptionsResolver(connectionModel.provider, formatters, SubscriptionPackage, PromiEventPackage)
         );
     }
 };

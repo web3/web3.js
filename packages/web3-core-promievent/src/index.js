@@ -16,60 +16,26 @@
  */
 /**
  * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2016
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
 
-var EventEmitter = require('eventemitter3');
-var Promise = require("any-promise");
+var version = require('./package.json').version;
+var PromiEvent = require('./PromiEvent');
 
-/**
- * This function generates a defer promise and adds eventEmitter functionality to it
- *
- * @method eventifiedPromise
- */
-var PromiEvent = function PromiEvent(justPromise) {// TODO: Just promise is no longer required
-    var resolve, reject,
-        eventEmitter = new Promise(function() {
-            resolve = arguments[0];
-            reject = arguments[1];
-        });
+module.exports = {
+    version: version,
 
-    if(justPromise) {
-        return {
-            resolve: resolve,
-            reject: reject,
-            eventEmitter: eventEmitter
-        };
+    /**
+     * Returns PromiEvent object
+     *
+     * @method create
+     *
+     * @param {Boolean} justPromise
+     */
+    create: function(justPromise) {
+        return new PromiEvent(justPromise);
     }
-
-    // get eventEmitter
-    var emitter = new EventEmitter();
-
-    // add eventEmitter to the promise
-    eventEmitter._events = emitter._events;
-    eventEmitter.emit = emitter.emit;
-    eventEmitter.on = emitter.on;
-    eventEmitter.once = emitter.once;
-    eventEmitter.off = emitter.off;
-    eventEmitter.listeners = emitter.listeners;
-    eventEmitter.addListener = emitter.addListener;
-    eventEmitter.removeListener = emitter.removeListener;
-    eventEmitter.removeAllListeners = emitter.removeAllListeners;
-
-    return {
-        resolve: resolve,
-        reject: reject,
-        eventEmitter: eventEmitter
-    };
 };
-
-PromiEvent.resolve = function(value) {
-    var promise = PromiEvent(true);
-    promise.resolve(value);
-    return promise.eventEmitter;
-};
-
-module.exports = PromiEvent;

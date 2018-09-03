@@ -20,6 +20,21 @@
 
 "use strict";
 
+var version = require('./package.json').version;
 var Batch = require('./Batch');
 
-module.exports = Batch;
+module.exports = {
+    version: version,
+
+    /**
+     * Returns the Batch object
+     *
+     * @param {ConnectionModel} connectionModel
+     *
+     * @returns {Batch}
+     */
+    create: function (connectionModel) {
+        return new Batch(connectionModel);
+    }
+
+};

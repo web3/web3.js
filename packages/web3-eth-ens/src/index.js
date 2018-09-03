@@ -20,6 +20,22 @@
 
 "use strict";
 
+var version = require('package.json').version;
 var ENS = require('./ENS');
 
-module.exports = ENS;
+module.exports = {
+    version: version,
+
+    /**
+     * Returns the ENS object
+     *
+     * @method create
+     *
+     * @param {Eth} eth
+     *
+     * @returns {ENS}
+     */
+    create: function (eth) { //TODO: Remove circular dependency and refactore ENS because of the new method and connection handling
+        return new ENS(eth);
+    }
+};

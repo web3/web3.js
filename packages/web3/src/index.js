@@ -24,6 +24,11 @@
 
 var ProvidersPackage = require('web3-core-providers');
 var EthPackage = require('web3-eth');
+var MethodPackage = require('web3-core-method');
+var Utils = require('web3-utils');
+var ShhPackage = require('web3-shh');
+var BzzPackage = require('web3-bzz');
+var HelpersPackage = require('web3-helpers');
 var version = require('../package.json').version;
 
 /**
@@ -37,7 +42,7 @@ var Web3 = function Web3(provider, net) {
     this.connectionModel = Web3.createConnectionModel(
         ProvidersPackage.resolve(provider, net)
     );
-    this.utils = UtilsPackage.create();
+    this.utils = Utils;
     this.eth = EthPackage.create(this.connectionModel);
     this.shh = ShhPackage.create(this.connectionModel);
     this.bzz = BzzPackage.create(this.connectionModel);
@@ -79,7 +84,7 @@ Object.defineProperty(Web3, 'givenProvider', {
 
 Web3.version = version;
 
-Web3.utils = new CoreFactory().createUtils();
+Web3.utils = Utils;
 
 Web3.modules = {
     Eth: function (provider, net) {
@@ -101,7 +106,9 @@ Web3.modules = {
 
 Web3.createConnectionModel = function(provider, net) {
     return new ConnectionModel(
-        ProvidersPackage.resolve(provider, net), UtilsPackage.create(),
+        ProvidersPackage.resolve(provider, net),
+        MethodPackage,
+        UtilsPackage.create(),
         HelpersPackage.create().formatters
     )
 };

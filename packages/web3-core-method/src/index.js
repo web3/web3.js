@@ -26,6 +26,7 @@
 var version = require('./package.json');
 var AccountsPackage = require('web3-eth-accounts');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
+var PromiEventPackage = require('web3-core-promievent');
 
 module.exports = {
     version: version,
@@ -33,22 +34,25 @@ module.exports = {
     /**
      * Creates the Method object
      *
+     * @method create
+     *
      * @param {Object} provider
      * @param {String} rpcMethod
      * @param {Array} parameters
      * @param {Function} inputFormatters
      * @param {Function} outputFormatters
-     * @param (PromiEvent) promiEvent
+     *
+     * @returns {Method}
      */
-    create: function (provider, rpcMethod, parameters, inputFormatters, outputFormatters, promiEvent) {
-        new MethodPackageFactory().createMethod(
+    create: function (provider, rpcMethod, parameters, inputFormatters, outputFormatters) {
+        return new MethodPackageFactory().createMethod(
             provider,
             AccountsPackage.create(),
             rpcMethod,
             parameters,
             inputFormatters,
             outputFormatters,
-            promiEvent.create()
+            PromiEventPackage.create()
         );
     }
 };
