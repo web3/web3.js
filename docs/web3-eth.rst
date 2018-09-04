@@ -91,10 +91,19 @@ For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-ac
 
 ------------------------------------------------------------------------------
 
+ens
+=====================
+
+For ``web3.eth.ens`` see the :ref:`ENS reference documentation <eth-ens>`
+
+
+
+------------------------------------------------------------------------------
+
 abi
 =====================
 
-For ``web3.eth.abi`` see the :ref:`abi reference documentation <eth-abi>`
+For ``web3.eth.abi`` see the :ref:`ABI reference documentation <eth-abi>`
 
 
 ------------------------------------------------------------------------------
