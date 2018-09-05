@@ -290,25 +290,29 @@ Subscription.prototype._resubscribe = function (err) {
     // unsubscribe
     this.options.requestManager.removeSubscription(this.id);
 
-                    // re-subscribe, if connection fails
+    // re-subscribe, if connection fails
     if(this.options.requestManager.provider.once && !_this._reconnectIntervalId) {
         this._reconnectIntervalId = setInterval(function () {
-                            // TODO check if that makes sense!
-                            if (_this.options.requestManager.provider.reconnect) {
-                                _this.options.requestManager.provider.reconnect();
-                            }
-                        }, 500);
+            // TODO check if that makes sense!
+            if (_this.options.requestManager.provider.reconnect) {
+                _this.options.requestManager.provider.reconnect();
+            }
+        }, 500);
 
         this.options.requestManager.provider.once('connect', function () {
-                            clearInterval(_this._reconnectIntervalId);
+            clearInterval(_this._reconnectIntervalId);
             _this._reconnectIntervalId = null;
-                            _this.subscribe(_this.callback);
-                        });
-                    }
+
+            // delete id to keep the listeners on subscribe
+            _this.id = null;
+
+            _this.subscribe(_this.callback);
+        });
+    }
 
     this.emit('error', err);
 
-                     // call the callback, last so that unsubscribe there won't affect the emit above
+    // call the callback, last so that unsubscribe there won't affect the emit above
     this.callback(err, null, this);
 };
 
