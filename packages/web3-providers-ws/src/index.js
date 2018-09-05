@@ -322,7 +322,24 @@ WebsocketProvider.prototype.on = function (type, callback) {
     }
 };
 
-// TODO add once
+/**
+ Subscribes to provider only once
+
+ @method once
+ @param {String} type    'notifcation', 'connect', 'error', 'end' or 'data'
+ @param {Function} callback   the callback to call
+ */
+WebsocketProvider.prototype.once = function (type, callback) {
+    var _this = this;
+
+    function onceCallback(event) {
+        _this.removeListener(type, onceCallback);
+
+        callback(event);
+    }
+
+    this.on(type, onceCallback);
+};
 
 /**
  Removes event listener
