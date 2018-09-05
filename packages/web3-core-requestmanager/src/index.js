@@ -205,17 +205,20 @@ RequestManager.prototype.addSubscription = function (id, name, type, callback) {
  * @param {Function} callback   fired once the subscription is removed
  */
 RequestManager.prototype.removeSubscription = function (id, callback) {
-    var _this = this;
-
     if(this.subscriptions[id]) {
+        var type = this.subscriptions[id].type;
 
+        // remove subscription first to avoid reentry
+        delete this.subscriptions[id];
+
+        // then, try to actually unsubscribe
         this.send({
-            method: this.subscriptions[id].type + '_unsubscribe',
+            method: type + '_unsubscribe',
             params: [id]
         }, callback);
-
-        // remove subscription
-        delete _this.subscriptions[id];
+    } else if (typeof callback === 'function') {
+        // call the callback if the subscription was already removed
+        callback(null);
     }
 };
 
