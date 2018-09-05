@@ -272,37 +272,44 @@ Subscription.prototype.subscribe = function() {
                         _this.callback(null, output, _this);
                     });
                 } else {
-                    // unsubscribe, but keep listeners
-                    _this.options.requestManager.removeSubscription(_this.id);
+                    _this._resubscribe(err);
+                }
+            });
+        } else {
+            _this._resubscribe(err);
+        }
+    });
+
+    // return an object to cancel the subscription
+    return this;
+};
+
+Subscription.prototype._resubscribe = function (err) {
+    var _this = this;
+
+    // unsubscribe
+    this.options.requestManager.removeSubscription(this.id);
 
                     // re-subscribe, if connection fails
-                    if(_this.options.requestManager.provider.once) {
-                        _this._reconnectIntervalId = setInterval(function () {
+    if(this.options.requestManager.provider.once && !_this._reconnectIntervalId) {
+        this._reconnectIntervalId = setInterval(function () {
                             // TODO check if that makes sense!
                             if (_this.options.requestManager.provider.reconnect) {
                                 _this.options.requestManager.provider.reconnect();
                             }
                         }, 500);
 
-                        _this.options.requestManager.provider.once('connect', function () {
+        this.options.requestManager.provider.once('connect', function () {
                             clearInterval(_this._reconnectIntervalId);
+            _this._reconnectIntervalId = null;
                             _this.subscribe(_this.callback);
                         });
                     }
-                    _this.emit('error', err);
+
+    this.emit('error', err);
 
                      // call the callback, last so that unsubscribe there won't affect the emit above
-                    _this.callback(err, null, _this);
-                }
-            });
-        } else {
-          _this.callback(err, null, _this);
-          _this.emit('error', err);
-        }
-    });
-
-    // return an object to cancel the subscription
-    return this;
+    this.callback(err, null, this);
 };
 
 module.exports = Subscription;
