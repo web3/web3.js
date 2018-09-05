@@ -103,13 +103,16 @@ RequestManager.prototype.setProvider = function (p, net) {
                 _this.subscriptions[result.params.subscription].callback(null, result.params.result);
             }
         });
-        // TODO add error, end, timeout, connect??
-        // this.provider.on('error', function requestManagerNotification(result){
-        //     Object.keys(_this.subscriptions).forEach(function(id){
-        //         if(_this.subscriptions[id].callback)
-        //             _this.subscriptions[id].callback(err);
-        //     });
-        // }
+
+        // notify all subscriptions about the error condition
+        this.provider.on('error', function (event) {
+            Object.keys(_this.subscriptions).forEach(function(id){
+                if(_this.subscriptions[id] && _this.subscriptions[id].callback)
+                _this.subscriptions[id].callback(event.code || new Error('Provider error'));
+            });
+        });
+
+        // TODO add end, timeout, connect??
     }
 };
 
