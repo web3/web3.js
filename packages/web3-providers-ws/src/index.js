@@ -392,4 +392,10 @@ WebsocketProvider.prototype.reset = function () {
     this.addDefaultEvents();
 };
 
+WebsocketProvider.prototype.disconnect = function () {
+    if (this.connection) {
+        this.connection.close();
+    }
+};
+
 module.exports = WebsocketProvider;
