@@ -26,7 +26,12 @@ var givenProvider = null;
 
 // ADD GIVEN PROVIDER
 /* jshint ignore:start */
-var global = Function('return this')();
+var global;
+try {
+  global = Function('return this')();
+} catch (e) {
+  global = window;
+}
 
 // EthereumProvider
 if(typeof global.ethereumProvider !== 'undefined') {
