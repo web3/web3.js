@@ -305,15 +305,15 @@ WebsocketProvider.prototype.on = function (type, callback) {
             break;
 
         case 'connect':
-            this.connection.onopen = callback;
+            this.connection.addEventListener('open', callback);
             break;
 
         case 'end':
-            this.connection.onclose = callback;
+            this.connection.addEventListener('close', callback);
             break;
 
         case 'error':
-            this.connection.onerror = callback;
+            this.connection.addEventListener('error', callback);
             break;
 
         // default:
@@ -342,7 +342,17 @@ WebsocketProvider.prototype.removeListener = function (type, callback) {
             });
             break;
 
-        // TODO remvoving connect missing
+        case 'connect':
+            this.connection.removeEventListener('open', callback);
+            break;
+
+        case 'end':
+            this.connection.removeEventListener('close', callback);
+            break;
+
+        case 'error':
+            this.connection.removeEventListener('error', callback);
+            break;
 
         // default:
         //     this.connection.removeListener(type, callback);
