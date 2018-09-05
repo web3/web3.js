@@ -535,7 +535,8 @@ function storageAvailable(type) {
         return true;
     }
     catch(e) {
-        return e instanceof DOMException && (
+      var isDOMException = typeof DOMException !== 'undefined' && e instanceof DOMException
+        return isDOMException && (
             // everything except Firefox
             e.code === 22 ||
             // Firefox
