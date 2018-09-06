@@ -244,7 +244,13 @@ WebsocketProvider.prototype._addResponseCallback = function(payload, callback) {
         setTimeout(function () {
             if (_this.responseCallbacks[id]) {
                 _this.responseCallbacks[id](errors.ConnectionTimeout(_this._customTimeout));
+
                 delete _this.responseCallbacks[id];
+
+                // try to reconnect
+                if (_this.connection.reconnect) {
+                    _this.connection.reconnect();
+            }
             }
         }, this._customTimeout);
     }
