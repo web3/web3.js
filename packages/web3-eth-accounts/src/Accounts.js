@@ -56,52 +56,55 @@ var makeEven = function (hex) {
 };
 
 
-var Accounts = function Accounts() {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    // remove unecessary core functions
-    delete this.BatchRequest;
-    delete this.extend;
-
-    var _ethereumCall = [
-        new Method({
-            name: 'getId',
-            call: 'net_version',
-            params: 0,
-            outputFormatter: utils.hexToNumber
-        }),
-        new Method({
-            name: 'getGasPrice',
-            call: 'eth_gasPrice',
-            params: 0
-        }),
-        new Method({
-            name: 'getTransactionCount',
-            call: 'eth_getTransactionCount',
-            params: 2,
-            inputFormatter: [function (address) {
-                if (utils.isAddress(address)) {
-                    return address;
-                } else {
-                    throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
-                }
-            }, function () { return 'latest'; }]
-        })
-    ];
-    // attach methods to this._ethereumCall
-    this._ethereumCall = {};
-    _.each(_ethereumCall, function (method) {
-        method.attachToObject(_this._ethereumCall);
-        method.setRequestManager(_this._requestManager);
-    });
-
-
+/**
+ * @param {MethodPackage} methodPackage
+ * @param {ConnectionModel} connectionModel
+ *
+ * @constructor
+ */
+var Accounts = function Accounts(methodPackage, connectionModel) {
+    this.methodPackage = methodPackage;
+    this.connectionModel = connectionModel;
     this.wallet = new Wallet(this);
 };
 
+/**
+ * Gets the gasPrice of the connected node
+ *
+ * @method getGasPrice
+ *
+ * @returns {Promise<String>}
+ */
+Accounts.prototype.getGasPrice = function () {
+    return this.methodPackage.create(this.connectionModel.provider, 'eth_gasPrice').send();
+};
+
+/**
+ * Gets the transaction count of an address
+ *
+ * @method getTransactionCount
+ *
+ * @param {String} address
+ *
+ * @returns {Promise<Number>}
+ */
+Accounts.prototype.getTransactionCount = function (address) {
+    if (this.utils.isAddress(address)) {
+        throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
+    }
+
+    return this.methodPackage.create(this.connectionModel.provider, 'eth_getTransactionCount', [address, 'latest'], ).send();
+};
+
+/**
+ * Adds the account functions to the given object
+ *
+ * @method _addAccountFunctions
+ *
+ * @param {Object} account
+ *
+ * @returns {Object}
+ */
 Accounts.prototype._addAccountFunctions = function (account) {
     var _this = this;
 
@@ -121,14 +124,42 @@ Accounts.prototype._addAccountFunctions = function (account) {
     return account;
 };
 
+/**
+ * Creates an account with a given entropy
+ *
+ * @method create
+ *
+ * @param {String} entropy
+ *
+ * @returns {Object}
+ */
 Accounts.prototype.create = function create(entropy) {
     return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
 };
 
+/**
+ * Creates an Account object from a privateKey
+ *
+ * @method privateKeyToAccount
+ *
+ * @param {String} privateKey
+ *
+ * @returns {Object}
+ */
 Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey) {
     return this._addAccountFunctions(Account.fromPrivate(privateKey));
 };
 
+/**
+ * Signs a transaction object with the given privateKey
+ *
+ * @param {Object} tx
+ * @param {String} privateKey
+ * @param {Function} callback
+ *
+ * @returns {Promise<Object>}
+ * @callback callback callback(error, result)
+ */
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
     var _this = this,
         error = false,
@@ -220,9 +251,9 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this._ethereumCall.getId() : tx.chainId,
-        isNot(tx.gasPrice) ? _this._ethereumCall.getGasPrice() : tx.gasPrice,
-        isNot(tx.nonce) ? _this._ethereumCall.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
+        isNot(tx.chainId) ? _this.connectionModel.getId() : tx.chainId,
+        isNot(tx.gasPrice) ? _this.getGasPrice() : tx.gasPrice,
+        isNot(tx.nonce) ? _this.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {
         if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
             throw new Error('One of the values "chainId", "gasPrice", or "nonce" couldn\'t be fetched: '+ JSON.stringify(args));
@@ -243,6 +274,15 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
 };
 /* jshint ignore:end */
 
+/**
+ * Hashes a given message
+ *
+ * @method hashMessage
+ *
+ * @param {String} data
+ *
+ * @returns {String}
+ */
 Accounts.prototype.hashMessage = function hashMessage(data) {
     var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
     var messageBuffer = Buffer.from(message);
@@ -252,6 +292,16 @@ Accounts.prototype.hashMessage = function hashMessage(data) {
     return Hash.keccak256s(ethMessage);
 };
 
+/**
+ * Signs a string with the given privateKey
+ *
+ * @method sign
+ *
+ * @param {String} data
+ * @param {String} privateKey
+ *
+ * @returns {Object}
+ */
 Accounts.prototype.sign = function sign(data, privateKey) {
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
@@ -266,6 +316,15 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     };
 };
 
+/**
+ * Recovers
+ *
+ * @param {String} message
+ * @param {String} signature
+ * @param preFixed
+ *
+ * @returns {*}
+ */
 Accounts.prototype.recover = function recover(message, signature, preFixed) {
     var args = [].slice.apply(arguments);
 
@@ -333,6 +392,17 @@ Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
     return this.privateKeyToAccount(seed);
 };
 
+/**
+ * Encrypts the account
+ *
+ * @method encrypt
+ *
+ * @param {String} privateKey
+ * @param {String} password
+ * @param {Object} options
+ *
+ * @returns {Object}
+ */
 Accounts.prototype.encrypt = function (privateKey, password, options) {
     /* jshint maxcomplexity: 20 */
     var account = this.privateKeyToAccount(privateKey);
@@ -392,12 +462,27 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html
 
+/**
+ * @param {Object} accounts
+ *
+ * @constructor
+ */
 function Wallet(accounts) {
     this._accounts = accounts;
     this.length = 0;
     this.defaultKeyName = "web3js_wallet";
 }
 
+/**
+ * Finds the safe index
+ *
+ * @method _findSafeIndex
+ * @private
+ *
+ * @param {Number} pointer
+ *
+ * @returns {*}
+ */
 Wallet.prototype._findSafeIndex = function (pointer) {
     pointer = pointer || 0;
     if (_.has(this, pointer)) {
@@ -407,6 +492,14 @@ Wallet.prototype._findSafeIndex = function (pointer) {
     }
 };
 
+/**
+ * Gets the correntIndexes array
+ *
+ * @method _currentIndexes
+ * @private
+ *
+ * @returns {Number[]}
+ */
 Wallet.prototype._currentIndexes = function () {
     var keys = Object.keys(this);
     var indexes = keys
@@ -416,6 +509,16 @@ Wallet.prototype._currentIndexes = function () {
     return indexes;
 };
 
+/**
+ * Creates new accounts with a given entropy
+ *
+ * @method create
+ *
+ * @param {Number} numberOfAccounts
+ * @param {String} entropy
+ *
+ * @returns {Wallet}
+ */
 Wallet.prototype.create = function (numberOfAccounts, entropy) {
     for (var i = 0; i < numberOfAccounts; ++i) {
         this.add(this._accounts.create(entropy).privateKey);
@@ -423,6 +526,15 @@ Wallet.prototype.create = function (numberOfAccounts, entropy) {
     return this;
 };
 
+/**
+ * Adds a account to the wallet
+ *
+ * @method add
+ *
+ * @param {Object} account
+ *
+ * @returns {Object}
+ */
 Wallet.prototype.add = function (account) {
 
     if (_.isString(account)) {
@@ -444,6 +556,15 @@ Wallet.prototype.add = function (account) {
     }
 };
 
+/**
+ * Removes a account from the number by his address or index
+ *
+ * @method remove
+ *
+ * @param {String|Number} addressOrIndex
+ *
+ * @returns {boolean}
+ */
 Wallet.prototype.remove = function (addressOrIndex) {
     var account = this[addressOrIndex];
 
@@ -466,6 +587,13 @@ Wallet.prototype.remove = function (addressOrIndex) {
     }
 };
 
+/**
+ * Clears the wallet
+ *
+ * @method clear
+ *
+ * @returns {Wallet}
+ */
 Wallet.prototype.clear = function () {
     var _this = this;
     var indexes = this._currentIndexes();
@@ -477,6 +605,16 @@ Wallet.prototype.clear = function () {
     return this;
 };
 
+/**
+ * Encrypts all accounts
+ *
+ * @method encrypt
+ *
+ * @param {String} password
+ * @param {Object} options
+ *
+ * @returns {any[]}
+ */
 Wallet.prototype.encrypt = function (password, options) {
     var _this = this;
     var indexes = this._currentIndexes();
@@ -488,7 +626,16 @@ Wallet.prototype.encrypt = function (password, options) {
     return accounts;
 };
 
-
+/**
+ * Decrypts all accounts
+ *
+ * @method decrypt
+ *
+ * @param {Wallet} encryptedWallet
+ * @param {String} password
+ *
+ * @returns {Wallet}
+ */
 Wallet.prototype.decrypt = function (encryptedWallet, password) {
     var _this = this;
 
@@ -505,12 +652,32 @@ Wallet.prototype.decrypt = function (encryptedWallet, password) {
     return this;
 };
 
+/**
+ * Saves the current wallet in the localStorage of the browser
+ *
+ * @method save
+ *
+ * @param {String} password
+ * @param {String} keyName
+ *
+ * @returns {boolean}
+ */
 Wallet.prototype.save = function (password, keyName) {
     localStorage.setItem(keyName || this.defaultKeyName, JSON.stringify(this.encrypt(password)));
 
     return true;
 };
 
+/**
+ * Loads the stored wallet by his keyName from the localStorage of the browser
+ *
+ * @method load
+ *
+ * @param {String} password
+ * @param {String} keyName
+ *
+ * @returns {Wallet}
+ */
 Wallet.prototype.load = function (password, keyName) {
     var keystore = localStorage.getItem(keyName || this.defaultKeyName);
 
