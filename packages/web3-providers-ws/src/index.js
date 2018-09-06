@@ -25,6 +25,7 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 var Ws = require('websocket').w3cwebsocket;
+var WsReconnector = require('websocket-reconnector');
 
 var isNode = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
 
@@ -85,6 +86,11 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     // Allow a custom request options
     // https://github.com/theturtle32/WebSocket-Node/blob/master/docs/WebSocketClient.md#connectrequesturl-requestedprotocols-origin-headers-requestoptions
     var requestOptions = options.requestOptions || undefined;
+
+    // Enable automatic reconnection wrapping `Ws` with reconnector
+    if (options.autoReconnect) {
+        Ws = WsReconnector(Ws);
+    }
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
