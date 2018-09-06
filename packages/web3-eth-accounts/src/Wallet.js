@@ -49,7 +49,7 @@ Wallet.prototype._findSafeIndex = function (pointer) {
     if (_.has(this, pointer)) {
         return this._findSafeIndex(pointer + 1);
     }
-
+    
     return pointer;
 };
 
@@ -157,7 +157,9 @@ Wallet.prototype.remove = function (addressOrIndex) {
  */
 Wallet.prototype.clear = function () {
     var _this = this;
-    this._currentIndexes().forEach(function (index) {
+    var indexes = this._currentIndexes();
+
+    indexes.forEach(function (index) {
         _this.remove(index);
     });
 
