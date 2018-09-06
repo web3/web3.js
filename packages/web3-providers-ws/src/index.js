@@ -25,6 +25,8 @@
 var _ = require('underscore');
 var errors = require('web3-core-helpers').errors;
 
+var WsReconnector = require('websocket-reconnector');
+
 var Ws = null;
 var _btoa = null;
 var parseURL = null;
@@ -79,6 +81,11 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
 
     // Allow a custom client configuration
     var clientConfig = options.clientConfig || undefined;
+
+    // Enable automatic reconnection wrapping `Ws` with reconnector
+    if (options.autoReconnect) {
+        Ws = WsReconnector(Ws);
+    }
 
     // When all node core implementations that do not have the
     // WHATWG compatible URL parser go out of service this line can be removed.
