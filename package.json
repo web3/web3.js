@@ -1,7 +1,8 @@
 {
   "name": "web3",
+  "private": true,
   "namespace": "ethereum",
-  "version": "1.0.0-beta.35",
+  "version": "1.0.0-beta.36",
   "description": "Ethereum JavaScript API wrapper repository",
   "license": "LGPL-3.0",
   "main": "./packages/web3/src/index.js",
@@ -73,7 +74,7 @@
     "coveralls": "^3.0.2",
     "crypto-js": "^3.1.4",
     "del": ">=2.0.2",
-    "ethereumjs-wallet": "^0.6.0",
+    "ethereumjs-wallet": "^0.6.2",
     "ethjs-signer": "^0.1.1",
     "exorcist": "^0.4.0",
     "gulp": "^4.0.0",
