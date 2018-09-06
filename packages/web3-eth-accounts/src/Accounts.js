@@ -23,8 +23,6 @@
 "use strict";
 
 var _ = require("underscore");
-var core = require('web3-core');
-var Method = require('web3-core-method');
 var Promise = require('any-promise');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
@@ -34,8 +32,6 @@ var Bytes = require("eth-lib/lib/bytes");
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
-var utils = require('web3-utils');
-var helpers = require('web3-core-helpers');
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
@@ -57,14 +53,18 @@ var makeEven = function (hex) {
 
 
 /**
- * @param {MethodPackage} methodPackage
  * @param {ConnectionModel} connectionModel
+ * @param {MethodPackage} methodPackage
+ * @param {Utils} utils
+ * @param {Object} formatters
  *
  * @constructor
  */
-var Accounts = function Accounts(methodPackage, connectionModel) {
+var Accounts = function Accounts(connectionModel, methodPackage, utils, formatters) {
     this.methodPackage = methodPackage;
     this.connectionModel = connectionModel;
+    this.utils = utils;
+    this.formatters = formatters;
     this.wallet = new Wallet(this);
 };
 
@@ -134,7 +134,7 @@ Accounts.prototype._addAccountFunctions = function (account) {
  * @returns {Object}
  */
 Accounts.prototype.create = function create(entropy) {
-    return this._addAccountFunctions(Account.create(entropy || utils.randomHex(32)));
+    return this._addAccountFunctions(Account.create(entropy || this.utils.randomHex(32)));
 };
 
 /**
@@ -193,13 +193,13 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
         }
 
         try {
-            tx = helpers.formatters.inputCallFormatter(tx);
+            tx = _this.formatters.inputCallFormatter(tx);
 
             var transaction = tx;
             transaction.to = tx.to || '0x';
             transaction.data = tx.data || '0x';
             transaction.value = tx.value || '0x';
-            transaction.chainId = utils.numberToHex(tx.chainId);
+            transaction.chainId = _this.utils.numberToHex(tx.chainId);
 
             var rlpEncoded = RLP.encode([
                 Bytes.fromNat(transaction.nonce),
@@ -284,7 +284,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
  * @returns {String}
  */
 Accounts.prototype.hashMessage = function hashMessage(data) {
-    var message = utils.isHexStrict(data) ? utils.hexToBytes(data) : data;
+    var message = this.utils.isHexStrict(data) ? this.utils.hexToBytes(data) : data;
     var messageBuffer = Buffer.from(message);
     var preamble = "\x19Ethereum Signed Message:\n" + message.length;
     var preambleBuffer = Buffer.from(preamble);
@@ -439,7 +439,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 
     var ciphertext = Buffer.concat([ cipher.update(new Buffer(account.privateKey.replace('0x',''), 'hex')), cipher.final() ]);
 
-    var mac = utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
+    var mac = this.utils.sha3(Buffer.concat([ derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex') ])).replace('0x','');
 
     return {
         version: 3,
