@@ -24,6 +24,9 @@
 
 var version = require('./package.json').version;
 var Personal = require('./Personal');
+var MethodPackage = require('web3-core-method');
+var Utils = require('web3-utils');
+var formatters = require('web3-core-helpers').formatters;
 
 module.exports = {
     version: version,
@@ -35,8 +38,8 @@ module.exports = {
      *
      * @returns {Personal}
      */
-    create: function () { //TODO: Refactor the personal object because of the new method and connection handling.
-        return new Personal();
+    create: function (connectionModel) {
+        return new Personal(connectionModel, MethodPackage, Utils, formatters);
     }
 };
 

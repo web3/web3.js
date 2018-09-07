@@ -22,128 +22,224 @@
 
 "use strict";
 
-var core = require('web3-core');
-var Method = require('web3-core-method');
-var utils = require('web3-utils');
-var Net = require('web3-net');
-
-var formatters = require('web3-core-helpers').formatters;
-
-
-var Personal = function Personal() {
-    var _this = this;
-
-    // sets _requestmanager
-    core.packageInit(this, arguments);
-
-    this.net = new Net(this.currentProvider);
-
-    var defaultAccount = null;
-    var defaultBlock = 'latest';
-
-    Object.defineProperty(this, 'defaultAccount', {
-        get: function () {
-            return defaultAccount;
-        },
-        set: function (val) {
-            if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
-            }
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultAccount = defaultAccount;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-    Object.defineProperty(this, 'defaultBlock', {
-        get: function () {
-            return defaultBlock;
-        },
-        set: function (val) {
-            defaultBlock = val;
-
-            // update defaultBlock
-            methods.forEach(function(method) {
-                method.defaultBlock = defaultBlock;
-            });
-
-            return val;
-        },
-        enumerable: true
-    });
-
-
-    var methods = [
-        new Method({
-            name: 'getAccounts',
-            call: 'personal_listAccounts',
-            params: 0,
-            outputFormatter: utils.toChecksumAddress
-        }),
-        new Method({
-            name: 'newAccount',
-            call: 'personal_newAccount',
-            params: 1,
-            inputFormatter: [null],
-            outputFormatter: utils.toChecksumAddress
-        }),
-        new Method({
-            name: 'unlockAccount',
-            call: 'personal_unlockAccount',
-            params: 3,
-            inputFormatter: [formatters.inputAddressFormatter, null, null]
-        }),
-        new Method({
-            name: 'lockAccount',
-            call: 'personal_lockAccount',
-            params: 1,
-            inputFormatter: [formatters.inputAddressFormatter]
-        }),
-        new Method({
-            name: 'importRawKey',
-            call: 'personal_importRawKey',
-            params: 2
-        }),
-        new Method({
-            name: 'sendTransaction',
-            call: 'personal_sendTransaction',
-            params: 2,
-            inputFormatter: [formatters.inputTransactionFormatter, null]
-        }),
-        new Method({
-            name: 'signTransaction',
-            call: 'personal_signTransaction',
-            params: 2,
-            inputFormatter: [formatters.inputTransactionFormatter, null]
-        }),
-        new Method({
-            name: 'sign',
-            call: 'personal_sign',
-            params: 3,
-            inputFormatter: [formatters.inputSignFormatter, formatters.inputAddressFormatter, null]
-        }),
-        new Method({
-            name: 'ecRecover',
-            call: 'personal_ecRecover',
-            params: 2,
-            inputFormatter: [formatters.inputSignFormatter, null]
-        })
-    ];
-    methods.forEach(function(method) {
-        method.attachToObject(_this);
-        method.setRequestManager(_this._requestManager);
-        method.defaultBlock = _this.defaultBlock;
-        method.defaultAccount = _this.defaultAccount;
-    });
+/**
+ * TODO: Add missing documenation for getAccounts, lockAccount, importRawKey and sendTransaction!
+ *
+ * @param {ConnectionModel} connectionModel
+ * @param {MethodPackage} methodPackage
+ * @param {Utils} utils
+ * @param {Object} formatters
+ *
+ * @constructor
+ */
+var Personal = function Personal(connectionModel, methodPackage, utils, formatters) {
+    this.connectionModel = connectionModel;
+    this.methodPackage = methodPackage;
+    this.utils = utils;
+    this.formatters = formatters;
+    this.net = this.connectionModel.getNetworkMethodsAsObject();
 };
 
-core.addProviders(Personal);
+/**
+ * Gets a list of accounts
+ *
+ * @method getAccounts
+ *
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ *
+ * @returns {Promise<Array>}
+ */
+Personal.prototype.getAccounts = function (callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_listAccounts',
+        null,
+        null,
+        this.utils.toChecksumAddress
+    ).send(callback);
+};
 
+/**
+ * Creates an new account
+ *
+ * @method newAccount
+ *
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<String>}
+ */
+Personal.prototype.newAccount = function (callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_newAccount',
+        null,
+        null,
+        this.utils.toChecksumAddress
+    ).send(callback);
+};
 
+/**
+ * Unlocks an account
+ * TODO: Fix typo in documentation
+ *
+ * @method unlockAccount
+ *
+ * @param {String} address
+ * @param {String} password
+ * @param {Number} unlockDuration
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<Boolean>}
+ */
+Personal.prototype.unlockAccount = function (address, password, unlockDuration, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_unlockAccount',
+        [address, password, unlockDuration],
+        [
+            this.formmaters.inputAddressFormatter,
+            null,
+            null
+        ],
+        null
+    ).send(callback);
+};
+
+/**
+ * Locks a account by the given address
+ *
+ * @method lockAccount
+ *
+ * @param {String} address
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<Boolean>}
+ */
+Personal.prototype.lockAccount = function (address, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_lockAccount',
+        [address],
+        [this.formmaters.inputAddressFormatter],
+        null
+    ).send(callback);
+};
+
+/**
+ * Imports the unencrypted key in to the keystore and encrypt it with the given passphrase
+ *
+ * @method importRawKey
+ *
+ * @param {String} keydata
+ * @param {String} passphrase
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<String>}
+ */
+Personal.prototype.importRawKey = function (keydata, passphrase, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_importRawKey',
+        [keydata, passphrase],
+        null,
+        null
+    ).send(callback);
+};
+
+/**
+ * Sends the transaction
+ *
+ * @method sendTransaction
+ *
+ * @param {Object} transactionObject
+ * @param {String} passphrase
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<String>}
+ */
+Personal.prototype.sendTransaction = function (transactionObject, passphrase, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_sendTransaction',
+        [transactionObject, passphrase],
+        [this.formatters.inputTransactionFormatter, null],
+        null
+    ).send(callback);
+};
+
+/**
+ * Signs the given transaction
+ *
+ * @method signTransaction
+ *
+ * @param {Object} transactionObject
+ * @param {String} passphrase
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<Object>}
+ */
+Personal.prototype.signTransaction = function (transactionObject, passphrase, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_signTransaction',
+        [transactionObject, passphrase],
+        [this.formatters.inputTransactionFormatter, null],
+        null
+    ).send(callback);
+};
+
+/**
+ * Signs a given string
+ *
+ * @method sign
+ *
+ * @param {String} data
+ * @param {String} address
+ * @param {String} password
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<String>}
+ */
+Personal.prototype.sign = function (data, address, password, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_sign',
+        [data, address, password],
+        [this.formatters.inputSignFormatter, this.formatters.inputAddressFormatter, null],
+        null
+    ).send(callback);
+};
+
+/**
+ * Recovers a signed string
+ *
+ * @method ecRecover
+ *
+ * @param {String} data
+ * @param {String} signature
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<String>}
+ */
+Personal.prototype.ecRecover = function (data, signature, callback) {
+    return this.methodPackage.create(
+        this.connectionModel.provider,
+        'personal_ecRecover',
+        [data, address, password],
+        [this.formatters.inputSignFormatter, this.formatters.inputAddressFormatter, null],
+        null
+    ).send(callback);
+};
 
 module.exports = Personal;
 

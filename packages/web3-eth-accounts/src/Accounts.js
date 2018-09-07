@@ -306,6 +306,7 @@ Accounts.prototype.sign = function sign(data, privateKey) {
     var hash = this.hashMessage(data);
     var signature = Account.sign(hash, privateKey);
     var vrs = Account.decodeSignature(signature);
+
     return {
         message: data,
         messageHash: hash,
