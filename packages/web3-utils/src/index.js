@@ -268,6 +268,7 @@ module.exports = {
     randomHex: randomHex,
     _: _,
     BN: utils.BN,
+
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,
     isHex: utils.isHex,
@@ -299,6 +300,8 @@ module.exports = {
     utf8ToHex: utils.utf8ToHex,
     stringToHex: utils.utf8ToHex,
     fromUtf8: utils.utf8ToHex,
+
+    buildEthUrl: utils.buildEthUrl,
 
     hexToAscii: hexToAscii,
     toAscii: hexToAscii,
