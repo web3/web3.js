@@ -440,6 +440,71 @@ var sha3 = function (value) {
 // expose the under the hood keccak256
 sha3._Hash = Hash;
 
+/**
+* Returns string that describes ethereum URL created according to eip-831.
+*
+* @method buildEthUrl
+* @param {String} targetAddress - The ethereum address to whom we going to send ether or the address of the smart contract
+*     which method we want to invoke. Address should be formatted as ( "0x" 40*40HEXDIG ) / ENS_NAME
+*
+* @param {Object|String} value - An amount of Ether that you want to pay in Wei, or object that describe invocation of smart contract call
+* @param {String} [value.methodName] -  Name of the smart contract method that we want to invoke
+* @param {String} [value.value=] - An amount of Ether that you want to send with method call
+* @param {String[]} [value.args=] - Array that describe parameters that we are going to pass.
+*    amount of elements must be even, and starts from type, than value.
+*    type must be a string that contains standard ABI type name,
+*    Value must be number / ethereum_address / STRING
+*
+* @param {String|number} [chainId=4] - The id of ethereum chain into which we are going to send transaction.
+*     Default value is 4 - Rinkeby
+* @param {String=} gas
+* @param {String=} gasPrice
+* @param {String=} gasLimit
+*
+* @param {String} [prefix] - Property, that defines payload after prefix
+*     at the moment pay is only supported payload type.
+*
+* @return {String}
+*/
+var buildEthUrl = function(targetAddress, value, chainId, gas, gasPrice, gasLimit, prefix){
+    prefix = prefix || "";
+
+    // simple payment
+    if(typeof value === 'string')
+        return `ethereum:${prefix}${targetAddress}?value=${value}`;
+
+    const tokens = [];
+    if(value && value.value)
+        tokens.push(`value=${value.value}`);
+
+    const args = (value && value.args) || [];
+    if(args && args.length % 2 !== 0)
+        throw "lenght of args array should be even";
+
+    for(let i=0; i < args.length; i+=2)
+        tokens.push(args[i] + "=" + args[i + 1]);
+
+
+    chainId  && tokens.push("chain_id=" + chainId);
+    gas      && tokens.push("gas="      + gas);
+    gasPrice && tokens.push("gasPrice=" + gasPrice);
+    gasLimit && tokens.push("gasLimit=" + gasLimit);
+
+    let result = `ethereum:${prefix}${targetAddress}/${value.methodName}`;
+    if(tokens.length)
+        result += ("?" + tokens.join("&"));
+
+    return result;
+};
+
+function findClones(array, elem) {
+    let counter = 0;
+    for (let i in array)
+        if (array[i] === elem)
+            counter++;
+    return counter;
+}
+
 
 module.exports = {
     BN: BN,
@@ -463,5 +528,6 @@ module.exports = {
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
-    sha3: sha3
+    sha3: sha3,
+    buildEthUrl: buildEthUrl
 };
