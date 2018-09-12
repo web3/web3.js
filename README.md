@@ -86,7 +86,7 @@ web3.eth.getAccounts()
 Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with
 
 ```bash
-npm install --dev @types/web3.js
+npm install --dev @types/web3
 ```
 
 You might need to install type definitions for `bignumber.js` and `lodash` too.
