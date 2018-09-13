@@ -27,20 +27,22 @@ var EventEmitter = require('eventemitter3');
 
 /**
  * @param {Object} provider
- * @param {String} type
+ * @param {String} method
  * @param {Array} parameters
  * @param {Array} inputFormatters
  * @param {Function} outputFormatter
+ * @param {String} subscriptionType
  *
  * @constructor
  */
-function Subscription(provider, type, parameters, inputFormatters, outputFormatter) {
+function Subscription(provider, method, parameters, inputFormatters, outputFormatter, subscriptionType) {
     this.provider = provider;
-    this.type = type;
+    this.method = method;
     this.parameters = parameters;
     this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
     this.subscriptionId = null;
+    this.subscriptionType = subscriptionType || 'eth';
 }
 
 /**
@@ -55,8 +57,13 @@ function Subscription(provider, type, parameters, inputFormatters, outputFormatt
  */
 Subscription.prototype.subscribe = function (callback) {
     var self = this;
-    this.provider.subscribe(this.type, this.formatInput(this.parameters)).then(function (subscriptionId) {
+
+    this.provider.subscribe(
+        this.subscriptionType,
+        this.method, this.getFormattedInput()
+    ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
+
         self.provider.on(self.subscriptionId, function (error, response) {
             if (!error) {
                 self.handleSubscriptionResponse(response, callback);
@@ -65,7 +72,7 @@ Subscription.prototype.subscribe = function (callback) {
             }
 
             if (self.provider.once) {
-                self.reconnect(type, parameters, subscriptionId, callback);
+                self.reconnect(callback);
             }
 
             if (_.isFunction(callback)) {
@@ -107,14 +114,11 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
  *
  * @method reconnect
  *
- * @param {String} type
- * @param {Array} parameters
- * @param {String} subscriptionId
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  */
-Subscription.prototype.reconnect = function (type, parameters, subscriptionId, callback) {
+Subscription.prototype.reconnect = function (callback) {
     var self = this;
 
     var interval = setInterval(function () {
@@ -127,7 +131,7 @@ Subscription.prototype.reconnect = function (type, parameters, subscriptionId, c
         clearInterval(interval);
         self.unsubscribe(function (error, result) {
             if (result) {
-                self.subscribe(type, parameters, callback);
+                self.subscribe(callback);
             }
 
             if (_.isFunction(callback)) {
@@ -160,18 +164,18 @@ Subscription.prototype.formatOutput = function (output) {
  *
  * @method formatInput
  *
- * @param {Array} parameters
- *
- * @returns {any}
+ * @returns {any[]}
  */
-Subscription.prototype.formatInput = function (parameters) {
+Subscription.prototype.getFormattedInput = function () {
+    var self = this;
+
     if (_.isArray(this.inputFormatters)) {
         return this.inputFormatters.map(function (formatter, index) {
             if (_.isFunction(formatter)) {
-                return formatter(parameters[index]);
+                return formatter(self.parameters[index]);
             }
 
-            return parameters[index];
+            return self.parameters[index];
         });
     }
 
@@ -190,7 +194,7 @@ Subscription.prototype.formatInput = function (parameters) {
  */
 Subscription.prototype.unsubscribe = function (callback) {
     var self = this;
-    return this.provider.unsubscribe(this.subscriptionId).then(function (response) {
+    return this.provider.unsubscribe(this.subscriptionId, this.subscriptionType).then(function (response) {
         if (!response) {
             self.subscriptionId = null;
             callback(true, false);

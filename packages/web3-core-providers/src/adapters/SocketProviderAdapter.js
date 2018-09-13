@@ -40,17 +40,18 @@ function SocketProviderAdapter(provider) {
  *
  * @method subscribe
  *
- * @param {String} subscriptionType
+ * @param {String} subscriptionMethod
  * @param {Array} parameters
+ * @param {String} subscriptionType
  *
  * @returns {Promise<String|Error>}
  */
-SocketProviderAdapter.prototype.subscribe = function (subscriptionType, parameters) {
+SocketProviderAdapter.prototype.subscribe = function (subscriptionType, subscriptionMethod, parameters) {
     var self = this;
 
-    return this.send('eth_subscribe', parameters.unshift(subscriptionType)).then(function (error, subscriptionId) {
+    return this.send(subscriptionType + '_subscribe', parameters.unshift(subscriptionMethod)).then(function (error, subscriptionId) {
         if (!error) {
-            self.subscriptions[subscriptionId]({subscriptionType: subscriptionType, type: 'eth'});
+            self.subscriptions.push(subscriptionId);
 
             return subscriptionId;
         }
@@ -65,11 +66,12 @@ SocketProviderAdapter.prototype.subscribe = function (subscriptionType, paramete
  * @method unsubscribe
  *
  * @param {String} subscriptionId
+ * @param {String} subscriptionType
  *
  * @returns {Promise<Boolean|Error>}
  */
-SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId) {
-    return this.send('eth_unsubscribe', [subscriptionId]).then(function (result) {
+SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId, subscriptionType) {
+    return this.send(subscriptionType + '_unsubscribe', [subscriptionId]).then(function (result) {
         if (result) {
             this.subscriptions = this.subscriptions.filter(function (subscription) {
                 return subscription !== subscriptionId;
@@ -94,10 +96,23 @@ SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
         response = response || deprecatedResponse;
 
         // check for result.method, to prevent old providers errors to pass as result
-        if (response.method && self.subscriptions[response.params.subscription]) {
+        if (response.method && self.hasSubscription(response.params.subscription)) {
             self.emit(response.params.subscription, response.params.result);
         }
     });
+};
+
+/**
+ * Checks if the given subscription id exists
+ *
+ * @method hasSubscription
+ *
+ * @param {String} subscriptionId
+ *
+ * @returns {Boolean}
+ */
+SocketProviderAdapter.prototype.hasSubscription = function (subscriptionId) {
+    return this.subscriptions.indexOf(subscriptionId) > -1;
 };
 
 /**
@@ -109,7 +124,7 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
     var self = this;
     var unsubscribePromises = [];
 
-    Object.keys(this.subscriptions).forEach(function (subscriptionId) {
+    this.subscriptions.forEach(function (subscriptionId) {
         unsubscribePromises.push(self.unsubscribe(subscriptionId));
     });
 
@@ -126,13 +141,13 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
  *
  * @param {String} subscriptionId
  *
- * @returns {Promise<boolean>}
+ * @returns {Promise<Boolean>}
  */
 SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
     var self = this;
-    return this.subscriptions[subscriptionId].unsubscribe().then(function(result) {
+    return this.unsubscribe(subscriptionId).then(function (result) {
         if (result) {
-            delete self.subscriptions[subscriptionId];
+            delete self.subscriptions[this.subscriptions.indexOf(subscriptionId)];
 
             return true;
         }
@@ -146,7 +161,7 @@ SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
  *
  * @method isConnected
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 SocketProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;

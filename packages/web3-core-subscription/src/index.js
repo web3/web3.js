@@ -38,10 +38,16 @@ module.exports = {
      * @param {Array} parameters
      * @param {Function} inputFormatters
      * @param {Function} outputFormatter
+     * @param {String} subscriptionType
      *
      * @returns {Subscription}
      */
-    create: function (provider, type, parameters, inputFormatters, outputFormatter) {
-        return new Subscription(provider, type, parameters, inputFormatters, outputFormatter)
-    }
+    create: function (provider, type, parameters, inputFormatters, outputFormatter, subscriptionType) {
+        return new Subscription(provider, type, parameters, inputFormatters, outputFormatter, subscriptionType)
+    },
+
+    /**
+     * Used for extending the ShhSubscription
+     */
+    Subscription: Subscription
 };
