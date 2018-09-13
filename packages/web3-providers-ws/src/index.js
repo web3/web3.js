@@ -276,9 +276,9 @@ WebsocketProvider.prototype.send = function (payload, callback) {
         callback(new Error('connection not open'));
         return;
     }
-
-    this.connection.send(JSON.stringify(payload));
+    
     this._addResponseCallback(payload, callback);
+    this.connection.send(JSON.stringify(payload));
 };
 
 /**
