@@ -153,6 +153,8 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
 /**
  * Signs a transaction object with the given privateKey
  *
+ * @method signTransaction
+ *
  * @param {Object} tx
  * @param {String} privateKey
  * @param {Function} callback
@@ -263,6 +265,15 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 };
 
 /* jshint ignore:start */
+/**
+ * Recovers transaction
+ *
+ * @method recoverTransaction
+ *
+ * @param {String} rawTx
+ *
+ * @returns {String}
+ */
 Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var values = RLP.decode(rawTx);
     var signature = Account.encodeSignature(values.slice(6,9));
@@ -270,6 +281,7 @@ Accounts.prototype.recoverTransaction = function recoverTransaction(rawTx) {
     var extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
     var signingData = values.slice(0,6).concat(extraData);
     var signingDataHex = RLP.encode(signingData);
+
     return Account.recover(Hash.keccak256(signingDataHex), signature);
 };
 /* jshint ignore:end */
@@ -320,9 +332,11 @@ Accounts.prototype.sign = function sign(data, privateKey) {
 /**
  * Recovers
  *
- * @param {String} message
+ * @method recover
+ *
+ * @param {String|Object} message
  * @param {String} signature
- * @param preFixed
+ * @param {Boolean} preFixed
  *
  * @returns {*}
  */
@@ -347,7 +361,19 @@ Accounts.prototype.recover = function recover(message, signature, preFixed) {
     return Account.recover(message, signature);
 };
 
-// Taken from https://github.com/ethereumjs/ethereumjs-wallet
+/**
+ * Decrypts account
+ *
+ * Note: Taken from https://github.com/ethereumjs/ethereumjs-wallet
+ *
+ * @method decrypt
+ *
+ * @param {Object|String} v3Keystore
+ * @param {String} password
+ * @param {Boolean} nonStrict
+ *
+ * @returns {Object}
+ */
 Accounts.prototype.decrypt = function (v3Keystore, password, nonStrict) {
     /* jshint maxcomplexity: 10 */
 

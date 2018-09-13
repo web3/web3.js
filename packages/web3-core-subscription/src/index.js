@@ -44,10 +44,5 @@ module.exports = {
      */
     create: function (provider, type, parameters, inputFormatters, outputFormatter, subscriptionType) {
         return new Subscription(provider, type, parameters, inputFormatters, outputFormatter, subscriptionType)
-    },
-
-    /**
-     * Used for extending the ShhSubscription
-     */
-    Subscription: Subscription
+    }
 };

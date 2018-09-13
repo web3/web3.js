@@ -89,6 +89,8 @@ Bzz.prototype.upload = function (data) {
 /**
  * Checks if swarm is available
  *
+ * @method isAvailable
+ *
  * @returns {Promise<boolean>}
  */
 Bzz.prototype.isAvailable = function () {
@@ -112,6 +114,9 @@ Bzz.prototype.hasProvider = function () {
 
 /**
  * Throws the provider error
+ *
+ * @method throwProviderError
+ *
  */
 Bzz.prototype.throwProviderError = function () {
     throw new Error('No provider set, please set one using bzz.setProvider().');

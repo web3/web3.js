@@ -34,7 +34,7 @@ var JSONRpcMapper = {
  *
  * @method toPayload
  *
- * @param {Function} method of jsonrpc call, required
+ * @param {String} method of jsonrpc call, required
  * @param {Array} params, an Array of method params, optional
  *
  * @returns {Object} valid jsonrpc payload object

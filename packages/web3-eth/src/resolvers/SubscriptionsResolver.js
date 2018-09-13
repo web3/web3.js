@@ -92,7 +92,8 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
         type,
         parameters,
         inputFormatter,
-        outputFormatter
+        outputFormatter,
+        'eth'
     ).subscribe(callback);
 };
 

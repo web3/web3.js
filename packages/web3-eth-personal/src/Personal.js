@@ -32,13 +32,13 @@
  *
  * @constructor
  */
-var Personal = function Personal(connectionModel, methodPackage, utils, formatters) {
+function Personal(connectionModel, methodPackage, utils, formatters) {
     this.connectionModel = connectionModel;
     this.methodPackage = methodPackage;
     this.utils = utils;
     this.formatters = formatters;
     this.net = this.connectionModel.getNetworkMethodsAsObject();
-};
+}
 
 /**
  * Gets a list of accounts

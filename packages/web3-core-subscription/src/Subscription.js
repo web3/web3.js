@@ -60,7 +60,8 @@ Subscription.prototype.subscribe = function (callback) {
 
     this.provider.subscribe(
         this.subscriptionType,
-        this.method, this.getFormattedInput()
+        this.method,
+        this.getFormattedInput()
     ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
 

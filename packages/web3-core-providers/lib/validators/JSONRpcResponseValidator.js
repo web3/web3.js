@@ -31,26 +31,26 @@ var JSONRpcResponseValidator = {};
  *
  * @param {Object} response
  *
- * @returns {Boolean} true if response is valid, otherwise false
+ * @returns {Boolean}
  */
 JSONRpcResponseValidator.isValid = function (response) {
     if (Array.isArray(response)) {
-        return response.every(this.validateSingleMessage)
+        return response.every(this.isResponseItemValid)
     }
 
-    return this.validateSingleMessage(response);
+    return this.isResponseItemValid(response);
 };
 
 /**
- * Checks if jsonrpc response is valid
+ * Validates response item from a JSON-RPC response
  *
- * @method validateSingleMessage
+ * @method isResponseItemValid
  *
  * @param {Object} response
  *
- * @returns {Boolean} true if response is valid, otherwise false
+ * @returns {Boolean}
  */
-JSONRpcResponseValidator.validateSingleMessage = function (response) {
+JSONRpcResponseValidator.isResponseItemValid = function (response) {
     return !!response &&
         !response.error &&
         response.jsonrpc === '2.0' &&

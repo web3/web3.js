@@ -20,7 +20,12 @@
  * @date 2018
  */
 
-var global = Function('return this')();
+var global;
+try {
+    global = Function('return this')();
+} catch (e) {
+    global = window;
+}
 
 function ProviderDetector() { }
 
@@ -64,9 +69,9 @@ ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
  *
  * @method addSubscriptionsToIpcProviderWrapper
  *
- * @param {Object} provider ipcProviderWrapper
+ * @param {Object} provider
  *
- * @returns {Object} ipcProviderWrapper
+ * @returns {Object}
  */
 ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (provider) {
     provider.on = function (type, callback) {

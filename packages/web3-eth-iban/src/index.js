@@ -35,7 +35,7 @@ module.exports = {
      *
      * @returns {Iban}
      */
-    create: function () {// TODO: Determine if this is the correct approach to do this with a create method.
+    create: function () {
         return Iban;
     }
 };

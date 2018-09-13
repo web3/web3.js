@@ -32,10 +32,8 @@ module.exports = {
      * Returns PromiEvent object
      *
      * @method create
-     *
-     * @param {Boolean} justPromise
      */
-    create: function(justPromise) {
-        return new PromiEvent(justPromise);
+    create: function() {
+        return new PromiEvent();
     }
 };

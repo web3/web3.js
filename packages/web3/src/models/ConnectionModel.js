@@ -26,6 +26,7 @@
  * @param {MethodPackage} methodPackage
  * @param {Utils} utils
  * @param {Object} formatters
+ *
  * @constructor
  */
 function ConnectionModel(provider, methodPackage, utils, formatters) {
