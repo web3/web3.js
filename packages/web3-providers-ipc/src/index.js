@@ -209,9 +209,8 @@ IpcProvider.prototype.send = function (payload, callback) {
     if(!this.connection.writable)
         this.connection.connect({path: this.path});
 
-
-    this.connection.write(JSON.stringify(payload));
     this._addResponseCallback(payload, callback);
+    this.connection.write(JSON.stringify(payload));
 };
 
 /**
