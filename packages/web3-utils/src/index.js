@@ -43,13 +43,17 @@ var randomHex = require('randomhex');
 var _fireError = function (error, emitter, reject, callback) {
     /*jshint maxcomplexity: 10 */
 
-    // add data if given
-    if(_.isObject(error) && !(error instanceof Error) &&  error.data) {
-        if(_.isObject(error.data) || _.isArray(error.data)) {
-            error.data = JSON.stringify(error.data, null, 2);
-        }
+    var errorData;
 
-        error = error.message +"\n"+ error.data;
+    // add data if given
+    if(_.isObject(error) && !(error instanceof Error) && error.data) {
+        errorData = error.data;
+        if(_.isObject(errorData) || _.isArray(errorData)) {
+            error = new Error(error.message + "\n" + JSON.stringify(errorData, null, 2));
+        } else {
+            error = new Error(error.message + "\n" + errorData);
+        }
+        error.data = errorData;
     }
 
     if(_.isString(error)) {
