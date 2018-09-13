@@ -199,6 +199,7 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
         confirmationCount = 0,
         intervalId = null,
         receiptJSON = '',
+        receiptError = {},
         gasProvided = (_.isObject(payload.params[0]) && payload.params[0].gas) ? payload.params[0].gas : null,
         isContractDeployment = _.isObject(payload.params[0]) &&
             payload.params[0].data &&
@@ -359,15 +360,14 @@ Method.prototype._confirmTransaction = function (defer, result, payload) {
                         }
 
                     } else {
+                        receiptError.data = receipt;
                         receiptJSON = JSON.stringify(receipt, null, 2);
                         if (receipt.status === false || receipt.status === '0x0') {
-                            utils._fireError(new Error("Transaction has been reverted by the EVM:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
+                            receiptError.message = "Transaction has been reverted by the EVM:";
                         } else {
-                            utils._fireError(
-                                new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON),
-                                defer.eventEmitter, defer.reject);
+                            receiptError.message = "Transaction ran out of gas. Please provide more gas:";
                         }
+                        utils._fireError(receiptError, defer.eventEmitter, defer.reject);
                     }
 
                     if (canUnsubscribe) {
