@@ -25,6 +25,7 @@
 var version = require('./package.json').version;
 var SubscriptionsResolver = require('./resolvers/SubscriptionsResolver');
 var Eth = require('./Eth');
+var NetPackage = require('web3-net');
 var ContractPackage = require('web3-eth-contract');
 var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
@@ -32,6 +33,7 @@ var ENSPackage = require('web3-eth-ens');
 var AbiPackage = require('web3-eth-abi');
 var SubscriptionPackage = require('web3-core-subscription');
 var PromiEventPackage = require('web3-core-promiEvent');
+var ProvidersPackage = require('web3-core-providers');
 var Iban = require('web3-eth-iban').create();
 var formatters = require('web3-core-helpers').formatters;
 var Utils = require('web3-utils');
@@ -45,23 +47,23 @@ module.exports = {
      *
      * @method create
      *
-     * @param {ConnectionModel} connectionModel
+     * @param {any} provider
      *
      * @returns {Eth}
      */
-    create: function (connectionModel) {
+    create: function (provider) {
         return new Eth(
-            connectionModel,
-            ContractPackage.create(connectionModel),
-            AccountsPackage.create(connectionModel),
-            PersonalPackage.create(connectionModel),
+            NetPackage.create(provider),
+            ContractPackage.create(provider),
+            AccountsPackage.create(provider),
+            PersonalPackage.create(provider),
             Iban,
             AbiPackage.create(utils),
-            ENSPackage.create(connectionModel),
+            ENSPackage.create(provider),
             Utils,
             formatters,
             MethodPackage,
-            new SubscriptionsResolver(connectionModel.provider, formatters, SubscriptionPackage, PromiEventPackage)
+            new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage)
         );
     }
 };

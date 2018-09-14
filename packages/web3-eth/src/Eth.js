@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file index.js
+ * @file Eth.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -23,24 +23,26 @@
 "use strict";
 
 var _ = require('underscore');
+var AbstractWeb3Object = require('web3-core-package');
 
 /**
- * @param {ConnectionModel} connectionModel
- * @param {ContractPackage} contract
- * @param {AccountsPackage} accounts
- * @param {PersonalPackage} personal
+ * @param {Network} net
+ * @param {Contract} contract
+ * @param {Accounts} accounts
+ * @param {Personal} personal
  * @param {Iban} iban
- * @param {AbiPackage} abi
- * @param {ENSPackage} ens
+ * @param {Abi} abi
+ * @param {ENS} ens
  * @param {Utils} utils
  * @param {Object} formatters
  * @param {MethodPackage} methodPackage
+ * @param {ProvidersPackage} providersPackage
  * @param {SubscriptionsResolver} subscriptionsResolver
  *
  * @constructor
  */
 var Eth = function Eth(
-    connectionModel,
+    net,
     contract,
     accounts,
     personal,
@@ -50,10 +52,11 @@ var Eth = function Eth(
     utils,
     formatters,
     methodPackage,
+    providersPackage,
     subscriptionsResolver
 ) {
-    this.connectionModel = connectionModel;
-    this.net = this.connectionModel.getNetworkMethodsAsObject();
+    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
+    this.net = net;
     this.Contract = contract;
     this.accounts = accounts;
     this.personal = personal;
@@ -123,7 +126,7 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
  * @returns {Promise}
  */
 Eth.prototype.getNodeInfo = function (callback) {
-    return this.methodPackage.create(this.connectionModel.provider, 'web3_clientVersion', [], null, null).send(callback);
+    return this.methodPackage.create(this.currentProvider, 'web3_clientVersion', [], null, null).send(callback);
 };
 
 /**
@@ -137,7 +140,7 @@ Eth.prototype.getNodeInfo = function (callback) {
  * @returns {Promise}
  */
 Eth.prototype.getProtocolVersion = function (callback) {
-    return this.methodPackage.create(this.connectionModel.provider, 'eth_protocolVersion', [], null, null).send(callback);
+    return this.methodPackage.create(this.currentProvider, 'eth_protocolVersion', [], null, null).send(callback);
 };
 
 /**
@@ -151,7 +154,7 @@ Eth.prototype.getProtocolVersion = function (callback) {
  * @returns {Promise}
  */
 Eth.prototype.getCoinbase = function (callback) {
-    return this.methodPackage.create(this.connectionModel.provider, 'eth_coinbase', [], null, null).send(callback);
+    return this.methodPackage.create(this.currentProvider, 'eth_coinbase', [], null, null).send(callback);
 };
 
 /**
@@ -165,7 +168,7 @@ Eth.prototype.getCoinbase = function (callback) {
  * @returns {Promise}
  */
 Eth.prototype.isMining = function (callback) {
-    return this.methodPackage.create(this.connectionModel.provider, 'eth_mining', [], null, null).send(callback);
+    return this.methodPackage.create(this.currentProvider, 'eth_mining', [], null, null).send(callback);
 };
 
 /**
@@ -180,7 +183,7 @@ Eth.prototype.isMining = function (callback) {
  */
 Eth.prototype.getHashrate = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_hashrate',
         [],
         null,
@@ -200,7 +203,7 @@ Eth.prototype.getHashrate = function (callback) {
  */
 Eth.prototype.isSyncing = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_syncing',
         [],
         null,
@@ -220,7 +223,7 @@ Eth.prototype.isSyncing = function (callback) {
  */
 Eth.prototype.getGasPrice = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_gasPrice',
         [],
         null,
@@ -240,7 +243,7 @@ Eth.prototype.getGasPrice = function (callback) {
  */
 Eth.prototype.getAccounts = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_accounts',
         [],
         null,
@@ -260,7 +263,7 @@ Eth.prototype.getAccounts = function (callback) {
  */
 Eth.prototype.getBlockNumber = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_blockNumber',
         [],
         null,
@@ -282,11 +285,11 @@ Eth.prototype.getBlockNumber = function (callback) {
  */
 Eth.prototype.getBalance = function (address, block, callback) {
     if (!block) {
-        block = this.connectionModel.defaultBlock;
+        block = this.defaultBlock;
     }
 
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getBalance',
         [address, block],
         [
@@ -312,11 +315,11 @@ Eth.prototype.getBalance = function (address, block, callback) {
  */
 Eth.prototype.getStorageAt = function (address, position, block, callback) {
     if (!block) {
-        block = this.connectionModel.defaultBlock;
+        block = this.defaultBlock;
     }
 
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getStorageAt',
         [address, position, block],
         [
@@ -342,11 +345,11 @@ Eth.prototype.getStorageAt = function (address, position, block, callback) {
  */
 Eth.prototype.getCode = function (address, block, callback) {
     if (!block) {
-        block = this.connectionModel.defaultBlock;
+        block = this.defaultBlock;
     }
 
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getCode',
         [address, block],
         [
@@ -371,7 +374,7 @@ Eth.prototype.getCode = function (address, block, callback) {
  */
 Eth.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getBlockByNumber',
         [blockNumber, returnTransactionObjects],
         [
@@ -398,7 +401,7 @@ Eth.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects
  */
 Eth.prototype.getBlockByHash = function (blockHash, returnTransactionObjects, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getBlockByHash',
         [blockHash, returnTransactionObjects],
         [
@@ -469,7 +472,7 @@ Eth.prototype.getUncle = function (blockHashOrBlockNumber, uncleIndex, callback)
  */
 Eth.prototype.getUncleByBlockNumber = function (blockNumber, uncleIndex, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getUncleByBlockNumberAndIndex',
         [blockNumber, uncleIndex],
         [
@@ -494,7 +497,7 @@ Eth.prototype.getUncleByBlockNumber = function (blockNumber, uncleIndex, callbac
  */
 Eth.prototype.getUnlceByBlockHash = function (blockHash, uncleIndex, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getUncleByBlockHashAndIndex',
         [blockHash, uncleIndex],
         [
@@ -540,7 +543,7 @@ Eth.prototype.getBlockTransactionCount = function (blockHashOrBlockNumber, callb
  */
 Eth.prototype.getBlockTransactionCountByBlockNumber = function (blockNumber, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getBlockTransactionCountByNumber',
         [blockNumber],
         [
@@ -564,7 +567,7 @@ Eth.prototype.getBlockTransactionCountByBlockNumber = function (blockNumber, cal
  */
 Eth.prototype.getBlockTransactionCountByBlockHash = function (blockHash, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getBlockTransactionCountByHash',
         [blockNumber],
         [
@@ -608,7 +611,7 @@ Eth.prototype.getBlockUncleCount = function (blockHashOrBlockNumber, callback) {
  */
 Eth.prototype.getBlockUncleCountByBlockHash = function (blockHash, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getUncleCountByBlockHash',
         [blockHash],
         [
@@ -631,7 +634,7 @@ Eth.prototype.getBlockUncleCountByBlockHash = function (blockHash, callback) {
  */
 Eth.prototype.getBlockUncleCountByBlockNumber = function (blockNumber, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getUncleCountByBlockNumber',
         [blockNumber],
         [
@@ -654,7 +657,7 @@ Eth.prototype.getBlockUncleCountByBlockNumber = function (blockNumber, callback)
  */
 Eth.prototype.getTransaction = function (transactionHash, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getTransactionByHash',
         [transactionHash],
         null,
@@ -698,7 +701,7 @@ Eth.prototype.getTransactionFromBlock = function (hashStringOrNumber, indexNumbe
  */
 Eth.prototype.getTransactionFromBlockByBlockHash = function (transactionHash, indexNumber, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getTransactionByBlockHashAndIndex',
         [transactionHash, indexNumber],
         [
@@ -724,7 +727,7 @@ Eth.prototype.getTransactionFromBlockByBlockHash = function (transactionHash, in
  */
 Eth.prototype.getTransactionFromBlockByBlockNumber = function (blockNumber, indexNumber, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getTransactionByBlockNumberAndIndex',
         [blockNumber, indexNumber],
         [
@@ -748,7 +751,7 @@ Eth.prototype.getTransactionFromBlockByBlockNumber = function (blockNumber, inde
  */
 Eth.prototype.getTransactionReceipt = function (transactionHash, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getTransactionReceipt',
         [transactionHash],
         null,
@@ -770,11 +773,11 @@ Eth.prototype.getTransactionReceipt = function (transactionHash, callback) {
  */
 Eth.prototype.getTransactionCount = function (address, block, callback) {
     if (!block) {
-        block = this.connectionModel.defaultBlock;
+        block = this.defaultBlock;
     }
 
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getTransactionCount',
         [address, block],
         [
@@ -798,7 +801,7 @@ Eth.prototype.getTransactionCount = function (address, block, callback) {
  */
 Eth.prototype.sendSignedTransaction = function (signedTransactionData, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_sendRawTransaction',
         [signedTransactionData],
         null,
@@ -819,7 +822,7 @@ Eth.prototype.sendSignedTransaction = function (signedTransactionData, callback)
  */
 Eth.prototype.signTransaction = function (transactionObject, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_signTransaction',
         [transactionObject],
         [this.formatters.inputTransactionFormatter],
@@ -840,7 +843,7 @@ Eth.prototype.signTransaction = function (transactionObject, callback) {
  */
 Eth.prototype.sendTransaction = function (transactionObject, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_sendTransaction',
         [transactionObject],
         [this.formatters.inputTransactionFormatter],
@@ -862,7 +865,7 @@ Eth.prototype.sendTransaction = function (transactionObject, callback) {
  */
 Eth.prototype.sign = function (dataToSign, address, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_sign',
         [address, dataToSign],
         [
@@ -887,11 +890,11 @@ Eth.prototype.sign = function (dataToSign, address, callback) {
  */
 Eth.prototype.call = function (callObject, block, callback) {
     if (!block) {
-        block = this.connectionModel.defaultBlock;
+        block = this.defaultBlock;
     }
 
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_call',
         [callObject, block],
         [
@@ -915,7 +918,7 @@ Eth.prototype.call = function (callObject, block, callback) {
  */
 Eth.prototype.estimateGas = function (callObject, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_estimateGas',
         [callObject],
         [this.formatters.inputCallFormatter],
@@ -938,7 +941,7 @@ Eth.prototype.estimateGas = function (callObject, callback) {
  */
 Eth.prototype.submitWork = function (nonce, powHash, digest, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_submitWork',
         [nonce, powHash, digest],
         null,
@@ -959,7 +962,7 @@ Eth.prototype.submitWork = function (nonce, powHash, digest, callback) {
  */
 Eth.prototype.getWork = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getWork',
         [],
         null,
@@ -980,7 +983,7 @@ Eth.prototype.getWork = function (callback) {
  */
 Eth.prototype.getPastLogs = function (options, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'eth_getLogs',
         [],
         [this.formatters.inputLogFormatter],
@@ -1003,6 +1006,26 @@ Eth.prototype.isBlockHash = function (blockParameter) {
 /**
  * Extends Eth with clearSubscriptions from the current provider
  */
-Eth.prototype.clearSubscriptions = this.connectionModel.provider.clearSubscriptions;
+Eth.prototype.clearSubscriptions = function () {
+    this.currentProvider.clearSubscriptions();
+};
+
+/**
+ * Extends setProvider method from AbstractWeb3Object.
+ * This is required for updating the provider also in the sub packages and objects related to Eth.
+ *
+ * @param {any} provider
+ */
+Eth.prototype.setProvider = function (provider) {
+    AbstractWeb3Object.setProvider.call(provider);
+
+    this.subscriptionsResolver.setProvider(provider);
+    this.net.setProvider(provider);
+    this.accounts.setProvider(provider);
+    this.personal.setProvider(provider);
+    this.ens.setProvider(provider);
+};
+
+Eth.prototype = Object.create(AbstractWeb3Object.prototype);
 
 module.exports = Eth;

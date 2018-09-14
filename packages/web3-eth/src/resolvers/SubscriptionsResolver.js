@@ -22,18 +22,20 @@
 
 "use strict";
 
+var AbstractWeb3Object = require('web3-core-package');
+
 /**
  * @param {Object} provider
  * @param {Object} formatters
  * @param {Subscription} subscriptionPackage
  * @param {PromiEvent} promiEventPackage
+ * @param {ProvidersPackage} providersPackage
  *
  * @constructor
  */
-function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage) {
-    this.provider = provider;
+function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage, providersPackage) {
+    AbstractWeb3Object.call(provider, providersPackage, null, subscriptionPackage);
     this.formatters = formatters;
-    this.subscriptionPackage = subscriptionPackage;
     this.promiEventPackage = promiEventPackage;
 }
 
@@ -88,7 +90,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
     }
 
     return this.subscriptionPackage.create(
-        this.provider,
+        this.currentProvider,
         type,
         parameters,
         inputFormatter,
@@ -168,7 +170,7 @@ SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEve
  */
 SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (parameters, promiEvent, callback) {
     var self = this;
-    this.provider.send('eth_getLogs', parameters).then(function (logs) {
+    this.currentProvider.send('eth_getLogs', parameters).then(function (logs) {
         logs.forEach(function (log) {
             var output = self.formatters.outputLogFormatter(log);
             callback(false, output);
@@ -269,5 +271,7 @@ SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
 SubscriptionsResolver.prototype.hasFromBlockProperty = function (parameter) {
     return _.isObject(parameter) && parameter.hasOwnProperty('fromBlock') && _.isNumber(parameter.fromBlock);
 };
+
+SubscriptionsResolver.prototype = Object.create(AbstractWeb3Object);
 
 module.exports = SubscriptionsResolver;
