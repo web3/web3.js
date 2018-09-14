@@ -24,11 +24,9 @@
 
 var ProvidersPackage = require('web3-core-providers');
 var EthPackage = require('web3-eth');
-var MethodPackage = require('web3-core-method');
 var Utils = require('web3-utils');
 var ShhPackage = require('web3-shh');
 var BzzPackage = require('web3-bzz');
-var HelpersPackage = require('web3-helpers');
 var version = require('../package.json').version;
 
 /**
@@ -37,50 +35,56 @@ var version = require('../package.json').version;
  *
  * @constructor
  */
-var Web3 = function Web3(provider, net) { // TODO: throw error if no provider is given and also no provider is found with the detector
+var Web3 = function Web3(provider, net) {
     this.version = version;
-    this.connectionModel = Web3.createConnectionModel(
-        ProvidersPackage.resolve(provider, net)
-    );
+
+    if (typeof provider === 'undefined') {
+        throw new Error('No provider given as constructor parameter!');
+    }
+
+    this._provider = ProvidersPackage.resolve(provider, net);
+
+    if (!this._provider) {
+        throw new Error('Invalid provider given as constructor parameter!');
+    }
+
     this.utils = Utils;
-    this.eth = EthPackage.create(this.connectionModel);
-    this.shh = ShhPackage.create(this.connectionModel);
-    this.bzz = BzzPackage.create(this.connectionModel);
+    this.eth = EthPackage.create(this._provider);
+    this.shh = ShhPackage.create(this._provider);
+    this.bzz = BzzPackage.create(this._provider);
+
+    /**
+     * Defines accessors for connectionModel
+     */
+    Object.defineProperty(this, 'givenProvider', {
+        get: function () {
+            return this.givenProvider;
+        },
+        set: function (provider) {
+            this.givenProvider = provider;
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, 'currentProvider', {
+        get: function () {
+            return this._provider
+        },
+        set: function (provider) {
+            if (typeof this._provider.clearSubscriptions !== 'undefined') {
+                this._provider.clearSubscriptions();
+            }
+
+            this._provider = ProvidersPackage.resolve(provider, net);
+            this.eth.setProvider(provider);
+            this.shh.setProvider(provider);
+            this.bzz.setProvider(provider);
+        },
+        enumerable: true
+    });
 };
 
-/**
- * Defines accessors for connectionModel
- */
-Object.defineProperty(Web3, 'connectionModel', {
-    get: function () {
-        return this.connectionModel;
-    },
-    set: function (connectionModel) {
-        if (this.connectionModel) {
-            return;
-        }
-
-        this.connectionModel = connectionModel;
-    },
-    enumerable: true
-});
-
-/**
- * Defines accessors for connectionModel
- */
-Object.defineProperty(Web3, 'givenProvider', {
-    get: function () {
-        return this.connectionModel.givenProvider;
-    },
-    set: function (connectionModel) {
-        if (this.connectionModel) {
-            return;
-        }
-
-        this.connectionModel = connectionModel;
-    },
-    enumerable: true
-});
+Web3.givenProvider = ProvidersPackage.detect();
 
 Web3.version = version;
 
@@ -88,31 +92,21 @@ Web3.utils = Utils;
 
 Web3.modules = {
     Eth: function (provider, net) {
-        return EthPackage.create(this.createConnectionModel(provider, net));
+        return EthPackage.create(ProvidersPackage.resolve(provider, net));
     },
     Net: function (provider, net) {
-        return this.createConnectionModel(provider, net).getNetworkMethodsAsObject();
+        // return this.createConnectionModel(provider, net).getNetworkMethodsAsObject();
     },
     Personal: function (provider, net) {
-        return PersonalPackage.create(this.createConnectionModel(provider, net));
+        return PersonalPackage.create(ProvidersPackage.resolve(provider, net));
     },
     Shh: function (provider, net) {
-        return ShhPackage.create(this.createConnectionModel(provider, net));
+        return ShhPackage.create(ProvidersPackage.resolve(provider, net));
     },
     Bzz: function (provider, net) {
-        return new BzzPackage.create(this.createConnectionModel(provider, net));
+        return new BzzPackage.create(ProvidersPackage.resolve(provider, net));
     }
 };
-
-Web3.createConnectionModel = function(provider, net) {
-    return new ConnectionModel(
-        ProvidersPackage.resolve(provider, net),
-        MethodPackage,
-        UtilsPackage.create(),
-        HelpersPackage.create().formatters
-    )
-};
-
 
 Web3.providers = {
     HttpProvider: ProvidersPackage.HttpProvider,

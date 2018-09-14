@@ -41,7 +41,7 @@ function ProviderAdapterResolver(providersPackageFactory) {
  * @param {Object} provider
  * @param {Net} net
  *
- * @returns {Object}
+ * @returns {Object|Boolean}
  */
 ProviderAdapterResolver.prototype.resolve = function (provider, net) {
 
@@ -74,6 +74,8 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
     if (_.isFunction(provider.sendAsync)) {
         return this.providersPackageFactory.createInpageProviderAdapter(provider);
     }
+
+    return false;
 };
 
 module.exports = ProviderAdapterResolver;

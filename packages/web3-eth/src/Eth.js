@@ -64,6 +64,36 @@ var Eth = function Eth(
     this.formatters = formatters;
     this.subscriptionsResolver = subscriptionsResolver;
     this.methodPackage = methodPackage;
+    this._defaultAccount = null;
+    this._defaultBlock = 'latest';
+
+    /**
+     * Defines accessors for defaultAccount
+     */
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            return this._defaultAccount;
+        },
+        set: function (val) {
+            if (val) {
+                this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
+            }
+        },
+        enumerable: true
+    });
+
+    /**
+     * Defines accessors for defaultBlock
+     */
+    Object.defineProperty(this, 'defaultBlock', {
+        get: function () {
+            return this._defaultBlock;
+        },
+        set: function (val) {
+            this._defaultBlock = val;
+        },
+        enumerable: true
+    });
 };
 
 /**

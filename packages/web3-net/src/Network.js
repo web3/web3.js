@@ -16,53 +16,30 @@
  */
 
 /**
- * @file ConnectionModel.js
+ * @file Network.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
+"use strict";
+
+var AbstractWeb3Object = require('web3-core-package');
+
 /**
  * @param {Object} provider
+ * @param {ProvidersPackage} providersPackage
  * @param {MethodPackage} methodPackage
- * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Object} utils
  *
  * @constructor
  */
-function ConnectionModel(provider, methodPackage, utils, formatters) {
-    this.provider = provider;
-    this.utils = utils;
+function Network(provider, providersPackage, methodPackage, formatters, utils) {
+    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
     this.formatters = formatters;
-    this.methodPackage = methodPackage;
+    this.utils = utils;
 }
 
-/**
- * Defines accessors for defaultAccount
- */
-Object.defineProperty(Eth, 'defaultAccount', {
-    get: function () {
-        return this.defaultAccount || null;
-    },
-    set: function (val) {
-        if (val) {
-            this.defaultAccount = utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
-        }
-    },
-    enumerable: true
-});
-
-/**
- * Defines accessors for defaultBlock
- */
-Object.defineProperty(Eth, 'defaultBlock', {
-    get: function () {
-        return this.defaultBlock || 'latest';
-    },
-    set: function (val) {
-        this.defaultBlock = val;
-    },
-    enumerable: true
-});
 
 /**
  * Determines to which network web3 is currently connected
@@ -74,7 +51,7 @@ Object.defineProperty(Eth, 'defaultBlock', {
  * @callback callback(error, result)
  * @returns {Promise<String|Error>}
  */
-ConnectionModel.prototype.getNetworkType = function (callback) {
+Network.prototype.getNetworkType = function (callback) {
     var self = this, id;
 
     return this.getId().then(function (givenId) {
@@ -127,7 +104,7 @@ ConnectionModel.prototype.getNetworkType = function (callback) {
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
  */
-ConnectionModel.prototype.getId = function (callback) {
+Network.prototype.getId = function (callback) {
     return this.methodPackage.create(this.provider, 'net_version', [], null, this.utils.hexToNumber).send(callback);
 };
 
@@ -141,7 +118,7 @@ ConnectionModel.prototype.getId = function (callback) {
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
  */
-ConnectionModel.prototype.isListening = function (callback) {
+Network.prototype.isListening = function (callback) {
     return this.methodPackage.create(this.provider, 'net_listening', [], null, null).send(callback);
 };
 
@@ -155,7 +132,7 @@ ConnectionModel.prototype.isListening = function (callback) {
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
  */
-ConnectionModel.prototype.getPeerCount = function (callback) {
+Network.prototype.getPeerCount = function (callback) {
     return this.methodPackage.create(this.provider, 'net_peerCount', [], null, this.utils.hexToNumber).send(callback);
 };
 
@@ -171,7 +148,7 @@ ConnectionModel.prototype.getPeerCount = function (callback) {
  * @callback callback callback(error, result)
  * @returns {Promise|eventifiedPromise}
  */
-ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
+Network.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
     return this.methodPackage.create(
         this.provider,
         'eth_getBlockByNumber',
@@ -183,18 +160,6 @@ ConnectionModel.prototype.getBlockByNumber = function (blockNumber, returnTransa
     ).send(callback);
 };
 
-/**
- * Returns the network methods for the public API
- *
- * @method getNetworkMethodsAsObject
- *
- * @returns {Object}
- */
-ConnectionModel.prototype.getNetworkMethodsAsObject = function () {
-    return {
-        getId: this.getId.bind(this),
-        isListening: this.isListening.bind(this),
-        getPeerCount: this.getPeerCount.bind(this),
-        getNetworkType: this.getNetworkType.bind(this)
-    }
-};
+Network.prototype = Object.create(AbstractWeb3Object.prototype);
+
+module.exports = Network;
