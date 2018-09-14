@@ -23,6 +23,10 @@
 "use strict";
 
 var version = require('./package.json');
+var ProvidersPackage = require('web3-core-providers');
+var MethodPackage = require('web3-core-method');
+var SubscriptionPackage = require('web3-core-subscription');
+var NetworkPackage = require('web3-net');
 var Shh = require('./Shh');
 
 module.exports = {
@@ -31,11 +35,13 @@ module.exports = {
     /**
      * Returns the Shh object.
      *
+     * @param {any} provider
+     *
      * @method create
      *
      * @returns {Shh}
      */
-    create: function () { // TODO: Refactor the Shh object because of the new method and connection handling.
-        return new Shh();
+    create: function (provider) {
+        return new Shh(provider, ProvidersPackage, MethodPackage, SubscriptionPackage, NetworkPackage.create(provider));
     }
 };

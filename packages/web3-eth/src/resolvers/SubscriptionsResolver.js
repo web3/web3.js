@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package');
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
  * @param {Object} provider

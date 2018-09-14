@@ -32,6 +32,7 @@ var Bytes = require("eth-lib/lib/bytes");
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
@@ -53,16 +54,16 @@ var makeEven = function (hex) {
 
 
 /**
- * @param {ConnectionModel} connectionModel
+ * @param {any} provider
+ * @param {ProvidersPackage} providersPackage
  * @param {MethodPackage} methodPackage
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-var Accounts = function Accounts(connectionModel, methodPackage, utils, formatters) {
-    this.methodPackage = methodPackage;
-    this.connectionModel = connectionModel;
+var Accounts = function Accounts(provider, providersPackage, methodPackage, utils, formatters) {
+    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
     this.utils = utils;
     this.formatters = formatters;
     this.wallet = new Wallet(this);
@@ -76,7 +77,7 @@ var Accounts = function Accounts(connectionModel, methodPackage, utils, formatte
  * @returns {Promise<String>}
  */
 Accounts.prototype.getGasPrice = function () {
-    return this.methodPackage.create(this.connectionModel.provider, 'eth_gasPrice').send();
+    return this.methodPackage.create(this.currentProvider, 'eth_gasPrice').send();
 };
 
 /**
@@ -93,7 +94,7 @@ Accounts.prototype.getTransactionCount = function (address) {
         throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
     }
 
-    return this.methodPackage.create(this.connectionModel.provider, 'eth_getTransactionCount', [address, 'latest'], ).send();
+    return this.methodPackage.create(this.currentProvider, 'eth_getTransactionCount', [address, 'latest'], ).send();
 };
 
 /**
@@ -484,6 +485,8 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         }
     };
 };
+
+Accounts.prototype = Object.create(AbstractWeb3Object.prototype);
 
 
 // Note: this is trying to follow closely the specs on

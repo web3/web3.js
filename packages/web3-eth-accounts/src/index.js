@@ -25,6 +25,7 @@
 var version = require('./package.json').version;
 var Accounts = require('./Accounts');
 var MethodPackage = require('web3-core-method');
+var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-helpers').formatters;
 
@@ -36,11 +37,11 @@ module.exports = {
      *
      * @method create
      *
-     * @params {ConnectionModel} connectionModel
+     * @params {any} provider
      *
      * @returns {Accounts}
      */
-    create: function(connectionModel) {
-        return new Accounts(connectionModel, MethodPackage, Utils, formatters);
+    create: function(provider) {
+        return new Accounts(provider, ProvidersPackage, MethodPackage, Utils, formatters);
     }
 };

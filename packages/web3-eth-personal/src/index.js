@@ -25,6 +25,8 @@
 var version = require('./package.json').version;
 var Personal = require('./Personal');
 var MethodPackage = require('web3-core-method');
+var NetworkPackage = require('web3-net');
+var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 
@@ -34,12 +36,14 @@ module.exports = {
     /**
      * Returns the Personal object
      *
+     * @param {any} provider
+     *
      * @method create
      *
      * @returns {Personal}
      */
-    create: function (connectionModel) {
-        return new Personal(connectionModel, MethodPackage, Utils, formatters);
+    create: function (provider) {
+        return new Personal(provider, ProvidersPackage, MethodPackage, NetworkPackage.create(provider), Utils, formatters);
     }
 };
 

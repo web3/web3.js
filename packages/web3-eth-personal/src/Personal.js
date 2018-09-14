@@ -22,22 +22,25 @@
 
 "use strict";
 
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+
 /**
  * TODO: Add missing documenation for getAccounts, lockAccount, importRawKey and sendTransaction!
  *
- * @param {ConnectionModel} connectionModel
+ * @param {any} provider
+ * @param {ProvidersPackage} providersPackage
  * @param {MethodPackage} methodPackage
+ * @param {Network} net
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function Personal(connectionModel, methodPackage, utils, formatters) {
-    this.connectionModel = connectionModel;
-    this.methodPackage = methodPackage;
+function Personal(provider, providersPackage, methodPackage, net, utils, formatters) {
+    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
     this.utils = utils;
     this.formatters = formatters;
-    this.net = this.connectionModel.getNetworkMethodsAsObject();
+    this.net = net;
 }
 
 /**
@@ -53,7 +56,7 @@ function Personal(connectionModel, methodPackage, utils, formatters) {
  */
 Personal.prototype.getAccounts = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_listAccounts',
         null,
         null,
@@ -73,7 +76,7 @@ Personal.prototype.getAccounts = function (callback) {
  */
 Personal.prototype.newAccount = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_newAccount',
         null,
         null,
@@ -97,11 +100,11 @@ Personal.prototype.newAccount = function (callback) {
  */
 Personal.prototype.unlockAccount = function (address, password, unlockDuration, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_unlockAccount',
         [address, password, unlockDuration],
         [
-            this.formmaters.inputAddressFormatter,
+            this.formatters.inputAddressFormatter,
             null,
             null
         ],
@@ -122,10 +125,10 @@ Personal.prototype.unlockAccount = function (address, password, unlockDuration, 
  */
 Personal.prototype.lockAccount = function (address, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_lockAccount',
         [address],
-        [this.formmaters.inputAddressFormatter],
+        [this.formatters.inputAddressFormatter],
         null
     ).send(callback);
 };
@@ -144,7 +147,7 @@ Personal.prototype.lockAccount = function (address, callback) {
  */
 Personal.prototype.importRawKey = function (keydata, passphrase, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_importRawKey',
         [keydata, passphrase],
         null,
@@ -166,10 +169,13 @@ Personal.prototype.importRawKey = function (keydata, passphrase, callback) {
  */
 Personal.prototype.sendTransaction = function (transactionObject, passphrase, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_sendTransaction',
         [transactionObject, passphrase],
-        [this.formatters.inputTransactionFormatter, null],
+        [
+            this.formatters.inputTransactionFormatter,
+            null
+        ],
         null
     ).send(callback);
 };
@@ -188,10 +194,13 @@ Personal.prototype.sendTransaction = function (transactionObject, passphrase, ca
  */
 Personal.prototype.signTransaction = function (transactionObject, passphrase, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_signTransaction',
         [transactionObject, passphrase],
-        [this.formatters.inputTransactionFormatter, null],
+        [
+            this.formatters.inputTransactionFormatter,
+            null
+        ],
         null
     ).send(callback);
 };
@@ -211,10 +220,14 @@ Personal.prototype.signTransaction = function (transactionObject, passphrase, ca
  */
 Personal.prototype.sign = function (data, address, password, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_sign',
         [data, address, password],
-        [this.formatters.inputSignFormatter, this.formatters.inputAddressFormatter, null],
+        [
+            this.formatters.inputSignFormatter,
+            this.formatters.inputAddressFormatter,
+            null
+        ],
         null
     ).send(callback);
 };
@@ -233,13 +246,30 @@ Personal.prototype.sign = function (data, address, password, callback) {
  */
 Personal.prototype.ecRecover = function (data, signature, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'personal_ecRecover',
         [data, address, password],
-        [this.formatters.inputSignFormatter, this.formatters.inputAddressFormatter, null],
+        [
+            this.formatters.inputSignFormatter,
+            this.formatters.inputAddressFormatter,
+            null
+        ],
         null
     ).send(callback);
 };
+
+/**
+ * Extends setProvider method from AbstractWeb3Object.
+ * This is required for updating the provider also in the sub package Net.
+ *
+ * @param {any} provider
+ */
+Personal.prototype.setProvider = function (provider) {
+    AbstractWeb3Object.setProvider.call(provider);
+    this.net.setProvider(provider);
+};
+
+Personal.prototype = Object.create(AbstractWeb3Object);
 
 module.exports = Personal;
 

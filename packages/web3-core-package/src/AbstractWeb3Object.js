@@ -42,11 +42,22 @@ function AbstractWeb3Object(provider, providersPackage, methodPackage, subscript
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
 
-    this.BatchRequest = batchRequest;
-    this.methodPackage = methodPackage;
-    this.subscriptionPackage = subscriptionPackage;
+    if (typeof batchRequest !== 'undefined') {
+        this.BatchRequest = batchRequest;
+    }
+
+    if (typeof methodPackage !== 'undefined') {
+        this.methodPackage = methodPackage;
+    }
+
+    if (typeof subscriptionPackage !== 'undefined') {
+        this.subscriptionPackage = subscriptionPackage;
+    }
 
     Object.defineProperty(this, 'currentProvider', {
+        get: function() {
+            return this._provider;
+        },
         set: function (provider) {
             if (typeof this._provider.clearSubscriptions !== 'undefined' && this._provider.subscriptions.length > 0) {
                 this._provider.clearSubscriptions();
@@ -68,6 +79,17 @@ function AbstractWeb3Object(provider, providersPackage, methodPackage, subscript
  */
 AbstractWeb3Object.prototype.setProvider = function (provider) {
     this.currentProvider = provider;
+};
+
+/**
+ * Clears all subscriptions and listeners of the provider if it has any subscriptions
+ *
+ * @method clearSubscriptions
+ */
+AbstractWeb3Object.prototype.clearSubscriptions = function() {
+    if (typeof this.currentProvider.clearSubscriptions !== 'undefined' && this.currentProvider.subscriptions.length > 0) {
+        this.currentProvider.clearSubscriptions();
+    }
 };
 
 /**

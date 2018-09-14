@@ -16,25 +16,26 @@
 */
 /**
  * @file Shh.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
 
 "use strict";
 
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+
 /**
- * @param {ConnectionModel} connectionModel
+ * @param {any} provider
+ * @param {ProvidersPackage} providersPackage
  * @param {MethodPackage} methodPackage
  * @param {SubscriptionPackage} subscriptionPackage
+ * @param {Network} net
  *
  * @constructor
  */
-function Shh(connectionModel, methodPackage, subscriptionPackage) {
-    this.connectionModel = connectionModel;
-    this.methodPackage = methodPackage;
-    this.subscriptionPackage = subscriptionPackage;
-    this.clearSubscriptions = this.connectionModel.provider.clearSubscriptions;
-    this.net = this.connectionModel.getNetworkMethodsAsObject();
+function Shh(provider, providersPackage, methodPackage, subscriptionPackage, net) {
+    AbstractWeb3Object.call(provider, providersPackage, methodPackage, subscriptionPackage);
+    this.net = net;
 }
 
 /**
@@ -51,7 +52,7 @@ function Shh(connectionModel, methodPackage, subscriptionPackage) {
  */
 Shh.prototype.subscribe = function (method, options, callback) {
     return this.subscriptionPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         method,
         [options],
         null,
@@ -72,7 +73,7 @@ Shh.prototype.subscribe = function (method, options, callback) {
  */
 Shh.prototype.getVersion = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_version',
         null,
         null,
@@ -90,7 +91,7 @@ Shh.prototype.getVersion = function (callback) {
  */
 Shh.prototype.getInfo = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_info',
         null,
         null,
@@ -109,7 +110,7 @@ Shh.prototype.getInfo = function (callback) {
  */
 Shh.prototype.setMaxMessageSize = function (size, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_setMaxMessageSize',
         size,
         null,
@@ -128,7 +129,7 @@ Shh.prototype.setMaxMessageSize = function (size, callback) {
  */
 Shh.prototype.setMinPoW = function (pow, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_setMinPoW',
         pow,
         null,
@@ -147,7 +148,7 @@ Shh.prototype.setMinPoW = function (pow, callback) {
  */
 Shh.prototype.markTrustedPeer = function (enode, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_markTrustedPeer',
         pow,
         null,
@@ -165,7 +166,7 @@ Shh.prototype.markTrustedPeer = function (enode, callback) {
  */
 Shh.prototype.newKeyPair = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_newKeyPair',
         null,
         null,
@@ -184,7 +185,7 @@ Shh.prototype.newKeyPair = function (callback) {
  */
 Shh.prototype.addPrivateKey = function (privateKey, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_addPrivateKey',
         privateKey,
         null,
@@ -203,7 +204,7 @@ Shh.prototype.addPrivateKey = function (privateKey, callback) {
  */
 Shh.prototype.deleteKeyPair = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_deleteKeyPair',
         id,
         null,
@@ -222,7 +223,7 @@ Shh.prototype.deleteKeyPair = function (id, callback) {
  */
 Shh.prototype.hasKeyPair = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_hasKeyPair',
         id,
         null,
@@ -241,7 +242,7 @@ Shh.prototype.hasKeyPair = function (id, callback) {
  */
 Shh.prototype.getPublicKey = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'id',
         id,
         null,
@@ -260,7 +261,7 @@ Shh.prototype.getPublicKey = function (id, callback) {
  */
 Shh.prototype.getPrivateKey = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_getPrivateKey',
         id,
         null,
@@ -278,7 +279,7 @@ Shh.prototype.getPrivateKey = function (id, callback) {
  */
 Shh.prototype.newSymKey = function (callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_newSymKey',
         null,
         null,
@@ -297,7 +298,7 @@ Shh.prototype.newSymKey = function (callback) {
  */
 Shh.prototype.addSymKey = function (symKey, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_addSymKey',
         symKey,
         null,
@@ -316,7 +317,7 @@ Shh.prototype.addSymKey = function (symKey, callback) {
  */
 Shh.prototype.generateSymKeyFromPassword = function (password, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_generateSymKeyFromPassword',
         password,
         null,
@@ -335,7 +336,7 @@ Shh.prototype.generateSymKeyFromPassword = function (password, callback) {
  */
 Shh.prototype.hasSymKey = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_hasSymKey',
         id,
         null,
@@ -354,7 +355,7 @@ Shh.prototype.hasSymKey = function (id, callback) {
  */
 Shh.prototype.getSymKey = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_getSymKey',
         id,
         null,
@@ -373,7 +374,7 @@ Shh.prototype.getSymKey = function (id, callback) {
  */
 Shh.prototype.deleteSymKey = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_deleteSymKey',
         id,
         null,
@@ -392,7 +393,7 @@ Shh.prototype.deleteSymKey = function (id, callback) {
  */
 Shh.prototype.newMessageFilter = function (options, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_newMessageFilter',
         options,
         null,
@@ -411,7 +412,7 @@ Shh.prototype.newMessageFilter = function (options, callback) {
  */
 Shh.prototype.deleteMessageFilter = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_deleteMessageFilter',
         id,
         null,
@@ -431,7 +432,7 @@ Shh.prototype.deleteMessageFilter = function (id, callback) {
  */
 Shh.prototype.getFilterMessages = function (id, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_getFilterMessages',
         id,
         null,
@@ -452,12 +453,25 @@ Shh.prototype.getFilterMessages = function (id, callback) {
  */
 Shh.prototype.post = function (object, callback) {
     return this.methodPackage.create(
-        this.connectionModel.provider,
+        this.currentProvider,
         'shh_post',
         object,
         null,
         null
     ).send(callback);
 };
+
+/**
+ * Extends setProvider method from AbstractWeb3Object.
+ * This is required for updating the provider also in the sub package Net.
+ *
+ * @param {any} provider
+ */
+Shh.prototype.setProvider = function (provider) {
+    AbstractWeb3Object.setProvider.call(provider);
+    this.net.setProvider(provider);
+};
+
+Shh.prototype = Object.create(AbstractWeb3Object.prototype);
 
 module.exports = Shh;

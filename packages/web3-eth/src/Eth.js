@@ -23,7 +23,7 @@
 "use strict";
 
 var _ = require('underscore');
-var AbstractWeb3Object = require('web3-core-package');
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
  * @param {Network} net
@@ -1001,13 +1001,6 @@ Eth.prototype.getPastLogs = function (options, callback) {
  */
 Eth.prototype.isBlockHash = function (blockParameter) {
     return _.isString(blockParameter) && blockParameter.indexOf('0x') === 0
-};
-
-/**
- * Extends Eth with clearSubscriptions from the current provider
- */
-Eth.prototype.clearSubscriptions = function () {
-    this.currentProvider.clearSubscriptions();
 };
 
 /**
