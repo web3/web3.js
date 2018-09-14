@@ -85,7 +85,7 @@ function signMessage(message){
     
     var state=unlockAccount(defaultAc);
     
-    const msg = new Buffer(message);
+    const msg = Buffer.from(message);
     const sig = ethWeb3.eth.sign(defaultAc, '0x' + msg.toString('hex'));
 
     return sig;
@@ -103,10 +103,10 @@ function verifySignedByAc(message, sig){
 
     // Unfortunately Geth client adds this line to the message as a prefix while signing
     // So while finding who signed it we need to prefix this part 
-    const prefix = new Buffer("\x19Ethereum Signed Message:\n");
-    const msg = new Buffer(message);
+    const prefix = Buffer.from("\x19Ethereum Signed Message:\n");
+    const msg = Buffer.from(message);
     const prefixedMsg = ethWeb3.sha3(
-    Buffer.concat([prefix, new Buffer(String(msg.length)), msg]).toString('utf8')
+    Buffer.concat([prefix, Buffer.from(String(msg.length)), msg]).toString('utf8')
     );
 
     var strPrefixedMsg=prefixedMsg;
