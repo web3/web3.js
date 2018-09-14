@@ -26,6 +26,7 @@ var _ = require('underscore');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
+ * @param {Object} provider
  * @param {Network} net
  * @param {Contract} contract
  * @param {Accounts} accounts
@@ -42,6 +43,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @constructor
  */
 var Eth = function Eth(
+    provider,
     net,
     contract,
     accounts,

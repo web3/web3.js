@@ -35,7 +35,7 @@ module.exports = {
     /**
      * Returns the Shh object.
      *
-     * @param {any} provider
+     * @param {Object} provider
      *
      * @method create
      *

@@ -33,11 +33,11 @@ module.exports = {
      *
      * @method create
      *
-     * @param {ConnectionModel} connectionModel
+     * @param {Object} provider
      *
      * @returns {Bzz}
      */
-    create: function (connectionModel) {
-        return new Bzz(connectionModel.provider);
+    create: function (provider) {
+        return new Bzz(provider);
     }
 };

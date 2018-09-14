@@ -26,7 +26,7 @@ var _ = require('underscore');
 var swarm = require("swarm-js");
 
 /**
- * @param {any} provider
+ * @param {Object} provider
  *
  * @constructor
  */

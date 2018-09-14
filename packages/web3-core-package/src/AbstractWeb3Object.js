@@ -100,7 +100,7 @@ AbstractWeb3Object.prototype.clearSubscriptions = function() {
  * @param {Object} extension
  */
 AbstractWeb3Object.prototype.extend = function (extension) {
-    var namespace = extension.property || null,
+    var namespace = extension.property || false,
         extendedObject,
         self = this;
 

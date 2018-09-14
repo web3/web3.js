@@ -37,7 +37,7 @@ module.exports = {
      *
      * @method create
      *
-     * @params {any} provider
+     * @params {Object} provider
      *
      * @returns {Accounts}
      */

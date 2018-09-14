@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * TODO: Add missing documenation for getAccounts, lockAccount, importRawKey and sendTransaction!
+ * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
  *
  * @param {any} provider
  * @param {ProvidersPackage} providersPackage

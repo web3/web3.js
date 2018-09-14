@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {any} provider
+ * @param {Object} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodPackage} methodPackage
  * @param {SubscriptionPackage} subscriptionPackage

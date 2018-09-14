@@ -40,6 +40,8 @@ module.exports = {
      * @method create
      *
      * @param {Object} provider
+     *
+     * @returns {Network}
      */
     create: function (provider) {
         return new Network(provider, ProvidersPackage, MethodPackage, formatters, utils)

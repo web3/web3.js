@@ -24,9 +24,11 @@
 
 var ProvidersPackage = require('web3-core-providers');
 var EthPackage = require('web3-eth');
+var PersonalPackage = require('web3-eth-personal');
 var Utils = require('web3-utils');
 var ShhPackage = require('web3-shh');
 var BzzPackage = require('web3-bzz');
+var NetworkPackage = require('web3-net');
 var version = require('../package.json').version;
 
 /**
@@ -95,7 +97,7 @@ Web3.modules = {
         return EthPackage.create(ProvidersPackage.resolve(provider, net));
     },
     Net: function (provider, net) {
-        // return this.createConnectionModel(provider, net).getNetworkMethodsAsObject();
+        return NetworkPackage.create(ProvidersPackage.resolve(provider, net));
     },
     Personal: function (provider, net) {
         return PersonalPackage.create(ProvidersPackage.resolve(provider, net));

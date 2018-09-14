@@ -45,11 +45,11 @@ var abi = require('web3-eth-abi');
 /**
  * Should be called to create new contract instance
  *
- * @method Contract
- * @constructor
  * @param {Array} jsonInterface
  * @param {String} address
  * @param {Object} options
+ *
+ * @constructor
  */
 var Contract = function Contract(jsonInterface, address, options) {
     var _this = this,

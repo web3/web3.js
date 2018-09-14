@@ -47,12 +47,13 @@ module.exports = {
      *
      * @method create
      *
-     * @param {any} provider
+     * @param {Object} provider
      *
      * @returns {Eth}
      */
     create: function (provider) {
         return new Eth(
+            provider,
             NetPackage.create(provider),
             ContractPackage.create(provider),
             AccountsPackage.create(provider),
@@ -63,6 +64,7 @@ module.exports = {
             Utils,
             formatters,
             MethodPackage,
+            ProvidersPackage,
             new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage)
         );
     }
