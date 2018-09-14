@@ -30,7 +30,7 @@ var swarm = require("swarm-js");
  *
  * @constructor
  */
-function Bzz(provider) {
+function Bzz(provider) {// TODO: have a closer look on the provider detection for Bzz maybe this could be done with the AbstractWeb3Object too.
     this.givenProvider = Bzz.givenProvider;
     this.currentProvider = null;
     this.setProvider(provider);

@@ -27,6 +27,7 @@ var version = require('./package.json');
 var AccountsPackage = require('web3-eth-accounts');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var PromiEventPackage = require('web3-core-promievent');
+var SubscriptionPackage = require('web3-core-subscription');
 
 module.exports = {
     version: version,
@@ -52,7 +53,8 @@ module.exports = {
             parameters,
             inputFormatters,
             outputFormatters,
-            PromiEventPackage.create()
+            PromiEventPackage.create(),
+            SubscriptionPackage
         );
     }
 };

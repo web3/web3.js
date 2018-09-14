@@ -28,6 +28,7 @@ var MessageSigner = require('../signers/MessageSigner');
 var TransactionConfirmationModel = require('../models/TransactionConfirmationModel');
 var TransactionReceiptValidator = require('../validators/TransactionReceiptValidator');
 var NewHeadsWatcher = require('../watchers/NewHeadsWatcher');
+var Method = require('../Method');
 
 
 /**
@@ -42,12 +43,13 @@ function MethodPackageFactory() { }
  * @method createMethod
  *
  * @param {Object} provider
- * @param {Accounts} coreFactory
+ * @param {Accounts} accounts
  * @param {String} rpcMethod
  * @param {Array} parameters
  * @param {Array} inputFormatters
  * @param {Function} outputFormatter
  * @param {PromiEvent} promiEvent
+ * @param {SubscriptionPackage} subscriptionPackage
  *
  * @returns {Method}
  */
@@ -58,7 +60,8 @@ MethodPackageFactory.prototype.createMethod = function (
     parameters,
     inputFormatters,
     outputFormatter,
-    promiEvent
+    promiEvent,
+    subscriptionPackage
 ) {
     return new Method(
         provider,
@@ -68,7 +71,7 @@ MethodPackageFactory.prototype.createMethod = function (
         inputFormatters,
         outputFormatter,
         promiEvent,
-        this.createTransactionConfirmationWorkflow(provider, coreFactory),
+        this.createTransactionConfirmationWorkflow(provider, subscriptionPackage),
         this.createTransactionSigner(),
         this.createMessageSigner()
     );
@@ -80,16 +83,16 @@ MethodPackageFactory.prototype.createMethod = function (
  * @method createTransactionConfirmationWorkflow
  *
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {SubscriptionPackage} subscriptionPackage
  *
  * @returns {TransactionConfirmationWorkflow}
  */
-MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (provider, coreFactory) {
+MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (provider, subscriptionPackage) {
   new TransactionConfirmationWorkflow(
       provider,
       this.createTransactionConfirmationModel(),
       this.createTransactionReceiptValidator(),
-      this.createNewHeadsWatcher(provider, coreFactory)
+      this.createNewHeadsWatcher(provider, subscriptionPackage)
   );
 };
 
@@ -139,10 +142,10 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function() {
  * Returns NewHeadsWatcher object
  *
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {SubscriptionPackage} subscriptionPackage
  *
  * @returns {NewHeadsWatcher}
  */
-MethodPackageFactory.prototype.createNewHeadsWatcher = function (provider, coreFactory) {
-  return new NewHeadsWatcher(provider, coreFactory);
+MethodPackageFactory.prototype.createNewHeadsWatcher = function (provider, subscriptionPackage) {
+  return new NewHeadsWatcher(provider, subscriptionPackage);
 };

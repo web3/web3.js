@@ -22,12 +22,12 @@
 
 /**
  * @param {Object} provider
- * @param {CoreFactory} coreFactory
+ * @param {SubscriptionPackage} subscriptionPackage
  * @constructor
  */
-function NewHeadsWatcher(provider, coreFactory)  {
+function NewHeadsWatcher(provider, subscriptionPackage)  {
     this.provider = provider;
-    this.coreFactory = coreFactory;
+    this.subscriptionPackage = subscriptionPackage;
     this.confirmationInterval = null;
     this.confirmationSubscription = null;
     this.isPolling = false;
@@ -46,7 +46,7 @@ NewHeadsWatcher.prototype.watch = function (transactionHash) {
     var self = this;
 
     try {
-        this.confirmationSubscription = this.coreFactory.createSubscription(
+        this.confirmationSubscription = this.subscriptionPackage.create(
             this.provider,
             'newHeads',
             transactionHash,
