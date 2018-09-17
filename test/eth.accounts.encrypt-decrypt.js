@@ -11,8 +11,8 @@ for (var i = 0; i < 50; i++) {
 }
 var n = 256;
 var salt = '3a1012583f8be138537bc7cf8a50c925b6fcc01a9f7744c85a18fbdc07999f10';
-var iv = new Buffer('653195c3e2791ac53f3f19b125c18f8c', 'hex');
-var uuid = new Buffer('ff31ddc3e2791ac53f3f19b125c18fff', 'hex');
+var iv = Buffer.from('653195c3e2791ac53f3f19b125c18f8c', 'hex');
+var uuid = Buffer.from('ff31ddc3e2791ac53f3f19b125c18fff', 'hex');
 var pw = 'test';
 
 // tests from https://github.com/Gustav-Simonsson/go-ethereum/blob/7cc6b801e0967e5ebfa26b9f670675acea6e3a20/accounts/testdata/v3_test_vector.json
@@ -120,7 +120,7 @@ describe("eth", function () {
                 var acc = ethAccounts.create();
 
                 // create ethereumjs-wallet account
-                var ethWall = ethereumWallet.fromPrivateKey(new Buffer(acc.privateKey.replace('0x',''),'hex'));
+                var ethWall = ethereumWallet.fromPrivateKey(Buffer.from(acc.privateKey.replace('0x',''),'hex'));
 
                 // compare addresses
                 assert.equal(acc.address, ethWall.getChecksumAddressString());
