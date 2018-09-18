@@ -29,6 +29,7 @@ var NetworkPackage = require('web3-net');
 var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
+var MethodModelFactory = require('./factories/MethodModelFactory');
 
 module.exports = {
     version: version,
@@ -43,7 +44,16 @@ module.exports = {
      * @returns {Personal}
      */
     createPersonal: function (provider) {
-        return new Personal(provider, ProvidersPackage, MethodPackage, NetworkPackage.createNetwork(provider), Utils, formatters);
+        return new Personal(
+            provider,
+            ProvidersPackage,
+            null,
+            MethodPackage.createMethodService(),
+            new MethodModelFactory(Utils, formatters),
+            NetworkPackage.createNetwork(provider),
+            Utils,
+            formatters
+        );
     }
 };
 

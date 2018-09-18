@@ -60,6 +60,15 @@ var CallMethodModel = require('./methods/CallMethodModel');
 var GetStroageAtMethodModel = require('./methods/GetStroageAtMethodModel');
 var EstimateGasMethodModel = require('./methods/EstimateGasMethodModel');
 var GetPastLogsMethodModel = require('./methods/GetPastLogsMethodModel');
+var EcRecoverMethodModel = require('./methods/personal/EcRecoverMethodModel');
+var ImportRawKeyMethodModel = require('./methods/personal/ImportRawKeyMethodModel');
+var ListAccountsMethodModel = require('./methods/personal/ListAccountsMethodModel');
+var LockAccountMethodModel = require('./methods/personal/LockAccountMethodModel');
+var NewAccountMethodModel = require('./methods/personal/NewAccountMethodModel');
+var PersonalSendTransactionMethodModel = require('./methods/personal/PersonalSendTransactionMethodModel');
+var PersonalSignMethodModel = require('./methods/personal/PersonalSignMethodModel');
+var PersonalSignTransactionMethodModel = require('./methods/personal/PersonalSignTransactionMethodModel');
+var UnlockAccountMethodModel = require('./methods/personal/UnlockAccountMethodModel');
 
 module.exports = {
     version: version,
@@ -98,6 +107,15 @@ module.exports = {
     SubmitWorkMethodModel: SubmitWorkMethodModel,
     GetWorkMethodModel: GetWorkMethodModel,
     GetPastLogsMethodModel: GetPastLogsMethodModel,
+    EcRecoverMethodModel: EcRecoverMethodModel,
+    ImportRawKeyMethodModel: ImportRawKeyMethodModel,
+    ListAccountsMethodModel: ListAccountsMethodModel,
+    LockAccountMethodModel: LockAccountMethodModel,
+    NewAccountMethodModel: NewAccountMethodModel,
+    PersonalSendTransactionMethodModel: PersonalSendTransactionMethodModel,
+    PersonalSignMethodModel: PersonalSignMethodModel,
+    PersonalSignTransactionMethodModel: PersonalSignTransactionMethodModel,
+    UnlockAccountMethodModel: UnlockAccountMethodModel,
 
     /**
      * Creates the Method object
