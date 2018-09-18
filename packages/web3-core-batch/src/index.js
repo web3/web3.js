@@ -21,7 +21,7 @@
 "use strict";
 
 var version = require('./package.json').version;
-var Batch = require('./Batch');
+var BatchRequest = require('./BatchRequest');
 var JSONRpcMapper = require('web3-core-providers').JSONRpcMapper;
 var JSONRpcResponseValidator = require('web3-core-providers').JSONRpcResponseValidator;
 
@@ -31,13 +31,13 @@ module.exports = {
     /**
      * Returns the Batch object
      *
-     * @method create
+     * @method createBatchRequest
      *
      * @param {AbstractProviderAdapter} provider
      *
-     * @returns {Batch}
+     * @returns {BatchRequest}
      */
-    create: function (provider) {
-        return new Batch(provider, JSONRpcMapper, JSONRpcResponseValidator);
+    createBatchRequest: function (provider) {
+        return new BatchRequest(provider, JSONRpcMapper, JSONRpcResponseValidator);
     }
 };

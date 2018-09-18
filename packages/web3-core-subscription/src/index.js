@@ -31,7 +31,7 @@ module.exports = {
     /**
      * Creates Subscription object
      *
-     * @method create
+     * @method createSubscription
      *
      * @param {Object} provider
      * @param {String} type
@@ -42,7 +42,7 @@ module.exports = {
      *
      * @returns {Subscription}
      */
-    create: function (provider, type, parameters, inputFormatters, outputFormatter, subscriptionType) {
+    createSubscription: function (provider, type, parameters, inputFormatters, outputFormatter, subscriptionType) {
         return new Subscription(provider, type, parameters, inputFormatters, outputFormatter, subscriptionType)
     }
 };

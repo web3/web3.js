@@ -31,9 +31,9 @@ module.exports = {
     /**
      * Returns PromiEvent object
      *
-     * @method create
+     * @method createPromiEvent
      */
-    create: function() {
+    createPromiEvent: function() {
         return new PromiEvent();
     }
 };

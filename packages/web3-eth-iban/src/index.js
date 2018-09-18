@@ -27,15 +27,5 @@ var Iban = require('./Iban.js');
 
 module.exports = {
     version: version,
-
-    /**
-     * Returns the uninitiadted Iban object.
-     *
-     * @method create
-     *
-     * @returns {Iban}
-     */
-    create: function () {
-        return Iban;
-    }
+    Iban: Iban
 };

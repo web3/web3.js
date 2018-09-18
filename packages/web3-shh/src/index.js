@@ -37,11 +37,11 @@ module.exports = {
      *
      * @param {Object} provider
      *
-     * @method create
+     * @method createShh
      *
      * @returns {Shh}
      */
-    create: function (provider) {
-        return new Shh(provider, ProvidersPackage, MethodPackage, SubscriptionPackage, NetworkPackage.create(provider));
+    createShh: function (provider) {
+        return new Shh(provider, ProvidersPackage, MethodPackage, SubscriptionPackage, NetworkPackage.createNetwork(provider));
     }
 };

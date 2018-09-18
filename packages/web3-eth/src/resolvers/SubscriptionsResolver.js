@@ -34,7 +34,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @constructor
  */
 function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage, providersPackage) {
-    AbstractWeb3Object.call(provider, providersPackage, null, subscriptionPackage);
+    AbstractWeb3Object.call(this, provider, providersPackage, null, null, null, subscriptionPackage);
     this.formatters = formatters;
     this.promiEventPackage = promiEventPackage;
 }
@@ -89,7 +89,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
         parameters = [];
     }
 
-    return this.subscriptionPackage.create(
+    return this.subscriptionPackage.createSubscription(
         this.currentProvider,
         type,
         parameters,
@@ -111,7 +111,7 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, callback) {
-    var promiEvent = this.promiEventPackage.create();
+    var promiEvent = this.promiEventPackage.createPromiEvent();
 
     if (this.hasFromBlockProperty(parameters[1])) {
         this.handleLogsSubscriptionWithFromBlock(parameters, promiEvent, callback);
@@ -198,7 +198,7 @@ SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (
  * @returns {eventifiedPromise}
  */
 SubscriptionsResolver.prototype.getSyncingSubscription = function (callback) {
-    var promiEvent = this.promiEventPackage.create();
+    var promiEvent = this.promiEventPackage.createPromiEvent();
 
     this.getSubscription(
         'syncing',

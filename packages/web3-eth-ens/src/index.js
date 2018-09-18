@@ -29,13 +29,13 @@ module.exports = {
     /**
      * Returns the ENS object
      *
-     * @method create
+     * @method createENS
      *
      * @param {Eth} eth
      *
      * @returns {ENS}
      */
-    create: function (eth) { //TODO: Remove circular dependency and refactore ENS because of the new method and connection handling
+    createENS: function (eth) { //TODO: Remove circular dependency and refactore ENS because of the new method and connection handling
         return new ENS(eth);
     }
 };

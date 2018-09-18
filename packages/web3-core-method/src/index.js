@@ -38,7 +38,7 @@ module.exports = {
     /**
      * Creates the Method object
      *
-     * @method create
+     * @method createMethodService
      *
      * @returns {MethodService}
      */

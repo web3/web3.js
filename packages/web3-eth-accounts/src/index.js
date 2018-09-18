@@ -35,13 +35,13 @@ module.exports = {
     /**
      * Returns the Accounts object
      *
-     * @method create
+     * @method createAccounts
      *
      * @params {Object} provider
      *
      * @returns {Accounts}
      */
-    create: function(provider) {
+    createAccounts: function(provider) {
         return new Accounts(provider, ProvidersPackage, MethodPackage, Utils, formatters);
     }
 };

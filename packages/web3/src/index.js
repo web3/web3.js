@@ -51,9 +51,9 @@ var Web3 = function Web3(provider, net) {
     }
 
     this.utils = Utils;
-    this.eth = EthPackage.create(this._provider);
-    this.shh = ShhPackage.create(this._provider);
-    this.bzz = BzzPackage.create(this._provider);
+    this.eth = EthPackage.createEth(this._provider);
+    this.shh = ShhPackage.createShh(this._provider);
+    this.bzz = BzzPackage.createBzz(this._provider);
 
     /**
      * Defines accessors for connectionModel
@@ -94,19 +94,19 @@ Web3.utils = Utils;
 
 Web3.modules = {
     Eth: function (provider, net) {
-        return EthPackage.create(ProvidersPackage.resolve(provider, net));
+        return EthPackage.createEth(ProvidersPackage.resolve(provider, net));
     },
     Net: function (provider, net) {
-        return NetworkPackage.create(ProvidersPackage.resolve(provider, net));
+        return NetworkPackage.createNetwork(ProvidersPackage.resolve(provider, net));
     },
     Personal: function (provider, net) {
-        return PersonalPackage.create(ProvidersPackage.resolve(provider, net));
+        return PersonalPackage.createPersonal(ProvidersPackage.resolve(provider, net));
     },
     Shh: function (provider, net) {
-        return ShhPackage.create(ProvidersPackage.resolve(provider, net));
+        return ShhPackage.createShh(ProvidersPackage.resolve(provider, net));
     },
     Bzz: function (provider, net) {
-        return new BzzPackage.create(ProvidersPackage.resolve(provider, net));
+        return new BzzPackage.createBzz(ProvidersPackage.resolve(provider, net));
     }
 };
 

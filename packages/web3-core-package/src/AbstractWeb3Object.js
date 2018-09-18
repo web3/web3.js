@@ -42,9 +42,10 @@ function AbstractWeb3Object(
     subscriptionPackage,
     batchRequestPackage
 ) {
-    this.methodModelFactory = methodModelFactory;
-    this.methodService = methodService;
-    this.accounts = accounts;
+    if (!this.isDependencyGiven(providersPackage) && !this.isDependencyGiven(provider)) {
+        throw Error('Provider and the ProviderPackage not found!');
+    }
+
     this.providersPackage = providersPackage;
     this._provider = this.providersPackage.resolve(provider);
     this.givenProvider = this.providersPackage.detect();
@@ -54,16 +55,6 @@ function AbstractWeb3Object(
         IpcProvider: this.providersPackage.IpcProvider,
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
-
-    if (typeof batchRequestPackage !== 'undefined') {
-        this.BatchRequest = function BatchRequest() {
-            return batchRequestPackage.create(self.currentProvider);
-        };
-    }
-
-    if (typeof subscriptionPackage !== 'undefined') {
-        this.subscriptionPackage = subscriptionPackage;
-    }
 
     Object.defineProperty(this, 'currentProvider', {
         get: function() {
@@ -79,12 +70,44 @@ function AbstractWeb3Object(
         enumerable: true
     });
 
-    return new Proxy(this,
-        {
-            get: this.proxyHandler
-        }
-    )
+    if (this.isDependencyGiven(batchRequestPackage)) {
+        this.BatchRequest = function BatchRequest() {
+            return batchRequestPackage.createBatchRequest(self.currentProvider);
+        };
+    }
+
+    if (this.isDependencyGiven(subscriptionPackage)) {
+        this.subscriptionPackage = subscriptionPackage;
+    }
+
+    if (this.isDependencyGiven(accounts)) {
+        this.accounts = accounts;
+    }
+
+    if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodService)) {
+        this.methodModelFactory = methodModelFactory;
+        this.methodService = methodService;
+
+        return new Proxy(this,
+            {
+                get: this.proxyHandler
+            }
+        )
+    }
 }
+
+/**
+ * Checks if the parameter is defined
+ *
+ * @method isDependencyGiven
+ *
+ * @param {*} object
+ *
+ * @returns {boolean}
+ */
+AbstractWeb3Object.prototype.isDependencyGiven = function(object) {
+    return object !== null || typeof object !== 'undefined';
+};
 
 /**
  * Sets the currentProvider and provider property
@@ -149,6 +172,16 @@ AbstractWeb3Object.prototype.extend = function (extension) {
     }
 };
 
+/**
+ * Handles method execution
+ *
+ * @method proxyHandler
+ *
+ * @param {Object} target
+ * @param {String} name
+ *
+ * @returns {*}
+ */
 AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
     if (target.methodModelFactory.hasMethodModel(name)) {
         var methodModel = target.methodModelFactory.createMethodModel(name);

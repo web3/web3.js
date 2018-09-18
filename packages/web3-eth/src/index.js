@@ -24,9 +24,10 @@
 
 var version = require('./package.json').version;
 var SubscriptionsResolver = require('./resolvers/SubscriptionsResolver');
+var MethodModelFactory = require('./factories/MethodModelFactory');
 var Eth = require('./Eth');
 var NetPackage = require('web3-net');
-var ContractPackage = require('web3-eth-contract');
+var Contract = require('web3-eth-contract').Contract;
 var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
 var ENSPackage = require('web3-eth-ens');
@@ -34,10 +35,11 @@ var AbiPackage = require('web3-eth-abi');
 var SubscriptionPackage = require('web3-core-subscription');
 var PromiEventPackage = require('web3-core-promiEvent');
 var ProvidersPackage = require('web3-core-providers');
-var Iban = require('web3-eth-iban').create();
+var Iban = require('web3-eth-iban').Iban;
 var formatters = require('web3-core-helpers').formatters;
 var Utils = require('web3-utils');
 var MethodPackage = require('web3-core-method');
+var BatchRequestPackage = require('web3-core-batch');
 
 module.exports = {
     version: version,
@@ -45,27 +47,31 @@ module.exports = {
     /**
      * Creates the Eth object
      *
-     * @method create
+     * @method createEth
      *
      * @param {Object} provider
      *
      * @returns {Eth}
      */
-    create: function (provider) {
+    createEth: function (provider) {
+        var accounts = AccountsPackage.createAccounts(provider);
+
         return new Eth(
             provider,
-            NetPackage.create(provider),
-            ContractPackage.create(provider),
-            AccountsPackage.create(provider),
-            PersonalPackage.create(provider),
+            NetPackage.createNetwork(provider),
+            Contract,
+            accounts,
+            PersonalPackage.createPersonal(provider),
             Iban,
-            AbiPackage.create(utils),
-            ENSPackage.create(provider),
+            AbiPackage.createAbiCoder(utils),
+            ENSPackage.createENS(provider),
             Utils,
             formatters,
-            MethodPackage,
             ProvidersPackage,
-            new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage)
+            new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage),
+            MethodPackage.createMethodService(),
+            new MethodModelFactory(formatters, accounts),
+            BatchRequestPackage
         );
     }
 };

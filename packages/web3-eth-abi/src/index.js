@@ -31,11 +31,11 @@ module.exports = {
     /**
      * Returns the ABICoder object
      *
-     * @method create
+     * @method createAbiCoder
      *
      * @returns {ABICoder}
      */
-    create: function() {
+    createAbiCoder: function() {
         return new ABICoder();
     }
 };

@@ -27,8 +27,5 @@ var Contract = require('./Contract');
 
 module.exports = {
     version: version,
-
-    create: function () {// TODO: Refactor the contract object because of the new provider, method and subscription handling.
-        return Contract;
-    }
+    Contract: Contract
 };

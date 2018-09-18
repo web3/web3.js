@@ -37,13 +37,13 @@ module.exports = {
     /**
      * Creates the Network Object
      *
-     * @method create
+     * @method createNetwork
      *
      * @param {Object} provider
      *
      * @returns {Network}
      */
-    create: function (provider) {
+    createNetwork: function (provider) {
         return new Network(provider, ProvidersPackage, MethodPackage, formatters, utils)
     }
 };

@@ -33,7 +33,7 @@ var _ = require('underscore');
  *
  * @constructor
  */
-function Batch(provider, jsonRpcMapper, jsonRpcResponseValidator) {
+function BatchRequest(provider, jsonRpcMapper, jsonRpcResponseValidator) {
     this.provider = provider;
     this.jsonRpcMapper = jsonRpcMapper;
     this.jsonRpcResponseValidator = jsonRpcResponseValidator;
@@ -47,7 +47,7 @@ function Batch(provider, jsonRpcMapper, jsonRpcResponseValidator) {
  *
  * @param {Object} request
  */
-Batch.prototype.add = function (request) {
+BatchRequest.prototype.add = function (request) {
     this.requests.push(request);
 };
 
@@ -56,7 +56,7 @@ Batch.prototype.add = function (request) {
  *
  * @method execute
  */
-Batch.prototype.execute = function () {
+BatchRequest.prototype.execute = function () {
     var self = this;
     this.provider.sendBatch(
         this.jsonRpcMapper.toBatchPayload(this.requests),
@@ -100,8 +100,8 @@ Batch.prototype.execute = function () {
  *
  * @returns {Boolean}
  */
-Batch.prototype.hasOutputFormatter = function (request) {
+BatchRequest.prototype.hasOutputFormatter = function (request) {
     return _.isFunction(request.methodModel.outputFormatter);
 };
 
-module.exports = Batch;
+module.exports = BatchRequest;

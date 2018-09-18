@@ -31,13 +31,13 @@ module.exports = {
     /**
      * Returns the Bzz object
      *
-     * @method create
+     * @method createBzz
      *
      * @param {Object} provider
      *
      * @returns {Bzz}
      */
-    create: function (provider) {
+    createBzz: function (provider) {
         return new Bzz(provider);
     }
 };

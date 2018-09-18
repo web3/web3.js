@@ -36,14 +36,14 @@ module.exports = {
     /**
      * Returns the Personal object
      *
-     * @param {any} provider
+     * @method createPersonal
      *
-     * @method create
+     * @param {any} provider
      *
      * @returns {Personal}
      */
-    create: function (provider) {
-        return new Personal(provider, ProvidersPackage, MethodPackage, NetworkPackage.create(provider), Utils, formatters);
+    createPersonal: function (provider) {
+        return new Personal(provider, ProvidersPackage, MethodPackage, NetworkPackage.createNetwork(provider), Utils, formatters);
     }
 };
 

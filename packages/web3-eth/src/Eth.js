@@ -36,9 +36,11 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {ENS} ens
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {MethodPackage} methodPackage
  * @param {ProvidersPackage} providersPackage
  * @param {SubscriptionsResolver} subscriptionsResolver
+ * @param {MethodModelFactory} methodModelFactory
+ * @param {MethodService} methodService
+ * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
  */
@@ -53,11 +55,23 @@ var Eth = function Eth(
     ens,
     utils,
     formatters,
-    methodPackage,
     providersPackage,
-    subscriptionsResolver
+    subscriptionsResolver,
+    methodService,
+    methodModelFactory,
+    batchRequestPackage
 ) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodPackage);
+    AbstractWeb3Object.call(
+        this,
+        provider,
+        providersPackage,
+        accounts,
+        methodService,
+        methodModelFactory,
+        null,
+        batchRequestPackage
+    );
+
     this.net = net;
     this.Contract = contract;
     this.accounts = accounts;
