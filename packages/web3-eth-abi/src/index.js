@@ -226,9 +226,16 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
-    var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
     var returnValue = new Result();
     returnValue.__length__ = 0;
+
+    if (outputs.length == 1 && outputs[0] == "raw") {
+        returnValue[0] = bytes;
+        returnValue.__length__++;
+        return returnValue;
+    }
+
+    var res = ethersAbiCoder.decode(this.mapTypes(outputs), '0x' + bytes.replace(/0x/i, ''));
 
     outputs.forEach(function (output, i) {
         var decodedValue = res[returnValue.__length__];
