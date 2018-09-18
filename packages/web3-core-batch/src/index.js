@@ -22,6 +22,7 @@
 
 var version = require('./package.json').version;
 var Batch = require('./Batch');
+var JSONRpcMapper = require('web3-core-providers').JSONRpcMapper;
 
 module.exports = {
     version: version,
@@ -29,11 +30,13 @@ module.exports = {
     /**
      * Returns the Batch object
      *
-     * @param {ConnectionModel} connectionModel
+     * @method create
+     *
+     * @param {AbstractProviderAdapter} provider
      *
      * @returns {Batch}
      */
-    create: function (connectionModel) {
-        return new Batch(connectionModel);
+    create: function (provider) {
+        return new Batch(provider, JSONRpcMapper);
     }
 };

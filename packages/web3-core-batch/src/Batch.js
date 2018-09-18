@@ -16,24 +16,27 @@
 */
 /**
  * @file Batch.js
- * @author Marek Kotewicz <marek@ethdev.com>
- * @date 2015
+ * @author Samuel Furter <samuel@ethereum.org>, Marek Kotewicz <marek@ethdev.com>
+ * @date 2018
  */
 
 "use strict";
 
 var errors = require('web3-core-helpers').errors;
+var _ = require('underscore');
 
 /**
  *
  * @param {AbstractProviderAdapter} provider
  * @param {JSONRpcMapper} jsonRpcMapper
+ * @param {JSONRpcResponseValidator} jsonRpcResponseValidator
  *
  * @constructor
  */
-function Batch(provider, jsonRpcMapper) {
+function Batch(provider, jsonRpcMapper, jsonRpcResponseValidator) {
     this.provider = provider;
     this.jsonRpcMapper = jsonRpcMapper;
+    this.jsonRpcResponseValidator = jsonRpcResponseValidator;
     this.requests = [];
 }
 
@@ -54,34 +57,51 @@ Batch.prototype.add = function (request) {
  * @method execute
  */
 Batch.prototype.execute = function () {
-    var requests = this.requests;
+    var self = this;
+    this.provider.sendBatch(
+        this.jsonRpcMapper.toBatchPayload(this.requests),
+        function (err, results) {
+            self.requests.forEach(function (request, index) {
+                var result = results[index] || null;
 
-    var payload = this.jsonRpcMapper.toBatchPayload(this.requests);
-    var request = this.requests[0]
-    request.method().apply(request.arguments);
-    this.provider.send(payload, function (err, results) {
-        results = results || [];
-        requests.map(function (request, index) {
-            return results[index] || {};
-        }).forEach(function (result, index) {
-            if (requests[index].callback) {
-                if (result && result.error) {
-                    return requests[index].callback(errors.ErrorResponse(result));
-                }
+                if (_.isFunction(request.callback)) {
+                    if (_.isObject(result) && result.error) {
+                        request.callback(errors.ErrorResponse(result));
+                    }
 
-                if (!JSONRpcResponseValidator.isValid(result)) {
-                    return requests[index].callback(errors.InvalidResponse(result));
-                }
+                    if (!this.jsonRpcResponseValidator.isValid(result)) {
+                        request.callback(errors.InvalidResponse(result));
+                    }
 
-                try {
-                    requests[index].callback(null, requests[index].format ? requests[index].format(result.result) : result.result);
-                } catch (err) {
-                    requests[index].callback(err);
+                    try {
+                        var mappedResult = result.result;
+
+                        if (self.hasOutputFormatter(request)) {
+                            mappedResult = request.methodModel.outputFormatter(mappedResult);
+                        }
+
+                        request.callback(null, mappedResult);
+
+                    } catch (err) {
+                        request.callback(err, null);
+                    }
                 }
-            }
-        });
-    });
+            });
+        }
+    );
+};
+
+/**
+ * Checks if the method has an outputFormatter defined
+ *
+ * @method hasOutputFormatter
+ *
+ * @param {Object} request
+ *
+ * @returns {Boolean}
+ */
+Batch.prototype.hasOutputFormatter = function (request) {
+    return _.isFunction(request.methodModel.outputFormatter);
 };
 
 module.exports = Batch;
-

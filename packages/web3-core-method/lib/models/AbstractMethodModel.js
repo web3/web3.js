@@ -45,9 +45,45 @@ function AbstractMethodModel(rpcMethod, parametersAmount, inputFormatters, outpu
  * @returns {Object}
  */
 AbstractMethodModel.prototype.request = function () {
+    var mappedFunctionArguments = this.mapFunctionArguments(arguments);
+
     return {
         methodModel: this,
-        parameters: arguments
+        parameters: mappedFunctionArguments.parameters,
+        callback: mappedFunctionArguments.callback
+    }
+};
+
+/**
+ * Splits the parameters and the callback function and returns it as object
+ *
+ * @param {Array} args
+ *
+ * @returns {Object}
+ */
+AbstractMethodModel.mapFunctionArguments = function (args) {
+    var parameters = args;
+    var callback = null;
+
+    if (arguments.length < this.parametersAmount) {
+        throw new Error(
+            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + arguments.length
+        );
+    }
+
+    if (arguments.length > this.parametersAmount) {
+        callback = arguments.slice(-1);
+        if(!_.isFunction(callback)) {
+            throw new Error(
+                'The latest parameter should be a function otherwise it can not be used as callback'
+            );
+        }
+        parameters = arguments.slice(0, -1);
+    }
+
+    return {
+        callback: callback,
+        parameters: parameters
     }
 };
 

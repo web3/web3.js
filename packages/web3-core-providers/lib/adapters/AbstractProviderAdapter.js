@@ -58,6 +58,20 @@ AbstractProviderAdapter.prototype.send = function (method, parameters) {
 };
 
 /**
+ * Sends batch payload
+ *
+ * @method sendBatch
+ *
+ * @param {Array} payload
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ */
+AbstractProviderAdapter.prototype.sendBatch = function (payload, callback) {
+    self.provider.send(payload, callback);
+};
+
+/**
  * Handles the JSON-RPC response
  *
  * @method handleResponse

@@ -60,13 +60,17 @@ JSONRpcMapper.toPayload = function (method, params) {
  *
  * @method toBatchPayload
  *
- * @param {Array} messages, an array of objects with method (required) and params (optional) fields
+ * @param {Array} requests, an array of objects with method (required) and params (optional) fields
  *
  * @returns {Array} batch payload
  */
-JSONRpcMapper.toBatchPayload = function (messages) {
-    return messages.map(function (message) {
-        return Jsonrpc.toPayload(message.method, message.params);
+JSONRpcMapper.toBatchPayload = function (requests) {
+    return requests.map(function (request) {
+        if(_.isFunction(request.methodModel.beforeExecution)) {
+            request.methodModel.beforeExecution();
+        }
+
+        return JSONRpcMapper.toPayload(request.methodModel.rpcMethod, request.parameters);
     });
 };
 
