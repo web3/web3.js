@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
+var AbstractMethodModel = require('web3-core-method').AbstractMethodModel;
 
 /**
  * @param {Utils} utils
