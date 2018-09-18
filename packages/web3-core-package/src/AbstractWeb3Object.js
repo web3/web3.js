@@ -29,7 +29,7 @@
  * @param {MethodService} methodService
  * @param {MethodModelFactory} methodModelFactory
  * @param {SubscriptionPackage} subscriptionPackage
- * @param {BatchRequest} batchRequest
+ * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
  */
@@ -40,7 +40,7 @@ function AbstractWeb3Object(
     methodService,
     methodModelFactory,
     subscriptionPackage,
-    batchRequest
+    batchRequestPackage
 ) {
     this.methodModelFactory = methodModelFactory;
     this.methodService = methodService;
@@ -55,12 +55,10 @@ function AbstractWeb3Object(
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
 
-    if (typeof batchRequest !== 'undefined') {
-        this.BatchRequest = batchRequest;
-    }
-
-    if (typeof methodPackage !== 'undefined') {
-        this.methodPackage = methodPackage;
+    if (typeof batchRequestPackage !== 'undefined') {
+        this.BatchRequest = function BatchRequest() {
+            return batchRequestPackage.create(self.currentProvider);
+        };
     }
 
     if (typeof subscriptionPackage !== 'undefined') {

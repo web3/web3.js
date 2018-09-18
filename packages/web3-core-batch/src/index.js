@@ -23,6 +23,7 @@
 var version = require('./package.json').version;
 var Batch = require('./Batch');
 var JSONRpcMapper = require('web3-core-providers').JSONRpcMapper;
+var JSONRpcResponseValidator = require('web3-core-providers').JSONRpcResponseValidator;
 
 module.exports = {
     version: version,
@@ -37,6 +38,6 @@ module.exports = {
      * @returns {Batch}
      */
     create: function (provider) {
-        return new Batch(provider, JSONRpcMapper);
+        return new Batch(provider, JSONRpcMapper, JSONRpcResponseValidator);
     }
 };
