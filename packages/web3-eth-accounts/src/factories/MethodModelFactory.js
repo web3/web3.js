@@ -25,17 +25,18 @@
 var web3CoreMethod = require('web3-core-method');
 
 /**
+ * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function MethodModelFactory(formatters, accounts) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, formatters, accounts);
+function MethodModelFactory(utils, formatters) {
+    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
 
     this.methodModels = {
         getGasPrice: web3CoreMethod.GetGasPriceMethodModel,
-        getTransactionCount: web3CoreMethod.GetTransactionCountMethodModel
+        getTransactionCount: web3CoreMethod.GetTransactionCountMethodModel,
+        getId: web3CoreMethod.GetIdMethodModel
     };
 
 }

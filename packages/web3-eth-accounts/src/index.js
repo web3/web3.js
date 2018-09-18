@@ -28,6 +28,7 @@ var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-helpers').formatters;
+var MethodModelFactory = require('./factories/MethodModelFactory');
 
 module.exports = {
     version: version,
@@ -42,6 +43,13 @@ module.exports = {
      * @returns {Accounts}
      */
     createAccounts: function(provider) {
-        return new Accounts(provider, ProvidersPackage, MethodPackage, Utils, formatters);
+        return new Accounts(
+            provider,
+            ProvidersPackage,
+            MethodPackage.createMethodService(),
+            new MethodModelFactory(Utils, formatters),
+            Utils,
+            formatters
+        );
     }
 };

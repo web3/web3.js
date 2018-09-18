@@ -70,7 +70,7 @@ module.exports = {
             ProvidersPackage,
             new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage),
             MethodPackage.createMethodService(),
-            new MethodModelFactory(formatters, accounts),
+            new MethodModelFactory(Utils, formatters, accounts),
             BatchRequestPackage
         );
     }

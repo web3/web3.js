@@ -85,7 +85,7 @@ MethodService.prototype.send = function (methodModel, provider, accounts, parame
     var self = this;
     var promiEvent = this.promiEventPackage.createPromiEvent();
 
-    if (accounts.wallet.length > 0) {
+    if (accounts && accounts.wallet.length > 0) {
         if (this.methodModel.isSign()) {
             return this.messageSigner.sign(parameters[0], parameters[1], accounts);
         }

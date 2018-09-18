@@ -31,6 +31,7 @@ var SubscriptionPackage = require('web3-core-subscription');
 
 // Methods
 var GetProtocolVersionMethodModel = require('./methods/network/GetProtocolVersionMethodModel');
+var GetIdMethodModel = require('./methods/network/GetIdMethodModel');
 var GetNodeInfoMethodModel = require('./methods/node/GetNodeInfoMethodModel');
 var GetCoinbaseMethodModel = require('./methods/node/GetCoinbaseMethodModel');
 var IsMiningMethodModel = require('./methods/node/IsMiningMethodModel');
@@ -67,8 +68,9 @@ module.exports = {
     /**
      * Methods
      */
-    GetNodeInfoMethodModel: GetNodeInfoMethodModel,
     GetProtocolVersionMethodModel: GetProtocolVersionMethodModel,
+    GetIdMethodModel: GetIdMethodModel,
+    GetNodeInfoMethodModel: GetNodeInfoMethodModel,
     GetCoinbaseMethodModel: GetCoinbaseMethodModel,
     IsMiningMethodModel: IsMiningMethodModel,
     GetHashrateMethodModel: GetHashrateMethodModel,

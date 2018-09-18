@@ -56,45 +56,18 @@ var makeEven = function (hex) {
 /**
  * @param {any} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodPackage} methodPackage
+ * @param {MethodService} methodService
+ * @param {MethodModelFactory} methodModelFactory
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-var Accounts = function Accounts(provider, providersPackage, methodPackage, utils, formatters) {
-    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
+var Accounts = function Accounts(provider, providersPackage, methodService, methodModelFactory, utils, formatters) {
+    AbstractWeb3Object.call(this, provider, providersPackage, this, methodService, methodModelFactory);
     this.utils = utils;
     this.formatters = formatters;
     this.wallet = new Wallet(this);
-};
-
-/**
- * Gets the gasPrice of the connected node
- *
- * @method getGasPrice
- *
- * @returns {Promise<String>}
- */
-Accounts.prototype.getGasPrice = function () {
-    return this.methodPackage.create(this.currentProvider, 'eth_gasPrice').send();
-};
-
-/**
- * Gets the transaction count of an address
- *
- * @method getTransactionCount
- *
- * @param {String} address
- *
- * @returns {Promise<Number>}
- */
-Accounts.prototype.getTransactionCount = function (address) {
-    if (this.utils.isAddress(address)) {
-        throw new Error('Address '+ address +' is not a valid address to get the "transactionCount".');
-    }
-
-    return this.methodPackage.create(this.currentProvider, 'eth_getTransactionCount', [address, 'latest'], ).send();
 };
 
 /**
@@ -254,7 +227,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
     // Otherwise, get the missing info from the Ethereum Node
     return Promise.all([
-        isNot(tx.chainId) ? _this.connectionModel.getId() : tx.chainId,
+        isNot(tx.chainId) ? _this.getId() : tx.chainId,
         isNot(tx.gasPrice) ? _this.getGasPrice() : tx.gasPrice,
         isNot(tx.nonce) ? _this.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
     ]).then(function (args) {

@@ -15,12 +15,14 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AbstractMethodModelFactory.js
+ * @file GetIdMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
+
+var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 
 /**
  * @param {Utils} utils
@@ -29,19 +31,17 @@
  *
  * @constructor
  */
-function AbstractMethodModelFactory(utils, formatters, accounts) {
-    this.utils = utils;
-    this.formatters = formatters;
-    this.accounts = accounts;
-    this.methodModels = {};
+function GetIdMethodModel(utils, formatters, accounts) {
+    AbstractMethodModel.call(
+        this,
+        'eth_protocolVersion',
+        0,
+        null,
+        utils.hexToNumber,
+        accounts
+    )
 }
 
-AbstractMethodModelFactory.prototype.hasMethodModel = function (name) {
-    return typeof this.methodModels[name] !== 'undefined';
-};
+GetIdMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
-AbstractMethodModelFactory.prototype.createMethodModel = function (name) {
-    return new this.methodModels[name](this.utils, this.formatters, this.accounts);
-};
-
-module.exports = AbstractMethodModelFactory;
+module.exports = GetIdMethodModel;
