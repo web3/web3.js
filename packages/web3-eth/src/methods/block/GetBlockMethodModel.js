@@ -47,7 +47,7 @@ function GetBlockMethodModel(utils, formatters, accounts) {
     )
 }
 
-GetBlockMethodModel.prototype.beforeExecute = function (parameters) {
+GetBlockMethodModel.prototype.beforeExecution = function (parameters) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getBlockByHash';
     }

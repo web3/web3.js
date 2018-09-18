@@ -45,7 +45,7 @@ function GetTransactionFromBlockMethodModel(utils, formatters, accounts) {
     )
 }
 
-GetTransactionFromBlockMethodModel.prototype.beforeExecute = function (parameters) {
+GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (parameters) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }

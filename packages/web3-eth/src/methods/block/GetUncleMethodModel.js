@@ -45,7 +45,7 @@ function GetUncleMethodModel(utils, formatters, accounts) {
     )
 }
 
-GetUncleMethodModel.prototype.beforeExecute = function (parameters) {
+GetUncleMethodModel.prototype.beforeExecution = function (parameters) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
     }

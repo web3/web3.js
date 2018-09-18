@@ -44,7 +44,7 @@ function GetBlockUncleCountMethodModel(utils, formatters, accounts) {
     )
 }
 
-GetBlockUncleCountMethodModel.prototype.beforeExecute = function (parameters) {
+GetBlockUncleCountMethodModel.prototype.beforeExecution = function (parameters) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getUncleCountByBlockHash';
     }

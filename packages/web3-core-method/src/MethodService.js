@@ -55,6 +55,10 @@ function MethodService(
 MethodService.prototype.execute = function () {
     var mappedFunctionArguments = this.mapFunctionArguments(arguments);
 
+    if (_.isFunction(arguments[0].beforeExecution)) {
+        arguments[0].beforeExecute(mappedFunctionArguments.parameters);
+    }
+
     return this.send(
         arguments[0],
         arguments[1],
