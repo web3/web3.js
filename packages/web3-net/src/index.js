@@ -26,9 +26,11 @@
 var version = require('../package.json').version;
 var ProvidersPackage = require('web3-core-providers');
 var MethodPackage = require('web3-core-method');
+var AccountsPackage = require('web3-eth-accounts');
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var Network = require('./Network');
+var MethodModelFactory = require('./factories/MethodModelFactory');
 
 
 module.exports = {
@@ -44,6 +46,16 @@ module.exports = {
      * @returns {Network}
      */
     createNetwork: function (provider) {
-        return new Network(provider, ProvidersPackage, MethodPackage, formatters, utils)
+        var accounts = AccountsPackage.createAccounts();
+        
+        return new Network(
+            provider,
+            ProvidersPackage,
+            accounts,
+            MethodPackage.createMethodService(),
+            new MethodModelFactory(Utils, formatters, accounts),
+            formatters,
+            utils
+        )
     }
 };

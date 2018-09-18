@@ -27,11 +27,12 @@ var web3CoreMethod = require('web3-core-method');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Accounts} accounts
  *
  * @constructor
  */
-function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
+function MethodModelFactory(utils, formatters, accounts) {
+    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters, accounts);
 
     this.methodModels = {
         getAccounts: web3CoreMethod.GetAccountsMethodModel,

@@ -25,6 +25,7 @@
 var version = require('./package.json').version;
 var Personal = require('./Personal');
 var MethodPackage = require('web3-core-method');
+var AccountsPackage = require('web3-eth-accounts');
 var NetworkPackage = require('web3-net');
 var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
@@ -44,12 +45,14 @@ module.exports = {
      * @returns {Personal}
      */
     createPersonal: function (provider) {
+        var accounts = AccountsPackage.createAccounts(provider);
+
         return new Personal(
             provider,
             ProvidersPackage,
-            null,
+            accounts,
             MethodPackage.createMethodService(),
-            new MethodModelFactory(Utils, formatters),
+            new MethodModelFactory(Utils, formatters, accounts),
             NetworkPackage.createNetwork(provider),
             Utils,
             formatters

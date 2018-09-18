@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetIdMethodModel.js
+ * @file VersionMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -31,7 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  *
  * @constructor
  */
-function GetIdMethodModel(utils, formatters, accounts) {
+function VersionMethodModel(utils, formatters, accounts) {
     AbstractMethodModel.call(
         this,
         'eth_protocolVersion',
@@ -42,6 +42,6 @@ function GetIdMethodModel(utils, formatters, accounts) {
     )
 }
 
-GetIdMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
-module.exports = GetIdMethodModel;
+module.exports = VersionMethodModel;

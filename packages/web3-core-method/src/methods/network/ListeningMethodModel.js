@@ -15,32 +15,33 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodModelFactory.js
+ * @file ListeningMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
-var web3CoreMethod = require('web3-core-method');
+var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 
 /**
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Accounts} accounts
  *
  * @constructor
  */
-function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
-
-    this.methodModels = {
-        getGasPrice: web3CoreMethod.GetGasPriceMethodModel,
-        getTransactionCount: web3CoreMethod.GetTransactionCountMethodModel,
-        getId: web3CoreMethod.VersionMethodModel
-    };
-
+function ListeningMethodModel(utils, formatters, accounts) {
+    AbstractMethodModel.call(
+        this,
+        'net_listening',
+        0,
+        null,
+        null,
+        accounts
+    )
 }
 
-MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
+ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
-module.exports = MethodModelFactory;
+module.exports = ListeningMethodModel;

@@ -27,22 +27,18 @@ var web3CoreMethod = require('web3-core-method');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Accounts} accounts
  *
  * @constructor
  */
-function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
+function MethodModelFactory(utils, formatters, accounts) {
+    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters, accounts);
 
     this.methodModels = {
-        getAccounts: web3CoreMethod.GetAccountsMethodModel,
-        newAccount: web3CoreMethod.NewAccountMethodModel,
-        unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
-        lockAccount: web3CoreMethod.LockAccountMethodModel,
-        importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
-        sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
-        signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
-        sign: web3CoreMethod.PersonalSignMethodModel,
-        ecRecover: web3CoreMethod.EcRecoverMethodModel
+        getId: web3CoreMethod.VersionMethodModel,
+        getBlock: web3CoreMethod.GetBlockMethodModel,
+        isListening: web3CoreMethod.ListeningMethodModel,
+        getPeerCount: web3CoreMethod.PeerCountMethodModel,
     };
 
 }

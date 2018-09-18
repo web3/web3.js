@@ -28,14 +28,16 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 /**
  * @param {Object} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodPackage} methodPackage
+ * @param {Accounts} accounts
+ * @param {MethodService} methodService
+ * @param {MethodModelFactory} methodModelFactory
  * @param {Object} formatters
  * @param {Object} utils
  *
  * @constructor
  */
-function Network(provider, providersPackage, methodPackage, formatters, utils) {
-    AbstractWeb3Object.call(provider, providersPackage, methodPackage);
+function Network(provider, providersPackage, accounts, methodService, methodModelFactory, formatters, utils) {
+    AbstractWeb3Object.call(this, provider, providersPackage, accounts, methodService, methodModelFactory);
     this.formatters = formatters;
     this.utils = utils;
 }
@@ -57,7 +59,7 @@ Network.prototype.getNetworkType = function (callback) {
     return this.getId().then(function (givenId) {
         id = givenId;
 
-        return self.getBlockByNumber(0, false);
+        return self.getBlock(0, false);
     }).then(function (genesis) {
         var returnValue = 'private';
         switch (genesis) {
@@ -92,72 +94,6 @@ Network.prototype.getNetworkType = function (callback) {
 
         throw err;
     });
-};
-
-/**
- * Executes the JSON-RPC method net_version
- *
- * @method getId
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Promise|eventifiedPromise}
- */
-Network.prototype.getId = function (callback) {
-    return this.methodPackage.create(this.provider, 'net_version', [], null, this.utils.hexToNumber).send(callback);
-};
-
-/**
- * Executes the JSON-RPC method net_listening
- *
- * @method isListening
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Promise|eventifiedPromise}
- */
-Network.prototype.isListening = function (callback) {
-    return this.methodPackage.create(this.provider, 'net_listening', [], null, null).send(callback);
-};
-
-/**
- * Executes the JSON-RPC method net_peerCount
- *
- * @method getPeerCount
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Promise|eventifiedPromise}
- */
-Network.prototype.getPeerCount = function (callback) {
-    return this.methodPackage.create(this.provider, 'net_peerCount', [], null, this.utils.hexToNumber).send(callback);
-};
-
-/**
- * Gets a block by his number
- *
- * @method getBlockByNumber
- *
- * @param {Number} blockNumber
- * @param {Boolean} returnTransactionObjects
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Promise|eventifiedPromise}
- */
-Network.prototype.getBlockByNumber = function (blockNumber, returnTransactionObjects, callback) {
-    return this.methodPackage.create(
-        this.provider,
-        'eth_getBlockByNumber',
-        [blockNumber, returnTransactionObjects],
-        [this.formatters.inputBlockNumberFormatter, function (val) {
-            return !!val
-        }],
-        this.formatters.outputBlockFormatter
-    ).send(callback);
 };
 
 Network.prototype = Object.create(AbstractWeb3Object.prototype);
