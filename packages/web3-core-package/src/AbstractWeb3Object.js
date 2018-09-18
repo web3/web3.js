@@ -156,9 +156,12 @@ AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
         var methodModel = target.methodModelFactory.createMethodModel(name);
 
         var anonymousFunction = function() {
-            var methodArguments = [methodModel, target.currentProvider, target.accounts].concat(arguments);
-
-            return target.methodService.execute().apply(methodArguments);
+            return target.methodService.execute(
+                methodModel,
+                target.currentProvider,
+                target.accounts,
+                arguments
+            );
         };
 
         anonymousFunction.methodModel = methodModel;

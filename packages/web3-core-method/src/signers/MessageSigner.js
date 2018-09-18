@@ -35,17 +35,18 @@ function MessageSigner() { }
  * @method sign
  *
  * @param {String} data
- * @param {any} address
+ * @param {String} address
+ * @param {Accounts} accounts
  *
- * @returns {String | boolean}
+ * @returns {String | Error}
  */
-MessageSigner.prototype.sign = function(data, address) {
-    var wallet = this.getWallet(address);
+MessageSigner.prototype.sign = function(data, address, accounts) {
+    var wallet = this.getWallet(address, accounts);
     if (wallet && wallet.privateKey) {
-        return this.accounts.sign(data, wallet.privateKey).signature;
+        return accounts.sign(data, wallet.privateKey).signature;
     }
 
-    return false;
+    return new Error('Wallet or privateKey for wallet is not set!');
 };
 
 // Inherit from AbstractSigner

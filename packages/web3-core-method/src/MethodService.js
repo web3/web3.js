@@ -50,19 +50,24 @@ function MethodService(
  *
  * @method execute
  *
+ * @param {AbstractMethodModel} methodModel
+ * @param {AbstractProviderAdapter} provider
+ * @param {Accounts} accounts
+ * @param {Array} methodArguments
+ *
  * @returns {Promise|eventifiedPromise|String|boolean}
  */
-MethodService.prototype.execute = function () {
-    var mappedFunctionArguments = this.mapFunctionArguments(arguments);
+MethodService.prototype.execute = function (methodModel, provider, accounts, methodArguments) {
+    var mappedFunctionArguments = this.mapFunctionArguments(methodArguments);
 
-    if (_.isFunction(arguments[0].beforeExecution)) {
-        arguments[0].beforeExecute(mappedFunctionArguments.parameters);
+    if (_.isFunction(methodModel.beforeExecution)) {
+        methodModel.beforeExecution(mappedFunctionArguments.parameters);
     }
 
     return this.send(
-        arguments[0],
-        arguments[1],
-        arguments[2],
+        methodModel,
+        provider,
+        accounts,
         mappedFunctionArguments.parameters,
         mappedFunctionArguments.callback
     );
@@ -87,21 +92,32 @@ MethodService.prototype.send = function (methodModel, provider, accounts, parame
 
         if (this.methodModel.isSendTransaction()) {
             this.methodModel.rpcMethod = 'eth_sendRawTransaction';
-            return this.sendTransaction(
-                promiEvent,
-                [this.transactionSigner.sign(parameters[0], accounts).rawTransaction],
-                null,
-                callback
-            );
+            this.transactionSigner.sign(parameters[0], accounts).then(function(response) {
+                self.sendTransaction(
+                    methodModel,
+                    provider,
+                    promiEvent,
+                    [response.rawTransaction],
+                    null,
+                    callback
+                );
+            }).catch(function(error) {
+                promiEvent.reject(error);
+                promiEvent.on('error', error);
+                promiEvent.eventEmitter.removeAllListeners();
+                callback(error, null);
+            });
+
+            return promiEvent;
         }
     }
 
     if (this.methodModel.isSendTransaction() || this.methodModel.isSendRawTransaction()) {
         if (this.isGasPriceDefined()) {
             return this.sendTransaction(
+                methodModel,
                 provider,
                 promiEvent,
-                methodModel,
                 parameters,
                 null,
                 callback
@@ -110,9 +126,9 @@ MethodService.prototype.send = function (methodModel, provider, accounts, parame
 
         this.getGasPrice().then(function (gasPrice) {
             self.sendTransaction(
+                methodModel,
                 provider,
                 promiEvent,
-                methodModel,
                 parameters,
                 gasPrice,
                 callback
@@ -126,7 +142,7 @@ MethodService.prototype.send = function (methodModel, provider, accounts, parame
         return this.messageSigner.sign(parameters[0], parameters[1], accounts);
     }
 
-    return this.call(provider, methodModel, parameters, callback);
+    return this.call(methodModel, provider, parameters, callback);
 };
 
 /**
@@ -145,15 +161,15 @@ MethodService.prototype.isGasPriceDefined = function () {
  *
  * @method call
  *
- * @param {AbstractProviderAdapter} provider
  * @param {AbstractMethodModel} methodModel
+ * @param {AbstractProviderAdapter} provider
  * @param {Array} parameters
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise}
  */
-MethodService.prototype.call = function (provider, methodModel, parameters, callback) {
+MethodService.prototype.call = function (methodModel, provider, parameters, callback) {
     var self = this;
 
     return provider.send(
@@ -205,9 +221,9 @@ MethodService.prototype.mapFunctionArguments = function (args) {
  *
  * @method sendTransaction
  *
+ * @param {AbstractMethodModel} methodModel
  * @param {AbstractProviderAdapter} provider
  * @param {PromiEvent} promiEvent
- * @param {AbstractMethodModel} methodModel
  * @param {Array} parameters
  * @param {String} gasPrice
  * @param {Function} callback
@@ -215,7 +231,7 @@ MethodService.prototype.mapFunctionArguments = function (args) {
  * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
-MethodService.prototype.sendTransaction = function (provider, promiEvent, methodModel, parameters, gasPrice, callback) {
+MethodService.prototype.sendTransaction = function (methodModel, provider, promiEvent, parameters, gasPrice, callback) {
     var self = this;
 
     if (gasPrice && _.isObject(parameters[0])) {
@@ -227,6 +243,7 @@ MethodService.prototype.sendTransaction = function (provider, promiEvent, method
         this.formatInput(parameters, methodModel.inputFormatters)
     ).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
+            provider,
             response,
             promiEvent,
             callback

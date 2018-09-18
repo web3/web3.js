@@ -21,12 +21,11 @@
  */
 
 /**
- * @param {Object} provider
  * @param {SubscriptionPackage} subscriptionPackage
+ *
  * @constructor
  */
-function NewHeadsWatcher(provider, subscriptionPackage)  {
-    this.provider = provider;
+function NewHeadsWatcher(subscriptionPackage)  {
     this.subscriptionPackage = subscriptionPackage;
     this.confirmationInterval = null;
     this.confirmationSubscription = null;
@@ -38,16 +37,17 @@ function NewHeadsWatcher(provider, subscriptionPackage)  {
  *
  * @method watch
  *
+ * @param {AbstractProviderAdapter} provider
  * @param {String} transactionHash
  *
  * @returns {this}
  */
-NewHeadsWatcher.prototype.watch = function (transactionHash) {
+NewHeadsWatcher.prototype.watch = function (provider, transactionHash) {
     var self = this;
 
     try {
         this.confirmationSubscription = this.subscriptionPackage.create(
-            this.provider,
+            provider,
             'newHeads',
             transactionHash,
             null,

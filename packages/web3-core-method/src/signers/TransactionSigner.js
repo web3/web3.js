@@ -32,18 +32,26 @@ function TransactionSigner() { }
  * @method sign
  *
  * @param {Object} transaction
+ * @param {Accounts} accounts
  *
- * @returns {boolean | String}
+ * @returns {Promise<boolean|String>}
  */
-TransactionSigner.prototype.sign = function (transaction) {
-    var wallet = this.getWallet(transaction.from);
-    if (wallet && wallet.privateKey) {
-        delete transaction.from;
+TransactionSigner.prototype.sign = function (transaction, accounts) {
+    var wallet = this.getWallet(transaction.from, accounts);
 
-        return this.accounts.signTransaction(transaction, wallet.privateKey);
-    }
+    return new Promise(function(resolve, reject) {
+        if (wallet && wallet.privateKey) {
+            delete transaction.from;
 
-    return false;
+            accounts.signTransaction(transaction, wallet.privateKey).then(function(response) {
+                resolve(response);
+            }).catch(function(error) {
+                reject(error);
+            });
+        }
+
+        reject(new Error('Wallet or privateKey for wallet is not set!'));
+    });
 };
 
 // Inherit from AbstractSigner

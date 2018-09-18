@@ -25,24 +25,22 @@
 var _ = require('underscore');
 
 /**
- * @param {Accounts} accounts
  * @constructor
  */
-function AbstractSigner(accounts) {
-    this.accounts = accounts;
-}
+function AbstractSigner() { }
 
 /**
  * Get wallet for address with accounts package
  *
  * @param {any} from
+ * @param {Accounts} accounts
  *
  * @returns {any}
  */
-AbstractSigner.prototype.getWallet = function (from) {
+AbstractSigner.prototype.getWallet = function (from, accounts) {
     // is index given
     if (_.isNumber(from)) {
-        return this.accounts.wallet[from];
+        return accounts.wallet[from];
 
     }
 
@@ -51,7 +49,7 @@ AbstractSigner.prototype.getWallet = function (from) {
         return from;
     }
 
-    var searchedWalletForAddress = this.accounts.wallet[from.toLowerCase()];
+    var searchedWalletForAddress = accounts.wallet[from.toLowerCase()];
     if (searchedWalletForAddress) {
         return searchedWalletForAddress;
     }

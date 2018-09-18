@@ -31,7 +31,6 @@
  * @constructor
  */
 function TransactionConfirmationWorkflow(
-    provider,
     transactionConfirmationModel,
     transactionReceiptValidator,
     newHeadsWatcher
@@ -39,7 +38,6 @@ function TransactionConfirmationWorkflow(
     this.transactionConfirmationModel = transactionConfirmationModel;
     this.transactionReceiptValidator = transactionReceiptValidator;
     this.newHeadsWatcher = newHeadsWatcher;
-    this.provider = provider;
 }
 
 /**
@@ -47,6 +45,7 @@ function TransactionConfirmationWorkflow(
  *
  * @method execute
  *
+ * @param {AbstractProviderAdapter} provider
  * @param {String} transactionHash
  * @param {Object} promiEvent
  * @param {Function} callback
@@ -54,13 +53,14 @@ function TransactionConfirmationWorkflow(
  * @callback callback callback(error, result)
  */
 TransactionConfirmationWorkflow.prototype.execute = function (
+    provider,
     transactionHash,
     promiEvent,
     callback
 ) {
     var self = this;
 
-    this.getTransactionReceipt(transactionHash).then(function (receipt) {
+    this.getTransactionReceipt(provider, transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
             var validationResult = this.transactionReceiptValidator.validate(receipt);
             if (validationResult === true) {
@@ -74,10 +74,10 @@ TransactionConfirmationWorkflow.prototype.execute = function (
             return;
         }
 
-        self.newHeadsWatcher.watch().on('newHead', function () {
+        self.newHeadsWatcher.watch(provider).on('newHead', function () {
             self.transactionConfirmationModel.timeoutCounter++;
             if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
-                self.getTransactionReceipt(transactionHash).then(function (receipt) {
+                self.getTransactionReceipt(provider, transactionHash).then(function (receipt) {
                     var validationResult = self.transactionReceiptValidator.validate(receipt);
                     if (validationResult === true) {
                         self.transactionConfirmationModel.addConfirmation(receipt);
@@ -123,12 +123,13 @@ TransactionConfirmationWorkflow.prototype.execute = function (
  *
  * @method execute
  *
+ * @param {AbstractProviderAdapter} provider
  * @param {String} transactionHash
  *
  * @returns {Promise<Object>}
  */
-TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (transactionHash) {
-    return this.provider.send('eth_getTransactionReceipt', transactionHash).then(function (receipt) {
+TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (provider, transactionHash) {
+    return provider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
         return this.formatters.outputTransactionReceiptFormatter(receipt);
     })
 };

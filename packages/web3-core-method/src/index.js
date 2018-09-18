@@ -24,7 +24,6 @@
 "use strict";
 
 var version = require('./package.json');
-var AccountsPackage = require('web3-eth-accounts');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
 var AbstractMethodModel = require('../lib/models/AbstractMethodModel');
@@ -41,23 +40,11 @@ module.exports = {
      *
      * @method create
      *
-     * @param {Object} provider
-     * @param {String} rpcMethod
-     * @param {Array} parameters
-     * @param {Function} inputFormatters
-     * @param {Function} outputFormatters
-     *
-     * @returns {Method}
+     * @returns {MethodService}
      */
-    create: function (provider, rpcMethod, parameters, inputFormatters, outputFormatters) {
-        return new MethodPackageFactory().createMethod(
-            provider,
-            AccountsPackage.create(),
-            rpcMethod,
-            parameters,
-            inputFormatters,
-            outputFormatters,
-            PromiEventPackage.create(),
+    createMethodService: function () {
+        return new MethodPackageFactory().createMethodService(
+            PromiEventPackage,
             SubscriptionPackage
         );
     }

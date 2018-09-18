@@ -28,7 +28,7 @@ var MessageSigner = require('../signers/MessageSigner');
 var TransactionConfirmationModel = require('../models/TransactionConfirmationModel');
 var TransactionReceiptValidator = require('../validators/TransactionReceiptValidator');
 var NewHeadsWatcher = require('../watchers/NewHeadsWatcher');
-var Method = require('../Method');
+var MethodService = require('../MethodService');
 
 
 /**
@@ -42,36 +42,18 @@ function MethodPackageFactory() { }
  *
  * @method createMethod
  *
- * @param {Object} provider
- * @param {Accounts} accounts
- * @param {String} rpcMethod
- * @param {Array} parameters
- * @param {Array} inputFormatters
- * @param {Function} outputFormatter
  * @param {PromiEvent} promiEvent
  * @param {SubscriptionPackage} subscriptionPackage
  *
- * @returns {Method}
+ * @returns {MethodService}
  */
-MethodPackageFactory.prototype.createMethod = function (
-    provider,
-    accounts,
-    rpcMethod,
-    parameters,
-    inputFormatters,
-    outputFormatter,
+MethodPackageFactory.prototype.createMethodService = function (
     promiEvent,
     subscriptionPackage
 ) {
-    return new Method(
-        provider,
-        accounts,
-        rpcMethod,
-        parameters,
-        inputFormatters,
-        outputFormatter,
+    return new MethodService(
         promiEvent,
-        this.createTransactionConfirmationWorkflow(provider, subscriptionPackage),
+        this.createTransactionConfirmationWorkflow(subscriptionPackage),
         this.createTransactionSigner(),
         this.createMessageSigner()
     );
@@ -82,17 +64,15 @@ MethodPackageFactory.prototype.createMethod = function (
  *
  * @method createTransactionConfirmationWorkflow
  *
- * @param {Object} provider
  * @param {SubscriptionPackage} subscriptionPackage
  *
  * @returns {TransactionConfirmationWorkflow}
  */
-MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (provider, subscriptionPackage) {
+MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionPackage) {
     new TransactionConfirmationWorkflow(
-        provider,
         this.createTransactionConfirmationModel(),
         this.createTransactionReceiptValidator(),
-        this.createNewHeadsWatcher(provider, subscriptionPackage)
+        this.createNewHeadsWatcher(subscriptionPackage)
     );
 };
 
@@ -141,11 +121,10 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
 /**
  * Returns NewHeadsWatcher object
  *
- * @param {Object} provider
  * @param {SubscriptionPackage} subscriptionPackage
  *
  * @returns {NewHeadsWatcher}
  */
-MethodPackageFactory.prototype.createNewHeadsWatcher = function (provider, subscriptionPackage) {
-    return new NewHeadsWatcher(provider, subscriptionPackage);
+MethodPackageFactory.prototype.createNewHeadsWatcher = function (subscriptionPackage) {
+    return new NewHeadsWatcher(subscriptionPackage);
 };
