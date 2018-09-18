@@ -26,14 +26,76 @@
 var version = require('./package.json');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
-var AbstractMethodModel = require('../lib/models/AbstractMethodModel');
 var PromiEventPackage = require('web3-core-promievent');
 var SubscriptionPackage = require('web3-core-subscription');
+
+// Methods
+var GetProtocolVersionMethodModel = require('./methods/network/GetProtocolVersionMethodModel');
+var GetNodeInfoMethodModel = require('./methods/node/GetNodeInfoMethodModel');
+var GetCoinbaseMethodModel = require('./methods/node/GetCoinbaseMethodModel');
+var IsMiningMethodModel = require('./methods/node/IsMiningMethodModel');
+var GetHashrateMethodModel = require('./methods/node/GetHashrateMethodModel');
+var IsSyncingMethodModel = require('./methods/node/IsSyncingMethodModel');
+var GetGasPriceMethodModel = require('./methods/node/GetGasPriceMethodModel');
+var SubmitWorkMethodModel = require('./methods/node/SubmitWorkMethodModel');
+var GetWorkMethodModel = require('./methods/node/GetWorkMethodModel');
+var GetAccountsMethodModel = require('./methods/account/GetAccountsMethodModel');
+var GetBalanceMethodModel = require('./methods/account/GetBalanceMethodModel');
+var GetTransactionCountMethodModel = require('./methods/account/GetTransactionCountMethodModel');
+var GetBlockNumberMethodModel = require('./methods/block/GetBlockNumberMethodModel');
+var GetBlockMethodModel = require('./methods/block/GetBlockMethodModel');
+var GetUncleMethodModel = require('./methods/block/GetUncleMethodModel');
+var GetBlockTransactionCountMethodModel = require('./methods/block/GetBlockTransactionCountMethodModel');
+var GetBlockUncleCountMethodModel = require('./methods/block/GetBlockUncleCountMethodModel');
+var GetTransactionMethodModel = require('./methods/transaction/GetTransactionMethodModel');
+var GetTransactionFromBlockMethodModel = require('./methods/transaction/GetTransactionFromBlockMethodModel');
+var GetTransactionReceipt = require('./methods/transaction/GetTransactionReceipt');
+var SendSignedTransactionMethodModel = require('./methods/transaction/SendSignedTransactionMethodModel');
+var SignTransactionMethodModel = require('./methods/transaction/SignTransactionMethodModel');
+var SendTransactionMethodModel = require('./methods/transaction/SendTransactionMethodModel');
+var GetCodeMethodModel = require('./methods/GetCodeMethodModel');
+var SignMethodModel = require('./methods/SignMethodModel');
+var CallMethodModel = require('./methods/CallMethodModel');
+var GetStroageAtMethodModel = require('./methods/GetStroageAtMethodModel');
+var EstimateGasMethodModel = require('./methods/EstimateGasMethodModel');
+var GetPastLogsMethodModel = require('./methods/GetPastLogsMethodModel');
 
 module.exports = {
     version: version,
     AbstractMethodModelFactory: AbstractMethodModelFactory,
-    AbstractMethodModel: AbstractMethodModel,
+
+    /**
+     * Methods
+     */
+    GetNodeInfoMethodModel: GetNodeInfoMethodModel,
+    GetProtocolVersionMethodModel: GetProtocolVersionMethodModel,
+    GetCoinbaseMethodModel: GetCoinbaseMethodModel,
+    IsMiningMethodModel: IsMiningMethodModel,
+    GetHashrateMethodModel: GetHashrateMethodModel,
+    IsSyncingMethodModel: IsSyncingMethodModel,
+    GetGasPriceMethodModel: GetGasPriceMethodModel,
+    GetAccountsMethodModel: GetAccountsMethodModel,
+    GetBlockNumberMethodModel: GetBlockNumberMethodModel,
+    GetBalanceMethodModel: GetBalanceMethodModel,
+    GetStroageAtMethodModel: GetStroageAtMethodModel,
+    GetCodeMethodModel: GetCodeMethodModel,
+    GetBlockMethodModel: GetBlockMethodModel,
+    GetUncleMethodModel: GetUncleMethodModel,
+    GetBlockTransactionCountMethodModel: GetBlockTransactionCountMethodModel,
+    GetBlockUncleCountMethodModel: GetBlockUncleCountMethodModel,
+    GetTransactionMethodModel: GetTransactionMethodModel,
+    GetTransactionFromBlockMethodModel: GetTransactionFromBlockMethodModel,
+    GetTransactionReceipt: GetTransactionReceipt,
+    GetTransactionCountMethodModel: GetTransactionCountMethodModel,
+    SendSignedTransactionMethodModel: SendSignedTransactionMethodModel,
+    SignTransactionMethodModel: SignTransactionMethodModel,
+    SendTransactionMethodModel: SendTransactionMethodModel,
+    SignMethodModel: SignMethodModel,
+    CallMethodModel: CallMethodModel,
+    EstimateGasMethodModel: EstimateGasMethodModel,
+    SubmitWorkMethodModel: SubmitWorkMethodModel,
+    GetWorkMethodModel: GetWorkMethodModel,
+    GetPastLogsMethodModel: GetPastLogsMethodModel,
 
     /**
      * Creates the Method object
