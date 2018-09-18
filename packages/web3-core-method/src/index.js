@@ -26,11 +26,15 @@
 var version = require('./package.json');
 var AccountsPackage = require('web3-eth-accounts');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
+var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
+var AbstractMethodModel = require('../lib/models/AbstractMethodModel');
 var PromiEventPackage = require('web3-core-promievent');
 var SubscriptionPackage = require('web3-core-subscription');
 
 module.exports = {
     version: version,
+    AbstractMethodModelFactory: AbstractMethodModelFactory,
+    AbstractMethodModel: AbstractMethodModel,
 
     /**
      * Creates the Method object

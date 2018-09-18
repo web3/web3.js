@@ -88,12 +88,12 @@ MethodPackageFactory.prototype.createMethod = function (
  * @returns {TransactionConfirmationWorkflow}
  */
 MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (provider, subscriptionPackage) {
-  new TransactionConfirmationWorkflow(
-      provider,
-      this.createTransactionConfirmationModel(),
-      this.createTransactionReceiptValidator(),
-      this.createNewHeadsWatcher(provider, subscriptionPackage)
-  );
+    new TransactionConfirmationWorkflow(
+        provider,
+        this.createTransactionConfirmationModel(),
+        this.createTransactionReceiptValidator(),
+        this.createNewHeadsWatcher(provider, subscriptionPackage)
+    );
 };
 
 /**
@@ -104,7 +104,7 @@ MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function 
  * @returns {TransactionSigner}
  */
 MethodPackageFactory.prototype.createTransactionSigner = function () {
-  return new TransactionSigner();
+    return new TransactionSigner();
 };
 
 /**
@@ -115,7 +115,7 @@ MethodPackageFactory.prototype.createTransactionSigner = function () {
  * @returns {MessageSigner}
  */
 MethodPackageFactory.prototype.createMessageSigner = function () {
-  new MessageSigner();
+    return new MessageSigner();
 };
 
 /**
@@ -125,7 +125,7 @@ MethodPackageFactory.prototype.createMessageSigner = function () {
  *
  * @returns {TransactionConfirmationModel}
  */
-MethodPackageFactory.prototype.createTransactionConfirmationModel = function() {
+MethodPackageFactory.prototype.createTransactionConfirmationModel = function () {
     return new TransactionConfirmationModel()
 };
 
@@ -134,7 +134,7 @@ MethodPackageFactory.prototype.createTransactionConfirmationModel = function() {
  *
  * @returns {TransactionReceiptValidator}
  */
-MethodPackageFactory.prototype.createTransactionReceiptValidator = function() {
+MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
     return new TransactionReceiptValidator();
 };
 
@@ -147,5 +147,5 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function() {
  * @returns {NewHeadsWatcher}
  */
 MethodPackageFactory.prototype.createNewHeadsWatcher = function (provider, subscriptionPackage) {
-  return new NewHeadsWatcher(provider, subscriptionPackage);
+    return new NewHeadsWatcher(provider, subscriptionPackage);
 };

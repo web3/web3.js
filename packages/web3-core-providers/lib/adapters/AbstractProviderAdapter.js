@@ -49,8 +49,8 @@ AbstractProviderAdapter.prototype.send = function (method, parameters) {
     var self = this;
     var payload = JSONRpcMapper.toPayload(method, parameters);
 
-    return new Promise(function(resolve, reject) {
-        self.provider.send(payload, function(error, response) {
+    return new Promise(function (resolve, reject) {
+        self.provider.send(payload, function (error, response) {
             self.handleResponse(reject, resolve, error, response)
         });
 
@@ -70,7 +70,7 @@ AbstractProviderAdapter.prototype.send = function (method, parameters) {
 AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, error, response) {
     if (response && response.id && payload.id !== response.id) {
         reject(
-            new Error('Wrong response id "'+ response.id +'" (expected: "'+ payload.id +'") in '+ JSON.stringify(payload))
+            new Error('Wrong response id "' + response.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload))
         );
 
         return;
@@ -83,13 +83,13 @@ AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, er
     }
 
 
-    if(!JSONRpcResponseValidator.isValid(response.result)) {
+    if (!JSONRpcResponseValidator.isValid(response.result)) {
         reject(errors.InvalidResponse(response));
 
         return;
     }
 
-    if(!error) {
+    if (!error) {
         resolve(response.result);
 
         return;

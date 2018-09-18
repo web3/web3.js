@@ -25,12 +25,14 @@ var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
+var JSONRpcMapper = require('../lib/mappers/JSONRpcMapper');
 
 module.exports = {
     version: version,
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
     WebsocketProvider: WebsocketProvider,
+    JSONRpcMapper: JSONRpcMapper,
 
     /**
      * Resolves the right provider adapter by the given parameters

@@ -22,13 +22,20 @@
 
 "use strict";
 
-var JSONRpcResponseValidator = require('web3-provider').JSONRpcResponseValidator;
 var errors = require('web3-core-helpers').errors;
 
-var Batch = function (provider) {
+/**
+ *
+ * @param {AbstractProviderAdapter} provider
+ * @param {JSONRpcMapper} jsonRpcMapper
+ *
+ * @constructor
+ */
+function Batch(provider, jsonRpcMapper) {
     this.provider = provider;
+    this.jsonRpcMapper = jsonRpcMapper;
     this.requests = [];
-};
+}
 
 /**
  * Should be called to add create new request to batch request
@@ -46,9 +53,13 @@ Batch.prototype.add = function (request) {
  *
  * @method execute
  */
-Batch.prototype.execute = function () {// TODO: refactore because of new method package
+Batch.prototype.execute = function () {
     var requests = this.requests;
-    this.provider.sendBatch(requests, function (err, results) {
+
+    var payload = this.jsonRpcMapper.toBatchPayload(this.requests);
+    var request = this.requests[0]
+    request.method().apply(request.arguments);
+    this.provider.send(payload, function (err, results) {
         results = results || [];
         requests.map(function (request, index) {
             return results[index] || {};

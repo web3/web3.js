@@ -16,7 +16,7 @@
  */
 
 /**
- * @file Method.js
+ * @file MethodService.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -26,85 +26,114 @@
 var _ = require('underscore');
 
 /**
- * @param {Object} provider
- * @param {Accounts} accounts
- * @param {String} rpcMethod
- * @param {Array} parameters
- * @param {Array} inputFormatters
- * @param {Function} outputFormatter
- * @param {PromiEvent} promiEvent
+ * @param {PromiEvent} promiEventPackage
  * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
  * @param {TransactionSigner} transactionSigner
  * @param {MessageSigner} messageSigner
  *
  * @constructor
  */
-function Method(
-    provider,
-    accounts,
-    rpcMethod,
-    parameters,
-    inputFormatters,
-    outputFormatter,
-    promiEvent,
+function MethodService(
+    promiEventPackage,
     transactionConfirmationWorkflow,
     transactionSigner,
     messageSigner
 ) {
-    this.provider = provider;
-    this.accounts = accounts;
-    this.rpcMethod = rpcMethod;
-    this.parameters = parameters;
-    this.inputFormatters = inputFormatters;
-    this.outputFormatter = outputFormatter;
-    this.promiEvent = promiEvent;
+    this.promiEventPackage = promiEventPackage;
     this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
     this.transactionSigner = transactionSigner;
     this.messageSigner = messageSigner;
 }
 
 /**
+ * Executes the given method
+ *
+ * @method execute
+ *
+ * @returns {Promise|eventifiedPromise|String|boolean}
+ */
+MethodService.prototype.execute = function () {
+    var mappedFunctionArguments = this.mapFunctionArguments(arguments);
+
+    return this.send(
+        arguments[0],
+        arguments[1],
+        arguments[2],
+        mappedFunctionArguments.parameters,
+        mappedFunctionArguments.callback
+    );
+};
+
+/**
  * Sends the JSON-RPC request
  *
  * @method send
  *
- * @param {Function} callback
- *
  * @callback callback callback(error, result)
  * @returns {Promise | eventifiedPromise | String | boolean}
  */
-Method.prototype.send = function (callback) {
+MethodService.prototype.send = function (methodModel, provider, accounts, parameters, callback) {
     var self = this;
+    var promiEvent = this.promiEventPackage.createPromiEvent();
 
-    if (this.hasWallets()) {
-        if (this.isSign(this.rpcMethod)) {
-            return this.messageSigner.sign(this.parameters[0], this.parameters[1]);
+    if (accounts.wallet.length > 0) {
+        if (this.methodModel.isSign()) {
+            return this.messageSigner.sign(parameters[0], parameters[1], accounts);
         }
 
-        if (this.isSendTransaction(this.rpcMethod)) {
-            this.rpcMethod = 'eth_sendRawTransaction';
-            this.parameters = [this.transactionSigner.sign(this.parameters[0]).rawTransaction];
-            return this.sendTransaction(null, callback);
+        if (this.methodModel.isSendTransaction()) {
+            this.methodModel.rpcMethod = 'eth_sendRawTransaction';
+            return this.sendTransaction(
+                promiEvent,
+                [this.transactionSigner.sign(parameters[0], accounts).rawTransaction],
+                null,
+                callback
+            );
         }
     }
 
-    if (this.isSendTransaction(this.rpcMethod) || this.isSendRawTransaction(this.rpcMethod)) {
+    if (this.methodModel.isSendTransaction() || this.methodModel.isSendRawTransaction()) {
         if (this.isGasPriceDefined()) {
-            return this.sendTransaction(null, callback);
+            return this.sendTransaction(
+                provider,
+                promiEvent,
+                methodModel,
+                parameters,
+                null,
+                callback
+            );
         }
 
         this.getGasPrice().then(function (gasPrice) {
-            self.sendTransaction(gasPrice, callback)
+            self.sendTransaction(
+                provider,
+                promiEvent,
+                methodModel,
+                parameters,
+                gasPrice,
+                callback
+            )
         });
 
-        return this.promiEvent;
+        return promiEvent;
     }
 
-    if (this.isSign(this.rpcMethod)) {
-        return this.messageSigner.sign(this.parameters[0], this.parameters[1]);
+    if (this.methodModel.isSign()) {
+        return this.messageSigner.sign(parameters[0], parameters[1], accounts);
     }
 
-    return this.call(callback);
+    return this.call(provider, methodModel, parameters, callback);
+};
+
+/**
+ * Determines if gasPrice is defined in the method options
+ *
+ * @method isGasPriceDefined
+ *
+ * @returns {boolean}
+ */
+MethodService.prototype.isGasPriceDefined = function () {
+    return _.isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
 };
 
 /**
@@ -112,37 +141,136 @@ Method.prototype.send = function (callback) {
  *
  * @method call
  *
+ * @param {AbstractProviderAdapter} provider
+ * @param {AbstractMethodModel} methodModel
+ * @param {Array} parameters
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise}
  */
-Method.prototype.call = function (callback) {
+MethodService.prototype.call = function (provider, methodModel, parameters, callback) {
     var self = this;
-    return this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
-        return self.formatOutput(response, callback)
+
+    return provider.send(
+        methodModel.rpcMethod,
+        this.formatInput(parameters, methodModel.inputFormatters)
+    ).then(function (response) {
+        return self.formatOutput(response, methodModel.outputFormatter, callback)
     });
 };
 
+/**
+ * Returns the mapped function arguments
+ *
+ * @method mapFunctionArguments
+ *
+ * @param {IArguments} args
+ *
+ * @returns {Object}
+ */
+MethodService.prototype.mapFunctionArguments = function (args) {
+    var parameters = args;
+    var callback = null;
+
+    if (arguments.length < this.parametersAmount) {
+        throw new Error(
+            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + arguments.length
+        );
+    }
+
+    if (arguments.length > this.parametersAmount) {
+        callback = arguments.slice(-1);
+        if(!_.isFunction(callback)) {
+            throw new Error(
+                'The latest parameter should be a function otherwise it can not be used as callback'
+            );
+        }
+        parameters = arguments.slice(0, -1);
+    }
+
+    return {
+        callback: callback,
+        parameters: parameters
+    }
+};
+
+
+/**
+ * Sends the JSON-RPC sendTransaction request
+ *
+ * @method sendTransaction
+ *
+ * @param {AbstractProviderAdapter} provider
+ * @param {PromiEvent} promiEvent
+ * @param {AbstractMethodModel} methodModel
+ * @param {Array} parameters
+ * @param {String} gasPrice
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {eventifiedPromise}
+ */
+MethodService.prototype.sendTransaction = function (provider, promiEvent, methodModel, parameters, gasPrice, callback) {
+    var self = this;
+
+    if (gasPrice && _.isObject(parameters[0])) {
+        parameters[0].gasPrice = gasPrice;
+    }
+
+    provider.send(
+        methodModel.rpcMethod,
+        this.formatInput(parameters, methodModel.inputFormatters)
+    ).then(function (response) {
+        self.transactionConfirmationWorkflow.execute(
+            response,
+            promiEvent,
+            callback
+        );
+
+        promiEvent.eventEmitter.emit('transactionHash', response)
+    }).catch(function (error) {
+        promiEvent.reject(error);
+        promiEvent.on('error', error);
+        promiEvent.eventEmitter.removeAllListeners();
+    });
+
+    return promiEvent;
+};
+
+/**
+ * Formats the input parameters
+ *
+ * @method formatInput
+ *
+ * @param {Array} parameters
+ * @param {Array} inputFormatters
+ *
+ * @returns {Array}
+ */
+MethodService.prototype.formatInput = function (parameters, inputFormatters) {
+    return inputFormatters.map(function (formatter, key) {
+        return formatter ? formatter(parameters[key]) : parameters[key];
+    });
+};
 
 /**
  * Formats the output of an JSON-RPC call request
  *
  * @method formatOutput
  *
+ * @param {Function|null} outputFormatter
  * @param {Array | String} response
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Array | String}
  */
-Method.prototype.formatOutput = function (response, callback) {
-    var self = this;
-
+MethodService.prototype.formatOutput = function (outputFormatter, response, callback) {
     if (_.isArray(response)) {
         response = response.map(function (responseItem) {
-            if (self.outputFormatter && responseItem) {
-                return self.outputFormatter(responseItem);
+            if (outputFormatter && responseItem) {
+                return outputFormatter(responseItem);
             }
 
             return responseItem;
@@ -153,8 +281,8 @@ Method.prototype.formatOutput = function (response, callback) {
         return response;
     }
 
-    if (self.outputFormatter && result) {
-        response = self.outputFormatter(response);
+    if (outputFormatter && result) {
+        response = outputFormatter(response);
     }
 
     callback(false, response);
@@ -162,137 +290,4 @@ Method.prototype.formatOutput = function (response, callback) {
     return response;
 };
 
-/**
- * Sends the JSON-RPC sendTransaction request
- *
- * @method sendTransaction
- *
- * @param {String} gasPrice
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
- */
-Method.prototype.sendTransaction = function (gasPrice, callback) {
-    var self = this;
-
-    if (gasPrice && _.isObject(this.parameters[0])) {
-        this.parameters.gasPrice = gasPrice;
-    }
-
-    this.provider.send(this.rpcMethod, this.formatInput(this.parameters)).then(function (response) {
-        self.transactionConfirmationWorkflow.execute(
-            response,
-            self.promiEvent,
-            callback
-        );
-
-        self.promiEvent.eventEmitter.emit('transactionHash', response)
-    }).catch(function (error) {
-        self.promiEvent.reject(error);
-        self.promiEvent.on('error', error);
-        self.promiEvent.eventEmitter.removeAllListeners();
-    });
-
-    return this.promiEvent;
-};
-
-/**
- * Should be called to get the request which can be used in a batch request
- *
- * @method request
- *
- * @returns {Function}
- */
-Method.prototype.request = function () {
-    return this.send.bind(this);
-};
-
-/**
- * Formats the input parameters
- *
- * @method formatInput
- *
- * @param {Array} parameters
- *
- * @returns {Array}
- */
-Method.prototype.formatInput = function (parameters) {
-    return this.inputFormatters.map(function (formatter, key) {
-        return formatter ? formatter(parameters[key]) : parameters[key];
-    });
-};
-
-/**
- * Gets the gasPrice with the eth_gasPrice RPC call.
- *
- * @method getGasPrice
- *
- * @returns {Promise<String>}
- */
-Method.prototype.getGasPrice = function () {
-  return this.provider.send('eth_gasPrice', []);
-};
-
-/**
- * Determines if the JSON-RPC method is sendTransaction
- *
- * @method isSendTransaction
- *
- * @param {String} rpcMethod
- *
- * @returns {boolean}
- */
-Method.prototype.isSendTransaction = function (rpcMethod) {
-    return rpcMethod === 'eth_sendTransaction';
-};
-
-/**
- * Determines if the JSON-RPC method is sendRawTransaction
- *
- * @method isSendRawTransaction
- *
- * @param {String} rpcMethod
- *
- * @returns {boolean}
- */
-Method.prototype.isSendRawTransaction = function (rpcMethod) {
-    return rpcMethod === 'eth_sendRawTransaction';
-};
-
-/**
- * Determines if the JSON-RPC method is sign.
- *
- * @method isSign
- *
- * @param {String} rpcMethod
- *
- * @returns {boolean}
- */
-Method.prototype.isSign = function (rpcMethod) {
-    return rpcMethod === 'eth_sign';
-};
-
-/**
- * Determines if gasPrice is defined in the method options
- *
- * @method isGasPriceDefined
- *
- * @returns {boolean}
- */
-Method.prototype.isGasPriceDefined = function () {
-    return _.isObject(this.parameters[0]) && typeof this.parameters[0].gasPrice !== 'undefined';
-};
-
-/**
- * Check if wallets are defined in the accounts package
- *
- * @method hasWallets
- *
- * @returns {boolean}
- */
-Method.prototype.hasWallets = function() {
-    return this.accounts.wallet.length > 0;
-};
-
-module.exports = Method;
+module.exports = MethodService;

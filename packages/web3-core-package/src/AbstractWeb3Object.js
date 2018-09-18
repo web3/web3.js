@@ -25,13 +25,26 @@
 /**
  * @param {Object} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodPackage} methodPackage
+ * @param {Accounts} accounts
+ * @param {MethodService} methodService
+ * @param {MethodModelFactory} methodModelFactory
  * @param {SubscriptionPackage} subscriptionPackage
  * @param {BatchRequest} batchRequest
  *
  * @constructor
  */
-function AbstractWeb3Object(provider, providersPackage, methodPackage, subscriptionPackage, batchRequest) {
+function AbstractWeb3Object(
+    provider,
+    providersPackage,
+    accounts,
+    methodService,
+    methodModelFactory,
+    subscriptionPackage,
+    batchRequest
+) {
+    this.methodModelFactory = methodModelFactory;
+    this.methodService = methodService;
+    this.accounts = accounts;
     this.providersPackage = providersPackage;
     this._provider = this.providersPackage.resolve(provider);
     this.givenProvider = this.providersPackage.detect();
@@ -68,6 +81,11 @@ function AbstractWeb3Object(provider, providersPackage, methodPackage, subscript
         enumerable: true
     });
 
+    return new Proxy(this,
+        {
+            get: this.proxyHandler
+        }
+    )
 }
 
 /**
@@ -132,5 +150,25 @@ AbstractWeb3Object.prototype.extend = function (extension) {
         });
     }
 };
+
+AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
+    if (target.methodModelFactory.hasMethodModel(name)) {
+        var methodModel = target.methodModelFactory.createMethodModel(name);
+
+        var anonymousFunction = function() {
+            var methodArguments = [methodModel, target.currentProvider, target.accounts].concat(arguments);
+
+            return target.methodService.execute().apply(methodArguments);
+        };
+
+        anonymousFunction.methodModel = methodModel;
+        anonymousFunction.request = methodModel.request;
+
+        return anonymousFunction;
+    }
+
+    return target[name];
+};
+
 
 module.exports = AbstractWeb3Object;
