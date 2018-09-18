@@ -184,6 +184,10 @@ AbstractWeb3Object.prototype.extend = function (extension) {
  */
 AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
     if (target.methodModelFactory.hasMethodModel(name)) {
+        if (typeof target[name] !== 'undefined') {
+            throw new Error('Duplicated method ' + name + '. This method is defined as RPC call and as Object method.');
+        }
+
         var methodModel = target.methodModelFactory.createMethodModel(name);
 
         var anonymousFunction = function() {
