@@ -24,10 +24,14 @@
 
 var version = require('./package.json');
 var ProvidersPackage = require('web3-core-providers');
+var AccountsPackage = require('web3-eth-accounts');
 var MethodPackage = require('web3-core-method');
 var SubscriptionPackage = require('web3-core-subscription');
 var NetworkPackage = require('web3-net');
+var Utils = require('web3-utils');
+var formatters = require('web3-core-helpers').formatters;
 var Shh = require('./Shh');
+var MethodModelFactory = require('./factories/MethodModelFactory');
 
 module.exports = {
     version: version,
@@ -42,6 +46,16 @@ module.exports = {
      * @returns {Shh}
      */
     createShh: function (provider) {
-        return new Shh(provider, ProvidersPackage, MethodPackage, SubscriptionPackage, NetworkPackage.createNetwork(provider));
+        var accounts = AccountsPackage.createAccounts(provider);
+
+        return new Shh(
+            provider,
+            ProvidersPackage,
+            accounts,
+            MethodPackage.createMethodService(),
+            new MethodModelFactory(Utils, formatters, accounts),
+            SubscriptionPackage,
+            NetworkPackage.createNetwork(provider)
+        );
     }
 };
