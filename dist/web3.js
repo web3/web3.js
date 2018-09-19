@@ -3992,6 +3992,7 @@ module.exports = {
 
 var coder = require('../solidity/coder');
 var utils = require('../utils/utils');
+var config = require('../utils/config');
 var errors = require('./errors');
 var formatters = require('./formatters');
 var sha3 = require('../utils/sha3');
@@ -4201,14 +4202,16 @@ SolidityFunction.prototype.typeName = function () {
  */
 SolidityFunction.prototype.request = function () {
     var args = Array.prototype.slice.call(arguments);
+    var defaultBlock = this.extractDefaultBlock(args) || config.defaultBlock;
     var callback = this.extractCallback(args);
     var payload = this.toPayload(args);
+    var params = this._constant ? [payload,defaultBlock] : [payload];
     var format = this.unpackOutput.bind(this);
 
     return {
         method: this._constant ? 'eth_call' : 'eth_sendTransaction',
         callback: callback,
-        params: [payload],
+        params: params,
         format: format
     };
 };
