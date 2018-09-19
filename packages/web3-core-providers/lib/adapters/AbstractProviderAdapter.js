@@ -22,8 +22,8 @@
 
 "use strict";
 
-var JSONRpcMapper = require('../mappers/JSONRpcMapper.js');
-var JSONRpcResponseValidator = require('../validators/JSONRpcResponseValidator.js');
+var JSONRpcMapper = require('../../src/mappers/JSONRpcMapper.js');
+var JSONRpcResponseValidator = require('../../src/validators/JSONRpcResponseValidator.js');
 var errors = require('web3-core-helpers').errors;
 
 /**

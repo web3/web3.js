@@ -25,8 +25,8 @@ var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
-var JSONRpcMapper = require('../lib/mappers/JSONRpcMapper');
-var JSONRpcResponseValidator = require('../lib/validators/JSONRpcResponseValidator');
+var JSONRpcMapper = require('./mappers/JSONRpcMapper');
+var JSONRpcResponseValidator = require('./validators/JSONRpcResponseValidator');
 
 module.exports = {
     version: version,
