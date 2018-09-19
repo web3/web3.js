@@ -31,18 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function PersonalSignMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'personal_sign',
-        3,
-        [
-            formatters.inputSignFormatter,
-            formatters.inputAddressFormatter,
-            null
-        ],
-        null
-    );
+    AbstractMethodModel.call(this, 'personal_sign', 3, utils, formatters);
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+PersonalSignMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputSignFormatter(parameters[0]);
+    parameters[1] = this.formatters.inputAddressFormatter(parameters[1]);
+};
 
 PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

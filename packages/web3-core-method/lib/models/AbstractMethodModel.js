@@ -25,16 +25,16 @@
 /**
  * @param {String|Function} rpcMethod
  * @param {Number} parametersAmount
- * @param {Array} inputFormatters
- * @param {Function} outputFormatter
+ * @param {Utils} utils
+ * @param {Object} formatters
  *
  * @constructor
  */
-function AbstractMethodModel(rpcMethod, parametersAmount, inputFormatters, outputFormatter) {
+function AbstractMethodModel(rpcMethod, parametersAmount, utils, formatters) {
     this.rpcMethod = rpcMethod;
     this.parametersAmount = parametersAmount;
-    this.inputFormatters = inputFormatters;
-    this.outputFormatter = outputFormatter;
+    this.utils = utils;
+    this.formatters = formatters;
 }
 
 /**
@@ -56,7 +56,9 @@ AbstractMethodModel.prototype.beforeExecution = function(parameters, web3Package
  *
  * @returns {*}
  */
-AbstractMethodModel.prototype.afterExecution = function(response) { };
+AbstractMethodModel.prototype.afterExecution = function(response) {
+    return response;
+};
 
 /**
  * Returns the given function arguments and the current model

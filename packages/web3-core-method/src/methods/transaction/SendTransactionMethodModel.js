@@ -32,16 +32,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function SendTransactionMethodModel(utils, formatters, accounts) {
-    AbstractMethodModel.call(
-        this,
-        'eth_sendTransaction',
-        1,
-        [formatters.inputTransactionFormatter],
-        null
-    );
-
+    AbstractMethodModel.call(this, 'eth_sendTransaction', 1, utils, formatters);
     this.accounts = accounts;
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+SendTransactionMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputTransactionFormatter(parameters[0]);
+};
 
 SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetWorkMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getWork',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'eth_getWork', 0, utils, formatters);
 }
 
 GetWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

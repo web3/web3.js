@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetGasPriceMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_gasPrice',
-        0,
-        null,
-        formatters.outputBigNumberFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_gasPrice', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {BigNumber}
+ */
+GetGasPriceMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputBigNumberFormatter(response);
+};
 
 GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

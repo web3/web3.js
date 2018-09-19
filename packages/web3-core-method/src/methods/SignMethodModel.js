@@ -32,19 +32,22 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function SignMethodModel(utils, formatters, accounts) {
-    AbstractMethodModel.call(
-        this,
-        'eth_sign',
-        2,
-        [
-            formatters.inputSignFormatter,
-            formatters.inputAddressFormatter
-        ],
-        null
-    );
-
+    AbstractMethodModel.call(this, 'eth_sign', 2, utils, formatters);
     this.accounts = accounts;
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+SignMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputSignFormatter(parameters[0]);
+    parameters[1] = this.formatters.inputAddressFormatter(parameters[1]);
+};
 
 SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

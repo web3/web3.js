@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetTransactionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getTransactionByHash',
-        1,
-        null,
-        formatters.outputTransactionFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_getTransactionByHash', 1, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+GetTransactionMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputTransactionFormatter(response);
+};
 
 GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

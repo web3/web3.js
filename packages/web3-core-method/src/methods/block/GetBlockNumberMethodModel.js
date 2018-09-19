@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetBlockNumberMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_blockNumber',
-        0,
-        null,
-        utils.hexToNumber
-    );
+    AbstractMethodModel.call(this, 'eth_blockNumber', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+GetBlockNumberMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
+};
 
 GetBlockNumberMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

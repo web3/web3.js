@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetPublicKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_getPublicKey',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_getPublicKey', 1, utils, formatters);
 }
 
 GetPublicKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

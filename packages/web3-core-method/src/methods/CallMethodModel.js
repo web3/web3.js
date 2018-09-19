@@ -31,30 +31,20 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function CallMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_call',
-        2,
-        [
-            formatters.inputCallFormatter,
-            formatters.inputDefaultBlockNumberFormatter
-        ],
-        null
-    );
+    AbstractMethodModel.call(this, 'eth_call', 2, utils, formatters);
 }
 
 /**
- * This method will be executed before the effective execution.
+ * This method will be executed before the RPC request.
  *
  * @method beforeExecution
  *
  * @param {Array} parameters
- * @param {Object} parentObject
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-CallMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
-    if (!parameters[1]) {
-        parameters[1] = parentObject.defaultBlock;
-    }
+CallMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputCallFormatter(parameters[0]);
+    parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(parameters[1], web3Package);
 };
 
 CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

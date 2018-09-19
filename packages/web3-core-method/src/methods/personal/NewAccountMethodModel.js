@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function NewAccountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'personal_newAccount',
-        0,
-        null,
-        utils.toChecksumAddress
-    );
+    AbstractMethodModel.call(this, 'personal_newAccount', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {String}
+ */
+NewAccountMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.toChecksumAddress(response);
+};
 
 NewAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

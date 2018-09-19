@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function NewKeyPairMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_newKeyPair',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_newKeyPair', 1, utils, formatters);
 }
 
 NewKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

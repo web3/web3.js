@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ListeningMethodModel.js
+ * @file PeerCountMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -30,16 +30,23 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  *
  * @constructor
  */
-function ListeningMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'net_peerCount',
-        0,
-        null,
-        utils.hexToNumber
-    );
+function PeerCountMethodModel(utils, formatters) {
+    AbstractMethodModel.call(this, 'net_peerCount', 0, utils, formatters);
 }
 
-ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+PeerCountMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
+};
 
-module.exports = ListeningMethodModel;
+PeerCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+
+module.exports = PeerCountMethodModel;

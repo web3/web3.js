@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function VersionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_protocolVersion',
-        0,
-        null,
-        utils.hexToNumber
-    );
+    AbstractMethodModel.call(this, 'eth_protocolVersion', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+VersionMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
+};
 
 VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

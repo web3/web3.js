@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function DeleteSymKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_deleteSymKey',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_deleteSymKey', 1, utils, formatters);
 }
 
 DeleteSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

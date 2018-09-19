@@ -31,24 +31,37 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetBlockMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getBlockByNumber',
-        2,
-        [
-            formatters.inputBlockNumberFormatter,
-            function (val) {
-                return !!val;
-            }
-        ],
-        formatters.outputBlockFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_getBlockByNumber', 2, utils, formatters);
 }
 
-GetBlockMethodModel.prototype.beforeExecution = function (parameters) {
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+GetBlockMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getBlockByHash';
     }
+
+    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
+    parameters[1] = !!parameters[1];
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+GetBlockMethodModel.prototype.afterExecution = function(response) {
+    return this.formatters.outputBlockFormatter(response);
 };
 
 GetBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

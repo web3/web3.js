@@ -31,18 +31,20 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function UnlockAccountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'personal_unlockAccount',
-        3,
-        [
-            formatters.inputAddressFormatter,
-            null,
-            null
-        ],
-        null
-    );
+    AbstractMethodModel.call(this, 'personal_unlockAccount', 3, utils, formatters);
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+UnlockAccountMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputAddressFormatter(parameters[0]);
+};
 
 UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

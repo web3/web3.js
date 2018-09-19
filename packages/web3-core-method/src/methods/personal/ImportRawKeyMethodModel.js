@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function ImportRawKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'personal_importRawKey',
-        2,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'personal_importRawKey', 2, utils, formatters);
 }
 
 ImportRawKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

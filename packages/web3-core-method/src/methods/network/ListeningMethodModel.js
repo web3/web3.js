@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function ListeningMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'net_listening',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'net_listening', 0, utils, formatters);
 }
 
 ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

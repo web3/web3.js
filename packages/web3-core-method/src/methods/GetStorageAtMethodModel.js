@@ -35,27 +35,23 @@ function GetStorageAtMethodModel(utils, formatters) {
         this,
         'eth_getStorageAt',
         3,
-        [
-            formatters.inputAddressFormatter,
-            utils.numberToHex,
-            formatters.inputDefaultBlockNumberFormatter
-        ],
-        null
+        utils,
+        formatters
     );
 }
 
 /**
- * This method will be executed before the effective execution.
+ * This method will be executed before the RPC request.
  *
  * @method beforeExecution
  *
  * @param {Array} parameters
- * @param {Object} parentObject
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-GetStorageAtMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
-    if (!parameters[2]) {
-        parameters[2] = parentObject.defaultBlock;
-    }
+GetStorageAtMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputAddressFormatter(parameters[0]);
+    parameters[1] = this.utils.numberToHex(parameters[1]);
+    parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(parameters[2], web3Package);
 };
 
 GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

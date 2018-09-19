@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetCoinbaseMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_coinbase',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'eth_coinbase', 0, utils, formatters);
 }
 
 GetCoinbaseMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

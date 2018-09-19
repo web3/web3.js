@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function SetMaxMessageSizeMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_setMaxMessageSize',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_setMaxMessageSize', 1, utils, formatters);
 }
 
 SetMaxMessageSizeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

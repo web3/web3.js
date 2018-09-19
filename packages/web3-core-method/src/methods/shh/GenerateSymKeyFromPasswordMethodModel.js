@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GenerateSymKeyFromPasswordMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_generateSymKeyFromPassword',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_generateSymKeyFromPassword', 1, utils, formatters);
 }
 
 GenerateSymKeyFromPasswordMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

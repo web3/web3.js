@@ -31,23 +31,37 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetUncleMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getUncleByBlockNumberAndIndex',
-        2,
-        [
-            formatters.inputBlockNumberFormatter,
-            utils.numberToHex
-        ],
-        formatters.outputBlockFormatter,
-        accounts
-    );
+    AbstractMethodModel.call(this, 'eth_getUncleByBlockNumberAndIndex', 2, utils, formatters);
 }
 
-GetUncleMethodModel.prototype.beforeExecution = function (parameters) {
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {AbstractWeb3Object} web3Package
+ */
+GetUncleMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
     }
+
+    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
+    parameters[1] = this.utils.numberToHex(parameters[1]);
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+GetUncleMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputBlockFormatter(response);
 };
 
 GetUncleMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function PostMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_post',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_post', 1, utils, formatters);
 }
 
 PostMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

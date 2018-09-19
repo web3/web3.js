@@ -31,14 +31,33 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function EstimateGasMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_estimateGas',
-        1,
-        [formatters.inputCallFormatter],
-        utils.hexToNumber
-    );
+    AbstractMethodModel.call(this, 'eth_estimateGas', 1, utils, formatters);
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+EstimateGasMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputCallFormatter(parameters[0]);
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+EstimateGasMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
+};
 
 EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function IsMiningMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_mining',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'eth_mining', 0, utils, formatters);
 }
 
 IsMiningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

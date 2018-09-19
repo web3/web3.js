@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function IsSyncingMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_syncing',
-        0,
-        null,
-        formatters.outputSyncingFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_syncing', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+IsSyncingMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputSyncingFormatter(response);
+};
 
 IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

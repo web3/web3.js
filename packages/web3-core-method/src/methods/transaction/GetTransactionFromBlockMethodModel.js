@@ -31,22 +31,37 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetTransactionFromBlockMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getTransactionByBlockNumberAndIndex',
-        2,
-        [
-            formatters.inputBlockNumberFormatter,
-            utils.numberToHex
-        ],
-        formatters.outputTransactionFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters);
 }
 
-GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (parameters) {
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }
+
+    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
+    parameters[1] = this.utils.numberToHex(parameters[1]);
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+GetTransactionFromBlockMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputTransactionFormatter(response);
 };
 
 GetTransactionFromBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function NewSymKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_newSymKey',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_newSymKey', 0, utils, formatters);
 }
 
 NewSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

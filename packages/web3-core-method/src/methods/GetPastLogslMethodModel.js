@@ -35,10 +35,39 @@ function GetPastLogsMethodModel(utils, formatters) {
         this,
         'eth_getLogs',
         1,
-        [formatters.inputLogFormatter],
-        formatters.outputLogFormatter,
+        utils,
+        formatters,
     );
 }
+
+/**
+ * This method will be executed before the RPC request.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ */
+GetPastLogsMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputLogFormatter(parameters[0]);
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Array}
+ */
+GetPastLogsMethodModel.prototype.afterExecution = function (response) {
+    var self = this;
+
+    return response.map(function(responseItem) {
+        return self.formatters.outputLogFormatter(responseItem);
+    });
+};
 
 GetPastLogsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

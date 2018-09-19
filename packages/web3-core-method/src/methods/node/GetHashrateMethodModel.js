@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetHashrateMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_hashrate',
-        0,
-        null,
-        utils.hexToNumber
-    );
+    AbstractMethodModel.call(this, 'eth_hashrate', 0, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+GetHashrateMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
+};
 
 GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

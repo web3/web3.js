@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function DeleteMessageFilterMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_deleteMessageFilter',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_deleteMessageFilter', 1, utils, formatters);
 }
 
 DeleteMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

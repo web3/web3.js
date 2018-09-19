@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetInfoMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_info',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_info', 0, utils, formatters);
 }
 
 GetInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

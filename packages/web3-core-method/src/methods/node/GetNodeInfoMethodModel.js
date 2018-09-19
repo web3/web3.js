@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetNodeInfoMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'web3_clientVersion',
-        0,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'web3_clientVersion', 0, utils, formatters);
 }
 
 GetNodeInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

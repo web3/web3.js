@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function AddPrivateKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'shh_addPrivateKey',
-        1,
-        null,
-        null
-    );
+    AbstractMethodModel.call(this, 'shh_addPrivateKey', 1, utils, formatters);
 }
 
 AddPrivateKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

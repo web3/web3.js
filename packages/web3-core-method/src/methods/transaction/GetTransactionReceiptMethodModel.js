@@ -31,14 +31,21 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetTransactionReceiptMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getTransactionReceipt',
-        1,
-        null,
-        formatters.outputTransactionReceiptFormatter
-    );
+    AbstractMethodModel.call(this, 'eth_getTransactionReceipt', 1, utils, formatters);
 }
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+GetTransactionReceiptMethodModel.prototype.afterExecution = function (response) {
+    return this.formatters.outputTransactionFormatter(response);
+};
 
 GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 

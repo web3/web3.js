@@ -31,16 +31,7 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetTransactionCountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getTransactionCount',
-        2,
-        [
-            formatters.inputAddressFormatter,
-            formatters.inputDefaultBlockNumberFormatter
-        ],
-        utils.hexToNumber
-    );
+    AbstractMethodModel.call(this, 'eth_getTransactionCount', 2, utils, formatters);
 }
 
 /**
@@ -49,12 +40,24 @@ function GetTransactionCountMethodModel(utils, formatters) {
  * @method beforeExecution
  *
  * @param {Array} parameters
- * @param {Object} parentObject
+ * @param {Object} web3Package
  */
-GetTransactionCountMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
-    if (!parameters[1]) {
-        parameters[1] = parentObject.defaultBlock;
-    }
+GetTransactionCountMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+    parameters[0] = this.formatters.inputAddressFormatter(parameters[0]);
+    parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(parameters[1], web3Package);
+};
+
+/**
+ * This method will be executed after the RPC request.
+ *
+ * @method afterExecution
+ *
+ * @param {Object} response
+ *
+ * @returns {Number}
+ */
+GetTransactionCountMethodModel.prototype.afterExecution = function (response) {
+    return this.utils.hexToNumber(response);
 };
 
 GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
