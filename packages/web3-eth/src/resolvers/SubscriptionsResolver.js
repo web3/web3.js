@@ -34,7 +34,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @constructor
  */
 function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage, providersPackage) {
-    AbstractWeb3Object.call(this, provider, providersPackage, null, null, null, subscriptionPackage);
+    AbstractWeb3Object.call(this, provider, providersPackage, null, null, subscriptionPackage);
     this.formatters = formatters;
     this.promiEventPackage = promiEventPackage;
 }

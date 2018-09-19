@@ -64,7 +64,7 @@ var makeEven = function (hex) {
  * @constructor
  */
 var Accounts = function Accounts(provider, providersPackage, methodService, methodModelFactory, utils, formatters) {
-    AbstractWeb3Object.call(this, provider, providersPackage, this, methodService, methodModelFactory);
+    AbstractWeb3Object.call(this, provider, providersPackage, methodService, methodModelFactory);
     this.utils = utils;
     this.formatters = formatters;
     this.wallet = new Wallet(this);

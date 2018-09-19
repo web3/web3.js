@@ -36,7 +36,6 @@
 function AbstractWeb3Object(
     provider,
     providersPackage,
-    accounts,
     methodService,
     methodModelFactory,
     subscriptionPackage,
@@ -78,10 +77,6 @@ function AbstractWeb3Object(
 
     if (this.isDependencyGiven(subscriptionPackage)) {
         this.subscriptionPackage = subscriptionPackage;
-    }
-
-    if (this.isDependencyGiven(accounts)) {
-        this.accounts = accounts;
     }
 
     if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodService)) {

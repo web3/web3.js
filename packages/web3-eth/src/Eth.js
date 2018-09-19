@@ -65,7 +65,6 @@ var Eth = function Eth(
         this,
         provider,
         providersPackage,
-        accounts,
         methodService,
         methodModelFactory,
         null,
