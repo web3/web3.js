@@ -44,6 +44,20 @@ function GetStorageAtMethodModel(utils, formatters) {
     );
 }
 
+/**
+ * This method will be executed before the effective execution.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} parentObject
+ */
+GetStorageAtMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
+    if (!parameters[2]) {
+        parameters[2] = parentObject.defaultBlock;
+    }
+};
+
 GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
 module.exports = GetStorageAtMethodModel;

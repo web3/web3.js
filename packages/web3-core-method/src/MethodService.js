@@ -53,15 +53,16 @@ function MethodService(
  * @param {AbstractMethodModel} methodModel
  * @param {AbstractProviderAdapter} provider
  * @param {Accounts} accounts
+ * @param {Object} parentObject - The object from which the method is called.
  * @param {Array} methodArguments
  *
  * @returns {Promise|eventifiedPromise|String|boolean}
  */
-MethodService.prototype.execute = function (methodModel, provider, accounts, methodArguments) {
+MethodService.prototype.execute = function (methodModel, provider, accounts, parentObject, methodArguments) {
     var mappedFunctionArguments = this.mapFunctionArguments(methodArguments);
 
     if (_.isFunction(methodModel.beforeExecution)) {
-        methodModel.beforeExecution(mappedFunctionArguments.parameters);
+        methodModel.beforeExecution(mappedFunctionArguments.parameters, parentObject);
     }
 
     return this.send(

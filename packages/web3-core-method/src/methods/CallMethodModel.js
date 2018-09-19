@@ -43,6 +43,20 @@ function CallMethodModel(utils, formatters) {
     );
 }
 
+/**
+ * This method will be executed before the effective execution.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} parentObject
+ */
+CallMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
+    if (!parameters[1]) {
+        parameters[1] = parentObject.defaultBlock;
+    }
+};
+
 CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
 module.exports = CallMethodModel;

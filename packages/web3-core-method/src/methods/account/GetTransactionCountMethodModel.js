@@ -43,6 +43,20 @@ function GetTransactionCountMethodModel(utils, formatters) {
     );
 }
 
+/**
+ * This method will be executed before the effective execution.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} parentObject
+ */
+GetTransactionCountMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
+    if (!parameters[1]) {
+        parameters[1] = parentObject.defaultBlock;
+    }
+};
+
 GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
 module.exports = GetTransactionCountMethodModel;

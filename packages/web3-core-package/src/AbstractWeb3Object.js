@@ -190,6 +190,7 @@ AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
                 methodModel,
                 target.currentProvider,
                 target.accounts,
+                target,
                 arguments
             );
         };

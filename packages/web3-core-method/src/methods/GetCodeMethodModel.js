@@ -43,6 +43,20 @@ function GetCodeMethodModel(utils, formatters) {
     );
 }
 
+/**
+ * This method will be executed before the effective execution.
+ *
+ * @method beforeExecution
+ *
+ * @param {Array} parameters
+ * @param {Object} parentObject
+ */
+GetCodeMethodModel.prototype.beforeExecution = function (parameters, parentObject) {
+    if (!parameters[1]) {
+        parameters[1] = parentObject.defaultBlock;
+    }
+};
+
 GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
 module.exports = GetCodeMethodModel;
