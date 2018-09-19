@@ -42,6 +42,30 @@ function Personal(provider, providersPackage, methodService, methodModelFactory,
     this.utils = utils;
     this.formatters = formatters;
     this.net = net;
+    var defaultAccount = null;
+    var defaultBlock = 'latest';
+
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            return defaultAccount;
+        },
+        set: function (val) {
+            if(val) {
+                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+            }
+        },
+        enumerable: true
+    });
+
+    Object.defineProperty(this, 'defaultBlock', {
+        get: function () {
+            return defaultBlock;
+        },
+        set: function (val) {
+            defaultBlock = val;
+        },
+        enumerable: true
+    });
 }
 
 /**

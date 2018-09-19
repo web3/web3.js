@@ -96,6 +96,9 @@ var Eth = function Eth(
             if (val) {
                 defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
             }
+
+            self.Contract.defaultAccount = defaultAccount;
+            self.personal.defaultAccount = defaultAccount;
         },
         enumerable: true
     });
@@ -109,6 +112,9 @@ var Eth = function Eth(
         },
         set: function (val) {
             defaultBlock = val;
+
+            self.Contract.defaultAccount = defaultBlock;
+            self.personal.defaultAccount = defaultBlock;
         },
         enumerable: true
     });
