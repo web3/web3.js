@@ -144,19 +144,19 @@ AbstractWeb3Object.prototype.clearSubscriptions = function () {
  */
 AbstractWeb3Object.prototype.extend = function (extension) {
     var namespace = extension.property || false,
-        extendedObject;
+        object;
 
     if (namespace) {
-        extendedObject = this[namespace] = new this.constructor(
+        object = this[namespace] = new this.constructor(
             this.provider,
             this.providersPackage,
             this.methodService,
             new this.methodModelFactory.constructor(this.methodModelFactory.utils, this.methodModelFactory.formatters)
         );
 
-        this.extendedPackages.push(extendedObject);
+        this.extendedPackages.push(object);
     } else {
-        extendedObject = this;
+        object = this;
     }
 
     if (extension.methods) {
@@ -195,7 +195,7 @@ AbstractWeb3Object.prototype.extend = function (extension) {
 
             ExtensionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
 
-            extendedObject.methodModelFactory.methodModels[method.name] = ExtensionMethodModel;
+            object.methodModelFactory.methodModels[method.name] = ExtensionMethodModel;
         });
     }
 };
