@@ -23,7 +23,6 @@
 "use strict";
 
 /**
- * @param {Object} provider
  * @param {TransactionConfirmationModel} transactionConfirmationModel
  * @param {TransactionReceiptValidator} transactionReceiptValidator
  * @param {NewHeadsWatcher} newHeadsWatcher

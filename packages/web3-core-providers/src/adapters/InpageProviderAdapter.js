@@ -32,7 +32,7 @@ var errors = require('web3-core-helpers').errors;
  * @constructor
  */
 function InpageProviderAdapter(inpageProvider) {
-    AbstractProviderAdapter.call(inpageProvider);
+    AbstractProviderAdapter.call(this, inpageProvider);
     this.provider.send = this.provider.sendAsync;
     delete this.provider.sendAsync;
 }

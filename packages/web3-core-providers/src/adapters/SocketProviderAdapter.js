@@ -30,7 +30,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
  * @constructor
  */
 function SocketProviderAdapter(provider) {
-    AbstractProviderAdapter.call(provider);
+    AbstractProviderAdapter.call(this, provider);
     this.subscriptions = [];
     this.registerSubscriptionListener();
 }
