@@ -43,13 +43,24 @@ var isPredefinedBlockNumber = function (blockNumber) {
     return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
 };
 
-var inputDefaultBlockNumberFormatter = function (blockNumber) {
-    if (this && (blockNumber === undefined || blockNumber === null)) {
-        return this.defaultBlock;
+/**
+ * Determines if it should use the default block by the given package or not,
+ * will map 'genesis' and 'earlist' to '0x0' and runs the inputBlockNumberFormatter.
+ *
+ * @param {String|Number} blockNumber
+ * @param {AbstractWeb3Object} web3Package
+ *
+ * @returns {String}
+ */
+var inputDefaultBlockNumberFormatter = function (blockNumber, web3Package) {
+    if (blockNumber === undefined || blockNumber === null) {
+        return web3Package.defaultBlock;
     }
+
     if (blockNumber === 'genesis' || blockNumber === 'earliest') {
         return '0x0';
     }
+
     return inputBlockNumberFormatter(blockNumber);
 };
 
@@ -142,7 +153,7 @@ var inputTransactionFormatter = function (options) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        options.from = inputAddressFormatter(options.from);
+        options.from = (options.from);
     }
 
     return options;
@@ -401,11 +412,13 @@ var outputPostFormatter = function(post){
 
 var inputAddressFormatter = function (address) {
     var iban = new Iban(address);
+
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
     } else if (utils.isAddress(address)) {
         return '0x' + address.toLowerCase().replace('0x','');
     }
+
     throw new Error('Provided address "'+ address +'" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can\'t be converted.');
 };
 

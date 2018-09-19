@@ -61,9 +61,7 @@ function MethodService(
 MethodService.prototype.execute = function (methodModel, provider, accounts, parentObject, methodArguments) {
     var mappedFunctionArguments = this.mapFunctionArguments(methodArguments);
 
-    if (_.isFunction(methodModel.beforeExecution)) {
-        methodModel.beforeExecution(mappedFunctionArguments.parameters, parentObject);
-    }
+    methodModel.beforeExecution(mappedFunctionArguments.parameters, parentObject);
 
     return this.send(
         methodModel,
@@ -167,13 +165,14 @@ MethodService.prototype.isGasPriceDefined = function () {
  * @returns {Promise}
  */
 MethodService.prototype.call = function (methodModel, provider, parameters, callback) {
-    var self = this;
-
     return provider.send(
         methodModel.rpcMethod,
-        this.formatInput(parameters, methodModel.inputFormatters)
+        parameters
     ).then(function (response) {
-        return self.formatOutput(response, methodModel.outputFormatter, callback)
+        var mappedResponse = methodModel.afterExecution(response);
+        callback(mappedResponse);
+
+        return mappedResponse;
     });
 };
 
@@ -237,9 +236,10 @@ MethodService.prototype.sendTransaction = function (methodModel, provider, promi
 
     provider.send(
         methodModel.rpcMethod,
-        this.formatInput(parameters, methodModel.inputFormatters)
+        parameters
     ).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
+            methodModel,
             provider,
             response,
             promiEvent,
@@ -254,58 +254,6 @@ MethodService.prototype.sendTransaction = function (methodModel, provider, promi
     });
 
     return promiEvent;
-};
-
-/**
- * Formats the input parameters
- *
- * @method formatInput
- *
- * @param {Array} parameters
- * @param {Array} inputFormatters
- *
- * @returns {Array}
- */
-MethodService.prototype.formatInput = function (parameters, inputFormatters) {
-    return inputFormatters.map(function (formatter, key) {
-        return formatter ? formatter(parameters[key]) : parameters[key];
-    });
-};
-
-/**
- * Formats the output of an JSON-RPC call request
- *
- * @method formatOutput
- *
- * @param {Function|null} outputFormatter
- * @param {Array | String} response
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Array | String}
- */
-MethodService.prototype.formatOutput = function (outputFormatter, response, callback) {
-    if (_.isArray(response)) {
-        response = response.map(function (responseItem) {
-            if (outputFormatter && responseItem) {
-                return outputFormatter(responseItem);
-            }
-
-            return responseItem;
-        });
-
-        callback(false, response);
-
-        return response;
-    }
-
-    if (outputFormatter && result) {
-        response = outputFormatter(response);
-    }
-
-    callback(false, response);
-
-    return response;
 };
 
 module.exports = MethodService;
