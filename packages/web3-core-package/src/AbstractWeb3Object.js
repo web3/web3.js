@@ -45,6 +45,7 @@ function AbstractWeb3Object(
         throw Error('Provider and the ProviderPackage not found!');
     }
 
+    this.extendedPackages = [];
     this.providersPackage = providersPackage;
     this._provider = this.providersPackage.resolve(provider);
     this.givenProvider = this.providersPackage.detect();
@@ -112,7 +113,15 @@ AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
  * @param {any} provider
  */
 AbstractWeb3Object.prototype.setProvider = function (provider) {
+    var self = this;
+
     this.currentProvider = provider;
+
+    if (this.extendedPackages.length > 0) {
+        this.extendedPackages.forEach(function(extendedPackage) {
+           extendedPackage.setProvider(self.currentProvider)
+        });
+    }
 };
 
 /**
@@ -144,6 +153,8 @@ AbstractWeb3Object.prototype.extend = function (extension) {
             this.methodService,
             new this.methodModelFactory.constructor(this.methodModelFactory.utils, this.methodModelFactory.formatters)
         );
+
+        this.extendedPackages.push(extendedObject);
     } else {
         extendedObject = this;
     }
