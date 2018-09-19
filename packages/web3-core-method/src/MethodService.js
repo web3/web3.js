@@ -138,10 +138,6 @@ MethodService.prototype.send = function (methodModel, provider, accounts, parame
         return promiEvent;
     }
 
-    if (this.methodModel.isSign()) {
-        return this.messageSigner.sign(parameters[0], parameters[1], accounts);
-    }
-
     return this.call(methodModel, provider, parameters, callback);
 };
 

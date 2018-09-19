@@ -46,7 +46,7 @@ MessageSigner.prototype.sign = function(data, address, accounts) {
         return accounts.sign(data, wallet.privateKey).signature;
     }
 
-    return new Error('Wallet or privateKey for wallet is not set!');
+    return new Error('Wallet or privateKey in wallet is not set!');
 };
 
 // Inherit from AbstractSigner
