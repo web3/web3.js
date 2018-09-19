@@ -56,7 +56,7 @@ function AbstractWeb3Object(
     };
 
     Object.defineProperty(this, 'currentProvider', {
-        get: function() {
+        get: function () {
             return this._provider;
         },
         set: function (provider) {
@@ -100,7 +100,7 @@ function AbstractWeb3Object(
  *
  * @returns {boolean}
  */
-AbstractWeb3Object.prototype.isDependencyGiven = function(object) {
+AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
     return object !== null || typeof object !== 'undefined';
 };
 
@@ -120,7 +120,7 @@ AbstractWeb3Object.prototype.setProvider = function (provider) {
  *
  * @method clearSubscriptions
  */
-AbstractWeb3Object.prototype.clearSubscriptions = function() {
+AbstractWeb3Object.prototype.clearSubscriptions = function () {
     if (typeof this.currentProvider.clearSubscriptions !== 'undefined' && this.currentProvider.subscriptions.length > 0) {
         this.currentProvider.clearSubscriptions();
     }
@@ -135,34 +135,56 @@ AbstractWeb3Object.prototype.clearSubscriptions = function() {
  */
 AbstractWeb3Object.prototype.extend = function (extension) {
     var namespace = extension.property || false,
-        extendedObject,
-        self = this;
+        extendedObject;
 
     if (namespace) {
-        extendedObject = this[namespace] = {};
+        extendedObject = this[namespace] = new this.constructor(
+            this.provider,
+            this.providersPackage,
+            this.methodService,
+            new this.methodModelFactory.constructor(this.methodModelFactory.utils, this.methodModelFactory.formatters)
+        );
     } else {
         extendedObject = this;
     }
 
-    if (extension.methods.length > 0) {
-        extension.methods.forEach(function(method) {
-           extendedObject[method.name] = function () {
-               var parameters = null;
-               var callback = arguments[0];
+    if (extension.methods) {
+        extension.methods.forEach(function (method) {
+            function ExtensionMethodModel(utils, formatters) {
+                AbstractMethodModel.call(this, method.call, method.params, utils, formatters);
+            }
 
-               if (method.params && method.params > 0) {
-                   parameters = arguments.slice(0, (method.params - 1 ));
-                   callback = arguments.slice(-1);
-               }
+            ExtensionMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+                method.inputFormatters.forEach(function (formatter, key) {
+                    if (formatter) {
+                        parameters[key] = formatter(parameters[key], web3Package);
+                    }
+                });
+            };
 
-               return this.methodPackage.create(
-                   self.currentProvider,
-                   method.call,
-                   parameters,
-                   method.inputFormatter,
-                   method.outputFormatter
-               ).send(callback);
-           };
+            ExtensionMethodModel.prototype.afterExecution = function (response) {
+                if (_.isArray(response)) {
+                    response = response.map(function (responseItem) {
+                        if (method.outputFormatter && responseItem) {
+                            return method.outputFormatter(responseItem);
+                        }
+
+                        return responseItem;
+                    });
+
+                    return response;
+                }
+
+                if (method.outputFormatter && result) {
+                    response = method.outputFormatter(response);
+                }
+
+                return response;
+            };
+
+            ExtensionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+
+            extendedObject.methodModelFactory.methodModels[method.name] = ExtensionMethodModel;
         });
     }
 };
@@ -177,7 +199,7 @@ AbstractWeb3Object.prototype.extend = function (extension) {
  *
  * @returns {*}
  */
-AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
+AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
     if (target.methodModelFactory.hasMethodModel(name)) {
         if (typeof target[name] !== 'undefined') {
             throw new Error('Duplicated method ' + name + '. This method is defined as RPC call and as Object method.');
@@ -185,7 +207,7 @@ AbstractWeb3Object.prototype.proxyHandler = function(target, name) {
 
         var methodModel = target.methodModelFactory.createMethodModel(name);
 
-        var anonymousFunction = function() {
+        var anonymousFunction = function () {
             return target.methodService.execute(
                 methodModel,
                 target.currentProvider,
