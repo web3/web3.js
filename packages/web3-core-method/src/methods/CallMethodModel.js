@@ -43,7 +43,7 @@ function CallMethodModel(utils, formatters) {
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
 CallMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputCallFormatter(parameters[0]);
+    parameters[0] = this.formatters.inputCallFormatter(parameters[0], web3Package);
     parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(parameters[1], web3Package);
 };
 

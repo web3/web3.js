@@ -117,19 +117,23 @@ var _txInputFormatter = function (options){
  * Formats the input of a transaction and converts all values to HEX
  *
  * @method inputCallFormatter
- * @param {Object} transaction options
+ *
+ * @param {Object} options
+ * @param {AbstractWeb3Object} web3Package
+ *
  * @returns object
 */
-var inputCallFormatter = function (options){
-
+var inputCallFormatter = function (options, web3Package){
     options = _txInputFormatter(options);
+    var from = web3Package.defaultAccount;
 
-    var from = options.from || (this ? this.defaultAccount : null);
+    if (options.from) {
+        from = options.from
+    }
 
     if (from) {
         options.from = inputAddressFormatter(from);
     }
-
 
     return options;
 };
@@ -138,16 +142,19 @@ var inputCallFormatter = function (options){
  * Formats the input of a transaction and converts all values to HEX
  *
  * @method inputTransactionFormatter
+ *
  * @param {Object} options
+ * @param {AbstractWeb3Object} web3Package
+ *
  * @returns object
 */
-var inputTransactionFormatter = function (options) {
-
+var inputTransactionFormatter = function (options, web3Package) {
     options = _txInputFormatter(options);
 
-    // check from, only if not number, or object
     if (!_.isNumber(options.from) && !_.isObject(options.from)) {
-        options.from = options.from || (this ? this.defaultAccount : null);
+        if (!options.from) {
+            options.from = web3Package.defaultAccount;
+        }
 
         if (!options.from && !_.isNumber(options.from)) {
             throw new Error('The send transactions "from" field must be defined!');

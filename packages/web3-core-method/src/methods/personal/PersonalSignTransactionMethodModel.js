@@ -43,7 +43,7 @@ function PersonalSignTransactionMethodModel(utils, formatters) {
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
 PersonalSignTransactionMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputTransactionFormatter(parameters[0]);
+    parameters[0] = this.formatters.inputTransactionFormatter(parameters[0], web3Package);
 };
 
 PersonalSignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
