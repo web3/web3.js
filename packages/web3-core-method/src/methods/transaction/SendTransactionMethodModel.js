@@ -37,9 +37,10 @@ function SendTransactionMethodModel(utils, formatters, accounts) {
         'eth_sendTransaction',
         1,
         [formatters.inputTransactionFormatter],
-        null,
-        accounts
-    )
+        null
+    );
+
+    this.accounts = accounts;
 }
 
 SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

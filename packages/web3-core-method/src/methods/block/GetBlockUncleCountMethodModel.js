@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetBlockUncleCountMethodModel(utils, formatters, accounts) {
+function GetBlockUncleCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getUncleCountByBlockNumber',
@@ -39,9 +38,8 @@ function GetBlockUncleCountMethodModel(utils, formatters, accounts) {
         [
             formatters.inputBlockNumberFormatter
         ],
-        utils.hexToNumber,
-        accounts
-    )
+        utils.hexToNumber
+    );
 }
 
 GetBlockUncleCountMethodModel.prototype.beforeExecution = function (parameters) {

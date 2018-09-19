@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetTransactionCountMethodModel(utils, formatters, accounts) {
+function GetTransactionCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getTransactionCount',
@@ -40,9 +39,8 @@ function GetTransactionCountMethodModel(utils, formatters, accounts) {
             formatters.inputAddressFormatter,
             formatters.inputDefaultBlockNumberFormatter
         ],
-        utils.hexToNumber,
-        accounts
-    )
+        utils.hexToNumber
+    );
 }
 
 GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

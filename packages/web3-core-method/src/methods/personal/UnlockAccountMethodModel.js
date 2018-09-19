@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function UnlockAccountMethodModel(utils, formatters, accounts) {
+function UnlockAccountMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'personal_unlockAccount',
@@ -41,9 +40,8 @@ function UnlockAccountMethodModel(utils, formatters, accounts) {
             null,
             null
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

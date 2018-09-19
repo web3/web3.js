@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function IsSyncingMethodModel(utils, formatters, accounts) {
+function IsSyncingMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_syncing',
         0,
         null,
-        formatters.outputSyncingFormatter,
-        accounts
-    )
+        formatters.outputSyncingFormatter
+    );
 }
 
 IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

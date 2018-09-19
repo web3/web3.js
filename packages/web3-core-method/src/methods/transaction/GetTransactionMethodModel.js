@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetTransactionMethodModel(utils, formatters, accounts) {
+function GetTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getTransactionByHash',
         1,
         null,
-        formatters.outputTransactionFormatter,
-        accounts
-    )
+        formatters.outputTransactionFormatter
+    );
 }
 
 GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

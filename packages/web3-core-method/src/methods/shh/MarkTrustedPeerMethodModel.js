@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function MarkTrustedPeerMethodModel(utils, formatters, accounts) {
+function MarkTrustedPeerMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_markTrustedPeer',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 MarkTrustedPeerMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

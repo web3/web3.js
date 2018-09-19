@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function ListeningMethodModel(utils, formatters, accounts) {
+function ListeningMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'net_peerCount',
         0,
         null,
-        utils.hexToNumber,
-        accounts
-    )
+        utils.hexToNumber
+    );
 }
 
 ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

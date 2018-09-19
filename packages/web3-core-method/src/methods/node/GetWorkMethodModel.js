@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetWorkMethodModel(utils, formatters, accounts) {
+function GetWorkMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getWork',
         0,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 GetWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

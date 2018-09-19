@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function EcRecoverMethodModel(utils, formatters, accounts) {
+function EcRecoverMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'personal_ecRecover',
@@ -41,9 +40,8 @@ function EcRecoverMethodModel(utils, formatters, accounts) {
             formatters.inputAddressFormatter,
             null
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

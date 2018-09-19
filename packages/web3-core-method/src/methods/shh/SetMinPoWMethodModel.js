@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function SetMinPoWMethodModel(utils, formatters, accounts) {
+function SetMinPoWMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_setMinPoW',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 SetMinPoWMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

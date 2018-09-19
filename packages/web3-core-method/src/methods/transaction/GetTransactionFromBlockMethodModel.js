@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetTransactionFromBlockMethodModel(utils, formatters, accounts) {
+function GetTransactionFromBlockMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getTransactionByBlockNumberAndIndex',
@@ -40,9 +39,8 @@ function GetTransactionFromBlockMethodModel(utils, formatters, accounts) {
             formatters.inputBlockNumberFormatter,
             utils.numberToHex
         ],
-        formatters.outputTransactionFormatter,
-        accounts
-    )
+        formatters.outputTransactionFormatter
+    );
 }
 
 GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (parameters) {

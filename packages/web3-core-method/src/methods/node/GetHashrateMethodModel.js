@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetHashrateMethodModel(utils, formatters, accounts) {
+function GetHashrateMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_hashrate',
         0,
         null,
-        utils.hexToNumber,
-        accounts
-    )
+        utils.hexToNumber
+    );
 }
 
 GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

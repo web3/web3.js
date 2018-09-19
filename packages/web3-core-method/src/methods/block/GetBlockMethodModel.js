@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetBlockMethodModel(utils, formatters, accounts) {
+function GetBlockMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getBlockByNumber',
@@ -42,9 +41,8 @@ function GetBlockMethodModel(utils, formatters, accounts) {
                 return !!val;
             }
         ],
-        formatters.outputBlockFormatter,
-        accounts
-    )
+        formatters.outputBlockFormatter
+    );
 }
 
 GetBlockMethodModel.prototype.beforeExecution = function (parameters) {

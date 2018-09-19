@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function NewMessageFilterMethodModel(utils, formatters, accounts) {
+function NewMessageFilterMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_newMessageFilter',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 NewMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetStorageAtMethodModel(utils, formatters, accounts) {
+function GetStorageAtMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getStorageAt',
@@ -41,9 +40,8 @@ function GetStorageAtMethodModel(utils, formatters, accounts) {
             utils.numberToHex,
             formatters.inputDefaultBlockNumberFormatter
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

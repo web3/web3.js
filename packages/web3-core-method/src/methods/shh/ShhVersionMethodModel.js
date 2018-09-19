@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function ShhVersionMethodModel(utils, formatters, accounts) {
+function ShhVersionMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_version',
         0,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 ShhVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

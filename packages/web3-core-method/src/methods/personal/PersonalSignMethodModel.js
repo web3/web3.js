@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function PersonalSignMethodModel(utils, formatters, accounts) {
+function PersonalSignMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'personal_sign',
@@ -41,9 +40,8 @@ function PersonalSignMethodModel(utils, formatters, accounts) {
             formatters.inputAddressFormatter,
             null
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

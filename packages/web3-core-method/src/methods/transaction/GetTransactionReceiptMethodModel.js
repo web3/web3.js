@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetTransactionReceiptMethodModel(utils, formatters, accounts) {
+function GetTransactionReceiptMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getTransactionReceipt',
         1,
         null,
-        formatters.outputTransactionReceiptFormatter,
-        accounts
-    )
+        formatters.outputTransactionReceiptFormatter
+    );
 }
 
 GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

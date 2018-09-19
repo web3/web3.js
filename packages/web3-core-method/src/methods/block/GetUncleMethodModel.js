@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetUncleMethodModel(utils, formatters, accounts) {
+function GetUncleMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getUncleByBlockNumberAndIndex',
@@ -42,7 +41,7 @@ function GetUncleMethodModel(utils, formatters, accounts) {
         ],
         formatters.outputBlockFormatter,
         accounts
-    )
+    );
 }
 
 GetUncleMethodModel.prototype.beforeExecution = function (parameters) {

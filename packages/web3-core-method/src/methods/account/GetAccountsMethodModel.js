@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetAccountsMethodModel(utils, formatters, accounts) {
+function GetAccountsMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_accounts',
         0,
         null,
-        utils.toChecksumAddress,
-        accounts
-    )
+        utils.toChecksumAddress
+    );
 }
 
 GetAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

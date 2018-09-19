@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function SetMaxMessageSizeMethodModel(utils, formatters, accounts) {
+function SetMaxMessageSizeMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_setMaxMessageSize',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 SetMaxMessageSizeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

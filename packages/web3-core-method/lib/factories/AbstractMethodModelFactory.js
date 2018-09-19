@@ -29,10 +29,9 @@
  *
  * @constructor
  */
-function AbstractMethodModelFactory(utils, formatters, accounts) {
+function AbstractMethodModelFactory(utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
-    this.accounts = accounts;
     this.methodModels = {};
 }
 
@@ -41,7 +40,7 @@ AbstractMethodModelFactory.prototype.hasMethodModel = function (name) {
 };
 
 AbstractMethodModelFactory.prototype.createMethodModel = function (name) {
-    return new this.methodModels[name](this.utils, this.formatters, this.accounts);
+    return new this.methodModels[name](this.utils, this.formatters);
 };
 
 module.exports = AbstractMethodModelFactory;

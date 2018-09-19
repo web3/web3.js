@@ -34,15 +34,16 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 function SignMethodModel(utils, formatters, accounts) {
     AbstractMethodModel.call(
         this,
-        'eth_signTransaction',
+        'eth_sign',
         2,
         [
             formatters.inputSignFormatter,
             formatters.inputAddressFormatter
         ],
-        null,
-        accounts
-    )
+        null
+    );
+
+    this.accounts = accounts;
 }
 
 SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

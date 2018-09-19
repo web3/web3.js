@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetProtocolVersionMethodModel(utils, formatters, accounts) {
+function GetProtocolVersionMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_protocolVersion',
         0,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 GetProtocolVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

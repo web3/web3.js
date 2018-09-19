@@ -52,7 +52,7 @@ module.exports = {
             ProvidersPackage,
             accounts,
             MethodPackage.createMethodService(),
-            new MethodModelFactory(Utils, formatters, accounts),
+            new MethodModelFactory(Utils, formatters),
             NetworkPackage.createNetwork(provider),
             Utils,
             formatters

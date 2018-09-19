@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function PersonalSendTransactionMethodModel(utils, formatters, accounts) {
+function PersonalSendTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'personal_sendTransaction',
@@ -40,9 +39,8 @@ function PersonalSendTransactionMethodModel(utils, formatters, accounts) {
             formatters.inputTransactionFormatter,
             null
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 PersonalSendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

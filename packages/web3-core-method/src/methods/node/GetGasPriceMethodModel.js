@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetGasPriceMethodModel(utils, formatters, accounts) {
+function GetGasPriceMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_gasPrice',
         0,
         null,
-        formatters.outputBigNumberFormatter,
-        accounts
-    )
+        formatters.outputBigNumberFormatter
+    );
 }
 
 GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

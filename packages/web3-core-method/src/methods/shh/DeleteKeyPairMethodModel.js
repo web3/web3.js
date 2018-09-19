@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function DeleteKeyPairMethodModel(utils, formatters, accounts) {
+function DeleteKeyPairMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_deleteKeyPair',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 DeleteKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

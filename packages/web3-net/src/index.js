@@ -47,13 +47,13 @@ module.exports = {
      */
     createNetwork: function (provider) {
         var accounts = AccountsPackage.createAccounts();
-        
+
         return new Network(
             provider,
             ProvidersPackage,
             accounts,
             MethodPackage.createMethodService(),
-            new MethodModelFactory(Utils, formatters, accounts),
+            new MethodModelFactory(Utils, formatters),
             formatters,
             utils
         )

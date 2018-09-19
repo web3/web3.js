@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function EstimateGasMethodModel(utils, formatters, accounts) {
+function EstimateGasMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_estimateGas',
         1,
         [formatters.inputCallFormatter],
-        utils.hexToNumber,
-        accounts
-    )
+        utils.hexToNumber
+    );
 }
 
 EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

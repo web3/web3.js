@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function HasSymKeyMethodModel(utils, formatters, accounts) {
+function HasSymKeyMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_hasSymKey',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 HasSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

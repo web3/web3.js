@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function SendSignedTransactionMethodModel(utils, formatters, accounts) {
+function SendSignedTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_sendRawTransaction',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 SendSignedTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

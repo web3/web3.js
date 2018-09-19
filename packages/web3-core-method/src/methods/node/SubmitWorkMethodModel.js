@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function SubmitWorkMethodModel(utils, formatters, accounts) {
+function SubmitWorkMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_submitWork',
         3,
         null,
         null,
-        accounts
-    )
+    );
 }
 
 SubmitWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

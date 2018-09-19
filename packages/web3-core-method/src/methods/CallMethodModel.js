@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function CallMethodModel(utils, formatters, accounts) {
+function CallMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_call',
@@ -40,9 +39,8 @@ function CallMethodModel(utils, formatters, accounts) {
             formatters.inputCallFormatter,
             formatters.inputDefaultBlockNumberFormatter
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

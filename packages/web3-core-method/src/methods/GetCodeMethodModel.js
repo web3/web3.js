@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetCodeMethodModel(utils, formatters, accounts) {
+function GetCodeMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getCode',
@@ -40,9 +39,8 @@ function GetCodeMethodModel(utils, formatters, accounts) {
             formatters.inputAddressFormatter,
             formatters.inputDefaultBlockNumberFormatter
         ],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

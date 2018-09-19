@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function LockAccountMethodModel(utils, formatters, accounts) {
+function LockAccountMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'personal_lockAccount',
         1,
         [formatters.inputAddressFormatter],
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 LockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

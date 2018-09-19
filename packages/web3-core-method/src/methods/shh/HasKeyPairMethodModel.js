@@ -27,19 +27,17 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function HasKeyPairMethodModel(utils, formatters, accounts) {
+function HasKeyPairMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'shh_hasKeyPair',
         1,
         null,
-        null,
-        accounts
-    )
+        null
+    );
 }
 
 HasKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

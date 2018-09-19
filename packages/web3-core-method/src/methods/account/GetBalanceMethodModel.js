@@ -27,11 +27,10 @@ var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function GetBalanceMethodModel(utils, formatters, accounts) {
+function GetBalanceMethodModel(utils, formatters) {
     AbstractMethodModel.call(
         this,
         'eth_getBalance',
@@ -40,9 +39,8 @@ function GetBalanceMethodModel(utils, formatters, accounts) {
             formatters.inputAddressFormatter,
             formatters.inputDefaultBlockNumberFormatter
         ],
-        formatters.outputBigNumberFormatter,
-        accounts
-    )
+        formatters.outputBigNumberFormatter
+    );
 }
 
 GetBalanceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
