@@ -23,7 +23,6 @@
 "use strict";
 
 var EventEmitter = require('eventemitter3');
-var Promise = require("any-promise");
 
 /**
  * This function generates a defer promise and adds eventEmitter functionality to it
@@ -56,12 +55,6 @@ var PromiEvent = function PromiEvent() {
         reject: reject,
         eventEmitter: eventEmitter
     };
-};
-
-PromiEvent.resolve = function(value) {
-    var promise = PromiEvent(true);
-    promise.resolve(value);
-    return promise.eventEmitter;
 };
 
 module.exports = PromiEvent;
