@@ -67,5 +67,6 @@ SendMethodCommand.prototype.execute = function (web3Package, methodModel, provid
 };
 
 SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+SendMethodCommand.prototype.constructor = SendMethodCommand;
 
 module.exports = SendMethodCommand;

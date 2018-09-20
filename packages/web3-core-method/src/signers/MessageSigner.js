@@ -51,6 +51,6 @@ MessageSigner.prototype.sign = function(data, address, accounts) {
 
 // Inherit from AbstractSigner
 MessageSigner.prototype = Object.create(AbstractSigner.prototype);
-MessageSigner.prototype.constructor = AbstractSigner.prototype.constructor;
+MessageSigner.prototype.constructor = MessageSigner;
 
 module.exports = MessageSigner;

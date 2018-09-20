@@ -35,5 +35,6 @@ function GetPublicKeyMethodModel(utils, formatters) {
 }
 
 GetPublicKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetPublicKeyMethodModel.prototype.constructor = GetPublicKeyMethodModel;
 
 module.exports = GetPublicKeyMethodModel;

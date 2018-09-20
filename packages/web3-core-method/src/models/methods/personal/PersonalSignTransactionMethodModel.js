@@ -46,5 +46,6 @@ PersonalSignTransactionMethodModel.prototype.beforeExecution = function (web3Pac
 };
 
 PersonalSignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PersonalSignTransactionMethodModel.prototype.constructor = PersonalSignTransactionMethodModel;
 
 module.exports = PersonalSignTransactionMethodModel;

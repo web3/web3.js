@@ -35,5 +35,6 @@ function SetMaxMessageSizeMethodModel(utils, formatters) {
 }
 
 SetMaxMessageSizeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SetMaxMessageSizeMethodModel.prototype.constructor = SetMaxMessageSizeMethodModel;
 
 module.exports = SetMaxMessageSizeMethodModel;

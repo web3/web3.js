@@ -56,6 +56,6 @@ TransactionSigner.prototype.sign = function (transaction, accounts) {
 
 // Inherit from AbstractSigner
 TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
-TransactionSigner.prototype.constructor = AbstractSigner.prototype.constructor;
+TransactionSigner.prototype.constructor = TransactionSigner;
 
 module.exports = TransactionSigner;

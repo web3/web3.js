@@ -48,5 +48,6 @@ GetBlockNumberMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetBlockNumberMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockNumberMethodModel.prototype.constructor = GetBlockNumberMethodModel;
 
 module.exports = GetBlockNumberMethodModel;

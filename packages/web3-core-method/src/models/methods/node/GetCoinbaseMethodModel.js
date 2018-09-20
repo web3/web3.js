@@ -35,5 +35,6 @@ function GetCoinbaseMethodModel(utils, formatters) {
 }
 
 GetCoinbaseMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetCoinbaseMethodModel.prototype.constructor = GetCoinbaseMethodModel;
 
 module.exports = GetCoinbaseMethodModel;

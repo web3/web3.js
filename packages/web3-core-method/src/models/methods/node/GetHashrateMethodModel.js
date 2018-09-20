@@ -48,5 +48,6 @@ GetHashrateMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetHashrateMethodModel.prototype.constructor = GetHashrateMethodModel;
 
 module.exports = GetHashrateMethodModel;

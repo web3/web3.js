@@ -47,5 +47,6 @@ GetCodeMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetCodeMethodModel.prototype.constructor = GetCodeMethodModel;
 
 module.exports = GetCodeMethodModel;

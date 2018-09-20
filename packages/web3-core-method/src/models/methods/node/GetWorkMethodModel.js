@@ -35,5 +35,6 @@ function GetWorkMethodModel(utils, formatters) {
 }
 
 GetWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetWorkMethodModel.prototype.constructor = GetWorkMethodModel;
 
 module.exports = GetWorkMethodModel;

@@ -35,5 +35,6 @@ function GetInfoMethodModel(utils, formatters) {
 }
 
 GetInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetInfoMethodModel.prototype.constructor = GetInfoMethodModel;
 
 module.exports = GetInfoMethodModel;

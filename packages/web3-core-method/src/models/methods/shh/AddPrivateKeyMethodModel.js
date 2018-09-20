@@ -35,5 +35,6 @@ function AddPrivateKeyMethodModel(utils, formatters) {
 }
 
 AddPrivateKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+AddPrivateKeyMethodModel.prototype.constructor = AddPrivateKeyMethodModel;
 
 module.exports = AddPrivateKeyMethodModel;

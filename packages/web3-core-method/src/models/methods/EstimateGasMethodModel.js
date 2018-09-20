@@ -59,5 +59,6 @@ EstimateGasMethodModel.prototype.afterExecution = function (response) {
 };
 
 EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+EstimateGasMethodModel.prototype.constructor = EstimateGasMethodModel;
 
 module.exports = EstimateGasMethodModel;

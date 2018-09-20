@@ -81,5 +81,6 @@ Shh.prototype.setProvider = function (provider) {
 };
 
 Shh.prototype = Object.create(AbstractWeb3Object.prototype);
+Shh.prototype.constructor = Shh;
 
 module.exports = Shh;

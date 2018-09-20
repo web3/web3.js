@@ -47,5 +47,6 @@ CallMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+CallMethodModel.prototype.constructor = CallMethodModel;
 
 module.exports = CallMethodModel;

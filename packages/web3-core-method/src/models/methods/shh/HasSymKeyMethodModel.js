@@ -35,5 +35,6 @@ function HasSymKeyMethodModel(utils, formatters) {
 }
 
 HasSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+HasSymKeyMethodModel.prototype.constructor = HasSymKeyMethodModel;
 
 module.exports = HasSymKeyMethodModel;

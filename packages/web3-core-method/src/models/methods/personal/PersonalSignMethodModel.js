@@ -47,5 +47,6 @@ PersonalSignMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PersonalSignMethodModel.prototype.constructor = PersonalSignMethodModel;
 
 module.exports = PersonalSignMethodModel;

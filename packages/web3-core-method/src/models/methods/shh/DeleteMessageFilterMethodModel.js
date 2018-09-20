@@ -35,5 +35,6 @@ function DeleteMessageFilterMethodModel(utils, formatters) {
 }
 
 DeleteMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+DeleteMessageFilterMethodModel.prototype.constructor = DeleteMessageFilterMethodModel;
 
 module.exports = DeleteMessageFilterMethodModel;

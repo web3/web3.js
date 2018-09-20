@@ -48,5 +48,6 @@ GetStorageAtMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetStorageAtMethodModel.prototype.constructor = GetStorageAtMethodModel;
 
 module.exports = GetStorageAtMethodModel;

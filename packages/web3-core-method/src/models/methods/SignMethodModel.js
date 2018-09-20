@@ -49,5 +49,6 @@ SignMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SignMethodModel.prototype.constructor = SignMethodModel;
 
 module.exports = SignMethodModel;

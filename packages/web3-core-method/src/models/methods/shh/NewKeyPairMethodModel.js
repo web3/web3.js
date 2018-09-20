@@ -35,5 +35,6 @@ function NewKeyPairMethodModel(utils, formatters) {
 }
 
 NewKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+NewKeyPairMethodModel.prototype.constructor = NewKeyPairMethodModel;
 
 module.exports = NewKeyPairMethodModel;

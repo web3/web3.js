@@ -153,5 +153,6 @@ Eth.prototype.setProvider = function (provider) {
 };
 
 Eth.prototype = Object.create(AbstractWeb3Object.prototype);
+Eth.prototype.constructor = Eth;
 
 module.exports = Eth;

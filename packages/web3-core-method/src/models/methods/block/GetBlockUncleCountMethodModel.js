@@ -63,5 +63,6 @@ GetBlockUncleCountMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetBlockUncleCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockUncleCountMethodModel.prototype.constructor = GetBlockUncleCountMethodModel;
 
 module.exports = GetBlockUncleCountMethodModel;

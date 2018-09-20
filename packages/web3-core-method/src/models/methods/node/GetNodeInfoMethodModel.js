@@ -35,5 +35,6 @@ function GetNodeInfoMethodModel(utils, formatters) {
 }
 
 GetNodeInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetNodeInfoMethodModel.prototype.constructor = GetNodeInfoMethodModel;
 
 module.exports = GetNodeInfoMethodModel;

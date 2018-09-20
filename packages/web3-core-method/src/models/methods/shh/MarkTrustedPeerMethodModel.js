@@ -35,5 +35,6 @@ function MarkTrustedPeerMethodModel(utils, formatters) {
 }
 
 MarkTrustedPeerMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+MarkTrustedPeerMethodModel.prototype.constructor = MarkTrustedPeerMethodModel;
 
 module.exports = MarkTrustedPeerMethodModel;

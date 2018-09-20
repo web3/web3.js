@@ -35,5 +35,6 @@ function SendSignedTransactionMethodModel(utils, formatters) {
 }
 
 SendSignedTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SendSignedTransactionMethodModel.prototype.constructor = SendSignedTransactionMethodModel;
 
 module.exports = SendSignedTransactionMethodModel;

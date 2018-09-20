@@ -46,5 +46,6 @@ PersonalSendTransactionMethodModel.prototype.beforeExecution = function (web3Pac
 };
 
 PersonalSendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PersonalSendTransactionMethodModel.prototype.constructor = PersonalSendTransactionMethodModel;
 
 module.exports = PersonalSendTransactionMethodModel;

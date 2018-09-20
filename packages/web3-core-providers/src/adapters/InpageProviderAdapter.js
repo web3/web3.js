@@ -99,5 +99,6 @@ InpageProviderAdapter.prototype.isConnected = function () {
 };
 
 InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+InpageProviderAdapter.prototype.constructor = InpageProviderAdapter;
 
 module.exports = InpageProviderAdapter;

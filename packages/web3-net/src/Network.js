@@ -96,5 +96,6 @@ Network.prototype.getNetworkType = function (callback) {
 };
 
 Network.prototype = Object.create(AbstractWeb3Object.prototype);
+Network.prototype.constructor = Network;
 
 module.exports = Network;

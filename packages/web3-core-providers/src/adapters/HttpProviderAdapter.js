@@ -74,5 +74,6 @@ HttpProviderAdapter.prototype.isConnected = function () {
 };
 
 HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+HttpProviderAdapter.prototype.constructor = HttpProviderAdapter;
 
 module.exports = HttpProviderAdapter;

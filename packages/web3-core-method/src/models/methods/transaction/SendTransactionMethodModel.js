@@ -48,5 +48,6 @@ SendTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SendTransactionMethodModel.prototype.constructor = SendTransactionMethodModel;
 
 module.exports = SendTransactionMethodModel;

@@ -64,5 +64,6 @@ GetUncleMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetUncleMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetUncleMethodModel.prototype.constructor = GetUncleMethodModel;
 
 module.exports = GetUncleMethodModel;

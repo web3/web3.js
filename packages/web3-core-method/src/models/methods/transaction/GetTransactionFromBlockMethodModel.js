@@ -64,5 +64,6 @@ GetTransactionFromBlockMethodModel.prototype.afterExecution = function (response
 };
 
 GetTransactionFromBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionFromBlockMethodModel.prototype.constructor = GetTransactionFromBlockMethodModel;
 
 module.exports = GetTransactionFromBlockMethodModel;

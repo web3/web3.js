@@ -460,6 +460,7 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
 };
 
 Accounts.prototype = Object.create(AbstractWeb3Object.prototype);
+Accounts.prototype.constructor = Accounts;
 
 
 // Note: this is trying to follow closely the specs on

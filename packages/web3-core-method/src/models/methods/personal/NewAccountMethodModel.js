@@ -48,5 +48,6 @@ NewAccountMethodModel.prototype.afterExecution = function (response) {
 };
 
 NewAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+NewAccountMethodModel.prototype.constructor = NewAccountMethodModel;
 
 module.exports = NewAccountMethodModel;

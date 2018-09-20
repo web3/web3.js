@@ -35,5 +35,6 @@ function ImportRawKeyMethodModel(utils, formatters) {
 }
 
 ImportRawKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+ImportRawKeyMethodModel.prototype.constructor = ImportRawKeyMethodModel;
 
 module.exports = ImportRawKeyMethodModel;

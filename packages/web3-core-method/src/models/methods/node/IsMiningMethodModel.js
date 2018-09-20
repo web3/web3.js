@@ -35,5 +35,6 @@ function IsMiningMethodModel(utils, formatters) {
 }
 
 IsMiningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+IsMiningMethodModel.prototype.constructor = IsMiningMethodModel;
 
 module.exports = IsMiningMethodModel;

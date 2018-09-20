@@ -63,5 +63,6 @@ GetBlockTransactionCountMethodModel.prototype.afterExecution = function (respons
 };
 
 GetBlockTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockTransactionCountMethodModel.prototype.constructor = GetBlockTransactionCountMethodModel;
 
 module.exports = GetBlockTransactionCountMethodModel;

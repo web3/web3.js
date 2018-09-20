@@ -35,5 +35,6 @@ function HasKeyPairMethodModel(utils, formatters) {
 }
 
 HasKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+HasKeyPairMethodModel.prototype.constructor = HasKeyPairMethodModel;
 
 module.exports = HasKeyPairMethodModel;

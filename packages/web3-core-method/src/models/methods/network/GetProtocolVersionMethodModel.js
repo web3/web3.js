@@ -35,5 +35,6 @@ function GetProtocolVersionMethodModel(utils, formatters) {
 }
 
 GetProtocolVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetProtocolVersionMethodModel.prototype.constructor = GetProtocolVersionMethodModel;
 
 module.exports = GetProtocolVersionMethodModel;

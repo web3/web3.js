@@ -35,5 +35,6 @@ function DeleteKeyPairMethodModel(utils, formatters) {
 }
 
 DeleteKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+DeleteKeyPairMethodModel.prototype.constructor = DeleteKeyPairMethodModel;
 
 module.exports = DeleteKeyPairMethodModel;

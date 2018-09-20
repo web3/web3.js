@@ -35,5 +35,6 @@ function SubmitWorkMethodModel(utils, formatters) {
 }
 
 SubmitWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SubmitWorkMethodModel.prototype.constructor = SubmitWorkMethodModel;
 
 module.exports = SubmitWorkMethodModel;

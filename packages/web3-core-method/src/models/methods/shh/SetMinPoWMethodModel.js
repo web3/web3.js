@@ -35,5 +35,6 @@ function SetMinPoWMethodModel(utils, formatters) {
 }
 
 SetMinPoWMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SetMinPoWMethodModel.prototype.constructor = SetMinPoWMethodModel;
 
 module.exports = SetMinPoWMethodModel;

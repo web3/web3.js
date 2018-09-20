@@ -48,5 +48,6 @@ IsSyncingMethodModel.prototype.afterExecution = function (response) {
 };
 
 IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+IsSyncingMethodModel.prototype.constructor = IsSyncingMethodModel;
 
 module.exports = IsSyncingMethodModel;

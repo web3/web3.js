@@ -46,5 +46,6 @@ LockAccountMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 LockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+LockAccountMethodModel.prototype.constructor = LockAccountMethodModel;
 
 module.exports = LockAccountMethodModel;

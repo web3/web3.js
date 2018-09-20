@@ -80,6 +80,7 @@ Personal.prototype.setProvider = function (provider) {
 };
 
 Personal.prototype = Object.create(AbstractWeb3Object);
+Personal.prototype.constructor = Personal;
 
 module.exports = Personal;
 

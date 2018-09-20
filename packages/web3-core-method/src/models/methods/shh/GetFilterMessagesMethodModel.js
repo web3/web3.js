@@ -35,5 +35,6 @@ function GetFilterMessagesMethodModel(utils, formatters) {
 }
 
 GetFilterMessagesMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetFilterMessagesMethodModel.prototype.constructor = GetFilterMessagesMethodModel;
 
 module.exports = GetFilterMessagesMethodModel;

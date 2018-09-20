@@ -48,5 +48,6 @@ VersionMethodModel.prototype.afterExecution = function (response) {
 };
 
 VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+VersionMethodModel.prototype.constructor = VersionMethodModel;
 
 module.exports = VersionMethodModel;

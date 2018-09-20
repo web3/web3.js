@@ -35,5 +35,6 @@ function ListeningMethodModel(utils, formatters) {
 }
 
 ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+ListeningMethodModel.prototype.constructor = ListeningMethodModel;
 
 module.exports = ListeningMethodModel;

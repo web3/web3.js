@@ -46,5 +46,6 @@ UnlockAccountMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+UnlockAccountMethodModel.prototype.constructor = UnlockAccountMethodModel;
 
 module.exports = UnlockAccountMethodModel;

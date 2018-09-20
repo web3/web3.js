@@ -35,5 +35,6 @@ function DeleteSymKeyMethodModel(utils, formatters) {
 }
 
 DeleteSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+DeleteSymKeyMethodModel.prototype.constructor = DeleteSymKeyMethodModel;
 
 module.exports = DeleteSymKeyMethodModel;

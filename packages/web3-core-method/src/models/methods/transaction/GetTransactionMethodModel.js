@@ -48,5 +48,6 @@ GetTransactionMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionMethodModel.prototype.constructor = GetTransactionMethodModel;
 
 module.exports = GetTransactionMethodModel;

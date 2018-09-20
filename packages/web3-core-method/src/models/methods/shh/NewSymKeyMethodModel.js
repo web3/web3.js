@@ -35,5 +35,6 @@ function NewSymKeyMethodModel(utils, formatters) {
 }
 
 NewSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+NewSymKeyMethodModel.prototype.constructor = NewSymKeyMethodModel;
 
 module.exports = NewSymKeyMethodModel;

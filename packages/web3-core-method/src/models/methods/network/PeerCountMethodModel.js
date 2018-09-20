@@ -48,5 +48,6 @@ PeerCountMethodModel.prototype.afterExecution = function (response) {
 };
 
 PeerCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PeerCountMethodModel.prototype.constructor = PeerCountMethodModel;
 
 module.exports = PeerCountMethodModel;

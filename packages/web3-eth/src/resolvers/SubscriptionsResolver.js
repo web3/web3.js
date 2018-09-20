@@ -273,5 +273,6 @@ SubscriptionsResolver.prototype.hasFromBlockProperty = function (parameter) {
 };
 
 SubscriptionsResolver.prototype = Object.create(AbstractWeb3Object);
+SubscriptionsResolver.prototype.constructor = SubscriptionsResolver;
 
 module.exports = SubscriptionsResolver;

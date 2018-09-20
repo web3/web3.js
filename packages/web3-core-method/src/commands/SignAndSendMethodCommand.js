@@ -75,5 +75,6 @@ SignAndSendMethodCommand.prototype.execute = function (
 };
 
 SignAndSendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
 
 module.exports = SignAndSendMethodCommand;

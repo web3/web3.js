@@ -35,5 +35,6 @@ function PostMethodModel(utils, formatters) {
 }
 
 PostMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PostMethodModel.prototype.constructor = PostMethodModel;
 
 module.exports = PostMethodModel;

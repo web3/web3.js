@@ -63,5 +63,6 @@ GetPastLogsMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetPastLogsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetPastLogsMethodModel.prototype.constructor = GetPastLogsMethodModel;
 
 module.exports = GetPastLogsMethodModel;

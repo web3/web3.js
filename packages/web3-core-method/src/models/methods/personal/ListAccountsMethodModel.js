@@ -52,5 +52,6 @@ ListAccountsMethodModel.prototype.afterExecution = function (response) {
 };
 
 ListAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+ListAccountsMethodModel.prototype.constructor = ListAccountsMethodModel;
 
 module.exports = ListAccountsMethodModel;

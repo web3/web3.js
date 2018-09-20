@@ -47,5 +47,6 @@ EcRecoverMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+EcRecoverMethodModel.prototype.constructor = EcRecoverMethodModel;
 
 module.exports = EcRecoverMethodModel;

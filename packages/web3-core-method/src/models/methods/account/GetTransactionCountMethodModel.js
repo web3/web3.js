@@ -60,5 +60,6 @@ GetTransactionCountMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionCountMethodModel.prototype.constructor = GetTransactionCountMethodModel;
 
 module.exports = GetTransactionCountMethodModel;

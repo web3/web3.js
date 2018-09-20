@@ -64,5 +64,6 @@ GetBlockMethodModel.prototype.afterExecution = function(response) {
 };
 
 GetBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockMethodModel.prototype.constructor = GetBlockMethodModel;
 
 module.exports = GetBlockMethodModel;

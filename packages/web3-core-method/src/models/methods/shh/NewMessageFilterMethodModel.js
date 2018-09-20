@@ -35,5 +35,6 @@ function NewMessageFilterMethodModel(utils, formatters) {
 }
 
 NewMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+NewMessageFilterMethodModel.prototype.constructor = NewMessageFilterMethodModel;
 
 module.exports = NewMessageFilterMethodModel;

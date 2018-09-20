@@ -35,5 +35,6 @@ function GenerateSymKeyFromPasswordMethodModel(utils, formatters) {
 }
 
 GenerateSymKeyFromPasswordMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GenerateSymKeyFromPasswordMethodModel.prototype.constructor = GenerateSymKeyFromPasswordMethodModel;
 
 module.exports = GenerateSymKeyFromPasswordMethodModel;

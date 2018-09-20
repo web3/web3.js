@@ -52,5 +52,6 @@ GetAccountsMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetAccountsMethodModel.prototype.constructor = GetAccountsMethodModel;
 
 module.exports = GetAccountsMethodModel;

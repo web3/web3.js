@@ -48,5 +48,6 @@ GetGasPriceMethodModel.prototype.afterExecution = function (response) {
 };
 
 GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetGasPriceMethodModel.prototype.constructor = GetGasPriceMethodModel;
 
 module.exports = GetGasPriceMethodModel;

@@ -35,5 +35,6 @@ function ShhVersionMethodModel(utils, formatters) {
 }
 
 ShhVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+ShhVersionMethodModel.prototype.constructor = ShhVersionMethodModel;
 
 module.exports = ShhVersionMethodModel;

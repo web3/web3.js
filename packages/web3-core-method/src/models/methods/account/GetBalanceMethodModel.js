@@ -60,5 +60,6 @@ GetBalanceMethodModel.prototype.afterExecution = function(response) {
 };
 
 GetBalanceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBalanceMethodModel.prototype.constructor = GetBalanceMethodModel;
 
 module.exports = GetBalanceMethodModel;

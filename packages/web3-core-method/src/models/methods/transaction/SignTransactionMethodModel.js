@@ -46,5 +46,6 @@ SignTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
 };
 
 SignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SignTransactionMethodModel.prototype.constructor = SignTransactionMethodModel;
 
 module.exports = SignTransactionMethodModel;

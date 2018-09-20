@@ -48,5 +48,6 @@ GetTransactionReceiptMethodModel.prototype.afterExecution = function (response) 
 };
 
 GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionReceiptMethodModel.prototype.constructor = GetTransactionReceiptMethodModel;
 
 module.exports = GetTransactionReceiptMethodModel;
