@@ -44,7 +44,6 @@ function ProviderAdapterResolver(providersPackageFactory) {
  * @returns {Object|Boolean}
  */
 ProviderAdapterResolver.prototype.resolve = function (provider, net) {
-
     if (typeof provider === 'string') {
         // HTTP
         if (/^http(s)?:\/\//i.test(provider)) {

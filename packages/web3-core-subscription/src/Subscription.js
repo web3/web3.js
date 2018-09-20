@@ -27,7 +27,7 @@ var EventEmitter = require('eventemitter3');
 
 /**
  * @param {Object} provider
- * @param {String} method
+ * @param {String} subscriptionMethod
  * @param {Array} parameters
  * @param {Array} inputFormatters
  * @param {Function} outputFormatter
@@ -35,9 +35,9 @@ var EventEmitter = require('eventemitter3');
  *
  * @constructor
  */
-function Subscription(provider, method, parameters, inputFormatters, outputFormatter, subscriptionType) {
+function Subscription(provider, subscriptionMethod, parameters, inputFormatters, outputFormatter, subscriptionType) {
     this.provider = provider;
-    this.method = method;
+    this.subscriptionMethod = subscriptionMethod;
     this.parameters = parameters;
     this.inputFormatters = inputFormatters;
     this.outputFormatter = outputFormatter;
@@ -60,7 +60,7 @@ Subscription.prototype.subscribe = function (callback) {
 
     this.provider.subscribe(
         this.subscriptionType,
-        this.method,
+        this.subscriptionMethod,
         this.getFormattedInput()
     ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
