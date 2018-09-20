@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetPastLogsMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getLogs',
-        1,
-        utils,
-        formatters,
-    );
+    AbstractMethodModel.call(this, 'eth_getLogs', 1, utils, formatters);
 }
 
 /**
