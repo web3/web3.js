@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {Object} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Object} formatters
  * @param {Subscription} subscriptionPackage
  * @param {PromiEvent} promiEventPackage

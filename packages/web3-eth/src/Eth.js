@@ -26,7 +26,7 @@ var _ = require('underscore');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {Object} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Network} net
  * @param {Contract} contract
  * @param {Accounts} accounts

@@ -32,7 +32,7 @@ var NetworkPackage = require('web3-net');
 var version = require('../package.json').version;
 
 /**
- * @param {Object} provider
+ * @param {any} provider
  * @param {Net} net
  *
  * @constructor
@@ -44,16 +44,16 @@ var Web3 = function Web3(provider, net) {
         throw new Error('No provider given as constructor parameter!');
     }
 
-    this._provider = ProvidersPackage.resolve(provider, net);
+    var currentProvider = ProvidersPackage.resolve(provider, net);
 
     if (!this._provider) {
         throw new Error('Invalid provider given as constructor parameter!');
     }
 
     this.utils = Utils;
-    this.eth = EthPackage.createEth(this._provider);
-    this.shh = ShhPackage.createShh(this._provider);
-    this.bzz = BzzPackage.createBzz(this._provider);
+    this.eth = EthPackage.createEth(this.currentProvider);
+    this.shh = ShhPackage.createShh(this.currentProvider);
+    this.bzz = BzzPackage.createBzz(this.currentProvider);
 
     /**
      * Defines accessors for connectionModel
@@ -70,14 +70,14 @@ var Web3 = function Web3(provider, net) {
 
     Object.defineProperty(this, 'currentProvider', {
         get: function () {
-            return this._provider
+            return currentProvider;
         },
         set: function (provider) {
-            if (typeof this._provider.clearSubscriptions !== 'undefined') {
-                this._provider.clearSubscriptions();
+            if (typeof currentProvider.clearSubscriptions !== 'undefined') {
+                currentProvider.clearSubscriptions();
             }
 
-            this._provider = ProvidersPackage.resolve(provider, net);
+            currentProvider = ProvidersPackage.resolve(provider);
             this.eth.setProvider(provider);
             this.shh.setProvider(provider);
             this.bzz.setProvider(provider);

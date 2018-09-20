@@ -34,7 +34,7 @@ function CallMethodCommand() { }
  *
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  *
  * @callback callback callback(error, result)
  * @returns {Promise<any>}

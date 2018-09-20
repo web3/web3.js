@@ -37,7 +37,7 @@ function NewHeadsWatcher(subscriptionPackage)  {
  *
  * @method watch
  *
- * @param {AbstractProviderAdapter} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {String} transactionHash
  *
  * @returns {this}

@@ -54,7 +54,7 @@ var makeEven = function (hex) {
 
 
 /**
- * @param {any} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory

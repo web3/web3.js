@@ -23,7 +23,7 @@
 "use strict";
 
 /**
- * @param {Object} provider
+ * @param {any} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
@@ -50,7 +50,7 @@ function AbstractWeb3Object(
 
     this.extendedPackages = [];
     this.providersPackage = providersPackage;
-    this._provider = this.providersPackage.resolve(provider);
+    this.currentProvider = provider;
     this.givenProvider = this.providersPackage.detect();
 
     this.providers = {
@@ -59,16 +59,21 @@ function AbstractWeb3Object(
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
 
+    var currentProvider = null;
+
+    /**
+     * Defines the accessors of currentProvider
+     */
     Object.defineProperty(this, 'currentProvider', {
         get: function () {
-            return this._provider;
+            return currentProvider;
         },
         set: function (provider) {
-            if (typeof this._provider.clearSubscriptions !== 'undefined' && this._provider.subscriptions.length > 0) {
-                this._provider.clearSubscriptions();
+            if (typeof currentProvider.clearSubscriptions !== 'undefined' && currentProvider.subscriptions.length > 0) {
+                currentProvider.clearSubscriptions();
             }
 
-            this._provider = this.providersPackage.resolve(provider);
+            currentProvider = this.providersPackage.resolve(provider);
         },
         enumerable: true
     });

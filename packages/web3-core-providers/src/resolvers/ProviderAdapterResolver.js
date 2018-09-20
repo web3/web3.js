@@ -38,7 +38,7 @@ function ProviderAdapterResolver(providersPackageFactory) {
  *
  * @method resolve
  *
- * @param {Object} provider
+ * @param {any} provider
  * @param {Net} net
  *
  * @returns {Object|Boolean}

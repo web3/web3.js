@@ -27,7 +27,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 /**
  * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
  *
- * @param {any} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory

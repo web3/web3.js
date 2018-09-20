@@ -48,7 +48,7 @@ function TransactionConfirmationWorkflow(
  * @method execute
  *
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter} provider
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {String} transactionHash
  * @param {Object} promiEvent
  *
