@@ -26,57 +26,57 @@
 function TransactionConfirmationModel() {
     this.confirmations = [];
     this.timeoutCounter = 0;
+
+    /**
+     * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
+     *
+     * Created empty setter that it acts like a constant.
+     */
+    Object.defineProperty(this, 'POLLINGTIMEOUT', {
+        get: function () {
+            return 15 * this.TIMEOUTBLOCK;
+        },
+        set: function () {},
+        enumerable: true
+    });
+
+    /**
+     * Defines accessors for TIMEOUTBLOCK
+     *
+     * Created empty setter that it acts like a constant.
+     */
+    Object.defineProperty(this, 'TIMEOUTBLOCK', {
+        get: function () {
+            return 50;
+        },
+        set: function () {},
+        enumerable: true
+    });
+
+    /**
+     * Defines accessors for CONFIRMATIONBLOCKS
+     *
+     * Created empty setter that it acts like a constant.
+     */
+    Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
+        get: function () {
+            return 24;
+        },
+        set: function () {},
+        enumerable: true
+    });
+
+    /**
+     * Defines accessors for confirmationsCount
+     */
+    Object.defineProperty(this, 'confirmationsCount', {
+        get: function () {
+            return this.confirmations.length;
+        },
+        set: function () {},
+        enumerable: true
+    });
 }
-
-/**
- * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
- *
- * Created empty setter that it acts like a constant.
- */
-Object.defineProperty(TransactionConfirmationModel, 'POLLINGTIMEOUT', {
-    get: function () {
-        return 15 * this.TIMEOUTBLOCK;
-    },
-    set: function () {},
-    enumerable: true
-});
-
-/**
- * Defines accessors for TIMEOUTBLOCK
- *
- * Created empty setter that it acts like a constant.
- */
-Object.defineProperty(TransactionConfirmationModel, 'TIMEOUTBLOCK', {
-    get: function () {
-        return 50;
-    },
-    set: function () {},
-    enumerable: true
-});
-
-/**
- * Defines accessors for CONFIRMATIONBLOCKS
- *
- * Created empty setter that it acts like a constant.
- */
-Object.defineProperty(TransactionConfirmationModel, 'CONFIRMATIONBLOCKS', {
-    get: function () {
-        return 24;
-    },
-    set: function () {},
-    enumerable: true
-});
-
-/**
- * Defines accessors for confirmationsCount
- */
-Object.defineProperty(TransactionConfirmationModel, 'confirmationsCount', {
-    get: function () {
-        return this.confirmations.length;
-    },
-    set: function () {},
-    enumerable: true
-});
 
 /**
  * Adds a receipt to the confirmation array
