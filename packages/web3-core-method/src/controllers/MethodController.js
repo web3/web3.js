@@ -98,7 +98,7 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
  *
  * @method hasWallet
  *
- * @param accounts
+ * @param {Accounts} accounts
  *
  * @returns {Boolean}
  */
