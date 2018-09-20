@@ -40,7 +40,6 @@ function AbstractWeb3Object(
     subscriptionPackage,
     batchRequestPackage
 ) {
-
     if (!this.isDependencyGiven(provider)) {
         throw Error('Provider not found!');
     }

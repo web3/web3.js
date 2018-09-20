@@ -42,6 +42,7 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
     this.utils = utils;
     this.formatters = formatters;
     this.net = net;
+
     var defaultAccount = null;
     var defaultBlock = 'latest';
 
@@ -51,7 +52,7 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
         },
         set: function (val) {
             if(val) {
-                defaultAccount = utils.toChecksumAddress(formatters.inputAddressFormatter(val));
+                defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
             }
         },
         enumerable: true

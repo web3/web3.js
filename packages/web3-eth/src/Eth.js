@@ -113,8 +113,8 @@ var Eth = function Eth(
         set: function (val) {
             defaultBlock = val;
 
-            self.Contract.defaultAccount = defaultBlock;
-            self.personal.defaultAccount = defaultBlock;
+            self.Contract.defaultBlock = defaultBlock;
+            self.personal.defaultBlock = defaultBlock;
         },
         enumerable: true
     });
