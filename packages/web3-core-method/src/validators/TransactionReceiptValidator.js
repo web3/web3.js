@@ -33,11 +33,12 @@ function TransactionReceiptValidator() { }
  * @method validate
  *
  * @param {Object} receipt
+ * @param {Array} methodParameters
  *
  * @returns {Error | boolean}
  */
-TransactionReceiptValidator.prototype.validate = function (receipt) {
-    if (this.isValidGasUsage(receipt) && this.isValidReceiptStatus(receipt)) {
+TransactionReceiptValidator.prototype.validate = function (receipt, methodParameters) {
+    if (this.isValidGasUsage(receipt, methodParameters) && this.isValidReceiptStatus(receipt)) {
         return true;
     }
 
@@ -69,10 +70,17 @@ TransactionReceiptValidator.prototype.isValidReceiptStatus = function (receipt) 
  * @method isValidGasUsage
  *
  * @param {Object} receipt
+ * @param {Array} methodParameters
  *
  * @returns {boolean}
  */
-TransactionReceiptValidator.prototype.isValidGasUsage = function (receipt) {
+TransactionReceiptValidator.prototype.isValidGasUsage = function (receipt, methodParameters) {
+    var gasProvided = null;
+
+    if(_.isObject(methodParameters[0]) && methodParameters[0].gas) {
+        gasProvided = methodParameters[0].gas;
+    }
+
     return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
 };
 

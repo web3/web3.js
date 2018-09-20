@@ -76,7 +76,8 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, provi
             self.transactionConfirmationModel.timeoutCounter++;
             if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
                 self.getTransactionReceipt(transactionHash).then(function (receipt) {
-                    var validationResult = self.transactionReceiptValidator.validate(receipt);
+                    var validationResult = self.transactionReceiptValidator.validate(receipt, methodModel.parameters);
+
                     if (validationResult === true) {
                         self.transactionConfirmationModel.addConfirmation(receipt);
                         promiEvent.eventEmitter.emit(
