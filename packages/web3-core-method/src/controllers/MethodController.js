@@ -27,14 +27,16 @@
  * @param {SendMethodCommand} sendMethodCommand
  * @param {SignAndSendMethodCommand} signAndSendMethodCommand
  * @param {SignMessageCommand} signMessageCommand
+ * @param {PromiEventPackage} promiEventPackage
  *
  * @constructor
  */
-function MethodController(callMethodCommand, sendMethodCommand, signAndSendMethodCommand, signMessageCommand) {
+function MethodController(callMethodCommand, sendMethodCommand, signAndSendMethodCommand, signMessageCommand, promiEventPackage) {
     this.callMethodCommand = callMethodCommand;
     this.sendMethodCommand = sendMethodCommand;
     this.signAndSendMethodCommand = signAndSendMethodCommand;
     this.signMessageCommand = signMessageCommand;
+    this.promiEventPackage = promiEventPackage;
 }
 
 /**
@@ -46,18 +48,19 @@ function MethodController(callMethodCommand, sendMethodCommand, signAndSendMetho
  * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Accounts} accounts
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} methodArguments
+ * @param {IArguments} methodArguments
  *
  * @returns {Promise | eventifiedPromise | String | boolean}
  */
 MethodController.prototype.execute = function (methodModel, provider, accounts, web3Package, methodArguments) {
-    var promiEvent = {},
+    var promiEvent = this.promiEventPackage.createPromiEvent(),
         mappedMethodArguments = this.mapFunctionArguments(methodArguments);
 
     if (this.hasWallets(accounts)) {
         if (methodModel.isSign()) {
             return this.signMessageCommand.execute(
-                mappedMethodArguments.parameters,
+                mappedMethodArguments.parameters[0],
+                mappedMethodArguments.parameters[1],
                 accounts,
                 mappedMethodArguments.callback
             );
@@ -75,6 +78,7 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
 
     if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction()) {
         return this.sendMethodCommand.execute(
+            web3Package,
             methodModel,
             provider,
             promiEvent,
@@ -83,6 +87,7 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
     }
 
     return this.callMethodCommand.execute(
+        web3Package,
         methodModel,
         provider,
         mappedMethodArguments.parameters,
@@ -101,4 +106,39 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
  */
 MethodController.prototype.hasWallets = function (accounts) {
     return (accounts && accounts.wallet.length > 0);
+};
+
+/**
+ * Returns the mapped function arguments
+ *
+ * @method mapFunctionArguments
+ *
+ * @param {IArguments} args
+ *
+ * @returns {Object}
+ */
+MethodController.prototype.mapFunctionArguments = function (args) {
+    var parameters = args;
+    var callback = null;
+
+    if (arguments.length < this.parametersAmount) {
+        throw new Error(
+            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + arguments.length
+        );
+    }
+
+    if (arguments.length > this.parametersAmount) {
+        callback = arguments.slice(-1);
+        if(!_.isFunction(callback)) {
+            throw new Error(
+                'The latest parameter should be a function otherwise it can not be used as callback'
+            );
+        }
+        parameters = arguments.slice(0, -1);
+    }
+
+    return {
+        callback: callback,
+        parameters: parameters
+    }
 };

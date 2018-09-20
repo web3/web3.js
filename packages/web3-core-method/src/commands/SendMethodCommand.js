@@ -22,6 +22,52 @@
 
 "use strict";
 
-function SendMethodCommand() {
+var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCommand');
 
+/**
+ * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+ *
+ * @constructor
+ */
+function SendMethodCommand(transactionConfirmationWorkflow) {
+    AbstractSendMethodCommand.call(this, transactionConfirmationWorkflow);
 }
+
+/**
+ * Determines if gasPrice is set, sends the request and returns a PromiEvent Object
+ *
+ * @method execute
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractMethodModel} methodModel
+ * @param {Array} parameters
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
+ * @param {PromiEvent} promiEvent
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent}
+ */
+SendMethodCommand.prototype.execute = function (web3Package, methodModel, parameters, provider, promiEvent, callback) {
+    var self = this;
+
+    methodModel.beforeExecution(parameters, web3Package);
+
+    if (this.isGasPriceDefined(parameters)) {
+        return this.send(methodModel, parameters, provider, promiEvent, callback);
+    }
+
+    this.getGasPrice(provider).then(function(gasPrice) {
+        if (_.isObject(parameters[0])) {
+            parameters[0].gasPrice = gasPrice;
+        }
+
+        self.send(methodModel, parameters, provider, promiEvent, callback);
+    });
+
+    return promiEvent;
+};
+
+SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+
+module.exports = SendMethodCommand;

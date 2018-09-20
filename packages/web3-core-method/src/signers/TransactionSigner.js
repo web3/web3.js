@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractSigner = require('../../lib/AbstractSigner');
+var AbstractSigner = require('../../lib/signers/AbstractSigner');
 
 function TransactionSigner() { }
 

@@ -113,14 +113,14 @@ module.exports = {
     AbstractMethodModelFactory: AbstractMethodModelFactory,
 
     /**
-     * Creates the Method object
+     * Returns the MethodController object
      *
-     * @method createMethodService
+     * @method createMethodController
      *
-     * @returns {MethodService}
+     * @returns {MethodController}
      */
-    createMethodService: function () {
-        return new MethodPackageFactory().createMethodService(
+    createMethodController: function () {
+        return new MethodPackageFactory().createMethodController(
             PromiEventPackage,
             SubscriptionPackage
         );

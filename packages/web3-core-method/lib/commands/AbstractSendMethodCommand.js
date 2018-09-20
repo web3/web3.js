@@ -15,66 +15,53 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file SignAndSendMethodCommand.js
+ * @file AbstractSendMethodCommand.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
-var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCommand');
-
 /**
  * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
- * @param {TransactionSigner} transactionSigner
  *
  * @constructor
  */
-function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner) {
-    AbstractSendCommand.call(this, transactionConfirmationWorkflow);
-    this.transactionSigner = transactionSigner;
+function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
+    this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
 }
 
+
 /**
- * TODO: Add gasPrice check
+ * Sends the JSON-RPC request
  *
- * Sends the JSON-RPC request and returns an PromiEvent object
+ * @method send
  *
- * @method execute
- *
- * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Array} parameters
- * @param {Accounts} accounts
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
-SignAndSendMethodCommand.prototype.execute = function (
-    web3Package,
-    methodModel,
-    provider,
-    parameters,
-    accounts,
-    promiEvent,
-    callback
-) {
-    methodModel.beforeExecution(parameters, web3Package);
-    methodModel.rpcMethod = 'eth_sendRawTransaction';
-
-    this.transactionSigner.sign(parameters[0], accounts).then(function(response) {
-        self.send(
+AbstractSendMethodCommand.prototype.send = function (methodModel, parameters, provider, promiEvent, callback) {
+    provider.send(
+        methodModel.rpcMethod,
+        parameters
+    ).then(function (response) {
+        self.transactionConfirmationWorkflow.execute(
             methodModel,
             provider,
+            response,
             promiEvent,
-            [response.rawTransaction],
-            null,
             callback
         );
-    }).catch(function(error) {
+
+        promiEvent.eventEmitter.emit('transactionHash', response);
+        callback(false, response);
+    }).catch(function (error) {
         promiEvent.reject(error);
         promiEvent.on('error', error);
         promiEvent.eventEmitter.removeAllListeners();
@@ -84,6 +71,29 @@ SignAndSendMethodCommand.prototype.execute = function (
     return promiEvent;
 };
 
-SignAndSendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
 
-module.exports = SignAndSendMethodCommand;
+/**
+ * Determines if gasPrice is defined in the method options
+ *
+ * @method isGasPriceDefined
+ *
+ * @param {Array} parameters
+ *
+ * @returns {boolean}
+ */
+AbstractSendMethodCommand.prototype.isGasPriceDefined = function (parameters) {
+    return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
+};
+
+/**
+ * Returns the current gasPrice of the connected node
+ *
+ * @param {AbstractProviderAdapter | EthereumProvider} provider
+ *
+ * @returns {Promise<String>}
+ */
+AbstractSendMethodCommand.prototype.getGasPrice = function (provider) {
+    return provider.send('eth_gasPrice', []);
+};
+
+module.exports = AbstractSendMethodCommand;

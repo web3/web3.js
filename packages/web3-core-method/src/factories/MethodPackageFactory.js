@@ -28,39 +28,97 @@ var MessageSigner = require('../signers/MessageSigner');
 var TransactionConfirmationModel = require('../models/TransactionConfirmationModel');
 var TransactionReceiptValidator = require('../validators/TransactionReceiptValidator');
 var NewHeadsWatcher = require('../watchers/NewHeadsWatcher');
-var MethodService = require('../MethodService');
-
+var MethodController = require('../controllers/MethodController');
+var CallMethodCommand = require('../commands/CallMethodCommand');
+var SendMethodCommand = require('../commands/SendMethodCommand');
+var SignAndSendMethodCommand = require('../commands/SignAndSendMethodCommand');
+var SignMessageCommand = require('../commands/SignMessageCommand');
 
 /**
  * @constructor
  */
 function MethodPackageFactory() { }
 
-
 /**
- * Return Method object
+ * Returns the MethodController object
  *
- * @method createMethod
+ * @method createMethodController
  *
- * @param {PromiEvent} promiEvent
+ * @param {PromiEventPackage} promiEventPackage
  * @param {SubscriptionPackage} subscriptionPackage
  *
- * @returns {MethodService}
+ * @returns {MethodController}
  */
-MethodPackageFactory.prototype.createMethodService = function (
-    promiEvent,
+MethodPackageFactory.prototype.createMethodController = function (
+    promiEventPackage,
     subscriptionPackage
 ) {
-    return new MethodService(
-        promiEvent,
+    return new MethodController(
+        this.createCallMethodCommand(),
+        this.createSendMethodCommand(subscriptionPackage),
+        this.createSignAndSendMethodCommand(subscriptionPackage),
+        this.createSignMessageCommand(),
+        promiEventPackage
+    );
+};
+
+/**
+ * Returns the CallMethodCommand object
+ *
+ * @method createCallMethodCommand
+ *
+ * @returns {CallMethodCommand}
+ */
+MethodPackageFactory.prototype.createCallMethodCommand = function () {
+    return new CallMethodCommand();
+};
+
+/**
+ * Returns the SendMethodCommand object
+ *
+ * @method createSendMethodCommand
+ *
+ * @param {SubscriptionPackage} subscriptionPackage
+ *
+ * @returns {SendMethodCommand}
+ */
+MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionPackage) {
+    return new SendMethodCommand(
+        this.createTransactionConfirmationWorkflow(subscriptionPackage)
+    );
+};
+
+/**
+ * Returns the SignAndSendCommand object
+ *
+ * @method createSingAndSendMethodCommand
+ *
+ * @param {SubscriptionPackage} subscriptionPackage
+ *
+ * @returns {SignAndSendMethodCommand}
+ */
+MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionPackage) {
+    return new SignAndSendMethodCommand(
         this.createTransactionConfirmationWorkflow(subscriptionPackage),
-        this.createTransactionSigner(),
+        this.createTransactionSigner()
+    );
+};
+
+/**
+ * Returns the SignMessageCommand object
+ *
+ * @method createSignMessageCommand
+ *
+ * @returns {SignMessageCommand}
+ */
+MethodPackageFactory.prototype.createSignMessageCommand = function () {
+    return new SignMessageCommand(
         this.createMessageSigner()
     );
 };
 
 /**
- * Returns TransactionConfirmationWorkflow object
+ * Returns the TransactionConfirmationWorkflow object
  *
  * @method createTransactionConfirmationWorkflow
  *
@@ -77,7 +135,7 @@ MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function 
 };
 
 /**
- * Returns TransactionSigner object
+ * Returns the TransactionSigner object
  *
  * @method createTransactionSigner
  *
@@ -88,7 +146,7 @@ MethodPackageFactory.prototype.createTransactionSigner = function () {
 };
 
 /**
- * Returns MessageSigner object
+ * Returns the MessageSigner object
  *
  * @method createMessageSigner
  *
@@ -99,7 +157,7 @@ MethodPackageFactory.prototype.createMessageSigner = function () {
 };
 
 /**
- * Returns TransactionConfirmationModel object
+ * Returns the TransactionConfirmationModel object
  *
  * @method createTransactionConfirmationModel
  *
@@ -110,7 +168,7 @@ MethodPackageFactory.prototype.createTransactionConfirmationModel = function () 
 };
 
 /**
- * Returns TransactionReceiptValidator object
+ * Returns the TransactionReceiptValidator object
  *
  * @returns {TransactionReceiptValidator}
  */
@@ -119,7 +177,7 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
 };
 
 /**
- * Returns NewHeadsWatcher object
+ * Returns the NewHeadsWatcher object
  *
  * @param {SubscriptionPackage} subscriptionPackage
  *

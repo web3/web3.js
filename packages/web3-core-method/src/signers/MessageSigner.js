@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractSigner = require('../../AbstractSigner');
+var AbstractSigner = require('../../lib/signers/AbstractSigner');
 
 /**
  * @constructor
@@ -46,7 +46,7 @@ MessageSigner.prototype.sign = function(data, address, accounts) {
         return accounts.sign(data, wallet.privateKey).signature;
     }
 
-    return new Error('Wallet or privateKey in wallet is not set!');
+    throw new Error('Wallet or privateKey in wallet is not set!');
 };
 
 // Inherit from AbstractSigner

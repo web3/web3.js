@@ -22,6 +22,38 @@
 
 "use strict";
 
-function CallMethodCommand() {
+/**
+ * @constructor
+ */
+function CallMethodCommand() { }
 
-}
+/**
+ * Sends a JSON-RPC call request
+ *
+ * @method execute
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractMethodModel} methodModel
+ * @param {AbstractProviderAdapter} provider
+ * @param {Array} parameters
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<any>}
+ */
+CallMethodCommand.prototype.execute = function (web3Package, methodModel, provider, parameters, callback) {
+
+    methodModel.beforeExecution(parameters, web3Package);
+
+    return provider.send(
+        methodModel.rpcMethod,
+        parameters
+    ).then(function (response) {
+        var mappedResponse = methodModel.afterExecution(response);
+
+        callback(mappedResponse);
+        return mappedResponse;
+    });
+};
+
+module.exports = CallMethodCommand;
