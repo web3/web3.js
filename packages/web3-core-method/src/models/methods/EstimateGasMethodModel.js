@@ -39,11 +39,10 @@ function EstimateGasMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-EstimateGasMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputCallFormatter(parameters[0], web3Package);
+EstimateGasMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], web3Package);
 };
 
 /**

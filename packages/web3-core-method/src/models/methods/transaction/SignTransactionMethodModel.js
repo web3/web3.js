@@ -39,11 +39,10 @@ function SignTransactionMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-SignTransactionMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputTransactionFormatter(parameters[0], web3Package);
+SignTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
 };
 
 SignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

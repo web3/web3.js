@@ -39,16 +39,15 @@ function GetUncleMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {AbstractWeb3Object} web3Package
  */
-GetUncleMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+GetUncleMethodModel.prototype.beforeExecution = function (web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
     }
 
-    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
-    parameters[1] = this.utils.numberToHex(parameters[1]);
+    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+    this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
 };
 
 /**

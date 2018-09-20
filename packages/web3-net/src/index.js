@@ -48,7 +48,7 @@ module.exports = {
         return new Network(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodService(),
+            MethodPackage.createMethodController(),
             new MethodModelFactory(Utils, formatters),
             formatters,
             utils

@@ -34,26 +34,24 @@ function SignMessageCommand(messageSigner) {
 /**
  * Executes the SignMessageCommand and returns the signed message
  *
- * @param {String} data
- * @param {String} address
+ * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {String}
  */
-SignMessageCommand.prototype.execute = function (data, address, accounts, callback) {
+SignMessageCommand.prototype.execute = function (methodModel, accounts) {
     var signedMessage;
 
     try {
-        signedMessage = this.messageSigner.sign(data, address, accounts);
+        signedMessage = this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts);
     } catch(error) {
-        callback(error, null);
+        methodModel.callback(error, null);
 
         throw error;
     }
 
-    callback(null, signedMessage);
+    methodModel.callback(null, signedMessage);
 
     return signedMessage;
 };

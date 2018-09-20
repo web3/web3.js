@@ -38,34 +38,31 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
  * @method send
  *
  * @param {AbstractMethodModel} methodModel
- * @param {Array} parameters
  * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {PromiEvent} promiEvent
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
-AbstractSendMethodCommand.prototype.send = function (methodModel, parameters, provider, promiEvent, callback) {
+AbstractSendMethodCommand.prototype.send = function (methodModel, provider, promiEvent) {
     provider.send(
         methodModel.rpcMethod,
-        parameters
+        methodModel.parameters
     ).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             methodModel,
             provider,
             response,
-            promiEvent,
-            callback
+            promiEvent
         );
 
         promiEvent.eventEmitter.emit('transactionHash', response);
-        callback(false, response);
+        methodModel.callback(false, response);
     }).catch(function (error) {
         promiEvent.reject(error);
         promiEvent.on('error', error);
         promiEvent.eventEmitter.removeAllListeners();
-        callback(error, null);
+        methodModel.callback(error, null);
     });
 
     return promiEvent;

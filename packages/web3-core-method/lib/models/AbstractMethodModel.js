@@ -35,6 +35,23 @@ function AbstractMethodModel(rpcMethod, parametersAmount, utils, formatters) {
     this.parametersAmount = parametersAmount;
     this.utils = utils;
     this.formatters = formatters;
+    var methodArguments = {};
+
+    /**
+     * Defines accessors for defaultAccount
+     */
+    Object.defineProperty(this, 'methodArguments', {
+        get: function () {
+            return methodArguments;
+        },
+        set: function (methodArguments) {
+            methodArguments = this.mapFunctionArguments(methodArguments);
+        },
+        enumerable: true
+    });
+
+    this.parameters = this.methodArguments.parameters;
+    this.callback = this.methodArguments.callback;
 }
 
 /**

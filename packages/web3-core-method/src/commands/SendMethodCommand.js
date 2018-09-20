@@ -40,29 +40,27 @@ function SendMethodCommand(transactionConfirmationWorkflow) {
  *
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
- * @param {Array} parameters
  * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {PromiEvent} promiEvent
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
-SendMethodCommand.prototype.execute = function (web3Package, methodModel, parameters, provider, promiEvent, callback) {
+SendMethodCommand.prototype.execute = function (web3Package, methodModel, provider, promiEvent) {
     var self = this;
 
-    methodModel.beforeExecution(parameters, web3Package);
+    methodModel.beforeExecution(web3Package);
 
-    if (this.isGasPriceDefined(parameters)) {
-        return this.send(methodModel, parameters, provider, promiEvent, callback);
+    if (this.isGasPriceDefined(methodModel.parameters)) {
+        return this.send(methodModel, provider, promiEvent);
     }
 
     this.getGasPrice(provider).then(function(gasPrice) {
-        if (_.isObject(parameters[0])) {
-            parameters[0].gasPrice = gasPrice;
+        if (_.isObject(methodModel.parameters[0])) {
+            methodModel.parameters[0].gasPrice = gasPrice;
         }
 
-        self.send(methodModel, parameters, provider, promiEvent, callback);
+        self.send(methodModel, provider, promiEvent);
     });
 
     return promiEvent;

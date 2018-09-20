@@ -45,13 +45,12 @@ function GetStorageAtMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-GetStorageAtMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputAddressFormatter(parameters[0]);
-    parameters[1] = this.utils.numberToHex(parameters[1]);
-    parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(parameters[2], web3Package);
+GetStorageAtMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], web3Package);
 };
 
 GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

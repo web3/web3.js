@@ -29,7 +29,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  *
  * @param {any} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodService} methodService
+ * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
  * @param {Network} net
  * @param {Utils} utils
@@ -37,8 +37,8 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  *
  * @constructor
  */
-function Personal(provider, providersPackage, methodService, methodModelFactory, net, utils, formatters) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodService, methodModelFactory);
+function Personal(provider, providersPackage, methodController, methodModelFactory, net, utils, formatters) {
+    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
     this.utils = utils;
     this.formatters = formatters;
     this.net = net;

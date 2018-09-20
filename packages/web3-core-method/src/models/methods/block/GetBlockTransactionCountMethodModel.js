@@ -39,15 +39,14 @@ function GetBlockTransactionCountMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {AbstractWeb3Object} web3Package
  */
-GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }
 
-    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
+    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
 };
 
 /**

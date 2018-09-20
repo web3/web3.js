@@ -25,8 +25,7 @@
 /**
  * @param {Object} provider
  * @param {ProvidersPackage} providersPackage
- * @param {Accounts} accounts
- * @param {MethodService} methodService
+ * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
  * @param {SubscriptionPackage} subscriptionPackage
  * @param {BatchRequestPackage} batchRequestPackage
@@ -36,7 +35,7 @@
 function AbstractWeb3Object(
     provider,
     providersPackage,
-    methodService,
+    methodController,
     methodModelFactory,
     subscriptionPackage,
     batchRequestPackage
@@ -80,9 +79,9 @@ function AbstractWeb3Object(
         this.subscriptionPackage = subscriptionPackage;
     }
 
-    if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodService)) {
+    if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodController)) {
         this.methodModelFactory = methodModelFactory;
-        this.methodService = methodService;
+        this.methodController = methodController;
 
         return new Proxy(this,
             {
@@ -150,7 +149,7 @@ AbstractWeb3Object.prototype.extend = function (extension) {
         object = this[namespace] = new this.constructor(
             this.provider,
             this.providersPackage,
-            this.methodService,
+            this.methodController,
             new this.methodModelFactory.constructor(this.methodModelFactory.utils, this.methodModelFactory.formatters)
         );
 
@@ -219,13 +218,9 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
         var methodModel = target.methodModelFactory.createMethodModel(name);
 
         var anonymousFunction = function () {
-            return target.methodService.execute(
-                methodModel,
-                target.currentProvider,
-                target.accounts,
-                target,
-                arguments
-            );
+            methodModel.methodArguments = arguments;
+
+            return target.methodController.execute(methodModel, target.currentProvider, target.accounts, target);
         };
 
         anonymousFunction.methodModel = methodModel;

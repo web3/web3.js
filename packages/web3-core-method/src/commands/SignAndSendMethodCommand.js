@@ -31,7 +31,7 @@ var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCo
  * @constructor
  */
 function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner) {
-    AbstractSendCommand.call(this, transactionConfirmationWorkflow);
+    AbstractSendMethodCommand.call(this, transactionConfirmationWorkflow);
     this.transactionSigner = transactionSigner;
 }
 
@@ -45,10 +45,8 @@ function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSi
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
  * @param {AbstractProviderAdapter | EthereumProvider} provider
- * @param {Array} parameters
  * @param {Accounts} accounts
  * @param {PromiEvent} promiEvent
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
@@ -57,28 +55,20 @@ SignAndSendMethodCommand.prototype.execute = function (
     web3Package,
     methodModel,
     provider,
-    parameters,
     accounts,
     promiEvent,
-    callback
 ) {
-    methodModel.beforeExecution(parameters, web3Package);
+    methodModel.beforeExecution(web3Package);
     methodModel.rpcMethod = 'eth_sendRawTransaction';
 
-    this.transactionSigner.sign(parameters[0], accounts).then(function(response) {
-        self.send(
-            methodModel,
-            provider,
-            promiEvent,
-            [response.rawTransaction],
-            null,
-            callback
-        );
+    this.transactionSigner.sign(methodModel.parameters[0], accounts).then(function(response) {
+        methodModel.parameters = [response.rawTransaction];
+        self.send(methodModel, provider, promiEvent);
     }).catch(function(error) {
         promiEvent.reject(error);
         promiEvent.on('error', error);
         promiEvent.eventEmitter.removeAllListeners();
-        callback(error, null);
+        methodModel.callback(error, null);
     });
 
     return promiEvent;

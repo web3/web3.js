@@ -39,12 +39,11 @@ function EcRecoverMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-EcRecoverMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputSignFormatter(parameters[0]);
-    parameters[1] = this.formatters.inputAddressFormatter(parameters[1]);
+EcRecoverMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+    this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };
 
 EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

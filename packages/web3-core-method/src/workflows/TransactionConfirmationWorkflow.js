@@ -26,17 +26,20 @@
  * @param {TransactionConfirmationModel} transactionConfirmationModel
  * @param {TransactionReceiptValidator} transactionReceiptValidator
  * @param {NewHeadsWatcher} newHeadsWatcher
+ * @param {Object} formatters
  *
  * @constructor
  */
 function TransactionConfirmationWorkflow(
     transactionConfirmationModel,
     transactionReceiptValidator,
-    newHeadsWatcher
+    newHeadsWatcher,
+    formatters
 ) {
     this.transactionConfirmationModel = transactionConfirmationModel;
     this.transactionReceiptValidator = transactionReceiptValidator;
     this.newHeadsWatcher = newHeadsWatcher;
+    this.formatters = formatters;
 }
 
 /**
@@ -48,33 +51,23 @@ function TransactionConfirmationWorkflow(
  * @param {AbstractProviderAdapter} provider
  * @param {String} transactionHash
  * @param {Object} promiEvent
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  */
-TransactionConfirmationWorkflow.prototype.execute = function (
-    methodModel,
-    provider,
-    transactionHash,
-    promiEvent,
-    callback
-) {
+TransactionConfirmationWorkflow.prototype.execute = function (methodModel, provider, transactionHash, promiEvent) {
     var self = this;
-    this.methodModel = methodModel;
     this.provider = provider;
-    this.promiEvent = promiEvent;
-    this.callback = callback;
 
     this.getTransactionReceipt(transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
             var validationResult = this.transactionReceiptValidator.validate(receipt);
             if (validationResult === true) {
-                this.handleSuccessState(receipt);
+                this.handleSuccessState(receipt, methodModel, promiEvent);
 
                 return;
             }
 
-            self.handleErrorState(validationResult);
+            self.handleErrorState(validationResult, methodModel, promiEvent);
 
             return;
         }
@@ -93,7 +86,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (
                         );
 
                         if (self.transactionConfirmationModel.isConfirmed()) {
-                            self.handleSuccessState(receipt);
+                            self.handleSuccessState(receipt, methodModel, promiEvent);
                         }
 
                         return;
@@ -102,7 +95,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (
                     promiEvent.reject(validationResult);
                     promiEvent.eventEmitter.emit('error', validationResult, receipt);
                     promiEvent.eventEmitter.removeAllListeners();
-                    callback(validationResult, null);
+                    methodModel.callback(validationResult, null);
                 });
 
                 return;
@@ -114,7 +107,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (
                 error = new Error('Transaction was not mined within' + self.transactionConfirmationModel.POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!')
             }
 
-            self.handleErrorState(error);
+            self.handleErrorState(error, methodModel, promiEvent);
         });
     });
 };
@@ -140,19 +133,21 @@ TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (tran
  * @method handleSuccessState
  *
  * @param {Object} receipt
+ * @param {AbstractMethodModel} methodModel
+ * @param {PromiEvent} promiEvent
  *
  * @callback callback callback(error, result)
  */
-TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt) {
+TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt, methodModel, promiEvent) {
     this.newHeadsWatcher.stop();
 
-    var mappedReceipt = this.methodModel.afterExecution(receipt);
+    var mappedReceipt = methodModel.afterExecution(receipt);
 
-    this.promiEvent.resolve(mappedReceipt);
-    this.promiEvent.eventEmitter.emit('receipt', mappedReceipt);
-    this.promiEvent.eventEmitter.removeAllListeners();
+    promiEvent.resolve(mappedReceipt);
+    promiEvent.eventEmitter.emit('receipt', mappedReceipt);
+    promiEvent.eventEmitter.removeAllListeners();
 
-    this.callback(false, mappedReceipt);
+    methodModel.callback(false, mappedReceipt);
 };
 
 /**
@@ -161,17 +156,19 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
  * @method handleErrorState
  *
  * @param {Error} error
+ * @param {AbstractMethodModel} methodModel
+ * @param {PromiEvent} promiEvent
  *
  * @callback callback callback(error, result)
  */
-TransactionConfirmationWorkflow.prototype.handleErrorState = function (error) {
+TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, methodModel, promiEvent) {
     this.newHeadsWatcher.stop();
 
-    this.promiEvent.reject(error).apply(error);
-    this.promiEvent.eventEmitter.emit('error', error);
-    this.promiEvent.eventEmitter.removeAllListeners();
+    promiEvent.reject(error).apply(error);
+    promiEvent.eventEmitter.emit('error', error);
+    promiEvent.eventEmitter.removeAllListeners();
 
-    this.callback(error, null);
+    methodModel.callback(error, null);
 };
 
 module.exports = TransactionConfirmationWorkflow;

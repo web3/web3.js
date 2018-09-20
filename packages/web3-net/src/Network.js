@@ -28,15 +28,15 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 /**
  * @param {Object} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodService} methodService
+ * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
  * @param {Object} formatters
  * @param {Object} utils
  *
  * @constructor
  */
-function Network(provider, providersPackage, methodService, methodModelFactory, formatters, utils) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodService, methodModelFactory);
+function Network(provider, providersPackage, methodController, methodModelFactory, formatters, utils) {
+    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
     this.formatters = formatters;
     this.utils = utils;
 }

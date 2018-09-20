@@ -39,15 +39,14 @@ function GetBlockUncleCountMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {AbstractWeb3Object} web3Package
  */
-GetBlockUncleCountMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+GetBlockUncleCountMethodModel.prototype.beforeExecution = function (web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getUncleCountByBlockHash';
     }
 
-    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
+    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
 };
 
 /**

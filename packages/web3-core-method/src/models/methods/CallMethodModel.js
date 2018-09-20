@@ -39,12 +39,11 @@ function CallMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-CallMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputCallFormatter(parameters[0], web3Package);
-    parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(parameters[1], web3Package);
+CallMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], web3Package);
+    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
 };
 
 CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

@@ -39,7 +39,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {ProvidersPackage} providersPackage
  * @param {SubscriptionsResolver} subscriptionsResolver
  * @param {MethodModelFactory} methodModelFactory
- * @param {MethodService} methodService
+ * @param {MethodController} methodController
  * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
@@ -57,7 +57,7 @@ var Eth = function Eth(
     formatters,
     providersPackage,
     subscriptionsResolver,
-    methodService,
+    methodController,
     methodModelFactory,
     batchRequestPackage
 ) {
@@ -65,7 +65,7 @@ var Eth = function Eth(
         this,
         provider,
         providersPackage,
-        methodService,
+        methodController,
         methodModelFactory,
         null,
         batchRequestPackage

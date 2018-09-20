@@ -39,16 +39,15 @@ function GetBlockMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-GetBlockMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+GetBlockMethodModel.prototype.beforeExecution = function (web3Package) {
     if (this.isHash(parameters[0])) {
         this.rpcMethod = 'eth_getBlockByHash';
     }
 
-    parameters[0] = this.formatters.inputBlockNumberFormatter(parameters[0]);
-    parameters[1] = !!parameters[1];
+    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+    this.parameters[1] = !!this.parameters[1];
 };
 
 /**

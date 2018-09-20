@@ -56,15 +56,15 @@ var makeEven = function (hex) {
 /**
  * @param {any} provider
  * @param {ProvidersPackage} providersPackage
- * @param {MethodService} methodService
+ * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-var Accounts = function Accounts(provider, providersPackage, methodService, methodModelFactory, utils, formatters) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodService, methodModelFactory);
+var Accounts = function Accounts(provider, providersPackage, methodController, methodModelFactory, utils, formatters) {
+    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
     this.utils = utils;
     this.formatters = formatters;
     this.wallet = new Wallet(this);
@@ -133,8 +133,8 @@ Accounts.prototype.privateKeyToAccount = function privateKeyToAccount(privateKey
  * @param {String} privateKey
  * @param {Function} callback
  *
- * @returns {Promise<Object>}
  * @callback callback callback(error, result)
+ * @returns {Promise<Object>}
  */
 Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, callback) {
     var _this = this,

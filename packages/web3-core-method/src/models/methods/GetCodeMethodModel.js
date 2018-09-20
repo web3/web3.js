@@ -39,12 +39,11 @@ function GetCodeMethodModel(utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-GetCodeMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
-    parameters[0] = this.formatters.inputAddressFormatter(parameters[0]);
-    parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(parameters[1], web3Package);
+GetCodeMethodModel.prototype.beforeExecution = function (web3Package) {
+    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
 };
 
 GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);

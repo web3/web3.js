@@ -48,7 +48,7 @@ module.exports = {
         return new Shh(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodService(),
+            MethodPackage.createMethodController(),
             new MethodModelFactory(Utils, formatters),
             SubscriptionPackage,
             NetworkPackage.createNetwork(provider)

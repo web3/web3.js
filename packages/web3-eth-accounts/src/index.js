@@ -46,7 +46,7 @@ module.exports = {
         return new Accounts(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodService(),
+            MethodPackage.createMethodController(),
             new MethodModelFactory(Utils, formatters),
             Utils,
             formatters

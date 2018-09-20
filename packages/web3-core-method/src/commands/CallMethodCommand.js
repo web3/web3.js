@@ -35,23 +35,21 @@ function CallMethodCommand() { }
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
  * @param {AbstractProviderAdapter} provider
- * @param {Array} parameters
- * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {Promise<any>}
  */
-CallMethodCommand.prototype.execute = function (web3Package, methodModel, provider, parameters, callback) {
+CallMethodCommand.prototype.execute = function (web3Package, methodModel, provider) {
 
-    methodModel.beforeExecution(parameters, web3Package);
+    methodModel.beforeExecution(web3Package);
 
     return provider.send(
         methodModel.rpcMethod,
-        parameters
+        methodModel.parameters
     ).then(function (response) {
         var mappedResponse = methodModel.afterExecution(response);
 
-        callback(mappedResponse);
+        methodModel.callback(mappedResponse);
         return mappedResponse;
     });
 };

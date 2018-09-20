@@ -46,17 +46,19 @@ function MethodPackageFactory() { }
  *
  * @param {PromiEventPackage} promiEventPackage
  * @param {SubscriptionPackage} subscriptionPackage
+ * @param {Object} formatters
  *
  * @returns {MethodController}
  */
 MethodPackageFactory.prototype.createMethodController = function (
     promiEventPackage,
-    subscriptionPackage
+    subscriptionPackage,
+    formatters
 ) {
     return new MethodController(
         this.createCallMethodCommand(),
-        this.createSendMethodCommand(subscriptionPackage),
-        this.createSignAndSendMethodCommand(subscriptionPackage),
+        this.createSendMethodCommand(subscriptionPackage, formatters),
+        this.createSignAndSendMethodCommand(subscriptionPackage, formatters),
         this.createSignMessageCommand(),
         promiEventPackage
     );
@@ -79,12 +81,13 @@ MethodPackageFactory.prototype.createCallMethodCommand = function () {
  * @method createSendMethodCommand
  *
  * @param {SubscriptionPackage} subscriptionPackage
+ * @param {Object} formatters
  *
  * @returns {SendMethodCommand}
  */
-MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionPackage) {
+MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionPackage, formatters) {
     return new SendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionPackage)
+        this.createTransactionConfirmationWorkflow(subscriptionPackage, formatters)
     );
 };
 
@@ -94,12 +97,13 @@ MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionP
  * @method createSingAndSendMethodCommand
  *
  * @param {SubscriptionPackage} subscriptionPackage
+ * @param {Object} formatters
  *
  * @returns {SignAndSendMethodCommand}
  */
-MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionPackage) {
+MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionPackage, formatters) {
     return new SignAndSendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionPackage),
+        this.createTransactionConfirmationWorkflow(subscriptionPackage, formatters),
         this.createTransactionSigner()
     );
 };
@@ -123,14 +127,16 @@ MethodPackageFactory.prototype.createSignMessageCommand = function () {
  * @method createTransactionConfirmationWorkflow
  *
  * @param {SubscriptionPackage} subscriptionPackage
+ * @param {Object} formatters
  *
  * @returns {TransactionConfirmationWorkflow}
  */
-MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionPackage) {
+MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionPackage, formatters) {
     new TransactionConfirmationWorkflow(
         this.createTransactionConfirmationModel(),
         this.createTransactionReceiptValidator(),
-        this.createNewHeadsWatcher(subscriptionPackage)
+        this.createNewHeadsWatcher(subscriptionPackage),
+        formatters
     );
 };
 
