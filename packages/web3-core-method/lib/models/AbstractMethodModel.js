@@ -85,13 +85,9 @@ AbstractMethodModel.prototype.afterExecution = function(response) {
  * @returns {Object}
  */
 AbstractMethodModel.prototype.request = function () {
-    var mappedFunctionArguments = this.mapFunctionArguments(arguments);
+    this.methodArguments = arguments;
 
-    return {
-        methodModel: this,
-        parameters: mappedFunctionArguments.parameters,
-        callback: mappedFunctionArguments.callback
-    }
+    return this;
 };
 
 /**

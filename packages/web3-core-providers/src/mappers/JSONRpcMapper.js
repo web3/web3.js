@@ -66,11 +66,9 @@ JSONRpcMapper.toPayload = function (method, params) {
  */
 JSONRpcMapper.toBatchPayload = function (requests) {
     return requests.map(function (request) {
-        if(_.isFunction(request.methodModel.beforeExecution)) {
-            request.methodModel.beforeExecution();
-        }
+        request.beforeExecution();
 
-        return JSONRpcMapper.toPayload(request.methodModel.rpcMethod, request.parameters);
+        return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
     });
 };
 

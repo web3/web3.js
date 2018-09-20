@@ -74,14 +74,8 @@ BatchRequest.prototype.execute = function () {
                     }
 
                     try {
-                        var mappedResult = result.result;
-
-                        if (self.hasOutputFormatter(request)) {
-                            mappedResult = request.methodModel.outputFormatter(mappedResult);
-                        }
-
+                        var mappedResult = request.afterExecution(result.result);
                         request.callback(null, mappedResult);
-
                     } catch (err) {
                         request.callback(err, null);
                     }
