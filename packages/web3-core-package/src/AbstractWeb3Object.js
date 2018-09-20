@@ -40,8 +40,13 @@ function AbstractWeb3Object(
     subscriptionPackage,
     batchRequestPackage
 ) {
-    if (!this.isDependencyGiven(providersPackage) && !this.isDependencyGiven(provider)) {
-        throw Error('Provider and the ProviderPackage not found!');
+
+    if (!this.isDependencyGiven(provider)) {
+        throw Error('Provider not found!');
+    }
+
+    if (!this.isDependencyGiven(providersPackage)) {
+        throw Error('ProviderPackage not found!');
     }
 
     this.extendedPackages = [];
