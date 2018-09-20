@@ -166,7 +166,7 @@ AbstractMethodModel.prototype.isSendRawTransaction = function () {
  * @returns {boolean}
  */
 AbstractMethodModel.prototype.isHash = function (parameter) {
-    return _.isString(parameter) && parameter.indexOf('0x') === 0
+    return _.isString(parameter) && parameter.indexOf('0x') === 0;
 };
 
 
