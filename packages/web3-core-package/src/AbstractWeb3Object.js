@@ -129,7 +129,7 @@ AbstractWeb3Object.prototype.setProvider = function (provider) {
  * @method clearSubscriptions
  */
 AbstractWeb3Object.prototype.clearSubscriptions = function () {
-    if (typeof this.currentProvider.clearSubscriptions !== 'undefined' && this.currentProvider.subscriptions.length > 0) {
+    if (typeof this.currentProvider.clearSubscriptions !== 'undefined' && this.currentProvider.hasSubscription()) {
         this.currentProvider.clearSubscriptions();
     }
 };

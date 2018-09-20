@@ -29,7 +29,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
  *
  * @constructor
  */
-function HttpProviderAdapter (httpProvider) {
+function HttpProviderAdapter(httpProvider) {
     AbstractProviderAdapter.call(this, httpProvider);
 }
 
