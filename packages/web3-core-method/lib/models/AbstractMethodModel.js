@@ -59,10 +59,9 @@ function AbstractMethodModel(rpcMethod, parametersAmount, utils, formatters) {
  *
  * @method beforeExecution
  *
- * @param {Array} parameters
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
-AbstractMethodModel.prototype.beforeExecution = function(parameters, web3Package) { };
+AbstractMethodModel.prototype.beforeExecution = function(web3Package) { };
 
 /**
  * This method will be executed after the RPC request.

@@ -31,13 +31,7 @@ var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
  * @constructor
  */
 function GetStorageAtMethodModel(utils, formatters) {
-    AbstractMethodModel.call(
-        this,
-        'eth_getStorageAt',
-        3,
-        utils,
-        formatters
-    );
+    AbstractMethodModel.call(this, 'eth_getStorageAt', 3, utils, formatters);
 }
 
 /**
