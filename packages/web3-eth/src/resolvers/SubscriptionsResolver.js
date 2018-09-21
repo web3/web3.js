@@ -30,11 +30,21 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {Subscription} subscriptionPackage
  * @param {PromiEvent} promiEventPackage
  * @param {ProvidersPackage} providersPackage
+ * @param {MethodModelFactory} methodModelFactory
+ * @param {MethodController} methodController
  *
  * @constructor
  */
-function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiEventPackage, providersPackage) {
-    AbstractWeb3Object.call(this, provider, providersPackage, null, null, subscriptionPackage);
+function SubscriptionsResolver(
+    provider,
+    formatters,
+    subscriptionPackage,
+    promiEventPackage,
+    providersPackage,
+    methodModelFactory,
+    methodController
+) {
+    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory, subscriptionPackage);
     this.formatters = formatters;
     this.promiEventPackage = promiEventPackage;
 }
@@ -45,26 +55,22 @@ function SubscriptionsResolver(provider, formatters, subscriptionPackage, promiE
  * @method resolve
  *
  * @param {String} type
- * @param {Array} parameters
+ * @param {Object} parameter
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {eventifiedPromise | Subscription}
  */
-SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) {
+SubscriptionsResolver.prototype.resolve = function (type, parameter, callback) {
     switch (type) {
         case 'newBlockHeaders':
             return this.getSubscription('newHeads', null, null, this.formatters.outputBlockFormatter, callback);
-            break;
         case 'pendingTransactions':
             return this.getSubscription('newPendingTransactions', null, null, null, callback);
-            break;
         case 'logs':
-            return this.getLogsSubscription(parameters, callback);
-            break;
+            return this.getLogsSubscription(parameter, callback);
         case 'syncing':
             return this.getSyncingSubscription(callback);
-            break;
         default:
             throw Error('Unknown subscription: ' + type);
     }
@@ -76,7 +82,7 @@ SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) 
  * @method getSubscription
  *
  * @param {String} type
- * @param {Array} parameters
+ * @param {Object} parameter
  * @param {Function} inputFormatter
  * @param {Function} outputFormatter
  * @param {Function} callback
@@ -84,15 +90,11 @@ SubscriptionsResolver.prototype.resolve = function (type, parameters, callback) 
  * @callback callback callback(error, result)
  * @returns {Subscription}
  */
-SubscriptionsResolver.prototype.getSubscription = function (type, parameters, inputFormatter, outputFormatter, callback) {
-    if (!parameters) {
-        parameters = [];
-    }
-
+SubscriptionsResolver.prototype.getSubscription = function (type, parameter, inputFormatter, outputFormatter, callback) {
     return this.subscriptionPackage.createSubscription(
         this.currentProvider,
         type,
-        parameters,
+        [parameter],
         inputFormatter,
         outputFormatter,
         'eth'
@@ -104,22 +106,22 @@ SubscriptionsResolver.prototype.getSubscription = function (type, parameters, in
  *
  * @method getLogsSubscription
  *
- * @param {Array} parameters
+ * @param {Object} parameter
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
-SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, callback) {
+SubscriptionsResolver.prototype.getLogsSubscription = function (parameter, callback) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
 
-    if (this.hasFromBlockProperty(parameters[1])) {
-        this.handleLogsSubscriptionWithFromBlock(parameters, promiEvent, callback);
+    if (this.hasFromBlockProperty(parameter)) {
+        this.handleLogsSubscriptionWithFromBlock(parameter, promiEvent, callback);
 
         return promiEvent;
     }
 
-    this.subscribeToLogs(parameters, promiEvent, callback);
+    this.subscribeToLogs(parameter, promiEvent, callback);
 
     return promiEvent;
 };
@@ -129,16 +131,16 @@ SubscriptionsResolver.prototype.getLogsSubscription = function (parameters, call
  *
  * @method subscribeToLogs
  *
- * @param {Array} parameters
+ * @param {Object} parameter
  * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  */
-SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEvent, callback) {
+SubscriptionsResolver.prototype.subscribeToLogs = function (parameter, promiEvent, callback) {
     this.getSubscription(
         'logs',
-        parameters,
+        parameter,
         null,
         this.formatters.outputLogFormatter,
         function (error, logs) {
@@ -162,24 +164,23 @@ SubscriptionsResolver.prototype.subscribeToLogs = function (parameters, promiEve
  *
  * @method handleLogsSubscriptionWithFromBlock
  *
- * @param {Array} parameters
+ * @param {Object} parameter
  * @param {PromiEvent} promiEvent
  * @param {Function} callback
  *
  * @callback callback callback(error,result)
  */
-SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (parameters, promiEvent, callback) {
+SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (parameter, promiEvent, callback) {
     var self = this;
-    this.currentProvider.send('eth_getLogs', parameters).then(function (logs) {
+    this.getLogs(parameter).then(function (logs) {
         logs.forEach(function (log) {
-            var output = self.formatters.outputLogFormatter(log);
-            callback(false, output);
-            promiEvent.eventEmitter.emit('data', output);
+            callback(false, log);
+            promiEvent.eventEmitter.emit('data', log);
         });
 
-        delete parameters[1].fromBlock;
+        delete parameter.fromBlock;
 
-        self.subscribeToLogs(parameters, outputFormatter, promiEvent, callback);
+        self.subscribeToLogs(parameter, promiEvent, callback);
 
     }).catch(function (error) {
         promiEvent.eventEmitter.emit('error', error);

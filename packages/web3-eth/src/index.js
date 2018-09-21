@@ -55,6 +55,8 @@ module.exports = {
      */
     createEth: function (provider) {
         var accounts = AccountsPackage.createAccounts(provider);
+        var methodModelFactory = new  MethodModelFactory(Utils, formatters, accounts);
+        var methodController = MethodPackage.createMethodController();
 
         return new Eth(
             provider,
@@ -68,9 +70,17 @@ module.exports = {
             Utils,
             formatters,
             ProvidersPackage,
-            new SubscriptionsResolver(provider, formatters, SubscriptionPackage, PromiEventPackage, ProvidersPackage),
-            MethodPackage.createMethodController(),
-            new MethodModelFactory(Utils, formatters, accounts),
+            new SubscriptionsResolver(
+                provider,
+                formatters,
+                SubscriptionPackage,
+                PromiEventPackage,
+                ProvidersPackage,
+                methodModelFactory,
+                methodController
+            ),
+            methodController,
+            methodModelFactory,
             BatchRequestPackage
         );
     }
