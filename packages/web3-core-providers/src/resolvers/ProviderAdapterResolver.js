@@ -66,15 +66,23 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
         }
     }
 
-    if (provider.constructor.name === 'EthereumProvider') {
-        return provider;
-    }
-
     if (_.isFunction(provider.sendAsync)) {
         return this.providersPackageFactory.createInpageProviderAdapter(provider);
     }
 
-    return false;
+    switch (provider.constructor.name) {
+        case 'EthereumProvider':
+            return provider;
+        case 'HttpProvider':
+            return this.providersPackageFactory.createHttpProviderAdapter(provider);
+        case 'WebsocketProvider':
+            return this.providersPackageFactory.createSocketProviderAdapter(provider);
+        case 'IpcProvider':
+            return this.providersPackageFactory.createSocketProviderAdapter(provider);
+
+    }
+
+    throw Error('Please provide an Web3 provider or the EthereumProvider');
 };
 
 module.exports = ProviderAdapterResolver;
