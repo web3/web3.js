@@ -32,82 +32,82 @@ var formatters = require('web3-core-helpers').formatters;
 
 // Methods
     // Network
-    var GetProtocolVersionMethodModel = require('./methods/network/GetProtocolVersionMethodModel');
-    var VersionMethodModel = require('./methods/network/VersionMethodModel');
-    var ListeningMethodModel = require('./methods/network/ListeningMethodModel');
-    var PeerCountMethodModel = require('./methods/network/PeerCountMethodModel');
+    var GetProtocolVersionMethodModel = require('./models/methods/network/GetProtocolVersionMethodModel');
+    var VersionMethodModel = require('./models/methods/network/VersionMethodModel');
+    var ListeningMethodModel = require('./models/methods/network/ListeningMethodModel');
+    var PeerCountMethodModel = require('./models/methods/network/PeerCountMethodModel');
 
     // Node
-    var GetNodeInfoMethodModel = require('./methods/node/GetNodeInfoMethodModel');
-    var GetCoinbaseMethodModel = require('./methods/node/GetCoinbaseMethodModel');
-    var IsMiningMethodModel = require('./methods/node/IsMiningMethodModel');
-    var GetHashrateMethodModel = require('./methods/node/GetHashrateMethodModel');
-    var IsSyncingMethodModel = require('./methods/node/IsSyncingMethodModel');
-    var GetGasPriceMethodModel = require('./methods/node/GetGasPriceMethodModel');
-    var SubmitWorkMethodModel = require('./methods/node/SubmitWorkMethodModel');
-    var GetWorkMethodModel = require('./methods/node/GetWorkMethodModel');
+    var GetNodeInfoMethodModel = require('./models/methods/node/GetNodeInfoMethodModel');
+    var GetCoinbaseMethodModel = require('./models/methods/node/GetCoinbaseMethodModel');
+    var IsMiningMethodModel = require('./models/methods/node/IsMiningMethodModel');
+    var GetHashrateMethodModel = require('./models/methods/node/GetHashrateMethodModel');
+    var IsSyncingMethodModel = require('./models/methods/node/IsSyncingMethodModel');
+    var GetGasPriceMethodModel = require('./models/methods/node/GetGasPriceMethodModel');
+    var SubmitWorkMethodModel = require('./models/methods/node/SubmitWorkMethodModel');
+    var GetWorkMethodModel = require('./models/methods/node/GetWorkMethodModel');
 
     // Account
-    var GetAccountsMethodModel = require('./methods/account/GetAccountsMethodModel');
-    var GetBalanceMethodModel = require('./methods/account/GetBalanceMethodModel');
-    var GetTransactionCountMethodModel = require('./methods/account/GetTransactionCountMethodModel');
+    var GetAccountsMethodModel = require('./models/methods/account/GetAccountsMethodModel');
+    var GetBalanceMethodModel = require('./models/methods/account/GetBalanceMethodModel');
+    var GetTransactionCountMethodModel = require('./models/methods/account/GetTransactionCountMethodModel');
 
     // Block
-    var GetBlockNumberMethodModel = require('./methods/block/GetBlockNumberMethodModel');
-    var GetBlockMethodModel = require('./methods/block/GetBlockMethodModel');
-    var GetUncleMethodModel = require('./methods/block/GetUncleMethodModel');
-    var GetBlockTransactionCountMethodModel = require('./methods/block/GetBlockTransactionCountMethodModel');
-    var GetBlockUncleCountMethodModel = require('./methods/block/GetBlockUncleCountMethodModel');
+    var GetBlockNumberMethodModel = require('./models/methods/block/GetBlockNumberMethodModel');
+    var GetBlockMethodModel = require('./models/methods/block/GetBlockMethodModel');
+    var GetUncleMethodModel = require('./models/methods/block/GetUncleMethodModel');
+    var GetBlockTransactionCountMethodModel = require('./models/methods/block/GetBlockTransactionCountMethodModel');
+    var GetBlockUncleCountMethodModel = require('./models/methods/block/GetBlockUncleCountMethodModel');
 
     // Transaction
-    var GetTransactionMethodModel = require('./methods/transaction/GetTransactionMethodModel');
-    var GetTransactionFromBlockMethodModel = require('./methods/transaction/GetTransactionFromBlockMethodModel');
-    var GetTransactionReceipt = require('./methods/transaction/GetTransactionReceipt');
-    var SendSignedTransactionMethodModel = require('./methods/transaction/SendSignedTransactionMethodModel');
-    var SignTransactionMethodModel = require('./methods/transaction/SignTransactionMethodModel');
-    var SendTransactionMethodModel = require('./methods/transaction/SendTransactionMethodModel');
+    var GetTransactionMethodModel = require('./models/methods/transaction/GetTransactionMethodModel');
+    var GetTransactionFromBlockMethodModel = require('./models/methods/transaction/GetTransactionFromBlockMethodModel');
+    var GetTransactionReceipt = require('./models/methods/transaction/GetTransactionReceipt');
+    var SendSignedTransactionMethodModel = require('./models/methods/transaction/SendSignedTransactionMethodModel');
+    var SignTransactionMethodModel = require('./models/methods/transaction/SignTransactionMethodModel');
+    var SendTransactionMethodModel = require('./models/methods/transaction/SendTransactionMethodModel');
 
     // Global
-    var GetCodeMethodModel = require('./methods/GetCodeMethodModel');
-    var SignMethodModel = require('./methods/SignMethodModel');
-    var CallMethodModel = require('./methods/CallMethodModel');
-    var GetStroageAtMethodModel = require('./methods/GetStroageAtMethodModel');
-    var EstimateGasMethodModel = require('./methods/EstimateGasMethodModel');
-    var GetPastLogsMethodModel = require('./methods/GetPastLogsMethodModel');
+    var GetCodeMethodModel = require('./models/methods/GetCodeMethodModel');
+    var SignMethodModel = require('./models/methods/SignMethodModel');
+    var CallMethodModel = require('./models/methods/CallMethodModel');
+    var GetStroageAtMethodModel = require('./models/methods/GetStroageAtMethodModel');
+    var EstimateGasMethodModel = require('./models/methods/EstimateGasMethodModel');
+    var GetPastLogsMethodModel = require('./models/methods/GetPastLogsMethodModel');
 
     // Personal
-    var EcRecoverMethodModel = require('./methods/personal/EcRecoverMethodModel');
-    var ImportRawKeyMethodModel = require('./methods/personal/ImportRawKeyMethodModel');
-    var ListAccountsMethodModel = require('./methods/personal/ListAccountsMethodModel');
-    var LockAccountMethodModel = require('./methods/personal/LockAccountMethodModel');
-    var NewAccountMethodModel = require('./methods/personal/NewAccountMethodModel');
-    var PersonalSendTransactionMethodModel = require('./methods/personal/PersonalSendTransactionMethodModel');
-    var PersonalSignMethodModel = require('./methods/personal/PersonalSignMethodModel');
-    var PersonalSignTransactionMethodModel = require('./methods/personal/PersonalSignTransactionMethodModel');
-    var UnlockAccountMethodModel = require('./methods/personal/UnlockAccountMethodModel');
+    var EcRecoverMethodModel = require('./models/methods/personal/EcRecoverMethodModel');
+    var ImportRawKeyMethodModel = require('./models/methods/personal/ImportRawKeyMethodModel');
+    var ListAccountsMethodModel = require('./models/methods/personal/ListAccountsMethodModel');
+    var LockAccountMethodModel = require('./models/methods/personal/LockAccountMethodModel');
+    var NewAccountMethodModel = require('./models/methods/personal/NewAccountMethodModel');
+    var PersonalSendTransactionMethodModel = require('./models/methods/personal/PersonalSendTransactionMethodModel');
+    var PersonalSignMethodModel = require('./models/methods/personal/PersonalSignMethodModel');
+    var PersonalSignTransactionMethodModel = require('./models/methods/personal/PersonalSignTransactionMethodModel');
+    var UnlockAccountMethodModel = require('./models/methods/personal/UnlockAccountMethodModel');
 
     // SHH
-    var AddPrivateKeyMethodModel = require('./methods/shh/AddPrivateKeyMethodModel');
-    var AddSymKeyMethodModel = require('./methods/shh/AddSymKeyMethodModel');
-    var DeleteKeyPairMethodModel = require('./methods/shh/DeleteKeyPairMethodModel');
-    var DeleteMessageFilterMethodModel = require('./methods/shh/DeleteMessageFilterMethodModel');
-    var DeleteSymKeyMethodModel = require('./methods/shh/DeleteSymKeyMethodModel');
-    var GenerateSymKeyFromPasswordMethodModel = require('./methods/shh/GenerateSymKeyFromPasswordMethodModel');
-    var GetFilterMessagesMethodModel = require('./methods/shh/GetFilterMessagesMethodModel');
-    var GetInfoMethodModel = require('./methods/shh/GetInfoMethodModel');
-    var GetPrivateKeyMethodModel = require('./methods/shh/GetPrivateKeyMethodModel');
-    var GetPublicKeyMethodModel = require('./methods/shh/GetPublicKeyMethodModel');
-    var GetSymKeyMethodModel = require('./methods/shh/GetSymKeyMethodModel');
-    var HasKeyPairMethodModel = require('./methods/shh/HasKeyPairMethodModel');
-    var HasSymKeyMethodModel = require('./methods/shh/HasSymKeyMethodModel');
-    var MarkTrustedPeerMethodModel = require('./methods/shh/MarkTrustedPeerMethodModel');
-    var NewKeyPairMethodModel = require('./methods/shh/NewKeyPairMethodModel');
-    var NewMessageFilterMethodModel = require('./methods/shh/NewMessageFilterMethodModel');
-    var NewSymKeyMethodModel = require('./methods/shh/NewSymKeyMethodModel');
-    var PostMethodModel = require('./methods/shh/PostMethodModel');
-    var SetMaxMessageSizeMethodModel = require('./methods/shh/SetMaxMessageSizeMethodModel');
-    var SetMinPoWMethodModel = require('./methods/shh/SetMinPoWMethodModel');
-    var ShhVersionMethodModel = require('./methods/shh/ShhVersionMethodModel');
+    var AddPrivateKeyMethodModel = require('./models/methods/shh/AddPrivateKeyMethodModel');
+    var AddSymKeyMethodModel = require('./models/methods/shh/AddSymKeyMethodModel');
+    var DeleteKeyPairMethodModel = require('./models/methods/shh/DeleteKeyPairMethodModel');
+    var DeleteMessageFilterMethodModel = require('./models/methods/shh/DeleteMessageFilterMethodModel');
+    var DeleteSymKeyMethodModel = require('./models/methods/shh/DeleteSymKeyMethodModel');
+    var GenerateSymKeyFromPasswordMethodModel = require('./models/methods/shh/GenerateSymKeyFromPasswordMethodModel');
+    var GetFilterMessagesMethodModel = require('./models/methods/shh/GetFilterMessagesMethodModel');
+    var GetInfoMethodModel = require('./models/methods/shh/GetInfoMethodModel');
+    var GetPrivateKeyMethodModel = require('./models/methods/shh/GetPrivateKeyMethodModel');
+    var GetPublicKeyMethodModel = require('./models/methods/shh/GetPublicKeyMethodModel');
+    var GetSymKeyMethodModel = require('./models/methods/shh/GetSymKeyMethodModel');
+    var HasKeyPairMethodModel = require('./models/methods/shh/HasKeyPairMethodModel');
+    var HasSymKeyMethodModel = require('./models/methods/shh/HasSymKeyMethodModel');
+    var MarkTrustedPeerMethodModel = require('./models/methods/shh/MarkTrustedPeerMethodModel');
+    var NewKeyPairMethodModel = require('./models/methods/shh/NewKeyPairMethodModel');
+    var NewMessageFilterMethodModel = require('./models/methods/shh/NewMessageFilterMethodModel');
+    var NewSymKeyMethodModel = require('./models/methods/shh/NewSymKeyMethodModel');
+    var PostMethodModel = require('./models/methods/shh/PostMethodModel');
+    var SetMaxMessageSizeMethodModel = require('./models/methods/shh/SetMaxMessageSizeMethodModel');
+    var SetMinPoWMethodModel = require('./models/methods/shh/SetMinPoWMethodModel');
+    var ShhVersionMethodModel = require('./models/methods/shh/ShhVersionMethodModel');
 
 module.exports = {
     version: version,
