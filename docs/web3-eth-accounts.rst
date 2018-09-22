@@ -160,7 +160,7 @@ Parameters
     - ``to`` - ``String``: (optional) The recevier of the transaction, can be empty when deploying a contract.
     - ``data`` - ``String``: (optional) The call data of the transaction, can be empty for simple value transfers.
     - ``value`` - ``String``: (optional) The value of the transaction in wei.
-    - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.gasPrice() <eth-gasprice>`
+    - ``gasPrice`` - ``String``: (optional) The gas price set by this transaction, if empty, it will use :ref:`web3.eth.getGasPrice() <eth-gasprice>`
     - ``gas`` - ``String``: The gas provided by the transaction.
 2. ``privateKey`` - ``String``: The private key to sign with.
 3. ``callback`` - ``Function``: (optional) Optional callback, returns an error object as first parameter and the result as second.
