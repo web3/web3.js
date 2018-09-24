@@ -23,16 +23,16 @@
 "use strict";
 
 /**
+ * @param {Object} methodModels
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {Accounts} accounts
  *
  * @constructor
  */
-function AbstractMethodModelFactory(utils, formatters) {
+function AbstractMethodModelFactory(methodModels, utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
-    this.methodModels = {};
+    this.methodModels = methodModels;
 }
 
 AbstractMethodModelFactory.prototype.hasMethodModel = function (name) {

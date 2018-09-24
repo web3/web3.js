@@ -31,20 +31,22 @@ var web3CoreMethod = require('web3-core-method');
  * @constructor
  */
 function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
-
-    this.methodModels = {
-        getAccounts: web3CoreMethod.GetAccountsMethodModel,
-        newAccount: web3CoreMethod.NewAccountMethodModel,
-        unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
-        lockAccount: web3CoreMethod.LockAccountMethodModel,
-        importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
-        sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
-        signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
-        sign: web3CoreMethod.PersonalSignMethodModel,
-        ecRecover: web3CoreMethod.EcRecoverMethodModel
-    };
-
+    web3CoreMethod.AbstractMethodModelFactory.call(
+        this,
+        {
+            getAccounts: web3CoreMethod.GetAccountsMethodModel,
+            newAccount: web3CoreMethod.NewAccountMethodModel,
+            unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
+            lockAccount: web3CoreMethod.LockAccountMethodModel,
+            importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
+            sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
+            signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
+            sign: web3CoreMethod.PersonalSignMethodModel,
+            ecRecover: web3CoreMethod.EcRecoverMethodModel
+        },
+        utils,
+        formatters
+    );
 }
 
 MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);

@@ -31,14 +31,17 @@ var web3CoreMethod = require('web3-core-method');
  * @constructor
  */
 function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(this, utils, formatters);
-
-    this.methodModels = {
-        getId: web3CoreMethod.VersionMethodModel,
-        getBlock: web3CoreMethod.GetBlockMethodModel,
-        isListening: web3CoreMethod.ListeningMethodModel,
-        getPeerCount: web3CoreMethod.PeerCountMethodModel,
-    };
+    web3CoreMethod.AbstractMethodModelFactory.call(
+        this,
+        {
+            getId: web3CoreMethod.VersionMethodModel,
+            getBlock: web3CoreMethod.GetBlockMethodModel,
+            isListening: web3CoreMethod.ListeningMethodModel,
+            getPeerCount: web3CoreMethod.PeerCountMethodModel,
+        },
+        utils,
+        formatters
+    );
 
 }
 
