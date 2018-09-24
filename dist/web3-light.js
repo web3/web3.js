@@ -4337,9 +4337,8 @@ HttpProvider.prototype.prepareRequest = function (async) {
   } else {
     request = new XMLHttpRequest();
   }
-  // include credentials if we're not connecting to the localhost node
   request.withCredentials = this.user && this.password;
-  
+
   request.open('POST', this.host, async);
   if (this.user && this.password) {
     var auth = 'Basic ' + new Buffer(this.user + ':' + this.password).toString('base64');
