@@ -24,14 +24,13 @@
 
 var CallMethodModel = require('web3-core-method').CallMethodModel;
 
-function ContractCallMethodModel(abiItem, utils, formatters, contractMethodEncoder) {
+function ContractCallMethodModel(abiItem, utils, formatters) {
     CallMethodModel.call(this, utils, formatters);
     this.contractMethodName = '';
     this.funcName = '';
     this.signature = '';
     this.requestOptions = null;
     this.parameters = null;
-    this.contractMethodEncoder = contractMethodEncoder;
 }
 
 ContractCallMethodModel.prototype.beforeExecution = function (web3Package) {
@@ -40,10 +39,6 @@ ContractCallMethodModel.prototype.beforeExecution = function (web3Package) {
 
 ContractCallMethodModel.prototype.afterExecution = function (web3Package) {
     // extend CallMethodModel afterExecution (decoding)
-};
-
-ContractCallMethodModel.prototype.getEncodedMethodAbi = function () {
-   return this.contractMethodEncoder.encode(this);
 };
 
 ContractCallMethodModel.prototype = Object.create(CallMethodModel.prototype);

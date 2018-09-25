@@ -25,12 +25,14 @@
 /**
  * @param {ContractMethodsFactory} contractMethodsFactory
  * @param {MethodController} methodController
+ * @param {ContractMethodEncoder} contractMethodEncoder
  *
  * @constructor
  */
-function ContractMethodsProxy(contractMethodsFactory, methodController) {
+function ContractMethodsProxy(contractMethodsFactory, methodController, contractMethodEncoder) {
     this.contractMethodsFactory = contractMethodsFactory;
     this.methodController = methodController;
+    this.contractMethodEncoder = contractMethodEncoder;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -79,7 +81,7 @@ ContractMethodsProxy.prototype.proxyHandler = function (target, name) {
             );
         };
 
-        anonymousFunction.encodeAbi = methodModel.getEncodedMethodAbi;
+        anonymousFunction.encodeAbi = this.contractMethodEncoder.encode(methodModel);
     }
 
     throw Error('Method with name "' + name + '" not found');
