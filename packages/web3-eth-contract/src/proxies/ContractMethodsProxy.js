@@ -71,13 +71,15 @@ ContractMethodsProxy.prototype.proxyHandler = function (target, name) {
         anonymousFunction[requestType].request = methodModel.request;
 
         anonymousFunction.estimateGas = function () {
-
+            return self.methodController.execute(
+                self.contractMethodsFactory.createEstimateGasMethodModel(methodModel),
+                target.currentProvider,
+                target.accounts,
+                target
+            );
         };
 
-        anonymousFunction.encodeAbi = function () {
-
-        };
-
+        anonymousFunction.encodeAbi = methodModel.getEncodedMethodAbi;
     }
 
     throw Error('Method with name "' + name + '" not found');

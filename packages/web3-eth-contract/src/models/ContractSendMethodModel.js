@@ -24,13 +24,15 @@
 
 var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
 
-function ContractSendMethodModel(abiItem, utils, formatters) {
+function ContractSendMethodModel(abiItem, utils, formatters, contractMethodEncoder) {
     SendTransactionMethodModel.call(this, utils, formatters);
     this.contractMethodName = '';
     this.funcName = '';
     this.signature = '';
     this.requestOptions = null;
     this.parameters = null;
+    this.abiItem = abiItem;
+    this.contractMethodEncoder = contractMethodEncoder;
 }
 
 ContractSendMethodModel.prototype.beforeExecution = function (web3Package) {
@@ -39,6 +41,17 @@ ContractSendMethodModel.prototype.beforeExecution = function (web3Package) {
 
 ContractSendMethodModel.prototype.afterExecution = function (web3Package) {
     // extend SendTransactionMethodModel afterExecution (decoding)
+};
+
+/**
+ * Encodes the method abi
+ *
+ * @method getEncodedMethodAbi
+ *
+ * @returns {string}
+ */
+ContractSendMethodModel.prototype.getEncodedMethodAbi = function () {
+    return this.contractMethodEncoder.encode(this);
 };
 
 ContractSendMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);

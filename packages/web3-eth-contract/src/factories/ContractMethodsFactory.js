@@ -68,7 +68,7 @@ ContractMethodsFactory.prototype.getMethodFromAbi = function (name) {
  *
  * @param {String} name
  *
- * @returns {Object}
+ * @returns {AbstractMethodModel}
  */
 ContractMethodsFactory.prototype.createMethodModel = function (name) {
     var method = this.getMethodFromAbi(name);
