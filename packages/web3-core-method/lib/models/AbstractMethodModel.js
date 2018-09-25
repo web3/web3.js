@@ -96,7 +96,7 @@ AbstractMethodModel.prototype.request = function () {
  *
  * @returns {Object}
  */
-AbstractMethodModel.mapFunctionArguments = function (args) {
+AbstractMethodModel.prototype.mapFunctionArguments = function (args) {
     var parameters = args;
     var callback = null;
 
