@@ -23,14 +23,16 @@
 "use strict";
 
 /**
- * @param {MethodsFactory} methodsFactory
+ * @param {AbiModel} abiModel
+ * @param {RpcMethodFactory} rpcMethodFactory
  * @param {MethodController} methodController
  * @param {MethodEncoder} methodEncoder
  *
  * @constructor
  */
-function MethodsProxy(methodsFactory, methodController, methodEncoder) {
-    this.methodsFactory = methodsFactory;
+function MethodsProxy(abiModel, rpcMethodFactory, methodController, methodEncoder) {
+    this.abiModel = abiModel;
+    this.rpcMethodFactory = rpcMethodFactory;
     this.methodController = methodController;
     this.methodEncoder = methodEncoder;
 
@@ -50,63 +52,64 @@ function MethodsProxy(methodsFactory, methodController, methodEncoder) {
  * @returns {Function|Error}
  */
 MethodsProxy.prototype.proxyHandler = function (target, name) {
-    if (this.methodsFactory.hasMethod(name)) {
-        var methodModel = this.methodsFactory.createMethodModel(name);
-        var requestType = this.getRequestType(methodModel);
+    var abiItemModel = this.abiModel.getMethod(name);
 
+    if (abiItemModel) {
         var anonymousFunction = function () {
-            methodModel.contractMethodParameters = arguments;
+            abiItemModel.contractMethodParameters = arguments;
         };
 
-        anonymousFunction[requestType] = function () {
-            methodModel.methodArguments = arguments;
+        anonymousFunction[abiItemModel.requestType] = function () {
+            var rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
+            rpcMethod.methodArguments = arguments;
+
+            var contractMethodArgumentsValidationResult = self.contractMethodArgumentsValidator.validate(abiItemModel);
+            var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(rpcMethod);
+
+            if (contractMethodArgumentsValidationResult !== true && rpcMethodOptionsValidationResult !== true) {
+                var promiEvent = new PromiEvent();
+                var errorsObject = {
+                    errors: [
+                        contractMethodArgumentsValidationResult,
+                        rpcMethodOptionsValidationResult
+                    ]
+                };
+
+                promiEvent.resolve(null);
+                promiEvent.reject(errorsObject);
+                promiEvent.eventEmitter.emit('error', errorsObject);
+
+                return promiEvent
+            }
 
             return self.methodController.execute(
-                methodModel,
+                rcpMethod,
                 target.currentProvider,
                 target.accounts,
                 target
             );
         };
 
-        anonymousFunction[requestType].request = methodModel.request;
+        anonymousFunction[abiItemModel.requestType].request = abiItemModel.request;
 
         anonymousFunction.estimateGas = function () {
-            var estimateGasOfContractMethodModel = self.methodFactory.createEstimateGasOfContractMethodModel(methodModel);
-            estimateGasOfContractMethodModel.methodArguments = arguments;
+            abiItemModel.requestType = 'estimate';
+
+            var rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
+            rpcMethod.methodArguments = arguments;
 
             return self.methodController.execute(
-                estimateGasOfContractMethodModel,
+                rpcMethod,
                 target.currentProvider,
                 target.accounts,
                 target
             );
         };
 
-        anonymousFunction.encodeAbi = this.methodEncoder.encode(
-            methodModel.contractMethodParameters,
-            methodModel.abiItem,
-            methodModel.signature,
-            target.contractOptions.data
-        );
+        anonymousFunction.encodeAbi = this.methodEncoder.encode(abiItemModel, target.contractOptions.data);
     }
 
     throw Error('Method with name "' + name + '" not found');
 };
 
-/**
- * Determines which type of JSON-RPC request it is.
- *
- * @method getRequestType
- *
- * @param {AbstractMethodModel} methodModel
- *
- * @returns {string}
- */
-MethodsProxy.prototype.getRequestType = function (methodModel) {
-    if (methodModel.constructor.name === 'CallContractMethodModel') {
-        return 'call';
-    }
-
-    return 'send';
-};
+module.exports = MethodsProxy;

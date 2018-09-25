@@ -44,8 +44,6 @@ function MethodEncoder(abiCoder) {
  * @returns {string}
  */
 MethodEncoder.prototype.encode = function (contractMethodParameters, abiItem, signature, deployData) {
-    this.validateInputLength(abiItem, contractMethodParameters);
-
     var encodedParameters = this.abiCoder.encodeParameters(
         this.getMethodParameterTypes(abiItem),
         contractMethodParameters
@@ -87,26 +85,4 @@ MethodEncoder.prototype.getMethodParameterTypes = function (abiItem) {
     return methodParameterTypes;
 };
 
-/**
- * Validates the input length and throws an error if they are wrong
- *
- * @method validateInputLength
- *
- * @param {Object} abiItem
- * @param {Array} contractMethodParameters
- */
-MethodEncoder.prototype.validateInputLength = function (abiItem, contractMethodParameters) {
-    var inputLength = 0;
-
-    if (_.isArray(abiItem.inputs)) {
-        inputLength = abiItem.inputs.length;
-    }
-
-    if (inputLength !== contractMethodParameters.length) {
-        throw new Error(
-            'The number of arguments is not matching the methods required number. You need to pass '
-            + inputLength +
-            ' arguments.'
-        );
-    }
-};
+module.exports = MethodEncoder;

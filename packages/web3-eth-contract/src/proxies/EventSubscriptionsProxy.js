@@ -23,12 +23,12 @@
 "use strict";
 
 /**
- * @param {EventSubscriptionsFactory} eventSubscriptionsFactory
+ * @param {AbiModel} abiModel
  *
  * @constructor
  */
-function EventSubscriptionsProxy(eventSubscriptionsFactory) {
-    this.eventSubscriptionsFactory = eventSubscriptionsFactory;
+function EventSubscriptionsProxy(abiModel) {
+    this.abiModel = abiModel;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -46,23 +46,19 @@ function EventSubscriptionsProxy(eventSubscriptionsFactory) {
  * @returns {Function|Error}
  */
 EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
-    if (this.eventSubscriptionsFactory.hasEvent(name)) {
-        var eventSubscriptionModel = this.eventSubscriptionsFactory.createEventSubscriptionModel(name);
+    var eventModel = this.abiModel.getEvent(name);
 
+    if (eventModel) {
         return function (options, callback) {
-            eventSubscriptionModel.options = options;
+            eventModel.options = options;
 
-            return eventSubscriptionModel.subscription.subscribe(callback);
         }
     }
 
     if (name === 'allEvents') {
-        var allEventsSubscriptionModel = this.eventSubscriptionsFactory.getAllEventsModel();
-
         return function (options, callback) {
-            allEventsSubscriptionModel.options = options;
+            eventModel.options = options;
 
-            return allEventsSubscriptionModel.subscription.subscribe(callback);
         }
     }
 
