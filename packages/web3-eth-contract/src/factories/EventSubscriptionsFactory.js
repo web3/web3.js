@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractEventSubscriptionsFactory.js
+ * @file EventSubscriptionsFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -29,7 +29,7 @@
  *
  * @constructor
  */
-function ContractEventSubscriptionsFactory(eventAbiItems, contractPackageFactory, subscriptionPackage) {
+function EventSubscriptionsFactory(eventAbiItems, contractPackageFactory, subscriptionPackage) {
     this.eventAbiItems = eventAbiItems;
     this.contractPackageFactory = contractPackageFactory;
     this.subscriptionPackage = subscriptionPackage;
@@ -44,7 +44,7 @@ function ContractEventSubscriptionsFactory(eventAbiItems, contractPackageFactory
  *
  * @returns {Boolean}
  */
-ContractEventSubscriptionsFactory.prototype.hasEvent = function (name) {
+EventSubscriptionsFactory.prototype.hasEvent = function (name) {
     return this.getEventFromAbi(name) !== undefined;
 };
 
@@ -57,7 +57,7 @@ ContractEventSubscriptionsFactory.prototype.hasEvent = function (name) {
  *
  * @returns {Object|undefined}
  */
-ContractEventSubscriptionsFactory.prototype.getEventFromAbi = function (name) {
+EventSubscriptionsFactory.prototype.getEventFromAbi = function (name) {
     return this.eventAbiItems.find(function (eventAbiItem) {
         // check for all three name types (funcName, name, signature)
     });
@@ -74,7 +74,7 @@ ContractEventSubscriptionsFactory.prototype.getEventFromAbi = function (name) {
  *
  * @returns {Object}
  */
-ContractEventSubscriptionsFactory.prototype.createEventSubscriptionModel = function (name) {
+EventSubscriptionsFactory.prototype.createEventSubscriptionModel = function (name) {
     return this.contractPackageFactory.createEventSubscriptionModel(
         this.eventAbiItems[name]
     );

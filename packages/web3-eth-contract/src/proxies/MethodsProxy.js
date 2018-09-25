@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractMethodsProxy.js
+ * @file MethodsProxy.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -23,16 +23,16 @@
 "use strict";
 
 /**
- * @param {ContractMethodsFactory} contractMethodsFactory
+ * @param {MethodsFactory} methodsFactory
  * @param {MethodController} methodController
- * @param {ContractMethodEncoder} contractMethodEncoder
+ * @param {MethodEncoder} methodEncoder
  *
  * @constructor
  */
-function ContractMethodsProxy(contractMethodsFactory, methodController, contractMethodEncoder) {
-    this.contractMethodsFactory = contractMethodsFactory;
+function MethodsProxy(methodsFactory, methodController, methodEncoder) {
+    this.methodsFactory = methodsFactory;
     this.methodController = methodController;
-    this.contractMethodEncoder = contractMethodEncoder;
+    this.methodEncoder = methodEncoder;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -49,18 +49,17 @@ function ContractMethodsProxy(contractMethodsFactory, methodController, contract
  *
  * @returns {Function|Error}
  */
-ContractMethodsProxy.prototype.proxyHandler = function (target, name) {
-    if (this.contractMethodsFactory.hasMethod(name)) {
-        var methodModel = this.contractMethodsFactory.createMethodModel(name);
+MethodsProxy.prototype.proxyHandler = function (target, name) {
+    if (this.methodsFactory.hasMethod(name)) {
+        var methodModel = this.methodsFactory.createMethodModel(name);
         var requestType = this.getRequestType(methodModel);
 
         var anonymousFunction = function () {
-            methodModel.parameters = arguments;
+            methodModel.contractMethodParameters = arguments;
         };
 
-        anonymousFunction[requestType] = function (options, callback) {
-            methodModel.requestOptions = options;
-            methodModel.callback = callback;
+        anonymousFunction[requestType] = function () {
+            methodModel.methodArguments = arguments;
 
             return self.methodController.execute(
                 methodModel,
@@ -73,15 +72,23 @@ ContractMethodsProxy.prototype.proxyHandler = function (target, name) {
         anonymousFunction[requestType].request = methodModel.request;
 
         anonymousFunction.estimateGas = function () {
+            var estimateGasOfContractMethodModel = self.methodFactory.createEstimateGasOfContractMethodModel(methodModel);
+            estimateGasOfContractMethodModel.methodArguments = arguments;
+
             return self.methodController.execute(
-                self.contractMethodsFactory.createEstimateGasMethodModel(methodModel),
+                estimateGasOfContractMethodModel,
                 target.currentProvider,
                 target.accounts,
                 target
             );
         };
 
-        anonymousFunction.encodeAbi = this.contractMethodEncoder.encode(methodModel);
+        anonymousFunction.encodeAbi = this.methodEncoder.encode(
+            methodModel.contractMethodParameters,
+            methodModel.abiItem,
+            methodModel.signature,
+            target.contractOptions.data
+        );
     }
 
     throw Error('Method with name "' + name + '" not found');
@@ -96,8 +103,8 @@ ContractMethodsProxy.prototype.proxyHandler = function (target, name) {
  *
  * @returns {string}
  */
-ContractMethodsProxy.prototype.getRequestType = function (methodModel) {
-    if (methodModel.constructor.name === 'ContractCallMethodModel') {
+MethodsProxy.prototype.getRequestType = function (methodModel) {
+    if (methodModel.constructor.name === 'CallContractMethodModel') {
         return 'call';
     }
 

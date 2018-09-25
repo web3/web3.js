@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractMethodsFactory.js
+ * @file MethodsFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -25,12 +25,27 @@
 /**
  * @param {Array} methodAbiItems
  * @param {ContractPackageFactory} contractPackageFactory
+ * @param {Utils} utils
+ * @param {Object} formatters
+ * @param {MethodEncoder} methodEncoder
+ * @param {MethodResponseDecoder} methodResponseDecoder
  *
  * @constructor
  */
-function ContractMethodsFactory(methodAbiItems, contractPackageFactory) {
-    this.eventAbiItems = eventAbiItems;
+function MethodsFactory(
+    methodAbiItems,
+    contractPackageFactory,
+    utils,
+    formatters,
+    methodEncoder,
+    methodResponseDecoder
+) {
+    this.methodAbiItems = methodAbiItems;
     this.contractPackageFactory = contractPackageFactory;
+    this.utils = utils;
+    this.formatters = formatters;
+    this.methodEncoder = methodEncoder;
+    this.methodResponseDecoder = methodResponseDecoder;
 }
 
 /**
@@ -42,7 +57,7 @@ function ContractMethodsFactory(methodAbiItems, contractPackageFactory) {
  *
  * @returns {Boolean}
  */
-ContractMethodsFactory.prototype.hasMethod = function (name) {
+MethodsFactory.prototype.hasMethod = function (name) {
     return this.getMethodFromAbi(name) !== undefined;
 };
 
@@ -55,10 +70,29 @@ ContractMethodsFactory.prototype.hasMethod = function (name) {
  *
  * @returns {Object|undefined}
  */
-ContractMethodsFactory.prototype.getMethodFromAbi = function (name) {
-    return this.eventAbiItems.find(function (eventAbiItem) {
+MethodsFactory.prototype.getMethodFromAbi = function (name) {
+    return this.methodAbiItems.find(function (methodAbiItem) {
         // check for all three name types (funcName, name, signature)
     });
+};
+
+/**
+ * Return the EstimateGasOfContractMethodModel object
+ *
+ * @method createEstimateGasOfContractMethodModel
+ *
+ * @param {AbstractMethodModel} methodModel
+ *
+ * @returns {*}
+ */
+MethodsFactory.prototype.createEstimateGasOfContractMethodModel = function (methodModel) {
+    return this.contractPackageFactory.createEstimateGasOfContractMethodModel(
+        methodModel,
+        this.utils,
+        this.formatters,
+        this.methodEncoder,
+        this.methodResponseDecoder
+    );
 };
 
 /**
@@ -70,12 +104,16 @@ ContractMethodsFactory.prototype.getMethodFromAbi = function (name) {
  *
  * @returns {AbstractMethodModel}
  */
-ContractMethodsFactory.prototype.createMethodModel = function (name) {
+MethodsFactory.prototype.createMethodModel = function (name) {
     var method = this.getMethodFromAbi(name);
 
     if (this.isSend(method)) {
         return this.contractPackageFactory.createSendMethodModel(
-            this.getMethodFromAbi(name)
+            this.getMethodFromAbi(name),
+            this.utils,
+            this.formatters,
+            this.methodEncoder,
+            this.methodResponseDecoder
         );
     }
 
@@ -93,7 +131,7 @@ ContractMethodsFactory.prototype.createMethodModel = function (name) {
  *
  * @returns {Boolean}
  */
-ContractMethodsFactory.prototype.isSend = function (abiItem) {
+MethodsFactory.prototype.isSend = function (abiItem) {
     // pseudo-code
     return abiItem.type === 'send';
 };

@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractEventSubscriptionsProxy.js
+ * @file EventSubscriptionsProxy.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -23,12 +23,12 @@
 "use strict";
 
 /**
- * @param {ContractEventSubscriptionsFactory} contractEventSubscriptionsFactory
+ * @param {EventSubscriptionsFactory} eventSubscriptionsFactory
  *
  * @constructor
  */
-function ContractEventSubscriptionsProxy(contractEventSubscriptionsFactory) {
-    this.contractEventSubscriptionsFactory = contractEventSubscriptionsFactory;
+function EventSubscriptionsProxy(eventSubscriptionsFactory) {
+    this.eventSubscriptionsFactory = eventSubscriptionsFactory;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -45,9 +45,9 @@ function ContractEventSubscriptionsProxy(contractEventSubscriptionsFactory) {
  *
  * @returns {Function|Error}
  */
-ContractEventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
-    if (this.contractEventSubscriptionsFactory.hasEvent(name)) {
-        var eventSubscriptionModel = this.contractEventSubscriptionsFactory.createEventSubscriptionModel(name);
+EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
+    if (this.eventSubscriptionsFactory.hasEvent(name)) {
+        var eventSubscriptionModel = this.eventSubscriptionsFactory.createEventSubscriptionModel(name);
 
         return function (options, callback) {
             eventSubscriptionModel.options = options;
@@ -57,7 +57,7 @@ ContractEventSubscriptionsProxy.prototype.proxyHandler = function (target, name)
     }
 
     if (name === 'allEvents') {
-        var allEventsSubscriptionModel = this.contractEventSubscriptionsFactory.getAllEventsModel();
+        var allEventsSubscriptionModel = this.eventSubscriptionsFactory.getAllEventsModel();
 
         return function (options, callback) {
             allEventsSubscriptionModel.options = options;
