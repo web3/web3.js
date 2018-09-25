@@ -56,7 +56,9 @@ SendMethodModel.prototype.beforeExecution = function (web3Package) {
         this.signature,
         web3Package.contractOptions.data
     );
-    this.parameters[0]['to'] = web3Package.contractOptions.address;
+
+    this.parameters[0] = this.getOrSetDefaultOptions(this.parameters[0], web3Package);
+
     SendTransactionMethodModel.prototype.beforeExecution.call(this, web3Package);
 };
 
@@ -71,6 +73,39 @@ SendMethodModel.prototype.beforeExecution = function (web3Package) {
  */
 SendMethodModel.prototype.afterExecution = function (response) {
     return this.methodResponseDecoder.decode(this.abiItem, response);
+};
+
+/**
+ * Use default values, if options are not available
+ *
+ * @method getOrSetDefaultOptions
+ *
+ * @param {Object} options the options gived by the user
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ *
+ * @returns {Object} the options with gaps filled by defaults
+ */
+SendMethodModel.prototype.getOrSetDefaultOptions = function getOrSetDefaultOptions(options, web3Package) {
+    var from = null;
+    var gasPrice = null;
+
+    if (options.gasPrice) {
+        gasPrice = String(options.gasPrice);
+    }
+
+    if (options.from) {
+        from = this.utils.toChecksumAddress(formatters.inputAddressFormatter(options.from));
+    }
+
+    options.from = from || web3Package.contractOptions.from;
+    options.gasPrice = gasPrice || web3Package.contractOptions.gasPrice;
+    options.gas = options.gas || options.gasLimit || web3Package.contractOptions.gas;
+    options.to = web3Package.contractOptions.address;
+
+    // TODO replace with only gasLimit?
+    delete options.gasLimit;
+
+    return options;
 };
 
 SendMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);

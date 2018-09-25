@@ -57,7 +57,41 @@ CallContractMethodModel.prototype.beforeExecution = function (web3Package) {
         web3Package.contractOptions.data
     );
 
+    this.parameters[0] = this.getOrSetDefaultOptions(this.parameters[0], web3Package);
+
     CallMethodModel.prototype.beforeExecution.call(this, web3Package);
+};
+
+/**
+ * Use default values, if options are not available
+ *
+ * @method getOrSetDefaultOptions
+ *
+ * @param {Object} options the options gived by the user
+ * @param {Object} web3Package - The package where the method is called from for example Eth.
+ *
+ * @returns {Object} the options with gaps filled by defaults
+ */
+CallContractMethodModel.prototype.getOrSetDefaultOptions = function getOrSetDefaultOptions(options, web3Package) {
+    var from = null;
+    var gasPrice = null;
+
+    if (options.gasPrice) {
+        gasPrice = String(options.gasPrice);
+    }
+
+    if (options.from) {
+        from = this.utils.toChecksumAddress(formatters.inputAddressFormatter(options.from));
+    }
+
+    options.from = from || web3Package.contractOptions.from;
+    options.gasPrice = gasPrice || web3Package.contractOptions.gasPrice;
+    options.gas = options.gas || options.gasLimit || web3Package.contractOptions.gas;
+
+    // TODO replace with only gasLimit?
+    delete options.gasLimit;
+
+    return options;
 };
 
 /**
