@@ -112,4 +112,12 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
     throw Error('Method with name "' + name + '" not found');
 };
 
+MethodsProxy.prototype.handleValidationErrors = function (errors) {
+    // return PromiEvent if errors
+};
+
+MethodsProxy.prototype.extendRpcMethodWithResponseDecoder = function (rpcMethod) {
+    // Extend afterExecution of the AbstractMethodModel with decoding of the response
+};
+
 module.exports = MethodsProxy;

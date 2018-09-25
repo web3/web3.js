@@ -24,11 +24,16 @@
 
 var _ = require('underscore');
 
+/**
+ * @param {Utils} utils
+ *
+ * @constructor
+ */
 function RpcMethodOptionsValidator(utils) {
     this.utils = utils;
 }
 
-RpcMethodOptionsValidator.prototype.validate = function (methodModel, rpcMethodModel) {
+RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethodModel) {
         // errors.push(new Error('This contract object doesn\'t have address set yet, please set an address first.'));
         // errors.push(new Error('No "from" address specified in neither the given options, nor the default options.'));
         // errors.push(new Error('Can not send value to non-payable contract method or constructor'));

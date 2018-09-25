@@ -64,3 +64,5 @@ EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
 
     throw Error('Event with name "' + name + '" not found');
 };
+
+module.exports = EventSubscriptionsProxy;

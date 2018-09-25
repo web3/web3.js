@@ -24,6 +24,11 @@
 
 var _ = require('underscore');
 
+/**
+ * @param {Object} abiItem
+ *
+ * @constructor
+ */
 function AbiItemModel(abiItem) {
     this.abiItem = abiItem;
 }

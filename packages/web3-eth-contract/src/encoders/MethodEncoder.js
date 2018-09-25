@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractMethodEncoder.js
+ * @file MethodEncoder.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -41,7 +41,7 @@ function MethodEncoder(abiCoder) {
  * @param {String} signature
  * @param {String} deployData
  *
- * @returns {string}
+ * @returns {String}
  */
 MethodEncoder.prototype.encode = function (contractMethodParameters, abiItem, signature, deployData) {
     var encodedParameters = this.abiCoder.encodeParameters(
