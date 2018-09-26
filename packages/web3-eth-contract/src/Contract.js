@@ -90,7 +90,7 @@ function Contract(
     );
 
     var self = this,
-        _address = null,
+        _address = self.utils.toChecksumAddress(self.formatters.inputAddressFormatter(address)),
         abiModel = abiMapper.map(abi);
 
     Object.defineProperty(this.options, 'address', {
@@ -127,7 +127,6 @@ function Contract(
     );
 
     this.events = contractPackageFactory.createEventsSubscriptionsProxy();
-    this.options.address = address;
 }
 
 Contract.prototype.once = function (event, options, callback) {
