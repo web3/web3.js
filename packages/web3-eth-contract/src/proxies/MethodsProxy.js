@@ -88,7 +88,9 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
             return self.executeMethod(abiItemModel, target, arguments);
         };
 
-        anonymousFunction.encodeAbi = this.methodEncoder.encode(abiItemModel, target.contract.options.data);
+        anonymousFunction.encodeAbi = function () {
+            return self.methodEncoder.encode(abiItemModel, target.contract.options.data);
+        };
     }
 
     throw Error('Method with name "' + name + '" not found');
