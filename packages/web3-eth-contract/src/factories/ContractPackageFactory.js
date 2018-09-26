@@ -22,11 +22,11 @@
 
 "use strict";
 
-var AbiModel = require('../models/abi/AbiModel');
-var AbiItemModel = require('../models/abi/AbiItemModel');
+var ABIModel = require('../models/abi/ABIModel');
+var ABIItemModel = require('../models/abi/ABIItemModel');
 var MethodEncoder = require('../encoders/MethodEncoder');
 var MethodResponseDecoder = require('../decoders/MethodResponseDecoder');
-var AbiMapper = require('../mappers/AbiMapper');
+var ABIMapper = require('../mappers/ABIMapper');
 var RpcMethodOptionsMapper = require('../mappers/RpcMethodOptionsMapper');
 var MethodsProxy = require('../proxies/MethodsProxy');
 var RpcMethodOptionsValidator = require('../validators/RpcMethodOptionsValidator');
@@ -38,29 +38,29 @@ var RpcMethodFactory = require('../factories/RpcMethodFactory');
 function ContractPackageFactory() { }
 
 /**
- * Returns an object of AbiModel
+ * Returns an object of ABIModel
  *
- * @method createAbiModel
+ * @method createABIModel
  *
  * @param {Object} mappedAbi
  *
- * @returns {AbiModel}
+ * @returns {ABIModel}
  */
-ContractPackageFactory.prototype.createAbiModel = function (mappedAbi) {
-    return new AbiModel(mappedAbi);
+ContractPackageFactory.prototype.createABIModel = function (mappedAbi) {
+    return new ABIModel(mappedAbi);
 };
 
 /**
- * Returns an object of AbiItemModel
+ * Returns an object of ABIItemModel
  *
- * @method createAbiItemModel
+ * @method createABIItemModel
  *
  * @param {Object} abiItem
  *
- * @returns {AbiItemModel}
+ * @returns {ABIItemModel}
  */
-ContractPackageFactory.prototype.createAbiItemModel = function (abiItem) {
-    return new AbiItemModel(abiItem);
+ContractPackageFactory.prototype.createABIItemModel = function (abiItem) {
+    return new ABIItemModel(abiItem);
 };
 
 /**
@@ -77,17 +77,17 @@ ContractPackageFactory.prototype.createMethodEncoder = function (abiCoder) {
 };
 
 /**
- * Returns an object of AbiMapper
+ * Returns an object of ABIMapper
  *
- * @method createAbiMapper
+ * @method createABIMapper
  *
  * @param {ABICoder} abiCoder
  * @param {Utils} utils
  *
- * @returns {AbiMapper}
+ * @returns {ABIMapper}
  */
-ContractPackageFactory.prototype.createAbiMapper = function (abiCoder, utils) {
-    return new AbiMapper(this, abiCoder, utils);
+ContractPackageFactory.prototype.createABIMapper = function (abiCoder, utils) {
+    return new ABIMapper(this, abiCoder, utils);
 };
 
 /**
@@ -157,7 +157,7 @@ ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, ut
  * @method createMethodsProxy
  *
  * @param {Contract} contract
- * @param {AbiModel} abiModel
+ * @param {ABIModel} abiModel
  * @param {MethodController} methodController
  * @param {ABICoder} abiCoder
  * @param {Utils} utils

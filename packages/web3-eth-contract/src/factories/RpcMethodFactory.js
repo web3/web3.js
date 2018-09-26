@@ -46,7 +46,7 @@ function RpcMethodFactory(methodResponseDecoder, accounts, utils, formatters) {
  *
  * @method createRpcMethod
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  *
  * @returns {AbstractMethodModel}
  */

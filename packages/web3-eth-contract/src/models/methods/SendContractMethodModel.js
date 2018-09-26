@@ -25,7 +25,7 @@
 var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
 
 /**
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {MethodResponseDecoder} methodResponseDecoder
  * @param {Utils} utils
  * @param {Object} formatters

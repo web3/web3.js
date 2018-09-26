@@ -24,7 +24,7 @@
 
 /**
  * @param {Contract} contract
- * @param {AbiModel} abiModel
+ * @param {ABIModel} abiModel
  * @param {RpcMethodFactory} rpcMethodFactory
  * @param {MethodController} methodController
  * @param {MethodEncoder} methodEncoder
@@ -102,7 +102,7 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
 /**
  * Executes the RPC method with the methodController
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {MethodsProxy} target
  * @param {IArguments} methodArguments
  *
@@ -126,7 +126,7 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
 /**
  * Creates the rpc method, encodes the contract method and validate the objects.
  *
- * @param {AbiItemModel|Array} abiItemModel
+ * @param {ABIItemModel|Array} abiItemModel
  * @param {MethodsProxy} target
  * @param {IArguments} methodArguments
  *

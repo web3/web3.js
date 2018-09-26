@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AbiModel.js
+ * @file ABIModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -27,7 +27,7 @@
  *
  * @constructor
  */
-function AbiModel(mappedAbi) {
+function ABIModel(mappedAbi) {
     this.abi = mappedAbi;
 }
 
@@ -38,9 +38,9 @@ function AbiModel(mappedAbi) {
  *
  * @param {String} name
  *
- * @returns {AbiItemModel|Boolean}
+ * @returns {ABIItemModel|Boolean}
  */
-AbiModel.prototype.getMethod = function (name) {
+ABIModel.prototype.getMethod = function (name) {
     if (this.hasMethod(name)) {
         return this.abi.methods[name];
     }
@@ -55,9 +55,9 @@ AbiModel.prototype.getMethod = function (name) {
  *
  * @param {String} name
  *
- * @returns {AbiItemModel|Boolean}
+ * @returns {ABIItemModel|Boolean}
  */
-AbiModel.prototype.getEvent = function (name) {
+ABIModel.prototype.getEvent = function (name) {
     if (this.hasEvent(name)) {
         return this.abi.events[name];
     }
@@ -74,7 +74,7 @@ AbiModel.prototype.getEvent = function (name) {
  *
  * @returns {Boolean}
  */
-AbiModel.prototype.hasMethod = function (name) {
+ABIModel.prototype.hasMethod = function (name) {
     return typeof this.abi.methods[name] !== 'undefined';
 };
 
@@ -87,8 +87,8 @@ AbiModel.prototype.hasMethod = function (name) {
  *
  * @returns {Boolean}
  */
-AbiModel.prototype.hasEvent = function (name) {
+ABIModel.prototype.hasEvent = function (name) {
     return typeof this.abi.events[name] !== 'undefined';
 };
 
-module.exports = AbiModel;
+module.exports = ABIModel;

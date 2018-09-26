@@ -38,7 +38,7 @@ function RpcMethodOptionsValidator(utils) {
  *
  * @method validate
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {AbstractMethodModel} rpcMethodModel
  *
  * @returns {Error|Boolean}
@@ -64,7 +64,7 @@ RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethod
  *
  * @method isToSet
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {AbstractMethodModel} rpcMethodModel
  *
  * @returns {Boolean}
@@ -95,7 +95,7 @@ RpcMethodOptionsValidator.prototype.isFromSet = function (rpcMethodModel) {
  *
  * @method isValueValid
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {AbstractMethodModel} rpcMethodModel
  *
  * @returns {Boolean}

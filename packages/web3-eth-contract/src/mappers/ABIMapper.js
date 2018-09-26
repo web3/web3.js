@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AbiMapper.js
+ * @file ABIMapper.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -29,7 +29,7 @@
  *
  * @constructor
  */
-function AbiMapper(contractPackageFactory, abiCoder, utils) {
+function ABIMapper(contractPackageFactory, abiCoder, utils) {
     this.utils = utils;
     this.abiCoder = abiCoder;
     this.contractPackageFactory = contractPackageFactory;
@@ -40,9 +40,9 @@ function AbiMapper(contractPackageFactory, abiCoder, utils) {
  *
  * @param {Array} abi
  *
- * @returns {AbiModel}
+ * @returns {ABIModel}
  */
-AbiMapper.prototype.map = function (abi) {
+ABIMapper.prototype.map = function (abi) {
     var self = this;
     var mappedAbiItem = {
         methods: {},
@@ -113,7 +113,7 @@ AbiMapper.prototype.map = function (abi) {
  *
  * @returns {Boolean}
  */
-AbiMapper.prototype.isConstant = function (abiItem) {
+ABIMapper.prototype.isConstant = function (abiItem) {
     return (abiItem.stateMutability === "view" || abiItem.stateMutability === "pure" || abiItem.constant);
 };
 
@@ -126,8 +126,8 @@ AbiMapper.prototype.isConstant = function (abiItem) {
  *
  * @returns {Boolean}
  */
-AbiMapper.prototype.isPayable = function (abiItem) {
+ABIMapper.prototype.isPayable = function (abiItem) {
     return (abiItem.stateMutability === "payable" || abiItem.payable);
 };
 
-module.exports = AbiMapper;
+module.exports = ABIMapper;

@@ -36,7 +36,7 @@ function MethodEncoder(abiCoder) {
  *
  * @method encode
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {ABIItemModel} abiItemModel
  * @param {String} deployData
  *
  * @returns {String|Error}

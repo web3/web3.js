@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AbiItemModel.js
+ * @file ABIItemModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -29,7 +29,7 @@ var _ = require('underscore');
  *
  * @constructor
  */
-function AbiItemModel(abiItem) {
+function ABIItemModel(abiItem) {
     this.abiItem = abiItem;
     this.signature = this.abiItem.signature;
     this.contractMethodParameters = [];
@@ -42,7 +42,7 @@ function AbiItemModel(abiItem) {
  *
  * @returns {Number}
  */
-AbiItemModel.prototype.getInputLength = function () {
+ABIItemModel.prototype.getInputLength = function () {
     if (_.isArray(this.abiItem.inputs)) {
         return this.abiItem.inputs.length;
     }
@@ -57,7 +57,7 @@ AbiItemModel.prototype.getInputLength = function () {
  *
  * @returns {Error|Boolean}
  */
-AbiItemModel.prototype.givenParametersLengthIsValid = function () {
+ABIItemModel.prototype.givenParametersLengthIsValid = function () {
     var inputLength = this.getInputLength();
 
     if (this.contractMethodParameters.length === inputLength) {
@@ -77,7 +77,7 @@ AbiItemModel.prototype.givenParametersLengthIsValid = function () {
  *
  * @returns {Array}
  */
-AbiItemModel.prototype.getInputs = function () {
+ABIItemModel.prototype.getInputs = function () {
     var inputs = [];
 
     if (_.isArray(this.abiItem.inputs)) {
@@ -94,8 +94,8 @@ AbiItemModel.prototype.getInputs = function () {
  *
  * @returns {Boolean}
  */
-AbiItemModel.prototype.isOfType = function (type) {
+ABIItemModel.prototype.isOfType = function (type) {
     return this.abiItem.type === type;
 };
 
-module.export = AbiItemModel;
+module.export = ABIItemModel;

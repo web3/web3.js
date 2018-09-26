@@ -23,7 +23,7 @@
 "use strict";
 
 /**
- * @param {AbiModel} abiModel
+ * @param {ABIModel} abiModel
  *
  * @constructor
  */
