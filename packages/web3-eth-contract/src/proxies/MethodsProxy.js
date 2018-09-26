@@ -23,6 +23,7 @@
 "use strict";
 
 /**
+ * @param {Contract} contract
  * @param {AbiModel} abiModel
  * @param {RpcMethodFactory} rpcMethodFactory
  * @param {MethodController} methodController
@@ -34,6 +35,7 @@
  * @constructor
  */
 function MethodsProxy(
+    contract,
     abiModel,
     rpcMethodFactory,
     methodController,
@@ -42,6 +44,7 @@ function MethodsProxy(
     rpcMethodOptionsMapper,
     promiEventPackage
 ) {
+    this.contract = contract;
     this.abiModel = abiModel;
     this.rpcMethodFactory = rpcMethodFactory;
     this.methodController = methodController;
@@ -114,9 +117,9 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
 
     return self.methodController.execute(
         rpcMethod,
-        target.currentProvider,
-        target.accounts,
-        target
+        target.contract.currentProvider,
+        target.contract.accounts,
+        target.contract
     );
 };
 
@@ -156,7 +159,7 @@ MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodA
     rpcMethod.parameters[0]['data'] = encodedContractMethod;
 
     // Set default options in the TxObject if needed
-    rpcMethod.parameters = self.rpcMethodOptionsMapper.map(target.contract, rpcMethod.parameters[0]);
+    rpcMethod.parameters = self.rpcMethodOptionsMapper.map(target.contract.options, rpcMethod.parameters[0]);
 
     // Validate TxObject options
     var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethod);

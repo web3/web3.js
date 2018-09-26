@@ -156,6 +156,7 @@ ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, ut
  *
  * @method createMethodsProxy
  *
+ * @param {Contract} contract
  * @param {AbiModel} abiModel
  * @param {MethodController} methodController
  * @param {ABICoder} abiCoder
@@ -166,6 +167,7 @@ ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, ut
  * @returns {MethodsProxy}
  */
 ContractPackageFactory.prototype.createMethodsProxy = function (
+    contract,
     abiModel,
     methodController,
     abiCoder,
@@ -174,6 +176,7 @@ ContractPackageFactory.prototype.createMethodsProxy = function (
     accounts
 ) {
     return new MethodsProxy(
+        contract,
         abiModel,
         this.createRpcMethodFactory(abiCoder, utils, formatters, accounts),
         methodController,

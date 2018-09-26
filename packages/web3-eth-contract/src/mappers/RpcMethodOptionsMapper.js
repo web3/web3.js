@@ -36,12 +36,12 @@ function RpcMethodOptionsMapper(utils, formatters) {
 /**
  * Sets the default options where it is required
  *
- * @param {Contract} contract
+ * @param {Object} contractOptions
  * @param {Object} options
  *
  * @returns {Object}
  */
-RpcMethodOptionsMapper.prototype.map = function (contract, options) {
+RpcMethodOptionsMapper.prototype.map = function (contractOptions, options) {
     var gasPrice = null;
     if (options.gasPrice) {
         gasPrice = String(options.gasPrice);
@@ -52,11 +52,11 @@ RpcMethodOptionsMapper.prototype.map = function (contract, options) {
         from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from))
     }
 
-    options.data = options.data || contract.options.data;
+    options.data = options.data || contractOptions.data;
 
-    options.from = from || contract.options.from;
-    options.gasPrice = gasPrice || contract.options.gasPrice;
-    options.gas = options.gas || options.gasLimit || contract.options.gas;
+    options.from = from || contractOptions.from;
+    options.gasPrice = gasPrice || contractOptions.gasPrice;
+    options.gas = options.gas || options.gasLimit || contractOptions.gas;
 
     delete options.gasLimit;
 

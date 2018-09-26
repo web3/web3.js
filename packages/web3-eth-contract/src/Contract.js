@@ -118,6 +118,7 @@ function Contract(
     });
 
     this.methods = contractPackageFactory.createMethodsProxy(
+        this,
         abiModel,
         this.methodController,
         this.abiCoder,
