@@ -42,14 +42,14 @@ function AbiMapper(contractPackageFactory, abiCoder, utils) {
  *
  * @returns {AbiModel}
  */
-AbiMapper.prototype.map = function(abi) {
+AbiMapper.prototype.map = function (abi) {
     var self = this;
     var mappedAbiItem = {
         methods: {},
         events: {}
     };
 
-    abi.forEach(function(abiItem) {
+    abi.forEach(function (abiItem) {
         abiItem.constant = self.isConstant(abiItem);
         abiItem.payable = self.isPayable(abiItem);
 
@@ -64,7 +64,7 @@ AbiMapper.prototype.map = function(abi) {
 
             abiItemModel = self.contractPackageFactory.createAbiItemModel(abiItem);
 
-            if(!mappedAbiItem.methods[abiItem.name]) {
+            if (!mappedAbiItem.methods[abiItem.name]) {
                 mappedAbiItem.methods[abiItem.name] = abiItemModel;
             } else {
                 //TODO: cascade method
@@ -82,7 +82,7 @@ AbiMapper.prototype.map = function(abi) {
 
             abiItem = self.contractPackageFactory.createAbiItemModel(event);
 
-            if(!mappedAbiItem.events[abiItem.name] || mappedAbiItem.events[abiItem.name].name === 'bound ') {
+            if (!mappedAbiItem.events[abiItem.name] || mappedAbiItem.events[abiItem.name].name === 'bound ') {
                 mappedAbiItem.events[abiItem.name] = abiItemModel;
             }
 

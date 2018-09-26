@@ -34,10 +34,10 @@ function RpcMethodOptionsValidator(utils) {
 }
 
 RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethodModel) {
-        // errors.push(new Error('This contract object doesn\'t have address set yet, please set an address first.'));
-        // errors.push(new Error('No "from" address specified in neither the given options, nor the default options.'));
-        // errors.push(new Error('Can not send value to non-payable contract method or constructor'));
-        // errors.push(new Error('Invalid arguments length'));
+    // errors.push(new Error('This contract object doesn\'t have address set yet, please set an address first.'));
+    // errors.push(new Error('No "from" address specified in neither the given options, nor the default options.'));
+    // errors.push(new Error('Can not send value to non-payable contract method or constructor'));
+    // errors.push(new Error('Invalid arguments length'));
 };
 
 /**
@@ -50,7 +50,7 @@ RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethod
  *
  * @returns {Boolean}
  */
-RpcMethodOptionsValidator.prototype.isToSet = function(abiItemModel, rpcMethodModel) {
+RpcMethodOptionsValidator.prototype.isToSet = function (abiItemModel, rpcMethodModel) {
     return !(abiItemModel.signature !== 'constructor' && !rpcMethodModel.parameters[0].to);
 };
 

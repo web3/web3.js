@@ -35,7 +35,8 @@ var RpcMethodFactory = require('../factories/RpcMethodFactory');
 /**
  * @constructor
  */
-function ContractPackageFactory() { }
+function ContractPackageFactory() {
+}
 
 /**
  * Returns an object of AbiModel
