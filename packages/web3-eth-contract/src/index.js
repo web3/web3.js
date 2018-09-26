@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Contract.js
+ * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -25,7 +25,10 @@
 var version = require('./package.json').version;
 var Contract = require('./Contract');
 
+// TODO: define public api
 module.exports = {
     version: version,
     Contract: Contract
+// TODO: Refactor Contract object because of the new handling
+// TODO: don't forget the currentProvider, defaultBlock, defaultAccount and accounts handling
 };

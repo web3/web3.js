@@ -33,11 +33,30 @@ function RpcMethodOptionsValidator(utils) {
     this.utils = utils;
 }
 
+/**
+ * Validates the options object for the RPC-Method call
+ *
+ * @method validate
+ *
+ * @param {AbiItemModel} abiItemModel
+ * @param {AbstractMethodModel} rpcMethodModel
+ *
+ * @returns {Error|Boolean}
+ */
 RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethodModel) {
-    // errors.push(new Error('This contract object doesn\'t have address set yet, please set an address first.'));
-    // errors.push(new Error('No "from" address specified in neither the given options, nor the default options.'));
-    // errors.push(new Error('Can not send value to non-payable contract method or constructor'));
-    // errors.push(new Error('Invalid arguments length'));
+    if (this.isToSet(abiItemModel, rpcMethodModel)) {
+        return new Error('This contract object doesn\'t have address set yet, please set an address first.');
+    }
+
+    if (this.isFromSet(rpcMethodModel)) {
+        return new Error('No "from" address specified in neither the given options, nor the default options.');
+    }
+
+    if (this.isValueValid(abiItemModel, rpcMethodModel)) {
+        return new Error('Can not send value to non-payable contract method or constructor')
+    }
+
+    return true;
 };
 
 /**
@@ -51,38 +70,38 @@ RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethod
  * @returns {Boolean}
  */
 RpcMethodOptionsValidator.prototype.isToSet = function (abiItemModel, rpcMethodModel) {
-    return !(abiItemModel.signature !== 'constructor' && !rpcMethodModel.parameters[0].to);
+    if (abiItemModel.signature === 'constructor') {
+        return true;
+    }
+
+    return !!rpcMethodModel.parameters[0].to;
 };
 
 /**
  * Checks if the property from of the options object is set and a valid address
  *
- * @method isFromNotSet
+ * @method isFromSet
  *
  * @param {AbstractMethodModel} rpcMethodModel
  *
  * @returns {Boolean}
  */
-RpcMethodOptionsValidator.prototype.isFromNotSet = function (rpcMethodModel) {
+RpcMethodOptionsValidator.prototype.isFromSet = function (rpcMethodModel) {
     return this.utils.isAddress(rpcMethodModel.parameters[0].from);
 };
 
 /**
  * Checks if no value is set for an non-payable method
  *
- * @method isValueEmptyForNonPayable
+ * @method isValueValid
  *
  * @param {AbiItemModel} abiItemModel
  * @param {AbstractMethodModel} rpcMethodModel
  *
  * @returns {Boolean}
  */
-RpcMethodOptionsValidator.prototype.isValueEmptyForNonPayable = function (abiItemModel, rpcMethodModel) {
-    return !(
-        !abiItemModel.payable &&
-        rpcMethodModel.parameters[0].options.value &&
-        rpcMethodModel.parameters[0].options.value > 0
-    );
+RpcMethodOptionsValidator.prototype.isValueValid = function (abiItemModel, rpcMethodModel) {
+    return !(!abiItemModel.payable && rpcMethodModel.parameters[0].value && rpcMethodModel.parameters[0].value > 0);
 };
 
 module.exports = RpcMethodOptionsValidator;

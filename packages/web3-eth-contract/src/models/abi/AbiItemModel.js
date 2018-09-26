@@ -31,6 +31,8 @@ var _ = require('underscore');
  */
 function AbiItemModel(abiItem) {
     this.abiItem = abiItem;
+    this.signature = this.abiItem.signature;
+    this.contractMethodParameters = [];
 }
 
 /**
@@ -46,6 +48,54 @@ AbiItemModel.prototype.getInputLength = function () {
     }
 
     return 0;
+};
+
+/**
+ * Checks if the given parameter array length matches the abiItem inputs length
+ *
+ * @method givenParametersLengthIsValid
+ *
+ * @returns {Error|Boolean}
+ */
+AbiItemModel.prototype.givenParametersLengthIsValid = function () {
+    var inputLength = this.getInputLength();
+
+    if (this.contractMethodParameters.length === inputLength) {
+        return true;
+    }
+
+    return new Error(
+        'The number of arguments is not matching the methods required number. You need to pass '
+        + inputLength + ' arguments.'
+    );
+};
+
+/**
+ * Returns all inputs of the abi item
+ *
+ * @method getInputs
+ *
+ * @returns {Array}
+ */
+AbiItemModel.prototype.getInputs = function () {
+    var inputs = [];
+
+    if (_.isArray(this.abiItem.inputs)) {
+        inputs = this.abiItem.inputs;
+    }
+
+    return inputs;
+};
+
+/**
+ * Checks the type of this abiItem
+ *
+ * @method isOfType
+ *
+ * @returns {Boolean}
+ */
+AbiItemModel.prototype.isOfType = function (type) {
+    return this.abiItem.type === type;
 };
 
 module.export = AbiItemModel;

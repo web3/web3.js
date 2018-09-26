@@ -36,6 +36,7 @@ function EventSubscriptionsProxy(abiModel) {
 }
 
 /**
+ * TODO: Implement event handling
  * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
  *
  * @method proxyHandler

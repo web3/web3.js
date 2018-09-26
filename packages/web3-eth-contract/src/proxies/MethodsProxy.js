@@ -27,14 +27,28 @@
  * @param {RpcMethodFactory} rpcMethodFactory
  * @param {MethodController} methodController
  * @param {MethodEncoder} methodEncoder
+ * @param {RpcMethodOptionsValidator} rpcMethodOptionsValidator
+ * @param {RpcMethodOptionsMapper} rpcMethodOptionsMapper
+ * @param {PromiEventPackage} promiEventPackage
  *
  * @constructor
  */
-function MethodsProxy(abiModel, rpcMethodFactory, methodController, methodEncoder) {
+function MethodsProxy(
+    abiModel,
+    rpcMethodFactory,
+    methodController,
+    methodEncoder,
+    rpcMethodOptionsValidator,
+    rpcMethodOptionsMapper,
+    promiEventPackage
+) {
     this.abiModel = abiModel;
     this.rpcMethodFactory = rpcMethodFactory;
     this.methodController = methodController;
     this.methodEncoder = methodEncoder;
+    this.rpcMethodOptionsValidator = rpcMethodOptionsValidator;
+    this.rpcMethodOptionsMapper = rpcMethodOptionsMapper;
+    this.promiEventPackage = promiEventPackage;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -52,6 +66,7 @@ function MethodsProxy(abiModel, rpcMethodFactory, methodController, methodEncode
  * @returns {Function|Error}
  */
 MethodsProxy.prototype.proxyHandler = function (target, name) {
+    var self = this;
     var abiItemModel = this.abiModel.getMethod(name);
 
     if (abiItemModel) {
@@ -63,27 +78,28 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
             var rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
             rpcMethod.methodArguments = arguments;
 
-            var contractMethodArgumentsValidationResult = self.contractMethodArgumentsValidator.validate(abiItemModel);
-            var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(rpcMethod);
+            var contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();
 
-            if (contractMethodArgumentsValidationResult !== true && rpcMethodOptionsValidationResult !== true) {
-                var promiEvent = new PromiEvent();
-                var errorsObject = {
-                    errors: [
-                        contractMethodArgumentsValidationResult,
-                        rpcMethodOptionsValidationResult
-                    ]
-                };
+            if (contractMethodParametersLengthIsValid !== true) {
+                return this.handleValidationError(contractMethodParametersLengthIsValid, rpcMethod.callback);
+            }
 
-                promiEvent.resolve(null);
-                promiEvent.reject(errorsObject);
-                promiEvent.eventEmitter.emit('error', errorsObject);
+            var encodedContractMethod = self.methodEncoder.encode(abiItemModel, target.contract.options.data);
+            if (encodedContractMethod instanceof Error) {
+                return this.handleValidationError(encodedContractMethod, rpcMethod.callback);
+            }
 
-                return promiEvent
+            rpcMethod.parameters[0]['data'] = encodedContractMethod;
+            rpcMethod.parameters = self.rpcMethodOptionsMapper.map(target.contract, rpcMethod.parameters[0]);
+
+            var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethod);
+
+            if (rpcMethodOptionsValidationResult !== true) {
+                return self.handleValidationError(rpcMethodOptionsValidationResult, rpcMethod.callback);
             }
 
             return self.methodController.execute(
-                rcpMethod,
+                rpcMethod,
                 target.currentProvider,
                 target.accounts,
                 target
@@ -106,18 +122,35 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
             );
         };
 
-        anonymousFunction.encodeAbi = this.methodEncoder.encode(abiItemModel, target.contractOptions.data);
+        anonymousFunction.encodeAbi = this.methodEncoder.encode(abiItemModel, target.contract.options.data);
     }
 
     throw Error('Method with name "' + name + '" not found');
 };
 
-MethodsProxy.prototype.handleValidationErrors = function (errors) {
-    // return PromiEvent if errors
-};
+/**
+ * Creates an promiEvent and rejects it with an error
+ *
+ * @method handleValidationError
+ *
+ * @param {Error} error
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent}
+ */
+MethodsProxy.prototype.handleValidationError = function (error, callback) {
+    var promiEvent = this.promiEventPackage.createPromiEvent();
 
-MethodsProxy.prototype.extendRpcMethodWithResponseDecoder = function (rpcMethod) {
-    // Extend afterExecution of the AbstractMethodModel with decoding of the response
+    promiEvent.resolve(null);
+    promiEvent.reject(error);
+    promiEvent.eventEmitter.emit('error', error);
+
+    if (_.isFunction(callback)) {
+        callback(error, null);
+    }
+
+    return promiEvent;
 };
 
 module.exports = MethodsProxy;

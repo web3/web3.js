@@ -22,21 +22,20 @@
 
 "use strict";
 
-var AbiModel = require('../models/AbiModel');
-var AbiItemModel = require('../models/AbiItemModel');
+var AbiModel = require('../models/abi/AbiModel');
+var AbiItemModel = require('../models/abi/AbiItemModel');
 var MethodEncoder = require('../encoders/MethodEncoder');
 var MethodResponseDecoder = require('../decoders/MethodResponseDecoder');
 var AbiMapper = require('../mappers/AbiMapper');
-var MethodOptionsMapper = require('../mappers/MethodOptionsMapper');
+var RpcMethodOptionsMapper = require('../mappers/RpcMethodOptionsMapper');
 var MethodsProxy = require('../proxies/MethodsProxy');
-var MethodValidator = require('../validators/MethodValidator');
+var RpcMethodOptionsValidator = require('../validators/RpcMethodOptionsValidator');
 var RpcMethodFactory = require('../factories/RpcMethodFactory');
 
 /**
  * @constructor
  */
-function ContractPackageFactory() {
-}
+function ContractPackageFactory() { }
 
 /**
  * Returns an object of AbiModel
@@ -54,7 +53,7 @@ ContractPackageFactory.prototype.createAbiModel = function (mappedAbi) {
 /**
  * Returns an object of AbiItemModel
  *
- * @methode createAbiItemModel
+ * @method createAbiItemModel
  *
  * @param {Object} abiItem
  *
@@ -69,7 +68,7 @@ ContractPackageFactory.prototype.createAbiItemModel = function (abiItem) {
  *
  * @method createMethodEncoder
  *
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  *
  * @returns {MethodEncoder}
  */
@@ -82,7 +81,7 @@ ContractPackageFactory.prototype.createMethodEncoder = function (abiCoder) {
  *
  * @method createAbiMapper
  *
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  * @param {Utils} utils
  *
  * @returns {AbiMapper}
@@ -96,7 +95,7 @@ ContractPackageFactory.prototype.createAbiMapper = function (abiCoder, utils) {
  *
  * @method createMethodResponseDecoder
  *
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  *
  * @returns {MethodResponseDecoder}
  */
@@ -105,25 +104,30 @@ ContractPackageFactory.prototype.createMethodResponseDecoder = function (abiCode
 };
 
 /**
- * Returns an object of MethodValidator
+ * Returns an object of RpcMethodOptionsValidator
  *
- * @method createMethodValidator
+ * @method createRpcMethodOptionsValidator
  *
  * @param {Utils} utils
  *
- * @returns {MethodValidator}
+ * @returns {RpcMethodOptionsValidator}
  */
-ContractPackageFactory.prototype.createMethodValidator = function (utils) {
-    return new MethodValidator(utils);
+ContractPackageFactory.prototype.createRpcMethodOptionsValidator = function (utils) {
+    return new RpcMethodOptionsValidator(utils);
 };
 
 /**
- * Returns an object of MethodOptionsMapper
+ * Returns an object of RpcMethodOptionsMapper
  *
- * @returns MethodOptionsMapper
+ * @method createRpcMethodOptionsMapper
+ *
+ * @param {Utils} utils
+ * @param {Object} formatters
+ *
+ * @returns {RpcMethodOptionsMapper}
  */
-ContractPackageFactory.prototype.createMethodOptionsMapper = function () {
-    return new MethodOptionsMapper();
+ContractPackageFactory.prototype.createRpcMethodOptionsMapper = function (utils, formatters) {
+    return new RpcMethodOptionsMapper(utils, formatters);
 };
 
 /**
@@ -131,18 +135,17 @@ ContractPackageFactory.prototype.createMethodOptionsMapper = function () {
  *
  * @method createRpcMethodFactory
  *
- * @param {AbiCoder} abiCoder
- * @param {MethodPackage} methodPackage
+ * @param {ABICoder} abiCoder
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Accounts} accounts
  *
  * @returns {RpcMethodFactory}
  */
-ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, methodPackage, utils, formatters) {
+ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, utils, formatters, accounts) {
     return new RpcMethodFactory(
-        methodPackage,
-        this.createMethodOptionsMapper(),
-        this.createMethodEncoder(abiCoder),
+        this.createMethodResponseDecoder(abiCoder),
+        accounts,
         utils,
         formatters
     );
@@ -154,25 +157,25 @@ ContractPackageFactory.prototype.createRpcMethodFactory = function (abiCoder, me
  * @method createMethodsProxy
  *
  * @param {AbiModel} abiModel
- * @param methodPackage
  * @param {MethodController} methodController
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {Accounts} accounts
  *
  * @returns {MethodsProxy}
  */
 ContractPackageFactory.prototype.createMethodsProxy = function (
     abiModel,
-    methodPackage,
     methodController,
     abiCoder,
     utils,
-    formatters
+    formatters,
+    accounts
 ) {
     return new MethodsProxy(
         abiModel,
-        this.createRpcMethodFactory(abiCoder, methodPackage, utils, formatters),
+        this.createRpcMethodFactory(abiCoder, utils, formatters, accounts),
         methodController,
         this.createMethodEncoder(abiCoder)
     );

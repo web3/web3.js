@@ -22,21 +22,23 @@
 
 "use strict";
 
+var SendContractMethodModel = require('../models/methods/SendContractMethodModel');
+var CallContractMethodModel = require('../models/methods/CallContractMethodModel');
+var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
+
 /**
- * @param {MethodPackage} methodPackage
- * @param {MethodOptionsMapper} methodOptionsMapper
- * @param {MethodEncoder} methodEncoder
+ * @param {MethodResponseDecoder} methodResponseDecoder
+ * @param {Accounts} accounts
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function RpcMethodFactory(methodPackage, methodOptionsMapper, methodEncoder, utils, formatters) {
-    this.methodPackage = methodPackage;
+function RpcMethodFactory(methodResponseDecoder, accounts, utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
-    this.methodOptionsMapper = methodOptionsMapper;
-    this.methodEncoder = methodEncoder;
+    this.methodResponseDecoder = methodResponseDecoder;
+    this.accounts = accounts;
 }
 
 /**
@@ -53,26 +55,30 @@ RpcMethodFactory.prototype.createRpcMethod = function (abiItemModel) {
 
     switch (abiItemModel.requestType) {
         case 'call':
-            rpcMethod = new this.methodPackage.CallMethodModel(this.utils, this.formatters);
-
+            rpcMethod = new CallContractMethodModel(
+                abiItemModel,
+                this.methodResponseDecoder,
+                this.utils,
+                this.formatters
+            );
             break;
         case 'send' :
-            rpcMethod = new this.methodPackage.SendTransactionMethodModel(this.utils, this.formatters);
-
+            rpcMethod = new SendContractMethodModel(
+                abiItemModel,
+                this.methodResponseDecoder,
+                this.utils,
+                this.formatters,
+                this.accounts
+            );
             break;
         case 'estimate':
-            rpcMethod = new this.methodPackage.EstimateGasMethodModel(this.utils, this.formatters);
-
+            rpcMethod = new EstimateGasMethodModel(this.utils, this.formatters);
             break;
     }
 
     if (typeof rpcMethod === 'undefined') {
-        throw Error('Unknown call type with name "' + abiItemModel.requestType + '"');
+        throw Error('Unknown RPC call with name "' + abiItemModel.requestType + '"');
     }
-
-    rpcMethod.methodArguments = arguments;
-    rpcMethod.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel.contractMethodParameters);
-    rpcMethod.parameters = this.methodOptionsMapper.map(rpcMethod.parameters);
 
     return rpcMethod;
 };

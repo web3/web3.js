@@ -24,7 +24,7 @@
 
 /**
  * @param {ContractPackageFactory} contractPackageFactory
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  * @param {Utils} utils
  *
  * @constructor
@@ -93,7 +93,7 @@ AbiMapper.prototype.map = function (abi) {
         }
     });
 
-    return this.contractPackage.createAbiModel(mappedAbiItem);
+    return this.contractPackageFactory.createAbiModel(mappedAbiItem);
 };
 
 /**

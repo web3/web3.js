@@ -36,12 +36,12 @@ function MethodResponseDecoder(abiCoder) {
  *
  * @method decode
  *
- * @param {Array} methodOutputTypes
+ * @param {Array} abiItemOutputTypes
  * @param {Array} response
- *
+ * //TODO: Fix response handling
  * @returns {*}
  */
-MethodResponseDecoder.prototype.decode = function (methodOutputTypes, response) {
+MethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response) {
     if (!response) {
         return null;
     }
@@ -50,7 +50,7 @@ MethodResponseDecoder.prototype.decode = function (methodOutputTypes, response) 
         response = response.slice(2);
     }
 
-    var result = this.abiCoder.decodeParameters(methodOutputTypes, response);
+    var result = this.abiCoder.decodeParameters(abiItemOutputTypes, response);
 
     if (result.__length__ === 1) {
         return result[0];

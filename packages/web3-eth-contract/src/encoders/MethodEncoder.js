@@ -36,22 +36,20 @@ function MethodEncoder(abiCoder) {
  *
  * @method encode
  *
- * @param {Array} contractMethodParameters
- * @param {Object} abiItem
- * @param {String} signature
+ * @param {AbiItemModel} abiItemModel
  * @param {String} deployData
  *
- * @returns {String}
+ * @returns {String|Error}
  */
-MethodEncoder.prototype.encode = function (contractMethodParameters, abiItem, signature, deployData) {
+MethodEncoder.prototype.encode = function (abiItemModel, deployData) {
     var encodedParameters = this.abiCoder.encodeParameters(
-        this.getMethodParameterTypes(abiItem),
-        contractMethodParameters
+        abiItemModel.getInputs(),
+        abiItemModel.contractMethodParameters
     ).replace('0x', '');
 
-    if (signature === 'constructor') {
+    if (abiItemModel.signature === 'constructor') {
         if (!deployData) {
-            throw new Error(
+            return new Error(
                 'The contract has no contract data option set. This is necessary to append the constructor parameters.'
             );
         }
@@ -59,30 +57,11 @@ MethodEncoder.prototype.encode = function (contractMethodParameters, abiItem, si
         return deployData + encodedParameters;
     }
 
-    if (abiItem.type === 'function') {
-        return signature + encodedParameters;
+    if (abiItemModel.isOfType('function')) {
+        return abiItemModel.signature + encodedParameters;
     }
 
     return encodedParameters;
-};
-
-/**
- * Returns the method parameter types from the abi
- *
- * @method getMethodParameterTypes
- *
- * @param {Object} abiItem
- *
- * @returns {Array}
- */
-MethodEncoder.prototype.getMethodParameterTypes = function (abiItem) {
-    var methodParameterTypes = [];
-
-    if (_.isArray(abiItem.inputs)) {
-        methodParameterTypes = abiItem.inputs;
-    }
-
-    return methodParameterTypes;
 };
 
 module.exports = MethodEncoder;

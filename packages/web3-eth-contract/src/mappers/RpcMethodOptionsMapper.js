@@ -15,14 +15,20 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodOptionsMapper.js
+ * @file RpcMethodOptionsMapper.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
-function MethodOptionsMapper(utils, formatters) {
+/**
+ * @param {Utils} utils
+ * @param {Object} formatters
+ *
+ * @constructor
+ */
+function RpcMethodOptionsMapper(utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
 }
@@ -35,7 +41,7 @@ function MethodOptionsMapper(utils, formatters) {
  *
  * @returns {Object}
  */
-MethodOptionsMapper.prototype.map = function (contract, options) {
+RpcMethodOptionsMapper.prototype.map = function (contract, options) {
     var gasPrice = null;
     if (options.gasPrice) {
         gasPrice = String(options.gasPrice);
@@ -57,4 +63,4 @@ MethodOptionsMapper.prototype.map = function (contract, options) {
     return options;
 };
 
-module.exports = MethodOptionsMapper;
+module.exports = RpcMethodOptionsMapper;
