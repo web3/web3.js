@@ -126,16 +126,43 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
 /**
  * Creates the rpc method, encodes the contract method and validate the objects.
  *
- * @param {AbiItemModel} abiItemModel
+ * @param {AbiItemModel|Array} abiItemModel
  * @param {MethodsProxy} target
  * @param {IArguments} methodArguments
  *
  * @returns {AbstractMethodModel}
  */
 MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodArguments) {
-    // Get correct rpc method model
-    var rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
-    rpcMethod.methodArguments = methodArguments;
+    var rpcMethod, self = this;
+
+    // If it is an array than check which AbiItemModel should be used
+    // (this is used if two methods with the same name exists but with different arguments length)
+    if (_.isArray(abiItemModel)) {
+        var isContractMethodParametersLengthValid;
+
+        // Check if one of the AbiItemModel in this array does match the arguments length
+        abiItemModel.some(function(method) {
+            // Get correct rpc method model
+            rpcMethod = self.rpcMethodFactory.createRpcMethod(method);
+            rpcMethod.methodArguments = methodArguments;
+            isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
+
+            return isContractMethodParametersLengthValid === true;
+        });
+
+        // Return error if no AbiItemModel found with the correct arguments length
+        if (isContractMethodParametersLengthValid !== true) {
+            return {
+                error: isContractMethodParametersLengthValid,
+                callback: rpcMethod.callback
+            };
+        }
+    } else {
+        // Get correct rpc method model
+        rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
+        rpcMethod.methodArguments = methodArguments;
+    }
+
 
     // Validate contract method parameters length
     var contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();

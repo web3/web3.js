@@ -67,8 +67,14 @@ AbiMapper.prototype.map = function (abi) {
             if (!mappedAbiItem.methods[abiItem.name]) {
                 mappedAbiItem.methods[abiItem.name] = abiItemModel;
             } else {
-                //TODO: cascade method
-                mappedAbiItem.methods[abiItem.name] = abiItemModel;
+                if (_.isArray(mappedAbiItem.methods[abiItem.name])) {
+                    mappedAbiItem.methods[abiItem.name].push(abiItemModel);
+                } else {
+                    mappedAbiItem.methods[abiItem.name] = [
+                        mappedAbiItem.methods[abiItem.name],
+                        abiItemModel
+                    ];
+                }
             }
 
             mappedAbiItem.methods[abiItem.signature] = abiItemModel;
