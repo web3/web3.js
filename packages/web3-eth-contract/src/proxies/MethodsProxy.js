@@ -135,8 +135,8 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
 MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodArguments) {
     var rpcMethod, self = this;
 
-    // If it is an array than check which AbiItemModel should be used
-    // (this is used if two methods with the same name exists but with different arguments length)
+    // If it is an array than check which AbiItemModel should be used.
+    // This will be used if two methods with the same name exists but with different arguments.
     if (_.isArray(abiItemModel)) {
         var isContractMethodParametersLengthValid;
 
