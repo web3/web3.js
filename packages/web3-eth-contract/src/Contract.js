@@ -31,7 +31,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {SubscriptionPackage} subscriptionPackage
  * @param {BatchRequestPackage} batchRequestPackage
  * @param {ContractPackageFactory} contractPackageFactory
- * @param {AbiCoder} abiCoder
+ * @param {ABICoder} abiCoder
  * @param {Utils} utils
  * @param {Object} formatters
  * @param {Accounts} accounts
