@@ -78,7 +78,9 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
             return self.executeMethod(abiItemModel, target, arguments);
         };
 
-        anonymousFunction[abiItemModel.requestType].request = abiItemModel.request;
+        anonymousFunction[abiItemModel.requestType].request = function () {
+            return self.createRpcMethod(abiItemModel, target, arguments);
+        };
 
         anonymousFunction.estimateGas = function () {
             abiItemModel.requestType = 'estimate';
