@@ -37,6 +37,8 @@ var Shh = require('web3-shh');
 var Bzz = require('web3-bzz');
 var utils = require('web3-utils');
 
+var ETrue = require('web3-etrue');
+
 var Web3 = function Web3() {
     var _this = this;
 
@@ -70,7 +72,8 @@ Web3.modules = {
     Net: Net,
     Personal: Personal,
     Shh: Shh,
-    Bzz: Bzz
+    Bzz: Bzz,
+    ETrue:ETrue
 };
 
 core.addProviders(Web3);
