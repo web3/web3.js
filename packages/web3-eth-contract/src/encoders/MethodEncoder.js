@@ -42,10 +42,14 @@ function MethodEncoder(abiCoder) {
  * @returns {String|Error}
  */
 MethodEncoder.prototype.encode = function (abiItemModel, deployData) {
-    var encodedParameters = this.abiCoder.encodeParameters(
-        abiItemModel.getInputs(),
-        abiItemModel.contractMethodParameters
-    ).replace('0x', '');
+    try {
+        var encodedParameters = this.abiCoder.encodeParameters(
+            abiItemModel.getInputs(),
+            abiItemModel.contractMethodParameters
+        ).replace('0x', '');
+    } catch (error) {
+        return error;
+    }
 
     if (abiItemModel.signature === 'constructor') {
         if (!deployData) {
