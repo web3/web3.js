@@ -75,29 +75,35 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
         };
 
         anonymousFunction[abiItemModel.requestType] = function () {
+            // Get correct rpc method model
             var rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
             rpcMethod.methodArguments = arguments;
 
+            // Validate contract method parameters length
             var contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();
-
             if (contractMethodParametersLengthIsValid !== true) {
                 return this.handleValidationError(contractMethodParametersLengthIsValid, rpcMethod.callback);
             }
 
+            // Encode contract method and check if there was an error
             var encodedContractMethod = self.methodEncoder.encode(abiItemModel, target.contract.options.data);
             if (encodedContractMethod instanceof Error) {
                 return this.handleValidationError(encodedContractMethod, rpcMethod.callback);
             }
 
+            // Set encoded contractMethod as data property of the transaction or call
             rpcMethod.parameters[0]['data'] = encodedContractMethod;
+
+            // Set default options in the TxObject if needed
             rpcMethod.parameters = self.rpcMethodOptionsMapper.map(target.contract, rpcMethod.parameters[0]);
 
+            // Validate TxObject options
             var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethod);
-
             if (rpcMethodOptionsValidationResult !== true) {
                 return self.handleValidationError(rpcMethodOptionsValidationResult, rpcMethod.callback);
             }
 
+            // Send JSON-RPC request
             return self.methodController.execute(
                 rpcMethod,
                 target.currentProvider,
