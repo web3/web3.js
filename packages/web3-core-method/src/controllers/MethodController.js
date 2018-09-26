@@ -55,7 +55,7 @@ function MethodController(
  * @param {Accounts} accounts
  * @param {AbstractWeb3Object} web3Package
  *
- * @returns {Promise | eventifiedPromise | String | boolean}
+ * @returns {Promise|PromiEvent|String|Boolean}
  */
 MethodController.prototype.execute = function (methodModel, provider, accounts, web3Package) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
