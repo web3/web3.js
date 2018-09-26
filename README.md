@@ -44,20 +44,23 @@ console.log(web3);
 }
 
 // ether account balance
-web3.eth.getBalance(addr)
+web3.eth.getBalance()
 .then(function(res){
     console.log('ether balance', res);  // balance of ether
 })
 
 // True-beta
 var true_web3 = new Web3.modules.ETrue('http://39.105.126.32:8544');
+// or https use this
+var true_web3 = new Web3.modules.ETrue('https://www.truewallet.net/true-beta-node/');
+
 
 // var address = web3.eth.accounts.privateKeyToAccount('0x01');
 //address: 0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf
 
 true_web3.getBalance('0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf')
 .then(function(res){
-    console.log('true beta balance', res);  // balance of true-beta
+    console.log('true beta balance', res);  // balance of true-beta 889989983880000
 })
 
 ```
