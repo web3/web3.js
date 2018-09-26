@@ -15,3 +15,4 @@ bower_components
 .vscode/
 dist/
 !./dist/web3.min.js
+*ckage-lock.json
