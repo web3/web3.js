@@ -64,6 +64,8 @@ AbiMapper.prototype.map = function (abi) {
 
             abiItemModel = self.contractPackageFactory.createAbiItemModel(abiItem);
 
+            // Check if an method already exists with this name and if it exists than create an array and push this abiItem
+            // into it. This is used if there are methods with the same name but with different arguments.
             if (!mappedAbiItem.methods[abiItem.name]) {
                 mappedAbiItem.methods[abiItem.name] = abiItemModel;
             } else {
