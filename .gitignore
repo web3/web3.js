@@ -13,6 +13,4 @@ bower_components
 .idea/
 .npm/
 .vscode/
-dist/
-!./dist/web3.min.js
 *ckage-lock.json
