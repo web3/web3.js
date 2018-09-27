@@ -44,9 +44,9 @@ console.log(web3);
 }
 
 // ether account balance
-web3.eth.getBalance()
+web3.eth.getBalance('0xff1eac53469a83a38583b102b21b929af2399fe4')
 .then(function(res){
-    console.log('ether balance', res);  // balance of ether
+    console.log('ether balance', res);  // balance of ether  22522918812500000
 })
 
 // True-beta
@@ -60,7 +60,7 @@ var true_web3 = new Web3.modules.ETrue('https://www.truewallet.net/true-beta-nod
 
 true_web3.getBalance('0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf')
 .then(function(res){
-    console.log('true beta balance', res);  // balance of true-beta 889989983880000
+    console.log('true beta balance', res);  // balance of true-beta 8899899838800000000
 })
 
 ```
