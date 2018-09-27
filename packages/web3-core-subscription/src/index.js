@@ -34,15 +34,15 @@ module.exports = {
      * @method createSubscription
      *
      * @param {Object} provider
-     * @param {String} type
+     * @param {String} method
      * @param {Array} parameters
      * @param {Function} inputFormatters
      * @param {Function} outputFormatter
-     * @param {String} subscriptionType
+     * @param {String} rpcSubscriptionMethod
      *
      * @returns {Subscription}
      */
-    createSubscription: function (provider, type, parameters, inputFormatters, outputFormatter, subscriptionType) {
-        return new Subscription(provider, type, parameters, inputFormatters, outputFormatter, subscriptionType)
+    createSubscription: function (provider, method, parameters, inputFormatters, outputFormatter, rpcSubscriptionMethod) {
+        return new Subscription(provider, method, parameters, inputFormatters, outputFormatter, rpcSubscriptionMethod)
     }
 };

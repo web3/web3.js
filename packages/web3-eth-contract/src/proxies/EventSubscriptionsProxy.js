@@ -24,11 +24,17 @@
 
 /**
  * @param {ABIModel} abiModel
+ * @param {SubscriptionPackage} subscriptionPackage
+ * @param {EventOptionsMapper} eventOptionsMapper
+ * @param {EventLogDecoder} eventLogDecoder
  *
  * @constructor
  */
-function EventSubscriptionsProxy(abiModel) {
+function EventSubscriptionsProxy(abiModel, subscriptionPackage, eventOptionsMapper, eventLogDecoder) {
+    this.subscriptionPackage = subscriptionPackage;
     this.abiModel = abiModel;
+    this.eventLogDecoder = eventLogDecoder;
+    this.eventOptionsMapper = eventOptionsMapper;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -36,7 +42,6 @@ function EventSubscriptionsProxy(abiModel) {
 }
 
 /**
- * TODO: Implement event handling
  * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
  *
  * @method proxyHandler
@@ -47,23 +52,72 @@ function EventSubscriptionsProxy(abiModel) {
  * @returns {Function|Error}
  */
 EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
-    var eventModel = this.abiModel.getEvent(name);
+    var self = this;
 
-    if (eventModel) {
+    if (this.abiModel.hasEvent(name)) {
         return function (options, callback) {
-            eventModel.options = options;
-
+            return this.subscribe(self.abiModel.getEvent(name), options, callback, target);
         }
     }
 
     if (name === 'allEvents') {
         return function (options, callback) {
-            eventModel.options = options;
-
+            return this.subscribeAll(options, target, callback);
         }
     }
 
     throw Error('Event with name "' + name + '" not found');
+};
+
+/**
+ * Returns an subscription on the given event
+ *
+ * @param {ABIItemModel} abiItemModel
+ * @param {EventSubscriptionsProxy} target
+ * @param {Object} options
+ * @param {Function} callback
+ *
+ * @returns {Subscription}
+ */
+EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, options, callback) {
+    if (options.filters && options.topics) {
+        this.handleValidationError(new Error('Please set only topics or filters but not both.'), callback);
+    }
+
+    options = this.eventOptionsMapper.map(abiItemModel, target, options);
+
+    return this.subscriptionPackage.createSubscription(
+        target.contract.currentProvider,
+        'logs',
+        [options],
+        this.formatters.inputLogFormatter,
+        this.eventLogDecoder.decode,
+        'eth'
+    ).subscribe(callback);
+};
+
+/**
+ * TODO: Move this to an AbstractContractEntityProxy object and let both proxies inherit from it
+ *
+ * Creates an promiEvent and rejects it with an error
+ *
+ * @method handleValidationError
+ *
+ * @param {Error} error
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {PromiEvent}
+ */
+EventSubscriptionsProxy.prototype.handleValidationError = function (error, callback) {
+    var promiEvent = this.promiEventPackage.createPromiEvent();
+    promiEvent.eventEmitter.emit('error', error);
+
+    if (_.isFunction(callback)) {
+        callback(error, null);
+    }
+
+    return promiEvent;
 };
 
 module.exports = EventSubscriptionsProxy;

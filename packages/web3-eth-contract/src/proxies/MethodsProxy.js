@@ -109,14 +109,14 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
  * @returns {Promise|PromiEvent|String|Boolean}
  */
 MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArguments) {
-    var rpcMethod = self.createRpcMethod(abiItemModel, target, methodArguments);
+    var rpcMethodModel = this.createRpcMethodModel(abiItemModel, target, methodArguments);
 
-    if (typeof rpcMethod.error !== 'undefined') {
-        return self.handleValidationError(rpcMethod.error, rpcMethod.callback);
+    if (typeof rpcMethodModel.error !== 'undefined') {
+        return this.handleValidationError(rpcMethodModel.error, rpcMethodModel.callback);
     }
 
-    return self.methodController.execute(
-        rpcMethod,
+    return this.methodController.execute(
+        rpcMethodModel,
         target.contract.currentProvider,
         target.contract.accounts,
         target.contract
@@ -132,19 +132,19 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
  *
  * @returns {AbstractMethodModel}
  */
-MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodArguments) {
-    var rpcMethod, self = this;
+MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, methodArguments) {
+    var rpcMethodModel, self = this;
 
     // If it is an array than check which AbiItemModel should be used.
     // This will be used if two methods with the same name exists but with different arguments.
     if (_.isArray(abiItemModel)) {
-        var isContractMethodParametersLengthValid;
+        var isContractMethodParametersLengthValid = false;
 
         // Check if one of the AbiItemModel in this array does match the arguments length
         abiItemModel.some(function(method) {
             // Get correct rpc method model
-            rpcMethod = self.rpcMethodFactory.createRpcMethod(method);
-            rpcMethod.methodArguments = methodArguments;
+            rpcMethodModel = self.rpcMethodFactory.createRpcMethod(method);
+            rpcMethodModel.methodArguments = methodArguments;
             isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
 
             return isContractMethodParametersLengthValid === true;
@@ -154,22 +154,22 @@ MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodA
         if (isContractMethodParametersLengthValid !== true) {
             return {
                 error: isContractMethodParametersLengthValid,
-                callback: rpcMethod.callback
+                callback: rpcMethodModel.callback
             };
         }
     } else {
         // Get correct rpc method model
-        rpcMethod = this.rpcMethodFactory.createRpcMethod(abiItemModel);
-        rpcMethod.methodArguments = methodArguments;
+        rpcMethodModel = this.rpcMethodFactory.createRpcMethod(abiItemModel);
+        rpcMethodModel.methodArguments = methodArguments;
     }
 
 
     // Validate contract method parameters length
     var contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();
-    if (contractMethodParametersLengthIsValid !== true) {
+    if (contractMethodParametersLengthIsValid instanceof Error) {
         return {
             error: contractMethodParametersLengthIsValid,
-            callback: rpcMethod.callback
+            callback: rpcMethodModel.callback
         };
     }
 
@@ -178,26 +178,26 @@ MethodsProxy.prototype.createRpcMethod = function (abiItemModel, target, methodA
     if (encodedContractMethod instanceof Error) {
         return {
             error: encodedContractMethod,
-            callback: rpcMethod.callback
+            callback: rpcMethodModel.callback
         };
     }
 
     // Set encoded contractMethod as data property of the transaction or call
-    rpcMethod.parameters[0]['data'] = encodedContractMethod;
+    rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
 
-    // Set default options in the TxObject if needed
-    rpcMethod.parameters = self.rpcMethodOptionsMapper.map(target.contract.options, rpcMethod.parameters[0]);
+    // Set default options in the TxObject if required
+    rpcMethodModel.parameters = self.rpcMethodOptionsMapper.map(target.contract.options, rpcMethodModel.parameters[0]);
 
-    // Validate TxObject options
-    var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethod);
-    if (rpcMethodOptionsValidationResult !== true) {
+    // Validate TxObject
+    var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
+    if (rpcMethodOptionsValidationResult instanceof Error) {
         return {
             error: rpcMethodOptionsValidationResult,
-            callback: rpcMethod.callback
+            callback: rpcMethodModel.callback
         };
     }
 
-    return rpcMethod;
+    return rpcMethodModel;
 };
 
 /**

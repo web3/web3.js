@@ -27,6 +27,7 @@ var CallContractMethodModel = require('../models/methods/CallContractMethodModel
 var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 
 /**
+ * TODO: Rename it to RpcMethodModelFactory
  * @param {MethodResponseDecoder} methodResponseDecoder
  * @param {Accounts} accounts
  * @param {Utils} utils

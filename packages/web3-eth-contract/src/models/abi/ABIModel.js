@@ -22,6 +22,8 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
  * @param {Object} mappedAbi
  *
@@ -89,6 +91,19 @@ ABIModel.prototype.hasMethod = function (name) {
  */
 ABIModel.prototype.hasEvent = function (name) {
     return typeof this.abi.events[name] !== 'undefined';
+};
+
+/**
+ * Returns the constructor of the contract
+ *
+ * @method getConstructor
+ *
+ * @returns {ABIItemModel}
+ */
+ABIModel.prototype.getConstructor = function () {
+  return this.abi.methods.find(function (abiItemModel) {
+      return !_.isArray(abiItemModel) && abiItemModel.name && abiItemModel.name === 'constructor';
+  })
 };
 
 module.exports = ABIModel;
