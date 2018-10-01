@@ -25,7 +25,6 @@
 var _ = require('underscore');
 
 /**
- * TODO: Add requestType getter
  * @param {Object} abiItem
  *
  * @constructor
@@ -35,6 +34,18 @@ function ABIItemModel(abiItem) {
     this.signature = this.abiItem.signature;
     this.name = this.abiItem.name;
     this.contractMethodParameters = [];
+
+    Object.defineProperty(this, 'requestType', {
+        get: function () {
+            if (abiItem.type === 'function') {
+                if (abiItem.constant === true) {
+                    return 'call';
+                }
+
+                return 'send';
+            }
+        }
+    })
 }
 
 /**
