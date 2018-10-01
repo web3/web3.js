@@ -57,11 +57,12 @@ AbstractSubscriptionModel.prototype.beforeSubscription = function (subscription,
  *
  * @method onNewSubscriptionItem
  *
+ * @param {Subscription} subscription
  * @param {*} subscriptionItem
  *
  * @returns {*}
  */
-AbstractSubscriptionModel.prototype.onNewSubscriptionItem = function (subscriptionItem) {
+AbstractSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.formatters.outputLogFormatter(subscriptionItem);
 };
 

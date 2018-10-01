@@ -96,7 +96,7 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
     }
 
     response.forEach(function (item) {
-        var formattedOutput = this.subscriptionModel.onNewSubscriptionItem(item);
+        var formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
 
         this.emit('data', formattedOutput);
         if (_.isFunction(callback)) {

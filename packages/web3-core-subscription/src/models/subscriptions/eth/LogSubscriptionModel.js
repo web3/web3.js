@@ -75,12 +75,13 @@ LogSubscriptionModel.prototype.beforeSubscription = function (subscription, web3
  *
  * @method onNewSubscriptionItem
  *
+ * @param {Subscription} subscription
  * @param {*} subscriptionItem
  *
- * @returns {*}
+ * @returns {Object}
  */
-LogSubscriptionModel.prototype.onNewSubscriptionItem = function (subscriptionItem) {
-    return subscriptionItem;
+LogSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
+    return this.formatters.outputLogFormatter(subscriptionItem);
 };
 
 LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
