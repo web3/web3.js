@@ -25,14 +25,14 @@
 /**
  * @param {Contract} contract
  * @param {ABIModel} abiModel
- * @param {EventSubscriptionFactory} subscriptionFactory
+ * @param {EventSubscriptionFactory} eventSubscriptionFactory
  * @param {EventOptionsMapper} eventOptionsMapper
  *
  * @constructor
  */
-function EventSubscriptionsProxy(contract, abiModel, subscriptionFactory, eventOptionsMapper) {
+function EventSubscriptionsProxy(contract, abiModel, eventSubscriptionFactory, eventOptionsMapper) {
     this.contract = contract;
-    this.subscriptionFactory = subscriptionFactory;
+    this.eventSubscriptionFactory = eventSubscriptionFactory;
     this.abiModel = abiModel;
     this.eventOptionsMapper = eventOptionsMapper;
 
@@ -86,7 +86,8 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
         this.handleValidationError(new Error('Please set only topics or filters but not both.'), callback);
     }
 
-    return this.subscriptionFactory.createEventLogSubscription(
+    return this.eventSubscriptionFactory.createEventLogSubscription(
+        abiItemModel,
         target.contract,
         target.eventOptionsMapper.map(abiItemModel, target.contract, options)
     ).subscribe(callback);

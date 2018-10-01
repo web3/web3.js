@@ -43,14 +43,16 @@ function EventSubscriptionFactory(utils, formatters, getPastLogsMethodModel, met
 /**
  * Returns an event log subscription
  *
+ * @param {ABIItemModel} abiItemModel
  * @param {AbstractWeb3Object} web3Package
  * @param {Object} options
  *
  * @returns {Subscription}
  */
-EventSubscriptionFactory.prototype.createEventLogSubscription = function (web3Package, options) {
+EventSubscriptionFactory.prototype.createEventLogSubscription = function (abiItemModel, web3Package, options) {
     return new Subscription(web3Package,
         new EventLogSubscription(
+            abiItemModel,
             options,
             this.utils,
             this.formatters,

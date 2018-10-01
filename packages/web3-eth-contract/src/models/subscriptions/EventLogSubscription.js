@@ -25,6 +25,7 @@
 var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionModel;
 
 /**
+ * @param {ABIItemModel} abiItemModel
  * @param {Object} options
  * @param {Utils} utils
  * @param {Object} formatters
@@ -34,9 +35,10 @@ var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionMode
  *
  * @constructor
  */
-function EventLogSubscription(options, utils, formatters, getPastLogsMethodModel, methodController, eventLogDecoder) {
+function EventLogSubscription(abiItemModel, options, utils, formatters, getPastLogsMethodModel, methodController, eventLogDecoder) {
     LogSubscriptionModel.call(this, options, utils, formatters, getPastLogsMethodModel, methodController);
     this.eventLogDecoder = eventLogDecoder;
+    this.abiItemModel = abiItemModel;
 }
 
 /**
@@ -50,7 +52,7 @@ function EventLogSubscription(options, utils, formatters, getPastLogsMethodModel
  * @returns {Object}
  */
 EventLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.eventLogDecoder.decode(this.formatters.outputLogFormatter(subscriptionItem));
+    return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
 };
 
 EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
