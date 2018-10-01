@@ -23,26 +23,9 @@
 "use strict";
 
 var version = require('./package.json').version;
-var Subscription = require('./Subscription');
+var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
 
 module.exports = {
     version: version,
-
-    /**
-     * Creates Subscription object
-     *
-     * @method createSubscription
-     *
-     * @param {Object} provider
-     * @param {String} method
-     * @param {Array} parameters
-     * @param {Function} inputFormatters
-     * @param {Function} outputFormatter
-     * @param {String} rpcSubscriptionMethod
-     *
-     * @returns {Subscription}
-     */
-    createSubscription: function (provider, method, parameters, inputFormatters, outputFormatter, rpcSubscriptionMethod) {
-        return new Subscription(provider, method, parameters, inputFormatters, outputFormatter, rpcSubscriptionMethod)
-    }
+    SubscriptionsFactory: SubscriptionsFactory
 };

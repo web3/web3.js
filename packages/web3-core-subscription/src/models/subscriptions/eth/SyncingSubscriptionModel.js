@@ -25,14 +25,13 @@
 var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
- * @param {Array} parameters
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function SyncingSubscriptionModel(parameters, utils, formatters) {
-    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'syncing', parameters, utils, formatters);
+function SyncingSubscriptionModel(utils, formatters) {
+    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'syncing', null, utils, formatters);
     this.isSyncing = null;
 }
 

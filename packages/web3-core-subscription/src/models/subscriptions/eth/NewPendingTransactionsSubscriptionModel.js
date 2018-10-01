@@ -25,14 +25,20 @@
 var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
- * @param {Array} parameters
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function NewPendingTransactionsSubscriptionModel(parameters, utils, formatters) {
-    NewPendingTransactionsSubscriptionModel.call(this, 'eth_subscribe', 'newPendingTransactions', parameters, utils, formatters);
+function NewPendingTransactionsSubscriptionModel(utils, formatters) {
+    NewPendingTransactionsSubscriptionModel.call(
+        this,
+        'eth_subscribe',
+        'newPendingTransactions',
+        null,
+        utils,
+        formatters
+    );
 }
 
 NewPendingTransactionsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);

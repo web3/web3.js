@@ -25,16 +25,16 @@
 /**
  * @param {String} subscriptionType
  * @param {String} subscriptionMethod
- * @param {Array} parameters
+ * @param {Object} options
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function AbstractSubscriptionModel(subscriptionType, subscriptionMethod, parameters, utils, formatters) {
+function AbstractSubscriptionModel(subscriptionType, subscriptionMethod, options, utils, formatters) {
     this.subscriptionType = subscriptionType;
     this.subscriptionMethod = subscriptionMethod;
-    this.parameters = parameters;
+    this.options = options;
     this.util = utils;
     this.formatters = formatters;
 }

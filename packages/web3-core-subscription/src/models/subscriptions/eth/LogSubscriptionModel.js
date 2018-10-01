@@ -25,7 +25,7 @@
 var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
- * @param {Array} parameters
+ * @param {Object} options
  * @param {Utils} utils
  * @param {Object} formatters
  * @param {GetPastLogsMethodModel} getPastLogsMethodModel
@@ -33,8 +33,8 @@ var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscrip
  *
  * @constructor
  */
-function LogSubscriptionModel(parameters, utils, formatters, getPastLogsMethodModel, methodController) {
-    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'logs', parameters, utils, formatters);
+function LogSubscriptionModel(options, utils, formatters, getPastLogsMethodModel, methodController) {
+    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'logs', options, utils, formatters);
     this.getPastLogsMethodModel = getPastLogsMethodModel;
     this.methodController = methodController;
 }
@@ -49,8 +49,9 @@ function LogSubscriptionModel(parameters, utils, formatters, getPastLogsMethodMo
  * @param {Function} callback
  */
 LogSubscriptionModel.prototype.beforeSubscription = function (subscription, web3Package, callback) {
-    this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
-    this.getPastLogsMethodModel.parameters = this.parameters;
+    var self = this;
+    this.options = this.formatters.inputLogFormatter(this.options);
+    this.getPastLogsMethodModel.parameters = [options];
 
     this.methodController.execute(
         this.getPastLogsMethodModel,
@@ -63,7 +64,7 @@ LogSubscriptionModel.prototype.beforeSubscription = function (subscription, web3
             subscription.emit('data', log);
         });
 
-        delete this.parameters[0].fromBlock;
+        delete self.options.fromBlock;
     }).catch(function (error) {
         subscription.emit('error', error);
         callback(error, null);

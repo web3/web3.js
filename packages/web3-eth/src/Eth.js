@@ -37,7 +37,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {Utils} utils
  * @param {Object} formatters
  * @param {ProvidersPackage} providersPackage
- * @param {SubscriptionsResolver} subscriptionsResolver
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {MethodModelFactory} methodModelFactory
  * @param {MethodController} methodController
  * @param {BatchRequestPackage} batchRequestPackage
@@ -56,7 +56,7 @@ var Eth = function Eth(
     utils,
     formatters,
     providersPackage,
-    subscriptionsResolver,
+    subscriptionsFactory,
     methodController,
     methodModelFactory,
     batchRequestPackage
@@ -67,7 +67,6 @@ var Eth = function Eth(
         providersPackage,
         methodController,
         methodModelFactory,
-        null,
         batchRequestPackage
     );
 
@@ -80,7 +79,7 @@ var Eth = function Eth(
     this.ens = ens;
     this.utils = utils;
     this.formatters = formatters;
-    this.subscriptionsResolver = subscriptionsResolver;
+    this.subscriptionsFactory = subscriptionsFactory;
 
     var defaultAccount = null;
     var defaultBlock = 'latest';
@@ -126,14 +125,30 @@ var Eth = function Eth(
  * @method subscribe
  *
  * @param {String} type
- * @param {Array} parameters
+ * @param {Object} options
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {eventifiedPromise | Subscription}
  */
-Eth.prototype.subscribe = function (type, parameters, callback) {
-    return this.subscriptionsResolver.resolve(type, parameters, callback);
+Eth.prototype.subscribe = function (type, options, callback) {
+    switch (type) {
+        case 'logs':
+            return this.subscriptionsFactory.createLogSubscription(
+                this,
+                options,
+                this.methodModelFactory.createMethodModel('getPastLogs'),
+                this.methodController
+            ).subscribe(callback);
+        case 'newBlockHeaders':
+            return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
+        case 'pendingTransactions':
+            return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
+        case 'syncing':
+            return this.subscriptionsFactory.createSyncingSubscriptionModel(this).subscribe(callback);
+        default:
+            throw Error('Unknown subscription: ' + type);
+    }
 };
 
 /**
@@ -144,8 +159,6 @@ Eth.prototype.subscribe = function (type, parameters, callback) {
  */
 Eth.prototype.setProvider = function (provider) {
     AbstractWeb3Object.setProvider.call(provider);
-
-    this.subscriptionsResolver.setProvider(provider);
     this.net.setProvider(provider);
     this.accounts.setProvider(provider);
     this.personal.setProvider(provider);

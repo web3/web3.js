@@ -25,14 +25,13 @@
 var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
- * @param {Array} parameters
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function NewHeadsSubscriptionModel(parameters, utils, formatters) {
-    NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', parameters, utils, formatters);
+function NewHeadsSubscriptionModel(utils, formatters) {
+    NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', null, utils, formatters);
 }
 
 /**

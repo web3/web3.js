@@ -25,14 +25,14 @@
 var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
- * @param {Array} parameters
+ * @param {Object} options
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function MessagesSubscriptionModel(parameters, utils, formatters) {
-    AbstractSubscriptionModel.call(this, 'shh_subscribe', 'messages', parameters, utils, formatters);
+function MessagesSubscriptionModel(options, utils, formatters) {
+    AbstractSubscriptionModel.call(this, 'shh_subscribe', 'messages', options, utils, formatters);
 }
 
 MessagesSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);

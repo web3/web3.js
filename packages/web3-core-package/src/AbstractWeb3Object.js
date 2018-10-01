@@ -27,7 +27,6 @@
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
- * @param {SubscriptionPackage} subscriptionPackage
  * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
@@ -37,7 +36,6 @@ function AbstractWeb3Object(
     providersPackage,
     methodController,
     methodModelFactory,
-    subscriptionPackage,
     batchRequestPackage
 ) {
     if (!this.isDependencyGiven(provider)) {
@@ -82,10 +80,6 @@ function AbstractWeb3Object(
         this.BatchRequest = function BatchRequest() {
             return batchRequestPackage.createBatchRequest(self.currentProvider);
         };
-    }
-
-    if (this.isDependencyGiven(subscriptionPackage)) {
-        this.subscriptionPackage = subscriptionPackage;
     }
 
     if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodController)) {

@@ -29,19 +29,18 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {Network} net
  *
  * @constructor
  */
-function Shh(provider, providersPackage, methodController, methodModelFactory, subscriptionPackage, net) {
+function Shh(provider, providersPackage, methodController, methodModelFactory, subscriptionsFactory, net) {
     AbstractWeb3Object.call(
         this,
         provider,
         providersPackage,
         methodController,
-        methodModelFactory,
-        subscriptionPackage
+        methodModelFactory
     );
     this.net = net;
 }
@@ -56,17 +55,14 @@ function Shh(provider, providersPackage, methodController, methodModelFactory, s
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {Subscription}
  */
 Shh.prototype.subscribe = function (method, options, callback) {
-    return this.subscriptionPackage.create(
-        this.currentProvider,
-        method,
-        [options],
-        null,
-        null,
-        'shh'
-    ).subscribe(callback);
+    if (method === 'messages') {
+        return this.subscriptionsFactory.createShhMessagesSubscription(this, options).subscribe(callback);
+    }
+
+    throw Error('Unknown subscription: ' + method);
 };
 
 /**

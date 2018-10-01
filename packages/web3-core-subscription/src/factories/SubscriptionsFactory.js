@@ -46,7 +46,7 @@ function SubscriptionsFactory(utils, formatters) {
  * @method createLogSubscription
  *
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} parameters
+ * @param {Object} options
  * @param {GetPastLogsMethodModel} getPastLogsMethodModel
  * @param {MethodController} methodController
  *
@@ -54,13 +54,13 @@ function SubscriptionsFactory(utils, formatters) {
  */
 SubscriptionsFactory.prototype.createLogSubscription = function (
     web3Package,
-    parameters,
+    options,
     getPastLogsMethodModel,
     methodController
 ) {
     return new Subscription(web3Package,
         new LogSubscriptionModel(
-            parameters,
+            options,
             this.utils,
             this.formatters,
             getPastLogsMethodModel,
@@ -72,17 +72,16 @@ SubscriptionsFactory.prototype.createLogSubscription = function (
 /**
  * Returns an eth newHeads subscription
  *
- * @method createNewHeadSubscription
+ * @method createNewHeadsSubscription
  *
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} parameters
  *
  * @returns {Subscription}
  */
-SubscriptionsFactory.prototype.createNewHeadSubscription = function (web3Package, parameters) {
+SubscriptionsFactory.prototype.createNewHeadsSubscription = function (web3Package) {
     return new Subscription(
         web3Package,
-        new NewHeadsSubscriptionModel(parameters, this.utils, this.formatters)
+        new NewHeadsSubscriptionModel(this.utils, this.formatters)
     );
 };
 
@@ -92,14 +91,13 @@ SubscriptionsFactory.prototype.createNewHeadSubscription = function (web3Package
  * @method createNewPendingTransactionsSubscription
  *
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} parameters
  *
  * @returns {Subscription}
  */
-SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = function (web3Package, parameters) {
+SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = function (web3Package) {
     return new Subscription(
         web3Package,
-        new NewPendingTransactionsSubscriptionModel(parameters, this.utils, this.formatters)
+        new NewPendingTransactionsSubscriptionModel(this.utils, this.formatters)
     );
 };
 
@@ -109,14 +107,13 @@ SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = functi
  * @method createSyncingSubscriptionModel
  *
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} parameters
  *
  * @returns {Subscription}
  */
-SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (web3Package, parameters) {
+SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (web3Package) {
     return new Subscription(
         web3Package,
-        new SyncingSubscriptionModel(parameters, this.utils, this.formatters)
+        new SyncingSubscriptionModel(this.utils, this.formatters)
     );
 };
 
@@ -126,14 +123,14 @@ SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (web3Pa
  * @method createShhMessagesSubscription
  *
  * @param {AbstractWeb3Object} web3Package
- * @param {Array} parameters
+ * @param {Object} options
  *
  * @returns {Subscription}
  */
-SubscriptionsFactory.prototype.createShhMessagesSubscription = function (web3Package, parameters) {
+SubscriptionsFactory.prototype.createShhMessagesSubscription = function (web3Package, options) {
     return new Subscription(
         web3Package,
-        new MessagesSubscriptionModel(parameters, this.utils, this.formatters)
+        new MessagesSubscriptionModel(options, this.utils, this.formatters)
     );
 };
 

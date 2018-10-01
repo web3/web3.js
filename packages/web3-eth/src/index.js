@@ -23,7 +23,6 @@
 "use strict";
 
 var version = require('./package.json').version;
-var SubscriptionsResolver = require('./resolvers/SubscriptionsResolver');
 var MethodModelFactory = require('./factories/MethodModelFactory');
 var Eth = require('./Eth');
 var NetPackage = require('web3-net');
@@ -32,8 +31,7 @@ var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
 var ENSPackage = require('web3-eth-ens');
 var AbiPackage = require('web3-eth-abi');
-var SubscriptionPackage = require('web3-core-subscription');
-var PromiEventPackage = require('web3-core-promiEvent');
+var SubscriptionsFactory = require('web3-core-subscription').SubscriptionsFactory;
 var ProvidersPackage = require('web3-core-providers');
 var Iban = require('web3-eth-iban').Iban;
 var formatters = require('web3-core-helpers').formatters;
@@ -49,7 +47,7 @@ module.exports = {
      *
      * @method createEth
      *
-     * @param {Object} provider
+     * @param {AbstractProviderAdapter} provider
      *
      * @returns {Eth}
      */
@@ -70,15 +68,7 @@ module.exports = {
             Utils,
             formatters,
             ProvidersPackage,
-            new SubscriptionsResolver(
-                provider,
-                formatters,
-                SubscriptionPackage,
-                PromiEventPackage,
-                ProvidersPackage,
-                methodModelFactory,
-                methodController
-            ),
+            new SubscriptionsFactory(Utils, formatters),
             methodController,
             methodModelFactory,
             BatchRequestPackage

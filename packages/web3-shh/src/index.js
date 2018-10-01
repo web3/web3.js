@@ -25,7 +25,7 @@
 var version = require('./package.json');
 var ProvidersPackage = require('web3-core-providers');
 var MethodPackage = require('web3-core-method');
-var SubscriptionPackage = require('web3-core-subscription');
+var SubscriptionsFactory = require('web3-core-subscription').SubscriptionsFactory;
 var NetworkPackage = require('web3-net');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
@@ -50,7 +50,7 @@ module.exports = {
             ProvidersPackage,
             MethodPackage.createMethodController(),
             new MethodModelFactory(Utils, formatters),
-            SubscriptionPackage,
+            new SubscriptionsFactory(Utils, formatters),
             NetworkPackage.createNetwork(provider)
         );
     }
