@@ -35,7 +35,15 @@ var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionMode
  *
  * @constructor
  */
-function EventLogSubscription(abiItemModel, options, utils, formatters, getPastLogsMethodModel, methodController, eventLogDecoder) {
+function EventLogSubscription(
+    abiItemModel,
+    options,
+    utils,
+    formatters,
+    getPastLogsMethodModel,
+    methodController,
+    eventLogDecoder
+) {
     LogSubscriptionModel.call(this, options, utils, formatters, getPastLogsMethodModel, methodController);
     this.eventLogDecoder = eventLogDecoder;
     this.abiItemModel = abiItemModel;
