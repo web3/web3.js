@@ -26,23 +26,15 @@ var _ = require('underscore');
 var EventEmitter = require('eventemitter3');
 
 /**
- * @param {Object} provider
- * @param {String} subscriptionMethod
- * @param {Array} parameters
- * @param {Array} inputFormatters
- * @param {Function} outputFormatter
- * @param {String} subscriptionType
+ * @param {AbstractSubscriptionModel} subscriptionModel
+ * @param {AbstractWeb3Object} web3Package
  *
  * @constructor
  */
-function Subscription(provider, subscriptionMethod, parameters, inputFormatters, outputFormatter, subscriptionType) {
-    this.provider = provider;
-    this.subscriptionMethod = subscriptionMethod;
-    this.parameters = parameters;
-    this.inputFormatters = inputFormatters;
-    this.outputFormatter = outputFormatter;
+function Subscription(subscriptionModel, web3Package) {
+    this.subscriptionModel = subscriptionModel;
+    this.web3Package = web3Package;
     this.subscriptionId = null;
-    this.subscriptionType = subscriptionType || 'eth';
 }
 
 /**
@@ -58,21 +50,23 @@ function Subscription(provider, subscriptionMethod, parameters, inputFormatters,
 Subscription.prototype.subscribe = function (callback) {
     var self = this;
 
-    this.provider.subscribe(
-        this.subscriptionType,
-        this.subscriptionMethod,
-        this.getFormattedInput()
+    this.subscriptionModel.beforeSubscription(this, this.web3Package, callback);
+
+    this.web3Package.currentProvider.subscribe(
+        this.subscriptionModel.subscriptionType,
+        this.subscriptionModel.subscriptionMethod,
+        this.subscriptionModel.parameters
     ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
 
-        self.provider.on(self.subscriptionId, function (error, response) {
+        self.web3Package.currentProvider.on(self.subscriptionId, function (error, response) {
             if (!error) {
                 self.handleSubscriptionResponse(response, callback);
 
                 return;
             }
 
-            if (self.provider.once) {
+            if (self.web3Package.currentProvider.once) {
                 self.reconnect(callback);
             }
 
@@ -102,7 +96,8 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
     }
 
     response.forEach(function (item) {
-        var formattedOutput = this.formatOutput(item);
+        var formattedOutput = this.subscriptionModel.onNewSubscriptionItem(item);
+
         this.emit('data', formattedOutput);
         if (_.isFunction(callback)) {
             callback(false, formattedOutput);
@@ -111,6 +106,7 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
 };
 
 /**
+ * TODO: Improve reconnecting!
  * Reconnects provider and restarts subscription
  *
  * @method reconnect
@@ -123,64 +119,19 @@ Subscription.prototype.reconnect = function (callback) {
     var self = this;
 
     var interval = setInterval(function () {
-        if (self.provider.reconnect) {
-            self.provider.reconnect();
+        if (self.web3Package.currentProvider.reconnect) {
+            self.web3Package.currentProvider.reconnect();
         }
     }, 500);
 
-    self.provider.once('connect', function () {
+    this.web3Package.currentProvider.once('connect', function () {
         clearInterval(interval);
-        self.unsubscribe(function (error, result) {
-            if (result) {
-                self.subscribe(callback);
-            }
-
-            if (_.isFunction(callback)) {
-                callback(error, null);
-            }
+        self.unsubscribe().then(function () {
+            self.subscribe(callback);
+        }).catch(function (error) {
+            callback(error, null);
         });
     });
-};
-
-/**
- * Executes outputFormatter if defined
- *
- * @method formatOutput
- *
- * @param {any} output
- *
- * @returns {any}
- * @callback callback callback(error, result)
- */
-Subscription.prototype.formatOutput = function (output) {
-    if (_.isFunction(this.outputFormatter) && output) {
-        return this.outputFormatter(output);
-    }
-
-    return output;
-};
-
-/**
- * Executes inputFormatters if defined
- *
- * @method formatInput
- *
- * @returns {any[]}
- */
-Subscription.prototype.getFormattedInput = function () {
-    var self = this;
-
-    if (_.isArray(this.inputFormatters)) {
-        return this.inputFormatters.map(function (formatter, index) {
-            if (_.isFunction(formatter)) {
-                return formatter(self.parameters[index]);
-            }
-
-            return self.parameters[index];
-        });
-    }
-
-    return parameters;
 };
 
 /**
@@ -195,7 +146,10 @@ Subscription.prototype.getFormattedInput = function () {
  */
 Subscription.prototype.unsubscribe = function (callback) {
     var self = this;
-    return this.provider.unsubscribe(this.subscriptionId, this.subscriptionType).then(function (response) {
+    return this.web3Package.currentProvider.unsubscribe(
+        this.subscriptionId,
+        this.subscriptionModel.subscriptionType
+    ).then(function (response) {
         if (!response) {
             self.subscriptionId = null;
             callback(true, false);

@@ -38,6 +38,7 @@ function MethodResponseDecoder(abiCoder) {
  *
  * @param {Array} abiItemOutputTypes
  * @param {String} response
+ *
  * @returns {*}
  */
 MethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response) {

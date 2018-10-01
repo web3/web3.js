@@ -22,6 +22,11 @@
 
 "use strict";
 
+/**
+ * @param {ABICoder} abiCoder
+ *
+ * @constructor
+ */
 function EventFilterEncoder(abiCoder) {
     this.abiCoder = abiCoder;
 }

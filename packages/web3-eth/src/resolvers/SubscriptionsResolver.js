@@ -172,7 +172,7 @@ SubscriptionsResolver.prototype.subscribeToLogs = function (parameter, promiEven
  */
 SubscriptionsResolver.prototype.handleLogsSubscriptionWithFromBlock = function (parameter, promiEvent, callback) {
     var self = this;
-    this.getLogs(parameter).then(function (logs) {
+    this.getPastLogs(parameter).then(function (logs) {
         logs.forEach(function (log) {
             callback(false, log);
             promiEvent.eventEmitter.emit('data', log);

@@ -84,12 +84,10 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
         this.handleValidationError(new Error('Please set only topics or filters but not both.'), callback);
     }
 
-    options = this.eventOptionsMapper.map(abiItemModel, target, options);
-
     return this.subscriptionPackage.createSubscription(
         target.contract.currentProvider,
         'logs',
-        [options],
+        [this.eventOptionsMapper.map(abiItemModel, target, options)],
         this.formatters.inputLogFormatter,
         this.eventLogDecoder.decode,
         'eth'
@@ -97,8 +95,6 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
 };
 
 /**
- * TODO: Move this to an AbstractContractEntityProxy object and let both proxies inherit from it
- *
  * Creates an promiEvent and rejects it with an error
  *
  * @method handleValidationError
@@ -107,7 +103,7 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {PromiEvent}
+ * @returns {EventEmitter}
  */
 EventSubscriptionsProxy.prototype.handleValidationError = function (error, callback) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
@@ -117,7 +113,7 @@ EventSubscriptionsProxy.prototype.handleValidationError = function (error, callb
         callback(error, null);
     }
 
-    return promiEvent;
+    return promiEvent.eventEmitter;
 };
 
 module.exports = EventSubscriptionsProxy;
