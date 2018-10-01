@@ -15,26 +15,38 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SubscriptionModelsFactory.js
+ * @file SubscriptionsFactory.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
+
 var Subscription = require('../Subscription');
 var LogSubscriptionModel = require('../models/subscriptions/eth/LogSubscriptionModel');
-
-function SubscriptionsFactory() { }
+var NewHeadsSubscriptionModel = require('../models/subscriptions/eth/NewHeadsSubscriptionModel');
+var NewPendingTransactionsSubscriptionModel = require('../models/subscriptions/eth/NewPendingTransactionsSubscriptionModel');
+var SyncingSubscriptionModel = require('../models/subscriptions/eth/SyncingSubscriptionModel');
+var MessagesSubscriptionModel = require('../models/subscriptions/shh/MessagesSubscriptionModel');
 
 /**
- * Returns an subscription how is initiated with LogSubscriptionModel
+ * @param {Utils} utils
+ * @param {Object} formatters
+ *
+ * @constructor
+ */
+function SubscriptionsFactory(utils, formatters) {
+    this.utils = utils;
+    this.formatters = formatters;
+}
+
+/**
+ * Returns an eth log subscription
  *
  * @method createLogSubscription
  *
  * @param {AbstractWeb3Object} web3Package
  * @param {Array} parameters
- * @param {Utils} utils
- * @param {Object} formatters
  * @param {GetPastLogsMethodModel} getPastLogsMethodModel
  * @param {MethodController} methodController
  *
@@ -43,19 +55,85 @@ function SubscriptionsFactory() { }
 SubscriptionsFactory.prototype.createLogSubscription = function (
     web3Package,
     parameters,
-    utils,
-    formatters,
     getPastLogsMethodModel,
     methodController
 ) {
     return new Subscription(web3Package,
         new LogSubscriptionModel(
             parameters,
-            utils,
-            formatters,
+            this.utils,
+            this.formatters,
             getPastLogsMethodModel,
             methodController
         )
+    );
+};
+
+/**
+ * Returns an eth newHeads subscription
+ *
+ * @method createNewHeadSubscription
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {Array} parameters
+ *
+ * @returns {Subscription}
+ */
+SubscriptionsFactory.prototype.createNewHeadSubscription = function (web3Package, parameters) {
+    return new Subscription(
+        web3Package,
+        new NewHeadsSubscriptionModel(parameters, this.utils, this.formatters)
+    );
+};
+
+/**
+ * Returns an eth newPendingTransactions subscription
+ *
+ * @method createNewPendingTransactionsSubscription
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {Array} parameters
+ *
+ * @returns {Subscription}
+ */
+SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = function (web3Package, parameters) {
+    return new Subscription(
+        web3Package,
+        new NewPendingTransactionsSubscriptionModel(parameters, this.utils, this.formatters)
+    );
+};
+
+/**
+ * Returns an eth syncing subscription
+ *
+ * @method createSyncingSubscriptionModel
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {Array} parameters
+ *
+ * @returns {Subscription}
+ */
+SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (web3Package, parameters) {
+    return new Subscription(
+        web3Package,
+        new SyncingSubscriptionModel(parameters, this.utils, this.formatters)
+    );
+};
+
+/**
+ * Returns an shh messages subscription
+ *
+ * @method createShhMessagesSubscription
+ *
+ * @param {AbstractWeb3Object} web3Package
+ * @param {Array} parameters
+ *
+ * @returns {Subscription}
+ */
+SubscriptionsFactory.prototype.createShhMessagesSubscription = function (web3Package, parameters) {
+    return new Subscription(
+        web3Package,
+        new MessagesSubscriptionModel(parameters, this.utils, this.formatters)
     );
 };
 

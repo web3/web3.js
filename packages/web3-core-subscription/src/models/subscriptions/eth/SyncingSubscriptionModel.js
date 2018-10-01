@@ -70,3 +70,4 @@ SyncingSubscriptionModel.prototype.onNewSubscriptionItem = function (subscriptio
 SyncingSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
 SyncingSubscriptionModel.prototype.constructor = SyncingSubscriptionModel;
 
+module.exports = SyncingSubscriptionModel;

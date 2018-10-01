@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file NewHeadSubscriptionModel.js
+ * @file NewHeadsSubscriptionModel.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -31,8 +31,8 @@ var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscrip
  *
  * @constructor
  */
-function NewHeadSubscriptionModel(parameters, utils, formatters) {
-    NewHeadSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', parameters, utils, formatters);
+function NewHeadsSubscriptionModel(parameters, utils, formatters) {
+    NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', parameters, utils, formatters);
 }
 
 /**
@@ -45,10 +45,11 @@ function NewHeadSubscriptionModel(parameters, utils, formatters) {
  *
  * @returns {Object}
  */
-NewHeadSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
+NewHeadsSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.formatters.outputBlockFormatter(subscriptionItem);
 };
 
-NewHeadSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
-NewHeadSubscriptionModel.prototype.constructor = NewHeadSubscriptionModel;
+NewHeadsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
+NewHeadsSubscriptionModel.prototype.constructor = NewHeadsSubscriptionModel;
 
+module.expors = NewHeadsSubscriptionModel;

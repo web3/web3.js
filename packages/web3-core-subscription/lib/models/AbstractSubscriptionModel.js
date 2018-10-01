@@ -48,9 +48,7 @@ function AbstractSubscriptionModel(subscriptionType, subscriptionMethod, paramet
  * @param {AbstractWeb3Object} web3Package
  * @param {Function} callback
  */
-AbstractSubscriptionModel.prototype.beforeSubscription = function (subscription, web3Package, callback) {
-
-};
+AbstractSubscriptionModel.prototype.beforeSubscription = function (subscription, web3Package, callback) { };
 
 /**
  * This method will be executed on each new subscription item.
