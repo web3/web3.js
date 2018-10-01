@@ -44,9 +44,6 @@ function EventLogDecoder(abiCoder, formatters) {
  * @returns {Object}
  */
 EventLogDecoder.prototype.decode = function(abiItemModel, response) {
-    response.data = response.data || '';
-    response.topics = response.topics || [];
-
     // // if allEvents get the right event
     // if(event.name === 'ALLEVENTS') {
     //     event = event.jsonInterface.find(function (intf) {
@@ -59,25 +56,23 @@ EventLogDecoder.prototype.decode = function(abiItemModel, response) {
         argTopics = response.topics.slice(1);
     }
 
-    var result = this.formatters.outputLogFormatter(response);
-
-    result.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
-    result.event = abiItemModel.name;
-    result.signature = abiItemModel.signature;
-    result.raw = {
-        data: result.data,
-        topics: result.topics
+    response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
+    response.event = abiItemModel.name;
+    response.signature = abiItemModel.signature;
+    response.raw = {
+        data: response.data,
+        topics: response.topics
     };
 
     if (abiItemModel.anonymous || !response.topics[0]) {
-        result.signature = null;
+        response.signature = null;
     }
 
-    delete result.returnValues.__length__;
-    delete result.data;
-    delete result.topics;
+    delete response.returnValues.__length__;
+    delete response.data;
+    delete response.topics;
 
-    return result;
+    return response;
 };
 
 module.exports = EventLogDecoder;
