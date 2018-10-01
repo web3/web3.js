@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractSubscriptionModel = require('../../../lib/models/AbstractSubscriptionModel');
+var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
 
 /**
  * @param {Array} parameters

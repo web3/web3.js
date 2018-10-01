@@ -22,7 +22,7 @@
 
 "use strict";
 var Subscription = require('../Subscription');
-var LogSubscriptionModel = require('../models/EthSubscriptions/LogSubscriptionModel');
+var LogSubscriptionModel = require('../models/subscriptions/eth/LogSubscriptionModel');
 
 function SubscriptionsFactory() { }
 
