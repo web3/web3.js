@@ -24,8 +24,11 @@
 
 var version = require('./package.json').version;
 var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
+var LogSubscriptionModel = require('./models/subscriptions/eth/LogSubscriptionModel');
 
 module.exports = {
     version: version,
+
+    LogSubscriptionModel: LogSubscriptionModel,
     SubscriptionsFactory: SubscriptionsFactory
 };

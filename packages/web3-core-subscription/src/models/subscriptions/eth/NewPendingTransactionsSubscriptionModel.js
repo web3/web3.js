@@ -41,7 +41,7 @@ function NewPendingTransactionsSubscriptionModel(utils, formatters) {
     );
 }
 
-NewPendingTransactionsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
+NewPendingTransactionsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
 NewPendingTransactionsSubscriptionModel.prototype.constructor = NewPendingTransactionsSubscriptionModel;
 
 module.exports = NewPendingTransactionsSubscriptionModel;

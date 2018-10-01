@@ -15,23 +15,28 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file NewHeadsSubscriptionModel.js
+ * @file EventLogSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionModel;
 
 /**
+ * @param {Object} options
  * @param {Utils} utils
  * @param {Object} formatters
+ * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+ * @param {MethodController} methodController
+ * @param {EventLogDecoder} eventLogDecoder
  *
  * @constructor
  */
-function NewHeadsSubscriptionModel(utils, formatters) {
-    NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', null, utils, formatters);
+function EventLogSubscription(options, utils, formatters, getPastLogsMethodModel, methodController, eventLogDecoder) {
+    LogSubscriptionModel.call(this, options, utils, formatters, getPastLogsMethodModel, methodController);
+    this.eventLogDecoder = eventLogDecoder;
 }
 
 /**
@@ -44,11 +49,9 @@ function NewHeadsSubscriptionModel(utils, formatters) {
  *
  * @returns {Object}
  */
-NewHeadsSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.formatters.outputBlockFormatter(subscriptionItem);
+EventLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
+    return this.eventLogDecoder.decode(this.formatters.outputLogFormatter(subscriptionItem));
 };
 
-NewHeadsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-NewHeadsSubscriptionModel.prototype.constructor = NewHeadsSubscriptionModel;
-
-module.expors = NewHeadsSubscriptionModel;
+EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
+EventLogSubscription.prototye.constructor = EventLogSubscription;

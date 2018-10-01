@@ -85,7 +85,7 @@ LogSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, s
     return this.formatters.outputLogFormatter(subscriptionItem);
 };
 
-LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
+LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
 LogSubscriptionModel.prototype.constructor = LogSubscriptionModel;
 
 module.exports = LogSubscriptionModel;
