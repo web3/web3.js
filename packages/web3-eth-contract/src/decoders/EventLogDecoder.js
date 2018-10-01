@@ -22,12 +22,67 @@
 
 "use strict";
 
-function EventLogDecoder() {
-
+/**
+ * @param {ABICoder} abiCoder
+ * @param {Object} formatters
+ *
+ * @constructor
+ */
+function EventLogDecoder(abiCoder, formatters) {
+    this.abiCoder = abiCoder;
+    this.formatters = formatters;
 }
 
-EventLogDecoder.prototype.decoder = function() {
+/**
+ * Decodes the event subscription response
+ *
+ * @method decoder
+ *
+ * @param {ABIItemModel} abiItemModel
+ * @param {Object} response
+ *
+ * @returns {Object}
+ */
+EventLogDecoder.prototype.decode = function(abiItemModel, response) {
+    response.data = response.data || '';
+    response.topics = response.topics || [];
 
+    // // if allEvents get the right event
+    // if(event.name === 'ALLEVENTS') {
+    //     event = event.jsonInterface.find(function (intf) {
+    //         return (intf.signature === data.topics[0]);
+    //     }) || {anonymous: true};
+    // }
+
+    var argTopics = response.topics;
+    if (abiItemModel.anonymous) {
+        argTopics = response.topics.slice(1);
+    }
+
+    var result = this.formatters.outputLogFormatter(response);
+    result.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
+
+    // add name
+    result.event = abiItemModel.name;
+
+    // add signature
+    result.signature = data.topics[0];
+
+    if (event.anonymous || !data.topics[0]) {
+        result.signature = null;
+    }
+
+    // move the data and topics to "raw"
+    result.raw = {
+        data: result.data,
+        topics: result.topics
+    };
+
+    delete result.returnValues.__length__;
+    delete result.data;
+    delete result.topics;
+
+    return result;
 };
 
 module.exports = EventLogDecoder;
