@@ -33,6 +33,7 @@ function ABIItemModel(abiItem) {
     this.abiItem = abiItem;
     this.signature = this.abiItem.signature;
     this.name = this.abiItem.name;
+    this.anonymous = this.abitItem.anonymous;
     this.contractMethodParameters = [];
 
     Object.defineProperty(this, 'requestType', {

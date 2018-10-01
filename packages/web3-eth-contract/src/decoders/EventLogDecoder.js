@@ -60,23 +60,18 @@ EventLogDecoder.prototype.decode = function(abiItemModel, response) {
     }
 
     var result = this.formatters.outputLogFormatter(response);
+
     result.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
-
-    // add name
     result.event = abiItemModel.name;
-
-    // add signature
-    result.signature = data.topics[0];
-
-    if (event.anonymous || !data.topics[0]) {
-        result.signature = null;
-    }
-
-    // move the data and topics to "raw"
+    result.signature = abiItemModel.signature;
     result.raw = {
         data: result.data,
         topics: result.topics
     };
+
+    if (abiItemModel.anonymous || !response.topics[0]) {
+        result.signature = null;
+    }
 
     delete result.returnValues.__length__;
     delete result.data;
