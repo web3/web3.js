@@ -27,7 +27,6 @@ var CallContractMethodModel = require('../models/methods/CallContractMethodModel
 var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 
 /**
- * TODO: Rename it to RpcMethodModelFactory
  * @param {MethodResponseDecoder} methodResponseDecoder
  * @param {Accounts} accounts
  * @param {Utils} utils
@@ -35,7 +34,7 @@ var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
  *
  * @constructor
  */
-function RpcMethodFactory(methodResponseDecoder, accounts, utils, formatters) {
+function RpcMethodModelFactory(methodResponseDecoder, accounts, utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
     this.methodResponseDecoder = methodResponseDecoder;
@@ -51,7 +50,7 @@ function RpcMethodFactory(methodResponseDecoder, accounts, utils, formatters) {
  *
  * @returns {AbstractMethodModel}
  */
-RpcMethodFactory.prototype.createRpcMethod = function (abiItemModel) {
+RpcMethodModelFactory.prototype.createRpcMethod = function (abiItemModel) {
     var rpcMethod;
 
     switch (abiItemModel.requestType) {
@@ -84,4 +83,4 @@ RpcMethodFactory.prototype.createRpcMethod = function (abiItemModel) {
     return rpcMethod;
 };
 
-module.exports = RpcMethodFactory;
+module.exports = RpcMethodModelFactory;

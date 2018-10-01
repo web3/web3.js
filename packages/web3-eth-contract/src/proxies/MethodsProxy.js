@@ -25,7 +25,7 @@
 /**
  * @param {Contract} contract
  * @param {ABIModel} abiModel
- * @param {RpcMethodFactory} rpcMethodFactory
+ * @param {RpcMethodModelFactory} rpcMethodModelFactory
  * @param {MethodController} methodController
  * @param {MethodEncoder} methodEncoder
  * @param {RpcMethodOptionsValidator} rpcMethodOptionsValidator
@@ -37,7 +37,7 @@
 function MethodsProxy(
     contract,
     abiModel,
-    rpcMethodFactory,
+    rpcMethodModelFactory,
     methodController,
     methodEncoder,
     rpcMethodOptionsValidator,
@@ -46,7 +46,7 @@ function MethodsProxy(
 ) {
     this.contract = contract;
     this.abiModel = abiModel;
-    this.rpcMethodFactory = rpcMethodFactory;
+    this.rpcMethodModelFactory = rpcMethodModelFactory;
     this.methodController = methodController;
     this.methodEncoder = methodEncoder;
     this.rpcMethodOptionsValidator = rpcMethodOptionsValidator;
@@ -69,8 +69,7 @@ function MethodsProxy(
  * @returns {Function|Error}
  */
 MethodsProxy.prototype.proxyHandler = function (target, name) {
-    var self = this;
-    var abiItemModel = this.abiModel.getMethod(name);
+    var abiItemModel = target.abiModel.getMethod(name);
 
     if (abiItemModel) {
         var anonymousFunction = function () {
@@ -78,22 +77,26 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
         };
 
         anonymousFunction[abiItemModel.requestType] = function () {
-            return self.executeMethod(abiItemModel, target, arguments);
+            return target.executeMethod(abiItemModel, target, arguments);
         };
 
         anonymousFunction[abiItemModel.requestType].request = function () {
-            return self.createRpcMethod(abiItemModel, target, arguments);
+            return target.createRpcMethod(abiItemModel, target, arguments);
         };
 
         anonymousFunction.estimateGas = function () {
             abiItemModel.requestType = 'estimate';
 
-            return self.executeMethod(abiItemModel, target, arguments);
+            return target.executeMethod(abiItemModel, target, arguments);
         };
 
         anonymousFunction.encodeAbi = function () {
-            return self.methodEncoder.encode(abiItemModel, target.contract.options.data);
+            return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
         };
+    }
+
+    if (target[name]) {
+        return target[name];
     }
 
     throw Error('Method with name "' + name + '" not found');
@@ -109,13 +112,13 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
  * @returns {Promise|PromiEvent|String|Boolean}
  */
 MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArguments) {
-    var rpcMethodModel = this.createRpcMethodModel(abiItemModel, target, methodArguments);
+    var rpcMethodModel = target.createRpcMethodModel(abiItemModel, target, methodArguments);
 
     if (typeof rpcMethodModel.error !== 'undefined') {
-        return this.handleValidationError(rpcMethodModel.error, rpcMethodModel.callback);
+        return target.handleValidationError(rpcMethodModel.error, rpcMethodModel.callback);
     }
 
-    return this.methodController.execute(
+    return target.methodController.execute(
         rpcMethodModel,
         target.contract.currentProvider,
         target.contract.accounts,
@@ -130,10 +133,10 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, target, methodArg
  * @param {MethodsProxy} target
  * @param {IArguments} methodArguments
  *
- * @returns {AbstractMethodModel}
+ * @returns {AbstractMethodModel|Object}
  */
 MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, methodArguments) {
-    var rpcMethodModel, self = this;
+    var rpcMethodModel;
 
     // If it is an array than check which AbiItemModel should be used.
     // This will be used if two methods with the same name exists but with different arguments.
@@ -143,7 +146,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, me
         // Check if one of the AbiItemModel in this array does match the arguments length
         abiItemModel.some(function(method) {
             // Get correct rpc method model
-            rpcMethodModel = self.rpcMethodFactory.createRpcMethod(method);
+            rpcMethodModel = target.rpcMethodFactory.createRpcMethod(method);
             rpcMethodModel.methodArguments = methodArguments;
             isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
 
@@ -159,7 +162,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, me
         }
     } else {
         // Get correct rpc method model
-        rpcMethodModel = this.rpcMethodFactory.createRpcMethod(abiItemModel);
+        rpcMethodModel = target.rpcMethodModelFactory.createRpcMethod(abiItemModel);
         rpcMethodModel.methodArguments = methodArguments;
     }
 
@@ -174,7 +177,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, me
     }
 
     // Encode contract method and check if there was an error
-    var encodedContractMethod = self.methodEncoder.encode(abiItemModel, target.contract.options.data);
+    var encodedContractMethod = target.methodEncoder.encode(abiItemModel, target.contract.options.data);
     if (encodedContractMethod instanceof Error) {
         return {
             error: encodedContractMethod,
@@ -186,10 +189,10 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, target, me
     rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
 
     // Set default options in the TxObject if required
-    rpcMethodModel.parameters = self.rpcMethodOptionsMapper.map(target.contract.options, rpcMethodModel.parameters[0]);
+    rpcMethodModel.parameters = target.rpcMethodOptionsMapper.map(target.contract.options, rpcMethodModel.parameters[0]);
 
     // Validate TxObject
-    var rpcMethodOptionsValidationResult = self.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
+    var rpcMethodOptionsValidationResult = target.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
     if (rpcMethodOptionsValidationResult instanceof Error) {
         return {
             error: rpcMethodOptionsValidationResult,

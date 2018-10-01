@@ -23,17 +23,17 @@
 "use strict";
 
 /**
+ * @param {Contract} contract
  * @param {ABIModel} abiModel
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {EventSubscriptionFactory} subscriptionFactory
  * @param {EventOptionsMapper} eventOptionsMapper
- * @param {EventLogDecoder} eventLogDecoder
  *
  * @constructor
  */
-function EventSubscriptionsProxy(abiModel, subscriptionPackage, eventOptionsMapper, eventLogDecoder) {
-    this.subscriptionPackage = subscriptionPackage;
+function EventSubscriptionsProxy(contract, abiModel, subscriptionFactory, eventOptionsMapper) {
+    this.contract = contract;
+    this.subscriptionFactory = subscriptionFactory;
     this.abiModel = abiModel;
-    this.eventLogDecoder = eventLogDecoder;
     this.eventOptionsMapper = eventOptionsMapper;
 
     return new Proxy(this, {
@@ -52,18 +52,20 @@ function EventSubscriptionsProxy(abiModel, subscriptionPackage, eventOptionsMapp
  * @returns {Function|Error}
  */
 EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
-    var self = this;
-
     if (this.abiModel.hasEvent(name)) {
         return function (options, callback) {
-            return this.subscribe(self.abiModel.getEvent(name), options, callback, target);
+            return target.subscribe(target.abiModel.getEvent(name), target, options, callback);
         }
     }
 
     if (name === 'allEvents') {
         return function (options, callback) {
-            return this.subscribeAll(options, target, callback);
+            return target.subscribeAll(options, target, callback);
         }
+    }
+
+    if (target[name]) {
+        return target[name];
     }
 
     throw Error('Event with name "' + name + '" not found');
@@ -84,13 +86,9 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
         this.handleValidationError(new Error('Please set only topics or filters but not both.'), callback);
     }
 
-    return this.subscriptionPackage.createSubscription(
-        target.contract.currentProvider,
-        'logs',
-        [this.eventOptionsMapper.map(abiItemModel, target, options)],
-        this.formatters.inputLogFormatter,
-        this.eventLogDecoder.decode,
-        'eth'
+    return this.subscriptionFactory.createEventLogSubscription(
+        target.contract,
+        target.eventOptionsMapper.map(abiItemModel, target.contract, options)
     ).subscribe(callback);
 };
 

@@ -55,3 +55,5 @@ EventLogSubscription.prototype.onNewSubscriptionItem = function (subscription, s
 
 EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
 EventLogSubscription.prototye.constructor = EventLogSubscription;
+
+module.exports = EventLogSubscription;

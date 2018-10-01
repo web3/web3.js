@@ -35,12 +35,12 @@ function EventOptionsMapper(formatters, eventFilterEncoder) {
 
 /**
  * @param {ABIItemModel} abiItemModel
- * @param {EventSubscriptionsProxy} target
+ * @param {Contract} contract
  * @param {Object} options
  *
  * @returns {Object}
  */
-EventOptionsMapper.prototype.map = function(abiItemModel, target, options) {
+EventOptionsMapper.prototype.map = function(abiItemModel, contract, options) {
     var topics = [];
 
     if (typeof options.fromBlock !== 'undefined') {
@@ -59,7 +59,7 @@ EventOptionsMapper.prototype.map = function(abiItemModel, target, options) {
        topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
     }
 
-    options.address = target.contract.options.address;
+    options.address = contract.options.address;
 
     return options;
 };
