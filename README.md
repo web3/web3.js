@@ -125,7 +125,7 @@ To migrate to this version, please follow the guide:
 
 ##### Install script
 
-To install Node on any Linux Distrution use [nvm](https://github.com/creationix/nvm) using Wget:
+To install node.js on any linux distribution use [nvm](https://github.com/creationix/nvm) using Wget:
 
 ```sh
 wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
