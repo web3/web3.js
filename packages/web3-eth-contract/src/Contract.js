@@ -124,14 +124,14 @@ function Contract(
         this,
         abiModel,
         this.methodController,
-        this.abiCoder,
-        this.utils,
-        this.formatters,
-        this.accounts,
         this.promiEventPackage
     );
 
-    this.events = contractPackageFactory.createEventsSubscriptionsProxy();
+    this.events = contractPackageFactory.createEventSubscriptionsProxy(
+        this,
+        abiModel,
+        this.methodController
+    );
 }
 
 Contract.prototype.once = function (event, options, callback) {

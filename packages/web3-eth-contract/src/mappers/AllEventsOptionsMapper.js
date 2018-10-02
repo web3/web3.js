@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EventOptionsMapper.js
+ * @file AllEventsOptionsMapper.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -24,26 +24,24 @@
 
 /**
  * @param {Object} formatters
- * @param {EventFilterEncoder} eventFilterEncoder
+ * @param {AllEventsFilterEncoder} allEventsFilterEncoder
  *
  * @constructor
  */
-function EventOptionsMapper(formatters, eventFilterEncoder) {
+function AllEventsOptionsMapper(formatters, allEventsFilterEncoder) {
     this.formatters = formatters;
-    this.eventFilterEncoder = eventFilterEncoder;
+    this.allEventsFilterEncoder = allEventsFilterEncoder;
 }
 
 /**
- * @param {ABIItemModel} abiItemModel
+ * @param {ABIModel} abiModel
  * @param {Contract} contract
  * @param {Object} options
  *
  * @returns {Object}
  */
-EventOptionsMapper.prototype.map = function (abiItemModel, contract, options) {
-    if (typeof options.topics === 'undefined') {
-        options.topics = [];
-    }
+AllEventsOptionsMapper.prototype.map = function (abiModel, contract, options) {
+    options.topics = [];
 
     if (typeof options.fromBlock !== 'undefined') {
         options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
@@ -53,12 +51,8 @@ EventOptionsMapper.prototype.map = function (abiItemModel, contract, options) {
         options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
     }
 
-    if (!abiItemModel.anonymous) {
-        options.topics.unshift(abiItemModel.signature);
-    }
-
     if (typeof options.filters !== 'undefined') {
-        options.topics.concat(this.eventFilterEncoder.encode(abiItemModel, options.filter));
+        options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
     }
 
     if (!options.address) {
@@ -68,4 +62,4 @@ EventOptionsMapper.prototype.map = function (abiItemModel, contract, options) {
     return options;
 };
 
-module.exports = EventOptionsMapper;
+module.exports = AllEventsOptionsMapper;

@@ -15,22 +15,25 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EventLogDecoder.js
+ * @file AllEventsLogDecoder.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
+var EventLogDecoder = require('./EventLogDecoder');
+
 /**
+ * @param {ABIModel} abiModel
  * @param {ABICoder} abiCoder
  * @param {Object} formatters
  *
  * @constructor
  */
-function EventLogDecoder(abiCoder, formatters) {
-    this.abiCoder = abiCoder;
-    this.formatters = formatters;
+function AllEventsLogDecoder(abiModel, abiCoder, formatters) {
+    EventLogDecoder.call(this, abiCoder, formatters);
+    this.abiModel = abiModel;
 }
 
 /**
@@ -43,29 +46,13 @@ function EventLogDecoder(abiCoder, formatters) {
  *
  * @returns {Object}
  */
-EventLogDecoder.prototype.decode = function(abiItemModel, response) {
-    var argTopics = response.topics;
-    if (abiItemModel.anonymous) {
-        argTopics = response.topics.slice(1);
-    }
-
-    response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
-    response.event = abiItemModel.name;
-    response.signature = abiItemModel.signature;
-    response.raw = {
-        data: response.data,
-        topics: response.topics
-    };
-
-    if (abiItemModel.anonymous || !response.topics[0]) {
-        response.signature = null;
-    }
-
-    delete response.returnValues.__length__;
-    delete response.data;
-    delete response.topics;
-
-    return response;
+AllEventsLogDecoder.prototype.decode = function (abiItemModel, response) {
+    return EventLogDecoder.prototype.decode.call(
+        this,
+        this.abiModel.getEventBySignature(response.topics[0]),
+        response
+    );
 };
 
-module.exports = EventLogDecoder;
+AllEventsLogDecoder.prototype = Object.create(EventLogDecoder.prototype);
+AllEventsLogDecoder.prototype.constructor = AllEventsLogDecoder;

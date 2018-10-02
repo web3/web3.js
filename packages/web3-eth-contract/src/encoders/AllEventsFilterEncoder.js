@@ -15,54 +15,45 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file EventFilterEncoder.js
+ * @file AllEventsFilterEncoder.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 "use strict";
 
+var EventFilterEncoder = require('./EventFilterEncoder');
+
 /**
  * @param {ABICoder} abiCoder
  *
  * @constructor
  */
-function EventFilterEncoder(abiCoder) {
-    this.abiCoder = abiCoder;
+function AllEventsFilterEncoder(abiCoder) {
+    EventFilterEncoder.call(this, abiCoder);
 }
 
 /**
  * Creates encoded topics from filter option of an event.
  *
- * @param {ABIItemModel} abiItemModel
+ * @param {ABIModel} abiModel
  * @param {*} filter
  *
  * @returns {Array}
  */
-EventFilterEncoder.prototype.encode = function (abiItemModel, filter) {
-    var indexedInputs = abiItemModel.getIndexedInputs(),
-        topics = [],
-        self = this;
+AllEventsFilterEncoder.prototype.encode = function (abiModel, filter) {
+    var self = this,
+        events = abiModel.getEvents(),
+        topics = [];
 
-    indexedInputs.forEach(function(indexedInput) {
-        if (typeof filter[indexedInput.name] !== 'undefined') {
-            var filterItem = filter[indexedInput.name];
-
-            if (_.isArray(filterItem)) {
-                filterItem.map(function(item) {
-                    return self.abiCoder.encodeParameter(indexedInput.type, item);
-                });
-
-                topics.push(filterItem);
-
-                return;
-            }
-
-            topics.push(self.abiCoder.encodeParameter(indexedInput.type, filterItem));
-        }
+    Object.keys(events).forEach(function (key) {
+        topics.push(EventFilterEncoder.prototype.encode.call(self, events[key], filter));
     });
 
     return topics;
 };
 
-module.exports = EventFilterEncoder;
+AllEventsFilterEncoder.prototype = Object.create(EventFilterEncoder.prototype);
+AllEventsFilterEncoder.prototype.constructor = AllEventsFilterEncoder;
+
+module.exports = AllEventsFilterEncoder;

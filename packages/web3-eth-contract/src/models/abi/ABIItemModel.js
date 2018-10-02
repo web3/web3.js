@@ -33,7 +33,7 @@ function ABIItemModel(abiItem) {
     this.abiItem = abiItem;
     this.signature = this.abiItem.signature;
     this.name = this.abiItem.name;
-    this.anonymous = this.abitItem.anonymous;
+    this.anonymous = this.abiItem.anonymous;
     this.contractMethodParameters = [];
 
     Object.defineProperty(this, 'requestType', {
@@ -65,6 +65,23 @@ ABIItemModel.prototype.getInputLength = function () {
 };
 
 /**
+ * Returns all inputs of the abi item
+ *
+ * @method getInputs
+ *
+ * @returns {Array}
+ */
+ABIItemModel.prototype.getInputs = function () {
+    var inputs = [];
+
+    if (_.isArray(this.abiItem.inputs)) {
+        inputs = this.abiItem.inputs;
+    }
+
+    return inputs;
+};
+
+/**
  * Checks if the given parameter array length matches the abiItem inputs length
  *
  * @method givenParametersLengthIsValid
@@ -85,20 +102,14 @@ ABIItemModel.prototype.givenParametersLengthIsValid = function () {
 };
 
 /**
- * Returns all inputs of the abi item
- *
- * @method getInputs
+ * Returns the indexed input of this abiItem
  *
  * @returns {Array}
  */
-ABIItemModel.prototype.getInputs = function () {
-    var inputs = [];
-
-    if (_.isArray(this.abiItem.inputs)) {
-        inputs = this.abiItem.inputs;
-    }
-
-    return inputs;
+ABIItemModel.prototype.getIndexedInputs = function () {
+    return this.getInputs().filter(function (input) {
+        return input.indexed === true;
+    });
 };
 
 /**

@@ -106,7 +106,7 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
 };
 
 /**
- * TODO: Improve reconnecting!
+ * TODO: The reconnecting handling should only be in the provider the subscription should not care about it.
  * Reconnects provider and restarts subscription
  *
  * @method reconnect

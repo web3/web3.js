@@ -26,11 +26,14 @@ var ABIModel = require('../models/abi/ABIModel');
 var ABIItemModel = require('../models/abi/ABIItemModel');
 var MethodEncoder = require('../encoders/MethodEncoder');
 var EventFilterEncoder = require('../encoders/EventFilterEncoder');
+var AllEventsFilterEncoder = require('../encoders/AllEventsFilterEncoder');
 var MethodResponseDecoder = require('../decoders/MethodResponseDecoder');
 var EventLogDecoder = require('../decoders/EventLogDecoder');
+var AllEventsLogDecoder = require('../decoders/AllEventsLogDecoder');
 var ABIMapper = require('../mappers/ABIMapper');
 var RpcMethodOptionsMapper = require('../mappers/RpcMethodOptionsMapper');
 var EventOptionsMapper = require('../mappers/EventOptionsMapper');
+var AllEventsOptionsMapper = require('../mappers/AllEventsOptionsMapper');
 var MethodsProxy = require('../proxies/MethodsProxy');
 var EventSubscriptionsProxy = require('../proxies/EventSubscriptionsProxy');
 var RpcMethodOptionsValidator = require('../validators/RpcMethodOptionsValidator');
@@ -101,6 +104,17 @@ ContractPackageFactory.prototype.createEventFilterEncoder = function () {
 };
 
 /**
+ * Returns an object of AllEventsFilterEncoder
+ *
+ * @method createAllEventsFilterEncoder
+ *
+ * @returns {AllEventsFilterEncoder}
+ */
+ContractPackageFactory.prototype.createAllEventsFilterEncoder = function () {
+    return new AllEventsFilterEncoder(this.abiCoder)
+};
+
+/**
  * Returns an object of ABIMapper
  *
  * @method createABIMapper
@@ -125,12 +139,24 @@ ContractPackageFactory.prototype.createMethodResponseDecoder = function () {
 /**
  * Returns an object of EventLogDecoder
  *
- * @method EventLogDecoder
+ * @method createEventLogDecoder
  *
  * @returns {EventLogDecoder}
  */
 ContractPackageFactory.prototype.createEventLogDecoder = function () {
-    return new EventLogDecoder();
+    return new EventLogDecoder(this.abiCoder, this.formatters);
+};
+
+
+/**
+ * Returns an object of AllEventsLogDecoder
+ *
+ * @method createAllEventsLogDecoder
+ *
+ * @returns {AllEventsLogDecoder}
+ */
+ContractPackageFactory.prototype.createAllEventsLogDecoder = function () {
+    return new AllEventsLogDecoder(this.abiCoder, this.formatters);
 };
 
 /**
@@ -164,6 +190,17 @@ ContractPackageFactory.prototype.createRpcMethodOptionsMapper = function () {
  */
 ContractPackageFactory.prototype.createEventOptionsMapper = function () {
     return new EventOptionsMapper(this.formatters, this.createEventFilterEncoder());
+};
+
+/**
+ * Returns an object of AllEventsOptionsMapper
+ *
+ * @method createAllEventsOptionsMapper
+ *
+ * @returns {AllEventsOptionsMapper}
+ */
+ContractPackageFactory.prototype.createAllEventsOptionsMapper = function () {
+    return new AllEventsOptionsMapper(this.formatters, this.createAllEventsFilterEncoder());
 };
 
 /**
@@ -218,26 +255,24 @@ ContractPackageFactory.prototype.createMethodsProxy = function (
  * @method createEventSubscriptionsProxy
  *
  * @param {Contract} contract
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+ * @param {ABIModel} abiModel
  * @param {MethodController} methodController
  *
  * @returns {EventSubscriptionsProxy}
  */
 ContractPackageFactory.prototype.createEventSubscriptionsProxy = function (
     contract,
-    getPastLogsMethodModel,
+    abiModel,
     methodController
 ) {
     new EventSubscriptionsProxy(
         contract,
         abiModel,
-        this.createEventSubscriptionFactory(
-            this.utils,
-            this.formatters,
-            getPastLogsMethodModel,
-            methodController
-        ),
-        this.createEventOptionsMapper()
+        this.createEventSubscriptionFactory(methodController),
+        this.createEventOptionsMapper(),
+        this.createEventLogDecoder(),
+        this.createAllEventsLogDecoder(),
+        this.createAllEventsOptionsMapper()
     );
 };
 
@@ -246,18 +281,15 @@ ContractPackageFactory.prototype.createEventSubscriptionsProxy = function (
  *
  * @method createEventSubscriptionFactory
  *
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
  * @param {MethodController} methodController
  *
  * @returns {EventSubscriptionFactory}
  */
-ContractPackageFactory.prototype.createEventSubscriptionFactory = function (getPastLogsMethodModel, methodController) {
+ContractPackageFactory.prototype.createEventSubscriptionFactory = function (methodController) {
     new EventSubscriptionFactory(
         this.utils,
         this.formatters,
-        getPastLogsMethodModel,
-        methodController,
-        this.createEventLogDecoder()
+        methodController
     );
 };
 

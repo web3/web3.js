@@ -68,6 +68,32 @@ ABIModel.prototype.getEvent = function (name) {
 };
 
 /**
+ * Returns all events from this ABIModel
+ *
+ * @method getEvents
+ *
+ * @returns {Object}
+ */
+ABIModel.prototype.getEvents = function () {
+    return this.abi.events;
+};
+
+/**
+ * Returns an event by his signature
+ *
+ * @method getEventBySignature
+ *
+ * @param {String} signature
+ *
+ * @returns {Object}
+ */
+ABIModel.prototype.getEventBySignature = function (signature) {
+    return this.abi.events.find(function (event) {
+        return event.signature === signature;
+    });
+};
+
+/**
  * Checks if the method exists
  *
  * @method hasMethod
@@ -101,9 +127,9 @@ ABIModel.prototype.hasEvent = function (name) {
  * @returns {ABIItemModel}
  */
 ABIModel.prototype.getConstructor = function () {
-  return this.abi.methods.find(function (abiItemModel) {
-      return !_.isArray(abiItemModel) && abiItemModel.name && abiItemModel.name === 'constructor';
-  })
+    return this.abi.methods.find(function (abiItemModel) {
+        return !_.isArray(abiItemModel) && abiItemModel.name && abiItemModel.name === 'constructor';
+    })
 };
 
 module.exports = ABIModel;

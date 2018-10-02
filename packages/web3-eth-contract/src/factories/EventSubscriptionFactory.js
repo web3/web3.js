@@ -23,42 +23,63 @@
 "use strict";
 
 var Subscription = require('web3-core-subscription').Subscription;
+var GetPastLogsMethodModel = require('web3-core-method').GetPastLogsMethodModel;
 var EventLogSubscription = require('../models/subscriptions/EventLogSubscription');
+var AllEventsLogSubscription = require('../models/subscriptions/AllEventsLogSubscription');
 
 /**
  * @param {Utils} utils
  * @param {Object} formatters
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
  * @param {MethodController} methodController
- * @param {EventLogDecoder} eventLogDecoder
  *
  * @constructor
  */
-function EventSubscriptionFactory(utils, formatters, getPastLogsMethodModel, methodController, eventLogDecoder) {
-    this.getPastLogsMethodModel = getPastLogsMethodModel;
+function EventSubscriptionFactory(utils, formatters, methodController) {
     this.methodController = methodController;
-    this.eventLogDecoder = eventLogDecoder;
 }
 
 /**
  * Returns an event log subscription
  *
+ * @param {EventLogDecoder} eventLogDecoder
  * @param {ABIItemModel} abiItemModel
  * @param {AbstractWeb3Object} web3Package
  * @param {Object} options
  *
  * @returns {Subscription}
  */
-EventSubscriptionFactory.prototype.createEventLogSubscription = function (abiItemModel, web3Package, options) {
+EventSubscriptionFactory.prototype.createEventLogSubscription = function (eventLogDecoder, abiItemModel, web3Package, options) {
     return new Subscription(web3Package,
         new EventLogSubscription(
             abiItemModel,
             options,
             this.utils,
             this.formatters,
-            this.getPastLogsMethodModel,
+            new GetPastLogsMethodModel(this.utils, this.formatters),
             this.methodController,
-            this.eventLogDecoder
+            eventLogDecoder
+        )
+    );
+};
+
+/**
+ * Returns an log subscription for all events
+ *
+ * @param {AllEventsLogDecoder} allEventsLogDecoder
+ * @param {AbstractWeb3Object} web3Package
+ * @param {Object} options
+ *
+ * @returns {Subscription}
+ */
+EventSubscriptionFactory.prototype.createAllEventLogSubscription = function (allEventsLogDecoder, web3Package, options) {
+    return new Subscription(web3Package,
+        new AllEventsLogSubscription(
+            options,
+            this.utils,
+            this.formatters,
+            new GetPastLogsMethodModel(this.utils, this.formatters),
+            this.methodController,
+            allEventsLogDecoder
         )
     );
 };

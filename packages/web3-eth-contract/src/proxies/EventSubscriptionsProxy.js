@@ -27,14 +27,28 @@
  * @param {ABIModel} abiModel
  * @param {EventSubscriptionFactory} eventSubscriptionFactory
  * @param {EventOptionsMapper} eventOptionsMapper
+ * @param {EventLogDecoder} eventLogDecoder
+ * @param {AllEventsLogDecoder} allEventsLogDecoder
+ * @param {AllEventsOptionsMapper} allEventsOptionsMapper
  *
  * @constructor
  */
-function EventSubscriptionsProxy(contract, abiModel, eventSubscriptionFactory, eventOptionsMapper) {
+function EventSubscriptionsProxy(
+    contract,
+    abiModel,
+    eventSubscriptionFactory,
+    eventOptionsMapper,
+    eventLogDecoder,
+    allEventsLogDecoder,
+    allEventsOptionsMapper,
+) {
     this.contract = contract;
     this.eventSubscriptionFactory = eventSubscriptionFactory;
     this.abiModel = abiModel;
     this.eventOptionsMapper = eventOptionsMapper;
+    this.eventLogDecoder = eventLogDecoder;
+    this.allEventsLogDecoder = allEventsLogDecoder;
+    this.allEventsOptionsMapper = allEventsOptionsMapper;
 
     return new Proxy(this, {
         get: this.proxyHandler
@@ -46,7 +60,7 @@ function EventSubscriptionsProxy(contract, abiModel, eventSubscriptionFactory, e
  *
  * @method proxyHandler
  *
- * @param {Object} target
+ * @param {EventSubscriptionsProxy} target
  * @param {String} name
  *
  * @returns {Function|Error}
@@ -54,13 +68,13 @@ function EventSubscriptionsProxy(contract, abiModel, eventSubscriptionFactory, e
 EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
     if (this.abiModel.hasEvent(name)) {
         return function (options, callback) {
-            return target.subscribe(target.abiModel.getEvent(name), target, options, callback);
+            return target.subscribe(target.abiModel.getEvent(name), options, callback);
         }
     }
 
     if (name === 'allEvents') {
         return function (options, callback) {
-            return target.subscribeAll(options, target, callback);
+            return target.subscribeAll(options, callback);
         }
     }
 
@@ -75,21 +89,49 @@ EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
  * Returns an subscription on the given event
  *
  * @param {ABIItemModel} abiItemModel
- * @param {EventSubscriptionsProxy} target
  * @param {Object} options
  * @param {Function} callback
  *
- * @returns {Subscription}
+ * @returns {Subscription|EventEmitter}
  */
-EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, options, callback) {
-    if (options.filters && options.topics) {
-        this.handleValidationError(new Error('Please set only topics or filters but not both.'), callback);
+EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, options, callback) {
+    if (typeof options.filters !== 'undefined' && typeof options.topics !== 'undefined') {
+        return this.handleValidationError(
+            'Invalid subscription options: Only filter or topics are allowed and not both',
+            callback
+        );
     }
 
     return this.eventSubscriptionFactory.createEventLogSubscription(
+        this.eventLogDecoder,
         abiItemModel,
-        target.contract,
-        target.eventOptionsMapper.map(abiItemModel, target.contract, options)
+        this.contract,
+        this.eventOptionsMapper.map(abiItemModel, this.contract, options)
+    ).subscribe(callback);
+};
+
+/**
+ * Returns an subscription for all contract events
+ *
+ * @method subscribeAll
+ *
+ * @param {Object} options
+ * @param {Function} callback
+ *
+ * @returns {Subscription|EventEmitter}
+ */
+EventSubscriptionsProxy.prototype.subscribeAll = function (options, callback) {
+    if (typeof options.topics !== 'undefined') {
+        return this.handleValidationError(
+            'Invalid subscription options: Topics are not allowed for the "allEvents" subscription',
+            callback
+        );
+    }
+
+    return this.eventSubscriptionFactory.createAllEventLogSubscription(
+        this.allEventsLogDecoder,
+        this.contract,
+        this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
     ).subscribe(callback);
 };
 
@@ -98,15 +140,15 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, target, op
  *
  * @method handleValidationError
  *
- * @param {Error} error
+ * @param {String} errorMessage
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
  * @returns {EventEmitter}
  */
-EventSubscriptionsProxy.prototype.handleValidationError = function (error, callback) {
+EventSubscriptionsProxy.prototype.handleValidationError = function (errorMessage, callback) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
-    promiEvent.eventEmitter.emit('error', error);
+    promiEvent.eventEmitter.emit('error', new Error(errorMessage));
 
     if (_.isFunction(callback)) {
         callback(error, null);
