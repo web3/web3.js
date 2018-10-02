@@ -9,7 +9,6 @@ To migrate to this version, please follow the guide:
 +var web3 = new Web3();
 ```
 
-
 # Ethereum JavaScript API
 
 [![Join the chat at https://gitter.im/ethereum/web3.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/ethereum/web3.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -65,9 +64,10 @@ Component
 component install ethereum/web3.js
 ```
 
-* Include `web3.min.js` in your html file. (not required for the meteor package)
+-   Include `web3.min.js` in your html file. (not required for the meteor package)
 
 ## Usage
+
 Use the `web3` object directly from global namespace:
 
 ```js
@@ -78,17 +78,24 @@ Set a provider (HttpProvider)
 
 ```js
 if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider);
+    web3 = new Web3(web3.currentProvider);
 } else {
-  // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+    // set the provider you want from Web3.providers
+    web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 }
 ```
 
 Set a provider (HttpProvider using [HTTP Basic Authentication](https://en.wikipedia.org/wiki/Basic_access_authentication))
 
 ```js
-web3.setProvider(new web3.providers.HttpProvider('http://host.url', 0, BasicAuthUsername, BasicAuthPassword));
+web3.setProvider(
+    new web3.providers.HttpProvider(
+        'http://host.url',
+        0,
+        BasicAuthUsername,
+        BasicAuthPassword
+    )
+);
 ```
 
 There you go, now you can use it:
@@ -100,27 +107,30 @@ var balance = web3.eth.getBalance(coinbase);
 
 You can find more examples in [`example`](https://github.com/ethereum/web3.js/tree/master/example) directory.
 
-
 ## Contribute!
 
 ### Requirements
 
-* Node.js
-* npm
+-   Node.js
+-   npm
 
-```bash
-sudo apt-get update
-sudo apt-get install nodejs
-sudo apt-get install npm
-sudo apt-get install nodejs-legacy
+##### Install script
+
+To install Node on any Linux Distrution use [nvm](https://github.com/creationix/nvm) using Wget:
+
+```sh
+wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+nvm install  # For latest version of Node
+nvm install --lts # For stable version of Node
 ```
+
+<sub>Note: npm will be automatically installed with this script as well.</sub>
 
 ### Building (gulp)
 
 ```bash
 npm run-script build
 ```
-
 
 ### Testing (mocha)
 
@@ -129,19 +139,19 @@ npm test
 ```
 
 ### Community
- - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
- - [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
+-   [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
+-   [Forum](https://forum.ethereum.org/categories/ethereum-js)
 
 ### Other implementations
- - Python [Web3.py](https://github.com/ethereum/web3.py)
- - Haskell [hs-web3](https://github.com/airalab/hs-web3)
- - Java [web3j](https://github.com/web3j/web3j)
- - Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
- - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
- - PHP [web3.php](https://github.com/sc0Vu/web3.php)
- - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
 
+-   Python [Web3.py](https://github.com/ethereum/web3.py)
+-   Haskell [hs-web3](https://github.com/airalab/hs-web3)
+-   Java [web3j](https://github.com/web3j/web3j)
+-   Scala [web3j-scala](https://github.com/mslinn/web3j-scala)
+-   Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
+-   PHP [web3.php](https://github.com/sc0Vu/web3.php)
+-   PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
 
 [npm-image]: https://badge.fury.io/js/web3.svg
 [npm-url]: https://npmjs.org/package/web3
