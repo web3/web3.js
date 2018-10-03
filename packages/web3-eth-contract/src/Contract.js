@@ -228,7 +228,7 @@ Contract.prototype.getPastEvents = function (eventName, options, callback) {
  * @returns {Promise<Contract>|EventEmitter}
  */
 Contract.prototype.deploy = function (options) {
-    return this.methods.constructor(options);
+    return this.methods.contractConstructor(options);
 };
 
 /**

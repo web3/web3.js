@@ -100,7 +100,7 @@ ABIMapper.prototype.map = function (abi) {
 
         if (abiItem.type === 'constructor') {
             abiItem.signature = abiItem.type;
-            mappedAbiItems.methods[abiItem.type] = self.contractPackageFactory.createABIItemModel(abiItem);
+            mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createABIItemModel(abiItem);
         }
     });
 

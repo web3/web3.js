@@ -81,7 +81,7 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
             var methodArguments = arguments;
 
             // Because of the possibility to overwrite the contract data if I call contract.deploy() have I to check
-            // here if it is an contract deployment. If this call is a deployment then I have to set the correct
+            // here if it is a contract deployment. If this call is a contract deployment then I have to set the right
             // contract data and to map the arguments. TODO: Change API or improve this
             if (requestType === 'contract-deployment') {
                 if (arguments[0]['data']) {
