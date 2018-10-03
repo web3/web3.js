@@ -55,7 +55,7 @@ Subscription.prototype.subscribe = function (callback) {
     this.web3Package.currentProvider.subscribe(
         this.subscriptionModel.subscriptionType,
         this.subscriptionModel.subscriptionMethod,
-        this.subscriptionModel.parameters
+        [this.subscriptionModel.options]
     ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
 
@@ -150,6 +150,9 @@ Subscription.prototype.unsubscribe = function (callback) {
         this.subscriptionId,
         this.subscriptionModel.subscriptionType
     ).then(function (response) {
+        self.removeAllListeners('data');
+        self.removeAllListeners('error');
+
         if (!response) {
             self.subscriptionId = null;
             callback(true, false);

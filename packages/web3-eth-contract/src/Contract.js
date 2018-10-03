@@ -159,29 +159,34 @@ function Contract(
     );
 }
 
-Contract.prototype.once = function (event, options, callback) {
-    // var args = Array.prototype.slice.call(arguments);
-    //
-    // // get the callback
-    // callback = this._getCallback(args);
-    //
-    // if (!callback) {
-    //     throw new Error('Once requires a callback as the second parameter.');
-    // }
-    //
-    // // don't allow fromBlock
-    // if (options)
-    //     delete options.fromBlock;
-    //
-    // // don't return as once shouldn't provide "on"
-    // this._on(event, options, function (err, res, sub) {
-    //     sub.unsubscribe();
-    //     if (_.isFunction(callback)) {
-    //         callback(err, res, sub);
-    //     }
-    // });
-    //
-    // return undefined;
+/**
+ * Adds event listeners and creates a subscription, and remove it once its fired.
+ *
+ * @method once
+ *
+ * @param {String} eventName
+ * @param {Object} options
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {undefined}
+ */
+Contract.prototype.once = function (eventName, options, callback) {
+    if (!callback) {
+        throw new Error('Once requires a callback.');
+    }
+
+    if (options) {
+        delete options.fromBlock;
+    }
+
+    var eventSubscription = this.events[event](options, callback);
+
+    eventSubscription.on('data', function() {
+        eventSubscription.unsubscribe();
+    });
+
+    return undefined;
 };
 
 Contract.prototype.getPastEvents = function () {

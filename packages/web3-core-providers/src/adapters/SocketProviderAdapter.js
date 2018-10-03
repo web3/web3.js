@@ -41,15 +41,15 @@ function SocketProviderAdapter(provider) {
  * @method subscribe
  *
  * @param {String} subscriptionMethod
- * @param {Array} parameters
  * @param {String} subscriptionType
+ * @param {Array} parameters
  *
  * @returns {Promise<String|Error>}
  */
 SocketProviderAdapter.prototype.subscribe = function (subscriptionType, subscriptionMethod, parameters) {
     var self = this;
 
-    return this.send(subscriptionType + '_subscribe', parameters.unshift(subscriptionMethod)).then(function (error, subscriptionId) {
+    return this.send(subscriptionType, parameters.unshift(subscriptionMethod)).then(function (error, subscriptionId) {
         if (!error) {
             self.subscriptions.push(subscriptionId);
 
@@ -71,7 +71,7 @@ SocketProviderAdapter.prototype.subscribe = function (subscriptionType, subscrip
  * @returns {Promise<Boolean|Error>}
  */
 SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId, subscriptionType) {
-    return this.send(subscriptionType + '_unsubscribe', [subscriptionId]).then(function (result) {
+    return this.send(subscriptionType, [subscriptionId]).then(function (result) {
         if (result) {
             this.subscriptions = this.subscriptions.filter(function (subscription) {
                 return subscription !== subscriptionId;
@@ -140,13 +140,14 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
  * @method removeSubscription
  *
  * @param {String} subscriptionId
+ * @param {String} subscriptionType
  *
  * @returns {Promise<Boolean>}
  */
-SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
+SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId, subscriptionType) {
     var self = this;
 
-    return this.unsubscribe(subscriptionId).then(function (result) {
+    return this.unsubscribe(subscriptionId, subscriptionType).then(function (result) {
         if (result) {
             delete self.subscriptions[this.subscriptions.indexOf(subscriptionId)];
 
