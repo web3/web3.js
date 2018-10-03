@@ -68,7 +68,7 @@ AbstractMethodModel.prototype.beforeExecution = function(web3Package) { };
  *
  * @method afterExecution
  *
- * @param {Object} response
+ * @param {*} response
  *
  * @returns {*}
  */

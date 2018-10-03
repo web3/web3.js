@@ -173,7 +173,7 @@ function Contract(
  */
 Contract.prototype.once = function (eventName, options, callback) {
     if (!callback) {
-        throw new Error('Once requires a callback.');
+        throw new Error('Once requires a callback function.');
     }
 
     if (options) {
@@ -185,26 +185,35 @@ Contract.prototype.once = function (eventName, options, callback) {
     eventSubscription.on('data', function() {
         eventSubscription.unsubscribe();
     });
-
-    return undefined;
 };
 
-Contract.prototype.getPastEvents = function () {
-    // var subOptions = this._generateEventOptions.apply(this, arguments);
-    //
-    // var getPastLogs = new Method({
-    //     name: 'getPastLogs',
-    //     call: 'eth_getLogs',
-    //     params: 1,
-    //     inputFormatter: [formatters.inputLogFormatter],
-    //     outputFormatter: this._decodeEventABI.bind(subOptions.event)
-    // });
-    // getPastLogs.setRequestManager(this._requestManager);
-    // var call = getPastLogs.buildCall();
-    //
-    // getPastLogs = null;
-    //
-    // return call(subOptions.params, subOptions.callback);
+/**
+ * Returns the past event logs by his name
+ *
+ * @method getPastEvents
+ *
+ * @param {String} eventName
+ * @param {Object} options
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<Array>}
+ */
+Contract.prototype.getPastEvents = function (eventName, options, callback) {
+    if (!this.options.jsonInterface.hasEvent(eventName)) {
+        throw Error('Event with name "' + eventName + 'does not exists.');
+    }
+
+    var abiItemModel = this.options.jsonInterface.getEvent(eventName);
+    abiItemModel.parameters = [options];
+    abiItemModel.callback = callback;
+
+    return this.methodController.execute(
+        this.contractPackageFactory.createRpcMethodModelFactory().createPastEventLogsMethodModel(abiItemModel),
+        this.currentProvider,
+        this.accounts,
+        this
+    );
 };
 
 Contract.prototype.deploy = function () {

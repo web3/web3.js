@@ -144,7 +144,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
         // Check if one of the AbiItemModel in this array does match the arguments length
         abiItemModel.some(function(method) {
             // Get correct rpc method model
-            rpcMethodModel = self.rpcMethodModelFactory.createRpcMethod(method);
+            rpcMethodModel = self.rpcMethodModelFactory.createRpcMethodByRequestType(method);
             rpcMethodModel.methodArguments = methodArguments;
             isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
 
@@ -160,7 +160,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
         }
     } else {
         // Get correct rpc method model
-        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethod(abiItemModel);
+        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel);
         rpcMethodModel.methodArguments = methodArguments;
     }
 

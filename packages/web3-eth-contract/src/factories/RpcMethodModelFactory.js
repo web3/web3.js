@@ -24,6 +24,7 @@
 
 var SendContractMethodModel = require('../models/methods/SendContractMethodModel');
 var CallContractMethodModel = require('../models/methods/CallContractMethodModel');
+var PastEventLogsMethodModel = require('../models/methods/PastEventLogsMethodModel');
 var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 
 /**
@@ -50,37 +51,87 @@ function RpcMethodModelFactory(methodResponseDecoder, accounts, utils, formatter
  *
  * @returns {AbstractMethodModel}
  */
-RpcMethodModelFactory.prototype.createRpcMethod = function (abiItemModel) {
+RpcMethodModelFactory.prototype.createRpcMethodByRequestType = function (abiItemModel) {
     var rpcMethod;
 
     switch (abiItemModel.requestType) {
         case 'call':
-            rpcMethod = new CallContractMethodModel(
-                abiItemModel,
-                this.methodResponseDecoder,
-                this.utils,
-                this.formatters
-            );
+            rpcMethod = this.createCallContractMethodModel(abiItemModel);
             break;
         case 'send' :
-            rpcMethod = new SendContractMethodModel(
-                abiItemModel,
-                this.methodResponseDecoder,
-                this.utils,
-                this.formatters,
-                this.accounts
-            );
+            rpcMethod = this.createSendContractMethodModel(abiItemModel);
             break;
         case 'estimate':
-            rpcMethod = new EstimateGasMethodModel(this.utils, this.formatters);
+            rpcMethod = this.createEstimateGasMethodModel();
             break;
     }
 
     if (typeof rpcMethod === 'undefined') {
-        throw Error('Unknown RPC call with name "' + abiItemModel.requestType + '"');
+        throw Error('Unknown RPC call with requestType "' + abiItemModel.requestType + '"');
     }
 
     return rpcMethod;
+};
+
+/**
+ * Returns an object of type PastEventLogsMethodModel
+ *
+ * @method createPastEventLogsMethodModel
+ *
+ * @param {ABIItemModel} abiItemModel
+ *
+ * @returns {PastEventLogsMethodModel}
+ */
+RpcMethodModelFactory.prototype.createPastEventLogsMethodModel = function (abiItemModel) {
+    return new PastEventLogsMethodModel(abiItemModel, this.utils, this.formatters);
+};
+
+/**
+ * Returns an object of type CallContractMethodModel
+ *
+ * @method createCallContractMethodModel
+ *
+ * @param {ABIItemModel} abiItemModel
+ *
+ * @returns {CallContractMethodModel}
+ */
+RpcMethodModelFactory.prototype.createCallContractMethodModel = function (abiItemModel) {
+    return new CallContractMethodModel(
+        abiItemModel,
+        this.methodResponseDecoder,
+        this.utils,
+        this.formatters
+    );
+};
+
+/**
+ * Returns an object of type SendContractMethodModel
+ *
+ * @method createSendContractMethodModel
+ *
+ * @param {ABIItemModel} abiItemModel
+ *
+ * @returns {SendContractMethodModel}
+ */
+RpcMethodModelFactory.prototype.createSendContractMethodModel = function (abiItemModel) {
+    return new SendContractMethodModel(
+        abiItemModel,
+        this.methodResponseDecoder,
+        this.utils,
+        this.formatters,
+        this.accounts
+    );
+};
+
+/**
+ * Returns an object of type EstimateGasMethodModel
+ *
+ * @method createEstimateGasMethodModel
+ *
+ * @returns {EstimateGasMethodModel}
+ */
+RpcMethodModelFactory.prototype.createEstimateGasMethodModel = function () {
+    return new EstimateGasMethodModel(this.utils, this.formatters)
 };
 
 module.exports = RpcMethodModelFactory;

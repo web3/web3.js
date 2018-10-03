@@ -50,7 +50,7 @@ GetPastLogsMethodModel.prototype.beforeExecution = function (web3Package) {
  *
  * @method afterExecution
  *
- * @param {Object} response
+ * @param {Array} response
  *
  * @returns {Array}
  */
