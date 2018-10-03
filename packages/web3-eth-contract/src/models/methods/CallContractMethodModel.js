@@ -26,16 +26,16 @@ var CallMethodModel = require('web3-core-method').CallMethodModel;
 
 /**
  * @param {ABIItemModel} abiItemModel
- * @param {MethodResponseDecoder} methodResponseDecoder
+ * @param {CallMethodResponseDecoder} callMethodResponseDecoder
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function CallContractMethodModel(abiItemModel, methodResponseDecoder, utils, formatters) {
+function CallContractMethodModel(abiItemModel, callMethodResponseDecoder, utils, formatters) {
     CallMethodModel.call(this, utils, formatters);
 
-    this.methodResponseDecoder = methodResponseDecoder;
+    this.callMethodResponseDecoder = callMethodResponseDecoder;
     this.abiItemModel = abiItemModel;
 }
 
@@ -49,7 +49,7 @@ function CallContractMethodModel(abiItemModel, methodResponseDecoder, utils, for
  * @returns {*}
  */
 CallContractMethodModel.prototype.afterExecution = function (response) {
-    return this.methodResponseDecoder.decode(this.abiItemModel, response);
+    return this.callMethodResponseDecoder.decode(this.abiItemModel, response);
 };
 
 CallContractMethodModel.prototype = Object.create(CallMethodModel.prototype);

@@ -28,17 +28,17 @@ var PastEventLogsMethodModel = require('../models/methods/PastEventLogsMethodMod
 var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 
 /**
- * @param {MethodResponseDecoder} methodResponseDecoder
+ * @param {CallMethodResponseDecoder} callMethodResponseDecoder
  * @param {Accounts} accounts
  * @param {Utils} utils
  * @param {Object} formatters
  *
  * @constructor
  */
-function RpcMethodModelFactory(methodResponseDecoder, accounts, utils, formatters) {
+function RpcMethodModelFactory(callMethodResponseDecoder, accounts, utils, formatters) {
     this.utils = utils;
     this.formatters = formatters;
-    this.methodResponseDecoder = methodResponseDecoder;
+    this.callMethodResponseDecoder = callMethodResponseDecoder;
     this.accounts = accounts;
 }
 
@@ -98,7 +98,7 @@ RpcMethodModelFactory.prototype.createPastEventLogsMethodModel = function (abiIt
 RpcMethodModelFactory.prototype.createCallContractMethodModel = function (abiItemModel) {
     return new CallContractMethodModel(
         abiItemModel,
-        this.methodResponseDecoder,
+        this.callMethodResponseDecoder,
         this.utils,
         this.formatters
     );
@@ -116,7 +116,7 @@ RpcMethodModelFactory.prototype.createCallContractMethodModel = function (abiIte
 RpcMethodModelFactory.prototype.createSendContractMethodModel = function (abiItemModel) {
     return new SendContractMethodModel(
         abiItemModel,
-        this.methodResponseDecoder,
+        this.allEventsLogDecoder,
         this.utils,
         this.formatters,
         this.accounts

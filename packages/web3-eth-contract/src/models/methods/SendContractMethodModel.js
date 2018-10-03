@@ -21,23 +21,23 @@
  */
 
 "use strict";
-
+var _ = require('underscore');
 var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
 
 /**
  * @param {ABIItemModel} abiItemModel
- * @param {MethodResponseDecoder} methodResponseDecoder
+ * @param {AllEventsLogDecoder} allEventsLogDecoder
  * @param {Utils} utils
  * @param {Object} formatters
  * @param {Accounts} accounts
  *
  * @constructor
  */
-function SendContractMethodModel(abiItemModel, methodResponseDecoder, utils, formatters, accounts) {
+function SendContractMethodModel(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
     SendTransactionMethodModel.call(this, utils, formatters, accounts);
 
-    this.methodResponseDecoder = methodResponseDecoder;
     this.abiItemModel = abiItemModel;
+    this.allEventsLogDecoder = allEventsLogDecoder;
 }
 
 /**
@@ -50,7 +50,39 @@ function SendContractMethodModel(abiItemModel, methodResponseDecoder, utils, for
  * @returns {*}
  */
 SendContractMethodModel.prototype.afterExecution = function (response) {
-    return this.methodResponseDecoder.decode(this.abiItemModel, response);
+    if (_.isArray(response.logs)) {
+        response.events = {};
+
+        response.logs.map(function (log) {
+            return this.allEventsLogDecoder.decode(null, log);
+        });
+
+        response.logs.forEach(function (log, index) {
+            if(log.event) {
+                if (response.events[log.event]) {
+                    if (_.isArray(response.events[log.event])) {
+                        response.events[log.event].push(log);
+
+                        return;
+                    }
+
+                    response.events[log.event] = [response.events[log.event], log];
+
+                    return;
+                }
+
+                response.events[log.event] = log;
+
+                return;
+            }
+
+            response.events[index] = log;
+        });
+
+        delete response.logs;
+    }
+
+    return response;
 };
 
 SendContractMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);

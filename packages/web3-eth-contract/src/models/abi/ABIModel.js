@@ -85,7 +85,7 @@ ABIModel.prototype.getEvents = function () {
  *
  * @param {String} signature
  *
- * @returns {Object}
+ * @returns {ABIItemModel}
  */
 ABIModel.prototype.getEventBySignature = function (signature) {
     return this.abi.events.find(function (event) {

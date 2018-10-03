@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodResponseDecoder.js
+ * @file CallMethodResponseDecoder.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -27,7 +27,7 @@
  *
  * @constructor
  */
-function MethodResponseDecoder(abiCoder) {
+function CallMethodResponseDecoder(abiCoder) {
     this.abiCoder = abiCoder;
 }
 
@@ -37,11 +37,11 @@ function MethodResponseDecoder(abiCoder) {
  * @method decode
  *
  * @param {Array} abiItemOutputTypes
- * @param {String} response
+ * @param {Object} response
  *
  * @returns {*}
  */
-MethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response) {
+CallMethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response) {
     if (!response) {
         return null;
     }
@@ -55,8 +55,6 @@ MethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response)
     if (result.__length__ === 1) {
         return result[0];
     }
-
-    delete result.__length__;
 
     return result;
 };

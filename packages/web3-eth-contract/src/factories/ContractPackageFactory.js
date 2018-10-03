@@ -27,7 +27,7 @@ var ABIItemModel = require('../models/abi/ABIItemModel');
 var MethodEncoder = require('../encoders/MethodEncoder');
 var EventFilterEncoder = require('../encoders/EventFilterEncoder');
 var AllEventsFilterEncoder = require('../encoders/AllEventsFilterEncoder');
-var MethodResponseDecoder = require('../decoders/MethodResponseDecoder');
+var CallMethodResponseDecoder = require('../decoders/CallMethodResponseDecoder');
 var EventLogDecoder = require('../decoders/EventLogDecoder');
 var AllEventsLogDecoder = require('../decoders/AllEventsLogDecoder');
 var ABIMapper = require('../mappers/ABIMapper');
@@ -126,14 +126,14 @@ ContractPackageFactory.prototype.createABIMapper = function () {
 };
 
 /**
- * Returns an object of MethodResponseDecoder
+ * Returns an object of CallMethodResponseDecoder
  *
- * @method createMethodResponseDecoder
+ * @method createCallMethodResponseDecoder
  *
- * @returns {MethodResponseDecoder}
+ * @returns {CallMethodResponseDecoder}
  */
-ContractPackageFactory.prototype.createMethodResponseDecoder = function () {
-    return new MethodResponseDecoder(this.abiCoder);
+ContractPackageFactory.prototype.createCallMethodResponseDecoder = function () {
+    return new CallMethodResponseDecoder(this.abiCoder);
 };
 
 /**
@@ -212,7 +212,7 @@ ContractPackageFactory.prototype.createAllEventsOptionsMapper = function () {
  */
 ContractPackageFactory.prototype.createRpcMethodModelFactory = function () {
     return new RpcMethodFactory(
-        this.createMethodResponseDecoder(),
+        this.createCallMethodResponseDecoder(),
         this.accounts,
         this.utils,
         this.formatters
