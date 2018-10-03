@@ -20,13 +20,15 @@
  * @date 2018
  */
 
+var SocketProviderAdapter = require('web3-core-providers').SocketProviderAdapter;
+
 /**
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  *
  * @constructor
  */
-function NewHeadsWatcher(subscriptionPackage)  {
-    this.subscriptionPackage = subscriptionPackage;
+function NewHeadsWatcher(subscriptionsFactory) {
+    this.subscriptionsFactory = subscriptionsFactory;
     this.confirmationInterval = null;
     this.confirmationSubscription = null;
     this.isPolling = false;
@@ -37,28 +39,25 @@ function NewHeadsWatcher(subscriptionPackage)  {
  *
  * @method watch
  *
- * @param {AbstractProviderAdapter | EthereumProvider} provider
- * @param {String} transactionHash
+ * @param {AbstractWeb3Object} web3Package
  *
  * @returns {this}
  */
-NewHeadsWatcher.prototype.watch = function (provider, transactionHash) {
+NewHeadsWatcher.prototype.watch = function (web3Package) {
     var self = this;
 
-    try {
-        this.confirmationSubscription = this.subscriptionPackage.create(
-            provider,
-            'newHeads',
-            transactionHash,
-            null,
-            null
-        ).subscribe(function () {
-            self.emit('newHead');
-        });
-    } catch (error) {
-        this.isPolling = true;
-        this.confirmationInterval = setInterval(this.emit('newHead'), 1000);
+    if (web3Package.currentProvider instanceof SocketProviderAdapter) {
+        this.confirmationSubscription = this.subscriptionsFactory.createNewHeadsSubscription(web3Package).subscribe(
+            function () {
+                self.emit('newHead');
+            }
+        );
+
+        return this;
     }
+
+    this.isPolling = true;
+    this.confirmationInterval = setInterval(this.emit('newHead'), 1000);
 
     return this;
 };
@@ -69,16 +68,15 @@ NewHeadsWatcher.prototype.watch = function (provider, transactionHash) {
  * @method stop
  */
 NewHeadsWatcher.prototype.stop = function () {
-    if(this.confirmationSubscription) {
+    if (this.confirmationSubscription) {
         this.confirmationSubscription.unsubscribe();
     }
 
-    if(this.confirmationInterval) {
+    if (this.confirmationInterval) {
         clearInterval(this.confirmationInterval);
     }
 };
 
-// Inherit EventEmitter
 NewHeadsWatcher.prototype = Object.create(EventEmitter.prototype);
 NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
 

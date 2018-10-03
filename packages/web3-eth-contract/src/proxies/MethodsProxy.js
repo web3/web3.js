@@ -119,7 +119,6 @@ MethodsProxy.prototype.executeMethod = function (abiItemModel, methodArguments) 
 
     return this.methodController.execute(
         rpcMethodModel,
-        this.contract.currentProvider,
         this.contract.accounts,
         this.contract
     );
@@ -188,7 +187,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
     rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
 
     // Set default options in the TxObject if required
-    rpcMethodModel.parameters = this.rpcMethodOptionsMapper.map(this.contract.options, rpcMethodModel.parameters[0]);
+    rpcMethodModel.parameters = this.rpcMethodOptionsMapper.map(this.contract, rpcMethodModel.parameters[0]);
 
     // Validate TxObject
     var rpcMethodOptionsValidationResult = this.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);

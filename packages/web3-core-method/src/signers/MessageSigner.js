@@ -49,7 +49,6 @@ MessageSigner.prototype.sign = function(data, address, accounts) {
     throw new Error('Wallet or privateKey in wallet is not set!');
 };
 
-// Inherit from AbstractSigner
 MessageSigner.prototype = Object.create(AbstractSigner.prototype);
 MessageSigner.prototype.constructor = MessageSigner;
 

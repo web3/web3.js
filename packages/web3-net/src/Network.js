@@ -41,7 +41,6 @@ function Network(provider, providersPackage, methodController, methodModelFactor
     this.utils = utils;
 }
 
-
 /**
  * Determines to which network web3 is currently connected
  *

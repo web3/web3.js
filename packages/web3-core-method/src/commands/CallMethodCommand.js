@@ -34,16 +34,14 @@ function CallMethodCommand() { }
  *
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
  *
  * @callback callback callback(error, result)
  * @returns {Promise<any>}
  */
-CallMethodCommand.prototype.execute = function (web3Package, methodModel, provider) {
-
+CallMethodCommand.prototype.execute = function (web3Package, methodModel) {
     methodModel.beforeExecution(web3Package);
 
-    return provider.send(
+    return web3Package.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
     ).then(function (response) {

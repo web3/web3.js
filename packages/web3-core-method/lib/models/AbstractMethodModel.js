@@ -81,7 +81,7 @@ AbstractMethodModel.prototype.afterExecution = function(response) {
  *
  * @method request
  *
- * @returns {Object}
+ * @returns {AbstractMethodModel}
  */
 AbstractMethodModel.prototype.request = function () {
     this.methodArguments = arguments;
@@ -91,6 +91,8 @@ AbstractMethodModel.prototype.request = function () {
 
 /**
  * Splits the parameters and the callback function and returns it as object
+ *
+ * @method mapFunctionArguments
  *
  * @param {Array} args
  *
@@ -167,6 +169,5 @@ AbstractMethodModel.prototype.isSendRawTransaction = function () {
 AbstractMethodModel.prototype.isHash = function (parameter) {
     return _.isString(parameter) && parameter.indexOf('0x') === 0;
 };
-
 
 module.exports = AbstractMethodModel;

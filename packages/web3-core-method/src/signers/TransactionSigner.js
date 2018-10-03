@@ -34,7 +34,7 @@ function TransactionSigner() { }
  * @param {Object} transaction
  * @param {Accounts} accounts
  *
- * @returns {Promise<boolean|String>}
+ * @returns {Promise<Boolean|String>}
  */
 TransactionSigner.prototype.sign = function (transaction, accounts) {
     var wallet = this.getWallet(transaction.from, accounts);
@@ -54,7 +54,6 @@ TransactionSigner.prototype.sign = function (transaction, accounts) {
     });
 };
 
-// Inherit from AbstractSigner
 TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
 TransactionSigner.prototype.constructor = TransactionSigner;
 

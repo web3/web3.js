@@ -52,9 +52,9 @@ module.exports = {
      * @returns {Eth}
      */
     createEth: function (provider) {
-        var accounts = AccountsPackage.createAccounts(provider);
-        var methodModelFactory = new  MethodModelFactory(Utils, formatters, accounts);
-        var methodController = MethodPackage.createMethodController();
+        var accounts = AccountsPackage.createAccounts(provider),
+        methodModelFactory = new  MethodModelFactory(Utils, formatters, accounts),
+        methodController = MethodPackage.createMethodController();
 
         return new Eth(
             provider,

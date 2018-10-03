@@ -33,25 +33,26 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
 
 
 /**
+ * TODO: Add gasPrice check
  * Sends the JSON-RPC request
  *
  * @method send
  *
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
+ * @param {AbstractWeb3Object} web3Package
  * @param {PromiEvent} promiEvent
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
-AbstractSendMethodCommand.prototype.send = function (methodModel, provider, promiEvent) {
-    provider.send(
+AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
+    web3Package.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
     ).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             methodModel,
-            provider,
+            web3Package,
             response,
             promiEvent
         );

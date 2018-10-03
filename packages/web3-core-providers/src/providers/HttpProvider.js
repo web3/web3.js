@@ -81,7 +81,6 @@ HttpProvider.prototype._prepareRequest = function () {
  * @method send
  *
  * @param {Object} payload
- *
  * @param {Function} callback
  *
  * @callback callback callback(error, result)

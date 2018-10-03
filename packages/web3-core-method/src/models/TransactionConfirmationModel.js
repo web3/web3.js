@@ -94,7 +94,7 @@ TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
  *
  * @method isConfirmed
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 TransactionConfirmationModel.prototype.isConfirmed = function () {
     return this.confirmationsCount === (this.CONFIRMATIONBLOCKS + 1);
@@ -105,7 +105,7 @@ TransactionConfirmationModel.prototype.isConfirmed = function () {
  *
  * @method isTimeoutTimeExceeded
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 TransactionConfirmationModel.prototype.isTimeoutTimeExceeded = function (watcherIsPolling) {
     if (watcherIsPolling) {

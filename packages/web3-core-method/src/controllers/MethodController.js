@@ -51,13 +51,12 @@ function MethodController(
  * @method execute
  *
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Accounts} accounts
  * @param {AbstractWeb3Object} web3Package
  *
  * @returns {Promise|PromiEvent|String|Boolean}
  */
-MethodController.prototype.execute = function (methodModel, provider, accounts, web3Package) {
+MethodController.prototype.execute = function (methodModel, accounts, web3Package) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
 
     if (this.hasWallets(accounts)) {
@@ -71,8 +70,9 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
         if (methodModel.isSendTransaction()) {
             return this.signAndSendMethodCommand.execute(
                 methodModel,
-                provider,
-                promiEvent
+                web3Package,
+                accounts,
+                promiEvent,
             );
         }
     }
@@ -81,7 +81,6 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
         return this.sendMethodCommand.execute(
             web3Package,
             methodModel,
-            provider,
             promiEvent
         );
     }
@@ -89,7 +88,6 @@ MethodController.prototype.execute = function (methodModel, provider, accounts, 
     return this.callMethodCommand.execute(
         web3Package,
         methodModel,
-        provider
     );
 };
 

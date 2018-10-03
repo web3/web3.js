@@ -32,10 +32,10 @@ function AbstractSigner() { }
 /**
  * Get wallet for address with accounts package
  *
- * @param {any} from
+ * @param {*} from
  * @param {Accounts} accounts
  *
- * @returns {any}
+ * @returns {*}
  */
 AbstractSigner.prototype.getWallet = function (from, accounts) {
     // is index given

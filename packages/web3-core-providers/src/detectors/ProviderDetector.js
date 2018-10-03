@@ -27,6 +27,9 @@ try {
     global = window;
 }
 
+/**
+ * @constructor
+ */
 function ProviderDetector() { }
 
 /**
@@ -58,10 +61,12 @@ ProviderDetector.prototype.detect = function () {
  *
  * @param {Object} currentProvider
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
-    return !currentProvider.on && currentProvider.connection && currentProvider.connection.constructor.name === 'ipcProviderWrapper';
+    return !currentProvider.on &&
+            currentProvider.connection &&
+            currentProvider.connection.constructor.name === 'ipcProviderWrapper';
 };
 
 /**
@@ -75,9 +80,9 @@ ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
  */
 ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (provider) {
     provider.on = function (type, callback) {
-
-        if (typeof callback !== 'function')
+        if (typeof callback !== 'function') {
             throw new Error('The second parameter callback must be a function.');
+        }
 
         switch (type) {
             case 'data':
@@ -99,7 +104,6 @@ ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (prov
 
                 });
                 break;
-
             default:
                 this.connection.on(type, callback);
                 break;

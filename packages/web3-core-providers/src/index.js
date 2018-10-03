@@ -22,6 +22,7 @@
 
 var version = require('./package.json').version;
 var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
+var SocketProviderAdapter = require('./adapters/SocketProviderAdapter');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
@@ -30,9 +31,13 @@ var JSONRpcResponseValidator = require('./validators/JSONRpcResponseValidator');
 
 module.exports = {
     version: version,
+
+    SocketProviderAdapter: SocketProviderAdapter,
+
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
     WebsocketProvider: WebsocketProvider,
+
     JSONRpcMapper: JSONRpcMapper,
     JSONRpcResponseValidator: JSONRpcResponseValidator,
 

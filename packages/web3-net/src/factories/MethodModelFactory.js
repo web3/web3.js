@@ -46,6 +46,6 @@ function MethodModelFactory(utils, formatters) {
 }
 
 MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
-MethodModelFacotry.prototype.constructor = MethodModelFactory;
+MethodModelFactory.prototype.constructor = MethodModelFactory;
 
 module.exports = MethodModelFactory;

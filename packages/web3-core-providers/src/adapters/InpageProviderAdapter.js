@@ -92,7 +92,7 @@ InpageProviderAdapter.prototype.unsubscribe = function () {
  *
  * @method isConnected
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 InpageProviderAdapter.prototype.isConnected = function () {
     return this.provider.isConnected;

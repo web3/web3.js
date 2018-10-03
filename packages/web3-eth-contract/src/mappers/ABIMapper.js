@@ -44,7 +44,7 @@ function ABIMapper(contractPackageFactory, abiCoder, utils) {
  */
 ABIMapper.prototype.map = function (abi) {
     var self = this;
-    var mappedAbiItem = {
+    var mappedAbiItems = {
         methods: {},
         events: {}
     };
@@ -66,23 +66,23 @@ ABIMapper.prototype.map = function (abi) {
 
             // Check if an method already exists with this name and if it exists than create an array and push this abiItem
             // into it. This will be used if there are methods with the same name but with different arguments.
-            if (!mappedAbiItem.methods[abiItem.name]) {
-                mappedAbiItem.methods[abiItem.name] = abiItemModel;
+            if (!mappedAbiItems.methods[abiItem.name]) {
+                mappedAbiItems.methods[abiItem.name] = abiItemModel;
             } else {
-                if (_.isArray(mappedAbiItem.methods[abiItem.name])) {
-                    mappedAbiItem.methods[abiItem.name].push(abiItemModel);
+                if (_.isArray(mappedAbiItems.methods[abiItem.name])) {
+                    mappedAbiItems.methods[abiItem.name].push(abiItemModel);
                 } else {
-                    mappedAbiItem.methods[abiItem.name] = [
-                        mappedAbiItem.methods[abiItem.name],
+                    mappedAbiItems.methods[abiItem.name] = [
+                        mappedAbiItems.methods[abiItem.name],
                         abiItemModel
                     ];
                 }
             }
 
-            mappedAbiItem.methods[abiItem.signature] = abiItemModel;
-            mappedAbiItem.methods[abiItem.funcName] = abiItemModel;
+            mappedAbiItems.methods[abiItem.signature] = abiItemModel;
+            mappedAbiItems.methods[abiItem.funcName] = abiItemModel;
 
-            return abiItem;
+            return;
         }
 
         if (abiItem.type === 'event') {
@@ -90,18 +90,16 @@ ABIMapper.prototype.map = function (abi) {
 
             abiItem = self.contractPackageFactory.createAbiItemModel(event);
 
-            if (!mappedAbiItem.events[abiItem.name] || mappedAbiItem.events[abiItem.name].name === 'bound ') {
-                mappedAbiItem.events[abiItem.name] = abiItemModel;
+            if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
+                mappedAbiItems.events[abiItem.name] = abiItemModel;
             }
 
-            mappedAbiItem.events[abiItem.signature] = abiItemModel;
-            mappedAbiItem.events[abiItem.funcName] = abiItemModel;
-
-            return method;
+            mappedAbiItems.events[abiItem.signature] = abiItemModel;
+            mappedAbiItems.events[abiItem.funcName] = abiItemModel;
         }
     });
 
-    return this.contractPackageFactory.createAbiModel(mappedAbiItem);
+    return this.contractPackageFactory.createABIModel(mappedAbiItems);
 };
 
 /**

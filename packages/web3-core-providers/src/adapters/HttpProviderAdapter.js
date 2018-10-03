@@ -67,7 +67,7 @@ HttpProviderAdapter.prototype.unsubscribe = function () {
  *
  * @method isConnected
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 HttpProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;

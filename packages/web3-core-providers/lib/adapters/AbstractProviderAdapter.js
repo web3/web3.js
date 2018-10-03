@@ -112,7 +112,6 @@ AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, er
     reject(error);
 };
 
-// Inherit EventEmitter
 AbstractProviderAdapter.prototype = Object.create(EventEmitter.prototype);
 AbstractProviderAdapter.prototype.constructor = AbstractProviderAdapter;
 

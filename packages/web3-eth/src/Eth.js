@@ -93,11 +93,11 @@ var Eth = function Eth(
         },
         set: function (val) {
             if (val) {
+                self.Contract.defaultAccount = val;
+                self.personal.defaultAccount = val;
                 defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
             }
 
-            self.Contract.defaultAccount = defaultAccount;
-            self.personal.defaultAccount = defaultAccount;
         },
         enumerable: true
     });

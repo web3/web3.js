@@ -27,5 +27,6 @@ var AbstractWeb3Object = require('./AbstractWeb3Object');
 
 module.exports = {
     version: version,
+
     AbstractWeb3Object: AbstractWeb3Object
 };

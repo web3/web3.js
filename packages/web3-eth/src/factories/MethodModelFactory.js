@@ -72,6 +72,15 @@ function MethodModelFactory(utils, formatters, accounts) {
     );
 }
 
+/**
+ * Returns an MethodModel object
+ *
+ * @method createMethodModel
+ *
+ * @param {String} name
+ *
+ * @returns {AbstractMethodModel}
+ */
 MethodModelFactory.prototype.createMethodModel = function (name) {
     return new this.methodModels[name](this.utils, this.formatters, this.accounts);
 };

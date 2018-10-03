@@ -121,8 +121,8 @@ SocketProviderAdapter.prototype.hasSubscription = function (subscriptionId) {
  * @method clearSubscriptions
  */
 SocketProviderAdapter.prototype.clearSubscriptions = function () {
-    var self = this;
-    var unsubscribePromises = [];
+    var self = this,
+        unsubscribePromises = [];
 
     this.subscriptions.forEach(function (subscriptionId) {
         unsubscribePromises.push(self.unsubscribe(subscriptionId));
@@ -145,6 +145,7 @@ SocketProviderAdapter.prototype.clearSubscriptions = function () {
  */
 SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId) {
     var self = this;
+
     return this.unsubscribe(subscriptionId).then(function (result) {
         if (result) {
             delete self.subscriptions[this.subscriptions.indexOf(subscriptionId)];

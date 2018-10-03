@@ -38,16 +38,19 @@ function Result() {
 
 /**
  * ABICoder prototype should be used to encode/decode solidity params of any type
+ *
+ * @constructor
  */
-var ABICoder = function () {
-};
+function ABICoder () { }
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
  *
  * @method encodeFunctionSignature
+ *
  * @param {String|Object} functionName
- * @return {String} encoded function name
+ *
+ * @returns {String} encoded function name
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
     if (_.isObject(functionName)) {
@@ -61,8 +64,10 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
  *
  * @method encodeEventSignature
+ *
  * @param {String|Object} functionName
- * @return {String} encoded function name
+ *
+ * @returns {String} encoded function name
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
     if (_.isObject(functionName)) {
@@ -76,9 +81,11 @@ ABICoder.prototype.encodeEventSignature = function (functionName) {
  * Should be used to encode plain param
  *
  * @method encodeParameter
+ *
  * @param {String} type
  * @param {Object} param
- * @return {String} encoded plain param
+ *
+ * @returns {String} encoded plain param
  */
 ABICoder.prototype.encodeParameter = function (type, param) {
     return this.encodeParameters([type], [param]);
@@ -88,9 +95,11 @@ ABICoder.prototype.encodeParameter = function (type, param) {
  * Should be used to encode list of params
  *
  * @method encodeParameters
+ *
  * @param {Array} types
  * @param {Array} params
- * @return {String} encoded list of params
+ *
+ * @returns {String} encoded list of params
  */
 ABICoder.prototype.encodeParameters = function (types, params) {
     return ethersAbiCoder.encode(this.mapTypes(types), params);
@@ -100,8 +109,10 @@ ABICoder.prototype.encodeParameters = function (types, params) {
  * Map types if simplified format is used
  *
  * @method mapTypes
+ *
  * @param {Array} types
- * @return {Array}
+ *
+ * @returns {Array}
  */
 ABICoder.prototype.mapTypes = function (types) {
     var self = this;
@@ -131,8 +142,10 @@ ABICoder.prototype.mapTypes = function (types) {
  * Check if type is simplified struct format
  *
  * @method isSimplifiedStructFormat
+ *
  * @param {String | Object} type
- * @returns {boolean}
+ *
+ * @returns {Boolean}
  */
 ABICoder.prototype.isSimplifiedStructFormat = function (type) {
     return typeof type === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
@@ -142,8 +155,10 @@ ABICoder.prototype.isSimplifiedStructFormat = function (type) {
  * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
  *
  * @method mapStructNameAndType
+ *
  * @param {String} structName
- * @return {{type: string, name: *}}
+ *
+ * @returns {{type: string, name: *}}
  */
 ABICoder.prototype.mapStructNameAndType = function (structName) {
     var type = 'tuple';
@@ -160,8 +175,10 @@ ABICoder.prototype.mapStructNameAndType = function (structName) {
  * Maps the simplified format in to the expected format of the ABICoder
  *
  * @method mapStructToCoderFormat
+ *
  * @param {Object} struct
- * @return {Array}
+ *
+ * @returns {Array}
  */
 ABICoder.prototype.mapStructToCoderFormat = function (struct) {
     var self = this;
@@ -193,9 +210,11 @@ ABICoder.prototype.mapStructToCoderFormat = function (struct) {
  * Encodes a function call from its json interface and parameters.
  *
  * @method encodeFunctionCall
+ *
  * @param {Array} jsonInterface
  * @param {Array} params
- * @return {String} The encoded ABI for this function call
+ *
+ * @returns {String} The encoded ABI for this function call
  */
 ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
     return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x', '');
@@ -205,9 +224,11 @@ ABICoder.prototype.encodeFunctionCall = function (jsonInterface, params) {
  * Should be used to decode bytes to plain param
  *
  * @method decodeParameter
+ *
  * @param {String} type
  * @param {String} bytes
- * @return {Object} plain param
+ *
+ * @returns {Object} plain param
  */
 ABICoder.prototype.decodeParameter = function (type, bytes) {
     return this.decodeParameters([type], bytes)[0];
@@ -217,9 +238,11 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * Should be used to decode list of params
  *
  * @method decodeParameter
+ *
  * @param {Array} outputs
  * @param {String} bytes
- * @return {Array} array of plain params
+ *
+ * @returns {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
     if (!bytes || bytes === '0x' || bytes === '0X') {
@@ -250,10 +273,12 @@ ABICoder.prototype.decodeParameters = function (outputs, bytes) {
  * Decodes events non- and indexed parameters.
  *
  * @method decodeLog
+ *
  * @param {Object} inputs
  * @param {String} data
  * @param {Array} topics
- * @return {Array} array of plain params
+ *
+ * @returns {Array} array of plain params
  */
 ABICoder.prototype.decodeLog = function (inputs, data, topics) {
     var _this = this;

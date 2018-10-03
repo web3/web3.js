@@ -95,8 +95,10 @@ var Iban = function Iban(iban) {
  * This method should be used to create an ethereum address from a direct iban address
  *
  * @method toAddress
- * @param {String} iban address
- * @return {String} the ethereum address
+ *
+ * @param {String} ib
+ *
+ * @returns {String}
  */
 Iban.toAddress = function (ib) {
     ib = new Iban(ib);
@@ -112,8 +114,10 @@ Iban.toAddress = function (ib) {
  * This method should be used to create iban address from an ethereum address
  *
  * @method toIban
+ *
  * @param {String} address
- * @return {String} the IBAN address
+ *
+ * @returns {String} the IBAN address
  */
 Iban.toIban = function (address) {
     return Iban.fromAddress(address).toString();
@@ -123,8 +127,10 @@ Iban.toIban = function (address) {
  * This method should be used to create iban object from an ethereum address
  *
  * @method fromAddress
+ *
  * @param {String} address
- * @return {Iban} the IBAN object
+ *
+ * @returns {Iban} the IBAN object
  */
 Iban.fromAddress = function (address) {
     if(!utils.isAddress(address)){
@@ -145,7 +151,9 @@ Iban.fromAddress = function (address) {
  * This method implements the preferred algorithm described in http://en.wikipedia.org/wiki/International_Bank_Account_Number#Generating_IBAN_check_digits
  *
  * @method fromBban
+ *
  * @param {String} bban the BBAN to convert to IBAN
+ *
  * @returns {Iban} the IBAN object
  */
 Iban.fromBban = function (bban) {
@@ -161,8 +169,10 @@ Iban.fromBban = function (bban) {
  * Should be used to create IBAN object for given institution and identifier
  *
  * @method createIndirect
+ *
  * @param {Object} options, required options are "institution" and "identifier"
- * @return {Iban} the IBAN object
+ *
+ * @returns {Iban} the IBAN object
  */
 Iban.createIndirect = function (options) {
     return Iban.fromBban('ETH' + options.institution + options.identifier);
@@ -172,8 +182,10 @@ Iban.createIndirect = function (options) {
  * This method should be used to check if given string is valid iban object
  *
  * @method isValid
+ *
  * @param {String} iban string
- * @return {Boolean} true if it is valid IBAN
+ *
+ * @returns {Boolean} true if it is valid IBAN
  */
 Iban.isValid = function (iban) {
     var i = new Iban(iban);
@@ -184,6 +196,7 @@ Iban.isValid = function (iban) {
  * Should be called to check if iban is correct
  *
  * @method isValid
+ *
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isValid = function () {
@@ -195,6 +208,7 @@ Iban.prototype.isValid = function () {
  * Should be called to check if iban number is direct
  *
  * @method isDirect
+ *
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isDirect = function () {
@@ -205,6 +219,7 @@ Iban.prototype.isDirect = function () {
  * Should be called to check if iban number if indirect
  *
  * @method isIndirect
+ *
  * @returns {Boolean} true if it is, otherwise false
  */
 Iban.prototype.isIndirect = function () {
@@ -216,6 +231,7 @@ Iban.prototype.isIndirect = function () {
  * Uses the mod-97-10 checksumming protocol (ISO/IEC 7064:2003)
  *
  * @method checksum
+ *
  * @returns {String} checksum
  */
 Iban.prototype.checksum = function () {
@@ -227,6 +243,7 @@ Iban.prototype.checksum = function () {
  * eg. XREG
  *
  * @method institution
+ *
  * @returns {String} institution identifier
  */
 Iban.prototype.institution = function () {
@@ -238,6 +255,7 @@ Iban.prototype.institution = function () {
  * eg. GAVOFYORK
  *
  * @method client
+ *
  * @returns {String} client identifier
  */
 Iban.prototype.client = function () {
@@ -248,6 +266,7 @@ Iban.prototype.client = function () {
  * Should be called to get client direct address
  *
  * @method toAddress
+ *
  * @returns {String} ethereum address
  */
 Iban.prototype.toAddress = function () {

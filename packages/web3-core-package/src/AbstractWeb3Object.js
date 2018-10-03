@@ -23,6 +23,7 @@
 "use strict";
 
 /**
+ * TODO: Split this AbstractWeb3Object in smaller objects and find a better naming for the AbstractWeb3Object
  * @param {any} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
@@ -48,7 +49,6 @@ function AbstractWeb3Object(
 
     this.extendedPackages = [];
     this.providersPackage = providersPackage;
-    this.currentProvider = provider;
     this.givenProvider = this.providersPackage.detect();
 
     this.providers = {
@@ -76,6 +76,8 @@ function AbstractWeb3Object(
         enumerable: true
     });
 
+    this.currentProvider = provider;
+
     if (this.isDependencyGiven(batchRequestPackage)) {
         this.BatchRequest = function BatchRequest() {
             return batchRequestPackage.createBatchRequest(self.currentProvider);
@@ -99,7 +101,7 @@ function AbstractWeb3Object(
  *
  * @method isDependencyGiven
  *
- * @param {*} object
+ * @param {Object} object
  *
  * @returns {boolean}
  */
@@ -223,7 +225,7 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
         var anonymousFunction = function () {
             methodModel.methodArguments = arguments;
 
-            return target.methodController.execute(methodModel, target.currentProvider, target.accounts, target);
+            return target.methodController.execute(methodModel, target.accounts, target);
         };
 
         anonymousFunction.methodModel = methodModel;
@@ -234,6 +236,5 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
 
     return target[name];
 };
-
 
 module.exports = AbstractWeb3Object;

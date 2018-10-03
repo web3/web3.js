@@ -165,6 +165,5 @@ Subscription.prototype.unsubscribe = function (callback) {
     });
 };
 
-// Inherit from EventEmitter
 Subscription.prototype = Object.create(EventEmitter.prototype);
 Subscription.prototype.constructor = Subscription;

@@ -92,22 +92,31 @@ function Contract(
         this.batchRequestPackage
     );
 
-    var self = this,
-        _address = self.utils.toChecksumAddress(self.formatters.inputAddressFormatter(address)),
-        abiModel = abiMapper.map(abi);
+    this.defaultBlock = 'latest';
+    address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(address));
 
+    var self = this,
+        abiModel = abiMapper.map(abi),
+        defaultAccount = null;
+
+    /**
+     * Defines accessors for contract address
+     */
     Object.defineProperty(this.options, 'address', {
         set: function (value) {
             if (value) {
-                _address = self.utils.toChecksumAddress(self.formatters.inputAddressFormatter(value));
+                address = self.utils.toChecksumAddress(self.formatters.inputAddressFormatter(value));
             }
         },
         get: function () {
-            return _address;
+            return address;
         },
         enumerable: true
     });
 
+    /**
+     * Defines accessors for jsonInterface
+     */
     Object.defineProperty(this.options, 'jsonInterface', {
         set: function (value) {
             abiModel = self.abiMapper.map(value);
@@ -116,6 +125,26 @@ function Contract(
         },
         get: function () {
             return abiModel;
+        },
+        enumerable: true
+    });
+
+    /**
+     * Defines accessors for defaultAccount
+     */
+    Object.defineProperty(this, 'defaultAccount', {
+        get: function () {
+            if (!defaultAccount) {
+                return this.options.from;
+            }
+
+            return defaultAccount;
+        },
+        set: function (val) {
+            if (val) {
+                defaultAccount = self.utils.toChecksumAddress(self.formatters.inputAddressFormatter(val));
+            }
+
         },
         enumerable: true
     });

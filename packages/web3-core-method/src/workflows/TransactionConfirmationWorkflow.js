@@ -48,15 +48,15 @@ function TransactionConfirmationWorkflow(
  * @method execute
  *
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
+ * @param {AbstractWeb3Object} web3Package
  * @param {String} transactionHash
  * @param {Object} promiEvent
  *
  * @callback callback callback(error, result)
  */
-TransactionConfirmationWorkflow.prototype.execute = function (methodModel, provider, transactionHash, promiEvent) {
+TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3Package, transactionHash, promiEvent) {
     var self = this;
-    this.provider = provider;
+    this.provider = web3Package.currentProvider;
 
     this.getTransactionReceipt(transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
@@ -72,7 +72,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, provi
             return;
         }
 
-        self.newHeadsWatcher.watch(provider).on('newHead', function () {
+        self.newHeadsWatcher.watch(web3Package).on('newHead', function () {
             self.transactionConfirmationModel.timeoutCounter++;
             if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
                 self.getTransactionReceipt(transactionHash).then(function (receipt) {

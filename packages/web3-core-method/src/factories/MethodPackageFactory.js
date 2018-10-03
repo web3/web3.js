@@ -45,20 +45,20 @@ function MethodPackageFactory() { }
  * @method createMethodController
  *
  * @param {PromiEventPackage} promiEventPackage
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {Object} formatters
  *
  * @returns {MethodController}
  */
 MethodPackageFactory.prototype.createMethodController = function (
     promiEventPackage,
-    subscriptionPackage,
+    subscriptionsFactory,
     formatters
 ) {
     return new MethodController(
         this.createCallMethodCommand(),
-        this.createSendMethodCommand(subscriptionPackage, formatters),
-        this.createSignAndSendMethodCommand(subscriptionPackage, formatters),
+        this.createSendMethodCommand(subscriptionsFactory, formatters),
+        this.createSignAndSendMethodCommand(subscriptionsFactory, formatters),
         this.createSignMessageCommand(),
         promiEventPackage
     );
@@ -80,14 +80,14 @@ MethodPackageFactory.prototype.createCallMethodCommand = function () {
  *
  * @method createSendMethodCommand
  *
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {Object} formatters
  *
  * @returns {SendMethodCommand}
  */
-MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionPackage, formatters) {
+MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionsFactory, formatters) {
     return new SendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionPackage, formatters)
+        this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters)
     );
 };
 
@@ -96,14 +96,14 @@ MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionP
  *
  * @method createSingAndSendMethodCommand
  *
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {Object} formatters
  *
  * @returns {SignAndSendMethodCommand}
  */
-MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionPackage, formatters) {
+MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionsFactory, formatters) {
     return new SignAndSendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionPackage, formatters),
+        this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters),
         this.createTransactionSigner()
     );
 };
@@ -126,16 +126,16 @@ MethodPackageFactory.prototype.createSignMessageCommand = function () {
  *
  * @method createTransactionConfirmationWorkflow
  *
- * @param {SubscriptionPackage} subscriptionPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {Object} formatters
  *
  * @returns {TransactionConfirmationWorkflow}
  */
-MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionPackage, formatters) {
+MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionsFactory, formatters) {
     new TransactionConfirmationWorkflow(
         this.createTransactionConfirmationModel(),
         this.createTransactionReceiptValidator(),
-        this.createNewHeadsWatcher(subscriptionPackage),
+        this.createNewHeadsWatcher(subscriptionsFactory),
         formatters
     );
 };
@@ -176,6 +176,8 @@ MethodPackageFactory.prototype.createTransactionConfirmationModel = function () 
 /**
  * Returns the TransactionReceiptValidator object
  *
+ * @method createTransactionReceiptValidator
+ *
  * @returns {TransactionReceiptValidator}
  */
 MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
@@ -185,10 +187,12 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
 /**
  * Returns the NewHeadsWatcher object
  *
- * @param {SubscriptionPackage} subscriptionPackage
+ * @method createNewHeadsWatcher
+ *
+ * @param {SubscriptionsFactory} subscriptionsFactory
  *
  * @returns {NewHeadsWatcher}
  */
-MethodPackageFactory.prototype.createNewHeadsWatcher = function (subscriptionPackage) {
-    return new NewHeadsWatcher(subscriptionPackage);
+MethodPackageFactory.prototype.createNewHeadsWatcher = function (subscriptionsFactory) {
+    return new NewHeadsWatcher(subscriptionsFactory);
 };

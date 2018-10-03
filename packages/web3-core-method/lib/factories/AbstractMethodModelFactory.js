@@ -35,10 +35,26 @@ function AbstractMethodModelFactory(methodModels, utils, formatters) {
     this.methodModels = methodModels;
 }
 
+/**
+ * Checks if the method exists
+ *
+ * @method hasMethodModel
+ *
+ * @param {String} name
+ *
+ * @returns {Boolean}
+ */
 AbstractMethodModelFactory.prototype.hasMethodModel = function (name) {
     return typeof this.methodModels[name] !== 'undefined';
 };
 
+/**
+ * Returns an MethodModel
+ *
+ * @param {String} name
+ *
+ * @returns {AbstractMethodModel}
+ */
 AbstractMethodModelFactory.prototype.createMethodModel = function (name) {
     return new this.methodModels[name](this.utils, this.formatters);
 };

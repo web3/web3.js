@@ -39,6 +39,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  */
 function Personal(provider, providersPackage, methodController, methodModelFactory, net, utils, formatters) {
     AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
+
     this.utils = utils;
     this.formatters = formatters;
     this.net = net;

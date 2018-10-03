@@ -36,15 +36,12 @@ function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSi
 }
 
 /**
- * TODO: Add gasPrice check
- *
  * Sends the JSON-RPC request and returns an PromiEvent object
  *
  * @method execute
  *
  * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Accounts} accounts
  * @param {PromiEvent} promiEvent
  *
@@ -52,9 +49,8 @@ function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSi
  * @returns {PromiEvent}
  */
 SignAndSendMethodCommand.prototype.execute = function (
-    web3Package,
     methodModel,
-    provider,
+    web3Package,
     accounts,
     promiEvent,
 ) {
@@ -63,7 +59,7 @@ SignAndSendMethodCommand.prototype.execute = function (
 
     this.transactionSigner.sign(methodModel.parameters[0], accounts).then(function(response) {
         methodModel.parameters = [response.rawTransaction];
-        self.send(methodModel, provider, promiEvent);
+        self.send(methodModel, promiEvent, web3Package);
     }).catch(function(error) {
         promiEvent.reject(error);
         promiEvent.on('error', error);

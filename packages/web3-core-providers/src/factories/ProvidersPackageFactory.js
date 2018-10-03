@@ -34,7 +34,7 @@ var HttpProvider = require('../providers/HttpProvider');
 function ProvidersPackageFactory() { }
 
 /**
- * Return ProviderAdapterResolver object
+ * Returns an ProviderAdapterResolver object
  *
  * @method createProviderAdapterResolver
  *
@@ -45,7 +45,7 @@ ProvidersPackageFactory.prototype.createProviderAdapterResolver = function () {
 };
 
 /**
- * Return ProviderDetector object
+ * Returns an ProviderDetector object
  *
  * @method createProviderDetector
  *
@@ -56,7 +56,7 @@ ProvidersPackageFactory.prototype.createProviderDetector = function () {
 };
 
 /**
- * Return HttpProvider object
+ * Returns an HttpProvider object
  *
  * @method createHttpProvider
  *
@@ -69,7 +69,7 @@ ProvidersPackageFactory.prototype.createHttpProvider = function (url) {
 };
 
 /**
- * Return WebsocketProvider object
+ * Return an WebsocketProvider object
  *
  * @method createWebsocketProvider
  *
@@ -82,7 +82,7 @@ ProvidersPackageFactory.prototype.createWebsocketProvider = function (url) {
 };
 
 /**
- * Return IpcProvider object
+ * Returns an IpcProvider object
  *
  * @method createIpcProvider
  *
@@ -96,7 +96,7 @@ ProvidersPackageFactory.prototype.createIpcProvider = function (path, net) {
 };
 
 /**
- * Returns HttpProviderAdapter object
+ * Returns an HttpProviderAdapter object
  *
  * @method createHttpProviderAdapter
  *
@@ -109,11 +109,11 @@ ProvidersPackageFactory.prototype.createHttpProviderAdapter = function (provider
 };
 
 /**
- * Returns SocketProviderAdapter object
+ * Returns an SocketProviderAdapter object
  *
  * @method createSocketProviderAdapter
  *
- * @param {WebsocketProvider | IpcProvider} provider
+ * @param {WebsocketProvider|IpcProvider} provider
  *
  * @returns {SocketProviderAdapter}
  */
@@ -122,7 +122,7 @@ ProvidersPackageFactory.prototype.createSocketProviderAdapter = function (provid
 };
 
 /**
- * Returns InpageProviderAdapter object
+ * Returns an InpageProviderAdapter object
  *
  * @method createInpageProviderAdapter
  *

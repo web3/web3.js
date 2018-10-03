@@ -30,7 +30,7 @@ var JSONRpcMapper = {
 };
 
 /**
- * Should be called to valid json create payload object
+ * Creates a valid json payload object
  *
  * @method toPayload
  *
@@ -56,7 +56,7 @@ JSONRpcMapper.toPayload = function (method, params) {
 };
 
 /**
- * Should be called to create batch payload object
+ * Creates a batch payload object
  *
  * @method toBatchPayload
  *
@@ -73,4 +73,3 @@ JSONRpcMapper.toBatchPayload = function (requests) {
 };
 
 module.exports = JSONRpcMapper;
-
