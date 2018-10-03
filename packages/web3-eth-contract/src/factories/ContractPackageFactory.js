@@ -277,7 +277,7 @@ ContractPackageFactory.prototype.createEventSubscriptionsProxy = function (
 };
 
 /**
- * Returns an object of SubscriptionFactory
+ * Returns an object of EventSubscriptionFactory
  *
  * @method createEventSubscriptionFactory
  *
