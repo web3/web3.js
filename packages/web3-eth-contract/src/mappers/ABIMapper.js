@@ -62,7 +62,7 @@ ABIMapper.prototype.map = function (abi) {
         if (abiItem.type === 'function') {
             abiItem.signature = self.abiCoder.encodeFunctionSignature(abiItem.funcName);
 
-            abiItemModel = self.contractPackageFactory.createAbiItemModel(abiItem);
+            abiItemModel = self.contractPackageFactory.createABIItemModel(abiItem);
 
             // Check if an method already exists with this name and if it exists than create an array and push this abiItem
             // into it. This will be used if there are methods with the same name but with different arguments.
@@ -88,7 +88,7 @@ ABIMapper.prototype.map = function (abi) {
         if (abiItem.type === 'event') {
             abiItem.signature = self.abiCoder.encodeEventSignature(abiItem.funcName);
 
-            abiItem = self.contractPackageFactory.createAbiItemModel(event);
+            abiItem = self.contractPackageFactory.createABIItemModel(event);
 
             if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
                 mappedAbiItems.events[abiItem.name] = abiItemModel;
@@ -96,6 +96,11 @@ ABIMapper.prototype.map = function (abi) {
 
             mappedAbiItems.events[abiItem.signature] = abiItemModel;
             mappedAbiItems.events[abiItem.funcName] = abiItemModel;
+        }
+
+        if (abiItem.type === 'constructor') {
+            abiItem.signature = abiItem.type;
+            mappedAbiItems.methods[abiItem.type] = self.contractPackageFactory.createABIItemModel(abiItem);
         }
     });
 

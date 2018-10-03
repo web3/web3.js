@@ -22,6 +22,8 @@
 
 "use strict";
 
+var ContractDeployMethodModel = require('web3-eth-contract').ContractDeployMethodModel;
+
 /**
  * @param {TransactionConfirmationModel} transactionConfirmationModel
  * @param {TransactionReceiptValidator} transactionReceiptValidator
@@ -141,6 +143,15 @@ TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (tran
  */
 TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt, methodModel, promiEvent) {
     this.newHeadsWatcher.stop();
+
+    if (methodModel instanceof ContractDeployMethodModel) {
+        promiEvent.resolve(methodModel.afterExecution(receipt));
+        promiEvent.eventEmitter.emit('receipt', receipt);
+        promiEvent.eventEmitter.removeAllListeners();
+        methodModel.callback(false, receipt);
+
+        return;
+    }
 
     var mappedReceipt = methodModel.afterExecution(receipt);
 

@@ -78,6 +78,7 @@ function Contract(
     this.abiMapper = abiMapper;
     this.options = options;
     this.promiEventPackage = promiEventPackage;
+    this.rpcMethodModelFactory = contractPackageFactory.createRpcMethodModelFactory();
 
     AbstractWeb3Object.call(
         this,
@@ -204,20 +205,30 @@ Contract.prototype.getPastEvents = function (eventName, options, callback) {
         throw Error('Event with name "' + eventName + 'does not exists.');
     }
 
-    var abiItemModel = this.options.jsonInterface.getEvent(eventName);
-    abiItemModel.parameters = [options];
-    abiItemModel.callback = callback;
+    var pastEventLogsMethodModel = this.rpcMethodModelFactory.createPastEventLogsMethodModel(
+        this.options.jsonInterface.getEvent(eventName)
+    );
+    pastEventLogsMethodModel.parameters = [options];
+    pastEventLogsMethodModel.callback = callback;
 
     return this.methodController.execute(
-        this.contractPackageFactory.createRpcMethodModelFactory().createPastEventLogsMethodModel(abiItemModel),
-        this.currentProvider,
+        pastEventLogsMethodModel,
         this.accounts,
         this
     );
 };
 
-Contract.prototype.deploy = function () {
-
+/**
+ * Deploy an contract and returns an new Contract instance with the correct address set
+ *
+ * @method deploy
+ *
+ * @param {Object} options
+ *
+ * @returns {Promise<Contract>|EventEmitter}
+ */
+Contract.prototype.deploy = function (options) {
+    return this.methods.constructor(options);
 };
 
 /**

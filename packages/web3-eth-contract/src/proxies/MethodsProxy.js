@@ -72,15 +72,35 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
     var abiItemModel = this.abiModel.getMethod(name);
 
     if (abiItemModel) {
+        var requestType = abiItemModel.requestType;
+        if (requestType === 'contract-deployment') {
+            requestType = 'send';
+        }
+
         var anonymousFunction = function () {
-            abiItemModel.contractMethodParameters = arguments;
+            var methodArguments = arguments;
+
+            // Because of the possibility to overwrite the contract data if I call contract.deploy() have I to check
+            // here if it is an contract deployment. If this call is a deployment then I have to set the correct
+            // contract data and to map the arguments. TODO: Change API or improve this
+            if (requestType === 'contract-deployment') {
+                if (arguments[0]['data']) {
+                    target.contract.options.data = target.contract.options.data || arguments[0]['data'];
+                }
+
+                if (arguments[0]['arguments']) {
+                    methodArguments = arguments[0]['arguments'];
+                }
+            }
+
+            abiItemModel.contractMethodParameters = methodArguments;
         };
 
-        anonymousFunction[abiItemModel.requestType] = function () {
+        anonymousFunction[requestType] = function () {
             return target.executeMethod(abiItemModel, arguments);
         };
 
-        anonymousFunction[abiItemModel.requestType].request = function () {
+        anonymousFunction[requestType].request = function () {
             return target.createRpcMethodModel(abiItemModel, arguments);
         };
 
@@ -144,7 +164,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
         // Check if one of the AbiItemModel in this array does match the arguments length
         abiItemModel.some(function(method) {
             // Get correct rpc method model
-            rpcMethodModel = self.rpcMethodModelFactory.createRpcMethodByRequestType(method);
+            rpcMethodModel = self.rpcMethodModelFactory.createRpcMethodByRequestType(method, self.contract);
             rpcMethodModel.methodArguments = methodArguments;
             isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
 
@@ -160,7 +180,7 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
         }
     } else {
         // Get correct rpc method model
-        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel);
+        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
         rpcMethodModel.methodArguments = methodArguments;
     }
 

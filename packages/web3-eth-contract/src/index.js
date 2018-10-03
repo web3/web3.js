@@ -24,11 +24,13 @@
 
 var version = require('./package.json').version;
 var Contract = require('./Contract');
+var ContractDeployMethodModel = require('./models/methods/ContractDeployMethodModel');
 
 // TODO: define public api
 module.exports = {
     version: version,
-    Contract: Contract
+    Contract: Contract,
+    ContractDeployMethodModel: ContractDeployMethodModel,
 // TODO: Refactor Contract object because of the new handling
 // TODO: don't forget the currentProvider, defaultBlock, defaultAccount and accounts handling
 };

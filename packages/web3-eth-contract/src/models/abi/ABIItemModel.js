@@ -45,6 +45,10 @@ function ABIItemModel(abiItem) {
 
                 return 'send';
             }
+
+            if (abiItem.type === 'constructor') {
+                return 'contract-deployment';
+            }
         }
     })
 }

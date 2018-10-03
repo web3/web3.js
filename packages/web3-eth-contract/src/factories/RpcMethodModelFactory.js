@@ -22,9 +22,10 @@
 
 "use strict";
 
-var SendContractMethodModel = require('../models/methods/SendContractMethodModel');
 var CallContractMethodModel = require('../models/methods/CallContractMethodModel');
+var ContractDeployMethodModel = require('../models/methods/ContractDeployMethodModel');
 var PastEventLogsMethodModel = require('../models/methods/PastEventLogsMethodModel');
+var SendContractMethodModel = require('../models/methods/SendContractMethodModel');
 var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 
 /**
@@ -48,22 +49,26 @@ function RpcMethodModelFactory(callMethodResponseDecoder, accounts, utils, forma
  * @method createRpcMethod
  *
  * @param {ABIItemModel} abiItemModel
+ * @param {Contract} contract
  *
  * @returns {AbstractMethodModel}
  */
-RpcMethodModelFactory.prototype.createRpcMethodByRequestType = function (abiItemModel) {
+RpcMethodModelFactory.prototype.createRpcMethodByRequestType = function (abiItemModel, contract) {
     var rpcMethod;
 
     switch (abiItemModel.requestType) {
         case 'call':
             rpcMethod = this.createCallContractMethodModel(abiItemModel);
-            break;
+        break;
         case 'send' :
             rpcMethod = this.createSendContractMethodModel(abiItemModel);
-            break;
+        break;
         case 'estimate':
             rpcMethod = this.createEstimateGasMethodModel();
-            break;
+        break;
+        case 'contract-deployment':
+            rpcMethod = this.createContractDeployMethodModel(contract);
+        break;
     }
 
     if (typeof rpcMethod === 'undefined') {
@@ -121,6 +126,19 @@ RpcMethodModelFactory.prototype.createSendContractMethodModel = function (abiIte
         this.formatters,
         this.accounts
     );
+};
+
+/**
+ * Returns an object of type ContractDeployMethodModel
+ *
+ * @method createContractDeployMethodModel
+ *
+ * @param {Contract} contract
+ *
+ * @returns {ContractDeployMethodModel}
+ */
+RpcMethodModelFactory.prototype.createContractDeployMethodModel = function (contract) {
+    return new ContractDeployMethodModel(contract, this.utils, this.formatters, this.accounts);
 };
 
 /**
