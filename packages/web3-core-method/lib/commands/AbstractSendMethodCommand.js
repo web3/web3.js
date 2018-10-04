@@ -33,8 +33,7 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
 
 
 /**
- * TODO: Add gasPrice check
- * Sends the JSON-RPC request
+ * Checks the gasPrice and sends the JSON-RPC request
  *
  * @method send
  *
@@ -42,10 +41,34 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
  * @param {AbstractWeb3Object} web3Package
  * @param {PromiEvent} promiEvent
  *
- * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
 AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
+    if (this.isGasPriceDefined(methodModel.parameters)) {
+        this.sendMethod(methodModel, promiEvent, web3Package);
+    }
+
+    this.getGasPrice(web3Package.currentProvider).then(function(gasPrice) {
+        if (_.isObject(methodModel.parameters[0])) {
+            methodModel.parameters[0].gasPrice = gasPrice;
+        }
+
+        self.sendMethod(methodModel, promiEvent, web3Package);
+    });
+
+    return promiEvent;
+};
+
+/**
+ * Sends the JSON-RPC request
+ *
+ * @method send
+ *
+ * @param {AbstractMethodModel} methodModel
+ * @param {AbstractWeb3Object} web3Package
+ * @param {PromiEvent} promiEvent
+ */
+AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEvent, web3Package) {
     web3Package.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
@@ -65,8 +88,6 @@ AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, we
         promiEvent.eventEmitter.removeAllListeners();
         methodModel.callback(error, null);
     });
-
-    return promiEvent;
 };
 
 

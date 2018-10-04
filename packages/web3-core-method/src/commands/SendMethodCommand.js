@@ -46,23 +46,9 @@ function SendMethodCommand(transactionConfirmationWorkflow) {
  * @returns {PromiEvent}
  */
 SendMethodCommand.prototype.execute = function (web3Package, methodModel, promiEvent) {
-    var self = this;
-
     methodModel.beforeExecution(web3Package);
 
-    if (this.isGasPriceDefined(methodModel.parameters)) {
-        return this.send(methodModel, promiEvent, web3Package);
-    }
-
-    this.getGasPrice(web3Package.currentProvider).then(function(gasPrice) {
-        if (_.isObject(methodModel.parameters[0])) {
-            methodModel.parameters[0].gasPrice = gasPrice;
-        }
-
-        self.send(methodModel, promiEvent, web3Package);
-    });
-
-    return promiEvent;
+    return this.send(methodModel, promiEvent, web3Package);
 };
 
 SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
