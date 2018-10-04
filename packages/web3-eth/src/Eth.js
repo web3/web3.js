@@ -28,7 +28,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 /**
  * @param {AbstractProviderAdapter | EthereumProvider} provider
  * @param {Network} net
- * @param {Contract} contract
+ * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
  * @param {Personal} personal
  * @param {Iban} iban
@@ -47,7 +47,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var Eth = function Eth(
     provider,
     net,
-    contract,
+    contractPackage,
     accounts,
     personal,
     iban,
@@ -70,8 +70,9 @@ var Eth = function Eth(
         batchRequestPackage
     );
 
+    var self = this;
+
     this.net = net;
-    this.Contract = contract;
     this.accounts = accounts;
     this.personal = personal;
     this.iban = iban;
@@ -80,9 +81,17 @@ var Eth = function Eth(
     this.utils = utils;
     this.formatters = formatters;
     this.subscriptionsFactory = subscriptionsFactory;
+    this.initiatedContracts = [];
 
-    var defaultAccount = null;
-    var defaultBlock = 'latest';
+    this.Contract = function (abi, address, options) {
+        var contract = contractPackage.createContract(self.currentProvider, self.accounts, abi, address, options);
+        self.initiatedContracts.push(contract);
+
+        return contract;
+    };
+
+    var defaultAccount = null,
+        defaultBlock = 'latest';
 
     /**
      * Defines accessors for defaultAccount
@@ -93,7 +102,10 @@ var Eth = function Eth(
         },
         set: function (val) {
             if (val) {
-                self.Contract.defaultAccount = val;
+                self.initiatedContracts.forEach(function (contract) {
+                    contract.defaultAccount = val;
+                });
+
                 self.personal.defaultAccount = val;
                 defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
             }
@@ -111,8 +123,10 @@ var Eth = function Eth(
         },
         set: function (val) {
             defaultBlock = val;
-
-            self.Contract.defaultBlock = defaultBlock;
+            self.initiatedContracts.forEach(function (contract) {
+                contract.defaultAccount = val;
+            });
+            
             self.personal.defaultBlock = defaultBlock;
         },
         enumerable: true
@@ -163,6 +177,10 @@ Eth.prototype.setProvider = function (provider) {
     this.accounts.setProvider(provider);
     this.personal.setProvider(provider);
     this.ens.setProvider(provider);
+    
+    this.initiatedContracts.forEach(function (contract) {
+       contract.setProvider(provider); 
+    });
 };
 
 Eth.prototype = Object.create(AbstractWeb3Object.prototype);

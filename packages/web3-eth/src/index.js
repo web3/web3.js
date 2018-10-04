@@ -26,7 +26,7 @@ var version = require('./package.json').version;
 var MethodModelFactory = require('./factories/MethodModelFactory');
 var Eth = require('./Eth');
 var NetPackage = require('web3-net');
-var Contract = require('web3-eth-contract').Contract;
+var ContractPackage = require('web3-eth-contract');
 var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
 var ENSPackage = require('web3-eth-ens');
@@ -59,7 +59,7 @@ module.exports = {
         return new Eth(
             provider,
             NetPackage.createNetwork(provider),
-            Contract,
+            ContractPackage,
             accounts,
             PersonalPackage.createPersonal(provider),
             Iban,
