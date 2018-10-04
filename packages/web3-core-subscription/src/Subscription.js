@@ -73,6 +73,7 @@ Subscription.prototype.subscribe = function (callback) {
             if (_.isFunction(callback)) {
                 callback(error, null);
             }
+
             self.emit('error', error);
         });
     });
@@ -99,6 +100,7 @@ Subscription.prototype.handleSubscriptionResponse = function (response, callback
         var formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
 
         this.emit('data', formattedOutput);
+
         if (_.isFunction(callback)) {
             callback(false, formattedOutput);
         }
@@ -129,6 +131,8 @@ Subscription.prototype.reconnect = function (callback) {
         self.unsubscribe().then(function () {
             self.subscribe(callback);
         }).catch(function (error) {
+            self.emit('error', error);
+
             if(_.isFunction(callback)) {
                 callback(error, null);
             }
