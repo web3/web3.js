@@ -28,7 +28,7 @@ var EventLogSubscription = require('../models/subscriptions/EventLogSubscription
 var AllEventsLogSubscription = require('../models/subscriptions/AllEventsLogSubscription');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {MethodController} methodController
  *

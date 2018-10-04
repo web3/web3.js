@@ -34,7 +34,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {Iban} iban
  * @param {Abi} abi
  * @param {ENS} ens
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {ProvidersPackage} providersPackage
  * @param {SubscriptionsFactory} subscriptionsFactory

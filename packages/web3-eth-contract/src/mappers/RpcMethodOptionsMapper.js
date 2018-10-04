@@ -23,7 +23,7 @@
 "use strict";
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

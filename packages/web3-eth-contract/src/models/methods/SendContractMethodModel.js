@@ -27,7 +27,7 @@ var SendTransactionMethodModel = require('web3-core-method').SendTransactionMeth
 /**
  * @param {ABIItemModel} abiItemModel
  * @param {AllEventsLogDecoder} allEventsLogDecoder
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {Accounts} accounts
  *

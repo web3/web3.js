@@ -41,7 +41,7 @@ var RpcMethodFactory = require('../factories/RpcMethodFactory');
 var EventSubscriptionFactory = require('../factories/EventSubscriptionFactory');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {ABICoder} abiCoder
  * @param {Accounts} accounts

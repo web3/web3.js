@@ -31,7 +31,7 @@ var EstimateGasMethodModel = require('web3-core-method').EstimateGasMethodModel;
 /**
  * @param {CallMethodResponseDecoder} callMethodResponseDecoder
  * @param {Accounts} accounts
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

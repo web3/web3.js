@@ -27,7 +27,7 @@ var CallMethodModel = require('web3-core-method').CallMethodModel;
 /**
  * @param {ABIItemModel} abiItemModel
  * @param {CallMethodResponseDecoder} callMethodResponseDecoder
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

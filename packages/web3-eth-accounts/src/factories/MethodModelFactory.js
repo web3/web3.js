@@ -25,7 +25,7 @@
 var web3CoreMethod = require('web3-core-method');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

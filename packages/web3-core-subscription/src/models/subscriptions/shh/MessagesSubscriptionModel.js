@@ -26,7 +26,7 @@ var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscrip
 
 /**
  * @param {Object} options
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

@@ -24,7 +24,7 @@
 
 /**
  * @param {Object} methodModels
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

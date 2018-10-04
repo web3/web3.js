@@ -25,7 +25,7 @@
 var _ = require('underscore');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  *
  * @constructor
  */

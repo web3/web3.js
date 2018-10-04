@@ -25,7 +25,7 @@
 var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

@@ -26,7 +26,7 @@ var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionMode
 
 /**
  * @param {Object} options
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {GetPastLogsMethodModel} getPastLogsMethodModel
  * @param {MethodController} methodController

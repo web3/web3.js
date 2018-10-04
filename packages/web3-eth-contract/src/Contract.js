@@ -32,7 +32,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {ContractPackageFactory} contractPackageFactory
  * @param {PromiEventPackage} promiEventPackage
  * @param {ABICoder} abiCoder
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {Accounts} accounts
  * @param {ABIMapper} abiMapper

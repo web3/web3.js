@@ -26,7 +26,7 @@
  * @param {String} subscriptionType
  * @param {String} subscriptionMethod
  * @param {Object} options
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

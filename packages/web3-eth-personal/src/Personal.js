@@ -32,7 +32,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
  * @param {Network} net
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

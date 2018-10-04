@@ -25,7 +25,7 @@
 /**
  * @param {ContractPackageFactory} contractPackageFactory
  * @param {ABICoder} abiCoder
- * @param {Utils} utils
+ * @param {Object} utils
  *
  * @constructor
  */

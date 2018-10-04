@@ -25,7 +25,7 @@
 /**
  * @param {String|Function} rpcMethod
  * @param {Number} parametersAmount
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor

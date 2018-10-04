@@ -26,7 +26,7 @@ var SendTransactionMethodModel = require('web3-core-method').SendTransactionMeth
 
 /**
  * @param {Contract} contract
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  * @param {Accounts} accounts
  *

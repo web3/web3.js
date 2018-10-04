@@ -30,7 +30,7 @@ var SyncingSubscriptionModel = require('../models/subscriptions/eth/SyncingSubsc
 var MessagesSubscriptionModel = require('../models/subscriptions/shh/MessagesSubscriptionModel');
 
 /**
- * @param {Utils} utils
+ * @param {Object} utils
  * @param {Object} formatters
  *
  * @constructor
