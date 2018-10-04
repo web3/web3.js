@@ -31,7 +31,7 @@ var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
 var ENSPackage = require('web3-eth-ens');
 var AbiPackage = require('web3-eth-abi');
-var SubscriptionsFactory = require('web3-core-subscription').SubscriptionsFactory;
+var SubscriptionPackage = require('web3-core-subscription');
 var ProvidersPackage = require('web3-core-providers');
 var Iban = require('web3-eth-iban').Iban;
 var formatters = require('web3-core-helpers').formatters;
@@ -52,9 +52,7 @@ module.exports = {
      * @returns {Eth}
      */
     createEth: function (provider) {
-        var accounts = AccountsPackage.createAccounts(provider),
-        methodModelFactory = new  MethodModelFactory(Utils, formatters, accounts),
-        methodController = MethodPackage.createMethodController();
+        var accounts = AccountsPackage.createAccounts(provider);
 
         return new Eth(
             provider,
@@ -68,9 +66,9 @@ module.exports = {
             Utils,
             formatters,
             ProvidersPackage,
-            new SubscriptionsFactory(Utils, formatters),
-            methodController,
-            methodModelFactory,
+            SubscriptionPackage.createSubscriptionsFactory(),
+            MethodPackage.createMethodController(),
+            new MethodModelFactory(Utils, formatters, accounts),
             BatchRequestPackage
         );
     }

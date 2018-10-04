@@ -26,7 +26,7 @@ var _ = require('underscore');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {AbstractProviderAdapter | EthereumProvider} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Network} net
  * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
@@ -126,7 +126,7 @@ var Eth = function Eth(
             self.initiatedContracts.forEach(function (contract) {
                 contract.defaultAccount = val;
             });
-            
+
             self.personal.defaultBlock = defaultBlock;
         },
         enumerable: true
@@ -154,12 +154,22 @@ Eth.prototype.subscribe = function (type, options, callback) {
                 this.methodModelFactory.createMethodModel('getPastLogs'),
                 this.methodController
             ).subscribe(callback);
+
         case 'newBlockHeaders':
-            return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
+            return this.subscriptionsFactory.createNewHeadsSubscription(
+                this
+            ).subscribe(callback);
+
         case 'pendingTransactions':
-            return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
+            return this.subscriptionsFactory.createNewPendingTransactionsSubscription(
+                this
+            ).subscribe(callback);
+
         case 'syncing':
-            return this.subscriptionsFactory.createSyncingSubscriptionModel(this).subscribe(callback);
+            return this.subscriptionsFactory.createSyncingSubscriptionModel(
+                this
+            ).subscribe(callback);
+
         default:
             throw Error('Unknown subscription: ' + type);
     }
@@ -177,9 +187,9 @@ Eth.prototype.setProvider = function (provider) {
     this.accounts.setProvider(provider);
     this.personal.setProvider(provider);
     this.ens.setProvider(provider);
-    
+
     this.initiatedContracts.forEach(function (contract) {
-       contract.setProvider(provider); 
+       contract.setProvider(provider);
     });
 };
 

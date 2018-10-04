@@ -26,11 +26,23 @@ var version = require('./package.json').version;
 var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
 var LogSubscriptionModel = require('./models/subscriptions/eth/LogSubscriptionModel');
 var Subscription = require('./Subscription');
+var Utils = require('web3-utils');
+var formatters = require('web3-core-helpers').formatters;
 
 module.exports = {
     version: version,
 
     Subscription: Subscription,
     LogSubscriptionModel: LogSubscriptionModel,
-    SubscriptionsFactory: SubscriptionsFactory
+
+    /**
+     * Returns an object of type SubscriptionsFactory
+     *
+     * @method createSubscriptionsFactory
+     *
+     * @returns {SubscriptionsFactory}
+     */
+    createSubscriptionsFactory: function () {
+        return new SubscriptionsFactory(Utils, formatters);
+    }
 };
