@@ -129,7 +129,9 @@ Subscription.prototype.reconnect = function (callback) {
         self.unsubscribe().then(function () {
             self.subscribe(callback);
         }).catch(function (error) {
-            callback(error, null);
+            if(_.isFunction(callback)) {
+                callback(error, null);
+            }
         });
     });
 };
@@ -155,7 +157,10 @@ Subscription.prototype.unsubscribe = function (callback) {
 
         if (!response) {
             self.subscriptionId = null;
-            callback(true, false);
+
+            if(_.isFunction(callback)) {
+                callback(true, false);
+            }
 
             return true;
         }

@@ -96,9 +96,12 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3P
                     }
 
                     promiEvent.reject(validationResult);
-                    promiEvent.eventEmitter.emit('error', validationResult, receipt);
+                    promiEvent.eventEmitter.emit('error', [validationResult, receipt]);
                     promiEvent.eventEmitter.removeAllListeners();
-                    methodModel.callback(validationResult, null);
+
+                    if (methodModel.callback) {
+                        methodModel.callback(validationResult, null);
+                    }
                 });
 
                 return;
@@ -148,7 +151,10 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
         promiEvent.resolve(methodModel.afterExecution(receipt));
         promiEvent.eventEmitter.emit('receipt', receipt);
         promiEvent.eventEmitter.removeAllListeners();
-        methodModel.callback(false, receipt);
+
+        if (methodModel.callback) {
+            methodModel.callback(false, receipt);
+        }
 
         return;
     }
@@ -159,7 +165,9 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
     promiEvent.eventEmitter.emit('receipt', mappedReceipt);
     promiEvent.eventEmitter.removeAllListeners();
 
-    methodModel.callback(false, mappedReceipt);
+    if (methodModel.callback) {
+        methodModel.callback(false, mappedReceipt);
+    }
 };
 
 /**
@@ -180,7 +188,9 @@ TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, me
     promiEvent.eventEmitter.emit('error', error);
     promiEvent.eventEmitter.removeAllListeners();
 
-    methodModel.callback(error, null);
+    if (methodModel.callback) {
+        methodModel.callback(error, null);
+    }
 };
 
 module.exports = TransactionConfirmationWorkflow;

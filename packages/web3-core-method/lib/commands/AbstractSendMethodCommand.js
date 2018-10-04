@@ -81,12 +81,18 @@ AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEve
         );
 
         promiEvent.eventEmitter.emit('transactionHash', response);
-        methodModel.callback(false, response);
+
+        if (methodModel.callback) {
+            methodModel.callback(false, response);
+        }
     }).catch(function (error) {
         promiEvent.reject(error);
         promiEvent.on('error', error);
         promiEvent.eventEmitter.removeAllListeners();
-        methodModel.callback(error, null);
+
+        if (methodModel.callback) {
+            methodModel.callback(error, null);
+        }
     });
 };
 

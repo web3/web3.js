@@ -51,7 +51,9 @@ SignMessageCommand.prototype.execute = function (methodModel, accounts) {
         throw error;
     }
 
-    methodModel.callback(null, signedMessage);
+    if (methodModel.callback) {
+        methodModel.callback(null, signedMessage);
+    }
 
     return signedMessage;
 };

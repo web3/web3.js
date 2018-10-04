@@ -99,23 +99,23 @@ AbstractMethodModel.prototype.request = function () {
  * @returns {Object}
  */
 AbstractMethodModel.prototype.mapFunctionArguments = function (args) {
-    var parameters = args;
-    var callback = null;
+    var parameters = args,
+        callback = false;
 
-    if (arguments.length < this.parametersAmount) {
+    if (args.length < this.parametersAmount) {
         throw new Error(
-            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + arguments.length
+            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + args.length
         );
     }
 
-    if (arguments.length > this.parametersAmount) {
-        callback = arguments.slice(-1);
+    if (args.length > this.parametersAmount) {
+        callback = args.slice(-1);
         if(!_.isFunction(callback)) {
             throw new Error(
                 'The latest parameter should be a function otherwise it can not be used as callback'
             );
         }
-        parameters = arguments.slice(0, -1);
+        parameters = args.slice(0, -1);
     }
 
     return {

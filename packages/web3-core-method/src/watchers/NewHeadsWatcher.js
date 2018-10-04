@@ -47,11 +47,11 @@ NewHeadsWatcher.prototype.watch = function (web3Package) {
     var self = this;
 
     if (web3Package.currentProvider instanceof SocketProviderAdapter) {
-        this.confirmationSubscription = this.subscriptionsFactory.createNewHeadsSubscription(web3Package).subscribe(
-            function () {
+        this.confirmationSubscription = this.subscriptionsFactory
+            .createNewHeadsSubscription(web3Package)
+            .subscribe(function () {
                 self.emit('newHead');
-            }
-        );
+            });
 
         return this;
     }

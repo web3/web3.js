@@ -64,7 +64,10 @@ SignAndSendMethodCommand.prototype.execute = function (
         promiEvent.reject(error);
         promiEvent.on('error', error);
         promiEvent.eventEmitter.removeAllListeners();
-        methodModel.callback(error, null);
+
+        if (methodModel.callback) {
+            methodModel.callback(error, null);
+        }
     });
 
     return promiEvent;
