@@ -19,13 +19,12 @@
 
 "use strict";
 
-var _ = require('underscore');
 var Contract = require('web3-eth-contract').Contract;
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
+var RESOLVER_ABI = require('../ressources/ABI/Resolver');
 
 
 /**
- * A wrapper around the ENS registry contract.
+ * A wrapper around the ENS resolver contract.
  *
  * @param {ENSNetworkDetector} ensNetworkDetector
  * @param {*} provider
@@ -43,7 +42,7 @@ var REGISTRY_ABI = require('../ressources/ABI/Registry');
  *
  * @constructor
  */
-function Registry(
+function Resolver(
     ensNetworkDetector,
     provider,
     providersPackage,
@@ -70,7 +69,7 @@ function Registry(
         formatters,
         accounts,
         abiMapper,
-        REGISTRY_ABI,
+        RESOLVER_ABI,
         null,
         options
     );
@@ -80,7 +79,7 @@ function Registry(
     });
 }
 
-Registry.prototype = Object.create(Contract.prototype);
-Registry.prototype.constructor = Registry;
+Resolver.prototype = Object.create(Contract.prototype);
+Resolver.prototype.constructor = Resolver;
 
-module.exports = Registry;
+module.exports = Resolver;
