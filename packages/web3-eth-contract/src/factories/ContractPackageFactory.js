@@ -56,7 +56,51 @@ function ContractPackageFactory(utils, formatters, abiCoder, accounts) {
 }
 
 /**
- * Returns an object of ABIModel
+ * Returns an object of type Contract
+ *
+ * @method createContract
+ *
+ * @param {*} provider
+ * @param {ProvidersPackage} providersPackage
+ * @param {MethodController} methodController
+ * @param {BatchRequestPackage} batchRequestPackage
+ * @param {PromiEventPackage} promiEventPackage
+ * @param {Object} abi
+ * @param {String} address
+ * @param {Object} options
+ *
+ * @returns {Contract}
+ */
+ContractPackageFactory.prototype.createContract = function (
+    provider,
+    providersPackage,
+    methodController,
+    batchRequestPackage,
+    promiEventPackage,
+    abi,
+    address,
+    options
+) {
+    return new Contract(
+        provider,
+        providersPackage,
+        new MethodController(),
+        batchRequestPackage,
+        this,
+        promiEventPackage,
+        this.abiCoder,
+        this.utils,
+        this.formatters,
+        this.accounts,
+        this.createABIMapper(),
+        abi,
+        address,
+        options
+    );
+};
+
+/**
+ * Returns an object of type ABIModel
  *
  * @method createABIModel
  *
@@ -69,7 +113,7 @@ ContractPackageFactory.prototype.createABIModel = function (mappedAbi) {
 };
 
 /**
- * Returns an object of ABIItemModel
+ * Returns an object of type ABIItemModel
  *
  * @method createABIItemModel
  *
@@ -82,7 +126,7 @@ ContractPackageFactory.prototype.createABIItemModel = function (abiItem) {
 };
 
 /**
- * Returns an object of MethodEncoder
+ * Returns an object of type MethodEncoder
  *
  * @method createMethodEncoder
  *
@@ -93,7 +137,7 @@ ContractPackageFactory.prototype.createMethodEncoder = function () {
 };
 
 /**
- * Returns an object of EventFilterEncoder
+ * Returns an object of type EventFilterEncoder
  *
  * @method createEventFilterEncoder
  *
@@ -104,7 +148,7 @@ ContractPackageFactory.prototype.createEventFilterEncoder = function () {
 };
 
 /**
- * Returns an object of AllEventsFilterEncoder
+ * Returns an object of type AllEventsFilterEncoder
  *
  * @method createAllEventsFilterEncoder
  *
@@ -115,7 +159,7 @@ ContractPackageFactory.prototype.createAllEventsFilterEncoder = function () {
 };
 
 /**
- * Returns an object of ABIMapper
+ * Returns an object oftype ABIMapper
  *
  * @method createABIMapper
  *
@@ -126,7 +170,7 @@ ContractPackageFactory.prototype.createABIMapper = function () {
 };
 
 /**
- * Returns an object of CallMethodResponseDecoder
+ * Returns an object of type CallMethodResponseDecoder
  *
  * @method createCallMethodResponseDecoder
  *
@@ -137,7 +181,7 @@ ContractPackageFactory.prototype.createCallMethodResponseDecoder = function () {
 };
 
 /**
- * Returns an object of EventLogDecoder
+ * Returns an object of type EventLogDecoder
  *
  * @method createEventLogDecoder
  *
@@ -149,7 +193,7 @@ ContractPackageFactory.prototype.createEventLogDecoder = function () {
 
 
 /**
- * Returns an object of AllEventsLogDecoder
+ * Returns an object of type AllEventsLogDecoder
  *
  * @method createAllEventsLogDecoder
  *
@@ -160,7 +204,7 @@ ContractPackageFactory.prototype.createAllEventsLogDecoder = function () {
 };
 
 /**
- * Returns an object of RpcMethodOptionsValidator
+ * Returns an object of type RpcMethodOptionsValidator
  *
  * @method createRpcMethodOptionsValidator
  *
@@ -171,7 +215,7 @@ ContractPackageFactory.prototype.createRpcMethodOptionsValidator = function () {
 };
 
 /**
- * Returns an object of RpcMethodOptionsMapper
+ * Returns an object of type RpcMethodOptionsMapper
  *
  * @method createRpcMethodOptionsMapper
  *
@@ -182,7 +226,7 @@ ContractPackageFactory.prototype.createRpcMethodOptionsMapper = function () {
 };
 
 /**
- * Returns an object of EventOptionsMapper
+ * Returns an object of type EventOptionsMapper
  *
  * @method createEventOptionsMapper
  *
@@ -193,7 +237,7 @@ ContractPackageFactory.prototype.createEventOptionsMapper = function () {
 };
 
 /**
- * Returns an object of AllEventsOptionsMapper
+ * Returns an object of type AllEventsOptionsMapper
  *
  * @method createAllEventsOptionsMapper
  *
@@ -204,7 +248,7 @@ ContractPackageFactory.prototype.createAllEventsOptionsMapper = function () {
 };
 
 /**
- * Returns an object of RpcMethodModelFactory
+ * Returns an object of type RpcMethodModelFactory
  *
  * @method createRpcMethodModelFactory
  *
@@ -220,7 +264,7 @@ ContractPackageFactory.prototype.createRpcMethodModelFactory = function () {
 };
 
 /**
- * Returns an Object of MethodsProxy
+ * Returns an object of type MethodsProxy
  *
  * @method createMethodsProxy
  *
@@ -250,7 +294,7 @@ ContractPackageFactory.prototype.createMethodsProxy = function (
 };
 
 /**
- * Returns an object of EventSubscriptionsProxy
+ * Returns an object of type EventSubscriptionsProxy
  *
  * @method createEventSubscriptionsProxy
  *
@@ -277,7 +321,7 @@ ContractPackageFactory.prototype.createEventSubscriptionsProxy = function (
 };
 
 /**
- * Returns an object of EventSubscriptionFactory
+ * Returns an object of type EventSubscriptionFactory
  *
  * @method createEventSubscriptionFactory
  *

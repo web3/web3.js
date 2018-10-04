@@ -23,14 +23,49 @@
 "use strict";
 
 var version = require('./package.json').version;
+var PromiEventPackage = require('web3-core-promievent');
+var MethodPackage = require('web3-core-method');
+var ProvidersPackage = require('web3-core-providers');
+var BatchRequestPackage = require('web3-core-batch');
+var ABIPackage = require('web3-eth-abi');
+var Utils = require('web3-utils');
+var formatters = require('web3-core-helpers').formatters;
 var Contract = require('./Contract');
 var ContractDeployMethodModel = require('./models/methods/ContractDeployMethodModel');
+var ContractPackageFactory = require('./factories/ContractPackageFactory');
 
-// TODO: define public api
 module.exports = {
     version: version,
+
     Contract: Contract,
     ContractDeployMethodModel: ContractDeployMethodModel,
-// TODO: Refactor Contract object because of the new handling
-// TODO: don't forget the currentProvider, defaultBlock, defaultAccount and accounts handling
+
+    /**
+     * Returns an object of type Contract
+     *
+     * @param {*} provider
+     * @param {Accounts} accounts
+     * @param {Object} abi
+     * @param {String} address
+     * @param {Object} options
+     *
+     * @returns {Contract}
+     */
+    createContract: function (provider, accounts, abi, address, options) {
+        return new ContractPackageFactory(
+            Utils,
+            formatters,
+            ABIPackage.createAbiCoder(),
+            accounts
+        ).createContract(
+            provider,
+            ProvidersPackage,
+            MethodPackage.createMethodController(),
+            BatchRequestPackage,
+            PromiEventPackage,
+            abi,
+            address,
+            options
+        );
+    }
 };

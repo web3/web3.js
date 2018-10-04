@@ -36,7 +36,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {Object} formatters
  * @param {Accounts} accounts
  * @param {ABIMapper} abiMapper
- * @param {Array} abi
+ * @param {Object} abi
  * @param {String} address
  * @param {Object} options
  *
