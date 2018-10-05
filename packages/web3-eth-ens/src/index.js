@@ -21,13 +21,13 @@
 "use strict";
 
 var version = require('package.json').version;
-var ENS = require('./ENS');
 var ContractPackage = require('web3-eth-contract');
 var PromiEventPackage = require('web3-core-promievent');
-var REGISTRY_ABI = require('./ressources/ABI/Registry');
-var RESOLVER_ABI = require('./ressources/ABI/Resolver');
+var REGISTRY_ABI = require('../ressources/ABI/Registry');
+var RESOLVER_ABI = require('../ressources/ABI/Resolver');
+var ENSPackageFactory = require('./factories/ENSPackageFactory');
 
-module.exports = {
+module.exports = { // TODO: overthink the ens package architecture and refactor it.
     version: version,
 
     /**
@@ -41,6 +41,13 @@ module.exports = {
      * @returns {ENS}
      */
     createENS: function (net, accounts) {
-        return new ENS(net, accounts, ContractPackage, REGISTRY_ABI, RESOLVER_ABI, PromiEventPackage);
+        return new ENSPackageFactory().createENS(
+            net,
+            accounts,
+            ContractPackage,
+            REGISTRY_ABI,
+            RESOLVER_ABI,
+            PromiEventPackage
+        );
     }
 };

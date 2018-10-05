@@ -20,28 +20,24 @@
 
 "use strict";
 
-var config = require('./config');
-var Registry = require('./contracts/Registry');
-var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
-
 /**
- * @param {Network} net
- * @param {Accounts} accounts
- * @param {ContractPackage} contractPackage
- * @param {Object} registryAbi
- * @param {Object} resolverAbi
- * @param {PromiEventPackage} promiEventPackage
+ * @param {Registry} registry
+ * @param {ResolverMethodHandler} resolverMethodHandler
  *
  * @constructor
  */
-function ENS(net, accounts, contractPackage, registryAbi, resolverAbi, promiEventPackage) {
-    this.net = net;
-    this.registry = new Registry(net, accounts, contractPackage, registryAbi, resolverAbi);
-    this.resolverMethodHandler = new ResolverMethodHandler(this.registry, promiEventPackage);
+function ENS(registry, resolverMethodHandler) {
+    this.registry = registry;
+    this.resolverMethodHandler = resolverMethodHandler;
 }
 
 /**
+ * Returns an contract of type resolver
+ *
+ * @method resolver
+ *
  * @param {String} name
+ *
  * @returns {Promise<Contract>}
  */
 ENS.prototype.resolver = function (name) {
@@ -52,8 +48,12 @@ ENS.prototype.resolver = function (name) {
  * Returns the address record associated with a name.
  *
  * @method getAddress
+ *
+ * @method getAddress
  * @param {String} name
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @return {eventifiedPromise}
  */
 ENS.prototype.getAddress = function (name, callback) {
@@ -64,10 +64,13 @@ ENS.prototype.getAddress = function (name, callback) {
  * Sets a new address
  *
  * @method setAddress
+ *
  * @param {String} name
  * @param {String} address
  * @param {Object} sendOptions
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
@@ -78,8 +81,11 @@ ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
  * Returns the public key
  *
  * @method getPubkey
+ *
  * @param {String} name
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.getPubkey = function (name, callback) {
@@ -90,11 +96,14 @@ ENS.prototype.getPubkey = function (name, callback) {
  * Set the new public key
  *
  * @method setPubkey
+ *
  * @param {String} name
  * @param {String} x
  * @param {String} y
  * @param {Object} sendOptions
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
@@ -105,8 +114,11 @@ ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
  * Returns the content
  *
  * @method getContent
+ *
  * @param {String} name
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.getContent = function (name, callback) {
@@ -117,10 +129,13 @@ ENS.prototype.getContent = function (name, callback) {
  * Set the content
  *
  * @method setContent
+ *
  * @param {String} name
  * @param {String} hash
- * @param {function} callback
  * @param {Object} sendOptions
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
@@ -131,8 +146,11 @@ ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
  * Get the multihash
  *
  * @method getMultihash
+ *
  * @param {String} name
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.getMultihash = function (name, callback) {
@@ -143,39 +161,17 @@ ENS.prototype.getMultihash = function (name, callback) {
  * Set the multihash
  *
  * @method setMultihash
+ *
  * @param {String} name
  * @param {String} hash
  * @param {Object} sendOptions
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
     return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(sendOptions, callback);
-};
-
-/**
- * Checks if the current used network is synced and looks for ENS support there.
- * Throws an error if not.
- *
- * @returns {Promise<Block>}
- */
-ENS.prototype.checkNetwork = function () {
-    var self = this;
-    return self.net.getBlock('latest', false).then(function (block) {
-        var headAge = new Date() / 1000 - block.timestamp;
-        if (headAge > 3600) {
-            throw new Error("Network not synced; last block was " + headAge + " seconds ago");
-        }
-
-        return self.net.getNetworkType();
-    }).then(function (networkType) {
-        var addr = config.addresses[networkType];
-        if (typeof addr === 'undefined') {
-            throw new Error("ENS is not supported on network " + networkType);
-        }
-
-        return addr;
-    });
 };
 
 module.exports = ENS;
