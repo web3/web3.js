@@ -183,7 +183,6 @@ Eth.prototype.setProvider = function (provider) {
     this.net.setProvider(provider);
     this.accounts.setProvider(provider);
     this.personal.setProvider(provider);
-    this.ens.setProvider(provider);
 
     this.initiatedContracts.forEach(function (contract) {
        contract.setProvider(provider);
