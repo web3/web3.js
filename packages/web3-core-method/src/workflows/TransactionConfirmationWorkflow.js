@@ -96,7 +96,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3P
                     }
 
                     promiEvent.reject(validationResult);
-                    promiEvent.eventEmitter.emit('error', validationResult, receipt);
+                    promiEvent.eventEmitter.emit('error', [validationResult, receipt]);
                     promiEvent.eventEmitter.removeAllListeners();
 
                     if (methodModel.callback) {

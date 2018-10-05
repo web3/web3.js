@@ -13,6 +13,7 @@
 */
 /**
  * @file Registry.js
+ *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -20,67 +21,80 @@
 "use strict";
 
 var _ = require('underscore');
-var Contract = require('web3-eth-contract').Contract;
+var Contract = require('web3-eth-contract');
+var namehash = require('eth-ens-namehash');
+var PromiEvent = require('web3-core-promievent');
 var REGISTRY_ABI = require('../ressources/ABI/Registry');
+var RESOLVER_ABI = require('../ressources/ABI/Resolver');
 
 
 /**
  * A wrapper around the ENS registry contract.
  *
- * @param {ENSNetworkDetector} ensNetworkDetector
- * @param {*} provider
- * @param {ProvidersPackage} providersPackage
- * @param {MethodController} methodController
- * @param {BatchRequestPackage} batchRequestPackage
- * @param {ContractPackageFactory} contractPackageFactory
- * @param {PromiEventPackage} promiEventPackage
- * @param {ABICoder} abiCoder
- * @param {Object} utils
- * @param {Object}formatters
- * @param {Accounts} accounts
- * @param {ABIMapper} abiMapper
- * @param {Object} options
- *
+ * @method Registry
+ * @param {Ens} ens
  * @constructor
  */
-function Registry(
-    ensNetworkDetector,
-    provider,
-    providersPackage,
-    methodController,
-    batchRequestPackage,
-    contractPackageFactory,
-    promiEventPackage,
-    abiCoder,
-    utils,
-    formatters,
-    accounts,
-    abiMapper,
-    options
-) {
-    Contract.call(this,
-        provider,
-        providersPackage,
-        methodController,
-        batchRequestPackage,
-        contractPackageFactory,
-        promiEventPackage,
-        abiCoder,
-        utils,
-        formatters,
-        accounts,
-        abiMapper,
-        REGISTRY_ABI,
-        null,
-        options
-    );
+function Registry(ens) {
+    var self = this;
+    this.ens = ens;
+    this.contract = ens.checkNetwork().then(function (address) {
+        var contract = new Contract(REGISTRY_ABI, address);
+        contract.setProvider(self.ens.eth.currentProvider);
 
-    ensNetworkDetector.detect().then(function (address) {
-        self.options.address = address;
+        return contract;
     });
 }
 
-Registry.prototype = Object.create(Contract.prototype);
-Registry.prototype.constructor = Registry;
+/**
+ * Returns the address of the owner of an ENS name.
+ *
+ * @method owner
+ * @param {String} name
+ * @param {function} callback
+ * @return {Promise<any>}
+ */
+Registry.prototype.owner = function (name, callback) {
+    var promiEvent = new PromiEvent(true);
+
+    this.contract.then(function (contract) {
+        contract.methods.owner(namehash.hash(name)).call()
+            .then(function (receipt) {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .catch(function (error) {
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+    });
+
+    return promiEvent.eventEmitter;
+};
+
+/**
+ * Returns the resolver contract associated with a name.
+ *
+ * @method resolver
+ * @param {String} name
+ * @return {Promise<Contract>}
+ */
+Registry.prototype.resolver = function (name) {
+    var self = this;
+
+    return this.contract.then(function (contract) {
+        return contract.methods.resolver(namehash.hash(name)).call();
+    }).then(function (address) {
+        var contract = new Contract(RESOLVER_ABI, address);
+        contract.setProvider(self.ens.eth.currentProvider);
+        return contract;
+    });
+};
 
 module.exports = Registry;

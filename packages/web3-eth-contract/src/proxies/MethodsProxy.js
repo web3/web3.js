@@ -69,11 +69,8 @@ function MethodsProxy(
  * @returns {Function|Error}
  */
 MethodsProxy.prototype.proxyHandler = function (target, name) {
-    if (target[name]) {
-        return this[name];
-    }
-
     var abiItemModel = this.abiModel.getMethod(name);
+
     if (abiItemModel) {
         var requestType = abiItemModel.requestType;
         if (requestType === 'contract-deployment') {
@@ -85,7 +82,7 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
 
             // Because of the possibility to overwrite the contract data if I call contract.deploy() have I to check
             // here if it is a contract deployment. If this call is a contract deployment then I have to set the right
-            // contract data and to map the arguments.
+            // contract data and to map the arguments. TODO: Change API or improve this
             if (requestType === 'contract-deployment') {
                 if (arguments[0]['data']) {
                     target.contract.options.data = target.contract.options.data || arguments[0]['data'];
@@ -116,6 +113,10 @@ MethodsProxy.prototype.proxyHandler = function (target, name) {
         anonymousFunction.encodeAbi = function () {
             return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
         };
+    }
+
+    if (target[name]) {
+        return this[name];
     }
 
     throw Error('Method with name "' + name + '" not found');
