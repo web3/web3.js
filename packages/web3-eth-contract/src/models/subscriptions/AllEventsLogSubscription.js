@@ -22,7 +22,7 @@
 
 "use strict";
 
-var LogSubscriptionModel = require('web3-core-subscription').LogSubscriptionModel;
+var LogSubscriptionModel = require('web3-core-subscriptions').LogSubscriptionModel;
 
 /**
  * @param {Object} options

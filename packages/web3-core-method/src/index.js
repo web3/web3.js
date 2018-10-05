@@ -27,7 +27,7 @@ var version = require('./package.json');
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
 var PromiEventPackage = require('web3-core-promievent');
-var SubscriptionPackage = require('web3-core-subscription');
+var SubscriptionPackage = require('web3-core-subscriptions');
 var formatters = require('web3-core-helpers').formatters;
 
 // Methods

@@ -71,9 +71,9 @@ var packages = [{
     expose: 'Web3Providers',
     src: './packages/web3-core-providers/src/index.js'
 }, {
-    fileName: 'web3-core-subscription',
+    fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscription',
-    src: './packages/web3-core-subscription/src/index.js'
+    src: './packages/web3-core-subscriptions/src/index.js'
 }, {
     fileName: 'web3-core-promievent',
     expose: 'Web3PromiEvent',

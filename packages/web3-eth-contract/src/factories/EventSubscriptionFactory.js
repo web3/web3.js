@@ -22,7 +22,7 @@
 
 "use strict";
 
-var Subscription = require('web3-core-subscription').Subscription;
+var Subscription = require('web3-core-subscriptions').Subscription;
 var GetPastLogsMethodModel = require('web3-core-method').GetPastLogsMethodModel;
 var EventLogSubscription = require('../models/subscriptions/EventLogSubscription');
 var AllEventsLogSubscription = require('../models/subscriptions/AllEventsLogSubscription');
