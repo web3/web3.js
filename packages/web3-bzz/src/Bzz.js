@@ -26,11 +26,11 @@ var _ = require('underscore');
 var swarm = require("swarm-js");
 
 /**
- * @param {Object} provider
+ * @param {Object|String} provider
  *
  * @constructor
  */
-function Bzz(provider) {// TODO: have a closer look on the provider detection for Bzz maybe this could be done with the AbstractWeb3Object too.
+function Bzz(provider) {
     this.givenProvider = Bzz.givenProvider;
     this.currentProvider = null;
     this.setProvider(provider);
@@ -106,7 +106,7 @@ Bzz.prototype.isAvailable = function () {
  *
  * @method hasProvider
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 Bzz.prototype.hasProvider = function () {
     return !!this.currentProvider;
@@ -127,9 +127,9 @@ Bzz.prototype.throwProviderError = function () {
  *
  * @method setProvider
  *
- * @param {Object} provider
+ * @param {Object|String} provider
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 Bzz.prototype.setProvider = function (provider) {
     // is ethereum provider
