@@ -208,6 +208,15 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
         var anonymousFunction = function () {
             methodModel.methodArguments = arguments;
 
+            if (methodModel.parameters.length !== methodModel.parametersAmount) {
+                throw Error(
+                    'Invalid parameters length the expected length would be'
+                    + methodModel.parametersAmount +
+                    'and not'
+                    + methodModel.parameters.length
+                );
+            }
+
             return target.methodController.execute(methodModel, target.accounts, target);
         };
 
