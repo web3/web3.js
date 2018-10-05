@@ -38,7 +38,7 @@ function ProviderAdapterResolver(providersPackageFactory) {
  *
  * @method resolve
  *
- * @param {any} provider
+ * @param {*} provider
  * @param {Net} net
  *
  * @returns {Object|Boolean}
@@ -79,7 +79,6 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
             return this.providersPackageFactory.createSocketProviderAdapter(provider);
         case 'IpcProvider':
             return this.providersPackageFactory.createSocketProviderAdapter(provider);
-
     }
 
     throw Error('Please provide an Web3 provider or the EthereumProvider');

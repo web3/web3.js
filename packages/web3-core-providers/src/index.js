@@ -46,10 +46,10 @@ module.exports = {
      *
      * @method resolve
      *
-     * @param {Object} provider
+     * @param {Object|String} provider
      * @param {Net} net
      *
-     * @returns {Object}
+     * @returns {AbstractProviderAdapter}
      */
     resolve: function (provider, net) {
         return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);

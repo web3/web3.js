@@ -44,7 +44,6 @@ JSONRpcMapper.toPayload = function (method, params) {
         throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
     }
 
-    // advance message ID
     JSONRpcMapper.messageId++;
 
     return {
