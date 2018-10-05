@@ -22,8 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
-
 /**
  * @param {Object} utils
  *

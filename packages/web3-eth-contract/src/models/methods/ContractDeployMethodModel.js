@@ -21,7 +21,7 @@
  */
 
 "use strict";
-var _ = require('underscore');
+
 var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
 
 /**

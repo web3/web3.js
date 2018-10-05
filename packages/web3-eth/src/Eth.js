@@ -22,7 +22,6 @@
 
 "use strict";
 
-var _ = require('underscore');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
