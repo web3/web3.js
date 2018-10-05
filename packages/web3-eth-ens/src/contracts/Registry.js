@@ -13,7 +13,6 @@
 */
 /**
  * @file Registry.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -21,28 +20,32 @@
 "use strict";
 
 var _ = require('underscore');
-var Contract = require('web3-eth-contract');
 var namehash = require('eth-ens-namehash');
-var PromiEvent = require('web3-core-promievent');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
-
 
 /**
- * A wrapper around the ENS registry contract.
+ * @param {Network} net
+ * @param {Accounts} accounts
+ * @param {ContractPackage} contractPackage
+ * @param {Object} registryABI
+ * @param {Object} resolverABI
  *
- * @method Registry
- * @param {Ens} ens
  * @constructor
  */
-function Registry(ens) {
+function Registry(net, accounts, contractPackage, registryABI, resolverABI) {
     var self = this;
-    this.ens = ens;
-    this.contract = ens.checkNetwork().then(function (address) {
-        var contract = new Contract(REGISTRY_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
+    this.net = net;
+    this.accounts = accounts;
+    this.contractPackage = contractPackage;
+    this.registryABI = registryABI;
+    this.resolverABI = resolverABI;
 
-        return contract;
+    this.contract = ens.checkNetwork().then(function (address) {
+        return self.contractPackage.createContract(
+            self.net.currentProvider,
+            self.accounts,
+            self.registryABI,
+            address
+        );
     });
 }
 
@@ -50,40 +53,46 @@ function Registry(ens) {
  * Returns the address of the owner of an ENS name.
  *
  * @method owner
+ *
  * @param {String} name
- * @param {function} callback
- * @return {Promise<any>}
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
+ * @returns {Promise<any>}
  */
 Registry.prototype.owner = function (name, callback) {
-    var promiEvent = new PromiEvent(true);
+    var self = this;
 
-    this.contract.then(function (contract) {
-        contract.methods.owner(namehash.hash(name)).call()
+    return new Promise(function (resolve, reject) {
+        self.contract.then(function (contract) {
+            contract.methods.owner(namehash.hash(name))
+            .call()
             .then(function (receipt) {
-                promiEvent.resolve(receipt);
+                resolve(receipt);
 
                 if (_.isFunction(callback)) {
-                    callback(receipt);
+                    callback(false, receipt);
                 }
             })
             .catch(function (error) {
-                promiEvent.reject(error);
+                reject(error);
 
                 if (_.isFunction(callback)) {
-                    callback(error);
+                    callback(error, null);
                 }
             });
+        });
     });
-
-    return promiEvent.eventEmitter;
 };
 
 /**
  * Returns the resolver contract associated with a name.
  *
  * @method resolver
+ *
  * @param {String} name
- * @return {Promise<Contract>}
+ *
+ * @returns {Promise<Contract>}
  */
 Registry.prototype.resolver = function (name) {
     var self = this;
@@ -91,9 +100,12 @@ Registry.prototype.resolver = function (name) {
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
-        var contract = new Contract(RESOLVER_ABI, address);
-        contract.setProvider(self.ens.eth.currentProvider);
-        return contract;
+        return self.contractPackage.createContract(
+            self.net.currentProvider,
+            self.accounts,
+            self.resolverABI,
+            address
+        );
     });
 };
 

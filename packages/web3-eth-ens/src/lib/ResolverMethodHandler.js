@@ -20,16 +20,18 @@
 
 "use strict";
 
-var PromiEvent = require('web3-core-promievent');
 var namehash = require('eth-ens-namehash');
 var _ = require('underscore');
 
 /**
  * @param {Registry} registry
+ * @param {PromiEventPackage} promiEventPackage
+ *
  * @constructor
  */
-function ResolverMethodHandler(registry) {
+function ResolverMethodHandler(registry, promiEventPackage) {
     this.registry = registry;
+    this.promiEventPackage = promiEventPackage;
 }
 
 /**
@@ -38,23 +40,22 @@ function ResolverMethodHandler(registry) {
  * @param {String} ensName
  * @param {String} methodName
  * @param {Array} methodArguments
- * @param {function} callback
+ * @param {Function} callback
+ *
  * @returns {Object}
  */
-ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments, callback) {
+ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments) {
     return {
         call: this.call.bind({
             ensName: ensName,
             methodName: methodName,
             methodArguments: methodArguments,
-            callback: callback,
             parent: this
         }),
         send: this.send.bind({
             ensName: ensName,
             methodName: methodName,
             methodArguments: methodArguments,
-            callback: callback,
             parent: this
         })
     };
@@ -63,12 +64,17 @@ ResolverMethodHandler.prototype.method = function (ensName, methodName, methodAr
 /**
  * Executes call
  *
+ * @method call
+ *
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.call = function (callback) {
-    var self = this;
-    var promiEvent = new PromiEvent();
-    var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+    var self = this,
+        promiEvent = this.promiEventPackage.createPromiEvent(),
+        preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.parent.registry.resolver(this.ensName).then(function (resolver) {
         self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
@@ -83,14 +89,18 @@ ResolverMethodHandler.prototype.call = function (callback) {
 /**
  * Executes send
  *
+ * @method send
+ *
  * @param {Object} sendOptions
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
-    var self = this;
-    var promiEvent = new PromiEvent();
-    var preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+    var self = this,
+        promiEvent = this.promiEventPackage.createPromiEvent(),
+        preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
     this.parent.registry.resolver(this.ensName).then(function (resolver) {
         self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
@@ -104,10 +114,14 @@ ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
 /**
  * Handles a call method
  *
+ * @method handleCall
+ *
  * @param {eventifiedPromise} promiEvent
  * @param {function} method
  * @param {Array} preparedArguments
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, callback) {
@@ -132,11 +146,15 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
 /**
  * Handles a send method
  *
+ * @method handleSend
+ *
  * @param {eventifiedPromise} promiEvent
  * @param {function} method
  * @param {Array} preparedArguments
  * @param {Object} sendOptions
- * @param {function} callback
+ * @param {Function} callback
+ *
+ * @callback callback callback(error, result)
  * @returns {eventifiedPromise}
  */
 ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, sendOptions, callback) {
@@ -170,8 +188,11 @@ ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, prepa
 /**
  * Adds the ENS node to the arguments
  *
+ * @method prepareArguments
+ *
  * @param {String} name
  * @param {Array} methodArguments
+ *
  * @returns {Array}
  */
 ResolverMethodHandler.prototype.prepareArguments = function (name, methodArguments) {

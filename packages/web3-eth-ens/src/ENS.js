@@ -25,29 +25,20 @@ var Registry = require('./contracts/Registry');
 var ResolverMethodHandler = require('./lib/ResolverMethodHandler');
 
 /**
- * Constructs a new instance of ENS
+ * @param {Network} net
+ * @param {Accounts} accounts
+ * @param {ContractPackage} contractPackage
+ * @param {Object} registryAbi
+ * @param {Object} resolverAbi
+ * @param {PromiEventPackage} promiEventPackage
  *
- * @method ENS
- * @param {Object} eth
  * @constructor
  */
-function ENS(eth) { // TODO: Remove circular dependency.
-    this.eth = eth;
+function ENS(net, accounts, contractPackage, registryAbi, resolverAbi, promiEventPackage) {
+    this.net = net;
+    this.registry = new Registry(net, accounts, contractPackage, registryAbi, resolverAbi);
+    this.resolverMethodHandler = new ResolverMethodHandler(this.registry, promiEventPackage);
 }
-
-Object.defineProperty(ENS.prototype, 'registry', {
-    get: function () {
-        return new Registry(this);
-    },
-    enumerable: true
-});
-
-Object.defineProperty(ENS.prototype, 'resolverMethodHandler', {
-    get: function () {
-        return new ResolverMethodHandler(this.registry);
-    },
-    enumerable: true
-});
 
 /**
  * @param {String} name
@@ -92,7 +83,7 @@ ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
  * @returns {eventifiedPromise}
  */
 ENS.prototype.getPubkey = function (name, callback) {
-    return this.resolverMethodHandler.method(name, 'pubkey', [], callback).call(callback);
+    return this.resolverMethodHandler.method(name, 'pubkey', []).call(callback);
 };
 
 /**
@@ -170,12 +161,13 @@ ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
  */
 ENS.prototype.checkNetwork = function () {
     var self = this;
-    return self.eth.getBlock('latest').then(function (block) {
+    return self.net.getBlock('latest', false).then(function (block) {
         var headAge = new Date() / 1000 - block.timestamp;
         if (headAge > 3600) {
             throw new Error("Network not synced; last block was " + headAge + " seconds ago");
         }
-        return self.eth.net.getNetworkType();
+
+        return self.net.getNetworkType();
     }).then(function (networkType) {
         var addr = config.addresses[networkType];
         if (typeof addr === 'undefined') {

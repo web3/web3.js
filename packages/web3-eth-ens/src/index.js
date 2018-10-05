@@ -22,6 +22,10 @@
 
 var version = require('package.json').version;
 var ENS = require('./ENS');
+var ContractPackage = require('web3-eth-contract');
+var PromiEventPackage = require('web3-core-promievent');
+var REGISTRY_ABI = require('./ressources/ABI/Registry');
+var RESOLVER_ABI = require('./ressources/ABI/Resolver');
 
 module.exports = {
     version: version,
@@ -31,11 +35,12 @@ module.exports = {
      *
      * @method createENS
      *
-     * @param {Eth} eth
+     * @param {Network} net
+     * @param {Accounts} accounts
      *
      * @returns {ENS}
      */
-    createENS: function (eth) { //TODO: Remove circular dependency and refactore ENS because of the new method and connection handling
-        return new ENS(eth);
+    createENS: function (net, accounts) {
+        return new ENS(net, accounts, ContractPackage, REGISTRY_ABI, RESOLVER_ABI, PromiEventPackage);
     }
 };
