@@ -27,6 +27,7 @@ var HttpProviderAdapter = require('../adapters/HttpProviderAdapter');
 var WebsocketProvider = require('../providers/WebsocketProvider');
 var IpcProvider = require('../providers/IpcProvider');
 var HttpProvider = require('../providers/HttpProvider');
+var JSONRpcResponseValidator = require('../validators/JSONRpcResponseValidator');
 
 /**
  * @constructor
@@ -132,6 +133,17 @@ ProvidersPackageFactory.prototype.createSocketProviderAdapter = function (provid
  */
 ProvidersPackageFactory.prototype.createInpageProviderAdapter = function (provider) {
     return new InpageProviderAdapter(provider)
+};
+
+/**
+ * Returns an JSONRpcResponseValidator object
+ *
+ * @method createJSONRpcResponseValidator
+ *
+ * @returns {JSONRpcResponseValidator}
+ */
+ProvidersPackageFactory.prototype.createJSONRpcResponseValidator = function () {
+    return new JSONRpcResponseValidator();
 };
 
 module.exports = ProvidersPackageFactory;

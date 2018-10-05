@@ -63,7 +63,6 @@ function ContractPackageFactory(utils, formatters, abiCoder, accounts) {
  * @param {*} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
- * @param {BatchRequestPackage} batchRequestPackage
  * @param {PromiEventPackage} promiEventPackage
  * @param {Object} abi
  * @param {String} address
@@ -75,7 +74,6 @@ ContractPackageFactory.prototype.createContract = function (
     provider,
     providersPackage,
     methodController,
-    batchRequestPackage,
     promiEventPackage,
     abi,
     address,
@@ -85,7 +83,6 @@ ContractPackageFactory.prototype.createContract = function (
         provider,
         providersPackage,
         new MethodController(),
-        batchRequestPackage,
         this,
         promiEventPackage,
         this.abiCoder,

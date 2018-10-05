@@ -28,6 +28,7 @@ var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
 var JSONRpcMapper = require('./mappers/JSONRpcMapper');
 var JSONRpcResponseValidator = require('./validators/JSONRpcResponseValidator');
+var BatchRequest = require('./batch-request/BatchRequest');
 
 module.exports = {
     version: version,
@@ -40,6 +41,23 @@ module.exports = {
 
     JSONRpcMapper: JSONRpcMapper,
     JSONRpcResponseValidator: JSONRpcResponseValidator,
+
+    /**
+     * Returns the Batch object
+     *
+     * @method createBatchRequest
+     *
+     * @param {AbstractProviderAdapter} provider
+     *
+     * @returns {BatchRequest}
+     */
+    createBatchRequest: function (provider) {
+        return new BatchRequest(
+            provider,
+            JSONRpcMapper,
+            new ProvidersPackageFactory().createJSONRpcResponseValidator()
+        );
+    },
 
     /**
      * Resolves the right provider adapter by the given parameters

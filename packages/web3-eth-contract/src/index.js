@@ -26,7 +26,6 @@ var version = require('./package.json').version;
 var PromiEventPackage = require('web3-core-promievent');
 var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
-var BatchRequestPackage = require('web3-core-batch');
 var ABIPackage = require('web3-eth-abi');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
@@ -61,7 +60,6 @@ module.exports = {
             provider,
             ProvidersPackage,
             MethodPackage.createMethodController(),
-            BatchRequestPackage,
             PromiEventPackage,
             abi,
             address,

@@ -37,7 +37,6 @@ var Iban = require('web3-eth-iban').Iban;
 var formatters = require('web3-core-helpers').formatters;
 var Utils = require('web3-utils');
 var MethodPackage = require('web3-core-method');
-var BatchRequestPackage = require('web3-core-batch');
 
 module.exports = {
     version: version,
@@ -68,8 +67,7 @@ module.exports = {
             ProvidersPackage,
             SubscriptionPackage.createSubscriptionsFactory(),
             MethodPackage.createMethodController(),
-            new MethodModelFactory(Utils, formatters, accounts),
-            BatchRequestPackage
+            new MethodModelFactory(Utils, formatters, accounts)
         );
     }
 };

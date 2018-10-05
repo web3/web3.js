@@ -25,7 +25,7 @@
 /**
  * @constructor
  */
-var JSONRpcMapper = {
+var JSONRpcMapper = { //TODO: Find a better solution to handle this property as "singleton" globally over the web3 lib
     messageId: 0
 };
 

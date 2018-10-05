@@ -23,12 +23,10 @@
 "use strict";
 
 /**
- * TODO: Split this AbstractWeb3Object in smaller objects and find a better naming for the AbstractWeb3Object
- * @param {any} provider
+ * @param {Object|String} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
- * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
  */
@@ -36,8 +34,7 @@ function AbstractWeb3Object(
     provider,
     providersPackage,
     methodController,
-    methodModelFactory,
-    batchRequestPackage
+    methodModelFactory
 ) {
     if (!this.isDependencyGiven(provider)) {
         throw Error('Provider not found!');
@@ -57,7 +54,8 @@ function AbstractWeb3Object(
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
 
-    var currentProvider = null;
+    var currentProvider = null,
+        self = this;
 
     /**
      * Defines the accessors of currentProvider
@@ -78,11 +76,9 @@ function AbstractWeb3Object(
 
     this.currentProvider = provider;
 
-    if (this.isDependencyGiven(batchRequestPackage)) {
-        this.BatchRequest = function BatchRequest() {
-            return batchRequestPackage.createBatchRequest(self.currentProvider);
-        };
-    }
+    this.BatchRequest = function BatchRequest() {
+        return self.providersPackage.createBatchRequest(self.currentProvider);
+    };
 
     if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodController)) {
         this.methodModelFactory = methodModelFactory;

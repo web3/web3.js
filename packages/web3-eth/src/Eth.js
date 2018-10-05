@@ -40,7 +40,6 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {SubscriptionsFactory} subscriptionsFactory
  * @param {MethodModelFactory} methodModelFactory
  * @param {MethodController} methodController
- * @param {BatchRequestPackage} batchRequestPackage
  *
  * @constructor
  */
@@ -58,16 +57,14 @@ var Eth = function Eth(
     providersPackage,
     subscriptionsFactory,
     methodController,
-    methodModelFactory,
-    batchRequestPackage
+    methodModelFactory
 ) {
     AbstractWeb3Object.call(
         this,
         provider,
         providersPackage,
         methodController,
-        methodModelFactory,
-        batchRequestPackage
+        methodModelFactory
     );
 
     var self = this;

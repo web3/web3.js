@@ -28,7 +28,6 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {AbstractProviderAdapter} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
- * @param {BatchRequestPackage} batchRequestPackage
  * @param {ContractPackageFactory} contractPackageFactory
  * @param {PromiEventPackage} promiEventPackage
  * @param {ABICoder} abiCoder
@@ -46,7 +45,6 @@ function Contract(
     provider,
     providersPackage,
     methodController,
-    batchRequestPackage,
     contractPackageFactory,
     promiEventPackage,
     abiCoder,
@@ -69,7 +67,6 @@ function Contract(
     this.provider = provider;
     this.providersPackage = providersPackage;
     this.methodController = methodController;
-    this.batchRequestPackage = batchRequestPackage;
     this.contractPackageFactory = contractPackageFactory;
     this.abiCoder = abiCoder;
     this.utils = utils;
@@ -86,7 +83,6 @@ function Contract(
         this.providersPackage,
         null,
         null,
-        this.batchRequestPackage
     );
 
     this.defaultBlock = 'latest';
@@ -243,7 +239,6 @@ Contract.prototype.clone = function () {
         this.provider,
         this.providersPackage,
         this.methodController,
-        this.batchRequestPackage,
         this.contractPackageFactory,
         this.promiEventPackage,
         this.abiCoder,

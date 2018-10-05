@@ -22,7 +22,7 @@
 
 "use strict";
 
-var JSONRpcResponseValidator = {};
+function JSONRpcResponseValidator() { }
 
 /**
  * Executes JSON-RPC response validation
