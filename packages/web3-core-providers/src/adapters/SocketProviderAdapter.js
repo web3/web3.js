@@ -158,17 +158,6 @@ SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId, s
     });
 };
 
-/**
- * Checks if the provider is connected
- *
- * @method isConnected
- *
- * @returns {Boolean}
- */
-SocketProviderAdapter.prototype.isConnected = function () {
-    return this.provider.connected;
-};
-
 SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
 SocketProviderAdapter.prototype.constructor = SocketProviderAdapter;
 

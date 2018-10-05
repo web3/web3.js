@@ -33,46 +33,6 @@ function HttpProviderAdapter(httpProvider) {
     AbstractProviderAdapter.call(this, httpProvider);
 }
 
-
-/**
- * Returns promise with an error because HTTP does not support subscriptions
- *
- * @method subscribe
- *
- * @returns {Promise<Error>}
- */
-HttpProviderAdapter.prototype.subscribe = function () {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
-    });
-};
-
-/**
- * Returns promise with an error because HTTP does not support subscriptions
- *
- * @method unsubscribe
- *
- * @returns {Promise<Error>}
- */
-HttpProviderAdapter.prototype.unsubscribe = function () {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
-    });
-};
-
-/**
- * Checks if the provider is connected
- *
- * @method isConnected
- *
- * @returns {Boolean}
- */
-HttpProviderAdapter.prototype.isConnected = function () {
-    return this.provider.connected;
-};
-
 HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
 HttpProviderAdapter.prototype.constructor = HttpProviderAdapter;
 

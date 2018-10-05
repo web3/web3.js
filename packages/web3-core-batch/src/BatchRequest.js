@@ -61,6 +61,12 @@ BatchRequest.prototype.execute = function () {
     this.provider.sendBatch(
         this.jsonRpcMapper.toBatchPayload(this.requests),
         function (err, results) {
+            if (!_.isArray(results)) {
+                request.callback(errors.InvalidResponse(results));
+
+                return;
+            }
+
             self.requests.forEach(function (request, index) {
                 var result = results[index] || null;
 

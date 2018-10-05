@@ -68,7 +68,35 @@ AbstractProviderAdapter.prototype.send = function (method, parameters) {
  * @callback callback callback(error, result)
  */
 AbstractProviderAdapter.prototype.sendBatch = function (payload, callback) {
-    self.provider.send(payload, callback);
+    this.provider.send(payload, callback);
+};
+
+/**
+ * Returns Promise with an error if the method is not overwritten
+ *
+ * @method subscribe
+ *
+ * @returns {Promise<Error>}
+ */
+AbstractProviderAdapter.prototype.subscribe = function () {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
+    });
+};
+
+/**
+ * Returns Promise with an error if the method is not overwritten
+ *
+ * @method unsubscribe
+ *
+ * @returns {Promise<Error>}
+ */
+AbstractProviderAdapter.prototype.unsubscribe = function () {
+    var self = this;
+    return new Promise(function(resolve, reject) {
+        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
+    });
 };
 
 /**
@@ -110,6 +138,17 @@ AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, er
     }
 
     reject(error);
+};
+
+/**
+ * Checks if the provider is connected
+ *
+ * @method isConnected
+ *
+ * @returns {Boolean}
+ */
+AbstractProviderAdapter.prototype.isConnected = function () {
+    return this.provider.connected;
 };
 
 AbstractProviderAdapter.prototype = Object.create(EventEmitter.prototype);

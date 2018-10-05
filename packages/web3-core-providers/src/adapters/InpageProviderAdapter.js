@@ -23,8 +23,6 @@
 "use strict";
 
 var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
-var JSONRpcMapper = require('./JSONRpcMapper.js');
-var errors = require('web3-core-helpers').errors;
 
 /**
  * @param {Object} inpageProvider
@@ -36,56 +34,6 @@ function InpageProviderAdapter(inpageProvider) {
     this.provider.send = this.provider.sendAsync;
     delete this.provider.sendAsync;
 }
-
-/**
- * Sends batch request
- *
- * @param {Array} payloadBatch
- *
- * @returns {Promise<any>}
- */
-InpageProviderAdapter.prototype.sendBatch = function (payloadBatch) {
-    return new Promise(function (resolve, reject) {
-        this.provider.send(JSONRpcMapper.toBatchPayload(payloadBatch), function (error, response) {
-            if (!error) {
-                resolve(response);
-                return;
-            }
-
-            if (!_.isArray(response)) {
-                reject(errors.InvalidResponse(response));
-            }
-
-            reject(error);
-        });
-    });
-};
-
-/**
- * Returns promise with an error because the inpageProvider does not support subscriptions
- *
- * @method subscribe
- *
- * @returns {Promise<Error>}
- */
-InpageProviderAdapter.prototype.subscribe = function () {
-    return new Promise(function (resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
-    });
-};
-
-/**
- * Returns promise with an error because the inpageProvider does not support subscriptions
- *
- * @method unsubscribe
- *
- * @returns {Promise<Error>}
- */
-InpageProviderAdapter.prototype.unsubscribe = function () {
-    return new Promise(function (resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + this.provider.constructor.name));
-    });
-};
 
 /**
  * Checks if the provider is connected
