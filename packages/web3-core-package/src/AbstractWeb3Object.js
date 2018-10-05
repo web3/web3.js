@@ -44,6 +44,7 @@ function AbstractWeb3Object(
         throw Error('ProviderPackage not found!');
     }
 
+    this.methodController = methodController;
     this.extendedPackages = [];
     this.providersPackage = providersPackage;
     this.givenProvider = this.providersPackage.detect();
@@ -80,9 +81,8 @@ function AbstractWeb3Object(
         return self.providersPackage.createBatchRequest(self.currentProvider);
     };
 
-    if (this.isDependencyGiven(methodModelFactory) && this.isDependencyGiven(methodController)) {
+    if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
         this.methodModelFactory = methodModelFactory;
-        this.methodController = methodController;
 
         return new Proxy(this,
             {
@@ -91,19 +91,6 @@ function AbstractWeb3Object(
         )
     }
 }
-
-/**
- * Checks if the parameter is defined
- *
- * @method isDependencyGiven
- *
- * @param {Object} object
- *
- * @returns {boolean}
- */
-AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
-    return object !== null || typeof object !== 'undefined';
-};
 
 /**
  * Sets the currentProvider and provider property
