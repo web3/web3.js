@@ -116,8 +116,11 @@ AbstractWeb3Object.prototype.setProvider = function (provider, net) {
  */
 AbstractWeb3Object.prototype.isSameProvider = function (provider) {
     if (_.isObject(provider)) {
-        return this.currentProvider.provider.constructor.name === provider.constructor.name &&
-               this.currentProvider.host !== provider.host;
+        if (this.currentProvider.provider.constructor.name === provider.constructor.name) {
+            return this.currentProvider.host === provider.host;
+        }
+
+        return false;
     }
 
     return this.currentProvider.host === provider;
