@@ -5,9 +5,12 @@ This is a sub package of [web3.js][repo]
 The ```web3-core-package``` contains core functions for [web3.js][repo] packages. This package should be used
 if someone wants to implement a new web3 package. 
 
+If you implement your own web3 package then don't forget to add the ```setProvider()``` method to the parent object. 
+This because the default behaviour of ```setProvider()``` is that the parent object will also set the provider of the child packages if this method is called.
+
 Provided interface of AbstractWeb3Object:
 
-- ```extend(methods: Object):void ``` Extends the current Object with additional RPC methods.
+- ```extend(methods: Object):void ``` Extends the current object with additional RPC methods.
 - ```setProvider(provider: any):void ``` This method will set the current provider of this object.
 - ```clearSubscriptions():void ``` This method will clear all subscriptions
 - ```proxyHandler(target, name): any``` This method will be used for the RPC method handling in the Proxy object. This method can be overwritten if you want to change the default behaviour of the Proxy.
