@@ -34,9 +34,8 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var SubscriptionsPackage = require('web3-core-subscriptions');
 
 // Create an object of type AbstractWeb3Object
-
 /**
- * @param {AbstractProviderAdapter} provider
+ * @param {Object|String} provider
  * @param {ProvidersPackage} providersPackage
  * @param {SubscriptionsFactory} subscriptionsFactory
  * 

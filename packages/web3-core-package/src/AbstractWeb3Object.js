@@ -78,7 +78,7 @@ function AbstractWeb3Object(
         return self.providersPackage.createBatchRequest(self.currentProvider);
     };
 
-    if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
+    if (this.isDependencyGiven(methodModelFactory)) {
         this.methodModelFactory = methodModelFactory;
 
         return new Proxy(this,
@@ -224,6 +224,17 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
     }
 
     return target[name];
+};
+
+/**
+ * Checks if the given value is defined
+ *
+ * @param {*} object
+ *
+ * @returns {Boolean}
+ */
+AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
+    return object !== null || typeof object !== 'undefined'
 };
 
 module.exports = AbstractWeb3Object;

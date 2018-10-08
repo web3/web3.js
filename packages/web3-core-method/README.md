@@ -39,7 +39,7 @@ var ProvidersPackage = require('web3-core-providers');
 
 // Create an object/package like Eth
 /**
- * @param {AbstractProviderAdapter} provider
+ * @param {Object|String} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {AbstractMethodModelFactory} methodModelFactory

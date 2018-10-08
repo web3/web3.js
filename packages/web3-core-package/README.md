@@ -35,7 +35,7 @@ npm install web3-core-package
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {AbstractProviderAdapter} provider
+ * @param {Object|String} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {AbstractMethodModelFactory} methodModelFactory

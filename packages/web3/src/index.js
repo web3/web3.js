@@ -46,28 +46,18 @@ var Web3 = function Web3(provider, net) {
 
     var currentProvider = ProvidersPackage.resolve(provider, net);
 
-    if (!this._provider) {
+    if (!currentProvider) {
         throw new Error('Invalid provider given as constructor parameter!');
     }
 
     this.utils = Utils;
-    this.eth = EthPackage.createEth(this.currentProvider);
-    this.shh = ShhPackage.createShh(this.currentProvider);
-    this.bzz = BzzPackage.createBzz(this.currentProvider);
+    this.eth = EthPackage.createEth(provider);
+    this.shh = ShhPackage.createShh(provider);
+    this.bzz = BzzPackage.createBzz(provider);
 
     /**
-     * Defines accessors for connectionModel
+     * Defines accessors for the currentProvider property
      */
-    Object.defineProperty(this, 'givenProvider', {
-        get: function () {
-            return this.givenProvider;
-        },
-        set: function (provider) {
-            this.givenProvider = provider;
-        },
-        enumerable: true
-    });
-
     Object.defineProperty(this, 'currentProvider', {
         get: function () {
             return currentProvider;

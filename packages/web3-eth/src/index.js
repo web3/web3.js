@@ -46,7 +46,7 @@ module.exports = {
      *
      * @method createEth
      *
-     * @param {AbstractProviderAdapter} provider
+     * @param {Object|String} provider
      *
      * @returns {Eth}
      */

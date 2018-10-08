@@ -29,9 +29,9 @@ This will expose the `Web3Eth` object on the window object.
 
 ```js
 // in node.js
-var Web3Eth = require('web3-eth');
+var EthPackage = require('web3-eth');
 
-var eth = new Web3Eth('ws://localhost:8546');
+var eth = EthPackage.createEth('http://127.0.0.1:4546');
 ```
 
 

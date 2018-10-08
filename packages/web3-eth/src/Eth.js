@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object|String} provider
  * @param {Network} net
  * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
