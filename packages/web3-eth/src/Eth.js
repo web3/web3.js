@@ -30,7 +30,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
  * @param {Personal} personal
- * @param {Iban} iban
+ * @param {IbanPackage} iban
  * @param {Abi} abi
  * @param {ENS} ens
  * @param {Object} utils
@@ -48,7 +48,7 @@ var Eth = function Eth(
     contractPackage,
     accounts,
     personal,
-    iban,
+    IbanPackage,
     abi,
     ens,
     utils,
@@ -71,7 +71,20 @@ var Eth = function Eth(
     this.net = net;
     this.accounts = accounts;
     this.personal = personal;
-    this.iban = iban;
+
+    /**
+     * This wrapper function is required for the "new web3.eth.Iban(...)" call.
+     *
+     * @param {String} iban
+     *
+     * @returns {Iban}
+     *
+     * @constructor
+     */
+    this.Iban = function Iban (iban) {
+        return IbanPackage.createIban(iban);
+    };
+
     this.abi = abi;
     this.ens = ens;
     this.utils = utils;
@@ -79,6 +92,17 @@ var Eth = function Eth(
     this.subscriptionsFactory = subscriptionsFactory;
     this.initiatedContracts = [];
 
+    /**
+     * This wrapper function is required for the "new web3.eth.Contract(...)" call.
+     *
+     * @param {Object} abi
+     * @param {String} address
+     * @param {Object} options
+     *
+     * @returns {Contract}
+     *
+     * @constructor
+     */
     this.Contract = function (abi, address, options) {
         var contract = contractPackage.createContract(self.currentProvider, self.accounts, abi, address, options);
         self.initiatedContracts.push(contract);
