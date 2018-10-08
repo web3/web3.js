@@ -82,6 +82,18 @@ var packages = [{
     fileName: 'web3-core-method',
     expose: 'Web3Method',
     src: './packages/web3-core-method/src/index.js'
+}, {
+    fileName: 'web3-core-package',
+    expose: 'Web3Package',
+    src: './packages/web3-core-package/src/index.js'
+}, {
+    fileName: 'web3-net',
+    expose: 'Web3Net',
+    src: './packages/web3-net/src/index.js'
+}, {
+    fileName: 'web3-core-helpers',
+    expose: 'Web3Helpers',
+    src: './packages/web3-core-helpers/src/index.js'
 }];
 
 var browserifyOptions = {
