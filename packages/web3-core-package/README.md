@@ -18,7 +18,7 @@ Provided interface of AbstractWeb3Object:
 - ```givenProvider``` This property contains the detected provider.
 - ```currentProvider``` This property contains the current provider of this object.
 - ```methodController``` This property is an instance of ```MethodController```. This will be used to execute an RPC request. For further information please have a look on the ```MethodController``` in the ```web3-core-method``` package.
-- ```methodModelFactory``` This property is an instance of ```AbstractMethodModelFactory```. If this property is given than it will create an "MethodProxy". Please have an look on the ```web3-core-method```readme for further information.
+- ```methodModelFactory``` This property is an instance of ```AbstractMethodModelFactory```. If this property is given then it will create an "MethodProxy". Please have a look on the ```web3-core-method```readme file for further information.
 
 ## Installation
 
@@ -55,8 +55,5 @@ MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
 MyObject.prototype.constructor = MyObject;
 ```
 
-
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-
