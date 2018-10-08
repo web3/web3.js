@@ -29,12 +29,17 @@ This will expose the `Web3EthContract` object on the window object.
 
 ```js
 // in node.js
-var Web3EthContract = require('web3-eth-contract');
+var AccountsPackage = require('web3-eth-accounts');
+var ContractPackage = require('web3-eth-contract');
 
-// set provider for all later instances to use
-Web3EthContract.setProvider('ws://localhost:8546');
+var contract = ContractPackage.createContract(
+    'ws://localhost:8546',
+    AccountsPackage.createAccounts('ws://localhost:8546'),
+    jsonInterface,
+    address,
+    contractOptions
+);
 
-var contract = new Web3EthContract(jsonInterface, address);
 contract.methods.somFunc().send({from: ....})
 .on('receipt', function(){
     ...

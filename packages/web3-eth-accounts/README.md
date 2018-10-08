@@ -29,10 +29,10 @@ This will expose the `Web3EthAccounts` object on the window object.
 
 ```js
 // in node.js
-var Web3EthAccounts = require('web3-eth-accounts');
+var AccountsPackage = require('web3-eth-accounts');
+var accounts = AccountsPackage.createAccounts('ws://localhost:8546');
 
-var account = new Web3EthAccounts('ws://localhost:8546');
-account.create();
+accounts.create();
 > {
   address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
   privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',

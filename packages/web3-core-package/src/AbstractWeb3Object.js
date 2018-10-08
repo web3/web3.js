@@ -94,7 +94,7 @@ function AbstractWeb3Object(
  *
  * @method setProvider
  *
- * @param {any} provider
+ * @param {Object|String} provider
  */
 AbstractWeb3Object.prototype.setProvider = function (provider) {
     var self = this;

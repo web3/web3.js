@@ -64,7 +64,6 @@ function Contract(
         throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
     }
 
-    this.provider = provider;
     this.providersPackage = providersPackage;
     this.methodController = methodController;
     this.contractPackageFactory = contractPackageFactory;
@@ -79,7 +78,7 @@ function Contract(
 
     AbstractWeb3Object.call(
         this,
-        this.provider,
+        provider,
         this.providersPackage,
         null,
         null,
@@ -236,7 +235,7 @@ Contract.prototype.deploy = function (options) {
  */
 Contract.prototype.clone = function () {
     return new this.constructor(
-        this.provider,
+        this.currentProvider,
         this.providersPackage,
         this.methodController,
         this.contractPackageFactory,
@@ -250,6 +249,19 @@ Contract.prototype.clone = function () {
         this.options.address,
         this.options
     );
+};
+
+/**
+ * Sets the currentProvider and provider property
+ *
+ * @method setProvider
+ *
+ * @param {Object|String} provider
+ */
+Contract.prototype.setProvider = function (provider) {
+  AbstractWeb3Object.prototype.setProvider.call(this, provider);
+
+  this.accounts.setProvider(provider);
 };
 
 Contract.prototype = Object.create(AbstractWeb3Object.prototype);

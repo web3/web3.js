@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the abi package to be used in the `web3-eth` package.
+This is the abi package will be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -29,9 +29,10 @@ This will expose the `Web3EthAbi` object on the window object.
 
 ```js
 // in node.js
-var Web3EthAbi = require('web3-eth-abi');
+var AbiPackage = require('web3-eth-abi');
+var abiCoder = AbiPackage.createAbiCoder();
 
-Web3EthAbi.encodeFunctionSignature('myMethod(uint256,string)');
+abiCoder.encodeFunctionSignature('myMethod(uint256,string)');
 > '0x24ee0097'
 ```
 
