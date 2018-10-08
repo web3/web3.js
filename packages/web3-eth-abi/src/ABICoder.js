@@ -22,8 +22,6 @@
  */
 
 var _ = require('underscore');
-var utils = require('web3-utils');
-
 var EthersAbi = require('ethers/utils/abi-coder').AbiCoder;
 var ethersAbiCoder = new EthersAbi(function (type, value) {
     if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
@@ -37,11 +35,13 @@ function Result() {
 }
 
 /**
- * ABICoder prototype should be used to encode/decode solidity params of any type
+ * @param {Object} utils
  *
  * @constructor
  */
-function ABICoder () { }
+function ABICoder (utils) {
+    this.utils = utils;
+}
 
 /**
  * Encodes the function name to its ABI representation, which are the first 4 bytes of the sha3 of the function name including  types.
@@ -54,10 +54,10 @@ function ABICoder () { }
  */
 ABICoder.prototype.encodeFunctionSignature = function (functionName) {
     if (_.isObject(functionName)) {
-        functionName = utils._jsonInterfaceMethodToString(functionName);
+        functionName = this.utils._jsonInterfaceMethodToString(functionName);
     }
 
-    return utils.sha3(functionName).slice(0, 10);
+    return this.utils.sha3(functionName).slice(0, 10);
 };
 
 /**
@@ -71,10 +71,10 @@ ABICoder.prototype.encodeFunctionSignature = function (functionName) {
  */
 ABICoder.prototype.encodeEventSignature = function (functionName) {
     if (_.isObject(functionName)) {
-        functionName = utils._jsonInterfaceMethodToString(functionName);
+        functionName = this.utils._jsonInterfaceMethodToString(functionName);
     }
 
-    return utils.sha3(functionName);
+    return this.utils.sha3(functionName);
 };
 
 /**

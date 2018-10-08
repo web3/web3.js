@@ -23,7 +23,6 @@
 "use strict";
 
 var _ = require("underscore");
-var Promise = require('any-promise');
 var Account = require("eth-lib/lib/account");
 var Hash = require("eth-lib/lib/hash");
 var RLP = require("eth-lib/lib/rlp");

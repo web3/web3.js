@@ -7,10 +7,10 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "web3-core-providers": "1.0.0-beta.35",
-        "web3-core-method": "1.0.0-beta.35",
-        "web3-core-helpers": "1.0.0-beta.35",
-        "web3-utils": "1.0.0-beta.35",
-        "web3-core-package": "1.0.0-beta.35"
+        "web3-core-providers": "1.0.0-beta.36",
+        "web3-core-method": "1.0.0-beta.36",
+        "web3-core-helpers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36",
+        "web3-core-package": "1.0.0-beta.36"
     }
 }

@@ -20,8 +20,8 @@
 
 "use strict";
 
-var namehash = require('eth-ens-namehash');
 var _ = require('underscore');
+var namehash = require('eth-ens-namehash');
 
 /**
  * @param {Registry} registry

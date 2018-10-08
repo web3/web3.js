@@ -31,7 +31,7 @@ var AccountsPackage = require('web3-eth-accounts');
 var PersonalPackage = require('web3-eth-personal');
 var ENSPackage = require('web3-eth-ens');
 var AbiPackage = require('web3-eth-abi');
-var SubscriptionPackage = require('web3-core-subscriptions');
+var SubscriptionsPackage = require('web3-core-subscriptions');
 var ProvidersPackage = require('web3-core-providers');
 var Iban = require('web3-eth-iban').Iban;
 var formatters = require('web3-core-helpers').formatters;
@@ -65,7 +65,7 @@ module.exports = {
             Utils,
             formatters,
             ProvidersPackage,
-            SubscriptionPackage.createSubscriptionsFactory(),
+            SubscriptionsPackage.createSubscriptionsFactory(),
             MethodPackage.createMethodController(),
             new MethodModelFactory(Utils, formatters, accounts)
         );

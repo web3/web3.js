@@ -7,6 +7,6 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
-        "eventemitter3": "1.1.1"
+        "eventemitter3": "3.1.0"
     }
 }

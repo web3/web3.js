@@ -34,6 +34,8 @@ module.exports = {
     version: version,
 
     /**
+     * TODO: Improve dependency handling of Accounts
+     *
      * Returns the Accounts object
      *
      * @method createAccounts

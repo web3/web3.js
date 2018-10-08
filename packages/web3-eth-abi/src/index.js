@@ -24,11 +24,14 @@
 
 var version = require('./package.json').version;
 var ABICoder = require('./ABICoder');
+var Utils = require('web3-utils');
 
 module.exports = {
     version: version,
 
     /**
+     * TODO: Improve dependency handling for ethersAbiCoder
+     *
      * Returns the ABICoder object
      *
      * @method createAbiCoder
@@ -36,6 +39,6 @@ module.exports = {
      * @returns {ABICoder}
      */
     createAbiCoder: function() {
-        return new ABICoder();
+        return new ABICoder(Utils);
     }
 };
