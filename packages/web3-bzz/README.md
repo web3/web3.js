@@ -2,8 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the swarm package.   
-Please read the [documentation][docs] for more.
+This is the swarm package of web3.js for further information please read the [documentation][docs].
 
 ## Installation
 
@@ -22,16 +21,16 @@ npm run-script build-all
 ```
 
 Then include `dist/web3-bzz.js` in your html file.
-This will expose the `Web3Personal` object on the window object.
+This will expose the `Web3Bzz` object on the window object.
 
 
 ## Usage
 
 ```js
 // in node.js
-var Web3Bzz = require('web3-bzz');
+var bzzPackage = require('web3-bzz');
 
-var bzz = new Web3Bzz('http://swarm-gateways.net');
+var bzz = bzzPackage.createBzz('http://swarm-gateways.net');
 ```
 
 

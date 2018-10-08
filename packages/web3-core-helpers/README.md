@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-Helper functions used in [web3.js][repo] packages.
+The Helper functions are used in all [web3.js][repo] packages.
 Please read the [documentation][docs] for more.
 
 ## Installation

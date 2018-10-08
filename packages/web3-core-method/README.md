@@ -29,17 +29,66 @@ This will expose the `Web3Method` object on the window object.
 
 ```js
 // in node.js
-var Web3Method = require('web3-core-method');
 
-var method = new Web3Method({
-    name: 'sendTransaction',
-    call: 'eth_sendTransaction',
-    params: 1,
-    inputFormatter: [inputTransactionFormatter]
-});
-method.attachToObject(myCoolLib);
+// Dependencies
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var Utils = require('web3-utils');
+var formatters = require('web3-core-helpers').formatters;
+var MethodPackage = require('web3-core-method');
+var ProvidersPackage = require('web3-core-providers');
 
-myCoolLib.sendTransaction({...}, function(){ ... });
+// Create an object/package like Eth
+
+function MyObject (
+    provider,
+    providersPackage,
+    methodController,
+    methodModelFactory
+) {
+    AbstractWeb3Object.call(
+        this,
+        provider,
+        providersPackage,
+        methodController,
+        methodModelFactory
+    );
+};
+
+// Inherit from AbstractWeb3Object
+MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+MyObject.prototype.constructor = MyObject;
+
+
+
+// Create the MyMethoModelFactory object
+
+function MyMethodModelFactory(utils, formatters) {
+    MethodPackage.AbstractMethodModelFactory.call(
+        this,
+        {
+            sendTransaction: MethodPackage.SendTransactionMethodModel
+        },
+        utils,
+        formatters
+    );
+}
+
+// Inherit from AbstractMethodModelFactory
+MyMethodModelFactory.prototype = Object.create(
+    MethodPackage.AbstractMethodModelFactory.prototype
+);
+MyMethodModelFactory.prototype.constructor = MyMethodModelFactory;
+
+
+// Initiate all objects
+var myObject = new MyObject(
+    provider, 
+    ProvidersPackage, 
+    MethodPackage.createMethodController(), 
+    new MyMethodModelFactory(Utils, formatters)
+);
+
+myObject.sendTransaction({...}, function(){ ... });
 ```
 
 
