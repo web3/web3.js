@@ -28,12 +28,9 @@ This will expose the `Web3Net` object on the window object.
 ## Usage
 
 ```js
-// TODO: update usage example
-
 // in node.js
-var Web3Net = require('web3-net');
-
-var net = new Web3Net('ws://localhost:8546');
+var NetworkPackage = require('web3-net');
+var net = NetworkPackage.createNetwork('ws://localhost:8546');
 ```
 
 
