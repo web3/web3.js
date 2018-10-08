@@ -66,10 +66,7 @@ function AbstractWeb3Object(
             return currentProvider;
         },
         set: function (provider) {
-            if (typeof currentProvider.clearSubscriptions !== 'undefined' && currentProvider.subscriptions.length > 0) {
-                currentProvider.clearSubscriptions();
-            }
-
+            this.clearSubscriptions();
             currentProvider = this.providersPackage.resolve(provider);
         },
         enumerable: true

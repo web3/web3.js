@@ -2,15 +2,27 @@
 
 This is a sub package of [web3.js][repo]
 
-The core package contains core functions for [web3.js][repo] packages.
-Please read the [documentation][docs] for more.
+The ```web3-core-package``` contains core functions for [web3.js][repo] packages. This package should be used
+if someone wants to implement a new web3 package. 
+
+Provided interface of AbstractWeb3Object:
+
+- ```extend(methods: Object):void ``` Extends the current Object with additional RPC methods.
+- ```setProvider(provider: any):void ``` This method will set the current provider of this object.
+- ```clearSubscriptions():void ``` This method will clear all subscriptions
+- ```proxyHandler(target, name): any``` This method will be used for the RPC method handling in the Proxy object. This method can be overwritten if you want to change the default behaviour of the Proxy.
+- ```BatchRequest``` With this property we provide the possibility to create batch requests. Please have a look on the official [documentation][docs] for further information.
+- ```givenProvider``` This property contains the detected provider.
+- ```currentProvider``` This property contains the current provider of this object.
+- ```methodController``` This property is an instance of ```MethodController```. This will be used to execute an RPC request. For further information please have a look on the ```MethodController``` in the ```web3-core-method``` package.
+- ```methodModelFactory``` This property is an instance of ```AbstractMethodModelFactory```. If this property is given than it will create an "MethodProxy". Please have an look on the ```web3-core-method```readme for further information.
 
 ## Installation
 
 ### Node.js
 
 ```bash
-npm install web3-core
+npm install web3-core-package
 ```
 
 
@@ -18,22 +30,26 @@ npm install web3-core
 
 ```js
 // in node.js
-var core = require('web3-core');
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
-var CoolLib = function CoolLib() {
-
-    // sets _requestmanager and adds basic functions
-    core.packageInit(this, arguments);
-    
+function MyObject (
+    provider,
+    providersPackage,
+    methodController, 
+    methodModelFactory // optional
+) {
+    AbstractWeb3Object.call(
+        this,
+        provider,
+        providersPackage,
+        methodController,
+        methodModelFactory // optional
+    );
 };
 
-
-CoolLib.providers;
-CoolLib.givenProvider;
-CoolLib.setProvider();
-CoolLib.BatchRequest();
-CoolLib.extend();
-...
+// Inherit from AbstractWeb3Object
+MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+MyObject.prototype.constructor = MyObject;
 ```
 
 

@@ -32,7 +32,7 @@ This will expose the `Web3PromiEvent` object on the window object.
 var Web3PromiEvent = require('web3-core-promievent');
 
 var myFunc = function(){
-    var promiEvent = Web3PromiEvent();
+    var promiEvent = Web3PromiEvent.createPromiEvent();
     
     setTimeout(function() {
         promiEvent.eventEmitter.emit('done', 'Hello!');
