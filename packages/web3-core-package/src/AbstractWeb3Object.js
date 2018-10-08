@@ -22,8 +22,10 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
- * @param {Object|String} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
@@ -55,24 +57,17 @@ function AbstractWeb3Object(
         WebsocketProvider: this.providersPackage.WebsocketProvider,
     };
 
-    var currentProvider = null,
-        self = this;
+    var self = this,
+        currentProvider = provider;
 
-    /**
-     * Defines the accessors of currentProvider
-     */
     Object.defineProperty(this, 'currentProvider', {
         get: function () {
             return currentProvider;
         },
-        set: function (provider) {
-            this.clearSubscriptions();
-            currentProvider = this.providersPackage.resolve(provider);
-        },
-        enumerable: true
+        set: function () {
+           throw Error('The property currentProvider is an read-only property!');
+        }
     });
-
-    this.currentProvider = provider;
 
     this.BatchRequest = function BatchRequest() {
         return self.providersPackage.createBatchRequest(self.currentProvider);
@@ -95,17 +90,37 @@ function AbstractWeb3Object(
  * @method setProvider
  *
  * @param {Object|String} provider
+ * @param {Net} net
  */
-AbstractWeb3Object.prototype.setProvider = function (provider) {
-    var self = this;
+AbstractWeb3Object.prototype.setProvider = function (provider, net) {
+    if (!this.isSameProvider(provider)) {
+        this.clearSubscriptions();
+        this.currentProvider = this.providersPackage.resolve(provider, net);
 
-    this.currentProvider = provider;
-
-    if (this.extendedPackages.length > 0) {
-        this.extendedPackages.forEach(function(extendedPackage) {
-           extendedPackage.setProvider(self.currentProvider)
-        });
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach(function (extendedPackage) {
+                extendedPackage.setProvider(provider, net)
+            });
+        }
     }
+};
+
+/**
+ * Checks if the given provider is the same as the currentProvider
+ *
+ * @method isSameProvider
+ *
+ * @param {Object|String} provider
+ *
+ * @returns {Boolean}
+ */
+AbstractWeb3Object.prototype.isSameProvider = function (provider) {
+    if (_.isObject(provider)) {
+        return this.currentProvider.provider.constructor.name === provider.constructor.name &&
+               this.currentProvider.host !== provider.host;
+    }
+
+    return this.currentProvider.host === provider;
 };
 
 /**
@@ -114,7 +129,9 @@ AbstractWeb3Object.prototype.setProvider = function (provider) {
  * @method clearSubscriptions
  */
 AbstractWeb3Object.prototype.clearSubscriptions = function () {
-    if (typeof this.currentProvider.clearSubscriptions !== 'undefined' && this.currentProvider.hasSubscription()) {
+    if (typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
+        this.currentProvider.subscriptions.length > 0
+    ) {
         this.currentProvider.clearSubscriptions();
     }
 };

@@ -31,6 +31,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
  */
 function HttpProviderAdapter(httpProvider) {
     AbstractProviderAdapter.call(this, httpProvider);
+    this.host = httpProvider.host;
 }
 
 HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);

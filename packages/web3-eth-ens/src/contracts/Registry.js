@@ -23,7 +23,7 @@ var _ = require('underscore');
 var namehash = require('eth-ens-namehash');
 
 /**
- * @param {Network} net
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Accounts} accounts
  * @param {ContractPackage} contractPackage
  * @param {Object} registryABI
@@ -31,23 +31,38 @@ var namehash = require('eth-ens-namehash');
  *
  * @constructor
  */
-function Registry(net, accounts, contractPackage, registryABI, resolverABI) {
+function Registry(provider, accounts, contractPackage, registryABI, resolverABI) {
     var self = this;
     this.net = net;
     this.accounts = accounts;
     this.contractPackage = contractPackage;
     this.registryABI = registryABI;
     this.resolverABI = resolverABI;
+    this.provider = provider;
 
     this.contract = this.checkNetwork().then(function (address) {
         return self.contractPackage.createContract(
-            self.net.currentProvider,
+            self.provider,
             self.accounts,
             self.registryABI,
             address
         );
     });
 }
+
+/**
+ * Sets the provider in NetworkPackage, AccountsPackage and the current object.
+ *
+ * @method setProvider
+ *
+ * @param {Object|String} provider
+ * @param {Net} net
+ */
+Registry.prototype.setProvider = function (provider, net) {
+    this.provider = this.providersPackage.resolve(provider, net);
+    this.net.setProvider(provider, net);
+    this.accounts.setProvider(provider, net);
+};
 
 /**
  * Returns the address of the owner of an ENS name.
@@ -101,7 +116,7 @@ Registry.prototype.resolver = function (name) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
         return self.contractPackage.createContract(
-            self.net.currentProvider,
+            self.provider,
             self.accounts,
             self.resolverABI,
             address

@@ -40,7 +40,7 @@ module.exports = {
      *
      * @method createNetwork
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Network}
      */

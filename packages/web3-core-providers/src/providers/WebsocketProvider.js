@@ -67,6 +67,7 @@ var WebsocketProvider = function WebsocketProvider(url, options)  {
     var _this = this;
     this.responseCallbacks = {};
     this.notificationCallbacks = [];
+    this.path = url;
 
     options = options || {};
     this._customTimeout = options.timeout;

@@ -27,13 +27,17 @@ This will expose the `EthEns` object on the window object.
 ## Usage
 
 ```js
+var ProvidersPackage = require('web3-core-providers');
 var NetPackage = require('web3-net');
 var AccountsPackage = require('web3-eth-accounts');
 var ENSPackage = require('web3-eth-ens');
 
+var provider = ProvidersPackage.resolve('ws://localhost:8546');
+
 var ens = ENSPackage.createENS(
-    NetPackage.createNetwork('ws://localhost:8546'),
-    AccountsPackage.createAccounts('ws://localhost:8546')
+    provider,
+    NetPackage.createNetwork(provider),
+    AccountsPackage.createAccounts(provider)
 );
     
 ens.getAddress('ethereum.eth').then(function (result) {

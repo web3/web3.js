@@ -47,7 +47,7 @@ module.exports = {
      *
      * @method createBatchRequest
      *
-     * @param {AbstractProviderAdapter} provider
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {BatchRequest}
      */

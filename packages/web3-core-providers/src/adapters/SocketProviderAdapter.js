@@ -31,6 +31,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
  */
 function SocketProviderAdapter(provider) {
     AbstractProviderAdapter.call(this, provider);
+    this.host = provider.path;
     this.subscriptions = [];
     this.registerSubscriptionListener();
 }

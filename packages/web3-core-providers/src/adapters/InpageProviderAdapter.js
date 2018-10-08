@@ -29,7 +29,7 @@ var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapte
  *
  * @constructor
  */
-function InpageProviderAdapter(inpageProvider) {
+function InpageProviderAdapter(inpageProvider) {// TODO: Check if there is a way to set a host property (will be used on setProvider)
     AbstractProviderAdapter.call(this, inpageProvider);
     this.provider.send = this.provider.sendAsync;
     delete this.provider.sendAsync;

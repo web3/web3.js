@@ -38,7 +38,7 @@ module.exports = {
      *
      * @method createAccounts
      *
-     * @params {Object} provider
+     * @params {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Accounts}
      */

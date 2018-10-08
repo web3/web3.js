@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {AbstractProviderAdapter | EthereumProvider} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
@@ -69,11 +69,12 @@ Shh.prototype.subscribe = function (method, options, callback) {
  * Extends setProvider method from AbstractWeb3Object.
  * This is required for updating the provider also in the sub package Net.
  *
- * @param {any} provider
+ * @param {Object|String} provider
+ * @param {Net} net
  */
-Shh.prototype.setProvider = function (provider) {
-    AbstractWeb3Object.setProvider.call(provider);
-    this.net.setProvider(provider);
+Shh.prototype.setProvider = function (provider, net) {
+    AbstractWeb3Object.setProvider.call(provider, net);
+    this.net.setProvider(provider, net);
 };
 
 Shh.prototype = Object.create(AbstractWeb3Object.prototype);

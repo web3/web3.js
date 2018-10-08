@@ -29,8 +29,9 @@ This will expose the `Web3Personal` object on the window object.
 
 ```js
 // in node.js
+var ProvidersPackage = require('web3-core-providers');
 var ShhPackage = require('web3-shh');
-var shh = ShhPackage.createShh('ws://localhost:8546');
+var shh = ShhPackage.createShh(ProvidersPackage.resolve('ws://localhost:8546'));
 ```
 
 

@@ -131,7 +131,6 @@ module.exports = {
     /**
      * Methods
      */
-
         // Network
         GetProtocolVersionMethodModel: GetProtocolVersionMethodModel,
         VersionMethodModel: VersionMethodModel,

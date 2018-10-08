@@ -32,6 +32,19 @@ function ENS(registry, resolverMethodHandler) {
 }
 
 /**
+ * Sets the provider for the registry and resolver object.
+ * This method will also set the provider in the NetworkPackage and AccountsPackage because they are used here.
+ *
+ * @method setProvider
+ *
+ * @param {Object|String} provider
+ * @param {Net} net
+ */
+ENS.prototype.setProvider = function (provider, net) {
+    this.registry.setProvider(provider, net);
+};
+
+/**
  * Returns an contract of type resolver
  *
  * @method resolver

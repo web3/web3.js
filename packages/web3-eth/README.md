@@ -29,8 +29,12 @@ This will expose the `Web3Eth` object on the window object.
 
 ```js
 // in node.js
+var ProvidersPackage = require('web3-core-providers');
 var EthPackage = require('web3-eth');
-var eth = EthPackage.createEth('http://127.0.0.1:4546');
+
+var eth = EthPackage.createEth(
+    ProvidersPackage.resolve('http://127.0.0.1:4546')
+);
 ```
 
 

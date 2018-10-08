@@ -38,9 +38,9 @@ module.exports = {
     /**
      * Returns the Shh object.
      *
-     * @param {Object} provider
-     *
      * @method createShh
+     *
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Shh}
      */

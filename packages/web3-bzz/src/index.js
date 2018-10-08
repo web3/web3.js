@@ -29,11 +29,12 @@ module.exports = {
     version: version,
 
     /**
+     * TODO: Check the provider handling in swarm.js
      * Returns the Bzz object
      *
      * @method createBzz
      *
-     * @param {Object} provider
+     * @param {Object|String} provider
      *
      * @returns {Bzz}
      */

@@ -46,7 +46,7 @@ module.exports = {
      *
      * @method createEth
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Eth}
      */

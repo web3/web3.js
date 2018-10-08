@@ -30,6 +30,7 @@ function ENSPackageFactory () { }
  *
  * @method createENS
  *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Network} net
  * @param {Accounts} accounts
  * @param {ContractPackage} contractPackage
@@ -40,6 +41,7 @@ function ENSPackageFactory () { }
  * @returns {ENS}
  */
 ENSPackageFactory.prototype.createENS = function (
+    provider,
     net,
     accounts,
     contractPackage,
@@ -47,7 +49,7 @@ ENSPackageFactory.prototype.createENS = function (
     resolverAbi,
     promiEventPackage
 ) {
-    var registry = this.createRegistry(net, accounts, contractPackage, registryAbi, resolverAbi);
+    var registry = this.createRegistry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
 
     return new ENS(registry, this.createResolverMethodHandler(registry, promiEventPackage));
 };
@@ -57,6 +59,7 @@ ENSPackageFactory.prototype.createENS = function (
  *
  * @method createRegistry
  *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Network} net
  * @param {Accounts} accounts
  * @param {ContractPackage} contractPackage
@@ -65,8 +68,8 @@ ENSPackageFactory.prototype.createENS = function (
  *
  * @returns {Registry}
  */
-ENSPackageFactory.prototype.createRegistry = function (net, accounts, contractPackage, registryAbi, resolverAbi) {
-    return new Registry(net, accounts, contractPackage, registryAbi, resolverAbi);
+ENSPackageFactory.prototype.createRegistry = function (provider, net, accounts, contractPackage, registryAbi, resolverAbi) {
+    return new Registry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
 };
 
 /**

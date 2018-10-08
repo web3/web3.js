@@ -27,7 +27,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 /**
  * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
  *
- * @param {Object|String} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {MethodModelFactory} methodModelFactory
@@ -72,13 +72,15 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
 
 /**
  * Extends setProvider method from AbstractWeb3Object.
- * This is required for updating the provider also in the sub package Net.
  *
- * @param {any} provider
+ * @method setProvider
+ *
+ * @param {Object|String} provider
+ * @param {Net} net
  */
-Personal.prototype.setProvider = function (provider) {
-    AbstractWeb3Object.setProvider.call(provider);
-    this.net.setProvider(provider);
+Personal.prototype.setProvider = function (provider, net) {
+    AbstractWeb3Object.setProvider.call(provider, net);
+    this.net.setProvider(provider, net);
 };
 
 Personal.prototype = Object.create(AbstractWeb3Object);

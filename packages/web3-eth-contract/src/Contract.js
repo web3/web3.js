@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {AbstractProviderAdapter} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
  * @param {ContractPackageFactory} contractPackageFactory
@@ -257,11 +257,11 @@ Contract.prototype.clone = function () {
  * @method setProvider
  *
  * @param {Object|String} provider
+ * @param {Net} net
  */
-Contract.prototype.setProvider = function (provider) {
-  AbstractWeb3Object.prototype.setProvider.call(this, provider);
-
-  this.accounts.setProvider(provider);
+Contract.prototype.setProvider = function (provider, net) {
+  AbstractWeb3Object.prototype.setProvider.call(this, provider, net);
+  this.accounts.setProvider(provider, net);
 };
 
 Contract.prototype = Object.create(AbstractWeb3Object.prototype);

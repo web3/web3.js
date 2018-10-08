@@ -25,7 +25,7 @@
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**
- * @param {Object|String} provider
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Network} net
  * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
@@ -199,16 +199,17 @@ Eth.prototype.subscribe = function (type, options, callback) {
  * Extends setProvider method from AbstractWeb3Object.
  * This is required for updating the provider also in the sub packages and objects related to Eth.
  *
- * @param {any} provider
+ * @param {Object|String} provider
+ * @param {Net} net
  */
-Eth.prototype.setProvider = function (provider) {
-    AbstractWeb3Object.setProvider.call(provider);
-    this.net.setProvider(provider);
-    this.accounts.setProvider(provider);
-    this.personal.setProvider(provider);
+Eth.prototype.setProvider = function (provider, net) {
+    AbstractWeb3Object.setProvider.call(provider, net);
+    this.net.setProvider(provider, net);
+    this.personal.setProvider(provider, net);
+    this.accounts.setProvider(provider, net);
 
     this.initiatedContracts.forEach(function (contract) {
-       contract.setProvider(provider);
+       contract.setProvider(provider, net);
     });
 };
 

@@ -77,9 +77,6 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
         case 'IpcProvider':
             return this.providersPackageFactory.createSocketProviderAdapter(provider);
         case 'EthereumProvider':
-            provider.sendBatch = provider.send;
-
-            return provider;
         case 'HttpProviderAdapter':
         case 'SocketProviderAdapter':
         case 'InpageProviderAdapter':

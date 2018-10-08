@@ -42,7 +42,7 @@ module.exports = {
     /**
      * Returns an object of type Contract
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {Accounts} accounts
      * @param {Object} abi
      * @param {String} address

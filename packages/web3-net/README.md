@@ -29,8 +29,9 @@ This will expose the `Web3Net` object on the window object.
 
 ```js
 // in node.js
+var ProvidersPackage = require('web3-core-providers');
 var NetworkPackage = require('web3-net');
-var net = NetworkPackage.createNetwork('ws://localhost:8546');
+var net = NetworkPackage.createNetwork(ProvidersPackage.resolve('ws://localhost:8546'));
 ```
 
 

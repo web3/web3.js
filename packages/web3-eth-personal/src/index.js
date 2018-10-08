@@ -39,7 +39,7 @@ module.exports = {
      *
      * @method createPersonal
      *
-     * @param {any} provider
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Personal}
      */
