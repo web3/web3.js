@@ -34,6 +34,14 @@ npm install web3-core-package
 // in node.js
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
+/**
+ * @param {AbstractProviderAdapter} provider
+ * @param {ProvidersPackage} providersPackage
+ * @param {MethodController} methodController
+ * @param {AbstractMethodModelFactory} methodModelFactory
+ * 
+ * @constructor
+ */
 function MyObject (
     provider,
     providersPackage,
@@ -47,7 +55,7 @@ function MyObject (
         methodController, // optional
         methodModelFactory // optional
     );
-};
+}
 
 // Inherit from AbstractWeb3Object
 MyObject.prototype = Object.create(AbstractWeb3Object.prototype);

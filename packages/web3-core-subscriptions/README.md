@@ -34,6 +34,14 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var SubscriptionsPackage = require('web3-core-subscriptions');
 
 // Create an object of type AbstractWeb3Object
+
+/**
+ * @param {AbstractProviderAdapter} provider
+ * @param {ProvidersPackage} providersPackage
+ * @param {SubscriptionsFactory} subscriptionsFactory
+ * 
+ * @constructor
+ */
 function MyObject (
     provider,
     providersPackage,
@@ -48,6 +56,17 @@ function MyObject (
     this.subscriptionsFactory = subscriptionsFactory;
 }
 
+/**
+ * Returns expected subscription
+ * 
+ * @method subscribe
+ * 
+ * @param {String} subscriptionMethod
+ * @param {Method} callback
+ * 
+ * @callback callback callback(error, result)
+ * @returns {Subscription}
+ */
 MyObject.prototype.subscribe = function (subscriptionMethod, callback) {
     switch (subscriptionMethod) {
         case 'newBlockHeaders':

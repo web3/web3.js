@@ -38,7 +38,14 @@ var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
 
 // Create an object/package like Eth
-
+/**
+ * @param {AbstractProviderAdapter} provider
+ * @param {ProvidersPackage} providersPackage
+ * @param {MethodController} methodController
+ * @param {AbstractMethodModelFactory} methodModelFactory
+ * 
+ * @constructor
+ */
 function MyObject (
     provider,
     providersPackage,
@@ -59,9 +66,13 @@ MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
 MyObject.prototype.constructor = MyObject;
 
 
-
 // Create the MyMethoModelFactory object
-
+/**
+ * @param {Object} utils
+ * @param {Object} formatters
+ * 
+ * @constructor
+ */
 function MyMethodModelFactory(utils, formatters) {
     MethodPackage.AbstractMethodModelFactory.call(
         this,
