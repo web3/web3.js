@@ -80,9 +80,9 @@ MyMethodModelFactory.prototype = Object.create(
 MyMethodModelFactory.prototype.constructor = MyMethodModelFactory;
 
 
-// Initiate all objects
+// Instantiate anything
 var myObject = new MyObject(
-    provider, 
+    ProvidersPackage.detect(), 
     ProvidersPackage, 
     MethodPackage.createMethodController(), 
     new MyMethodModelFactory(Utils, formatters)

@@ -28,7 +28,6 @@ Provided interface of AbstractWeb3Object:
 npm install web3-core-package
 ```
 
-
 ## Usage
 
 ```js
@@ -38,14 +37,14 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 function MyObject (
     provider,
     providersPackage,
-    methodController, 
+    methodController, // optional
     methodModelFactory // optional
 ) {
     AbstractWeb3Object.call(
         this,
         provider,
         providersPackage,
-        methodController,
+        methodController, // optional
         methodModelFactory // optional
     );
 };

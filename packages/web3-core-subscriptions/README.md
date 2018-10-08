@@ -1,9 +1,7 @@
 # web3-core-subscriptions
 
-This is a sub package of [web3.js][repo]
-
-The subscriptions package used within some [web3.js][repo] packages.
-Please read the [documentation][docs] for more.
+This is a sub package of [web3.js][repo].
+The subscriptions package is used within some [web3.js][repo] packages.
 
 ## Installation
 
@@ -29,28 +27,56 @@ This will expose the `Web3Subscriptions` object on the window object.
 
 ```js
 // in node.js
-var Web3Subscriptions = require('web3-core-subscriptions');
 
-var sub = new Web3Subscriptions({
-    name: 'subscribe',
-    type: 'eth',
-    subscriptions: {
-        'newBlockHeaders': {
-            subscriptionName: 'newHeads',
-            params: 0,
-            outputFormatter: formatters.outputBlockFormatter
-        },
-        'pendingTransactions': {
-            params: 0,
-            outputFormatter: formatters.outputTransactionFormatter
-        }
+// Dependencies
+var ProvidersPackage = require('web3-core-providers');
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var SubscriptionsPackage = require('web3-core-subscriptions');
+
+// Create an object of type AbstractWeb3Object
+function MyObject (
+    provider,
+    providersPackage,
+    subscriptionsFactory
+) {
+    AbstractWeb3Object.call(
+        this,
+        provider,
+        providersPackage
+    );
+    
+    this.subscriptionsFactory = subscriptionsFactory;
+}
+
+MyObject.prototype.subscribe = function (subscriptionMethod, callback) {
+    switch (subscriptionMethod) {
+        case 'newBlockHeaders':
+            return this.subscriptionsFactory
+                .createNewHeadsSubscription(this)
+                .subscribe(callback);
+        case 'pendingTransactions':
+            return this.subscriptionsFactory
+                .createNewPendingTransactionsSubscription(this)
+                .subscribe(callback);
+        default:
+            throw Error('Unsupported subscription: ' + subscriptionMethod);
     }
-});
-sub.attachToObject(myCoolLib);
+};
 
-myCoolLib.subscribe('newBlockHeaders', function(){ ... });
+// Inherit from AbstractWeb3Object
+MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+MyObject.prototype.constructor = MyObject;
+
+// Instantiate anything
+var myObject = new MyObject(
+    ProvidersPackage.detect(),
+    ProvidersPackage,
+    SubscriptionsPackage.createSubscriptionsFactory()
+);
+
+// Subscribe
+myObject.subscribe('newBlockHeaders', function(){ ... });
 ```
-
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
