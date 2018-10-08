@@ -40,7 +40,7 @@ module.exports = {
      *
      * @method createNetwork
      *
-     * @param {Object} provider
+     * @param {Object|String} provider
      *
      * @returns {Network}
      */

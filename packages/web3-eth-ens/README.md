@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the contract package to be used in the `web3-eth` package.
+This is the ENS package and it will be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -27,12 +27,18 @@ This will expose the `EthEns` object on the window object.
 ## Usage
 
 ```js
-    var eth = new Web3Eth(web3.currentProvider);
-    var ens = new EthEns(eth);
+var NetPackage = require('web3-net');
+var AccountsPackage = require('web3-eth-accounts');
+var ENSPackage = require('web3-eth-ens');
+
+var ens = ENSPackage.createENS(
+    NetPackage.createNetwork('ws://localhost:8546'),
+    AccountsPackage.createAccounts('ws://localhost:8546')
+);
     
-    ens.getAddress('ethereum.eth').then(function (result) {
-      console.log(result);
-    });
+ens.getAddress('ethereum.eth').then(function (result) {
+  console.log(result);
+});
 ```
 
 
