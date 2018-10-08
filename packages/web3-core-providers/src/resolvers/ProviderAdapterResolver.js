@@ -41,7 +41,7 @@ function ProviderAdapterResolver(providersPackageFactory) {
  * @param {*} provider
  * @param {Net} net
  *
- * @returns {Object|Boolean}
+ * @returns {AbstractProviderAdapter|Error}
  */
 ProviderAdapterResolver.prototype.resolve = function (provider, net) {
     if (typeof provider === 'string') {
@@ -71,14 +71,19 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
     }
 
     switch (provider.constructor.name) {
-        case 'EthereumProvider':
-            return provider;
         case 'HttpProvider':
             return this.providersPackageFactory.createHttpProviderAdapter(provider);
         case 'WebsocketProvider':
-            return this.providersPackageFactory.createSocketProviderAdapter(provider);
         case 'IpcProvider':
             return this.providersPackageFactory.createSocketProviderAdapter(provider);
+        case 'EthereumProvider':
+            provider.sendBatch = provider.send;
+
+            return provider;
+        case 'HttpProviderAdapter':
+        case 'SocketProviderAdapter':
+        case 'InpageProviderAdapter':
+            return provider;
     }
 
     throw Error('Please provide an Web3 provider or the EthereumProvider');
