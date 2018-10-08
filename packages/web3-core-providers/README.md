@@ -19,6 +19,7 @@ npm run-script build-all
 ```
 
 Then include `dist/web3-core-providers.js` in your html file.
+This will expose the `Web3Providers` object on the window object.
 
 
 ## Usage

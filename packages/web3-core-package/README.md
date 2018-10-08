@@ -28,6 +28,17 @@ Provided interface of AbstractWeb3Object:
 npm install web3-core-package
 ```
 
+### In the Browser
+
+Build running the following in the [web3.js][repo] repository:
+
+```bash
+npm run-script build-all
+```
+
+Then include `dist/web3-core-package.js` in your html file.
+This will expose the `Web3Package` object on the window object.
+
 ## Usage
 
 ```js

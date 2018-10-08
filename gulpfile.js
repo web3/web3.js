@@ -90,10 +90,6 @@ var packages = [{
     fileName: 'web3-net',
     expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
-}, {
-    fileName: 'web3-core-helpers',
-    expose: 'Web3Helpers',
-    src: './packages/web3-core-helpers/src/index.js'
 }];
 
 var browserifyOptions = {
