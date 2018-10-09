@@ -21,7 +21,7 @@
     "bower": ">=1.4.1",
     "browserify": ">=10.0",
     "chai": "^3.0.0",
-    "coveralls": "^2.11.2",
+    "coveralls": "^3.0.2",
     "del": ">=2.0.2",
     "exorcist": "^0.4.0",
     "gulp": ">=3.9.0",
@@ -31,7 +31,7 @@
     "gulp-streamify": "0.0.5",
     "gulp-uglify": ">=1.2.0",
     "istanbul": "^0.4.4",
-    "jshint": ">=2.5.0",
+    "jshint": "^2.9.6",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
     "vinyl-source-stream": "^1.1.0"
