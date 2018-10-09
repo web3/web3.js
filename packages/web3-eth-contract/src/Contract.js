@@ -258,10 +258,14 @@ Contract.prototype.clone = function () {
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Contract.prototype.setProvider = function (provider, net) {
-  AbstractWeb3Object.prototype.setProvider.call(this, provider, net);
-  this.accounts.setProvider(provider, net);
+  return !!(
+      AbstractWeb3Object.prototype.setProvider.call(this, provider, net) &&
+      this.accounts.setProvider(provider, net)
+  );
 };
 
 Contract.prototype = Object.create(AbstractWeb3Object.prototype);

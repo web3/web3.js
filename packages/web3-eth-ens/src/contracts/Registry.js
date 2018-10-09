@@ -57,11 +57,13 @@ function Registry(provider, accounts, contractPackage, registryABI, resolverABI)
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Registry.prototype.setProvider = function (provider, net) {
     this.provider = this.providersPackage.resolve(provider, net);
-    this.net.setProvider(provider, net);
-    this.accounts.setProvider(provider, net);
+
+    return !!(this.net.setProvider(provider, net) && this.accounts.setProvider(provider, net) && this.provider);
 };
 
 /**

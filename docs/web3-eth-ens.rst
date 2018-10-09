@@ -10,6 +10,55 @@ The ``web3.eth.ens`` functions let you interacting with ENS.
 
 ------------------------------------------------------------------------------
 
+setProvider
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.ens.setProvider(myProvider, net)
+
+Will change the provider for the ENS package.
+
+----------
+Parameters
+----------
+
+1. ``Object|String`` - ``provider``: a valid provider
+2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
+
+-------
+Returns
+-------
+
+``Boolean``
+
+-------
+Example
+-------
+
+.. code-block:: javascript
+
+    var Web3 = require('web3');
+    var web3 = new Web3('http://localhost:8545');
+    // or
+    var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+
+    // change provider
+    web3.setProvider('ws://localhost:8546');
+    // or
+    web3.setProvider(new Web3.providers.WebsocketProvider('ws://localhost:8546'));
+
+    // Using the IPC provider in node.js
+    var net = require('net');
+    var web3 = new Web3('/Users/myuser/Library/Ethereum/geth.ipc', net); // mac os path
+    // or
+    var web3 = new Web3(new Web3.providers.IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', net)); // mac os path
+    // on windows the path is: "\\\\.\\pipe\\geth.ipc"
+    // on linux the path is: "/users/myuser/.ethereum/geth.ipc"
+
+
+------------------------------------------------------------------------------
+
 registry
 =====================
 
@@ -54,7 +103,7 @@ Returns the resolver contract to an Ethereum address.
 Returns
 -------
 
-``Reslver`` - The ENS resolver for this name.
+``Resolver`` - The ENS resolver for this name.
 
 -------
 Example
@@ -178,7 +227,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -300,7 +349,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -414,7 +463,7 @@ Example
     });
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -513,7 +562,7 @@ Example
     .on('error', console.error);
 
 
-    For further information on the handling of contract events please see here contract-events_.
+For further information on the handling of contract events please see here contract-events_.
 
 ------------------------------------------------------------------------------
 
@@ -526,11 +575,11 @@ The ENS API provides the possibility for listening to all ENS related events.
 Known resolver events
 ------------
 
-1. AddrChanged(node bytes32, a address)
-2. ContentChanged(node bytes32, hash bytes32)
-4. NameChanged(node bytes32, name string)
-5. ABIChanged(node bytes32, contentType uint256)
-6. PubkeyChanged(node bytes32, x bytes32, y bytes32)
+1. ``AddrChanged`` - AddrChanged(node bytes32, a address)
+2. ``ContentChanged`` - ContentChanged(node bytes32, hash bytes32)
+4. ``NameChanged`` - NameChanged(node bytes32, name string)
+5. ``ABIChanged`` - ABIChanged(node bytes32, contentType uint256)
+6. ``PubkeyChanged`` - PubkeyChanged(node bytes32, x bytes32, y bytes32)
 
 -------
 Example
@@ -576,10 +625,10 @@ Example
 Known registry events
 ------------
 
-1. Transfer(node bytes32, owner address)
-2. NewOwner(node bytes32, label bytes32, owner address)
-4. NewResolver(node bytes32, resolver address)
-5. NewTTL(node bytes32, ttl uint64)
+1. ``Transfer`` - Transfer(node bytes32, owner address)
+2. ``NewOwner`` - NewOwner(node bytes32, label bytes32, owner address)
+4. ``NewResolver`` - NewResolver(node bytes32, resolver address)
+5. ``NewTTL`` - NewTTL(node bytes32, ttl uint64)
 
 -------
 Example

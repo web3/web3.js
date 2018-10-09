@@ -71,10 +71,14 @@ Shh.prototype.subscribe = function (method, options, callback) {
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Shh.prototype.setProvider = function (provider, net) {
-    AbstractWeb3Object.setProvider.call(provider, net);
-    this.net.setProvider(provider, net);
+    return !!(
+        AbstractWeb3Object.setProvider.call(this, provider, net) &&
+        this.net.setProvider(provider, net)
+    );
 };
 
 Shh.prototype = Object.create(AbstractWeb3Object.prototype);

@@ -39,9 +39,11 @@ function ENS(registry, resolverMethodHandler) {
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 ENS.prototype.setProvider = function (provider, net) {
-    this.registry.setProvider(provider, net);
+     return this.registry.setProvider(provider, net);
 };
 
 /**

@@ -19,7 +19,8 @@ Will change the provider for its module.
 Parameters
 ----------
 
-1. ``Object`` - ``myProvider``: :ref:`a valid provider <web3-providers>`.
+1. ``Object|String`` - ``provider``: a valid provider
+2. ``Net`` - ``net``: (optional) the node.js Net package. This is only required for the IPC provider.
 
 -------
 Returns

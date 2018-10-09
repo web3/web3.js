@@ -92,6 +92,8 @@ function AbstractWeb3Object(
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 AbstractWeb3Object.prototype.setProvider = function (provider, net) {
     if (!this.isSameProvider(provider)) {
@@ -99,11 +101,15 @@ AbstractWeb3Object.prototype.setProvider = function (provider, net) {
         this.currentProvider = this.providersPackage.resolve(provider, net);
 
         if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach(function (extendedPackage) {
-                extendedPackage.setProvider(provider, net)
+            var setExtendedPackagesProvider = this.extendedPackages.every(function (extendedPackage) {
+                return !!extendedPackage.setProvider(provider, net);
             });
         }
+
+        return !!(setExtendedPackagesProvider && this.currentProvider);
     }
+
+    return false;
 };
 
 /**

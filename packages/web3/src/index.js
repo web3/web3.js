@@ -65,12 +65,16 @@ var Web3 = function Web3(provider, net) {
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Web3.prototype.setProvider = function (provider, net) {
-    AbstractWeb3Object.prototype.setProvider.call(this, provider, net);
-    this.eth.setProvider(provider, net);
-    this.shh.setProvider(provider, net);
-    this.bzz.setProvider(provider);
+    return !!(
+        AbstractWeb3Object.prototype.setProvider.call(this, provider, net) &&
+        this.eth.setProvider(provider, net) &&
+        this.shh.setProvider(provider, net) &&
+        this.bzz.setProvider(provider)
+    );
 };
 
 Web3.prototype = Object.create(AbstractWeb3Object.prototype);

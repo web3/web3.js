@@ -77,10 +77,11 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Personal.prototype.setProvider = function (provider, net) {
-    AbstractWeb3Object.setProvider.call(provider, net);
-    this.net.setProvider(provider, net);
+    return !!(AbstractWeb3Object.setProvider.call(this, provider, net) && this.net.setProvider(provider, net));
 };
 
 Personal.prototype = Object.create(AbstractWeb3Object);

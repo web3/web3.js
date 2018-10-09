@@ -201,16 +201,21 @@ Eth.prototype.subscribe = function (type, options, callback) {
  *
  * @param {Object|String} provider
  * @param {Net} net
+ *
+ * @returns {Boolean}
  */
 Eth.prototype.setProvider = function (provider, net) {
-    AbstractWeb3Object.setProvider.call(provider, net);
-    this.net.setProvider(provider, net);
-    this.personal.setProvider(provider, net);
-    this.accounts.setProvider(provider, net);
-
-    this.initiatedContracts.forEach(function (contract) {
-       contract.setProvider(provider, net);
+    var setContractProviders = this.initiatedContracts.every(function (contract) {
+        return !!contract.setProvider(provider, net);
     });
+
+    return !!(
+        AbstractWeb3Object.setProvider.call(this, provider, net) &&
+        this.net.setProvider(provider, net) &&
+        this.personal.setProvider(provider, net) &&
+        this.accounts.setProvider(provider, net) &&
+        setContractProviders
+    );
 };
 
 Eth.prototype = Object.create(AbstractWeb3Object.prototype);
