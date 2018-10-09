@@ -135,7 +135,6 @@ nvm install --lts # For stable version of Node
 
 <sub>Note: npm will be automatically installed with this script as well.</sub>
 
-
 ### Building (gulp)
 
 ```bash
