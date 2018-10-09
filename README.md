@@ -106,10 +106,12 @@ var balance = web3.eth.getBalance(coinbase);
 
 You can find more examples in the [`example`](https://github.com/ethereum/web3.js/tree/master/example) directory.
 
+
 ### Migration from 0.13.0 to 0.14.0
 
 web3.js version 0.14.0 supports [multiple instances of the web3](https://github.com/ethereum/web3.js/issues/297) object.
 To migrate to this version, please follow the guide:
+
 
 ```diff
 -var web3 = require('web3');
