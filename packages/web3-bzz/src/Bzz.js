@@ -116,7 +116,6 @@ Bzz.prototype.hasProvider = function () {
  * Throws the provider error
  *
  * @method throwProviderError
- *
  */
 Bzz.prototype.throwProviderError = function () {
     throw new Error('No provider set, please set one using bzz.setProvider().');
@@ -153,7 +152,7 @@ Bzz.prototype.setProvider = function (provider) {
 // set default ethereum provider
 /* jshint ignore:start */
 Bzz.givenProvider = null;
-if(typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
+if (typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
     Bzz.givenProvider = ethereumProvider.bzz;
 }
 /* jshint ignore:end */
