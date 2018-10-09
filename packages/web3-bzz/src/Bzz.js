@@ -48,7 +48,7 @@ Bzz.prototype.pick = function () {
         return swarm.pick;
     }
 
-    return false;
+    throw Error('Pick is not supported for this environment.');
 };
 
 /**
@@ -144,7 +144,6 @@ Bzz.prototype.setProvider = function (provider) {
     }
 
     this.currentProvider = null;
-    this.throwProviderError();
 
     return false;
 };

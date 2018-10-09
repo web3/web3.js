@@ -42,19 +42,20 @@ var version = require('../package.json').version;
  */
 var Web3 = function Web3(provider, net) {
     this.version = version;
+    provider = ProvidersPackage.resolve(provider, net);
 
     AbstractWeb3Object.call(
         this,
-        ProvidersPackage.resolve(provider, net),
+        provider,
         ProvidersPackage,
         MethodPackage.createMethodController(),
         new MethodPackage.AbstractMethodModelFactory({}, utils, formatters)
     );
 
     this.utils = Utils;
-    this.eth = EthPackage.createEth(this.currentProvider);
-    this.shh = ShhPackage.createShh(this.currentProvider);
-    this.bzz = BzzPackage.createBzz(this.currentProvider);
+    this.eth = EthPackage.createEth(provider);
+    this.shh = ShhPackage.createShh(provider);
+    this.bzz = BzzPackage.createBzz(provider);
 };
 
 /**
@@ -69,7 +70,7 @@ Web3.prototype.setProvider = function (provider, net) {
     AbstractWeb3Object.prototype.setProvider.call(this, provider, net);
     this.eth.setProvider(provider, net);
     this.shh.setProvider(provider, net);
-    // this.bzz.setProvider(provider, net); TODO: check the provider handling in swarm.js
+    this.bzz.setProvider(provider);
 };
 
 Web3.prototype = Object.create(AbstractWeb3Object.prototype);
@@ -106,4 +107,3 @@ Web3.providers = {
 };
 
 module.exports = Web3;
-
