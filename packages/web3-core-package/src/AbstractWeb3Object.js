@@ -28,7 +28,7 @@ var _ = require('underscore');
  * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {ProvidersPackage} providersPackage
  * @param {MethodController} methodController
- * @param {MethodModelFactory} methodModelFactory
+ * @param {AbstractMethodModelFactory} methodModelFactory
  *
  * @constructor
  */
@@ -39,7 +39,7 @@ function AbstractWeb3Object(
     methodModelFactory
 ) {
     if (!this.isDependencyGiven(provider)) {
-        throw Error('Provider not found!');
+        throw Error('No provider given as constructor parameter!');
     }
 
     if (!this.isDependencyGiven(providersPackage)) {
@@ -75,6 +75,7 @@ function AbstractWeb3Object(
 
     if (this.isDependencyGiven(methodModelFactory)) {
         this.methodModelFactory = methodModelFactory;
+        this.extend.formatters = this.methodModelFactory.formatters;
 
         return new Proxy(this,
             {

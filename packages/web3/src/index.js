@@ -22,6 +22,9 @@
 
 "use strict";
 
+var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var formatters = require('web3-core-helpers').formatters;
+var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
 var EthPackage = require('web3-eth');
 var PersonalPackage = require('web3-eth-personal');
@@ -40,30 +43,18 @@ var version = require('../package.json').version;
 var Web3 = function Web3(provider, net) {
     this.version = version;
 
-    if (typeof provider === 'undefined') {
-        throw new Error('No provider given as constructor parameter!');
-    }
-
-    var currentProvider = ProvidersPackage.resolve(provider, net);
-
-    Object.defineProperty(this, 'currentProvider', {
-        get: function () {
-            return currentProvider;
-        },
-        set: function () {
-            throw Error('The property currentProvider is an read-only property!');
-        }
-    });
-
-    if (!this.currentProvider) {
-        throw new Error('Invalid provider given as constructor parameter!');
-    }
+    AbstractWeb3Object.call(
+        this,
+        ProvidersPackage.resolve(provider, net),
+        ProvidersPackage,
+        MethodPackage.createMethodController(),
+        new MethodPackage.AbstractMethodModelFactory({}, utils, formatters)
+    );
 
     this.utils = Utils;
     this.eth = EthPackage.createEth(this.currentProvider);
     this.shh = ShhPackage.createShh(this.currentProvider);
     this.bzz = BzzPackage.createBzz(this.currentProvider);
-
 };
 
 /**
@@ -75,15 +66,14 @@ var Web3 = function Web3(provider, net) {
  * @param {Net} net
  */
 Web3.prototype.setProvider = function (provider, net) {
-    if (typeof this.currentProvider.clearSubscriptions !== 'undefined') {
-        this.currentProvider.clearSubscriptions();
-    }
-
-    this.currentProvider = ProvidersPackage.resolve(provider, net);
+    AbstractWeb3Object.prototype.setProvider.call(this, provider, net);
     this.eth.setProvider(provider, net);
     this.shh.setProvider(provider, net);
     // this.bzz.setProvider(provider, net); TODO: check the provider handling in swarm.js
 };
+
+Web3.prototype = Object.create(AbstractWeb3Object.prototype);
+Web3.prototype.constructor = Web3;
 
 Web3.givenProvider = ProvidersPackage.detect();
 

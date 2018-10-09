@@ -83,7 +83,7 @@ ProviderAdapterResolver.prototype.resolve = function (provider, net) {
             return provider;
     }
 
-    throw Error('Please provide an Web3 provider or the EthereumProvider');
+    throw Error('Please provide an valid Web3 provider or the EthereumProvider');
 };
 
 module.exports = ProviderAdapterResolver;
