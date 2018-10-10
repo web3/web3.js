@@ -3,6 +3,7 @@
     "bitwise": true,
     "camelcase": true,
     "eqeqeq": true,
+    "esversion": 6,
     "freeze": true,
     "funcscope": false,
     "maxcomplexity": 5, /* our target is 3! */

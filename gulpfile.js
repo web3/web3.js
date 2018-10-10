@@ -29,36 +29,43 @@ var browserifyOptions = {
     bundleExternal: true
 };
 
-gulp.task('version', function(){
-  gulp.src(['./package.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
-    .pipe(gulp.dest('./'));
-  gulp.src(['./bower.json'])
-    .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
-    .pipe(gulp.dest('./'));
-  gulp.src(['./package.js'])
-    .pipe(replace(/version\: \'([\.0-9]*)\'/, "version: '"+ version.version + "'"))
-    .pipe(gulp.dest('./'));
-});
+var versionTask = function(){
+    return new Promise(function(resolve /*, reject*/) {
+        gulp.src(['./package.json'])
+            .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
+            .pipe(gulp.dest('./'));
+        gulp.src(['./bower.json'])
+            .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
+            .pipe(gulp.dest('./'));
+        gulp.src(['./package.js'])
+            .pipe(replace(/version\: \'([\.0-9]*)\'/, "version: '"+ version.version + "'"))
+            .pipe(gulp.dest('./'));
+        resolve();
+    });
+};
+gulp.task('version', versionTask);
 
-gulp.task('bower', ['version'], function(cb){
+var bowerTask = function(cb){
     bower.commands.install().on('end', function (installed){
         console.log(installed);
         cb();
     });
-});
+};
+gulp.task('bower', gulp.series(versionTask, bowerTask));
 
-gulp.task('lint', [], function(){
+var lintTask = function(){
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
-});
+};
+gulp.task('lint', lintTask);
 
-gulp.task('clean', ['lint'], function(cb) {
+var cleanTask = function(cb) {
     del([ DEST ]).then(cb.bind(null, null));
-});
+};
+gulp.task('clean', gulp.series(lintTask, cleanTask));
 
-gulp.task('light', ['clean'], function () {
+var lightTask = function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .ignore('bignumber.js')
@@ -71,9 +78,10 @@ gulp.task('light', ['clean'], function () {
         .pipe(streamify(uglify()))
         .pipe(rename(lightDst + '.min.js'))
         .pipe(gulp.dest( DEST ));
-});
+};
+gulp.task('light', gulp.series(cleanTask, lightTask));
 
-gulp.task('standalone', ['clean'], function () {
+var standaloneTask = function () {
     return browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .require('bignumber.js') // expose it to dapp users
@@ -86,11 +94,21 @@ gulp.task('standalone', ['clean'], function () {
         .pipe(streamify(uglify()))
         .pipe(rename(dst + '.min.js'))
         .pipe(gulp.dest( DEST ));
-});
+};
+gulp.task('standalone', gulp.series(cleanTask, standaloneTask));
 
 gulp.task('watch', function() {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
 });
 
-gulp.task('default', ['version', 'lint', 'clean', 'light', 'standalone']);
+gulp.task(
+    'default',
+    gulp.series(
+        versionTask,
+        lintTask,
+        cleanTask,
+        lightTask,
+        standaloneTask
+    )
+);
 
