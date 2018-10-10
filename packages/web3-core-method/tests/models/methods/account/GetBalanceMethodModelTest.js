@@ -3,17 +3,17 @@ var sinon = require('sinon');
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
 
-var GetCodeMethodModel = require('../../../src/models/methods/GetCodeMethodModel');
+var GetBalanceMethodModel = require('../../../../src/models/methods/account/GetBalanceMethodModel');
 
 /**
- * GetCodeMethodModel test
+ * GetBalanceMethodModel test
  */
-describe('GetCodeMethodModelTest', function () {
+describe('GetBalanceMethodModelTest', function () {
     var model,
         formattersMock = sinon.mock(formatters);
 
     beforeEach(function () {
-        model = new GetCodeMethodModel({}, formatters);
+        model = new GetBalanceMethodModel({}, formatters);
     });
 
     after(function () {
@@ -21,8 +21,8 @@ describe('GetCodeMethodModelTest', function () {
     });
 
     describe('rpcMethod', function () {
-        it('should return eth_getCode', function () {
-            expect(model.rpcMethod).to.equal('eth_getCode');
+        it('should return eth_getBalance', function () {
+            expect(model.rpcMethod).to.equal('eth_getBalance');
         });
     });
 
@@ -33,7 +33,7 @@ describe('GetCodeMethodModelTest', function () {
     });
 
     describe('beforeExecution', function () {
-        it('should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
+        it('should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
             model.parameters = ['string', 100];
 
             formattersMock
@@ -58,10 +58,18 @@ describe('GetCodeMethodModelTest', function () {
     });
 
     describe('afterExecution', function () {
-        it('should just return the response', function () {
-            var object = {};
+        it('should call outputBigNumberFormatter on the response and return it', function () {
+            var response = {};
 
-            expect(model.afterExecution(object)).to.equal(object);
+            formattersMock
+                .expects('outputBigNumberFormatter')
+                .withArgs(response)
+                .returns({bigNumber: true})
+                .once();
+
+            expect(model.afterExecution({})).to.have.property('bigNumber', true);
+
+            formattersMock.verify();
         });
     });
 });

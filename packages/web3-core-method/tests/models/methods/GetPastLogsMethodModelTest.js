@@ -9,11 +9,15 @@ var GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMet
  * GetPastLogsMethodModel test
  */
 describe('GetPastLogsMethodModelTest', function () {
-    var model;
-    var formattersMock = sinon.mock(formatters);
+    var model,
+        formattersMock = sinon.mock(formatters);
 
     beforeEach(function () {
         model = new GetPastLogsMethodModel({}, formatters);
+    });
+
+    after(function () {
+        formattersMock.restore();
     });
 
     describe('rpcMethod', function () {
@@ -35,9 +39,12 @@ describe('GetPastLogsMethodModelTest', function () {
             formattersMock
                 .expects('inputLogFormatter')
                 .withArgs(model.parameters[0])
+                .returns({empty: true})
                 .once();
 
             model.beforeExecution({});
+
+            expect(model.parameters[0]).to.have.property('empty', true);
 
             formattersMock.verify();
         });
@@ -48,9 +55,10 @@ describe('GetPastLogsMethodModelTest', function () {
             formattersMock
                 .expects('outputLogFormatter')
                 .withArgs({})
+                .returns({formatted: true})
                 .once();
 
-            expect(model.afterExecution([{}])).to.be.an.instanceof(Array);
+            expect(model.afterExecution([{}])[0]).to.have.property('formatted', true);
 
             formattersMock.verify();
         });

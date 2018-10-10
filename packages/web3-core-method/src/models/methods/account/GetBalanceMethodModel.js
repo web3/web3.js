@@ -34,6 +34,9 @@ function GetBalanceMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getBalance', 2, utils, formatters);
 }
 
+GetBalanceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBalanceMethodModel.prototype.constructor = GetBalanceMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -58,8 +61,5 @@ GetBalanceMethodModel.prototype.beforeExecution = function (web3Package) {
 GetBalanceMethodModel.prototype.afterExecution = function(response) {
     return this.formatters.outputBigNumberFormatter(response);
 };
-
-GetBalanceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBalanceMethodModel.prototype.constructor = GetBalanceMethodModel;
 
 module.exports = GetBalanceMethodModel;

@@ -9,11 +9,15 @@ var CallMethodModel = require('../../../src/models/methods/CallMethodModel');
  * CallMethodModel test
  */
 describe('CallMethodModelTest', function () {
-    var model;
-    var formattersMock = sinon.mock(formatters);
+    var model,
+        formattersMock = sinon.mock(formatters);
 
     beforeEach(function () {
         model = new CallMethodModel({}, formatters);
+    });
+
+    after(function () {
+        formattersMock.restore();
     });
 
     describe('rpcMethod', function () {
@@ -35,14 +39,19 @@ describe('CallMethodModelTest', function () {
             formattersMock
                 .expects('inputCallFormatter')
                 .withArgs(model.parameters[0], {})
+                .returns({empty: true})
                 .once();
 
             formattersMock
                 .expects('inputDefaultBlockNumberFormatter')
                 .withArgs(model.parameters[1], {})
+                .returns('0x0')
                 .once();
 
             model.beforeExecution({});
+
+            expect(model.parameters[0]).to.have.property('empty', true);
+            expect(model.parameters[1]).equal('0x0');
 
             formattersMock.verify();
         });

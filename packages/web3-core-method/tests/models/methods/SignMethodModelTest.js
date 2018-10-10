@@ -9,11 +9,21 @@ var SignMethodModel = require('../../../src/models/methods/SignMethodModel');
  * GetStorageAtMethodModel test
  */
 describe('SignMethodModelTest', function () {
-    var model;
-    var formattersMock = sinon.mock(formatters);
+    var model,
+        formattersMock = sinon.mock(formatters);
 
     beforeEach(function () {
-        model = new SignMethodModel({}, formatters);
+        model = new SignMethodModel({}, formatters, {test: true});
+    });
+
+    after(function () {
+        formattersMock.restore();
+    });
+
+    describe('accounts', function () {
+        it('should be defined', function () {
+            expect(model.accounts.test).to.be.true;
+        });
     });
 
     describe('rpcMethod', function () {
@@ -30,21 +40,26 @@ describe('SignMethodModelTest', function () {
 
     describe('beforeExecution', function () {
         it('should call the inputSignFormatter and inputAddressFormatter', function () {
-                model.parameters = ['string', 'string'];
+            model.parameters = ['string', 'string'];
 
-                formattersMock
-                    .expects('inputSignFormatter')
-                    .withArgs(model.parameters[0])
-                    .once();
+            formattersMock
+                .expects('inputSignFormatter')
+                .withArgs(model.parameters[0])
+                .returns('string')
+                .once();
 
-                formattersMock
-                    .expects('inputAddressFormatter')
-                    .withArgs(model.parameters[1])
-                    .once();
+            formattersMock
+                .expects('inputAddressFormatter')
+                .withArgs(model.parameters[1])
+                .returns('0x0')
+                .once();
 
-                model.beforeExecution({});
+            model.beforeExecution({});
 
-                formattersMock.verify();
+            expect(model.parameters[0]).equal('string');
+            expect(model.parameters[1]).equal('0x0');
+
+            formattersMock.verify();
         });
     });
 

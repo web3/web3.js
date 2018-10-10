@@ -34,6 +34,9 @@ function GetTransactionCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getTransactionCount', 2, utils, formatters);
 }
 
+GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionCountMethodModel.prototype.constructor = GetTransactionCountMethodModel;
+
 /**
  * This method will be executed before the effective execution.
  *
@@ -58,8 +61,5 @@ GetTransactionCountMethodModel.prototype.beforeExecution = function (web3Package
 GetTransactionCountMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionCountMethodModel.prototype.constructor = GetTransactionCountMethodModel;
 
 module.exports = GetTransactionCountMethodModel;

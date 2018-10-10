@@ -34,6 +34,9 @@ function GetBlockMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getBlockByNumber', 2, utils, formatters);
 }
 
+GetBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockMethodModel.prototype.constructor = GetBlockMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -42,7 +45,7 @@ function GetBlockMethodModel(utils, formatters) {
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
 GetBlockMethodModel.prototype.beforeExecution = function (web3Package) {
-    if (this.isHash(parameters[0])) {
+    if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getBlockByHash';
     }
 
@@ -62,8 +65,5 @@ GetBlockMethodModel.prototype.beforeExecution = function (web3Package) {
 GetBlockMethodModel.prototype.afterExecution = function(response) {
     return this.formatters.outputBlockFormatter(response);
 };
-
-GetBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockMethodModel.prototype.constructor = GetBlockMethodModel;
 
 module.exports = GetBlockMethodModel;

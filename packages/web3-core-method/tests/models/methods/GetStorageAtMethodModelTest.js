@@ -10,12 +10,17 @@ var GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtM
  * GetStorageAtMethodModel test
  */
 describe('GetStorageAtMethodModelTest', function () {
-    var model;
-    var formattersMock = sinon.mock(formatters);
-    var utilsMock = sinon.mock(utils);
+    var model,
+        formattersMock = sinon.mock(formatters),
+        utilsMock = sinon.mock(utils);
 
     beforeEach(function () {
         model = new GetStorageAtMethodModel(utils, formatters);
+    });
+
+    after(function () {
+        formattersMock.restore();
+        utilsMock.restore();
     });
 
     describe('rpcMethod', function () {
@@ -40,19 +45,26 @@ describe('GetStorageAtMethodModelTest', function () {
                 formattersMock
                     .expects('inputAddressFormatter')
                     .withArgs(model.parameters[0])
+                    .returns('0x0')
                     .once();
 
                 utilsMock
                     .expects('numberToHex')
                     .withArgs(model.parameters[1])
+                    .returns('0x0')
                     .once();
 
                 formattersMock
                     .expects('inputDefaultBlockNumberFormatter')
                     .withArgs(model.parameters[2])
+                    .returns('0x0')
                     .once();
 
                 model.beforeExecution({});
+
+                expect(model.parameters[0]).equal('0x0');
+                expect(model.parameters[1]).equal('0x0');
+                expect(model.parameters[2]).equal('0x0');
 
                 formattersMock.verify();
             }

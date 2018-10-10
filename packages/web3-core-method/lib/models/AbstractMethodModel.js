@@ -22,6 +22,8 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
  * @param {String|Function} rpcMethod
  * @param {Number} parametersAmount

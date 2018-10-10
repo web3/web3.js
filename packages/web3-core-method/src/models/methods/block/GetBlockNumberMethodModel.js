@@ -34,6 +34,9 @@ function GetBlockNumberMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_blockNumber', 0, utils, formatters);
 }
 
+GetBlockNumberMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockNumberMethodModel.prototype.constructor = GetBlockNumberMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function GetBlockNumberMethodModel(utils, formatters) {
 GetBlockNumberMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-GetBlockNumberMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockNumberMethodModel.prototype.constructor = GetBlockNumberMethodModel;
 
 module.exports = GetBlockNumberMethodModel;

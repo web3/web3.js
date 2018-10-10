@@ -93,6 +93,8 @@
         "lerna": "^2.5.1",
         "mocha": ">=2.3.3",
         "sandboxed-module": "^2.0.2",
+        "sinon": "^6.3.5",
+        "sinon-chai": "^3.2.0",
         "underscore": "^1.8.3",
         "vinyl-source-stream": "^2.0.0"
     }

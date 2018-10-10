@@ -2,27 +2,30 @@ var chai = require('chai');
 var sinon = require('sinon');
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
+var utils = require('web3-utils');
 
-var GetCodeMethodModel = require('../../../src/models/methods/GetCodeMethodModel');
+var GetTransactionCountMethodModel = require('../../../../src/models/methods/account/GetTransactionCountMethodModel');
 
 /**
- * GetCodeMethodModel test
+ * GetTransactionCountMethodModel test
  */
-describe('GetCodeMethodModelTest', function () {
+describe('GetTransactionCountMethodModelTest', function () {
     var model,
-        formattersMock = sinon.mock(formatters);
+        formattersMock = sinon.mock(formatters),
+        utilsMock = sinon.mock(utils);
 
     beforeEach(function () {
-        model = new GetCodeMethodModel({}, formatters);
+        model = new GetTransactionCountMethodModel(utils, formatters);
     });
 
     after(function () {
         formattersMock.restore();
+        utilsMock.restore();
     });
 
     describe('rpcMethod', function () {
-        it('should return eth_getCode', function () {
-            expect(model.rpcMethod).to.equal('eth_getCode');
+        it('should return eth_getTransactionCount', function () {
+            expect(model.rpcMethod).to.equal('eth_getTransactionCount');
         });
     });
 
@@ -33,7 +36,7 @@ describe('GetCodeMethodModelTest', function () {
     });
 
     describe('beforeExecution', function () {
-        it('should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
+        it('should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
             model.parameters = ['string', 100];
 
             formattersMock
@@ -58,10 +61,16 @@ describe('GetCodeMethodModelTest', function () {
     });
 
     describe('afterExecution', function () {
-        it('should just return the response', function () {
-            var object = {};
+        it('should call hexToNumber on the response and return it', function () {
+            utilsMock
+                .expects('hexToNumber')
+                .withArgs('0x0')
+                .returns(100)
+                .once();
 
-            expect(model.afterExecution(object)).to.equal(object);
+            expect(model.afterExecution('0x0')).equal(100);
+
+            utilsMock.verify();
         });
     });
 });

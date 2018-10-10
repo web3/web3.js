@@ -34,6 +34,9 @@ function GetAccountsMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_accounts', 0, utils, formatters);
 }
 
+GetAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetAccountsMethodModel.prototype.constructor = GetAccountsMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -50,8 +53,5 @@ GetAccountsMethodModel.prototype.afterExecution = function (response) {
         return self.utils.toChecksumAddress(responseItem);
     });
 };
-
-GetAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetAccountsMethodModel.prototype.constructor = GetAccountsMethodModel;
 
 module.exports = GetAccountsMethodModel;
