@@ -34,6 +34,9 @@ function GetCodeMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getCode', 2, utils, formatters);
 }
 
+GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetCodeMethodModel.prototype.constructor = GetCodeMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -45,8 +48,5 @@ GetCodeMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
 };
-
-GetCodeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetCodeMethodModel.prototype.constructor = GetCodeMethodModel;
 
 module.exports = GetCodeMethodModel;

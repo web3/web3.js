@@ -34,6 +34,9 @@ function GetStorageAtMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getStorageAt', 3, utils, formatters);
 }
 
+GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetStorageAtMethodModel.prototype.constructor = GetStorageAtMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -46,8 +49,5 @@ GetStorageAtMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
     this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], web3Package);
 };
-
-GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetStorageAtMethodModel.prototype.constructor = GetStorageAtMethodModel;
 
 module.exports = GetStorageAtMethodModel;

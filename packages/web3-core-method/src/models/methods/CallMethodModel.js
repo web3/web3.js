@@ -34,6 +34,9 @@ function CallMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_call', 2, utils, formatters);
 }
 
+CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+CallMethodModel.prototype.constructor = CallMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -45,8 +48,5 @@ CallMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], web3Package);
     this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
 };
-
-CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-CallMethodModel.prototype.constructor = CallMethodModel;
 
 module.exports = CallMethodModel;

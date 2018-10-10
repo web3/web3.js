@@ -36,6 +36,9 @@ function SignMethodModel(utils, formatters, accounts) {
     this.accounts = accounts;
 }
 
+SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SignMethodModel.prototype.constructor = SignMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -47,8 +50,5 @@ SignMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };
-
-SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SignMethodModel.prototype.constructor = SignMethodModel;
 
 module.exports = SignMethodModel;

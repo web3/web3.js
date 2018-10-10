@@ -5,15 +5,15 @@ var TransactionConfirmationModel = require('../../src/models/TransactionConfirma
 /**
  * TransactionConfirmationModel test
  */
-describe('TransactionConfirmationModel', function() {
+describe('TransactionConfirmationModel', function () {
     var model;
 
-    beforeEach(function() {
+    beforeEach(function () {
         model = new TransactionConfirmationModel();
     });
 
-    describe('POLLINGTIMEOUT', function() {
-        it('should return 15 * TIMEOUTBLOCK', function() {
+    describe('POLLINGTIMEOUT', function () {
+        it('should return 15 * TIMEOUTBLOCK', function () {
             assert.equal(model.POLLINGTIMEOUT, 15 * model.TIMEOUTBLOCK);
         });
     });
@@ -77,7 +77,7 @@ describe('TransactionConfirmationModel', function() {
     });
 
     describe('isTimeoutTimeExceeded', function () {
-        describe('watcher is not polling', function() {
+        describe('watcher is not polling', function () {
             it('should return true ', function () {
                 model.timeoutCounter = 51;
                 assert.isTrue(model.isTimeoutTimeExceeded(false));
@@ -89,7 +89,7 @@ describe('TransactionConfirmationModel', function() {
             });
         });
 
-        describe('watcher is polling', function() {
+        describe('watcher is polling', function () {
             it('should return true ', function () {
                 model.timeoutCounter = 1 + (15 * model.TIMEOUTBLOCK);
                 assert.isTrue(model.isTimeoutTimeExceeded(true));

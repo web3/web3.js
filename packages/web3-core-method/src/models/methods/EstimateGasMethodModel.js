@@ -34,6 +34,9 @@ function EstimateGasMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_estimateGas', 1, utils, formatters);
 }
 
+EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+EstimateGasMethodModel.prototype.constructor = EstimateGasMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -57,8 +60,5 @@ EstimateGasMethodModel.prototype.beforeExecution = function (web3Package) {
 EstimateGasMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-EstimateGasMethodModel.prototype.constructor = EstimateGasMethodModel;
 
 module.exports = EstimateGasMethodModel;

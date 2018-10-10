@@ -34,6 +34,9 @@ function GetPastLogsMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getLogs', 1, utils, formatters);
 }
 
+GetPastLogsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetPastLogsMethodModel.prototype.constructor = GetPastLogsMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -61,8 +64,5 @@ GetPastLogsMethodModel.prototype.afterExecution = function (response) {
         return self.formatters.outputLogFormatter(responseItem);
     });
 };
-
-GetPastLogsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetPastLogsMethodModel.prototype.constructor = GetPastLogsMethodModel;
 
 module.exports = GetPastLogsMethodModel;
