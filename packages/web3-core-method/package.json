@@ -6,11 +6,18 @@
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-method",
     "license": "LGPL-3.0",
     "main": "src/index.js",
+    "scripts": {
+        "test": "mocha './tests/**/*.js'"
+    },
     "dependencies": {
         "underscore": "1.8.3",
         "web3-core-promievent": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-providers": "1.0.0-beta.36"
+    },
+    "devDependencies": {
+        "chai": "^4.2.0",
+        "mocha": "^5.2.0"
     }
 }

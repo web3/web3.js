@@ -86,7 +86,7 @@ Subscription.prototype.subscribe = function (callback) {
  *
  * @method handleSubscriptionResponse
  *
- * @param {any} response
+ * @param {*} response
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
