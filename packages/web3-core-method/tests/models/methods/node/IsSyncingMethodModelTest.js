@@ -35,7 +35,7 @@ describe('IsSyncingMethodModelTest', function () {
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should map the response', function () {
         formattersMock
             .expects('outputSyncingFormatter')
             .withArgs({})

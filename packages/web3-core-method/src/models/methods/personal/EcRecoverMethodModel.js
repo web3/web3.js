@@ -34,6 +34,9 @@ function EcRecoverMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_ecRecover', 3, utils, formatters);
 }
 
+EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+EcRecoverMethodModel.prototype.constructor = EcRecoverMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -45,8 +48,5 @@ EcRecoverMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };
-
-EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-EcRecoverMethodModel.prototype.constructor = EcRecoverMethodModel;
 
 module.exports = EcRecoverMethodModel;

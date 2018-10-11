@@ -34,6 +34,9 @@ function ListAccountsMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_listAccounts', 0, utils, formatters);
 }
 
+ListAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+ListAccountsMethodModel.prototype.constructor = ListAccountsMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -50,8 +53,5 @@ ListAccountsMethodModel.prototype.afterExecution = function (response) {
         return self.utils.toChecksumAddress(responseItem);
     });
 };
-
-ListAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-ListAccountsMethodModel.prototype.constructor = ListAccountsMethodModel;
 
 module.exports = ListAccountsMethodModel;

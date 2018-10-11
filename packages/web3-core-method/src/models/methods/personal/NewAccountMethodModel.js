@@ -34,6 +34,9 @@ function NewAccountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_newAccount', 0, utils, formatters);
 }
 
+NewAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+NewAccountMethodModel.prototype.constructor = NewAccountMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function NewAccountMethodModel(utils, formatters) {
 NewAccountMethodModel.prototype.afterExecution = function (response) {
     return this.utils.toChecksumAddress(response);
 };
-
-NewAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-NewAccountMethodModel.prototype.constructor = NewAccountMethodModel;
 
 module.exports = NewAccountMethodModel;

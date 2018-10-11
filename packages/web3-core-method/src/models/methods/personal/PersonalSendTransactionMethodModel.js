@@ -34,6 +34,9 @@ function PersonalSendTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_sendTransaction', 2, utils, formatters);
 }
 
+PersonalSendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PersonalSendTransactionMethodModel.prototype.constructor = PersonalSendTransactionMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -44,8 +47,5 @@ function PersonalSendTransactionMethodModel(utils, formatters) {
 PersonalSendTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
 };
-
-PersonalSendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PersonalSendTransactionMethodModel.prototype.constructor = PersonalSendTransactionMethodModel;
 
 module.exports = PersonalSendTransactionMethodModel;

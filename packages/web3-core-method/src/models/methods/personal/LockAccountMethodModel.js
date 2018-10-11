@@ -34,6 +34,9 @@ function LockAccountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_lockAccount', 1, utils, formatters);
 }
 
+LockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+LockAccountMethodModel.prototype.constructor = LockAccountMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -44,8 +47,5 @@ function LockAccountMethodModel(utils, formatters) {
 LockAccountMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
 };
-
-LockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-LockAccountMethodModel.prototype.constructor = LockAccountMethodModel;
 
 module.exports = LockAccountMethodModel;

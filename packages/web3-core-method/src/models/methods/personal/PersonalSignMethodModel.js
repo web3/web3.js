@@ -34,6 +34,9 @@ function PersonalSignMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_sign', 3, utils, formatters);
 }
 
+PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PersonalSignMethodModel.prototype.constructor = PersonalSignMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -45,8 +48,5 @@ PersonalSignMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };
-
-PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PersonalSignMethodModel.prototype.constructor = PersonalSignMethodModel;
 
 module.exports = PersonalSignMethodModel;

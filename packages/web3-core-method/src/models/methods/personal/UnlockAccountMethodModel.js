@@ -34,6 +34,9 @@ function UnlockAccountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'personal_unlockAccount', 3, utils, formatters);
 }
 
+UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+UnlockAccountMethodModel.prototype.constructor = UnlockAccountMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -44,8 +47,5 @@ function UnlockAccountMethodModel(utils, formatters) {
 UnlockAccountMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
 };
-
-UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-UnlockAccountMethodModel.prototype.constructor = UnlockAccountMethodModel;
 
 module.exports = UnlockAccountMethodModel;
