@@ -36,6 +36,9 @@ function SendTransactionMethodModel(utils, formatters, accounts) {
     this.accounts = accounts;
 }
 
+SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SendTransactionMethodModel.prototype.constructor = SendTransactionMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -46,8 +49,5 @@ function SendTransactionMethodModel(utils, formatters, accounts) {
 SendTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
 };
-
-SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SendTransactionMethodModel.prototype.constructor = SendTransactionMethodModel;
 
 module.exports = SendTransactionMethodModel;

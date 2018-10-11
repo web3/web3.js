@@ -34,6 +34,9 @@ function GetTransactionReceiptMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getTransactionReceipt', 1, utils, formatters);
 }
 
+GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionReceiptMethodModel.prototype.constructor = GetTransactionReceiptMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function GetTransactionReceiptMethodModel(utils, formatters) {
 GetTransactionReceiptMethodModel.prototype.afterExecution = function (response) {
     return this.formatters.outputTransactionFormatter(response);
 };
-
-GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionReceiptMethodModel.prototype.constructor = GetTransactionReceiptMethodModel;
 
 module.exports = GetTransactionReceiptMethodModel;

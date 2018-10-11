@@ -34,6 +34,9 @@ function GetTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getTransactionByHash', 1, utils, formatters);
 }
 
+GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionMethodModel.prototype.constructor = GetTransactionMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function GetTransactionMethodModel(utils, formatters) {
 GetTransactionMethodModel.prototype.afterExecution = function (response) {
     return this.formatters.outputTransactionFormatter(response);
 };
-
-GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionMethodModel.prototype.constructor = GetTransactionMethodModel;
 
 module.exports = GetTransactionMethodModel;

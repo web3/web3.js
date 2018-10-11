@@ -34,6 +34,9 @@ function SignTransactionMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_signTransaction', 1, utils, formatters);
 }
 
+SignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+SignTransactionMethodModel.prototype.constructor = SignTransactionMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -44,8 +47,5 @@ function SignTransactionMethodModel(utils, formatters) {
 SignTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
     this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
 };
-
-SignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SignTransactionMethodModel.prototype.constructor = SignTransactionMethodModel;
 
 module.exports = SignTransactionMethodModel;

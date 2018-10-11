@@ -34,6 +34,9 @@ function GetTransactionFromBlockMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters);
 }
 
+GetTransactionFromBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetTransactionFromBlockMethodModel.prototype.constructor = GetTransactionFromBlockMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -42,7 +45,7 @@ function GetTransactionFromBlockMethodModel(utils, formatters) {
  * @param {Object} web3Package - The package where the method is called from for example Eth.
  */
 GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (web3Package) {
-    if (this.isHash(parameters[0])) {
+    if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }
 
@@ -62,8 +65,5 @@ GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (web3Pac
 GetTransactionFromBlockMethodModel.prototype.afterExecution = function (response) {
     return this.formatters.outputTransactionFormatter(response);
 };
-
-GetTransactionFromBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionFromBlockMethodModel.prototype.constructor = GetTransactionFromBlockMethodModel;
 
 module.exports = GetTransactionFromBlockMethodModel;
