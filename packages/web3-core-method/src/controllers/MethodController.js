@@ -103,3 +103,5 @@ MethodController.prototype.execute = function (methodModel, accounts, web3Packag
 MethodController.prototype.hasWallets = function (accounts) {
     return (accounts && accounts.wallet.length > 0);
 };
+
+module.exports = MethodController;
