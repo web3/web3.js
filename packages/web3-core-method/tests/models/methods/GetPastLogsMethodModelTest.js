@@ -1,5 +1,5 @@
 var chai = require('chai');
-var sinon = require('sinon');
+var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
 
@@ -9,58 +9,50 @@ var GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMet
  * GetPastLogsMethodModel test
  */
 describe('GetPastLogsMethodModelTest', function () {
-    var model,
-        formattersMock = sinon.mock(formatters);
+    var model, formattersMock;
 
     beforeEach(function () {
+        formattersMock = sinon.mock(formatters);
         model = new GetPastLogsMethodModel({}, formatters);
     });
 
-    after(function () {
-        formattersMock.restore();
+    afterEach(function () {
+        sinon.restore();
     });
 
-    describe('rpcMethod', function () {
-        it('should return eth_getLogs', function () {
-            expect(model.rpcMethod).to.equal('eth_getLogs');
-        });
+    it('rpcMethod should return eth_getLogs', function () {
+        expect(model.rpcMethod).to.equal('eth_getLogs');
     });
 
-    describe('parametersAmount', function () {
-        it('should return 1', function () {
-            expect(model.parametersAmount).to.equal(1);
-        });
+    it('parametersAmount should return 1', function () {
+        expect(model.parametersAmount).to.equal(1);
     });
 
-    describe('beforeExecution', function () {
-        it('should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
-            model.parameters = [{}];
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
+        model.parameters = [{}];
 
-            formattersMock
-                .expects('inputLogFormatter')
-                .withArgs(model.parameters[0])
-                .returns({empty: true})
-                .once();
+        formattersMock
+            .expects('inputLogFormatter')
+            .withArgs(model.parameters[0])
+            .returns({empty: true})
+            .once();
 
-            model.beforeExecution({});
+        model.beforeExecution({});
 
-            expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).to.have.property('empty', true);
 
-            formattersMock.verify();
-        });
+        formattersMock.verify();
     });
 
-    describe('afterExecution', function () {
-        it('should just return the response', function () {
-            formattersMock
-                .expects('outputLogFormatter')
-                .withArgs({})
-                .returns({formatted: true})
-                .once();
+    it('afterExecution should just return the response', function () {
+        formattersMock
+            .expects('outputLogFormatter')
+            .withArgs({})
+            .returns({formatted: true})
+            .once();
 
-            expect(model.afterExecution([{}])[0]).to.have.property('formatted', true);
+        expect(model.afterExecution([{}])[0]).to.have.property('formatted', true);
 
-            formattersMock.verify();
-        });
+        formattersMock.verify();
     });
 });

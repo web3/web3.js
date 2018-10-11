@@ -34,6 +34,9 @@ function GetBlockUncleCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getUncleCountByBlockNumber', 1, utils, formatters);
 }
 
+GetBlockUncleCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockUncleCountMethodModel.prototype.constructor = GetBlockUncleCountMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -42,7 +45,7 @@ function GetBlockUncleCountMethodModel(utils, formatters) {
  * @param {AbstractWeb3Object} web3Package
  */
 GetBlockUncleCountMethodModel.prototype.beforeExecution = function (web3Package) {
-    if (this.isHash(parameters[0])) {
+    if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getUncleCountByBlockHash';
     }
 
@@ -61,8 +64,5 @@ GetBlockUncleCountMethodModel.prototype.beforeExecution = function (web3Package)
 GetBlockUncleCountMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-GetBlockUncleCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockUncleCountMethodModel.prototype.constructor = GetBlockUncleCountMethodModel;
 
 module.exports = GetBlockUncleCountMethodModel;

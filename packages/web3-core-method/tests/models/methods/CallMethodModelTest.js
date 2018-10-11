@@ -1,5 +1,5 @@
 var chai = require('chai');
-var sinon = require('sinon');
+var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
 
@@ -9,59 +9,51 @@ var CallMethodModel = require('../../../src/models/methods/CallMethodModel');
  * CallMethodModel test
  */
 describe('CallMethodModelTest', function () {
-    var model,
-        formattersMock = sinon.mock(formatters);
+    var model, formattersMock;
 
     beforeEach(function () {
+        formattersMock = sinon.mock(formatters);
         model = new CallMethodModel({}, formatters);
     });
 
-    after(function () {
-        formattersMock.restore();
+    afterEach(function () {
+        sinon.restore();
     });
 
-    describe('rpcMethod', function () {
-        it('should return eth_call', function () {
-            expect(model.rpcMethod).to.equal('eth_call');
-        });
+    it('rpcMethod should return eth_call', function () {
+        expect(model.rpcMethod).to.equal('eth_call');
     });
 
-    describe('parametersAmount', function () {
-        it('should return 2', function () {
-            expect(model.parametersAmount).to.equal(2);
-        });
+    it('parametersAmount should return 2', function () {
+        expect(model.parametersAmount).to.equal(2);
     });
 
-    describe('beforeExecution', function () {
-        it('should call inputCallFormatter and inputDefaultBlockNumberFormatter', function () {
-            model.parameters = [{}, 100];
+    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', function () {
+        model.parameters = [{}, 100];
 
-            formattersMock
-                .expects('inputCallFormatter')
-                .withArgs(model.parameters[0], {})
-                .returns({empty: true})
-                .once();
+        formattersMock
+            .expects('inputCallFormatter')
+            .withArgs(model.parameters[0], {})
+            .returns({empty: true})
+            .once();
 
-            formattersMock
-                .expects('inputDefaultBlockNumberFormatter')
-                .withArgs(model.parameters[1], {})
-                .returns('0x0')
-                .once();
+        formattersMock
+            .expects('inputDefaultBlockNumberFormatter')
+            .withArgs(model.parameters[1], {})
+            .returns('0x0')
+            .once();
 
-            model.beforeExecution({});
+        model.beforeExecution({});
 
-            expect(model.parameters[0]).to.have.property('empty', true);
-            expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[1]).equal('0x0');
 
-            formattersMock.verify();
-        });
+        formattersMock.verify();
     });
 
-    describe('afterExecution', function () {
-        it('should just return the response', function () {
-            var object = {};
+    it('afterExecution should just return the response', function () {
+        var object = {};
 
-            expect(model.afterExecution(object)).to.equal(object);
-        });
+        expect(model.afterExecution(object)).to.equal(object);
     });
 });

@@ -34,6 +34,9 @@ function GetBlockTransactionCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_getTransactionByBlockNumberAndIndex', 1, utils, formatters);
 }
 
+GetBlockTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetBlockTransactionCountMethodModel.prototype.constructor = GetBlockTransactionCountMethodModel;
+
 /**
  * This method will be executed before the RPC request.
  *
@@ -42,7 +45,7 @@ function GetBlockTransactionCountMethodModel(utils, formatters) {
  * @param {AbstractWeb3Object} web3Package
  */
 GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (web3Package) {
-    if (this.isHash(parameters[0])) {
+    if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }
 
@@ -61,8 +64,5 @@ GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (web3Pa
 GetBlockTransactionCountMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-GetBlockTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockTransactionCountMethodModel.prototype.constructor = GetBlockTransactionCountMethodModel;
 
 module.exports = GetBlockTransactionCountMethodModel;

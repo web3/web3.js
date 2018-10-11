@@ -1,5 +1,5 @@
 var chai = require('chai');
-var sinon = require('sinon');
+var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
@@ -10,60 +10,51 @@ var EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMet
  * EstimateGasMethodModel test
  */
 describe('EstimateGasMethodModelTest', function () {
-    var model,
-        formattersMock = sinon.mock(formatters),
-        utilsMock = sinon.mock(utils);
+    var model, formattersMock, utilsMock;
 
     beforeEach(function () {
+        formattersMock = sinon.mock(formatters);
+        utilsMock = sinon.mock(utils);
         model = new EstimateGasMethodModel(utils, formatters);
     });
 
-    after(function () {
-        formattersMock.restore();
-        utilsMock.restore();
+    afterEach(function () {
+        sinon.restore();
     });
 
-    describe('rpcMethod', function () {
-        it('should return eth_estimateGas', function () {
-            expect(model.rpcMethod).to.equal('eth_estimateGas');
-        });
+    it('rpcMethod should return eth_estimateGas', function () {
+        expect(model.rpcMethod).to.equal('eth_estimateGas');
     });
 
-    describe('parametersAmount', function () {
-        it('should return 1', function () {
-            expect(model.parametersAmount).to.equal(1);
-        });
+    it('parametersAmount should return 1', function () {
+        expect(model.parametersAmount).to.equal(1);
     });
 
-    describe('beforeExecution', function () {
-        it('should call the inputCallFormatter', function () {
-            model.parameters = [{}];
+    it('beforeExecution should call the inputCallFormatter', function () {
+        model.parameters = [{}];
 
-            formattersMock
-                .expects('inputCallFormatter')
-                .withArgs(model.parameters[0], {})
-                .returns({empty: true})
-                .once();
+        formattersMock
+            .expects('inputCallFormatter')
+            .withArgs(model.parameters[0], {})
+            .returns({empty: true})
+            .once();
 
-            model.beforeExecution({});
+        model.beforeExecution({});
 
-            expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).to.have.property('empty', true);
 
-            formattersMock.verify();
-        });
+        formattersMock.verify();
     });
 
-    describe('afterExecution', function () {
-        it('should call hexToNumber and return the response', function () {
-            utilsMock
-                .expects('hexToNumber')
-                .withArgs({})
-                .returns(100)
-                .once();
+    it('afterExecution should call hexToNumber and return the response', function () {
+        utilsMock
+            .expects('hexToNumber')
+            .withArgs({})
+            .returns(100)
+            .once();
 
-            expect(model.afterExecution({})).equal(100);
+        expect(model.afterExecution({})).equal(100);
 
-            utilsMock.verify();
-        });
+        utilsMock.verify();
     });
 });

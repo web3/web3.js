@@ -1,5 +1,5 @@
 var chai = require('chai');
-var sinon = require('sinon');
+var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
@@ -10,67 +10,58 @@ var GetTransactionCountMethodModel = require('../../../../src/models/methods/acc
  * GetTransactionCountMethodModel test
  */
 describe('GetTransactionCountMethodModelTest', function () {
-    var model,
-        formattersMock = sinon.mock(formatters),
-        utilsMock = sinon.mock(utils);
+    var model, formattersMock, utilsMock;
 
     beforeEach(function () {
+        formattersMock = sinon.mock(formatters);
+        utilsMock = sinon.mock(utils);
         model = new GetTransactionCountMethodModel(utils, formatters);
     });
 
-    after(function () {
-        formattersMock.restore();
-        utilsMock.restore();
+    afterEach(function () {
+        sinon.restore();
     });
 
-    describe('rpcMethod', function () {
-        it('should return eth_getTransactionCount', function () {
-            expect(model.rpcMethod).to.equal('eth_getTransactionCount');
-        });
+    it('rpcMethod should return eth_getTransactionCount', function () {
+        expect(model.rpcMethod).to.equal('eth_getTransactionCount');
     });
 
-    describe('parametersAmount', function () {
-        it('should return 2', function () {
-            expect(model.parametersAmount).to.equal(2);
-        });
+    it('parametersAmount should return 2', function () {
+        expect(model.parametersAmount).to.equal(2);
     });
 
-    describe('beforeExecution', function () {
-        it('should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
-            model.parameters = ['string', 100];
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
+        model.parameters = ['string', 100];
 
-            formattersMock
-                .expects('inputAddressFormatter')
-                .withArgs(model.parameters[0])
-                .returns('0x0')
-                .once();
+        formattersMock
+            .expects('inputAddressFormatter')
+            .withArgs(model.parameters[0])
+            .returns('0x0')
+            .once();
 
-            formattersMock
-                .expects('inputDefaultBlockNumberFormatter')
-                .withArgs(model.parameters[1], {})
-                .returns('0x0')
-                .once();
+        formattersMock
+            .expects('inputDefaultBlockNumberFormatter')
+            .withArgs(model.parameters[1], {})
+            .returns('0x0')
+            .once();
 
-            model.beforeExecution({});
+        model.beforeExecution({});
 
-            expect(model.parameters[0]).equal('0x0');
-            expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[1]).equal('0x0');
 
-            formattersMock.verify();
-        });
+        formattersMock.verify();
     });
 
-    describe('afterExecution', function () {
-        it('should call hexToNumber on the response and return it', function () {
-            utilsMock
-                .expects('hexToNumber')
-                .withArgs('0x0')
-                .returns(100)
-                .once();
+    it('afterExecution should call hexToNumber on the response and return it', function () {
+        utilsMock
+            .expects('hexToNumber')
+            .withArgs('0x0')
+            .returns(100)
+            .once();
 
-            expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).equal(100);
 
-            utilsMock.verify();
-        });
+        utilsMock.verify();
     });
 });
