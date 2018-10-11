@@ -21,6 +21,7 @@
  */
 
 var ProviderAdapterResolver = require('../resolvers/ProviderAdapterResolver');
+var ProviderDetector = require('../detectors/ProviderDetector');
 var SocketProviderAdapter = require('../adapters/SocketProviderAdapter');
 var InpageProviderAdapter = require('../adapters/InpageProviderAdapter');
 var HttpProviderAdapter = require('../adapters/HttpProviderAdapter');

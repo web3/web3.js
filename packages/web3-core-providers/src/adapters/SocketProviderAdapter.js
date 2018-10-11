@@ -36,6 +36,9 @@ function SocketProviderAdapter(provider) {
     this.registerSubscriptionListener();
 }
 
+SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+SocketProviderAdapter.prototype.constructor = SocketProviderAdapter;
+
 /**
  * Subscribes to a given subscriptionType
  *
@@ -158,8 +161,5 @@ SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId, s
         return false;
     });
 };
-
-SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
-SocketProviderAdapter.prototype.constructor = SocketProviderAdapter;
 
 module.exports = SocketProviderAdapter;

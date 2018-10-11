@@ -112,3 +112,5 @@ ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (prov
 
     return provider;
 };
+
+module.exports = ProviderDetector;

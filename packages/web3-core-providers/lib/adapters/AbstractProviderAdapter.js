@@ -25,6 +25,7 @@
 var JSONRpcMapper = require('../../src/mappers/JSONRpcMapper.js');
 var JSONRpcResponseValidator = require('../../src/validators/JSONRpcResponseValidator.js');
 var errors = require('web3-core-helpers').errors;
+var EventEmitter = require('eventemitter3');
 
 /**
  * @param {Object} provider
@@ -34,6 +35,9 @@ var errors = require('web3-core-helpers').errors;
 function AbstractProviderAdapter(provider) {
     this.provider = provider;
 }
+
+AbstractProviderAdapter.prototype = Object.create(EventEmitter.prototype);
+AbstractProviderAdapter.prototype.constructor = AbstractProviderAdapter;
 
 /**
  * Sends the JSON-RPC request
@@ -150,8 +154,5 @@ AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, er
 AbstractProviderAdapter.prototype.isConnected = function () {
     return this.provider.connected;
 };
-
-AbstractProviderAdapter.prototype = Object.create(EventEmitter.prototype);
-AbstractProviderAdapter.prototype.constructor = AbstractProviderAdapter;
 
 module.exports = AbstractProviderAdapter;

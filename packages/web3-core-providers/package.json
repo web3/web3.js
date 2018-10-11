@@ -1,5 +1,5 @@
 {
-    "name": "web3-provider",
+    "name": "web3-core-providers",
     "namespace": "ethereum",
     "version": "1.0.0-beta.36",
     "description": "Web3 module to handle requests to external providers.",
@@ -7,6 +7,7 @@
     "license": "LGPL-3.0",
     "main": "src/index.js",
     "dependencies": {
+        "eventemitter3": "3.1.0",
         "xhr2-cookies": "1.1.0",
         "oboe": "2.1.4",
         "underscore": "1.9.1",

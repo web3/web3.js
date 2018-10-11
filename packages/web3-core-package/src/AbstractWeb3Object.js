@@ -261,7 +261,7 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
  * @returns {Boolean}
  */
 AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
-    return object !== null || typeof object !== 'undefined'
+    return object !== null && typeof object !== 'undefined'
 };
 
 module.exports = AbstractWeb3Object;

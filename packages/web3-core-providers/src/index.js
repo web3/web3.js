@@ -20,7 +20,7 @@
 
 "use strict";
 
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var SocketProviderAdapter = require('./adapters/SocketProviderAdapter');
 var HttpProvider = require('./providers/HttpProvider');
