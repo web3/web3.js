@@ -34,6 +34,9 @@ function GetHashrateMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_hashrate', 0, utils, formatters);
 }
 
+GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetHashrateMethodModel.prototype.constructor = GetHashrateMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function GetHashrateMethodModel(utils, formatters) {
 GetHashrateMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetHashrateMethodModel.prototype.constructor = GetHashrateMethodModel;
 
 module.exports = GetHashrateMethodModel;

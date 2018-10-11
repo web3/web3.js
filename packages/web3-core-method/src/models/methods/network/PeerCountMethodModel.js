@@ -34,20 +34,20 @@ function PeerCountMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'net_peerCount', 0, utils, formatters);
 }
 
+PeerCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+PeerCountMethodModel.prototype.constructor = PeerCountMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
  * @method afterExecution
  *
- * @param {Object} response
+ * @param {String} response
  *
  * @returns {Number}
  */
 PeerCountMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-PeerCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PeerCountMethodModel.prototype.constructor = PeerCountMethodModel;
 
 module.exports = PeerCountMethodModel;

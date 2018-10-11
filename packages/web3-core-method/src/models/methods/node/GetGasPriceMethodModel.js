@@ -34,6 +34,9 @@ function GetGasPriceMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_gasPrice', 0, utils, formatters);
 }
 
+GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+GetGasPriceMethodModel.prototype.constructor = GetGasPriceMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function GetGasPriceMethodModel(utils, formatters) {
 GetGasPriceMethodModel.prototype.afterExecution = function (response) {
     return this.formatters.outputBigNumberFormatter(response);
 };
-
-GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetGasPriceMethodModel.prototype.constructor = GetGasPriceMethodModel;
 
 module.exports = GetGasPriceMethodModel;

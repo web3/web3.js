@@ -34,6 +34,9 @@ function IsSyncingMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_syncing', 0, utils, formatters);
 }
 
+IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+IsSyncingMethodModel.prototype.constructor = IsSyncingMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function IsSyncingMethodModel(utils, formatters) {
 IsSyncingMethodModel.prototype.afterExecution = function (response) {
     return this.formatters.outputSyncingFormatter(response);
 };
-
-IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-IsSyncingMethodModel.prototype.constructor = IsSyncingMethodModel;
 
 module.exports = IsSyncingMethodModel;

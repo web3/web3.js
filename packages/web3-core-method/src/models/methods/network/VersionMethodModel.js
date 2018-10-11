@@ -34,6 +34,9 @@ function VersionMethodModel(utils, formatters) {
     AbstractMethodModel.call(this, 'eth_protocolVersion', 0, utils, formatters);
 }
 
+VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
+VersionMethodModel.prototype.constructor = VersionMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -46,8 +49,5 @@ function VersionMethodModel(utils, formatters) {
 VersionMethodModel.prototype.afterExecution = function (response) {
     return this.utils.hexToNumber(response);
 };
-
-VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-VersionMethodModel.prototype.constructor = VersionMethodModel;
 
 module.exports = VersionMethodModel;
