@@ -21,22 +21,31 @@ describe('SendTransactionMethodModelTest', function () {
         sendMethodCommandMock,
         signAndSendMethodCommandMock,
         signMessageCommandMock,
-        promiEventPackageMock;
+        promiEventPackageMock,
+        callMethodCommand,
+        sendMethodCommand,
+        signAndSendMethodCommand,
+        signMessageCommand;
 
     beforeEach(function () {
-        callMethodCommandMock = sinon.mock(CallMethodCommand);
-        sendMethodCommandMock = sinon.mock(SendMethodCommand);
-        signAndSendMethodCommandMock = sinon.mock(SignAndSendMethodCommand);
-        signMessageCommandMock = sinon.mock(new SignMessageCommand({}));
-        promiEventPackageMock = sinon.mock(PromiEventPackage);
-        methodModelMock = sinon.mock(new AbstractMethodModel('', 0, {}, {}));
-
+        callMethodCommand = new CallMethodCommand();
+        sendMethodCommand = new SendMethodCommand({});
+        signAndSendMethodCommand = new SignAndSendMethodCommand({}, {});
+        signMessageCommand = new SignMessageCommand({});
         methodModel = new AbstractMethodModel('', 0, {}, {});
+
+        callMethodCommandMock = sinon.mock(callMethodCommand);
+        sendMethodCommandMock = sinon.mock(sendMethodCommand);
+        signAndSendMethodCommandMock = sinon.mock(signAndSendMethodCommand);
+        signMessageCommandMock = sinon.mock(signMessageCommand);
+        promiEventPackageMock = sinon.mock(PromiEventPackage);
+        methodModelMock = sinon.mock(methodModel);
+
         methodController = new MethodController(
-            new CallMethodCommand(),
-            new SendMethodCommand({}),
-            new SignAndSendMethodCommand({}, {}),
-            new SignMessageCommand({}),
+            callMethodCommand,
+            sendMethodCommand,
+            signAndSendMethodCommand,
+            signMessageCommand,
             PromiEventPackage
         );
     });
@@ -58,6 +67,7 @@ describe('SendTransactionMethodModelTest', function () {
 
         promiEventPackageMock
             .expects('createPromiEvent')
+            .returns({})
             .once();
 
         methodModelMock
@@ -77,7 +87,7 @@ describe('SendTransactionMethodModelTest', function () {
         signMessageCommandMock.verify();
     });
 
-    it('execute calls signAndSendmethodCommand', function () {
+    it('execute calls signAndSendMethodCommand', function () {
         var accounts = {wallet: [0]};
 
         promiEventPackageMock

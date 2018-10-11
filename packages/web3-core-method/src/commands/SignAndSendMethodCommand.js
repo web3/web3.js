@@ -35,6 +35,9 @@ function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSi
     this.transactionSigner = transactionSigner;
 }
 
+SignAndSendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
+
 /**
  * Sends the JSON-RPC request and returns an PromiEvent object
  *
@@ -72,8 +75,5 @@ SignAndSendMethodCommand.prototype.execute = function (
 
     return promiEvent;
 };
-
-SignAndSendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
-SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
 
 module.exports = SignAndSendMethodCommand;

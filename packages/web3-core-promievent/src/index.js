@@ -22,7 +22,7 @@
 
 "use strict";
 
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var PromiEvent = require('./PromiEvent');
 
 module.exports = {

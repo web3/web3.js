@@ -33,6 +33,9 @@ function SendMethodCommand(transactionConfirmationWorkflow) {
     AbstractSendMethodCommand.call(this, transactionConfirmationWorkflow);
 }
 
+SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+SendMethodCommand.prototype.constructor = SendMethodCommand;
+
 /**
  * Determines if gasPrice is set, sends the request and returns a PromiEvent Object
  *
@@ -50,8 +53,5 @@ SendMethodCommand.prototype.execute = function (web3Package, methodModel, promiE
 
     return this.send(methodModel, promiEvent, web3Package);
 };
-
-SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
-SendMethodCommand.prototype.constructor = SendMethodCommand;
 
 module.exports = SendMethodCommand;

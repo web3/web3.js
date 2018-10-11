@@ -23,7 +23,7 @@
 
 "use strict";
 
-var version = require('./package.json');
+var version = require('../package.json').version;
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
 var PromiEventPackage = require('web3-core-promievent');
