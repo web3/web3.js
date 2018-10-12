@@ -48,10 +48,14 @@ CallMethodCommand.prototype.execute = function (web3Package, methodModel) {
         var mappedResponse = methodModel.afterExecution(response);
 
         if (methodModel.callback) {
-            methodModel.callback(mappedResponse);
+            methodModel.callback(false, mappedResponse);
         }
 
         return mappedResponse;
+    }).catch(function(error) {
+        if (methodModel.callback) {
+            methodModel.callback(error, null);
+        }
     });
 };
 

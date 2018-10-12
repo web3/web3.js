@@ -22,6 +22,8 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
  * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
  *
@@ -44,8 +46,11 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
  * @returns {PromiEvent}
  */
 AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
+    var self = this;
     if (this.isGasPriceDefined(methodModel.parameters)) {
         this.sendMethod(methodModel, promiEvent, web3Package);
+
+        return promiEvent;
     }
 
     this.getGasPrice(web3Package.currentProvider).then(function(gasPrice) {
@@ -69,6 +74,8 @@ AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, we
  * @param {PromiEvent} promiEvent
  */
 AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEvent, web3Package) {
+    var self = this;
+
     web3Package.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
@@ -104,7 +111,7 @@ AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEve
  *
  * @param {Array} parameters
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 AbstractSendMethodCommand.prototype.isGasPriceDefined = function (parameters) {
     return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';

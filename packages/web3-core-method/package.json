@@ -10,11 +10,12 @@
         "test": "mocha './tests/**/*.js'"
     },
     "dependencies": {
-        "underscore": "^1.8.3",
+        "underscore": "^1.9.1",
         "web3-core-helpers": "^1.0.0-beta.36",
         "web3-core-promievent": "file:../web3-core-promievent",
         "web3-core-providers": "1.0.0-beta.36",
-        "web3-core-subscriptions": "1.0.0-beta.36"
+        "web3-core-subscriptions": "1.0.0-beta.36",
+        "web3-eth-contract": "1.0.0-beta.36"
     },
     "devDependencies": {
         "chai": "^4.2.0",
