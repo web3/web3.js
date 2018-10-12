@@ -62,7 +62,7 @@ var formatters = require('web3-core-helpers').formatters;
     // Transaction
     var GetTransactionMethodModel = require('./models/methods/transaction/GetTransactionMethodModel');
     var GetTransactionFromBlockMethodModel = require('./models/methods/transaction/GetTransactionFromBlockMethodModel');
-    var GetTransactionReceipt = require('./models/methods/transaction/GetTransactionReceipt');
+    var GetTransactionReceipt = require('./models/methods/transaction/GetTransactionReceiptMethodModel');
     var SendSignedTransactionMethodModel = require('./models/methods/transaction/SendSignedTransactionMethodModel');
     var SignTransactionMethodModel = require('./models/methods/transaction/SignTransactionMethodModel');
     var SendTransactionMethodModel = require('./models/methods/transaction/SendTransactionMethodModel');
@@ -71,7 +71,7 @@ var formatters = require('web3-core-helpers').formatters;
     var GetCodeMethodModel = require('./models/methods/GetCodeMethodModel');
     var SignMethodModel = require('./models/methods/SignMethodModel');
     var CallMethodModel = require('./models/methods/CallMethodModel');
-    var GetStroageAtMethodModel = require('./models/methods/GetStroageAtMethodModel');
+    var GetStorageAtMethodModel = require('./models/methods/GetStorageAtMethodModel');
     var EstimateGasMethodModel = require('./models/methods/EstimateGasMethodModel');
     var GetPastLogsMethodModel = require('./models/methods/GetPastLogsMethodModel');
 
@@ -168,7 +168,7 @@ module.exports = {
         GetTransactionReceipt: GetTransactionReceipt,
 
         // Global
-        GetStroageAtMethodModel: GetStroageAtMethodModel,
+        GetStorageAtMethodModel: GetStorageAtMethodModel,
         GetCodeMethodModel: GetCodeMethodModel,
         SignMethodModel: SignMethodModel,
         CallMethodModel: CallMethodModel,

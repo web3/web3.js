@@ -22,7 +22,7 @@
 
 "use strict";
 
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
 var LogSubscriptionModel = require('./models/subscriptions/eth/LogSubscriptionModel');
 var Subscription = require('./Subscription');

@@ -69,6 +69,9 @@ var Accounts = function Accounts(provider, providersPackage, methodController, m
     this.wallet = new Wallet(this);
 };
 
+Accounts.prototype = Object.create(AbstractWeb3Object.prototype);
+Accounts.prototype.constructor = Accounts;
+
 /**
  * Adds the account functions to the given object
  *
@@ -457,10 +460,6 @@ Accounts.prototype.encrypt = function (privateKey, password, options) {
         }
     };
 };
-
-Accounts.prototype = Object.create(AbstractWeb3Object.prototype);
-Accounts.prototype.constructor = Accounts;
-
 
 // Note: this is trying to follow closely the specs on
 // http://web3js.readthedocs.io/en/1.0/web3-eth-accounts.html

@@ -16,9 +16,9 @@ var TransactionReceiptValidator = require('../../src/validators/TransactionRecei
 var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
 
 /**
- * SendMethodCommand test
+ * MethodPackageFactory test
  */
-describe('SendMethodCommandTest', function () {
+describe('MethodPackageFactoryTest', function () {
     var methodPackageFactory;
 
     beforeEach(function () {

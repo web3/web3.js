@@ -22,12 +22,12 @@
 
 "use strict";
 
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var Accounts = require('./Accounts');
 var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
 var Utils = require('web3-utils');
-var formatters = require('web3-helpers').formatters;
+var formatters = require('web3-core-helpers').formatters;
 var MethodModelFactory = require('./factories/MethodModelFactory');
 
 module.exports = {

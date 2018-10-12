@@ -41,7 +41,7 @@ MessageSigner.prototype.constructor = MessageSigner;
  * @param {String} address
  * @param {Accounts} accounts
  *
- * @returns {String | Error}
+ * @returns {String|Error}
  */
 MessageSigner.prototype.sign = function(data, address, accounts) {
     var wallet = this.getWallet(address, accounts);
