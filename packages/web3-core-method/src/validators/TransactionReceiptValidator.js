@@ -22,6 +22,8 @@
 
 "use strict";
 
+var _ = require('underscore');
+
 /**
  * @constructor
  */
@@ -45,10 +47,10 @@ TransactionReceiptValidator.prototype.validate = function (receipt, methodParame
     var receiptJSON = JSON.stringify(receipt, null, 2);
 
     if (receipt.status === false || receipt.status === '0x0') {
-        return new Error("Transaction has been reverted by the EVM:\n" + receiptJSON);
+        return new Error('Transaction has been reverted by the EVM:\n' + receiptJSON);
     }
 
-    return new Error("Transaction ran out of gas. Please provide more gas:\n" + receiptJSON);
+    return new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON);
 };
 
 /**

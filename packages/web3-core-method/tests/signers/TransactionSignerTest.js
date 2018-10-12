@@ -36,7 +36,7 @@ describe('TransactionSignerTest', function () {
     });
 
     it('calls sign and throws error', function () {
-        transactionSigner.sign({from: 0}, accounts).catch(function(error) {
+        transactionSigner.sign({from: 0}, accounts).catch(function (error) {
             expect(error.message).equal('Wallet or privateKey in wallet is not set!');
         });
     });
@@ -51,7 +51,7 @@ describe('TransactionSignerTest', function () {
             .expects('signTransaction')
             .withArgs(transaction, '0x0')
             .returns(new Promise(
-                function(resolve) {
+                function (resolve) {
                     resolve('0x0');
                 }
             ))
