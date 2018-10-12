@@ -29,6 +29,9 @@ var AbstractSigner = require('../../lib/signers/AbstractSigner');
  */
 function MessageSigner() { }
 
+MessageSigner.prototype = Object.create(AbstractSigner.prototype);
+MessageSigner.prototype.constructor = MessageSigner;
+
 /**
  * Signs a given message
  *
@@ -48,8 +51,5 @@ MessageSigner.prototype.sign = function(data, address, accounts) {
 
     throw new Error('Wallet or privateKey in wallet is not set!');
 };
-
-MessageSigner.prototype = Object.create(AbstractSigner.prototype);
-MessageSigner.prototype.constructor = MessageSigner;
 
 module.exports = MessageSigner;

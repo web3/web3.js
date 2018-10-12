@@ -34,17 +34,22 @@ function SignMessageCommand(messageSigner) {
 /**
  * Executes the SignMessageCommand and returns the signed message
  *
+ * @param {AbstractWeb3Object} web3Package
  * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts
  *
  * @callback callback callback(error, result)
  * @returns {String}
  */
-SignMessageCommand.prototype.execute = function (methodModel, accounts) {
+SignMessageCommand.prototype.execute = function (web3Package, methodModel, accounts) {
     var signedMessage;
 
+    methodModel.beforeExecution(web3Package);
+
     try {
-        signedMessage = this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts);
+        signedMessage = methodModel.afterExecution(
+            this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts)
+        );
     } catch(error) {
         methodModel.callback(error, null);
 
@@ -52,7 +57,7 @@ SignMessageCommand.prototype.execute = function (methodModel, accounts) {
     }
 
     if (methodModel.callback) {
-        methodModel.callback(null, signedMessage);
+        methodModel.callback(false, signedMessage);
     }
 
     return signedMessage;

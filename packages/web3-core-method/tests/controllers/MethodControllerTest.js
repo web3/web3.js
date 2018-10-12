@@ -77,7 +77,7 @@ describe('MethodControllerTest', function () {
 
         signMessageCommandMock
             .expects('execute')
-            .withArgs(methodModel, accounts)
+            .withArgs({}, methodModel, accounts)
             .returns(true)
             .once();
 

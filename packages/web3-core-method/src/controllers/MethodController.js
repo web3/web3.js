@@ -62,6 +62,7 @@ MethodController.prototype.execute = function (methodModel, accounts, web3Packag
     if (this.hasWallets(accounts)) {
         if (methodModel.isSign()) {
             return this.signMessageCommand.execute(
+                web3Package,
                 methodModel,
                 accounts,
             );
