@@ -40,9 +40,11 @@ TransactionSigner.prototype.constructor = TransactionSigner;
  * @returns {Promise<Boolean|String>}
  */
 TransactionSigner.prototype.sign = function (transaction, accounts) {
-    var wallet = this.getWallet(transaction.from, accounts);
+    var self = this;
 
     return new Promise(function(resolve, reject) {
+        var wallet = self.getWallet(transaction.from, accounts);
+
         if (wallet && wallet.privateKey) {
             delete transaction.from;
 
@@ -51,9 +53,11 @@ TransactionSigner.prototype.sign = function (transaction, accounts) {
             }).catch(function(error) {
                 reject(error);
             });
+
+            return;
         }
 
-        reject(new Error('Wallet or privateKey for wallet is not set!'));
+        reject(new Error('Wallet or privateKey in wallet is not set!'));
     });
 };
 

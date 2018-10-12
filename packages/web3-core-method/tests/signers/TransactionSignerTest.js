@@ -4,13 +4,13 @@ var expect = chai.expect;
 
 var ProvidersPackage = require('web3-core-providers');
 var AccountsPackage = require('web3-eth-accounts');
-var MessageSigner = require('../../src/signers/MessageSigner');
+var TransactionSigner = require('../../src/signers/TransactionSigner');
 
 /**
- * MessageSigner test
+ * TransactionSigner test
  */
-describe('MessageSignerTest', function () {
-    var messageSigner,
+describe('TransactionSignerTest', function () {
+    var transactionSigner,
         provider,
         providerMock,
         providerAdapter,
@@ -28,7 +28,7 @@ describe('MessageSignerTest', function () {
         accounts = AccountsPackage.createAccounts(provider);
         accountsMock = sinon.mock(accounts);
 
-        messageSigner = new MessageSigner();
+        transactionSigner = new TransactionSigner();
     });
 
     afterEach(function () {
@@ -36,23 +36,31 @@ describe('MessageSignerTest', function () {
     });
 
     it('calls sign and throws error', function () {
-        try {
-            messageSigner.sign('string', 0, accounts)
-        } catch (error) {
+        transactionSigner.sign({from: 0}, accounts).catch(function(error) {
             expect(error.message).equal('Wallet or privateKey in wallet is not set!');
-        }
+        });
     });
 
-    it('calls sign and returns signed message', function () {
+    it('calls sign and returns signed transaction', async function () {
         accounts.wallet[0] = {privateKey: '0x0'};
+        var transaction = {
+            from: 0,
+        };
 
         accountsMock
-            .expects('sign')
-            .withArgs('string', '0x0')
-            .returns({signature: '0x00'})
+            .expects('signTransaction')
+            .withArgs(transaction, '0x0')
+            .returns(new Promise(
+                function(resolve) {
+                    resolve('0x0');
+                }
+            ))
             .once();
 
-        expect(messageSigner.sign('string', 0, accounts)).equal('0x00');
+        var returnValue = await transactionSigner.sign(transaction, accounts);
+
+        expect(returnValue).equal('0x0');
+        expect(transaction.from).equal(undefined);
 
         accountsMock.verify();
     });
