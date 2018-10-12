@@ -1,5 +1,4 @@
 var chai = require('chai');
-var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 
 var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
@@ -12,10 +11,6 @@ describe('TransactionReceiptValidatorTest', function () {
 
     beforeEach(function () {
         transactionReceiptValidator = new TransactionReceiptValidator();
-    });
-
-    afterEach(function () {
-        sinon.restore();
     });
 
     it('calls validate and returns true', function () {
