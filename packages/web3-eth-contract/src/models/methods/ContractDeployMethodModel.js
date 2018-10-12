@@ -37,6 +37,9 @@ function ContractDeployMethodModel(contract, utils, formatters, accounts) {
     this.contract = contract;
 }
 
+ContractDeployMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
+ContractDeployMethodModel.prototype.constructor = ContractDeployMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -52,8 +55,5 @@ ContractDeployMethodModel.prototype.afterExecution = function (response) {
 
     return clonedContract;
 };
-
-ContractDeployMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
-ContractDeployMethodModel.prototype.constructor = ContractDeployMethodModel;
 
 module.exports = ContractDeployMethodModel;

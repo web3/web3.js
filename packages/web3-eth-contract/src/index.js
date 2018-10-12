@@ -22,7 +22,7 @@
 
 "use strict";
 
-var version = require('./package.json').version;
+var version = require('../package.json').version;
 var PromiEventPackage = require('web3-core-promievent');
 var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-core-providers');
