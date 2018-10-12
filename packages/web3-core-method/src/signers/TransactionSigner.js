@@ -26,6 +26,9 @@ var AbstractSigner = require('../../lib/signers/AbstractSigner');
 
 function TransactionSigner() { }
 
+TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
+TransactionSigner.prototype.constructor = TransactionSigner;
+
 /**
  * Signs the given transaction
  *
@@ -53,8 +56,5 @@ TransactionSigner.prototype.sign = function (transaction, accounts) {
         reject(new Error('Wallet or privateKey for wallet is not set!'));
     });
 };
-
-TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
-TransactionSigner.prototype.constructor = TransactionSigner;
 
 module.exports = TransactionSigner;
