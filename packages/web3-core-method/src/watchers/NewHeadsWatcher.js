@@ -21,6 +21,7 @@
  */
 
 var SocketProviderAdapter = require('web3-core-providers').SocketProviderAdapter;
+var EventEmitter = require('eventemitter3');
 
 /**
  * @param {SubscriptionsFactory} subscriptionsFactory
@@ -33,6 +34,9 @@ function NewHeadsWatcher(subscriptionsFactory) {
     this.confirmationSubscription = null;
     this.isPolling = false;
 }
+
+NewHeadsWatcher.prototype = Object.create(EventEmitter.prototype);
+NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
 
 /**
  * Starts subscription on newHeads if supported or creates an interval to get the newHeads
@@ -76,8 +80,5 @@ NewHeadsWatcher.prototype.stop = function () {
         clearInterval(this.confirmationInterval);
     }
 };
-
-NewHeadsWatcher.prototype = Object.create(EventEmitter.prototype);
-NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
 
 module.exports = NewHeadsWatcher;

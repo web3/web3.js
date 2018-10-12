@@ -132,7 +132,7 @@ MethodPackageFactory.prototype.createSignMessageCommand = function () {
  * @returns {TransactionConfirmationWorkflow}
  */
 MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionsFactory, formatters) {
-    new TransactionConfirmationWorkflow(
+    return new TransactionConfirmationWorkflow(
         this.createTransactionConfirmationModel(),
         this.createTransactionReceiptValidator(),
         this.createNewHeadsWatcher(subscriptionsFactory),
@@ -196,3 +196,5 @@ MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
 MethodPackageFactory.prototype.createNewHeadsWatcher = function (subscriptionsFactory) {
     return new NewHeadsWatcher(subscriptionsFactory);
 };
+
+module.exports = MethodPackageFactory;
