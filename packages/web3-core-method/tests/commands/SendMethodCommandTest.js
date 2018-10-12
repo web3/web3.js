@@ -24,6 +24,7 @@ describe('SendMethodCommandTest', function () {
         methodModelCallbackSpy,
         methodModelMock,
         promiEvent,
+        promiEventMock,
         promiEventEmitSpy,
         promiEventRemoveListenersSpy,
         transactionConfirmationWorkflow,
@@ -45,6 +46,7 @@ describe('SendMethodCommandTest', function () {
         methodModelMock = sinon.mock(methodModel);
 
         promiEvent = PromiEventPackage.createPromiEvent();
+        promiEventMock = sinon.mock(promiEvent);
 
         promiEventEmitSpy = sinon.spy();
         promiEvent.eventEmitter.emit = promiEventEmitSpy;
@@ -151,5 +153,46 @@ describe('SendMethodCommandTest', function () {
         });
 
         expect(methodModel.parameters[0].gasPrice).equal(100);
+    });
+
+    it('calls execute and throws error', async function () {
+        methodModel.parameters = [{gasPrice: 100}];
+        methodModel.rpcMethod = 'eth_sendRawTransaction';
+
+        methodModelMock
+            .expects('beforeExecution')
+            .withArgs(web3Package)
+            .once();
+
+        providerAdapterMock
+            .expects('send')
+            .withArgs(methodModel.rpcMethod, methodModel.parameters)
+            .returns(new Promise(
+                function (resolve, reject) {
+                    reject('error');
+                }
+            ))
+            .once();
+
+        promiEventMock
+            .expects('reject')
+            .withArgs('error')
+            .once();
+
+        var returnedPromiEvent = await sendMethodCommand.execute(web3Package, methodModel, promiEvent);
+
+        expect(returnedPromiEvent).equal(promiEvent);
+
+        promiEvent.eventEmitter.then(function () {
+            expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
+            expect(promiEventEmitSpy.calledOnce).to.be.true;
+            expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;
+
+            expect(methodModelCallbackSpy.calledOnce).to.be.true;
+            expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
+
+            providerAdapterMock.verify();
+            methodModelMock.verify();
+        });
     });
 });

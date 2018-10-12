@@ -94,7 +94,7 @@ AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEve
         }
     }).catch(function (error) {
         promiEvent.reject(error);
-        promiEvent.on('error', error);
+        promiEvent.eventEmitter.emit('error', error);
         promiEvent.eventEmitter.removeAllListeners();
 
         if (methodModel.callback) {

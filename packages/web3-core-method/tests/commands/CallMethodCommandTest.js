@@ -42,68 +42,62 @@ describe('CallMethodCommandTest', function () {
         sinon.restore();
     });
 
-    it('execute calls beforeExecution/afterExecution of the methodModel, ' +
-        'the send method of the provider and calls the callback',
-        async function () {
-            methodModelMock
-                .expects('beforeExecution')
-                .withArgs(web3Package)
-                .once();
+    it('calls execute', async function () {
+        methodModelMock
+            .expects('beforeExecution')
+            .withArgs(web3Package)
+            .once();
 
-            providerAdapterMock
-                .expects('send')
-                .returns(new Promise(
-                    function(resolve) {
-                        resolve('response')
-                    }
-                ))
-                .once();
+        providerAdapterMock
+            .expects('send')
+            .returns(new Promise(
+                function (resolve) {
+                    resolve('response')
+                }
+            ))
+            .once();
 
-            methodModelMock
-                .expects('afterExecution')
-                .withArgs('response')
-                .returns('0x0')
-                .once();
+        methodModelMock
+            .expects('afterExecution')
+            .withArgs('response')
+            .returns('0x0')
+            .once();
 
-            var returnValue = await callMethodCommand.execute(web3Package, methodModel);
-            expect(returnValue).to.equal('0x0');
+        var returnValue = await callMethodCommand.execute(web3Package, methodModel);
+        expect(returnValue).to.equal('0x0');
 
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith(false, '0x0')).to.be.true;
+        expect(methodModelCallbackSpy.calledOnce).to.be.true;
+        expect(methodModelCallbackSpy.calledWith(false, '0x0')).to.be.true;
 
-            methodModelMock.verify();
-            providerAdapterMock.verify();
+        methodModelMock.verify();
+        providerAdapterMock.verify();
+    });
+
+    it('calls execute and throws error', async function () {
+        methodModelMock
+            .expects('beforeExecution')
+            .withArgs(web3Package)
+            .once();
+
+        providerAdapterMock
+            .expects('send')
+            .returns(new Promise(
+                function (resolve, reject) {
+                    reject('error')
+                }
+            ))
+            .once();
+
+        try {
+            await callMethodCommand.execute(web3Package, methodModel);
+        } catch (error) {
+            expect(error).to.equal('error');
         }
-    );
 
-    it('execute calls beforeExecution/afterExecution of the methodModel, ' +
-        'the send method of the provider and throws an error',
-        async function () {
-            methodModelMock
-                .expects('beforeExecution')
-                .withArgs(web3Package)
-                .once();
+        expect(methodModelCallbackSpy.calledOnce).to.be.true;
+        expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
 
-            providerAdapterMock
-                .expects('send')
-                .returns(new Promise(
-                    function(resolve, reject) {
-                        reject('error')
-                    }
-                ))
-                .once();
-
-            try {
-                await callMethodCommand.execute(web3Package, methodModel);
-            } catch(error) {
-                expect(error).to.equal('error');
-            }
-
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
-
-            methodModelMock.verify();
-            providerAdapterMock.verify();
-        }
-    );
+        methodModelMock.verify();
+        providerAdapterMock.verify();
+    });
 });
