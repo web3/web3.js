@@ -37,6 +37,9 @@ function Subscription(subscriptionModel, web3Package) {
     this.subscriptionId = null;
 }
 
+Subscription.prototype = Object.create(EventEmitter.prototype);
+Subscription.prototype.constructor = Subscription;
+
 /**
  * Sends the JSON-RPC request, emits the required events and executes the callback method.
  *
@@ -177,5 +180,4 @@ Subscription.prototype.unsubscribe = function (callback) {
     });
 };
 
-Subscription.prototype = Object.create(EventEmitter.prototype);
-Subscription.prototype.constructor = Subscription;
+module.exports = Subscription;

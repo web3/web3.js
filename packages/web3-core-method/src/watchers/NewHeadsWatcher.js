@@ -61,7 +61,9 @@ NewHeadsWatcher.prototype.watch = function (web3Package) {
     }
 
     this.isPolling = true;
-    this.confirmationInterval = setInterval(this.emit('newHead'), 1000);
+    this.confirmationInterval = setInterval(function() {
+        self.emit('newHead')
+    }, 1000);
 
     return this;
 };
@@ -79,6 +81,8 @@ NewHeadsWatcher.prototype.stop = function () {
     if (this.confirmationInterval) {
         clearInterval(this.confirmationInterval);
     }
+
+    this.removeAllListeners('newHead');
 };
 
 module.exports = NewHeadsWatcher;

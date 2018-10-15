@@ -23,6 +23,7 @@
 var version = require('../package.json').version;
 var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
 var SocketProviderAdapter = require('./adapters/SocketProviderAdapter');
+var HttpProviderAdapter = require('./adapters/HttpProviderAdapter');
 var HttpProvider = require('./providers/HttpProvider');
 var IpcProvider = require('./providers/IpcProvider');
 var WebsocketProvider = require('./providers/WebsocketProvider');
@@ -34,6 +35,7 @@ module.exports = {
     version: version,
 
     SocketProviderAdapter: SocketProviderAdapter,
+    HttpProviderAdapter: HttpProviderAdapter,
 
     HttpProvider: HttpProvider,
     IpcProvider: IpcProvider,
