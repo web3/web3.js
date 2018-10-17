@@ -22,21 +22,18 @@
 
 "use strict";
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-/**
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function MessagesSubscriptionModel(options, utils, formatters) {
-    AbstractSubscriptionModel.call(this, 'shh_subscribe', 'messages', options, utils, formatters);
+export default class MessagesSubscriptionModel extends AbstractSubscriptionModel {
+
+    /**
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(options, utils, formatters) {
+        super('shh_subscribe', 'messages', options, utils, formatters);
+    }
 }
-
-MessagesSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
-MessagesSubscriptionModel.prototype.constructor = MessagesSubscriptionModel;
-
-module.exports = MessagesSubscriptionModel;
-

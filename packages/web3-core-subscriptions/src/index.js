@@ -22,18 +22,18 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
-var LogSubscriptionModel = require('./models/subscriptions/eth/LogSubscriptionModel');
-var Subscription = require('./Subscription');
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
+import {version} from '../package.json';
+import SubscriptionsFactory from './factories/SubscriptionsFactory';
+import LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
+import Subscription from './Subscription';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
-    Subscription: Subscription,
-    LogSubscriptionModel: LogSubscriptionModel,
+    Subscription,
+    LogSubscriptionModel,
 
     /**
      * Returns an object of type SubscriptionsFactory
@@ -42,7 +42,7 @@ module.exports = {
      *
      * @returns {SubscriptionsFactory}
      */
-    SubscriptionsFactory: function () {
+    SubscriptionsFactory() {
         return new SubscriptionsFactory(Utils, formatters);
     }
 };

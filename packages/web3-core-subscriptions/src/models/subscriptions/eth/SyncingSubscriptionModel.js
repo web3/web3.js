@@ -22,52 +22,49 @@
 
 "use strict";
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SyncingSubscriptionModel(utils, formatters) {
-    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'syncing', null, utils, formatters);
-    this.isSyncing = null;
+export default class SyncingSubscriptionModel extends AbstractSubscriptionModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_subscribe', 'syncing', null, utils, formatters);
+        this.isSyncing = null;
+    }
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {Object}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        const isSyncing = subscriptionItem.result.syncing;
+
+        if (this.isSyncing === null) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        if (this.isSyncing === true && isSyncing === false) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        if (this.isSyncing === false && isSyncing === true) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        return this.formatters.outputSyncingFormatter(subscriptionItem);
+    }
 }
-
-SyncingSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-SyncingSubscriptionModel.prototype.constructor = SyncingSubscriptionModel;
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {Object}
- */
-SyncingSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    var isSyncing = subscriptionItem.result.syncing;
-
-    if (this.isSyncing === null) {
-        this.isSyncing = isSyncing;
-        subscription.emit('changed', this.isSyncing);
-    }
-
-    if (this.isSyncing === true && isSyncing === false) {
-        this.isSyncing = isSyncing;
-        subscription.emit('changed', this.isSyncing);
-    }
-
-    if (this.isSyncing === false && isSyncing === true) {
-        this.isSyncing = isSyncing;
-        subscription.emit('changed', this.isSyncing);
-    }
-
-    return this.formatters.outputSyncingFormatter(subscriptionItem);
-};
-
-
-module.exports = SyncingSubscriptionModel;

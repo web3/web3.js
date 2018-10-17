@@ -22,162 +22,156 @@
 
 "use strict";
 
-var _ = require('underscore');
-var EventEmitter = require('eventemitter3');
+import _ from 'underscore';
+import EventEmitter from 'eventemitter3';
 
-/**
- * @param {AbstractSubscriptionModel} subscriptionModel
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @constructor
- */
-function Subscription(subscriptionModel, moduleInstance) {
-    this.subscriptionModel = subscriptionModel;
-    this.moduleInstance = moduleInstance;
-    this.subscriptionId = null;
-}
+export default class Subscription extends EventEmitter {
 
-Subscription.prototype = Object.create(EventEmitter.prototype);
-Subscription.prototype.constructor = Subscription;
+    /**
+     * @param {AbstractSubscriptionModel} subscriptionModel
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @constructor
+     */
+    constructor(subscriptionModel, moduleInstance) {
+        super();
+        this.subscriptionModel = subscriptionModel;
+        this.moduleInstance = moduleInstance;
+        this.subscriptionId = null;
+    }
 
-/**
- * Sends the JSON-RPC request, emits the required events and executes the callback method.
- *
- * @method subscribe
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Subscription} Subscription
- */
-Subscription.prototype.subscribe = function (callback) {
-    var self = this;
+    /**
+     * Sends the JSON-RPC request, emits the required events and executes the callback method.
+     *
+     * @method subscribe
+     *
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Subscription} Subscription
+     */
+    subscribe(callback) {
+        this.subscriptionModel.beforeSubscription(this, this.moduleInstance, callback);
 
-    this.subscriptionModel.beforeSubscription(this, this.moduleInstance, callback);
+        this.moduleInstance.currentProvider.subscribe(
+            this.subscriptionModel.subscriptionType,
+            this.subscriptionModel.subscriptionMethod,
+            [this.subscriptionModel.options]
+        ).then(subscriptionId => {
+            this.subscriptionId = subscriptionId;
 
-    this.moduleInstance.currentProvider.subscribe(
-        this.subscriptionModel.subscriptionType,
-        this.subscriptionModel.subscriptionMethod,
-        [this.subscriptionModel.options]
-    ).then(function (subscriptionId) {
-        self.subscriptionId = subscriptionId;
+            this.moduleInstance.currentProvider.on(this.subscriptionId, (error, response) => {
+                if (!error) {
+                    this.handleSubscriptionResponse(response, callback);
 
-        self.moduleInstance.currentProvider.on(self.subscriptionId, function (error, response) {
-            if (!error) {
-                self.handleSubscriptionResponse(response, callback);
+                    return;
+                }
 
-                return;
+                if (self.moduleInstance.currentProvider.once) {
+                    this.reconnect(callback);
+                }
+
+                if (_.isFunction(callback)) {
+                    callback(error, null);
+                }
+
+                this.emit('error', error);
+            });
+        });
+
+        return this;
+    }
+
+    /**
+     * Iterates over each item in the response, formats the output, emits required events and executes the callback method.
+     *
+     * @method handleSubscriptionResponse
+     *
+     * @param {*} response
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     */
+    handleSubscriptionResponse(response, callback) {
+        if (!_.isArray(response)) {
+            response = [response];
+        }
+
+        response.forEach(function (item) {
+            const formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
+
+            this.emit('data', formattedOutput);
+
+            if (_.isFunction(callback)) {
+                callback(false, formattedOutput);
             }
+        });
+    }
 
-            if (self.moduleInstance.currentProvider.once) {
-                self.reconnect(callback);
+    /**
+     * TODO: The reconnecting handling should only be in the provider the subscription should not care about it.
+     * Reconnects provider and restarts subscription
+     *
+     * @method reconnect
+     *
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     */
+    reconnect(callback) {
+        const interval = setInterval(() => {
+            if (this.moduleInstance.currentProvider.reconnect) {
+                this.moduleInstance.currentProvider.reconnect();
+            }
+        }, 500);
+
+        this.moduleInstance.currentProvider.once('connect', () => {
+            clearInterval(interval);
+            this.unsubscribe().then(() => {
+                this.subscribe(callback);
+            }).catch(error => {
+                this.emit('error', error);
+
+                if (_.isFunction(callback)) {
+                    callback(error, null);
+                }
+            });
+        });
+    }
+
+    /**
+     * Unsubscribes subscription
+     *
+     * @method unsubscribe
+     *
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<boolean>}
+     */
+    unsubscribe(callback) {
+        return this.moduleInstance.currentProvider.unsubscribe(
+            this.subscriptionId,
+            this.subscriptionModel.subscriptionType
+        ).then(response => {
+            this.removeAllListeners('data');
+            this.removeAllListeners('error');
+
+            if (!response) {
+                this.subscriptionId = null;
+
+                if (_.isFunction(callback)) {
+                    callback(true, false);
+                }
+
+                return true;
             }
 
             if (_.isFunction(callback)) {
-                callback(error, null);
+                callback(false, true);
             }
 
-            self.emit('error', error);
+            return false;
         });
-    });
-
-    return this;
-};
-
-/**
- * Iterates over each item in the response, formats the output, emits required events and executes the callback method.
- *
- * @method handleSubscriptionResponse
- *
- * @param {*} response
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- */
-Subscription.prototype.handleSubscriptionResponse = function (response, callback) {
-    if (!_.isArray(response)) {
-        response = [response];
     }
-
-    response.forEach(function (item) {
-        var formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
-
-        this.emit('data', formattedOutput);
-
-        if (_.isFunction(callback)) {
-            callback(false, formattedOutput);
-        }
-    });
-};
-
-/**
- * TODO: The reconnecting handling should only be in the provider the subscription should not care about it.
- * Reconnects provider and restarts subscription
- *
- * @method reconnect
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- */
-Subscription.prototype.reconnect = function (callback) {
-    var self = this;
-
-    var interval = setInterval(function () {
-        if (self.moduleInstance.currentProvider.reconnect) {
-            self.moduleInstance.currentProvider.reconnect();
-        }
-    }, 500);
-
-    this.moduleInstance.currentProvider.once('connect', function () {
-        clearInterval(interval);
-        self.unsubscribe().then(function () {
-            self.subscribe(callback);
-        }).catch(function (error) {
-            self.emit('error', error);
-
-            if(_.isFunction(callback)) {
-                callback(error, null);
-            }
-        });
-    });
-};
-
-/**
- * Unsubscribes subscription
- *
- * @method unsubscribe
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Promise<boolean>}
- */
-Subscription.prototype.unsubscribe = function (callback) {
-    var self = this;
-    return this.moduleInstance.currentProvider.unsubscribe(
-        this.subscriptionId,
-        this.subscriptionModel.subscriptionType
-    ).then(function (response) {
-        self.removeAllListeners('data');
-        self.removeAllListeners('error');
-
-        if (!response) {
-            self.subscriptionId = null;
-
-            if(_.isFunction(callback)) {
-                callback(true, false);
-            }
-
-            return true;
-        }
-
-        if (_.isFunction(callback)) {
-            callback(false, true);
-        }
-
-        return false;
-    });
-};
-
-module.exports = Subscription;
+}
