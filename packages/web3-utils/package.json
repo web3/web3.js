@@ -12,7 +12,7 @@
         "ethjs-unit": "0.1.6",
         "number-to-bn": "1.7.0",
         "randomhex": "0.1.5",
-        "underscore": "1.8.3",
+        "underscore": "1.9.1",
         "utf8": "2.1.1"
     }
 }
