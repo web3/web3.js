@@ -22,137 +22,133 @@
 
 "use strict";
 
-var JSONRpcMapper = require('../../src/mappers/JSONRpcMapper.js');
-var JSONRpcResponseValidator = require('../../src/validators/JSONRpcResponseValidator.js');
-var errors = require('web3-core-helpers').errors;
-var EventEmitter = require('eventemitter3');
+import JSONRpcMapper from '../../src/mappers/JSONRpcMapper.js';
+import JSONRpcResponseValidator from '../../src/validators/JSONRpcResponseValidator.js';
+import {errors} from 'web3-core-helpers';
+import EventEmitter from 'eventemitter3';
 
-/**
- * @param {Object} provider
- *
- * @constructor
- */
-function AbstractProviderAdapter(provider) {
-    this.provider = provider;
-}
+export default class AbstractProviderAdapter extends EventEmitter {
 
-AbstractProviderAdapter.prototype = Object.create(EventEmitter.prototype);
-AbstractProviderAdapter.prototype.constructor = AbstractProviderAdapter;
+    /**
+     * @param {Object} provider
+     *
+     * @constructor
+     */
+    constructor(provider) {
+        super();
+        this.provider = provider;
+    }
 
-/**
- * Sends the JSON-RPC request
- *
- * @method send
- *
- * @param {String} method
- * @param {Array} parameters
- *
- * @returns {Promise<any>}
- */
-AbstractProviderAdapter.prototype.send = function (method, parameters) {
-    var self = this;
-    var payload = JSONRpcMapper.toPayload(method, parameters);
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method send
+     *
+     * @param {String} method
+     * @param {Array} parameters
+     *
+     * @returns {Promise<any>}
+     */
+    send(method, parameters) {
+        const payload = JSONRpcMapper.toPayload(method, parameters);
 
-    return new Promise(function (resolve, reject) {
-        self.provider.send(payload, function (error, response) {
-            self.handleResponse(reject, resolve, error, response)
+        return new Promise((resolve, reject) => {
+            this.provider.send(payload, (error, response) => {
+                this.handleResponse(reject, resolve, error, response)
+            });
+
         });
-
-    });
-};
-
-/**
- * Sends batch payload
- *
- * @method sendBatch
- *
- * @param {Array} payload
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- */
-AbstractProviderAdapter.prototype.sendBatch = function (payload, callback) {
-    this.provider.send(payload, callback);
-};
-
-/**
- * Returns Promise with an error if the method is not overwritten
- *
- * @method subscribe
- *
- * @returns {Promise<Error>}
- */
-AbstractProviderAdapter.prototype.subscribe = function () {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
-    });
-};
-
-/**
- * Returns Promise with an error if the method is not overwritten
- *
- * @method unsubscribe
- *
- * @returns {Promise<Error>}
- */
-AbstractProviderAdapter.prototype.unsubscribe = function () {
-    var self = this;
-    return new Promise(function(resolve, reject) {
-        reject(new Error('The current provider does not support subscriptions: ' + self.provider.constructor.name));
-    });
-};
-
-/**
- * Handles the JSON-RPC response
- *
- * @method handleResponse
- *
- * @param {Function} reject
- * @param {Function} resolve
- * @param {Object} error
- * @param {Object} response
- */
-AbstractProviderAdapter.prototype.handleResponse = function (reject, resolve, error, response) {
-    if (response && response.id && payload.id !== response.id) {
-        reject(
-            new Error('Wrong response id "' + response.id + '" (expected: "' + payload.id + '") in ' + JSON.stringify(payload))
-        );
-
-        return;
     }
 
-    if (response && response.error) {
-        reject(errors.ErrorResponse(response));
-
-        return;
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {Array} payload
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     */
+    sendBatch(payload, callback) {
+        this.provider.send(payload, callback);
     }
 
-
-    if (!JSONRpcResponseValidator.isValid(response.result)) {
-        reject(errors.InvalidResponse(response));
-
-        return;
+    /**
+     * Returns Promise with an error if the method is not overwritten
+     *
+     * @method subscribe
+     *
+     * @returns {Promise<Error>}
+     */
+    subscribe() {
+        return new Promise((resolve, reject) => {
+            reject(new Error(`The current provider does not support subscriptions: ${this.provider.constructor.name}`));
+        });
     }
 
-    if (!error) {
-        resolve(response.result);
-
-        return;
+    /**
+     * Returns Promise with an error if the method is not overwritten
+     *
+     * @method unsubscribe
+     *
+     * @returns {Promise<Error>}
+     */
+    unsubscribe() {
+        return new Promise((resolve, reject) => {
+            reject(new Error(`The current provider does not support subscriptions: ${this.provider.constructor.name}`));
+        });
     }
 
-    reject(error);
-};
+    /**
+     * Handles the JSON-RPC response
+     *
+     * @method handleResponse
+     *
+     * @param {Function} reject
+     * @param {Function} resolve
+     * @param {Object} error
+     * @param {Object} response
+     */
+    handleResponse(reject, resolve, error, response) {
+        if (response && response.id && payload.id !== response.id) {
+            reject(
+                new Error(`Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`)
+            );
 
-/**
- * Checks if the provider is connected
- *
- * @method isConnected
- *
- * @returns {Boolean}
- */
-AbstractProviderAdapter.prototype.isConnected = function () {
-    return this.provider.connected;
-};
+            return;
+        }
 
-module.exports = AbstractProviderAdapter;
+        if (response && response.error) {
+            reject(errors.ErrorResponse(response));
+
+            return;
+        }
+
+
+        if (!JSONRpcResponseValidator.isValid(response.result)) {
+            reject(errors.InvalidResponse(response));
+
+            return;
+        }
+
+        if (!error) {
+            resolve(response.result);
+
+            return;
+        }
+
+        reject(error);
+    }
+
+    /**
+     * Checks if the provider is connected
+     *
+     * @method isConnected
+     *
+     * @returns {Boolean}
+     */
+    isConnected() {
+        return this.provider.connected;
+    }
+}

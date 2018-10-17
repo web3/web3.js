@@ -22,144 +22,136 @@
 
 "use strict";
 
-var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
+import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
-/**
- * @param {Object} provider
- *
- * @constructor
- */
-function SocketProviderAdapter(provider) {
-    AbstractProviderAdapter.call(this, provider);
-    this.host = provider.path;
-    this.subscriptions = [];
-    this.registerSubscriptionListener();
+export default class SocketProviderAdapter extends AbstractProviderAdapter {
+
+    /**
+     * @param {Object} provider
+     *
+     * @constructor
+     */
+    constructor(provider) {
+        super(provider);
+        this.host = provider.path;
+        this.subscriptions = [];
+        this.registerSubscriptionListener();
+    }
+
+    /**
+     * Subscribes to a given subscriptionType
+     *
+     * @method subscribe
+     *
+     * @param {String} subscriptionMethod
+     * @param {String} subscriptionType
+     * @param {Array} parameters
+     *
+     * @returns {Promise<String|Error>}
+     */
+    subscribe(subscriptionType, subscriptionMethod, parameters) {
+        return this.send(subscriptionType, parameters.unshift(subscriptionMethod)).then((error, subscriptionId) => {
+            if (!error) {
+                this.subscriptions.push(subscriptionId);
+
+                return subscriptionId;
+            }
+
+            throw new Error(`Provider error: ${error}`);
+        });
+    }
+
+    /**
+     * Unsubscribes the subscription by his id
+     *
+     * @method unsubscribe
+     *
+     * @param {String} subscriptionId
+     * @param {String} subscriptionType
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    unsubscribe(subscriptionId, subscriptionType) {
+        return this.send(subscriptionType, [subscriptionId]).then(function (result) {
+            if (result) {
+                this.subscriptions = this.subscriptions.filter(subscription => {
+                    return subscription !== subscriptionId;
+                });
+
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * Emits an event with the subscription id
+     *
+     * @method registerSubscriptionListener
+     */
+    registerSubscriptionListener() {
+        this.provider.on('data', (response, deprecatedResponse) => {
+            // this is for possible old providers, which may had the error first handler
+            response = response || deprecatedResponse;
+
+            // check for result.method, to prevent old providers errors to pass as result
+            if (response.method && this.hasSubscription(response.params.subscription)) {
+                this.emit(response.params.subscription, response.params.result);
+            }
+        });
+    }
+
+    /**
+     * Checks if the given subscription id exists
+     *
+     * @method hasSubscription
+     *
+     * @param {String} subscriptionId
+     *
+     * @returns {Boolean}
+     */
+    hasSubscription(subscriptionId) {
+        return this.subscriptions.indexOf(subscriptionId) > -1;
+    }
+
+    /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     */
+    clearSubscriptions() {
+        const unsubscribePromises = [];
+
+        this.subscriptions.forEach(subscriptionId => {
+            unsubscribePromises.push(this.unsubscribe(subscriptionId));
+        });
+
+        Promise.all(unsubscribePromises).then(() => {
+            this.provider.reset();
+            this.subscriptions = [];
+        });
+    }
+
+    /**
+     * Removes subscription from subscriptions list and unsubscribes it.
+     *
+     * @method removeSubscription
+     *
+     * @param {String} subscriptionId
+     * @param {String} subscriptionType
+     *
+     * @returns {Promise<Boolean>}
+     */
+    removeSubscription(subscriptionId, subscriptionType) {
+        return this.unsubscribe(subscriptionId, subscriptionType).then((result) => {
+            if (result) {
+                delete this.subscriptions[this.subscriptions.indexOf(subscriptionId)];
+
+                return true;
+            }
+
+            return false;
+        });
+    }
 }
-
-SocketProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
-SocketProviderAdapter.prototype.constructor = SocketProviderAdapter;
-
-/**
- * Subscribes to a given subscriptionType
- *
- * @method subscribe
- *
- * @param {String} subscriptionMethod
- * @param {String} subscriptionType
- * @param {Array} parameters
- *
- * @returns {Promise<String|Error>}
- */
-SocketProviderAdapter.prototype.subscribe = function (subscriptionType, subscriptionMethod, parameters) {
-    var self = this;
-
-    return this.send(subscriptionType, parameters.unshift(subscriptionMethod)).then(function (error, subscriptionId) {
-        if (!error) {
-            self.subscriptions.push(subscriptionId);
-
-            return subscriptionId;
-        }
-
-        throw new Error('Provider error: ' + error);
-    });
-};
-
-/**
- * Unsubscribes the subscription by his id
- *
- * @method unsubscribe
- *
- * @param {String} subscriptionId
- * @param {String} subscriptionType
- *
- * @returns {Promise<Boolean|Error>}
- */
-SocketProviderAdapter.prototype.unsubscribe = function (subscriptionId, subscriptionType) {
-    return this.send(subscriptionType, [subscriptionId]).then(function (result) {
-        if (result) {
-            this.subscriptions = this.subscriptions.filter(function (subscription) {
-                return subscription !== subscriptionId;
-            });
-
-            return true;
-        }
-
-        return false;
-    });
-};
-
-/**
- * Emits an event with the subscription id
- *
- * @method registerSubscriptionListener
- */
-SocketProviderAdapter.prototype.registerSubscriptionListener = function () {
-    var self = this;
-    this.provider.on('data', function (response, deprecatedResponse) {
-        // this is for possible old providers, which may had the error first handler
-        response = response || deprecatedResponse;
-
-        // check for result.method, to prevent old providers errors to pass as result
-        if (response.method && self.hasSubscription(response.params.subscription)) {
-            self.emit(response.params.subscription, response.params.result);
-        }
-    });
-};
-
-/**
- * Checks if the given subscription id exists
- *
- * @method hasSubscription
- *
- * @param {String} subscriptionId
- *
- * @returns {Boolean}
- */
-SocketProviderAdapter.prototype.hasSubscription = function (subscriptionId) {
-    return this.subscriptions.indexOf(subscriptionId) > -1;
-};
-
-/**
- * Clears all subscriptions and listeners
- *
- * @method clearSubscriptions
- */
-SocketProviderAdapter.prototype.clearSubscriptions = function () {
-    var self = this,
-        unsubscribePromises = [];
-
-    this.subscriptions.forEach(function (subscriptionId) {
-        unsubscribePromises.push(self.unsubscribe(subscriptionId));
-    });
-
-    Promise.all(unsubscribePromises).then(function () {
-        this.provider.reset();
-        self.subscriptions = [];
-    });
-};
-
-/**
- * Removes subscription from subscriptions list and unsubscribes it.
- *
- * @method removeSubscription
- *
- * @param {String} subscriptionId
- * @param {String} subscriptionType
- *
- * @returns {Promise<Boolean>}
- */
-SocketProviderAdapter.prototype.removeSubscription = function (subscriptionId, subscriptionType) {
-    var self = this;
-
-    return this.unsubscribe(subscriptionId, subscriptionType).then(function (result) {
-        if (result) {
-            delete self.subscriptions[this.subscriptions.indexOf(subscriptionId)];
-
-            return true;
-        }
-
-        return false;
-    });
-};
-
-module.exports = SocketProviderAdapter;

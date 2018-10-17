@@ -22,40 +22,39 @@
 
 "use strict";
 
-function JSONRpcResponseValidator() { }
+export default class JSONRpcResponseValidator {
 
-/**
- * Executes JSON-RPC response validation
- *
- * @method isValid
- *
- * @param {Object} response
- *
- * @returns {Boolean}
- */
-JSONRpcResponseValidator.isValid = function (response) {
-    if (Array.isArray(response)) {
-        return response.every(this.isResponseItemValid)
+    /**
+     * Executes JSON-RPC response validation
+     *
+     * @method isValid
+     *
+     * @param {Object} response
+     *
+     * @returns {Boolean}
+     */
+    static isValid(response) {
+        if (Array.isArray(response)) {
+            return response.every(this.isResponseItemValid)
+        }
+
+        return this.isResponseItemValid(response);
     }
 
-    return this.isResponseItemValid(response);
-};
-
-/**
- * Validates response item from a JSON-RPC response
- *
- * @method isResponseItemValid
- *
- * @param {Object} response
- *
- * @returns {Boolean}
- */
-JSONRpcResponseValidator.isResponseItemValid = function (response) {
-    return !!response &&
-        !response.error &&
-        response.jsonrpc === '2.0' &&
-        (typeof response.id === 'number' || typeof response.id === 'string') &&
-        response.result !== undefined;
-};
-
-module.exports = JSONRpcResponseValidator;
+    /**
+     * Validates response item from a JSON-RPC response
+     *
+     * @method isResponseItemValid
+     *
+     * @param {Object} response
+     *
+     * @returns {Boolean}
+     */
+    static isResponseItemValid(response) {
+        return !!response &&
+            !response.error &&
+            response.jsonrpc === '2.0' &&
+            (typeof response.id === 'number' || typeof response.id === 'string') &&
+            response.result !== undefined;
+    }
+}

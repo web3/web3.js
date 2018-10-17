@@ -25,7 +25,7 @@
 /**
  * @constructor
  */
-var JSONRpcMapper = { //TODO: Find a better solution to handle this property as "singleton" globally over the web3 lib
+const JSONRpcMapper = { //TODO: Find a better solution to handle this property as "singleton" globally over the web3 lib
     messageId: 0
 };
 
@@ -39,9 +39,9 @@ var JSONRpcMapper = { //TODO: Find a better solution to handle this property as 
  *
  * @returns {Object} valid jsonrpc payload object
  */
-JSONRpcMapper.toPayload = function (method, params) {
+JSONRpcMapper.toPayload = (method, params) => {
     if (!method) {
-        throw new Error('JSONRPC method should be specified for params: "'+ JSON.stringify(params) +'"!');
+        throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
     }
 
     JSONRpcMapper.messageId++;
@@ -49,7 +49,7 @@ JSONRpcMapper.toPayload = function (method, params) {
     return {
         jsonrpc: '2.0',
         id: JSONRpcMapper.messageId,
-        method: method,
+        method,
         params: params || []
     };
 };
@@ -63,12 +63,12 @@ JSONRpcMapper.toPayload = function (method, params) {
  *
  * @returns {Array} batch payload
  */
-JSONRpcMapper.toBatchPayload = function (requests) {
-    return requests.map(function (request) {
+JSONRpcMapper.toBatchPayload = requests => {
+    return requests.map(request => {
         request.beforeExecution();
 
         return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
     });
 };
 
-module.exports = JSONRpcMapper;
+export default JSONRpcMapper;

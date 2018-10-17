@@ -20,29 +20,29 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
-var SocketProviderAdapter = require('./adapters/SocketProviderAdapter');
-var HttpProviderAdapter = require('./adapters/HttpProviderAdapter');
-var HttpProvider = require('./providers/HttpProvider');
-var IpcProvider = require('./providers/IpcProvider');
-var WebsocketProvider = require('./providers/WebsocketProvider');
-var JSONRpcMapper = require('./mappers/JSONRpcMapper');
-var JSONRpcResponseValidator = require('./validators/JSONRpcResponseValidator');
-var BatchRequest = require('./batch-request/BatchRequest');
+import {version} from '../package.json';
+import ProvidersPackageFactory from './factories/ProvidersPackageFactory';
+import SocketProviderAdapter from './adapters/SocketProviderAdapter';
+import HttpProviderAdapter from './adapters/HttpProviderAdapter';
+import HttpProvider from './providers/HttpProvider';
+import IpcProvider from './providers/IpcProvider';
+import WebsocketProvider from './providers/WebsocketProvider';
+import JSONRpcMapper from './mappers/JSONRpcMapper';
+import JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
+import BatchRequest from './batch-request/BatchRequest';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
-    SocketProviderAdapter: SocketProviderAdapter,
-    HttpProviderAdapter: HttpProviderAdapter,
+    SocketProviderAdapter,
+    HttpProviderAdapter,
 
-    HttpProvider: HttpProvider,
-    IpcProvider: IpcProvider,
-    WebsocketProvider: WebsocketProvider,
+    HttpProvider,
+    IpcProvider,
+    WebsocketProvider,
 
-    JSONRpcMapper: JSONRpcMapper,
-    JSONRpcResponseValidator: JSONRpcResponseValidator,
+    JSONRpcMapper,
+    JSONRpcResponseValidator,
 
     /**
      * Returns the Batch object
@@ -53,7 +53,7 @@ module.exports = {
      *
      * @returns {BatchRequest}
      */
-    BatchRequest: function (provider) {
+    BatchRequest: (provider) => {
         return new BatchRequest(
             provider,
             JSONRpcMapper,
@@ -71,7 +71,7 @@ module.exports = {
      *
      * @returns {AbstractProviderAdapter}
      */
-    resolve: function (provider, net) {
+    resolve: (provider, net) => {
         return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
     },
 
@@ -82,7 +82,7 @@ module.exports = {
      *
      * @returns {Object}
      */
-    detect: function () {
+    detect: () => {
         return new ProvidersPackageFactory().createProviderDetector().detect();
     }
 };

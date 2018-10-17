@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
+import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
-/**
- * @param {HttpProvider} httpProvider
- *
- * @constructor
- */
-function HttpProviderAdapter(httpProvider) {
-    AbstractProviderAdapter.call(this, httpProvider);
-    this.host = httpProvider.host;
+export default class HttpProviderAdapter extends AbstractProviderAdapter {
+
+    /**
+     * @param {HttpProvider} httpProvider
+     *
+     * @constructor
+     */
+    constructor(httpProvider) {
+        super(httpProvider);
+        this.host = httpProvider.host;
+    }
 }
-
-HttpProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
-HttpProviderAdapter.prototype.constructor = HttpProviderAdapter;
-
-module.exports = HttpProviderAdapter;

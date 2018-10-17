@@ -20,97 +20,93 @@
  * @date 2018
  */
 
-var global;
+let global;
 try {
     global = Function('return this')();
 } catch (e) {
     global = window;
 }
 
-/**
- * @constructor
- */
-function ProviderDetector() { }
+export default class ProviderDetector {
 
-/**
- * Detects which provider is given with web3.currentProvider
- *
- * @method detect
- *
- * @returns {Object} provider
- */
-ProviderDetector.prototype.detect = function () {
-    if (typeof global.ethereumProvider !== 'undefined') {
-        return global.ethereumProvider;
+    /**
+     * Detects which provider is given with web3.currentProvider
+     *
+     * @method detect
+     *
+     * @returns {Object} provider
+     */
+    detect() {
+        if (typeof global.ethereumProvider !== 'undefined') {
+            return global.ethereumProvider;
+        }
+
+        if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
+
+            if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
+                global.web3.currentProvider = this.addSubscriptionsToIpcProviderWrapper(global.web3.currentProvider);
+            }
+
+            return global.web3.currentProvider;
+        }
     }
 
-    if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-
-        if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
-            global.web3.currentProvider = this.addSubscriptionsToIpcProviderWrapper(global.web3.currentProvider);
-        }
-
-        return global.web3.currentProvider;
+    /**
+     * Checks if the given provider it is of type ipcProviderWrapper
+     *
+     * @method isIpcProviderWrapper
+     *
+     * @param {Object} currentProvider
+     *
+     * @returns {Boolean}
+     */
+    isIpcProviderWrapper(currentProvider) {
+        return !currentProvider.on &&
+                currentProvider.connection &&
+                currentProvider.connection.constructor.name === 'ipcProviderWrapper';
     }
-};
 
-/**
- * Checks if the given provider it is of type ipcProviderWrapper
- *
- * @method isIpcProviderWrapper
- *
- * @param {Object} currentProvider
- *
- * @returns {Boolean}
- */
-ProviderDetector.prototype.isIpcProviderWrapper = function (currentProvider) {
-    return !currentProvider.on &&
-            currentProvider.connection &&
-            currentProvider.connection.constructor.name === 'ipcProviderWrapper';
-};
+    /**
+     * Adds the on method for the subscriptions to the ipcProviderWrapper
+     *
+     * @method addSubscriptionsToIpcProviderWrapper
+     *
+     * @param {Object} provider
+     *
+     * @returns {Object}
+     */
+    addSubscriptionsToIpcProviderWrapper(provider) {
+        provider.on = (type, callback) => {
+            if (typeof callback !== 'function') {
+                throw new Error('The second parameter callback must be a function.');
+            }
 
-/**
- * Adds the on method for the subscriptions to the ipcProviderWrapper
- *
- * @method addSubscriptionsToIpcProviderWrapper
- *
- * @param {Object} provider
- *
- * @returns {Object}
- */
-ProviderDetector.prototype.addSubscriptionsToIpcProviderWrapper = function (provider) {
-    provider.on = function (type, callback) {
-        if (typeof callback !== 'function') {
-            throw new Error('The second parameter callback must be a function.');
-        }
+            switch (type) {
+                case 'data':
+                    this.connection.on('data', data => {
+                        let result = '';
 
-        switch (type) {
-            case 'data':
-                this.connection.on('data', function (data) {
-                    var result = '';
+                        data = data.toString();
 
-                    data = data.toString();
+                        try {
+                            result = JSON.parse(data);
+                        } catch (e) {
+                            return callback(new Error(`Couldn't parse response data${data}`));
+                        }
 
-                    try {
-                        result = JSON.parse(data);
-                    } catch (e) {
-                        return callback(new Error('Couldn\'t parse response data' + data));
-                    }
+                        // notification
+                        if (!result.id && result.method.indexOf('_subscription') !== -1) {
+                            callback(null, result);
+                        }
 
-                    // notification
-                    if (!result.id && result.method.indexOf('_subscription') !== -1) {
-                        callback(null, result);
-                    }
+                    });
+                    break;
+                default:
+                    this.connection.on(type, callback);
+                    break;
+            }
+        };
 
-                });
-                break;
-            default:
-                this.connection.on(type, callback);
-                break;
-        }
-    };
-
-    return provider;
-};
-
-module.exports = ProviderDetector;
+        return provider;
+    }
+}
