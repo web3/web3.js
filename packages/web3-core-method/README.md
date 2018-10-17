@@ -34,7 +34,7 @@ This will expose the `Web3Method` object on the window object.
 var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
-var MethodController = require('web3-core-method').MethodController;
+var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-providers');
 
 // Create an object/package like Eth
@@ -95,7 +95,7 @@ MethodModelFactory.prototype.constructor = MethodModelFactory;
 var module = new Module(
     ProvidersPackage.detect(), 
     ProvidersPackage, 
-    new MethodController(), 
+    new MethodPackage.MethodController(), 
     new MethodModelFactory(Utils, formatters)
 );
 
