@@ -29,7 +29,7 @@ This will expose the `Web3Subscriptions` object on the window object.
 // in node.js
 
 // Dependencies
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var SubscriptionsPackage = require('web3-core-subscriptions');
 

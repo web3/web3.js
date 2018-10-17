@@ -27,7 +27,7 @@ This will expose the `EthEns` object on the window object.
 ## Usage
 
 ```js
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var NetPackage = require('web3-net');
 var AccountsPackage = require('web3-eth-accounts');
 var ENSPackage = require('web3-eth-ens');

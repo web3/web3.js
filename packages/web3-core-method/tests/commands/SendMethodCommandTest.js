@@ -5,7 +5,7 @@ var expect = chai.expect;
 var SendMethodCommand = require('../../src/commands/SendMethodCommand');
 var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var PromiEventPackage = require('web3-core-promievent');
 

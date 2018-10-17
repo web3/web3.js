@@ -2,7 +2,7 @@ var chai = require('chai');
 var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var AccountsPackage = require('web3-eth-accounts');
 var TransactionSigner = require('../../src/signers/TransactionSigner');
 

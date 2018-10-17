@@ -4,7 +4,7 @@ var expect = chai.expect;
 
 var SubscriptionsPackage = require('web3-core-subscriptions');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
 
 /**

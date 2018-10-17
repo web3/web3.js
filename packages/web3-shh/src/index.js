@@ -23,7 +23,7 @@
 "use strict";
 
 var version = require('./package.json');
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var MethodPackage = require('web3-core-method');
 var SubscriptionsPackage = require('web3-core-subscriptions');
 var NetworkPackage = require('web3-net');

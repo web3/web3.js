@@ -24,7 +24,7 @@
 "use strict";
 
 var version = require('../package.json').version;
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var MethodPackage = require('web3-core-method');
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');

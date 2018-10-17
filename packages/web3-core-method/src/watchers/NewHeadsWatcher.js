@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-var SocketProviderAdapter = require('web3-core-providers').SocketProviderAdapter;
+var SocketProviderAdapter = require('web3-providers').SocketProviderAdapter;
 var EventEmitter = require('eventemitter3');
 
 /**
@@ -45,7 +45,7 @@ NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
  *
  * @param {AbstractWeb3Object} web3Package
  *
- * @returns {NewHeadsWatcher}
+ * @returns {this}
  */
 NewHeadsWatcher.prototype.watch = function (web3Package) {
     var self = this;

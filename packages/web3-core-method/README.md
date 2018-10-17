@@ -35,7 +35,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 var MethodPackage = require('web3-core-method');
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 
 // Create an object/package like Eth
 /**

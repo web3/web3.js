@@ -14,7 +14,7 @@
         "underscore": "^1.9.1",
         "web3-core-helpers": "^1.0.0-beta.36",
         "web3-core-promievent": "1.0.0-beta.36",
-        "web3-core-providers": "1.0.0-beta.36",
+        "web3-providers": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-core-package": "1.0.0-beta.36",
         "web3-eth-accounts": "1.0.0-beta.36",

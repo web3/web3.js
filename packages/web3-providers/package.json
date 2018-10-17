@@ -1,5 +1,5 @@
 {
-    "name": "web3-core-providers",
+    "name": "web3-providers",
     "namespace": "ethereum",
     "version": "1.0.0-beta.36",
     "description": "Web3 module to handle requests to external providers.",

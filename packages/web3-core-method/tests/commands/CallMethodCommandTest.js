@@ -4,7 +4,7 @@ var expect = chai.expect;
 
 var CallMethodCommand = require('../../src/commands/CallMethodCommand');
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-core-providers');
+var ProvidersPackage = require('web3-providers');
 var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 
 /**

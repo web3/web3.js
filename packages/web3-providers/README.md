@@ -1,4 +1,4 @@
-# web3-core-providers
+# web3-providers
 
 This is a sub package of [web3.js][repo]
 
@@ -7,7 +7,7 @@ This is a sub package of [web3.js][repo]
 ### Node.js
 
 ```bash
-npm install web3-core-providers
+npm install web3-providers
 ```
 
 ### In the Browser
@@ -18,7 +18,7 @@ Build running the following in the [web3.js][repo] repository:
 npm run-script build-all
 ```
 
-Then include `dist/web3-core-providers.js` in your html file.
+Then include `dist/web3-providers.js` in your html file.
 This will expose the `Web3Providers` object on the window object.
 
 
