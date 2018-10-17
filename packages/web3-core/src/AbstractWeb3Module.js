@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AbstractWeb3Object.js
+ * @file AbstractWeb3Module.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -32,7 +32,7 @@ var _ = require('underscore');
  *
  * @constructor
  */
-function AbstractWeb3Object(
+function AbstractWeb3Module(
     provider,
     providersPackage,
     methodController,
@@ -95,7 +95,7 @@ function AbstractWeb3Object(
  *
  * @returns {Boolean}
  */
-AbstractWeb3Object.prototype.setProvider = function (provider, net) {
+AbstractWeb3Module.prototype.setProvider = function (provider, net) {
     if (!this.isSameProvider(provider)) {
         this.clearSubscriptions();
         this.currentProvider = this.providersPackage.resolve(provider, net);
@@ -121,7 +121,7 @@ AbstractWeb3Object.prototype.setProvider = function (provider, net) {
  *
  * @returns {Boolean}
  */
-AbstractWeb3Object.prototype.isSameProvider = function (provider) {
+AbstractWeb3Module.prototype.isSameProvider = function (provider) {
     if (_.isObject(provider)) {
         if (this.currentProvider.provider.constructor.name === provider.constructor.name) {
             return this.currentProvider.host === provider.host;
@@ -138,7 +138,7 @@ AbstractWeb3Object.prototype.isSameProvider = function (provider) {
  *
  * @method clearSubscriptions
  */
-AbstractWeb3Object.prototype.clearSubscriptions = function () {
+AbstractWeb3Module.prototype.clearSubscriptions = function () {
     if (typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
         this.currentProvider.subscriptions.length > 0
     ) {
@@ -153,7 +153,7 @@ AbstractWeb3Object.prototype.clearSubscriptions = function () {
  *
  * @param {Object} extension
  */
-AbstractWeb3Object.prototype.extend = function (extension) {
+AbstractWeb3Module.prototype.extend = function (extension) {
     var namespace = extension.property || false,
         object;
 
@@ -176,10 +176,10 @@ AbstractWeb3Object.prototype.extend = function (extension) {
                 AbstractMethodModel.call(this, method.call, method.params, utils, formatters);
             }
 
-            ExtensionMethodModel.prototype.beforeExecution = function (parameters, web3Package) {
+            ExtensionMethodModel.prototype.beforeExecution = function (parameters, moduleInstance) {
                 method.inputFormatters.forEach(function (formatter, key) {
                     if (formatter) {
-                        parameters[key] = formatter(parameters[key], web3Package);
+                        parameters[key] = formatter(parameters[key], moduleInstance);
                     }
                 });
             };
@@ -221,7 +221,7 @@ AbstractWeb3Object.prototype.extend = function (extension) {
  *
  * @returns {*}
  */
-AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
+AbstractWeb3Module.prototype.proxyHandler = function (target, name) {
     if (target.methodModelFactory.hasMethodModel(name)) {
         if (typeof target[name] !== 'undefined') {
             throw new Error('Duplicated method ' + name + '. This method is defined as RPC call and as Object method.');
@@ -260,8 +260,8 @@ AbstractWeb3Object.prototype.proxyHandler = function (target, name) {
  *
  * @returns {Boolean}
  */
-AbstractWeb3Object.prototype.isDependencyGiven = function (object) {
+AbstractWeb3Module.prototype.isDependencyGiven = function (object) {
     return object !== null && typeof object !== 'undefined'
 };
 
-module.exports = AbstractWeb3Object;
+module.exports = AbstractWeb3Module;

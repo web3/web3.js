@@ -1,5 +1,5 @@
 {
-    "name": "web3-core-package",
+    "name": "web3-core",
     "namespace": "ethereum",
     "version": "1.0.0-beta.36",
     "description": "Web3 core tools for sub packages. This is an internal package.",

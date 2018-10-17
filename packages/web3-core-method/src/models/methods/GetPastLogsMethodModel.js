@@ -42,9 +42,9 @@ GetPastLogsMethodModel.prototype.constructor = GetPastLogsMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-GetPastLogsMethodModel.prototype.beforeExecution = function (web3Package) {
+GetPastLogsMethodModel.prototype.beforeExecution = function (moduleInstance) {
     this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
 };
 

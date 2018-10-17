@@ -42,11 +42,11 @@ GetTransactionCountMethodModel.prototype.constructor = GetTransactionCountMethod
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  */
-GetTransactionCountMethodModel.prototype.beforeExecution = function (web3Package) {
+GetTransactionCountMethodModel.prototype.beforeExecution = function (moduleInstance) {
     this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
+    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
 };
 
 /**

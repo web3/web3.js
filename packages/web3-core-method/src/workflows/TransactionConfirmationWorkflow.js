@@ -50,16 +50,16 @@ function TransactionConfirmationWorkflow(
  * @method execute
  *
  * @param {AbstractMethodModel} methodModel
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {String} transactionHash
  * @param {Object} promiEvent
  *
  * @callback callback callback(error, result)
  */
-TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3Package, transactionHash, promiEvent) {
+TransactionConfirmationWorkflow.prototype.execute = function (methodModel, moduleInstance, transactionHash, promiEvent) {
     var self = this;
 
-    this.getTransactionReceipt(web3Package, transactionHash).then(function (receipt) {
+    this.getTransactionReceipt(moduleInstance, transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
             var validationResult = self.transactionReceiptValidator.validate(receipt);
             if (validationResult === true) {
@@ -73,7 +73,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3P
             return;
         }
 
-        self.newHeadsWatcher.watch(web3Package).on('newHead', function () {
+        self.newHeadsWatcher.watch(moduleInstance).on('newHead', function () {
             self.transactionConfirmationModel.timeoutCounter++;
             if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
                 self.getTransactionReceipt(transactionHash).then(function (receipt) {
@@ -122,15 +122,15 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3P
  *
  * @method execute
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {String} transactionHash
  *
  * @returns {Promise<Object>}
  */
-TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (web3Package, transactionHash) {
+TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (moduleInstance, transactionHash) {
     var self = this;
 
-    return web3Package.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
+    return moduleInstance.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
         return self.formatters.outputTransactionReceiptFormatter(receipt);
     })
 };

@@ -42,9 +42,9 @@ EcRecoverMethodModel.prototype.constructor = EcRecoverMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-EcRecoverMethodModel.prototype.beforeExecution = function (web3Package) {
+EcRecoverMethodModel.prototype.beforeExecution = function (moduleInstance) {
     this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };

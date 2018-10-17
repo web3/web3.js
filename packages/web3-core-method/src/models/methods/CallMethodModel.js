@@ -42,11 +42,11 @@ CallMethodModel.prototype.constructor = CallMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-CallMethodModel.prototype.beforeExecution = function (web3Package) {
-    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], web3Package);
-    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], web3Package);
+CallMethodModel.prototype.beforeExecution = function (moduleInstance) {
+    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
 };
 
 module.exports = CallMethodModel;

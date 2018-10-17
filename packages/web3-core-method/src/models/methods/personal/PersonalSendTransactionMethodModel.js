@@ -42,10 +42,10 @@ PersonalSendTransactionMethodModel.prototype.constructor = PersonalSendTransacti
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-PersonalSendTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
-    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
+PersonalSendTransactionMethodModel.prototype.beforeExecution = function (moduleInstance) {
+    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
 };
 
 module.exports = PersonalSendTransactionMethodModel;

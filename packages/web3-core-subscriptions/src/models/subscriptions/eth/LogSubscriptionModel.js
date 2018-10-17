@@ -45,19 +45,19 @@ function LogSubscriptionModel(options, utils, formatters, getPastLogsMethodModel
  * @method beforeSubscription
  *
  * @param {Subscription} subscription
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {Function} callback
  */
-LogSubscriptionModel.prototype.beforeSubscription = function (subscription, web3Package, callback) {
+LogSubscriptionModel.prototype.beforeSubscription = function (subscription, moduleInstance, callback) {
     var self = this;
     this.options = this.formatters.inputLogFormatter(this.options);
     this.getPastLogsMethodModel.parameters = [options];
 
     this.methodController.execute(
         this.getPastLogsMethodModel,
-        web3Package.currentProvider,
+        moduleInstance.currentProvider,
         null,
-        web3Package
+        moduleInstance
     ).then(function (logs) {
         logs.forEach(function (log) {
             callback(false, log);

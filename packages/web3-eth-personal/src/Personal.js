@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
@@ -38,7 +38,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @constructor
  */
 function Personal(provider, providersPackage, methodController, methodModelFactory, net, utils, formatters) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
+    AbstractWeb3Module.call(this, provider, providersPackage, methodController, methodModelFactory);
 
     this.utils = utils;
     this.formatters = formatters;
@@ -71,7 +71,7 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
 }
 
 /**
- * Extends setProvider method from AbstractWeb3Object.
+ * Extends setProvider method from AbstractWeb3Module.
  *
  * @method setProvider
  *
@@ -81,10 +81,10 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
  * @returns {Boolean}
  */
 Personal.prototype.setProvider = function (provider, net) {
-    return !!(AbstractWeb3Object.setProvider.call(this, provider, net) && this.net.setProvider(provider, net));
+    return !!(AbstractWeb3Module.setProvider.call(this, provider, net) && this.net.setProvider(provider, net));
 };
 
-Personal.prototype = Object.create(AbstractWeb3Object);
+Personal.prototype = Object.create(AbstractWeb3Module);
 Personal.prototype.constructor = Personal;
 
 module.exports = Personal;

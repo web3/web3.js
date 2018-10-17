@@ -42,45 +42,45 @@ SendMethodCommand.prototype.constructor = SendMethodCommand;
  *
  * @method execute
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
  * @param {PromiEvent} promiEvent
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
-SendMethodCommand.prototype.execute = function (web3Package, methodModel, promiEvent) {
+SendMethodCommand.prototype.execute = function (moduleInstance, methodModel, promiEvent) {
     var self = this;
 
-    methodModel.beforeExecution(web3Package);
+    methodModel.beforeExecution(moduleInstance);
 
     if (this.isGasPriceDefined(methodModel.parameters)) {
-        this.send(methodModel, promiEvent, web3Package);
+        this.send(methodModel, promiEvent, moduleInstance);
 
         return promiEvent;
     }
 
-    this.getGasPrice(web3Package.currentProvider).then(function(gasPrice) {
+    this.getGasPrice(moduleInstance.currentProvider).then(function(gasPrice) {
         if (_.isObject(methodModel.parameters[0])) {
             methodModel.parameters[0].gasPrice = gasPrice;
         }
 
-        self.send(methodModel, promiEvent, web3Package);
+        self.send(methodModel, promiEvent, moduleInstance);
     });
 
     return promiEvent;
 };
 
-SendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
+SendMethodCommand.prototype.send = function (methodModel, promiEvent, moduleInstance) {
     var self = this;
 
-    web3Package.currentProvider.send(
+    moduleInstance.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
     ).then(function (response) {
         self.transactionConfirmationWorkflow.execute(
             methodModel,
-            web3Package,
+            moduleInstance,
             response,
             promiEvent
         );

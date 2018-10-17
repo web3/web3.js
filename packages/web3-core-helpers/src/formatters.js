@@ -48,13 +48,13 @@ var isPredefinedBlockNumber = function (blockNumber) {
  * will map 'genesis' and 'earlist' to '0x0' and runs the inputBlockNumberFormatter.
  *
  * @param {String|Number} blockNumber
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns {String}
  */
-var inputDefaultBlockNumberFormatter = function (blockNumber, web3Package) {
+var inputDefaultBlockNumberFormatter = function (blockNumber, moduleInstance) {
     if (blockNumber === undefined || blockNumber === null) {
-        return web3Package.defaultBlock;
+        return moduleInstance.defaultBlock;
     }
 
     if (blockNumber === 'genesis' || blockNumber === 'earliest') {
@@ -119,13 +119,13 @@ var _txInputFormatter = function (options){
  * @method inputCallFormatter
  *
  * @param {Object} options
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns object
 */
-var inputCallFormatter = function (options, web3Package){
+var inputCallFormatter = function (options, moduleInstance){
     options = _txInputFormatter(options);
-    var from = web3Package.defaultAccount;
+    var from = moduleInstance.defaultAccount;
 
     if (options.from) {
         from = options.from
@@ -144,16 +144,16 @@ var inputCallFormatter = function (options, web3Package){
  * @method inputTransactionFormatter
  *
  * @param {Object} options
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns object
 */
-var inputTransactionFormatter = function (options, web3Package) {
+var inputTransactionFormatter = function (options, moduleInstance) {
     options = _txInputFormatter(options);
 
     if (!_.isNumber(options.from) && !_.isObject(options.from)) {
         if (!options.from) {
-            options.from = web3Package.defaultAccount;
+            options.from = moduleInstance.defaultAccount;
         }
 
         if (!options.from && !_.isNumber(options.from)) {

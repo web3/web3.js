@@ -43,13 +43,13 @@ function EventSubscriptionFactory(utils, formatters, methodController) {
  *
  * @param {EventLogDecoder} eventLogDecoder
  * @param {ABIItemModel} abiItemModel
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {Object} options
  *
  * @returns {Subscription}
  */
-EventSubscriptionFactory.prototype.createEventLogSubscription = function (eventLogDecoder, abiItemModel, web3Package, options) {
-    return new Subscription(web3Package,
+EventSubscriptionFactory.prototype.createEventLogSubscription = function (eventLogDecoder, abiItemModel, moduleInstance, options) {
+    return new Subscription(moduleInstance,
         new EventLogSubscription(
             abiItemModel,
             options,
@@ -66,13 +66,13 @@ EventSubscriptionFactory.prototype.createEventLogSubscription = function (eventL
  * Returns an log subscription for all events
  *
  * @param {AllEventsLogDecoder} allEventsLogDecoder
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {Object} options
  *
  * @returns {Subscription}
  */
-EventSubscriptionFactory.prototype.createAllEventLogSubscription = function (allEventsLogDecoder, web3Package, options) {
-    return new Subscription(web3Package,
+EventSubscriptionFactory.prototype.createAllEventLogSubscription = function (allEventsLogDecoder, moduleInstance, options) {
+    return new Subscription(moduleInstance,
         new AllEventsLogSubscription(
             options,
             this.utils,

@@ -23,10 +23,10 @@
 "use strict";
 
 var version = require('../package.json').version;
-var AbstractWeb3Object = require('./AbstractWeb3Object');
+var AbstractWeb3Module = require('./AbstractWeb3Module');
 
 module.exports = {
     version: version,
 
-    AbstractWeb3Object: AbstractWeb3Object
+    AbstractWeb3Module: AbstractWeb3Module
 };

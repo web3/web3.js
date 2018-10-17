@@ -42,9 +42,9 @@ LockAccountMethodModel.prototype.constructor = LockAccountMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-LockAccountMethodModel.prototype.beforeExecution = function (web3Package) {
+LockAccountMethodModel.prototype.beforeExecution = function (moduleInstance) {
     this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
 };
 

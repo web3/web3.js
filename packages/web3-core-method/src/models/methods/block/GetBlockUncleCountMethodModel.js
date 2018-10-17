@@ -42,9 +42,9 @@ GetBlockUncleCountMethodModel.prototype.constructor = GetBlockUncleCountMethodMo
  *
  * @method beforeExecution
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  */
-GetBlockUncleCountMethodModel.prototype.beforeExecution = function (web3Package) {
+GetBlockUncleCountMethodModel.prototype.beforeExecution = function (moduleInstance) {
     if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getUncleCountByBlockHash';
     }

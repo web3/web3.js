@@ -7,7 +7,7 @@ var TransactionSigner = require('../../src/signers/TransactionSigner');
 var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 var PromiEventPackage = require('web3-core-promievent');
 
 /**
@@ -19,8 +19,8 @@ describe('SendAndSignMethodCommandTest', function () {
         providerMock,
         providerAdapter,
         providerAdapterMock,
-        web3Package,
-        web3PackageMock,
+        moduleInstance,
+        moduleInstanceMock,
         methodModel,
         methodModelCallbackSpy,
         methodModelMock,
@@ -40,8 +40,8 @@ describe('SendAndSignMethodCommandTest', function () {
         providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        web3Package = new AbstractWeb3Object(providerAdapter, ProvidersPackage, null, null);
-        web3PackageMock = sinon.mock(web3Package);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstanceMock = sinon.mock(moduleInstance);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
@@ -75,7 +75,7 @@ describe('SendAndSignMethodCommandTest', function () {
 
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         transactionSignerMock
@@ -99,10 +99,10 @@ describe('SendAndSignMethodCommandTest', function () {
 
         transactionConfirmationWorkflowMock
             .expects('execute')
-            .withArgs(methodModel, web3Package, 'response', promiEvent)
+            .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, web3Package, {}, promiEvent);
+        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, moduleInstance, {}, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
@@ -127,7 +127,7 @@ describe('SendAndSignMethodCommandTest', function () {
 
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         transactionSignerMock
@@ -138,7 +138,7 @@ describe('SendAndSignMethodCommandTest', function () {
             }))
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, web3Package, {}, promiEvent);
+        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, moduleInstance, {}, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 

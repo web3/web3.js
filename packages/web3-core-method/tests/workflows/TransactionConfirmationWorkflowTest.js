@@ -2,7 +2,7 @@ var chai = require('chai');
 var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
 var PromiEventPackage = require('web3-core-promievent');
@@ -31,8 +31,8 @@ describe('TransactionConfirmationWorkflowTest', function () {
         providerMock,
         providerAdapter,
         providerAdapterMock,
-        web3Package,
-        web3PackageMock,
+        moduleInstance,
+        moduleInstanceMock,
         promiEvent,
         promiEventMock;
 
@@ -59,8 +59,8 @@ describe('TransactionConfirmationWorkflowTest', function () {
         providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        web3Package = new AbstractWeb3Object(providerAdapter, ProvidersPackage, null, null);
-        web3PackageMock = sinon.mock(web3Package);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstanceMock = sinon.mock(moduleInstance);
 
         promiEvent = PromiEventPackage.createPromiEvent();
         promiEventMock = sinon.mock(promiEvent);
@@ -112,7 +112,7 @@ describe('TransactionConfirmationWorkflowTest', function () {
 
         transactionConfirmationWorkflow.execute(
             methodModel,
-            web3Package,
+            moduleInstance,
             '0x0',
             promiEvent
         );

@@ -43,7 +43,7 @@ SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
  *
  * @method execute
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts
  * @param {PromiEvent} promiEvent
@@ -53,18 +53,18 @@ SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
  */
 SignAndSendMethodCommand.prototype.execute = function (
     methodModel,
-    web3Package,
+    moduleInstance,
     accounts,
     promiEvent,
 ) {
     var self = this;
 
-    methodModel.beforeExecution(web3Package);
+    methodModel.beforeExecution(moduleInstance);
     methodModel.rpcMethod = 'eth_sendRawTransaction';
 
     this.transactionSigner.sign(methodModel.parameters[0], accounts).then(function(response) {
         methodModel.parameters = [response.rawTransaction];
-        self.send(methodModel, promiEvent, web3Package);
+        self.send(methodModel, promiEvent, moduleInstance);
     }).catch(function(error) {
         promiEvent.reject(error);
         promiEvent.eventEmitter.emit('error', error);

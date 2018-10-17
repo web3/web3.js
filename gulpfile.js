@@ -67,9 +67,9 @@ var packages = [{
     expose: 'Web3Bzz',
     src: './packages/web3-bzz/src/index.js'
 }, {
-    fileName: 'web3-core-providers',
+    fileName: 'web3-providers',
     expose: 'Web3Providers',
-    src: './packages/web3-core-providers/src/index.js'
+    src: './packages/web3-providers/src/index.js'
 }, {
     fileName: 'web3-core-subscriptions',
     expose: 'Web3Subscription',
@@ -83,9 +83,9 @@ var packages = [{
     expose: 'Web3Method',
     src: './packages/web3-core-method/src/index.js'
 }, {
-    fileName: 'web3-core-package',
+    fileName: 'web3-core',
     expose: 'Web3Package',
-    src: './packages/web3-core-package/src/index.js'
+    src: './packages/web3-core/src/index.js'
 }, {
     fileName: 'web3-net',
     expose: 'Web3Net',

@@ -31,7 +31,7 @@ This will expose the `Web3Method` object on the window object.
 // in node.js
 
 // Dependencies
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 var MethodPackage = require('web3-core-method');
@@ -52,7 +52,7 @@ function MyObject (
     methodController,
     methodModelFactory
 ) {
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         providersPackage,
@@ -61,8 +61,8 @@ function MyObject (
     );
 };
 
-// Inherit from AbstractWeb3Object
-MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+// Inherit from AbstractWeb3Module
+MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
 MyObject.prototype.constructor = MyObject;
 
 

@@ -23,7 +23,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * @param {AbstractProviderAdapter|EthereumProvider} provider
@@ -36,7 +36,7 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
  * @constructor
  */
 function Network(provider, providersPackage, methodController, methodModelFactory, formatters, utils) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
+    AbstractWeb3Module.call(this, provider, providersPackage, methodController, methodModelFactory);
     this.formatters = formatters;
     this.utils = utils;
 }
@@ -94,7 +94,7 @@ Network.prototype.getNetworkType = function (callback) {
     });
 };
 
-Network.prototype = Object.create(AbstractWeb3Object.prototype);
+Network.prototype = Object.create(AbstractWeb3Module.prototype);
 Network.prototype.constructor = Network;
 
 module.exports = Network;

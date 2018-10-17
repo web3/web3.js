@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * @param {AbstractProviderAdapter|EthereumProvider} provider
@@ -76,7 +76,7 @@ function Contract(
     this.promiEventPackage = promiEventPackage;
     this.rpcMethodModelFactory = contractPackageFactory.createRpcMethodModelFactory();
 
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         this.providersPackage,
@@ -263,12 +263,12 @@ Contract.prototype.clone = function () {
  */
 Contract.prototype.setProvider = function (provider, net) {
   return !!(
-      AbstractWeb3Object.prototype.setProvider.call(this, provider, net) &&
+      AbstractWeb3Module.prototype.setProvider.call(this, provider, net) &&
       this.accounts.setProvider(provider, net)
   );
 };
 
-Contract.prototype = Object.create(AbstractWeb3Object.prototype);
+Contract.prototype = Object.create(AbstractWeb3Module.prototype);
 Contract.prototype.constructor = Contract;
 
 module.exports = Contract;

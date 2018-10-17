@@ -42,9 +42,9 @@ GetUncleMethodModel.prototype.constructor = GetUncleMethodModel;
  *
  * @method beforeExecution
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  */
-GetUncleMethodModel.prototype.beforeExecution = function (web3Package) {
+GetUncleMethodModel.prototype.beforeExecution = function (moduleInstance) {
     if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
     }

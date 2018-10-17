@@ -2,13 +2,13 @@
 
 This is a sub package of [web3.js][repo]
 
-The ```web3-core-package``` contains core functions for [web3.js][repo] packages. This package should be used
+The ```web3-core``` contains core functions for [web3.js][repo] packages. This package should be used
 if someone wants to implement a new web3 package. 
 
 If you implement your own web3 package then don't forget to add the ```setProvider()``` method to the parent object. 
 This because the default behaviour of ```setProvider()``` is that the parent object will also set the provider of the child packages if this method is called.
 
-Provided interface of AbstractWeb3Object:
+Provided interface of AbstractWeb3Module:
 
 - ```extend(methods: Object):void ``` Extends the current object with additional RPC methods.
 - ```setProvider(provider: any):void ``` This method will set the current provider of this object.
@@ -25,7 +25,7 @@ Provided interface of AbstractWeb3Object:
 ### Node.js
 
 ```bash
-npm install web3-core-package
+npm install web3-core
 ```
 
 ### In the Browser
@@ -36,14 +36,14 @@ Build running the following in the [web3.js][repo] repository:
 npm run-script build-all
 ```
 
-Then include `dist/web3-core-package.js` in your html file.
-This will expose the `Web3Package` object on the window object.
+Then include `dist/web3-core.js` in your html file.
+This will expose the `moduleInstance` object on the window object.
 
 ## Usage
 
 ```js
 // in node.js
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * @param {Object|String} provider
@@ -59,7 +59,7 @@ function MyObject (
     methodController, // optional
     methodModelFactory // optional
 ) {
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         providersPackage,
@@ -68,8 +68,8 @@ function MyObject (
     );
 }
 
-// Inherit from AbstractWeb3Object
-MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+// Inherit from AbstractWeb3Module
+MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
 MyObject.prototype.constructor = MyObject;
 ```
 

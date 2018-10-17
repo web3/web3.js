@@ -44,9 +44,9 @@ SignMethodModel.prototype.constructor = SignMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-SignMethodModel.prototype.beforeExecution = function (web3Package) {
+SignMethodModel.prototype.beforeExecution = function (moduleInstance) {
     this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
     this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
 };

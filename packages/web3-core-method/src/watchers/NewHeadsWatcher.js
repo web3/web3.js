@@ -43,16 +43,16 @@ NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
  *
  * @method watch
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns {this}
  */
-NewHeadsWatcher.prototype.watch = function (web3Package) {
+NewHeadsWatcher.prototype.watch = function (moduleInstance) {
     var self = this;
 
-    if (web3Package.currentProvider instanceof SocketProviderAdapter) {
+    if (moduleInstance.currentProvider instanceof SocketProviderAdapter) {
         this.confirmationSubscription = this.subscriptionsFactory
-            .createNewHeadsSubscription(web3Package)
+            .createNewHeadsSubscription(moduleInstance)
             .subscribe(function () {
                 self.emit('newHead');
             });

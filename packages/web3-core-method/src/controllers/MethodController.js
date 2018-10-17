@@ -52,17 +52,17 @@ function MethodController(
  *
  * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns {Promise<*>|PromiEvent}
  */
-MethodController.prototype.execute = function (methodModel, accounts, web3Package) {
+MethodController.prototype.execute = function (methodModel, accounts, moduleInstance) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
 
     if (this.hasWallets(accounts)) {
         if (methodModel.isSign()) {
             return this.signMessageCommand.execute(
-                web3Package,
+                moduleInstance,
                 methodModel,
                 accounts,
             );
@@ -71,7 +71,7 @@ MethodController.prototype.execute = function (methodModel, accounts, web3Packag
         if (methodModel.isSendTransaction()) {
             return this.signAndSendMethodCommand.execute(
                 methodModel,
-                web3Package,
+                moduleInstance,
                 accounts,
                 promiEvent,
             );
@@ -80,14 +80,14 @@ MethodController.prototype.execute = function (methodModel, accounts, web3Packag
 
     if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction()) {
         return this.sendMethodCommand.execute(
-            web3Package,
+            moduleInstance,
             methodModel,
             promiEvent
         );
     }
 
     return this.callMethodCommand.execute(
-        web3Package,
+        moduleInstance,
         methodModel,
     );
 };

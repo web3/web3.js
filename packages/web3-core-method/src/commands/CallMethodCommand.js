@@ -32,16 +32,16 @@ function CallMethodCommand() { }
  *
  * @method execute
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
  *
  * @callback callback callback(error, result)
  * @returns {Promise<*>}
  */
-CallMethodCommand.prototype.execute = function (web3Package, methodModel) {
-    methodModel.beforeExecution(web3Package);
+CallMethodCommand.prototype.execute = function (moduleInstance, methodModel) {
+    methodModel.beforeExecution(moduleInstance);
 
-    return web3Package.currentProvider.send(
+    return moduleInstance.currentProvider.send(
         methodModel.rpcMethod,
         methodModel.parameters
     ).then(function (response) {

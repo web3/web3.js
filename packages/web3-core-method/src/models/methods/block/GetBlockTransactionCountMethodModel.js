@@ -42,9 +42,9 @@ GetBlockTransactionCountMethodModel.prototype.constructor = GetBlockTransactionC
  *
  * @method beforeExecution
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  */
-GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (web3Package) {
+GetBlockTransactionCountMethodModel.prototype.beforeExecution = function (moduleInstance) {
     if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }

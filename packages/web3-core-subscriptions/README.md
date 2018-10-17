@@ -30,10 +30,10 @@ This will expose the `Web3Subscriptions` object on the window object.
 
 // Dependencies
 var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
 var SubscriptionsPackage = require('web3-core-subscriptions');
 
-// Create an object of type AbstractWeb3Object
+// Create an object of type AbstractWeb3Module
 /**
  * @param {Object|String} provider
  * @param {ProvidersPackage} providersPackage
@@ -46,7 +46,7 @@ function MyObject (
     providersPackage,
     subscriptionsFactory
 ) {
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         providersPackage
@@ -81,8 +81,8 @@ MyObject.prototype.subscribe = function (subscriptionMethod, callback) {
     }
 };
 
-// Inherit from AbstractWeb3Object
-MyObject.prototype = Object.create(AbstractWeb3Object.prototype);
+// Inherit from AbstractWeb3Module
+MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
 MyObject.prototype.constructor = MyObject;
 
 // Instantiate anything

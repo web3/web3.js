@@ -5,7 +5,7 @@ var expect = chai.expect;
 var CallMethodCommand = require('../../src/commands/CallMethodCommand');
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * CallMethodCommand test
@@ -16,7 +16,7 @@ describe('CallMethodCommandTest', function () {
         providerMock,
         providerAdapter,
         providerAdapterMock,
-        web3Package,
+        moduleInstance,
         methodModel,
         methodModelCallbackSpy,
         methodModelMock;
@@ -28,7 +28,7 @@ describe('CallMethodCommandTest', function () {
         providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        web3Package = new AbstractWeb3Object(providerAdapter, ProvidersPackage, null, null);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
@@ -45,7 +45,7 @@ describe('CallMethodCommandTest', function () {
     it('calls execute', async function () {
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         providerAdapterMock
@@ -63,7 +63,7 @@ describe('CallMethodCommandTest', function () {
             .returns('0x0')
             .once();
 
-        var returnValue = await callMethodCommand.execute(web3Package, methodModel);
+        var returnValue = await callMethodCommand.execute(moduleInstance, methodModel);
         expect(returnValue).to.equal('0x0');
 
         expect(methodModelCallbackSpy.calledOnce).to.be.true;
@@ -76,7 +76,7 @@ describe('CallMethodCommandTest', function () {
     it('calls execute and throws error', async function () {
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         providerAdapterMock
@@ -89,7 +89,7 @@ describe('CallMethodCommandTest', function () {
             .once();
 
         try {
-            await callMethodCommand.execute(web3Package, methodModel);
+            await callMethodCommand.execute(moduleInstance, methodModel);
         } catch (error) {
             expect(error).to.equal('error');
         }

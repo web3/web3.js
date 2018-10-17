@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 /**
  * @param {AbstractProviderAdapter|EthereumProvider} provider
@@ -58,7 +58,7 @@ var Eth = function Eth(
     methodController,
     methodModelFactory
 ) {
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         providersPackage,
@@ -196,7 +196,7 @@ Eth.prototype.subscribe = function (type, options, callback) {
 };
 
 /**
- * Extends setProvider method from AbstractWeb3Object.
+ * Extends setProvider method from AbstractWeb3Module.
  * This is required for updating the provider also in the sub packages and objects related to Eth.
  *
  * @param {Object|String} provider
@@ -210,7 +210,7 @@ Eth.prototype.setProvider = function (provider, net) {
     });
 
     return !!(
-        AbstractWeb3Object.setProvider.call(this, provider, net) &&
+        AbstractWeb3Module.setProvider.call(this, provider, net) &&
         this.net.setProvider(provider, net) &&
         this.personal.setProvider(provider, net) &&
         this.accounts.setProvider(provider, net) &&
@@ -218,7 +218,7 @@ Eth.prototype.setProvider = function (provider, net) {
     );
 };
 
-Eth.prototype = Object.create(AbstractWeb3Object.prototype);
+Eth.prototype = Object.create(AbstractWeb3Module.prototype);
 Eth.prototype.constructor = Eth;
 
 module.exports = Eth;

@@ -42,10 +42,10 @@ SignTransactionMethodModel.prototype.constructor = SignTransactionMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
  */
-SignTransactionMethodModel.prototype.beforeExecution = function (web3Package) {
-    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], web3Package);
+SignTransactionMethodModel.prototype.beforeExecution = function (moduleInstance) {
+    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
 };
 
 module.exports = SignTransactionMethodModel;

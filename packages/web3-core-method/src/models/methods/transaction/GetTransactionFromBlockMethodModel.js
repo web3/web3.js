@@ -42,9 +42,9 @@ GetTransactionFromBlockMethodModel.prototype.constructor = GetTransactionFromBlo
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (web3Package) {
+GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (moduleInstance) {
     if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
     }

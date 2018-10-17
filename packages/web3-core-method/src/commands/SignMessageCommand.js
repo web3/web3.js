@@ -34,17 +34,17 @@ function SignMessageCommand(messageSigner) {
 /**
  * Executes the SignMessageCommand and returns the signed message
  *
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts
  *
  * @callback callback callback(error, result)
  * @returns {String}
  */
-SignMessageCommand.prototype.execute = function (web3Package, methodModel, accounts) {
+SignMessageCommand.prototype.execute = function (moduleInstance, methodModel, accounts) {
     var signedMessage;
 
-    methodModel.beforeExecution(web3Package);
+    methodModel.beforeExecution(moduleInstance);
 
     try {
         signedMessage = methodModel.afterExecution(

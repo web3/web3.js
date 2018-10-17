@@ -27,13 +27,13 @@ var EventEmitter = require('eventemitter3');
 
 /**
  * @param {AbstractSubscriptionModel} subscriptionModel
- * @param {AbstractWeb3Object} web3Package
+ * @param {AbstractWeb3Module} moduleInstance
  *
  * @constructor
  */
-function Subscription(subscriptionModel, web3Package) {
+function Subscription(subscriptionModel, moduleInstance) {
     this.subscriptionModel = subscriptionModel;
-    this.web3Package = web3Package;
+    this.moduleInstance = moduleInstance;
     this.subscriptionId = null;
 }
 
@@ -53,23 +53,23 @@ Subscription.prototype.constructor = Subscription;
 Subscription.prototype.subscribe = function (callback) {
     var self = this;
 
-    this.subscriptionModel.beforeSubscription(this, this.web3Package, callback);
+    this.subscriptionModel.beforeSubscription(this, this.moduleInstance, callback);
 
-    this.web3Package.currentProvider.subscribe(
+    this.moduleInstance.currentProvider.subscribe(
         this.subscriptionModel.subscriptionType,
         this.subscriptionModel.subscriptionMethod,
         [this.subscriptionModel.options]
     ).then(function (subscriptionId) {
         self.subscriptionId = subscriptionId;
 
-        self.web3Package.currentProvider.on(self.subscriptionId, function (error, response) {
+        self.moduleInstance.currentProvider.on(self.subscriptionId, function (error, response) {
             if (!error) {
                 self.handleSubscriptionResponse(response, callback);
 
                 return;
             }
 
-            if (self.web3Package.currentProvider.once) {
+            if (self.moduleInstance.currentProvider.once) {
                 self.reconnect(callback);
             }
 
@@ -124,12 +124,12 @@ Subscription.prototype.reconnect = function (callback) {
     var self = this;
 
     var interval = setInterval(function () {
-        if (self.web3Package.currentProvider.reconnect) {
-            self.web3Package.currentProvider.reconnect();
+        if (self.moduleInstance.currentProvider.reconnect) {
+            self.moduleInstance.currentProvider.reconnect();
         }
     }, 500);
 
-    this.web3Package.currentProvider.once('connect', function () {
+    this.moduleInstance.currentProvider.once('connect', function () {
         clearInterval(interval);
         self.unsubscribe().then(function () {
             self.subscribe(callback);
@@ -155,7 +155,7 @@ Subscription.prototype.reconnect = function (callback) {
  */
 Subscription.prototype.unsubscribe = function (callback) {
     var self = this;
-    return this.web3Package.currentProvider.unsubscribe(
+    return this.moduleInstance.currentProvider.unsubscribe(
         this.subscriptionId,
         this.subscriptionModel.subscriptionType
     ).then(function (response) {

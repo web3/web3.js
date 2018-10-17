@@ -6,7 +6,7 @@ var SendMethodCommand = require('../../src/commands/SendMethodCommand');
 var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
 var PromiEventPackage = require('web3-core-promievent');
 
 /**
@@ -18,8 +18,8 @@ describe('SendMethodCommandTest', function () {
         providerMock,
         providerAdapter,
         providerAdapterMock,
-        web3Package,
-        web3PackageMock,
+        moduleInstance,
+        moduleInstanceMock,
         methodModel,
         methodModelCallbackSpy,
         methodModelMock,
@@ -35,8 +35,8 @@ describe('SendMethodCommandTest', function () {
         providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        web3Package = new AbstractWeb3Object(providerAdapter, ProvidersPackage, null, null);
-        web3PackageMock = sinon.mock(web3Package);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstanceMock = sinon.mock(moduleInstance);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelMock = sinon.mock(methodModel);
@@ -60,7 +60,7 @@ describe('SendMethodCommandTest', function () {
 
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         providerAdapterMock
@@ -75,10 +75,10 @@ describe('SendMethodCommandTest', function () {
 
         transactionConfirmationWorkflowMock
             .expects('execute')
-            .withArgs(methodModel, web3Package, 'response', promiEvent)
+            .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(web3Package, methodModel, promiEvent);
+        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
@@ -95,7 +95,7 @@ describe('SendMethodCommandTest', function () {
 
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         providerAdapterMock
@@ -120,10 +120,10 @@ describe('SendMethodCommandTest', function () {
 
         transactionConfirmationWorkflowMock
             .expects('execute')
-            .withArgs(methodModel, web3Package, 'response', promiEvent)
+            .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(web3Package, methodModel, promiEvent);
+        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
@@ -143,7 +143,7 @@ describe('SendMethodCommandTest', function () {
 
         methodModelMock
             .expects('beforeExecution')
-            .withArgs(web3Package)
+            .withArgs(moduleInstance)
             .once();
 
         providerAdapterMock
@@ -161,7 +161,7 @@ describe('SendMethodCommandTest', function () {
             .withArgs('error')
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(web3Package, methodModel, promiEvent);
+        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 

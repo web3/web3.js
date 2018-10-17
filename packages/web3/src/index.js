@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 var formatters = require('web3-core-helpers').formatters;
 var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-providers');
@@ -44,7 +44,7 @@ var Web3 = function Web3(provider, net) {
     this.version = version;
     provider = ProvidersPackage.resolve(provider, net);
 
-    AbstractWeb3Object.call(
+    AbstractWeb3Module.call(
         this,
         provider,
         ProvidersPackage,
@@ -70,14 +70,14 @@ var Web3 = function Web3(provider, net) {
  */
 Web3.prototype.setProvider = function (provider, net) {
     return !!(
-        AbstractWeb3Object.prototype.setProvider.call(this, provider, net) &&
+        AbstractWeb3Module.prototype.setProvider.call(this, provider, net) &&
         this.eth.setProvider(provider, net) &&
         this.shh.setProvider(provider, net) &&
         this.bzz.setProvider(provider)
     );
 };
 
-Web3.prototype = Object.create(AbstractWeb3Object.prototype);
+Web3.prototype = Object.create(AbstractWeb3Module.prototype);
 Web3.prototype.constructor = Web3;
 
 Web3.givenProvider = ProvidersPackage.detect();

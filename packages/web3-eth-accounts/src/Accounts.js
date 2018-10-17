@@ -31,7 +31,7 @@ var Bytes = require("eth-lib/lib/bytes");
 var cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 var scryptsy = require('scrypt.js');
 var uuid = require('uuid');
-var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
+var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 
 var isNot = function(value) {
     return (_.isUndefined(value) || _.isNull(value));
@@ -63,13 +63,13 @@ var makeEven = function (hex) {
  * @constructor
  */
 var Accounts = function Accounts(provider, providersPackage, methodController, methodModelFactory, utils, formatters) {
-    AbstractWeb3Object.call(this, provider, providersPackage, methodController, methodModelFactory);
+    AbstractWeb3Module.call(this, provider, providersPackage, methodController, methodModelFactory);
     this.utils = utils;
     this.formatters = formatters;
     this.wallet = new Wallet(this);
 };
 
-Accounts.prototype = Object.create(AbstractWeb3Object.prototype);
+Accounts.prototype = Object.create(AbstractWeb3Module.prototype);
 Accounts.prototype.constructor = Accounts;
 
 /**

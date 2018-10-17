@@ -42,9 +42,9 @@ GetBlockMethodModel.prototype.constructor = GetBlockMethodModel;
  *
  * @method beforeExecution
  *
- * @param {Object} web3Package - The package where the method is called from for example Eth.
+ * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
  */
-GetBlockMethodModel.prototype.beforeExecution = function (web3Package) {
+GetBlockMethodModel.prototype.beforeExecution = function (moduleInstance) {
     if (this.isHash(this.parameters[0])) {
         this.rpcMethod = 'eth_getBlockByHash';
     }
