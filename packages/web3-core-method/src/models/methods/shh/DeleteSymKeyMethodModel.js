@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function DeleteSymKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_deleteSymKey', 1, utils, formatters);
+export default class DeleteSymKeyMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_deleteSymKey', 1, utils, formatters);
+    }
 }
-
-DeleteSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-DeleteSymKeyMethodModel.prototype.constructor = DeleteSymKeyMethodModel;
-
-module.exports = DeleteSymKeyMethodModel;

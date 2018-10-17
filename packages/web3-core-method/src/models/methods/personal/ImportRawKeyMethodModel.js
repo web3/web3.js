@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function ImportRawKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'personal_importRawKey', 2, utils, formatters);
+export default class ImportRawKeyMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('personal_importRawKey', 2, utils, formatters);
+    }
 }
-
-ImportRawKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-ImportRawKeyMethodModel.prototype.constructor = ImportRawKeyMethodModel;
-
-module.exports = ImportRawKeyMethodModel;

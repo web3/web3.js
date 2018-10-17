@@ -22,30 +22,28 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SignTransactionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_signTransaction', 1, utils, formatters);
+export default class SignTransactionMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_signTransaction', 1, utils, formatters);
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    }
 }
-
-SignTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SignTransactionMethodModel.prototype.constructor = SignTransactionMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from.
- */
-SignTransactionMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-};
-
-module.exports = SignTransactionMethodModel;

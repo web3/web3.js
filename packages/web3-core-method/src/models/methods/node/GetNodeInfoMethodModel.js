@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetNodeInfoMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'web3_clientVersion', 0, utils, formatters);
+export default class GetNodeInfoMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('web3_clientVersion', 0, utils, formatters);
+    }
 }
-
-GetNodeInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetNodeInfoMethodModel.prototype.constructor = GetNodeInfoMethodModel;
-
-module.exports = GetNodeInfoMethodModel;

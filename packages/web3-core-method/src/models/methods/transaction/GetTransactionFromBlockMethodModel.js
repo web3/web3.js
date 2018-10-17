@@ -22,48 +22,46 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetTransactionFromBlockMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters);
-}
+export default class GetTransactionFromBlockMethodModel extends AbstractMethodModel {
 
-GetTransactionFromBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionFromBlockMethodModel.prototype.constructor = GetTransactionFromBlockMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-GetTransactionFromBlockMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    if (this.isHash(this.parameters[0])) {
-        this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters);
     }
 
-    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-    this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-};
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.isHash(this.parameters[0])) {
+            this.rpcMethod = 'eth_getTransactionByBlockHashAndIndex';
+        }
 
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-GetTransactionFromBlockMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputTransactionFormatter(response);
-};
+        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    }
 
-module.exports = GetTransactionFromBlockMethodModel;
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
+    }
+}

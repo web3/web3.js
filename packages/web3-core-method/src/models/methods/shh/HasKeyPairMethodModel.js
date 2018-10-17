@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function HasKeyPairMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_hasKeyPair', 1, utils, formatters);
+export default class HasKeyPairMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_hasKeyPair', 1, utils, formatters);
+    }
 }
-
-HasKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-HasKeyPairMethodModel.prototype.constructor = HasKeyPairMethodModel;
-
-module.exports = HasKeyPairMethodModel;

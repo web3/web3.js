@@ -25,38 +25,36 @@
 /**
  * @constructor
  */
-function CallMethodCommand() { }
+export default class CallMethodCommand {
+    /**
+     * Sends a JSON-RPC call request
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethodModel} methodModel
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<*>}
+     */
+    execute(moduleInstance, methodModel) {
+        methodModel.beforeExecution(moduleInstance);
 
-/**
- * Sends a JSON-RPC call request
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractMethodModel} methodModel
- *
- * @callback callback callback(error, result)
- * @returns {Promise<*>}
- */
-CallMethodCommand.prototype.execute = function (moduleInstance, methodModel) {
-    methodModel.beforeExecution(moduleInstance);
+        return moduleInstance.currentProvider.send(
+            methodModel.rpcMethod,
+            methodModel.parameters
+        ).then(response => {
+            const mappedResponse = methodModel.afterExecution(response);
 
-    return moduleInstance.currentProvider.send(
-        methodModel.rpcMethod,
-        methodModel.parameters
-    ).then(function (response) {
-        var mappedResponse = methodModel.afterExecution(response);
+            if (methodModel.callback) {
+                methodModel.callback(false, mappedResponse);
+            }
 
-        if (methodModel.callback) {
-            methodModel.callback(false, mappedResponse);
-        }
-
-        return mappedResponse;
-    }).catch(function(error) {
-        if (methodModel.callback) {
-            methodModel.callback(error, null);
-        }
-    });
-};
-
-module.exports = CallMethodCommand;
+            return mappedResponse;
+        }).catch(error => {
+            if (methodModel.callback) {
+                methodModel.callback(error, null);
+            }
+        });
+    }
+}

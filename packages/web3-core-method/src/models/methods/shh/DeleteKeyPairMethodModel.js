@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function DeleteKeyPairMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_deleteKeyPair', 1, utils, formatters);
+export default class DeleteKeyPairMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_deleteKeyPair', 1, utils, formatters);
+    }
 }
-
-DeleteKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-DeleteKeyPairMethodModel.prototype.constructor = DeleteKeyPairMethodModel;
-
-module.exports = DeleteKeyPairMethodModel;

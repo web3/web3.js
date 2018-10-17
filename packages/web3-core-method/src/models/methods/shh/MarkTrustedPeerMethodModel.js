@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function MarkTrustedPeerMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_markTrustedPeer', 1, utils, formatters);
+export default class MarkTrustedPeerMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_markTrustedPeer', 1, utils, formatters);
+    }
 }
-
-MarkTrustedPeerMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-MarkTrustedPeerMethodModel.prototype.constructor = MarkTrustedPeerMethodModel;
-
-module.exports = MarkTrustedPeerMethodModel;

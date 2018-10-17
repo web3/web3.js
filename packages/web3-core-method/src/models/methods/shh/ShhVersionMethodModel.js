@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function ShhVersionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_version', 0, utils, formatters);
+export default class ShhVersionMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_version', 0, utils, formatters);
+    }
 }
-
-ShhVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-ShhVersionMethodModel.prototype.constructor = ShhVersionMethodModel;
-
-module.exports = ShhVersionMethodModel;

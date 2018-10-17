@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SetMinPoWMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_setMinPoW', 1, utils, formatters);
+export default class SetMinPoWMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_setMinPoW', 1, utils, formatters);
+    }
 }
-
-SetMinPoWMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SetMinPoWMethodModel.prototype.constructor = SetMinPoWMethodModel;
-
-module.exports = SetMinPoWMethodModel;

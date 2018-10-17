@@ -22,32 +22,30 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function VersionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_protocolVersion', 0, utils, formatters);
+export default class VersionMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_protocolVersion', 0, utils, formatters);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-VersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-VersionMethodModel.prototype.constructor = VersionMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-VersionMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = VersionMethodModel;

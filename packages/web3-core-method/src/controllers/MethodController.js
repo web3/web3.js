@@ -22,85 +22,86 @@
 
 "use strict";
 
-/**
- * @param {CallMethodCommand} callMethodCommand
- * @param {SendMethodCommand} sendMethodCommand
- * @param {SignAndSendMethodCommand} signAndSendMethodCommand
- * @param {SignMessageCommand} signMessageCommand
- * @param {PromiEventPackage} promiEventPackage
- *
- * @constructor
- */
-function MethodController(
-    callMethodCommand,
-    sendMethodCommand,
-    signAndSendMethodCommand,
-    signMessageCommand,
-    promiEventPackage
-) {
-    this.callMethodCommand = callMethodCommand;
-    this.sendMethodCommand = sendMethodCommand;
-    this.signAndSendMethodCommand = signAndSendMethodCommand;
-    this.signMessageCommand = signMessageCommand;
-    this.promiEventPackage = promiEventPackage;
-}
+export default class MethodController {
 
-/**
- * Checks which command should be executed
- *
- * @method execute
- *
- * @param {AbstractMethodModel} methodModel
- * @param {Accounts} accounts
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @returns {Promise<Object|String>|PromiEvent|String}
- */
-MethodController.prototype.execute = function (methodModel, accounts, moduleInstance) {
-    if (this.hasWallets(accounts)) {
-        if (methodModel.isSign()) {
-            return this.signMessageCommand.execute(
-                moduleInstance,
-                methodModel,
-                accounts,
-            );
-        }
-
-        if (methodModel.isSendTransaction()) {
-            return this.signAndSendMethodCommand.execute(
-                moduleInstance,
-                methodModel,
-                new this.promiEventPackage.PromiEvent(),
-                accounts,
-            );
-        }
+    /**
+     * @param {CallMethodCommand} callMethodCommand
+     * @param {SendMethodCommand} sendMethodCommand
+     * @param {SignAndSendMethodCommand} signAndSendMethodCommand
+     * @param {SignMessageCommand} signMessageCommand
+     * @param {PromiEventPackage} promiEventPackage
+     *
+     * @constructor
+     */
+    constructor(
+        callMethodCommand,
+        sendMethodCommand,
+        signAndSendMethodCommand,
+        signMessageCommand,
+        promiEventPackage
+    ) {
+        this.callMethodCommand = callMethodCommand;
+        this.sendMethodCommand = sendMethodCommand;
+        this.signAndSendMethodCommand = signAndSendMethodCommand;
+        this.signMessageCommand = signMessageCommand;
+        this.promiEventPackage = promiEventPackage;
     }
 
-    if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction() || methodModel.isSign()) {
-        return this.sendMethodCommand.execute(
+    /**
+     * Checks which command should be executed
+     *
+     * @method execute
+     *
+     * @param {AbstractMethodModel} methodModel
+     * @param {Accounts} accounts
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Promise<Object|String>|PromiEvent|String}
+     */
+    execute(methodModel, accounts, moduleInstance) {
+        if (this.hasWallets(accounts)) {
+            if (methodModel.isSign()) {
+                return this.signMessageCommand.execute(
+                    moduleInstance,
+                    methodModel,
+                    accounts,
+                );
+            }
+
+            if (methodModel.isSendTransaction()) {
+                return this.signAndSendMethodCommand.execute(
+                    moduleInstance,
+                    methodModel,
+                    new this.promiEventPackage.PromiEvent(),
+                    accounts,
+                );
+            }
+        }
+
+        if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction() || methodModel.isSign()) {
+            return this.sendMethodCommand.execute(
+                moduleInstance,
+                methodModel,
+                new this.promiEventPackage.PromiEvent()
+            );
+        }
+
+        return this.callMethodCommand.execute(
             moduleInstance,
             methodModel,
-            new this.promiEventPackage.PromiEvent()
         );
     }
 
-    return this.callMethodCommand.execute(
-        moduleInstance,
-        methodModel,
-    );
-};
-
-/**
- * Checks if accounts is defined and if wallet is not empty
- *
- * @method hasWallet
- *
- * @param {Accounts} accounts
- *
- * @returns {Boolean}
- */
-MethodController.prototype.hasWallets = function (accounts) {
-    return (accounts && accounts.wallet.length > 0);
-};
-
-module.exports = MethodController;
+    /**
+     * Checks if accounts is defined and if wallet is not empty
+     *
+     * @method hasWallet
+     *
+     * @param {Accounts} accounts
+     *
+     * @returns {Boolean}
+     */
+    hasWallets(accounts) {
+        return (accounts && accounts.wallet.length > 0);
+    }
+}

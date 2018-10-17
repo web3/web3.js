@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function DeleteMessageFilterMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_deleteMessageFilter', 1, utils, formatters);
+export default class DeleteMessageFilterMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_deleteMessageFilter', 1, utils, formatters);
+    }
 }
-
-DeleteMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-DeleteMessageFilterMethodModel.prototype.constructor = DeleteMessageFilterMethodModel;
-
-module.exports = DeleteMessageFilterMethodModel;

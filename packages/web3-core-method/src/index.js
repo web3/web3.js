@@ -23,95 +23,95 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var MethodPackageFactory = require('./factories/MethodPackageFactory');
-var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
-var PromiEventPackage = require('web3-core-promievent');
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
-var formatters = require('web3-core-helpers').formatters;
-
+import {version} from '../package.json';
+import MethodPackageFactory from './factories/MethodPackageFactory';
+import AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';
+import PromiEventPackage from 'web3-core-promievent';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {formatters} from 'web3-core-helpers';
 // Methods
-    // Network
-    var GetProtocolVersionMethodModel = require('./models/methods/network/GetProtocolVersionMethodModel');
-    var VersionMethodModel = require('./models/methods/network/VersionMethodModel');
-    var ListeningMethodModel = require('./models/methods/network/ListeningMethodModel');
-    var PeerCountMethodModel = require('./models/methods/network/PeerCountMethodModel');
+// Network
+import GetProtocolVersionMethodModel from './models/methods/network/GetProtocolVersionMethodModel';
 
-    // Node
-    var GetNodeInfoMethodModel = require('./models/methods/node/GetNodeInfoMethodModel');
-    var GetCoinbaseMethodModel = require('./models/methods/node/GetCoinbaseMethodModel');
-    var IsMiningMethodModel = require('./models/methods/node/IsMiningMethodModel');
-    var GetHashrateMethodModel = require('./models/methods/node/GetHashrateMethodModel');
-    var IsSyncingMethodModel = require('./models/methods/node/IsSyncingMethodModel');
-    var GetGasPriceMethodModel = require('./models/methods/node/GetGasPriceMethodModel');
-    var SubmitWorkMethodModel = require('./models/methods/node/SubmitWorkMethodModel');
-    var GetWorkMethodModel = require('./models/methods/node/GetWorkMethodModel');
+import VersionMethodModel from './models/methods/network/VersionMethodModel';
+import ListeningMethodModel from './models/methods/network/ListeningMethodModel';
+import PeerCountMethodModel from './models/methods/network/PeerCountMethodModel';
+// Node
+import GetNodeInfoMethodModel from './models/methods/node/GetNodeInfoMethodModel';
 
-    // Account
-    var GetAccountsMethodModel = require('./models/methods/account/GetAccountsMethodModel');
-    var GetBalanceMethodModel = require('./models/methods/account/GetBalanceMethodModel');
-    var GetTransactionCountMethodModel = require('./models/methods/account/GetTransactionCountMethodModel');
+import GetCoinbaseMethodModel from './models/methods/node/GetCoinbaseMethodModel';
+import IsMiningMethodModel from './models/methods/node/IsMiningMethodModel';
+import GetHashrateMethodModel from './models/methods/node/GetHashrateMethodModel';
+import IsSyncingMethodModel from './models/methods/node/IsSyncingMethodModel';
+import GetGasPriceMethodModel from './models/methods/node/GetGasPriceMethodModel';
+import SubmitWorkMethodModel from './models/methods/node/SubmitWorkMethodModel';
+import GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
+// Account
+import GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';
 
-    // Block
-    var GetBlockNumberMethodModel = require('./models/methods/block/GetBlockNumberMethodModel');
-    var GetBlockMethodModel = require('./models/methods/block/GetBlockMethodModel');
-    var GetUncleMethodModel = require('./models/methods/block/GetUncleMethodModel');
-    var GetBlockTransactionCountMethodModel = require('./models/methods/block/GetBlockTransactionCountMethodModel');
-    var GetBlockUncleCountMethodModel = require('./models/methods/block/GetBlockUncleCountMethodModel');
+import GetBalanceMethodModel from './models/methods/account/GetBalanceMethodModel';
+import GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethodModel';
+// Block
+import GetBlockNumberMethodModel from './models/methods/block/GetBlockNumberMethodModel';
 
-    // Transaction
-    var GetTransactionMethodModel = require('./models/methods/transaction/GetTransactionMethodModel');
-    var GetTransactionFromBlockMethodModel = require('./models/methods/transaction/GetTransactionFromBlockMethodModel');
-    var GetTransactionReceipt = require('./models/methods/transaction/GetTransactionReceiptMethodModel');
-    var SendSignedTransactionMethodModel = require('./models/methods/transaction/SendSignedTransactionMethodModel');
-    var SignTransactionMethodModel = require('./models/methods/transaction/SignTransactionMethodModel');
-    var SendTransactionMethodModel = require('./models/methods/transaction/SendTransactionMethodModel');
+import GetBlockMethodModel from './models/methods/block/GetBlockMethodModel';
+import GetUncleMethodModel from './models/methods/block/GetUncleMethodModel';
+import GetBlockTransactionCountMethodModel from './models/methods/block/GetBlockTransactionCountMethodModel';
+import GetBlockUncleCountMethodModel from './models/methods/block/GetBlockUncleCountMethodModel';
+// Transaction
+import GetTransactionMethodModel from './models/methods/transaction/GetTransactionMethodModel';
 
-    // Global
-    var GetCodeMethodModel = require('./models/methods/GetCodeMethodModel');
-    var SignMethodModel = require('./models/methods/SignMethodModel');
-    var CallMethodModel = require('./models/methods/CallMethodModel');
-    var GetStorageAtMethodModel = require('./models/methods/GetStorageAtMethodModel');
-    var EstimateGasMethodModel = require('./models/methods/EstimateGasMethodModel');
-    var GetPastLogsMethodModel = require('./models/methods/GetPastLogsMethodModel');
+import GetTransactionFromBlockMethodModel from './models/methods/transaction/GetTransactionFromBlockMethodModel';
+import GetTransactionReceipt from './models/methods/transaction/GetTransactionReceiptMethodModel';
+import SendSignedTransactionMethodModel from './models/methods/transaction/SendSignedTransactionMethodModel';
+import SignTransactionMethodModel from './models/methods/transaction/SignTransactionMethodModel';
+import SendTransactionMethodModel from './models/methods/transaction/SendTransactionMethodModel';
+// Global
+import GetCodeMethodModel from './models/methods/GetCodeMethodModel';
 
-    // Personal
-    var EcRecoverMethodModel = require('./models/methods/personal/EcRecoverMethodModel');
-    var ImportRawKeyMethodModel = require('./models/methods/personal/ImportRawKeyMethodModel');
-    var ListAccountsMethodModel = require('./models/methods/personal/ListAccountsMethodModel');
-    var LockAccountMethodModel = require('./models/methods/personal/LockAccountMethodModel');
-    var NewAccountMethodModel = require('./models/methods/personal/NewAccountMethodModel');
-    var PersonalSendTransactionMethodModel = require('./models/methods/personal/PersonalSendTransactionMethodModel');
-    var PersonalSignMethodModel = require('./models/methods/personal/PersonalSignMethodModel');
-    var PersonalSignTransactionMethodModel = require('./models/methods/personal/PersonalSignTransactionMethodModel');
-    var UnlockAccountMethodModel = require('./models/methods/personal/UnlockAccountMethodModel');
+import SignMethodModel from './models/methods/SignMethodModel';
+import CallMethodModel from './models/methods/CallMethodModel';
+import GetStorageAtMethodModel from './models/methods/GetStorageAtMethodModel';
+import EstimateGasMethodModel from './models/methods/EstimateGasMethodModel';
+import GetPastLogsMethodModel from './models/methods/GetPastLogsMethodModel';
+// Personal
+import EcRecoverMethodModel from './models/methods/personal/EcRecoverMethodModel';
 
-    // SHH
-    var AddPrivateKeyMethodModel = require('./models/methods/shh/AddPrivateKeyMethodModel');
-    var AddSymKeyMethodModel = require('./models/methods/shh/AddSymKeyMethodModel');
-    var DeleteKeyPairMethodModel = require('./models/methods/shh/DeleteKeyPairMethodModel');
-    var DeleteMessageFilterMethodModel = require('./models/methods/shh/DeleteMessageFilterMethodModel');
-    var DeleteSymKeyMethodModel = require('./models/methods/shh/DeleteSymKeyMethodModel');
-    var GenerateSymKeyFromPasswordMethodModel = require('./models/methods/shh/GenerateSymKeyFromPasswordMethodModel');
-    var GetFilterMessagesMethodModel = require('./models/methods/shh/GetFilterMessagesMethodModel');
-    var GetInfoMethodModel = require('./models/methods/shh/GetInfoMethodModel');
-    var GetPrivateKeyMethodModel = require('./models/methods/shh/GetPrivateKeyMethodModel');
-    var GetPublicKeyMethodModel = require('./models/methods/shh/GetPublicKeyMethodModel');
-    var GetSymKeyMethodModel = require('./models/methods/shh/GetSymKeyMethodModel');
-    var HasKeyPairMethodModel = require('./models/methods/shh/HasKeyPairMethodModel');
-    var HasSymKeyMethodModel = require('./models/methods/shh/HasSymKeyMethodModel');
-    var MarkTrustedPeerMethodModel = require('./models/methods/shh/MarkTrustedPeerMethodModel');
-    var NewKeyPairMethodModel = require('./models/methods/shh/NewKeyPairMethodModel');
-    var NewMessageFilterMethodModel = require('./models/methods/shh/NewMessageFilterMethodModel');
-    var NewSymKeyMethodModel = require('./models/methods/shh/NewSymKeyMethodModel');
-    var PostMethodModel = require('./models/methods/shh/PostMethodModel');
-    var SetMaxMessageSizeMethodModel = require('./models/methods/shh/SetMaxMessageSizeMethodModel');
-    var SetMinPoWMethodModel = require('./models/methods/shh/SetMinPoWMethodModel');
-    var ShhVersionMethodModel = require('./models/methods/shh/ShhVersionMethodModel');
+import ImportRawKeyMethodModel from './models/methods/personal/ImportRawKeyMethodModel';
+import ListAccountsMethodModel from './models/methods/personal/ListAccountsMethodModel';
+import LockAccountMethodModel from './models/methods/personal/LockAccountMethodModel';
+import NewAccountMethodModel from './models/methods/personal/NewAccountMethodModel';
+import PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethodModel';
+import PersonalSignMethodModel from './models/methods/personal/PersonalSignMethodModel';
+import PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethodModel';
+import UnlockAccountMethodModel from './models/methods/personal/UnlockAccountMethodModel';
+// SHH
+import AddPrivateKeyMethodModel from './models/methods/shh/AddPrivateKeyMethodModel';
 
-module.exports = {
-    version: version,
-    AbstractMethodModelFactory: AbstractMethodModelFactory,
+import AddSymKeyMethodModel from './models/methods/shh/AddSymKeyMethodModel';
+import DeleteKeyPairMethodModel from './models/methods/shh/DeleteKeyPairMethodModel';
+import DeleteMessageFilterMethodModel from './models/methods/shh/DeleteMessageFilterMethodModel';
+import DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethodModel';
+import GenerateSymKeyFromPasswordMethodModel from './models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
+import GetFilterMessagesMethodModel from './models/methods/shh/GetFilterMessagesMethodModel';
+import GetInfoMethodModel from './models/methods/shh/GetInfoMethodModel';
+import GetPrivateKeyMethodModel from './models/methods/shh/GetPrivateKeyMethodModel';
+import GetPublicKeyMethodModel from './models/methods/shh/GetPublicKeyMethodModel';
+import GetSymKeyMethodModel from './models/methods/shh/GetSymKeyMethodModel';
+import HasKeyPairMethodModel from './models/methods/shh/HasKeyPairMethodModel';
+import HasSymKeyMethodModel from './models/methods/shh/HasSymKeyMethodModel';
+import MarkTrustedPeerMethodModel from './models/methods/shh/MarkTrustedPeerMethodModel';
+import NewKeyPairMethodModel from './models/methods/shh/NewKeyPairMethodModel';
+import NewMessageFilterMethodModel from './models/methods/shh/NewMessageFilterMethodModel';
+import NewSymKeyMethodModel from './models/methods/shh/NewSymKeyMethodModel';
+import PostMethodModel from './models/methods/shh/PostMethodModel';
+import SetMaxMessageSizeMethodModel from './models/methods/shh/SetMaxMessageSizeMethodModel';
+import SetMinPoWMethodModel from './models/methods/shh/SetMinPoWMethodModel';
+import ShhVersionMethodModel from './models/methods/shh/ShhVersionMethodModel';
+
+export default {
+    version,
+    AbstractMethodModelFactory,
 
     /**
      * Returns the MethodController object
@@ -120,7 +120,7 @@ module.exports = {
      *
      * @returns {MethodController}
      */
-    MethodController: function () {
+    MethodController() {
         return new MethodPackageFactory().createMethodController(
             PromiEventPackage,
             new SubscriptionsFactory(),
@@ -131,81 +131,81 @@ module.exports = {
     /**
      * Methods
      */
-        // Network
-        GetProtocolVersionMethodModel: GetProtocolVersionMethodModel,
-        VersionMethodModel: VersionMethodModel,
-        ListeningMethodModel: ListeningMethodModel,
-        PeerCountMethodModel: PeerCountMethodModel,
+    // Network
+    GetProtocolVersionMethodModel,
+    VersionMethodModel,
+    ListeningMethodModel,
+    PeerCountMethodModel,
 
-        // Node
-        GetNodeInfoMethodModel: GetNodeInfoMethodModel,
-        GetCoinbaseMethodModel: GetCoinbaseMethodModel,
-        IsMiningMethodModel: IsMiningMethodModel,
-        GetHashrateMethodModel: GetHashrateMethodModel,
-        IsSyncingMethodModel: IsSyncingMethodModel,
-        GetWorkMethodModel: GetWorkMethodModel,
-        GetGasPriceMethodModel: GetGasPriceMethodModel,
-        SubmitWorkMethodModel: SubmitWorkMethodModel,
+    // Node
+    GetNodeInfoMethodModel,
+    GetCoinbaseMethodModel,
+    IsMiningMethodModel,
+    GetHashrateMethodModel,
+    IsSyncingMethodModel,
+    GetWorkMethodModel,
+    GetGasPriceMethodModel,
+    SubmitWorkMethodModel,
 
-        // Account
-        GetAccountsMethodModel: GetAccountsMethodModel,
-        GetBalanceMethodModel: GetBalanceMethodModel,
-        GetTransactionCountMethodModel: GetTransactionCountMethodModel,
+    // Account
+    GetAccountsMethodModel,
+    GetBalanceMethodModel,
+    GetTransactionCountMethodModel,
 
-        // Block
-        GetBlockNumberMethodModel: GetBlockNumberMethodModel,
-        GetBlockMethodModel: GetBlockMethodModel,
-        GetUncleMethodModel: GetUncleMethodModel,
-        GetBlockTransactionCountMethodModel: GetBlockTransactionCountMethodModel,
-        GetBlockUncleCountMethodModel: GetBlockUncleCountMethodModel,
+    // Block
+    GetBlockNumberMethodModel,
+    GetBlockMethodModel,
+    GetUncleMethodModel,
+    GetBlockTransactionCountMethodModel,
+    GetBlockUncleCountMethodModel,
 
-        // Transaction
-        GetTransactionMethodModel: GetTransactionMethodModel,
-        GetTransactionFromBlockMethodModel: GetTransactionFromBlockMethodModel,
-        SendSignedTransactionMethodModel: SendSignedTransactionMethodModel,
-        SignTransactionMethodModel: SignTransactionMethodModel,
-        SendTransactionMethodModel: SendTransactionMethodModel,
-        GetTransactionReceipt: GetTransactionReceipt,
+    // Transaction
+    GetTransactionMethodModel,
+    GetTransactionFromBlockMethodModel,
+    SendSignedTransactionMethodModel,
+    SignTransactionMethodModel,
+    SendTransactionMethodModel,
+    GetTransactionReceipt,
 
-        // Global
-        GetStorageAtMethodModel: GetStorageAtMethodModel,
-        GetCodeMethodModel: GetCodeMethodModel,
-        SignMethodModel: SignMethodModel,
-        CallMethodModel: CallMethodModel,
-        EstimateGasMethodModel: EstimateGasMethodModel,
-        GetPastLogsMethodModel: GetPastLogsMethodModel,
+    // Global
+    GetStorageAtMethodModel,
+    GetCodeMethodModel,
+    SignMethodModel,
+    CallMethodModel,
+    EstimateGasMethodModel,
+    GetPastLogsMethodModel,
 
-        // Personal
-        EcRecoverMethodModel: EcRecoverMethodModel,
-        ImportRawKeyMethodModel: ImportRawKeyMethodModel,
-        ListAccountsMethodModel: ListAccountsMethodModel,
-        LockAccountMethodModel: LockAccountMethodModel,
-        NewAccountMethodModel: NewAccountMethodModel,
-        PersonalSendTransactionMethodModel: PersonalSendTransactionMethodModel,
-        PersonalSignMethodModel: PersonalSignMethodModel,
-        PersonalSignTransactionMethodModel: PersonalSignTransactionMethodModel,
-        UnlockAccountMethodModel: UnlockAccountMethodModel,
+    // Personal
+    EcRecoverMethodModel,
+    ImportRawKeyMethodModel,
+    ListAccountsMethodModel,
+    LockAccountMethodModel,
+    NewAccountMethodModel,
+    PersonalSendTransactionMethodModel,
+    PersonalSignMethodModel,
+    PersonalSignTransactionMethodModel,
+    UnlockAccountMethodModel,
 
-        // SHH
-        AddPrivateKeyMethodModel: AddPrivateKeyMethodModel,
-        AddSymKeyMethodModel: AddSymKeyMethodModel,
-        DeleteKeyPairMethodModel: DeleteKeyPairMethodModel,
-        DeleteMessageFilterMethodModel: DeleteMessageFilterMethodModel,
-        DeleteSymKeyMethodModel: DeleteSymKeyMethodModel,
-        GenerateSymKeyFromPasswordMethodModel: GenerateSymKeyFromPasswordMethodModel,
-        GetFilterMessagesMethodModel: GetFilterMessagesMethodModel,
-        GetInfoMethodModel: GetInfoMethodModel,
-        GetPrivateKeyMethodModel: GetPrivateKeyMethodModel,
-        GetPublicKeyMethodModel: GetPublicKeyMethodModel,
-        GetSymKeyMethodModel: GetSymKeyMethodModel,
-        HasKeyPairMethodModel: HasKeyPairMethodModel,
-        HasSymKeyMethodModel: HasSymKeyMethodModel,
-        MarkTrustedPeerMethodModel: MarkTrustedPeerMethodModel,
-        NewKeyPairMethodModel: NewKeyPairMethodModel,
-        NewMessageFilterMethodModel: NewMessageFilterMethodModel,
-        NewSymKeyMethodModel: NewSymKeyMethodModel,
-        PostMethodModel: PostMethodModel,
-        SetMaxMessageSizeMethodModel: SetMaxMessageSizeMethodModel,
-        SetMinPoWMethodModel: SetMinPoWMethodModel,
-        ShhVersionMethodModel: ShhVersionMethodModel
+    // SHH
+    AddPrivateKeyMethodModel,
+    AddSymKeyMethodModel,
+    DeleteKeyPairMethodModel,
+    DeleteMessageFilterMethodModel,
+    DeleteSymKeyMethodModel,
+    GenerateSymKeyFromPasswordMethodModel,
+    GetFilterMessagesMethodModel,
+    GetInfoMethodModel,
+    GetPrivateKeyMethodModel,
+    GetPublicKeyMethodModel,
+    GetSymKeyMethodModel,
+    HasKeyPairMethodModel,
+    HasSymKeyMethodModel,
+    MarkTrustedPeerMethodModel,
+    NewKeyPairMethodModel,
+    NewMessageFilterMethodModel,
+    NewSymKeyMethodModel,
+    PostMethodModel,
+    SetMaxMessageSizeMethodModel,
+    SetMinPoWMethodModel,
+    ShhVersionMethodModel
 };

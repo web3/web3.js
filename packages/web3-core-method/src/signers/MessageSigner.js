@@ -22,34 +22,27 @@
 
 "use strict";
 
-var AbstractSigner = require('../../lib/signers/AbstractSigner');
+import AbstractSigner from '../../lib/signers/AbstractSigner';
 
-/**
- * @constructor
- */
-function MessageSigner() { }
+export default class MessageSigner extends AbstractSigner {
 
-MessageSigner.prototype = Object.create(AbstractSigner.prototype);
-MessageSigner.prototype.constructor = MessageSigner;
+    /**
+     * Signs a given message
+     *
+     * @method sign
+     *
+     * @param {String} data
+     * @param {String} address
+     * @param {Accounts} accounts
+     *
+     * @returns {String|Error}
+     */
+    sign(data, address, accounts) {
+        const wallet = this.getWallet(address, accounts);
+        if (wallet && wallet.privateKey) {
+            return accounts.sign(data, wallet.privateKey).signature;
+        }
 
-/**
- * Signs a given message
- *
- * @method sign
- *
- * @param {String} data
- * @param {String} address
- * @param {Accounts} accounts
- *
- * @returns {String|Error}
- */
-MessageSigner.prototype.sign = function(data, address, accounts) {
-    var wallet = this.getWallet(address, accounts);
-    if (wallet && wallet.privateKey) {
-        return accounts.sign(data, wallet.privateKey).signature;
+        throw new Error('Wallet or privateKey in wallet is not set!');
     }
-
-    throw new Error('Wallet or privateKey in wallet is not set!');
-};
-
-module.exports = MessageSigner;
+}

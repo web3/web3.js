@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SetMaxMessageSizeMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_setMaxMessageSize', 1, utils, formatters);
+export default class SetMaxMessageSizeMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_setMaxMessageSize', 1, utils, formatters);
+    }
 }
-
-SetMaxMessageSizeMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SetMaxMessageSizeMethodModel.prototype.constructor = SetMaxMessageSizeMethodModel;
-
-module.exports = SetMaxMessageSizeMethodModel;

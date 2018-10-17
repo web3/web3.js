@@ -22,32 +22,30 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function IsSyncingMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_syncing', 0, utils, formatters);
+export default class IsSyncingMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_syncing', 0, utils, formatters);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputSyncingFormatter(response);
+    }
 }
-
-IsSyncingMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-IsSyncingMethodModel.prototype.constructor = IsSyncingMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-IsSyncingMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputSyncingFormatter(response);
-};
-
-module.exports = IsSyncingMethodModel;

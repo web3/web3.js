@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetWorkMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getWork', 0, utils, formatters);
+export default class GetWorkMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_getWork', 0, utils, formatters);
+    }
 }
-
-GetWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetWorkMethodModel.prototype.constructor = GetWorkMethodModel;
-
-module.exports = GetWorkMethodModel;

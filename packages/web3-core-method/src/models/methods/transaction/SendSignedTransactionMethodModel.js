@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SendSignedTransactionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_sendRawTransaction', 1, utils, formatters);
+export default class SendSignedTransactionMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_sendRawTransaction', 1, utils, formatters);
+    }
 }
-
-SendSignedTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SendSignedTransactionMethodModel.prototype.constructor = SendSignedTransactionMethodModel;
-
-module.exports = SendSignedTransactionMethodModel;

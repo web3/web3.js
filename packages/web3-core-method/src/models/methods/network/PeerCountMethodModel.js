@@ -22,32 +22,30 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function PeerCountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'net_peerCount', 0, utils, formatters);
+export default class PeerCountMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('net_peerCount', 0, utils, formatters);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {String} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-PeerCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PeerCountMethodModel.prototype.constructor = PeerCountMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {String} response
- *
- * @returns {Number}
- */
-PeerCountMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = PeerCountMethodModel;

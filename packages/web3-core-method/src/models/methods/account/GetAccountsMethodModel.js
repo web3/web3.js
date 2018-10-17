@@ -22,36 +22,34 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetAccountsMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_accounts', 0, utils, formatters);
+export default class GetAccountsMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_accounts', 0, utils, formatters);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Array}
+     */
+    afterExecution(response) {
+        const self = this;
+
+        return response.map(responseItem => {
+            return self.utils.toChecksumAddress(responseItem);
+        });
+    }
 }
-
-GetAccountsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetAccountsMethodModel.prototype.constructor = GetAccountsMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Array}
- */
-GetAccountsMethodModel.prototype.afterExecution = function (response) {
-    var self = this;
-
-    return response.map(function(responseItem) {
-        return self.utils.toChecksumAddress(responseItem);
-    });
-};
-
-module.exports = GetAccountsMethodModel;

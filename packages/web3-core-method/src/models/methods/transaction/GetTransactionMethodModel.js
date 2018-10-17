@@ -22,32 +22,30 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetTransactionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getTransactionByHash', 1, utils, formatters);
+export default class GetTransactionMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('eth_getTransactionByHash', 1, utils, formatters);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
+    }
 }
-
-GetTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionMethodModel.prototype.constructor = GetTransactionMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-GetTransactionMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputTransactionFormatter(response);
-};
-
-module.exports = GetTransactionMethodModel;

@@ -22,47 +22,48 @@
 
 "use strict";
 
-/**
- * @param {MessageSigner} messageSigner
- *
- * @constructor
- */
-function SignMessageCommand(messageSigner) {
-    this.messageSigner = messageSigner;
+export default class SignMessageCommand {
+
+    /**
+     * @param {MessageSigner} messageSigner
+     *
+     * @constructor
+     */
+    constructor(messageSigner) {
+        this.messageSigner = messageSigner;
+    }
+
+    /**
+     * Executes the SignMessageCommand and returns the signed message
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethodModel} methodModel
+     * @param {Accounts} accounts
+     *
+     * @callback callback callback(error, result)
+     * @returns {String}
+     */
+    execute(moduleInstance, methodModel, accounts) {
+        let signedMessage;
+
+        methodModel.beforeExecution(moduleInstance);
+
+        try {
+            signedMessage = methodModel.afterExecution(
+                this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts)
+            );
+        } catch(error) {
+            methodModel.callback(error, null);
+
+            throw error;
+        }
+
+        if (methodModel.callback) {
+            methodModel.callback(false, signedMessage);
+        }
+
+        return signedMessage;
+    }
 }
-
-/**
- * Executes the SignMessageCommand and returns the signed message
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractMethodModel} methodModel
- * @param {Accounts} accounts
- *
- * @callback callback callback(error, result)
- * @returns {String}
- */
-SignMessageCommand.prototype.execute = function (moduleInstance, methodModel, accounts) {
-    var signedMessage;
-
-    methodModel.beforeExecution(moduleInstance);
-
-    try {
-        signedMessage = methodModel.afterExecution(
-            this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts)
-        );
-    } catch(error) {
-        methodModel.callback(error, null);
-
-        throw error;
-    }
-
-    if (methodModel.callback) {
-        methodModel.callback(false, signedMessage);
-    }
-
-    return signedMessage;
-};
-
-module.exports = SignMessageCommand;

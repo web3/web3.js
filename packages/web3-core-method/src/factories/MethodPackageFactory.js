@@ -22,179 +22,171 @@
 
 "use strict";
 
-var TransactionConfirmationWorkflow = require('../workflows/TransactionConfirmationWorkflow');
-var TransactionSigner = require('../signers/TransactionSigner');
-var MessageSigner = require('../signers/MessageSigner');
-var TransactionConfirmationModel = require('../models/TransactionConfirmationModel');
-var TransactionReceiptValidator = require('../validators/TransactionReceiptValidator');
-var NewHeadsWatcher = require('../watchers/NewHeadsWatcher');
-var MethodController = require('../controllers/MethodController');
-var CallMethodCommand = require('../commands/CallMethodCommand');
-var SendMethodCommand = require('../commands/SendMethodCommand');
-var SignAndSendMethodCommand = require('../commands/SignAndSendMethodCommand');
-var SignMessageCommand = require('../commands/SignMessageCommand');
+import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
+import TransactionSigner from '../signers/TransactionSigner';
+import MessageSigner from '../signers/MessageSigner';
+import TransactionConfirmationModel from '../models/TransactionConfirmationModel';
+import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
+import MethodController from '../controllers/MethodController';
+import CallMethodCommand from '../commands/CallMethodCommand';
+import SendMethodCommand from '../commands/SendMethodCommand';
+import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
+import SignMessageCommand from '../commands/SignMessageCommand';
 
-/**
- * @constructor
- */
-function MethodPackageFactory() { }
+export default class MethodPackageFactory {
 
-/**
- * Returns the MethodController object
- *
- * @method createMethodController
- *
- * @param {PromiEventPackage} promiEventPackage
- * @param {SubscriptionsFactory} subscriptionsFactory
- * @param {Object} formatters
- *
- * @returns {MethodController}
- */
-MethodPackageFactory.prototype.createMethodController = function (
-    promiEventPackage,
-    subscriptionsFactory,
-    formatters
-) {
-    return new MethodController(
-        this.createCallMethodCommand(),
-        this.createSendMethodCommand(subscriptionsFactory, formatters),
-        this.createSignAndSendMethodCommand(subscriptionsFactory, formatters),
-        this.createSignMessageCommand(),
-        promiEventPackage
-    );
-};
+    /**
+     * Returns the MethodController object
+     *
+     * @method createMethodController
+     *
+     * @param {PromiEventPackage} promiEventPackage
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} formatters
+     *
+     * @returns {MethodController}
+     */
+    createMethodController(promiEventPackage, subscriptionsFactory, formatters) {
+        return new MethodController(
+            this.createCallMethodCommand(),
+            this.createSendMethodCommand(subscriptionsFactory, formatters),
+            this.createSignAndSendMethodCommand(subscriptionsFactory, formatters),
+            this.createSignMessageCommand(),
+            promiEventPackage
+        );
+    }
 
-/**
- * Returns the CallMethodCommand object
- *
- * @method createCallMethodCommand
- *
- * @returns {CallMethodCommand}
- */
-MethodPackageFactory.prototype.createCallMethodCommand = function () {
-    return new CallMethodCommand();
-};
+    /**
+     * Returns the CallMethodCommand object
+     *
+     * @method createCallMethodCommand
+     *
+     * @returns {CallMethodCommand}
+     */
+    createCallMethodCommand() {
+        return new CallMethodCommand();
+    }
 
-/**
- * Returns the SendMethodCommand object
- *
- * @method createSendMethodCommand
- *
- * @param {SubscriptionsFactory} subscriptionsFactory
- * @param {Object} formatters
- *
- * @returns {SendMethodCommand}
- */
-MethodPackageFactory.prototype.createSendMethodCommand = function (subscriptionsFactory, formatters) {
-    return new SendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters)
-    );
-};
+    /**
+     * Returns the SendMethodCommand object
+     *
+     * @method createSendMethodCommand
+     *
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} formatters
+     *
+     * @returns {SendMethodCommand}
+     */
+    createSendMethodCommand(subscriptionsFactory, formatters) {
+        return new SendMethodCommand(
+            this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters)
+        );
+    }
 
-/**
- * Returns the SignAndSendCommand object
- *
- * @method createSingAndSendMethodCommand
- *
- * @param {SubscriptionsFactory} subscriptionsFactory
- * @param {Object} formatters
- *
- * @returns {SignAndSendMethodCommand}
- */
-MethodPackageFactory.prototype.createSignAndSendMethodCommand = function (subscriptionsFactory, formatters) {
-    return new SignAndSendMethodCommand(
-        this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters),
-        this.createTransactionSigner()
-    );
-};
+    /**
+     * Returns the SignAndSendCommand object
+     *
+     * @method createSingAndSendMethodCommand
+     *
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} formatters
+     *
+     * @returns {SignAndSendMethodCommand}
+     */
+    createSignAndSendMethodCommand(subscriptionsFactory, formatters) {
+        return new SignAndSendMethodCommand(
+            this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters),
+            this.createTransactionSigner()
+        );
+    }
 
-/**
- * Returns the SignMessageCommand object
- *
- * @method createSignMessageCommand
- *
- * @returns {SignMessageCommand}
- */
-MethodPackageFactory.prototype.createSignMessageCommand = function () {
-    return new SignMessageCommand(
-        this.createMessageSigner()
-    );
-};
+    /**
+     * Returns the SignMessageCommand object
+     *
+     * @method createSignMessageCommand
+     *
+     * @returns {SignMessageCommand}
+     */
+    createSignMessageCommand() {
+        return new SignMessageCommand(
+            this.createMessageSigner()
+        );
+    }
 
-/**
- * Returns the TransactionConfirmationWorkflow object
- *
- * @method createTransactionConfirmationWorkflow
- *
- * @param {SubscriptionsFactory} subscriptionsFactory
- * @param {Object} formatters
- *
- * @returns {TransactionConfirmationWorkflow}
- */
-MethodPackageFactory.prototype.createTransactionConfirmationWorkflow = function (subscriptionsFactory, formatters) {
-    return new TransactionConfirmationWorkflow(
-        this.createTransactionConfirmationModel(),
-        this.createTransactionReceiptValidator(),
-        this.createNewHeadsWatcher(subscriptionsFactory),
-        formatters
-    );
-};
+    /**
+     * Returns the TransactionConfirmationWorkflow object
+     *
+     * @method createTransactionConfirmationWorkflow
+     *
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} formatters
+     *
+     * @returns {TransactionConfirmationWorkflow}
+     */
+    createTransactionConfirmationWorkflow(subscriptionsFactory, formatters) {
+        return new TransactionConfirmationWorkflow(
+            this.createTransactionConfirmationModel(),
+            this.createTransactionReceiptValidator(),
+            this.createNewHeadsWatcher(subscriptionsFactory),
+            formatters
+        );
+    }
 
-/**
- * Returns the TransactionSigner object
- *
- * @method createTransactionSigner
- *
- * @returns {TransactionSigner}
- */
-MethodPackageFactory.prototype.createTransactionSigner = function () {
-    return new TransactionSigner();
-};
+    /**
+     * Returns the TransactionSigner object
+     *
+     * @method createTransactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    createTransactionSigner() {
+        return new TransactionSigner();
+    }
 
-/**
- * Returns the MessageSigner object
- *
- * @method createMessageSigner
- *
- * @returns {MessageSigner}
- */
-MethodPackageFactory.prototype.createMessageSigner = function () {
-    return new MessageSigner();
-};
+    /**
+     * Returns the MessageSigner object
+     *
+     * @method createMessageSigner
+     *
+     * @returns {MessageSigner}
+     */
+    createMessageSigner() {
+        return new MessageSigner();
+    }
 
-/**
- * Returns the TransactionConfirmationModel object
- *
- * @method createTransactionConfirmationModel
- *
- * @returns {TransactionConfirmationModel}
- */
-MethodPackageFactory.prototype.createTransactionConfirmationModel = function () {
-    return new TransactionConfirmationModel()
-};
+    /**
+     * Returns the TransactionConfirmationModel object
+     *
+     * @method createTransactionConfirmationModel
+     *
+     * @returns {TransactionConfirmationModel}
+     */
+    createTransactionConfirmationModel() {
+        return new TransactionConfirmationModel()
+    }
 
-/**
- * Returns the TransactionReceiptValidator object
- *
- * @method createTransactionReceiptValidator
- *
- * @returns {TransactionReceiptValidator}
- */
-MethodPackageFactory.prototype.createTransactionReceiptValidator = function () {
-    return new TransactionReceiptValidator();
-};
+    /**
+     * Returns the TransactionReceiptValidator object
+     *
+     * @method createTransactionReceiptValidator
+     *
+     * @returns {TransactionReceiptValidator}
+     */
+    createTransactionReceiptValidator() {
+        return new TransactionReceiptValidator();
+    }
 
-/**
- * Returns the NewHeadsWatcher object
- *
- * @method createNewHeadsWatcher
- *
- * @param {SubscriptionsFactory} subscriptionsFactory
- *
- * @returns {NewHeadsWatcher}
- */
-MethodPackageFactory.prototype.createNewHeadsWatcher = function (subscriptionsFactory) {
-    return new NewHeadsWatcher(subscriptionsFactory);
-};
-
-module.exports = MethodPackageFactory;
+    /**
+     * Returns the NewHeadsWatcher object
+     *
+     * @method createNewHeadsWatcher
+     *
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     *
+     * @returns {NewHeadsWatcher}
+     */
+    createNewHeadsWatcher(subscriptionsFactory) {
+        return new NewHeadsWatcher(subscriptionsFactory);
+    }
+}

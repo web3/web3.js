@@ -22,43 +22,39 @@
 
 "use strict";
 
-var AbstractSigner = require('../../lib/signers/AbstractSigner');
+import AbstractSigner from '../../lib/signers/AbstractSigner';
 
-function TransactionSigner() { }
+export default class TransactionSigner extends AbstractSigner {
 
-TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
-TransactionSigner.prototype.constructor = TransactionSigner;
+    /**
+     * Signs the given transaction
+     *
+     * @method sign
+     *
+     * @param {Object} transaction
+     * @param {Accounts} accounts
+     *
+     * @returns {Promise<Boolean|String>}
+     */
+    sign(transaction, accounts) {
+        const self = this;
 
-/**
- * Signs the given transaction
- *
- * @method sign
- *
- * @param {Object} transaction
- * @param {Accounts} accounts
- *
- * @returns {Promise<Boolean|String>}
- */
-TransactionSigner.prototype.sign = function (transaction, accounts) {
-    var self = this;
+        return new Promise((resolve, reject) => {
+            const wallet = self.getWallet(transaction.from, accounts);
 
-    return new Promise(function(resolve, reject) {
-        var wallet = self.getWallet(transaction.from, accounts);
+            if (wallet && wallet.privateKey) {
+                delete transaction.from;
 
-        if (wallet && wallet.privateKey) {
-            delete transaction.from;
+                accounts.signTransaction(transaction, wallet.privateKey).then(response => {
+                    resolve(response);
+                }).catch(error => {
+                    reject(error);
+                });
 
-            accounts.signTransaction(transaction, wallet.privateKey).then(function(response) {
-                resolve(response);
-            }).catch(function(error) {
-                reject(error);
-            });
+                return;
+            }
 
-            return;
-        }
-
-        reject(new Error('Wallet or privateKey in wallet is not set!'));
-    });
-};
-
-module.exports = TransactionSigner;
+            reject(new Error('Wallet or privateKey in wallet is not set!'));
+        });
+    }
+}

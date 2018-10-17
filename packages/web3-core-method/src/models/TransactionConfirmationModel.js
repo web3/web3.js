@@ -20,93 +20,98 @@
  * @date 2018
  */
 
-/**
- * @constructor
- */
-function TransactionConfirmationModel() {
-    this.confirmations = [];
-    this.timeoutCounter = 0;
+export default class TransactionConfirmationModel {
 
     /**
-     * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
+     * @constructor
      */
-    Object.defineProperty(this, 'POLLINGTIMEOUT', {
-        get: function () {
-            return 15 * this.TIMEOUTBLOCK;
-        },
-        set: function () {},
-        enumerable: true
-    });
+    constructor() {
+        this.confirmations = [];
+        this.timeoutCounter = 0;
 
-    /**
-     * Defines accessors for TIMEOUTBLOCK
-     */
-    Object.defineProperty(this, 'TIMEOUTBLOCK', {
-        get: function () {
-            return 50;
-        },
-        set: function () {},
-        enumerable: true
-    });
+        /**
+         * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
+         */
+        Object.defineProperty(this, 'POLLINGTIMEOUT', {
+            get() {
+                return 15 * this.TIMEOUTBLOCK;
+            },
+            set() {
+            },
+            enumerable: true
+        });
 
-    /**
-     * Defines accessors for CONFIRMATIONBLOCKS
-     */
-    Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
-        get: function () {
-            return 24;
-        },
-        set: function () {},
-        enumerable: true
-    });
+        /**
+         * Defines accessors for TIMEOUTBLOCK
+         */
+        Object.defineProperty(this, 'TIMEOUTBLOCK', {
+            get() {
+                return 50;
+            },
+            set() {
+            },
+            enumerable: true
+        });
 
-    /**
-     * Defines accessors for confirmationsCount
-     */
-    Object.defineProperty(this, 'confirmationsCount', {
-        get: function () {
-            return this.confirmations.length;
-        },
-        set: function () {},
-        enumerable: true
-    });
-}
+        /**
+         * Defines accessors for CONFIRMATIONBLOCKS
+         */
+        Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
+            get() {
+                return 24;
+            },
+            set() {
+            },
+            enumerable: true
+        });
 
-/**
- * Adds a receipt to the confirmation array
- *
- * @method addConfirmation
- *
- * @param {Object} receipt
- */
-TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
-    this.confirmations.push(receipt);
-};
-
-/**
- * Checks if enough confirmations are registered to set the transaction as approved
- *
- * @method isConfirmed
- *
- * @returns {Boolean}
- */
-TransactionConfirmationModel.prototype.isConfirmed = function () {
-    return this.confirmationsCount === (this.CONFIRMATIONBLOCKS + 1);
-};
-
-/**
- * Checks if the timeout time is exceeded
- *
- * @method isTimeoutTimeExceeded
- *
- * @returns {Boolean}
- */
-TransactionConfirmationModel.prototype.isTimeoutTimeExceeded = function (watcherIsPolling) {
-    if (watcherIsPolling) {
-        return (this.timeoutCounter - 1) >= this.POLLINGTIMEOUT;
+        /**
+         * Defines accessors for confirmationsCount
+         */
+        Object.defineProperty(this, 'confirmationsCount', {
+            get() {
+                return this.confirmations.length;
+            },
+            set() {
+            },
+            enumerable: true
+        });
     }
 
-    return (this.timeoutCounter - 1) >= this.TIMEOUTBLOCK;
-};
+    /**
+     * Adds a receipt to the confirmation array
+     *
+     * @method addConfirmation
+     *
+     * @param {Object} receipt
+     */
+    addConfirmation(receipt) {
+        this.confirmations.push(receipt);
+    }
 
-module.exports = TransactionConfirmationModel;
+    /**
+     * Checks if enough confirmations are registered to set the transaction as approved
+     *
+     * @method isConfirmed
+     *
+     * @returns {Boolean}
+     */
+    isConfirmed() {
+        return this.confirmationsCount === (this.CONFIRMATIONBLOCKS + 1);
+    }
+
+    /**
+     * Checks if the timeout time is exceeded
+     *
+     * @method isTimeoutTimeExceeded
+     *
+     * @returns {Boolean}
+     */
+    isTimeoutTimeExceeded(watcherIsPolling) {
+        if (watcherIsPolling) {
+            return (this.timeoutCounter - 1) >= this.POLLINGTIMEOUT;
+        }
+
+        return (this.timeoutCounter - 1) >= this.TIMEOUTBLOCK;
+    }
+}

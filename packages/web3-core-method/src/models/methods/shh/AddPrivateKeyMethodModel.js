@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function AddPrivateKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_addPrivateKey', 1, utils, formatters);
+export default class AddPrivateKeyMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_addPrivateKey', 1, utils, formatters);
+    }
 }
-
-AddPrivateKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-AddPrivateKeyMethodModel.prototype.constructor = AddPrivateKeyMethodModel;
-
-module.exports = AddPrivateKeyMethodModel;

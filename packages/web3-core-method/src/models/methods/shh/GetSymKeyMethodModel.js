@@ -22,19 +22,17 @@
 
 "use strict";
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetSymKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_getSymKey', 1, utils, formatters);
+export default class GetSymKeyMethodModel extends AbstractMethodModel {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super('shh_getSymKey', 1, utils, formatters);
+    }
 }
-
-GetSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetSymKeyMethodModel.prototype.constructor = GetSymKeyMethodModel;
-
-module.exports = GetSymKeyMethodModel;
