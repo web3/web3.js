@@ -22,115 +22,116 @@
 
 "use strict";
 
-/**
- * @param {ContractPackageFactory} contractPackageFactory
- * @param {ABICoder} abiCoder
- * @param {Object} utils
- *
- * @constructor
- */
-function ABIMapper(contractPackageFactory, abiCoder, utils) {
-    this.utils = utils;
-    this.abiCoder = abiCoder;
-    this.contractPackageFactory = contractPackageFactory;
-}
+export default class ABIMapper {
 
-/**
- * Maps the abi to an object of methods and events as AbiItemModel
- *
- * @param {Array} abi
- *
- * @returns {ABIModel}
- */
-ABIMapper.prototype.map = function (abi) {
-    var self = this;
-    var mappedAbiItems = {
-        methods: {},
-        events: {}
-    };
+    /**
+     * @param {ContractPackageFactory} contractPackageFactory
+     * @param {ABICoder} abiCoder
+     * @param {Object} utils
+     *
+     * @constructor
+     */
+    constructor(contractPackageFactory, abiCoder, utils) {
+        this.utils = utils;
+        this.abiCoder = abiCoder;
+        this.contractPackageFactory = contractPackageFactory;
+    }
 
-    abi.forEach(function (abiItem) {
-        abiItem.constant = self.isConstant(abiItem);
-        abiItem.payable = self.isPayable(abiItem);
+    /**
+     * Maps the abi to an object of methods and events as AbiItemModel
+     *
+     * @param {Array} abi
+     *
+     * @returns {ABIModel}
+     */
+    map(abi) {
+        const self = this;
+        const mappedAbiItems = {
+            methods: {},
+            events: {}
+        };
 
-        if (abiItem.name) {
-            abiItem.funcName = self.utils._jsonInterfaceMethodToString(abiItem);
-        }
+        abi.forEach(abiItem => {
+            abiItem.constant = self.isConstant(abiItem);
+            abiItem.payable = self.isPayable(abiItem);
 
-        var abiItemModel;
+            if (abiItem.name) {
+                abiItem.funcName = self.utils._jsonInterfaceMethodToString(abiItem);
+            }
 
-        if (abiItem.type === 'function') {
-            abiItem.signature = self.abiCoder.encodeFunctionSignature(abiItem.funcName);
+            let abiItemModel;
 
-            abiItemModel = self.contractPackageFactory.createABIItemModel(abiItem);
+            if (abiItem.type === 'function') {
+                abiItem.signature = self.abiCoder.encodeFunctionSignature(abiItem.funcName);
 
-            // Check if an method already exists with this name and if it exists than create an array and push this abiItem
-            // into it. This will be used if there are methods with the same name but with different arguments.
-            if (!mappedAbiItems.methods[abiItem.name]) {
-                mappedAbiItems.methods[abiItem.name] = abiItemModel;
-            } else {
-                if (_.isArray(mappedAbiItems.methods[abiItem.name])) {
-                    mappedAbiItems.methods[abiItem.name].push(abiItemModel);
+                abiItemModel = self.contractPackageFactory.createABIItemModel(abiItem);
+
+                // Check if an method already exists with this name and if it exists than create an array and push this abiItem
+                // into it. This will be used if there are methods with the same name but with different arguments.
+                if (!mappedAbiItems.methods[abiItem.name]) {
+                    mappedAbiItems.methods[abiItem.name] = abiItemModel;
                 } else {
-                    mappedAbiItems.methods[abiItem.name] = [
-                        mappedAbiItems.methods[abiItem.name],
-                        abiItemModel
-                    ];
+                    if (_.isArray(mappedAbiItems.methods[abiItem.name])) {
+                        mappedAbiItems.methods[abiItem.name].push(abiItemModel);
+                    } else {
+                        mappedAbiItems.methods[abiItem.name] = [
+                            mappedAbiItems.methods[abiItem.name],
+                            abiItemModel
+                        ];
+                    }
                 }
+
+                mappedAbiItems.methods[abiItem.signature] = abiItemModel;
+                mappedAbiItems.methods[abiItem.funcName] = abiItemModel;
+
+                return;
             }
 
-            mappedAbiItems.methods[abiItem.signature] = abiItemModel;
-            mappedAbiItems.methods[abiItem.funcName] = abiItemModel;
+            if (abiItem.type === 'event') {
+                abiItem.signature = self.abiCoder.encodeEventSignature(abiItem.funcName);
 
-            return;
-        }
+                abiItem = self.contractPackageFactory.createABIItemModel(event);
 
-        if (abiItem.type === 'event') {
-            abiItem.signature = self.abiCoder.encodeEventSignature(abiItem.funcName);
+                if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
+                    mappedAbiItems.events[abiItem.name] = abiItemModel;
+                }
 
-            abiItem = self.contractPackageFactory.createABIItemModel(event);
-
-            if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
-                mappedAbiItems.events[abiItem.name] = abiItemModel;
+                mappedAbiItems.events[abiItem.signature] = abiItemModel;
+                mappedAbiItems.events[abiItem.funcName] = abiItemModel;
             }
 
-            mappedAbiItems.events[abiItem.signature] = abiItemModel;
-            mappedAbiItems.events[abiItem.funcName] = abiItemModel;
-        }
+            if (abiItem.type === 'constructor') {
+                abiItem.signature = abiItem.type;
+                mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createABIItemModel(abiItem);
+            }
+        });
 
-        if (abiItem.type === 'constructor') {
-            abiItem.signature = abiItem.type;
-            mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createABIItemModel(abiItem);
-        }
-    });
+        return this.contractPackageFactory.createABIModel(mappedAbiItems);
+    }
 
-    return this.contractPackageFactory.createABIModel(mappedAbiItems);
-};
+    /**
+     * Checks if the given abiItem is a constant
+     *
+     * @method isConstant
+     *
+     * @param {Object} abiItem
+     *
+     * @returns {Boolean}
+     */
+    isConstant(abiItem) {
+        return (abiItem.stateMutability === "view" || abiItem.stateMutability === "pure" || abiItem.constant);
+    }
 
-/**
- * Checks if the given abiItem is a constant
- *
- * @method isConstant
- *
- * @param {Object} abiItem
- *
- * @returns {Boolean}
- */
-ABIMapper.prototype.isConstant = function (abiItem) {
-    return (abiItem.stateMutability === "view" || abiItem.stateMutability === "pure" || abiItem.constant);
-};
-
-/**
- * Checks if the given abiItem is payable
- *
- * @method isPayable
- *
- * @param {Object} abiItem
- *
- * @returns {Boolean}
- */
-ABIMapper.prototype.isPayable = function (abiItem) {
-    return (abiItem.stateMutability === "payable" || abiItem.payable);
-};
-
-module.exports = ABIMapper;
+    /**
+     * Checks if the given abiItem is payable
+     *
+     * @method isPayable
+     *
+     * @param {Object} abiItem
+     *
+     * @returns {Boolean}
+     */
+    isPayable(abiItem) {
+        return (abiItem.stateMutability === "payable" || abiItem.payable);
+    }
+}

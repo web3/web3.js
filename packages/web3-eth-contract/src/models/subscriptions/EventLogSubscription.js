@@ -22,48 +22,46 @@
 
 "use strict";
 
-var LogSubscriptionModel = require('web3-core-subscriptions').LogSubscriptionModel;
+import {LogSubscriptionModel} from 'web3-core-subscriptions';
 
-/**
- * @param {ABIItemModel} abiItemModel
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
- * @param {MethodController} methodController
- * @param {EventLogDecoder} eventLogDecoder
- *
- * @constructor
- */
-function EventLogSubscription(
-    abiItemModel,
-    options,
-    utils,
-    formatters,
-    getPastLogsMethodModel,
-    methodController,
-    eventLogDecoder
-) {
-    LogSubscriptionModel.call(this, options, utils, formatters, getPastLogsMethodModel, methodController);
-    this.eventLogDecoder = eventLogDecoder;
-    this.abiItemModel = abiItemModel;
+export default class EventLogSubscription extends LogSubscriptionModel {
+
+    /**
+     * @param {ABIItemModel} abiItemModel
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+     * @param {MethodController} methodController
+     * @param {EventLogDecoder} eventLogDecoder
+     *
+     * @constructor
+     */
+    constructor(
+        abiItemModel,
+        options,
+        utils,
+        formatters,
+        getPastLogsMethodModel,
+        methodController,
+        eventLogDecoder
+    ) {
+        super(options, utils, formatters, getPastLogsMethodModel, methodController);
+        this.eventLogDecoder = eventLogDecoder;
+        this.abiItemModel = abiItemModel;
+    }
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {Object}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
+    }
 }
-
-EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
-EventLogSubscription.prototye.constructor = EventLogSubscription;
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {Object}
- */
-EventLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
-};
-
-module.exports = EventLogSubscription;

@@ -22,41 +22,38 @@
 
 "use strict";
 
-var GetPastLogsMethodModel = require('web3-core-method').GetPastLogsMethodModel;
+import {GetPastLogsMethodModel} from 'web3-core-method';
 
-/**
- * @param {ABIItemModel} abiItemModel
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function PastEventLogsMethodModel(abiItemModel, utils, formatters) {
-    GetPastLogsMethodModel.call(this, utils, formatters);
-    this.abiItemModel = abiItemModel;
+export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
+
+    /**
+     * @param {ABIItemModel} abiItemModel
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(abiItemModel, utils, formatters) {
+        super(utils, formatters);
+        this.abiItemModel = abiItemModel;
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Array} response
+     *
+     * @returns {Array}
+     */
+    afterExecution(response) {
+        const formattedLogs = GetPastLogsMethodModel.prototype.afterExecution.call(response), self = this;
+
+        formattedLogs.map(logItem => {
+            return self.eventLogDecoder.decode(self.abiItemModel, logItem);
+        });
+
+        return formattedLogs;
+    }
 }
-
-PastEventLogsMethodModel.prototype = Object.create(GetPastLogsMethodModel.prototype);
-PastEventLogsMethodModel.prototype.constructor = PastEventLogsMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Array} response
- *
- * @returns {Array}
- */
-PastEventLogsMethodModel.prototype.afterExecution = function (response) {
-    var formattedLogs = GetPastLogsMethodModel.prototype.afterExecution.call(response),
-    self = this;
-
-    formattedLogs.map(function(logItem) {
-        return self.eventLogDecoder.decode(self.abiItemModel, logItem);
-    });
-
-    return formattedLogs;
-};
-
-module.exports = PastEventLogsMethodModel;

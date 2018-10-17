@@ -22,44 +22,45 @@
 
 "use strict";
 
-/**
- * @param {Object} formatters
- * @param {AllEventsFilterEncoder} allEventsFilterEncoder
- *
- * @constructor
- */
-function AllEventsOptionsMapper(formatters, allEventsFilterEncoder) {
-    this.formatters = formatters;
-    this.allEventsFilterEncoder = allEventsFilterEncoder;
+export default class AllEventsOptionsMapper {
+
+    /**
+     * @param {Object} formatters
+     * @param {AllEventsFilterEncoder} allEventsFilterEncoder
+     *
+     * @constructor
+     */
+    constructor(formatters, allEventsFilterEncoder) {
+        this.formatters = formatters;
+        this.allEventsFilterEncoder = allEventsFilterEncoder;
+    }
+
+    /**
+     * @param {ABIModel} abiModel
+     * @param {Contract} contract
+     * @param {Object} options
+     *
+     * @returns {Object}
+     */
+    map(abiModel, contract, options) {
+        options.topics = [];
+
+        if (typeof options.fromBlock !== 'undefined') {
+            options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
+        }
+
+        if (typeof options.toBlock !== 'undefined') {
+            options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
+        }
+
+        if (typeof options.filters !== 'undefined') {
+            options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
+        }
+
+        if (!options.address) {
+            options.address = contract.options.address;
+        }
+
+        return options;
+    }
 }
-
-/**
- * @param {ABIModel} abiModel
- * @param {Contract} contract
- * @param {Object} options
- *
- * @returns {Object}
- */
-AllEventsOptionsMapper.prototype.map = function (abiModel, contract, options) {
-    options.topics = [];
-
-    if (typeof options.fromBlock !== 'undefined') {
-        options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
-    }
-
-    if (typeof options.toBlock !== 'undefined') {
-        options.toBlock = this.formatters.inputBlockNumberFormatter(options.toBlock);
-    }
-
-    if (typeof options.filters !== 'undefined') {
-        options.topics.concat(this.allEventsFilterEncoder.encode(abiModel, options.filter));
-    }
-
-    if (!options.address) {
-        options.address = contract.options.address;
-    }
-
-    return options;
-};
-
-module.exports = AllEventsOptionsMapper;

@@ -22,50 +22,53 @@
 
 "use strict";
 
-/**
- * @param {ABICoder} abiCoder
- *
- * @constructor
- */
-function MethodEncoder(abiCoder) {
-    this.abiCoder = abiCoder;
-}
+export default class MethodEncoder {
 
-/**
- * Encodes the method with the given parameters
- *
- * @method encode
- *
- * @param {ABIItemModel} abiItemModel
- * @param {String} deployData
- *
- * @returns {String|Error}
- */
-MethodEncoder.prototype.encode = function (abiItemModel, deployData) {
-    try {
-        var encodedParameters = this.abiCoder.encodeParameters(
-            abiItemModel.getInputs(),
-            abiItemModel.contractMethodParameters
-        ).replace('0x', '');
-    } catch (error) {
-        return error;
+    /**
+     * @param {ABICoder} abiCoder
+     *
+     * @constructor
+     */
+    constructor(abiCoder) {
+        this.abiCoder = abiCoder;
     }
 
-    if (abiItemModel.signature === 'constructor') {
-        if (!deployData) {
-            return new Error(
-                'The contract has no contract data option set. This is necessary to append the constructor parameters.'
-            );
+    /**
+     * Encodes the method with the given parameters
+     *
+     * @method encode
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {String} deployData
+     *
+     * @returns {String|Error}
+     */
+    encode(abiItemModel, deployData) {
+        let encodedParameters;
+
+        try {
+            encodedParameters = this.abiCoder.encodeParameters(
+                abiItemModel.getInputs(),
+                abiItemModel.contractMethodParameters
+            ).replace('0x', '');
+        } catch (error) {
+            return error;
         }
 
-        return deployData + encodedParameters;
+        if (abiItemModel.signature === 'constructor') {
+            if (!deployData) {
+                return new Error(
+                    'The contract has no contract data option set. This is necessary to append the constructor parameters.'
+                );
+            }
+
+            return deployData + encodedParameters;
+        }
+
+        if (abiItemModel.isOfType('function')) {
+            return abiItemModel.signature + encodedParameters;
+        }
+
+        return encodedParameters;
     }
-
-    if (abiItemModel.isOfType('function')) {
-        return abiItemModel.signature + encodedParameters;
-    }
-
-    return encodedParameters;
-};
-
-module.exports = MethodEncoder;
+}

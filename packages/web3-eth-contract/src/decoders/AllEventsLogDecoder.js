@@ -22,39 +22,33 @@
 
 "use strict";
 
-var EventLogDecoder = require('./EventLogDecoder');
+import EventLogDecoder from './EventLogDecoder';
 
-/**
- * @param {ABIModel} abiModel
- * @param {ABICoder} abiCoder
- * @param {Object} formatters
- *
- * @constructor
- */
-function AllEventsLogDecoder(abiModel, abiCoder, formatters) {
-    EventLogDecoder.call(this, abiCoder, formatters);
-    this.abiModel = abiModel;
+export default class AllEventsLogDecoder extends EventLogDecoder {
+
+    /**
+     * @param {ABIModel} abiModel
+     * @param {ABICoder} abiCoder
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(abiModel, abiCoder, formatters) {
+        super(abiCoder, formatters);
+        this.abiModel = abiModel;
+    }
+
+    /**
+     * Decodes the event subscription response
+     *
+     * @method decoder
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    decode(abiItemModel, response) {
+        return super.decode(this.abiModel.getEventBySignature(response.topics[0]), response);
+    }
 }
-
-AllEventsLogDecoder.prototype = Object.create(EventLogDecoder.prototype);
-AllEventsLogDecoder.prototype.constructor = AllEventsLogDecoder;
-
-/**
- * Decodes the event subscription response
- *
- * @method decoder
- *
- * @param {ABIItemModel} abiItemModel
- * @param {Object} response
- *
- * @returns {Object}
- */
-AllEventsLogDecoder.prototype.decode = function (abiItemModel, response) {
-    return EventLogDecoder.prototype.decode.call(
-        this,
-        this.abiModel.getEventBySignature(response.topics[0]),
-        response
-    );
-};
-
-module.exports = AllEventsLogDecoder;

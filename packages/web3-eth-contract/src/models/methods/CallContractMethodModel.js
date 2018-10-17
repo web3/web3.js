@@ -22,37 +22,35 @@
 
 "use strict";
 
-var CallMethodModel = require('web3-core-method').CallMethodModel;
+import {CallMethodModel} from 'web3-core-method';
 
-/**
- * @param {ABIItemModel} abiItemModel
- * @param {CallMethodResponseDecoder} callMethodResponseDecoder
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function CallContractMethodModel(abiItemModel, callMethodResponseDecoder, utils, formatters) {
-    CallMethodModel.call(this, utils, formatters);
+export default class CallContractMethodModel extends CallMethodModel {
 
-    this.callMethodResponseDecoder = callMethodResponseDecoder;
-    this.abiItemModel = abiItemModel;
+    /**
+     * @param {ABIItemModel} abiItemModel
+     * @param {CallMethodResponseDecoder} callMethodResponseDecoder
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(abiItemModel, callMethodResponseDecoder, utils, formatters) {
+        super(utils, formatters);
+
+        this.callMethodResponseDecoder = callMethodResponseDecoder;
+        this.abiItemModel = abiItemModel;
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Array} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        return this.callMethodResponseDecoder.decode(this.abiItemModel, response);
+    }
 }
-
-CallContractMethodModel.prototype = Object.create(CallMethodModel.prototype);
-CallContractMethodModel.prototype.constructor = CallContractMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Array} response
- *
- * @returns {*}
- */
-CallContractMethodModel.prototype.afterExecution = function (response) {
-    return this.callMethodResponseDecoder.decode(this.abiItemModel, response);
-};
-
-module.exports = CallContractMethodModel;

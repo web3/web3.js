@@ -22,41 +22,42 @@
 
 "use strict";
 
-/**
- * @param {ABICoder} abiCoder
- *
- * @constructor
- */
-function CallMethodResponseDecoder(abiCoder) {
-    this.abiCoder = abiCoder;
+export default class CallMethodResponseDecoder {
+
+    /**
+     * @param {ABICoder} abiCoder
+     *
+     * @constructor
+     */
+    constructor(abiCoder) {
+        this.abiCoder = abiCoder;
+    }
+
+    /**
+     * Decodes the method response
+     *
+     * @method decode
+     *
+     * @param {Array} abiItemOutputTypes
+     * @param {Object} response
+     *
+     * @returns {*}
+     */
+    decode(abiItemOutputTypes, response) {
+        if (!response) {
+            return null;
+        }
+
+        if (response.length >= 2) {
+            response = response.slice(2);
+        }
+
+        const result = this.abiCoder.decodeParameters(abiItemOutputTypes, response);
+
+        if (result.__length__ === 1) {
+            return result[0];
+        }
+
+        return result;
+    }
 }
-
-/**
- * Decodes the method response
- *
- * @method decode
- *
- * @param {Array} abiItemOutputTypes
- * @param {Object} response
- *
- * @returns {*}
- */
-CallMethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, response) {
-    if (!response) {
-        return null;
-    }
-
-    if (response.length >= 2) {
-        response = response.slice(2);
-    }
-
-    var result = this.abiCoder.decodeParameters(abiItemOutputTypes, response);
-
-    if (result.__length__ === 1) {
-        return result[0];
-    }
-
-    return result;
-};
-
-module.exports = CallMethodResponseDecoder;

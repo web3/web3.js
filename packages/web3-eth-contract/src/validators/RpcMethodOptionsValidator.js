@@ -22,84 +22,85 @@
 
 "use strict";
 
-/**
- * @param {Object} utils
- *
- * @constructor
- */
-function RpcMethodOptionsValidator(utils) {
-    this.utils = utils;
-}
+export default class RpcMethodOptionsValidator {
 
-/**
- * Validates the options object for the RPC-Method call
- *
- * @method validate
- *
- * @param {ABIItemModel} abiItemModel
- * @param {AbstractMethodModel} rpcMethodModel
- *
- * @returns {Error|Boolean}
- */
-RpcMethodOptionsValidator.prototype.validate = function (abiItemModel, rpcMethodModel) {
-    if (this.isToSet(abiItemModel, rpcMethodModel)) {
-        return new Error('This contract object doesn\'t have address set yet, please set an address first.');
+    /**
+     * @param {Object} utils
+     *
+     * @constructor
+     */
+    constructor(utils) {
+        this.utils = utils;
     }
 
-    if (this.isFromSet(rpcMethodModel)) {
-        return new Error('No "from" address specified in neither the given options, nor the default options.');
-    }
+    /**
+     * Validates the options object for the RPC-Method call
+     *
+     * @method validate
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {AbstractMethodModel} rpcMethodModel
+     *
+     * @returns {Error|Boolean}
+     */
+    validate(abiItemModel, rpcMethodModel) {
+        if (this.isToSet(abiItemModel, rpcMethodModel)) {
+            return new Error('This contract object doesn\'t have address set yet, please set an address first.');
+        }
 
-    if (this.isValueValid(abiItemModel, rpcMethodModel)) {
-        return new Error('Can not send value to non-payable contract method or constructor')
-    }
+        if (this.isFromSet(rpcMethodModel)) {
+            return new Error('No "from" address specified in neither the given options, nor the default options.');
+        }
 
-    return true;
-};
+        if (this.isValueValid(abiItemModel, rpcMethodModel)) {
+            return new Error('Can not send value to non-payable contract method or constructor')
+        }
 
-/**
- * Checks if the property to is set in the options object
- *
- * @method isToSet
- *
- * @param {ABIItemModel} abiItemModel
- * @param {AbstractMethodModel} rpcMethodModel
- *
- * @returns {Boolean}
- */
-RpcMethodOptionsValidator.prototype.isToSet = function (abiItemModel, rpcMethodModel) {
-    if (abiItemModel.signature === 'constructor') {
         return true;
     }
 
-    return !!rpcMethodModel.parameters[0].to;
-};
+    /**
+     * Checks if the property to is set in the options object
+     *
+     * @method isToSet
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {AbstractMethodModel} rpcMethodModel
+     *
+     * @returns {Boolean}
+     */
+    isToSet(abiItemModel, rpcMethodModel) {
+        if (abiItemModel.signature === 'constructor') {
+            return true;
+        }
 
-/**
- * Checks if the property from of the options object is set and a valid address
- *
- * @method isFromSet
- *
- * @param {AbstractMethodModel} rpcMethodModel
- *
- * @returns {Boolean}
- */
-RpcMethodOptionsValidator.prototype.isFromSet = function (rpcMethodModel) {
-    return this.utils.isAddress(rpcMethodModel.parameters[0].from);
-};
+        return !!rpcMethodModel.parameters[0].to;
+    }
 
-/**
- * Checks if no value is set for an non-payable method
- *
- * @method isValueValid
- *
- * @param {ABIItemModel} abiItemModel
- * @param {AbstractMethodModel} rpcMethodModel
- *
- * @returns {Boolean}
- */
-RpcMethodOptionsValidator.prototype.isValueValid = function (abiItemModel, rpcMethodModel) {
-    return !(!abiItemModel.payable && rpcMethodModel.parameters[0].value && rpcMethodModel.parameters[0].value > 0);
-};
+    /**
+     * Checks if the property from of the options object is set and a valid address
+     *
+     * @method isFromSet
+     *
+     * @param {AbstractMethodModel} rpcMethodModel
+     *
+     * @returns {Boolean}
+     */
+    isFromSet(rpcMethodModel) {
+        return this.utils.isAddress(rpcMethodModel.parameters[0].from);
+    }
 
-module.exports = RpcMethodOptionsValidator;
+    /**
+     * Checks if no value is set for an non-payable method
+     *
+     * @method isValueValid
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {AbstractMethodModel} rpcMethodModel
+     *
+     * @returns {Boolean}
+     */
+    isValueValid(abiItemModel, rpcMethodModel) {
+        return !(!abiItemModel.payable && rpcMethodModel.parameters[0].value && rpcMethodModel.parameters[0].value > 0);
+    }
+}

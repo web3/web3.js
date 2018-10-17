@@ -22,21 +22,20 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var PromiEventPackage = require('web3-core-promievent');
-var MethodController = require('web3-core-method').MethodController;
-var ProvidersPackage = require('web3-providers');
-var formatters = require('web3-core-helpers').formatters;
-var Utils = require('web3-utils');
-var AbiCoder = require('web3-eth-abi').AbiCoder;
-var Contract = require('./Contract');
-var ContractDeployMethodModel = require('./models/methods/ContractDeployMethodModel');
-var ContractPackageFactory = require('./factories/ContractPackageFactory');
+import {version} from '../package.json';
+import PromiEventPackage from 'web3-core-promievent';
+import {MethodController} from 'web3-core-method';
+import ProvidersPackage from 'web3-providers';
+import {formatters} from 'web3-core-helpers';
+import Utils from 'web3-utils';
+import {AbiCoder} from 'web3-eth-abi';
+import Contract from './Contract';
+import ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';
+import ContractPackageFactory from './factories/ContractPackageFactory';
 
-module.exports = {
-    version: version,
-
-    ContractDeployMethodModel: ContractDeployMethodModel,
+export default {
+    version,
+    ContractDeployMethodModel,
 
     /**
      * Returns an object of type Contract
@@ -51,7 +50,7 @@ module.exports = {
      *
      * @returns {Contract}
      */
-    Contract: function (provider, accounts, abi, address, options) {
+    Contract: (provider, accounts, abi, address, options) => {
         return new ContractPackageFactory(
             Utils,
             formatters,

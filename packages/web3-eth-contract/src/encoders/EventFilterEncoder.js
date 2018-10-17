@@ -22,47 +22,47 @@
 
 "use strict";
 
-/**
- * @param {ABICoder} abiCoder
- *
- * @constructor
- */
-function EventFilterEncoder(abiCoder) {
-    this.abiCoder = abiCoder;
-}
+export default class EventFilterEncoder {
 
-/**
- * Creates encoded topics from filter option of an event.
- *
- * @param {ABIItemModel} abiItemModel
- * @param {*} filter
- *
- * @returns {Array}
- */
-EventFilterEncoder.prototype.encode = function (abiItemModel, filter) {
-    var indexedInputs = abiItemModel.getIndexedInputs(),
-        topics = [],
-        self = this;
+    /**
+     * @param {ABICoder} abiCoder
+     *
+     * @constructor
+     */
+    constructor(abiCoder) {
+        this.abiCoder = abiCoder;
+    }
 
-    indexedInputs.forEach(function(indexedInput) {
-        if (typeof filter[indexedInput.name] !== 'undefined') {
-            var filterItem = filter[indexedInput.name];
+    /**
+     * Creates encoded topics from filter option of an event.
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {*} filter
+     *
+     * @returns {Array}
+     */
+    encode(abiItemModel, filter) {
+        const indexedInputs = abiItemModel.getIndexedInputs();
+        let  topics = [];
 
-            if (_.isArray(filterItem)) {
-                filterItem.map(function(item) {
-                    return self.abiCoder.encodeParameter(indexedInput.type, item);
-                });
+        indexedInputs.forEach(indexedInput => {
+            if (typeof filter[indexedInput.name] !== 'undefined') {
+                const filterItem = filter[indexedInput.name];
 
-                topics.push(filterItem);
+                if (_.isArray(filterItem)) {
+                    filterItem.map(item => {
+                        return this.abiCoder.encodeParameter(indexedInput.type, item);
+                    });
 
-                return;
+                    topics.push(filterItem);
+
+                    return;
+                }
+
+                topics.push(this.abiCoder.encodeParameter(indexedInput.type, filterItem));
             }
+        });
 
-            topics.push(self.abiCoder.encodeParameter(indexedInput.type, filterItem));
-        }
-    });
-
-    return topics;
-};
-
-module.exports = EventFilterEncoder;
+        return topics;
+    }
+}
