@@ -22,34 +22,29 @@
 
 "use strict";
 
-import {version} from '../package.json';
-import Accounts from './Accounts';
+import AccountsModule from './Accounts';
 import {MethodController} from 'web3-core-method';
 import ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import MethodModelFactory from './factories/MethodModelFactory';
 
-export default {
-    version,
-
-    /**
-     * Returns the Accounts object
-     *
-     * @method Accounts
-     *
-     * @params {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Accounts}
-     */
-    Accounts: (provider) => {
-        return new Accounts(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            Utils,
-            formatters
-        );
-    }
+/**
+ * Returns the Accounts object
+ *
+ * @method Accounts
+ *
+ * @params {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Accounts}
+ */
+export const Accounts = (provider) => {
+    return new AccountsModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        Utils,
+        formatters
+    );
 };

@@ -22,9 +22,7 @@
 
 "use strict";
 
-import {version} from '../package.json';
 import MethodModelFactory from './factories/MethodModelFactory';
-import Eth from './Eth';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
@@ -38,36 +36,32 @@ import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
 import ContractPackage from 'web3-eth-contract';
 
-export default {
-    version,
+/**
+ * Creates the Eth object
+ *
+ * @method Eth
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Eth}
+ */
+export const Eth = (provider) => {
+    const accounts = new Accounts(provider);
 
-    /**
-     * Creates the Eth object
-     *
-     * @method Eth
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Eth}
-     */
-    Eth: (provider) => {
-        const accounts = new Accounts(provider);
-
-        return new Eth(
-            provider,
-            new Network(provider),
-            ContractPackage,
-            accounts,
-            new Personal(provider),
-            Iban,
-            new AbiCoder(utils),
-            new ENS(provider),
-            Utils,
-            formatters,
-            ProvidersPackage,
-            new SubscriptionsFactory(),
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters, accounts)
-        );
-    }
+    return new Eth(
+        provider,
+        new Network(provider),
+        ContractPackage,
+        accounts,
+        new Personal(provider),
+        Iban,
+        new AbiCoder(utils),
+        new ENS(provider),
+        Utils,
+        formatters,
+        ProvidersPackage,
+        new SubscriptionsFactory(),
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters, accounts)
+    );
 };

@@ -22,36 +22,31 @@
 
 "use strict";
 
-import {version} from '../package.json';
 import ProvidersPackage from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import Shh from './Shh';
+import ShhModule from './Shh';
 import MethodModelFactory from './factories/MethodModelFactory';
 
-export default {
-    version,
-
-    /**
-     * Returns the Shh object.
-     *
-     * @method Shh
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Shh}
-     */
-    Shh: (provider) => {
-        return new Shh(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            new SubscriptionsFactory(),
-            new Network(provider)
-        );
-    }
+/**
+ * Returns the Shh object.
+ *
+ * @method Shh
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Shh}
+ */
+export const Shh = (provider) => {
+    return new ShhModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        new SubscriptionsFactory(),
+        new Network(provider)
+    );
 };

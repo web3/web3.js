@@ -260,7 +260,7 @@ export default class Contract extends AbstractWeb3Module {
      */
     setProvider(provider, net) {
         return !!(
-            AbstractWeb3Module.prototype.setProvider.call(this, provider, net) &&
+            super.setProvider(provider, net) &&
             this.accounts.setProvider(provider, net)
         );
     }

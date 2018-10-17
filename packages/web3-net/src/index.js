@@ -23,33 +23,29 @@
 
 "use strict";
 
-import {version} from '../package.json';
 import ProvidersPackage from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import utils from 'web3-utils';
-import Network from './Network';
+import NetworkModule from './Network';
 import MethodModelFactory from './factories/MethodModelFactory';
 
-export default {
-    version,
-    /**
-     * Creates the Network Object
-     *
-     * @method Network
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Network}
-     */
-    Network: (provider) => {
-        return new Network(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            formatters,
-            utils
-        )
-    }
+/**
+ * Creates the Network Object
+ *
+ * @method Network
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Network}
+ */
+export const Network = (provider) => {
+    return new NetworkModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        formatters,
+        utils
+    )
 };

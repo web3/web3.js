@@ -22,48 +22,42 @@
 
 "use strict";
 
-import {version} from '../package.json';
 import PromiEventPackage from 'web3-core-promievent';
 import {MethodController} from 'web3-core-method';
 import ProvidersPackage from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';
 import {AbiCoder} from 'web3-eth-abi';
-import Contract from './Contract';
-import ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';
 import ContractPackageFactory from './factories/ContractPackageFactory';
 
-export default {
-    version,
-    ContractDeployMethodModel,
-
-    /**
-     * Returns an object of type Contract
-     *
-     * @method Contract
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {Accounts} accounts
-     * @param {Object} abi
-     * @param {String} address
-     * @param {Object} options
-     *
-     * @returns {Contract}
-     */
-    Contract: (provider, accounts, abi, address, options) => {
-        return new ContractPackageFactory(
-            Utils,
-            formatters,
-            new AbiCoder(),
-            accounts
-        ).createContract(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            PromiEventPackage,
-            abi,
-            address,
-            options
-        );
-    }
+/**
+ * Returns an object of type Contract
+ *
+ * @method Contract
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Accounts} accounts
+ * @param {Object} abi
+ * @param {String} address
+ * @param {Object} options
+ *
+ * @returns {Contract}
+ */
+export const Contract = (provider, accounts, abi, address, options) => {
+    return new ContractPackageFactory(
+        Utils,
+        formatters,
+        new AbiCoder(),
+    accounts
+    ).createContract(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+    PromiEventPackage,
+    abi,
+    address,
+    options
+    );
 };
+
+export ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';

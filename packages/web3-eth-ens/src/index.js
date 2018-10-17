@@ -27,29 +27,26 @@ import REGISTRY_ABI from '../ressources/ABI/Registry';
 import RESOLVER_ABI from '../ressources/ABI/Resolver';
 import ENSPackageFactory from './factories/ENSPackageFactory';
 
-export default { // TODO: overthink the ens package architecture and refactor it.
-    version,
-
-    /**
-     * Returns the ENS object
-     *
-     * @method ENS
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {Network} net
-     * @param {Accounts} accounts
-     *
-     * @returns {ENS}
-     */
-    ENS(provider, net, accounts) {
-        return new ENSPackageFactory().createENS(
-            provider,
-            net,
-            accounts,
-            ContractPackage,
-            REGISTRY_ABI,
-            RESOLVER_ABI,
-            PromiEventPackage
-        );
-    }
+/**
+ * TODO: Overthink the module structure
+ * Returns the ENS object
+ *
+ * @method ENS
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Network} net
+ * @param {Accounts} accounts
+ *
+ * @returns {ENS}
+ */
+export const ENS = (provider, net, accounts) => {
+    return new ENSPackageFactory().createENS(
+        provider,
+        net,
+        accounts,
+        ContractPackage,
+        REGISTRY_ABI,
+        RESOLVER_ABI,
+        PromiEventPackage
+    );
 };

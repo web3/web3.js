@@ -22,11 +22,5 @@
 
 "use strict";
 
-import errors from './errors';
-import formatters from './formatters';
-
-export default {
-    errors,
-    formatters
-};
-
+export errors from './errors';
+export formatters from './formatters';

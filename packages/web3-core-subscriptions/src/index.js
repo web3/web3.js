@@ -22,26 +22,20 @@
 
 "use strict";
 
-import {version} from '../package.json';
-import SubscriptionsFactory from './factories/SubscriptionsFactory';
-import LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
-import Subscription from './Subscription';
+import SubscriptionsFactoryObject from './factories/SubscriptionsFactory';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 
-export default {
-    version,
-    Subscription,
-    LogSubscriptionModel,
-
-    /**
-     * Returns an object of type SubscriptionsFactory
-     *
-     * @method SubscriptionsFactory
-     *
-     * @returns {SubscriptionsFactory}
-     */
-    SubscriptionsFactory: () => {
-        return new SubscriptionsFactory(Utils, formatters);
-    }
+/**
+ * Returns an object of type SubscriptionsFactory
+ *
+ * @method SubscriptionsFactory
+ *
+ * @returns {SubscriptionsFactory}
+ */
+export const SubscriptionsFactory = () => {
+    return new SubscriptionsFactoryObject(Utils, formatters);
 };
+
+export LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
+export Subscription from './Subscription';

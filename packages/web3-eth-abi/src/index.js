@@ -22,21 +22,16 @@
 
 'use strict';
 
-import {version} from '../package.json';
-import ABICoder from './ABICoder';
 import Utils from 'web3-utils';
+export ABICoderObject from './ABICoder';
 
-export default {
-    version,
-
-    /**
-     * Returns the ABICoder object
-     *
-     * @method AbiCoder
-     *
-     * @returns {ABICoder}
-     */
-    AbiCoder() {
-        return new ABICoder(Utils);
-    }
+/**
+ * Returns an object of AbiCoder
+ *
+ * @returns {AbiCoder}
+ *
+ * @constructor
+ */
+export const AbiCoder = () => {
+    return new ABICoderObject(Utils);
 };

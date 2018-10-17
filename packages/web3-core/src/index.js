@@ -22,10 +22,5 @@
 
 "use strict";
 
-import {version} from '../package.json';
-import AbstractWeb3Module from './AbstractWeb3Module';
-
-export default {
-    version,
-    AbstractWeb3Module
-};
+export version from '../package.json';
+export AbstractWeb3Module from './AbstractWeb3Module';

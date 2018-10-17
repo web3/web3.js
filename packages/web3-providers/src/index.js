@@ -20,69 +20,56 @@
 
 "use strict";
 
-import {version} from '../package.json';
 import ProvidersPackageFactory from './factories/ProvidersPackageFactory';
-import SocketProviderAdapter from './adapters/SocketProviderAdapter';
-import HttpProviderAdapter from './adapters/HttpProviderAdapter';
-import HttpProvider from './providers/HttpProvider';
-import IpcProvider from './providers/IpcProvider';
-import WebsocketProvider from './providers/WebsocketProvider';
-import JSONRpcMapper from './mappers/JSONRpcMapper';
-import JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
-import BatchRequest from './batch-request/BatchRequest';
+import BatchRequestObject from './batch-request/BatchRequest';
+import JSONRpcMapper from './validators/JSONRpcResponseValidator';
 
-export default {
-    version,
+export SocketProviderAdapter from './adapters/SocketProviderAdapter';
+export HttpProviderAdapter from './adapters/HttpProviderAdapter';
+export HttpProvider from './providers/HttpProvider';
+export IpcProvider from './providers/IpcProvider';
+export WebsocketProvider from './providers/WebsocketProvider';
+export JSONRpcMapper from './mappers/JSONRpcMapper';
+export JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
 
-    SocketProviderAdapter,
-    HttpProviderAdapter,
+/**
+ * Returns the Batch object
+ *
+ * @method BatchRequest
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {BatchRequest}
+ */
+export const BatchRequest = (provider) => {
+    return new BatchRequestObject(
+        provider,
+        JSONRpcMapper,
+        new ProvidersPackageFactory().createJSONRpcResponseValidator()
+    );
+};
 
-    HttpProvider,
-    IpcProvider,
-    WebsocketProvider,
+/**
+ * Resolves the right provider adapter by the given parameters
+ *
+ * @method resolve
+ *
+ * @param {Object|String} provider
+ * @param {Net} net
+ *
+ * @returns {AbstractProviderAdapter}
+ */
+export const resolve = (provider, net) => {
+    return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
+};
 
-    JSONRpcMapper,
-    JSONRpcResponseValidator,
-
-    /**
-     * Returns the Batch object
-     *
-     * @method BatchRequest
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {BatchRequest}
-     */
-    BatchRequest: (provider) => {
-        return new BatchRequest(
-            provider,
-            JSONRpcMapper,
-            new ProvidersPackageFactory().createJSONRpcResponseValidator()
-        );
-    },
-
-    /**
-     * Resolves the right provider adapter by the given parameters
-     *
-     * @method resolve
-     *
-     * @param {Object|String} provider
-     * @param {Net} net
-     *
-     * @returns {AbstractProviderAdapter}
-     */
-    resolve: (provider, net) => {
-        return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
-    },
-
-    /**
-     * Detects the given provider in the global scope
-     *
-     * @method detect
-     *
-     * @returns {Object}
-     */
-    detect: () => {
-        return new ProvidersPackageFactory().createProviderDetector().detect();
-    }
+/**
+ * Detects the given provider in the global scope
+ *
+ * @method detect
+ *
+ * @returns {Object}
+ */
+export const detect = () => {
+    return new ProvidersPackageFactory().createProviderDetector().detect();
 };

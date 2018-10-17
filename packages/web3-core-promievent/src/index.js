@@ -22,10 +22,4 @@
 
 "use strict";
 
-import {version} from '../package.json';
-import PromiEvent from './PromiEvent';
-
-export default {
-    version,
-    PromiEvent
-};
+export PromiEvent from './PromiEvent';

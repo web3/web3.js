@@ -21,11 +21,5 @@
  */
 
 "use strict";
-
-import {version} from '../package.json';
-import Bzz from './Bzz';
-
-export default {
-    version,
-    Bzz
-};
+export Bzz from './Bzz';
+export version from '../package.json';

@@ -48,10 +48,10 @@ export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        const formattedLogs = GetPastLogsMethodModel.prototype.afterExecution.call(response), self = this;
+        const formattedLogs = super.afterExecution(response);
 
         formattedLogs.map(logItem => {
-            return self.eventLogDecoder.decode(self.abiItemModel, logItem);
+            return this.eventLogDecoder.decode(self.abiItemModel, logItem);
         });
 
         return formattedLogs;
