@@ -22,11 +22,10 @@
 
 "use strict";
 
-var version = require('./package.json').version;
-var Iban = require('./Iban.js');
+import {version} from './package.json';
+import Iban from './Iban.js';
 
-module.exports = {
-    version: version,
-
-    Iban: Iban
+export default {
+    version,
+    Iban
 };
