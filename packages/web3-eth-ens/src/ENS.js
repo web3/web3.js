@@ -69,7 +69,7 @@ ENS.prototype.resolver = function (name) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @return {eventifiedPromise}
+ * @return {PromiEvent}
  */
 ENS.prototype.getAddress = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'addr', []).call(callback);
@@ -86,7 +86,7 @@ ENS.prototype.getAddress = function (name, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
     return this.resolverMethodHandler.method(name, 'setAddr', [address]).send(sendOptions, callback);
@@ -101,7 +101,7 @@ ENS.prototype.setAddress = function (name, address, sendOptions, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.getPubkey = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'pubkey', []).call(callback);
@@ -119,7 +119,7 @@ ENS.prototype.getPubkey = function (name, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
     return this.resolverMethodHandler.method(name, 'setPubkey', [x, y]).send(sendOptions, callback);
@@ -134,7 +134,7 @@ ENS.prototype.setPubkey = function (name, x, y, sendOptions, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.getContent = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'content', []).call(callback);
@@ -151,7 +151,7 @@ ENS.prototype.getContent = function (name, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
     return this.resolverMethodHandler.method(name, 'setContent', [hash]).send(sendOptions, callback);
@@ -166,7 +166,7 @@ ENS.prototype.setContent = function (name, hash, sendOptions, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.getMultihash = function (name, callback) {
     return this.resolverMethodHandler.method(name, 'multihash', []).call(callback);
@@ -183,7 +183,7 @@ ENS.prototype.getMultihash = function (name, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ENS.prototype.setMultihash = function (name, hash, sendOptions, callback) {
     return this.resolverMethodHandler.method(name, 'multihash', [hash]).send(sendOptions, callback);

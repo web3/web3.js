@@ -95,7 +95,7 @@ ResolverMethodHandler.prototype.call = function (callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
     var self = this,
@@ -155,7 +155,7 @@ ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, prepa
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {eventifiedPromise}
+ * @returns {PromiEvent}
  */
 ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, sendOptions, callback) {
     method.apply(this, preparedArguments).send(sendOptions)
