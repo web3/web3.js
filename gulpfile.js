@@ -72,7 +72,7 @@ var packages = [{
     src: './packages/web3-providers/src/index.js'
 }, {
     fileName: 'web3-core-subscriptions',
-    expose: 'Web3Subscription',
+    expose: 'Web3Subscriptions',
     src: './packages/web3-core-subscriptions/src/index.js'
 }, {
     fileName: 'web3-core-promievent',
