@@ -16,8 +16,8 @@
  */
 /**
  * @file index.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2016
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
 "use strict";
@@ -29,32 +29,45 @@ var EventEmitter = require('eventemitter3');
  *
  * @method eventifiedPromise
  */
-var PromiEvent = function PromiEvent() {
-    var resolve, reject,
-        eventEmitter = new Promise(function() {
-            resolve = arguments[0];
-            reject = arguments[1];
-        });
+function PromiEvent() {
+    var self = this;
 
-    // get eventEmitter
-    var emitter = new EventEmitter();
+    this.promise = new Promise(function(resolve, reject) {
+        self.resolve = resolve;
+        self.reject = reject;
+    });
 
-    // add eventEmitter to the promise
-    eventEmitter._events = emitter._events;
-    eventEmitter.emit = emitter.emit;
-    eventEmitter.on = emitter.on;
-    eventEmitter.once = emitter.once;
-    eventEmitter.off = emitter.off;
-    eventEmitter.listeners = emitter.listeners;
-    eventEmitter.addListener = emitter.addListener;
-    eventEmitter.removeListener = emitter.removeListener;
-    eventEmitter.removeAllListeners = emitter.removeAllListeners;
+    this.eventEmitter = new EventEmitter();
 
-    return {
-        resolve: resolve,
-        reject: reject,
-        eventEmitter: eventEmitter
-    };
+    return new Proxy(this, {
+        get: this.proxyHandler
+    });
+}
+
+/**
+ * Proxy handler to call the promise or eventEmitter methods
+ *
+ * @method proxyHandler
+ *
+ * @param {PromiEvent} target
+ * @param {String} name
+ *
+ * @returns {Function}
+ */
+PromiEvent.prototype.proxyHandler = function (target, name) {
+    if (name === 'resolve' || name === 'reject') {
+        return target[name];
+    }
+
+    if (this.promise[name]) {
+        return target.promise[name];
+    }
+
+    if (this.eventEmitter[name]) {
+        return target.eventEmitter[name];
+    }
+
+    throw Error('Method with name ' + name + ' not found');
 };
 
 module.exports = PromiEvent;
