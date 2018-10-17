@@ -31,7 +31,7 @@ This will expose the `Web3Subscriptions` object on the window object.
 // Dependencies
 var ProvidersPackage = require('web3-providers');
 var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
-var SubscriptionsPackage = require('web3-core-subscriptions');
+var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
 
 // Create an object of type AbstractWeb3Module
 /**
@@ -41,7 +41,7 @@ var SubscriptionsPackage = require('web3-core-subscriptions');
  * 
  * @constructor
  */
-function MyObject (
+function Module (
     provider,
     providersPackage,
     subscriptionsFactory
@@ -66,7 +66,7 @@ function MyObject (
  * @callback callback callback(error, result)
  * @returns {Subscription}
  */
-MyObject.prototype.subscribe = function (subscriptionMethod, callback) {
+Module.prototype.subscribe = function (subscriptionMethod, callback) {
     switch (subscriptionMethod) {
         case 'newBlockHeaders':
             return this.subscriptionsFactory
@@ -82,18 +82,18 @@ MyObject.prototype.subscribe = function (subscriptionMethod, callback) {
 };
 
 // Inherit from AbstractWeb3Module
-MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
-MyObject.prototype.constructor = MyObject;
+Module.prototype = Object.create(AbstractWeb3Module.prototype);
+Module.prototype.constructor = Module;
 
 // Instantiate anything
-var myObject = new MyObject(
+var module = new Module(
     ProvidersPackage.detect(),
     ProvidersPackage,
-    SubscriptionsPackage.createSubscriptionsFactory()
+    new SubscriptionsFactory()
 );
 
 // Subscribe
-myObject.subscribe('newBlockHeaders', function(){ ... });
+module.subscribe('newBlockHeaders', function(){ ... });
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/

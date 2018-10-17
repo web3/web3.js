@@ -30,8 +30,8 @@ This will expose the `Web3Shh` object on the window object.
 ```js
 // in node.js
 var ProvidersPackage = require('web3-providers');
-var ShhPackage = require('web3-shh');
-var shh = ShhPackage.createShh(ProvidersPackage.resolve('ws://localhost:8546'));
+var Shh = require('web3-shh').Shh;
+var shh = new Shh(ProvidersPackage.resolve('ws://localhost:8546'));
 ```
 
 

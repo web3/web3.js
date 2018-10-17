@@ -53,7 +53,7 @@ var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
  * 
  * @constructor
  */
-function MyObject (
+function Module (
     provider,
     providersPackage,
     methodController, // optional
@@ -69,8 +69,8 @@ function MyObject (
 }
 
 // Inherit from AbstractWeb3Module
-MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
-MyObject.prototype.constructor = MyObject;
+Module.prototype = Object.create(AbstractWeb3Module.prototype);
+Module.prototype.constructor = Module;
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/

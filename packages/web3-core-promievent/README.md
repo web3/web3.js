@@ -29,10 +29,10 @@ This will expose the `Web3PromiEvent` object on the window object.
 
 ```js
 // in node.js
-var Web3PromiEvent = require('web3-core-promievent');
+var PromiEvent = require('web3-core-promievent').PromiEvent;
 
 var myFunc = function(){
-    var promiEvent = Web3PromiEvent.createPromiEvent();
+    var promiEvent = new PromiEvent();
     
     setTimeout(function() {
         promiEvent.eventEmitter.emit('done', 'Hello!');

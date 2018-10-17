@@ -30,8 +30,8 @@ This will expose the `Web3Net` object on the window object.
 ```js
 // in node.js
 var ProvidersPackage = require('web3-providers');
-var NetworkPackage = require('web3-net');
-var net = NetworkPackage.createNetwork(ProvidersPackage.resolve('ws://localhost:8546'));
+var Network = require('web3-net').Network;
+var net = new Network(ProvidersPackage.resolve('ws://localhost:8546'));
 ```
 
 

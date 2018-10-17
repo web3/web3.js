@@ -28,9 +28,9 @@ This will expose the `Web3Bzz` object on the window object.
 
 ```js
 // in node.js
-var bzzPackage = require('web3-bzz');
+var Bzz = require('web3-bzz').Bzz;
 
-var bzz = bzzPackage.createBzz('http://swarm-gateways.net');
+var bzz = new Bzz('http://swarm-gateways.net');
 ```
 
 

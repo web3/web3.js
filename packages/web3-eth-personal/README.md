@@ -30,8 +30,8 @@ This will expose the `Web3EthPersonal` object on the window object.
 ```js
 // in node.js
 var ProvidersPackage = require('web3-providers');
-var PersonalPackage = require('web3-eth-personal');
-var personal = PersonalPackage.createPersonal(ProvidersPackage.resolve('ws://localhost:8546'));
+var Personal = require('web3-eth-personal').Personal;
+var personal = new Personal(ProvidersPackage.resolve('ws://localhost:8546'));
 ```
 
 

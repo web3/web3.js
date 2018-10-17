@@ -29,9 +29,9 @@ This will expose the `Web3EthIban` object on the window object.
 
 ```js
 // in node.js
-var IbanPackage = require('web3-eth-iban');
+var Iban = require('web3-eth-iban').Iban;
 
-var iban = IbanPackage.createIban('XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3');
+var iban = new Iban('XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3');
 iban.toAddress()
 > '0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B'
 ```

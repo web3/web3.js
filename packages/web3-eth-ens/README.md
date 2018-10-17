@@ -28,16 +28,16 @@ This will expose the `EthEns` object on the window object.
 
 ```js
 var ProvidersPackage = require('web3-providers');
-var NetPackage = require('web3-net');
-var AccountsPackage = require('web3-eth-accounts');
-var ENSPackage = require('web3-eth-ens');
+var Network = require('web3-net').Network;
+var Accounts = require('web3-eth-accounts').Accounts;
+var ENS = require('web3-eth-ens').ENS;
 
 var provider = ProvidersPackage.resolve('ws://localhost:8546');
 
-var ens = ENSPackage.createENS(
+var ens = new ENS(
     provider,
-    NetPackage.createNetwork(provider),
-    AccountsPackage.createAccounts(provider)
+    new Network(provider),
+    new Accounts(provider)
 );
     
 ens.getAddress('ethereum.eth').then(function (result) {
