@@ -31,7 +31,6 @@ import {formatters} from 'web3-core-helpers';
 
 export default {
     version,
-
     Subscription,
     LogSubscriptionModel,
 
@@ -42,7 +41,7 @@ export default {
      *
      * @returns {SubscriptionsFactory}
      */
-    SubscriptionsFactory() {
+    SubscriptionsFactory: () => {
         return new SubscriptionsFactory(Utils, formatters);
     }
 };

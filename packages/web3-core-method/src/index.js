@@ -29,85 +29,86 @@ import AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFact
 import PromiEventPackage from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
+
 // Methods
-// Network
-import GetProtocolVersionMethodModel from './models/methods/network/GetProtocolVersionMethodModel';
+    // Network
+    import GetProtocolVersionMethodModel from './models/methods/network/GetProtocolVersionMethodModel';
 
-import VersionMethodModel from './models/methods/network/VersionMethodModel';
-import ListeningMethodModel from './models/methods/network/ListeningMethodModel';
-import PeerCountMethodModel from './models/methods/network/PeerCountMethodModel';
-// Node
-import GetNodeInfoMethodModel from './models/methods/node/GetNodeInfoMethodModel';
+    import VersionMethodModel from './models/methods/network/VersionMethodModel';
+    import ListeningMethodModel from './models/methods/network/ListeningMethodModel';
+    import PeerCountMethodModel from './models/methods/network/PeerCountMethodModel';
+    // Node
+    import GetNodeInfoMethodModel from './models/methods/node/GetNodeInfoMethodModel';
 
-import GetCoinbaseMethodModel from './models/methods/node/GetCoinbaseMethodModel';
-import IsMiningMethodModel from './models/methods/node/IsMiningMethodModel';
-import GetHashrateMethodModel from './models/methods/node/GetHashrateMethodModel';
-import IsSyncingMethodModel from './models/methods/node/IsSyncingMethodModel';
-import GetGasPriceMethodModel from './models/methods/node/GetGasPriceMethodModel';
-import SubmitWorkMethodModel from './models/methods/node/SubmitWorkMethodModel';
-import GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
-// Account
-import GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';
+    import GetCoinbaseMethodModel from './models/methods/node/GetCoinbaseMethodModel';
+    import IsMiningMethodModel from './models/methods/node/IsMiningMethodModel';
+    import GetHashrateMethodModel from './models/methods/node/GetHashrateMethodModel';
+    import IsSyncingMethodModel from './models/methods/node/IsSyncingMethodModel';
+    import GetGasPriceMethodModel from './models/methods/node/GetGasPriceMethodModel';
+    import SubmitWorkMethodModel from './models/methods/node/SubmitWorkMethodModel';
+    import GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
+    // Account
+    import GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';
 
-import GetBalanceMethodModel from './models/methods/account/GetBalanceMethodModel';
-import GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethodModel';
-// Block
-import GetBlockNumberMethodModel from './models/methods/block/GetBlockNumberMethodModel';
+    import GetBalanceMethodModel from './models/methods/account/GetBalanceMethodModel';
+    import GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethodModel';
+    // Block
+    import GetBlockNumberMethodModel from './models/methods/block/GetBlockNumberMethodModel';
 
-import GetBlockMethodModel from './models/methods/block/GetBlockMethodModel';
-import GetUncleMethodModel from './models/methods/block/GetUncleMethodModel';
-import GetBlockTransactionCountMethodModel from './models/methods/block/GetBlockTransactionCountMethodModel';
-import GetBlockUncleCountMethodModel from './models/methods/block/GetBlockUncleCountMethodModel';
-// Transaction
-import GetTransactionMethodModel from './models/methods/transaction/GetTransactionMethodModel';
+    import GetBlockMethodModel from './models/methods/block/GetBlockMethodModel';
+    import GetUncleMethodModel from './models/methods/block/GetUncleMethodModel';
+    import GetBlockTransactionCountMethodModel from './models/methods/block/GetBlockTransactionCountMethodModel';
+    import GetBlockUncleCountMethodModel from './models/methods/block/GetBlockUncleCountMethodModel';
+    // Transaction
+    import GetTransactionMethodModel from './models/methods/transaction/GetTransactionMethodModel';
 
-import GetTransactionFromBlockMethodModel from './models/methods/transaction/GetTransactionFromBlockMethodModel';
-import GetTransactionReceipt from './models/methods/transaction/GetTransactionReceiptMethodModel';
-import SendSignedTransactionMethodModel from './models/methods/transaction/SendSignedTransactionMethodModel';
-import SignTransactionMethodModel from './models/methods/transaction/SignTransactionMethodModel';
-import SendTransactionMethodModel from './models/methods/transaction/SendTransactionMethodModel';
-// Global
-import GetCodeMethodModel from './models/methods/GetCodeMethodModel';
+    import GetTransactionFromBlockMethodModel from './models/methods/transaction/GetTransactionFromBlockMethodModel';
+    import GetTransactionReceipt from './models/methods/transaction/GetTransactionReceiptMethodModel';
+    import SendSignedTransactionMethodModel from './models/methods/transaction/SendSignedTransactionMethodModel';
+    import SignTransactionMethodModel from './models/methods/transaction/SignTransactionMethodModel';
+    import SendTransactionMethodModel from './models/methods/transaction/SendTransactionMethodModel';
+    // Global
+    import GetCodeMethodModel from './models/methods/GetCodeMethodModel';
 
-import SignMethodModel from './models/methods/SignMethodModel';
-import CallMethodModel from './models/methods/CallMethodModel';
-import GetStorageAtMethodModel from './models/methods/GetStorageAtMethodModel';
-import EstimateGasMethodModel from './models/methods/EstimateGasMethodModel';
-import GetPastLogsMethodModel from './models/methods/GetPastLogsMethodModel';
-// Personal
-import EcRecoverMethodModel from './models/methods/personal/EcRecoverMethodModel';
+    import SignMethodModel from './models/methods/SignMethodModel';
+    import CallMethodModel from './models/methods/CallMethodModel';
+    import GetStorageAtMethodModel from './models/methods/GetStorageAtMethodModel';
+    import EstimateGasMethodModel from './models/methods/EstimateGasMethodModel';
+    import GetPastLogsMethodModel from './models/methods/GetPastLogsMethodModel';
+    // Personal
+    import EcRecoverMethodModel from './models/methods/personal/EcRecoverMethodModel';
 
-import ImportRawKeyMethodModel from './models/methods/personal/ImportRawKeyMethodModel';
-import ListAccountsMethodModel from './models/methods/personal/ListAccountsMethodModel';
-import LockAccountMethodModel from './models/methods/personal/LockAccountMethodModel';
-import NewAccountMethodModel from './models/methods/personal/NewAccountMethodModel';
-import PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethodModel';
-import PersonalSignMethodModel from './models/methods/personal/PersonalSignMethodModel';
-import PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethodModel';
-import UnlockAccountMethodModel from './models/methods/personal/UnlockAccountMethodModel';
-// SHH
-import AddPrivateKeyMethodModel from './models/methods/shh/AddPrivateKeyMethodModel';
+    import ImportRawKeyMethodModel from './models/methods/personal/ImportRawKeyMethodModel';
+    import ListAccountsMethodModel from './models/methods/personal/ListAccountsMethodModel';
+    import LockAccountMethodModel from './models/methods/personal/LockAccountMethodModel';
+    import NewAccountMethodModel from './models/methods/personal/NewAccountMethodModel';
+    import PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethodModel';
+    import PersonalSignMethodModel from './models/methods/personal/PersonalSignMethodModel';
+    import PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethodModel';
+    import UnlockAccountMethodModel from './models/methods/personal/UnlockAccountMethodModel';
+    // SHH
+    import AddPrivateKeyMethodModel from './models/methods/shh/AddPrivateKeyMethodModel';
 
-import AddSymKeyMethodModel from './models/methods/shh/AddSymKeyMethodModel';
-import DeleteKeyPairMethodModel from './models/methods/shh/DeleteKeyPairMethodModel';
-import DeleteMessageFilterMethodModel from './models/methods/shh/DeleteMessageFilterMethodModel';
-import DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethodModel';
-import GenerateSymKeyFromPasswordMethodModel from './models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
-import GetFilterMessagesMethodModel from './models/methods/shh/GetFilterMessagesMethodModel';
-import GetInfoMethodModel from './models/methods/shh/GetInfoMethodModel';
-import GetPrivateKeyMethodModel from './models/methods/shh/GetPrivateKeyMethodModel';
-import GetPublicKeyMethodModel from './models/methods/shh/GetPublicKeyMethodModel';
-import GetSymKeyMethodModel from './models/methods/shh/GetSymKeyMethodModel';
-import HasKeyPairMethodModel from './models/methods/shh/HasKeyPairMethodModel';
-import HasSymKeyMethodModel from './models/methods/shh/HasSymKeyMethodModel';
-import MarkTrustedPeerMethodModel from './models/methods/shh/MarkTrustedPeerMethodModel';
-import NewKeyPairMethodModel from './models/methods/shh/NewKeyPairMethodModel';
-import NewMessageFilterMethodModel from './models/methods/shh/NewMessageFilterMethodModel';
-import NewSymKeyMethodModel from './models/methods/shh/NewSymKeyMethodModel';
-import PostMethodModel from './models/methods/shh/PostMethodModel';
-import SetMaxMessageSizeMethodModel from './models/methods/shh/SetMaxMessageSizeMethodModel';
-import SetMinPoWMethodModel from './models/methods/shh/SetMinPoWMethodModel';
-import ShhVersionMethodModel from './models/methods/shh/ShhVersionMethodModel';
+    import AddSymKeyMethodModel from './models/methods/shh/AddSymKeyMethodModel';
+    import DeleteKeyPairMethodModel from './models/methods/shh/DeleteKeyPairMethodModel';
+    import DeleteMessageFilterMethodModel from './models/methods/shh/DeleteMessageFilterMethodModel';
+    import DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethodModel';
+    import GenerateSymKeyFromPasswordMethodModel from './models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
+    import GetFilterMessagesMethodModel from './models/methods/shh/GetFilterMessagesMethodModel';
+    import GetInfoMethodModel from './models/methods/shh/GetInfoMethodModel';
+    import GetPrivateKeyMethodModel from './models/methods/shh/GetPrivateKeyMethodModel';
+    import GetPublicKeyMethodModel from './models/methods/shh/GetPublicKeyMethodModel';
+    import GetSymKeyMethodModel from './models/methods/shh/GetSymKeyMethodModel';
+    import HasKeyPairMethodModel from './models/methods/shh/HasKeyPairMethodModel';
+    import HasSymKeyMethodModel from './models/methods/shh/HasSymKeyMethodModel';
+    import MarkTrustedPeerMethodModel from './models/methods/shh/MarkTrustedPeerMethodModel';
+    import NewKeyPairMethodModel from './models/methods/shh/NewKeyPairMethodModel';
+    import NewMessageFilterMethodModel from './models/methods/shh/NewMessageFilterMethodModel';
+    import NewSymKeyMethodModel from './models/methods/shh/NewSymKeyMethodModel';
+    import PostMethodModel from './models/methods/shh/PostMethodModel';
+    import SetMaxMessageSizeMethodModel from './models/methods/shh/SetMaxMessageSizeMethodModel';
+    import SetMinPoWMethodModel from './models/methods/shh/SetMinPoWMethodModel';
+    import ShhVersionMethodModel from './models/methods/shh/ShhVersionMethodModel';
 
 export default {
     version,
@@ -120,7 +121,7 @@ export default {
      *
      * @returns {MethodController}
      */
-    MethodController() {
+    MethodController: () => {
         return new MethodPackageFactory().createMethodController(
             PromiEventPackage,
             new SubscriptionsFactory(),

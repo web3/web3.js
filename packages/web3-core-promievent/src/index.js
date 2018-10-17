@@ -27,6 +27,5 @@ import PromiEvent from './PromiEvent';
 
 export default {
     version,
-
     PromiEvent
 };

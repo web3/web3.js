@@ -22,24 +22,24 @@
 
 "use strict";
 
-var version = require('./package.json').version;
-var MethodModelFactory = require('./factories/MethodModelFactory');
-var Eth = require('./Eth');
-var MethodController = require('web3-core-method').MethodController;
-var formatters = require('web3-core-helpers').formatters;
-var Network = require('web3-net').Network;
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var Accounts = require('web3-eth-accounts').Accounts;
-var Personal = require('web3-eth-personal').Personal;
-var ENS = require('web3-eth-ens').ENS;
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
-var AbiCoder = require('web3-eth-abi').AbiCoder;
-var Iban = require('web3-eth-iban').Iban;
-var ContractPackage = require('web3-eth-contract');
+import {version} from '../package.json';
+import MethodModelFactory from './factories/MethodModelFactory';
+import Eth from './Eth';
+import {MethodController} from 'web3-core-method';
+import {formatters} from 'web3-core-helpers';
+import {Network} from 'web3-net';
+import ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {Accounts} from 'web3-eth-accounts';
+import {Personal} from 'web3-eth-personal';
+import {ENS} from 'web3-eth-ens';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {AbiCoder} from 'web3-eth-abi';
+import {Iban} from 'web3-eth-iban';
+import ContractPackage from 'web3-eth-contract';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
     /**
      * Creates the Eth object
@@ -50,8 +50,8 @@ module.exports = {
      *
      * @returns {Eth}
      */
-    Eth: function (provider) {
-        var accounts = new Accounts(provider);
+    Eth: (provider) => {
+        const accounts = new Accounts(provider);
 
         return new Eth(
             provider,
