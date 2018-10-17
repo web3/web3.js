@@ -36,7 +36,7 @@ function CallMethodCommand() { }
  * @param {AbstractMethodModel} methodModel
  *
  * @callback callback callback(error, result)
- * @returns {Promise<any>}
+ * @returns {Promise<*>}
  */
 CallMethodCommand.prototype.execute = function (web3Package, methodModel) {
     methodModel.beforeExecution(web3Package);

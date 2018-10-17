@@ -46,7 +46,7 @@ function MethodController(
 }
 
 /**
- * Determines which command should be executed
+ * Checks which command should be executed
  *
  * @method execute
  *
@@ -54,7 +54,7 @@ function MethodController(
  * @param {Accounts} accounts
  * @param {AbstractWeb3Object} web3Package
  *
- * @returns {Promise|PromiEvent}
+ * @returns {Promise<*>|PromiEvent}
  */
 MethodController.prototype.execute = function (methodModel, accounts, web3Package) {
     var promiEvent = this.promiEventPackage.createPromiEvent();
@@ -93,7 +93,7 @@ MethodController.prototype.execute = function (methodModel, accounts, web3Packag
 };
 
 /**
- * Determines if accounts is defined and if wallet is not empty
+ * Checks if accounts is defined and if wallet is not empty
  *
  * @method hasWallet
  *

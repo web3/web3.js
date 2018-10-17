@@ -38,7 +38,7 @@ SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype)
 SendMethodCommand.prototype.constructor = SendMethodCommand;
 
 /**
- * Determines if gasPrice is set, sends the request and returns a PromiEvent Object
+ * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
  *
  * @method execute
  *
@@ -104,7 +104,7 @@ SendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Packag
 };
 
 /**
- * Determines if gasPrice is defined in the method options
+ * Checks if gasPrice is defined in the method options
  *
  * @method isGasPriceDefined
  *

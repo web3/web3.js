@@ -45,7 +45,7 @@ NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
  *
  * @param {AbstractWeb3Object} web3Package
  *
- * @returns {this}
+ * @returns {NewHeadsWatcher}
  */
 NewHeadsWatcher.prototype.watch = function (web3Package) {
     var self = this;

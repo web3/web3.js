@@ -127,7 +127,7 @@ AbstractMethodModel.prototype.mapFunctionArguments = function (args) {
 };
 
 /**
- * Determines if the JSON-RPC method is sign.
+ * Checks if the JSON-RPC method is sign.
  *
  * @method isSign
  *
@@ -138,7 +138,7 @@ AbstractMethodModel.prototype.isSign = function () {
 };
 
 /**
- * Determines if the JSON-RPC method is sendTransaction
+ * Checks if the JSON-RPC method is sendTransaction
  *
  * @method isSendTransaction
  *
@@ -149,7 +149,7 @@ AbstractMethodModel.prototype.isSendTransaction = function () {
 };
 
 /**
- * Determines if the JSON-RPC method is sendRawTransaction
+ * Checks if the JSON-RPC method is sendRawTransaction
  *
  * @method isSendRawTransaction
  *

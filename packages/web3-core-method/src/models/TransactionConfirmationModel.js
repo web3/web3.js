@@ -29,8 +29,6 @@ function TransactionConfirmationModel() {
 
     /**
      * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
-     *
-     * Created empty setter that it acts like a constant.
      */
     Object.defineProperty(this, 'POLLINGTIMEOUT', {
         get: function () {
@@ -42,8 +40,6 @@ function TransactionConfirmationModel() {
 
     /**
      * Defines accessors for TIMEOUTBLOCK
-     *
-     * Created empty setter that it acts like a constant.
      */
     Object.defineProperty(this, 'TIMEOUTBLOCK', {
         get: function () {
@@ -55,8 +51,6 @@ function TransactionConfirmationModel() {
 
     /**
      * Defines accessors for CONFIRMATIONBLOCKS
-     *
-     * Created empty setter that it acts like a constant.
      */
     Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
         get: function () {

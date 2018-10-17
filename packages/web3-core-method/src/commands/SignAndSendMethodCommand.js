@@ -58,6 +58,7 @@ SignAndSendMethodCommand.prototype.execute = function (
     promiEvent,
 ) {
     var self = this;
+
     methodModel.beforeExecution(web3Package);
     methodModel.rpcMethod = 'eth_sendRawTransaction';
 
