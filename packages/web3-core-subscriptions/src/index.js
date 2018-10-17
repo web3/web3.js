@@ -38,11 +38,11 @@ module.exports = {
     /**
      * Returns an object of type SubscriptionsFactory
      *
-     * @method createSubscriptionsFactory
+     * @method SubscriptionsFactory
      *
      * @returns {SubscriptionsFactory}
      */
-    createSubscriptionsFactory: function () {
+    SubscriptionsFactory: function () {
         return new SubscriptionsFactory(Utils, formatters);
     }
 };

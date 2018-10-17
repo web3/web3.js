@@ -59,7 +59,7 @@ describe('MethodControllerTest', function () {
         expect(methodController.sendMethodCommand).to.be.an.instanceof(SendMethodCommand);
         expect(methodController.signAndSendMethodCommand).to.be.an.instanceof(SignAndSendMethodCommand);
         expect(methodController.signMessageCommand).to.be.an.instanceof(SignMessageCommand);
-        expect(methodController.promiEventPackage.createPromiEvent).to.be.an.instanceof(Function);
+        expect(methodController.promiEventPackage).to.be.an.instanceof(Object);
     });
 
     it('execute calls signMessageCommand', function () {

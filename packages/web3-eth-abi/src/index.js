@@ -30,15 +30,13 @@ module.exports = {
     version: version,
 
     /**
-     * TODO: Improve dependency handling for ethersAbiCoder
-     *
      * Returns the ABICoder object
      *
-     * @method createAbiCoder
+     * @method AbiCoder
      *
      * @returns {ABICoder}
      */
-    createAbiCoder: function() {
+    AbiCoder: function () {
         return new ABICoder(Utils);
     }
 };

@@ -35,6 +35,9 @@ function InpageProviderAdapter(inpageProvider) {// TODO: Check if there is a way
     delete this.provider.sendAsync;
 }
 
+InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
+InpageProviderAdapter.prototype.constructor = InpageProviderAdapter;
+
 /**
  * Checks if the provider is connected
  *
@@ -45,8 +48,5 @@ function InpageProviderAdapter(inpageProvider) {// TODO: Check if there is a way
 InpageProviderAdapter.prototype.isConnected = function () {
     return this.provider.isConnected;
 };
-
-InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
-InpageProviderAdapter.prototype.constructor = InpageProviderAdapter;
 
 module.exports = InpageProviderAdapter;

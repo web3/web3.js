@@ -34,6 +34,9 @@ function NewHeadsSubscriptionModel(utils, formatters) {
     NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', null, utils, formatters);
 }
 
+NewHeadsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
+NewHeadsSubscriptionModel.prototype.constructor = NewHeadsSubscriptionModel;
+
 /**
  * This method will be executed on each new subscription item.
  *
@@ -47,8 +50,5 @@ function NewHeadsSubscriptionModel(utils, formatters) {
 NewHeadsSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.formatters.outputBlockFormatter(subscriptionItem);
 };
-
-NewHeadsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-NewHeadsSubscriptionModel.prototype.constructor = NewHeadsSubscriptionModel;
 
 module.expors = NewHeadsSubscriptionModel;

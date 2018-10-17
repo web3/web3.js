@@ -69,8 +69,8 @@ function AbstractWeb3Module(
         }
     });
 
-    this.BatchRequest = function BatchRequest() {
-        return self.providersPackage.createBatchRequest(self.currentProvider);
+    this.BatchRequest = function () {
+        return new self.providersPackage.BatchRequest(self.currentProvider);
     };
 
     if (this.isDependencyGiven(methodModelFactory)) {

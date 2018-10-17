@@ -47,13 +47,13 @@ module.exports = {
     /**
      * Returns the Batch object
      *
-     * @method createBatchRequest
+     * @method BatchRequest
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {BatchRequest}
      */
-    createBatchRequest: function (provider) {
+    BatchRequest: function (provider) {
         return new BatchRequest(
             provider,
             JSONRpcMapper,

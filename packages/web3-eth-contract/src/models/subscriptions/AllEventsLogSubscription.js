@@ -46,6 +46,9 @@ function AllEventsLogSubscription(
     this.allEventsLogDecoder = allEventsLogDecoder;
 }
 
+AllEventsLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
+AllEventsLogSubscription.prototye.constructor = AllEventsLogSubscription;
+
 /**
  * This method will be executed on each new subscription item.
  *
@@ -59,8 +62,5 @@ function AllEventsLogSubscription(
 AllEventsLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.allEventsLogDecoder.decode(null, this.formatters.outputLogFormatter(subscriptionItem));
 };
-
-AllEventsLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
-AllEventsLogSubscription.prototye.constructor = AllEventsLogSubscription;
 
 module.exports = AllEventsLogSubscription;

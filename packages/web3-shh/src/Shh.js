@@ -45,6 +45,9 @@ function Shh(provider, providersPackage, methodController, methodModelFactory, s
     this.net = net;
 }
 
+Shh.prototype = Object.create(AbstractWeb3Module.prototype);
+Shh.prototype.constructor = Shh;
+
 /**
  * Subscribe to whisper streams
  *
@@ -80,8 +83,5 @@ Shh.prototype.setProvider = function (provider, net) {
         this.net.setProvider(provider, net)
     );
 };
-
-Shh.prototype = Object.create(AbstractWeb3Module.prototype);
-Shh.prototype.constructor = Shh;
 
 module.exports = Shh;

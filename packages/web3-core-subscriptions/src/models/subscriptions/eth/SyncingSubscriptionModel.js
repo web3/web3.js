@@ -35,6 +35,9 @@ function SyncingSubscriptionModel(utils, formatters) {
     this.isSyncing = null;
 }
 
+SyncingSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
+SyncingSubscriptionModel.prototype.constructor = SyncingSubscriptionModel;
+
 /**
  * This method will be executed on each new subscription item.
  *
@@ -66,7 +69,5 @@ SyncingSubscriptionModel.prototype.onNewSubscriptionItem = function (subscriptio
     return this.formatters.outputSyncingFormatter(subscriptionItem);
 };
 
-SyncingSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-SyncingSubscriptionModel.prototype.constructor = SyncingSubscriptionModel;
 
 module.exports = SyncingSubscriptionModel;

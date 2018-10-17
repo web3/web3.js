@@ -30,7 +30,7 @@ var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
  * @param {ContractPackage} contractPackage
  * @param {Accounts} accounts
  * @param {Personal} personal
- * @param {IbanPackage} iban
+ * @param {Iban} iban
  * @param {Abi} abi
  * @param {ENS} ens
  * @param {Object} utils
@@ -48,7 +48,7 @@ var Eth = function Eth(
     contractPackage,
     accounts,
     personal,
-    IbanPackage,
+    iban,
     abi,
     ens,
     utils,
@@ -71,20 +71,7 @@ var Eth = function Eth(
     this.net = net;
     this.accounts = accounts;
     this.personal = personal;
-
-    /**
-     * This wrapper function is required for the "new web3.eth.Iban(...)" call.
-     *
-     * @param {String} iban
-     *
-     * @returns {Iban}
-     *
-     * @constructor
-     */
-    this.Iban = function Iban (iban) {
-        return IbanPackage.createIban(iban);
-    };
-
+    this.Iban = Iban;
     this.abi = abi;
     this.ens = ens;
     this.utils = utils;
@@ -104,7 +91,7 @@ var Eth = function Eth(
      * @constructor
      */
     this.Contract = function (abi, address, options) {
-        var contract = contractPackage.createContract(self.currentProvider, self.accounts, abi, address, options);
+        var contract = new contractPackage.Contract(self.currentProvider, self.accounts, abi, address, options);
         self.initiatedContracts.push(contract);
 
         return contract;
@@ -152,6 +139,9 @@ var Eth = function Eth(
         enumerable: true
     });
 };
+
+Eth.prototype = Object.create(AbstractWeb3Module.prototype);
+Eth.prototype.constructor = Eth;
 
 /**
  * Gets and executes subscription for an given type
@@ -217,8 +207,5 @@ Eth.prototype.setProvider = function (provider, net) {
         setContractProviders
     );
 };
-
-Eth.prototype = Object.create(AbstractWeb3Module.prototype);
-Eth.prototype.constructor = Eth;
 
 module.exports = Eth;

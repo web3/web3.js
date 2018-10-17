@@ -24,11 +24,11 @@
 
 var version = require('../package.json').version;
 var PromiEventPackage = require('web3-core-promievent');
-var MethodPackage = require('web3-core-method');
+var MethodController = require('web3-core-method').MethodController;
 var ProvidersPackage = require('web3-providers');
-var ABIPackage = require('web3-eth-abi');
-var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
+var Utils = require('web3-utils');
+var AbiCoder = require('web3-eth-abi').AbiCoder;
 var Contract = require('./Contract');
 var ContractDeployMethodModel = require('./models/methods/ContractDeployMethodModel');
 var ContractPackageFactory = require('./factories/ContractPackageFactory');
@@ -36,11 +36,12 @@ var ContractPackageFactory = require('./factories/ContractPackageFactory');
 module.exports = {
     version: version,
 
-    Contract: Contract,
     ContractDeployMethodModel: ContractDeployMethodModel,
 
     /**
      * Returns an object of type Contract
+     *
+     * @method Contract
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {Accounts} accounts
@@ -50,16 +51,16 @@ module.exports = {
      *
      * @returns {Contract}
      */
-    createContract: function (provider, accounts, abi, address, options) {
+    Contract: function (provider, accounts, abi, address, options) {
         return new ContractPackageFactory(
             Utils,
             formatters,
-            ABIPackage.createAbiCoder(),
+            new AbiCoder(),
             accounts
         ).createContract(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodController(),
+            new MethodController(),
             PromiEventPackage,
             abi,
             address,

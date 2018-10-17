@@ -127,4 +127,4 @@ ABIItemModel.prototype.isOfType = function (type) {
     return this.abiItem.type === type;
 };
 
-module.export = ABIItemModel;
+module.exports = ABIItemModel;

@@ -33,6 +33,9 @@ function AllEventsFilterEncoder(abiCoder) {
     EventFilterEncoder.call(this, abiCoder);
 }
 
+AllEventsFilterEncoder.prototype = Object.create(EventFilterEncoder.prototype);
+AllEventsFilterEncoder.prototype.constructor = AllEventsFilterEncoder;
+
 /**
  * Creates encoded topics from filter option of an event.
  *
@@ -52,8 +55,5 @@ AllEventsFilterEncoder.prototype.encode = function (abiModel, filter) {
 
     return topics;
 };
-
-AllEventsFilterEncoder.prototype = Object.create(EventFilterEncoder.prototype);
-AllEventsFilterEncoder.prototype.constructor = AllEventsFilterEncoder;
 
 module.exports = AllEventsFilterEncoder;

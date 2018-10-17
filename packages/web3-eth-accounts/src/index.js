@@ -24,7 +24,7 @@
 
 var version = require('../package.json').version;
 var Accounts = require('./Accounts');
-var MethodPackage = require('web3-core-method');
+var MethodController = require('web3-core-method').MethodController;
 var ProvidersPackage = require('web3-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
@@ -34,21 +34,19 @@ module.exports = {
     version: version,
 
     /**
-     * TODO: Improve dependency handling of Accounts
-     *
      * Returns the Accounts object
      *
-     * @method createAccounts
+     * @method Accounts
      *
      * @params {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Accounts}
      */
-    createAccounts: function(provider) {
+    Accounts: function (provider) {
         return new Accounts(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodController(),
+            new MethodController(),
             new MethodModelFactory(Utils, formatters),
             Utils,
             formatters

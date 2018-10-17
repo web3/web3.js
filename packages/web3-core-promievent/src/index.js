@@ -28,12 +28,5 @@ var PromiEvent = require('./PromiEvent');
 module.exports = {
     version: version,
 
-    /**
-     * Returns PromiEvent object
-     *
-     * @method createPromiEvent
-     */
-    createPromiEvent: function() {
-        return new PromiEvent();
-    }
+    PromiEvent: PromiEvent
 };

@@ -39,6 +39,9 @@ function CallContractMethodModel(abiItemModel, callMethodResponseDecoder, utils,
     this.abiItemModel = abiItemModel;
 }
 
+CallContractMethodModel.prototype = Object.create(CallMethodModel.prototype);
+CallContractMethodModel.prototype.constructor = CallContractMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -51,8 +54,5 @@ function CallContractMethodModel(abiItemModel, callMethodResponseDecoder, utils,
 CallContractMethodModel.prototype.afterExecution = function (response) {
     return this.callMethodResponseDecoder.decode(this.abiItemModel, response);
 };
-
-CallContractMethodModel.prototype = Object.create(CallMethodModel.prototype);
-CallContractMethodModel.prototype.constructor = CallContractMethodModel;
 
 module.exports = CallContractMethodModel;

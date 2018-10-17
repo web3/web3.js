@@ -41,7 +41,7 @@ function Registry(provider, accounts, contractPackage, registryABI, resolverABI)
     this.provider = provider;
 
     this.contract = this.checkNetwork().then(function (address) {
-        return self.contractPackage.createContract(
+        return new self.contractPackage.Contract(
             self.provider,
             self.accounts,
             self.registryABI,
@@ -117,7 +117,7 @@ Registry.prototype.resolver = function (name) {
     return this.contract.then(function (contract) {
         return contract.methods.resolver(namehash.hash(name)).call();
     }).then(function (address) {
-        return self.contractPackage.createContract(
+        return new self.contractPackage.Contract(
             self.provider,
             self.accounts,
             self.resolverABI,

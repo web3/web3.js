@@ -36,6 +36,9 @@ function PastEventLogsMethodModel(abiItemModel, utils, formatters) {
     this.abiItemModel = abiItemModel;
 }
 
+PastEventLogsMethodModel.prototype = Object.create(GetPastLogsMethodModel.prototype);
+PastEventLogsMethodModel.prototype.constructor = PastEventLogsMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -55,8 +58,5 @@ PastEventLogsMethodModel.prototype.afterExecution = function (response) {
 
     return formattedLogs;
 };
-
-PastEventLogsMethodModel.prototype = Object.create(GetPastLogsMethodModel.prototype);
-PastEventLogsMethodModel.prototype.constructor = PastEventLogsMethodModel;
 
 module.exports = PastEventLogsMethodModel;

@@ -24,8 +24,8 @@
 
 var version = require('./package.json').version;
 var Personal = require('./Personal');
-var MethodPackage = require('web3-core-method');
-var NetworkPackage = require('web3-net');
+var MethodController = require('web3-core-method').MethodController;
+var Network = require('web3-net').Network;
 var ProvidersPackage = require('web3-providers');
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
@@ -37,19 +37,19 @@ module.exports = {
     /**
      * Returns the Personal object
      *
-     * @method createPersonal
+     * @method Personal
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Personal}
      */
-    createPersonal: function (provider) {
+    Personal: function (provider) {
         return new Personal(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodController(),
+            new MethodController(),
             new MethodModelFactory(Utils, formatters),
-            NetworkPackage.createNetwork(provider),
+            new Network(provider),
             Utils,
             formatters
         );

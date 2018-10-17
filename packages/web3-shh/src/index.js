@@ -24,9 +24,9 @@
 
 var version = require('./package.json');
 var ProvidersPackage = require('web3-providers');
-var MethodPackage = require('web3-core-method');
-var SubscriptionsPackage = require('web3-core-subscriptions');
-var NetworkPackage = require('web3-net');
+var MethodController = require('web3-core-method').MethodController;
+var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
+var Network = require('web3-net').Network;
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
 var Shh = require('./Shh');
@@ -38,20 +38,20 @@ module.exports = {
     /**
      * Returns the Shh object.
      *
-     * @method createShh
+     * @method Shh
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Shh}
      */
-    createShh: function (provider) {
+    Shh: function (provider) {
         return new Shh(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodController(),
+            new MethodController(),
             new MethodModelFactory(Utils, formatters),
-            SubscriptionsPackage.createSubscriptionsFactory(),
-            NetworkPackage.createNetwork(provider)
+            new SubscriptionsFactory(),
+            new Network(provider)
         );
     }
 };

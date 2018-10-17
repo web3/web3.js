@@ -26,12 +26,12 @@ var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 var formatters = require('web3-core-helpers').formatters;
 var MethodPackage = require('web3-core-method');
 var ProvidersPackage = require('web3-providers');
-var EthPackage = require('web3-eth');
-var PersonalPackage = require('web3-eth-personal');
 var Utils = require('web3-utils');
-var ShhPackage = require('web3-shh');
-var BzzPackage = require('web3-bzz');
-var NetworkPackage = require('web3-net');
+var Eth = require('web3-eth').Eth;
+var Shh = require('web3-shh').Shh;
+var Bzz = require('web3-bzz').Bzz;
+var Network = require('web3-net').Network;
+var Personal = require('web3-eth-personal').Personal;
 var version = require('../package.json').version;
 
 /**
@@ -53,9 +53,9 @@ var Web3 = function Web3(provider, net) {
     );
 
     this.utils = Utils;
-    this.eth = EthPackage.createEth(provider);
-    this.shh = ShhPackage.createShh(provider);
-    this.bzz = BzzPackage.createBzz(provider);
+    this.eth = new Eth(provider);
+    this.shh = new Shh(provider);
+    this.bzz = new Bzz(provider);
 };
 
 /**
@@ -88,19 +88,19 @@ Web3.utils = Utils;
 
 Web3.modules = {
     Eth: function (provider, net) {
-        return EthPackage.createEth(ProvidersPackage.resolve(provider, net));
+        return new Eth(ProvidersPackage.resolve(provider, net));
     },
     Net: function (provider, net) {
-        return NetworkPackage.createNetwork(ProvidersPackage.resolve(provider, net));
+        return new Network(ProvidersPackage.resolve(provider, net));
     },
     Personal: function (provider, net) {
-        return PersonalPackage.createPersonal(ProvidersPackage.resolve(provider, net));
+        return new Personal(ProvidersPackage.resolve(provider, net));
     },
     Shh: function (provider, net) {
-        return ShhPackage.createShh(ProvidersPackage.resolve(provider, net));
+        return new Shh(ProvidersPackage.resolve(provider, net));
     },
     Bzz: function (provider, net) {
-        return new BzzPackage.createBzz(ProvidersPackage.resolve(provider, net));
+        return new Bzz(ProvidersPackage.resolve(provider, net));
     }
 };
 

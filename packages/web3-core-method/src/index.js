@@ -27,7 +27,7 @@ var version = require('../package.json').version;
 var MethodPackageFactory = require('./factories/MethodPackageFactory');
 var AbstractMethodModelFactory = require('../lib/factories/AbstractMethodModelFactory');
 var PromiEventPackage = require('web3-core-promievent');
-var SubscriptionsPackage = require('web3-core-subscriptions');
+var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
 var formatters = require('web3-core-helpers').formatters;
 
 // Methods
@@ -116,14 +116,14 @@ module.exports = {
     /**
      * Returns the MethodController object
      *
-     * @method createMethodController
+     * @method MethodController
      *
      * @returns {MethodController}
      */
-    createMethodController: function () {
+    MethodController: function () {
         return new MethodPackageFactory().createMethodController(
             PromiEventPackage,
-            SubscriptionsPackage.createSubscriptionsFactory(),
+            new SubscriptionsFactory(),
             formatters
         );
     },

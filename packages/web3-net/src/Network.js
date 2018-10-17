@@ -41,6 +41,9 @@ function Network(provider, providersPackage, methodController, methodModelFactor
     this.utils = utils;
 }
 
+Network.prototype = Object.create(AbstractWeb3Module.prototype);
+Network.prototype.constructor = Network;
+
 /**
  * Determines to which network web3 is currently connected
  *
@@ -93,8 +96,5 @@ Network.prototype.getNetworkType = function (callback) {
         throw err;
     });
 };
-
-Network.prototype = Object.create(AbstractWeb3Module.prototype);
-Network.prototype.constructor = Network;
 
 module.exports = Network;

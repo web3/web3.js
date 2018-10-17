@@ -72,6 +72,9 @@ function MethodModelFactory(utils, formatters, accounts) {
     );
 }
 
+MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
+MethodModelFactory.prototype.constructor = MethodModelFactory;
+
 /**
  * Returns an MethodModel object
  *
@@ -84,8 +87,5 @@ function MethodModelFactory(utils, formatters, accounts) {
 MethodModelFactory.prototype.createMethodModel = function (name) {
     return new this.methodModels[name](this.utils, this.formatters, this.accounts);
 };
-
-MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
-MethodModelFactory.prototype.constructor = MethodModelFactory;
 
 module.exports = MethodModelFactory;

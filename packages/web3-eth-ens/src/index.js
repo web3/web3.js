@@ -33,7 +33,7 @@ module.exports = { // TODO: overthink the ens package architecture and refactor 
     /**
      * Returns the ENS object
      *
-     * @method createENS
+     * @method ENS
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {Network} net
@@ -41,7 +41,7 @@ module.exports = { // TODO: overthink the ens package architecture and refactor 
      *
      * @returns {ENS}
      */
-    createENS: function (provider, net, accounts) {
+    ENS: function (provider, net, accounts) {
         return new ENSPackageFactory().createENS(
             provider,
             net,

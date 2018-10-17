@@ -25,7 +25,7 @@
 
 var version = require('../package.json').version;
 var ProvidersPackage = require('web3-providers');
-var MethodPackage = require('web3-core-method');
+var MethodController = require('web3-core-method').MethodController;
 var formatters = require('web3-core-helpers').formatters;
 var utils = require('web3-utils');
 var Network = require('./Network');
@@ -38,17 +38,17 @@ module.exports = {
     /**
      * Creates the Network Object
      *
-     * @method createNetwork
+     * @method Network
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Network}
      */
-    createNetwork: function (provider) {
+    Network: function (provider) {
         return new Network(
             provider,
             ProvidersPackage,
-            MethodPackage.createMethodController(),
+            new MethodController(),
             new MethodModelFactory(Utils, formatters),
             formatters,
             utils

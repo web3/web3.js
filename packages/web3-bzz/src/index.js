@@ -28,16 +28,5 @@ var Bzz = require('./Bzz');
 module.exports = {
     version: version,
 
-    /**
-     * Returns the Bzz object
-     *
-     * @method createBzz
-     *
-     * @param {Object|String} provider
-     *
-     * @returns {Bzz}
-     */
-    createBzz: function (provider) {
-        return new Bzz(provider);
-    }
+    Bzz: Bzz
 };

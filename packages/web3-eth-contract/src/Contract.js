@@ -155,6 +155,9 @@ function Contract(
     );
 }
 
+Contract.prototype = Object.create(AbstractWeb3Module.prototype);
+Contract.prototype.constructor = Contract;
+
 /**
  * Adds event listeners and creates a subscription, and remove it once its fired.
  *
@@ -267,8 +270,5 @@ Contract.prototype.setProvider = function (provider, net) {
       this.accounts.setProvider(provider, net)
   );
 };
-
-Contract.prototype = Object.create(AbstractWeb3Module.prototype);
-Contract.prototype.constructor = Contract;
 
 module.exports = Contract;

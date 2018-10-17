@@ -39,6 +39,9 @@ function LogSubscriptionModel(options, utils, formatters, getPastLogsMethodModel
     this.methodController = methodController;
 }
 
+LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
+LogSubscriptionModel.prototype.constructor = LogSubscriptionModel;
+
 /**
  * This method will be executed before the subscription starts.
  *
@@ -84,8 +87,5 @@ LogSubscriptionModel.prototype.beforeSubscription = function (subscription, modu
 LogSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.formatters.outputLogFormatter(subscriptionItem);
 };
-
-LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-LogSubscriptionModel.prototype.constructor = LogSubscriptionModel;
 
 module.exports = LogSubscriptionModel;

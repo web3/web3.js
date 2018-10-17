@@ -25,18 +25,18 @@
 var version = require('./package.json').version;
 var MethodModelFactory = require('./factories/MethodModelFactory');
 var Eth = require('./Eth');
-var NetPackage = require('web3-net');
-var ContractPackage = require('web3-eth-contract');
-var AccountsPackage = require('web3-eth-accounts');
-var PersonalPackage = require('web3-eth-personal');
-var ENSPackage = require('web3-eth-ens');
-var AbiPackage = require('web3-eth-abi');
-var SubscriptionsPackage = require('web3-core-subscriptions');
-var ProvidersPackage = require('web3-providers');
-var Iban = require('web3-eth-iban').Iban;
+var MethodController = require('web3-core-method').MethodController;
 var formatters = require('web3-core-helpers').formatters;
+var Network = require('web3-net').Network;
+var ProvidersPackage = require('web3-providers');
 var Utils = require('web3-utils');
-var MethodPackage = require('web3-core-method');
+var Accounts = require('web3-eth-accounts').Accounts;
+var Personal = require('web3-eth-personal').Personal;
+var ENS = require('web3-eth-ens').ENS;
+var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
+var AbiCoder = require('web3-eth-abi').AbiCoder;
+var Iban = require('web3-eth-iban').Iban;
+var ContractPackage = require('web3-eth-contract');
 
 module.exports = {
     version: version,
@@ -44,29 +44,29 @@ module.exports = {
     /**
      * Creates the Eth object
      *
-     * @method createEth
+     * @method Eth
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      *
      * @returns {Eth}
      */
-    createEth: function (provider) {
-        var accounts = AccountsPackage.createAccounts(provider);
+    Eth: function (provider) {
+        var accounts = new Accounts(provider);
 
         return new Eth(
             provider,
-            NetPackage.createNetwork(provider),
+            new Network(provider),
             ContractPackage,
             accounts,
-            PersonalPackage.createPersonal(provider),
+            new Personal(provider),
             Iban,
-            AbiPackage.createAbiCoder(utils),
-            ENSPackage.createENS(provider),
+            new AbiCoder(utils),
+            new ENS(provider),
             Utils,
             formatters,
             ProvidersPackage,
-            SubscriptionsPackage.createSubscriptionsFactory(),
-            MethodPackage.createMethodController(),
+            new SubscriptionsFactory(),
+            new MethodController(),
             new MethodModelFactory(Utils, formatters, accounts)
         );
     }

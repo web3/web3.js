@@ -57,7 +57,7 @@ function MethodController(
  * @returns {Promise<*>|PromiEvent}
  */
 MethodController.prototype.execute = function (methodModel, accounts, moduleInstance) {
-    var promiEvent = this.promiEventPackage.createPromiEvent();
+    var promiEvent = new this.promiEventPackage.PromiEvent();
 
     if (this.hasWallets(accounts)) {
         if (methodModel.isSign()) {

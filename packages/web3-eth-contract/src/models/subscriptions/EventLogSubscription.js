@@ -49,6 +49,9 @@ function EventLogSubscription(
     this.abiItemModel = abiItemModel;
 }
 
+EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
+EventLogSubscription.prototye.constructor = EventLogSubscription;
+
 /**
  * This method will be executed on each new subscription item.
  *
@@ -62,8 +65,5 @@ function EventLogSubscription(
 EventLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
     return this.eventLogDecoder.decode(this.abiItemModel, this.formatters.outputLogFormatter(subscriptionItem));
 };
-
-EventLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
-EventLogSubscription.prototye.constructor = EventLogSubscription;
 
 module.exports = EventLogSubscription;

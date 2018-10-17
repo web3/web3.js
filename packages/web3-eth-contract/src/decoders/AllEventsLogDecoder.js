@@ -36,6 +36,9 @@ function AllEventsLogDecoder(abiModel, abiCoder, formatters) {
     this.abiModel = abiModel;
 }
 
+AllEventsLogDecoder.prototype = Object.create(EventLogDecoder.prototype);
+AllEventsLogDecoder.prototype.constructor = AllEventsLogDecoder;
+
 /**
  * Decodes the event subscription response
  *
@@ -54,5 +57,4 @@ AllEventsLogDecoder.prototype.decode = function (abiItemModel, response) {
     );
 };
 
-AllEventsLogDecoder.prototype = Object.create(EventLogDecoder.prototype);
-AllEventsLogDecoder.prototype.constructor = AllEventsLogDecoder;
+module.exports = AllEventsLogDecoder;

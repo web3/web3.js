@@ -70,6 +70,9 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
     });
 }
 
+Personal.prototype = Object.create(AbstractWeb3Module);
+Personal.prototype.constructor = Personal;
+
 /**
  * Extends setProvider method from AbstractWeb3Module.
  *
@@ -83,9 +86,6 @@ function Personal(provider, providersPackage, methodController, methodModelFacto
 Personal.prototype.setProvider = function (provider, net) {
     return !!(AbstractWeb3Module.setProvider.call(this, provider, net) && this.net.setProvider(provider, net));
 };
-
-Personal.prototype = Object.create(AbstractWeb3Module);
-Personal.prototype.constructor = Personal;
 
 module.exports = Personal;
 

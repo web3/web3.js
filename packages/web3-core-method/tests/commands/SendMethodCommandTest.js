@@ -7,7 +7,7 @@ var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionCo
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
 var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
-var PromiEventPackage = require('web3-core-promievent');
+var PromiEvent = require('web3-core-promievent').PromiEvent;
 
 /**
  * SendMethodCommand test
@@ -41,7 +41,7 @@ describe('SendMethodCommandTest', function () {
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelMock = sinon.mock(methodModel);
 
-        promiEvent = PromiEventPackage.createPromiEvent();
+        promiEvent = new PromiEvent();
         promiEventMock = sinon.mock(promiEvent);
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow({}, {}, {}, {});

@@ -5,7 +5,7 @@ var expect = chai.expect;
 var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
 var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
 var ProvidersPackage = require('web3-providers');
-var PromiEventPackage = require('web3-core-promievent');
+var PromiEvent = require('web3-core-promievent').PromiEvent;
 var formatters = require('web3-core-helpers').formatters;
 var TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
 var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
@@ -62,7 +62,7 @@ describe('TransactionConfirmationWorkflowTest', function () {
         moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
         moduleInstanceMock = sinon.mock(moduleInstance);
 
-        promiEvent = PromiEventPackage.createPromiEvent();
+        promiEvent = new PromiEvent();
         promiEventMock = sinon.mock(promiEvent);
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow(

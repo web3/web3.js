@@ -58,14 +58,15 @@ SubscriptionsFactory.prototype.createLogSubscription = function (
     getPastLogsMethodModel,
     methodController
 ) {
-    return new Subscription(moduleInstance,
+    return new Subscription(
         new LogSubscriptionModel(
             options,
             this.utils,
             this.formatters,
             getPastLogsMethodModel,
             methodController
-        )
+        ),
+        moduleInstance
     );
 };
 
@@ -80,8 +81,8 @@ SubscriptionsFactory.prototype.createLogSubscription = function (
  */
 SubscriptionsFactory.prototype.createNewHeadsSubscription = function (moduleInstance) {
     return new Subscription(
-        moduleInstance,
-        new NewHeadsSubscriptionModel(this.utils, this.formatters)
+        new NewHeadsSubscriptionModel(this.utils, this.formatters),
+        moduleInstance
     );
 };
 
@@ -96,8 +97,8 @@ SubscriptionsFactory.prototype.createNewHeadsSubscription = function (moduleInst
  */
 SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = function (moduleInstance) {
     return new Subscription(
-        moduleInstance,
-        new NewPendingTransactionsSubscriptionModel(this.utils, this.formatters)
+        new NewPendingTransactionsSubscriptionModel(this.utils, this.formatters),
+        moduleInstance
     );
 };
 
@@ -112,8 +113,8 @@ SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = functi
  */
 SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (moduleInstance) {
     return new Subscription(
-        moduleInstance,
-        new SyncingSubscriptionModel(this.utils, this.formatters)
+        new SyncingSubscriptionModel(this.utils, this.formatters),
+        moduleInstance
     );
 };
 
@@ -129,8 +130,8 @@ SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (module
  */
 SubscriptionsFactory.prototype.createShhMessagesSubscription = function (moduleInstance, options) {
     return new Subscription(
-        moduleInstance,
-        new MessagesSubscriptionModel(options, this.utils, this.formatters)
+        new MessagesSubscriptionModel(options, this.utils, this.formatters),
+        moduleInstance
     );
 };
 

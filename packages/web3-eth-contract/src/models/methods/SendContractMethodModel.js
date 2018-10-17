@@ -40,6 +40,9 @@ function SendContractMethodModel(abiItemModel, allEventsLogDecoder, utils, forma
     this.allEventsLogDecoder = allEventsLogDecoder;
 }
 
+SendContractMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
+SendContractMethodModel.prototype.constructor = SendContractMethodModel;
+
 /**
  * This method will be executed after the RPC request.
  *
@@ -84,8 +87,5 @@ SendContractMethodModel.prototype.afterExecution = function (response) {
 
     return response;
 };
-
-SendContractMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
-SendContractMethodModel.prototype.constructor = SendContractMethodModel;
 
 module.exports = SendContractMethodModel;

@@ -58,3 +58,5 @@ CallMethodResponseDecoder.prototype.decode = function (abiItemOutputTypes, respo
 
     return result;
 };
+
+module.exports = CallMethodResponseDecoder;
