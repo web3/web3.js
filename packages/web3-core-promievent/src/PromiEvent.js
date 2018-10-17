@@ -22,50 +22,49 @@
 
 "use strict";
 
-var EventEmitter = require('eventemitter3');
+import EventEmitter from 'eventemitter3';
 
-/**
- * @constructor
- */
-function PromiEvent() {
-    var self = this;
+export default class PromiEvent {
 
-    this.promise = new Promise(function(resolve, reject) {
-        self.resolve = resolve;
-        self.reject = reject;
-    });
+    /**
+     * @constructor
+     */
+    constructor() {
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
 
-    this.eventEmitter = new EventEmitter();
+        this.eventEmitter = new EventEmitter();
 
-    return new Proxy(this, {
-        get: this.proxyHandler
-    });
+        return new Proxy(this, {
+            get: this.proxyHandler
+        });
+    }
+
+    /**
+     * Proxy handler to call the promise or eventEmitter methods
+     *
+     * @method proxyHandler
+     *
+     * @param {PromiEvent} target
+     * @param {String} name
+     *
+     * @returns {Function}
+     */
+    proxyHandler(target, name) {
+        if (name === 'resolve' || name === 'reject') {
+            return target[name];
+        }
+
+        if (this.promise[name]) {
+            return target.promise[name];
+        }
+
+        if (this.eventEmitter[name]) {
+            return target.eventEmitter[name];
+        }
+
+        throw Error(`Method with name ${name} not found`);
+    }
 }
-
-/**
- * Proxy handler to call the promise or eventEmitter methods
- *
- * @method proxyHandler
- *
- * @param {PromiEvent} target
- * @param {String} name
- *
- * @returns {Function}
- */
-PromiEvent.prototype.proxyHandler = function (target, name) {
-    if (name === 'resolve' || name === 'reject') {
-        return target[name];
-    }
-
-    if (this.promise[name]) {
-        return target.promise[name];
-    }
-
-    if (this.eventEmitter[name]) {
-        return target.eventEmitter[name];
-    }
-
-    throw Error('Method with name ' + name + ' not found');
-};
-
-module.exports = PromiEvent;

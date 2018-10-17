@@ -22,11 +22,11 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var PromiEvent = require('./PromiEvent');
+import {version} from '../package.json';
+import PromiEvent from './PromiEvent';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
-    PromiEvent: PromiEvent
+    PromiEvent
 };
