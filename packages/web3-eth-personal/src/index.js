@@ -22,17 +22,17 @@
 
 "use strict";
 
-var version = require('./package.json').version;
-var Personal = require('./Personal');
-var MethodController = require('web3-core-method').MethodController;
-var Network = require('web3-net').Network;
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var MethodModelFactory = require('./factories/MethodModelFactory');
+import {version} from './package.json';
+import Personal from './Personal';
+import {MethodController} from 'web3-core-method';
+import {Network} from 'web3-net';
+import ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
     /**
      * Returns the Personal object
@@ -43,7 +43,7 @@ module.exports = {
      *
      * @returns {Personal}
      */
-    Personal: function (provider) {
+    Personal: (provider) => {
         return new Personal(
             provider,
             ProvidersPackage,
@@ -55,5 +55,3 @@ module.exports = {
         );
     }
 };
-
-
