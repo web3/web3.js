@@ -25,9 +25,7 @@
 var EventEmitter = require('eventemitter3');
 
 /**
- * This function generates a defer promise and adds eventEmitter functionality to it
- *
- * @method eventifiedPromise
+ * @constructor
  */
 function PromiEvent() {
     var self = this;
