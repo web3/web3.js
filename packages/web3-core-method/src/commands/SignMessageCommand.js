@@ -34,6 +34,8 @@ function SignMessageCommand(messageSigner) {
 /**
  * Executes the SignMessageCommand and returns the signed message
  *
+ * @method execute
+ *
  * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
  * @param {Accounts} accounts

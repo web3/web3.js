@@ -131,7 +131,7 @@ AbstractMethodModel.prototype.mapFunctionArguments = function (args) {
  *
  * @method isSign
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 AbstractMethodModel.prototype.isSign = function () {
     return this.rpcMethod === 'eth_sign';
@@ -142,7 +142,7 @@ AbstractMethodModel.prototype.isSign = function () {
  *
  * @method isSendTransaction
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 AbstractMethodModel.prototype.isSendTransaction = function () {
     return this.rpcMethod === 'eth_sendTransaction';
@@ -153,7 +153,7 @@ AbstractMethodModel.prototype.isSendTransaction = function () {
  *
  * @method isSendRawTransaction
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 AbstractMethodModel.prototype.isSendRawTransaction = function () {
     return this.rpcMethod === 'eth_sendRawTransaction';
@@ -164,9 +164,9 @@ AbstractMethodModel.prototype.isSendRawTransaction = function () {
  *
  * @method isHash
  *
- * @param {any} parameter
+ * @param {*} parameter
  *
- * @returns {boolean}
+ * @returns {Boolean}
  */
 AbstractMethodModel.prototype.isHash = function (parameter) {
     return _.isString(parameter) && parameter.indexOf('0x') === 0;

@@ -160,7 +160,7 @@ var inputTransactionFormatter = function (options, moduleInstance) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
-        options.from = (options.from);
+        options.from = inputAddressFormatter(options.from);
     }
 
     return options;

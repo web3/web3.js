@@ -34,7 +34,7 @@ This will expose the `Web3Method` object on the window object.
 var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
 var Utils = require('web3-utils');
 var formatters = require('web3-core-helpers').formatters;
-var MethodPackage = require('web3-core-method');
+var MethodController = require('web3-core-method').MethodController;
 var ProvidersPackage = require('web3-providers');
 
 // Create an object/package like Eth
@@ -46,7 +46,7 @@ var ProvidersPackage = require('web3-providers');
  * 
  * @constructor
  */
-function MyObject (
+function Module (
     provider,
     providersPackage,
     methodController,
@@ -62,8 +62,8 @@ function MyObject (
 };
 
 // Inherit from AbstractWeb3Module
-MyObject.prototype = Object.create(AbstractWeb3Module.prototype);
-MyObject.prototype.constructor = MyObject;
+Module.prototype = Object.create(AbstractWeb3Module.prototype);
+Module.prototype.constructor = Module;
 
 
 // Create the MyMethoModelFactory object
@@ -73,7 +73,7 @@ MyObject.prototype.constructor = MyObject;
  * 
  * @constructor
  */
-function MyMethodModelFactory(utils, formatters) {
+function MethodModelFactory(utils, formatters) {
     MethodPackage.AbstractMethodModelFactory.call(
         this,
         {
@@ -85,21 +85,21 @@ function MyMethodModelFactory(utils, formatters) {
 }
 
 // Inherit from AbstractMethodModelFactory
-MyMethodModelFactory.prototype = Object.create(
+MethodModelFactory.prototype = Object.create(
     MethodPackage.AbstractMethodModelFactory.prototype
 );
-MyMethodModelFactory.prototype.constructor = MyMethodModelFactory;
+MethodModelFactory.prototype.constructor = MethodModelFactory;
 
 
 // Instantiate anything
-var myObject = new MyObject(
+var module = new Module(
     ProvidersPackage.detect(), 
     ProvidersPackage, 
-    MethodPackage.createMethodController(), 
-    new MyMethodModelFactory(Utils, formatters)
+    new MethodController(), 
+    new MethodModelFactory(Utils, formatters)
 );
 
-myObject.sendTransaction({...}, function(){ ... });
+module.sendTransaction({...}, function(){ ... });
 ```
 
 
