@@ -311,5 +311,16 @@ IpcProvider.prototype.reset = function () {
     this.addDefaultEvents();
 };
 
+/**
+Disconnects from the IPC endpoint. This allows freeing the socket.
+
+@method disconnect
+*/
+IpcProvider.prototype.disconnect = function () {
+    if (this.connection) {
+        this.connection.close();
+    }
+};
+
 module.exports = IpcProvider;
 
