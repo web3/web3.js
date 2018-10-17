@@ -22,63 +22,62 @@
 
 "use strict";
 
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-var formatters = require('web3-core-helpers').formatters;
-var MethodPackage = require('web3-core-method');
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var Eth = require('web3-eth').Eth;
-var Shh = require('web3-shh').Shh;
-var Bzz = require('web3-bzz').Bzz;
-var Network = require('web3-net').Network;
-var Personal = require('web3-eth-personal').Personal;
-var version = require('../package.json').version;
+import {AbstractWeb3Module} from 'web3-core';
+import {formatters} from 'web3-core-helpers';
+import MethodPackage from 'web3-core-method';
+import ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {Eth} from 'web3-eth';
+import {Shh} from 'web3-shh';
+import {Bzz} from 'web3-bzz';
+import {Network} from 'web3-net';
+import {Personal} from 'web3-eth-personal';
+import {version} from '../package.json';
 
-/**
- * @param {Object|String} provider
- * @param {Net} net
- *
- * @constructor
- */
-var Web3 = function Web3(provider, net) {
-    this.version = version;
-    provider = ProvidersPackage.resolve(provider, net);
+export default class Web3 extends AbstractWeb3Module {
 
-    AbstractWeb3Module.call(
-        this,
-        provider,
-        ProvidersPackage,
-        MethodPackage.createMethodController(),
-        new MethodPackage.AbstractMethodModelFactory({}, utils, formatters)
-    );
+    /**
+     * @param {Object|String} provider
+     * @param {Net} net
+     *
+     * @constructor
+     */
+    constructor(provider, net) {
+        provider = ProvidersPackage.resolve(provider, net);
 
-    this.utils = Utils;
-    this.eth = new Eth(provider);
-    this.shh = new Shh(provider);
-    this.bzz = new Bzz(provider);
-};
+        super(
+            provider,
+            ProvidersPackage,
+            MethodPackage.createMethodController(),
+            new MethodPackage.AbstractMethodModelFactory({}, utils, formatters)
+        );
 
-/**
- * Sets the provider for all packages
- *
- * @method setProvider
- *
- * @param {Object|String} provider
- * @param {Net} net
- *
- * @returns {Boolean}
- */
-Web3.prototype.setProvider = function (provider, net) {
-    return !!(
-        AbstractWeb3Module.prototype.setProvider.call(this, provider, net) &&
-        this.eth.setProvider(provider, net) &&
-        this.shh.setProvider(provider, net) &&
-        this.bzz.setProvider(provider)
-    );
-};
+        this.version = version;
+        this.utils = Utils;
+        this.eth = new Eth(provider);
+        this.shh = new Shh(provider);
+        this.bzz = new Bzz(provider);
+    }
 
-Web3.prototype = Object.create(AbstractWeb3Module.prototype);
-Web3.prototype.constructor = Web3;
+    /**
+     * Sets the provider for all packages
+     *
+     * @method setProvider
+     *
+     * @param {Object|String} provider
+     * @param {Net} net
+     *
+     * @returns {Boolean}
+     */
+    setProvider(provider, net) {
+        return !!(
+            super.setProvider(provider, net) &&
+            this.eth.setProvider(provider, net) &&
+            this.shh.setProvider(provider, net) &&
+            this.bzz.setProvider(provider)
+        );
+    }
+}
 
 Web3.givenProvider = ProvidersPackage.detect();
 
@@ -87,19 +86,19 @@ Web3.version = version;
 Web3.utils = Utils;
 
 Web3.modules = {
-    Eth: function (provider, net) {
+    Eth(provider, net) {
         return new Eth(ProvidersPackage.resolve(provider, net));
     },
-    Net: function (provider, net) {
+    Net(provider, net) {
         return new Network(ProvidersPackage.resolve(provider, net));
     },
-    Personal: function (provider, net) {
+    Personal(provider, net) {
         return new Personal(ProvidersPackage.resolve(provider, net));
     },
-    Shh: function (provider, net) {
+    Shh(provider, net) {
         return new Shh(ProvidersPackage.resolve(provider, net));
     },
-    Bzz: function (provider, net) {
+    Bzz(provider, net) {
         return new Bzz(ProvidersPackage.resolve(provider, net));
     }
 };
@@ -109,5 +108,3 @@ Web3.providers = {
     WebsocketProvider: ProvidersPackage.WebsocketProvider,
     IpcProvider: ProvidersPackage.IpcProvider
 };
-
-module.exports = Web3;
