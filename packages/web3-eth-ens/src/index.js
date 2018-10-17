@@ -20,15 +20,15 @@
 
 "use strict";
 
-var version = require('package.json').version;
-var ContractPackage = require('web3-eth-contract');
-var PromiEventPackage = require('web3-core-promievent');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
-var ENSPackageFactory = require('./factories/ENSPackageFactory');
+import {version} from '../package.json';
+import ContractPackage from 'web3-eth-contract';
+import PromiEventPackage from 'web3-core-promievent';
+import REGISTRY_ABI from '../ressources/ABI/Registry';
+import RESOLVER_ABI from '../ressources/ABI/Resolver';
+import ENSPackageFactory from './factories/ENSPackageFactory';
 
-module.exports = { // TODO: overthink the ens package architecture and refactor it.
-    version: version,
+export default { // TODO: overthink the ens package architecture and refactor it.
+    version,
 
     /**
      * Returns the ENS object
@@ -41,7 +41,7 @@ module.exports = { // TODO: overthink the ens package architecture and refactor 
      *
      * @returns {ENS}
      */
-    ENS: function (provider, net, accounts) {
+    ENS(provider, net, accounts) {
         return new ENSPackageFactory().createENS(
             provider,
             net,

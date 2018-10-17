@@ -20,191 +20,189 @@
 
 "use strict";
 
-var _ = require('underscore');
-var namehash = require('eth-ens-namehash');
+import _ from 'underscore';
+import namehash from 'eth-ens-namehash';
 
-/**
- * @param {Registry} registry
- * @param {PromiEventPackage} promiEventPackage
- *
- * @constructor
- */
-function ResolverMethodHandler(registry, promiEventPackage) {
-    this.registry = registry;
-    this.promiEventPackage = promiEventPackage;
-}
+export default class ResolverMethodHandler {
 
-/**
- * Executes an resolver method and returns an eventifiedPromise
- *
- * @param {String} ensName
- * @param {String} methodName
- * @param {Array} methodArguments
- * @param {Function} callback
- *
- * @returns {Object}
- */
-ResolverMethodHandler.prototype.method = function (ensName, methodName, methodArguments) {
-    return {
-        call: this.call.bind({
-            ensName: ensName,
-            methodName: methodName,
-            methodArguments: methodArguments,
-            parent: this
-        }),
-        send: this.send.bind({
-            ensName: ensName,
-            methodName: methodName,
-            methodArguments: methodArguments,
-            parent: this
-        })
-    };
-};
-
-/**
- * Executes call
- *
- * @method call
- *
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-ResolverMethodHandler.prototype.call = function (callback) {
-    var self = this,
-        promiEvent = new this.promiEventPackage.PromiEvent(),
-        preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
-
-    this.parent.registry.resolver(this.ensName).then(function (resolver) {
-        self.parent.handleCall(promiEvent, resolver.methods[self.methodName], preparedArguments, callback);
-    }).catch(function (error) {
-        promiEvent.reject(error);
-    });
-
-    return promiEvent;
-};
-
-
-/**
- * Executes send
- *
- * @method send
- *
- * @param {Object} sendOptions
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-ResolverMethodHandler.prototype.send = function (sendOptions, callback) {
-    var self = this,
-        promiEvent = new this.promiEventPackage.PromiEvent(),
-        preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
-
-    this.parent.registry.resolver(this.ensName).then(function (resolver) {
-        self.parent.handleSend(promiEvent, resolver.methods[self.methodName], preparedArguments, sendOptions, callback);
-    }).catch(function (error) {
-        promiEvent.reject(error);
-    });
-
-    return promiEvent;
-};
-
-/**
- * Handles a call method
- *
- * @method handleCall
- *
- * @param {PromiEvent} promiEvent
- * @param {function} method
- * @param {Array} preparedArguments
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-ResolverMethodHandler.prototype.handleCall = function (promiEvent, method, preparedArguments, callback) {
-    method.apply(this, preparedArguments).call()
-        .then(function (receipt) {
-            promiEvent.resolve(receipt);
-
-            if (_.isFunction(callback)) {
-                callback(receipt);
-            }
-        }).catch(function (error) {
-            promiEvent.reject(error);
-
-            if (_.isFunction(callback)) {
-                callback(error);
-            }
-        });
-
-    return promiEvent;
-};
-
-/**
- * Handles a send method
- *
- * @method handleSend
- *
- * @param {PromiEvent} promiEvent
- * @param {function} method
- * @param {Array} preparedArguments
- * @param {Object} sendOptions
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-ResolverMethodHandler.prototype.handleSend = function (promiEvent, method, preparedArguments, sendOptions, callback) {
-    method.apply(this, preparedArguments).send(sendOptions)
-        .on('transactionHash', function (hash) {
-            promiEvent.emit('transactionHash', hash);
-        })
-        .on('confirmation', function (confirmationNumber, receipt) {
-            promiEvent.emit('confirmation', confirmationNumber, receipt);
-        })
-        .on('receipt', function (receipt) {
-            promiEvent.emit('receipt', receipt);
-            promiEvent.resolve(receipt);
-
-            if (_.isFunction(callback)) {
-                callback(receipt);
-            }
-        })
-        .on('error', function (error) {
-            promiEvent.emit('error', error);
-            promiEvent.reject(error);
-
-            if (_.isFunction(callback)) {
-                callback(error);
-            }
-        });
-
-    return promiEvent;
-};
-
-/**
- * Adds the ENS node to the arguments
- *
- * @method prepareArguments
- *
- * @param {String} name
- * @param {Array} methodArguments
- *
- * @returns {Array}
- */
-ResolverMethodHandler.prototype.prepareArguments = function (name, methodArguments) {
-    var node = namehash.hash(name);
-
-    if (methodArguments.length > 0) {
-        methodArguments.unshift(node);
-
-        return methodArguments;
+    /**
+     * @param {Registry} registry
+     * @param {PromiEventPackage} promiEventPackage
+     *
+     * @constructor
+     */
+    constructor(registry, promiEventPackage) {
+        this.registry = registry;
+        this.promiEventPackage = promiEventPackage;
     }
 
-    return [node];
-};
+    /**
+     * Executes an resolver method and returns an eventifiedPromise
+     *
+     * @param {String} ensName
+     * @param {String} methodName
+     * @param {Array} methodArguments
+     * @param {Function} callback
+     *
+     * @returns {Object}
+     */
+    method(ensName, methodName, methodArguments) {
+        return {
+            call: this.call.bind({
+                ensName,
+                methodName,
+                methodArguments,
+                parent: this
+            }),
+            send: this.send.bind({
+                ensName,
+                methodName,
+                methodArguments,
+                parent: this
+            })
+        };
+    }
 
-module.exports = ResolverMethodHandler;
+    /**
+     * Executes call
+     *
+     * @method call
+     *
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    call(callback) {
+        const promiEvent = new this.promiEventPackage.PromiEvent(),
+              preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+
+        this.parent.registry.resolver(this.ensName).then(resolver => {
+            this.parent.handleCall(promiEvent, resolver.methods[this.methodName], preparedArguments, callback);
+        }).catch(error => {
+            promiEvent.reject(error);
+        });
+
+        return promiEvent;
+    }
+
+    /**
+     * Executes send
+     *
+     * @method send
+     *
+     * @param {Object} sendOptions
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    send(sendOptions, callback) {
+        const promiEvent = new this.promiEventPackage.PromiEvent(),
+              preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+
+        this.parent.registry.resolver(this.ensName).then(resolver => {
+            this.parent.handleSend(promiEvent, resolver.methods[this.methodName], preparedArguments, sendOptions, callback);
+        }).catch(error => {
+            promiEvent.reject(error);
+        });
+
+        return promiEvent;
+    }
+
+    /**
+     * Handles a call method
+     *
+     * @method handleCall
+     *
+     * @param {PromiEvent} promiEvent
+     * @param {function} method
+     * @param {Array} preparedArguments
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    handleCall(promiEvent, method, preparedArguments, callback) {
+        method.apply(this, preparedArguments).call()
+            .then(receipt => {
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            }).catch(error => {
+            promiEvent.reject(error);
+
+            if (_.isFunction(callback)) {
+                callback(error);
+            }
+        });
+
+        return promiEvent;
+    }
+
+    /**
+     * Handles a send method
+     *
+     * @method handleSend
+     *
+     * @param {PromiEvent} promiEvent
+     * @param {function} method
+     * @param {Array} preparedArguments
+     * @param {Object} sendOptions
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    handleSend(promiEvent, method, preparedArguments, sendOptions, callback) {
+        method.apply(this, preparedArguments).send(sendOptions)
+            .on('transactionHash', hash => {
+                promiEvent.emit('transactionHash', hash);
+            })
+            .on('confirmation', (confirmationNumber, receipt) => {
+                promiEvent.emit('confirmation', confirmationNumber, receipt);
+            })
+            .on('receipt', receipt => {
+                promiEvent.emit('receipt', receipt);
+                promiEvent.resolve(receipt);
+
+                if (_.isFunction(callback)) {
+                    callback(receipt);
+                }
+            })
+            .on('error', error => {
+                promiEvent.emit('error', error);
+                promiEvent.reject(error);
+
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
+
+        return promiEvent;
+    }
+
+    /**
+     * Adds the ENS node to the arguments
+     *
+     * @method prepareArguments
+     *
+     * @param {String} name
+     * @param {Array} methodArguments
+     *
+     * @returns {Array}
+     */
+    prepareArguments(name, methodArguments) {
+        const node = namehash.hash(name);
+
+        if (methodArguments.length > 0) {
+            methodArguments.unshift(node);
+
+            return methodArguments;
+        }
+
+        return [node];
+    }
+}
