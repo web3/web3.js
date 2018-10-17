@@ -22,12 +22,12 @@
 
 'use strict';
 
-var version = require('./package.json').version;
-var ABICoder = require('./ABICoder');
-var Utils = require('web3-utils');
+import {version} from '../package.json';
+import ABICoder from './ABICoder';
+import Utils from 'web3-utils';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
     /**
      * Returns the ABICoder object
@@ -36,7 +36,7 @@ module.exports = {
      *
      * @returns {ABICoder}
      */
-    AbiCoder: function () {
+    AbiCoder() {
         return new ABICoder(Utils);
     }
 };
