@@ -22,11 +22,10 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var AbstractWeb3Module = require('./AbstractWeb3Module');
+import {version} from '../package.json';
+import AbstractWeb3Module from './AbstractWeb3Module';
 
-module.exports = {
-    version: version,
-
-    AbstractWeb3Module: AbstractWeb3Module
+export default {
+    version,
+    AbstractWeb3Module
 };
