@@ -22,66 +22,65 @@
 
 "use strict";
 
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+import {AbstractWeb3Module} from 'web3-core';
 
-/**
- * @param {AbstractProviderAdapter|EthereumProvider} provider
- * @param {ProvidersPackage} providersPackage
- * @param {MethodController} methodController
- * @param {MethodModelFactory} methodModelFactory
- * @param {SubscriptionsFactory} subscriptionsFactory
- * @param {Network} net
- *
- * @constructor
- */
-function Shh(provider, providersPackage, methodController, methodModelFactory, subscriptionsFactory, net) {
-    AbstractWeb3Module.call(
-        this,
+export default class Shh extends AbstractWeb3Module {
+
+    /**
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {MethodController} methodController
+     * @param {MethodModelFactory} methodModelFactory
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Network} net
+     *
+     * @constructor
+     */
+    constructor(
         provider,
         providersPackage,
         methodController,
-        methodModelFactory
-    );
-    this.net = net;
-}
-
-Shh.prototype = Object.create(AbstractWeb3Module.prototype);
-Shh.prototype.constructor = Shh;
-
-/**
- * Subscribe to whisper streams
- *
- * @method subscribe
- *
- * @param {string} method
- * @param {Object} options
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- * @returns {Subscription}
- */
-Shh.prototype.subscribe = function (method, options, callback) {
-    if (method === 'messages') {
-        return this.subscriptionsFactory.createShhMessagesSubscription(this, options).subscribe(callback);
+        methodModelFactory,
+        subscriptionsFactory,
+        net
+    ) {
+        super(provider, providersPackage, methodController, methodModelFactory);
+        this.net = net;
     }
 
-    throw Error('Unknown subscription: ' + method);
-};
+    /**
+     * Subscribe to whisper streams
+     *
+     * @method subscribe
+     *
+     * @param {string} method
+     * @param {Object} options
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Subscription}
+     */
+    subscribe(method, options, callback) {
+        if (method === 'messages') {
+            return this.subscriptionsFactory.createShhMessagesSubscription(this, options).subscribe(callback);
+        }
 
-/**
- * Extends setProvider method from AbstractWeb3Module.
- * This is required for updating the provider also in the sub package Net.
- *
- * @param {Object|String} provider
- * @param {Net} net
- *
- * @returns {Boolean}
- */
-Shh.prototype.setProvider = function (provider, net) {
-    return !!(
-        AbstractWeb3Module.setProvider.call(this, provider, net) &&
-        this.net.setProvider(provider, net)
-    );
-};
+        throw Error(`Unknown subscription: ${method}`);
+    }
 
-module.exports = Shh;
+    /**
+     * Extends setProvider method from AbstractWeb3Module.
+     * This is required for updating the provider also in the sub package Net.
+     *
+     * @param {Object|String} provider
+     * @param {Net} net
+     *
+     * @returns {Boolean}
+     */
+    setProvider(provider, net) {
+        return !!(
+            super.setProvider(provider, net) &&
+            this.net.setProvider(provider, net)
+        );
+    }
+}

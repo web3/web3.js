@@ -22,18 +22,18 @@
 
 "use strict";
 
-var version = require('./package.json');
-var ProvidersPackage = require('web3-providers');
-var MethodController = require('web3-core-method').MethodController;
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
-var Network = require('web3-net').Network;
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var Shh = require('./Shh');
-var MethodModelFactory = require('./factories/MethodModelFactory');
+import {version} from '../package.json';
+import ProvidersPackage from 'web3-providers';
+import {MethodController} from 'web3-core-method';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {Network} from 'web3-net';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import Shh from './Shh';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-module.exports = {
-    version: version,
+export default {
+    version,
 
     /**
      * Returns the Shh object.
@@ -44,7 +44,7 @@ module.exports = {
      *
      * @returns {Shh}
      */
-    Shh: function (provider) {
+    Shh: (provider) => {
         return new Shh(
             provider,
             ProvidersPackage,
