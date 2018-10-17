@@ -92,7 +92,7 @@ EventSubscriptionsProxy.prototype.proxyHandler = function (target, name) {
  * @param {Object} options
  * @param {Function} callback
  *
- * @returns {Subscription|EventEmitter}
+ * @returns {Subscription|PromiEvent}
  */
 EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, options, callback) {
     if (typeof options.filters !== 'undefined' && typeof options.topics !== 'undefined') {
@@ -118,7 +118,7 @@ EventSubscriptionsProxy.prototype.subscribe = function (abiItemModel, options, c
  * @param {Object} options
  * @param {Function} callback
  *
- * @returns {Subscription|EventEmitter}
+ * @returns {Subscription|PromiEvent}
  */
 EventSubscriptionsProxy.prototype.subscribeAll = function (options, callback) {
     if (typeof options.topics !== 'undefined') {
