@@ -22,7 +22,7 @@
 
 "use strict";
 
-var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCommand');
+var SendMethodCommand = require('./SendMethodCommand');
 
 /**
  * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
@@ -31,11 +31,11 @@ var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCo
  * @constructor
  */
 function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner) {
-    AbstractSendMethodCommand.call(this, transactionConfirmationWorkflow);
+    SendMethodCommand.call(this, transactionConfirmationWorkflow);
     this.transactionSigner = transactionSigner;
 }
 
-SignAndSendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
+SignAndSendMethodCommand.prototype = Object.create(SendMethodCommand.prototype);
 SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
 
 /**

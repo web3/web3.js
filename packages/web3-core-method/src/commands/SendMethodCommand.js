@@ -71,6 +71,38 @@ SendMethodCommand.prototype.execute = function (web3Package, methodModel, promiE
     return promiEvent;
 };
 
+SendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
+    var self = this;
+
+    web3Package.currentProvider.send(
+        methodModel.rpcMethod,
+        methodModel.parameters
+    ).then(function (response) {
+        self.transactionConfirmationWorkflow.execute(
+            methodModel,
+            web3Package,
+            response,
+            promiEvent
+        );
+
+        promiEvent.eventEmitter.emit('transactionHash', response);
+
+        if (methodModel.callback) {
+            methodModel.callback(false, response);
+        }
+    }).catch(function (error) {
+        promiEvent.reject(error);
+        promiEvent.eventEmitter.emit('error', error);
+        promiEvent.eventEmitter.removeAllListeners();
+
+        if (methodModel.callback) {
+            methodModel.callback(error, null);
+        }
+    });
+
+    return promiEvent;
+};
+
 /**
  * Determines if gasPrice is defined in the method options
  *
