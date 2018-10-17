@@ -22,53 +22,51 @@
 
 "use strict";
 
-/**
- * @constructor
- */
-const JSONRpcMapper = { //TODO: Find a better solution to handle this property as "singleton" globally over the web3 lib
+const JSONRpcMapper = {
     messageId: 0
 };
 
-/**
- * Creates a valid json payload object
- *
- * @method toPayload
- *
- * @param {String} method of jsonrpc call, required
- * @param {Array} params, an Array of method params, optional
- *
- * @returns {Object} valid jsonrpc payload object
- */
-JSONRpcMapper.toPayload = (method, params) => {
-    if (!method) {
-        throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
-    }
+export default class JSONRpcMapper {
 
-    JSONRpcMapper.messageId++;
+    /**
+     * Creates a valid json payload object
+     *
+     * @method toPayload
+     *
+     * @param {String} method of jsonrpc call, required
+     * @param {Array} params, an Array of method params, optional
+     *
+     * @returns {Object} valid jsonrpc payload object
+     */
+    static toPayload(method, params) {
+        if (!method) {
+            throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
+        }
 
-    return {
-        jsonrpc: '2.0',
-        id: JSONRpcMapper.messageId,
-        method,
-        params: params || []
+        JSONRpcMapper.messageId++;
+
+        return {
+            jsonrpc: '2.0',
+            id: JSONRpcMapper.messageId,
+            method,
+            params: params || []
+        };
     };
-};
 
-/**
- * Creates a batch payload object
- *
- * @method toBatchPayload
- *
- * @param {Array} requests, an array of objects with method (required) and params (optional) fields
- *
- * @returns {Array} batch payload
- */
-JSONRpcMapper.toBatchPayload = requests => {
-    return requests.map(request => {
-        request.beforeExecution();
+    /**
+     * Creates a batch payload object
+     *
+     * @method toBatchPayload
+     *
+     * @param {Array} requests, an array of objects with method (required) and params (optional) fields
+     *
+     * @returns {Array} batch payload
+     */
+    static toBatchPayload(requests) {
+        return requests.map(request => {
+            request.beforeExecution();
 
-        return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
-    });
-};
-
-export default JSONRpcMapper;
+            return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
+        });
+    };
+}
