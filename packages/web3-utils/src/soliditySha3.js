@@ -20,28 +20,28 @@
  * @date 2017
  */
 
-var _ = require('underscore');
-var BN = require('bn.js');
-var utils = require('./utils.js');
+import _ from 'underscore';
 
+import BN from 'bn.js';
+import utils from './utils.js';
 
-var _elementaryName = function (name) {
+const _elementaryName = name => {
     /*jshint maxcomplexity:false */
 
     if (name.startsWith('int[')) {
-        return 'int256' + name.slice(3);
+        return `int256${name.slice(3)}`;
     } else if (name === 'int') {
         return 'int256';
     } else if (name.startsWith('uint[')) {
-        return 'uint256' + name.slice(4);
+        return `uint256${name.slice(4)}`;
     } else if (name === 'uint') {
         return 'uint256';
     } else if (name.startsWith('fixed[')) {
-        return 'fixed128x128' + name.slice(5);
+        return `fixed128x128${name.slice(5)}`;
     } else if (name === 'fixed') {
         return 'fixed128x128';
     } else if (name.startsWith('ufixed[')) {
-        return 'ufixed128x128' + name.slice(6);
+        return `ufixed128x128${name.slice(6)}`;
     } else if (name === 'ufixed') {
         return 'ufixed128x128';
     }
@@ -49,22 +49,22 @@ var _elementaryName = function (name) {
 };
 
 // Parse N from type<N>
-var _parseTypeN = function (type) {
-    var typesize = /^\D+(\d+).*$/.exec(type);
+const _parseTypeN = type => {
+    const typesize = /^\D+(\d+).*$/.exec(type);
     return typesize ? parseInt(typesize[1], 10) : null;
 };
 
 // Parse N from type[<N>]
-var _parseTypeNArray = function (type) {
-    var arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
+const _parseTypeNArray = type => {
+    const arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
     return arraySize ? parseInt(arraySize[1], 10) : null;
 };
 
-var _parseNumber = function (arg) {
-    var type = typeof arg;
+const _parseNumber = arg => {
+    const type = typeof arg;
     if (type === 'string') {
         if (utils.isHexStrict(arg)) {
-            return new BN(arg.replace(/0x/i,''), 16);
+            return new BN(arg.replace(/0x/i, ''), 16);
         } else {
             return new BN(arg, 10);
         }
@@ -75,21 +75,21 @@ var _parseNumber = function (arg) {
     } else if (utils.isBN(arg)) {
         return arg;
     } else {
-        throw new Error(arg +' is not a number');
+        throw new Error(`${arg} is not a number`);
     }
 };
 
-var _solidityPack = function (type, value, arraySize) {
+const _solidityPack = (type, value, arraySize) => {
     /*jshint maxcomplexity:false */
 
-    var size, num;
+    let size, num;
     type = _elementaryName(type);
 
 
     if (type === 'bytes') {
 
-        if (value.replace(/^0x/i,'').length % 2 !== 0) {
-            throw new Error('Invalid bytes characters '+ value.length);
+        if (value.replace(/^0x/i, '').length % 2 !== 0) {
+            throw new Error(`Invalid bytes characters ${value.length}`);
         }
 
         return value;
@@ -98,14 +98,14 @@ var _solidityPack = function (type, value, arraySize) {
     } else if (type === 'bool') {
         return value ? '01' : '00';
     } else if (type.startsWith('address')) {
-        if(arraySize) {
+        if (arraySize) {
             size = 64;
         } else {
             size = 40;
         }
 
-        if(!utils.isAddress(value)) {
-            throw new Error(value +' is not a valid address, or the checksum is invalid.');
+        if (!utils.isAddress(value)) {
+            throw new Error(`${value} is not a valid address, or the checksum is invalid.`);
         }
 
         return utils.leftPad(value.toLowerCase(), size);
@@ -115,76 +115,76 @@ var _solidityPack = function (type, value, arraySize) {
 
     if (type.startsWith('bytes')) {
 
-        if(!size) {
+        if (!size) {
             throw new Error('bytes[] not yet supported in solidity');
         }
 
         // must be 32 byte slices when in an array
-        if(arraySize) {
+        if (arraySize) {
             size = 32;
         }
 
-        if (size < 1 || size > 32 || size < value.replace(/^0x/i,'').length / 2 ) {
-            throw new Error('Invalid bytes' + size +' for '+ value);
+        if (size < 1 || size > 32 || size < value.replace(/^0x/i, '').length / 2) {
+            throw new Error(`Invalid bytes${size} for ${value}`);
         }
 
         return utils.rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
-            throw new Error('Invalid uint'+size+' size');
+            throw new Error(`Invalid uint${size} size`);
         }
 
         num = _parseNumber(value);
         if (num.bitLength() > size) {
-            throw new Error('Supplied uint exceeds width: ' + size + ' vs ' + num.bitLength());
+            throw new Error(`Supplied uint exceeds width: ${size} vs ${num.bitLength()}`);
         }
 
-        if(num.lt(new BN(0))) {
-            throw new Error('Supplied uint '+ num.toString() +' is negative');
+        if (num.lt(new BN(0))) {
+            throw new Error(`Supplied uint ${num.toString()} is negative`);
         }
 
-        return size ? utils.leftPad(num.toString('hex'), size/8 * 2) : num;
+        return size ? utils.leftPad(num.toString('hex'), size / 8 * 2) : num;
     } else if (type.startsWith('int')) {
 
         if ((size % 8) || (size < 8) || (size > 256)) {
-            throw new Error('Invalid int'+size+' size');
+            throw new Error(`Invalid int${size} size`);
         }
 
         num = _parseNumber(value);
         if (num.bitLength() > size) {
-            throw new Error('Supplied int exceeds width: ' + size + ' vs ' + num.bitLength());
+            throw new Error(`Supplied int exceeds width: ${size} vs ${num.bitLength()}`);
         }
 
-        if(num.lt(new BN(0))) {
+        if (num.lt(new BN(0))) {
             return num.toTwos(size).toString('hex');
         } else {
-            return size ? utils.leftPad(num.toString('hex'), size/8 * 2) : num;
+            return size ? utils.leftPad(num.toString('hex'), size / 8 * 2) : num;
         }
 
     } else {
         // FIXME: support all other types
-        throw new Error('Unsupported or invalid type: ' + type);
+        throw new Error(`Unsupported or invalid type: ${type}`);
     }
 };
 
 
-var _processSoliditySha3Args = function (arg) {
+const _processSoliditySha3Args = arg => {
     /*jshint maxcomplexity:false */
 
-    if(_.isArray(arg)) {
+    if (_.isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
-    var type, value = '';
-    var hexArg, arraySize;
+    let type, value = '';
+    let hexArg, arraySize;
 
     // if type is given
     if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
         type = arg.hasOwnProperty('t') ? arg.t : arg.type;
         value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 
-    // otherwise try to guess the type
+        // otherwise try to guess the type
     } else {
 
         type = utils.toHex(arg, true);
@@ -195,15 +195,15 @@ var _processSoliditySha3Args = function (arg) {
         }
     }
 
-    if ((type.startsWith('int') || type.startsWith('uint')) &&  typeof value === 'string' && !/^(-)?0x/i.test(value)) {
+    if ((type.startsWith('int') || type.startsWith('uint')) && typeof value === 'string' && !/^(-)?0x/i.test(value)) {
         value = new BN(value);
     }
 
     // get the array size
-    if(_.isArray(value)) {
+    if (_.isArray(value)) {
         arraySize = _parseTypeNArray(type);
-        if(arraySize && value.length !== arraySize) {
-            throw new Error(type +' is not matching the given array '+ JSON.stringify(value));
+        if (arraySize && value.length !== arraySize) {
+            throw new Error(`${type} is not matching the given array ${JSON.stringify(value)}`);
         } else {
             arraySize = value.length;
         }
@@ -211,13 +211,13 @@ var _processSoliditySha3Args = function (arg) {
 
 
     if (_.isArray(value)) {
-        hexArg = value.map(function (val) {
-            return _solidityPack(type, val, arraySize).toString('hex').replace('0x','');
+        hexArg = value.map(val => {
+            return _solidityPack(type, val, arraySize).toString('hex').replace('0x', '');
         });
         return hexArg.join('');
     } else {
         hexArg = _solidityPack(type, value, arraySize);
-        return hexArg.toString('hex').replace('0x','');
+        return hexArg.toString('hex').replace('0x', '');
     }
 
 };
@@ -228,18 +228,18 @@ var _processSoliditySha3Args = function (arg) {
  * @method soliditySha3
  * @return {Object} the sha3
  */
-var soliditySha3 = function () {
+const soliditySha3 = () => {
     /*jshint maxcomplexity:false */
 
-    var args = Array.prototype.slice.call(arguments);
+    const args = Array.prototype.slice.call(arguments);
 
-    var hexArgs = _.map(args, _processSoliditySha3Args);
+    const hexArgs = _.map(args, _processSoliditySha3Args);
 
     // console.log(args, hexArgs);
     // console.log('0x'+ hexArgs.join(''));
 
-    return utils.sha3('0x'+ hexArgs.join(''));
+    return utils.sha3(`0x${hexArgs.join('')}`);
 };
 
 
-module.exports = soliditySha3;
+export default soliditySha3;
