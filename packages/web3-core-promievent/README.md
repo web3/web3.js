@@ -35,11 +35,11 @@ var myFunc = function(){
     var promiEvent = new PromiEvent();
     
     setTimeout(function() {
-        promiEvent.eventEmitter.emit('done', 'Hello!');
+        promiEvent.emit('done', 'Hello!');
         promiEvent.resolve('Hello!');
     }, 10);
     
-    return promiEvent.eventEmitter;
+    return promiEvent;
 };
 
 

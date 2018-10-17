@@ -117,7 +117,7 @@ describe('TransactionConfirmationWorkflowTest', function () {
             promiEvent
         );
 
-        promiEvent.eventEmitter.on('receipt', function (receipt) {
+        promiEvent.on('receipt', function (receipt) {
             expect(receipt).to.has.an.property('blockHash', '0x00');
         }).then(function (response) {
             expect(methodModelCallbackSpy.calledOnce).to.be.true;

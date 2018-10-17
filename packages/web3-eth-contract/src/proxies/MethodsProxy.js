@@ -233,11 +233,11 @@ MethodsProxy.prototype.createRpcMethodModel = function (abiItemModel, methodArgu
  * @returns {PromiEvent}
  */
 MethodsProxy.prototype.handleValidationError = function (error, callback) {
-    var promiEvent = this.promiEventPackage.createPromiEvent();
+    var promiEvent = new this.promiEventPackage.PromiEvent();
 
     promiEvent.resolve(null);
     promiEvent.reject(error);
-    promiEvent.eventEmitter.emit('error', error);
+    promiEvent.emit('error', error);
 
     if (_.isFunction(callback)) {
         callback(error, null);

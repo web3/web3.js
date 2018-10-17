@@ -82,7 +82,7 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.on('transactionHash', function () {
+        promiEvent.on('transactionHash', function () {
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
             methodModelMock.verify();
@@ -127,7 +127,7 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.on('transactionHash', function (response) {
+        promiEvent.on('transactionHash', function (response) {
             expect(response).equal('response');
             expect(methodModel.parameters[0].gasPrice).equal(100);
 
@@ -165,7 +165,7 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.on('error', function (error) {
+        promiEvent.on('error', function (error) {
             expect(error).equal('error');
 
             providerAdapterMock.verify();

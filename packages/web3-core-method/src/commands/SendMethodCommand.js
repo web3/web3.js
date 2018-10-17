@@ -85,15 +85,15 @@ SendMethodCommand.prototype.send = function (methodModel, promiEvent, moduleInst
             promiEvent
         );
 
-        promiEvent.eventEmitter.emit('transactionHash', response);
+        promiEvent.emit('transactionHash', response);
 
         if (methodModel.callback) {
             methodModel.callback(false, response);
         }
     }).catch(function (error) {
         promiEvent.reject(error);
-        promiEvent.eventEmitter.emit('error', error);
-        promiEvent.eventEmitter.removeAllListeners();
+        promiEvent.emit('error', error);
+        promiEvent.removeAllListeners();
 
         if (methodModel.callback) {
             methodModel.callback(error, null);

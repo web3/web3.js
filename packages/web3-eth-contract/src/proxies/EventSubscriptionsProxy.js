@@ -144,17 +144,17 @@ EventSubscriptionsProxy.prototype.subscribeAll = function (options, callback) {
  * @param {Function} callback
  *
  * @callback callback callback(error, result)
- * @returns {EventEmitter}
+ * @returns {PromiEvent}
  */
 EventSubscriptionsProxy.prototype.handleValidationError = function (errorMessage, callback) {
-    var promiEvent = this.promiEventPackage.createPromiEvent();
-    promiEvent.eventEmitter.emit('error', new Error(errorMessage));
+    var promiEvent = new this.promiEventPackage.PromiEvent();
+    promiEvent.emit('error', new Error(errorMessage));
 
     if (_.isFunction(callback)) {
         callback(error, null);
     }
 
-    return promiEvent.eventEmitter;
+    return promiEvent;
 };
 
 module.exports = EventSubscriptionsProxy;

@@ -52,10 +52,10 @@ describe('SendAndSignMethodCommandTest', function () {
         promiEventMock = sinon.mock(promiEvent);
 
         promiEventEmitSpy = sinon.spy();
-        promiEvent.eventEmitter.emit = promiEventEmitSpy;
+        promiEvent.emit = promiEventEmitSpy;
 
         promiEventRemoveListenersSpy = sinon.spy();
-        promiEvent.eventEmitter.removeAllListeners = promiEventRemoveListenersSpy;
+        promiEvent.removeAllListeners = promiEventRemoveListenersSpy;
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow({}, {}, {}, {});
         transactionConfirmationWorkflowMock = sinon.mock(transactionConfirmationWorkflow);
@@ -106,7 +106,7 @@ describe('SendAndSignMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.then(function () {
+        promiEvent.then(function () {
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
 
@@ -142,7 +142,7 @@ describe('SendAndSignMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.catch(function (error) {
+        promiEvent.catch(function (error) {
             expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;

@@ -81,7 +81,7 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, modul
 
                     if (validationResult === true) {
                         self.transactionConfirmationModel.addConfirmation(receipt);
-                        promiEvent.eventEmitter.emit(
+                        promiEvent.emit(
                             'confirmation',
                             self.transactionConfirmationModel.confirmationsCount,
                             receipt
@@ -95,8 +95,8 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, modul
                     }
 
                     promiEvent.reject(validationResult);
-                    promiEvent.eventEmitter.emit('error', validationResult, receipt);
-                    promiEvent.eventEmitter.removeAllListeners();
+                    promiEvent.emit('error', validationResult, receipt);
+                    promiEvent.removeAllListeners();
 
                     if (methodModel.callback) {
                         methodModel.callback(validationResult, null);
@@ -151,8 +151,8 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
 
     if (methodModel instanceof ContractDeployMethodModel) {
         promiEvent.resolve(methodModel.afterExecution(receipt));
-        promiEvent.eventEmitter.emit('receipt', receipt);
-        promiEvent.eventEmitter.removeAllListeners();
+        promiEvent.emit('receipt', receipt);
+        promiEvent.removeAllListeners();
 
         if (methodModel.callback) {
             methodModel.callback(false, receipt);
@@ -164,8 +164,8 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
     var mappedReceipt = methodModel.afterExecution(receipt);
 
     promiEvent.resolve(mappedReceipt);
-    promiEvent.eventEmitter.emit('receipt', mappedReceipt);
-    promiEvent.eventEmitter.removeAllListeners();
+    promiEvent.emit('receipt', mappedReceipt);
+    promiEvent.removeAllListeners();
 
     if (methodModel.callback) {
         methodModel.callback(false, mappedReceipt);
@@ -186,9 +186,9 @@ TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt
 TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, methodModel, promiEvent) {
     this.newHeadsWatcher.stop();
 
-    promiEvent.reject(error).apply(error);
-    promiEvent.eventEmitter.emit('error', error);
-    promiEvent.eventEmitter.removeAllListeners();
+    promiEvent.reject(error);
+    promiEvent.emit('error', error);
+    promiEvent.removeAllListeners();
 
     if (methodModel.callback) {
         methodModel.callback(error, null);

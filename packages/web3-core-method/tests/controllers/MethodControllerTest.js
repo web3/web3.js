@@ -65,11 +65,6 @@ describe('MethodControllerTest', function () {
     it('execute calls signMessageCommand', function () {
         var accounts = {wallet: [0]};
 
-        promiEventPackageMock
-            .expects('createPromiEvent')
-            .returns({})
-            .once();
-
         methodModelMock
             .expects('isSign')
             .returns(true)
@@ -90,11 +85,6 @@ describe('MethodControllerTest', function () {
     it('execute calls signAndSendMethodCommand', function () {
         var accounts = {wallet: [0]};
 
-        promiEventPackageMock
-            .expects('createPromiEvent')
-            .returns({})
-            .once();
-
         methodModelMock
             .expects('isSendTransaction')
             .returns(true)
@@ -113,11 +103,6 @@ describe('MethodControllerTest', function () {
     });
 
     it('execute calls sendMethodCommand with sendTransaction rpc method', function () {
-        promiEventPackageMock
-            .expects('createPromiEvent')
-            .returns({})
-            .once();
-
         methodModelMock
             .expects('isSendTransaction')
             .returns(true)
@@ -136,11 +121,6 @@ describe('MethodControllerTest', function () {
     });
 
     it('execute calls sendMethodCommand with sendRawTransaction rpc method', function () {
-        promiEventPackageMock
-            .expects('createPromiEvent')
-            .returns({})
-            .once();
-
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)
@@ -164,11 +144,6 @@ describe('MethodControllerTest', function () {
     });
 
     it('execute calls callMethodCommand', function () {
-        promiEventPackageMock
-            .expects('createPromiEvent')
-            .returns({})
-            .once();
-
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)
