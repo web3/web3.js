@@ -78,7 +78,7 @@ MethodController.prototype.execute = function (methodModel, accounts, moduleInst
         }
     }
 
-    if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction()) {
+    if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction() || methodModel.isSign()) {
         return this.sendMethodCommand.execute(
             moduleInstance,
             methodModel,
