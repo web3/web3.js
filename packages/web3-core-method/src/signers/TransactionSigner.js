@@ -37,10 +37,8 @@ export default class TransactionSigner extends AbstractSigner {
      * @returns {Promise<Boolean|String>}
      */
     sign(transaction, accounts) {
-        const self = this;
-
         return new Promise((resolve, reject) => {
-            const wallet = self.getWallet(transaction.from, accounts);
+            const wallet = this.getWallet(transaction.from, accounts);
 
             if (wallet && wallet.privateKey) {
                 delete transaction.from;

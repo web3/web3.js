@@ -48,13 +48,11 @@ export default class NewHeadsWatcher extends EventEmitter {
      * @returns {this}
      */
     watch(moduleInstance) {
-        const self = this;
-
         if (moduleInstance.currentProvider instanceof SocketProviderAdapter) {
             this.confirmationSubscription = this.subscriptionsFactory
                 .createNewHeadsSubscription(moduleInstance)
                 .subscribe(() => {
-                    self.emit('newHead');
+                    this.emit('newHead');
                 });
 
             return this;
@@ -62,7 +60,7 @@ export default class NewHeadsWatcher extends EventEmitter {
 
         this.isPolling = true;
         this.confirmationInterval = setInterval(() => {
-            self.emit('newHead')
+            this.emit('newHead')
         }, 1000);
 
         return this;

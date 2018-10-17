@@ -59,38 +59,36 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     execute(methodModel, moduleInstance, transactionHash, promiEvent) {
-        const self = this;
-
         this.getTransactionReceipt(moduleInstance, transactionHash).then(receipt => {
             if (receipt && receipt.blockHash) {
-                const validationResult = self.transactionReceiptValidator.validate(receipt);
+                const validationResult = this.transactionReceiptValidator.validate(receipt);
                 if (validationResult === true) {
-                    self.handleSuccessState(receipt, methodModel, promiEvent);
+                    this.handleSuccessState(receipt, methodModel, promiEvent);
 
                     return;
                 }
 
-                self.handleErrorState(validationResult, methodModel, promiEvent);
+                this.handleErrorState(validationResult, methodModel, promiEvent);
 
                 return;
             }
 
-            self.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
-                self.transactionConfirmationModel.timeoutCounter++;
-                if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
-                    self.getTransactionReceipt(transactionHash).then(receipt => {
-                        const validationResult = self.transactionReceiptValidator.validate(receipt, methodModel.parameters);
+            this.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
+                this.transactionConfirmationModel.timeoutCounter++;
+                if (!this.transactionConfirmationModel.isTimeoutTimeExceeded()) {
+                    this.getTransactionReceipt(transactionHash).then(receipt => {
+                        const validationResult = this.transactionReceiptValidator.validate(receipt, methodModel.parameters);
 
                         if (validationResult === true) {
-                            self.transactionConfirmationModel.addConfirmation(receipt);
+                            this.transactionConfirmationModel.addConfirmation(receipt);
                             promiEvent.emit(
                                 'confirmation',
-                                self.transactionConfirmationModel.confirmationsCount,
+                                this.transactionConfirmationModel.confirmationsCount,
                                 receipt
                             );
 
-                            if (self.transactionConfirmationModel.isConfirmed()) {
-                                self.handleSuccessState(receipt, methodModel, promiEvent);
+                            if (this.transactionConfirmationModel.isConfirmed()) {
+                                this.handleSuccessState(receipt, methodModel, promiEvent);
                             }
 
                             return;
@@ -108,13 +106,13 @@ export default class TransactionConfirmationWorkflow {
                     return;
                 }
 
-                let error = new Error(`Transaction was not mined within ${self.transactionConfirmationModel.TIMEOUTBLOCK} blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`);
+                let error = new Error(`Transaction was not mined within ${this.transactionConfirmationModel.TIMEOUTBLOCK} blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`);
 
-                if (self.newHeadsWatcher.isPolling) {
-                    error = new Error(`Transaction was not mined within${self.transactionConfirmationModel.POLLINGTIMEOUT} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`)
+                if (this.newHeadsWatcher.isPolling) {
+                    error = new Error(`Transaction was not mined within${this.transactionConfirmationModel.POLLINGTIMEOUT} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`)
                 }
 
-                self.handleErrorState(error, methodModel, promiEvent);
+                this.handleErrorState(error, methodModel, promiEvent);
             });
         });
     }
@@ -130,11 +128,11 @@ export default class TransactionConfirmationWorkflow {
      * @returns {Promise<Object>}
      */
     getTransactionReceipt(moduleInstance, transactionHash) {
-        const self = this;
-
-        return moduleInstance.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then(receipt => {
-            return self.formatters.outputTransactionReceiptFormatter(receipt);
-        });
+        return moduleInstance.currentProvider
+            .send('eth_getTransactionReceipt', [transactionHash])
+            .then(receipt => {
+                return this.formatters.outputTransactionReceiptFormatter(receipt);
+            });
     }
 
     /**

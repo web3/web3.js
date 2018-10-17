@@ -51,14 +51,12 @@ export default class SignAndSendMethodCommand extends SendMethodCommand {
      * @returns {PromiEvent}
      */
     execute(moduleInstance, methodModel, promiEvent, accounts) {
-        const self = this;
-
         methodModel.beforeExecution(moduleInstance);
         methodModel.rpcMethod = 'eth_sendRawTransaction';
 
         this.transactionSigner.sign(methodModel.parameters[0], accounts).then(response => {
             methodModel.parameters = [response.rawTransaction];
-            self.send(methodModel, promiEvent, moduleInstance);
+            this.send(methodModel, promiEvent, moduleInstance);
         }).catch(error => {
             promiEvent.reject(error);
             promiEvent.emit('error', error);

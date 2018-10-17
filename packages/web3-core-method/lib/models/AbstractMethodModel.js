@@ -22,154 +22,154 @@
 
 "use strict";
 
-var _ = require('underscore');
+import _ from 'underscore';
 
-/**
- * @param {String|Function} rpcMethod
- * @param {Number} parametersAmount
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function AbstractMethodModel(rpcMethod, parametersAmount, utils, formatters) {
-    this.rpcMethod = rpcMethod;
-    this.parametersAmount = parametersAmount;
-    this.utils = utils;
-    this.formatters = formatters;
-    var methodArguments = {};
+export default class AbstractMethodModel {
 
     /**
-     * Defines accessors for defaultAccount
+     * @param {String|Function} rpcMethod
+     * @param {Number} parametersAmount
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
      */
-    Object.defineProperty(this, 'methodArguments', {
-        get: function () {
-            return methodArguments;
-        },
-        set: function (methodArguments) {
-            methodArguments = this.mapFunctionArguments(methodArguments);
-        },
-        enumerable: true
-    });
+    constructor(rpcMethod, parametersAmount, utils, formatters) {
+        this.rpcMethod = rpcMethod;
+        this.parametersAmount = parametersAmount;
+        this.utils = utils;
+        this.formatters = formatters;
+        const methodArguments = {};
 
-    this.parameters = this.methodArguments.parameters;
-    this.callback = this.methodArguments.callback;
-}
+        /**
+         * Defines accessors for defaultAccount
+         */
+        Object.defineProperty(this, 'methodArguments', {
+            get() {
+                return methodArguments;
+            },
+            set(methodArguments) {
+                methodArguments = this.mapFunctionArguments(methodArguments);
+            },
+            enumerable: true
+        });
 
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-AbstractMethodModel.prototype.beforeExecution = function(moduleInstance) { };
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {*} response
- *
- * @returns {*}
- */
-AbstractMethodModel.prototype.afterExecution = function(response) {
-    return response;
-};
-
-/**
- * Returns the given function arguments and the current model
- *
- * @method request
- *
- * @returns {AbstractMethodModel}
- */
-AbstractMethodModel.prototype.request = function () {
-    this.methodArguments = arguments;
-
-    return this;
-};
-
-/**
- * Splits the parameters and the callback function and returns it as object
- *
- * @method mapFunctionArguments
- *
- * @param {Array} args
- *
- * @returns {Object}
- */
-AbstractMethodModel.prototype.mapFunctionArguments = function (args) {
-    var parameters = args,
-        callback = false;
-
-    if (args.length < this.parametersAmount) {
-        throw new Error(
-            'Arguments length is not correct: expected: ' + this.parametersAmount + ', given: ' + args.length
-        );
+        this.parameters = this.methodArguments.parameters;
+        this.callback = this.methodArguments.callback;
     }
 
-    if (args.length > this.parametersAmount) {
-        callback = args.slice(-1);
-        if(!_.isFunction(callback)) {
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) { }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {*} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        return response;
+    }
+
+    /**
+     * Returns the given function arguments and the current model
+     *
+     * @method request
+     *
+     * @returns {AbstractMethodModel}
+     */
+    request() {
+        this.methodArguments = arguments;
+
+        return this;
+    }
+
+    /**
+     * Splits the parameters and the callback function and returns it as object
+     *
+     * @method mapFunctionArguments
+     *
+     * @param {Array} args
+     *
+     * @returns {Object}
+     */
+    mapFunctionArguments(args) {
+        let parameters = args, callback = false;
+
+        if (args.length < this.parametersAmount) {
             throw new Error(
-                'The latest parameter should be a function otherwise it can not be used as callback'
+                `Arguments length is not correct: expected: ${this.parametersAmount}, given: ${args.length}`
             );
         }
-        parameters = args.slice(0, -1);
+
+        if (args.length > this.parametersAmount) {
+            callback = args.slice(-1);
+            if (!_.isFunction(callback)) {
+                throw new Error(
+                    'The latest parameter should be a function otherwise it can not be used as callback'
+                );
+            }
+            parameters = args.slice(0, -1);
+        }
+
+        return {
+            callback,
+            parameters
+        };
     }
 
-    return {
-        callback: callback,
-        parameters: parameters
+    /**
+     * Checks if the JSON-RPC method is sign.
+     *
+     * @method isSign
+     *
+     * @returns {Boolean}
+     */
+    isSign() {
+        return this.rpcMethod === 'eth_sign';
     }
-};
 
-/**
- * Checks if the JSON-RPC method is sign.
- *
- * @method isSign
- *
- * @returns {Boolean}
- */
-AbstractMethodModel.prototype.isSign = function () {
-    return this.rpcMethod === 'eth_sign';
-};
+    /**
+     * Checks if the JSON-RPC method is sendTransaction
+     *
+     * @method isSendTransaction
+     *
+     * @returns {Boolean}
+     */
+    isSendTransaction() {
+        return this.rpcMethod === 'eth_sendTransaction';
+    }
 
-/**
- * Checks if the JSON-RPC method is sendTransaction
- *
- * @method isSendTransaction
- *
- * @returns {Boolean}
- */
-AbstractMethodModel.prototype.isSendTransaction = function () {
-    return this.rpcMethod === 'eth_sendTransaction';
-};
+    /**
+     * Checks if the JSON-RPC method is sendRawTransaction
+     *
+     * @method isSendRawTransaction
+     *
+     * @returns {Boolean}
+     */
+    isSendRawTransaction() {
+        return this.rpcMethod === 'eth_sendRawTransaction';
+    }
 
-/**
- * Checks if the JSON-RPC method is sendRawTransaction
- *
- * @method isSendRawTransaction
- *
- * @returns {Boolean}
- */
-AbstractMethodModel.prototype.isSendRawTransaction = function () {
-    return this.rpcMethod === 'eth_sendRawTransaction';
-};
-
-/**
- * Checks if the given parameter is of type hash
- *
- * @method isHash
- *
- * @param {*} parameter
- *
- * @returns {Boolean}
- */
-AbstractMethodModel.prototype.isHash = function (parameter) {
-    return _.isString(parameter) && parameter.indexOf('0x') === 0;
-};
-
-module.exports = AbstractMethodModel;
+    /**
+     * Checks if the given parameter is of type hash
+     *
+     * @method isHash
+     *
+     * @param {*} parameter
+     *
+     * @returns {Boolean}
+     */
+    isHash(parameter) {
+        return _.isString(parameter) && parameter.indexOf('0x') === 0;
+    }
+}

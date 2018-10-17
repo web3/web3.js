@@ -46,10 +46,8 @@ export default class GetAccountsMethodModel extends AbstractMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        const self = this;
-
         return response.map(responseItem => {
-            return self.utils.toChecksumAddress(responseItem);
+            return this.utils.toChecksumAddress(responseItem);
         });
     }
 }

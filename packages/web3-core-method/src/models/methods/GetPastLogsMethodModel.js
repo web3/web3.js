@@ -57,10 +57,8 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        const self = this;
-
         return response.map(responseItem => {
-            return self.formatters.outputLogFormatter(responseItem);
+            return this.formatters.outputLogFormatter(responseItem);
         });
     }
 }

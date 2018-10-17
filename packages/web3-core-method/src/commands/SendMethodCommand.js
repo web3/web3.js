@@ -48,8 +48,6 @@ export default class SendMethodCommand extends AbstractSendMethodCommand {
      * @returns {PromiEvent}
      */
     execute(moduleInstance, methodModel, promiEvent) {
-        const self = this;
-
         methodModel.beforeExecution(moduleInstance);
 
         if (this.isGasPriceDefined(methodModel.parameters)) {
@@ -63,20 +61,18 @@ export default class SendMethodCommand extends AbstractSendMethodCommand {
                 methodModel.parameters[0].gasPrice = gasPrice;
             }
 
-            self.send(methodModel, promiEvent, moduleInstance);
+            this.send(methodModel, promiEvent, moduleInstance);
         });
 
         return promiEvent;
     }
 
     send(methodModel, promiEvent, moduleInstance) {
-        const self = this;
-
         moduleInstance.currentProvider.send(
             methodModel.rpcMethod,
             methodModel.parameters
         ).then(response => {
-            self.transactionConfirmationWorkflow.execute(
+            this.transactionConfirmationWorkflow.execute(
                 methodModel,
                 moduleInstance,
                 response,
