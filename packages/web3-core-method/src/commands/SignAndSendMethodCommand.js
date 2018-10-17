@@ -45,17 +45,17 @@ SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
  *
  * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractMethodModel} methodModel
- * @param {Accounts} accounts
  * @param {PromiEvent} promiEvent
+ * @param {Accounts} accounts
  *
  * @callback callback callback(error, result)
  * @returns {PromiEvent}
  */
 SignAndSendMethodCommand.prototype.execute = function (
-    methodModel,
     moduleInstance,
-    accounts,
+    methodModel,
     promiEvent,
+    accounts,
 ) {
     var self = this;
 

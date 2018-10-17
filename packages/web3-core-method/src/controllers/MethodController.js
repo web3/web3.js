@@ -70,10 +70,10 @@ MethodController.prototype.execute = function (methodModel, accounts, moduleInst
 
         if (methodModel.isSendTransaction()) {
             return this.signAndSendMethodCommand.execute(
-                methodModel,
                 moduleInstance,
-                accounts,
+                methodModel,
                 promiEvent,
+                accounts,
             );
         }
     }

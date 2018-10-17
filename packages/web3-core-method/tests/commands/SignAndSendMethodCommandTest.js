@@ -102,7 +102,7 @@ describe('SendAndSignMethodCommandTest', function () {
             .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, moduleInstance, {}, promiEvent);
+        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
         expect(returnedPromiEvent).equal(promiEvent);
 
@@ -138,7 +138,7 @@ describe('SendAndSignMethodCommandTest', function () {
             }))
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, moduleInstance, {}, promiEvent);
+        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
         expect(returnedPromiEvent).equal(promiEvent);
 
