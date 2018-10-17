@@ -11,9 +11,9 @@ var AbstractWeb3Object = require('web3-core-package').AbstractWeb3Object;
 var PromiEventPackage = require('web3-core-promievent');
 
 /**
- * SendMethodCommand test
+ * SendAndSignMethodCommand test
  */
-describe('SendMethodCommandTest', function () {
+describe('SendAndSignMethodCommandTest', function () {
     var signAndSendMethodCommand,
         provider,
         providerMock,
@@ -71,7 +71,7 @@ describe('SendMethodCommandTest', function () {
     });
 
     it('calls execute', function () {
-        methodModel.parameters = [{gasPrice: 100}];
+        methodModel.parameters = [];
 
         methodModelMock
             .expects('beforeExecution')
@@ -90,16 +90,7 @@ describe('SendMethodCommandTest', function () {
 
         providerAdapterMock
             .expects('send')
-            .withArgs('eth_gasPrice', [])
-            .returns(new Promise(
-                function (resolve) {
-                    resolve(100);
-                }
-            )).once();
-
-        providerAdapterMock
-            .expects('send')
-            .withArgs(methodModel.rpcMethod, methodModel.parameters)
+            .withArgs('eth_sendRawTransaction', [''])
             .returns(new Promise(
                 function (resolve) {
                     resolve('response');
@@ -110,7 +101,6 @@ describe('SendMethodCommandTest', function () {
             .expects('execute')
             .withArgs(methodModel, web3Package, 'response', promiEvent)
             .once();
-
 
         var returnedPromiEvent = signAndSendMethodCommand.execute(methodModel, web3Package, {}, promiEvent);
 

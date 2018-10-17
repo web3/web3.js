@@ -1,5 +1,4 @@
 var chai = require('chai');
-var sinon = require('sinon').createSandbox();
 var expect = chai.expect;
 
 var MethodPackageFactory = require('../../src/factories/MethodPackageFactory');
@@ -23,10 +22,6 @@ describe('MethodPackageFactoryTest', function () {
 
     beforeEach(function () {
         methodPackageFactory = new MethodPackageFactory();
-    });
-
-    afterEach(function () {
-        sinon.restore();
     });
 
     it('calls createMethodController and should return an instance of MethodController', function () {

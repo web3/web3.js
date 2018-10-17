@@ -37,7 +37,7 @@ var AllEventsOptionsMapper = require('../mappers/AllEventsOptionsMapper');
 var MethodsProxy = require('../proxies/MethodsProxy');
 var EventSubscriptionsProxy = require('../proxies/EventSubscriptionsProxy');
 var RpcMethodOptionsValidator = require('../validators/RpcMethodOptionsValidator');
-var RpcMethodFactory = require('../factories/RpcMethodFactory');
+var RpcMethodFactory = require('../factories/RpcMethodModelFactory');
 var EventSubscriptionFactory = require('../factories/EventSubscriptionFactory');
 
 /**

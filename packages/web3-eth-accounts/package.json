@@ -8,14 +8,14 @@
     "main": "src/index.js",
     "dependencies": {
         "crypto-browserify": "3.12.0",
-        "eth-lib": "0.2.8",
+        "eth-lib": "^0.2.8",
         "scrypt.js": "0.2.0",
         "underscore": "1.9.1",
         "uuid": "3.3.2",
-        "web3-core-method": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-core-providers": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
-        "web3-core-package": "1.0.0-beta.36"
+        "web3-core-method": "1.0.0-beta.36",
+        "web3-core-package": "1.0.0-beta.36",
+        "web3-core-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     }
 }

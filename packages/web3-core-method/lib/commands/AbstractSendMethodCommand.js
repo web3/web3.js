@@ -35,7 +35,7 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
 
 
 /**
- * Checks the gasPrice and sends the JSON-RPC request
+ * Sends the JSON-RPC request and executes the TransactionConfirmationWorkflow
  *
  * @method send
  *
@@ -46,34 +46,6 @@ function AbstractSendMethodCommand(transactionConfirmationWorkflow) {
  * @returns {PromiEvent}
  */
 AbstractSendMethodCommand.prototype.send = function (methodModel, promiEvent, web3Package) {
-    var self = this;
-    if (this.isGasPriceDefined(methodModel.parameters)) {
-        this.sendMethod(methodModel, promiEvent, web3Package);
-
-        return promiEvent;
-    }
-
-    this.getGasPrice(web3Package.currentProvider).then(function(gasPrice) {
-        if (_.isObject(methodModel.parameters[0])) {
-            methodModel.parameters[0].gasPrice = gasPrice;
-        }
-
-        self.sendMethod(methodModel, promiEvent, web3Package);
-    });
-
-    return promiEvent;
-};
-
-/**
- * Sends the JSON-RPC request
- *
- * @method send
- *
- * @param {AbstractMethodModel} methodModel
- * @param {AbstractWeb3Object} web3Package
- * @param {PromiEvent} promiEvent
- */
-AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEvent, web3Package) {
     var self = this;
 
     web3Package.currentProvider.send(
@@ -101,31 +73,8 @@ AbstractSendMethodCommand.prototype.sendMethod = function (methodModel, promiEve
             methodModel.callback(error, null);
         }
     });
-};
 
-
-/**
- * Determines if gasPrice is defined in the method options
- *
- * @method isGasPriceDefined
- *
- * @param {Array} parameters
- *
- * @returns {Boolean}
- */
-AbstractSendMethodCommand.prototype.isGasPriceDefined = function (parameters) {
-    return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
-};
-
-/**
- * Returns the current gasPrice of the connected node
- *
- * @param {AbstractProviderAdapter | EthereumProvider} provider
- *
- * @returns {Promise<String>}
- */
-AbstractSendMethodCommand.prototype.getGasPrice = function (provider) {
-    return provider.send('eth_gasPrice', []);
+    return promiEvent;
 };
 
 module.exports = AbstractSendMethodCommand;

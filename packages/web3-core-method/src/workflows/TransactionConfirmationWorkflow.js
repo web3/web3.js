@@ -58,13 +58,12 @@ function TransactionConfirmationWorkflow(
  */
 TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3Package, transactionHash, promiEvent) {
     var self = this;
-    this.provider = web3Package.currentProvider;
 
-    this.getTransactionReceipt(transactionHash).then(function (receipt) {
+    this.getTransactionReceipt(web3Package, transactionHash).then(function (receipt) {
         if (receipt && receipt.blockHash) {
-            var validationResult = this.transactionReceiptValidator.validate(receipt);
+            var validationResult = self.transactionReceiptValidator.validate(receipt);
             if (validationResult === true) {
-                this.handleSuccessState(receipt, methodModel, promiEvent);
+                self.handleSuccessState(receipt, methodModel, promiEvent);
 
                 return;
             }
@@ -123,13 +122,16 @@ TransactionConfirmationWorkflow.prototype.execute = function (methodModel, web3P
  *
  * @method execute
  *
+ * @param {AbstractWeb3Object} web3Package
  * @param {String} transactionHash
  *
  * @returns {Promise<Object>}
  */
-TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (transactionHash) {
-    return this.provider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
-        return this.formatters.outputTransactionReceiptFormatter(receipt);
+TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (web3Package, transactionHash) {
+    var self = this;
+
+    return web3Package.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
+        return self.formatters.outputTransactionReceiptFormatter(receipt);
     })
 };
 

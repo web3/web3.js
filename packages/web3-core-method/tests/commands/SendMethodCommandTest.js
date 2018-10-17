@@ -25,8 +25,6 @@ describe('SendMethodCommandTest', function () {
         methodModelMock,
         promiEvent,
         promiEventMock,
-        promiEventEmitSpy,
-        promiEventRemoveListenersSpy,
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
@@ -41,20 +39,12 @@ describe('SendMethodCommandTest', function () {
         web3PackageMock = sinon.mock(web3Package);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
-        methodModelCallbackSpy = sinon.spy();
-        methodModel.callback = methodModelCallbackSpy;
         methodModelMock = sinon.mock(methodModel);
 
         promiEvent = PromiEventPackage.createPromiEvent();
         promiEventMock = sinon.mock(promiEvent);
 
-        promiEventEmitSpy = sinon.spy();
-        promiEvent.eventEmitter.emit = promiEventEmitSpy;
-
-        promiEventRemoveListenersSpy = sinon.spy();
-        promiEvent.eventEmitter.removeAllListeners = promiEventRemoveListenersSpy;
-
-        transactionConfirmationWorkflow = new TransactionConfirmationWorkflow({},{},{},{});
+        transactionConfirmationWorkflow = new TransactionConfirmationWorkflow({}, {}, {}, {});
         transactionConfirmationWorkflowMock = sinon.mock(transactionConfirmationWorkflow);
 
         sendMethodCommand = new SendMethodCommand(transactionConfirmationWorkflow);
@@ -64,9 +54,9 @@ describe('SendMethodCommandTest', function () {
         sinon.restore();
     });
 
-    it('calls execute with gasPrice defined', async function () {
+    it('calls execute with gasPrice defined', function () {
         methodModel.parameters = [{gasPrice: 100}];
-        methodModel.rpcMethod = 'eth_sendRawTransaction';
+        methodModel.rpcMethod = 'eth_sendTransaction';
 
         methodModelMock
             .expects('beforeExecution')
@@ -88,25 +78,20 @@ describe('SendMethodCommandTest', function () {
             .withArgs(methodModel, web3Package, 'response', promiEvent)
             .once();
 
-
-        var returnedPromiEvent = await sendMethodCommand.execute(web3Package, methodModel, promiEvent);
+        var returnedPromiEvent = sendMethodCommand.execute(web3Package, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        expect(promiEventEmitSpy.calledOnce).to.be.true;
-        expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
-
-        expect(methodModelCallbackSpy.calledOnce).to.be.true;
-        expect(methodModelCallbackSpy.calledWith(false, 'response')).to.be.true;
-
-        transactionConfirmationWorkflowMock.verify();
-        providerAdapterMock.verify();
-        methodModelMock.verify();
+        promiEvent.eventEmitter.on('transactionHash', function () {
+            transactionConfirmationWorkflowMock.verify();
+            providerAdapterMock.verify();
+            methodModelMock.verify();
+        });
     });
 
     it('calls execute without gasPrice defined', function () {
         methodModel.parameters = [{}];
-        methodModel.rpcMethod = 'eth_sendRawTransaction';
+        methodModel.rpcMethod = 'eth_sendTransaction';
 
         methodModelMock
             .expects('beforeExecution')
@@ -120,7 +105,8 @@ describe('SendMethodCommandTest', function () {
                 function (resolve) {
                     resolve(100);
                 }
-            )).once();
+            ))
+            .once();
 
         providerAdapterMock
             .expects('send')
@@ -129,7 +115,8 @@ describe('SendMethodCommandTest', function () {
                 function (resolve) {
                     resolve('response');
                 }
-            )).once();
+            ))
+            .once();
 
         transactionConfirmationWorkflowMock
             .expects('execute')
@@ -140,24 +127,19 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.then(function () {
+        promiEvent.eventEmitter.on('transactionHash', function (response) {
+            expect(response).equal('response');
+            expect(methodModel.parameters[0].gasPrice).equal(100);
+
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
             methodModelMock.verify();
-
-            expect(promiEventEmitSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
-
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith(false, 'response')).to.be.true;
-            expect(methodModel.parameters[0].gasPrice).equal(100);
         });
-
     });
 
     it('calls execute and throws error', function () {
         methodModel.parameters = [{gasPrice: 100}];
-        methodModel.rpcMethod = 'eth_sendRawTransaction';
+        methodModel.rpcMethod = 'eth_sendTransaction';
 
         methodModelMock
             .expects('beforeExecution')
@@ -183,18 +165,12 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.eventEmitter.catch(function (error) {
-            expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;
-
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
-
+        promiEvent.eventEmitter.on('error', function (error) {
             expect(error).equal('error');
 
             providerAdapterMock.verify();
             methodModelMock.verify();
+            promiEventMock.verify();
         });
     });
 });

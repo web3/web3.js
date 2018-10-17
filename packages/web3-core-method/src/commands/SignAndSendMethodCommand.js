@@ -57,6 +57,7 @@ SignAndSendMethodCommand.prototype.execute = function (
     accounts,
     promiEvent,
 ) {
+    var self = this;
     methodModel.beforeExecution(web3Package);
     methodModel.rpcMethod = 'eth_sendRawTransaction';
 
@@ -65,7 +66,7 @@ SignAndSendMethodCommand.prototype.execute = function (
         self.send(methodModel, promiEvent, web3Package);
     }).catch(function(error) {
         promiEvent.reject(error);
-        promiEvent.on('error', error);
+        promiEvent.eventEmitter.emit('error', error);
         promiEvent.eventEmitter.removeAllListeners();
 
         if (methodModel.callback) {
