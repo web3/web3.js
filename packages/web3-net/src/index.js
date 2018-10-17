@@ -23,18 +23,16 @@
 
 "use strict";
 
-var version = require('../package.json').version;
-var ProvidersPackage = require('web3-providers');
-var MethodController = require('web3-core-method').MethodController;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
-var Network = require('./Network');
-var MethodModelFactory = require('./factories/MethodModelFactory');
+import {version} from '../package.json';
+import ProvidersPackage from 'web3-providers';
+import {MethodController} from 'web3-core-method';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import Network from './Network';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-
-module.exports = {
-    version: version,
-
+export default {
+    version,
     /**
      * Creates the Network Object
      *
@@ -44,7 +42,7 @@ module.exports = {
      *
      * @returns {Network}
      */
-    Network: function (provider) {
+    Network: (provider) => {
         return new Network(
             provider,
             ProvidersPackage,

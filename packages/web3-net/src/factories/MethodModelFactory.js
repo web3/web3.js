@@ -22,30 +22,23 @@
 
 "use strict";
 
-var web3CoreMethod = require('web3-core-method');
+import web3CoreMethod from 'web3-core-method';
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(
-        this,
-        {
+export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super({
             getId: web3CoreMethod.VersionMethodModel,
             getBlock: web3CoreMethod.GetBlockMethodModel,
             isListening: web3CoreMethod.ListeningMethodModel,
             getPeerCount: web3CoreMethod.PeerCountMethodModel,
-        },
-        utils,
-        formatters
-    );
+        }, utils, formatters);
 
+    }
 }
-
-MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
-MethodModelFactory.prototype.constructor = MethodModelFactory;
-
-module.exports = MethodModelFactory;
