@@ -22,11 +22,10 @@
 
 "use strict";
 
-var version = require('./package.json').version;
-var Bzz = require('./Bzz');
+import {version} from '../package.json';
+import Bzz from './Bzz';
 
-module.exports = {
-    version: version,
-
-    Bzz: Bzz
+export default {
+    version,
+    Bzz
 };
