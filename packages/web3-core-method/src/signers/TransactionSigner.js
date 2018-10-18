@@ -32,25 +32,17 @@ export default class TransactionSigner extends AbstractSigner {
      * @param {Object} transaction
      * @param {Accounts} accounts
      *
-     * @returns {Promise<Boolean|String>}
+     * @returns {Promise<Boolean|String|Error>}
      */
-    sign(transaction, accounts) {
-        return new Promise((resolve, reject) => {
-            const wallet = this.getWallet(transaction.from, accounts);
+    async sign(transaction, accounts) {
+        const wallet = this.getWallet(transaction.from, accounts);
 
-            if (wallet && wallet.privateKey) {
-                delete transaction.from;
+        if (wallet && wallet.privateKey) {
+            delete transaction.from;
 
-                accounts.signTransaction(transaction, wallet.privateKey).then(response => {
-                    resolve(response);
-                }).catch(error => {
-                    reject(error);
-                });
+            return await accounts.signTransaction(transaction, wallet.privateKey);
+        }
 
-                return;
-            }
-
-            reject(new Error('Wallet or privateKey in wallet is not set!'));
-        });
+        throw new Error('Wallet or privateKey in wallet is not set!');
     }
 }

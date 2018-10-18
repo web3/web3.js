@@ -31,15 +31,12 @@ export default class CallMethodCommand {
      * @param {AbstractMethodModel} methodModel
      *
      * @callback callback callback(error, result)
-     * @returns {Promise<*>}
+     * @returns {Promise<Object|String>}
      */
-    execute(moduleInstance, methodModel) {
-        methodModel.beforeExecution(moduleInstance);
-
-        return moduleInstance.currentProvider.send(
-            methodModel.rpcMethod,
-            methodModel.parameters
-        ).then(response => {
+    async execute(moduleInstance, methodModel) {
+        try {
+            methodModel.beforeExecution(moduleInstance);
+            const response = await moduleInstance.currentProvider.send(methodModel.rpcMethod, methodModel.parameters);
             const mappedResponse = methodModel.afterExecution(response);
 
             if (methodModel.callback) {
@@ -47,10 +44,10 @@ export default class CallMethodCommand {
             }
 
             return mappedResponse;
-        }).catch(error => {
+        } catch (error) {
             if (methodModel.callback) {
                 methodModel.callback(error, null);
             }
-        });
+        }
     }
 }
