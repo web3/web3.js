@@ -20,23 +20,19 @@
  * @date 2018
  */
 
-"use strict";
+import web3CoreMethod from 'web3-core-method';
 
-var web3CoreMethod = require('web3-core-method');
+export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- * @param {Accounts} accounts
- *
- * @constructor
- */
-function MethodModelFactory(utils, formatters, accounts) {
-    this.accounts = accounts;
-
-    web3CoreMethod.AbstractMethodModelFactory.call(
-        this,
-        {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     *
+     * @constructor
+     */
+    constructor(utils, formatters, accounts) {
+        super({
             getNodeInfo: web3CoreMethod.GetNodeInfoMethodModel,
             getProtocolVersion: web3CoreMethod.GetProtocolVersionMethodModel,
             getCoinbase: web3CoreMethod.GetCoinbaseMethodModel,
@@ -66,26 +62,21 @@ function MethodModelFactory(utils, formatters, accounts) {
             submitWork: web3CoreMethod.SubmitWorkMethodModel,
             getWork: web3CoreMethod.GetWorkMethodModel,
             getPastLogs: web3CoreMethod.GetPastLogsMethodModel
-        },
-        utils,
-        formatters
-    );
+        }, utils, formatters);
+
+        this.accounts = accounts;
+    }
+
+    /**
+     * Returns an MethodModel object
+     *
+     * @method createMethodModel
+     *
+     * @param {String} name
+     *
+     * @returns {AbstractMethodModel}
+     */
+    createMethodModel(name) {
+        return new this.methodModels[name](this.utils, this.formatters, this.accounts);
+    }
 }
-
-MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
-MethodModelFactory.prototype.constructor = MethodModelFactory;
-
-/**
- * Returns an MethodModel object
- *
- * @method createMethodModel
- *
- * @param {String} name
- *
- * @returns {AbstractMethodModel}
- */
-MethodModelFactory.prototype.createMethodModel = function (name) {
-    return new this.methodModels[name](this.utils, this.formatters, this.accounts);
-};
-
-module.exports = MethodModelFactory;

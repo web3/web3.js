@@ -1,24 +1,26 @@
 # web3-core
 
-This is a sub package of [web3.js][repo]
+This is a sub module of [web3.js][repo]
 
-The ```web3-core``` contains core functions for [web3.js][repo] packages. This package should be used
-if someone wants to implement a new web3 package. 
+The ```web3-core``` contains core functions for [web3.js][repo] modules. This module should be used
+if someone wants to implement a new web3 module. 
 
-If you implement your own web3 package then don't forget to add the ```setProvider()``` method to the parent object. 
-This because the default behaviour of ```setProvider()``` is that the parent object will also set the provider of the child packages if this method is called.
+Don't forget to overwrite the ```setProvider()``` method in the parent object and be sure it
+will set the provider on his child modules too. This is the default behaviour of web3.
 
-Provided interface of AbstractWeb3Module:
+##### AbstractWeb3Module:
+
+> This class provides the default dependencies and behaviours of an web3 JSON-RPC module.
 
 - ```extend(methods: Object):void ``` Extends the current object with additional RPC methods.
-- ```setProvider(provider: any):void ``` This method will set the current provider of this object.
-- ```clearSubscriptions():void ``` This method will clear all subscriptions
-- ```proxyHandler(target, name): any``` This method will be used for the RPC method handling in the Proxy object. This method can be overwritten if you want to change the default behaviour of the Proxy.
-- ```BatchRequest``` With this property we provide the possibility to create batch requests. Please have a look on the official [documentation][docs] for further information.
-- ```givenProvider``` This property contains the detected provider.
-- ```currentProvider``` This property contains the current provider of this object.
-- ```methodController``` This property is an instance of ```MethodController```. This will be used to execute an RPC request. For further information please have a look on the ```MethodController``` in the ```web3-core-method``` package.
-- ```methodModelFactory``` This property is an instance of ```AbstractMethodModelFactory```. If this property is given then it will create an "MethodProxy". Please have a look on the ```web3-core-method```readme file for further information.
+- ```setProvider(provider: any):void ``` Sets the current provider of it.
+- ```clearSubscriptions():void ``` Clears all subscriptions
+- ```proxyHandler(target, name): any``` This will be used for the RPC method handling in the Proxy object.  
+- ```BatchRequest``` This provides the possibility to create a batch requests. Please have a look on the official [documentation][docs] for further information.
+- ```givenProvider``` This contains the detected provider.
+- ```currentProvider``` This contains the current provider of this object.
+- ```methodController``` This is an instance of ```MethodController```. It will be used to execute an RPC request. For further information please have a look on the ```MethodController``` in the ```web3-core-method``` package.
+- ```methodModelFactory``` This is an instance of ```AbstractMethodModelFactory```. If this property is given then it will create an "MethodProxy". Please have a look on the ```web3-core-method```readme file for further information.
 
 ## Installation
 
@@ -42,35 +44,32 @@ This will expose the `moduleInstance` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+import AbstractWeb3Module from 'web3-core';
 
-/**
- * @param {Object|String} provider
- * @param {ProvidersPackage} providersPackage
- * @param {MethodController} methodController
- * @param {AbstractMethodModelFactory} methodModelFactory
- * 
- * @constructor
- */
-function Module (
-    provider,
-    providersPackage,
-    methodController, // optional
-    methodModelFactory // optional
-) {
-    AbstractWeb3Module.call(
-        this,
+class Module extends AbstractWeb3Module {
+    
+    /**
+     * @param {Object|String} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {MethodController} methodController
+     * @param {AbstractMethodModelFactory} methodModelFactory
+     * 
+     * @constructor
+     */
+    constructor(
         provider,
         providersPackage,
         methodController, // optional
         methodModelFactory // optional
-    );
+    ) {
+        super(
+            provider,
+            providersPackage,
+            methodController, // optional
+            methodModelFactory // optional
+        );
+    }
 }
-
-// Inherit from AbstractWeb3Module
-Module.prototype = Object.create(AbstractWeb3Module.prototype);
-Module.prototype.constructor = Module;
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/

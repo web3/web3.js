@@ -20,34 +20,35 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class NewAccountMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function NewAccountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'personal_newAccount', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'personal_newAccount',
+            0,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {String}
+     */
+    afterExecution(response) {
+        return this.utils.toChecksumAddress(response);
+    }
 }
-
-NewAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-NewAccountMethodModel.prototype.constructor = NewAccountMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {String}
- */
-NewAccountMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.toChecksumAddress(response);
-};
-
-module.exports = NewAccountMethodModel;

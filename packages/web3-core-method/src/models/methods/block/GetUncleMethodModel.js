@@ -20,50 +20,51 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetUncleMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetUncleMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getUncleByBlockNumberAndIndex', 2, utils, formatters);
-}
-
-GetUncleMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetUncleMethodModel.prototype.constructor = GetUncleMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance
- */
-GetUncleMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    if (this.isHash(this.parameters[0])) {
-        this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getUncleByBlockNumberAndIndex',
+            2,
+            utils,
+            formatters
+        );
     }
 
-    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-    this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-};
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     */
+    beforeExecution(moduleInstance) {
+        if (this.isHash(this.parameters[0])) {
+            this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
+        }
 
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-GetUncleMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputBlockFormatter(response);
-};
+        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+    }
 
-module.exports = GetUncleMethodModel;
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputBlockFormatter(response);
+    }
+}

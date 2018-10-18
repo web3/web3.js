@@ -20,40 +20,35 @@
  * @date 2018
  */
 
-"use strict";
+import EventFilterEncoder from './EventFilterEncoder';
 
-var EventFilterEncoder = require('./EventFilterEncoder');
+export default class AllEventsFilterEncoder extends EventFilterEncoder {
 
-/**
- * @param {ABICoder} abiCoder
- *
- * @constructor
- */
-function AllEventsFilterEncoder(abiCoder) {
-    EventFilterEncoder.call(this, abiCoder);
+    /**
+     * @param {ABICoder} abiCoder
+     *
+     * @constructor
+     */
+    constructor(abiCoder) {
+        super(abiCoder);
+    }
+
+    /**
+     * Creates encoded topics from filter option of an event.
+     *
+     * @param {ABIModel} abiModel
+     * @param {*} filter
+     *
+     * @returns {Array}
+     */
+    encode(abiModel, filter) {
+        const events = abiModel.getEvents();
+        let topics = [];
+
+        Object.keys(events).forEach(key => {
+            topics.push(super.encode(events[key], filter));
+        });
+
+        return topics;
+    }
 }
-
-AllEventsFilterEncoder.prototype = Object.create(EventFilterEncoder.prototype);
-AllEventsFilterEncoder.prototype.constructor = AllEventsFilterEncoder;
-
-/**
- * Creates encoded topics from filter option of an event.
- *
- * @param {ABIModel} abiModel
- * @param {*} filter
- *
- * @returns {Array}
- */
-AllEventsFilterEncoder.prototype.encode = function (abiModel, filter) {
-    var self = this,
-        events = abiModel.getEvents(),
-        topics = [];
-
-    Object.keys(events).forEach(function (key) {
-        topics.push(EventFilterEncoder.prototype.encode.call(self, events[key], filter));
-    });
-
-    return topics;
-};
-
-module.exports = AllEventsFilterEncoder;

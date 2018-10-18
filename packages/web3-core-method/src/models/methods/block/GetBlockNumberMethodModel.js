@@ -20,34 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetBlockNumberMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_blockNumber',
+            0,
+            utils,
+            formatters
+        );
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetBlockNumberMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_blockNumber', 0, utils, formatters);
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-GetBlockNumberMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockNumberMethodModel.prototype.constructor = GetBlockNumberMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-GetBlockNumberMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = GetBlockNumberMethodModel;

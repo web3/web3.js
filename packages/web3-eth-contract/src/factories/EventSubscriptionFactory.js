@@ -20,68 +20,67 @@
  * @date 2018
  */
 
-"use strict";
+import {Subscription} from 'web3-core-subscriptions';
+import {GetPastLogsMethodModel} from 'web3-core-method';
+import EventLogSubscription from '../models/subscriptions/EventLogSubscription';
+import AllEventsLogSubscription from '../models/subscriptions/AllEventsLogSubscription';
 
-var Subscription = require('web3-core-subscriptions').Subscription;
-var GetPastLogsMethodModel = require('web3-core-method').GetPastLogsMethodModel;
-var EventLogSubscription = require('../models/subscriptions/EventLogSubscription');
-var AllEventsLogSubscription = require('../models/subscriptions/AllEventsLogSubscription');
+export default class EventSubscriptionFactory {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- * @param {MethodController} methodController
- *
- * @constructor
- */
-function EventSubscriptionFactory(utils, formatters, methodController) {
-    this.methodController = methodController;
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {MethodController} methodController
+     *
+     * @constructor
+     */
+    constructor(utils, formatters, methodController) {
+        this.methodController = methodController;
+    }
+
+    /**
+     * Returns an event log subscription
+     *
+     * @param {EventLogDecoder} eventLogDecoder
+     * @param {ABIItemModel} abiItemModel
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Object} options
+     *
+     * @returns {Subscription}
+     */
+    createEventLogSubscription(eventLogDecoder, abiItemModel, moduleInstance, options) {
+        return new Subscription(moduleInstance,
+            new EventLogSubscription(
+                abiItemModel,
+                options,
+                this.utils,
+                this.formatters,
+                new GetPastLogsMethodModel(this.utils, this.formatters),
+                this.methodController,
+                eventLogDecoder
+            )
+        );
+    }
+
+    /**
+     * Returns an log subscription for all events
+     *
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Object} options
+     *
+     * @returns {Subscription}
+     */
+    createAllEventLogSubscription(allEventsLogDecoder, moduleInstance, options) {
+        return new Subscription(moduleInstance,
+            new AllEventsLogSubscription(
+                options,
+                this.utils,
+                this.formatters,
+                new GetPastLogsMethodModel(this.utils, this.formatters),
+                this.methodController,
+                allEventsLogDecoder
+            )
+        );
+    }
 }
-
-/**
- * Returns an event log subscription
- *
- * @param {EventLogDecoder} eventLogDecoder
- * @param {ABIItemModel} abiItemModel
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Object} options
- *
- * @returns {Subscription}
- */
-EventSubscriptionFactory.prototype.createEventLogSubscription = function (eventLogDecoder, abiItemModel, moduleInstance, options) {
-    return new Subscription(moduleInstance,
-        new EventLogSubscription(
-            abiItemModel,
-            options,
-            this.utils,
-            this.formatters,
-            new GetPastLogsMethodModel(this.utils, this.formatters),
-            this.methodController,
-            eventLogDecoder
-        )
-    );
-};
-
-/**
- * Returns an log subscription for all events
- *
- * @param {AllEventsLogDecoder} allEventsLogDecoder
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Object} options
- *
- * @returns {Subscription}
- */
-EventSubscriptionFactory.prototype.createAllEventLogSubscription = function (allEventsLogDecoder, moduleInstance, options) {
-    return new Subscription(moduleInstance,
-        new AllEventsLogSubscription(
-            options,
-            this.utils,
-            this.formatters,
-            new GetPastLogsMethodModel(this.utils, this.formatters),
-            this.methodController,
-            allEventsLogDecoder
-        )
-    );
-};
-
-module.exports = EventSubscriptionFactory;

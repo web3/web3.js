@@ -20,46 +20,47 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetTransactionCountMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetTransactionCountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getTransactionCount', 2, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getTransactionCount',
+            2,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the effective execution.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-GetTransactionCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionCountMethodModel.prototype.constructor = GetTransactionCountMethodModel;
-
-/**
- * This method will be executed before the effective execution.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance
- */
-GetTransactionCountMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
-};
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-GetTransactionCountMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = GetTransactionCountMethodModel;

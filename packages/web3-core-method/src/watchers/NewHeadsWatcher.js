@@ -20,69 +20,66 @@
  * @date 2018
  */
 
-var SocketProviderAdapter = require('web3-providers').SocketProviderAdapter;
-var EventEmitter = require('eventemitter3');
+import {SocketProviderAdapter} from 'web3-providers';
+import EventEmitter from 'eventemitter3';
 
-/**
- * @param {SubscriptionsFactory} subscriptionsFactory
- *
- * @constructor
- */
-function NewHeadsWatcher(subscriptionsFactory) {
-    this.subscriptionsFactory = subscriptionsFactory;
-    this.confirmationInterval = null;
-    this.confirmationSubscription = null;
-    this.isPolling = false;
-}
+export default class NewHeadsWatcher extends EventEmitter {
 
-NewHeadsWatcher.prototype = Object.create(EventEmitter.prototype);
-NewHeadsWatcher.prototype.constructor = NewHeadsWatcher;
+    /**
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     *
+     * @constructor
+     */
+    constructor(subscriptionsFactory) {
+        super();
+        this.subscriptionsFactory = subscriptionsFactory;
+        this.confirmationInterval = null;
+        this.confirmationSubscription = null;
+        this.isPolling = false;
+    }
 
-/**
- * Starts subscription on newHeads if supported or creates an interval to get the newHeads
- *
- * @method watch
- *
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @returns {this}
- */
-NewHeadsWatcher.prototype.watch = function (moduleInstance) {
-    var self = this;
+    /**
+     * Starts subscription on newHeads if supported or creates an interval to get the newHeads
+     *
+     * @method watch
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {this}
+     */
+    watch(moduleInstance) {
+        if (moduleInstance.currentProvider instanceof SocketProviderAdapter) {
+            this.confirmationSubscription = this.subscriptionsFactory
+                .createNewHeadsSubscription(moduleInstance)
+                .subscribe(() => {
+                    this.emit('newHead');
+                });
 
-    if (moduleInstance.currentProvider instanceof SocketProviderAdapter) {
-        this.confirmationSubscription = this.subscriptionsFactory
-            .createNewHeadsSubscription(moduleInstance)
-            .subscribe(function () {
-                self.emit('newHead');
-            });
+            return this;
+        }
+
+        this.isPolling = true;
+        this.confirmationInterval = setInterval(() => {
+            this.emit('newHead')
+        }, 1000);
 
         return this;
     }
 
-    this.isPolling = true;
-    this.confirmationInterval = setInterval(function() {
-        self.emit('newHead')
-    }, 1000);
+    /**
+     * Clears the interval and unsubscribes the subscription
+     *
+     * @method stop
+     */
+    stop() {
+        if (this.confirmationSubscription) {
+            this.confirmationSubscription.unsubscribe();
+        }
 
-    return this;
-};
+        if (this.confirmationInterval) {
+            clearInterval(this.confirmationInterval);
+        }
 
-/**
- * Clears the interval and unsubscribes the subscription
- *
- * @method stop
- */
-NewHeadsWatcher.prototype.stop = function () {
-    if (this.confirmationSubscription) {
-        this.confirmationSubscription.unsubscribe();
+        this.removeAllListeners('newHead');
     }
-
-    if (this.confirmationInterval) {
-        clearInterval(this.confirmationInterval);
-    }
-
-    this.removeAllListeners('newHead');
-};
-
-module.exports = NewHeadsWatcher;
+}

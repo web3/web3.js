@@ -20,62 +20,51 @@
  * @date 2018
  */
 
-"use strict";
+import SendMethodCommand from './SendMethodCommand';
 
-var SendMethodCommand = require('./SendMethodCommand');
+export default class SignAndSendMethodCommand extends SendMethodCommand {
 
-/**
- * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
- * @param {TransactionSigner} transactionSigner
- *
- * @constructor
- */
-function SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner) {
-    SendMethodCommand.call(this, transactionConfirmationWorkflow);
-    this.transactionSigner = transactionSigner;
+    /**
+     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     * @param {TransactionSigner} transactionSigner
+     *
+     * @constructor
+     */
+    constructor(transactionConfirmationWorkflow, transactionSigner) {
+        super(transactionConfirmationWorkflow);
+        this.transactionSigner = transactionSigner;
+    }
+
+    /**
+     * Sends the JSON-RPC request and returns an PromiEvent object
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethodModel} methodModel
+     * @param {PromiEvent} promiEvent
+     * @param {Accounts} accounts
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    execute(moduleInstance, methodModel, promiEvent, accounts) {
+        methodModel.beforeExecution(moduleInstance);
+        methodModel.rpcMethod = 'eth_sendRawTransaction';
+
+        this.transactionSigner.sign(methodModel.parameters[0], accounts).then(response => {
+            methodModel.parameters = [response.rawTransaction];
+            this.send(methodModel, promiEvent, moduleInstance);
+        }).catch(error => {
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
+            promiEvent.removeAllListeners();
+
+            if (methodModel.callback) {
+                methodModel.callback(error, null);
+            }
+        });
+
+        return promiEvent;
+    }
 }
-
-SignAndSendMethodCommand.prototype = Object.create(SendMethodCommand.prototype);
-SignAndSendMethodCommand.prototype.constructor = SignAndSendMethodCommand;
-
-/**
- * Sends the JSON-RPC request and returns an PromiEvent object
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractMethodModel} methodModel
- * @param {PromiEvent} promiEvent
- * @param {Accounts} accounts
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-SignAndSendMethodCommand.prototype.execute = function (
-    moduleInstance,
-    methodModel,
-    promiEvent,
-    accounts,
-) {
-    var self = this;
-
-    methodModel.beforeExecution(moduleInstance);
-    methodModel.rpcMethod = 'eth_sendRawTransaction';
-
-    this.transactionSigner.sign(methodModel.parameters[0], accounts).then(function(response) {
-        methodModel.parameters = [response.rawTransaction];
-        self.send(methodModel, promiEvent, moduleInstance);
-    }).catch(function(error) {
-        promiEvent.reject(error);
-        promiEvent.emit('error', error);
-        promiEvent.removeAllListeners();
-
-        if (methodModel.callback) {
-            methodModel.callback(error, null);
-        }
-    });
-
-    return promiEvent;
-};
-
-module.exports = SignAndSendMethodCommand;

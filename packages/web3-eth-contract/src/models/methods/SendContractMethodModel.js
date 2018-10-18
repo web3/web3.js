@@ -20,72 +20,69 @@
  * @date 2018
  */
 
-"use strict";
-var _ = require('underscore');
-var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
+import _ from 'underscore';
+import {SendTransactionMethodModel} from 'web3-core-method';
 
-/**
- * @param {ABIItemModel} abiItemModel
- * @param {AllEventsLogDecoder} allEventsLogDecoder
- * @param {Object} utils
- * @param {Object} formatters
- * @param {Accounts} accounts
- *
- * @constructor
- */
-function SendContractMethodModel(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
-    SendTransactionMethodModel.call(this, utils, formatters, accounts);
+export default class SendContractMethodModel extends SendTransactionMethodModel {
 
-    this.abiItemModel = abiItemModel;
-    this.allEventsLogDecoder = allEventsLogDecoder;
-}
+    /**
+     * @param {ABIItemModel} abiItemModel
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     *
+     * @constructor
+     */
+    constructor(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
+        super(utils, formatters, accounts);
 
-SendContractMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
-SendContractMethodModel.prototype.constructor = SendContractMethodModel;
+        this.abiItemModel = abiItemModel;
+        this.allEventsLogDecoder = allEventsLogDecoder;
+    }
 
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {*}
- */
-SendContractMethodModel.prototype.afterExecution = function (response) {
-    if (_.isArray(response.logs)) {
-        response.events = {};
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        if (_.isArray(response.logs)) {
+            response.events = {};
 
-        response.logs.map(function (log) {
-            return this.allEventsLogDecoder.decode(null, log);
-        });
+            response.logs.map(function (log) {
+                return this.allEventsLogDecoder.decode(null, log);
+            });
 
-        response.logs.forEach(function (log, index) {
-            if(log.event) {
-                if (response.events[log.event]) {
-                    if (_.isArray(response.events[log.event])) {
-                        response.events[log.event].push(log);
+            response.logs.forEach((log, index) => {
+                if (log.event) {
+                    if (response.events[log.event]) {
+                        if (_.isArray(response.events[log.event])) {
+                            response.events[log.event].push(log);
+
+                            return;
+                        }
+
+                        response.events[log.event] = [response.events[log.event], log];
 
                         return;
                     }
 
-                    response.events[log.event] = [response.events[log.event], log];
+                    response.events[log.event] = log;
 
                     return;
                 }
 
-                response.events[log.event] = log;
+                response.events[index] = log;
+            });
 
-                return;
-            }
+            delete response.logs;
+        }
 
-            response.events[index] = log;
-        });
-
-        delete response.logs;
+        return response;
     }
-
-    return response;
-};
-
-module.exports = SendContractMethodModel;
+}

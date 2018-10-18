@@ -20,33 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class EcRecoverMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function EcRecoverMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'personal_ecRecover', 3, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'personal_ecRecover',
+            3,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    }
 }
-
-EcRecoverMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-EcRecoverMethodModel.prototype.constructor = EcRecoverMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-EcRecoverMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-};
-
-module.exports = EcRecoverMethodModel;

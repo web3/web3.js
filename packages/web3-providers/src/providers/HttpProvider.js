@@ -22,106 +22,106 @@
  * @date 2015
  */
 
-var errors = require('web3-core-helpers').errors;
-var XHR2 = require('xhr2-cookies').XMLHttpRequest; // jshint ignore: line
-var http = require('http');
-var https = require('https');
+import {errors} from 'web3-core-helpers';
+import {XMLHttpRequest as XHR2} from 'xhr2-cookies'; // jshint ignore: line
+import http from 'http';
+import https from 'https';
 
-/**
- * @param {String} host
- * @param {Object} options
- *
- * @constructor
- */
-var HttpProvider = function HttpProvider(host, options) {
-    options = options || {};
-    this.host = host || 'http://localhost:8545';
-    if (this.host.substring(0,5) === "https"){
-        this.httpsAgent = new https.Agent({ keepAlive: true });
-    }else{
-        this.httpAgent = new http.Agent({ keepAlive: true });
-    }
-    this.timeout = options.timeout || 0;
-    this.headers = options.headers;
-    this.connected = false;
-};
+export default class HttpProvider {
 
-/**
- * Prepares the HTTP request
- *
- * @private
- * @method _prepareRequest
- *
- * @returns {FakeXHR2}
- */
-HttpProvider.prototype._prepareRequest = function () {
-    var request = new XHR2();
-    request.nodejsSet({
-        httpsAgent:this.httpsAgent,
-        httpAgent:this.httpAgent
-    });
+    /**
+     * @param {String} host
+     * @param {Object} options
+     *
+     * @constructor
+     */
+    constructor(host, options = {}) {
+        this.host = host || 'http://localhost:8545';
 
-    request.open('POST', this.host, true);
-    request.setRequestHeader('Content-Type','application/json');
-    request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
-    request.withCredentials = true;
-
-    if(this.headers) {
-        this.headers.forEach(function(header) {
-            request.setRequestHeader(header.name, header.value);
-        });
-    }
-
-    return request;
-};
-
-/**
- * Should be used to make async request
- *
- * @method send
- *
- * @param {Object} payload
- * @param {Function} callback
- *
- * @callback callback callback(error, result)
- */
-HttpProvider.prototype.send = function (payload, callback) {
-    var _this = this;
-    var request = this._prepareRequest();
-
-    request.onreadystatechange = function() {
-        if (request.readyState === 4 && request.timeout !== 1) {
-            var result = request.responseText;
-            var error = null;
-
-            try {
-                result = JSON.parse(result);
-            } catch(e) {
-                error = errors.InvalidResponse(request.responseText);
-            }
-
-            _this.connected = true;
-            callback(error, result);
+        if (this.host.substring(0,5) === "https"){
+            this.httpsAgent = new https.Agent({ keepAlive: true });
+        } else {
+            this.httpAgent = new http.Agent({ keepAlive: true });
         }
-    };
 
-    request.ontimeout = function() {
-        _this.connected = false;
-        callback(errors.ConnectionTimeout(this.timeout));
-    };
-
-    try {
-        request.send(JSON.stringify(payload));
-    } catch(error) {
+        this.timeout = options.timeout || 0;
+        this.headers = options.headers;
         this.connected = false;
-        callback(errors.InvalidConnection(this.host));
     }
-};
 
-/**
- * If this method does not exist it will throw en error.
- */
-HttpProvider.prototype.disconnect = function () { };
+    /**
+     * Prepares the HTTP request
+     *
+     * @private
+     * @method _prepareRequest
+     *
+     * @returns {FakeXHR2}
+     */
+    _prepareRequest() {
+        const request = new XHR2();
+        request.nodejsSet({
+            httpsAgent:this.httpsAgent,
+            httpAgent:this.httpAgent
+        });
 
+        request.open('POST', this.host, true);
+        request.setRequestHeader('Content-Type','application/json');
+        request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
+        request.withCredentials = true;
 
-module.exports = HttpProvider;
+        if(this.headers) {
+            this.headers.forEach(header => {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
+
+        return request;
+    }
+
+    /**
+     * Should be used to make async request
+     *
+     * @method send
+     *
+     * @param {Object} payload
+     * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     */
+    send(payload, callback) {
+        const request = this._prepareRequest();
+
+        request.onreadystatechange = () => {
+            if (request.readyState === 4 && request.timeout !== 1) {
+                let result = request.responseText;
+                let error = null;
+
+                try {
+                    result = JSON.parse(result);
+                } catch(e) {
+                    error = errors.InvalidResponse(request.responseText);
+                }
+
+                this.connected = true;
+                callback(error, result);
+            }
+        };
+
+        request.ontimeout = function() {
+            this.connected = false;
+            callback(errors.ConnectionTimeout(this.timeout));
+        };
+
+        try {
+            request.send(JSON.stringify(payload));
+        } catch(error) {
+            this.connected = false;
+            callback(errors.InvalidConnection(this.host));
+        }
+    }
+
+    /**
+     * If this method does not exist it will throw en error.
+     */
+    disconnect() { }
+}

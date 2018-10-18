@@ -20,179 +20,176 @@
  * @date 2018
  */
 
-"use strict";
+import {ContractDeployMethodModel} from 'web3-eth-contract';
 
-var ContractDeployMethodModel = require('web3-eth-contract').ContractDeployMethodModel;
+export default class TransactionConfirmationWorkflow {
 
-/**
- * @param {TransactionConfirmationModel} transactionConfirmationModel
- * @param {TransactionReceiptValidator} transactionReceiptValidator
- * @param {NewHeadsWatcher} newHeadsWatcher
- * @param {Object} formatters
- *
- * @constructor
- */
-function TransactionConfirmationWorkflow(
-    transactionConfirmationModel,
-    transactionReceiptValidator,
-    newHeadsWatcher,
-    formatters
-) {
-    this.transactionConfirmationModel = transactionConfirmationModel;
-    this.transactionReceiptValidator = transactionReceiptValidator;
-    this.newHeadsWatcher = newHeadsWatcher;
-    this.formatters = formatters;
-}
+    /**
+     * @param {TransactionConfirmationModel} transactionConfirmationModel
+     * @param {TransactionReceiptValidator} transactionReceiptValidator
+     * @param {NewHeadsWatcher} newHeadsWatcher
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(
+        transactionConfirmationModel,
+        transactionReceiptValidator,
+        newHeadsWatcher,
+        formatters
+    ) {
+        this.transactionConfirmationModel = transactionConfirmationModel;
+        this.transactionReceiptValidator = transactionReceiptValidator;
+        this.newHeadsWatcher = newHeadsWatcher;
+        this.formatters = formatters;
+    }
 
-/**
- * Executes the transaction confirmation workflow
- *
- * @method execute
- *
- * @param {AbstractMethodModel} methodModel
- * @param {AbstractWeb3Module} moduleInstance
- * @param {String} transactionHash
- * @param {Object} promiEvent
- *
- * @callback callback callback(error, result)
- */
-TransactionConfirmationWorkflow.prototype.execute = function (methodModel, moduleInstance, transactionHash, promiEvent) {
-    var self = this;
+    /**
+     * Executes the transaction confirmation workflow
+     *
+     * @method execute
+     *
+     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {String} transactionHash
+     * @param {Object} promiEvent
+     *
+     * @callback callback callback(error, result)
+     */
+    execute(methodModel, moduleInstance, transactionHash, promiEvent) {
+        this.getTransactionReceipt(moduleInstance, transactionHash).then(receipt => {
+            if (receipt && receipt.blockHash) {
+                const validationResult = this.transactionReceiptValidator.validate(receipt);
+                if (validationResult === true) {
+                    this.handleSuccessState(receipt, methodModel, promiEvent);
 
-    this.getTransactionReceipt(moduleInstance, transactionHash).then(function (receipt) {
-        if (receipt && receipt.blockHash) {
-            var validationResult = self.transactionReceiptValidator.validate(receipt);
-            if (validationResult === true) {
-                self.handleSuccessState(receipt, methodModel, promiEvent);
+                    return;
+                }
+
+                this.handleErrorState(validationResult, methodModel, promiEvent);
 
                 return;
             }
 
-            self.handleErrorState(validationResult, methodModel, promiEvent);
+            this.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
+                this.transactionConfirmationModel.timeoutCounter++;
+                if (!this.transactionConfirmationModel.isTimeoutTimeExceeded()) {
+                    this.getTransactionReceipt(transactionHash).then(receipt => {
+                        const validationResult = this.transactionReceiptValidator.validate(receipt, methodModel.parameters);
+
+                        if (validationResult === true) {
+                            this.transactionConfirmationModel.addConfirmation(receipt);
+                            promiEvent.emit(
+                                'confirmation',
+                                this.transactionConfirmationModel.confirmationsCount,
+                                receipt
+                            );
+
+                            if (this.transactionConfirmationModel.isConfirmed()) {
+                                this.handleSuccessState(receipt, methodModel, promiEvent);
+                            }
+
+                            return;
+                        }
+
+                        promiEvent.reject(validationResult);
+                        promiEvent.emit('error', validationResult, receipt);
+                        promiEvent.removeAllListeners();
+
+                        if (methodModel.callback) {
+                            methodModel.callback(validationResult, null);
+                        }
+                    });
+
+                    return;
+                }
+
+                let error = new Error(`Transaction was not mined within ${this.transactionConfirmationModel.TIMEOUTBLOCK} blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`);
+
+                if (this.newHeadsWatcher.isPolling) {
+                    error = new Error(`Transaction was not mined within${this.transactionConfirmationModel.POLLINGTIMEOUT} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`)
+                }
+
+                this.handleErrorState(error, methodModel, promiEvent);
+            });
+        });
+    }
+
+    /**
+     * Get receipt by transaction hash
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {String} transactionHash
+     *
+     * @returns {Promise<Object>}
+     */
+    getTransactionReceipt(moduleInstance, transactionHash) {
+        return moduleInstance.currentProvider
+            .send('eth_getTransactionReceipt', [transactionHash])
+            .then(receipt => {
+                return this.formatters.outputTransactionReceiptFormatter(receipt);
+            });
+    }
+
+    /**
+     * Resolves promise, emits receipt event, calls callback and removes all the listeners.
+     *
+     * @method handleSuccessState
+     *
+     * @param {Object} receipt
+     * @param {AbstractMethodModel} methodModel
+     * @param {PromiEvent} promiEvent
+     *
+     * @callback callback callback(error, result)
+     */
+    handleSuccessState(receipt, methodModel, promiEvent) {
+        this.newHeadsWatcher.stop();
+
+        if (methodModel instanceof ContractDeployMethodModel) {
+            promiEvent.resolve(methodModel.afterExecution(receipt));
+            promiEvent.emit('receipt', receipt);
+            promiEvent.removeAllListeners();
+
+            if (methodModel.callback) {
+                methodModel.callback(false, receipt);
+            }
 
             return;
         }
 
-        self.newHeadsWatcher.watch(moduleInstance).on('newHead', function () {
-            self.transactionConfirmationModel.timeoutCounter++;
-            if (!self.transactionConfirmationModel.isTimeoutTimeExceeded()) {
-                self.getTransactionReceipt(transactionHash).then(function (receipt) {
-                    var validationResult = self.transactionReceiptValidator.validate(receipt, methodModel.parameters);
+        const mappedReceipt = methodModel.afterExecution(receipt);
 
-                    if (validationResult === true) {
-                        self.transactionConfirmationModel.addConfirmation(receipt);
-                        promiEvent.emit(
-                            'confirmation',
-                            self.transactionConfirmationModel.confirmationsCount,
-                            receipt
-                        );
-
-                        if (self.transactionConfirmationModel.isConfirmed()) {
-                            self.handleSuccessState(receipt, methodModel, promiEvent);
-                        }
-
-                        return;
-                    }
-
-                    promiEvent.reject(validationResult);
-                    promiEvent.emit('error', validationResult, receipt);
-                    promiEvent.removeAllListeners();
-
-                    if (methodModel.callback) {
-                        methodModel.callback(validationResult, null);
-                    }
-                });
-
-                return;
-            }
-
-            var error =  new Error('Transaction was not mined within '+ self.transactionConfirmationModel.TIMEOUTBLOCK +' blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!');
-
-            if (self.newHeadsWatcher.isPolling) {
-                error = new Error('Transaction was not mined within' + self.transactionConfirmationModel.POLLINGTIMEOUT + ' seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!')
-            }
-
-            self.handleErrorState(error, methodModel, promiEvent);
-        });
-    });
-};
-
-/**
- * Get receipt by transaction hash
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {String} transactionHash
- *
- * @returns {Promise<Object>}
- */
-TransactionConfirmationWorkflow.prototype.getTransactionReceipt = function (moduleInstance, transactionHash) {
-    var self = this;
-
-    return moduleInstance.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then(function (receipt) {
-        return self.formatters.outputTransactionReceiptFormatter(receipt);
-    })
-};
-
-/**
- * Resolves promise, emits receipt event, calls callback and removes all the listeners.
- *
- * @method handleSuccessState
- *
- * @param {Object} receipt
- * @param {AbstractMethodModel} methodModel
- * @param {PromiEvent} promiEvent
- *
- * @callback callback callback(error, result)
- */
-TransactionConfirmationWorkflow.prototype.handleSuccessState = function (receipt, methodModel, promiEvent) {
-    this.newHeadsWatcher.stop();
-
-    if (methodModel instanceof ContractDeployMethodModel) {
-        promiEvent.resolve(methodModel.afterExecution(receipt));
-        promiEvent.emit('receipt', receipt);
+        promiEvent.resolve(mappedReceipt);
+        promiEvent.emit('receipt', mappedReceipt);
         promiEvent.removeAllListeners();
 
         if (methodModel.callback) {
-            methodModel.callback(false, receipt);
+            methodModel.callback(false, mappedReceipt);
         }
-
-        return;
     }
 
-    var mappedReceipt = methodModel.afterExecution(receipt);
+    /**
+     * Rejects promise, emits error event, calls callback and removes all the listeners.
+     *
+     * @method handleErrorState
+     *
+     * @param {Error} error
+     * @param {AbstractMethodModel} methodModel
+     * @param {PromiEvent} promiEvent
+     *
+     * @callback callback callback(error, result)
+     */
+    handleErrorState(error, methodModel, promiEvent) {
+        this.newHeadsWatcher.stop();
 
-    promiEvent.resolve(mappedReceipt);
-    promiEvent.emit('receipt', mappedReceipt);
-    promiEvent.removeAllListeners();
+        promiEvent.reject(error);
+        promiEvent.emit('error', error);
+        promiEvent.removeAllListeners();
 
-    if (methodModel.callback) {
-        methodModel.callback(false, mappedReceipt);
+        if (methodModel.callback) {
+            methodModel.callback(error, null);
+        }
     }
-};
-
-/**
- * Rejects promise, emits error event, calls callback and removes all the listeners.
- *
- * @method handleErrorState
- *
- * @param {Error} error
- * @param {AbstractMethodModel} methodModel
- * @param {PromiEvent} promiEvent
- *
- * @callback callback callback(error, result)
- */
-TransactionConfirmationWorkflow.prototype.handleErrorState = function (error, methodModel, promiEvent) {
-    this.newHeadsWatcher.stop();
-
-    promiEvent.reject(error);
-    promiEvent.emit('error', error);
-    promiEvent.removeAllListeners();
-
-    if (methodModel.callback) {
-        methodModel.callback(error, null);
-    }
-};
-
-module.exports = TransactionConfirmationWorkflow;
+}

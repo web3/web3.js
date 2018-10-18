@@ -20,111 +20,109 @@
  * @date 2018
  */
 
-"use strict";
+import _ from 'underscore';
 
-var _ = require('underscore');
+export default class ABIItemModel {
 
-/**
- * @param {Object} abiItem
- *
- * @constructor
- */
-function ABIItemModel(abiItem) {
-    this.abiItem = abiItem;
-    this.signature = this.abiItem.signature;
-    this.name = this.abiItem.name;
-    this.anonymous = this.abiItem.anonymous;
-    this.contractMethodParameters = [];
+    /**
+     * @param {Object} abiItem
+     *
+     * @constructor
+     */
+    constructor(abiItem) {
+        this.abiItem = abiItem;
+        this.signature = this.abiItem.signature;
+        this.name = this.abiItem.name;
+        this.anonymous = this.abiItem.anonymous;
+        this.contractMethodParameters = [];
 
-    Object.defineProperty(this, 'requestType', {
-        get: function () {
-            if (abiItem.type === 'function') {
-                if (abiItem.constant === true) {
-                    return 'call';
+        Object.defineProperty(this, 'requestType', {
+            get() {
+                if (abiItem.type === 'function') {
+                    if (abiItem.constant === true) {
+                        return 'call';
+                    }
+
+                    return 'send';
                 }
 
-                return 'send';
+                if (abiItem.type === 'constructor') {
+                    return 'contract-deployment';
+                }
             }
+        })
+    }
 
-            if (abiItem.type === 'constructor') {
-                return 'contract-deployment';
-            }
+    /**
+     * Returns the input length of the abiItem
+     *
+     * @method getInputLength
+     *
+     * @returns {Number}
+     */
+    getInputLength() {
+        if (_.isArray(this.abiItem.inputs)) {
+            return this.abiItem.inputs.length;
         }
-    })
+
+        return 0;
+    }
+
+    /**
+     * Returns all inputs of the abi item
+     *
+     * @method getInputs
+     *
+     * @returns {Array}
+     */
+    getInputs() {
+        let inputs = [];
+
+        if (_.isArray(this.abiItem.inputs)) {
+            inputs = this.abiItem.inputs;
+        }
+
+        return inputs;
+    }
+
+    /**
+     * Checks if the given parameter array length matches the abiItem inputs length
+     *
+     * @method givenParametersLengthIsValid
+     *
+     * @returns {Error|Boolean}
+     */
+    givenParametersLengthIsValid() {
+        const inputLength = this.getInputLength();
+
+        if (this.contractMethodParameters.length === inputLength) {
+            return true;
+        }
+
+        return new Error(
+            `The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`
+        );
+    }
+
+    /**
+     * Returns the indexed input of this abiItem
+     *
+     * @returns {Array}
+     */
+    getIndexedInputs() {
+        return this.getInputs().filter(input => {
+            return input.indexed === true;
+        });
+    }
+
+    /**
+     * Checks the type of this abiItem
+     *
+     * @method isOfType
+     *
+     * @returns {Boolean}
+     */
+    isOfType(type) {
+        return this.abiItem.type === type;
+    }
 }
-
-/**
- * Returns the input length of the abiItem
- *
- * @method getInputLength
- *
- * @returns {Number}
- */
-ABIItemModel.prototype.getInputLength = function () {
-    if (_.isArray(this.abiItem.inputs)) {
-        return this.abiItem.inputs.length;
-    }
-
-    return 0;
-};
-
-/**
- * Returns all inputs of the abi item
- *
- * @method getInputs
- *
- * @returns {Array}
- */
-ABIItemModel.prototype.getInputs = function () {
-    var inputs = [];
-
-    if (_.isArray(this.abiItem.inputs)) {
-        inputs = this.abiItem.inputs;
-    }
-
-    return inputs;
-};
-
-/**
- * Checks if the given parameter array length matches the abiItem inputs length
- *
- * @method givenParametersLengthIsValid
- *
- * @returns {Error|Boolean}
- */
-ABIItemModel.prototype.givenParametersLengthIsValid = function () {
-    var inputLength = this.getInputLength();
-
-    if (this.contractMethodParameters.length === inputLength) {
-        return true;
-    }
-
-    return new Error(
-        'The number of arguments is not matching the methods required number. You need to pass '
-        + inputLength + ' arguments.'
-    );
-};
-
-/**
- * Returns the indexed input of this abiItem
- *
- * @returns {Array}
- */
-ABIItemModel.prototype.getIndexedInputs = function () {
-    return this.getInputs().filter(function (input) {
-        return input.indexed === true;
-    });
-};
-
-/**
- * Checks the type of this abiItem
- *
- * @method isOfType
- *
- * @returns {Boolean}
- */
-ABIItemModel.prototype.isOfType = function (type) {
-    return this.abiItem.type === type;
-};
-
-module.exports = ABIItemModel;

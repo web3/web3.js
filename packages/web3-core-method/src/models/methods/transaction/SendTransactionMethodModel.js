@@ -20,34 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class SendTransactionMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     *
+     * @constructor
+     */
+    constructor(utils, formatters, accounts) {
+        super(
+            'eth_sendTransaction',
+            1,
+            utils,
+            formatters
+        );
+        this.accounts = accounts;
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- * @param {Accounts} accounts
- *
- * @constructor
- */
-function SendTransactionMethodModel(utils, formatters, accounts) {
-    AbstractMethodModel.call(this, 'eth_sendTransaction', 1, utils, formatters);
-    this.accounts = accounts;
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
+    }
 }
-
-SendTransactionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SendTransactionMethodModel.prototype.constructor = SendTransactionMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-SendTransactionMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
-};
-
-module.exports = SendTransactionMethodModel;

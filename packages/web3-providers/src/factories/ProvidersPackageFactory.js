@@ -20,131 +20,127 @@
  * @date 2018
  */
 
-var ProviderAdapterResolver = require('../resolvers/ProviderAdapterResolver');
-var ProviderDetector = require('../detectors/ProviderDetector');
-var SocketProviderAdapter = require('../adapters/SocketProviderAdapter');
-var InpageProviderAdapter = require('../adapters/InpageProviderAdapter');
-var HttpProviderAdapter = require('../adapters/HttpProviderAdapter');
-var WebsocketProvider = require('../providers/WebsocketProvider');
-var IpcProvider = require('../providers/IpcProvider');
-var HttpProvider = require('../providers/HttpProvider');
-var JSONRpcResponseValidator = require('../validators/JSONRpcResponseValidator');
+import ProviderAdapterResolver from '../resolvers/ProviderAdapterResolver';
+import ProviderDetector from '../detectors/ProviderDetector';
+import SocketProviderAdapter from '../adapters/SocketProviderAdapter';
+import InpageProviderAdapter from '../adapters/InpageProviderAdapter';
+import HttpProviderAdapter from '../adapters/HttpProviderAdapter';
+import WebsocketProvider from '../providers/WebsocketProvider';
+import IpcProvider from '../providers/IpcProvider';
+import HttpProvider from '../providers/HttpProvider';
+import JSONRpcResponseValidator from '../validators/JSONRpcResponseValidator';
 
-/**
- * @constructor
- */
-function ProvidersPackageFactory() { }
+export default class ProvidersPackageFactory {
 
-/**
- * Returns an ProviderAdapterResolver object
- *
- * @method createProviderAdapterResolver
- *
- * @returns {ProviderAdapterResolver}
- */
-ProvidersPackageFactory.prototype.createProviderAdapterResolver = function () {
-    return new ProviderAdapterResolver(this);
-};
+    /**
+     * Returns an ProviderAdapterResolver object
+     *
+     * @method createProviderAdapterResolver
+     *
+     * @returns {ProviderAdapterResolver}
+     */
+    createProviderAdapterResolver() {
+        return new ProviderAdapterResolver(this);
+    }
 
-/**
- * Returns an ProviderDetector object
- *
- * @method createProviderDetector
- *
- * @returns {ProviderDetector}
- */
-ProvidersPackageFactory.prototype.createProviderDetector = function () {
-    return new ProviderDetector();
-};
+    /**
+     * Returns an ProviderDetector object
+     *
+     * @method createProviderDetector
+     *
+     * @returns {ProviderDetector}
+     */
+    createProviderDetector() {
+        return new ProviderDetector();
+    }
 
-/**
- * Returns an HttpProvider object
- *
- * @method createHttpProvider
- *
- * @param {String} url
- *
- * @returns {HttpProvider}
- */
-ProvidersPackageFactory.prototype.createHttpProvider = function (url) {
-    return new HttpProvider(url);
-};
+    /**
+     * Returns an HttpProvider object
+     *
+     * @method createHttpProvider
+     *
+     * @param {String} url
+     *
+     * @returns {HttpProvider}
+     */
+    createHttpProvider(url) {
+        return new HttpProvider(url);
+    }
 
-/**
- * Return an WebsocketProvider object
- *
- * @method createWebsocketProvider
- *
- * @param {String} url
- *
- * @returns {WebsocketProvider}
- */
-ProvidersPackageFactory.prototype.createWebsocketProvider = function (url) {
-    return new WebsocketProvider(url);
-};
+    /**
+     * Return an WebsocketProvider object
+     *
+     * @method createWebsocketProvider
+     *
+     * @param {String} url
+     *
+     * @returns {WebsocketProvider}
+     */
+    createWebsocketProvider(url) {
+        return new WebsocketProvider(url);
+    }
 
-/**
- * Returns an IpcProvider object
- *
- * @method createIpcProvider
- *
- * @param {String} path
- * @param {Net} net
- *
- * @returns {IpcProvider}
- */
-ProvidersPackageFactory.prototype.createIpcProvider = function (path, net) {
-    return new IpcProvider(path, net);
-};
+    /**
+     * Returns an IpcProvider object
+     *
+     * @method createIpcProvider
+     *
+     * @param {String} path
+     * @param {Net} net
+     *
+     * @returns {IpcProvider}
+     */
+    createIpcProvider(path, net) {
+        return new IpcProvider(path, net);
+    }
 
-/**
- * Returns an HttpProviderAdapter object
- *
- * @method createHttpProviderAdapter
- *
- * @param {HttpProvider} provider
- *
- * @returns {HttpProviderAdapter}
- */
-ProvidersPackageFactory.prototype.createHttpProviderAdapter = function (provider) {
-    return new HttpProviderAdapter(provider);
-};
+    /**
+     * Returns an HttpProviderAdapter object
+     *
+     * @method createHttpProviderAdapter
+     *
+     * @param {HttpProvider} provider
+     *
+     * @returns {HttpProviderAdapter}
+     */
+    createHttpProviderAdapter(provider) {
+        return new HttpProviderAdapter(provider);
+    }
 
-/**
- * Returns an SocketProviderAdapter object
- *
- * @method createSocketProviderAdapter
- *
- * @param {WebsocketProvider|IpcProvider} provider
- *
- * @returns {SocketProviderAdapter}
- */
-ProvidersPackageFactory.prototype.createSocketProviderAdapter = function (provider) {
-    return new SocketProviderAdapter(provider)
-};
+    /**
+     * Returns an SocketProviderAdapter object
+     *
+     * @method createSocketProviderAdapter
+     *
+     * @param {WebsocketProvider|IpcProvider} provider
+     *
+     * @returns {SocketProviderAdapter}
+     */
+    createSocketProviderAdapter(provider) {
+        return new SocketProviderAdapter(provider)
+    }
 
-/**
- * Returns an InpageProviderAdapter object
- *
- * @method createInpageProviderAdapter
- *
- * @param {Object} provider
- *
- * @returns {InpageProviderAdapter}
- */
-ProvidersPackageFactory.prototype.createInpageProviderAdapter = function (provider) {
-    return new InpageProviderAdapter(provider)
-};
+    /**
+     * Returns an InpageProviderAdapter object
+     *
+     * @method createInpageProviderAdapter
+     *
+     * @param {Object} provider
+     *
+     * @returns {InpageProviderAdapter}
+     */
+    createInpageProviderAdapter(provider) {
+        return new InpageProviderAdapter(provider)
+    }
 
-/**
- * Returns an JSONRpcResponseValidator object
- *
- * @method createJSONRpcResponseValidator
- *
- * @returns {JSONRpcResponseValidator}
- */
-ProvidersPackageFactory.prototype.createJSONRpcResponseValidator = function () {
-    return new JSONRpcResponseValidator();
-};
-
-module.exports = ProvidersPackageFactory;
+    /**
+     * Returns an JSONRpcResponseValidator object
+     *
+     * @method createJSONRpcResponseValidator
+     *
+     * @returns {JSONRpcResponseValidator}
+     */
+    createJSONRpcResponseValidator() {
+        return new JSONRpcResponseValidator();
+    }
+}

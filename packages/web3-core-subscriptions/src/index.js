@@ -20,29 +20,20 @@
  * @date 2018
  */
 
-"use strict";
+import SubscriptionsFactoryObject from './factories/SubscriptionsFactory';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 
-var version = require('../package.json').version;
-var SubscriptionsFactory = require('./factories/SubscriptionsFactory');
-var LogSubscriptionModel = require('./models/subscriptions/eth/LogSubscriptionModel');
-var Subscription = require('./Subscription');
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-
-module.exports = {
-    version: version,
-
-    Subscription: Subscription,
-    LogSubscriptionModel: LogSubscriptionModel,
-
-    /**
-     * Returns an object of type SubscriptionsFactory
-     *
-     * @method SubscriptionsFactory
-     *
-     * @returns {SubscriptionsFactory}
-     */
-    SubscriptionsFactory: function () {
-        return new SubscriptionsFactory(Utils, formatters);
-    }
+/**
+ * Returns an object of type SubscriptionsFactory
+ *
+ * @method SubscriptionsFactory
+ *
+ * @returns {SubscriptionsFactory}
+ */
+export const SubscriptionsFactory = () => {
+    return new SubscriptionsFactoryObject(Utils, formatters);
 };
+
+export LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
+export Subscription from './Subscription';

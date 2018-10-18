@@ -20,54 +20,47 @@
  * @date 2018
  */
 
-"use strict";
+import MethodModelFactory from './factories/MethodModelFactory';
+import {MethodController} from 'web3-core-method';
+import {formatters} from 'web3-core-helpers';
+import {Network} from 'web3-net';
+import * as ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {Accounts} from 'web3-eth-accounts';
+import {Personal} from 'web3-eth-personal';
+import {ENS} from 'web3-eth-ens';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {AbiCoder} from 'web3-eth-abi';
+import {Iban} from 'web3-eth-iban';
+import * as ContractPackage from 'web3-eth-contract';
+import EthModule from './Eth';
 
-var version = require('./package.json').version;
-var MethodModelFactory = require('./factories/MethodModelFactory');
-var Eth = require('./Eth');
-var MethodController = require('web3-core-method').MethodController;
-var formatters = require('web3-core-helpers').formatters;
-var Network = require('web3-net').Network;
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var Accounts = require('web3-eth-accounts').Accounts;
-var Personal = require('web3-eth-personal').Personal;
-var ENS = require('web3-eth-ens').ENS;
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
-var AbiCoder = require('web3-eth-abi').AbiCoder;
-var Iban = require('web3-eth-iban').Iban;
-var ContractPackage = require('web3-eth-contract');
+/**
+ * Creates the Eth object
+ *
+ * @method Eth
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Eth}
+ */
+export const Eth = (provider) => {
+    const accounts = new Accounts(provider);
 
-module.exports = {
-    version: version,
-
-    /**
-     * Creates the Eth object
-     *
-     * @method Eth
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Eth}
-     */
-    Eth: function (provider) {
-        var accounts = new Accounts(provider);
-
-        return new Eth(
-            provider,
-            new Network(provider),
-            ContractPackage,
-            accounts,
-            new Personal(provider),
-            Iban,
-            new AbiCoder(utils),
-            new ENS(provider),
-            Utils,
-            formatters,
-            ProvidersPackage,
-            new SubscriptionsFactory(),
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters, accounts)
-        );
-    }
+    return new EthModule(
+        provider,
+        new Network(provider),
+        ContractPackage,
+        accounts,
+        new Personal(provider),
+        Iban,
+        new AbiCoder(utils),
+        new ENS(provider),
+        Utils,
+        formatters,
+        ProvidersPackage,
+        new SubscriptionsFactory(),
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters, accounts)
+    );
 };

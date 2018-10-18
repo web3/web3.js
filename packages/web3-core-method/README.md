@@ -2,8 +2,20 @@
 
 This is a sub package of [web3.js][repo]
 
-The Method package used within most [web3.js][repo] packages.
-Please read the [documentation][docs] for more.
+The Method module abstracts the JSON-RPC method and is used within most [web3.js][repo] packages.
+
+
+##### MethodController
+> Excecutes the JSON-RPC method with an ```MethodModel```
+
+##### execute
+ ```js 
+    execute(
+        methodModel: AbstractMethodModel,
+        accounts: Accounts,
+        moduleInstance: AbstractWeb3Module
+    ): {Promise<Object|String>|PromiEvent|String} 
+ ```
 
 ## Installation
 
@@ -31,71 +43,60 @@ This will expose the `Web3Method` object on the window object.
 // in node.js
 
 // Dependencies
-var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var MethodPackage = require('web3-core-method');
-var ProvidersPackage = require('web3-providers');
+import {AbstractWeb3Module} from 'web3-package';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import {MethodController} from 'web3-core-method';
+import * as ProvidersPackage from 'web3-providers';
 
 // Create an object/package like Eth
-/**
- * @param {Object|String} provider
- * @param {ProvidersPackage} providersPackage
- * @param {MethodController} methodController
- * @param {AbstractMethodModelFactory} methodModelFactory
- * 
- * @constructor
- */
-function Module (
-    provider,
-    providersPackage,
-    methodController,
-    methodModelFactory
-) {
-    AbstractWeb3Module.call(
-        this,
+class Module extends AbstractWeb3Module {
+    
+    /**
+     * @param {Object|String} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {MethodController} methodController
+     * @param {AbstractMethodModelFactory} methodModelFactory
+     * 
+     * @constructor
+     */
+    constructor (
         provider,
         providersPackage,
         methodController,
         methodModelFactory
-    );
-};
-
-// Inherit from AbstractWeb3Module
-Module.prototype = Object.create(AbstractWeb3Module.prototype);
-Module.prototype.constructor = Module;
-
-
-// Create the MyMethoModelFactory object
-/**
- * @param {Object} utils
- * @param {Object} formatters
- * 
- * @constructor
- */
-function MethodModelFactory(utils, formatters) {
-    MethodPackage.AbstractMethodModelFactory.call(
-        this,
-        {
-            sendTransaction: MethodPackage.SendTransactionMethodModel
-        },
-        utils,
-        formatters
-    );
+    ) {
+        super(
+            provider,
+            providersPackage,
+            methodController,
+            methodModelFactory
+        );
+    }
 }
 
-// Inherit from AbstractMethodModelFactory
-MethodModelFactory.prototype = Object.create(
-    MethodPackage.AbstractMethodModelFactory.prototype
-);
-MethodModelFactory.prototype.constructor = MethodModelFactory;
-
+// Create the MyMethoModelFactory object
+class MethodModelFactory extends AbstractMethodModelFactory {
+    
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     * 
+     * @constructor
+     */
+    constructor (utils, formatters) {
+        super({sendTransaction: MethodPackage.SendTransactionMethodModel},
+            utils,
+            formatters
+        );
+    }
+}
 
 // Instantiate anything
-var module = new Module(
+const module = new Module(
     ProvidersPackage.detect(), 
     ProvidersPackage, 
-    new MethodPackage.MethodController(), 
+    new MethodController(), 
     new MethodModelFactory(Utils, formatters)
 );
 

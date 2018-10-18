@@ -20,46 +20,46 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetBalanceMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getBalance',
+            2,
+            utils,
+            formatters
+        );
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetBalanceMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getBalance', 2, utils, formatters);
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {BigNumber}
+     */
+    afterExecution(response) {
+        return this.formatters.outputBigNumberFormatter(response);
+    }
 }
-
-GetBalanceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBalanceMethodModel.prototype.constructor = GetBalanceMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-GetBalanceMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
-};
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {BigNumber}
- */
-GetBalanceMethodModel.prototype.afterExecution = function(response) {
-    return this.formatters.outputBigNumberFormatter(response);
-};
-
-module.exports = GetBalanceMethodModel;

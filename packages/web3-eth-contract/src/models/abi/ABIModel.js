@@ -20,103 +20,100 @@
  * @date 2018
  */
 
-"use strict";
+export default class ABIModel {
 
-var _ = require('underscore');
+    /**
+     * @param {Object} mappedAbi
+     *
+     * @constructor
+     */
+    constructor(mappedAbi) {
+        this.abi = mappedAbi;
+    }
 
-/**
- * @param {Object} mappedAbi
- *
- * @constructor
- */
-function ABIModel(mappedAbi) {
-    this.abi = mappedAbi;
+    /**
+     * Checks if the method exists and returns it otherwise it will return false
+     *
+     * @method getMethod
+     *
+     * @param {String} name
+     *
+     * @returns {ABIItemModel|Boolean}
+     */
+    getMethod(name) {
+        if (this.hasMethod(name)) {
+            return this.abi.methods[name];
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the event exists and returns it otherwise it will return false
+     *
+     * @method getEvent
+     *
+     * @param {String} name
+     *
+     * @returns {ABIItemModel|Boolean}
+     */
+    getEvent(name) {
+        if (this.hasEvent(name)) {
+            return this.abi.events[name];
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns all events from this ABIModel
+     *
+     * @method getEvents
+     *
+     * @returns {Object}
+     */
+    getEvents() {
+        return this.abi.events;
+    }
+
+    /**
+     * Returns an event by his signature
+     *
+     * @method getEventBySignature
+     *
+     * @param {String} signature
+     *
+     * @returns {ABIItemModel}
+     */
+    getEventBySignature(signature) {
+        return this.abi.events.find(event => {
+            return event.signature === signature;
+        });
+    }
+
+    /**
+     * Checks if the method exists
+     *
+     * @method hasMethod
+     *
+     * @param name
+     *
+     * @returns {Boolean}
+     */
+    hasMethod(name) {
+        return typeof this.abi.methods[name] !== 'undefined';
+    }
+
+    /**
+     * Checks if the event exists
+     *
+     * @method hasEvent
+     *
+     * @param name
+     *
+     * @returns {Boolean}
+     */
+    hasEvent(name) {
+        return typeof this.abi.events[name] !== 'undefined';
+    }
 }
-
-/**
- * Checks if the method exists and returns it otherwise it will return false
- *
- * @method getMethod
- *
- * @param {String} name
- *
- * @returns {ABIItemModel|Boolean}
- */
-ABIModel.prototype.getMethod = function (name) {
-    if (this.hasMethod(name)) {
-        return this.abi.methods[name];
-    }
-
-    return false;
-};
-
-/**
- * Checks if the event exists and returns it otherwise it will return false
- *
- * @method getEvent
- *
- * @param {String} name
- *
- * @returns {ABIItemModel|Boolean}
- */
-ABIModel.prototype.getEvent = function (name) {
-    if (this.hasEvent(name)) {
-        return this.abi.events[name];
-    }
-
-    return false;
-};
-
-/**
- * Returns all events from this ABIModel
- *
- * @method getEvents
- *
- * @returns {Object}
- */
-ABIModel.prototype.getEvents = function () {
-    return this.abi.events;
-};
-
-/**
- * Returns an event by his signature
- *
- * @method getEventBySignature
- *
- * @param {String} signature
- *
- * @returns {ABIItemModel}
- */
-ABIModel.prototype.getEventBySignature = function (signature) {
-    return this.abi.events.find(function (event) {
-        return event.signature === signature;
-    });
-};
-
-/**
- * Checks if the method exists
- *
- * @method hasMethod
- *
- * @param name
- *
- * @returns {Boolean}
- */
-ABIModel.prototype.hasMethod = function (name) {
-    return typeof this.abi.methods[name] !== 'undefined';
-};
-
-/**
- * Checks if the event exists
- *
- * @method hasEvent
- *
- * @param name
- *
- * @returns {Boolean}
- */
-ABIModel.prototype.hasEvent = function (name) {
-    return typeof this.abi.events[name] !== 'undefined';
-};
-
-module.exports = ABIModel;

@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class SubmitWorkMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SubmitWorkMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_submitWork', 3, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_submitWork',
+            3,
+            utils,
+            formatters
+        );
+    }
 }
-
-SubmitWorkMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SubmitWorkMethodModel.prototype.constructor = SubmitWorkMethodModel;
-
-module.exports = SubmitWorkMethodModel;

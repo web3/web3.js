@@ -20,36 +20,29 @@
  * @date 2018
  */
 
-"use strict";
+import AccountsModule from './Accounts';
+import {MethodController} from 'web3-core-method';
+import * as ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-var version = require('../package.json').version;
-var Accounts = require('./Accounts');
-var MethodController = require('web3-core-method').MethodController;
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var MethodModelFactory = require('./factories/MethodModelFactory');
-
-module.exports = {
-    version: version,
-
-    /**
-     * Returns the Accounts object
-     *
-     * @method Accounts
-     *
-     * @params {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Accounts}
-     */
-    Accounts: function (provider) {
-        return new Accounts(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            Utils,
-            formatters
-        );
-    }
+/**
+ * Returns the Accounts object
+ *
+ * @method Accounts
+ *
+ * @params {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Accounts}
+ */
+export const Accounts = (provider) => {
+    return new AccountsModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        Utils,
+        formatters
+    );
 };

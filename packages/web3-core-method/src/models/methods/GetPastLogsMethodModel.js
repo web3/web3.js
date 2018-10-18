@@ -20,49 +20,48 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
+export default class GetPastLogsMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetPastLogsMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getLogs', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getLogs',
+            1,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Array} response
+     *
+     * @returns {Array}
+     */
+    afterExecution(response) {
+        return response.map(responseItem => {
+            return this.formatters.outputLogFormatter(responseItem);
+        });
+    }
 }
-
-GetPastLogsMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetPastLogsMethodModel.prototype.constructor = GetPastLogsMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-GetPastLogsMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
-};
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Array} response
- *
- * @returns {Array}
- */
-GetPastLogsMethodModel.prototype.afterExecution = function (response) {
-    var self = this;
-
-    return response.map(function(responseItem) {
-        return self.formatters.outputLogFormatter(responseItem);
-    });
-};
-
-module.exports = GetPastLogsMethodModel;

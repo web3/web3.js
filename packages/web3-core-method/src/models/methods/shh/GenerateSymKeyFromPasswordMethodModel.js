@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GenerateSymKeyFromPasswordMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GenerateSymKeyFromPasswordMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_generateSymKeyFromPassword', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_generateSymKeyFromPassword',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-GenerateSymKeyFromPasswordMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GenerateSymKeyFromPasswordMethodModel.prototype.constructor = GenerateSymKeyFromPasswordMethodModel;
-
-module.exports = GenerateSymKeyFromPasswordMethodModel;

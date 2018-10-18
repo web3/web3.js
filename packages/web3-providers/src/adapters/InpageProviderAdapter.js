@@ -20,33 +20,29 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
-var AbstractProviderAdapter = require('../../lib/adapters/AbstractProviderAdapter');
+export default class InpageProviderAdapter extends AbstractProviderAdapter {
 
-/**
- * @param {Object} inpageProvider
- *
- * @constructor
- */
-function InpageProviderAdapter(inpageProvider) {// TODO: Check if there is a way to set a host property (will be used on setProvider)
-    AbstractProviderAdapter.call(this, inpageProvider);
-    this.provider.send = this.provider.sendAsync;
-    delete this.provider.sendAsync;
+    /**
+     * @param {Object} inpageProvider
+     *
+     * @constructor
+     */
+    constructor(inpageProvider) {// TODO: Check if there is a way to set a host property (will be used on setProvider)
+        super(inpageProvider);
+        this.provider.send = this.provider.sendAsync;
+        delete this.provider.sendAsync;
+    }
+
+    /**
+     * Checks if the provider is connected
+     *
+     * @method isConnected
+     *
+     * @returns {Boolean}
+     */
+    isConnected() {
+        return this.provider.isConnected;
+    }
 }
-
-InpageProviderAdapter.prototype = Object.create(AbstractProviderAdapter.prototype);
-InpageProviderAdapter.prototype.constructor = InpageProviderAdapter;
-
-/**
- * Checks if the provider is connected
- *
- * @method isConnected
- *
- * @returns {Boolean}
- */
-InpageProviderAdapter.prototype.isConnected = function () {
-    return this.provider.isConnected;
-};
-
-module.exports = InpageProviderAdapter;

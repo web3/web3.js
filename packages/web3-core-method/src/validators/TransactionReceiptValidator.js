@@ -20,70 +20,64 @@
  * @date 2018
  */
 
-"use strict";
+import _ from 'underscore';
 
-var _ = require('underscore');
+export default class TransactionReceiptValidator {
 
-/**
- * @constructor
- */
-function TransactionReceiptValidator() { }
+    /**
+     * Validates the receipt
+     *
+     * @method validate
+     *
+     * @param {Object} receipt
+     * @param {Array} methodParameters
+     *
+     * @returns {Error|Boolean}
+     */
+    validate(receipt, methodParameters) {
+        if (this.isValidGasUsage(receipt, methodParameters) && this.isValidReceiptStatus(receipt)) {
+            return true;
+        }
 
-/**
- * Validates the receipt
- *
- * @method validate
- *
- * @param {Object} receipt
- * @param {Array} methodParameters
- *
- * @returns {Error|Boolean}
- */
-TransactionReceiptValidator.prototype.validate = function (receipt, methodParameters) {
-    if (this.isValidGasUsage(receipt, methodParameters) && this.isValidReceiptStatus(receipt)) {
-        return true;
+        const receiptJSON = JSON.stringify(receipt, null, 2);
+
+        if (receipt.status === false || receipt.status === '0x0') {
+            return new Error(`Transaction has been reverted by the EVM:\n${receiptJSON}`);
+        }
+
+        return new Error(`Transaction ran out of gas. Please provide more gas:\n${receiptJSON}`);
     }
 
-    var receiptJSON = JSON.stringify(receipt, null, 2);
-
-    if (receipt.status === false || receipt.status === '0x0') {
-        return new Error('Transaction has been reverted by the EVM:\n' + receiptJSON);
+    /**
+     * Checks if receipt status is valid
+     *
+     * @method isValidReceiptStatus
+     *
+     * @param {Object} receipt
+     *
+     * @returns {Boolean}
+     */
+    isValidReceiptStatus(receipt) {
+        return receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined'
     }
 
-    return new Error('Transaction ran out of gas. Please provide more gas:\n' + receiptJSON);
-};
+    /**
+     * Checks it is a valid gas usage
+     *
+     * @method isValidGasUsage
+     *
+     * @param {Object} receipt
+     * @param {Array} methodParameters
+     *
+     * @returns {Boolean}
+     */
+    isValidGasUsage(receipt, methodParameters) {
+        let gasProvided = null;
 
-/**
- * Checks if receipt status is valid
- *
- * @method isValidReceiptStatus
- *
- * @param {Object} receipt
- *
- * @returns {Boolean}
- */
-TransactionReceiptValidator.prototype.isValidReceiptStatus = function (receipt) {
-    return receipt.status === true || receipt.status === '0x1' || typeof receipt.status === 'undefined'
-};
+        if (_.isObject(methodParameters[0]) && methodParameters[0].gas) {
+            gasProvided = methodParameters[0].gas;
+        }
 
-/**
- * Checks it is a valid gas usage
- *
- * @method isValidGasUsage
- *
- * @param {Object} receipt
- * @param {Array} methodParameters
- *
- * @returns {Boolean}
- */
-TransactionReceiptValidator.prototype.isValidGasUsage = function (receipt, methodParameters) {
-    var gasProvided = null;
-
-    if(_.isObject(methodParameters[0]) && methodParameters[0].gas) {
-        gasProvided = methodParameters[0].gas;
+        return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
     }
-
-    return !receipt.outOfGas && (!gasProvided || gasProvided !== receipt.gasUsed);
-};
-
-module.exports = TransactionReceiptValidator;
+}

@@ -20,48 +20,47 @@
  * @date 2018
  */
 
-"use strict";
+export default class AbstractSubscriptionModel {
 
-/**
- * @param {String} subscriptionType
- * @param {String} subscriptionMethod
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function AbstractSubscriptionModel(subscriptionType, subscriptionMethod, options, utils, formatters) {
-    this.subscriptionType = subscriptionType;
-    this.subscriptionMethod = subscriptionMethod;
-    this.options = options;
-    this.util = utils;
-    this.formatters = formatters;
+    /**
+     * @param {String} subscriptionType
+     * @param {String} subscriptionMethod
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(subscriptionType, subscriptionMethod, options, utils, formatters) {
+        this.subscriptionType = subscriptionType;
+        this.subscriptionMethod = subscriptionMethod;
+        this.options = options;
+        this.util = utils;
+        this.formatters = formatters;
+    }
+
+    /**
+     * This method will be executed before the subscription starts.
+     *
+     * @method beforeSubscription
+     *
+     * @param {Subscription} subscription
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Function} callback
+     */
+    beforeSubscription(subscription, moduleInstance, callback) { }
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {*}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return this.formatters.outputLogFormatter(subscriptionItem);
+    }
 }
-
-/**
- * This method will be executed before the subscription starts.
- *
- * @method beforeSubscription
- *
- * @param {Subscription} subscription
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Function} callback
- */
-AbstractSubscriptionModel.prototype.beforeSubscription = function (subscription, moduleInstance, callback) { };
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {*}
- */
-AbstractSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.formatters.outputLogFormatter(subscriptionItem);
-};
-
-module.exports = AbstractSubscriptionModel;

@@ -20,34 +20,35 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetHashrateMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetHashrateMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_hashrate', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_hashrate',
+            0,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-GetHashrateMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetHashrateMethodModel.prototype.constructor = GetHashrateMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-GetHashrateMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = GetHashrateMethodModel;

@@ -20,28 +20,23 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+export default class NewPendingTransactionsSubscriptionModel extends AbstractSubscriptionModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function NewPendingTransactionsSubscriptionModel(utils, formatters) {
-    NewPendingTransactionsSubscriptionModel.call(
-        this,
-        'eth_subscribe',
-        'newPendingTransactions',
-        null,
-        utils,
-        formatters
-    );
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_subscribe',
+            'newPendingTransactions',
+            null,
+            utils,
+            formatters
+        );
+    }
 }
-
-NewPendingTransactionsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-NewPendingTransactionsSubscriptionModel.prototype.constructor = NewPendingTransactionsSubscriptionModel;
-
-module.exports = NewPendingTransactionsSubscriptionModel;

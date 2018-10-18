@@ -20,34 +20,35 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
+export default class GetStorageAtMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetStorageAtMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getStorageAt', 3, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getStorageAt',
+            3,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+    }
 }
-
-GetStorageAtMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetStorageAtMethodModel.prototype.constructor = GetStorageAtMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-GetStorageAtMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-    this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-    this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
-};
-
-module.exports = GetStorageAtMethodModel;

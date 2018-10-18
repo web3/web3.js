@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class NewKeyPairMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function NewKeyPairMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_newKeyPair', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_newKeyPair',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-NewKeyPairMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-NewKeyPairMethodModel.prototype.constructor = NewKeyPairMethodModel;
-
-module.exports = NewKeyPairMethodModel;

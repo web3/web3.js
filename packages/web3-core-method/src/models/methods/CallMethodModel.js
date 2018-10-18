@@ -20,33 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
+export default class CallMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function CallMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_call', 2, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_call',
+            2,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+    }
 }
-
-CallMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-CallMethodModel.prototype.constructor = CallMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-CallMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
-    this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
-};
-
-module.exports = CallMethodModel;

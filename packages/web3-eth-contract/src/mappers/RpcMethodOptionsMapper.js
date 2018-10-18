@@ -20,47 +20,45 @@
  * @date 2018
  */
 
-"use strict";
+export default class RpcMethodOptionsMapper {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        this.utils = utils;
+        this.formatters = formatters;
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function RpcMethodOptionsMapper(utils, formatters) {
-    this.utils = utils;
-    this.formatters = formatters;
+    /**
+     * Sets the default options where it is required
+     *
+     * @param {Contract} contract
+     * @param {Object} options
+     *
+     * @returns {Object}
+     */
+    map(contract, options) {
+        let gasPrice = null;
+        if (options.gasPrice) {
+            gasPrice = String(options.gasPrice);
+        }
+
+        let from = null;
+        if (options.from) {
+            from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from))
+        }
+
+        options.data = options.data || contract.options.data;
+
+        options.from = from || contract.defaultAccount;
+        options.gasPrice = gasPrice || contract.options.gasPrice;
+        options.gas = options.gas || options.gasLimit || contract.options.gas;
+
+        delete options.gasLimit;
+
+        return options;
+    }
 }
-
-/**
- * Sets the default options where it is required
- *
- * @param {Contract} contract
- * @param {Object} options
- *
- * @returns {Object}
- */
-RpcMethodOptionsMapper.prototype.map = function (contract, options) {
-    var gasPrice = null;
-    if (options.gasPrice) {
-        gasPrice = String(options.gasPrice);
-    }
-
-    var from = null;
-    if (options.from) {
-        from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from))
-    }
-
-    options.data = options.data || contract.options.data;
-
-    options.from = from || contract.defaultAccount;
-    options.gasPrice = gasPrice || contract.options.gasPrice;
-    options.gas = options.gas || options.gasLimit || contract.options.gas;
-
-    delete options.gasLimit;
-
-    return options;
-};
-
-module.exports = RpcMethodOptionsMapper;

@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetCoinbaseMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetCoinbaseMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_coinbase', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_coinbase',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-GetCoinbaseMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetCoinbaseMethodModel.prototype.constructor = GetCoinbaseMethodModel;
-
-module.exports = GetCoinbaseMethodModel;

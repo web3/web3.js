@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetProtocolVersionMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetProtocolVersionMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_protocolVersion', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_protocolVersion',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-GetProtocolVersionMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetProtocolVersionMethodModel.prototype.constructor = GetProtocolVersionMethodModel;
-
-module.exports = GetProtocolVersionMethodModel;

@@ -20,23 +20,24 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+export default class MessagesSubscriptionModel extends AbstractSubscriptionModel {
 
-/**
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function MessagesSubscriptionModel(options, utils, formatters) {
-    AbstractSubscriptionModel.call(this, 'shh_subscribe', 'messages', options, utils, formatters);
+    /**
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(options, utils, formatters) {
+        super(
+            'shh_subscribe',
+            'messages',
+            options,
+            utils,
+            formatters
+        );
+    }
 }
-
-MessagesSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel);
-MessagesSubscriptionModel.prototype.constructor = MessagesSubscriptionModel;
-
-module.exports = MessagesSubscriptionModel;
-

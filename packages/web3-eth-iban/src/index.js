@@ -20,13 +20,4 @@
  * @date 2018
  */
 
-"use strict";
-
-var version = require('./package.json').version;
-var Iban = require('./Iban.js');
-
-module.exports = {
-    version: version,
-
-    Iban: Iban
-};
+export Iban from './Iban.js';

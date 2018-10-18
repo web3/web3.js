@@ -20,50 +20,51 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetBlockMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetBlockMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getBlockByNumber', 2, utils, formatters);
-}
-
-GetBlockMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockMethodModel.prototype.constructor = GetBlockMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-GetBlockMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    if (this.isHash(this.parameters[0])) {
-        this.rpcMethod = 'eth_getBlockByHash';
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getBlockByNumber',
+            2,
+            utils,
+            formatters
+        );
     }
 
-    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-    this.parameters[1] = !!this.parameters[1];
-};
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        if (this.isHash(this.parameters[0])) {
+            this.rpcMethod = 'eth_getBlockByHash';
+        }
 
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-GetBlockMethodModel.prototype.afterExecution = function(response) {
-    return this.formatters.outputBlockFormatter(response);
-};
+        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+        this.parameters[1] = !!this.parameters[1];
+    }
 
-module.exports = GetBlockMethodModel;
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputBlockFormatter(response);
+    }
+}

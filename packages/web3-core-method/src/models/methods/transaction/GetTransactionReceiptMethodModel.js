@@ -20,34 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetTransactionReceiptMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getTransactionReceipt',
+            1,
+            utils,
+            formatters
+        );
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetTransactionReceiptMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getTransactionReceipt', 1, utils, formatters);
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    afterExecution(response) {
+        return this.formatters.outputTransactionFormatter(response);
+    }
 }
-
-GetTransactionReceiptMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetTransactionReceiptMethodModel.prototype.constructor = GetTransactionReceiptMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Object}
- */
-GetTransactionReceiptMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputTransactionFormatter(response);
-};
-
-module.exports = GetTransactionReceiptMethodModel;

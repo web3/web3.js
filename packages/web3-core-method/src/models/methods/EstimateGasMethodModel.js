@@ -20,45 +20,46 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
+export default class EstimateGasMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function EstimateGasMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_estimateGas', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_estimateGas',
+            1,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
 }
-
-EstimateGasMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-EstimateGasMethodModel.prototype.constructor = EstimateGasMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-EstimateGasMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
-};
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-EstimateGasMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
-
-module.exports = EstimateGasMethodModel;

@@ -20,23 +20,16 @@
  * @date 2018
  */
 
-'use strict';
+import Utils from 'web3-utils';
+import ABICoderObject from './ABICoder';
 
-var version = require('./package.json').version;
-var ABICoder = require('./ABICoder');
-var Utils = require('web3-utils');
-
-module.exports = {
-    version: version,
-
-    /**
-     * Returns the ABICoder object
-     *
-     * @method AbiCoder
-     *
-     * @returns {ABICoder}
-     */
-    AbiCoder: function () {
-        return new ABICoder(Utils);
-    }
+/**
+ * Returns an object of AbiCoder
+ *
+ * @returns {ABICoder}
+ *
+ * @constructor
+ */
+export const AbiCoder = () => {
+    return new ABICoderObject(Utils);
 };

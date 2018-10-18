@@ -28,9 +28,9 @@ This will expose the `Web3Utils` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-var Web3Utils = require('web3-utils');
-console.log(Web3Utils);
+import Utils from 'web3-utils';
+
+console.log(Utils);
 > {
     sha3: function(){},
     soliditySha3: function(){},

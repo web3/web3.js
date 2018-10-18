@@ -20,73 +20,94 @@
  * @date 2017
  */
 
-"use strict";
+import {AbstractWeb3Module} from 'web3-core';
 
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+export default class Personal extends AbstractWeb3Module {
 
-/**
- * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
- *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
- * @param {ProvidersPackage} providersPackage
- * @param {MethodController} methodController
- * @param {MethodModelFactory} methodModelFactory
- * @param {Network} net
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function Personal(provider, providersPackage, methodController, methodModelFactory, net, utils, formatters) {
-    AbstractWeb3Module.call(this, provider, providersPackage, methodController, methodModelFactory);
+    /**
+     * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
+     *
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {MethodController} methodController
+     * @param {MethodModelFactory} methodModelFactory
+     * @param {Network} net
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(
+        provider,
+        providersPackage,
+        methodController,
+        methodModelFactory,
+        net,
+        utils,
+        formatters
+    ) {
+        super(provider, providersPackage, methodController, methodModelFactory);
 
-    this.utils = utils;
-    this.formatters = formatters;
-    this.net = net;
+        this.utils = utils;
+        this.formatters = formatters;
+        this.net = net;
+        this._defaultAccount = null;
+        this._defaultBlock = 'latest';
+    }
 
-    var defaultAccount = null;
-    var defaultBlock = 'latest';
+    /**
+     * Getter for the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {null|String}
+     */
+    get defaultAccount() {
+        return this._defaultAccount;
+    }
 
-    Object.defineProperty(this, 'defaultAccount', {
-        get: function () {
-            return defaultAccount;
-        },
-        set: function (val) {
-            if(val) {
-                defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
-            }
-        },
-        enumerable: true
-    });
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultAccount
+     */
+    set defaultAccount(value) {
+        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+    }
 
-    Object.defineProperty(this, 'defaultBlock', {
-        get: function () {
-            return defaultBlock;
-        },
-        set: function (val) {
-            defaultBlock = val;
-        },
-        enumerable: true
-    });
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
+    }
+
+    /**
+     * Extends setProvider method from AbstractWeb3Module.
+     *
+     * @method setProvider
+     *
+     * @param {Object|String} provider
+     * @param {Net} net
+     *
+     * @returns {Boolean}
+     */
+    setProvider(provider, net) {
+        return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
+    }
 }
-
-Personal.prototype = Object.create(AbstractWeb3Module);
-Personal.prototype.constructor = Personal;
-
-/**
- * Extends setProvider method from AbstractWeb3Module.
- *
- * @method setProvider
- *
- * @param {Object|String} provider
- * @param {Net} net
- *
- * @returns {Boolean}
- */
-Personal.prototype.setProvider = function (provider, net) {
-    return !!(AbstractWeb3Module.setProvider.call(this, provider, net) && this.net.setProvider(provider, net));
-};
-
-module.exports = Personal;
-
-

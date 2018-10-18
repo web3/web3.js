@@ -20,49 +20,47 @@
  * @date 2018
  */
 
-"use strict";
+export default class EventFilterEncoder {
 
-/**
- * @param {ABICoder} abiCoder
- *
- * @constructor
- */
-function EventFilterEncoder(abiCoder) {
-    this.abiCoder = abiCoder;
-}
+    /**
+     * @param {ABICoder} abiCoder
+     *
+     * @constructor
+     */
+    constructor(abiCoder) {
+        this.abiCoder = abiCoder;
+    }
 
-/**
- * Creates encoded topics from filter option of an event.
- *
- * @param {ABIItemModel} abiItemModel
- * @param {*} filter
- *
- * @returns {Array}
- */
-EventFilterEncoder.prototype.encode = function (abiItemModel, filter) {
-    var indexedInputs = abiItemModel.getIndexedInputs(),
-        topics = [],
-        self = this;
+    /**
+     * Creates encoded topics from filter option of an event.
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {*} filter
+     *
+     * @returns {Array}
+     */
+    encode(abiItemModel, filter) {
+        const indexedInputs = abiItemModel.getIndexedInputs();
+        let  topics = [];
 
-    indexedInputs.forEach(function(indexedInput) {
-        if (typeof filter[indexedInput.name] !== 'undefined') {
-            var filterItem = filter[indexedInput.name];
+        indexedInputs.forEach(indexedInput => {
+            if (typeof filter[indexedInput.name] !== 'undefined') {
+                const filterItem = filter[indexedInput.name];
 
-            if (_.isArray(filterItem)) {
-                filterItem.map(function(item) {
-                    return self.abiCoder.encodeParameter(indexedInput.type, item);
-                });
+                if (_.isArray(filterItem)) {
+                    filterItem.map(item => {
+                        return this.abiCoder.encodeParameter(indexedInput.type, item);
+                    });
 
-                topics.push(filterItem);
+                    topics.push(filterItem);
 
-                return;
+                    return;
+                }
+
+                topics.push(this.abiCoder.encodeParameter(indexedInput.type, filterItem));
             }
+        });
 
-            topics.push(self.abiCoder.encodeParameter(indexedInput.type, filterItem));
-        }
-    });
-
-    return topics;
-};
-
-module.exports = EventFilterEncoder;
+        return topics;
+    }
+}

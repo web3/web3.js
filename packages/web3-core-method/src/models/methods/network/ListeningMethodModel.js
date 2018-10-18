@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class ListeningMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function ListeningMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'net_listening', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'net_listening',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-ListeningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-ListeningMethodModel.prototype.constructor = ListeningMethodModel;
-
-module.exports = ListeningMethodModel;

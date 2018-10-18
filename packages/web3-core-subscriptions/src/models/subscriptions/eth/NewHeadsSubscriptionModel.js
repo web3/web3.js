@@ -20,35 +20,37 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function NewHeadsSubscriptionModel(utils, formatters) {
-    NewHeadsSubscriptionModel.call(this, 'eth_subscribe', 'newHeads', null, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_subscribe',
+            'newHeads',
+            null,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {Object}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return this.formatters.outputBlockFormatter(subscriptionItem);
+    }
 }
-
-NewHeadsSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-NewHeadsSubscriptionModel.prototype.constructor = NewHeadsSubscriptionModel;
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {Object}
- */
-NewHeadsSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.formatters.outputBlockFormatter(subscriptionItem);
-};
-
-module.expors = NewHeadsSubscriptionModel;

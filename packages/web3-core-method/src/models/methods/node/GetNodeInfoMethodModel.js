@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetNodeInfoMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetNodeInfoMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'web3_clientVersion', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'web3_clientVersion',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-GetNodeInfoMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetNodeInfoMethodModel.prototype.constructor = GetNodeInfoMethodModel;
-
-module.exports = GetNodeInfoMethodModel;

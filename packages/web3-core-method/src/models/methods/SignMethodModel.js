@@ -20,35 +20,36 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../lib/models/AbstractMethodModel');
+export default class SignMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- * @param {Accounts} accounts
- *
- * @constructor
- */
-function SignMethodModel(utils, formatters, accounts) {
-    AbstractMethodModel.call(this, 'eth_sign', 2, utils, formatters);
-    this.accounts = accounts;
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     *
+     * @constructor
+     */
+    constructor(utils, formatters, accounts) {
+        super(
+            'eth_sign',
+            2,
+            utils,
+            formatters
+        );
+        this.accounts = accounts;
+    }
+
+    /**
+    * This method will be executed before the RPC request.
+    *
+    * @method beforeExecution
+    *
+    * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+    */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    }
 }
-
-SignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-SignMethodModel.prototype.constructor = SignMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-SignMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-};
-
-module.exports = SignMethodModel;

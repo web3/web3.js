@@ -20,43 +20,38 @@
  * @date 2018
  */
 
-"use strict";
+import {GetPastLogsMethodModel} from 'web3-core-method';
 
-var GetPastLogsMethodModel = require('web3-core-method').GetPastLogsMethodModel;
+export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
 
-/**
- * @param {ABIItemModel} abiItemModel
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function PastEventLogsMethodModel(abiItemModel, utils, formatters) {
-    GetPastLogsMethodModel.call(this, utils, formatters);
-    this.abiItemModel = abiItemModel;
+    /**
+     * @param {ABIItemModel} abiItemModel
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(abiItemModel, utils, formatters) {
+        super(utils, formatters);
+        this.abiItemModel = abiItemModel;
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Array} response
+     *
+     * @returns {Array}
+     */
+    afterExecution(response) {
+        const formattedLogs = super.afterExecution(response);
+
+        formattedLogs.map(logItem => {
+            return this.eventLogDecoder.decode(self.abiItemModel, logItem);
+        });
+
+        return formattedLogs;
+    }
 }
-
-PastEventLogsMethodModel.prototype = Object.create(GetPastLogsMethodModel.prototype);
-PastEventLogsMethodModel.prototype.constructor = PastEventLogsMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Array} response
- *
- * @returns {Array}
- */
-PastEventLogsMethodModel.prototype.afterExecution = function (response) {
-    var formattedLogs = GetPastLogsMethodModel.prototype.afterExecution.call(response),
-    self = this;
-
-    formattedLogs.map(function(logItem) {
-        return self.eventLogDecoder.decode(self.abiItemModel, logItem);
-    });
-
-    return formattedLogs;
-};
-
-module.exports = PastEventLogsMethodModel;

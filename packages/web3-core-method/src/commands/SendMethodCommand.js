@@ -20,111 +20,103 @@
  * @date 2018
  */
 
-"use strict";
+import _ from 'underscore';
+import AbstractSendMethodCommand from '../../lib/commands/AbstractSendMethodCommand';
 
-var _ = require('underscore');
-var AbstractSendMethodCommand = require('../../lib/commands/AbstractSendMethodCommand');
+export default class SendMethodCommand extends AbstractSendMethodCommand {
 
-/**
- * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
- *
- * @constructor
- */
-function SendMethodCommand(transactionConfirmationWorkflow) {
-    AbstractSendMethodCommand.call(this, transactionConfirmationWorkflow);
-}
+    /**
+     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     *
+     * @constructor
+     */
+    constructor(transactionConfirmationWorkflow) {
+        super(transactionConfirmationWorkflow);
+    }
 
-SendMethodCommand.prototype = Object.create(AbstractSendMethodCommand.prototype);
-SendMethodCommand.prototype.constructor = SendMethodCommand;
+    /**
+     * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethodModel} methodModel
+     * @param {PromiEvent} promiEvent
+     *
+     * @callback callback callback(error, result)
+     * @returns {PromiEvent}
+     */
+    execute(moduleInstance, methodModel, promiEvent) {
+        methodModel.beforeExecution(moduleInstance);
 
-/**
- * Checks if gasPrice is set, sends the request and returns a PromiEvent Object
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractMethodModel} methodModel
- * @param {PromiEvent} promiEvent
- *
- * @callback callback callback(error, result)
- * @returns {PromiEvent}
- */
-SendMethodCommand.prototype.execute = function (moduleInstance, methodModel, promiEvent) {
-    var self = this;
+        if (this.isGasPriceDefined(methodModel.parameters)) {
+            this.send(methodModel, promiEvent, moduleInstance);
 
-    methodModel.beforeExecution(moduleInstance);
+            return promiEvent;
+        }
 
-    if (this.isGasPriceDefined(methodModel.parameters)) {
-        this.send(methodModel, promiEvent, moduleInstance);
+        this.getGasPrice(moduleInstance.currentProvider).then(gasPrice => {
+            if (_.isObject(methodModel.parameters[0])) {
+                methodModel.parameters[0].gasPrice = gasPrice;
+            }
+
+            this.send(methodModel, promiEvent, moduleInstance);
+        });
 
         return promiEvent;
     }
 
-    this.getGasPrice(moduleInstance.currentProvider).then(function(gasPrice) {
-        if (_.isObject(methodModel.parameters[0])) {
-            methodModel.parameters[0].gasPrice = gasPrice;
-        }
+    send(methodModel, promiEvent, moduleInstance) {
+        moduleInstance.currentProvider.send(
+            methodModel.rpcMethod,
+            methodModel.parameters
+        ).then(response => {
+            this.transactionConfirmationWorkflow.execute(
+                methodModel,
+                moduleInstance,
+                response,
+                promiEvent
+            );
 
-        self.send(methodModel, promiEvent, moduleInstance);
-    });
+            promiEvent.emit('transactionHash', response);
 
-    return promiEvent;
-};
+            if (methodModel.callback) {
+                methodModel.callback(false, response);
+            }
+        }).catch(error => {
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
+            promiEvent.removeAllListeners();
 
-SendMethodCommand.prototype.send = function (methodModel, promiEvent, moduleInstance) {
-    var self = this;
+            if (methodModel.callback) {
+                methodModel.callback(error, null);
+            }
+        });
 
-    moduleInstance.currentProvider.send(
-        methodModel.rpcMethod,
-        methodModel.parameters
-    ).then(function (response) {
-        self.transactionConfirmationWorkflow.execute(
-            methodModel,
-            moduleInstance,
-            response,
-            promiEvent
-        );
+        return promiEvent;
+    }
 
-        promiEvent.emit('transactionHash', response);
+    /**
+     * Checks if gasPrice is defined in the method options
+     *
+     * @method isGasPriceDefined
+     *
+     * @param {Array} parameters
+     *
+     * @returns {Boolean}
+     */
+    isGasPriceDefined(parameters) {
+        return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
+    }
 
-        if (methodModel.callback) {
-            methodModel.callback(false, response);
-        }
-    }).catch(function (error) {
-        promiEvent.reject(error);
-        promiEvent.emit('error', error);
-        promiEvent.removeAllListeners();
-
-        if (methodModel.callback) {
-            methodModel.callback(error, null);
-        }
-    });
-
-    return promiEvent;
-};
-
-/**
- * Checks if gasPrice is defined in the method options
- *
- * @method isGasPriceDefined
- *
- * @param {Array} parameters
- *
- * @returns {Boolean}
- */
-SendMethodCommand.prototype.isGasPriceDefined = function (parameters) {
-    return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
-};
-
-/**
- * Returns the current gasPrice of the connected node
- *
- * @param {AbstractProviderAdapter | EthereumProvider} provider
- *
- * @returns {Promise<String>}
- */
-SendMethodCommand.prototype.getGasPrice = function (provider) {
-    return provider.send('eth_gasPrice', []);
-};
-
-module.exports = SendMethodCommand;
+    /**
+     * Returns the current gasPrice of the connected node
+     *
+     * @param {AbstractProviderAdapter | EthereumProvider} provider
+     *
+     * @returns {Promise<String>}
+     */
+    getGasPrice(provider) {
+        return provider.send('eth_gasPrice', []);
+    }
+}

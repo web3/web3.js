@@ -20,40 +20,36 @@
  * @date 2018
  */
 
-"use strict";
+import {SendTransactionMethodModel} from 'web3-core-method';
 
-var SendTransactionMethodModel = require('web3-core-method').SendTransactionMethodModel;
+export default class ContractDeployMethodModel extends SendTransactionMethodModel {
 
-/**
- * @param {Contract} contract
- * @param {Object} utils
- * @param {Object} formatters
- * @param {Accounts} accounts
- *
- * @constructor
- */
-function ContractDeployMethodModel(contract, utils, formatters, accounts) {
-    SendTransactionMethodModel.call(this, utils, formatters, accounts);
-    this.contract = contract;
+    /**
+     * @param {Contract} contract
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     *
+     * @constructor
+     */
+    constructor(contract, utils, formatters, accounts) {
+        super(utils, formatters, accounts);
+        this.contract = contract;
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        const clonedContract = this.contract.clone();
+        clonedContract.options.address = response.contractAddress;
+
+        return clonedContract;
+    }
 }
-
-ContractDeployMethodModel.prototype = Object.create(SendTransactionMethodModel.prototype);
-ContractDeployMethodModel.prototype.constructor = ContractDeployMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {*}
- */
-ContractDeployMethodModel.prototype.afterExecution = function (response) {
-    var clonedContract = this.contract.clone();
-    clonedContract.options.address = response.contractAddress;
-
-    return clonedContract;
-};
-
-module.exports = ContractDeployMethodModel;

@@ -20,34 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetGasPriceMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_gasPrice',
+            0,
+            utils,
+            formatters
+        );
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetGasPriceMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_gasPrice', 0, utils, formatters);
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {BigNumber}
+     */
+    afterExecution(response) {
+        return this.formatters.outputBigNumberFormatter(response);
+    }
 }
-
-GetGasPriceMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetGasPriceMethodModel.prototype.constructor = GetGasPriceMethodModel;
-
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {BigNumber}
- */
-GetGasPriceMethodModel.prototype.afterExecution = function (response) {
-    return this.formatters.outputBigNumberFormatter(response);
-};
-
-module.exports = GetGasPriceMethodModel;

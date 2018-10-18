@@ -20,43 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+export default class CallMethodCommand {
 
-/**
- * @constructor
- */
-function CallMethodCommand() { }
+    /**
+     * Sends a JSON-RPC call request
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethodModel} methodModel
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<Object|String>}
+     */
+    async execute(moduleInstance, methodModel) {
+        try {
+            methodModel.beforeExecution(moduleInstance);
+            const response = await moduleInstance.currentProvider.send(methodModel.rpcMethod, methodModel.parameters);
+            const mappedResponse = methodModel.afterExecution(response);
 
-/**
- * Sends a JSON-RPC call request
- *
- * @method execute
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractMethodModel} methodModel
- *
- * @callback callback callback(error, result)
- * @returns {Promise<*>}
- */
-CallMethodCommand.prototype.execute = function (moduleInstance, methodModel) {
-    methodModel.beforeExecution(moduleInstance);
+            if (methodModel.callback) {
+                methodModel.callback(false, mappedResponse);
+            }
 
-    return moduleInstance.currentProvider.send(
-        methodModel.rpcMethod,
-        methodModel.parameters
-    ).then(function (response) {
-        var mappedResponse = methodModel.afterExecution(response);
-
-        if (methodModel.callback) {
-            methodModel.callback(false, mappedResponse);
+            return mappedResponse;
+        } catch (error) {
+            if (methodModel.callback) {
+                methodModel.callback(error, null);
+            }
         }
-
-        return mappedResponse;
-    }).catch(function(error) {
-        if (methodModel.callback) {
-            methodModel.callback(error, null);
-        }
-    });
-};
-
-module.exports = CallMethodCommand;
+    }
+}

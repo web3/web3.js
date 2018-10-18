@@ -20,93 +20,76 @@
  * @date 2018
  */
 
-/**
- * @constructor
- */
-function TransactionConfirmationModel() {
-    this.confirmations = [];
-    this.timeoutCounter = 0;
+export default class TransactionConfirmationModel {
 
     /**
-     * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
+     * @constructor
      */
-    Object.defineProperty(this, 'POLLINGTIMEOUT', {
-        get: function () {
-            return 15 * this.TIMEOUTBLOCK;
-        },
-        set: function () {},
-        enumerable: true
-    });
-
-    /**
-     * Defines accessors for TIMEOUTBLOCK
-     */
-    Object.defineProperty(this, 'TIMEOUTBLOCK', {
-        get: function () {
-            return 50;
-        },
-        set: function () {},
-        enumerable: true
-    });
-
-    /**
-     * Defines accessors for CONFIRMATIONBLOCKS
-     */
-    Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
-        get: function () {
-            return 24;
-        },
-        set: function () {},
-        enumerable: true
-    });
-
-    /**
-     * Defines accessors for confirmationsCount
-     */
-    Object.defineProperty(this, 'confirmationsCount', {
-        get: function () {
-            return this.confirmations.length;
-        },
-        set: function () {},
-        enumerable: true
-    });
-}
-
-/**
- * Adds a receipt to the confirmation array
- *
- * @method addConfirmation
- *
- * @param {Object} receipt
- */
-TransactionConfirmationModel.prototype.addConfirmation = function (receipt) {
-    this.confirmations.push(receipt);
-};
-
-/**
- * Checks if enough confirmations are registered to set the transaction as approved
- *
- * @method isConfirmed
- *
- * @returns {Boolean}
- */
-TransactionConfirmationModel.prototype.isConfirmed = function () {
-    return this.confirmationsCount === (this.CONFIRMATIONBLOCKS + 1);
-};
-
-/**
- * Checks if the timeout time is exceeded
- *
- * @method isTimeoutTimeExceeded
- *
- * @returns {Boolean}
- */
-TransactionConfirmationModel.prototype.isTimeoutTimeExceeded = function (watcherIsPolling) {
-    if (watcherIsPolling) {
-        return (this.timeoutCounter - 1) >= this.POLLINGTIMEOUT;
+    constructor() {
+        this.confirmations = [];
+        this.timeoutCounter = 0;
+        this._pollingTimeout = 15;
+        this.timeoutBlock = 50;
+        this.confirmationBlocks = 24;
     }
 
-    return (this.timeoutCounter - 1) >= this.TIMEOUTBLOCK;
-};
+    /**
+     * Getter for pollingTimeout
+     *
+     * @property pollingTimeout
+     *
+     * @returns {Number}
+     */
+    get pollingTimeout() {
+        return this._pollingTimeout * this.timeoutBlock;
+    }
 
-module.exports = TransactionConfirmationModel;
+    /**
+     * Setter for pollingTimeout
+     *
+     * @property pollingTimeout
+     *
+     * @param {Number} value
+     */
+    set pollingTimeout(value) {
+        this._pollingTimeout = value;
+    }
+
+
+    /**
+     * Adds a receipt to the confirmation array
+     *
+     * @method addConfirmation
+     *
+     * @param {Object} receipt
+     */
+    addConfirmation(receipt) {
+        this.confirmations.push(receipt);
+    }
+
+    /**
+     * Checks if enough confirmations are registered to set the transaction as approved
+     *
+     * @method isConfirmed
+     *
+     * @returns {Boolean}
+     */
+    isConfirmed() {
+        return this.confirmations.length === (this.confirmationBlocks + 1);
+    }
+
+    /**
+     * Checks if the timeout time is exceeded
+     *
+     * @method isTimeoutTimeExceeded
+     *
+     * @returns {Boolean}
+     */
+    isTimeoutTimeExceeded(watcherIsPolling) {
+        if (watcherIsPolling) {
+            return (this.timeoutCounter - 1) >= this.pollingTimeout;
+        }
+
+        return (this.timeoutCounter - 1) >= this.timeoutBlock;
+    }
+}

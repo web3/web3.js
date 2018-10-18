@@ -18,71 +18,56 @@
  * @date 2018
  */
 
-"use strict";
+import ProvidersPackageFactory from './factories/ProvidersPackageFactory';
+import BatchRequestObject from './batch-request/BatchRequest';
+import JSONRpcMapper from './validators/JSONRpcResponseValidator';
 
-var version = require('../package.json').version;
-var ProvidersPackageFactory = require('./factories/ProvidersPackageFactory');
-var SocketProviderAdapter = require('./adapters/SocketProviderAdapter');
-var HttpProviderAdapter = require('./adapters/HttpProviderAdapter');
-var HttpProvider = require('./providers/HttpProvider');
-var IpcProvider = require('./providers/IpcProvider');
-var WebsocketProvider = require('./providers/WebsocketProvider');
-var JSONRpcMapper = require('./mappers/JSONRpcMapper');
-var JSONRpcResponseValidator = require('./validators/JSONRpcResponseValidator');
-var BatchRequest = require('./batch-request/BatchRequest');
+export SocketProviderAdapter from './adapters/SocketProviderAdapter';
+export HttpProviderAdapter from './adapters/HttpProviderAdapter';
+export HttpProvider from './providers/HttpProvider';
+export IpcProvider from './providers/IpcProvider';
+export WebsocketProvider from './providers/WebsocketProvider';
+export JSONRpcMapper from './mappers/JSONRpcMapper';
+export JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
 
-module.exports = {
-    version: version,
+/**
+ * Returns the Batch object
+ *
+ * @method BatchRequest
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {BatchRequest}
+ */
+export const BatchRequest = (provider) => {
+    return new BatchRequestObject(
+        provider,
+        JSONRpcMapper,
+        new ProvidersPackageFactory().createJSONRpcResponseValidator()
+    );
+};
 
-    SocketProviderAdapter: SocketProviderAdapter,
-    HttpProviderAdapter: HttpProviderAdapter,
+/**
+ * Resolves the right provider adapter by the given parameters
+ *
+ * @method resolve
+ *
+ * @param {Object|String} provider
+ * @param {Net} net
+ *
+ * @returns {AbstractProviderAdapter}
+ */
+export const resolve = (provider, net) => {
+    return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
+};
 
-    HttpProvider: HttpProvider,
-    IpcProvider: IpcProvider,
-    WebsocketProvider: WebsocketProvider,
-
-    JSONRpcMapper: JSONRpcMapper,
-    JSONRpcResponseValidator: JSONRpcResponseValidator,
-
-    /**
-     * Returns the Batch object
-     *
-     * @method BatchRequest
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {BatchRequest}
-     */
-    BatchRequest: function (provider) {
-        return new BatchRequest(
-            provider,
-            JSONRpcMapper,
-            new ProvidersPackageFactory().createJSONRpcResponseValidator()
-        );
-    },
-
-    /**
-     * Resolves the right provider adapter by the given parameters
-     *
-     * @method resolve
-     *
-     * @param {Object|String} provider
-     * @param {Net} net
-     *
-     * @returns {AbstractProviderAdapter}
-     */
-    resolve: function (provider, net) {
-        return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
-    },
-
-    /**
-     * Detects the given provider in the global scope
-     *
-     * @method detect
-     *
-     * @returns {Object}
-     */
-    detect: function () {
-        return new ProvidersPackageFactory().createProviderDetector().detect();
-    }
+/**
+ * Detects the given provider in the global scope
+ *
+ * @method detect
+ *
+ * @returns {Object}
+ */
+export const detect = () => {
+    return new ProvidersPackageFactory().createProviderDetector().detect();
 };

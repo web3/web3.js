@@ -20,33 +20,34 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class PersonalSignMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function PersonalSignMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'personal_sign', 3, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'personal_sign',
+            3,
+            utils,
+            formatters
+        );
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+    }
 }
-
-PersonalSignMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PersonalSignMethodModel.prototype.constructor = PersonalSignMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-PersonalSignMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-    this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
-};
-
-module.exports = PersonalSignMethodModel;

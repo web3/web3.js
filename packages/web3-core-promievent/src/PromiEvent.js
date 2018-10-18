@@ -20,52 +20,49 @@
  * @date 2018
  */
 
-"use strict";
+import EventEmitter from 'eventemitter3';
 
-var EventEmitter = require('eventemitter3');
+export default class PromiEvent {
 
-/**
- * @constructor
- */
-function PromiEvent() {
-    var self = this;
+    /**
+     * @constructor
+     */
+    constructor() {
+        this.promise = new Promise((resolve, reject) => {
+            this.resolve = resolve;
+            this.reject = reject;
+        });
 
-    this.promise = new Promise(function(resolve, reject) {
-        self.resolve = resolve;
-        self.reject = reject;
-    });
+        this.eventEmitter = new EventEmitter();
 
-    this.eventEmitter = new EventEmitter();
+        return new Proxy(this, {
+            get: this.proxyHandler
+        });
+    }
 
-    return new Proxy(this, {
-        get: this.proxyHandler
-    });
+    /**
+     * Proxy handler to call the promise or eventEmitter methods
+     *
+     * @method proxyHandler
+     *
+     * @param {PromiEvent} target
+     * @param {String} name
+     *
+     * @returns {Function}
+     */
+    proxyHandler(target, name) {
+        if (name === 'resolve' || name === 'reject') {
+            return target[name];
+        }
+
+        if (this.promise[name]) {
+            return target.promise[name];
+        }
+
+        if (this.eventEmitter[name]) {
+            return target.eventEmitter[name];
+        }
+
+        throw Error(`Method with name ${name} not found`);
+    }
 }
-
-/**
- * Proxy handler to call the promise or eventEmitter methods
- *
- * @method proxyHandler
- *
- * @param {PromiEvent} target
- * @param {String} name
- *
- * @returns {Function}
- */
-PromiEvent.prototype.proxyHandler = function (target, name) {
-    if (name === 'resolve' || name === 'reject') {
-        return target[name];
-    }
-
-    if (this.promise[name]) {
-        return target.promise[name];
-    }
-
-    if (this.eventEmitter[name]) {
-        return target.eventEmitter[name];
-    }
-
-    throw Error('Method with name ' + name + ' not found');
-};
-
-module.exports = PromiEvent;

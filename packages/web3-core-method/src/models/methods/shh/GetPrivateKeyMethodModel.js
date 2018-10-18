@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetPrivateKeyMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetPrivateKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_getPrivateKey', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_getPrivateKey',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-GetPrivateKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetPrivateKeyMethodModel.prototype.constructor = GetPrivateKeyMethodModel;
-
-module.exports = GetPrivateKeyMethodModel;

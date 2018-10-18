@@ -20,72 +20,74 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
-var AbstractSubscriptionModel = require('../../../../lib/models/AbstractSubscriptionModel');
+export default class LogSubscriptionModel extends AbstractSubscriptionModel {
 
-/**
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
- * @param {MethodController} methodController
- *
- * @constructor
- */
-function LogSubscriptionModel(options, utils, formatters, getPastLogsMethodModel, methodController) {
-    AbstractSubscriptionModel.call(this, 'eth_subscribe', 'logs', options, utils, formatters);
-    this.getPastLogsMethodModel = getPastLogsMethodModel;
-    this.methodController = methodController;
-}
+    /**
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+     * @param {MethodController} methodController
+     *
+     * @constructor
+     */
+    constructor(options, utils, formatters, getPastLogsMethodModel, methodController) {
+        super(
+            'eth_subscribe',
+            'logs',
+            options,
+            utils,
+            formatters
+        );
+        this.getPastLogsMethodModel = getPastLogsMethodModel;
+        this.methodController = methodController;
+    }
 
-LogSubscriptionModel.prototype = Object.create(AbstractSubscriptionModel.prototype);
-LogSubscriptionModel.prototype.constructor = LogSubscriptionModel;
+    /**
+     * This method will be executed before the subscription starts.
+     *
+     * @method beforeSubscription
+     *
+     * @param {Subscription} subscription
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Function} callback
+     */
+    beforeSubscription(subscription, moduleInstance, callback) {
+        const self = this;
+        this.options = this.formatters.inputLogFormatter(this.options);
+        this.getPastLogsMethodModel.parameters = [options];
 
-/**
- * This method will be executed before the subscription starts.
- *
- * @method beforeSubscription
- *
- * @param {Subscription} subscription
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Function} callback
- */
-LogSubscriptionModel.prototype.beforeSubscription = function (subscription, moduleInstance, callback) {
-    var self = this;
-    this.options = this.formatters.inputLogFormatter(this.options);
-    this.getPastLogsMethodModel.parameters = [options];
+        this.methodController.execute(
+            this.getPastLogsMethodModel,
+            moduleInstance.currentProvider,
+            null,
+            moduleInstance
+        ).then(logs => {
+            logs.forEach(log => {
+                callback(false, log);
+                subscription.emit('data', log);
+            });
 
-    this.methodController.execute(
-        this.getPastLogsMethodModel,
-        moduleInstance.currentProvider,
-        null,
-        moduleInstance
-    ).then(function (logs) {
-        logs.forEach(function (log) {
-            callback(false, log);
-            subscription.emit('data', log);
+            delete self.options.fromBlock;
+        }).catch(error => {
+            subscription.emit('error', error);
+            callback(error, null);
         });
+    }
 
-        delete self.options.fromBlock;
-    }).catch(function (error) {
-        subscription.emit('error', error);
-        callback(error, null);
-    });
-};
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {Object}
- */
-LogSubscriptionModel.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.formatters.outputLogFormatter(subscriptionItem);
-};
-
-module.exports = LogSubscriptionModel;
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {Object}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return this.formatters.outputLogFormatter(subscriptionItem);
+    }
+}

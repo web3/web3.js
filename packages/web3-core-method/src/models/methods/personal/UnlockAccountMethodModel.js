@@ -20,32 +20,32 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class UnlockAccountMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'personal_unlockAccount',
+            3,
+            utils,
+            formatters
+        );
+    }
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function UnlockAccountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'personal_unlockAccount', 3, utils, formatters);
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    }
 }
-
-UnlockAccountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-UnlockAccountMethodModel.prototype.constructor = UnlockAccountMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
- */
-UnlockAccountMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-};
-
-module.exports = UnlockAccountMethodModel;

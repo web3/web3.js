@@ -20,70 +20,69 @@
  * @date 2018
  */
 
-"use strict";
+import _ from 'underscore';
 
-var _ = require('underscore');
+export default class ProviderAdapterResolver {
 
-/**
- * @param {ProvidersPackageFactory} providersPackageFactory
- *
- * @constructor
- */
-function ProviderAdapterResolver(providersPackageFactory) {
-    this.providersPackageFactory = providersPackageFactory;
+    /**
+     * @param {ProvidersPackageFactory} providersPackageFactory
+     *
+     * @constructor
+     */
+    constructor(providersPackageFactory) {
+        this.providersPackageFactory = providersPackageFactory;
+    }
+
+    /**
+     * Resolves the correct provider with his adapter
+     *
+     * @method resolve
+     *
+     * @param {*} provider
+     * @param {Net} net
+     *
+     * @returns {AbstractProviderAdapter|Error}
+     */
+    resolve(provider, net) {
+        if (typeof provider === 'string') {
+            // HTTP
+            if (/^http(s)?:\/\//i.test(provider)) {
+                return this.providersPackageFactory.createHttpProviderAdapter(
+                    this.providersPackageFactory.createHttpProvider(provider)
+                );
+            }
+            // WS
+            if (/^ws(s)?:\/\//i.test(provider)) {
+                return this.providersPackageFactory.createSocketProviderAdapter(
+                    this.providersPackageFactory.createWebsocketProvider(provider)
+                );
+            }
+
+            // IPC
+            if (provider && _.isObject(net) && _.isFunction(net.connect)) {
+                return this.providersPackageFactory.createSocketProviderAdapter(
+                    this.providersPackageFactory.createIpcProvider(provider, net)
+                );
+            }
+        }
+
+        if (_.isFunction(provider.sendAsync)) {
+            return this.providersPackageFactory.createInpageProviderAdapter(provider);
+        }
+
+        switch (provider.constructor.name) {
+            case 'HttpProvider':
+                return this.providersPackageFactory.createHttpProviderAdapter(provider);
+            case 'WebsocketProvider':
+            case 'IpcProvider':
+                return this.providersPackageFactory.createSocketProviderAdapter(provider);
+            case 'EthereumProvider':
+            case 'HttpProviderAdapter':
+            case 'SocketProviderAdapter':
+            case 'InpageProviderAdapter':
+                return provider;
+        }
+
+        throw Error('Please provide an valid Web3 provider or the EthereumProvider');
+    }
 }
-
-/**
- * Resolves the correct provider with his adapter
- *
- * @method resolve
- *
- * @param {*} provider
- * @param {Net} net
- *
- * @returns {AbstractProviderAdapter|Error}
- */
-ProviderAdapterResolver.prototype.resolve = function (provider, net) {
-    if (typeof provider === 'string') {
-        // HTTP
-        if (/^http(s)?:\/\//i.test(provider)) {
-            return this.providersPackageFactory.createHttpProviderAdapter(
-                this.providersPackageFactory.createHttpProvider(provider)
-            );
-        }
-        // WS
-        if (/^ws(s)?:\/\//i.test(provider)) {
-            return this.providersPackageFactory.createSocketProviderAdapter(
-                this.providersPackageFactory.createWebsocketProvider(provider)
-            );
-        }
-
-        // IPC
-        if (provider && _.isObject(net) && _.isFunction(net.connect)) {
-            return this.providersPackageFactory.createSocketProviderAdapter(
-                this.providersPackageFactory.createIpcProvider(provider, net)
-            );
-        }
-    }
-
-    if (_.isFunction(provider.sendAsync)) {
-        return this.providersPackageFactory.createInpageProviderAdapter(provider);
-    }
-
-    switch (provider.constructor.name) {
-        case 'HttpProvider':
-            return this.providersPackageFactory.createHttpProviderAdapter(provider);
-        case 'WebsocketProvider':
-        case 'IpcProvider':
-            return this.providersPackageFactory.createSocketProviderAdapter(provider);
-        case 'EthereumProvider':
-        case 'HttpProviderAdapter':
-        case 'SocketProviderAdapter':
-        case 'InpageProviderAdapter':
-            return provider;
-    }
-
-    throw Error('Please provide an valid Web3 provider or the EthereumProvider');
-};
-
-module.exports = ProviderAdapterResolver;

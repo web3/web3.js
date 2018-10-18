@@ -20,51 +20,42 @@
  * @date 2018
  */
 
-"use strict";
+import * as PromiEventPackage from 'web3-core-promievent';
+import {MethodController} from 'web3-core-method';
+import * as ProvidersPackage from 'web3-providers';
+import {formatters} from 'web3-core-helpers';
+import Utils from 'web3-utils';
+import {AbiCoder} from 'web3-eth-abi';
+import ContractPackageFactory from './factories/ContractPackageFactory';
 
-var version = require('../package.json').version;
-var PromiEventPackage = require('web3-core-promievent');
-var MethodController = require('web3-core-method').MethodController;
-var ProvidersPackage = require('web3-providers');
-var formatters = require('web3-core-helpers').formatters;
-var Utils = require('web3-utils');
-var AbiCoder = require('web3-eth-abi').AbiCoder;
-var Contract = require('./Contract');
-var ContractDeployMethodModel = require('./models/methods/ContractDeployMethodModel');
-var ContractPackageFactory = require('./factories/ContractPackageFactory');
-
-module.exports = {
-    version: version,
-
-    ContractDeployMethodModel: ContractDeployMethodModel,
-
-    /**
-     * Returns an object of type Contract
-     *
-     * @method Contract
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {Accounts} accounts
-     * @param {Object} abi
-     * @param {String} address
-     * @param {Object} options
-     *
-     * @returns {Contract}
-     */
-    Contract: function (provider, accounts, abi, address, options) {
-        return new ContractPackageFactory(
-            Utils,
-            formatters,
-            new AbiCoder(),
-            accounts
-        ).createContract(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            PromiEventPackage,
-            abi,
-            address,
-            options
-        );
-    }
+/**
+ * Returns an object of type Contract
+ *
+ * @method Contract
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Accounts} accounts
+ * @param {Object} abi
+ * @param {String} address
+ * @param {Object} options
+ *
+ * @returns {Contract}
+ */
+export const Contract = (provider, accounts, abi, address, options) => {
+    return new ContractPackageFactory(
+        Utils,
+        formatters,
+        new AbiCoder(),
+        accounts
+    ).createContract(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        PromiEventPackage,
+        abi,
+        address,
+        options
+    );
 };
+
+export ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';

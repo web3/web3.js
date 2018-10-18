@@ -20,47 +20,43 @@
  * @date 2018
  */
 
-"use strict";
+import {LogSubscriptionModel} from 'web3-core-subscriptions';
 
-var LogSubscriptionModel = require('web3-core-subscriptions').LogSubscriptionModel;
+export default class AllEventsLogSubscription extends LogSubscriptionModel {
 
-/**
- * @param {Object} options
- * @param {Object} utils
- * @param {Object} formatters
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
- * @param {MethodController} methodController
- * @param {EventLogDecoder} allEventsLogDecoder
- *
- * @constructor
- */
-function AllEventsLogSubscription(
-    options,
-    utils,
-    formatters,
-    getPastLogsMethodModel,
-    methodController,
-    allEventsLogDecoder
-) {
-    LogSubscriptionModel.call(this, options, utils, formatters, getPastLogsMethodModel, methodController);
-    this.allEventsLogDecoder = allEventsLogDecoder;
+    /**
+     * @param {Object} options
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+     * @param {MethodController} methodController
+     * @param {EventLogDecoder} allEventsLogDecoder
+     *
+     * @constructor
+     */
+    constructor(
+        options,
+        utils,
+        formatters,
+        getPastLogsMethodModel,
+        methodController,
+        allEventsLogDecoder
+    ) {
+        super(options, utils, formatters, getPastLogsMethodModel, methodController);
+        this.allEventsLogDecoder = allEventsLogDecoder;
+    }
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {Object}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return this.allEventsLogDecoder.decode(null, this.formatters.outputLogFormatter(subscriptionItem));
+    }
 }
-
-AllEventsLogSubscription.prototye = Object.create(LogSubscriptionModel.prototype);
-AllEventsLogSubscription.prototye.constructor = AllEventsLogSubscription;
-
-/**
- * This method will be executed on each new subscription item.
- *
- * @method onNewSubscriptionItem
- *
- * @param {Subscription} subscription
- * @param {*} subscriptionItem
- *
- * @returns {Object}
- */
-AllEventsLogSubscription.prototype.onNewSubscriptionItem = function (subscription, subscriptionItem) {
-    return this.allEventsLogDecoder.decode(null, this.formatters.outputLogFormatter(subscriptionItem));
-};
-
-module.exports = AllEventsLogSubscription;

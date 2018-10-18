@@ -20,49 +20,50 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class GetBlockUncleCountMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetBlockUncleCountMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_getUncleCountByBlockNumber', 1, utils, formatters);
-}
-
-GetBlockUncleCountMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetBlockUncleCountMethodModel.prototype.constructor = GetBlockUncleCountMethodModel;
-
-/**
- * This method will be executed before the RPC request.
- *
- * @method beforeExecution
- *
- * @param {AbstractWeb3Module} moduleInstance
- */
-GetBlockUncleCountMethodModel.prototype.beforeExecution = function (moduleInstance) {
-    if (this.isHash(this.parameters[0])) {
-        this.rpcMethod = 'eth_getUncleCountByBlockHash';
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_getUncleCountByBlockNumber',
+            1,
+            utils,
+            formatters
+        );
     }
 
-    this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-};
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     */
+    beforeExecution(moduleInstance) {
+        if (this.isHash(this.parameters[0])) {
+            this.rpcMethod = 'eth_getUncleCountByBlockHash';
+        }
 
-/**
- * This method will be executed after the RPC request.
- *
- * @method afterExecution
- *
- * @param {Object} response
- *
- * @returns {Number}
- */
-GetBlockUncleCountMethodModel.prototype.afterExecution = function (response) {
-    return this.utils.hexToNumber(response);
-};
+        this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
+    }
 
-module.exports = GetBlockUncleCountMethodModel;
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Object} response
+     *
+     * @returns {Number}
+     */
+    afterExecution(response) {
+        return this.utils.hexToNumber(response);
+    }
+}

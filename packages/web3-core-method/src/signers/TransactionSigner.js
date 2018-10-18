@@ -20,45 +20,29 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractSigner from '../../lib/signers/AbstractSigner';
 
-var AbstractSigner = require('../../lib/signers/AbstractSigner');
+export default class TransactionSigner extends AbstractSigner {
 
-function TransactionSigner() { }
-
-TransactionSigner.prototype = Object.create(AbstractSigner.prototype);
-TransactionSigner.prototype.constructor = TransactionSigner;
-
-/**
- * Signs the given transaction
- *
- * @method sign
- *
- * @param {Object} transaction
- * @param {Accounts} accounts
- *
- * @returns {Promise<Boolean|String>}
- */
-TransactionSigner.prototype.sign = function (transaction, accounts) {
-    var self = this;
-
-    return new Promise(function(resolve, reject) {
-        var wallet = self.getWallet(transaction.from, accounts);
+    /**
+     * Signs the given transaction
+     *
+     * @method sign
+     *
+     * @param {Object} transaction
+     * @param {Accounts} accounts
+     *
+     * @returns {Promise<Boolean|String|Error>}
+     */
+    async sign(transaction, accounts) {
+        const wallet = this.getWallet(transaction.from, accounts);
 
         if (wallet && wallet.privateKey) {
             delete transaction.from;
 
-            accounts.signTransaction(transaction, wallet.privateKey).then(function(response) {
-                resolve(response);
-            }).catch(function(error) {
-                reject(error);
-            });
-
-            return;
+            return await accounts.signTransaction(transaction, wallet.privateKey);
         }
 
-        reject(new Error('Wallet or privateKey in wallet is not set!'));
-    });
-};
-
-module.exports = TransactionSigner;
+        throw new Error('Wallet or privateKey in wallet is not set!');
+    }
+}

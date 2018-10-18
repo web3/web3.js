@@ -20,21 +20,21 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
-
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function GetFilterMessagesMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_getFilterMessages', 1, utils, formatters);
+export default class GetFilterMessagesMethodModel extends AbstractMethodModel {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_getFilterMessages',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-GetFilterMessagesMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-GetFilterMessagesMethodModel.prototype.constructor = GetFilterMessagesMethodModel;
-
-module.exports = GetFilterMessagesMethodModel;

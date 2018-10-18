@@ -20,41 +20,35 @@
  * @date 2018
  */
 
-"use strict";
+import _ from 'underscore';
 
-var _ = require('underscore');
+export default class AbstractSigner {
 
-/**
- * @constructor
- */
-function AbstractSigner() { }
+    /**
+     * Get wallet for address with accounts package
+     *
+     * @param {*} from
+     * @param {Accounts} accounts
+     *
+     * @returns {*}
+     */
+    getWallet(from, accounts) {
+        // is index given
+        if (_.isNumber(from)) {
+            return accounts.wallet[from];
 
-/**
- * Get wallet for address with accounts package
- *
- * @param {*} from
- * @param {Accounts} accounts
- *
- * @returns {*}
- */
-AbstractSigner.prototype.getWallet = function (from, accounts) {
-    // is index given
-    if (_.isNumber(from)) {
-        return accounts.wallet[from];
+        }
 
+        // is account given
+        if (_.isObject(from) && from.address && from.privateKey) {
+            return from;
+        }
+
+        const searchedWalletForAddress = accounts.wallet[from.toLowerCase()];
+        if (searchedWalletForAddress) {
+            return searchedWalletForAddress;
+        }
+
+        return null;
     }
-
-    // is account given
-    if (_.isObject(from) && from.address && from.privateKey) {
-        return from;
-    }
-
-    var searchedWalletForAddress = accounts.wallet[from.toLowerCase()];
-    if (searchedWalletForAddress) {
-        return searchedWalletForAddress;
-    }
-
-    return null;
-};
-
-module.exports = AbstractSigner;
+}

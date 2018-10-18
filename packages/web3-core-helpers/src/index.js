@@ -20,13 +20,5 @@
  * @date 2017
  */
 
-"use strict";
-
-var errors = require('./errors');
-var formatters = require('./formatters');
-
-module.exports = {
-    errors: errors,
-    formatters: formatters
-};
-
+export errors from './errors';
+export formatters from './formatters';

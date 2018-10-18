@@ -20,13 +20,5 @@
  * @date 2018
  */
 
-"use strict";
-
-var version = require('./package.json').version;
-var Bzz = require('./Bzz');
-
-module.exports = {
-    version: version,
-
-    Bzz: Bzz
-};
+export Bzz from './Bzz';
+export version from '../package.json';

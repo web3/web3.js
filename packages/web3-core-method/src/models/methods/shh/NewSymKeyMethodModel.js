@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class NewSymKeyMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function NewSymKeyMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_newSymKey', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_newSymKey',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-NewSymKeyMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-NewSymKeyMethodModel.prototype.constructor = NewSymKeyMethodModel;
-
-module.exports = NewSymKeyMethodModel;

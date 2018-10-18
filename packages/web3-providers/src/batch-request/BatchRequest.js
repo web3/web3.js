@@ -20,88 +20,85 @@
  * @date 2018
  */
 
-"use strict";
+import {errors} from 'web3-core-helpers';
+import _ from 'underscore';
 
-var errors = require('web3-core-helpers').errors;
-var _ = require('underscore');
+export default class BatchRequest {
 
-/**
- *
- * @param {AbstractProviderAdapter} provider
- * @param {JSONRpcMapper} jsonRpcMapper
- * @param {JSONRpcResponseValidator} jsonRpcResponseValidator
- *
- * @constructor
- */
-function BatchRequest(provider, jsonRpcMapper, jsonRpcResponseValidator) {
-    this.provider = provider;
-    this.jsonRpcMapper = jsonRpcMapper;
-    this.jsonRpcResponseValidator = jsonRpcResponseValidator;
-    this.requests = [];
-}
+    /**
+     * @param {AbstractProviderAdapter} provider
+     * @param {JSONRpcMapper} jsonRpcMapper
+     * @param {JSONRpcResponseValidator} jsonRpcResponseValidator
+     *
+     * @constructor
+     */
+    constructor(provider, jsonRpcMapper, jsonRpcResponseValidator) {
+        this.provider = provider;
+        this.jsonRpcMapper = jsonRpcMapper;
+        this.jsonRpcResponseValidator = jsonRpcResponseValidator;
+        this.requests = [];
+    }
 
-/**
- * Should be called to add create new request to batch request
- *
- * @method add
- *
- * @param {Object} request
- */
-BatchRequest.prototype.add = function (request) {
-    this.requests.push(request);
-};
+    /**
+     * Should be called to add create new request to batch request
+     *
+     * @method add
+     *
+     * @param {Object} request
+     */
+    add(request) {
+        this.requests.push(request);
+    }
 
-/**
- * Should be called to execute batch request
- *
- * @method execute
- */
-BatchRequest.prototype.execute = function () {
-    var self = this;
-    this.provider.sendBatch(
-        this.jsonRpcMapper.toBatchPayload(this.requests),
-        function (err, results) {
-            if (!_.isArray(results)) {
-                request.callback(errors.InvalidResponse(results));
+    /**
+     * Should be called to execute batch request
+     *
+     * @method execute
+     */
+    execute() {
+        this.provider.sendBatch(
+            this.jsonRpcMapper.toBatchPayload(this.requests),
+            (err, results) => {
+                if (!_.isArray(results)) {
+                    request.callback(errors.InvalidResponse(results));
 
-                return;
-            }
-
-            self.requests.forEach(function (request, index) {
-                var result = results[index] || null;
-
-                if (_.isFunction(request.callback)) {
-                    if (_.isObject(result) && result.error) {
-                        request.callback(errors.ErrorResponse(result));
-                    }
-
-                    if (!this.jsonRpcResponseValidator.isValid(result)) {
-                        request.callback(errors.InvalidResponse(result));
-                    }
-
-                    try {
-                        var mappedResult = request.afterExecution(result.result);
-                        request.callback(null, mappedResult);
-                    } catch (err) {
-                        request.callback(err, null);
-                    }
+                    return;
                 }
-            });
-        }
-    );
-};
 
-/**
- * Checks if the method has an outputFormatter defined
- *
- * @method hasOutputFormatter
- *
- * @param {Object} request
- *
- * @returns {Boolean}
- */
-BatchRequest.prototype.hasOutputFormatter = function (request) {
-    return _.isFunction(request.methodModel.outputFormatter);
-};
+                this.requests.forEach(function (request, index) {
+                    const result = results[index] || null;
 
-module.exports = BatchRequest;
+                    if (_.isFunction(request.callback)) {
+                        if (_.isObject(result) && result.error) {
+                            request.callback(errors.ErrorResponse(result));
+                        }
+
+                        if (!this.jsonRpcResponseValidator.isValid(result)) {
+                            request.callback(errors.InvalidResponse(result));
+                        }
+
+                        try {
+                            const mappedResult = request.afterExecution(result.result);
+                            request.callback(null, mappedResult);
+                        } catch (err) {
+                            request.callback(err, null);
+                        }
+                    }
+                });
+            }
+        );
+    }
+
+    /**
+     * Checks if the method has an outputFormatter defined
+     *
+     * @method hasOutputFormatter
+     *
+     * @param {Object} request
+     *
+     * @returns {Boolean}
+     */
+    hasOutputFormatter(request) {
+        return _.isFunction(request.methodModel.outputFormatter);
+    }
+}

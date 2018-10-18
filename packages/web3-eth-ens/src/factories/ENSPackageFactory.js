@@ -17,73 +17,70 @@
  * @date 2018
  */
 
-"use strict";
+import ENS from './ENS';
+import Registry from './contracts/Registry';
+import ResolverMethodHandler from '../handlers/ResolverMethodHandler';
 
-var ENS = require('./ENS');
-var Registry = require('./contracts/Registry');
-var ResolverMethodHandler = require('../handlers/ResolverMethodHandler');
+export default class ENSPackageFactory {
 
-function ENSPackageFactory () { }
+    /**
+     * Returns an object of type ENS
+     *
+     * @method createENS
+     *
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {Network} net
+     * @param {Accounts} accounts
+     * @param {ContractPackage} contractPackage
+     * @param {Object} registryAbi
+     * @param {Object} resolverAbi
+     * @param {PromiEventPackage} promiEventPackage
+     *
+     * @returns {ENS}
+     */
+    createENS(
+        provider,
+        net,
+        accounts,
+        contractPackage,
+        registryAbi,
+        resolverAbi,
+        promiEventPackage
+    ) {
+        const registry = this.createRegistry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
 
-/**
- * Returns an object of type ENS
- *
- * @method createENS
- *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
- * @param {Network} net
- * @param {Accounts} accounts
- * @param {ContractPackage} contractPackage
- * @param {Object} registryAbi
- * @param {Object} resolverAbi
- * @param {PromiEventPackage} promiEventPackage
- *
- * @returns {ENS}
- */
-ENSPackageFactory.prototype.createENS = function (
-    provider,
-    net,
-    accounts,
-    contractPackage,
-    registryAbi,
-    resolverAbi,
-    promiEventPackage
-) {
-    var registry = this.createRegistry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
+        return new ENS(registry, this.createResolverMethodHandler(registry, promiEventPackage));
+    }
 
-    return new ENS(registry, this.createResolverMethodHandler(registry, promiEventPackage));
-};
+    /**
+     * Returns an object of type Registry
+     *
+     * @method createRegistry
+     *
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {Network} net
+     * @param {Accounts} accounts
+     * @param {ContractPackage} contractPackage
+     * @param {Object} registryAbi
+     * @param {Object} resolverAbi
+     *
+     * @returns {Registry}
+     */
+    createRegistry(provider, net, accounts, contractPackage, registryAbi, resolverAbi) {
+        return new Registry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
+    }
 
-/**
- * Returns an object of type Registry
- *
- * @method createRegistry
- *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
- * @param {Network} net
- * @param {Accounts} accounts
- * @param {ContractPackage} contractPackage
- * @param {Object} registryAbi
- * @param {Object} resolverAbi
- *
- * @returns {Registry}
- */
-ENSPackageFactory.prototype.createRegistry = function (provider, net, accounts, contractPackage, registryAbi, resolverAbi) {
-    return new Registry(provider, net, accounts, contractPackage, registryAbi, resolverAbi);
-};
-
-/**
- * Returns an object of type ResolverMethodHandler
- *
- * @method createResolverMethodHandler
- *
- * @param {Registry} registry
- * @param {PromiEventPackage} promiEventPackage
- *
- * @returns {ResolverMethodHandler}
- */
-ENSPackageFactory.prototype.createResolverMethodHandler = function (registry, promiEventPackage) {
-    return new ResolverMethodHandler(registry, promiEventPackage);
-};
-
-module.exports = ENSPackageFactory;
+    /**
+     * Returns an object of type ResolverMethodHandler
+     *
+     * @method createResolverMethodHandler
+     *
+     * @param {Registry} registry
+     * @param {PromiEventPackage} promiEventPackage
+     *
+     * @returns {ResolverMethodHandler}
+     */
+    createResolverMethodHandler(registry, promiEventPackage) {
+        return new ResolverMethodHandler(registry, promiEventPackage);
+    }
+}

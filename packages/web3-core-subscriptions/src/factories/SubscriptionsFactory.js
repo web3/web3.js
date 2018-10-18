@@ -20,119 +20,113 @@
  * @date 2018
  */
 
-"use strict";
+import Subscription from '../Subscription';
+import LogSubscriptionModel from '../models/subscriptions/eth/LogSubscriptionModel';
+import NewHeadsSubscriptionModel from '../models/subscriptions/eth/NewHeadsSubscriptionModel';
+import NewPendingTransactionsSubscriptionModel from '../models/subscriptions/eth/NewPendingTransactionsSubscriptionModel';
+import SyncingSubscriptionModel from '../models/subscriptions/eth/SyncingSubscriptionModel';
+import MessagesSubscriptionModel from '../models/subscriptions/shh/MessagesSubscriptionModel';
 
-var Subscription = require('../Subscription');
-var LogSubscriptionModel = require('../models/subscriptions/eth/LogSubscriptionModel');
-var NewHeadsSubscriptionModel = require('../models/subscriptions/eth/NewHeadsSubscriptionModel');
-var NewPendingTransactionsSubscriptionModel = require('../models/subscriptions/eth/NewPendingTransactionsSubscriptionModel');
-var SyncingSubscriptionModel = require('../models/subscriptions/eth/SyncingSubscriptionModel');
-var MessagesSubscriptionModel = require('../models/subscriptions/shh/MessagesSubscriptionModel');
+export default class SubscriptionsFactory {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function SubscriptionsFactory(utils, formatters) {
-    this.utils = utils;
-    this.formatters = formatters;
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        this.utils = utils;
+        this.formatters = formatters;
+    }
+
+    /**
+     * Returns an eth log subscription
+     *
+     * @method createLogSubscription
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Object} options
+     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
+     * @param {MethodController} methodController
+     *
+     * @returns {Subscription}
+     */
+    createLogSubscription(moduleInstance, options, getPastLogsMethodModel, methodController) {
+        return new Subscription(
+            new LogSubscriptionModel(
+                options,
+                this.utils,
+                this.formatters,
+                getPastLogsMethodModel,
+                methodController
+            ),
+            moduleInstance
+        );
+    }
+
+    /**
+     * Returns an eth newHeads subscription
+     *
+     * @method createNewHeadsSubscription
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Subscription}
+     */
+    createNewHeadsSubscription(moduleInstance) {
+        return new Subscription(
+            new NewHeadsSubscriptionModel(this.utils, this.formatters),
+            moduleInstance
+        );
+    }
+
+    /**
+     * Returns an eth newPendingTransactions subscription
+     *
+     * @method createNewPendingTransactionsSubscription
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Subscription}
+     */
+    createNewPendingTransactionsSubscription(moduleInstance) {
+        return new Subscription(
+            new NewPendingTransactionsSubscriptionModel(this.utils, this.formatters),
+            moduleInstance
+        );
+    }
+
+    /**
+     * Returns an eth syncing subscription
+     *
+     * @method createSyncingSubscriptionModel
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Subscription}
+     */
+    createSyncingSubscriptionModel(moduleInstance) {
+        return new Subscription(
+            new SyncingSubscriptionModel(this.utils, this.formatters),
+            moduleInstance
+        );
+    }
+
+    /**
+     * Returns an shh messages subscription
+     *
+     * @method createShhMessagesSubscription
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Object} options
+     *
+     * @returns {Subscription}
+     */
+    createShhMessagesSubscription(moduleInstance, options) {
+        return new Subscription(
+            new MessagesSubscriptionModel(options, this.utils, this.formatters),
+            moduleInstance
+        );
+    }
 }
-
-/**
- * Returns an eth log subscription
- *
- * @method createLogSubscription
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Object} options
- * @param {GetPastLogsMethodModel} getPastLogsMethodModel
- * @param {MethodController} methodController
- *
- * @returns {Subscription}
- */
-SubscriptionsFactory.prototype.createLogSubscription = function (
-    moduleInstance,
-    options,
-    getPastLogsMethodModel,
-    methodController
-) {
-    return new Subscription(
-        new LogSubscriptionModel(
-            options,
-            this.utils,
-            this.formatters,
-            getPastLogsMethodModel,
-            methodController
-        ),
-        moduleInstance
-    );
-};
-
-/**
- * Returns an eth newHeads subscription
- *
- * @method createNewHeadsSubscription
- *
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @returns {Subscription}
- */
-SubscriptionsFactory.prototype.createNewHeadsSubscription = function (moduleInstance) {
-    return new Subscription(
-        new NewHeadsSubscriptionModel(this.utils, this.formatters),
-        moduleInstance
-    );
-};
-
-/**
- * Returns an eth newPendingTransactions subscription
- *
- * @method createNewPendingTransactionsSubscription
- *
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @returns {Subscription}
- */
-SubscriptionsFactory.prototype.createNewPendingTransactionsSubscription = function (moduleInstance) {
-    return new Subscription(
-        new NewPendingTransactionsSubscriptionModel(this.utils, this.formatters),
-        moduleInstance
-    );
-};
-
-/**
- * Returns an eth syncing subscription
- *
- * @method createSyncingSubscriptionModel
- *
- * @param {AbstractWeb3Module} moduleInstance
- *
- * @returns {Subscription}
- */
-SubscriptionsFactory.prototype.createSyncingSubscriptionModel = function (moduleInstance) {
-    return new Subscription(
-        new SyncingSubscriptionModel(this.utils, this.formatters),
-        moduleInstance
-    );
-};
-
-/**
- * Returns an shh messages subscription
- *
- * @method createShhMessagesSubscription
- *
- * @param {AbstractWeb3Module} moduleInstance
- * @param {Object} options
- *
- * @returns {Subscription}
- */
-SubscriptionsFactory.prototype.createShhMessagesSubscription = function (moduleInstance, options) {
-    return new Subscription(
-        new MessagesSubscriptionModel(options, this.utils, this.formatters),
-        moduleInstance
-    );
-};
-
-module.exports = SubscriptionsFactory;

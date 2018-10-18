@@ -20,38 +20,31 @@
  * @date 2018
  */
 
-"use strict";
+import * as ProvidersPackage from 'web3-providers';
+import {MethodController} from 'web3-core-method';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
+import {Network} from 'web3-net';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import ShhModule from './Shh';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-var version = require('./package.json');
-var ProvidersPackage = require('web3-providers');
-var MethodController = require('web3-core-method').MethodController;
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
-var Network = require('web3-net').Network;
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var Shh = require('./Shh');
-var MethodModelFactory = require('./factories/MethodModelFactory');
-
-module.exports = {
-    version: version,
-
-    /**
-     * Returns the Shh object.
-     *
-     * @method Shh
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Shh}
-     */
-    Shh: function (provider) {
-        return new Shh(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            new SubscriptionsFactory(),
-            new Network(provider)
-        );
-    }
+/**
+ * Returns the Shh object.
+ *
+ * @method Shh
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Shh}
+ */
+export const Shh = (provider) => {
+    return new ShhModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        new SubscriptionsFactory(),
+        new Network(provider)
+    );
 };

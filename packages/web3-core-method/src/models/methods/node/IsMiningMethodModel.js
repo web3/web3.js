@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class IsMiningMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function IsMiningMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'eth_mining', 0, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'eth_mining',
+            0,
+            utils,
+            formatters
+        );
+    }
 }
-
-IsMiningMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-IsMiningMethodModel.prototype.constructor = IsMiningMethodModel;
-
-module.exports = IsMiningMethodModel;

@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class DeleteMessageFilterMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function DeleteMessageFilterMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_deleteMessageFilter', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_deleteMessageFilter',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-DeleteMessageFilterMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-DeleteMessageFilterMethodModel.prototype.constructor = DeleteMessageFilterMethodModel;
-
-module.exports = DeleteMessageFilterMethodModel;

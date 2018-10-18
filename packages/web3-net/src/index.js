@@ -21,37 +21,29 @@
  * @date 2018
  */
 
-"use strict";
+import * as ProvidersPackage from 'web3-providers';
+import {MethodController} from 'web3-core-method';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import NetworkModule from './Network';
+import MethodModelFactory from './factories/MethodModelFactory';
 
-var version = require('../package.json').version;
-var ProvidersPackage = require('web3-providers');
-var MethodController = require('web3-core-method').MethodController;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
-var Network = require('./Network');
-var MethodModelFactory = require('./factories/MethodModelFactory');
-
-
-module.exports = {
-    version: version,
-
-    /**
-     * Creates the Network Object
-     *
-     * @method Network
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Network}
-     */
-    Network: function (provider) {
-        return new Network(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            formatters,
-            utils
-        )
-    }
+/**
+ * Creates the Network Object
+ *
+ * @method Network
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Network}
+ */
+export const Network = (provider) => {
+    return new NetworkModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        formatters,
+        utils
+    )
 };

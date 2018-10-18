@@ -13,43 +13,36 @@
 */
 /**
  * @file index.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-"use strict";
+import * as ContractPackage from 'web3-eth-contract';
+import * as PromiEventPackage from 'web3-core-promievent';
+import REGISTRY_ABI from '../ressources/ABI/Registry';
+import RESOLVER_ABI from '../ressources/ABI/Resolver';
+import ENSPackageFactory from './factories/ENSPackageFactory';
 
-var version = require('package.json').version;
-var ContractPackage = require('web3-eth-contract');
-var PromiEventPackage = require('web3-core-promievent');
-var REGISTRY_ABI = require('../ressources/ABI/Registry');
-var RESOLVER_ABI = require('../ressources/ABI/Resolver');
-var ENSPackageFactory = require('./factories/ENSPackageFactory');
-
-module.exports = { // TODO: overthink the ens package architecture and refactor it.
-    version: version,
-
-    /**
-     * Returns the ENS object
-     *
-     * @method ENS
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {Network} net
-     * @param {Accounts} accounts
-     *
-     * @returns {ENS}
-     */
-    ENS: function (provider, net, accounts) {
-        return new ENSPackageFactory().createENS(
-            provider,
-            net,
-            accounts,
-            ContractPackage,
-            REGISTRY_ABI,
-            RESOLVER_ABI,
-            PromiEventPackage
-        );
-    }
+/**
+ * TODO: Overthink the module structure
+ * Returns the ENS object
+ *
+ * @method ENS
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Network} net
+ * @param {Accounts} accounts
+ *
+ * @returns {ENS}
+ */
+export const ENS = (provider, net, accounts) => {
+    return new ENSPackageFactory().createENS(
+        provider,
+        net,
+        accounts,
+        ContractPackage,
+        REGISTRY_ABI,
+        RESOLVER_ABI,
+        PromiEventPackage
+    );
 };

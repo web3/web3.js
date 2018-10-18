@@ -20,40 +20,31 @@
  * @date 2018
  */
 
-"use strict";
+import {MethodController} from 'web3-core-method';
+import {Network} from 'web3-net';
+import * as ProvidersPackage from 'web3-providers';
+import Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import MethodModelFactory from './factories/MethodModelFactory';
+import PersonalModule from './Personal';
 
-var version = require('./package.json').version;
-var Personal = require('./Personal');
-var MethodController = require('web3-core-method').MethodController;
-var Network = require('web3-net').Network;
-var ProvidersPackage = require('web3-providers');
-var Utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
-var MethodModelFactory = require('./factories/MethodModelFactory');
-
-module.exports = {
-    version: version,
-
-    /**
-     * Returns the Personal object
-     *
-     * @method Personal
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Personal}
-     */
-    Personal: function (provider) {
-        return new Personal(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            new Network(provider),
-            Utils,
-            formatters
-        );
-    }
+/**
+ * Returns the Personal object
+ *
+ * @method Personal
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Personal}
+ */
+export const Personal = (provider) => {
+    return new PersonalModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        new Network(provider),
+        Utils,
+        formatters
+    );
 };
-
-

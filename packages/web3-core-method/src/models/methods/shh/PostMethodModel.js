@@ -20,21 +20,22 @@
  * @date 2018
  */
 
-"use strict";
+import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
-var AbstractMethodModel = require('../../../../lib/models/AbstractMethodModel');
+export default class PostMethodModel extends AbstractMethodModel {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function PostMethodModel(utils, formatters) {
-    AbstractMethodModel.call(this, 'shh_post', 1, utils, formatters);
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super(
+            'shh_post',
+            1,
+            utils,
+            formatters
+        );
+    }
 }
-
-PostMethodModel.prototype = Object.create(AbstractMethodModel.prototype);
-PostMethodModel.prototype.constructor = PostMethodModel;
-
-module.exports = PostMethodModel;

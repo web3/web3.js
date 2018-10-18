@@ -20,52 +20,51 @@
  * @date 2018
  */
 
-"use strict";
+class EventLogDecoder {
 
-/**
- * @param {ABICoder} abiCoder
- * @param {Object} formatters
- *
- * @constructor
- */
-function EventLogDecoder(abiCoder, formatters) {
-    this.abiCoder = abiCoder;
-    this.formatters = formatters;
+    /**
+     * @param {ABICoder} abiCoder
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(abiCoder, formatters) {
+        this.abiCoder = abiCoder;
+        this.formatters = formatters;
+    }
+
+    /**
+     * Decodes the event subscription response
+     *
+     * @method decoder
+     *
+     * @param {ABIItemModel} abiItemModel
+     * @param {Object} response
+     *
+     * @returns {Object}
+     */
+    decode(abiItemModel, response) {
+        let argTopics = response.topics;
+        if (abiItemModel.anonymous) {
+            argTopics = response.topics.slice(1);
+        }
+
+        response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
+        response.event = abiItemModel.name;
+        response.signature = abiItemModel.signature;
+        response.raw = {
+            data: response.data,
+            topics: response.topics
+        };
+
+        if (abiItemModel.anonymous || !response.topics[0]) {
+            response.signature = null;
+        }
+
+        delete response.returnValues.__length__;
+        delete response.data;
+        delete response.topics;
+
+        return response;
+    }
 }
-
-/**
- * Decodes the event subscription response
- *
- * @method decoder
- *
- * @param {ABIItemModel} abiItemModel
- * @param {Object} response
- *
- * @returns {Object}
- */
-EventLogDecoder.prototype.decode = function(abiItemModel, response) {
-    var argTopics = response.topics;
-    if (abiItemModel.anonymous) {
-        argTopics = response.topics.slice(1);
-    }
-
-    response.returnValues = this.abiCoder.decodeLog(abiItemModel.getInputs(), response.data, argTopics);
-    response.event = abiItemModel.name;
-    response.signature = abiItemModel.signature;
-    response.raw = {
-        data: response.data,
-        topics: response.topics
-    };
-
-    if (abiItemModel.anonymous || !response.topics[0]) {
-        response.signature = null;
-    }
-
-    delete response.returnValues.__length__;
-    delete response.data;
-    delete response.topics;
-
-    return response;
-};
-
-module.exports = EventLogDecoder;

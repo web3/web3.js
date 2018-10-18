@@ -20,20 +20,18 @@
  * @date 2018
  */
 
-"use strict";
+import * as web3CoreMethod from 'web3-core-method';
 
-var web3CoreMethod = require('web3-core-method');
+export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
 
-/**
- * @param {Object} utils
- * @param {Object} formatters
- *
- * @constructor
- */
-function MethodModelFactory(utils, formatters) {
-    web3CoreMethod.AbstractMethodModelFactory.call(
-        this,
-        {
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        super({
             getAccounts: web3CoreMethod.GetAccountsMethodModel,
             newAccount: web3CoreMethod.NewAccountMethodModel,
             unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
@@ -43,13 +41,6 @@ function MethodModelFactory(utils, formatters) {
             signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
             sign: web3CoreMethod.PersonalSignMethodModel,
             ecRecover: web3CoreMethod.EcRecoverMethodModel
-        },
-        utils,
-        formatters
-    );
+        }, utils, formatters);
+    }
 }
-
-MethodModelFactory.prototype = Object.create(web3CoreMethod.AbstractMethodModelFactory.prototype);
-MethodModelFactory.prototype.constructor = MethodModelFactory;
-
-module.exports = MethodModelFactory;

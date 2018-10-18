@@ -29,64 +29,58 @@ This will expose the `Web3Subscriptions` object on the window object.
 // in node.js
 
 // Dependencies
-var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
-var SubscriptionsFactory = require('web3-core-subscriptions').SubscriptionsFactory;
+import * as ProvidersPackage from 'web3-providers';
+import AbstractWeb3Module from 'web3-package';
+import SubscriptionsFactory from 'web3-core-subscriptions';
 
 // Create an object of type AbstractWeb3Module
-/**
- * @param {Object|String} provider
- * @param {ProvidersPackage} providersPackage
- * @param {SubscriptionsFactory} subscriptionsFactory
- * 
- * @constructor
- */
-function Module (
-    provider,
-    providersPackage,
-    subscriptionsFactory
-) {
-    AbstractWeb3Module.call(
-        this,
-        provider,
-        providersPackage
-    );
+class Module extends AbstractWeb3Module{
     
-    this.subscriptionsFactory = subscriptionsFactory;
+    /**
+     * @param {Object|String} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * 
+     * @constructor
+     */
+    constructor (
+        provider,
+        providersPackage,
+        subscriptionsFactory
+    ) {
+        super(provider, providersPackage);
+        this.subscriptionsFactory = subscriptionsFactory;
+    }
+    
+    /**
+     * Returns expected subscription
+     * 
+     * @method subscribe
+     * 
+     * @param {String} subscriptionMethod
+     * @param {Method} callback
+     * 
+     * @callback callback callback(error, result)
+     * @returns {Subscription}
+     */
+    subscribe (subscriptionMethod, callback) {
+        switch (subscriptionMethod) {
+            case 'newBlockHeaders':
+                return this.subscriptionsFactory
+                    .createNewHeadsSubscription(this)
+                    .subscribe(callback);
+            case 'pendingTransactions':
+                return this.subscriptionsFactory
+                    .createNewPendingTransactionsSubscription(this)
+                    .subscribe(callback);
+            default:
+                throw Error('Unsupported subscription: ' + subscriptionMethod);
+        }
+    };
 }
 
-/**
- * Returns expected subscription
- * 
- * @method subscribe
- * 
- * @param {String} subscriptionMethod
- * @param {Method} callback
- * 
- * @callback callback callback(error, result)
- * @returns {Subscription}
- */
-Module.prototype.subscribe = function (subscriptionMethod, callback) {
-    switch (subscriptionMethod) {
-        case 'newBlockHeaders':
-            return this.subscriptionsFactory
-                .createNewHeadsSubscription(this)
-                .subscribe(callback);
-        case 'pendingTransactions':
-            return this.subscriptionsFactory
-                .createNewPendingTransactionsSubscription(this)
-                .subscribe(callback);
-        default:
-            throw Error('Unsupported subscription: ' + subscriptionMethod);
-    }
-};
-
-// Inherit from AbstractWeb3Module
-Module.prototype = Object.create(AbstractWeb3Module.prototype);
-Module.prototype.constructor = Module;
-
 // Instantiate anything
-var module = new Module(
+const module = new Module(
     ProvidersPackage.detect(),
     ProvidersPackage,
     new SubscriptionsFactory()
