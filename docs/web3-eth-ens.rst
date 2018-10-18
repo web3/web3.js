@@ -54,7 +54,7 @@ Returns the resolver contract to an Ethereum address.
 Returns
 -------
 
-``Reslver`` - The ENS resolver for this name.
+``Resolver`` - The ENS resolver for this name.
 
 -------
 Example
