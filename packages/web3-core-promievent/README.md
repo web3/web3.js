@@ -28,10 +28,9 @@ This will expose the `Web3PromiEvent` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-var PromiEvent = require('web3-core-promievent').PromiEvent;
+import PromiEvent from 'web3-core-promievent';
 
-var myFunc = function(){
+const myFunc = function(){
     var promiEvent = new PromiEvent();
     
     setTimeout(function() {

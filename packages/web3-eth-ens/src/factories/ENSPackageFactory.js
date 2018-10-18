@@ -17,13 +17,12 @@
  * @date 2018
  */
 
-"use strict";
-
 import ENS from './ENS';
 import Registry from './contracts/Registry';
 import ResolverMethodHandler from '../handlers/ResolverMethodHandler';
 
 export default class ENSPackageFactory {
+
     /**
      * Returns an object of type ENS
      *

@@ -20,6 +20,5 @@
  * @date 2018
  */
 
-"use strict";
 export Bzz from './Bzz';
 export version from '../package.json';

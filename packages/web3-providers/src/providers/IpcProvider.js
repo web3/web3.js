@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-"use strict";
-
 import _ from 'underscore';
 import {errors} from 'web3-core-helpers';
 import oboe from 'oboe';

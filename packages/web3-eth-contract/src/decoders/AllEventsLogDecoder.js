@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import EventLogDecoder from './EventLogDecoder';
 
 export default class AllEventsLogDecoder extends EventLogDecoder {

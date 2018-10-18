@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import web3CoreMethod from 'web3-core-method';
 
 export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {

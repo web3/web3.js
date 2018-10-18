@@ -20,11 +20,9 @@
  * @date 2018
  */
 
-"use strict";
-
-import PromiEventPackage from 'web3-core-promievent';
+import * as PromiEventPackage from 'web3-core-promievent';
 import {MethodController} from 'web3-core-method';
-import ProvidersPackage from 'web3-providers';
+import * as ProvidersPackage from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';
 import {AbiCoder} from 'web3-eth-abi';
@@ -48,15 +46,15 @@ export const Contract = (provider, accounts, abi, address, options) => {
         Utils,
         formatters,
         new AbiCoder(),
-    accounts
+        accounts
     ).createContract(
         provider,
         ProvidersPackage,
         new MethodController(),
-    PromiEventPackage,
-    abi,
-    address,
-    options
+        PromiEventPackage,
+        abi,
+        address,
+        options
     );
 };
 

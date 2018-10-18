@@ -20,13 +20,11 @@
  * @date 2018
  */
 
-"use strict";
-
 import MethodModelFactory from './factories/MethodModelFactory';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
-import ProvidersPackage from 'web3-providers';
+import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
@@ -34,7 +32,8 @@ import {ENS} from 'web3-eth-ens';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import ContractPackage from 'web3-eth-contract';
+import * as ContractPackage from 'web3-eth-contract';
+import EthModule from './Eth';
 
 /**
  * Creates the Eth object
@@ -48,7 +47,7 @@ import ContractPackage from 'web3-eth-contract';
 export const Eth = (provider) => {
     const accounts = new Accounts(provider);
 
-    return new Eth(
+    return new EthModule(
         provider,
         new Network(provider),
         ContractPackage,

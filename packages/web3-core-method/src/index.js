@@ -21,11 +21,8 @@
  * @date 2018
  */
 
-"use strict";
-
-import {version} from '../package.json';
 import MethodPackageFactory from './factories/MethodPackageFactory';
-import PromiEventPackage from 'web3-core-promievent';
+import * as PromiEventPackage from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
 

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import ABIModel from '../models/abi/ABIModel';
 import ABIItemModel from '../models/abi/ABIItemModel';
 import MethodEncoder from '../encoders/MethodEncoder';

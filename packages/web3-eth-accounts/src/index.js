@@ -20,11 +20,9 @@
  * @date 2018
  */
 
-"use strict";
-
 import AccountsModule from './Accounts';
 import {MethodController} from 'web3-core-method';
-import ProvidersPackage from 'web3-providers';
+import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import MethodModelFactory from './factories/MethodModelFactory';

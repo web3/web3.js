@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import Subscription from '../Subscription';
 import LogSubscriptionModel from '../models/subscriptions/eth/LogSubscriptionModel';
 import NewHeadsSubscriptionModel from '../models/subscriptions/eth/NewHeadsSubscriptionModel';

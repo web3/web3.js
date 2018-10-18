@@ -13,12 +13,9 @@
 */
 /**
  * @file ResolverMethodHandler.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-
-"use strict";
 
 import _ from 'underscore';
 import namehash from 'eth-ens-namehash';

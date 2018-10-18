@@ -20,12 +20,8 @@
  * @date 2018
  */
 
-"use strict";
-
-/**
- * @constructor
- */
 export default class CallMethodCommand {
+
     /**
      * Sends a JSON-RPC call request
      *

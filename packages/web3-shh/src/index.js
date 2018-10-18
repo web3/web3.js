@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-"use strict";
-
-import ProvidersPackage from 'web3-providers';
+import * as ProvidersPackage from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Contract extends AbstractWeb3Module {
@@ -79,76 +77,87 @@ export default class Contract extends AbstractWeb3Module {
         this.options = options;
         this.promiEventPackage = promiEventPackage;
         this.rpcMethodModelFactory = contractPackageFactory.createRpcMethodModelFactory();
+        this._defaultAccount = null;
+        this._defaultBlock = 'latest';
+        this.abiModel = abiMapper.map(abi);
+        this.options.address = address;
 
-
-        this.defaultBlock = 'latest';
-        address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(address));
-
-        let abiModel = abiMapper.map(abi);
-        let defaultAccount = null;
-
-        /**
-         * Defines accessors for contract address
-         */
-        Object.defineProperty(this.options, 'address', {
-            set: (value) => {
-                if (value) {
-                    address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-                }
-            },
-            get: () => {
-                return address;
-            },
-            enumerable: true
-        });
-
-        /**
-         * Defines accessors for jsonInterface
-         */
         Object.defineProperty(this.options, 'jsonInterface', {
-            set: (value) => {
-                abiModel = this.abiMapper.map(value);
-                this.methods.abiModel = abiModel;
-                this.events.abiModel = abiModel;
-            },
             get: () => {
-                return abiModel;
+                return this.abiModel;
             },
-            enumerable: true
+            set: (value) =>  {
+                this.abiModel = this.abiMapper.map(value);
+                this.methods.abiModel = this.abiModel;
+                this.events.abiModel = this.abiModel;
+            },
+           enumerable: true
         });
 
-        /**
-         * Defines accessors for defaultAccount
-         */
-        Object.defineProperty(this, 'defaultAccount', {
+        Object.defineProperty(this.options, 'address', {
             get: () => {
-                if (!defaultAccount) {
-                    return this.options.from;
-                }
-
-                return defaultAccount;
+                return this._address;
             },
-            set: (val) => {
-                if (val) {
-                    defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
-                }
-
+            set: (value) =>  {
+                this._address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
             },
             enumerable: true
         });
 
         this.methods = contractPackageFactory.createMethodsProxy(
             this,
-            abiModel,
+            this.abiModel,
             this.methodController,
             this.promiEventPackage
         );
 
         this.events = contractPackageFactory.createEventSubscriptionsProxy(
             this,
-            abiModel,
+            this.abiModel,
             this.methodController
         );
+    }
+
+    /**
+     * Getter for the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {null|String}
+     */
+    get defaultAccount() {
+        return this._defaultAccount;
+    }
+
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultAccount
+     */
+    set defaultAccount(value) {
+        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+    }
+
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
     }
 
     /**
@@ -231,7 +240,7 @@ export default class Contract extends AbstractWeb3Module {
      * @returns {Contract}
      */
     clone() {
-        return new this.constructor(
+        const contract = new this.constructor(
             this.currentProvider,
             this.providersPackage,
             this.methodController,
@@ -242,10 +251,14 @@ export default class Contract extends AbstractWeb3Module {
             this.formatters,
             this.accounts,
             this.abiMapper,
-            this.options.jsonInterface,
+            {},
             this.options.address,
             this.options
         );
+
+        contract.abiModel = this.abiModel;
+
+        return contract;
     }
 
     /**

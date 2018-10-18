@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import _ from 'underscore';
 import {SendTransactionMethodModel} from 'web3-core-method';
 

@@ -20,12 +20,4 @@
  * @date 2018
  */
 
-"use strict";
-
-import {version} from './package.json';
-import Iban from './Iban.js';
-
-export default {
-    version,
-    Iban
-};
+export Iban from './Iban.js';

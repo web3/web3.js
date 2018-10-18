@@ -21,8 +21,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Network extends AbstractWeb3Module {

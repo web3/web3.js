@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class MessageSigner extends AbstractSigner {

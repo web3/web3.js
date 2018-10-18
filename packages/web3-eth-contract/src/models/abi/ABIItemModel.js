@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import _ from 'underscore';
 
 export default class ABIItemModel {

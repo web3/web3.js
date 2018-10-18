@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import CallContractMethodModel from '../models/methods/CallContractMethodModel';
 import ContractDeployMethodModel from '../models/methods/ContractDeployMethodModel';
 import PastEventLogsMethodModel from '../models/methods/PastEventLogsMethodModel';

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../signers/TransactionSigner';
 import MessageSigner from '../signers/MessageSigner';

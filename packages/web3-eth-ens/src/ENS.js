@@ -13,12 +13,9 @@
 */
 /**
  * @file ENS.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
-
-"use strict";
 
 export default class ENS {
 

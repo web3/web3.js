@@ -28,55 +28,33 @@ export default class TransactionConfirmationModel {
     constructor() {
         this.confirmations = [];
         this.timeoutCounter = 0;
-
-        /**
-         * Defines accessors for POLLINGTIMEOUT. This is the average block time (seconds) * TIMEOUTBLOCK
-         */
-        Object.defineProperty(this, 'POLLINGTIMEOUT', {
-            get() {
-                return 15 * this.TIMEOUTBLOCK;
-            },
-            set() {
-            },
-            enumerable: true
-        });
-
-        /**
-         * Defines accessors for TIMEOUTBLOCK
-         */
-        Object.defineProperty(this, 'TIMEOUTBLOCK', {
-            get() {
-                return 50;
-            },
-            set() {
-            },
-            enumerable: true
-        });
-
-        /**
-         * Defines accessors for CONFIRMATIONBLOCKS
-         */
-        Object.defineProperty(this, 'CONFIRMATIONBLOCKS', {
-            get() {
-                return 24;
-            },
-            set() {
-            },
-            enumerable: true
-        });
-
-        /**
-         * Defines accessors for confirmationsCount
-         */
-        Object.defineProperty(this, 'confirmationsCount', {
-            get() {
-                return this.confirmations.length;
-            },
-            set() {
-            },
-            enumerable: true
-        });
+        this._pollingTimeout = 15;
+        this.timeoutBlock = 50;
+        this.confirmationBlocks = 24;
     }
+
+    /**
+     * Getter for pollingTimeout
+     *
+     * @property pollingTimeout
+     *
+     * @returns {Number}
+     */
+    get pollingTimeout() {
+        return this._pollingTimeout * this.timeoutBlock;
+    }
+
+    /**
+     * Setter for pollingTimeout
+     *
+     * @property pollingTimeout
+     *
+     * @param {Number} value
+     */
+    set pollingTimeout(value) {
+        this._pollingTimeout = value;
+    }
+
 
     /**
      * Adds a receipt to the confirmation array
@@ -97,7 +75,7 @@ export default class TransactionConfirmationModel {
      * @returns {Boolean}
      */
     isConfirmed() {
-        return this.confirmationsCount === (this.CONFIRMATIONBLOCKS + 1);
+        return this.confirmations.length === (this.confirmationBlocks + 1);
     }
 
     /**
@@ -109,9 +87,9 @@ export default class TransactionConfirmationModel {
      */
     isTimeoutTimeExceeded(watcherIsPolling) {
         if (watcherIsPolling) {
-            return (this.timeoutCounter - 1) >= this.POLLINGTIMEOUT;
+            return (this.timeoutCounter - 1) >= this.pollingTimeout;
         }
 
-        return (this.timeoutCounter - 1) >= this.TIMEOUTBLOCK;
+        return (this.timeoutCounter - 1) >= this.timeoutBlock;
     }
 }

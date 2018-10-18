@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import SubscriptionsFactoryObject from './factories/SubscriptionsFactory';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class LogSubscriptionModel extends AbstractSubscriptionModel {

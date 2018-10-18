@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 export default class RpcMethodOptionsMapper {
     /**
      * @param {Object} utils

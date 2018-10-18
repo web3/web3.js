@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {Subscription} from 'web3-core-subscriptions';
 import {GetPastLogsMethodModel} from 'web3-core-method';
 import EventLogSubscription from '../models/subscriptions/EventLogSubscription';

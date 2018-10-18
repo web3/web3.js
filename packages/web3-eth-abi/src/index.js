@@ -20,15 +20,13 @@
  * @date 2018
  */
 
-'use strict';
-
 import Utils from 'web3-utils';
-export ABICoderObject from './ABICoder';
+import ABICoderObject from './ABICoder';
 
 /**
  * Returns an object of AbiCoder
  *
- * @returns {AbiCoder}
+ * @returns {ABICoder}
  *
  * @constructor
  */

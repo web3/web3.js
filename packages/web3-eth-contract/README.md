@@ -28,13 +28,12 @@ This will expose the `Web3EthContract` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-var ProvidersPackage = require('web3-providers');
-var Accounts = require('web3-eth-accounts').Accounts;
-var Contract = require('web3-eth-contract').Contract;
+import {resolve} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
+import {Contract} from 'web3-eth-contract';
 
-var provider = ProvidersPackage.resolve('ws://localhost:8546');
-var contract = new Contract(
+const provider = resolve('ws://localhost:8546');
+const contract = new Contract(
     provider,
     new Accounts(provider),
     jsonInterface,

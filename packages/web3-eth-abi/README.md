@@ -29,9 +29,9 @@ This will expose the `Web3EthAbi` object on the window object.
 
 ```js
 // in node.js
-var AbiCoder = require('web3-eth-abi').AbiCoder;
-var abiCoder = new AbiCoder();
+import {AbiCoder} from 'web3-eth-abi';
 
+const abiCoder = new AbiCoder();
 abiCoder.encodeFunctionSignature('myMethod(uint256,string)');
 > '0x24ee0097'
 ```

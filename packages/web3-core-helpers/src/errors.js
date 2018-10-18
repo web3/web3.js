@@ -21,8 +21,6 @@
  * @date 2017
  */
 
-"use strict";
-
 export default {
     ErrorResponse(result) {
         const message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);

@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Shh extends AbstractWeb3Module {

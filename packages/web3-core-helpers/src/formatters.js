@@ -21,12 +21,9 @@
  * @date 2017
  */
 
-"use strict";
-
-
 import _ from 'underscore';
 import utils from 'web3-utils';
-import Iban from 'web3-eth-iban';
+import {Iban} from 'web3-eth-iban';
 
 /**
  * Should the format output to a big number

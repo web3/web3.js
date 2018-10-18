@@ -20,38 +20,31 @@
  * @date 2018
  */
 
-"use strict";
-
-import {version} from './package.json';
-import Personal from './Personal';
 import {MethodController} from 'web3-core-method';
 import {Network} from 'web3-net';
-import ProvidersPackage from 'web3-providers';
+import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import MethodModelFactory from './factories/MethodModelFactory';
+import PersonalModule from './Personal';
 
-export default {
-    version,
-
-    /**
-     * Returns the Personal object
-     *
-     * @method Personal
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     *
-     * @returns {Personal}
-     */
-    Personal: (provider) => {
-        return new Personal(
-            provider,
-            ProvidersPackage,
-            new MethodController(),
-            new MethodModelFactory(Utils, formatters),
-            new Network(provider),
-            Utils,
-            formatters
-        );
-    }
+/**
+ * Returns the Personal object
+ *
+ * @method Personal
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ *
+ * @returns {Personal}
+ */
+export const Personal = (provider) => {
+    return new PersonalModule(
+        provider,
+        ProvidersPackage,
+        new MethodController(),
+        new MethodModelFactory(Utils, formatters),
+        new Network(provider),
+        Utils,
+        formatters
+    );
 };

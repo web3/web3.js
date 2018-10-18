@@ -29,9 +29,10 @@ This will expose the `Web3EthPersonal` object on the window object.
 
 ```js
 // in node.js
-var ProvidersPackage = require('web3-providers');
-var Personal = require('web3-eth-personal').Personal;
-var personal = new Personal(ProvidersPackage.resolve('ws://localhost:8546'));
+import {resolve} from 'web3-providers';
+import {Personal} from 'web3-eth-personal';
+
+const personal = new Personal(resolve('ws://localhost:8546'));
 ```
 
 

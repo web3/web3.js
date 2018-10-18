@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {LogSubscriptionModel} from 'web3-core-subscriptions';
 
 export default class AllEventsLogSubscription extends LogSubscriptionModel {

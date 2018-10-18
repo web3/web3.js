@@ -18,8 +18,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import ProvidersPackageFactory from './factories/ProvidersPackageFactory';
 import BatchRequestObject from './batch-request/BatchRequest';
 import JSONRpcMapper from './validators/JSONRpcResponseValidator';

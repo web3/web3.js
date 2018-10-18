@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import EventFilterEncoder from './EventFilterEncoder';
 
 export default class AllEventsFilterEncoder extends EventFilterEncoder {

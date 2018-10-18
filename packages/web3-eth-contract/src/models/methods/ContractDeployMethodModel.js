@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {SendTransactionMethodModel} from 'web3-core-method';
 
 export default class ContractDeployMethodModel extends SendTransactionMethodModel {

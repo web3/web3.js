@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-"use strict";
-
 import _ from 'underscore';
 import swarm from "swarm-js";
 

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
 export default class HttpProviderAdapter extends AbstractProviderAdapter {

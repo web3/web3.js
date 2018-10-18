@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class IsMiningMethodModel extends AbstractMethodModel {

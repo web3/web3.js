@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {ContractDeployMethodModel} from 'web3-eth-contract';
 
 export default class TransactionConfirmationWorkflow {

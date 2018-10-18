@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {CallMethodModel} from 'web3-core-method';
 
 export default class CallContractMethodModel extends CallMethodModel {

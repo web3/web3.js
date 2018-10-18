@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import JSONRpcMapper from '../../src/mappers/JSONRpcMapper.js';
 import JSONRpcResponseValidator from '../../src/validators/JSONRpcResponseValidator.js';
 import {errors} from 'web3-core-helpers';

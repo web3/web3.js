@@ -20,7 +20,5 @@
  * @date 2017
  */
 
-"use strict";
-
 export errors from './errors';
 export formatters from './formatters';

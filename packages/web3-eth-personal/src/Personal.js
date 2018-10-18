@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Personal extends AbstractWeb3Module {
@@ -53,31 +51,50 @@ export default class Personal extends AbstractWeb3Module {
         this.utils = utils;
         this.formatters = formatters;
         this.net = net;
+        this._defaultAccount = null;
+        this._defaultBlock = 'latest';
+    }
 
-        let defaultAccount = null;
-        let defaultBlock = 'latest';
+    /**
+     * Getter for the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {null|String}
+     */
+    get defaultAccount() {
+        return this._defaultAccount;
+    }
 
-        Object.defineProperty(this, 'defaultAccount', {
-            get: () => {
-                return defaultAccount;
-            },
-            set: (val) => {
-                if (val) {
-                    defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
-                }
-            },
-            enumerable: true
-        });
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultAccount
+     */
+    set defaultAccount(value) {
+        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+    }
 
-        Object.defineProperty(this, 'defaultBlock', {
-            get: () => {
-                return defaultBlock;
-            },
-            set: (val) => {
-                defaultBlock = val;
-            },
-            enumerable: true
-        });
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
     }
 
     /**

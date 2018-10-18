@@ -20,17 +20,16 @@
  * @date 2018
  */
 
-"use strict";
-
 import _ from 'underscore';
 import AbstractSendMethodCommand from '../../lib/commands/AbstractSendMethodCommand';
 
-/**
- * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
- *
- * @constructor
- */
 export default class SendMethodCommand extends AbstractSendMethodCommand {
+
+    /**
+     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
+     *
+     * @constructor
+     */
     constructor(transactionConfirmationWorkflow) {
         super(transactionConfirmationWorkflow);
     }

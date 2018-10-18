@@ -28,13 +28,10 @@ This will expose the `Web3Eth` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-var ProvidersPackage = require('web3-providers');
-var Eth = require('web3-eth').Eth;
+import {resolve} from 'web3-providers';
+import {Eth} from 'web3-eth';
 
-var eth = new Eth(
-    ProvidersPackage.resolve('http://127.0.0.1:4546')
-);
+const eth = new Eth(resolve('http://127.0.0.1:4546'));
 ```
 
 

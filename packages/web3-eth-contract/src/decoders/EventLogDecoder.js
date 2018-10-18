@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 class EventLogDecoder {
 
     /**

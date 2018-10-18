@@ -20,8 +20,6 @@
  * @date 2017
  */
 
-"use strict";
-
 import _ from "underscore";
 import Account from "eth-lib/lib/account";
 import Hash from "eth-lib/lib/hash";

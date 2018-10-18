@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
@@ -61,6 +59,7 @@ export default class Eth extends AbstractWeb3Module {
         methodModelFactory
     ) {
         super(provider, providersPackage, methodController, methodModelFactory);
+
         this.net = net;
         this.accounts = accounts;
         this.personal = personal;
@@ -71,6 +70,8 @@ export default class Eth extends AbstractWeb3Module {
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
         this.initiatedContracts = [];
+        this._defaultAccount = null ;
+        this._defaultBlock = 'latest';
 
         /**
          * This wrapper function is required for the "new web3.eth.Contract(...)" call.
@@ -89,47 +90,59 @@ export default class Eth extends AbstractWeb3Module {
 
             return contract;
         };
+    }
 
-        let defaultAccount = null, defaultBlock = 'latest';
+    /**
+     * Getter for the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {null|String}
+     */
+    get defaultAccount() {
+        return this._defaultAccount;
+    }
 
-        /**
-         * Defines accessors for defaultAccount
-         */
-        Object.defineProperty(this, 'defaultAccount', {
-            get: () => {
-                return defaultAccount;
-            },
-            set: (val) => {
-                if (val) {
-                    this.initiatedContracts.forEach(contract => {
-                        contract.defaultAccount = val;
-                    });
-
-                    this.personal.defaultAccount = val;
-                    defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(val));
-                }
-
-            },
-            enumerable: true
+    /**
+     * Setter for the defaultAccount property
+     *
+     * @property defaultAccount
+     */
+    set defaultAccount(value) {
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultAccount = value;
         });
 
-        /**
-         * Defines accessors for defaultBlock
-         */
-        Object.defineProperty(this, 'defaultBlock', {
-            get: () => {
-                return defaultBlock;
-            },
-            set: (val) => {
-                defaultBlock = val;
-                this.initiatedContracts.forEach(contract => {
-                    contract.defaultAccount = val;
-                });
+        this.personal.defaultAccount = value;
+        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+    }
 
-                this.personal.defaultBlock = defaultBlock;
-            },
-            enumerable: true
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @returns {String}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Setter for the defaultBlock property
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
+
+        this.initiatedContracts.forEach(contract => {
+            contract.defaultBlock = value;
         });
+
+        this.personal.defaultBlock = this._defaultBlock;
     }
 
     /**

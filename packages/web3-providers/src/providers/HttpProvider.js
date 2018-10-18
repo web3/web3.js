@@ -23,7 +23,6 @@
  */
 
 import {errors} from 'web3-core-helpers';
-
 import {XMLHttpRequest as XHR2} from 'xhr2-cookies'; // jshint ignore: line
 import http from 'http';
 import https from 'https';

@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import EventEmitter from 'eventemitter3';
 
 export default class PromiEvent {

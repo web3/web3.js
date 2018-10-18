@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-"use strict";
-
 import {errors} from 'web3-core-helpers';
 import _ from 'underscore';
 

@@ -21,14 +21,11 @@
  * @date 2017
  */
 
-
 import _ from 'underscore';
-
 import ethjsUnit from 'ethjs-unit';
 import utils from './utils.js';
 import soliditySha3 from './soliditySha3.js';
 import randomHex from 'randomhex';
-
 
 /**
  * Fires an error in an event emitter and callback and returns the eventemitter
@@ -100,7 +97,6 @@ const _jsonInterfaceMethodToString = json => {
     return `${json.name}(${_flattenTypes(false, json.inputs).join(',')})`;
 };
 
-
 /**
  * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
  *
@@ -146,7 +142,6 @@ const _flattenTypes = (includeTuple, puts) => {
     return types;
 };
 
-
 /**
  * Should be called to get ascii from it's hex representation
  *
@@ -191,7 +186,6 @@ const asciiToHex = str => {
 
     return `0x${hex}`;
 };
-
 
 /**
  * Returns value of unit in Wei

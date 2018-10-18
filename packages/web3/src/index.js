@@ -20,12 +20,10 @@
  * @date 2018
  */
 
-"use strict";
-
 import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
-import MethodPackage from 'web3-core-method';
-import ProvidersPackage from 'web3-providers';
+import * as MethodPackage from 'web3-core-method';
+import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';

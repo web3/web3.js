@@ -13,16 +13,12 @@
 */
 /**
  * @file index.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-"use strict";
-
-import {version} from '../package.json';
-import ContractPackage from 'web3-eth-contract';
-import PromiEventPackage from 'web3-core-promievent';
+import * as ContractPackage from 'web3-eth-contract';
+import * as PromiEventPackage from 'web3-core-promievent';
 import REGISTRY_ABI from '../ressources/ABI/Registry';
 import RESOLVER_ABI from '../ressources/ABI/Resolver';
 import ENSPackageFactory from './factories/ENSPackageFactory';
