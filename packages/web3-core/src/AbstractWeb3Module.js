@@ -32,7 +32,7 @@ export default class AbstractWeb3Module {
      *
      * @constructor
      */
-    constructor(provider, providersPackage, methodController, methodModelFactory) {
+    constructor(provider, providersPackage, methodController, methodModelFactory = null) {
         if (!this.isDependencyGiven(provider)) {
             throw Error('No provider given as constructor parameter!');
         }
@@ -45,23 +45,13 @@ export default class AbstractWeb3Module {
         this.extendedPackages = [];
         this.providersPackage = providersPackage;
         this.givenProvider = this.providersPackage.detect();
+        this._currentProvider = provider;
 
         this.providers = {
             HttpProvider: this.providersPackage.HttpProvider,
             IpcProvider: this.providersPackage.IpcProvider,
             WebsocketProvider: this.providersPackage.WebsocketProvider,
         };
-
-        let currentProvider = provider;
-
-        Object.defineProperty(this, 'currentProvider', {
-            get() {
-                return currentProvider;
-            },
-            set() {
-                throw Error('The property currentProvider is an read-only property!');
-            }
-        });
 
         this.BatchRequest = () => {
             return new this.providersPackage.BatchRequest(this.currentProvider);
@@ -80,6 +70,28 @@ export default class AbstractWeb3Module {
     }
 
     /**
+     * Returns the currentProvider
+     *
+     * @property currentProvider
+     *
+     * @returns {*}
+     */
+    get currentProvider() {
+        return this._currentProvider;
+    }
+
+    /**
+     * Throws an error because currentProvider is read-only
+     *
+     * @property currentProvider
+     *
+     * @param value
+     */
+    set currentProvider(value) {
+        throw Error('The property currentProvider is an read-only property!');
+    }
+
+    /**
      * Sets the currentProvider and provider property
      *
      * @method setProvider
@@ -92,7 +104,7 @@ export default class AbstractWeb3Module {
     setProvider(provider, net) {
         if (!this.isSameProvider(provider)) {
             this.clearSubscriptions();
-            this.currentProvider = this.providersPackage.resolve(provider, net);
+            this._currentProvider = this.providersPackage.resolve(provider, net);
 
             if (this.extendedPackages.length > 0) {
                 var setExtendedPackagesProvider = this.extendedPackages.every(extendedPackage => {
@@ -100,7 +112,7 @@ export default class AbstractWeb3Module {
                 });
             }
 
-            return !!(setExtendedPackagesProvider && this.currentProvider);
+            return !!(setExtendedPackagesProvider && this._currentProvider);
         }
 
         return false;
