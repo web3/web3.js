@@ -31,6 +31,11 @@ export default class HasKeyPairMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_hasKeyPair', 1, utils, formatters);
+        super(
+            'shh_hasKeyPair',
+            1,
+            utils,
+            formatters
+        );
     }
 }

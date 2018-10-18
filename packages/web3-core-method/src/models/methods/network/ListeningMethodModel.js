@@ -31,6 +31,11 @@ export default class ListeningMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('net_listening', 0, utils, formatters);
+        super(
+            'net_listening',
+            0,
+            utils,
+            formatters
+        );
     }
 }

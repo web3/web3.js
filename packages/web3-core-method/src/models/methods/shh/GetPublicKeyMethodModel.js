@@ -31,6 +31,11 @@ export default class GetPublicKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_getPublicKey', 1, utils, formatters);
+        super(
+            'shh_getPublicKey',
+            1,
+            utils,
+            formatters
+        );
     }
 }

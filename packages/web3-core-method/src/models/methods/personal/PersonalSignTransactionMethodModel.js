@@ -31,7 +31,12 @@ export default class PersonalSignTransactionMethodModel extends AbstractMethodMo
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_signTransaction', 2, utils, formatters);
+        super(
+            'personal_signTransaction',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

@@ -31,7 +31,12 @@ export default class PeerCountMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('net_peerCount', 0, utils, formatters);
+        super(
+            'net_peerCount',
+            0,
+            utils,
+            formatters
+        );
     }
 
     /**

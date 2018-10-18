@@ -31,6 +31,11 @@ export default class MarkTrustedPeerMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_markTrustedPeer', 1, utils, formatters);
+        super(
+            'shh_markTrustedPeer',
+            1,
+            utils,
+            formatters
+        );
     }
 }

@@ -31,6 +31,11 @@ export default class GenerateSymKeyFromPasswordMethodModel extends AbstractMetho
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_generateSymKeyFromPassword', 1, utils, formatters);
+        super(
+            'shh_generateSymKeyFromPassword',
+            1,
+            utils,
+            formatters
+        );
     }
 }

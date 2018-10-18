@@ -31,7 +31,12 @@ export default class EstimateGasMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_estimateGas', 1, utils, formatters);
+        super(
+            'eth_estimateGas',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

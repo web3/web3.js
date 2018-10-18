@@ -31,6 +31,11 @@ export default class DeleteSymKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_deleteSymKey', 1, utils, formatters);
+        super(
+            'shh_deleteSymKey',
+            1,
+            utils,
+            formatters
+        );
     }
 }

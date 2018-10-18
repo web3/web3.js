@@ -31,6 +31,11 @@ export default class SendSignedTransactionMethodModel extends AbstractMethodMode
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_sendRawTransaction', 1, utils, formatters);
+        super(
+            'eth_sendRawTransaction',
+            1,
+            utils,
+            formatters
+        );
     }
 }

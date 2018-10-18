@@ -31,6 +31,11 @@ export default class SetMaxMessageSizeMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_setMaxMessageSize', 1, utils, formatters);
+        super(
+            'shh_setMaxMessageSize',
+            1,
+            utils,
+            formatters
+        );
     }
 }

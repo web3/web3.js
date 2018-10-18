@@ -30,7 +30,12 @@ export default class GetTransactionReceiptMethodModel extends AbstractMethodMode
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getTransactionReceipt', 1, utils, formatters);
+        super(
+            'eth_getTransactionReceipt',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

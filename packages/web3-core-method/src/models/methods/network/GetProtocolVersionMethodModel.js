@@ -31,6 +31,11 @@ export default class GetProtocolVersionMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_protocolVersion', 0, utils, formatters);
+        super(
+            'eth_protocolVersion',
+            0,
+            utils,
+            formatters
+        );
     }
 }

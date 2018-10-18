@@ -31,6 +31,11 @@ export default class GetInfoMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_info', 0, utils, formatters);
+        super(
+            'shh_info',
+            0,
+            utils,
+            formatters
+        );
     }
 }

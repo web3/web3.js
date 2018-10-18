@@ -31,6 +31,11 @@ export default class ImportRawKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_importRawKey', 2, utils, formatters);
+        super(
+            'personal_importRawKey',
+            2,
+            utils,
+            formatters
+        );
     }
 }

@@ -31,6 +31,11 @@ export default class AddPrivateKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_addPrivateKey', 1, utils, formatters);
+        super(
+            'shh_addPrivateKey',
+            1,
+            utils,
+            formatters
+        );
     }
 }

@@ -31,7 +31,12 @@ export default class GetAccountsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_accounts', 0, utils, formatters);
+        super(
+            'eth_accounts',
+            0,
+            utils,
+            formatters
+        );
     }
 
     /**

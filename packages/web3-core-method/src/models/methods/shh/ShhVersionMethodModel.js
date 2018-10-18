@@ -31,6 +31,11 @@ export default class ShhVersionMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_version', 0, utils, formatters);
+        super(
+            'shh_version',
+            0,
+            utils,
+            formatters
+        );
     }
 }

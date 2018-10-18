@@ -31,6 +31,11 @@ export default class GetSymKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_getSymKey', 1, utils, formatters);
+        super(
+            'shh_getSymKey',
+            1,
+            utils,
+            formatters
+        );
     }
 }

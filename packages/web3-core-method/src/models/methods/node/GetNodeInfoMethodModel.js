@@ -31,6 +31,11 @@ export default class GetNodeInfoMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('web3_clientVersion', 0, utils, formatters);
+        super(
+            'web3_clientVersion',
+            0,
+            utils,
+            formatters
+        );
     }
 }

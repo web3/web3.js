@@ -31,7 +31,12 @@ export default class PersonalSendTransactionMethodModel extends AbstractMethodMo
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_sendTransaction', 2, utils, formatters);
+        super(
+            'personal_sendTransaction',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

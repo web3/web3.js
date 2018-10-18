@@ -31,6 +31,12 @@ export default class NewPendingTransactionsSubscriptionModel extends AbstractSub
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters);
+        super(
+            'eth_subscribe',
+            'newPendingTransactions',
+            null,
+            utils,
+            formatters
+        );
     }
 }

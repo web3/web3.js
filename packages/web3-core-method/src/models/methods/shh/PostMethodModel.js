@@ -31,6 +31,11 @@ export default class PostMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_post', 1, utils, formatters);
+        super(
+            'shh_post',
+            1,
+            utils,
+            formatters
+        );
     }
 }

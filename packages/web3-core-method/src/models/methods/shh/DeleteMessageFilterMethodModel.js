@@ -31,6 +31,11 @@ export default class DeleteMessageFilterMethodModel extends AbstractMethodModel 
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_deleteMessageFilter', 1, utils, formatters);
+        super(
+            'shh_deleteMessageFilter',
+            1,
+            utils,
+            formatters
+        );
     }
 }

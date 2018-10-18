@@ -31,7 +31,12 @@ export default class GetUncleMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getUncleByBlockNumberAndIndex', 2, utils, formatters);
+        super(
+            'eth_getUncleByBlockNumberAndIndex',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

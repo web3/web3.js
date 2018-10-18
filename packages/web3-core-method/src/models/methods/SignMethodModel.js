@@ -32,7 +32,12 @@ export default class SignMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters, accounts) {
-        super('eth_sign', 2, utils, formatters);
+        super(
+            'eth_sign',
+            2,
+            utils,
+            formatters
+        );
         this.accounts = accounts;
     }
 

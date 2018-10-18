@@ -31,7 +31,12 @@ export default class GetBlockMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getBlockByNumber', 2, utils, formatters);
+        super(
+            'eth_getBlockByNumber',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

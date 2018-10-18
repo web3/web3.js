@@ -31,6 +31,11 @@ export default class DeleteKeyPairMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_deleteKeyPair', 1, utils, formatters);
+        super(
+            'shh_deleteKeyPair',
+            1,
+            utils,
+            formatters
+        );
     }
 }

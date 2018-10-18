@@ -31,7 +31,12 @@ export default class GetHashrateMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_hashrate', 0, utils, formatters);
+        super(
+            'eth_hashrate',
+            0,
+            utils,
+            formatters
+        );
     }
 
     /**

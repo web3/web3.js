@@ -31,7 +31,12 @@ export default class PersonalSignMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_sign', 3, utils, formatters);
+        super(
+            'personal_sign',
+            3,
+            utils,
+            formatters
+        );
     }
 
     /**

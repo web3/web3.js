@@ -31,7 +31,12 @@ export default class GetTransactionFromBlockMethodModel extends AbstractMethodMo
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getTransactionByBlockNumberAndIndex', 2, utils, formatters);
+        super(
+            'eth_getTransactionByBlockNumberAndIndex',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

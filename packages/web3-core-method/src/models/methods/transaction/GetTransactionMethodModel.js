@@ -31,7 +31,12 @@ export default class GetTransactionMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getTransactionByHash', 1, utils, formatters);
+        super(
+            'eth_getTransactionByHash',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

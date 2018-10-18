@@ -31,6 +31,11 @@ export default class NewMessageFilterMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_newMessageFilter', 1, utils, formatters);
+        super(
+            'shh_newMessageFilter',
+            1,
+            utils,
+            formatters
+        );
     }
 }

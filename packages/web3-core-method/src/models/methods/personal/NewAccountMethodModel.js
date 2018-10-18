@@ -31,7 +31,12 @@ export default class NewAccountMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_newAccount', 0, utils, formatters);
+        super(
+            'personal_newAccount',
+            0,
+            utils,
+            formatters
+        );
     }
 
     /**

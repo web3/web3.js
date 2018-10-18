@@ -31,7 +31,12 @@ export default class CallMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_call', 2, utils, formatters);
+        super(
+            'eth_call',
+            2,
+            utils,
+            formatters
+        );
     }
 
     /**

@@ -31,7 +31,12 @@ export default class ListAccountsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_listAccounts', 0, utils, formatters);
+        super(
+            'personal_listAccounts',
+            0,
+            utils,
+            formatters
+        );
     }
 
     /**

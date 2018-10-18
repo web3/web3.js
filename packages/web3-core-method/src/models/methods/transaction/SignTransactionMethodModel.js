@@ -31,7 +31,12 @@ export default class SignTransactionMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_signTransaction', 1, utils, formatters);
+        super(
+            'eth_signTransaction',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

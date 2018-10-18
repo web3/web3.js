@@ -31,7 +31,12 @@ export default class GetBlockUncleCountMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getUncleCountByBlockNumber', 1, utils, formatters);
+        super(
+            'eth_getUncleCountByBlockNumber',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

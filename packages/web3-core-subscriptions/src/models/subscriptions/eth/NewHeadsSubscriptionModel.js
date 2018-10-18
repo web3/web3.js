@@ -31,7 +31,13 @@ export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_subscribe', 'newHeads', null, utils, formatters);
+        super(
+            'eth_subscribe',
+            'newHeads',
+            null,
+            utils,
+            formatters
+        );
     }
 
     /**

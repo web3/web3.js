@@ -34,7 +34,13 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
      * @constructor
      */
     constructor(options, utils, formatters, getPastLogsMethodModel, methodController) {
-        super('eth_subscribe', 'logs', options, utils, formatters);
+        super(
+            'eth_subscribe',
+            'logs',
+            options,
+            utils,
+            formatters
+        );
         this.getPastLogsMethodModel = getPastLogsMethodModel;
         this.methodController = methodController;
     }

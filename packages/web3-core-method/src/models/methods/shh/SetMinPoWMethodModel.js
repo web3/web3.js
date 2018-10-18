@@ -31,6 +31,11 @@ export default class SetMinPoWMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_setMinPoW', 1, utils, formatters);
+        super(
+            'shh_setMinPoW',
+            1,
+            utils,
+            formatters
+        );
     }
 }

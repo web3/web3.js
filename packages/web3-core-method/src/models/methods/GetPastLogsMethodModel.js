@@ -31,7 +31,12 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getLogs', 1, utils, formatters);
+        super(
+            'eth_getLogs',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**

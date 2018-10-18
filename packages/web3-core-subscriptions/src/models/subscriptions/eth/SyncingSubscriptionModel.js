@@ -31,7 +31,13 @@ export default class SyncingSubscriptionModel extends AbstractSubscriptionModel 
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_subscribe', 'syncing', null, utils, formatters);
+        super(
+            'eth_subscribe',
+            'syncing',
+            null,
+            utils,
+            formatters
+        );
         this.isSyncing = null;
     }
 

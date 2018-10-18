@@ -31,7 +31,12 @@ export default class GetStorageAtMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getStorageAt', 3, utils, formatters);
+        super(
+            'eth_getStorageAt',
+            3,
+            utils,
+            formatters
+        );
     }
 
     /**

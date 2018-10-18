@@ -31,7 +31,12 @@ export default class LockAccountMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('personal_lockAccount', 1, utils, formatters);
+        super(
+            'personal_lockAccount',
+            1,
+            utils,
+            formatters
+        );
     }
 
     /**
