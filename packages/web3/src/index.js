@@ -75,34 +75,69 @@ export default class Web3 extends AbstractWeb3Module {
             this.bzz.setProvider(provider)
         );
     }
-}
 
-Web3.givenProvider = ProvidersPackage.detect();
-
-Web3.version = version;
-
-Web3.utils = Utils;
-
-Web3.modules = {
-    Eth(provider, net) {
-        return new Eth(ProvidersPackage.resolve(provider, net));
-    },
-    Net(provider, net) {
-        return new Network(ProvidersPackage.resolve(provider, net));
-    },
-    Personal(provider, net) {
-        return new Personal(ProvidersPackage.resolve(provider, net));
-    },
-    Shh(provider, net) {
-        return new Shh(ProvidersPackage.resolve(provider, net));
-    },
-    Bzz(provider, net) {
-        return new Bzz(ProvidersPackage.resolve(provider, net));
+    /**
+     * Returns the detected provider
+     *
+     * @returns {Object}
+     */
+    static get givenProvider() {
+        return ProvidersPackage.detect();
     }
-};
 
-Web3.providers = {
-    HttpProvider: ProvidersPackage.HttpProvider,
-    WebsocketProvider: ProvidersPackage.WebsocketProvider,
-    IpcProvider: ProvidersPackage.IpcProvider
-};
+    /**
+     * Returns the web3 version
+     *
+     * @returns {String}
+     */
+    static get version() {
+        return version;
+    }
+
+    /**
+     * Returns the utils
+     *
+     * @returns {Utils}
+     */
+    static get utils() {
+        return Utils;
+    }
+
+    /**
+     * Returns an object with all public web3 modules
+     *
+     * @returns {Object}
+     */
+    static get modules() {
+        return {
+            Eth: (provider, net) => {
+                return new Eth(ProvidersPackage.resolve(provider, net));
+            },
+            Net: (provider, net) => {
+                return new Network(ProvidersPackage.resolve(provider, net));
+            },
+            Personal: (provider, net) => {
+                return new Personal(ProvidersPackage.resolve(provider, net));
+            },
+            Shh: (provider, net) => {
+                return new Shh(ProvidersPackage.resolve(provider, net));
+            },
+            Bzz: (provider, net) => {
+                return new Bzz(ProvidersPackage.resolve(provider, net));
+            }
+        }
+    }
+
+    /**
+     * Returns an object with all providers of web3
+     *
+     * @returns {Object}
+     */
+    static get providers() {
+        return {
+            HttpProvider: ProvidersPackage.HttpProvider,
+            WebsocketProvider: ProvidersPackage.WebsocketProvider,
+            IpcProvider: ProvidersPackage.IpcProvider
+        }
+    }
+}
