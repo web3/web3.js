@@ -24,9 +24,15 @@
         "babel-preset-env": "^1.7.0",
         "chai": "^4.2.0",
         "jest": "^23.6.0",
-        "sinon": "^6.3.5"
     },
     "jest": {
-        "testMatch": ["**/**.js"]
+        "notifyMode": "success-change",
+        "notify": true,
+        "coverageDirectory": "./coverage",
+        "collectCoverage": true,
+        "collectCoverageFrom": ["**/**.js"],
+        "clearMocks": true,
+        "bail": true,
+        "testMatch": ["tests/**/**.js"]
     }
 }
