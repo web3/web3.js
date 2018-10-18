@@ -74,7 +74,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {*}
+     * @returns {AbstractProviderAdapter|EthereumProvider}
      */
     get currentProvider() {
         return this._currentProvider;
@@ -84,11 +84,9 @@ export default class AbstractWeb3Module {
      * Throws an error because currentProvider is read-only
      *
      * @property currentProvider
-     *
-     * @param value
      */
     set currentProvider(value) {
-        throw Error('The property currentProvider is an read-only property!');
+        throw Error('The property currentProvider read-only!');
     }
 
     /**
