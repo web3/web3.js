@@ -280,7 +280,7 @@ ABICoder.prototype.decodeLog = function (inputs, data, topics) {
 
 
     var nonIndexedData = data;
-    var notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+    var notIndexedParams = (notIndexedInputs.length != 0) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
 
     var returnValue = new Result();
     returnValue.__length__ = 0;
