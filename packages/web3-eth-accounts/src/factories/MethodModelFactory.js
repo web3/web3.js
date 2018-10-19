@@ -20,9 +20,14 @@
  * @date 2018
  */
 
-import * as web3CoreMethod from 'web3-core-method';
+import {
+    AbstractMethodModelFactory,
+    GetGasPriceMethodModel,
+    GetTransactionCountMethodModel,
+    VersionMethodModel
+} from 'web3-core-method';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class MethodModelFactory extends AbstractMethodModelFactory {
 
     /**
      * @param {Object} utils
@@ -33,9 +38,9 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
     constructor(utils, formatters) {
         super(
             {
-                getGasPrice: web3CoreMethod.GetGasPriceMethodModel,
-                getTransactionCount: web3CoreMethod.GetTransactionCountMethodModel,
-                getId: web3CoreMethod.VersionMethodModel
+                getGasPrice: GetGasPriceMethodModel,
+                getTransactionCount: GetTransactionCountMethodModel,
+                getId: VersionMethodModel
             },
             utils,
             formatters

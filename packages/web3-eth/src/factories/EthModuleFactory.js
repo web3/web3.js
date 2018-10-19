@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import {MethodModelFactory} from './MethodModelFactory';
-import {Eth} from '../Eth';
+import MethodModelFactory from './MethodModelFactory';
+import Eth from '../Eth';
 
 export default class EthModuleFactory {
 
@@ -42,6 +42,10 @@ export default class EthModuleFactory {
      * @method createEthModule
      *
      * @param {AbstractProviderAdapter} provider
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {Network} net
      * @param {ContractPackage} contractPackage
      * @param {Accounts} accounts
@@ -49,7 +53,6 @@ export default class EthModuleFactory {
      * @param {Iban} iban
      * @param {Abi} abi
      * @param {ENS} ens
-     * @param {ProvidersPackage} providersPackage
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {MethodController} methodController
      *
@@ -57,6 +60,11 @@ export default class EthModuleFactory {
      */
     createEthModule(
         provider,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
+        methodController,
         net,
         contractPackage,
         accounts,
@@ -64,12 +72,16 @@ export default class EthModuleFactory {
         iban,
         abi,
         ens,
-        providersPackage,
         subscriptionsFactory,
-        methodController
     ) {
         return new Eth(
             provider,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
+            methodController,
+            this.createMethodModelFactory(accounts),
             net,
             contractPackage,
             accounts,
@@ -79,10 +91,7 @@ export default class EthModuleFactory {
             ens,
             this.utils,
             this.formatters,
-            providersPackage,
-            subscriptionsFactory,
-            methodController,
-            this.createMethodModelFactory(accounts)
+            subscriptionsFactory
         );
     }
 

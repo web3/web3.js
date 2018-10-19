@@ -21,7 +21,7 @@
  * @date 2018
  */
 
-import * as ProvidersPackage from 'web3-providers';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';
@@ -37,9 +37,14 @@ import NetworkModuleFactory from "./factories/NetworkModuleFactory";
  * @returns {Network}
  */
 export const Network = (provider) => {
+    const providersModuleFactory = new ProvidersModuleFactory();
+
     return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
         provider,
-        ProvidersPackage,
+        providersModuleFactory.createProviderDetector(),
+        providersModuleFactory.createProviderAdapterResolver(),
+        providersModuleFactory,
+        providers,
         new MethodController(),
     )
 };

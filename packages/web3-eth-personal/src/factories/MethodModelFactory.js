@@ -20,9 +20,20 @@
  * @date 2018
  */
 
-import * as web3CoreMethod from 'web3-core-method';
+import {
+    AbstractMethodModelFactory,
+    GetAccountsMethodModel,
+    NewAccountMethodModel,
+    UnlockAccountMethodModel,
+    LockAccountMethodModel,
+    ImportRawKeyMethodModel,
+    PersonalSendTransactionMethodModel,
+    PersonalSignTransactionMethodModel,
+    PersonalSignMethodModel,
+    EcRecoverMethodModel
+} from 'web3-core-method';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class MethodModelFactory extends AbstractMethodModelFactory {
 
     /**
      * @param {Object} utils
@@ -33,15 +44,15 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
     constructor(utils, formatters) {
         super(
             {
-                getAccounts: web3CoreMethod.GetAccountsMethodModel,
-                newAccount: web3CoreMethod.NewAccountMethodModel,
-                unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
-                lockAccount: web3CoreMethod.LockAccountMethodModel,
-                importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
-                sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
-                signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
-                sign: web3CoreMethod.PersonalSignMethodModel,
-                ecRecover: web3CoreMethod.EcRecoverMethodModel
+                getAccounts: GetAccountsMethodModel,
+                newAccount: NewAccountMethodModel,
+                unlockAccount: UnlockAccountMethodModel,
+                lockAccount: LockAccountMethodModel,
+                importRawKey: ImportRawKeyMethodModel,
+                sendTransaction: PersonalSendTransactionMethodModel,
+                signTransaction: PersonalSignTransactionMethodModel,
+                sign: PersonalSignMethodModel,
+                ecRecover: EcRecoverMethodModel
             },
             utils,
             formatters

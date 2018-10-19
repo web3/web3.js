@@ -21,4 +21,3 @@
  */
 
 export Bzz from './Bzz';
-export version from '../package.json';

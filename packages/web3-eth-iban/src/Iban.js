@@ -25,9 +25,8 @@
 
 "use strict";
 
-import utils from 'web3-utils';
+import Utils from 'web3-utils';
 import BigNumber from 'bn.js';
-
 
 const leftPad = (string, bytes) => {
     let result = string;
@@ -134,7 +133,7 @@ export default class Iban {
      * @returns {Iban} the IBAN object
      */
     static fromAddress(address) {
-        if (!utils.isAddress(address)) {
+        if (!Utils.isAddress(address)) {
             throw new Error(`Provided address is not a valid address: ${address}`);
         }
 
@@ -274,7 +273,7 @@ export default class Iban {
         if (this.isDirect()) {
             const base36 = this._iban.substr(4);
             const asBn = new BigNumber(base36, 36);
-            return utils.toChecksumAddress(asBn.toString(16, 20));
+            return Utils.toChecksumAddress(asBn.toString(16, 20));
         }
 
         return '';

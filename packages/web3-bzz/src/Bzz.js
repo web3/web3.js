@@ -21,7 +21,7 @@
  */
 
 import _ from 'underscore';
-import swarm from "swarm-js";
+import swarm from 'swarm-js';
 
 export default class Bzz {
 
@@ -45,7 +45,7 @@ export default class Bzz {
      */
     pick() {
         if (typeof document !== 'undefined') {
-            return swarm.pick;
+            return this.swarm.pick;
         }
 
         throw Error('Pick is not supported for this environment.');

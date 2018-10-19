@@ -16,13 +16,14 @@
  */
 
 /**
+ * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection
  * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import MethodModuleFactory from './factories/MethodModuleFactory';
-import * as PromiEventPackage from 'web3-core-promievent';
+import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
 
@@ -35,7 +36,7 @@ import {formatters} from 'web3-core-helpers';
  */
 export const MethodController = () => {
     return new MethodModuleFactory().createMethodController(
-        PromiEventPackage,
+        PromiEvent,
         new SubscriptionsFactory(),
         formatters
     );

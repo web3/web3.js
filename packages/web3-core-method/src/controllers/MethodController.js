@@ -27,7 +27,7 @@ export default class MethodController {
      * @param {SendMethodCommand} sendMethodCommand
      * @param {SignAndSendMethodCommand} signAndSendMethodCommand
      * @param {SignMessageCommand} signMessageCommand
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {PromiEvent} promiEventObject
      *
      * @constructor
      */
@@ -36,13 +36,13 @@ export default class MethodController {
         sendMethodCommand,
         signAndSendMethodCommand,
         signMessageCommand,
-        promiEventPackage
+        promiEventObject
     ) {
         this.callMethodCommand = callMethodCommand;
         this.sendMethodCommand = sendMethodCommand;
         this.signAndSendMethodCommand = signAndSendMethodCommand;
         this.signMessageCommand = signMessageCommand;
-        this.promiEventPackage = promiEventPackage;
+        this.promiEventObject = promiEventObject;
     }
 
     /**
@@ -70,7 +70,7 @@ export default class MethodController {
                 return this.signAndSendMethodCommand.execute(
                     moduleInstance,
                     methodModel,
-                    new this.promiEventPackage.PromiEvent(),
+                    new this.promiEventObject(),
                     accounts,
                 );
             }
@@ -80,7 +80,7 @@ export default class MethodController {
             return this.sendMethodCommand.execute(
                 moduleInstance,
                 methodModel,
-                new this.promiEventPackage.PromiEvent()
+                new this.promiEventObject()
             );
         }
 

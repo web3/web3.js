@@ -37,6 +37,7 @@ import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
 import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
+import Contract from '../Contract';
 
 export default class ContractModuleFactory {
 
@@ -60,8 +61,11 @@ export default class ContractModuleFactory {
      *
      * @method createContract
      *
-     * @param {*} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {PromiEventPackage} promiEventPackage
      * @param {Object} abi
@@ -72,7 +76,10 @@ export default class ContractModuleFactory {
      */
     createContract(
         provider,
-        providersPackage,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
         methodController,
         promiEventPackage,
         abi,
@@ -81,8 +88,11 @@ export default class ContractModuleFactory {
     ) {
         return new Contract(
             provider,
-            providersPackage,
-            new MethodController(),
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
+            methodController,
             this,
             promiEventPackage,
             this.abiCoder,
@@ -267,11 +277,11 @@ export default class ContractModuleFactory {
      * @param {Contract} contract
      * @param {ABIModel} abiModel
      * @param {MethodController} methodController
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {PromiEvent} promiEvent
      *
      * @returns {MethodsProxy}
      */
-    createMethodsProxy(contract, abiModel, methodController, promiEventPackage) {
+    createMethodsProxy(contract, abiModel, methodController, promiEvent) {
         return new MethodsProxy(
             contract,
             abiModel,
@@ -280,7 +290,7 @@ export default class ContractModuleFactory {
             this.createMethodEncoder(),
             this.createRpcMethodOptionsValidator(),
             this.createRpcMethodOptionsMapper(),
-            promiEventPackage
+            promiEvent
         );
     }
 

@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import {Personal} from "../Personal";
-import MethodModelFactory from "./MethodModelFactory";
+import Personal from '../Personal';
+import MethodModelFactory from './MethodModelFactory';
 
 export default class PersonalModuleFactory {
 
@@ -42,7 +42,10 @@ export default class PersonalModuleFactory {
      * @method createPersonal
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {Network} net
      *
@@ -50,18 +53,24 @@ export default class PersonalModuleFactory {
      */
     createPersonal(
         provider,
-        providersPackage,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
         methodController,
-        net,
+        net
     ) {
         return new Personal(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
             this.createMethodModelFactory(),
             net,
-            utils,
-            formatters
+            this.utils,
+            this.formatters
         );
     }
 

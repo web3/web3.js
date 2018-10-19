@@ -26,7 +26,10 @@ export default class Shh extends AbstractWeb3Module {
 
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {MethodModelFactory} methodModelFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
@@ -36,13 +39,26 @@ export default class Shh extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersPackage,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
         methodController,
         methodModelFactory,
         subscriptionsFactory,
         net
     ) {
-        super(provider, providersPackage, methodController, methodModelFactory);
+        super(
+            provider,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
+            methodController,
+            methodModelFactory
+        );
+
+        this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;
     }
 

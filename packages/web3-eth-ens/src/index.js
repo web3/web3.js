@@ -17,14 +17,15 @@
  * @date 2018
  */
 
-import * as ContractPackage from 'web3-eth-contract';
-import * as PromiEventPackage from 'web3-core-promievent';
+import {Contract} from 'web3-eth-contract';
+import {PromiEvent} from 'web3-core-promievent';
 import REGISTRY_ABI from '../ressources/ABI/Registry';
 import RESOLVER_ABI from '../ressources/ABI/Resolver';
-import ENSPackageFactory from './factories/ENSPackageFactory';
+import ENSModuleFactory from './factories/ENSModuleFactory';
 
 /**
- * TODO: Overthink the module structure
+ * TODO: Contracts should be implemented over dependency inversion not injection.
+ * TODO: Refactor ENS
  * Returns the ENS object
  *
  * @method ENS
@@ -36,13 +37,13 @@ import ENSPackageFactory from './factories/ENSPackageFactory';
  * @returns {ENS}
  */
 export const ENS = (provider, net, accounts) => {
-    return new ENSPackageFactory().createENS(
+    return new ENSModuleFactory().createENS(
         provider,
         net,
         accounts,
-        ContractPackage,
+        Contract,
         REGISTRY_ABI,
         RESOLVER_ABI,
-        PromiEventPackage
+        PromiEvent
     );
 };

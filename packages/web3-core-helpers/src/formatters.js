@@ -22,7 +22,7 @@
  */
 
 import _ from 'underscore';
-import utils from 'web3-utils';
+import Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 
 /**
@@ -33,7 +33,7 @@ import {Iban} from 'web3-eth-iban';
  * @returns {BigNumber} object
  */
 const outputBigNumberFormatter = number => {
-    return utils.toBN(number).toString(10);
+    return Utils.toBN(number).toString(10);
 };
 
 const isPredefinedBlockNumber = blockNumber => {
@@ -70,7 +70,7 @@ const inputBlockNumberFormatter = blockNumber => {
         return blockNumber;
     }
 
-    return (utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : utils.numberToHex(blockNumber);
+    return (Utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : Utils.numberToHex(blockNumber);
 };
 
 /**
@@ -95,7 +95,7 @@ const _txInputFormatter = options => {
         delete options.input;
     }
 
-    if(options.data && !utils.isHex(options.data)) {
+    if(options.data && !Utils.isHex(options.data)) {
         throw new Error('The data field must be HEX encoded data.');
     }
 
@@ -107,7 +107,7 @@ const _txInputFormatter = options => {
     ['gasPrice', 'gas', 'value', 'nonce'].filter(key => {
         return options[key] !== undefined;
     }).forEach(key => {
-        options[key] = utils.numberToHex(options[key]);
+        options[key] = Utils.numberToHex(options[key]);
     });
 
     return options;
@@ -174,7 +174,7 @@ const inputTransactionFormatter = (options, moduleInstance) => {
  * @returns {String}
  */
 const inputSignFormatter = data => {
-    return (utils.isHexStrict(data)) ? data : utils.utf8ToHex(data);
+    return (Utils.isHexStrict(data)) ? data : Utils.utf8ToHex(data);
 };
 
 /**
@@ -186,22 +186,22 @@ const inputSignFormatter = data => {
 */
 const outputTransactionFormatter = tx => {
     if(tx.blockNumber !== null)
-        tx.blockNumber = utils.hexToNumber(tx.blockNumber);
+        tx.blockNumber = Utils.hexToNumber(tx.blockNumber);
     if(tx.transactionIndex !== null)
-        tx.transactionIndex = utils.hexToNumber(tx.transactionIndex);
-    tx.nonce = utils.hexToNumber(tx.nonce);
-    tx.gas = utils.hexToNumber(tx.gas);
+        tx.transactionIndex = Utils.hexToNumber(tx.transactionIndex);
+    tx.nonce = Utils.hexToNumber(tx.nonce);
+    tx.gas = Utils.hexToNumber(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
-    if(tx.to && utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
-        tx.to = utils.toChecksumAddress(tx.to);
+    if(tx.to && Utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
+        tx.to = Utils.toChecksumAddress(tx.to);
     } else {
         tx.to = null; // set to `null` if invalid address
     }
 
     if(tx.from) {
-        tx.from = utils.toChecksumAddress(tx.from);
+        tx.from = Utils.toChecksumAddress(tx.from);
     }
 
     return tx;
@@ -220,18 +220,18 @@ const outputTransactionReceiptFormatter = receipt => {
     }
 
     if(receipt.blockNumber !== null)
-        receipt.blockNumber = utils.hexToNumber(receipt.blockNumber);
+        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
     if(receipt.transactionIndex !== null)
-        receipt.transactionIndex = utils.hexToNumber(receipt.transactionIndex);
-    receipt.cumulativeGasUsed = utils.hexToNumber(receipt.cumulativeGasUsed);
-    receipt.gasUsed = utils.hexToNumber(receipt.gasUsed);
+        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+    receipt.cumulativeGasUsed = Utils.hexToNumber(receipt.cumulativeGasUsed);
+    receipt.gasUsed = Utils.hexToNumber(receipt.gasUsed);
 
     if(_.isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
     if(receipt.contractAddress) {
-        receipt.contractAddress = utils.toChecksumAddress(receipt.contractAddress);
+        receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
     }
 
     if(typeof receipt.status !== 'undefined') {
@@ -251,12 +251,12 @@ const outputTransactionReceiptFormatter = receipt => {
 const outputBlockFormatter = block => {
 
     // transform to number
-    block.gasLimit = utils.hexToNumber(block.gasLimit);
-    block.gasUsed = utils.hexToNumber(block.gasUsed);
-    block.size = utils.hexToNumber(block.size);
-    block.timestamp = utils.hexToNumber(block.timestamp);
+    block.gasLimit = Utils.hexToNumber(block.gasLimit);
+    block.gasUsed = Utils.hexToNumber(block.gasUsed);
+    block.size = Utils.hexToNumber(block.size);
+    block.timestamp = Utils.hexToNumber(block.timestamp);
     if (block.number !== null)
-        block.number = utils.hexToNumber(block.number);
+        block.number = Utils.hexToNumber(block.number);
 
     if(block.difficulty)
         block.difficulty = outputBigNumberFormatter(block.difficulty);
@@ -271,7 +271,7 @@ const outputBlockFormatter = block => {
     }
 
     if (block.miner)
-        block.miner = utils.toChecksumAddress(block.miner);
+        block.miner = Utils.toChecksumAddress(block.miner);
 
     return block;
 };
@@ -294,7 +294,7 @@ const inputLogFormatter = options => {
         if(value.indexOf('0x') === 0)
             return value;
         else
-            return utils.fromUtf8(value);
+            return Utils.fromUtf8(value);
     };
 
     if (options.fromBlock)
@@ -334,21 +334,21 @@ const outputLogFormatter = log => {
     if(typeof log.blockHash === 'string' &&
        typeof log.transactionHash === 'string' &&
        typeof log.logIndex === 'string') {
-        const shaId = utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
+        const shaId = Utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
         log.id = `log_${shaId.replace('0x','').substr(0,8)}`;
     } else if(!log.id) {
         log.id = null;
     }
 
     if (log.blockNumber !== null)
-        log.blockNumber = utils.hexToNumber(log.blockNumber);
+        log.blockNumber = Utils.hexToNumber(log.blockNumber);
     if (log.transactionIndex !== null)
-        log.transactionIndex = utils.hexToNumber(log.transactionIndex);
+        log.transactionIndex = Utils.hexToNumber(log.transactionIndex);
     if (log.logIndex !== null)
-        log.logIndex = utils.hexToNumber(log.logIndex);
+        log.logIndex = Utils.hexToNumber(log.logIndex);
 
     if (log.address) {
-        log.address = utils.toChecksumAddress(log.address);
+        log.address = Utils.toChecksumAddress(log.address);
     }
 
     return log;
@@ -363,14 +363,14 @@ const outputLogFormatter = log => {
 */
 const inputPostFormatter = post => {
 
-    // post.payload = utils.toHex(post.payload);
+    // post.payload = Utils.toHex(post.payload);
 
     if (post.ttl)
-        post.ttl = utils.numberToHex(post.ttl);
+        post.ttl = Utils.numberToHex(post.ttl);
     if (post.workToProve)
-        post.workToProve = utils.numberToHex(post.workToProve);
+        post.workToProve = Utils.numberToHex(post.workToProve);
     if (post.priority)
-        post.priority = utils.numberToHex(post.priority);
+        post.priority = Utils.numberToHex(post.priority);
 
     // fallback
     if (!_.isArray(post.topics)) {
@@ -380,7 +380,7 @@ const inputPostFormatter = post => {
     // format the following options
     post.topics = post.topics.map(topic => {
         // convert only if not hex
-        return (topic.indexOf('0x') === 0) ? topic : utils.fromUtf8(topic);
+        return (topic.indexOf('0x') === 0) ? topic : Utils.fromUtf8(topic);
     });
 
     return post;
@@ -394,14 +394,14 @@ const inputPostFormatter = post => {
  * @returns {Object}
  */
 const outputPostFormatter = post => {
-    post.expiry = utils.hexToNumber(post.expiry);
-    post.sent = utils.hexToNumber(post.sent);
-    post.ttl = utils.hexToNumber(post.ttl);
-    post.workProved = utils.hexToNumber(post.workProved);
+    post.expiry = Utils.hexToNumber(post.expiry);
+    post.sent = Utils.hexToNumber(post.sent);
+    post.ttl = Utils.hexToNumber(post.ttl);
+    post.workProved = Utils.hexToNumber(post.workProved);
     // post.payloadRaw = post.payload;
-    // post.payload = utils.hexToAscii(post.payload);
+    // post.payload = Utils.hexToAscii(post.payload);
 
-    // if (utils.isJson(post.payload)) {
+    // if (Utils.isJson(post.payload)) {
     //     post.payload = JSON.parse(post.payload);
     // }
 
@@ -410,7 +410,7 @@ const outputPostFormatter = post => {
         post.topics = [];
     }
     post.topics = post.topics.map(topic => {
-        return utils.toUtf8(topic);
+        return Utils.toUtf8(topic);
     });
 
     return post;
@@ -421,7 +421,7 @@ var inputAddressFormatter = address => {
 
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
-    } else if (utils.isAddress(address)) {
+    } else if (Utils.isAddress(address)) {
         return `0x${address.toLowerCase().replace('0x','')}`;
     }
 
@@ -431,12 +431,12 @@ var inputAddressFormatter = address => {
 
 const outputSyncingFormatter = result => {
 
-    result.startingBlock = utils.hexToNumber(result.startingBlock);
-    result.currentBlock = utils.hexToNumber(result.currentBlock);
-    result.highestBlock = utils.hexToNumber(result.highestBlock);
+    result.startingBlock = Utils.hexToNumber(result.startingBlock);
+    result.currentBlock = Utils.hexToNumber(result.currentBlock);
+    result.highestBlock = Utils.hexToNumber(result.highestBlock);
     if (result.knownStates) {
-        result.knownStates = utils.hexToNumber(result.knownStates);
-        result.pulledStates = utils.hexToNumber(result.pulledStates);
+        result.knownStates = Utils.hexToNumber(result.knownStates);
+        result.pulledStates = Utils.hexToNumber(result.pulledStates);
     }
 
     return result;

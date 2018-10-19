@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {Network} from "../Network";
+import Network from "../Network";
 import MethodModelFactory from "./MethodModelFactory";
 
 export default class NetworkModuleFactory {
@@ -42,15 +42,28 @@ export default class NetworkModuleFactory {
      * @method createNetworkModule
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      *
      * @returns {Network}
      */
-    createNetworkModule(provider, providersPackage, methodController) {
+    createNetworkModule(
+        provider,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
+        methodController
+    ) {
         return new Network(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
             this.createMethodModelFactory(),
             this.formatters,

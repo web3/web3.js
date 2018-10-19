@@ -21,10 +21,10 @@
  */
 
 import {MethodController} from 'web3-core-method';
-import * as ProvidersPackage from 'web3-providers';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {AccountsModuleFactory} from './factories/AccountsModuleFactory'
+import AccountsModuleFactory from './factories/AccountsModuleFactory'
 
 /**
  * Returns the Accounts object
@@ -36,11 +36,14 @@ import {AccountsModuleFactory} from './factories/AccountsModuleFactory'
  * @returns {Accounts}
  */
 export const Accounts = (provider) => {
-    return new AccountsModuleFactory().createAccounts(
+    const providersModuleFactory = new ProvidersModuleFactory();
+
+    return new AccountsModuleFactory(Utils, formatters).createAccounts(
         provider,
-        ProvidersPackage,
-        new MethodController(),
-        Utils,
-        formatters
+        providersModuleFactory.createProviderDetector(),
+        providersModuleFactory.createProviderAdapterResolver(),
+        providersModuleFactory,
+        providers,
+        new MethodController()
     );
 };

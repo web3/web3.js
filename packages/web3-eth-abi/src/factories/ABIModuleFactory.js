@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {ABICoder} from '../ABICoder';
+import ABICoder from '../ABICoder';
 
 export default class ABIModuleFactory {
 

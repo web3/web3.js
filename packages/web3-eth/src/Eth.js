@@ -26,16 +26,19 @@ export default class Eth extends AbstractWeb3Module {
 
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {Network} net
-     * @param {ContractPackage} contractPackage
+     * @param {Contract} contract
      * @param {Accounts} accounts
      * @param {Personal} personal
      * @param {Iban} iban
-     * @param {Abi} abi
+     * @param {ABICoder} abiCoder
      * @param {ENS} ens
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {ProvidersPackage} providersPackage
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {MethodModelFactory} methodModelFactory
      * @param {MethodController} methodController
@@ -44,23 +47,29 @@ export default class Eth extends AbstractWeb3Module {
      */
     constructor(
         provider,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
+        methodController,
+        methodModelFactory,
         net,
-        contractPackage,
+        contract,
         accounts,
         personal,
         iban,
-        abi,
+        abiCoder,
         ens,
         utils,
         formatters,
-        providersPackage,
-        subscriptionsFactory,
-        methodController,
-        methodModelFactory
+        subscriptionsFactory
     ) {
         super(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
             methodModelFactory
         );
@@ -69,7 +78,7 @@ export default class Eth extends AbstractWeb3Module {
         this.accounts = accounts;
         this.personal = personal;
         this.Iban = Iban;
-        this.abi = abi;
+        this.abi = abiCoder;
         this.ens = ens;
         this.utils = utils;
         this.formatters = formatters;
@@ -90,10 +99,10 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
-            const contract = new contractPackage.Contract(this.currentProvider, this.accounts, abi, address, options);
-            this.initiatedContracts.push(contract);
+            const contractObject = new contract(this.currentProvider, this.accounts, abi, address, options);
+            this.initiatedContracts.push(contractObject);
 
-            return contract;
+            return contractObject;
         };
     }
 

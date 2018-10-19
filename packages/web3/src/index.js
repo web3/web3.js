@@ -22,9 +22,9 @@
 
 import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
-import * as MethodPackage from 'web3-core-method';
-import * as ProvidersPackage from 'web3-providers';
-import Utils from 'web3-utils';
+import {AbstractMethodModelFactory, MethodController} from 'web3-core-method';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {Utils} from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
 import {Bzz} from 'web3-bzz';
@@ -41,17 +41,22 @@ export default class Web3 extends AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, net) {
-        provider = ProvidersPackage.resolve(provider, net);
+        var providersModuleFactory = new ProvidersModuleFactory();
+        var providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
+        var providerDetector = providersModuleFactory.createProviderDetector();
+
+        provider = providerAdapterResolver.resolve(provider, net);
 
         super(
             provider,
-            ProvidersPackage,
-            MethodPackage.createMethodController(),
-            new MethodPackage.AbstractMethodModelFactory({}, utils, formatters)
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
+            new MethodController(),
+            new AbstractMethodModelFactory({}, utils, formatters)
         );
 
-        this.version = version;
-        this.utils = Utils;
         this.eth = new Eth(provider);
         this.shh = new Shh(provider);
         this.bzz = new Bzz(provider);
@@ -82,7 +87,7 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get givenProvider() {
-        return ProvidersPackage.detect();
+        return new ProvidersModuleFactory().createProviderDetector().detect();
     }
 
     /**
@@ -109,21 +114,23 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get modules() {
+        const providerAdapterResolver = new ProvidersModuleFactory().createProviderAdapterResolver();
+
         return {
             Eth: (provider, net) => {
-                return new Eth(ProvidersPackage.resolve(provider, net));
+                return new Eth(providerAdapterResolver.resolve(provider, net));
             },
             Net: (provider, net) => {
-                return new Network(ProvidersPackage.resolve(provider, net));
+                return new Network(providerAdapterResolver.resolve(provider, net));
             },
             Personal: (provider, net) => {
-                return new Personal(ProvidersPackage.resolve(provider, net));
+                return new Personal(providerAdapterResolver.resolve(provider, net));
             },
             Shh: (provider, net) => {
-                return new Shh(ProvidersPackage.resolve(provider, net));
+                return new Shh(providerAdapterResolver.resolve(provider, net));
             },
             Bzz: (provider, net) => {
-                return new Bzz(ProvidersPackage.resolve(provider, net));
+                return new Bzz(providerAdapterResolver.resolve(provider, net));
             }
         }
     }
@@ -134,10 +141,6 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get providers() {
-        return {
-            HttpProvider: ProvidersPackage.HttpProvider,
-            WebsocketProvider: ProvidersPackage.WebsocketProvider,
-            IpcProvider: ProvidersPackage.IpcProvider
-        }
+        return providers;
     }
 }

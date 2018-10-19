@@ -22,10 +22,10 @@
 
 import {MethodController} from 'web3-core-method';
 import {Network} from 'web3-net';
-import * as ProvidersPackage from 'web3-providers';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {PersonalModuleFactory} from './factories/PersonalModuleFactory';
+import PersonalModuleFactory from './factories/PersonalModuleFactory';
 
 /**
  * Returns the Personal object
@@ -37,10 +37,15 @@ import {PersonalModuleFactory} from './factories/PersonalModuleFactory';
  * @returns {Personal}
  */
 export const Personal = (provider) => {
+    const providersModuleFactory = new ProvidersModuleFactory();
+
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
-        ProvidersPackage,
+        providersModuleFactory.createProviderDetector(),
+        providersModuleFactory.createProviderAdapterResolver(),
+        providersModuleFactory,
+        providers,
         new MethodController(),
-        new Network(provider),
+        new Network(provider)
     );
 };

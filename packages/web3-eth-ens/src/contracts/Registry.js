@@ -23,24 +23,25 @@ import namehash from 'eth-ens-namehash';
 export default class Registry {
 
     /**
+     * // TODO: Contract should be implemented over dependency inversion and not dependency injection
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {Accounts} accounts
-     * @param {ContractPackage} contractPackage
+     * @param {Contract} contractObject
      * @param {Object} registryABI
      * @param {Object} resolverABI
      *
      * @constructor
      */
-    constructor(provider, accounts, contractPackage, registryABI, resolverABI) {
+    constructor(provider, accounts, contractObject, registryABI, resolverABI) {
         this.net = net;
         this.accounts = accounts;
-        this.contractPackage = contractPackage;
+        this.contractObject = contractObject;
         this.registryABI = registryABI;
         this.resolverABI = resolverABI;
         this.provider = provider;
 
         this.contract = this.checkNetwork().then(address => {
-            return new this.contractPackage.Contract(
+            return new this.contractObject(
                 this.provider,
                 this.accounts,
                 this.registryABI,
@@ -112,7 +113,7 @@ export default class Registry {
         return this.contract.then(contract => {
             return contract.methods.resolver(namehash.hash(name)).call();
         }).then(address => {
-            return new this.contractPackage.Contract(
+            return new this.Contract.Contract(
                 this.provider,
                 this.accounts,
                 this.resolverABI,

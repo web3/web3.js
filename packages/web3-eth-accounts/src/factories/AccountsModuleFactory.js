@@ -20,30 +20,63 @@
  * @date 2018
  */
 
-import {MethodModelFactory} from './MethodModelFactory';
-import {Accounts} from '../Accounts';
+import MethodModelFactory from './MethodModelFactory';
+import Accounts from '../Accounts';
 
 export default class AccountsModuleFactory {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        this.utils = utils;
+        this.formatters = formatters;
+    }
 
     /**
      * Returns an object of type Accounts
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
-     * @param {Object} utils
-     * @param {Object} formatters
      *
      * @returns {Accounts}
      */
-    createAccounts(provider, providersPackage, methodController, utils, formatters) {
+    createAccounts(
+        provider,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
+        methodController
+    ) {
         return new Accounts(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
-            new MethodModelFactory(utils, formatters),
-            utils,
-            formatters
+            this.createMethodModelFactory(),
+            this.utils,
+            this.formatters
         );
+    }
+
+    /**
+     * Returns an object of type MethodModelFactory
+     *
+     * @method createMethodModelFactory
+     *
+     * @returns {MethodModelFactory}
+     */
+    createMethodModelFactory() {
+        return new MethodModelFactory(this.utils, this.formatters);
     }
 }

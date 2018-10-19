@@ -1,18 +1,18 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * @file MethodsProxy.js
@@ -30,7 +30,7 @@ export default class MethodsProxy {
      * @param {MethodEncoder} methodEncoder
      * @param {RpcMethodOptionsValidator} rpcMethodOptionsValidator
      * @param {RpcMethodOptionsMapper} rpcMethodOptionsMapper
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {PromiEvent} promiEvent
      *
      * @constructor
      */
@@ -42,7 +42,7 @@ export default class MethodsProxy {
         methodEncoder,
         rpcMethodOptionsValidator,
         rpcMethodOptionsMapper,
-        promiEventPackage
+        promiEvent
     ) {
         this.contract = contract;
         this.abiModel = abiModel;
@@ -51,7 +51,7 @@ export default class MethodsProxy {
         this.methodEncoder = methodEncoder;
         this.rpcMethodOptionsValidator = rpcMethodOptionsValidator;
         this.rpcMethodOptionsMapper = rpcMethodOptionsMapper;
-        this.promiEventPackage = promiEventPackage;
+        this.promiEvent = promiEvent;
 
         return new Proxy(this, {
             get: this.proxyHandler
@@ -222,7 +222,7 @@ export default class MethodsProxy {
     }
 
     /**
-     * Creates an promiEvent and rejects it with an error
+     * Creates an PromiEvent object and rejects it with an error
      *
      * @method handleValidationError
      *
@@ -233,7 +233,7 @@ export default class MethodsProxy {
      * @returns {PromiEvent}
      */
     handleValidationError(error, callback) {
-        const promiEvent = new this.promiEventPackage.PromiEvent();
+        const promiEvent = new this.promiEvent();
 
         promiEvent.resolve(null);
         promiEvent.reject(error);

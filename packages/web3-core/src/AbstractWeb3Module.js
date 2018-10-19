@@ -26,38 +26,37 @@ export default class AbstractWeb3Module {
 
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {AbstractMethodModelFactory} methodModelFactory
      *
      * @constructor
      */
-    constructor(provider, providersPackage, methodController, methodModelFactory = null) {
-        if (!this.isDependencyGiven(provider)) {
-            throw Error('No provider given as constructor parameter!');
-        }
-
-        if (!this.isDependencyGiven(providersPackage)) {
-            throw Error('ProviderPackage not found!');
-        }
-
+    constructor(
+        provider = this.throwIfMissing('provider'),
+        providerDetector = this.throwIfMissing('providerDetector'),
+        providerAdapterResolver = this.throwIfMissing('providerAdapterResolver'),
+        providersModuleFactory = this.throwIfMissing('providersModuleFactory'),
+        providers = this.throwIfMissing('providers'),
+        methodController = this.throwIfMissing('methodController'),
+        methodModelFactory = null
+    ) {
         this.methodController = methodController;
         this.extendedPackages = [];
-        this.providersPackage = providersPackage;
-        this.givenProvider = this.providersPackage.detect();
+        this.providerDetector = providerDetector;
+        this.providerAdapterResolver = providerAdapterResolver;
+        this.providersModuleFactory = providersModuleFactory;
+        this.givenProvider = this.providerDetector.detect();
         this._currentProvider = provider;
-
-        this.providers = {
-            HttpProvider: this.providersPackage.HttpProvider,
-            IpcProvider: this.providersPackage.IpcProvider,
-            WebsocketProvider: this.providersPackage.WebsocketProvider,
-        };
-
+        this.providers = providers;
         this.BatchRequest = () => {
-            return new this.providersPackage.BatchRequest(this.currentProvider);
+            return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
 
-        if (this.isDependencyGiven(methodModelFactory)) {
+        if (methodModelFactory !== null && typeof methodModelFactory !== 'undefined') {
             this.methodModelFactory = methodModelFactory;
             this.extend.formatters = this.methodModelFactory.formatters;
 
@@ -102,7 +101,7 @@ export default class AbstractWeb3Module {
     setProvider(provider, net) {
         if (!this.isSameProvider(provider)) {
             this.clearSubscriptions();
-            this._currentProvider = this.providersPackage.resolve(provider, net);
+            this._currentProvider = this.providerAdapterResolver.resolve(provider, net);
 
             if (this.extendedPackages.length > 0) {
                 var setExtendedPackagesProvider = this.extendedPackages.every(extendedPackage => {
@@ -242,7 +241,7 @@ export default class AbstractWeb3Module {
 
                 if (methodModel.parameters.length !== methodModel.parametersAmount) {
                     throw Error(
-                        `Invalid parameters length the expected length would be${methodModel.parametersAmount}and not${methodModel.parameters.length}`
+                        `Invalid parameters length the expected length would be ${methodModel.parametersAmount} and not ${methodModel.parameters.length}`
                     );
                 }
 
@@ -259,13 +258,11 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Checks if the given value is defined
+     * Throws an error if the parameter is missing
      *
-     * @param {*} object
-     *
-     * @returns {Boolean}
+     * @param {String} name
      */
-    isDependencyGiven(object) {
-        return object !== null && typeof object !== 'undefined'
+    throwIfMissing(name) {
+        throw Error('Parameter with name ${name} is missing');
     }
 }

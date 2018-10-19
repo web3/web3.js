@@ -55,7 +55,10 @@ export default class Accounts extends AbstractWeb3Module {
 
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {MethodModelFactory} methodModelFactory
      * @param {Object} utils
@@ -65,7 +68,10 @@ export default class Accounts extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersPackage,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
         methodController,
         methodModelFactory,
         utils,
@@ -73,7 +79,10 @@ export default class Accounts extends AbstractWeb3Module {
     ) {
         super(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
             methodModelFactory
         );

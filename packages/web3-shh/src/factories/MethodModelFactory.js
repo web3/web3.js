@@ -20,9 +20,32 @@
  * @date 2018
  */
 
-import * as web3CoreMethod from 'web3-core-method';
+import {
+    AbstractMethodModelFactory,
+    ShhVersionMethodModel,
+    GetInfoMethodModel,
+    SetMaxMessageSizeMethodModel,
+    SetMinPoWMethodModel,
+    MarkTrustedPeerMethodModel,
+    NewKeyPairMethodModel,
+    AddPrivateKeyMethodModel,
+    DeleteKeyPairMethodModel,
+    HasKeyPairMethodModel,
+    GetPublicKeyMethodModel,
+    GetPrivateKeyMethodModel,
+    NewSymKeyMethodModel,
+    AddSymKeyMethodModel,
+    GenerateSymKeyFromPasswordMethodModel,
+    HasSymKeyMethodModel,
+    GetSymKeyMethodModel,
+    DeleteSymKeyMethodModel,
+    NewMessageFilterMethodModel,
+    GetFilterMessagesMethodModel,
+    DeleteMessageFilterMethodModel,
+    PostMethodModel
+} from 'web3-core-method';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class MethodModelFactory extends AbstractMethodModelFactory {
 
     /**
      * @param {Object} utils
@@ -33,27 +56,27 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
     constructor(utils, formatters) {
         super(
             {
-                getVersion: web3CoreMethod.ShhVersionMethodModel,
-                getInfo: web3CoreMethod.GetInfoMethodModel,
-                setMaxMessageSize: web3CoreMethod.SetMaxMessageSizeMethodModel,
-                setMinPoW: web3CoreMethod.SetMinPoWMethodModel,
-                markTrustedPeer: web3CoreMethod.MarkTrustedPeerMethodModel,
-                newKeyPair: web3CoreMethod.NewKeyPairMethodModel,
-                addPrivateKey: web3CoreMethod.AddPrivateKeyMethodModel,
-                deleteKeyPair: web3CoreMethod.DeleteKeyPairMethodModel,
-                hasKeyPair: web3CoreMethod.HasKeyPairMethodModel,
-                getPublicKey: web3CoreMethod.GetPublicKeyMethodModel,
-                getPrivateKey: web3CoreMethod.GetPrivateKeyMethodModel,
-                newSymKey: web3CoreMethod.NewSymKeyMethodModel,
-                addSymKey: web3CoreMethod.AddSymKeyMethodModel,
-                generateSymKeyFromPassword: web3CoreMethod.GenerateSymKeyFromPasswordMethodModel,
-                hasSymKey: web3CoreMethod.HasSymKeyMethodModel,
-                getSymKey: web3CoreMethod.GetSymKeyMethodModel,
-                deleteSymKey: web3CoreMethod.DeleteSymKeyMethodModel,
-                newMessageFilter: web3CoreMethod.NewMessageFilterMethodModel,
-                getFilterMessages: web3CoreMethod.GetFilterMessagesMethodModel,
-                deleteMessageFilter: web3CoreMethod.DeleteMessageFilterMethodModel,
-                post: web3CoreMethod.PostMethodModel,
+                getVersion: ShhVersionMethodModel,
+                getInfo: GetInfoMethodModel,
+                setMaxMessageSize: SetMaxMessageSizeMethodModel,
+                setMinPoW: SetMinPoWMethodModel,
+                markTrustedPeer: MarkTrustedPeerMethodModel,
+                newKeyPair: NewKeyPairMethodModel,
+                addPrivateKey: AddPrivateKeyMethodModel,
+                deleteKeyPair: DeleteKeyPairMethodModel,
+                hasKeyPair: HasKeyPairMethodModel,
+                getPublicKey: GetPublicKeyMethodModel,
+                getPrivateKey: GetPrivateKeyMethodModel,
+                newSymKey: NewSymKeyMethodModel,
+                addSymKey: AddSymKeyMethodModel,
+                generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethodModel,
+                hasSymKey: HasSymKeyMethodModel,
+                getSymKey: GetSymKeyMethodModel,
+                deleteSymKey: DeleteSymKeyMethodModel,
+                newMessageFilter: NewMessageFilterMethodModel,
+                getFilterMessages: GetFilterMessagesMethodModel,
+                deleteMessageFilter: DeleteMessageFilterMethodModel,
+                post: PostMethodModel,
             },
             utils,
             formatters

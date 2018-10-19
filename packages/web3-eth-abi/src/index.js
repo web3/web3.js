@@ -21,7 +21,7 @@
  */
 
 import Utils from 'web3-utils';
-import {ABIModuleFactory} from './factories/ABIModuleFactory';
+import ABIModuleFactory from './factories/ABIModuleFactory';
 
 /**
  * Returns an object of AbiCoder

@@ -19,12 +19,19 @@
 
 import ProvidersModuleFactory from './factories/ProvidersModuleFactory';
 
-export {SocketProviderAdapter} from './adapters/SocketProviderAdapter';
-export {HttpProviderAdapter} from './adapters/HttpProviderAdapter';
-export {HttpProvider} from './providers/HttpProvider';
-export {IpcProvider} from './providers/IpcProvider';
-export {WebsocketProvider} from './providers/WebsocketProvider';
-export {JSONRpcResponseValidator} from './validators/JSONRpcResponseValidator';
+export SocketProviderAdapter from './adapters/SocketProviderAdapter';
+export HttpProviderAdapter from './adapters/HttpProviderAdapter';
+export HttpProvider from './providers/HttpProvider';
+export IpcProvider from './providers/IpcProvider';
+export WebsocketProvider from './providers/WebsocketProvider';
+export JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
+export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+
+export const providers = {
+    HttpProvider,
+    WebsocketProvider,
+    IpcProvider
+};
 
 /**
  * Creates the BatchRequest object
@@ -58,5 +65,5 @@ export const ProviderAdapterResolver = () => {
  * @returns {Object}
  */
 export const ProviderDetector = () => {
-    return new ProvidersModuleFactory().createProviderDetector().detect();
+    return new ProvidersModuleFactory().createProviderDetector();
 };

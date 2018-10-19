@@ -30,7 +30,7 @@ import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import JSONRpcResponseValidator from '../validators/JSONRpcResponseValidator';
 import JSONRpcMapper from '../mappers/JSONRpcMapper';
-import {BatchRequest} from '../batch-request/BatchRequest';
+import BatchRequest from '../batch-request/BatchRequest';
 
 export default class ProvidersModuleFactory {
 

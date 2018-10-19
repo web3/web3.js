@@ -23,7 +23,7 @@
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
-import * as ProvidersPackage from 'web3-providers';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
 import Utils from 'web3-utils';
 import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
@@ -31,8 +31,8 @@ import {ENS} from 'web3-eth-ens';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import * as ContractPackage from 'web3-eth-contract';
-import {EthModuleFactory} from './factories/EthModuleFactory';
+import {Contract} from 'web3-eth-contract';
+import EthModuleFactory from './factories/EthModuleFactory';
 
 /**
  * Creates the Eth object
@@ -44,17 +44,22 @@ import {EthModuleFactory} from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider) => {
+    const providersModuleFactory = new ProvidersModuleFactory();
+
     return new EthModuleFactory(Utils, formatters).createEthModule(
         provider,
-        new Network(provider),
-        ContractPackage,
+        providersModuleFactory.createProviderDetector(),
+        providersModuleFactory.createProviderAdapterResolver(),
+        providersModuleFactory,
+        providers,
+        new MethodController(),
+        new Network(),
+        Contract,
         new Accounts(provider),
         new Personal(provider),
         Iban,
         new AbiCoder(Utils),
         new ENS(provider),
-        ProvidersPackage,
         new SubscriptionsFactory(),
-        new MethodController()
     );
 };

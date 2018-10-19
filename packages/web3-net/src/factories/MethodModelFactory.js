@@ -20,9 +20,15 @@
  * @date 2018
  */
 
-import * as web3CoreMethod from 'web3-core-method';
+import {
+    AbstractMethodModelFactory,
+    VersionMethodModel,
+    GetBlockMethodModel,
+    ListeningMethodModel,
+    PeerCountMethodModel
+} from 'web3-core-method';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class MethodModelFactory extends AbstractMethodModelFactory {
 
     /**
      * @param {Object} utils
@@ -33,10 +39,10 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
     constructor(utils, formatters) {
         super(
             {
-                getId: web3CoreMethod.VersionMethodModel,
-                getBlock: web3CoreMethod.GetBlockMethodModel,
-                isListening: web3CoreMethod.ListeningMethodModel,
-                getPeerCount: web3CoreMethod.PeerCountMethodModel,
+                getId: VersionMethodModel,
+                getBlock: GetBlockMethodModel,
+                isListening: ListeningMethodModel,
+                getPeerCount: PeerCountMethodModel,
             },
             utils,
             formatters

@@ -26,10 +26,13 @@ export default class Contract extends AbstractWeb3Module {
 
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {ProviderDetector} providerDetector
+     * @param {ProviderAdapterResolver} providerAdapterResolver
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
-     * @param {ContractModuleFactory} contractPackageFactory
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {PromiEvent} promiEvent
      * @param {ABICoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
@@ -43,10 +46,13 @@ export default class Contract extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providersPackage,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
         methodController,
-        contractPackageFactory,
-        promiEventPackage,
+        contractModuleFactory,
+        promiEvent,
         abiCoder,
         utils,
         formatters,
@@ -56,10 +62,14 @@ export default class Contract extends AbstractWeb3Module {
         address,
         options
     ) {
+
         super(
             provider,
-            providersPackage,
-            null,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
+            methodController,
             null
         );
 
@@ -71,17 +81,15 @@ export default class Contract extends AbstractWeb3Module {
             throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
         }
 
-        this.providersPackage = providersPackage;
-        this.methodController = methodController;
-        this.contractPackageFactory = contractPackageFactory;
+        this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;
         this.formatters = formatters;
         this.accounts = accounts;
         this.abiMapper = abiMapper;
         this.options = options;
-        this.promiEventPackage = promiEventPackage;
-        this.rpcMethodModelFactory = contractPackageFactory.createRpcMethodModelFactory();
+        this.promiEvent = promiEvent;
+        this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
         this._defaultAccount = null;
         this._defaultBlock = 'latest';
         this.abiModel = abiMapper.map(abi);
@@ -109,14 +117,14 @@ export default class Contract extends AbstractWeb3Module {
             enumerable: true
         });
 
-        this.methods = contractPackageFactory.createMethodsProxy(
+        this.methods = contractModuleFactory.createMethodsProxy(
             this,
             this.abiModel,
             this.methodController,
-            this.promiEventPackage
+            this.promiEvent
         );
 
-        this.events = contractPackageFactory.createEventSubscriptionsProxy(
+        this.events = contractModuleFactory.createEventSubscriptionsProxy(
             this,
             this.abiModel,
             this.methodController
@@ -247,10 +255,13 @@ export default class Contract extends AbstractWeb3Module {
     clone() {
         const contract = new this.constructor(
             this.currentProvider,
-            this.providersPackage,
+            this.providerDetector,
+            this.providerAdapterResolver,
+            this.providersModuleFactory,
+            this.providers,
             this.methodController,
-            this.contractPackageFactory,
-            this.promiEventPackage,
+            this.contractModuleFactory,
+            this.promiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,

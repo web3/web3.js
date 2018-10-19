@@ -21,6 +21,7 @@
  */
 
 export default class RpcMethodOptionsMapper {
+
     /**
      * @param {Object} utils
      * @param {Object} formatters

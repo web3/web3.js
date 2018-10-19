@@ -39,19 +39,19 @@ export default class MethodModuleFactory {
      *
      * @method createMethodController
      *
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {PromiEvent} promiEventObject
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Object} formatters
      *
      * @returns {MethodController}
      */
-    createMethodController(promiEventPackage, subscriptionsFactory, formatters) {
+    createMethodController(promiEventObject, subscriptionsFactory, formatters) {
         return new MethodController(
             this.createCallMethodCommand(),
             this.createSendMethodCommand(subscriptionsFactory, formatters),
             this.createSignAndSendMethodCommand(subscriptionsFactory, formatters),
             this.createSignMessageCommand(),
-            promiEventPackage
+            promiEventObject
         );
     }
 

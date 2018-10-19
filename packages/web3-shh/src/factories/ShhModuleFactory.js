@@ -20,10 +20,21 @@
  * @date 2018
  */
 
-import {Shh} from '../Shh';
+import Shh from '../Shh';
 import MethodModelFactory from "./MethodModelFactory";
 
 export default class ShhModuleFactory {
+
+    /**
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(utils, formatters) {
+        this.utils = utils;
+        this.formatters = formatters;
+    }
 
     /**
      * Returns an object of type Shh
@@ -31,21 +42,34 @@ export default class ShhModuleFactory {
      * @method createShhModule
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param providerDetector
+     * @param providerAdapterResolver
+     * @param providersModuleFactory
+     * @param providers
      * @param {MethodController} methodController
-     * @param {SubscriptionsFacotry} subscriptionsFactory
+     * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
-     * @param {Object} utils
-     * @param {Object} formatters
      *
      * @returns {Shh}
      */
-    createShhModule(provider, providersPackage, methodController, subscriptionsFactory, net, utils, formatters) {
+    createShhModule(
+        provider,
+        providerDetector,
+        providerAdapterResolver,
+        providersModuleFactory,
+        providers,
+        methodController,
+        subscriptionsFactory,
+        net,
+    ) {
         return new Shh(
             provider,
-            providersPackage,
+            providerDetector,
+            providerAdapterResolver,
+            providersModuleFactory,
+            providers,
             methodController,
-            this.createMethodModelFactory(utils, formatters),
+            this.createMethodModelFactory(),
             subscriptionsFactory,
             net
         );
@@ -56,12 +80,9 @@ export default class ShhModuleFactory {
      *
      * @method createMethodModelFactory
      *
-     * @param {Object} utils
-     * @param {Object} formatters
-     *
      * @returns {MethodModelFactory}
      */
-    createMethodModelFactory(utils, formatters) {
-        return new MethodModelFactory(utils, formatters)
+    createMethodModelFactory() {
+        return new MethodModelFactory(this.utils, this.formatters)
     }
 }

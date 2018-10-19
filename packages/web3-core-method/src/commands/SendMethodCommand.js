@@ -21,9 +21,8 @@
  */
 
 import _ from 'underscore';
-import AbstractSendMethodCommand from '../../lib/commands/AbstractSendMethodCommand';
 
-export default class SendMethodCommand extends AbstractSendMethodCommand {
+export default class SendMethodCommand {
 
     /**
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
@@ -31,7 +30,7 @@ export default class SendMethodCommand extends AbstractSendMethodCommand {
      * @constructor
      */
     constructor(transactionConfirmationWorkflow) {
-        super(transactionConfirmationWorkflow);
+        this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
     }
 
     /**
