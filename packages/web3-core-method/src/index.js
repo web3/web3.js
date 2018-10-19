@@ -21,7 +21,7 @@
  * @date 2018
  */
 
-import MethodPackageFactory from './factories/MethodPackageFactory';
+import MethodModuleFactory from './factories/MethodModuleFactory';
 import * as PromiEventPackage from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
@@ -34,7 +34,7 @@ import {formatters} from 'web3-core-helpers';
  * @returns {MethodController}
  */
 export const MethodController = () => {
-    return new MethodPackageFactory().createMethodController(
+    return new MethodModuleFactory().createMethodController(
         PromiEventPackage,
         new SubscriptionsFactory(),
         formatters

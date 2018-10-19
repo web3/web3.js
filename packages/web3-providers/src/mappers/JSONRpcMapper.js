@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-const JSONRpcMapper = {
-    messageId: 0
-};
+let messageId = 0;
 
 export default class JSONRpcMapper {
 
@@ -41,11 +39,11 @@ export default class JSONRpcMapper {
             throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
         }
 
-        JSONRpcMapper.messageId++;
+        messageId++;
 
         return {
             jsonrpc: '2.0',
-            id: JSONRpcMapper.messageId,
+            id: messageId,
             method,
             params: params || []
         };

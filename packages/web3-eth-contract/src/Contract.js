@@ -28,7 +28,7 @@ export default class Contract extends AbstractWeb3Module {
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersPackage} providersPackage
      * @param {MethodController} methodController
-     * @param {ContractPackageFactory} contractPackageFactory
+     * @param {ContractModuleFactory} contractPackageFactory
      * @param {PromiEventPackage} promiEventPackage
      * @param {ABICoder} abiCoder
      * @param {Object} utils
@@ -56,7 +56,12 @@ export default class Contract extends AbstractWeb3Module {
         address,
         options
     ) {
-        super(provider, providersPackage, null, null);
+        super(
+            provider,
+            providersPackage,
+            null,
+            null
+        );
 
         if (!(this instanceof Contract)) {
             throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');

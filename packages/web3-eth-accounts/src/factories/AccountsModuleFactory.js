@@ -15,29 +15,33 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodModelFactory.js
+ * @file AccountsModuleFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import * as web3CoreMethod from 'web3-core-method';
+import {MethodModelFactory} from './MethodModelFactory';
+import {Accounts} from '../Accounts';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class AccountsModuleFactory {
 
     /**
+     * Returns an object of type Accounts
+     *
+     * @param {AbstractProviderAdapter} provider
+     * @param {ProvidersPackage} providersPackage
+     * @param {MethodController} methodController
      * @param {Object} utils
      * @param {Object} formatters
      *
-     * @constructor
+     * @returns {Accounts}
      */
-    constructor(utils, formatters) {
-        super(
-            {
-                getId: web3CoreMethod.VersionMethodModel,
-                getBlock: web3CoreMethod.GetBlockMethodModel,
-                isListening: web3CoreMethod.ListeningMethodModel,
-                getPeerCount: web3CoreMethod.PeerCountMethodModel,
-            },
+    createAccounts(provider, providersPackage, methodController, utils, formatters) {
+        return new Accounts(
+            provider,
+            providersPackage,
+            methodController,
+            new MethodModelFactory(utils, formatters),
             utils,
             formatters
         );

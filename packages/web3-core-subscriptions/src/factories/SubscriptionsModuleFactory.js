@@ -15,25 +15,26 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file SubscriptionsFactory.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import Utils from 'web3-utils';
-import {formatters} from 'web3-core-helpers';
-import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
+import SubscriptionsFactory from './SubscriptionsFactory';
 
-/**
- * Returns an object of type SubscriptionsFactory
- *
- * @method SubscriptionsFactory
- *
- * @returns {SubscriptionsFactory}
- */
-export const SubscriptionsFactory = () => {
-    return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
-};
+export default class SubscriptionsModuleFactory {
 
-export LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
-export Subscription from './Subscription';
+    /**
+     * Returns an object of type SubscriptionsFactory
+     *
+     * @method createSubscriptionsFactory
+     *
+     * @param {Object} utils
+     * @param {Object} formatters
+     *
+     * @returns {SubscriptionsFactory}
+     */
+    createSubscriptionsFactory(utils, formatters) {
+        return new SubscriptionsFactory(utils, formatters);
+    }
+}

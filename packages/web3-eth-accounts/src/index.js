@@ -20,12 +20,11 @@
  * @date 2018
  */
 
-import AccountsModule from './Accounts';
 import {MethodController} from 'web3-core-method';
 import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import MethodModelFactory from './factories/MethodModelFactory';
+import {AccountsModuleFactory} from './factories/AccountsModuleFactory'
 
 /**
  * Returns the Accounts object
@@ -37,11 +36,10 @@ import MethodModelFactory from './factories/MethodModelFactory';
  * @returns {Accounts}
  */
 export const Accounts = (provider) => {
-    return new AccountsModule(
+    return new AccountsModuleFactory().createAccounts(
         provider,
         ProvidersPackage,
         new MethodController(),
-        new MethodModelFactory(Utils, formatters),
         Utils,
         formatters
     );

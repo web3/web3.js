@@ -32,7 +32,11 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
      * @constructor
      */
     constructor(abiModel, abiCoder, formatters) {
-        super(abiCoder, formatters);
+        super(
+            abiCoder,
+            formatters
+        );
+
         this.abiModel = abiModel;
     }
 

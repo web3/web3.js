@@ -55,7 +55,6 @@ export default class TransactionConfirmationModel {
         this._pollingTimeout = value;
     }
 
-
     /**
      * Adds a receipt to the confirmation array
      *

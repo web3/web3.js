@@ -29,8 +29,23 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import JSONRpcResponseValidator from '../validators/JSONRpcResponseValidator';
+import JSONRpcMapper from '../mappers/JSONRpcMapper';
+import {BatchRequest} from '../batch-request/BatchRequest';
 
-export default class ProvidersPackageFactory {
+export default class ProvidersModuleFactory {
+
+    /**
+     * Returns an BatchRequest object
+     *
+     * @method createBatchRequest
+     *
+     * @param {AbstractProviderAdapter} provider
+     *
+     * @returns {BatchRequest}
+     */
+    createBatchRequest(provider) {
+        return new BatchRequest(provider, JSONRpcMapper, JSONRpcResponseValidator);
+    }
 
     /**
      * Returns an ProviderAdapterResolver object

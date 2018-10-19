@@ -81,7 +81,8 @@ export default class Subscription extends EventEmitter {
     }
 
     /**
-     * Iterates over each item in the response, formats the output, emits required events and executes the callback method.
+     * Iterates over each item in the response, formats the output, emits required events and
+     * executes the callback method.
      *
      * @method handleSubscriptionResponse
      *

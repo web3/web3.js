@@ -1,10 +1,8 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-
-var MessageSigner = require('../../src/signers/MessageSigner');
-var SignMessageCommand = require('../../src/commands/SignMessageCommand');
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
+import * as sinonLib from 'sinon';
+const sinon = sinonLib.createSandbox();
+import MessageSigner from '../../src/signers/MessageSigner';
+import SignMessageCommand from '../../src/commands/SignMessageCommand';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 
 /**
  * SignMessageCommand test
@@ -54,10 +52,10 @@ describe('SignMessageCommandTest', function () {
             .once();
 
         var returnValue = signMessageCommand.execute({}, methodModel, {});
-        expect(returnValue).to.equal('0x0');
+        expect(returnValue).toBe('0x0');
 
-        expect(methodModelCallbackSpy.calledOnce).to.be.true;
-        expect(methodModelCallbackSpy.calledWith(false, '0x0')).to.be.true;
+        expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+        expect(methodModelCallbackSpy.calledWith(false, '0x0')).toBeTruthy();
 
         methodModelMock.verify();
         messageSignerMock.verify();
@@ -81,10 +79,10 @@ describe('SignMessageCommandTest', function () {
         try {
             signMessageCommand.execute({}, methodModel, {});
         } catch(error) {
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith(error, null)).to.be.true;
-            expect(error).to.be.instanceof(Error);
-            expect(error.message).equal('PANIC');
+            expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+            expect(methodModelCallbackSpy.calledWith(error, null)).toBeTruthy();
+            expect(error).toBeInstanceOf(Error);
+            expect(error.message).toBe('PANIC');
 
             methodModelMock.verify();
             messageSignerMock.verify();

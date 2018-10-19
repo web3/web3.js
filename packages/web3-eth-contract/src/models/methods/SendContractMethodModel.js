@@ -35,7 +35,11 @@ export default class SendContractMethodModel extends SendTransactionMethodModel 
      * @constructor
      */
     constructor(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
-        super(utils, formatters, accounts);
+        super(
+            utils,
+            formatters,
+            accounts
+        );
 
         this.abiItemModel = abiItemModel;
         this.allEventsLogDecoder = allEventsLogDecoder;

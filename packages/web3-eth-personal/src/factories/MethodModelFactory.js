@@ -31,16 +31,20 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
      * @constructor
      */
     constructor(utils, formatters) {
-        super({
-            getAccounts: web3CoreMethod.GetAccountsMethodModel,
-            newAccount: web3CoreMethod.NewAccountMethodModel,
-            unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
-            lockAccount: web3CoreMethod.LockAccountMethodModel,
-            importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
-            sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
-            signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
-            sign: web3CoreMethod.PersonalSignMethodModel,
-            ecRecover: web3CoreMethod.EcRecoverMethodModel
-        }, utils, formatters);
+        super(
+            {
+                getAccounts: web3CoreMethod.GetAccountsMethodModel,
+                newAccount: web3CoreMethod.NewAccountMethodModel,
+                unlockAccount: web3CoreMethod.UnlockAccountMethodModel,
+                lockAccount: web3CoreMethod.LockAccountMethodModel,
+                importRawKey: web3CoreMethod.ImportRawKeyMethodModel,
+                sendTransaction: web3CoreMethod.PersonalSendTransactionMethodModel,
+                signTransaction: web3CoreMethod.PersonalSignTransactionMethodModel,
+                sign: web3CoreMethod.PersonalSignMethodModel,
+                ecRecover: web3CoreMethod.EcRecoverMethodModel
+            },
+            utils,
+            formatters
+        );
     }
 }

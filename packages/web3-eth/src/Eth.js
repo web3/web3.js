@@ -58,7 +58,12 @@ export default class Eth extends AbstractWeb3Module {
         methodController,
         methodModelFactory
     ) {
-        super(provider, providersPackage, methodController, methodModelFactory);
+        super(
+            provider,
+            providersPackage,
+            methodController,
+            methodModelFactory
+        );
 
         this.net = net;
         this.accounts = accounts;

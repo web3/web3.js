@@ -32,7 +32,11 @@ export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
      * @constructor
      */
     constructor(abiItemModel, utils, formatters) {
-        super(utils, formatters);
+        super(
+            utils,
+            formatters
+        );
+
         this.abiItemModel = abiItemModel;
     }
 

@@ -33,7 +33,10 @@ export default class CallContractMethodModel extends CallMethodModel {
      * @constructor
      */
     constructor(abiItemModel, callMethodResponseDecoder, utils, formatters) {
-        super(utils, formatters);
+        super(
+            utils,
+            formatters
+        );
 
         this.callMethodResponseDecoder = callMethodResponseDecoder;
         this.abiItemModel = abiItemModel;

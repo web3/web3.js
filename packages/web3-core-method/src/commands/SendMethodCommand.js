@@ -66,6 +66,17 @@ export default class SendMethodCommand extends AbstractSendMethodCommand {
         return promiEvent;
     }
 
+    /**
+     * Sends the JSON-RPC method
+     *
+     * @method send
+     *
+     * @param {AbstractMethodModel} methodModel
+     * @param {PromiEvent} promiEvent
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {PromiEvent}
+     */
     send(methodModel, promiEvent, moduleInstance) {
         moduleInstance.currentProvider.send(
             methodModel.rpcMethod,

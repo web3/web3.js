@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodPackageFactory.js
+ * @file MethodModuleFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -32,7 +32,7 @@ import SendMethodCommand from '../commands/SendMethodCommand';
 import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../commands/SignMessageCommand';
 
-export default class MethodPackageFactory {
+export default class MethodModuleFactory {
 
     /**
      * Returns the MethodController object

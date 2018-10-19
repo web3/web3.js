@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractPackageFactory.js
+ * @file ContractModuleFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -38,7 +38,7 @@ import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
 
-export default class ContractPackageFactory {
+export default class ContractModuleFactory {
 
     /**
      * @param {Object} utils

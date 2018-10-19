@@ -24,9 +24,8 @@
 import * as ProvidersPackage from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
-import utils from 'web3-utils';
-import NetworkModule from './Network';
-import MethodModelFactory from './factories/MethodModelFactory';
+import Utils from 'web3-utils';
+import NetworkModuleFactory from "./factories/NetworkModuleFactory";
 
 /**
  * Creates the Network Object
@@ -38,12 +37,9 @@ import MethodModelFactory from './factories/MethodModelFactory';
  * @returns {Network}
  */
 export const Network = (provider) => {
-    return new NetworkModule(
+    return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
         provider,
         ProvidersPackage,
         new MethodController(),
-        new MethodModelFactory(Utils, formatters),
-        formatters,
-        utils
     )
 };

@@ -1,11 +1,9 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-
-var CallMethodCommand = require('../../src/commands/CallMethodCommand');
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+import * as sinonLib from 'sinon';
+const sinon = sinonLib.createSandbox();
+import CallMethodCommand from '../../src/commands/CallMethodCommand';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import AbstractWeb3Module from 'web3-core';
 
 /**
  * CallMethodCommand test
@@ -22,10 +20,10 @@ describe('CallMethodCommandTest', function () {
         methodModelMock;
 
     beforeEach(function () {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
+        providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
         moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
@@ -64,10 +62,10 @@ describe('CallMethodCommandTest', function () {
             .once();
 
         var returnValue = await callMethodCommand.execute(moduleInstance, methodModel);
-        expect(returnValue).to.equal('0x0');
+        expect(returnValue).toBe('0x0');
 
-        expect(methodModelCallbackSpy.calledOnce).to.be.true;
-        expect(methodModelCallbackSpy.calledWith(false, '0x0')).to.be.true;
+        expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+        expect(methodModelCallbackSpy.calledWith(false, '0x0')).toBeTruthy();
 
         methodModelMock.verify();
         providerAdapterMock.verify();
@@ -91,11 +89,11 @@ describe('CallMethodCommandTest', function () {
         try {
             await callMethodCommand.execute(moduleInstance, methodModel);
         } catch (error) {
-            expect(error).to.equal('error');
+            expect(error).toBe('error');
         }
 
-        expect(methodModelCallbackSpy.calledOnce).to.be.true;
-        expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
+        expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+        expect(methodModelCallbackSpy.calledWith('error', null)).toBeTruthy();
 
         methodModelMock.verify();
         providerAdapterMock.verify();

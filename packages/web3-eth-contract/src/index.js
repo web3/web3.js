@@ -26,7 +26,7 @@ import * as ProvidersPackage from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';
 import {AbiCoder} from 'web3-eth-abi';
-import ContractPackageFactory from './factories/ContractPackageFactory';
+import ContractModuleFactory from './factories/ContractModuleFactory';
 
 /**
  * Returns an object of type Contract
@@ -42,7 +42,7 @@ import ContractPackageFactory from './factories/ContractPackageFactory';
  * @returns {Contract}
  */
 export const Contract = (provider, accounts, abi, address, options) => {
-    return new ContractPackageFactory(
+    return new ContractModuleFactory(
         Utils,
         formatters,
         new AbiCoder(),

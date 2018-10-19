@@ -25,8 +25,7 @@ import {Network} from 'web3-net';
 import * as ProvidersPackage from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import MethodModelFactory from './factories/MethodModelFactory';
-import PersonalModule from './Personal';
+import {PersonalModuleFactory} from './factories/PersonalModuleFactory';
 
 /**
  * Returns the Personal object
@@ -38,13 +37,10 @@ import PersonalModule from './Personal';
  * @returns {Personal}
  */
 export const Personal = (provider) => {
-    return new PersonalModule(
+    return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
         ProvidersPackage,
         new MethodController(),
-        new MethodModelFactory(Utils, formatters),
         new Network(provider),
-        Utils,
-        formatters
     );
 };

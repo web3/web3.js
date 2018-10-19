@@ -44,7 +44,14 @@ export default class EventLogSubscription extends LogSubscriptionModel {
         methodController,
         eventLogDecoder
     ) {
-        super(options, utils, formatters, getPastLogsMethodModel, methodController);
+        super(
+            options,
+            utils,
+            formatters,
+            getPastLogsMethodModel,
+            methodController
+        );
+
         this.eventLogDecoder = eventLogDecoder;
         this.abiItemModel = abiItemModel;
     }

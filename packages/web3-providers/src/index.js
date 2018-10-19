@@ -13,25 +13,21 @@
 */
 /**
  * @file index.js
- *
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ProvidersPackageFactory from './factories/ProvidersPackageFactory';
-import BatchRequestObject from './batch-request/BatchRequest';
-import JSONRpcMapper from './validators/JSONRpcResponseValidator';
+import ProvidersModuleFactory from './factories/ProvidersModuleFactory';
 
-export SocketProviderAdapter from './adapters/SocketProviderAdapter';
-export HttpProviderAdapter from './adapters/HttpProviderAdapter';
-export HttpProvider from './providers/HttpProvider';
-export IpcProvider from './providers/IpcProvider';
-export WebsocketProvider from './providers/WebsocketProvider';
-export JSONRpcMapper from './mappers/JSONRpcMapper';
-export JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
+export {SocketProviderAdapter} from './adapters/SocketProviderAdapter';
+export {HttpProviderAdapter} from './adapters/HttpProviderAdapter';
+export {HttpProvider} from './providers/HttpProvider';
+export {IpcProvider} from './providers/IpcProvider';
+export {WebsocketProvider} from './providers/WebsocketProvider';
+export {JSONRpcResponseValidator} from './validators/JSONRpcResponseValidator';
 
 /**
- * Returns the Batch object
+ * Creates the BatchRequest object
  *
  * @method BatchRequest
  *
@@ -40,34 +36,27 @@ export JSONRpcResponseValidator from './validators/JSONRpcResponseValidator';
  * @returns {BatchRequest}
  */
 export const BatchRequest = (provider) => {
-    return new BatchRequestObject(
-        provider,
-        JSONRpcMapper,
-        new ProvidersPackageFactory().createJSONRpcResponseValidator()
-    );
+    return new ProvidersModuleFactory().createBatchRequest(provider);
 };
 
 /**
- * Resolves the right provider adapter by the given parameters
+ * Creates the ProviderAdapterResolver object
  *
- * @method resolve
+ * @method ProviderAdapterResolver
  *
- * @param {Object|String} provider
- * @param {Net} net
- *
- * @returns {AbstractProviderAdapter}
+ * @returns {ProviderAdapterResolver}
  */
-export const resolve = (provider, net) => {
-    return new ProvidersPackageFactory().createProviderAdapterResolver().resolve(provider, net);
+export const ProviderAdapterResolver = () => {
+    return new ProvidersModuleFactory().createProviderAdapterResolver();
 };
 
 /**
- * Detects the given provider in the global scope
+ * Creates the ProviderDetector object
  *
  * @method detect
  *
  * @returns {Object}
  */
-export const detect = () => {
-    return new ProvidersPackageFactory().createProviderDetector().detect();
+export const ProviderDetector = () => {
+    return new ProvidersModuleFactory().createProviderDetector().detect();
 };

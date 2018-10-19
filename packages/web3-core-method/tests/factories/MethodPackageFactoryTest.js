@@ -1,7 +1,7 @@
 var chai = require('chai');
 var expect = chai.expect;
 
-var MethodPackageFactory = require('../../src/factories/MethodPackageFactory');
+var MethodPackageFactory = require('../../src/factories/MethodModuleFactory');
 var MethodController = require('../../src/controllers/MethodController');
 var CallMethodCommand = require('../../src/commands/CallMethodCommand');
 var SignAndSendMethodCommand = require('../../src/commands/SignAndSendMethodCommand');
@@ -15,7 +15,7 @@ var TransactionReceiptValidator = require('../../src/validators/TransactionRecei
 var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
 
 /**
- * MethodPackageFactory test
+ * MethodModuleFactory test
  */
 describe('MethodPackageFactoryTest', function () {
     var methodPackageFactory;

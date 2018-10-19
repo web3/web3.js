@@ -42,7 +42,14 @@ export default class AllEventsLogSubscription extends LogSubscriptionModel {
         methodController,
         allEventsLogDecoder
     ) {
-        super(options, utils, formatters, getPastLogsMethodModel, methodController);
+        super(
+            options,
+            utils,
+            formatters,
+            getPastLogsMethodModel,
+            methodController
+        );
+
         this.allEventsLogDecoder = allEventsLogDecoder;
     }
 

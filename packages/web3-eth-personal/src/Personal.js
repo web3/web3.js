@@ -46,7 +46,12 @@ export default class Personal extends AbstractWeb3Module {
         utils,
         formatters
     ) {
-        super(provider, providersPackage, methodController, methodModelFactory);
+        super(
+            provider,
+            providersPackage,
+            methodController,
+            methodModelFactory
+        );
 
         this.utils = utils;
         this.formatters = formatters;

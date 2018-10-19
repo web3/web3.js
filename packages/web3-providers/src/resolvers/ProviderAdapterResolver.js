@@ -25,7 +25,7 @@ import _ from 'underscore';
 export default class ProviderAdapterResolver {
 
     /**
-     * @param {ProvidersPackageFactory} providersPackageFactory
+     * @param {ProvidersModuleFactory} providersPackageFactory
      *
      * @constructor
      */
