@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isNull, isUndefined, isBoolean, isString, isNumber, isObject} from 'underscore';
 
 import BN from 'bn.js';
 import numberToBN from 'number-to-bn';
@@ -256,7 +256,7 @@ const hexToNumberString = value => {
  * @return {String}
  */
 const numberToHex = value => {
-    if (_.isNull(value) || _.isUndefined(value)) {
+    if (isNull(value) || isUndefined(value)) {
         return value;
     }
 
@@ -330,17 +330,17 @@ const toHex = (value, returnType) => {
         return returnType ? 'address' : `0x${value.toLowerCase().replace(/^0x/i, '')}`;
     }
 
-    if (_.isBoolean(value)) {
+    if (isBoolean(value)) {
         return returnType ? 'bool' : value ? '0x01' : '0x00';
     }
 
 
-    if (_.isObject(value) && !isBigNumber(value) && !isBN(value)) {
+    if (isObject(value) && !isBigNumber(value) && !isBN(value)) {
         return returnType ? 'string' : utf8ToHex(JSON.stringify(value));
     }
 
     // if its a negative number, pass it through numberToHex
-    if (_.isString(value)) {
+    if (isString(value)) {
         if (value.indexOf('-0x') === 0 || value.indexOf('-0X') === 0) {
             return returnType ? 'int256' : numberToHex(value);
         } else if (value.indexOf('0x') === 0 || value.indexOf('0X') === 0) {
@@ -362,7 +362,7 @@ const toHex = (value, returnType) => {
  * @returns {Boolean}
  */
 const isHexStrict = hex => {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
+    return ((isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex));
 };
 
 /**
@@ -373,7 +373,7 @@ const isHexStrict = hex => {
  * @returns {Boolean}
  */
 const isHex = hex => {
-    return ((_.isString(hex) || _.isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
+    return ((isString(hex) || isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex));
 };
 
 

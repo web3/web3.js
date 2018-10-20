@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isArray, isFunction} from 'underscore';
 import {errors} from 'web3-core-helpers';
 
 let Ws = null;

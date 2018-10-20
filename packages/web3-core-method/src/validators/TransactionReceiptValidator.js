@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isObject} from 'underscore';
 
 export default class TransactionReceiptValidator {
 
@@ -74,7 +74,7 @@ export default class TransactionReceiptValidator {
     isValidGasUsage(receipt, methodParameters) {
         let gasProvided = null;
 
-        if (_.isObject(methodParameters[0]) && methodParameters[0].gas) {
+        if (isObject(methodParameters[0]) && methodParameters[0].gas) {
             gasProvided = methodParameters[0].gas;
         }
 

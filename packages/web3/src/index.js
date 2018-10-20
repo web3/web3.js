@@ -24,7 +24,7 @@ import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {AbstractMethodModelFactory, MethodController} from 'web3-core-method';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
-import {Utils} from 'web3-utils';
+import Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
 import {Bzz} from 'web3-bzz';

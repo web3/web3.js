@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isArray, isFunction} from 'underscore';
 import {errors} from 'web3-core-helpers';
 import oboe from 'oboe';
 
@@ -49,7 +49,7 @@ export default class IpcProvider {
             let id = null;
 
             // get the id which matches the returned id
-            if (_.isArray(result)) {
+            if (isArray(result)) {
                 result.forEach(load => {
                     if (this.responseCallbacks[load.id])
                         id = load.id;
@@ -61,7 +61,7 @@ export default class IpcProvider {
             // notification
             if (!id && result.method.indexOf('_subscription') !== -1) {
                 this.notificationCallbacks.forEach(callback => {
-                    if (_.isFunction(callback))
+                    if (isFunction(callback))
                         callback(result);
                 });
 

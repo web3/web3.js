@@ -29,7 +29,7 @@ import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
 import {ENS} from 'web3-eth-ens';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
-import {AbiCoder} from 'web3-eth-abi';
+import {ABICoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
 import {Contract} from 'web3-eth-contract';
 import EthModuleFactory from './factories/EthModuleFactory';
@@ -58,7 +58,7 @@ export const Eth = (provider) => {
         new Accounts(provider),
         new Personal(provider),
         Iban,
-        new AbiCoder(Utils),
+        new ABICoder(Utils),
         new ENS(provider),
         new SubscriptionsFactory(),
     );

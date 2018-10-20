@@ -20,9 +20,40 @@
  * @date 2018
  */
 
-import web3CoreMethod from 'web3-core-method';
+import {
+    AbstractMethodModelFactory,
+    GetNodeInfoMethodModel,
+    GetProtocolVersionMethodModel,
+    GetCoinbaseMethodModel,
+    IsMiningMethodModel,
+    GetHashrateMethodModel,
+    IsSyncingMethodModel,
+    GetGasPriceMethodModel,
+    GetAccountsMethodModel,
+    GetBlockNumberMethodModel,
+    GetBalanceMethodModel,
+    GetStorageAtMethodModel,
+    GetCodeMethodModel,
+    GetBlockMethodModel,
+    GetUncleMethodModel,
+    GetBlockTransactionCountMethodModel,
+    GetBlockUncleCountMethodModel,
+    GetTransactionMethodModel,
+    GetTransactionFromBlockMethodModel,
+    GetTransactionReceipt,
+    GetTransactionCountMethodModel,
+    SendSignedTransactionMethodModel,
+    SignTransactionMethodModel,
+    SendTransactionMethodModel,
+    SignMethodModel,
+    CallMethodModel,
+    EstimateGasMethodModel,
+    SubmitWorkMethodModel,
+    GetWorkMethodModel,
+    GetPastLogsMethodModel
+} from 'web3-core-method';
 
-export default class MethodModelFactory extends web3CoreMethod.AbstractMethodModelFactory {
+export default class MethodModelFactory extends AbstractMethodModelFactory {
 
     /**
      * @param {Object} utils
@@ -34,35 +65,35 @@ export default class MethodModelFactory extends web3CoreMethod.AbstractMethodMod
     constructor(utils, formatters, accounts) {
         super(
             {
-                getNodeInfo: web3CoreMethod.GetNodeInfoMethodModel,
-                getProtocolVersion: web3CoreMethod.GetProtocolVersionMethodModel,
-                getCoinbase: web3CoreMethod.GetCoinbaseMethodModel,
-                isMining: web3CoreMethod.IsMiningMethodModel,
-                getHashrate: web3CoreMethod.GetHashrateMethodModel,
-                isSyncing: web3CoreMethod.IsSyncingMethodModel,
-                getGasPrice: web3CoreMethod.GetGasPriceMethodModel,
-                getAccounts: web3CoreMethod.GetAccountsMethodModel,
-                getBlockNumber: web3CoreMethod.GetBlockNumberMethodModel,
-                getBalance: web3CoreMethod.GetBalanceMethodModel,
-                getStorageAt: web3CoreMethod.GetStroageAtMethodModel,
-                getCode: web3CoreMethod.GetCodeMethodModel,
-                getBlock: web3CoreMethod.GetBlockMethodModel,
-                getUncle: web3CoreMethod.GetUncleMethodModel,
-                getBlockTransactionCount: web3CoreMethod.GetBlockTransactionCountMethodModel,
-                getBlockUncleCount: web3CoreMethod.GetBlockUncleCountMethodModel,
-                getTransaction: web3CoreMethod.GetTransactionMethodModel,
-                getTransactionFromBlock: web3CoreMethod.GetTransactionFromBlockMethodModel,
-                getTransactionReceipt: web3CoreMethod.GetTransactionReceipt,
-                getTransactionCount: web3CoreMethod.GetTransactionCountMethodModel,
-                sendSignedTransaction: web3CoreMethod.SendSignedTransactionMethodModel,
-                signTransaction: web3CoreMethod.SignTransactionMethodModel,
-                sendTransaction: web3CoreMethod.SendTransactionMethodModel,
-                sign: web3CoreMethod.SignMethodModel,
-                call: web3CoreMethod.CallMethodModel,
-                estimateGas: web3CoreMethod.EstimateGasMethodModel,
-                submitWork: web3CoreMethod.SubmitWorkMethodModel,
-                getWork: web3CoreMethod.GetWorkMethodModel,
-                getPastLogs: web3CoreMethod.GetPastLogsMethodModel
+                getNodeInfo: GetNodeInfoMethodModel,
+                getProtocolVersion: GetProtocolVersionMethodModel,
+                getCoinbase: GetCoinbaseMethodModel,
+                isMining: IsMiningMethodModel,
+                getHashrate: GetHashrateMethodModel,
+                isSyncing: IsSyncingMethodModel,
+                getGasPrice: GetGasPriceMethodModel,
+                getAccounts: GetAccountsMethodModel,
+                getBlockNumber: GetBlockNumberMethodModel,
+                getBalance: GetBalanceMethodModel,
+                getStorageAt: GetStorageAtMethodModel,
+                getCode: GetCodeMethodModel,
+                getBlock: GetBlockMethodModel,
+                getUncle: GetUncleMethodModel,
+                getBlockTransactionCount: GetBlockTransactionCountMethodModel,
+                getBlockUncleCount: GetBlockUncleCountMethodModel,
+                getTransaction: GetTransactionMethodModel,
+                getTransactionFromBlock: GetTransactionFromBlockMethodModel,
+                getTransactionReceipt: GetTransactionReceipt,
+                getTransactionCount: GetTransactionCountMethodModel,
+                sendSignedTransaction: SendSignedTransactionMethodModel,
+                signTransaction: SignTransactionMethodModel,
+                sendTransaction: SendTransactionMethodModel,
+                sign: SignMethodModel,
+                call: CallMethodModel,
+                estimateGas: EstimateGasMethodModel,
+                submitWork: SubmitWorkMethodModel,
+                getWork: GetWorkMethodModel,
+                getPastLogs: GetPastLogsMethodModel
             },
             utils,
             formatters

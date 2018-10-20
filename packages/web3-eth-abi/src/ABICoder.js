@@ -21,11 +21,11 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isArray, isObject} from 'underscore';
 import {AbiCoder as EthersAbi} from 'ethers/utils/abi-coder';
 
 const ethersAbiCoder = new EthersAbi((type, value) => {
-    if (type.match(/^u?int/) && !_.isArray(value) && (!_.isObject(value) || value.constructor.name !== 'BN')) {
+    if (type.match(/^u?int/) && !isArray(value) && (!isObject(value) || value.constructor.name !== 'BN')) {
         return value.toString();
     }
     return value;
@@ -56,7 +56,7 @@ export default class ABICoder {
      * @returns {String} encoded function name
      */
     encodeFunctionSignature(functionName) {
-        if (_.isObject(functionName)) {
+        if (isObject(functionName)) {
             functionName = this.utils._jsonInterfaceMethodToString(functionName);
         }
 
@@ -73,7 +73,7 @@ export default class ABICoder {
      * @returns {String} encoded function name
      */
     encodeEventSignature(functionName) {
-        if (_.isObject(functionName)) {
+        if (isObject(functionName)) {
             functionName = this.utils._jsonInterfaceMethodToString(functionName);
         }
 
@@ -260,7 +260,7 @@ export default class ABICoder {
 
             returnValue[i] = decodedValue;
 
-            if (_.isObject(output) && output.name) {
+            if (isObject(output) && output.name) {
                 returnValue[output.name] = decodedValue;
             }
 
@@ -283,7 +283,7 @@ export default class ABICoder {
      */
     decodeLog(inputs, data, topics) {
         const _this = this;
-        topics = _.isArray(topics) ? topics : [topics];
+        topics = isArray(topics) ? topics : [topics];
 
         data = data || '';
 

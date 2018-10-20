@@ -20,12 +20,12 @@
  * @date 2017
  */
 
-import _ from "underscore";
-import Account from "eth-lib/lib/account";
-import Hash from "eth-lib/lib/hash";
-import RLP from "eth-lib/lib/rlp";
-import Nat from "eth-lib/lib/nat";
-import Bytes from "eth-lib/lib/bytes";
+import {isUndefined, isNull, extend, isObject, isBoolean, isString, has} from 'underscore';
+import Account from 'eth-lib/lib/account';
+import Hash from 'eth-lib/lib/hash';
+import RLP from 'eth-lib/lib/rlp';
+import Nat from 'eth-lib/lib/nat';
+import Bytes from 'eth-lib/lib/bytes';
 import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 import {AbstractWeb3Module} from 'web3-core';
@@ -33,7 +33,7 @@ import {AbstractWeb3Module} from 'web3-core';
 const cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
 
 const isNot = value => {
-    return (_.isUndefined(value) || _.isNull(value));
+    return (isUndefined(value) || isNull(value));
 };
 
 const trimLeadingZero = hex => {
@@ -176,7 +176,7 @@ export default class Accounts extends AbstractWeb3Module {
         function signed(tx) {
 
             if (!tx.gas && !tx.gasLimit) {
-                error = new Error('"gas" is missing');
+                error = new Error('gas is missing');
             }
 
             if (tx.nonce < 0 ||
@@ -207,14 +207,14 @@ export default class Accounts extends AbstractWeb3Module {
                     transaction.to.toLowerCase(),
                     Bytes.fromNat(transaction.value),
                     transaction.data,
-                    Bytes.fromNat(transaction.chainId || "0x1"),
-                    "0x",
-                    "0x"]);
+                    Bytes.fromNat(transaction.chainId || '0x1'),
+                    '0x',
+                    '0x']);
 
 
                 const hash = Hash.keccak256(rlpEncoded);
 
-                const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || "0x1") * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+                const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || '0x1') * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
 
                 const rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
 
@@ -255,9 +255,9 @@ export default class Accounts extends AbstractWeb3Module {
             isNot(tx.nonce) ? _this.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
         ]).then(args => {
             if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
-                throw new Error(`One of the values "chainId", "gasPrice", or "nonce" couldn't be fetched: ${JSON.stringify(args)}`);
+                throw new Error(`One of the values 'chainId', 'gasPrice', or 'nonce' couldn't be fetched: ${JSON.stringify(args)}`);
             }
-            return signed(_.extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
+            return signed(extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
         });
     }
 
@@ -275,7 +275,7 @@ export default class Accounts extends AbstractWeb3Module {
         const values = RLP.decode(rawTx);
         const signature = Account.encodeSignature(values.slice(6, 9));
         const recovery = Bytes.toNumber(values[6]);
-        const extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), "0x", "0x"];
+        const extraData = recovery < 35 ? [] : [Bytes.fromNumber((recovery - 35) >> 1), '0x', '0x'];
         const signingData = values.slice(0, 6).concat(extraData);
         const signingDataHex = RLP.encode(signingData);
 
@@ -342,7 +342,7 @@ export default class Accounts extends AbstractWeb3Module {
         const args = [].slice.apply(arguments);
 
 
-        if (_.isObject(message)) {
+        if (isObject(message)) {
             return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
         }
 
@@ -352,7 +352,7 @@ export default class Accounts extends AbstractWeb3Module {
 
         if (args.length >= 4) {
             preFixed = args.slice(-1)[0];
-            preFixed = _.isBoolean(preFixed) ? !!preFixed : false;
+            preFixed = isBoolean(preFixed) ? !!preFixed : false;
 
             return this.recover(message, Account.encodeSignature(args.slice(1, 4)), preFixed); // v, r, s
         }
@@ -375,11 +375,11 @@ export default class Accounts extends AbstractWeb3Module {
     decrypt(v3Keystore, password, nonStrict) {
         /* jshint maxcomplexity: 10 */
 
-        if (!_.isString(password)) {
+        if (!isString(password)) {
             throw new Error('No password given.');
         }
 
-        const json = (_.isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+        const json = (isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
         if (json.version !== 3) {
             throw new Error('Not a valid V3 wallet');
@@ -496,7 +496,7 @@ class Wallet {
     constructor(accounts) {
         this._accounts = accounts;
         this.length = 0;
-        this.defaultKeyName = "web3js_wallet";
+        this.defaultKeyName = 'web3js_wallet';
     }
 
     /**
@@ -510,7 +510,7 @@ class Wallet {
      * @returns {*}
      */
     _findSafeIndex(pointer = 0) {
-        if (_.has(this, pointer)) {
+        if (has(this, pointer)) {
             return this._findSafeIndex(pointer + 1);
         } else {
             return pointer;
@@ -566,7 +566,7 @@ class Wallet {
      */
     add(account) {
 
-        if (_.isString(account)) {
+        if (isString(account)) {
             account = this._accounts.privateKeyToAccount(account);
         }
         if (!this[account.address]) {

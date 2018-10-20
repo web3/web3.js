@@ -21,7 +21,7 @@
  */
 
 import {errors} from 'web3-core-helpers';
-import _ from 'underscore';
+import {isFunction, isObject, isArray} from 'underscore';
 
 export default class BatchRequest {
 
@@ -59,7 +59,7 @@ export default class BatchRequest {
         this.provider.sendBatch(
             this.jsonRpcMapper.toBatchPayload(this.requests),
             (err, results) => {
-                if (!_.isArray(results)) {
+                if (!isArray(results)) {
                     request.callback(errors.InvalidResponse(results));
 
                     return;
@@ -68,8 +68,8 @@ export default class BatchRequest {
                 this.requests.forEach(function (request, index) {
                     const result = results[index] || null;
 
-                    if (_.isFunction(request.callback)) {
-                        if (_.isObject(result) && result.error) {
+                    if (isFunction(request.callback)) {
+                        if (isObject(result) && result.error) {
                             request.callback(errors.ErrorResponse(result));
                         }
 
@@ -99,6 +99,6 @@ export default class BatchRequest {
      * @returns {Boolean}
      */
     hasOutputFormatter(request) {
-        return _.isFunction(request.methodModel.outputFormatter);
+        return isFunction(request.methodModel.outputFormatter);
     }
 }

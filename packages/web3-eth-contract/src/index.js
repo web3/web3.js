@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import PromiEvent from 'web3-core-promievent';
+import {PromiEvent} from 'web3-core-promievent';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';

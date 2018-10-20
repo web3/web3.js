@@ -9,6 +9,6 @@
     "dependencies": {
         "got": "7.1.0",
         "swarm-js": "0.1.37",
-        "underscore": "1.8.3"
+        "underscore": "1.9.1"
     }
 }

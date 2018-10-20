@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isFunction} from 'underscore';
 import namehash from 'eth-ens-namehash';
 
 export default class Registry {
@@ -85,14 +85,14 @@ export default class Registry {
                     .then(receipt => {
                         resolve(receipt);
 
-                        if (_.isFunction(callback)) {
+                        if (isFunction(callback)) {
                             callback(false, receipt);
                         }
                     })
                     .catch(error => {
                         reject(error);
 
-                        if (_.isFunction(callback)) {
+                        if (isFunction(callback)) {
                             callback(error, null);
                         }
                     });

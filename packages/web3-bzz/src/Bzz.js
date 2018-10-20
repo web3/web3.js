@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isObject, isString} from 'underscore';
 import swarm from 'swarm-js';
 
 export default class Bzz {
@@ -132,11 +132,11 @@ export default class Bzz {
      */
     setProvider(provider) {
         // is ethereum provider
-        if (_.isObject(provider) && _.isString(provider.bzz)) {
+        if (isObject(provider) && isString(provider.bzz)) {
             provider = provider.bzz;
         }
 
-        if (_.isString(provider)) {
+        if (isString(provider)) {
             this.currentProvider = provider;
             this.swarm = swarm.at(provider);
 

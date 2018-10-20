@@ -21,7 +21,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isString, isObject, isNumber, isArray} from 'underscore';
 import Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 
@@ -70,7 +70,7 @@ const inputBlockNumberFormatter = blockNumber => {
         return blockNumber;
     }
 
-    return (Utils.isHexStrict(blockNumber)) ? ((_.isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : Utils.numberToHex(blockNumber);
+    return (Utils.isHexStrict(blockNumber)) ? ((isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : Utils.numberToHex(blockNumber);
 };
 
 /**
@@ -151,12 +151,12 @@ const inputCallFormatter = (options, moduleInstance) => {
 const inputTransactionFormatter = (options, moduleInstance) => {
     options = _txInputFormatter(options);
 
-    if (!_.isNumber(options.from) && !_.isObject(options.from)) {
+    if (!isNumber(options.from) && !isObject(options.from)) {
         if (!options.from) {
             options.from = moduleInstance.defaultAccount;
         }
 
-        if (!options.from && !_.isNumber(options.from)) {
+        if (!options.from && !isNumber(options.from)) {
             throw new Error('The send transactions "from" field must be defined!');
         }
 
@@ -226,7 +226,7 @@ const outputTransactionReceiptFormatter = receipt => {
     receipt.cumulativeGasUsed = Utils.hexToNumber(receipt.cumulativeGasUsed);
     receipt.gasUsed = Utils.hexToNumber(receipt.gasUsed);
 
-    if(_.isArray(receipt.logs)) {
+    if(isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
@@ -263,9 +263,9 @@ const outputBlockFormatter = block => {
     if(block.totalDifficulty)
         block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
-    if (_.isArray(block.transactions)) {
+    if (isArray(block.transactions)) {
         block.transactions.forEach(item => {
-            if(!_.isString(item))
+            if(!isString(item))
                 return outputTransactionFormatter(item);
         });
     }
@@ -307,13 +307,13 @@ const inputLogFormatter = options => {
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
     options.topics = options.topics.map(topic => {
-        return (_.isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+        return (isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
     });
 
     toTopic = null;
 
     if (options.address) {
-        options.address = (_.isArray(options.address)) ? options.address.map(addr => {
+        options.address = (isArray(options.address)) ? options.address.map(addr => {
             return inputAddressFormatter(addr);
         }) : inputAddressFormatter(options.address);
     }
@@ -373,7 +373,7 @@ const inputPostFormatter = post => {
         post.priority = Utils.numberToHex(post.priority);
 
     // fallback
-    if (!_.isArray(post.topics)) {
+    if (!isArray(post.topics)) {
         post.topics = post.topics ? [post.topics] : [];
     }
 

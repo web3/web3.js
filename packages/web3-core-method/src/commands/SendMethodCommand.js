@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isObject} from 'underscore';
 
 export default class SendMethodCommand {
 
@@ -55,7 +55,7 @@ export default class SendMethodCommand {
         }
 
         this.getGasPrice(moduleInstance.currentProvider).then(gasPrice => {
-            if (_.isObject(methodModel.parameters[0])) {
+            if (isObject(methodModel.parameters[0])) {
                 methodModel.parameters[0].gasPrice = gasPrice;
             }
 
@@ -116,7 +116,7 @@ export default class SendMethodCommand {
      * @returns {Boolean}
      */
     isGasPriceDefined(parameters) {
-        return _.isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
+        return isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
     }
 
     /**

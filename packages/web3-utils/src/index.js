@@ -21,7 +21,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isObject, isString, isArray, isFunction} from 'underscore';
 import ethjsUnit from 'ethjs-unit';
 import utils from './utils.js';
 import soliditySha3 from './soliditySha3.js';
@@ -41,27 +41,27 @@ const _fireError = (error, emitter, reject, callback) => {
     /*jshint maxcomplexity: 10 */
 
     // add data if given
-    if (_.isObject(error) && !(error instanceof Error) && error.data) {
-        if (_.isObject(error.data) || _.isArray(error.data)) {
+    if (isObject(error) && !(error instanceof Error) && error.data) {
+        if (isObject(error.data) || isArray(error.data)) {
             error.data = JSON.stringify(error.data, null, 2);
         }
 
         error = `${error.message}\n${error.data}`;
     }
 
-    if (_.isString(error)) {
+    if (isString(error)) {
         error = new Error(error);
     }
 
-    if (_.isFunction(callback)) {
+    if (isFunction(callback)) {
         callback(error);
     }
-    if (_.isFunction(reject)) {
+    if (isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         // OR suppress uncatched error if an callback listener is present
         if (emitter &&
-            (_.isFunction(emitter.listeners) &&
-                emitter.listeners('error').length) || _.isFunction(callback)) {
+            (isFunction(emitter.listeners) &&
+                emitter.listeners('error').length) || isFunction(callback)) {
             emitter.catch(() => {
             });
         }
@@ -71,7 +71,7 @@ const _fireError = (error, emitter, reject, callback) => {
         }, 1);
     }
 
-    if (emitter && _.isFunction(emitter.emit)) {
+    if (emitter && isFunction(emitter.emit)) {
         // emit later, to be able to return emitter
         setTimeout(() => {
             emitter.emit('error', error);
@@ -90,7 +90,7 @@ const _fireError = (error, emitter, reject, callback) => {
  * @return {String} full function/event name
  */
 const _jsonInterfaceMethodToString = json => {
-    if (_.isObject(json) && json.name && json.name.indexOf('(') !== -1) {
+    if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
 
@@ -121,7 +121,7 @@ const _flattenTypes = (includeTuple, puts) => {
             }
             const result = _flattenTypes(includeTuple, param.components);
             // console.log("result should have things: " + result)
-            if (_.isArray(result) && includeTuple) {
+            if (isArray(result) && includeTuple) {
                 // console.log("include tuple word, and its an array. joining...: " + result.types)
                 types.push(`tuple(${result.join(',')})${suffix}`);
             }
@@ -227,7 +227,7 @@ const getUnitValue = unit => {
 const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
 
-    if (!utils.isBN(number) && !_.isString(number)) {
+    if (!utils.isBN(number) && !isString(number)) {
         throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
     }
 
@@ -259,7 +259,7 @@ const fromWei = (number, unit) => {
 const toWei = (number, unit) => {
     unit = getUnitValue(unit);
 
-    if (!utils.isBN(number) && !_.isString(number)) {
+    if (!utils.isBN(number) && !isString(number)) {
         throw new Error('Please pass numbers as strings or BigNumber objects to avoid precision errors.');
     }
 

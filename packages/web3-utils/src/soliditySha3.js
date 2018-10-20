@@ -20,7 +20,7 @@
  * @date 2017
  */
 
-import _ from 'underscore';
+import {isArray, isObject, map} from 'underscore';
 
 import BN from 'bn.js';
 import utils from './utils.js';
@@ -172,7 +172,7 @@ const _solidityPack = (type, value, arraySize) => {
 const _processSoliditySha3Args = arg => {
     /*jshint maxcomplexity:false */
 
-    if (_.isArray(arg)) {
+    if (isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
@@ -180,7 +180,7 @@ const _processSoliditySha3Args = arg => {
     let hexArg, arraySize;
 
     // if type is given
-    if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+    if (isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
         type = arg.hasOwnProperty('t') ? arg.t : arg.type;
         value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 
@@ -200,7 +200,7 @@ const _processSoliditySha3Args = arg => {
     }
 
     // get the array size
-    if (_.isArray(value)) {
+    if (isArray(value)) {
         arraySize = _parseTypeNArray(type);
         if (arraySize && value.length !== arraySize) {
             throw new Error(`${type} is not matching the given array ${JSON.stringify(value)}`);
@@ -210,7 +210,7 @@ const _processSoliditySha3Args = arg => {
     }
 
 
-    if (_.isArray(value)) {
+    if (isArray(value)) {
         hexArg = value.map(val => {
             return _solidityPack(type, val, arraySize).toString('hex').replace('0x', '');
         });
@@ -233,7 +233,7 @@ const soliditySha3 = () => {
 
     const args = Array.prototype.slice.call(arguments);
 
-    const hexArgs = _.map(args, _processSoliditySha3Args);
+    const hexArgs = map(args, _processSoliditySha3Args);
 
     // console.log(args, hexArgs);
     // console.log('0x'+ hexArgs.join(''));

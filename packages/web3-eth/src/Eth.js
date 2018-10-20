@@ -212,7 +212,7 @@ export default class Eth extends AbstractWeb3Module {
      */
     setProvider(provider, net) {
         const setContractProviders = this.initiatedContracts.every(contract => {
-            return !!contract.setProvider(provider, net);
+            return contract.setProvider(provider, net);
         });
 
         return !!(

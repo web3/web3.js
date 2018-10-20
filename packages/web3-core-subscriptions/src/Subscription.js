@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isArray, isFunction} from 'underscore';
 import EventEmitter from 'eventemitter3';
 
 export default class Subscription extends EventEmitter {
@@ -69,7 +69,7 @@ export default class Subscription extends EventEmitter {
                     this.reconnect(callback);
                 }
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(error, null);
                 }
 
@@ -92,7 +92,7 @@ export default class Subscription extends EventEmitter {
      * @callback callback callback(error, result)
      */
     handleSubscriptionResponse(response, callback) {
-        if (!_.isArray(response)) {
+        if (!isArray(response)) {
             response = [response];
         }
 
@@ -101,7 +101,7 @@ export default class Subscription extends EventEmitter {
 
             this.emit('data', formattedOutput);
 
-            if (_.isFunction(callback)) {
+            if (isFunction(callback)) {
                 callback(false, formattedOutput);
             }
         });
@@ -131,7 +131,7 @@ export default class Subscription extends EventEmitter {
             }).catch(error => {
                 this.emit('error', error);
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(error, null);
                 }
             });
@@ -159,14 +159,14 @@ export default class Subscription extends EventEmitter {
             if (!response) {
                 this.subscriptionId = null;
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(true, false);
                 }
 
                 return true;
             }
 
-            if (_.isFunction(callback)) {
+            if (isFunction(callback)) {
                 callback(false, true);
             }
 

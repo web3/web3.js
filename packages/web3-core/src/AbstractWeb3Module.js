@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isArray, isObject} from 'underscore';
 
 export default class AbstractWeb3Module {
 
@@ -125,7 +125,7 @@ export default class AbstractWeb3Module {
      * @returns {Boolean}
      */
     isSameProvider(provider) {
-        if (_.isObject(provider)) {
+        if (isObject(provider)) {
             if (this.currentProvider.provider.constructor.name === provider.constructor.name) {
                 return this.currentProvider.host === provider.host;
             }
@@ -193,7 +193,7 @@ export default class AbstractWeb3Module {
                     }
 
                     afterExecution(response) {
-                        if (_.isArray(response)) {
+                        if (isArray(response)) {
                             response = response.map(responseItem => {
                                 if (method.outputFormatter && responseItem) {
                                     return method.outputFormatter(responseItem);
