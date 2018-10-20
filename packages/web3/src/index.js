@@ -54,7 +54,7 @@ export default class Web3 extends AbstractWeb3Module {
             providersModuleFactory,
             providers,
             new MethodController(),
-            new AbstractMethodModelFactory({}, utils, formatters)
+            new AbstractMethodModelFactory({}, Utils, formatters)
         );
 
         this.eth = new Eth(provider);
@@ -132,7 +132,7 @@ export default class Web3 extends AbstractWeb3Module {
             Bzz: (provider, net) => {
                 return new Bzz(providerAdapterResolver.resolve(provider, net));
             }
-        }
+        };
     }
 
     /**

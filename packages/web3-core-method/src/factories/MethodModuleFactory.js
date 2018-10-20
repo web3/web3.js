@@ -161,7 +161,7 @@ export default class MethodModuleFactory {
      * @returns {TransactionConfirmationModel}
      */
     createTransactionConfirmationModel() {
-        return new TransactionConfirmationModel()
+        return new TransactionConfirmationModel();
     }
 
     /**

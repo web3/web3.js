@@ -21,6 +21,7 @@
  */
 
 import {isArray, isObject} from 'underscore';
+import {AbstractMethodModel} from 'web3-core-method';
 
 export default class AbstractWeb3Module {
 
@@ -64,7 +65,7 @@ export default class AbstractWeb3Module {
                 {
                     get: this.proxyHandler
                 }
-            )
+            );
         }
     }
 
@@ -103,9 +104,10 @@ export default class AbstractWeb3Module {
             this.clearSubscriptions();
             this._currentProvider = this.providerAdapterResolver.resolve(provider, net);
 
+            var setExtendedPackagesProvider = true;
             if (this.extendedPackages.length > 0) {
-                var setExtendedPackagesProvider = this.extendedPackages.every(extendedPackage => {
-                    return !!extendedPackage.setProvider(provider, net);
+                setExtendedPackagesProvider = this.extendedPackages.every(extendedPackage => {
+                    return extendedPackage.setProvider(provider, net);
                 });
             }
 
@@ -205,7 +207,7 @@ export default class AbstractWeb3Module {
                             return response;
                         }
 
-                        if (method.outputFormatter && result) {
+                        if (method.outputFormatter && response) {
                             response = method.outputFormatter(response);
                         }
 
@@ -263,6 +265,6 @@ export default class AbstractWeb3Module {
      * @param {String} name
      */
     throwIfMissing(name) {
-        throw Error('Parameter with name ${name} is missing');
+        throw Error(`Parameter with name ${name} is missing`);
     }
 }

@@ -128,7 +128,7 @@ const inputCallFormatter = (options, moduleInstance) => {
     let from = moduleInstance.defaultAccount;
 
     if (options.from) {
-        from = options.from
+        from = options.from;
     }
 
     if (from) {
