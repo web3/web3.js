@@ -4,6 +4,7 @@ node_js:
     - "6"
     - "7"
     - "8"
+    - "10"
 env:
     - CXX=g++-4.8
 addons:
