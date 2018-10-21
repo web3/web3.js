@@ -34,9 +34,9 @@ var https = require('https');
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
     this.host = host || 'http://localhost:8545';
-    if (this.host.substring(0,5) === "https"){
+    if (this.host.substring(0, 5) === "https") {
         this.httpsAgent = new https.Agent({ keepAlive: true });
-    }else{
+    } else {
         this.httpAgent = new http.Agent({ keepAlive: true });
     }
     this.timeout = options.timeout || 0;
@@ -44,11 +44,11 @@ var HttpProvider = function HttpProvider(host, options) {
     this.connected = false;
 };
 
-HttpProvider.prototype._prepareRequest = function(){
+HttpProvider.prototype._prepareRequest = function() {
     var request = new XHR2();
     request.nodejsSet({
-        httpsAgent:this.httpsAgent,
-        httpAgent:this.httpAgent
+        httpsAgent: this.httpsAgent,
+        httpAgent: this.httpAgent
     });
 
     request.open('POST', this.host, true);
@@ -72,7 +72,7 @@ HttpProvider.prototype._prepareRequest = function(){
  * @param {Object} payload
  * @param {Function} callback triggered on end with (err, result)
  */
-HttpProvider.prototype.send = function (payload, callback) {
+HttpProvider.prototype.send = function(payload, callback) {
     var _this = this;
     var request = this._prepareRequest();
 
@@ -105,7 +105,7 @@ HttpProvider.prototype.send = function (payload, callback) {
     }
 };
 
-HttpProvider.prototype.disconnect = function () {
+HttpProvider.prototype.disconnect = function() {
     //NO OP
 };
 
