@@ -24,6 +24,9 @@
 
 var errors = require('web3-core-helpers').errors;
 var XHR2 = require('xhr2-cookies').XMLHttpRequest // jshint ignore: line
+var http = require('http');
+var https = require('https');
+
 
 /**
  * HttpProvider should be used to send rpc calls over http
@@ -31,6 +34,11 @@ var XHR2 = require('xhr2-cookies').XMLHttpRequest // jshint ignore: line
 var HttpProvider = function HttpProvider(host, options) {
     options = options || {};
     this.host = host || 'http://localhost:8545';
+    if (this.host.substring(0,5) === "https"){
+        this.httpsAgent = new https.Agent({ keepAlive: true });
+    }else{
+        this.httpAgent = new http.Agent({ keepAlive: true });
+    }
     this.timeout = options.timeout || 0;
     this.headers = options.headers;
     this.connected = false;
@@ -38,6 +46,10 @@ var HttpProvider = function HttpProvider(host, options) {
 
 HttpProvider.prototype._prepareRequest = function(){
     var request = new XHR2();
+    request.nodejsSet({
+        httpsAgent:this.httpsAgent,
+        httpAgent:this.httpAgent
+    });
 
     request.open('POST', this.host, true);
     request.setRequestHeader('Content-Type','application/json');
@@ -91,6 +103,10 @@ HttpProvider.prototype.send = function (payload, callback) {
         this.connected = false;
         callback(errors.InvalidConnection(this.host));
     }
+};
+
+HttpProvider.prototype.disconnect = function () {
+    //NO OP
 };
 
 

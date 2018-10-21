@@ -17,10 +17,6 @@ describe('eth', function() {
         u.methodExists(eth, 'getBlock');
         u.methodExists(eth, 'getTransaction');
         u.methodExists(eth, 'getUncle');
-        u.methodExists(eth, 'getCompilers');
-        u.methodExists(eth.compile, 'lll');
-        u.methodExists(eth.compile, 'solidity');
-        u.methodExists(eth.compile, 'serpent');
         u.methodExists(eth, 'getBlockTransactionCount');
         u.methodExists(eth, 'getBlockUncleCount');
         u.methodExists(eth, 'subscribe');

@@ -91,10 +91,19 @@ For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-ac
 
 ------------------------------------------------------------------------------
 
+ens
+=====================
+
+For ``web3.eth.ens`` see the :ref:`ENS reference documentation <eth-ens>`
+
+
+
+------------------------------------------------------------------------------
+
 abi
 =====================
 
-For ``web3.eth.abi`` see the :ref:`abi reference documentation <eth-abi>`
+For ``web3.eth.abi`` see the :ref:`ABI reference documentation <eth-abi>`
 
 
 ------------------------------------------------------------------------------
@@ -883,7 +892,7 @@ Returns
 
 ``Promise`` returns ``Object`` - A transaction receipt object, or ``null`` when no receipt was found:
 
-  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was susccessfull, ``FALSE``, if the EVM reverted the transaction.
+  - ``status`` - ``Boolean``: ``TRUE`` if the transaction was successful, ``FALSE``, if the EVM reverted the transaction.
   - ``blockHash`` 32 Bytes - ``String``: Hash of the block where this transaction was in.
   - ``blockNumber`` - ``Number``: Block number where this transaction was in.
   - ``transactionHash`` 32 Bytes - ``String``: Hash of the transaction.
@@ -1000,7 +1009,7 @@ The **callback** will return the 32 bytes transaction hash.
 
 ``PromiEvent``: A :ref:`promise combined event emitter <promiEvent>`. Will be resolved when the transaction :ref:`receipt <eth-gettransactionreceipt-return>` is available. Additionally the following events are available:
 
-- ``"transactionHash"`` returns ``String``: Is fired right after the transaction is send and a transaction hash is available.
+- ``"transactionHash"`` returns ``String``: Is fired right after the transaction is sent and a transaction hash is available.
 - ``"receipt"`` returns ``Object``: Is fired when the transaction receipt is available.
 - ``"confirmation"`` returns ``Number``, ``Object``: Is fired for every confirmation up to the 12th confirmation. Receives the confirmation number as the first and the :ref:`receipt <eth-gettransactionreceipt-return>` as the second argument. Fired from confirmation 0 on, which is the block where its minded.
 - ``"error"`` returns ``Error``: Is fired if an error occurs during sending. If a out of gas error, the second parameter is the receipt.
@@ -1370,198 +1379,6 @@ Example
         blockNumber: 1234,
         address: '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
     },{...}]
-
-
-------------------------------------------------------------------------------
-
-
-getCompilers
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.getCompilers([callback])
-
-Gets a list of available compilers.
-
-----------
-Parameters
-----------
-
-1. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``Promise`` returns ``Array`` - An array of strings of available compilers.
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    web3.eth.getCompilers()
-    .then(console.log);
-    > ["lll", "solidity", "serpent"]
-
-
-------------------------------------------------------------------------------
-
-compile.solidity
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.compile.solidity(sourceCode [, callback])
-
-Compiles solidity source code.
-
-----------
-Parameters
-----------
-
-1. ``String`` - The solidity source code.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-``Promise`` returns ``Object`` - Contract and compiler info.
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    var source = "" +
-        "contract test {\n" +
-        "   function multiply(uint a) returns(uint d) {\n" +
-        "       return a * 7;\n" +
-        "   }\n" +
-        "}\n";
-
-    web3.eth.compile.solidity(source)
-    .then(console.log);
-
-    > {
-      "test": {
-        "code": "0x605280600c6000396000f3006000357c010000000000000000000000000000000000000000000000000000000090048063c6888fa114602e57005b60376004356041565b8060005260206000f35b6000600782029050604d565b91905056",
-        "info": {
-          "source": "contract test {\n\tfunction multiply(uint a) returns(uint d) {\n\t\treturn a * 7;\n\t}\n}\n",
-          "language": "Solidity",
-          "languageVersion": "0",
-          "compilerVersion": "0.8.2",
-          "abiDefinition": [
-            {
-              "constant": false,
-              "inputs": [
-                {
-                  "name": "a",
-                  "type": "uint256"
-                }
-              ],
-              "name": "multiply",
-              "outputs": [
-                {
-                  "name": "d",
-                  "type": "uint256"
-                }
-              ],
-              "type": "function"
-            }
-          ],
-          "userDoc": {
-            "methods": {}
-          },
-          "developerDoc": {
-            "methods": {}
-          }
-        }
-      }
-    }
-
-
-------------------------------------------------------------------------------
-
-
-compile.lll
-=====================
-
-.. code-block:: javascript
-
-    web3. eth.compile.lll(sourceCode [, callback])
-
-Compiles LLL source code.
-
-----------
-Parameters
-----------
-
-1. ``String`` - The LLL source code.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-
-``Promise`` returns ``String`` - The compiled LLL code as HEX string.
-
-
--------
-Example
--------
-
-
-.. code-block:: javascript
-
-    var source = "...";
-
-    web3.eth.compile.lll(source)
-    .then(console.log);
-    > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
-
-
-------------------------------------------------------------------------------
-
-compile.serpent
-=====================
-
-.. code-block:: javascript
-
-    web3.eth.compile.serpent(sourceCode [, callback])
-
-Compiles serpent source code.
-
-----------
-Parameters
-----------
-
-1. ``String`` - The serpent source code.
-2. ``Function`` - (optional) Optional callback, returns an error object as first parameter and the result as second.
-
--------
-Returns
--------
-
-
-``Promise`` returns ``String`` - The compiled serpent code as HEX string.
-
-
-.. code-block:: javascript
-
-    var source = "...";
-
-    var code = web3.eth.compile.serpent(source)
-    .then(console.log);
-    > "0x603880600c6000396000f3006001600060e060020a600035048063c6888fa114601857005b6021600435602b565b8060005260206000f35b600081600702905091905056"
-
 
 
 ------------------------------------------------------------------------------
