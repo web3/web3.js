@@ -20,15 +20,15 @@
  * @date 2018
  */
 
-import ABIModel from '../models/abi/ABIModel';
-import ABIItemModel from '../models/abi/ABIItemModel';
+import AbiModel from '../models/abi/AbiModel';
+import AbiItemModel from '../models/abi/AbiItemModel';
 import MethodEncoder from '../encoders/MethodEncoder';
 import EventFilterEncoder from '../encoders/EventFilterEncoder';
 import AllEventsFilterEncoder from '../encoders/AllEventsFilterEncoder';
 import CallMethodResponseDecoder from '../decoders/CallMethodResponseDecoder';
 import EventLogDecoder from '../decoders/EventLogDecoder';
 import AllEventsLogDecoder from '../decoders/AllEventsLogDecoder';
-import ABIMapper from '../mappers/ABIMapper';
+import AbiMapper from '../mappers/AbiMapper';
 import RpcMethodOptionsMapper from '../mappers/RpcMethodOptionsMapper';
 import EventOptionsMapper from '../mappers/EventOptionsMapper';
 import AllEventsOptionsMapper from '../mappers/AllEventsOptionsMapper';
@@ -43,7 +43,7 @@ export default class ContractModuleFactory {
     /**
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
      *
      * @constructor
@@ -106,29 +106,29 @@ export default class ContractModuleFactory {
     }
 
     /**
-     * Returns an object of type ABIModel
+     * Returns an object of type AbiModel
      *
-     * @method createABIModel
+     * @method createAbiModel
      *
      * @param {Object} mappedAbi
      *
-     * @returns {ABIModel}
+     * @returns {AbiModel}
      */
-    createABIModel(mappedAbi) {
-        return new ABIModel(mappedAbi);
+    createAbiModel(mappedAbi) {
+        return new AbiModel(mappedAbi);
     }
 
     /**
-     * Returns an object of type ABIItemModel
+     * Returns an object of type AbiItemModel
      *
-     * @method createABIItemModel
+     * @method createAbiItemModel
      *
      * @param {Object} abiItem
      *
-     * @returns {ABIItemModel}
+     * @returns {AbiItemModel}
      */
-    createABIItemModel(abiItem) {
-        return new ABIItemModel(abiItem);
+    createAbiItemModel(abiItem) {
+        return new AbiItemModel(abiItem);
     }
 
     /**
@@ -165,14 +165,14 @@ export default class ContractModuleFactory {
     }
 
     /**
-     * Returns an object oftype ABIMapper
+     * Returns an object oftype AbiMapper
      *
      * @method createABIMapper
      *
-     * @returns {ABIMapper}
+     * @returns {AbiMapper}
      */
     createABIMapper() {
-        return new ABIMapper(this, this.abiCoder, this.utils);
+        return new AbiMapper(this, this.abiCoder, this.utils);
     }
 
     /**
@@ -269,7 +269,7 @@ export default class ContractModuleFactory {
      * @method createMethodsProxy
      *
      * @param {Contract} contract
-     * @param {ABIModel} abiModel
+     * @param {AbiModel} abiModel
      * @param {MethodController} methodController
      * @param {PromiEvent} PromiEvent
      *
@@ -294,7 +294,7 @@ export default class ContractModuleFactory {
      * @method createEventSubscriptionsProxy
      *
      * @param {Contract} contract
-     * @param {ABIModel} abiModel
+     * @param {AbiModel} abiModel
      * @param {MethodController} methodController
      * @param {PromiEvent} PromiEvent
      *

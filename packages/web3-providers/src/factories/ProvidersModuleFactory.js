@@ -28,8 +28,8 @@ import HttpProviderAdapter from '../adapters/HttpProviderAdapter';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
-import JSONRpcResponseValidator from '../validators/JSONRpcResponseValidator';
-import JSONRpcMapper from '../mappers/JSONRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import BatchRequest from '../batch-request/BatchRequest';
 
 export default class ProvidersModuleFactory {
@@ -43,7 +43,7 @@ export default class ProvidersModuleFactory {
      * @returns {BatchRequest}
      */
     createBatchRequest(provider) {
-        return new BatchRequest(provider, JSONRpcMapper, JSONRpcResponseValidator);
+        return new BatchRequest(provider, JsonRpcMapper, JsonRpcResponseValidator);
     }
 
     /**
@@ -148,13 +148,13 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an JSONRpcResponseValidator object
+     * Returns an JsonRpcResponseValidator object
      *
      * @method createJSONRpcResponseValidator
      *
-     * @returns {JSONRpcResponseValidator}
+     * @returns {JsonRpcResponseValidator}
      */
     createJSONRpcResponseValidator() {
-        return new JSONRpcResponseValidator();
+        return new JsonRpcResponseValidator();
     }
 }

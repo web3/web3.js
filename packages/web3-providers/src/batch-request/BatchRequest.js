@@ -26,8 +26,8 @@ import {isFunction, isObject, isArray} from 'underscore';
 export default class BatchRequest {
     /**
      * @param {AbstractProviderAdapter} provider
-     * @param {JSONRpcMapper} jsonRpcMapper
-     * @param {JSONRpcResponseValidator} jsonRpcResponseValidator
+     * @param {JsonRpcMapper} jsonRpcMapper
+     * @param {JsonRpcResponseValidator} jsonRpcResponseValidator
      *
      * @constructor
      */

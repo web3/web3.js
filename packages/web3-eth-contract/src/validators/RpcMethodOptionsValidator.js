@@ -35,7 +35,7 @@ export default class RpcMethodOptionsValidator {
      *
      * @method validate
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {AbstractMethodModel} rpcMethodModel
      *
      * @returns {Error|Boolean}
@@ -61,7 +61,7 @@ export default class RpcMethodOptionsValidator {
      *
      * @method isToSet
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {AbstractMethodModel} rpcMethodModel
      *
      * @returns {Boolean}
@@ -92,7 +92,7 @@ export default class RpcMethodOptionsValidator {
      *
      * @method isValueValid
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {AbstractMethodModel} rpcMethodModel
      *
      * @returns {Boolean}

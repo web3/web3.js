@@ -25,7 +25,7 @@ import {SendTransactionMethodModel} from 'web3-core-method';
 
 export default class SendContractMethodModel extends SendTransactionMethodModel {
     /**
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {Object} utils
      * @param {Object} formatters

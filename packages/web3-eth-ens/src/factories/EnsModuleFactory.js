@@ -12,18 +12,18 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ENSModuleFactory.js
+ * @file EnsModuleFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import ENS from '../ENS';
+import Ens from '../Ens';
 import Registry from '../contracts/Registry';
 import ResolverMethodHandler from '../handlers/ResolverMethodHandler';
 
-export default class ENSModuleFactory {
+export default class EnsModuleFactory {
     /**
-     * Returns an object of type ENS
+     * Returns an object of type Ens
      *
      * @method createENS
      *
@@ -35,12 +35,12 @@ export default class ENSModuleFactory {
      * @param {Object} resolverAbi
      * @param {PromiEvent} PromiEvent
      *
-     * @returns {ENS}
+     * @returns {Ens}
      */
     createENS(provider, net, accounts, Contract, registryAbi, resolverAbi, PromiEvent) {
         const registry = this.createRegistry(provider, net, accounts, Contract, registryAbi, resolverAbi);
 
-        return new ENS(registry, this.createResolverMethodHandler(registry, PromiEvent));
+        return new Ens(registry, this.createResolverMethodHandler(registry, PromiEvent));
     }
 
     /**

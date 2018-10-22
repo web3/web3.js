@@ -12,12 +12,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ENS.js
+ * @file Ens.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class ENS {
+export default class Ens {
     /**
      * @param {Registry} registry
      * @param {ResolverMethodHandler} resolverMethodHandler

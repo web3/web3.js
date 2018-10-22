@@ -27,7 +27,7 @@
  * TODO UNDOCUMENTED
  */
 
-import utils from './utils.js';
+import utils from './Utils.js';
 
 /**
  * @method codePointToInt

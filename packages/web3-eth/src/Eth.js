@@ -34,8 +34,8 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Accounts} accounts
      * @param {Personal} personal
      * @param {Iban} Iban
-     * @param {ABICoder} abiCoder
-     * @param {ENS} ens
+     * @param {AbiCoder} abiCoder
+     * @param {Ens} ens
      * @param {Object} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory

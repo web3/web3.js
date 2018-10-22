@@ -51,7 +51,7 @@ export default class EthModuleFactory {
      * @param {Personal} personal
      * @param {Iban} iban
      * @param {Abi} abi
-     * @param {ENS} ens
+     * @param {Ens} ens
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {MethodController} methodController
      *

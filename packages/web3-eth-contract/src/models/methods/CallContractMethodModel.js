@@ -24,7 +24,7 @@ import {CallMethodModel} from 'web3-core-method';
 
 export default class CallContractMethodModel extends CallMethodModel {
     /**
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {CallMethodResponseDecoder} callMethodResponseDecoder
      * @param {Object} utils
      * @param {Object} formatters

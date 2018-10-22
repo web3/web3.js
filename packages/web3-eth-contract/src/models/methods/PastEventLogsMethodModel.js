@@ -24,7 +24,7 @@ import {GetPastLogsMethodModel} from 'web3-core-method';
 
 export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
     /**
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} utils
      * @param {Object} formatters
      *

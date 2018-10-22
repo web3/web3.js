@@ -25,7 +25,7 @@ import {isArray, isFunction} from 'underscore';
 export default class MethodsProxy {
     /**
      * @param {Contract} contract
-     * @param {ABIModel} abiModel
+     * @param {AbiModel} abiModel
      * @param {RpcMethodModelFactory} rpcMethodModelFactory
      * @param {MethodController} methodController
      * @param {MethodEncoder} methodEncoder
@@ -127,7 +127,7 @@ export default class MethodsProxy {
     /**
      * Executes the RPC method with the methodController
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {IArguments} methodArguments
      *
      * @returns {Promise|PromiEvent|String|Boolean}
@@ -145,7 +145,7 @@ export default class MethodsProxy {
     /**
      * Creates the rpc method, encodes the contract method and validate the objects.
      *
-     * @param {ABIItemModel|Array} abiItemModel
+     * @param {AbiItemModel|Array} abiItemModel
      * @param {IArguments} methodArguments
      *
      * @returns {AbstractMethodModel|Object}

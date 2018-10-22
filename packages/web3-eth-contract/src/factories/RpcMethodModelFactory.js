@@ -47,7 +47,7 @@ export default class RpcMethodModelFactory {
      *
      * @method createRpcMethod
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Contract} contract
      *
      * @returns {AbstractMethodModel}
@@ -82,7 +82,7 @@ export default class RpcMethodModelFactory {
      *
      * @method createPastEventLogsMethodModel
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      *
      * @returns {PastEventLogsMethodModel}
      */
@@ -95,7 +95,7 @@ export default class RpcMethodModelFactory {
      *
      * @method createCallContractMethodModel
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      *
      * @returns {CallContractMethodModel}
      */
@@ -108,7 +108,7 @@ export default class RpcMethodModelFactory {
      *
      * @method createSendContractMethodModel
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      *
      * @returns {SendContractMethodModel}
      */

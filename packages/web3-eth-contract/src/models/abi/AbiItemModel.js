@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ABIItemModel.js
+ * @file AbiItemModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import _ from 'underscore';
 
-export default class ABIItemModel {
+export default class AbiItemModel {
     /**
      * @param {Object} abiItem
      *

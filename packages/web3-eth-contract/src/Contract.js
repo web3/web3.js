@@ -32,11 +32,11 @@ export default class Contract extends AbstractWeb3Module {
      * @param {MethodController} methodController
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} PromiEvent
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
-     * @param {ABIMapper} abiMapper
+     * @param {AbiMapper} abiMapper
      * @param {Object} abi
      * @param {String} address
      * @param {Object} options

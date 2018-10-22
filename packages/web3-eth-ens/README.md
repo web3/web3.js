@@ -2,7 +2,7 @@
 
 This is a sub package of [web3.js][repo]
 
-This is the ENS package and it will be used in the `web3-eth` package.
+This is the Ens package and it will be used in the `web3-eth` package.
 Please read the [documentation][docs] for more.
 
 ## Installation
@@ -30,11 +30,11 @@ This will expose the `EthEns` object on the window object.
 var ProvidersPackage = require('web3-providers');
 var Network = require('web3-net').Network;
 var Accounts = require('web3-eth-accounts').Accounts;
-var ENS = require('web3-eth-ens').ENS;
+var Ens = require('web3-eth-ens').Ens;
 
 var provider = ProvidersPackage.resolve('ws://localhost:8546');
 
-var ens = new ENS(
+var ens = new Ens(
     provider,
     new Network(provider),
     new Accounts(provider)

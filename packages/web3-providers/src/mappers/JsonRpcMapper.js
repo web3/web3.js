@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file JSONRpcMapper.js
+ * @file JsonRpcMapper.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 let messageId = 0;
 
-export default class JSONRpcMapper {
+export default class JsonRpcMapper {
     /**
      * Creates a valid json payload object
      *
@@ -61,7 +61,7 @@ export default class JSONRpcMapper {
         return requests.map((request) => {
             request.beforeExecution();
 
-            return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
+            return JsonRpcMapper.toPayload(request.rpcMethod, request.parameters);
         });
     }
 }

@@ -25,7 +25,7 @@ import {isFunction} from 'underscore';
 export default class EventSubscriptionsProxy {
     /**
      * @param {Contract} contract
-     * @param {ABIModel} abiModel
+     * @param {AbiModel} abiModel
      * @param {EventSubscriptionFactory} eventSubscriptionFactory
      * @param {EventOptionsMapper} eventOptionsMapper
      * @param {EventLogDecoder} eventLogDecoder
@@ -92,7 +92,7 @@ export default class EventSubscriptionsProxy {
     /**
      * Returns an subscription on the given event
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} options
      * @param {Function} callback
      *

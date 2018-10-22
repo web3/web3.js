@@ -200,7 +200,7 @@ export default class ResolverMethodHandler {
     }
 
     /**
-     * Adds the ENS node to the arguments
+     * Adds the Ens node to the arguments
      *
      * @method prepareArguments
      *

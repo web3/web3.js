@@ -15,17 +15,17 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ABIMapper.js
+ * @file AbiMapper.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import {isArray} from 'underscore';
 
-export default class ABIMapper {
+export default class AbiMapper {
     /**
      * @param {ContractModuleFactory} contractPackageFactory
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      * @param {Object} utils
      *
      * @constructor
@@ -41,7 +41,7 @@ export default class ABIMapper {
      *
      * @param {Array} abi
      *
-     * @returns {ABIModel}
+     * @returns {AbiModel}
      */
     map(abi) {
         const self = this;
@@ -63,7 +63,7 @@ export default class ABIMapper {
             if (abiItem.type === 'function') {
                 abiItem.signature = self.abiCoder.encodeFunctionSignature(abiItem.funcName);
 
-                abiItemModel = self.contractPackageFactory.createABIItemModel(abiItem);
+                abiItemModel = self.contractPackageFactory.createAbiItemModel(abiItem);
 
                 // Check if an method already exists with this name and if it exists than create an array and push this abiItem
                 // into it. This will be used if there are methods with the same name but with different arguments.
@@ -86,7 +86,7 @@ export default class ABIMapper {
             if (abiItem.type === 'event') {
                 abiItem.signature = self.abiCoder.encodeEventSignature(abiItem.funcName);
 
-                abiItem = self.contractPackageFactory.createABIItemModel(event);
+                abiItem = self.contractPackageFactory.createAbiItemModel(event);
 
                 if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
                     mappedAbiItems.events[abiItem.name] = abiItemModel;
@@ -98,11 +98,11 @@ export default class ABIMapper {
 
             if (abiItem.type === 'constructor') {
                 abiItem.signature = abiItem.type;
-                mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createABIItemModel(abiItem);
+                mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createAbiItemModel(abiItem);
             }
         });
 
-        return this.contractPackageFactory.createABIModel(mappedAbiItems);
+        return this.contractPackageFactory.createAbiModel(mappedAbiItems);
     }
 
     /**

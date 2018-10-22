@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file errors.js
+ * @file Errors.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @author Marek Kotewicz <marek@parity.io>
  * @date 2017

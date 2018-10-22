@@ -24,8 +24,8 @@ import EventLogDecoder from './EventLogDecoder';
 
 export default class AllEventsLogDecoder extends EventLogDecoder {
     /**
-     * @param {ABIModel} abiModel
-     * @param {ABICoder} abiCoder
+     * @param {AbiModel} abiModel
+     * @param {AbiCoder} abiCoder
      * @param {Object} formatters
      *
      * @constructor
@@ -41,7 +41,7 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
      *
      * @method decoder
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} response
      *
      * @returns {Object}

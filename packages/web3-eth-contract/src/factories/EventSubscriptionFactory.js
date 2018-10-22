@@ -41,7 +41,7 @@ export default class EventSubscriptionFactory {
      * Returns an event log subscription
      *
      * @param {EventLogDecoder} eventLogDecoder
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Object} options
      *

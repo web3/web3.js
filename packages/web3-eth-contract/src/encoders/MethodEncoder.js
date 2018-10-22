@@ -22,7 +22,7 @@
 
 export default class MethodEncoder {
     /**
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
@@ -35,7 +35,7 @@ export default class MethodEncoder {
      *
      * @method encode
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {String} deployData
      *
      * @returns {String|Error}

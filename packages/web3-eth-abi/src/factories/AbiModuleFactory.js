@@ -15,24 +15,24 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ABIModuleFactory.js
+ * @file AbiModuleFactory.js
  * @author Samuel Furter<samuel@ethereum.org>
  * @date 2018
  */
 
-import ABICoder from '../ABICoder';
+import AbiCoder from '../AbiCoder';
 
-export default class ABIModuleFactory {
+export default class AbiModuleFactory {
     /**
-     * Returns an object of type ABICoder
+     * Returns an object of type AbiCoder
      *
-     * @method createABICoder
+     * @method createAbiCoder
      *
      * @param {Object} utils
      *
-     * @returns {ABICoder}
+     * @returns {AbiCoder}
      */
-    createABICoder(utils) {
-        return new ABICoder(utils);
+    createAbiCoder(utils) {
+        return new AbiCoder(utils);
     }
 }

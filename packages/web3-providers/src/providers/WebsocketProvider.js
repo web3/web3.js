@@ -37,7 +37,7 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
 } else {
     Ws = require('websocket').w3cwebsocket;
     _btoa = (str) => {
-        return Buffer(str).toString('base64');
+        return Buffer.from(str, 'base64');
     };
     const url = require('url');
     if (url.URL) {

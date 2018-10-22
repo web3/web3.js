@@ -21,15 +21,15 @@
  */
 
 import Utils from 'web3-utils';
-import ABIModuleFactory from './factories/ABIModuleFactory';
+import AbiModuleFactory from './factories/AbiModuleFactory';
 
 /**
  * Returns an object of AbiCoder
  *
- * @returns {ABICoder}
+ * @returns {AbiCoder}
  *
  * @constructor
  */
-export const ABICoder = () => {
-    return new ABIModuleFactory().createABICoder(Utils);
+export const AbiCoder = () => {
+    return new AbiModuleFactory().createAbiCoder(Utils);
 };

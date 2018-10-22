@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file soliditySha3.js
+ * @file SoliditySha3.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
@@ -23,7 +23,7 @@
 import {isArray, isObject, map} from 'underscore';
 
 import BN from 'bn.js';
-import utils from './utils.js';
+import utils from './Utils.js';
 
 const _elementaryName = (name) => {
     if (name.startsWith('int[')) {

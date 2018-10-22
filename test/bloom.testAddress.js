@@ -1,5 +1,5 @@
 var chai = require('chai');
-var bloom = require('../packages/web3-utils/src/bloomFilter.js');
+var bloom = require('../packages/web3-utils/src/BloomFilter.js');
 var assert = chai.assert;
 
 var addressTests = [

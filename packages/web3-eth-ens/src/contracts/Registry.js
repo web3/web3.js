@@ -62,7 +62,7 @@ export default class Registry {
     }
 
     /**
-     * Returns the address of the owner of an ENS name.
+     * Returns the address of the owner of an Ens name.
      *
      * @method owner
      *
@@ -116,7 +116,7 @@ export default class Registry {
     }
 
     /**
-     * Checks if the current used network is synced and looks for ENS support there.
+     * Checks if the current used network is synced and looks for Ens support there.
      * Throws an error if not.
      *
      * @method checkNetwork

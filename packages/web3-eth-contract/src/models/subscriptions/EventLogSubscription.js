@@ -24,7 +24,7 @@ import {LogSubscriptionModel} from 'web3-core-subscriptions';
 
 export default class EventLogSubscription extends LogSubscriptionModel {
     /**
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} options
      * @param {Object} utils
      * @param {Object} formatters

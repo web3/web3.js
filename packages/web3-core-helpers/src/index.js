@@ -20,5 +20,5 @@
  * @date 2017
  */
 
-export errors from './errors';
-export formatters from './formatters';
+export errors from './Errors';
+export formatters from './Formatters';

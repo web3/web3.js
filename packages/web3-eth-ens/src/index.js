@@ -21,14 +21,14 @@ import {Contract} from 'web3-eth-contract';
 import {PromiEvent} from 'web3-core-promievent';
 import REGISTRY_ABI from '../ressources/ABI/Registry';
 import RESOLVER_ABI from '../ressources/ABI/Resolver';
-import ENSModuleFactory from './factories/ENSModuleFactory';
+import EnsModuleFactory from './factories/EnsModuleFactory';
 
 /**
  * TODO: Contracts should be implemented over dependency inversion not injection.
- * TODO: Refactor ENS
- * Returns the ENS object
+ * TODO: Refactor Ens
+ * Returns the Ens object
  *
- * @method ENS
+ * @method Ens
  *
  * @param {AbstractProviderAdapter|EthereumProvider} provider
  * @param {Network} net
@@ -37,5 +37,5 @@ import ENSModuleFactory from './factories/ENSModuleFactory';
  * @returns {ENS}
  */
 export const ENS = (provider, net, accounts) => {
-    return new ENSModuleFactory().createENS(provider, net, accounts, Contract, REGISTRY_ABI, RESOLVER_ABI, PromiEvent);
+    return new EnsModuleFactory().createENS(provider, net, accounts, Contract, REGISTRY_ABI, RESOLVER_ABI, PromiEvent);
 };

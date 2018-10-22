@@ -26,7 +26,7 @@ export default class AllEventsFilterEncoder extends EventFilterEncoder {
     /**
      * Creates encoded topics from filter option of an event.
      *
-     * @param {ABIModel} abiModel
+     * @param {AbiModel} abiModel
      * @param {*} filter
      *
      * @returns {Array}

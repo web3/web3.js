@@ -20,8 +20,8 @@
  * @date 2018
  */
 
-import JSONRpcMapper from '../../src/mappers/JSONRpcMapper.js';
-import JSONRpcResponseValidator from '../../src/validators/JSONRpcResponseValidator.js';
+import JsonRpcMapper from '../../src/mappers/JsonRpcMapper.js';
+import JsonRpcResponseValidator from '../../src/validators/JsonRpcResponseValidator.js';
 import {errors} from 'web3-core-helpers';
 import EventEmitter from 'eventemitter3';
 
@@ -47,7 +47,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        const payload = JSONRpcMapper.toPayload(method, parameters);
+        const payload = JsonRpcMapper.toPayload(method, parameters);
 
         return new Promise((resolve, reject) => {
             this.provider.send(payload, (error, response) => {
@@ -124,7 +124,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
             return;
         }
 
-        if (!JSONRpcResponseValidator.isValid(response.result)) {
+        if (!JsonRpcResponseValidator.isValid(response.result)) {
             reject(errors.InvalidResponse(response));
 
             return;

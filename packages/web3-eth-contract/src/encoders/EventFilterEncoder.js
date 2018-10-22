@@ -24,7 +24,7 @@ import {isArray} from 'underscore';
 
 export default class EventFilterEncoder {
     /**
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
@@ -35,7 +35,7 @@ export default class EventFilterEncoder {
     /**
      * Creates encoded topics from filter option of an event.
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {*} filter
      *
      * @returns {Array}

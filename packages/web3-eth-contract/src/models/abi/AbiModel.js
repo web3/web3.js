@@ -15,12 +15,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ABIModel.js
+ * @file AbiModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class ABIModel {
+export default class AbiModel {
     /**
      * @param {Object} mappedAbi
      *
@@ -37,7 +37,7 @@ export default class ABIModel {
      *
      * @param {String} name
      *
-     * @returns {ABIItemModel|Boolean}
+     * @returns {AbiItemModel|Boolean}
      */
     getMethod(name) {
         if (this.hasMethod(name)) {
@@ -54,7 +54,7 @@ export default class ABIModel {
      *
      * @param {String} name
      *
-     * @returns {ABIItemModel|Boolean}
+     * @returns {AbiItemModel|Boolean}
      */
     getEvent(name) {
         if (this.hasEvent(name)) {
@@ -65,7 +65,7 @@ export default class ABIModel {
     }
 
     /**
-     * Returns all events from this ABIModel
+     * Returns all events from this AbiModel
      *
      * @method getEvents
      *
@@ -82,7 +82,7 @@ export default class ABIModel {
      *
      * @param {String} signature
      *
-     * @returns {ABIItemModel}
+     * @returns {AbiItemModel}
      */
     getEventBySignature(signature) {
         return this.abi.events.find((event) => {

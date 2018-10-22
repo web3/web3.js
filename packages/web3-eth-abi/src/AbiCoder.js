@@ -34,7 +34,7 @@ const ethersAbiCoder = new EthersAbi((type, value) => {
 // result method
 function Result() {}
 
-export default class ABICoder {
+export default class AbiCoder {
     /**
      * @param {Object} utils
      *
@@ -169,7 +169,7 @@ export default class ABICoder {
     }
 
     /**
-     * Maps the simplified format in to the expected format of the ABICoder
+     * Maps the simplified format in to the expected format of the AbiCoder
      *
      * @method mapStructToCoderFormat
      *

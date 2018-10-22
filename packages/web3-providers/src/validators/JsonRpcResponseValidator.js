@@ -15,12 +15,12 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file JSONRpcResponseValidator.js
+ * @file JsonRpcResponseValidator.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class JSONRpcResponseValidator {
+export default class JsonRpcResponseValidator {
     /**
      * Executes JSON-RPC response validation
      *

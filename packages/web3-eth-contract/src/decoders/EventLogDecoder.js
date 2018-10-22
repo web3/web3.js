@@ -22,7 +22,7 @@
 
 export default class EventLogDecoder {
     /**
-     * @param {ABICoder} abiCoder
+     * @param {AbiCoder} abiCoder
      * @param {Object} formatters
      *
      * @constructor
@@ -37,7 +37,7 @@ export default class EventLogDecoder {
      *
      * @method decoder
      *
-     * @param {ABIItemModel} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {Object} response
      *
      * @returns {Object}

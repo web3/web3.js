@@ -94,7 +94,7 @@ For ``web3.eth.accounts`` see the :ref:`accounts reference documentation <eth-ac
 ens
 =====================
 
-For ``web3.eth.ens`` see the :ref:`ENS reference documentation <eth-ens>`
+For ``web3.eth.ens`` see the :ref:`Ens reference documentation <eth-ens>`
 
 
 

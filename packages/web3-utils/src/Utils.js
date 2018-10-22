@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file utils.js
+ * @file Utils.js
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
@@ -168,6 +168,7 @@ const utf8ToHex = (str) => {
     str = utf8.encode(str);
     let hex = '';
 
+    /* eslint-disable no-control-regex */
     // remove \u0000 padding from either side
     str = str.replace(/^(?:\u0000)*/, '');
     str = str
@@ -179,6 +180,7 @@ const utf8ToHex = (str) => {
         .split('')
         .reverse()
         .join('');
+    /* eslint-enable no-control-regex */
 
     for (let i = 0; i < str.length; i++) {
         const code = str.charCodeAt(i);

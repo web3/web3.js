@@ -24,7 +24,7 @@ import {PromiEvent} from 'web3-core-promievent';
 import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import Utils from 'web3-utils';
-import {ABICoder} from 'web3-eth-abi';
+import {AbiCoder} from 'web3-eth-abi';
 import {providers, ProvidersModuleFactory} from 'web3-providers';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
@@ -44,7 +44,7 @@ import ContractModuleFactory from './factories/ContractModuleFactory';
 export const Contract = (provider, accounts, abi, address, options) => {
     const providersModuleFactory = new ProvidersModuleFactory();
 
-    return new ContractModuleFactory(Utils, formatters, new ABICoder(), accounts).createContract(
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), accounts).createContract(
         provider,
         providersModuleFactory.createProviderDetector(),
         providersModuleFactory.createProviderAdapterResolver(),
