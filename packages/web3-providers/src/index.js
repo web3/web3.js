@@ -18,6 +18,9 @@
  */
 
 import ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+import HttpProvider from './providers/HttpProvider';
+import IpcProvider from './providers/IpcProvider';
+import WebsocketProvider from './providers/WebsocketProvider';
 
 export SocketProviderAdapter from './adapters/SocketProviderAdapter';
 export HttpProviderAdapter from './adapters/HttpProviderAdapter';

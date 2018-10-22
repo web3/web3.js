@@ -148,9 +148,7 @@ export default class Bzz {
     }
 }
 
-/* jshint ignore:start */
 Bzz.givenProvider = null;
 if (typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
     Bzz.givenProvider = ethereumProvider.bzz;
 }
-/* jshint ignore:end */

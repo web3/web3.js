@@ -289,12 +289,13 @@ const numberToHex = (value) => {
  * @return {String} the hex string
  */
 const bytesToHex = (bytes) => {
-    for (let hex = [], i = 0; i < bytes.length; i++) {
-        /* jshint ignore:start */
+    let hex = [];
+
+    for (let i = 0; i < bytes.length; i++) {
         hex.push((bytes[i] >>> 4).toString(16));
         hex.push((bytes[i] & 0xf).toString(16));
-        /* jshint ignore:end */
     }
+
     return `0x${hex.join('')}`;
 };
 
@@ -316,7 +317,11 @@ const hexToBytes = (hex) => {
 
     hex = hex.replace(/^0x/i, '');
 
-    for (let bytes = [], c = 0; c < hex.length; c += 2) bytes.push(parseInt(hex.substr(c, 2), 16));
+    let bytes = [];
+    for (let c = 0; c < hex.length; c += 2) {
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+    }
+
     return bytes;
 };
 
@@ -331,8 +336,6 @@ const hexToBytes = (hex) => {
  * @return {String}
  */
 const toHex = (value, returnType) => {
-    /* jshint maxcomplexity: false */
-
     if (isAddress(value)) {
         return returnType ? 'address' : `0x${value.toLowerCase().replace(/^0x/i, '')}`;
     }

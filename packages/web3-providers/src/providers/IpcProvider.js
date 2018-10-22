@@ -43,8 +43,6 @@ export default class IpcProvider {
 
         // LISTEN FOR CONNECTION RESPONSES
         const callback = (result) => {
-            /* jshint maxcomplexity: 6 */
-
             let id = null;
 
             // get the id which matches the returned id
@@ -137,7 +135,7 @@ export default class IpcProvider {
 
             try {
                 result = JSON.parse(data);
-            } catch (e) {
+            } catch (error) {
                 this.lastChunk = data;
 
                 // start timeout to cancel all requests

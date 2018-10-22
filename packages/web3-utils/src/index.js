@@ -38,8 +38,6 @@ import randomHex from 'randomhex';
  * @return {Object} the emitter
  */
 const _fireError = (error, emitter, reject, callback) => {
-    /* jshint maxcomplexity: 10 */
-
     // add data if given
     if (isObject(error) && !(error instanceof Error) && error.data) {
         if (isObject(error.data) || isArray(error.data)) {

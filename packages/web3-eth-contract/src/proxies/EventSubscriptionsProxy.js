@@ -156,7 +156,9 @@ export default class EventSubscriptionsProxy {
      */
     handleValidationError(errorMessage, callback) {
         const promiEvent = new this.PromiEvent();
-        promiEvent.emit('error', new Error(errorMessage));
+
+        const error = new Error(errorMessage);
+        promiEvent.emit('error', error);
 
         if (isFunction(callback)) {
             callback(error, null);

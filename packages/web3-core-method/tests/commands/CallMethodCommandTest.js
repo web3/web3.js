@@ -1,9 +1,9 @@
 import * as sinonLib from 'sinon';
-const sinon = sinonLib.createSandbox();
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
 import AbstractWeb3Module from 'web3-core';
+const sinon = sinonLib.createSandbox();
 
 /**
  * CallMethodCommand test

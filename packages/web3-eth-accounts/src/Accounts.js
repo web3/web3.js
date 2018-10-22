@@ -259,7 +259,6 @@ export default class Accounts extends AbstractWeb3Module {
         });
     }
 
-    /* jshint ignore:start */
     /**
      * Recovers transaction
      *
@@ -279,8 +278,6 @@ export default class Accounts extends AbstractWeb3Module {
 
         return Account.recover(Hash.keccak256(signingDataHex), signature);
     }
-
-    /* jshint ignore:end */
 
     /**
      * Hashes a given message
@@ -370,8 +367,6 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     decrypt(v3Keystore, password, nonStrict) {
-        /* jshint maxcomplexity: 10 */
-
         if (!isString(password)) {
             throw new Error('No password given.');
         }
@@ -443,7 +438,6 @@ export default class Accounts extends AbstractWeb3Module {
      * @returns {Object}
      */
     encrypt(privateKey, password, options) {
-        /* jshint maxcomplexity: 20 */
         const account = this.privateKeyToAccount(privateKey);
 
         options = options || {};
@@ -692,7 +686,7 @@ class Wallet {
             if (account) {
                 _this.add(account);
             } else {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
         });
 

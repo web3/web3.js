@@ -42,7 +42,7 @@ export default class RpcMethodOptionsValidator {
      */
     validate(abiItemModel, rpcMethodModel) {
         if (this.isToSet(abiItemModel, rpcMethodModel)) {
-            return new Error('This contract object doesn\'t have address set yet, please set an address first.');
+            return new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
         if (this.isFromSet(rpcMethodModel)) {

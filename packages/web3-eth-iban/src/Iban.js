@@ -108,7 +108,7 @@ export default class Iban {
         ib = new Iban(ib);
 
         if (!ib.isDirect()) {
-            throw new Error('IBAN is indirect and can\'t be converted');
+            throw new Error("IBAN is indirect and can't be converted");
         }
 
         return ib.toAddress();

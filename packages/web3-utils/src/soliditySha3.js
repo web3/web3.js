@@ -26,25 +26,38 @@ import BN from 'bn.js';
 import utils from './utils.js';
 
 const _elementaryName = (name) => {
-    /* jshint maxcomplexity:false */
-
     if (name.startsWith('int[')) {
         return `int256${name.slice(3)}`;
-    } else if (name === 'int') {
+    }
+
+    if (name === 'int') {
         return 'int256';
-    } else if (name.startsWith('uint[')) {
+    }
+
+    if (name.startsWith('uint[')) {
         return `uint256${name.slice(4)}`;
-    } else if (name === 'uint') {
+    }
+
+    if (name === 'uint') {
         return 'uint256';
-    } else if (name.startsWith('fixed[')) {
+    }
+
+    if (name.startsWith('fixed[')) {
         return `fixed128x128${name.slice(5)}`;
-    } else if (name === 'fixed') {
+    }
+
+    if (name === 'fixed') {
         return 'fixed128x128';
-    } else if (name.startsWith('ufixed[')) {
+    }
+
+    if (name.startsWith('ufixed[')) {
         return `ufixed128x128${name.slice(6)}`;
-    } else if (name === 'ufixed') {
+    }
+
+    if (name === 'ufixed') {
         return 'ufixed128x128';
     }
+
     return name;
 };
 
@@ -80,8 +93,6 @@ const _parseNumber = (arg) => {
 };
 
 const _solidityPack = (type, value, arraySize) => {
-    /* jshint maxcomplexity:false */
-
     let size, num;
     type = _elementaryName(type);
 
@@ -163,8 +174,6 @@ const _solidityPack = (type, value, arraySize) => {
 };
 
 const _processSoliditySha3Args = (arg) => {
-    /* jshint maxcomplexity:false */
-
     if (isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
@@ -229,14 +238,9 @@ const _processSoliditySha3Args = (arg) => {
  * @return {Object} the sha3
  */
 const soliditySha3 = () => {
-    /* jshint maxcomplexity:false */
-
     const args = Array.prototype.slice.call(arguments);
 
     const hexArgs = map(args, _processSoliditySha3Args);
-
-    // console.log(args, hexArgs);
-    // console.log('0x'+ hexArgs.join(''));
 
     return utils.sha3(`0x${hexArgs.join('')}`);
 };

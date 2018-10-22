@@ -38,8 +38,11 @@ export default class TransactionSigner extends AbstractSigner {
 
         if (wallet && wallet.privateKey) {
             delete transaction.from;
-
-            return await accounts.signTransaction(transaction, wallet.privateKey);
+            try {
+                return await accounts.signTransaction(transaction, wallet.privateKey);
+            } catch (error) {
+                throw error;
+            }
         }
 
         throw new Error('Wallet or privateKey in wallet is not set!');

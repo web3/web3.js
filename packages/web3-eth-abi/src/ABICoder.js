@@ -242,7 +242,7 @@ export default class ABICoder {
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
-            throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+            throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
         const res = ethersAbiCoder.decode(this.mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);

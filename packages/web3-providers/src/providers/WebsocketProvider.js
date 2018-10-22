@@ -42,9 +42,9 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     const url = require('url');
     if (url.URL) {
         // Use the new Node 6+ API for parsing URLs that supports username/password
-        const newURL = url.URL;
+        const NewURL = url.URL;
         parseURL = (url) => {
-            return new newURL(url);
+            return new NewURL(url);
         };
     } else {
         // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
@@ -93,7 +93,6 @@ export default class WebsocketProvider {
 
         // LISTEN FOR CONNECTION RESPONSES
         this.connection.addEventListener('message', (e) => {
-            /* jshint maxcomplexity: 6 */
             const data = typeof e.data === 'string' ? e.data : '';
 
             this._parseResponse(data).forEach((result) => {
@@ -179,7 +178,7 @@ export default class WebsocketProvider {
 
             try {
                 result = JSON.parse(data);
-            } catch (e) {
+            } catch (error) {
                 this.lastChunk = data;
 
                 // start timeout to cancel all requests
@@ -300,7 +299,7 @@ export default class WebsocketProvider {
                 break;
 
             case 'connect':
-                this.connection.onopen = callback;
+                this.connection.addEventListener('open', callback);
                 break;
 
             case 'end':

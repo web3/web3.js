@@ -305,11 +305,13 @@ const inputLogFormatter = (options) => {
     toTopic = null;
 
     if (options.address) {
-        options.address = isArray(options.address)
-            ? options.address.map((addr) => {
-                  return inputAddressFormatter(addr);
-              })
-            : inputAddressFormatter(options.address);
+        if (isArray(options.address)) {
+            options.address = options.address.map((addr) => {
+                return inputAddressFormatter(addr);
+            });
+        } else {
+            options.address = inputAddressFormatter(options.address);
+        }
     }
 
     return options;

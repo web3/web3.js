@@ -94,13 +94,12 @@ export default class HttpProvider {
         request.onreadystatechange = () => {
             if (request.readyState === 4 && request.timeout !== 1) {
                 let result = request.responseText;
-                let error = null;
 
                 try {
                     result = JSON.parse(result);
                 } catch (error) {
-                    error = errors.InvalidResponse(request.responseText);
-                    callback(error, result);
+                    const invalidResponseError = errors.InvalidResponse(request.responseText);
+                    callback(invalidResponseError, result);
                 }
 
                 this.connected = true;

@@ -1,4 +1,3 @@
-/* jshint ignore:start */
 Package.describe({
     name: 'ethereum:web3',
     version: '1.0.0-beta.36',
@@ -18,5 +17,3 @@ Package.onUse(function(api) {
 
     api.addFiles('dist/web3.js', ['client']); // 'server'
 });
-
-/* jshint ignore:end */

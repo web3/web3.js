@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isObject, isFunction} from 'underscore';
+import {isFunction, isObject} from 'underscore';
 
 export default class ProviderAdapterResolver {
     /**

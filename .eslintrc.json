@@ -1,4 +1,5 @@
 {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "commonjs": true,
@@ -15,7 +16,7 @@
         "prettier/unicorn"
     ],
     "parserOptions": {
-        "ecmaVersion": 2015,
+        "ecmaVersion": 2017,
         "sourceType": "module"
     },
     "plugins": [
@@ -25,11 +26,20 @@
         "jest"
     ],
     "rules": {
-        "unicorn/filename-case": ["error", {"case": "pascalCase"}],
+        "standard/no-callback-literal": 0,
+        "unicorn/filename-case": [
+            "error",
+            {
+                "case": "pascalCase"
+            }
+        ],
         "prettier/prettier": "error",
         "indent": [
             "error",
-            4
+            4,
+            {
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
             "error",
@@ -37,7 +47,10 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "single",
+            {
+                "avoidEscape": true
+            }
         ],
         "semi": [
             "error",
