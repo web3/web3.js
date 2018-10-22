@@ -1,7 +1,6 @@
 var path = require('path');
 var DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 var BabelMinify = require('babel-minify-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
     mode: 'production',
@@ -27,8 +26,8 @@ module.exports = {
             'web3-eth-personal': path.resolve(__dirname, 'packages/web3-eth-personal/src'),
             'web3-bzz': path.resolve(__dirname, 'packages/web3-bzz/src'),
             'bn.js': path.resolve(__dirname, 'node_modules/bn.js'),
-            underscore: path.resolve(__dirname, 'node_modules/underscore'),
-            elliptic: path.resolve(__dirname, 'node_modules/elliptic'),
+            'underscore': path.resolve(__dirname, 'node_modules/underscore'),
+            'elliptic': path.resolve(__dirname, 'node_modules/elliptic'),
             'asn1.js': path.resolve(__dirname, 'node_modules/asn1.js'),
             'hash.js': path.resolve(__dirname, 'node_modules/hash.js'),
             'browser.js': path.resolve(__dirname, 'node_modules/browser.js'),
@@ -74,7 +73,7 @@ module.exports = {
             }
         ]
     },
-    plugins: [new BundleAnalyzerPlugin(), new DuplicatePackageCheckerPlugin()],
+    plugins: [new DuplicatePackageCheckerPlugin()],
     optimization: {
         minimizer: [new BabelMinify()]
     }
