@@ -24,15 +24,6 @@ import EventFilterEncoder from './EventFilterEncoder';
 
 export default class AllEventsFilterEncoder extends EventFilterEncoder {
     /**
-     * @param {ABICoder} abiCoder
-     *
-     * @constructor
-     */
-    constructor(abiCoder) {
-        super(abiCoder);
-    }
-
-    /**
      * Creates encoded topics from filter option of an event.
      *
      * @param {ABIModel} abiModel

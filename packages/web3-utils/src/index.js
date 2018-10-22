@@ -38,7 +38,7 @@ import randomHex from 'randomhex';
  * @return {Object} the emitter
  */
 const _fireError = (error, emitter, reject, callback) => {
-    /*jshint maxcomplexity: 10 */
+    /* jshint maxcomplexity: 10 */
 
     // add data if given
     if (isObject(error) && !(error instanceof Error) && error.data) {
@@ -59,7 +59,10 @@ const _fireError = (error, emitter, reject, callback) => {
     if (isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         // OR suppress uncatched error if an callback listener is present
-        if ((emitter && (isFunction(emitter.listeners) && emitter.listeners('error').length)) || isFunction(callback)) {
+        if (
+            (emitter && (isFunction(emitter.listeners) && emitter.listeners('error').length > 0)) ||
+            isFunction(callback)
+        ) {
             emitter.catch(() => {});
         }
         // reject later, to be able to return emitter
@@ -147,8 +150,9 @@ const _flattenTypes = (includeTuple, puts) => {
 const hexToAscii = (hex) => {
     if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
-    let str = '',
-        i = 0;
+    let str = '';
+
+    let i = 0;
     const l = hex.length;
 
     if (hex.substring(0, 2) === '0x') {
@@ -301,7 +305,6 @@ export default {
     // extractDisplayName: extractDisplayName,
     // extractTypeName: extractTypeName,
     randomHex,
-    _,
     BN: utils.BN,
     isBN: utils.isBN,
     isBigNumber: utils.isBigNumber,

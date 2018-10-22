@@ -2,10 +2,9 @@ var chai = require('chai');
 var assert = chai.assert;
 var Method = require('../packages/web3-core-method');
 
-describe('lib/web3/method', function () {
-    describe('getCall', function () {
-        it('should return call name', function () {
-
+describe('lib/web3/method', function() {
+    describe('getCall', function() {
+        it('should return call name', function() {
             // given
             var call = 'hello_call_world';
             var method = new Method({
@@ -20,10 +19,9 @@ describe('lib/web3/method', function () {
             assert.equal(call, result);
         });
 
-        it('should return call based on args', function () {
-
+        it('should return call based on args', function() {
             // given
-            var call = function (args) {
+            var call = function(args) {
                 return args ? args.length.toString() : '0';
             };
 
@@ -41,8 +39,6 @@ describe('lib/web3/method', function () {
             assert.equal(r0, '0');
             assert.equal(r1, '1');
             assert.equal(r2, '2');
-
         });
     });
 });
-

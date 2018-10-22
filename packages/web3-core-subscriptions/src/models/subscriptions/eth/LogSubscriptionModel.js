@@ -50,7 +50,7 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
     beforeSubscription(subscription, moduleInstance, callback) {
         const self = this;
         this.options = this.formatters.inputLogFormatter(this.options);
-        this.getPastLogsMethodModel.parameters = [options];
+        this.getPastLogsMethodModel.parameters = [this.options];
 
         this.methodController
             .execute(this.getPastLogsMethodModel, moduleInstance.currentProvider, null, moduleInstance)

@@ -229,12 +229,13 @@ export default class Accounts extends AbstractWeb3Module {
                     s: trimLeadingZero(values[8]),
                     rawTransaction
                 };
-            } catch (e) {
-                callback(e);
-                return Promise.reject(e);
+            } catch (error) {
+                callback(error);
+                return Promise.reject(error);
             }
 
             callback(null, result);
+
             return result;
         }
 
@@ -293,7 +294,7 @@ export default class Accounts extends AbstractWeb3Module {
     hashMessage(data) {
         const message = this.utils.isHexStrict(data) ? this.utils.hexToBytes(data) : data;
         const messageBuffer = Buffer.from(message);
-        const preamble = `\x19Ethereum Signed Message:\n${message.length}`;
+        const preamble = `\u0019Ethereum Signed Message:\n${message.length}`;
         const preambleBuffer = Buffer.from(preamble);
         const ethMessage = Buffer.concat([preambleBuffer, messageBuffer]);
         return Hash.keccak256s(ethMessage);
@@ -388,8 +389,8 @@ export default class Accounts extends AbstractWeb3Module {
 
             // FIXME: support progress reporting callback
             derivedKey = scryptsy(
-                new Buffer(password),
-                new Buffer(kdfparams.salt, 'hex'),
+                Buffer.from(password),
+                Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.n,
                 kdfparams.r,
                 kdfparams.p,
@@ -403,8 +404,8 @@ export default class Accounts extends AbstractWeb3Module {
             }
 
             derivedKey = cryp.pbkdf2Sync(
-                new Buffer(password),
-                new Buffer(kdfparams.salt, 'hex'),
+                Buffer.from(password),
+                Buffer.from(kdfparams.salt, 'hex'),
                 kdfparams.c,
                 kdfparams.dklen,
                 'sha256'
@@ -413,9 +414,9 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Unsupported key derivation scheme');
         }
 
-        const ciphertext = new Buffer(json.crypto.ciphertext, 'hex');
+        const ciphertext = Buffer.from(json.crypto.ciphertext, 'hex');
 
-        const mac = utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
+        const mac = this.utils.sha3(Buffer.concat([derivedKey.slice(16, 32), ciphertext])).replace('0x', '');
         if (mac !== json.crypto.mac) {
             throw new Error('Key derivation failed - possibly wrong password');
         }
@@ -423,7 +424,7 @@ export default class Accounts extends AbstractWeb3Module {
         const decipher = cryp.createDecipheriv(
             json.crypto.cipher,
             derivedKey.slice(0, 16),
-            new Buffer(json.crypto.cipherparams.iv, 'hex')
+            Buffer.from(json.crypto.cipherparams.iv, 'hex')
         );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
@@ -459,13 +460,13 @@ export default class Accounts extends AbstractWeb3Module {
         if (kdf === 'pbkdf2') {
             kdfparams.c = options.c || 262144;
             kdfparams.prf = 'hmac-sha256';
-            derivedKey = cryp.pbkdf2Sync(new Buffer(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = cryp.pbkdf2Sync(Buffer.from(password), salt, kdfparams.c, kdfparams.dklen, 'sha256');
         } else if (kdf === 'scrypt') {
             // FIXME: support progress reporting callback
             kdfparams.n = options.n || 8192; // 2048 4096 8192 16384
             kdfparams.r = options.r || 8;
             kdfparams.p = options.p || 1;
-            derivedKey = scryptsy(new Buffer(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            derivedKey = scryptsy(Buffer.from(password), salt, kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
         } else {
             throw new Error('Unsupported kdf');
         }
@@ -476,12 +477,12 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         const ciphertext = Buffer.concat([
-            cipher.update(new Buffer(account.privateKey.replace('0x', ''), 'hex')),
+            cipher.update(Buffer.from(account.privateKey.replace('0x', ''), 'hex')),
             cipher.final()
         ]);
 
         const mac = this.utils
-            .sha3(Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]))
+            .sha3(Buffer.concat([derivedKey.slice(16, 32), Buffer.from(ciphertext, 'hex')]))
             .replace('0x', '');
 
         return {
@@ -691,7 +692,7 @@ class Wallet {
             if (account) {
                 _this.add(account);
             } else {
-                throw new Error("Couldn't decrypt accounts. Password wrong?");
+                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
             }
         });
 
@@ -730,7 +731,7 @@ class Wallet {
         if (keystore) {
             try {
                 keystore = JSON.parse(keystore);
-            } catch (e) {}
+            } catch (error) {}
         }
 
         return this.decrypt(keystore || [], password);

@@ -59,8 +59,8 @@ const isBigNumber = (object) => {
 const toBN = (number) => {
     try {
         return numberToBN.apply(null, arguments);
-    } catch (e) {
-        throw new Error(`${e} Given value: "${number}"`);
+    } catch (error) {
+        throw new Error(`${error} Given value: "${number}"`);
     }
 };
 
@@ -136,7 +136,7 @@ const leftPad = (string, chars, sign) => {
 
     const padding = chars - string.length + 1 >= 0 ? chars - string.length + 1 : 0;
 
-    return (hasPrefix ? '0x' : '') + new Array(padding).join(sign ? sign : '0') + string;
+    return (hasPrefix ? '0x' : '') + new Array(padding).join(sign || '0') + string;
 };
 
 /**
@@ -154,7 +154,7 @@ const rightPad = (string, chars, sign) => {
 
     const padding = chars - string.length + 1 >= 0 ? chars - string.length + 1 : 0;
 
-    return (hasPrefix ? '0x' : '') + string + new Array(padding).join(sign ? sign : '0');
+    return (hasPrefix ? '0x' : '') + string + new Array(padding).join(sign || '0');
 };
 
 /**
@@ -331,7 +331,7 @@ const hexToBytes = (hex) => {
  * @return {String}
  */
 const toHex = (value, returnType) => {
-    /*jshint maxcomplexity: false */
+    /* jshint maxcomplexity: false */
 
     if (isAddress(value)) {
         return returnType ? 'address' : `0x${value.toLowerCase().replace(/^0x/i, '')}`;

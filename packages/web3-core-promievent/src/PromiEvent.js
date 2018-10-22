@@ -62,6 +62,6 @@ export default class PromiEvent {
             return target.eventEmitter[name];
         }
 
-        throw Error(`Method with name ${name} not found`);
+        throw new Error(`Method with name ${name} not found`);
     }
 }

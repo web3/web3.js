@@ -98,12 +98,12 @@ export default class HttpProvider {
 
                 try {
                     result = JSON.parse(result);
-                } catch (e) {
+                } catch (error) {
                     error = errors.InvalidResponse(request.responseText);
+                    callback(error, result);
                 }
 
                 this.connected = true;
-                callback(error, result);
             }
         };
 

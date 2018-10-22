@@ -1,5 +1,5 @@
 var path = require('path');
-var DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack-plugin");
+var DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-plugin');
 var BabelMinify = require('babel-minify-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -27,8 +27,8 @@ module.exports = {
             'web3-eth-personal': path.resolve(__dirname, 'packages/web3-eth-personal/src'),
             'web3-bzz': path.resolve(__dirname, 'packages/web3-bzz/src'),
             'bn.js': path.resolve(__dirname, 'node_modules/bn.js'),
-            'underscore': path.resolve(__dirname, 'node_modules/underscore'),
-            'elliptic': path.resolve(__dirname, 'node_modules/elliptic'),
+            underscore: path.resolve(__dirname, 'node_modules/underscore'),
+            elliptic: path.resolve(__dirname, 'node_modules/elliptic'),
             'asn1.js': path.resolve(__dirname, 'node_modules/asn1.js'),
             'hash.js': path.resolve(__dirname, 'node_modules/hash.js'),
             'browser.js': path.resolve(__dirname, 'node_modules/browser.js'),
@@ -40,7 +40,7 @@ module.exports = {
             'diffie-hellman': path.resolve(__dirname, 'node_modules/diffie-hellman'),
             'md5.js': path.resolve(__dirname, 'node_modules/md5.js'),
             'js-sha3': path.resolve(__dirname, 'node_modules/js-sha3'),
-            'parse-asn1': path.resolve(__dirname, 'node_modules/parse-asn1'),
+            'parse-asn1': path.resolve(__dirname, 'node_modules/parse-asn1')
         }
     },
     module: {
@@ -54,9 +54,9 @@ module.exports = {
                         [
                             '@babel/preset-env',
                             {
-                                'useBuiltIns': 'usage',
-                                'targets': {
-                                    'browsers': [
+                                useBuiltIns: 'usage',
+                                targets: {
+                                    browsers: [
                                         'last 2 Chrome versions',
                                         'last 2 Safari versions',
                                         'last 2 Edge versions',
@@ -64,23 +64,18 @@ module.exports = {
                                         'last 2 Electron versions',
                                         'last 2 Opera versions'
                                     ],
-                                    'node': true
+                                    node: true
                                 }
                             }
-                        ],
+                        ]
                     ],
                     plugins: ['@babel/plugin-proposal-export-default-from']
                 }
             }
         ]
     },
-    plugins: [
-        new BundleAnalyzerPlugin(),
-        new DuplicatePackageCheckerPlugin()
-    ],
+    plugins: [new BundleAnalyzerPlugin(), new DuplicatePackageCheckerPlugin()],
     optimization: {
-        minimizer: [
-            new BabelMinify()
-        ]
+        minimizer: [new BabelMinify()]
     }
 };

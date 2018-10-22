@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isArray} from 'underscore';
+
 export default class ABIMapper {
     /**
      * @param {ContractModuleFactory} contractPackageFactory
@@ -68,7 +70,7 @@ export default class ABIMapper {
                 if (!mappedAbiItems.methods[abiItem.name]) {
                     mappedAbiItems.methods[abiItem.name] = abiItemModel;
                 } else {
-                    if (_.isArray(mappedAbiItems.methods[abiItem.name])) {
+                    if (isArray(mappedAbiItems.methods[abiItem.name])) {
                         mappedAbiItems.methods[abiItem.name].push(abiItemModel);
                     } else {
                         mappedAbiItems.methods[abiItem.name] = [mappedAbiItems.methods[abiItem.name], abiItemModel];

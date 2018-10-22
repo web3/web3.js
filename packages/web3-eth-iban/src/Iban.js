@@ -73,8 +73,9 @@ const iso13616Prepare = (iban) => {
  * @returns {Number}
  */
 const mod9710 = (iban) => {
-    let remainder = iban,
-        block;
+    let remainder = iban;
+
+    let block;
 
     while (remainder.length > 2) {
         block = remainder.slice(0, 9);
@@ -107,7 +108,7 @@ export default class Iban {
         ib = new Iban(ib);
 
         if (!ib.isDirect()) {
-            throw new Error("IBAN is indirect and can't be converted");
+            throw new Error('IBAN is indirect and can\'t be converted');
         }
 
         return ib.toAddress();
@@ -204,8 +205,7 @@ export default class Iban {
      */
     isValid() {
         return (
-            /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-            mod9710(iso13616Prepare(this._iban)) === 1
+            /^XE\d{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) && mod9710(iso13616Prepare(this._iban)) === 1
         );
     }
 

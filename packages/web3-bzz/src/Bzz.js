@@ -47,7 +47,7 @@ export default class Bzz {
             return this.swarm.pick;
         }
 
-        throw Error('Pick is not supported for this environment.');
+        throw new Error('Pick is not supported for this environment.');
     }
 
     /**

@@ -1,10 +1,9 @@
 var assert = require('assert');
 var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
 
-describe('jsonrpc', function () {
-    describe('isValidResponse', function () {
-        it('should validate basic jsonrpc response', function () {
-
+describe('jsonrpc', function() {
+    describe('isValidResponse', function() {
+        it('should validate basic jsonrpc response', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -19,8 +18,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, true);
         });
 
-        it('should validate basic undefined response', function () {
-
+        it('should validate basic undefined response', function() {
             // given
             var response = undefined;
 
@@ -31,8 +29,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response without jsonrpc field', function () {
-
+        it('should validate jsonrpc response without jsonrpc field', function() {
             // given
             var response = {
                 id: 1,
@@ -46,8 +43,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with wrong jsonrpc version', function () {
-
+        it('should validate jsonrpc response with wrong jsonrpc version', function() {
             // given
             var response = {
                 jsonrpc: '1.0',
@@ -62,8 +58,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response without id number', function () {
-
+        it('should validate jsonrpc response without id number', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -77,8 +72,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with string id field', function () {
-
+        it('should validate jsonrpc response with string id field', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -93,8 +87,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response with string id field but as number', function () {
-
+        it('should validate jsonrpc response with string id field but as number', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -109,8 +102,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response without result field', function () {
-
+        it('should validate jsonrpc response without result field', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -124,8 +116,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, false);
         });
 
-        it('should validate jsonrpc response with result field === false', function () {
-
+        it('should validate jsonrpc response with result field === false', function() {
             // given
             var response = {
                 jsonrpc: '2.0',
@@ -140,8 +131,7 @@ describe('jsonrpc', function () {
             assert.equal(valid, true);
         });
 
-        it('should validate jsonrpc response with result field === 0', function () {
-
+        it('should validate jsonrpc response with result field === 0', function() {
             // given
             var response = {
                 jsonrpc: '2.0',

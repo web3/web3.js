@@ -24,23 +24,24 @@ export default class Registry {
     /**
      * // TODO: Contract should be implemented over dependency inversion and not dependency injection
      * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {Network} net
      * @param {Accounts} accounts
-     * @param {Contract} contractObject
+     * @param {Contract} ContractObject
      * @param {Object} registryABI
      * @param {Object} resolverABI
      *
      * @constructor
      */
-    constructor(provider, accounts, contractObject, registryABI, resolverABI) {
+    constructor(provider, net, accounts, ContractObject, registryABI, resolverABI) {
         this.net = net;
         this.accounts = accounts;
-        this.contractObject = contractObject;
+        this.ContractObject = ContractObject;
         this.registryABI = registryABI;
         this.resolverABI = resolverABI;
         this.provider = provider;
 
         this.contract = this.checkNetwork().then((address) => {
-            return new this.contractObject(this.provider, this.accounts, this.registryABI, address);
+            return new this.ContractObject(this.provider, this.accounts, this.registryABI, address);
         });
     }
 
@@ -142,7 +143,7 @@ export default class Registry {
             .then((networkType) => {
                 const addr = ensAddresses[networkType];
                 if (typeof addr === 'undefined') {
-                    throw new Error(`ENS is not supported on network ${networkType}`);
+                    throw new TypeError(`ENS is not supported on network ${networkType}`);
                 }
 
                 return addr;

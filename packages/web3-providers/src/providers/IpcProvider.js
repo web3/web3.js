@@ -43,7 +43,7 @@ export default class IpcProvider {
 
         // LISTEN FOR CONNECTION RESPONSES
         const callback = (result) => {
-            /*jshint maxcomplexity: 6 */
+            /* jshint maxcomplexity: 6 */
 
             let id = null;
 
@@ -234,7 +234,7 @@ export default class IpcProvider {
      */
     on(type, callback) {
         if (typeof callback !== 'function') {
-            throw new Error('The second parameter callback must be a function.');
+            throw new TypeError('The second parameter callback must be a function.');
         }
 
         switch (type) {
@@ -261,7 +261,7 @@ export default class IpcProvider {
      */
     once(type, callback) {
         if (typeof callback !== 'function') {
-            throw new Error('The second parameter callback must be a function.');
+            throw new TypeError('The second parameter callback must be a function.');
         }
 
         this.connection.once(type, callback);

@@ -31,7 +31,7 @@ export default class Contract extends AbstractWeb3Module {
      * @param {Object} providers
      * @param {MethodController} methodController
      * @param {ContractModuleFactory} contractModuleFactory
-     * @param {PromiEvent} promiEvent
+     * @param {PromiEvent} PromiEvent
      * @param {ABICoder} abiCoder
      * @param {Object} utils
      * @param {Object} formatters
@@ -51,7 +51,7 @@ export default class Contract extends AbstractWeb3Module {
         providers,
         methodController,
         contractModuleFactory,
-        promiEvent,
+        PromiEvent,
         abiCoder,
         utils,
         formatters,
@@ -72,7 +72,7 @@ export default class Contract extends AbstractWeb3Module {
         );
 
         if (!(this instanceof Contract)) {
-            throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+            throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
         }
 
         if (!abi || !Array.isArray(abi)) {
@@ -88,7 +88,7 @@ export default class Contract extends AbstractWeb3Module {
         this.accounts = accounts;
         this.abiMapper = abiMapper;
         this.options = options;
-        this.promiEvent = promiEvent;
+        this.PromiEvent = PromiEvent;
         this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
         this._defaultAccount = null;
         this._defaultBlock = 'latest';
@@ -121,10 +121,15 @@ export default class Contract extends AbstractWeb3Module {
             this,
             this.abiModel,
             this.methodController,
-            this.promiEvent
+            this.PromiEvent
         );
 
-        this.events = contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.methodController);
+        this.events = contractModuleFactory.createEventSubscriptionsProxy(
+            this,
+            this.abiModel,
+            this.methodController,
+            this.PromiEvent
+        );
     }
 
     /**
@@ -211,7 +216,7 @@ export default class Contract extends AbstractWeb3Module {
      */
     getPastEvents(eventName, options, callback) {
         if (!this.options.jsonInterface.hasEvent(eventName)) {
-            throw Error(`Event with name "${eventName}does not exists.`);
+            throw new Error(`Event with name "${eventName}does not exists.`);
         }
 
         const pastEventLogsMethodModel = this.rpcMethodModelFactory.createPastEventLogsMethodModel(
@@ -253,7 +258,7 @@ export default class Contract extends AbstractWeb3Module {
             this.providers,
             this.methodController,
             this.contractModuleFactory,
-            this.promiEvent,
+            this.PromiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,

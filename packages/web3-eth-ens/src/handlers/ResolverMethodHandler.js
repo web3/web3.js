@@ -70,8 +70,9 @@ export default class ResolverMethodHandler {
      * @returns {PromiEvent}
      */
     call(callback) {
-        const promiEvent = new this.promiEventPackage.PromiEvent(),
-            preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+        const promiEvent = new this.promiEventPackage.PromiEvent();
+
+        const preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
         this.parent.registry
             .resolver(this.ensName)
@@ -97,8 +98,9 @@ export default class ResolverMethodHandler {
      * @returns {PromiEvent}
      */
     send(sendOptions, callback) {
-        const promiEvent = new this.promiEventPackage.PromiEvent(),
-            preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+        const promiEvent = new this.promiEventPackage.PromiEvent();
+
+        const preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
         this.parent.registry
             .resolver(this.ensName)

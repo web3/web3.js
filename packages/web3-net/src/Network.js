@@ -22,6 +22,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
+import {isFunction} from 'underscore';
 
 export default class Network extends AbstractWeb3Module {
     /**
@@ -106,20 +107,18 @@ export default class Network extends AbstractWeb3Module {
                         break;
                 }
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(null, returnValue);
                 }
 
                 return returnValue;
             })
-            .catch((err) => {
-                if (_.isFunction(callback)) {
-                    callback(err);
-
-                    return;
+            .catch((error) => {
+                if (isFunction(callback)) {
+                    callback(error);
                 }
 
-                throw err;
+                throw error;
             });
     }
 }

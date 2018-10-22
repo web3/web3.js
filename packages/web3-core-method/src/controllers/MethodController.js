@@ -26,16 +26,16 @@ export default class MethodController {
      * @param {SendMethodCommand} sendMethodCommand
      * @param {SignAndSendMethodCommand} signAndSendMethodCommand
      * @param {SignMessageCommand} signMessageCommand
-     * @param {PromiEvent} promiEventObject
+     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
-    constructor(callMethodCommand, sendMethodCommand, signAndSendMethodCommand, signMessageCommand, promiEventObject) {
+    constructor(callMethodCommand, sendMethodCommand, signAndSendMethodCommand, signMessageCommand, PromiEvent) {
         this.callMethodCommand = callMethodCommand;
         this.sendMethodCommand = sendMethodCommand;
         this.signAndSendMethodCommand = signAndSendMethodCommand;
         this.signMessageCommand = signMessageCommand;
-        this.promiEventObject = promiEventObject;
+        this.PromiEvent = PromiEvent;
     }
 
     /**
@@ -59,14 +59,14 @@ export default class MethodController {
                 return this.signAndSendMethodCommand.execute(
                     moduleInstance,
                     methodModel,
-                    new this.promiEventObject(),
+                    new this.PromiEvent(),
                     accounts
                 );
             }
         }
 
         if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction() || methodModel.isSign()) {
-            return this.sendMethodCommand.execute(moduleInstance, methodModel, new this.promiEventObject());
+            return this.sendMethodCommand.execute(moduleInstance, methodModel, new this.PromiEvent());
         }
 
         return this.callMethodCommand.execute(moduleInstance, methodModel);

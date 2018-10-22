@@ -2,10 +2,9 @@ var chai = require('chai');
 var assert = chai.assert;
 var Jsonrpc = require('../packages/web3-core-requestmanager/src/jsonrpc');
 
-describe('lib/web3/jsonrpc', function () {
-    describe('id', function () {
-        it('should increment the id', function () {
-
+describe('lib/web3/jsonrpc', function() {
+    describe('id', function() {
+        it('should increment the id', function() {
             // given
             var method = 'm';
 
@@ -18,4 +17,3 @@ describe('lib/web3/jsonrpc', function () {
         });
     });
 });
-

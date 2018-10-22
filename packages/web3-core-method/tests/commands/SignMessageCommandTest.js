@@ -1,8 +1,8 @@
 import * as sinonLib from 'sinon';
-const sinon = sinonLib.createSandbox();
 import MessageSigner from '../../src/signers/MessageSigner';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+const sinon = sinonLib.createSandbox();
 
 /**
  * SignMessageCommand test

@@ -1,0 +1,47 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true,
+        "node": true,
+        "jest/globals": true
+    },
+    "extends": [
+        "standard",
+        "plugin:unicorn/recommended",
+        "plugin:jest/recommended",
+        "prettier",
+        "prettier/standard",
+        "prettier/unicorn"
+    ],
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "prettier",
+        "standard",
+        "unicorn",
+        "jest"
+    ],
+    "rules": {
+        "unicorn/filename-case": ["error", {"case": "pascalCase"}],
+        "prettier/prettier": "error",
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}

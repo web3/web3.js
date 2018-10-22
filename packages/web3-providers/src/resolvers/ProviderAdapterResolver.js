@@ -58,14 +58,14 @@ export default class ProviderAdapterResolver {
             }
 
             // IPC
-            if (provider && _.isObject(net) && _.isFunction(net.connect)) {
+            if (provider && isObject(net) && isFunction(net.connect)) {
                 return this.providersPackageFactory.createSocketProviderAdapter(
                     this.providersPackageFactory.createIpcProvider(provider, net)
                 );
             }
         }
 
-        if (_.isFunction(provider.sendAsync)) {
+        if (isFunction(provider.sendAsync)) {
             return this.providersPackageFactory.createInpageProviderAdapter(provider);
         }
 
@@ -82,6 +82,6 @@ export default class ProviderAdapterResolver {
                 return provider;
         }
 
-        throw Error('Please provide an valid Web3 provider or the EthereumProvider');
+        throw new Error('Please provide an valid Web3 provider or the EthereumProvider');
     }
 }

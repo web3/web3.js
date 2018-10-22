@@ -71,7 +71,7 @@ export default class RpcMethodModelFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw Error(`Unknown RPC call with requestType "${abiItemModel.requestType}"`);
+            throw new TypeError(`Unknown RPC call with requestType "${abiItemModel.requestType}"`);
         }
 
         return rpcMethod;

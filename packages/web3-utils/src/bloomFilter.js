@@ -1,4 +1,4 @@
-/*jshint bitwise: false*/
+/* jshint bitwise: false */
 
 /*
  This file is part of web3.js.
@@ -33,17 +33,17 @@ import utils from './utils.js';
 
 function codePointToInt(codePoint) {
     if (codePoint >= 48 && codePoint <= 57) {
-        /*['0'..'9'] -> [0..9]*/
+        /* ['0'..'9'] -> [0..9] */
         return codePoint - 48;
     }
 
     if (codePoint >= 65 && codePoint <= 70) {
-        /*['A'..'F'] -> [10..15]*/
+        /* ['A'..'F'] -> [10..15] */
         return codePoint - 55;
     }
 
     if (codePoint >= 97 && codePoint <= 102) {
-        /*['a'..'f'] -> [10..15]*/
+        /* ['a'..'f'] -> [10..15] */
         return codePoint - 87;
     }
 

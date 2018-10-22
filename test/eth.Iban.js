@@ -23,18 +23,18 @@ var tests = [
     }
 ];
 
-describe('eth', function () {
-    describe('Iban', function () {
-        tests.forEach(function (test) {
-            it('toAddress() should transform iban to address: ' +  test.address, function () {
-                if(test.error) {
+describe('eth', function() {
+    describe('Iban', function() {
+        tests.forEach(function(test) {
+            it('toAddress() should transform iban to address: ' + test.address, function() {
+                if (test.error) {
                     assert.throws(eth.Iban.toAddress.bind(eth.Iban, test.direct));
                 } else {
                     assert.deepEqual(eth.Iban.toAddress(test.direct), test.address);
                 }
             });
-            it('toIban() should transform address to iban: ' +  test.address, function () {
-                if(test.error) {
+            it('toIban() should transform address to iban: ' + test.address, function() {
+                if (test.error) {
                     assert.throws(eth.Iban.toIban.bind(eth, test.address));
                 } else {
                     assert.deepEqual(eth.Iban.toIban(test.address), test.direct);
@@ -43,4 +43,3 @@ describe('eth', function () {
         });
     });
 });
-

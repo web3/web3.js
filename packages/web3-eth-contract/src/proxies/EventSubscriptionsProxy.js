@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isFunction} from 'underscore';
+
 export default class EventSubscriptionsProxy {
     /**
      * @param {Contract} contract
@@ -29,6 +31,7 @@ export default class EventSubscriptionsProxy {
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AllEventsOptionsMapper} allEventsOptionsMapper
+     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
@@ -39,7 +42,8 @@ export default class EventSubscriptionsProxy {
         eventOptionsMapper,
         eventLogDecoder,
         allEventsLogDecoder,
-        allEventsOptionsMapper
+        allEventsOptionsMapper,
+        PromiEvent
     ) {
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
@@ -48,6 +52,7 @@ export default class EventSubscriptionsProxy {
         this.eventLogDecoder = eventLogDecoder;
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;
+        this.PromiEvent = PromiEvent;
 
         return new Proxy(this, {
             get: this.proxyHandler
@@ -81,7 +86,7 @@ export default class EventSubscriptionsProxy {
             return target[name];
         }
 
-        throw Error(`Event with name "${name}" not found`);
+        throw new Error(`Event with name "${name}" not found`);
     }
 
     /**
@@ -150,10 +155,10 @@ export default class EventSubscriptionsProxy {
      * @returns {PromiEvent}
      */
     handleValidationError(errorMessage, callback) {
-        const promiEvent = new this.promiEventPackage.PromiEvent();
+        const promiEvent = new this.PromiEvent();
         promiEvent.emit('error', new Error(errorMessage));
 
-        if (_.isFunction(callback)) {
+        if (isFunction(callback)) {
             callback(error, null);
         }
 

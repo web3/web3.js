@@ -92,15 +92,15 @@ export default class WebsocketProvider {
         this.addDefaultEvents();
 
         // LISTEN FOR CONNECTION RESPONSES
-        this.connection.onmessage = (e) => {
-            /*jshint maxcomplexity: 6 */
+        this.connection.addEventListener('message', (e) => {
+            /* jshint maxcomplexity: 6 */
             const data = typeof e.data === 'string' ? e.data : '';
 
             this._parseResponse(data).forEach((result) => {
                 let id = null;
 
                 // get the id which matches the returned id
-                if (_.isArray(result)) {
+                if (isArray(result)) {
                     result.forEach((load) => {
                         if (this.responseCallbacks[load.id]) id = load.id;
                     });
@@ -111,7 +111,7 @@ export default class WebsocketProvider {
                 // notification
                 if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
                     this.notificationCallbacks.forEach((callback) => {
-                        if (_.isFunction(callback)) callback(result);
+                        if (isFunction(callback)) callback(result);
                     });
 
                     // fire the callback
@@ -120,7 +120,7 @@ export default class WebsocketProvider {
                     delete this.responseCallbacks[id];
                 }
             });
-        };
+        });
 
         // make property `connected` which will return the current connection status
         Object.defineProperty(this, 'connected', {
@@ -137,9 +137,9 @@ export default class WebsocketProvider {
      * @method addDefaultEvents
      */
     addDefaultEvents() {
-        this.connection.onerror = () => {
+        this.connection.addEventListener('error', () => {
             this._timeout();
-        };
+        });
 
         this.connection.onclose = () => {
             this._timeout();
@@ -308,7 +308,7 @@ export default class WebsocketProvider {
                 break;
 
             case 'error':
-                this.connection.onerror = callback;
+                this.connection.addEventListener('error', callback);
                 break;
 
             // default:
@@ -363,7 +363,7 @@ export default class WebsocketProvider {
             // TODO remvoving connect properly missing
 
             case 'connect':
-                this.connection.onopen = null;
+                this.connection.addEventListener('open', null);
                 break;
 
             case 'end':
@@ -371,7 +371,7 @@ export default class WebsocketProvider {
                 break;
 
             case 'error':
-                this.connection.onerror = null;
+                this.connection.addEventListener('error', null);
                 break;
 
             default:

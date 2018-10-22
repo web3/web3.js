@@ -2,7 +2,7 @@ var u = require('./helpers/test.utils.js');
 var utils = require('../packages/web3-utils');
 
 describe('utils', function() {
-    describe('methods', function () {
+    describe('methods', function() {
         u.methodExists(utils, 'sha3');
         u.methodExists(utils, 'hexToAscii');
         u.methodExists(utils, 'asciiToHex');
@@ -14,4 +14,3 @@ describe('utils', function() {
         u.methodExists(utils, 'isAddress');
     });
 });
-

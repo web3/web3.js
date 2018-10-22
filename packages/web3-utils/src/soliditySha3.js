@@ -26,7 +26,7 @@ import BN from 'bn.js';
 import utils from './utils.js';
 
 const _elementaryName = (name) => {
-    /*jshint maxcomplexity:false */
+    /* jshint maxcomplexity:false */
 
     if (name.startsWith('int[')) {
         return `int256${name.slice(3)}`;
@@ -80,7 +80,7 @@ const _parseNumber = (arg) => {
 };
 
 const _solidityPack = (type, value, arraySize) => {
-    /*jshint maxcomplexity:false */
+    /* jshint maxcomplexity:false */
 
     let size, num;
     type = _elementaryName(type);
@@ -163,14 +163,15 @@ const _solidityPack = (type, value, arraySize) => {
 };
 
 const _processSoliditySha3Args = (arg) => {
-    /*jshint maxcomplexity:false */
+    /* jshint maxcomplexity:false */
 
     if (isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
-    let type,
-        value = '';
+    let type;
+
+    let value = '';
     let hexArg, arraySize;
 
     // if type is given
@@ -228,7 +229,7 @@ const _processSoliditySha3Args = (arg) => {
  * @return {Object} the sha3
  */
 const soliditySha3 = () => {
-    /*jshint maxcomplexity:false */
+    /* jshint maxcomplexity:false */
 
     const args = Array.prototype.slice.call(arguments);
 

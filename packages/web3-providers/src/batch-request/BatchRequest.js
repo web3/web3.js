@@ -55,32 +55,38 @@ export default class BatchRequest {
      * @method execute
      */
     execute() {
-        this.provider.sendBatch(this.jsonRpcMapper.toBatchPayload(this.requests), (err, results) => {
-            if (!isArray(results)) {
-                request.callback(errors.InvalidResponse(results));
-
-                return;
-            }
-
+        this.provider.sendBatch(this.jsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
             this.requests.forEach(function(request, index) {
-                const result = results[index] || null;
+                if (!error) {
+                    if (!isArray(results)) {
+                        request.callback(errors.InvalidResponse(results));
 
-                if (isFunction(request.callback)) {
-                    if (isObject(result) && result.error) {
-                        request.callback(errors.ErrorResponse(result));
+                        return;
                     }
 
-                    if (!this.jsonRpcResponseValidator.isValid(result)) {
-                        request.callback(errors.InvalidResponse(result));
+                    const result = results[index] || null;
+
+                    if (isFunction(request.callback)) {
+                        if (isObject(result) && result.error) {
+                            request.callback(errors.ErrorResponse(result));
+                        }
+
+                        if (!this.jsonRpcResponseValidator.isValid(result)) {
+                            request.callback(errors.InvalidResponse(result));
+                        }
+
+                        try {
+                            const mappedResult = request.afterExecution(result.result);
+                            request.callback(null, mappedResult);
+                        } catch (error) {
+                            request.callback(error, null);
+                        }
                     }
 
-                    try {
-                        const mappedResult = request.afterExecution(result.result);
-                        request.callback(null, mappedResult);
-                    } catch (err) {
-                        request.callback(err, null);
-                    }
+                    return;
                 }
+
+                request.callback(error);
             });
         });
     }

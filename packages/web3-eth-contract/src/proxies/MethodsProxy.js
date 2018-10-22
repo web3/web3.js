@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isArray, isFunction} from 'underscore';
+
 export default class MethodsProxy {
     /**
      * @param {Contract} contract
@@ -29,7 +31,7 @@ export default class MethodsProxy {
      * @param {MethodEncoder} methodEncoder
      * @param {RpcMethodOptionsValidator} rpcMethodOptionsValidator
      * @param {RpcMethodOptionsMapper} rpcMethodOptionsMapper
-     * @param {PromiEvent} promiEvent
+     * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
@@ -41,7 +43,7 @@ export default class MethodsProxy {
         methodEncoder,
         rpcMethodOptionsValidator,
         rpcMethodOptionsMapper,
-        promiEvent
+        PromiEvent
     ) {
         this.contract = contract;
         this.abiModel = abiModel;
@@ -50,7 +52,7 @@ export default class MethodsProxy {
         this.methodEncoder = methodEncoder;
         this.rpcMethodOptionsValidator = rpcMethodOptionsValidator;
         this.rpcMethodOptionsMapper = rpcMethodOptionsMapper;
-        this.promiEvent = promiEvent;
+        this.PromiEvent = PromiEvent;
 
         return new Proxy(this, {
             get: this.proxyHandler
@@ -119,7 +121,7 @@ export default class MethodsProxy {
             return this[name];
         }
 
-        throw Error(`Method with name "${name}" not found`);
+        throw new Error(`Method with name "${name}" not found`);
     }
 
     /**
@@ -153,7 +155,7 @@ export default class MethodsProxy {
 
         // If it is an array than check which AbiItemModel should be used.
         // This will be used if two methods with the same name exists but with different arguments.
-        if (_.isArray(abiItemModel)) {
+        if (isArray(abiItemModel)) {
             let isContractMethodParametersLengthValid = false;
 
             // Check if one of the AbiItemModel in this array does match the arguments length
@@ -227,13 +229,13 @@ export default class MethodsProxy {
      * @returns {PromiEvent}
      */
     handleValidationError(error, callback) {
-        const promiEvent = new this.promiEvent();
+        const promiEvent = new this.PromiEvent();
 
         promiEvent.resolve(null);
         promiEvent.reject(error);
         promiEvent.emit('error', error);
 
-        if (_.isFunction(callback)) {
+        if (isFunction(callback)) {
             callback(error, null);
         }
 

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-class EventLogDecoder {
+export default class EventLogDecoder {
     /**
      * @param {ABICoder} abiCoder
      * @param {Object} formatters

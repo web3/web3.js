@@ -30,10 +30,10 @@ export default class Eth extends AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {Network} net
-     * @param {Contract} contract
+     * @param {Contract} Contract
      * @param {Accounts} accounts
      * @param {Personal} personal
-     * @param {Iban} iban
+     * @param {Iban} Iban
      * @param {ABICoder} abiCoder
      * @param {ENS} ens
      * @param {Object} utils
@@ -53,10 +53,10 @@ export default class Eth extends AbstractWeb3Module {
         methodController,
         methodModelFactory,
         net,
-        contract,
+        Contract,
         accounts,
         personal,
-        iban,
+        Iban,
         abiCoder,
         ens,
         utils,
@@ -98,7 +98,7 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
-            const contractObject = new contract(this.currentProvider, this.accounts, abi, address, options);
+            const contractObject = new Contract(this.currentProvider, this.accounts, abi, address, options);
             this.initiatedContracts.push(contractObject);
 
             return contractObject;
@@ -192,7 +192,7 @@ export default class Eth extends AbstractWeb3Module {
                 return this.subscriptionsFactory.createSyncingSubscriptionModel(this).subscribe(callback);
 
             default:
-                throw Error(`Unknown subscription: ${type}`);
+                throw new Error(`Unknown subscription: ${type}`);
         }
     }
 

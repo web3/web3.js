@@ -20,6 +20,8 @@
  * @date 2018
  */
 
+import {isArray} from 'underscore';
+
 export default class EventFilterEncoder {
     /**
      * @param {ABICoder} abiCoder
@@ -46,7 +48,7 @@ export default class EventFilterEncoder {
             if (typeof filter[indexedInput.name] !== 'undefined') {
                 const filterItem = filter[indexedInput.name];
 
-                if (_.isArray(filterItem)) {
+                if (isArray(filterItem)) {
                     filterItem.map((item) => {
                         return this.abiCoder.encodeParameter(indexedInput.type, item);
                     });

@@ -51,7 +51,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
 
         return new Promise((resolve, reject) => {
             this.provider.send(payload, (error, response) => {
-                this.handleResponse(reject, resolve, error, response);
+                this.handleResponse(reject, resolve, error, response, payload);
             });
         });
     }
@@ -105,8 +105,9 @@ export default class AbstractProviderAdapter extends EventEmitter {
      * @param {Function} resolve
      * @param {Object} error
      * @param {Object} response
+     * @param {Object} payload
      */
-    handleResponse(reject, resolve, error, response) {
+    handleResponse(reject, resolve, error, response, payload) {
         if (response && response.id && payload.id !== response.id) {
             reject(
                 new Error(

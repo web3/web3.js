@@ -83,7 +83,7 @@ export default class AbstractWeb3Module {
      * @property currentProvider
      */
     set currentProvider(value) {
-        throw Error('The property currentProvider read-only!');
+        throw new Error('The property currentProvider read-only!');
     }
 
     /**
@@ -231,7 +231,9 @@ export default class AbstractWeb3Module {
     proxyHandler(target, name) {
         if (target.methodModelFactory.hasMethodModel(name)) {
             if (typeof target[name] !== 'undefined') {
-                throw new Error(`Duplicated method ${name}. This method is defined as RPC call and as Object method.`);
+                throw new TypeError(
+                    `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
+                );
             }
 
             const methodModel = target.methodModelFactory.createMethodModel(name);
@@ -240,7 +242,7 @@ export default class AbstractWeb3Module {
                 methodModel.methodArguments = arguments;
 
                 if (methodModel.parameters.length !== methodModel.parametersAmount) {
-                    throw Error(
+                    throw new Error(
                         `Invalid parameters length the expected length would be ${
                             methodModel.parametersAmount
                         } and not ${methodModel.parameters.length}`
@@ -265,6 +267,6 @@ export default class AbstractWeb3Module {
      * @param {String} name
      */
     throwIfMissing(name) {
-        throw Error(`Parameter with name ${name} is missing`);
+        throw new Error(`Parameter with name ${name} is missing`);
     }
 }

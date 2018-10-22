@@ -22,8 +22,8 @@
 
 let global;
 try {
-    global = Function('return this')();
-} catch (e) {
+    global = new Function('return this')();
+} catch (error) {
     global = window;
 }
 
@@ -78,7 +78,7 @@ export default class ProviderDetector {
     addSubscriptionsToIpcProviderWrapper(provider) {
         provider.on = (type, callback) => {
             if (typeof callback !== 'function') {
-                throw new Error('The second parameter callback must be a function.');
+                throw new TypeError('The second parameter callback must be a function.');
             }
 
             switch (type) {
@@ -90,7 +90,7 @@ export default class ProviderDetector {
 
                         try {
                             result = JSON.parse(data);
-                        } catch (e) {
+                        } catch (error) {
                             return callback(new Error(`Couldn't parse response data${data}`));
                         }
 

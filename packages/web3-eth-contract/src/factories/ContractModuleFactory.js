@@ -66,7 +66,7 @@ export default class ContractModuleFactory {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
-     * @param {PromiEventPackage} promiEventPackage
+     * @param {PromiEvent} PromiEvent
      * @param {Object} abi
      * @param {String} address
      * @param {Object} options
@@ -80,7 +80,7 @@ export default class ContractModuleFactory {
         providersModuleFactory,
         providers,
         methodController,
-        promiEventPackage,
+        PromiEvent,
         abi,
         address,
         options
@@ -93,7 +93,7 @@ export default class ContractModuleFactory {
             providers,
             methodController,
             this,
-            promiEventPackage,
+            PromiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,
@@ -271,11 +271,11 @@ export default class ContractModuleFactory {
      * @param {Contract} contract
      * @param {ABIModel} abiModel
      * @param {MethodController} methodController
-     * @param {PromiEvent} promiEvent
+     * @param {PromiEvent} PromiEvent
      *
      * @returns {MethodsProxy}
      */
-    createMethodsProxy(contract, abiModel, methodController, promiEvent) {
+    createMethodsProxy(contract, abiModel, methodController, PromiEvent) {
         return new MethodsProxy(
             contract,
             abiModel,
@@ -284,7 +284,7 @@ export default class ContractModuleFactory {
             this.createMethodEncoder(),
             this.createRpcMethodOptionsValidator(),
             this.createRpcMethodOptionsMapper(),
-            promiEvent
+            PromiEvent
         );
     }
 
@@ -296,18 +296,20 @@ export default class ContractModuleFactory {
      * @param {Contract} contract
      * @param {ABIModel} abiModel
      * @param {MethodController} methodController
+     * @param {PromiEvent} PromiEvent
      *
      * @returns {EventSubscriptionsProxy}
      */
-    createEventSubscriptionsProxy(contract, abiModel, methodController) {
-        new EventSubscriptionsProxy(
+    createEventSubscriptionsProxy(contract, abiModel, methodController, PromiEvent) {
+        return new EventSubscriptionsProxy(
             contract,
             abiModel,
             this.createEventSubscriptionFactory(methodController),
             this.createEventOptionsMapper(),
             this.createEventLogDecoder(),
             this.createAllEventsLogDecoder(),
-            this.createAllEventsOptionsMapper()
+            this.createAllEventsOptionsMapper(),
+            PromiEvent
         );
     }
 
@@ -321,6 +323,6 @@ export default class ContractModuleFactory {
      * @returns {EventSubscriptionFactory}
      */
     createEventSubscriptionFactory(methodController) {
-        new EventSubscriptionFactory(this.utils, this.formatters, methodController);
+        return new EventSubscriptionFactory(this.utils, this.formatters, methodController);
     }
 }

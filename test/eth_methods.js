@@ -23,7 +23,6 @@ describe('eth', function() {
         u.methodExists(eth, 'Contract');
         u.methodExists(eth, 'Iban');
 
-
         u.methodExists(eth, 'isMining');
         u.methodExists(eth, 'getCoinbase');
         u.methodExists(eth, 'getGasPrice');
@@ -49,4 +48,3 @@ describe('eth', function() {
         u.methodExists(eth.personal, 'unlockAccount');
     });
 });
-
