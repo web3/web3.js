@@ -149,6 +149,8 @@ export default class Bzz {
 }
 
 Bzz.givenProvider = null;
+/* eslint-disable no-undef */
 if (typeof ethereumProvider !== 'undefined' && ethereumProvider.bzz) {
     Bzz.givenProvider = ethereumProvider.bzz;
 }
+/* eslint-enable no-undef */

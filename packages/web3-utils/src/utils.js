@@ -58,7 +58,7 @@ const isBigNumber = (object) => {
  */
 const toBN = (number) => {
     try {
-        return numberToBN.apply(null, arguments);
+        return numberToBN(number);
     } catch (error) {
         throw new Error(`${error} Given value: "${number}"`);
     }

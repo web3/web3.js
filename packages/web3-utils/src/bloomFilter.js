@@ -29,6 +29,13 @@
 
 import utils from './utils.js';
 
+/**
+ * @method codePointToInt
+ *
+ * @param codePoint
+ *
+ * @returns {Number}
+ */
 function codePointToInt(codePoint) {
     if (codePoint >= 48 && codePoint <= 57) {
         /* ['0'..'9'] -> [0..9] */
@@ -45,9 +52,17 @@ function codePointToInt(codePoint) {
         return codePoint - 87;
     }
 
-    throw 'invalid bloom';
+    throw new Error('invalid bloom');
 }
 
+/**
+ * @method testBytes
+ *
+ * @param bloom
+ * @param bytes
+ *
+ * @returns {Boolean}
+ */
 function testBytes(bloom, bytes) {
     const hash = utils.sha3(bytes).replace('0x', '');
 
@@ -72,16 +87,18 @@ function testBytes(bloom, bytes) {
  * note: false positives are possible.
  *
  * @method testAddress
+ *
  * @param {String} hex encoded bloom
  * @param {String} address in hex notation
+ *
  * @returns {Boolean} topic is (probably) part of the block
  */
 const testAddress = (bloom, address) => {
     if (!utils.isBloom(bloom)) {
-        throw 'Invalid bloom given';
+        throw new Error('Invalid bloom given');
     }
     if (!utils.isAddress(address)) {
-        throw `Invalid address given: "${address}"`;
+        throw new Error(`Invalid address given: "${address}"`);
     }
 
     return testBytes(bloom, address);
@@ -92,13 +109,20 @@ const testAddress = (bloom, address) => {
  * note: false positives are possible.
  *
  * @method hasTopic
- * @param {String} hex encoded bloom
- * @param {String} address in hex notation
+ *
+ * @param {String} bloom encoded bloom
+ * @param {String} topic in hex notation
+ *
  * @returns {Boolean} topic is (probably) part of the block
  */
 const testTopic = (bloom, topic) => {
-    if (!utils.isBloom(bloom)) throw 'invalid bloom';
-    if (!utils.isTopic(topic)) throw 'invalid topic';
+    if (!utils.isBloom(bloom)) {
+        throw new Error('invalid bloom');
+    }
+
+    if (!utils.isTopic(topic)) {
+        throw new Error('invalid topic');
+    }
 
     return testBytes(bloom, topic);
 };

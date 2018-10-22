@@ -237,7 +237,7 @@ const _processSoliditySha3Args = (arg) => {
  * @method soliditySha3
  * @return {Object} the sha3
  */
-const soliditySha3 = () => {
+const soliditySha3 = function() {
     const args = Array.prototype.slice.call(arguments);
 
     const hexArgs = map(args, _processSoliditySha3Args);

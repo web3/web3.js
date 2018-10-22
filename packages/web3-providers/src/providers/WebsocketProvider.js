@@ -354,25 +354,20 @@ export default class WebsocketProvider {
      * @callback callback callback(error, result)
      */
     removeAllListeners(type) {
+        // TODO remvoving connect properly missing
         switch (type) {
             case 'data':
                 this.notificationCallbacks = [];
                 break;
-
-            // TODO remvoving connect properly missing
-
             case 'connect':
                 this.connection.addEventListener('open', null);
                 break;
-
             case 'end':
                 this.connection.onclose = null;
                 break;
-
             case 'error':
                 this.connection.addEventListener('error', null);
                 break;
-
             default:
                 // this.connection.removeAllListeners(type);
                 break;
