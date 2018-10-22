@@ -318,7 +318,7 @@ Disconnects from the IPC endpoint. This allows freeing the socket.
 */
 IpcProvider.prototype.disconnect = function () {
     if (this.connection) {
-        this.connection.close();
+        this.connection.endfix();
     }
 };
 
