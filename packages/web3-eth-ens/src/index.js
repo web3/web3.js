@@ -37,13 +37,5 @@ import ENSModuleFactory from './factories/ENSModuleFactory';
  * @returns {ENS}
  */
 export const ENS = (provider, net, accounts) => {
-    return new ENSModuleFactory().createENS(
-        provider,
-        net,
-        accounts,
-        Contract,
-        REGISTRY_ABI,
-        RESOLVER_ABI,
-        PromiEvent
-    );
+    return new ENSModuleFactory().createENS(provider, net, accounts, Contract, REGISTRY_ABI, RESOLVER_ABI, PromiEvent);
 };

@@ -23,7 +23,6 @@
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,13 +30,7 @@ export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_subscribe',
-            'newHeads',
-            null,
-            utils,
-            formatters
-        );
+        super('eth_subscribe', 'newHeads', null, utils, formatters);
     }
 
     /**

@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class HasKeyPairMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class HasKeyPairMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'shh_hasKeyPair',
-            1,
-            utils,
-            formatters
-        );
+        super('shh_hasKeyPair', 1, utils, formatters);
     }
 }

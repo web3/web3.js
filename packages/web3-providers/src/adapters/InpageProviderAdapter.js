@@ -23,13 +23,13 @@
 import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
 export default class InpageProviderAdapter extends AbstractProviderAdapter {
-
     /**
      * @param {Object} inpageProvider
      *
      * @constructor
      */
-    constructor(inpageProvider) {// TODO: Check if there is a way to set a host property (will be used on setProvider)
+    constructor(inpageProvider) {
+        // TODO: Check if there is a way to set a host property (will be used on setProvider)
         super(inpageProvider);
         this.provider.send = this.provider.sendAsync;
         delete this.provider.sendAsync;

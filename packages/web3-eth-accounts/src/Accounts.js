@@ -30,29 +30,27 @@ import scryptsy from 'scrypt.js';
 import uuid from 'uuid';
 import {AbstractWeb3Module} from 'web3-core';
 
-const cryp = (typeof global === 'undefined') ? require('crypto-browserify') : require('crypto');
+const cryp = typeof global === 'undefined' ? require('crypto-browserify') : require('crypto');
 
-const isNot = value => {
-    return (isUndefined(value) || isNull(value));
+const isNot = (value) => {
+    return isUndefined(value) || isNull(value);
 };
 
-const trimLeadingZero = hex => {
+const trimLeadingZero = (hex) => {
     while (hex && hex.startsWith('0x0')) {
         hex = `0x${hex.slice(3)}`;
     }
     return hex;
 };
 
-const makeEven = hex => {
+const makeEven = (hex) => {
     if (hex.length % 2 === 1) {
         hex = hex.replace('0x', '0x0');
     }
     return hex;
 };
 
-
 export default class Accounts extends AbstractWeb3Module {
-
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -116,7 +114,6 @@ export default class Accounts extends AbstractWeb3Module {
             return _this.encrypt(account.privateKey, password, options);
         };
 
-
         return account;
     }
 
@@ -163,8 +160,7 @@ export default class Accounts extends AbstractWeb3Module {
         let error = false;
         let result;
 
-        callback = callback || (() => {
-        });
+        callback = callback || (() => {});
 
         if (!tx) {
             error = new Error('No transaction object given!');
@@ -174,15 +170,11 @@ export default class Accounts extends AbstractWeb3Module {
         }
 
         function signed(tx) {
-
             if (!tx.gas && !tx.gasLimit) {
                 error = new Error('gas is missing');
             }
 
-            if (tx.nonce < 0 ||
-                tx.gas < 0 ||
-                tx.gasPrice < 0 ||
-                tx.chainId < 0) {
+            if (tx.nonce < 0 || tx.gas < 0 || tx.gasPrice < 0 || tx.chainId < 0) {
                 error = new Error('Gas, gasPrice, nonce or chainId is lower than 0');
             }
 
@@ -209,14 +201,19 @@ export default class Accounts extends AbstractWeb3Module {
                     transaction.data,
                     Bytes.fromNat(transaction.chainId || '0x1'),
                     '0x',
-                    '0x']);
-
+                    '0x'
+                ]);
 
                 const hash = Hash.keccak256(rlpEncoded);
 
-                const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || '0x1') * 2 + 35)(Hash.keccak256(rlpEncoded), privateKey);
+                const signature = Account.makeSigner(Nat.toNumber(transaction.chainId || '0x1') * 2 + 35)(
+                    Hash.keccak256(rlpEncoded),
+                    privateKey
+                );
 
-                const rawTx = RLP.decode(rlpEncoded).slice(0, 6).concat(Account.decodeSignature(signature));
+                const rawTx = RLP.decode(rlpEncoded)
+                    .slice(0, 6)
+                    .concat(Account.decodeSignature(signature));
 
                 rawTx[6] = makeEven(trimLeadingZero(rawTx[6]));
                 rawTx[7] = makeEven(trimLeadingZero(rawTx[7]));
@@ -232,7 +229,6 @@ export default class Accounts extends AbstractWeb3Module {
                     s: trimLeadingZero(values[8]),
                     rawTransaction
                 };
-
             } catch (e) {
                 callback(e);
                 return Promise.reject(e);
@@ -247,15 +243,16 @@ export default class Accounts extends AbstractWeb3Module {
             return Promise.resolve(signed(tx));
         }
 
-
         // Otherwise, get the missing info from the Ethereum Node
         return Promise.all([
             isNot(tx.chainId) ? _this.getId() : tx.chainId,
             isNot(tx.gasPrice) ? _this.getGasPrice() : tx.gasPrice,
             isNot(tx.nonce) ? _this.getTransactionCount(_this.privateKeyToAccount(privateKey).address) : tx.nonce
-        ]).then(args => {
+        ]).then((args) => {
             if (isNot(args[0]) || isNot(args[1]) || isNot(args[2])) {
-                throw new Error(`One of the values 'chainId', 'gasPrice', or 'nonce' couldn't be fetched: ${JSON.stringify(args)}`);
+                throw new Error(
+                    `One of the values 'chainId', 'gasPrice', or 'nonce' couldn't be fetched: ${JSON.stringify(args)}`
+                );
             }
             return signed(extend(tx, {chainId: args[0], gasPrice: args[1], nonce: args[2]}));
         });
@@ -341,7 +338,6 @@ export default class Accounts extends AbstractWeb3Module {
     recover(message, signature, preFixed) {
         const args = [].slice.apply(arguments);
 
-
         if (isObject(message)) {
             return this.recover(message.messageHash, Account.encodeSignature([message.v, message.r, message.s]), true);
         }
@@ -379,7 +375,7 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('No password given.');
         }
 
-        const json = (isObject(v3Keystore)) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
+        const json = isObject(v3Keystore) ? v3Keystore : JSON.parse(nonStrict ? v3Keystore.toLowerCase() : v3Keystore);
 
         if (json.version !== 3) {
             throw new Error('Not a valid V3 wallet');
@@ -391,7 +387,14 @@ export default class Accounts extends AbstractWeb3Module {
             kdfparams = json.crypto.kdfparams;
 
             // FIXME: support progress reporting callback
-            derivedKey = scryptsy(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.n, kdfparams.r, kdfparams.p, kdfparams.dklen);
+            derivedKey = scryptsy(
+                new Buffer(password),
+                new Buffer(kdfparams.salt, 'hex'),
+                kdfparams.n,
+                kdfparams.r,
+                kdfparams.p,
+                kdfparams.dklen
+            );
         } else if (json.crypto.kdf === 'pbkdf2') {
             kdfparams = json.crypto.kdfparams;
 
@@ -399,7 +402,13 @@ export default class Accounts extends AbstractWeb3Module {
                 throw new Error('Unsupported parameters to PBKDF2');
             }
 
-            derivedKey = cryp.pbkdf2Sync(new Buffer(password), new Buffer(kdfparams.salt, 'hex'), kdfparams.c, kdfparams.dklen, 'sha256');
+            derivedKey = cryp.pbkdf2Sync(
+                new Buffer(password),
+                new Buffer(kdfparams.salt, 'hex'),
+                kdfparams.c,
+                kdfparams.dklen,
+                'sha256'
+            );
         } else {
             throw new Error('Unsupported key derivation scheme');
         }
@@ -411,7 +420,11 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Key derivation failed - possibly wrong password');
         }
 
-        const decipher = cryp.createDecipheriv(json.crypto.cipher, derivedKey.slice(0, 16), new Buffer(json.crypto.cipherparams.iv, 'hex'));
+        const decipher = cryp.createDecipheriv(
+            json.crypto.cipher,
+            derivedKey.slice(0, 16),
+            new Buffer(json.crypto.cipherparams.iv, 'hex')
+        );
         const seed = `0x${Buffer.concat([decipher.update(ciphertext), decipher.final()]).toString('hex')}`;
 
         return this.privateKeyToAccount(seed);
@@ -462,9 +475,14 @@ export default class Accounts extends AbstractWeb3Module {
             throw new Error('Unsupported cipher');
         }
 
-        const ciphertext = Buffer.concat([cipher.update(new Buffer(account.privateKey.replace('0x', ''), 'hex')), cipher.final()]);
+        const ciphertext = Buffer.concat([
+            cipher.update(new Buffer(account.privateKey.replace('0x', ''), 'hex')),
+            cipher.final()
+        ]);
 
-        const mac = this.utils.sha3(Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')])).replace('0x', '');
+        const mac = this.utils
+            .sha3(Buffer.concat([derivedKey.slice(16, 32), new Buffer(ciphertext, 'hex')]))
+            .replace('0x', '');
 
         return {
             version: 3,
@@ -528,11 +546,11 @@ class Wallet {
     _currentIndexes() {
         const keys = Object.keys(this);
         const indexes = keys
-            .map(key => {
+            .map((key) => {
                 return parseInt(key);
             })
-            .filter(n => {
-                return (n < 9e20);
+            .filter((n) => {
+                return n < 9e20;
             });
 
         return indexes;
@@ -565,7 +583,6 @@ class Wallet {
      * @returns {Object}
      */
     add(account) {
-
         if (isString(account)) {
             account = this._accounts.privateKeyToAccount(account);
         }
@@ -627,7 +644,7 @@ class Wallet {
         const _this = this;
         const indexes = this._currentIndexes();
 
-        indexes.forEach(index => {
+        indexes.forEach((index) => {
             _this.remove(index);
         });
 
@@ -648,7 +665,7 @@ class Wallet {
         const _this = this;
         const indexes = this._currentIndexes();
 
-        const accounts = indexes.map(index => {
+        const accounts = indexes.map((index) => {
             return _this[index].encrypt(password, options);
         });
 
@@ -668,13 +685,13 @@ class Wallet {
     decrypt(encryptedWallet, password) {
         const _this = this;
 
-        encryptedWallet.forEach(keystore => {
+        encryptedWallet.forEach((keystore) => {
             const account = _this._accounts.decrypt(keystore, password);
 
             if (account) {
                 _this.add(account);
             } else {
-                throw new Error('Couldn\'t decrypt accounts. Password wrong?');
+                throw new Error("Couldn't decrypt accounts. Password wrong?");
             }
         });
 
@@ -713,9 +730,7 @@ class Wallet {
         if (keystore) {
             try {
                 keystore = JSON.parse(keystore);
-            } catch (e) {
-
-            }
+            } catch (e) {}
         }
 
         return this.decrypt(keystore || [], password);

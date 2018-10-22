@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class SendSignedTransactionMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class SendSignedTransactionMethodModel extends AbstractMethodMode
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_sendRawTransaction',
-            1,
-            utils,
-            formatters
-        );
+        super('eth_sendRawTransaction', 1, utils, formatters);
     }
 }

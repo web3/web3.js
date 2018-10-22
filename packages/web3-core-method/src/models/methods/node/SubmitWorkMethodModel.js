@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class SubmitWorkMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class SubmitWorkMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_submitWork',
-            3,
-            utils,
-            formatters
-        );
+        super('eth_submitWork', 3, utils, formatters);
     }
 }

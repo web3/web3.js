@@ -8,27 +8,27 @@ var PersonalSignMethodModel = require('../../../../src/models/methods/personal/P
 /**
  * PersonalSignMethodModel test
  */
-describe('PersonalSignMethodModelTest', function () {
+describe('PersonalSignMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new PersonalSignMethodModel({}, formatters);
     });
 
     afterEach(function() {
-       sinon.restore();
+        sinon.restore();
     });
 
-    it('rpcMethod should return personal_sign', function () {
+    it('rpcMethod should return personal_sign', function() {
         expect(model.rpcMethod).to.equal('personal_sign');
     });
 
-    it('parametersAmount should return 3', function () {
+    it('parametersAmount should return 3', function() {
         expect(model.parametersAmount).to.equal(3);
     });
 
-    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', function () {
+    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', function() {
         model.parameters = ['sign', '0x0'];
 
         formattersMock
@@ -51,7 +51,7 @@ describe('PersonalSignMethodModelTest', function () {
         expect(model.parameters[1]).equal('0x00');
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         expect(model.afterExecution('personalSign')).equal('personalSign');
     });
 });

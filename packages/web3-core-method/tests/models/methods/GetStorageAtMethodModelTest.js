@@ -9,31 +9,31 @@ var GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtM
 /**
  * GetStorageAtMethodModel test
  */
-describe('GetStorageAtMethodModelTest', function () {
+describe('GetStorageAtMethodModelTest', function() {
     var model, formattersMock, utilsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetStorageAtMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getStorageAt', function () {
+    it('rpcMethod should return eth_getStorageAt', function() {
         expect(model.rpcMethod).to.equal('eth_getStorageAt');
     });
 
-    it('parametersAmount should return 3', function () {
+    it('parametersAmount should return 3', function() {
         expect(model.parametersAmount).to.equal(3);
     });
 
     it(
         'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter ' +
-        'and utils.numberToHex method',
-        function () {
+            'and utils.numberToHex method',
+        function() {
             model.parameters = ['string', 100, 100];
 
             formattersMock
@@ -64,7 +64,7 @@ describe('GetStorageAtMethodModelTest', function () {
         }
     );
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         var object = {};
 
         expect(model.afterExecution(object)).to.equal(object);

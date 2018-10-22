@@ -23,7 +23,6 @@
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Contract extends AbstractWeb3Module {
-
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -62,7 +61,6 @@ export default class Contract extends AbstractWeb3Module {
         address,
         options
     ) {
-
         super(
             provider,
             providerDetector,
@@ -77,8 +75,10 @@ export default class Contract extends AbstractWeb3Module {
             throw new Error('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
         }
 
-        if (!abi || !(Array.isArray(abi))) {
-            throw new Error('You must provide the json interface of the contract when instantiating a contract object.');
+        if (!abi || !Array.isArray(abi)) {
+            throw new Error(
+                'You must provide the json interface of the contract when instantiating a contract object.'
+            );
         }
 
         this.contractModuleFactory = contractModuleFactory;
@@ -99,19 +99,19 @@ export default class Contract extends AbstractWeb3Module {
             get: () => {
                 return this.abiModel;
             },
-            set: (value) =>  {
+            set: (value) => {
                 this.abiModel = this.abiMapper.map(value);
                 this.methods.abiModel = this.abiModel;
                 this.events.abiModel = this.abiModel;
             },
-           enumerable: true
+            enumerable: true
         });
 
         Object.defineProperty(this.options, 'address', {
             get: () => {
                 return this._address;
             },
-            set: (value) =>  {
+            set: (value) => {
                 this._address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
             },
             enumerable: true
@@ -124,11 +124,7 @@ export default class Contract extends AbstractWeb3Module {
             this.promiEvent
         );
 
-        this.events = contractModuleFactory.createEventSubscriptionsProxy(
-            this,
-            this.abiModel,
-            this.methodController
-        );
+        this.events = contractModuleFactory.createEventSubscriptionsProxy(this, this.abiModel, this.methodController);
     }
 
     /**
@@ -225,11 +221,7 @@ export default class Contract extends AbstractWeb3Module {
         pastEventLogsMethodModel.parameters = [options];
         pastEventLogsMethodModel.callback = callback;
 
-        return this.methodController.execute(
-            pastEventLogsMethodModel,
-            this.accounts,
-            this
-        );
+        return this.methodController.execute(pastEventLogsMethodModel, this.accounts, this);
     }
 
     /**
@@ -288,9 +280,6 @@ export default class Contract extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(
-            super.setProvider(provider, net) &&
-            this.accounts.setProvider(provider, net)
-        );
+        return !!(super.setProvider(provider, net) && this.accounts.setProvider(provider, net));
     }
 }

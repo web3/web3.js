@@ -23,7 +23,6 @@
 import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class MessageSigner extends AbstractSigner {
-
     /**
      * Signs a given message
      *

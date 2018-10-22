@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class ListeningMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class ListeningMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'net_listening',
-            0,
-            utils,
-            formatters
-        );
+        super('net_listening', 0, utils, formatters);
     }
 }

@@ -26,7 +26,6 @@ import {errors} from 'web3-core-helpers';
 import EventEmitter from 'eventemitter3';
 
 export default class AbstractProviderAdapter extends EventEmitter {
-
     /**
      * @param {Object} provider
      *
@@ -52,9 +51,8 @@ export default class AbstractProviderAdapter extends EventEmitter {
 
         return new Promise((resolve, reject) => {
             this.provider.send(payload, (error, response) => {
-                this.handleResponse(reject, resolve, error, response)
+                this.handleResponse(reject, resolve, error, response);
             });
-
         });
     }
 
@@ -111,7 +109,9 @@ export default class AbstractProviderAdapter extends EventEmitter {
     handleResponse(reject, resolve, error, response) {
         if (response && response.id && payload.id !== response.id) {
             reject(
-                new Error(`Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`)
+                new Error(
+                    `Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`
+                )
             );
 
             return;
@@ -122,7 +122,6 @@ export default class AbstractProviderAdapter extends EventEmitter {
 
             return;
         }
-
 
         if (!JSONRpcResponseValidator.isValid(response.result)) {
             reject(errors.InvalidResponse(response));

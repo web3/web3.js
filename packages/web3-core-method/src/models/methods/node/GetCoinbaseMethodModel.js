@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class GetCoinbaseMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class GetCoinbaseMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_coinbase',
-            0,
-            utils,
-            formatters
-        );
+        super('eth_coinbase', 0, utils, formatters);
     }
 }

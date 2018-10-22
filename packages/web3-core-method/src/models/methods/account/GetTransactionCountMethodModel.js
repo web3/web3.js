@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class GetTransactionCountMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class GetTransactionCountMethodModel extends AbstractMethodModel 
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_getTransactionCount',
-            2,
-            utils,
-            formatters
-        );
+        super('eth_getTransactionCount', 2, utils, formatters);
     }
 
     /**

@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class GetAccountsMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class GetAccountsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_accounts',
-            0,
-            utils,
-            formatters
-        );
+        super('eth_accounts', 0, utils, formatters);
     }
 
     /**
@@ -49,7 +43,7 @@ export default class GetAccountsMethodModel extends AbstractMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        return response.map(responseItem => {
+        return response.map((responseItem) => {
             return this.utils.toChecksumAddress(responseItem);
         });
     }

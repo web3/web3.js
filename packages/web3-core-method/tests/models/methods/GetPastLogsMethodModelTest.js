@@ -8,27 +8,27 @@ var GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMet
 /**
  * GetPastLogsMethodModel test
  */
-describe('GetPastLogsMethodModelTest', function () {
+describe('GetPastLogsMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new GetPastLogsMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getLogs', function () {
+    it('rpcMethod should return eth_getLogs', function() {
         expect(model.rpcMethod).to.equal('eth_getLogs');
     });
 
-    it('parametersAmount should return 1', function () {
+    it('parametersAmount should return 1', function() {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function() {
         model.parameters = [{}];
 
         formattersMock
@@ -44,7 +44,7 @@ describe('GetPastLogsMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         formattersMock
             .expects('outputLogFormatter')
             .withArgs({})

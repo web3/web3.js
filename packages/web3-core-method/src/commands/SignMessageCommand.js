@@ -21,7 +21,6 @@
  */
 
 export default class SignMessageCommand {
-
     /**
      * @param {MessageSigner} messageSigner
      *
@@ -52,7 +51,7 @@ export default class SignMessageCommand {
             signedMessage = methodModel.afterExecution(
                 this.messageSigner.sign(methodModel.parameters[0], methodModel.parameters[1], accounts)
             );
-        } catch(error) {
+        } catch (error) {
             methodModel.callback(error, null);
 
             throw error;

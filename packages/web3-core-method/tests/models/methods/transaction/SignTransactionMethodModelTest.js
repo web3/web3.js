@@ -8,27 +8,27 @@ var SignTransactionMethodModel = require('../../../../src/models/methods/transac
 /**
  * SendTransactionMethodModel test
  */
-describe('SendTransactionMethodModelTest', function () {
+describe('SendTransactionMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new SignTransactionMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_signTransaction', function () {
+    it('rpcMethod should return eth_signTransaction', function() {
         expect(model.rpcMethod).to.equal('eth_signTransaction');
     });
 
-    it('parametersAmount should return 1', function () {
+    it('parametersAmount should return 1', function() {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should do nothing with the parameters', function () {
+    it('beforeExecution should do nothing with the parameters', function() {
         model.parameters = [{}];
 
         formattersMock
@@ -42,7 +42,7 @@ describe('SendTransactionMethodModelTest', function () {
         expect(model.parameters[0]).to.be.property('empty', false);
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         expect(model.afterExecution('sendTransaction')).equal('sendTransaction');
     });
 });

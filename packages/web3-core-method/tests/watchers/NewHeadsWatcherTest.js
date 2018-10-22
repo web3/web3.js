@@ -10,7 +10,7 @@ var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
 /**
  * NewHeadsWatcher test
  */
-describe('NewHeadsWatcherTest', function () {
+describe('NewHeadsWatcherTest', function() {
     var newHeadsWatcher,
         provider,
         providerMock,
@@ -23,14 +23,14 @@ describe('NewHeadsWatcherTest', function () {
         subscription,
         subscriptionMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         subscriptionsFactory = new SubscriptionsPackage.createSubscriptionsFactory();
         subscriptionsFactoryMock = sinon.mock(subscriptionsFactory);
 
         newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactory);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
@@ -41,7 +41,7 @@ describe('NewHeadsWatcherTest', function () {
         expect(newHeadsWatcher.confirmationInterval).to.be.null;
     });
 
-    it('calls watch and stop with HttpProviderAdapter', function () {
+    it('calls watch and stop with HttpProviderAdapter', function() {
         provider = new ProvidersPackage.HttpProvider('http://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -61,7 +61,7 @@ describe('NewHeadsWatcherTest', function () {
         expect(newHeadsWatcher.listeners('newHead').length).equal(0);
     });
 
-    it('calls watch and stop with SocketProviderAdapter', function () {
+    it('calls watch and stop with SocketProviderAdapter', function() {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -79,9 +79,7 @@ describe('NewHeadsWatcherTest', function () {
             .returns(subscription)
             .once();
 
-        subscriptionMock
-            .expects('unsubscribe')
-            .once();
+        subscriptionMock.expects('unsubscribe').once();
 
         subscriptionsFactoryMock
             .expects('createNewHeadsSubscription')

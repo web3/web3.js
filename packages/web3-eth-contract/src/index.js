@@ -44,12 +44,7 @@ import ContractModuleFactory from './factories/ContractModuleFactory';
 export const Contract = (provider, accounts, abi, address, options) => {
     const providersModuleFactory = new ProvidersModuleFactory();
 
-    return new ContractModuleFactory(
-        Utils,
-        formatters,
-        new ABICoder(),
-        accounts
-    ).createContract(
+    return new ContractModuleFactory(Utils, formatters, new ABICoder(), accounts).createContract(
         provider,
         providersModuleFactory.createProviderDetector(),
         providersModuleFactory.createProviderAdapterResolver(),

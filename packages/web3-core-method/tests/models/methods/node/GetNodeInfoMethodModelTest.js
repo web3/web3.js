@@ -6,29 +6,29 @@ var GetNodeInfoMethodModel = require('../../../../src/models/methods/node/GetNod
 /**
  * GetNodeInfoMethodModel test
  */
-describe('GetNodeInfoMethodModelTest', function () {
+describe('GetNodeInfoMethodModelTest', function() {
     var model;
 
-    beforeEach(function () {
+    beforeEach(function() {
         model = new GetNodeInfoMethodModel({}, {});
     });
 
-    it('rpcMethod should return web3_clientVersion', function () {
+    it('rpcMethod should return web3_clientVersion', function() {
         expect(model.rpcMethod).to.equal('web3_clientVersion');
     });
 
-    it('parametersAmount should return 0', function () {
+    it('parametersAmount should return 0', function() {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function () {
+    it('beforeExecution should do nothing with the parameters', function() {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         expect(model.afterExecution('version')).equal('version');
     });
 });

@@ -30,12 +30,7 @@ export default class GetGasPriceMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_gasPrice',
-            0,
-            utils,
-            formatters
-        );
+        super('eth_gasPrice', 0, utils, formatters);
     }
 
     /**

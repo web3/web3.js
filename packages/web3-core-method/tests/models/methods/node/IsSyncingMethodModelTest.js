@@ -8,34 +8,34 @@ var IsSyncingMethodModel = require('../../../../src/models/methods/node/IsSyncin
 /**
  * IsSyncingMethodModel test
  */
-describe('IsSyncingMethodModelTest', function () {
+describe('IsSyncingMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new IsSyncingMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_syncing', function () {
+    it('rpcMethod should return eth_syncing', function() {
         expect(model.rpcMethod).to.equal('eth_syncing');
     });
 
-    it('parametersAmount should return 0', function () {
+    it('parametersAmount should return 0', function() {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function () {
+    it('beforeExecution should do nothing with the parameters', function() {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should map the response', function () {
+    it('afterExecution should map the response', function() {
         formattersMock
             .expects('outputSyncingFormatter')
             .withArgs({})

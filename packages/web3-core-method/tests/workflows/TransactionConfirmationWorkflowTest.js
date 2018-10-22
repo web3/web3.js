@@ -15,7 +15,7 @@ var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionCo
 /**
  * TransactionConfirmationWorkflow test
  */
-describe('TransactionConfirmationWorkflowTest', function () {
+describe('TransactionConfirmationWorkflowTest', function() {
     var transactionConfirmationWorkflow,
         transactionConfirmationModel,
         transactionConfirmationModelMock,
@@ -36,7 +36,7 @@ describe('TransactionConfirmationWorkflowTest', function () {
         promiEvent,
         promiEventMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         transactionConfirmationModel = new TransactionConfirmationModel();
         transactionConfirmationModelMock = sinon.mock(transactionConfirmationModel);
 
@@ -73,19 +73,19 @@ describe('TransactionConfirmationWorkflowTest', function () {
         );
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls executes and receipt does already exists', function () {
+    it('calls executes and receipt does already exists', function() {
         providerAdapterMock
             .expects('send')
             .withArgs('eth_getTransactionReceipt', ['0x0'])
-            .returns(new Promise(
-                function (resolve) {
+            .returns(
+                new Promise(function(resolve) {
                     resolve({});
-                }
-            ))
+                })
+            )
             .once();
 
         formattersMock
@@ -100,9 +100,7 @@ describe('TransactionConfirmationWorkflowTest', function () {
             .returns(true)
             .once();
 
-        newHeadsWatcherMock
-            .expects('stop')
-            .once();
+        newHeadsWatcherMock.expects('stop').once();
 
         methodModelMock
             .expects('afterExecution')
@@ -110,25 +108,22 @@ describe('TransactionConfirmationWorkflowTest', function () {
             .returns({blockHash: '0x00'})
             .once();
 
-        transactionConfirmationWorkflow.execute(
-            methodModel,
-            moduleInstance,
-            '0x0',
-            promiEvent
-        );
+        transactionConfirmationWorkflow.execute(methodModel, moduleInstance, '0x0', promiEvent);
 
-        promiEvent.on('receipt', function (receipt) {
-            expect(receipt).to.has.an.property('blockHash', '0x00');
-        }).then(function (response) {
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'}));
-            expect(response).to.has.an.property('blockHash', '0x00');
+        promiEvent
+            .on('receipt', function(receipt) {
+                expect(receipt).to.has.an.property('blockHash', '0x00');
+            })
+            .then(function(response) {
+                expect(methodModelCallbackSpy.calledOnce).to.be.true;
+                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'}));
+                expect(response).to.has.an.property('blockHash', '0x00');
 
-            providerMock.verify();
-            formattersMock.verify();
-            transactionReceiptValidatorMock.verify();
-            newHeadsWatcherMock.verify();
-            methodModelMock.verify();
-        });
+                providerMock.verify();
+                formattersMock.verify();
+                transactionReceiptValidatorMock.verify();
+                newHeadsWatcherMock.verify();
+                methodModelMock.verify();
+            });
     });
 });

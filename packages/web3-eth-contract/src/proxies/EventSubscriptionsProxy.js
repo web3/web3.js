@@ -21,7 +21,6 @@
  */
 
 export default class EventSubscriptionsProxy {
-
     /**
      * @param {Contract} contract
      * @param {ABIModel} abiModel
@@ -102,12 +101,14 @@ export default class EventSubscriptionsProxy {
             );
         }
 
-        return this.eventSubscriptionFactory.createEventLogSubscription(
-            this.eventLogDecoder,
-            abiItemModel,
-            this.contract,
-            this.eventOptionsMapper.map(abiItemModel, this.contract, options)
-        ).subscribe(callback);
+        return this.eventSubscriptionFactory
+            .createEventLogSubscription(
+                this.eventLogDecoder,
+                abiItemModel,
+                this.contract,
+                this.eventOptionsMapper.map(abiItemModel, this.contract, options)
+            )
+            .subscribe(callback);
     }
 
     /**
@@ -128,11 +129,13 @@ export default class EventSubscriptionsProxy {
             );
         }
 
-        return this.eventSubscriptionFactory.createAllEventLogSubscription(
-            this.allEventsLogDecoder,
-            this.contract,
-            this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
-        ).subscribe(callback);
+        return this.eventSubscriptionFactory
+            .createAllEventLogSubscription(
+                this.allEventsLogDecoder,
+                this.contract,
+                this.allEventsOptionsMapper.map(this.abiModel, this.contract, options)
+            )
+            .subscribe(callback);
     }
 
     /**

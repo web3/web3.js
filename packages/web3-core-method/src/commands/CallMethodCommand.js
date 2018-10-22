@@ -21,7 +21,6 @@
  */
 
 export default class CallMethodCommand {
-
     /**
      * Sends a JSON-RPC call request
      *

@@ -31,30 +31,28 @@ if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
         return new window.WebSocket(url, protocols);
     };
     _btoa = btoa;
-    parseURL = url => {
+    parseURL = (url) => {
         return new URL(url);
     };
 } else {
     Ws = require('websocket').w3cwebsocket;
-    _btoa = str => {
+    _btoa = (str) => {
         return Buffer(str).toString('base64');
     };
     const url = require('url');
     if (url.URL) {
         // Use the new Node 6+ API for parsing URLs that supports username/password
         const newURL = url.URL;
-        parseURL = url => {
+        parseURL = (url) => {
             return new newURL(url);
         };
-    }
-    else {
+    } else {
         // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
         parseURL = require('url').parse;
     }
 }
 
 export default class WebsocketProvider {
-
     /**
      * Default connection ws://localhost:8546
      *
@@ -93,21 +91,18 @@ export default class WebsocketProvider {
 
         this.addDefaultEvents();
 
-
         // LISTEN FOR CONNECTION RESPONSES
-        this.connection.onmessage = e => {
+        this.connection.onmessage = (e) => {
             /*jshint maxcomplexity: 6 */
-            const data = (typeof e.data === 'string') ? e.data : '';
+            const data = typeof e.data === 'string' ? e.data : '';
 
-            this._parseResponse(data).forEach(result => {
-
+            this._parseResponse(data).forEach((result) => {
                 let id = null;
 
                 // get the id which matches the returned id
                 if (_.isArray(result)) {
-                    result.forEach(load => {
-                        if (this.responseCallbacks[load.id])
-                            id = load.id;
+                    result.forEach((load) => {
+                        if (this.responseCallbacks[load.id]) id = load.id;
                     });
                 } else {
                     id = result.id;
@@ -115,9 +110,8 @@ export default class WebsocketProvider {
 
                 // notification
                 if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
-                    this.notificationCallbacks.forEach(callback => {
-                        if (_.isFunction(callback))
-                            callback(result);
+                    this.notificationCallbacks.forEach((callback) => {
+                        if (_.isFunction(callback)) callback(result);
                     });
 
                     // fire the callback
@@ -133,7 +127,7 @@ export default class WebsocketProvider {
             get() {
                 return this.connection && this.connection.readyState === this.connection.OPEN;
             },
-            enumerable: true,
+            enumerable: true
         });
     }
 
@@ -177,19 +171,15 @@ export default class WebsocketProvider {
             .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
             .split('|--|');
 
-        dechunkedData.forEach(data => {
-
+        dechunkedData.forEach((data) => {
             // prepend the last chunk
-            if (this.lastChunk)
-                data = this.lastChunk + data;
+            if (this.lastChunk) data = this.lastChunk + data;
 
             let result = null;
 
             try {
                 result = JSON.parse(data);
-
             } catch (e) {
-
                 this.lastChunk = data;
 
                 // start timeout to cancel all requests
@@ -206,8 +196,7 @@ export default class WebsocketProvider {
             clearTimeout(this.lastChunkTimeout);
             this.lastChunk = null;
 
-            if (result)
-                returnValues.push(result);
+            if (result) returnValues.push(result);
         });
 
         return returnValues;
@@ -303,9 +292,7 @@ export default class WebsocketProvider {
      * @callback callback callback(error, result)
      */
     on(type, callback) {
-
-        if (typeof callback !== 'function')
-            throw new Error('The second parameter callback must be a function.');
+        if (typeof callback !== 'function') throw new Error('The second parameter callback must be a function.');
 
         switch (type) {
             case 'data':
@@ -346,8 +333,7 @@ export default class WebsocketProvider {
         switch (type) {
             case 'data':
                 this.notificationCallbacks.forEach((cb, index) => {
-                    if (cb === callback)
-                        this.notificationCallbacks.splice(index, 1);
+                    if (cb === callback) this.notificationCallbacks.splice(index, 1);
                 });
                 break;
 

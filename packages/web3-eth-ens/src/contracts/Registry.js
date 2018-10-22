@@ -21,7 +21,6 @@ import {isFunction} from 'underscore';
 import namehash from 'eth-ens-namehash';
 
 export default class Registry {
-
     /**
      * // TODO: Contract should be implemented over dependency inversion and not dependency injection
      * @param {AbstractProviderAdapter|EthereumProvider} provider
@@ -40,13 +39,8 @@ export default class Registry {
         this.resolverABI = resolverABI;
         this.provider = provider;
 
-        this.contract = this.checkNetwork().then(address => {
-            return new this.contractObject(
-                this.provider,
-                this.accounts,
-                this.registryABI,
-                address
-            );
+        this.contract = this.checkNetwork().then((address) => {
+            return new this.contractObject(this.provider, this.accounts, this.registryABI, address);
         });
     }
 
@@ -79,17 +73,18 @@ export default class Registry {
      */
     owner(name, callback) {
         return new Promise((resolve, reject) => {
-            this.contract.then(contract => {
-                contract.methods.owner(namehash.hash(name))
+            this.contract.then((contract) => {
+                contract.methods
+                    .owner(namehash.hash(name))
                     .call()
-                    .then(receipt => {
+                    .then((receipt) => {
                         resolve(receipt);
 
                         if (isFunction(callback)) {
                             callback(false, receipt);
                         }
                     })
-                    .catch(error => {
+                    .catch((error) => {
                         reject(error);
 
                         if (isFunction(callback)) {
@@ -110,16 +105,13 @@ export default class Registry {
      * @returns {Promise<Contract>}
      */
     resolver(name) {
-        return this.contract.then(contract => {
-            return contract.methods.resolver(namehash.hash(name)).call();
-        }).then(address => {
-            return new this.Contract.Contract(
-                this.provider,
-                this.accounts,
-                this.resolverABI,
-                address
-            );
-        });
+        return this.contract
+            .then((contract) => {
+                return contract.methods.resolver(namehash.hash(name)).call();
+            })
+            .then((address) => {
+                return new this.Contract.Contract(this.provider, this.accounts, this.resolverABI, address);
+            });
     }
 
     /**
@@ -132,25 +124,28 @@ export default class Registry {
      */
     checkNetwork() {
         const ensAddresses = {
-            main: "0x314159265dD8dbb310642f98f50C066173C1259b",
-            ropsten: "0x112234455c3a32fd11230c42e7bccd4a84e02010",
-            rinkeby: "0xe7410170f87102df0055eb195163a03b7f2bff4a"
+            main: '0x314159265dD8dbb310642f98f50C066173C1259b',
+            ropsten: '0x112234455c3a32fd11230c42e7bccd4a84e02010',
+            rinkeby: '0xe7410170f87102df0055eb195163a03b7f2bff4a'
         };
 
-        return this.net.getBlock('latest', false).then(block => {
-            const headAge = new Date() / 1000 - block.timestamp;
-            if (headAge > 3600) {
-                throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
-            }
+        return this.net
+            .getBlock('latest', false)
+            .then((block) => {
+                const headAge = new Date() / 1000 - block.timestamp;
+                if (headAge > 3600) {
+                    throw new Error(`Network not synced; last block was ${headAge} seconds ago`);
+                }
 
-            return this.net.getNetworkType();
-        }).then(networkType => {
-            const addr = ensAddresses[networkType];
-            if (typeof addr === 'undefined') {
-                throw new Error(`ENS is not supported on network ${networkType}`);
-            }
+                return this.net.getNetworkType();
+            })
+            .then((networkType) => {
+                const addr = ensAddresses[networkType];
+                if (typeof addr === 'undefined') {
+                    throw new Error(`ENS is not supported on network ${networkType}`);
+                }
 
-            return addr;
-        });
+                return addr;
+            });
     }
 }

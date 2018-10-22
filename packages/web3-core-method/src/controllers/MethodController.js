@@ -21,7 +21,6 @@
  */
 
 export default class MethodController {
-
     /**
      * @param {CallMethodCommand} callMethodCommand
      * @param {SendMethodCommand} sendMethodCommand
@@ -31,13 +30,7 @@ export default class MethodController {
      *
      * @constructor
      */
-    constructor(
-        callMethodCommand,
-        sendMethodCommand,
-        signAndSendMethodCommand,
-        signMessageCommand,
-        promiEventObject
-    ) {
+    constructor(callMethodCommand, sendMethodCommand, signAndSendMethodCommand, signMessageCommand, promiEventObject) {
         this.callMethodCommand = callMethodCommand;
         this.sendMethodCommand = sendMethodCommand;
         this.signAndSendMethodCommand = signAndSendMethodCommand;
@@ -59,11 +52,7 @@ export default class MethodController {
     execute(methodModel, accounts, moduleInstance) {
         if (this.hasWallets(accounts)) {
             if (methodModel.isSign()) {
-                return this.signMessageCommand.execute(
-                    moduleInstance,
-                    methodModel,
-                    accounts,
-                );
+                return this.signMessageCommand.execute(moduleInstance, methodModel, accounts);
             }
 
             if (methodModel.isSendTransaction()) {
@@ -71,23 +60,16 @@ export default class MethodController {
                     moduleInstance,
                     methodModel,
                     new this.promiEventObject(),
-                    accounts,
+                    accounts
                 );
             }
         }
 
         if (methodModel.isSendTransaction() || methodModel.isSendRawTransaction() || methodModel.isSign()) {
-            return this.sendMethodCommand.execute(
-                moduleInstance,
-                methodModel,
-                new this.promiEventObject()
-            );
+            return this.sendMethodCommand.execute(moduleInstance, methodModel, new this.promiEventObject());
         }
 
-        return this.callMethodCommand.execute(
-            moduleInstance,
-            methodModel,
-        );
+        return this.callMethodCommand.execute(moduleInstance, methodModel);
     }
 
     /**
@@ -100,6 +82,6 @@ export default class MethodController {
      * @returns {Boolean}
      */
     hasWallets(accounts) {
-        return (accounts && accounts.wallet.length > 0);
+        return accounts && accounts.wallet.length > 0;
     }
 }

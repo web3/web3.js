@@ -23,7 +23,6 @@
 import {isObject, isFunction} from 'underscore';
 
 export default class ProviderAdapterResolver {
-
     /**
      * @param {ProvidersModuleFactory} providersPackageFactory
      *

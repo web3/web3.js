@@ -40,7 +40,6 @@ import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
 import Contract from '../Contract';
 
 export default class ContractModuleFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -151,7 +150,7 @@ export default class ContractModuleFactory {
      * @returns {EventFilterEncoder}
      */
     createEventFilterEncoder() {
-        return new EventFilterEncoder(this.abiCoder)
+        return new EventFilterEncoder(this.abiCoder);
     }
 
     /**
@@ -162,7 +161,7 @@ export default class ContractModuleFactory {
      * @returns {AllEventsFilterEncoder}
      */
     createAllEventsFilterEncoder() {
-        return new AllEventsFilterEncoder(this.abiCoder)
+        return new AllEventsFilterEncoder(this.abiCoder);
     }
 
     /**
@@ -261,12 +260,7 @@ export default class ContractModuleFactory {
      * @returns {RpcMethodModelFactory}
      */
     createRpcMethodModelFactory() {
-        return new RpcMethodFactory(
-            this.createCallMethodResponseDecoder(),
-            this.accounts,
-            this.utils,
-            this.formatters
-        );
+        return new RpcMethodFactory(this.createCallMethodResponseDecoder(), this.accounts, this.utils, this.formatters);
     }
 
     /**
@@ -327,10 +321,6 @@ export default class ContractModuleFactory {
      * @returns {EventSubscriptionFactory}
      */
     createEventSubscriptionFactory(methodController) {
-        new EventSubscriptionFactory(
-            this.utils,
-            this.formatters,
-            methodController
-        );
+        new EventSubscriptionFactory(this.utils, this.formatters, methodController);
     }
 }

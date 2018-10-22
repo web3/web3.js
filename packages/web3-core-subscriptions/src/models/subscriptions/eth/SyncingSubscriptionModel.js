@@ -23,7 +23,6 @@
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class SyncingSubscriptionModel extends AbstractSubscriptionModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,13 +30,7 @@ export default class SyncingSubscriptionModel extends AbstractSubscriptionModel 
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_subscribe',
-            'syncing',
-            null,
-            utils,
-            formatters
-        );
+        super('eth_subscribe', 'syncing', null, utils, formatters);
         this.isSyncing = null;
     }
 

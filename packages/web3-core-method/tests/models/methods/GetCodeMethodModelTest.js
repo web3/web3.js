@@ -8,27 +8,27 @@ var GetCodeMethodModel = require('../../../src/models/methods/GetCodeMethodModel
 /**
  * GetCodeMethodModel test
  */
-describe('GetCodeMethodModelTest', function () {
+describe('GetCodeMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new GetCodeMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getCode', function () {
+    it('rpcMethod should return eth_getCode', function() {
         expect(model.rpcMethod).to.equal('eth_getCode');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function () {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function() {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -51,7 +51,7 @@ describe('GetCodeMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         var object = {};
 
         expect(model.afterExecution(object)).to.equal(object);

@@ -9,28 +9,28 @@ var EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMet
 /**
  * EstimateGasMethodModel test
  */
-describe('EstimateGasMethodModelTest', function () {
+describe('EstimateGasMethodModelTest', function() {
     var model, formattersMock, utilsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new EstimateGasMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_estimateGas', function () {
+    it('rpcMethod should return eth_estimateGas', function() {
         expect(model.rpcMethod).to.equal('eth_estimateGas');
     });
 
-    it('parametersAmount should return 1', function () {
+    it('parametersAmount should return 1', function() {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call the inputCallFormatter', function () {
+    it('beforeExecution should call the inputCallFormatter', function() {
         model.parameters = [{}];
 
         formattersMock
@@ -46,7 +46,7 @@ describe('EstimateGasMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber and return the response', function () {
+    it('afterExecution should call hexToNumber and return the response', function() {
         utilsMock
             .expects('hexToNumber')
             .withArgs({})

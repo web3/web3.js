@@ -23,7 +23,6 @@
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class NewPendingTransactionsSubscriptionModel extends AbstractSubscriptionModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,6 @@ export default class NewPendingTransactionsSubscriptionModel extends AbstractSub
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_subscribe',
-            'newPendingTransactions',
-            null,
-            utils,
-            formatters
-        );
+        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters);
     }
 }

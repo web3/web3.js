@@ -22,7 +22,6 @@ import Registry from '../contracts/Registry';
 import ResolverMethodHandler from '../handlers/ResolverMethodHandler';
 
 export default class ENSModuleFactory {
-
     /**
      * Returns an object of type ENS
      *
@@ -38,15 +37,7 @@ export default class ENSModuleFactory {
      *
      * @returns {ENS}
      */
-    createENS(
-        provider,
-        net,
-        accounts,
-        Contract,
-        registryAbi,
-        resolverAbi,
-        PromiEvent
-    ) {
+    createENS(provider, net, accounts, Contract, registryAbi, resolverAbi, PromiEvent) {
         const registry = this.createRegistry(provider, net, accounts, Contract, registryAbi, resolverAbi);
 
         return new ENS(registry, this.createResolverMethodHandler(registry, PromiEvent));

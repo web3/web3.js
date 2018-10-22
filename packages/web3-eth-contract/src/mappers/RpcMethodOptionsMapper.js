@@ -21,7 +21,6 @@
  */
 
 export default class RpcMethodOptionsMapper {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -49,7 +48,7 @@ export default class RpcMethodOptionsMapper {
 
         let from = null;
         if (options.from) {
-            from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from))
+            from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from));
         }
 
         options.data = options.data || contract.options.data;

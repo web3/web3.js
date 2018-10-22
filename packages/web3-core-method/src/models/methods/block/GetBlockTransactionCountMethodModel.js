@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class GetBlockTransactionCountMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class GetBlockTransactionCountMethodModel extends AbstractMethodM
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_getTransactionByBlockNumberAndIndex',
-            1,
-            utils,
-            formatters
-        );
+        super('eth_getTransactionByBlockNumberAndIndex', 1, utils, formatters);
     }
 
     /**

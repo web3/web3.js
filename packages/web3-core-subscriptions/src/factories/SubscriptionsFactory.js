@@ -28,7 +28,6 @@ import SyncingSubscriptionModel from '../models/subscriptions/eth/SyncingSubscri
 import MessagesSubscriptionModel from '../models/subscriptions/shh/MessagesSubscriptionModel';
 
 export default class SubscriptionsFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -54,13 +53,7 @@ export default class SubscriptionsFactory {
      */
     createLogSubscription(moduleInstance, options, getPastLogsMethodModel, methodController) {
         return new Subscription(
-            new LogSubscriptionModel(
-                options,
-                this.utils,
-                this.formatters,
-                getPastLogsMethodModel,
-                methodController
-            ),
+            new LogSubscriptionModel(options, this.utils, this.formatters, getPastLogsMethodModel, methodController),
             moduleInstance
         );
     }
@@ -75,10 +68,7 @@ export default class SubscriptionsFactory {
      * @returns {Subscription}
      */
     createNewHeadsSubscription(moduleInstance) {
-        return new Subscription(
-            new NewHeadsSubscriptionModel(this.utils, this.formatters),
-            moduleInstance
-        );
+        return new Subscription(new NewHeadsSubscriptionModel(this.utils, this.formatters), moduleInstance);
     }
 
     /**
@@ -107,10 +97,7 @@ export default class SubscriptionsFactory {
      * @returns {Subscription}
      */
     createSyncingSubscriptionModel(moduleInstance) {
-        return new Subscription(
-            new SyncingSubscriptionModel(this.utils, this.formatters),
-            moduleInstance
-        );
+        return new Subscription(new SyncingSubscriptionModel(this.utils, this.formatters), moduleInstance);
     }
 
     /**
@@ -124,9 +111,6 @@ export default class SubscriptionsFactory {
      * @returns {Subscription}
      */
     createShhMessagesSubscription(moduleInstance, options) {
-        return new Subscription(
-            new MessagesSubscriptionModel(options, this.utils, this.formatters),
-            moduleInstance
-        );
+        return new Subscription(new MessagesSubscriptionModel(options, this.utils, this.formatters), moduleInstance);
     }
 }

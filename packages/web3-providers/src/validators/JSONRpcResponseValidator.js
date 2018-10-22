@@ -21,7 +21,6 @@
  */
 
 export default class JSONRpcResponseValidator {
-
     /**
      * Executes JSON-RPC response validation
      *
@@ -33,7 +32,7 @@ export default class JSONRpcResponseValidator {
      */
     static isValid(response) {
         if (Array.isArray(response)) {
-            return response.every(this.isResponseItemValid)
+            return response.every(this.isResponseItemValid);
         }
 
         return this.isResponseItemValid(response);
@@ -49,10 +48,12 @@ export default class JSONRpcResponseValidator {
      * @returns {Boolean}
      */
     static isResponseItemValid(response) {
-        return !!response &&
+        return (
+            !!response &&
             !response.error &&
             response.jsonrpc === '2.0' &&
             (typeof response.id === 'number' || typeof response.id === 'string') &&
-            response.result !== undefined;
+            response.result !== undefined
+        );
     }
 }

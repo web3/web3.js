@@ -30,11 +30,6 @@ export default class GetFilterMessagesMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'shh_getFilterMessages',
-            1,
-            utils,
-            formatters
-        );
+        super('shh_getFilterMessages', 1, utils, formatters);
     }
 }

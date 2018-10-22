@@ -21,7 +21,6 @@
  */
 
 export default class AllEventsOptionsMapper {
-
     /**
      * @param {Object} formatters
      * @param {AllEventsFilterEncoder} allEventsFilterEncoder

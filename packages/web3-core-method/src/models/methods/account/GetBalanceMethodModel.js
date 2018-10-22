@@ -30,12 +30,7 @@ export default class GetBalanceMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_getBalance',
-            2,
-            utils,
-            formatters
-        );
+        super('eth_getBalance', 2, utils, formatters);
     }
 
     /**

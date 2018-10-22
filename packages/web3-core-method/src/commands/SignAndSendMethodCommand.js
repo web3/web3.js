@@ -23,7 +23,6 @@
 import SendMethodCommand from './SendMethodCommand';
 
 export default class SignAndSendMethodCommand extends SendMethodCommand {
-
     /**
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {TransactionSigner} transactionSigner
@@ -52,18 +51,21 @@ export default class SignAndSendMethodCommand extends SendMethodCommand {
         methodModel.beforeExecution(moduleInstance);
         methodModel.rpcMethod = 'eth_sendRawTransaction';
 
-        this.transactionSigner.sign(methodModel.parameters[0], accounts).then(response => {
-            methodModel.parameters = [response.rawTransaction];
-            this.send(methodModel, promiEvent, moduleInstance);
-        }).catch(error => {
-            promiEvent.reject(error);
-            promiEvent.emit('error', error);
-            promiEvent.removeAllListeners();
+        this.transactionSigner
+            .sign(methodModel.parameters[0], accounts)
+            .then((response) => {
+                methodModel.parameters = [response.rawTransaction];
+                this.send(methodModel, promiEvent, moduleInstance);
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
 
-            if (methodModel.callback) {
-                methodModel.callback(error, null);
-            }
-        });
+                if (methodModel.callback) {
+                    methodModel.callback(error, null);
+                }
+            });
 
         return promiEvent;
     }

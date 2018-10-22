@@ -9,28 +9,28 @@ var GetBlockTransactionCountMethodModel = require('../../../../src/models/method
 /**
  * GetBlockTransactionCountMethodModel test
  */
-describe('GetBlockTransactionCountMethodModelTest', function () {
+describe('GetBlockTransactionCountMethodModelTest', function() {
     var model, utilsMock, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         utilsMock = sinon.mock(utils);
         formattersMock = sinon.mock(formatters);
         model = new GetBlockTransactionCountMethodModel(utils, formatters);
     });
 
     afterEach(function() {
-       sinon.restore();
+        sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', function () {
+    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', function() {
         expect(model.rpcMethod).to.equal('eth_getTransactionByBlockNumberAndIndex');
     });
 
-    it('parametersAmount should return 1', function () {
+    it('parametersAmount should return 1', function() {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call method with block hash as parameter and call inputBlockNumberFormatter', function () {
+    it('beforeExecution should call method with block hash as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -48,8 +48,7 @@ describe('GetBlockTransactionCountMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getTransactionByBlockHashAndIndex');
     });
 
-    it('beforeExecution should call method with block number as parameter and call inputBlockNumberFormatter', function () {
-
+    it('beforeExecution should call method with block number as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = [100];
 
         formattersMock
@@ -67,7 +66,7 @@ describe('GetBlockTransactionCountMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getTransactionByBlockNumberAndIndex');
     });
 
-    it('afterExecution should map the hex string to a number', function () {
+    it('afterExecution should map the hex string to a number', function() {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

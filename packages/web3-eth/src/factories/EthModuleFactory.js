@@ -24,7 +24,6 @@ import MethodModelFactory from './MethodModelFactory';
 import Eth from '../Eth';
 
 export default class EthModuleFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -72,7 +71,7 @@ export default class EthModuleFactory {
         iban,
         abi,
         ens,
-        subscriptionsFactory,
+        subscriptionsFactory
     ) {
         return new Eth(
             provider,

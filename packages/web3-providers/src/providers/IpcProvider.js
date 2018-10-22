@@ -25,7 +25,6 @@ import {errors} from 'web3-core-helpers';
 import oboe from 'oboe';
 
 export default class IpcProvider {
-
     /**
      * @param {String} path
      * @param {Net} net
@@ -43,16 +42,15 @@ export default class IpcProvider {
         this.addDefaultEvents();
 
         // LISTEN FOR CONNECTION RESPONSES
-        const callback = result => {
+        const callback = (result) => {
             /*jshint maxcomplexity: 6 */
 
             let id = null;
 
             // get the id which matches the returned id
             if (isArray(result)) {
-                result.forEach(load => {
-                    if (this.responseCallbacks[load.id])
-                        id = load.id;
+                result.forEach((load) => {
+                    if (this.responseCallbacks[load.id]) id = load.id;
                 });
             } else {
                 id = result.id;
@@ -60,9 +58,8 @@ export default class IpcProvider {
 
             // notification
             if (!id && result.method.indexOf('_subscription') !== -1) {
-                this.notificationCallbacks.forEach(callback => {
-                    if (isFunction(callback))
-                        callback(result);
+                this.notificationCallbacks.forEach((callback) => {
+                    if (isFunction(callback)) callback(result);
                 });
 
                 // fire the callback
@@ -74,10 +71,9 @@ export default class IpcProvider {
 
         // use oboe.js for Sockets
         if (net.constructor.name === 'Socket') {
-            oboe(this.connection)
-                .done(callback);
+            oboe(this.connection).done(callback);
         } else {
-            this.connection.on('data', data => {
+            this.connection.on('data', (data) => {
                 this._parseResponse(data.toString()).forEach(callback);
             });
         }
@@ -131,14 +127,13 @@ export default class IpcProvider {
             .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
             .split('|--|');
 
-        dechunkedData.forEach(data => {
+        dechunkedData.forEach((data) => {
             let result = null;
 
             // prepend the last chunk
             if (this.lastChunk) {
                 data = this.lastChunk + data;
             }
-
 
             try {
                 result = JSON.parse(data);
@@ -286,8 +281,7 @@ export default class IpcProvider {
         switch (type) {
             case 'data':
                 this.notificationCallbacks.forEach((cb, index) => {
-                    if (cb === callback)
-                        this.notificationCallbacks.splice(index, 1);
+                    if (cb === callback) this.notificationCallbacks.splice(index, 1);
                 });
                 break;
 

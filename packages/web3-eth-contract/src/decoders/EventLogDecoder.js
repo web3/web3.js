@@ -21,7 +21,6 @@
  */
 
 class EventLogDecoder {
-
     /**
      * @param {ABICoder} abiCoder
      * @param {Object} formatters

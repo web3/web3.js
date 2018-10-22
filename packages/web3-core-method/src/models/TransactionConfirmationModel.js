@@ -21,7 +21,6 @@
  */
 
 export default class TransactionConfirmationModel {
-
     /**
      * @constructor
      */
@@ -74,7 +73,7 @@ export default class TransactionConfirmationModel {
      * @returns {Boolean}
      */
     isConfirmed() {
-        return this.confirmations.length === (this.confirmationBlocks + 1);
+        return this.confirmations.length === this.confirmationBlocks + 1;
     }
 
     /**
@@ -86,9 +85,9 @@ export default class TransactionConfirmationModel {
      */
     isTimeoutTimeExceeded(watcherIsPolling) {
         if (watcherIsPolling) {
-            return (this.timeoutCounter - 1) >= this.pollingTimeout;
+            return this.timeoutCounter - 1 >= this.pollingTimeout;
         }
 
-        return (this.timeoutCounter - 1) >= this.timeoutBlock;
+        return this.timeoutCounter - 1 >= this.timeoutBlock;
     }
 }

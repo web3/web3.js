@@ -29,7 +29,6 @@ import http from 'http';
 import https from 'https';
 
 export default class HttpProvider {
-
     /**
      * @param {String} host
      * @param {Object} options
@@ -39,10 +38,10 @@ export default class HttpProvider {
     constructor(host, options = {}) {
         this.host = host || 'http://localhost:8545';
 
-        if (this.host.substring(0,5) === "https"){
-            this.httpsAgent = new https.Agent({ keepAlive: true });
+        if (this.host.substring(0, 5) === 'https') {
+            this.httpsAgent = new https.Agent({keepAlive: true});
         } else {
-            this.httpAgent = new http.Agent({ keepAlive: true });
+            this.httpAgent = new http.Agent({keepAlive: true});
         }
 
         this.timeout = options.timeout || 0;
@@ -61,17 +60,17 @@ export default class HttpProvider {
     _prepareRequest() {
         const request = new XHR2();
         request.nodejsSet({
-            httpsAgent:this.httpsAgent,
-            httpAgent:this.httpAgent
+            httpsAgent: this.httpsAgent,
+            httpAgent: this.httpAgent
         });
 
         request.open('POST', this.host, true);
-        request.setRequestHeader('Content-Type','application/json');
+        request.setRequestHeader('Content-Type', 'application/json');
         request.timeout = this.timeout && this.timeout !== 1 ? this.timeout : 0;
         request.withCredentials = true;
 
-        if(this.headers) {
-            this.headers.forEach(header => {
+        if (this.headers) {
+            this.headers.forEach((header) => {
                 request.setRequestHeader(header.name, header.value);
             });
         }
@@ -99,7 +98,7 @@ export default class HttpProvider {
 
                 try {
                     result = JSON.parse(result);
-                } catch(e) {
+                } catch (e) {
                     error = errors.InvalidResponse(request.responseText);
                 }
 
@@ -115,7 +114,7 @@ export default class HttpProvider {
 
         try {
             request.send(JSON.stringify(payload));
-        } catch(error) {
+        } catch (error) {
             this.connected = false;
             callback(errors.InvalidConnection(this.host));
         }
@@ -124,5 +123,5 @@ export default class HttpProvider {
     /**
      * If this method does not exist it will throw en error.
      */
-    disconnect() { }
+    disconnect() {}
 }

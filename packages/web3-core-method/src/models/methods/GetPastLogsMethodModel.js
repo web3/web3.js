@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
 export default class GetPastLogsMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_getLogs',
-            1,
-            utils,
-            formatters
-        );
+        super('eth_getLogs', 1, utils, formatters);
     }
 
     /**
@@ -60,7 +54,7 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        return response.map(responseItem => {
+        return response.map((responseItem) => {
             return this.formatters.outputLogFormatter(responseItem);
         });
     }

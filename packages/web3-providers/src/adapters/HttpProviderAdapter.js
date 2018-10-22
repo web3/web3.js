@@ -23,7 +23,6 @@
 import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
 export default class HttpProviderAdapter extends AbstractProviderAdapter {
-
     /**
      * @param {HttpProvider} httpProvider
      *

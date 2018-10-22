@@ -20,11 +20,10 @@
  * @date 2018
  */
 
-import Network from "../Network";
-import MethodModelFactory from "./MethodModelFactory";
+import Network from '../Network';
+import MethodModelFactory from './MethodModelFactory';
 
 export default class NetworkModuleFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters

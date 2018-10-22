@@ -13,7 +13,7 @@ var MethodController = require('../../src/controllers/MethodController');
 /**
  * MethodController test
  */
-describe('MethodControllerTest', function () {
+describe('MethodControllerTest', function() {
     var methodController,
         methodModel,
         methodModelMock,
@@ -27,7 +27,7 @@ describe('MethodControllerTest', function () {
         signAndSendMethodCommand,
         signMessageCommand;
 
-    beforeEach(function () {
+    beforeEach(function() {
         callMethodCommand = new CallMethodCommand();
         sendMethodCommand = new SendMethodCommand({});
         signAndSendMethodCommand = new SignAndSendMethodCommand({}, {});
@@ -50,11 +50,11 @@ describe('MethodControllerTest', function () {
         );
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('constructor is setting all the dependencies correctly', function () {
+    it('constructor is setting all the dependencies correctly', function() {
         expect(methodController.callMethodCommand).to.be.an.instanceof(CallMethodCommand);
         expect(methodController.sendMethodCommand).to.be.an.instanceof(SendMethodCommand);
         expect(methodController.signAndSendMethodCommand).to.be.an.instanceof(SignAndSendMethodCommand);
@@ -62,7 +62,7 @@ describe('MethodControllerTest', function () {
         expect(methodController.promiEventPackage).to.be.an.instanceof(Object);
     });
 
-    it('execute calls signMessageCommand', function () {
+    it('execute calls signMessageCommand', function() {
         var accounts = {wallet: [0]};
 
         methodModelMock
@@ -82,7 +82,7 @@ describe('MethodControllerTest', function () {
         signMessageCommandMock.verify();
     });
 
-    it('execute calls signAndSendMethodCommand', function () {
+    it('execute calls signAndSendMethodCommand', function() {
         var accounts = {wallet: [0]};
 
         methodModelMock
@@ -102,7 +102,7 @@ describe('MethodControllerTest', function () {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls sendMethodCommand with sendTransaction rpc method', function () {
+    it('execute calls sendMethodCommand with sendTransaction rpc method', function() {
         methodModelMock
             .expects('isSendTransaction')
             .returns(true)
@@ -120,7 +120,7 @@ describe('MethodControllerTest', function () {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls sendMethodCommand with sendRawTransaction rpc method', function () {
+    it('execute calls sendMethodCommand with sendRawTransaction rpc method', function() {
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)
@@ -143,7 +143,7 @@ describe('MethodControllerTest', function () {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls callMethodCommand', function () {
+    it('execute calls callMethodCommand', function() {
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)

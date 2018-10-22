@@ -33,7 +33,6 @@ import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../commands/SignMessageCommand';
 
 export default class MethodModuleFactory {
-
     /**
      * Returns the MethodController object
      *
@@ -77,9 +76,7 @@ export default class MethodModuleFactory {
      * @returns {SendMethodCommand}
      */
     createSendMethodCommand(subscriptionsFactory, formatters) {
-        return new SendMethodCommand(
-            this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters)
-        );
+        return new SendMethodCommand(this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters));
     }
 
     /**
@@ -107,9 +104,7 @@ export default class MethodModuleFactory {
      * @returns {SignMessageCommand}
      */
     createSignMessageCommand() {
-        return new SignMessageCommand(
-            this.createMessageSigner()
-        );
+        return new SignMessageCommand(this.createMessageSigner());
     }
 
     /**

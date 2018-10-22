@@ -23,7 +23,6 @@
 import {GetPastLogsMethodModel} from 'web3-core-method';
 
 export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
-
     /**
      * @param {ABIItemModel} abiItemModel
      * @param {Object} utils
@@ -32,10 +31,7 @@ export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
      * @constructor
      */
     constructor(abiItemModel, utils, formatters) {
-        super(
-            utils,
-            formatters
-        );
+        super(utils, formatters);
 
         this.abiItemModel = abiItemModel;
     }
@@ -52,7 +48,7 @@ export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
     afterExecution(response) {
         const formattedLogs = super.afterExecution(response);
 
-        formattedLogs.map(logItem => {
+        formattedLogs.map((logItem) => {
             return this.eventLogDecoder.decode(self.abiItemModel, logItem);
         });
 

@@ -14,7 +14,7 @@
         "build": "webpack --mode production",
         "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
         "docs": "cd docs; make html;",
-        "lint": "jshint *.js packages"
+        "format": "prettier --config ./.prettierrc --write ./packages/**/*.js"
     },
     "repository": {
         "type": "git",
@@ -75,14 +75,13 @@
         "babel-preset-env": "^1.6.0",
         "bn.js": "4.11.8",
         "coveralls": "^3.0.2",
-        "crypto-js": "^3.1.4",
         "duplicate-package-checker-webpack-plugin": "^3.0.0",
         "eth-lib": "^0.2.8",
         "ethereumjs-wallet": "^0.6.2",
         "ethjs-signer": "^0.1.1",
         "js-sha3": "^0.8.0",
-        "jshint": ">=2.5.0",
         "lerna": "^2.5.1",
+        "prettier": "1.14.3",
         "uglifyjs-webpack-plugin": "^2.0.1",
         "underscore": "^1.8.3",
         "webpack": "^4.21.0",

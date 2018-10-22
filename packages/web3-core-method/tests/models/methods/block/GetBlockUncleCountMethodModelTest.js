@@ -9,29 +9,29 @@ var GetBlockUncleCountMethodModel = require('../../../../src/models/methods/bloc
 /**
  * GetBlockUncleCountMethodModel test
  */
-describe('GetBlockUncleCountMethodModelTest', function () {
+describe('GetBlockUncleCountMethodModelTest', function() {
     var model, utilsMock, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         utilsMock = sinon.mock(utils);
         formattersMock = sinon.mock(formatters);
 
         model = new GetBlockUncleCountMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getUncleCountByBlockNumber', function () {
+    it('rpcMethod should return eth_getUncleCountByBlockNumber', function() {
         expect(model.rpcMethod).to.equal('eth_getUncleCountByBlockNumber');
     });
 
-    it('parametersAmount should return 1', function () {
+    it('parametersAmount should return 1', function() {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -49,7 +49,7 @@ describe('GetBlockUncleCountMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getUncleCountByBlockHash');
     });
 
-    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = [100];
 
         formattersMock
@@ -67,7 +67,7 @@ describe('GetBlockUncleCountMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getUncleCountByBlockNumber');
     });
 
-    it('afterExecution should map the hex string to a number', function () {
+    it('afterExecution should map the hex string to a number', function() {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

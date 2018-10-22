@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
 export default class EstimateGasMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class EstimateGasMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_estimateGas',
-            1,
-            utils,
-            formatters
-        );
+        super('eth_estimateGas', 1, utils, formatters);
     }
 
     /**

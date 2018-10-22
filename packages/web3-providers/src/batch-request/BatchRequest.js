@@ -24,7 +24,6 @@ import {errors} from 'web3-core-helpers';
 import {isFunction, isObject, isArray} from 'underscore';
 
 export default class BatchRequest {
-
     /**
      * @param {AbstractProviderAdapter} provider
      * @param {JSONRpcMapper} jsonRpcMapper
@@ -56,37 +55,34 @@ export default class BatchRequest {
      * @method execute
      */
     execute() {
-        this.provider.sendBatch(
-            this.jsonRpcMapper.toBatchPayload(this.requests),
-            (err, results) => {
-                if (!isArray(results)) {
-                    request.callback(errors.InvalidResponse(results));
+        this.provider.sendBatch(this.jsonRpcMapper.toBatchPayload(this.requests), (err, results) => {
+            if (!isArray(results)) {
+                request.callback(errors.InvalidResponse(results));
 
-                    return;
-                }
-
-                this.requests.forEach(function (request, index) {
-                    const result = results[index] || null;
-
-                    if (isFunction(request.callback)) {
-                        if (isObject(result) && result.error) {
-                            request.callback(errors.ErrorResponse(result));
-                        }
-
-                        if (!this.jsonRpcResponseValidator.isValid(result)) {
-                            request.callback(errors.InvalidResponse(result));
-                        }
-
-                        try {
-                            const mappedResult = request.afterExecution(result.result);
-                            request.callback(null, mappedResult);
-                        } catch (err) {
-                            request.callback(err, null);
-                        }
-                    }
-                });
+                return;
             }
-        );
+
+            this.requests.forEach(function(request, index) {
+                const result = results[index] || null;
+
+                if (isFunction(request.callback)) {
+                    if (isObject(result) && result.error) {
+                        request.callback(errors.ErrorResponse(result));
+                    }
+
+                    if (!this.jsonRpcResponseValidator.isValid(result)) {
+                        request.callback(errors.InvalidResponse(result));
+                    }
+
+                    try {
+                        const mappedResult = request.afterExecution(result.result);
+                        request.callback(null, mappedResult);
+                    } catch (err) {
+                        request.callback(err, null);
+                    }
+                }
+            });
+        });
     }
 
     /**

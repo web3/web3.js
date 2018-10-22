@@ -8,27 +8,27 @@ var GetBalanceMethodModel = require('../../../../src/models/methods/account/GetB
 /**
  * GetBalanceMethodModel test
  */
-describe('GetBalanceMethodModelTest', function () {
+describe('GetBalanceMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new GetBalanceMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getBalance', function () {
+    it('rpcMethod should return eth_getBalance', function() {
         expect(model.rpcMethod).to.equal('eth_getBalance');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -51,7 +51,7 @@ describe('GetBalanceMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should call outputBigNumberFormatter on the response and return it', function () {
+    it('afterExecution should call outputBigNumberFormatter on the response and return it', function() {
         var response = {};
 
         formattersMock

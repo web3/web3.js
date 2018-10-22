@@ -8,27 +8,27 @@ var PersonalSendTransactionMethodModel = require('../../../../src/models/methods
 /**
  * PersonalSendTransactionMethodModel test
  */
-describe('PersonalSendTransactionMethodModelTest', function () {
+describe('PersonalSendTransactionMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new PersonalSendTransactionMethodModel({}, formatters);
     });
 
     afterEach(function() {
-       sinon.restore();
+        sinon.restore();
     });
 
-    it('rpcMethod should return personal_sendTransaction', function () {
+    it('rpcMethod should return personal_sendTransaction', function() {
         expect(model.rpcMethod).to.equal('personal_sendTransaction');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputTransactionFormatter', function () {
+    it('beforeExecution should call inputTransactionFormatter', function() {
         model.parameters = [{}];
 
         formattersMock
@@ -44,7 +44,7 @@ describe('PersonalSendTransactionMethodModelTest', function () {
         expect(model.parameters[0]).to.be.property('send', true);
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         expect(model.afterExecution('personalSend')).equal('personalSend');
     });
 });

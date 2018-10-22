@@ -23,7 +23,6 @@
 import _ from 'underscore';
 
 export default class ABIItemModel {
-
     /**
      * @param {Object} abiItem
      *
@@ -50,7 +49,7 @@ export default class ABIItemModel {
                     return 'contract-deployment';
                 }
             }
-        })
+        });
     }
 
     /**
@@ -110,7 +109,7 @@ export default class ABIItemModel {
      * @returns {Array}
      */
     getIndexedInputs() {
-        return this.getInputs().filter(input => {
+        return this.getInputs().filter((input) => {
             return input.indexed === true;
         });
     }

@@ -23,7 +23,6 @@
 import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class TransactionSigner extends AbstractSigner {
-
     /**
      * Signs the given transaction
      *

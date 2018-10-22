@@ -32,11 +32,11 @@ import {Iban} from 'web3-eth-iban';
  * @param {String|Number|BigNumber} number
  * @returns {BigNumber} object
  */
-const outputBigNumberFormatter = number => {
+const outputBigNumberFormatter = (number) => {
     return Utils.toBN(number).toString(10);
 };
 
-const isPredefinedBlockNumber = blockNumber => {
+const isPredefinedBlockNumber = (blockNumber) => {
     return blockNumber === 'latest' || blockNumber === 'pending' || blockNumber === 'earliest';
 };
 
@@ -61,7 +61,7 @@ const inputDefaultBlockNumberFormatter = (blockNumber, moduleInstance) => {
     return inputBlockNumberFormatter(blockNumber);
 };
 
-const inputBlockNumberFormatter = blockNumber => {
+const inputBlockNumberFormatter = (blockNumber) => {
     if (blockNumber === undefined) {
         return undefined;
     }
@@ -70,7 +70,11 @@ const inputBlockNumberFormatter = blockNumber => {
         return blockNumber;
     }
 
-    return (Utils.isHexStrict(blockNumber)) ? ((isString(blockNumber)) ? blockNumber.toLowerCase() : blockNumber) : Utils.numberToHex(blockNumber);
+    return Utils.isHexStrict(blockNumber)
+        ? isString(blockNumber)
+            ? blockNumber.toLowerCase()
+            : blockNumber
+        : Utils.numberToHex(blockNumber);
 };
 
 /**
@@ -80,14 +84,16 @@ const inputBlockNumberFormatter = blockNumber => {
  * @param {Object} transaction options
  * @returns object
  */
-const _txInputFormatter = options => {
-
-    if (options.to) { // it might be contract creation
+const _txInputFormatter = (options) => {
+    if (options.to) {
+        // it might be contract creation
         options.to = inputAddressFormatter(options.to);
     }
 
     if (options.data && options.input) {
-        throw new Error('You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.');
+        throw new Error(
+            'You can\'t have "data" and "input" as properties of transactions at the same time, please use either "data" or "input" instead.'
+        );
     }
 
     if (!options.data && options.input) {
@@ -95,7 +101,7 @@ const _txInputFormatter = options => {
         delete options.input;
     }
 
-    if(options.data && !Utils.isHex(options.data)) {
+    if (options.data && !Utils.isHex(options.data)) {
         throw new Error('The data field must be HEX encoded data.');
     }
 
@@ -104,11 +110,13 @@ const _txInputFormatter = options => {
         options.gas = options.gas || options.gasLimit;
     }
 
-    ['gasPrice', 'gas', 'value', 'nonce'].filter(key => {
-        return options[key] !== undefined;
-    }).forEach(key => {
-        options[key] = Utils.numberToHex(options[key]);
-    });
+    ['gasPrice', 'gas', 'value', 'nonce']
+        .filter((key) => {
+            return options[key] !== undefined;
+        })
+        .forEach((key) => {
+            options[key] = Utils.numberToHex(options[key]);
+        });
 
     return options;
 };
@@ -122,7 +130,7 @@ const _txInputFormatter = options => {
  * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns object
-*/
+ */
 const inputCallFormatter = (options, moduleInstance) => {
     options = _txInputFormatter(options);
     let from = moduleInstance.defaultAccount;
@@ -147,7 +155,7 @@ const inputCallFormatter = (options, moduleInstance) => {
  * @param {AbstractWeb3Module} moduleInstance
  *
  * @returns object
-*/
+ */
 const inputTransactionFormatter = (options, moduleInstance) => {
     options = _txInputFormatter(options);
 
@@ -173,8 +181,8 @@ const inputTransactionFormatter = (options, moduleInstance) => {
  * @param {String} data
  * @returns {String}
  */
-const inputSignFormatter = data => {
-    return (Utils.isHexStrict(data)) ? data : Utils.utf8ToHex(data);
+const inputSignFormatter = (data) => {
+    return Utils.isHexStrict(data) ? data : Utils.utf8ToHex(data);
 };
 
 /**
@@ -183,24 +191,23 @@ const inputSignFormatter = data => {
  * @method outputTransactionFormatter
  * @param {Object} tx
  * @returns {Object}
-*/
-const outputTransactionFormatter = tx => {
-    if(tx.blockNumber !== null)
-        tx.blockNumber = Utils.hexToNumber(tx.blockNumber);
-    if(tx.transactionIndex !== null)
-        tx.transactionIndex = Utils.hexToNumber(tx.transactionIndex);
+ */
+const outputTransactionFormatter = (tx) => {
+    if (tx.blockNumber !== null) tx.blockNumber = Utils.hexToNumber(tx.blockNumber);
+    if (tx.transactionIndex !== null) tx.transactionIndex = Utils.hexToNumber(tx.transactionIndex);
     tx.nonce = Utils.hexToNumber(tx.nonce);
     tx.gas = Utils.hexToNumber(tx.gas);
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
     tx.value = outputBigNumberFormatter(tx.value);
 
-    if(tx.to && Utils.isAddress(tx.to)) { // tx.to could be `0x0` or `null` while contract creation
+    if (tx.to && Utils.isAddress(tx.to)) {
+        // tx.to could be `0x0` or `null` while contract creation
         tx.to = Utils.toChecksumAddress(tx.to);
     } else {
         tx.to = null; // set to `null` if invalid address
     }
 
-    if(tx.from) {
+    if (tx.from) {
         tx.from = Utils.toChecksumAddress(tx.from);
     }
 
@@ -213,28 +220,26 @@ const outputTransactionFormatter = tx => {
  * @method outputTransactionReceiptFormatter
  * @param {Object} receipt
  * @returns {Object}
-*/
-const outputTransactionReceiptFormatter = receipt => {
-    if(typeof receipt !== 'object') {
+ */
+const outputTransactionReceiptFormatter = (receipt) => {
+    if (typeof receipt !== 'object') {
         throw new Error(`Received receipt is invalid: ${receipt}`);
     }
 
-    if(receipt.blockNumber !== null)
-        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
-    if(receipt.transactionIndex !== null)
-        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+    if (receipt.blockNumber !== null) receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+    if (receipt.transactionIndex !== null) receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
     receipt.cumulativeGasUsed = Utils.hexToNumber(receipt.cumulativeGasUsed);
     receipt.gasUsed = Utils.hexToNumber(receipt.gasUsed);
 
-    if(isArray(receipt.logs)) {
+    if (isArray(receipt.logs)) {
         receipt.logs = receipt.logs.map(outputLogFormatter);
     }
 
-    if(receipt.contractAddress) {
+    if (receipt.contractAddress) {
         receipt.contractAddress = Utils.toChecksumAddress(receipt.contractAddress);
     }
 
-    if(typeof receipt.status !== 'undefined') {
+    if (typeof receipt.status !== 'undefined') {
         receipt.status = Boolean(parseInt(receipt.status));
     }
 
@@ -247,31 +252,25 @@ const outputTransactionReceiptFormatter = receipt => {
  * @method outputBlockFormatter
  * @param {Object} block
  * @returns {Object}
-*/
-const outputBlockFormatter = block => {
-
+ */
+const outputBlockFormatter = (block) => {
     // transform to number
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
     block.timestamp = Utils.hexToNumber(block.timestamp);
-    if (block.number !== null)
-        block.number = Utils.hexToNumber(block.number);
+    if (block.number !== null) block.number = Utils.hexToNumber(block.number);
 
-    if(block.difficulty)
-        block.difficulty = outputBigNumberFormatter(block.difficulty);
-    if(block.totalDifficulty)
-        block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+    if (block.difficulty) block.difficulty = outputBigNumberFormatter(block.difficulty);
+    if (block.totalDifficulty) block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
 
     if (isArray(block.transactions)) {
-        block.transactions.forEach(item => {
-            if(!isString(item))
-                return outputTransactionFormatter(item);
+        block.transactions.forEach((item) => {
+            if (!isString(item)) return outputTransactionFormatter(item);
         });
     }
 
-    if (block.miner)
-        block.miner = Utils.toChecksumAddress(block.miner);
+    if (block.miner) block.miner = Utils.toChecksumAddress(block.miner);
 
     return block;
 };
@@ -282,40 +281,35 @@ const outputBlockFormatter = block => {
  * @method inputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
-*/
-const inputLogFormatter = options => {
-    let toTopic = value => {
-
-        if(value === null || typeof value === 'undefined')
-            return null;
+ */
+const inputLogFormatter = (options) => {
+    let toTopic = (value) => {
+        if (value === null || typeof value === 'undefined') return null;
 
         value = String(value);
 
-        if(value.indexOf('0x') === 0)
-            return value;
-        else
-            return Utils.fromUtf8(value);
+        if (value.indexOf('0x') === 0) return value;
+        else return Utils.fromUtf8(value);
     };
 
-    if (options.fromBlock)
-        options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+    if (options.fromBlock) options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
 
-    if (options.toBlock)
-        options.toBlock = inputBlockNumberFormatter(options.toBlock);
-
+    if (options.toBlock) options.toBlock = inputBlockNumberFormatter(options.toBlock);
 
     // make sure topics, get converted to hex
     options.topics = options.topics || [];
-    options.topics = options.topics.map(topic => {
-        return (isArray(topic)) ? topic.map(toTopic) : toTopic(topic);
+    options.topics = options.topics.map((topic) => {
+        return isArray(topic) ? topic.map(toTopic) : toTopic(topic);
     });
 
     toTopic = null;
 
     if (options.address) {
-        options.address = (isArray(options.address)) ? options.address.map(addr => {
-            return inputAddressFormatter(addr);
-        }) : inputAddressFormatter(options.address);
+        options.address = isArray(options.address)
+            ? options.address.map((addr) => {
+                  return inputAddressFormatter(addr);
+              })
+            : inputAddressFormatter(options.address);
     }
 
     return options;
@@ -327,25 +321,25 @@ const inputLogFormatter = options => {
  * @method outputLogFormatter
  * @param {Object} log object
  * @returns {Object} log
-*/
-const outputLogFormatter = log => {
-
+ */
+const outputLogFormatter = (log) => {
     // generate a custom log id
-    if(typeof log.blockHash === 'string' &&
-       typeof log.transactionHash === 'string' &&
-       typeof log.logIndex === 'string') {
-        const shaId = Utils.sha3(log.blockHash.replace('0x','') + log.transactionHash.replace('0x','') + log.logIndex.replace('0x',''));
-        log.id = `log_${shaId.replace('0x','').substr(0,8)}`;
-    } else if(!log.id) {
+    if (
+        typeof log.blockHash === 'string' &&
+        typeof log.transactionHash === 'string' &&
+        typeof log.logIndex === 'string'
+    ) {
+        const shaId = Utils.sha3(
+            log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', '')
+        );
+        log.id = `log_${shaId.replace('0x', '').substr(0, 8)}`;
+    } else if (!log.id) {
         log.id = null;
     }
 
-    if (log.blockNumber !== null)
-        log.blockNumber = Utils.hexToNumber(log.blockNumber);
-    if (log.transactionIndex !== null)
-        log.transactionIndex = Utils.hexToNumber(log.transactionIndex);
-    if (log.logIndex !== null)
-        log.logIndex = Utils.hexToNumber(log.logIndex);
+    if (log.blockNumber !== null) log.blockNumber = Utils.hexToNumber(log.blockNumber);
+    if (log.transactionIndex !== null) log.transactionIndex = Utils.hexToNumber(log.transactionIndex);
+    if (log.logIndex !== null) log.logIndex = Utils.hexToNumber(log.logIndex);
 
     if (log.address) {
         log.address = Utils.toChecksumAddress(log.address);
@@ -360,17 +354,13 @@ const outputLogFormatter = log => {
  * @method inputPostFormatter
  * @param {Object} transaction object
  * @returns {Object}
-*/
-const inputPostFormatter = post => {
-
+ */
+const inputPostFormatter = (post) => {
     // post.payload = Utils.toHex(post.payload);
 
-    if (post.ttl)
-        post.ttl = Utils.numberToHex(post.ttl);
-    if (post.workToProve)
-        post.workToProve = Utils.numberToHex(post.workToProve);
-    if (post.priority)
-        post.priority = Utils.numberToHex(post.priority);
+    if (post.ttl) post.ttl = Utils.numberToHex(post.ttl);
+    if (post.workToProve) post.workToProve = Utils.numberToHex(post.workToProve);
+    if (post.priority) post.priority = Utils.numberToHex(post.priority);
 
     // fallback
     if (!isArray(post.topics)) {
@@ -378,9 +368,9 @@ const inputPostFormatter = post => {
     }
 
     // format the following options
-    post.topics = post.topics.map(topic => {
+    post.topics = post.topics.map((topic) => {
         // convert only if not hex
-        return (topic.indexOf('0x') === 0) ? topic : Utils.fromUtf8(topic);
+        return topic.indexOf('0x') === 0 ? topic : Utils.fromUtf8(topic);
     });
 
     return post;
@@ -393,7 +383,7 @@ const inputPostFormatter = post => {
  * @param {Object}
  * @returns {Object}
  */
-const outputPostFormatter = post => {
+const outputPostFormatter = (post) => {
     post.expiry = Utils.hexToNumber(post.expiry);
     post.sent = Utils.hexToNumber(post.sent);
     post.ttl = Utils.hexToNumber(post.ttl);
@@ -409,28 +399,28 @@ const outputPostFormatter = post => {
     if (!post.topics) {
         post.topics = [];
     }
-    post.topics = post.topics.map(topic => {
+    post.topics = post.topics.map((topic) => {
         return Utils.toUtf8(topic);
     });
 
     return post;
 };
 
-var inputAddressFormatter = address => {
+var inputAddressFormatter = (address) => {
     const iban = new Iban(address);
 
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
     } else if (Utils.isAddress(address)) {
-        return `0x${address.toLowerCase().replace('0x','')}`;
+        return `0x${address.toLowerCase().replace('0x', '')}`;
     }
 
-    throw new Error(`Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted.`);
+    throw new Error(
+        `Provided address "${address}" is invalid, the capitalization checksum test failed, or its an indrect IBAN address which can't be converted.`
+    );
 };
 
-
-const outputSyncingFormatter = result => {
-
+const outputSyncingFormatter = (result) => {
     result.startingBlock = Utils.hexToNumber(result.startingBlock);
     result.currentBlock = Utils.hexToNumber(result.currentBlock);
     result.highestBlock = Utils.hexToNumber(result.highestBlock);
@@ -459,4 +449,3 @@ export default {
     outputPostFormatter,
     outputSyncingFormatter
 };
-

@@ -21,7 +21,6 @@
  */
 
 export default class MethodEncoder {
-
     /**
      * @param {ABICoder} abiCoder
      *
@@ -45,10 +44,9 @@ export default class MethodEncoder {
         let encodedParameters;
 
         try {
-            encodedParameters = this.abiCoder.encodeParameters(
-                abiItemModel.getInputs(),
-                abiItemModel.contractMethodParameters
-            ).replace('0x', '');
+            encodedParameters = this.abiCoder
+                .encodeParameters(abiItemModel.getInputs(), abiItemModel.contractMethodParameters)
+                .replace('0x', '');
         } catch (error) {
             return error;
         }

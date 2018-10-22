@@ -21,7 +21,6 @@
  */
 
 export default class AbstractSubscriptionModel {
-
     /**
      * @param {String} subscriptionType
      * @param {String} subscriptionMethod
@@ -48,7 +47,7 @@ export default class AbstractSubscriptionModel {
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Function} callback
      */
-    beforeSubscription(subscription, moduleInstance, callback) { }
+    beforeSubscription(subscription, moduleInstance, callback) {}
 
     /**
      * This method will be executed on each new subscription item.

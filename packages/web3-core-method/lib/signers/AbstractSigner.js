@@ -23,7 +23,6 @@
 import _ from 'underscore';
 
 export default class AbstractSigner {
-
     /**
      * Get wallet for address with accounts package
      *
@@ -36,7 +35,6 @@ export default class AbstractSigner {
         // is index given
         if (_.isNumber(from)) {
             return accounts.wallet[from];
-
         }
 
         // is account given

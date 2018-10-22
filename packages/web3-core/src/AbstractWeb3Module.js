@@ -24,7 +24,6 @@ import {isArray, isObject} from 'underscore';
 import {AbstractMethodModel} from 'web3-core-method';
 
 export default class AbstractWeb3Module {
-
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -61,11 +60,9 @@ export default class AbstractWeb3Module {
             this.methodModelFactory = methodModelFactory;
             this.extend.formatters = this.methodModelFactory.formatters;
 
-            return new Proxy(this,
-                {
-                    get: this.proxyHandler
-                }
-            );
+            return new Proxy(this, {
+                get: this.proxyHandler
+            });
         }
     }
 
@@ -106,7 +103,7 @@ export default class AbstractWeb3Module {
 
             var setExtendedPackagesProvider = true;
             if (this.extendedPackages.length > 0) {
-                setExtendedPackagesProvider = this.extendedPackages.every(extendedPackage => {
+                setExtendedPackagesProvider = this.extendedPackages.every((extendedPackage) => {
                     return extendedPackage.setProvider(provider, net);
                 });
             }
@@ -144,7 +141,8 @@ export default class AbstractWeb3Module {
      * @method clearSubscriptions
      */
     clearSubscriptions() {
-        if (typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
+        if (
+            typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
             this.currentProvider.subscriptions.length > 0
         ) {
             this.currentProvider.clearSubscriptions();
@@ -180,7 +178,7 @@ export default class AbstractWeb3Module {
         }
 
         if (extension.methods) {
-            extension.methods.forEach(method => {
+            extension.methods.forEach((method) => {
                 class ExtensionMethodModel extends AbstractMethodModel {
                     constructor(utils, formatters) {
                         super(method.call, method.params, utils, formatters);
@@ -196,7 +194,7 @@ export default class AbstractWeb3Module {
 
                     afterExecution(response) {
                         if (isArray(response)) {
-                            response = response.map(responseItem => {
+                            response = response.map((responseItem) => {
                                 if (method.outputFormatter && responseItem) {
                                     return method.outputFormatter(responseItem);
                                 }
@@ -243,7 +241,9 @@ export default class AbstractWeb3Module {
 
                 if (methodModel.parameters.length !== methodModel.parametersAmount) {
                     throw Error(
-                        `Invalid parameters length the expected length would be ${methodModel.parametersAmount} and not ${methodModel.parameters.length}`
+                        `Invalid parameters length the expected length would be ${
+                            methodModel.parametersAmount
+                        } and not ${methodModel.parameters.length}`
                     );
                 }
 

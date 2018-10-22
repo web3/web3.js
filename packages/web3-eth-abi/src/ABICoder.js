@@ -32,11 +32,9 @@ const ethersAbiCoder = new EthersAbi((type, value) => {
 });
 
 // result method
-function Result() {
-}
+function Result() {}
 
 export default class ABICoder {
-
     /**
      * @param {Object} utils
      *
@@ -119,16 +117,13 @@ export default class ABICoder {
      */
     mapTypes(types) {
         const mappedTypes = [];
-        types.forEach(type => {
+        types.forEach((type) => {
             if (this.isSimplifiedStructFormat(type)) {
                 const structName = Object.keys(type)[0];
                 mappedTypes.push(
-                    Object.assign(
-                        this.mapStructNameAndType(structName),
-                        {
-                            components: this.mapStructToCoderFormat(type[structName])
-                        }
-                    )
+                    Object.assign(this.mapStructNameAndType(structName), {
+                        components: this.mapStructToCoderFormat(type[structName])
+                    })
                 );
 
                 return;
@@ -184,15 +179,12 @@ export default class ABICoder {
      */
     mapStructToCoderFormat(struct) {
         const components = [];
-        Object.keys(struct).forEach(key => {
+        Object.keys(struct).forEach((key) => {
             if (typeof struct[key] === 'object') {
                 components.push(
-                    Object.assign(
-                        this.mapStructNameAndType(key),
-                        {
-                            components: this.mapStructToCoderFormat(struct[key])
-                        }
-                    )
+                    Object.assign(this.mapStructNameAndType(key), {
+                        components: this.mapStructToCoderFormat(struct[key])
+                    })
                 );
 
                 return;
@@ -218,7 +210,10 @@ export default class ABICoder {
      * @returns {String} The encoded ABI for this function call
      */
     encodeFunctionCall(jsonInterface, params) {
-        return this.encodeFunctionSignature(jsonInterface) + this.encodeParameters(jsonInterface.inputs, params).replace('0x', '');
+        return (
+            this.encodeFunctionSignature(jsonInterface) +
+            this.encodeParameters(jsonInterface.inputs, params).replace('0x', '')
+        );
     }
 
     /**
@@ -247,7 +242,7 @@ export default class ABICoder {
      */
     decodeParameters(outputs, bytes) {
         if (!bytes || bytes === '0x' || bytes === '0X') {
-            throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
+            throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
         const res = ethersAbiCoder.decode(this.mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
@@ -256,7 +251,7 @@ export default class ABICoder {
 
         outputs.forEach((output, i) => {
             let decodedValue = res[returnValue.__length__];
-            decodedValue = (decodedValue === '0x') ? null : decodedValue;
+            decodedValue = decodedValue === '0x' ? null : decodedValue;
 
             returnValue[i] = decodedValue;
 
@@ -295,25 +290,25 @@ export default class ABICoder {
 
         inputs.forEach((input, i) => {
             if (input.indexed) {
-                indexedParams[i] = (['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find(staticType => {
+                indexedParams[i] = ['bool', 'int', 'uint', 'address', 'fixed', 'ufixed'].find((staticType) => {
                     return input.type.indexOf(staticType) !== -1;
-                })) ? _this.decodeParameter(input.type, topics[topicCount]) : topics[topicCount];
+                })
+                    ? _this.decodeParameter(input.type, topics[topicCount])
+                    : topics[topicCount];
                 topicCount++;
             } else {
                 notIndexedInputs[i] = input;
             }
         });
 
-
         const nonIndexedData = data;
-        const notIndexedParams = (nonIndexedData) ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
+        const notIndexedParams = nonIndexedData ? this.decodeParameters(notIndexedInputs, nonIndexedData) : [];
 
         const returnValue = new Result();
         returnValue.__length__ = 0;
 
-
         inputs.forEach((res, i) => {
-            returnValue[i] = (res.type === 'string') ? '' : null;
+            returnValue[i] = res.type === 'string' ? '' : null;
 
             if (typeof notIndexedParams[i] !== 'undefined') {
                 returnValue[i] = notIndexedParams[i];

@@ -25,7 +25,7 @@ import {isArray, isObject, map} from 'underscore';
 import BN from 'bn.js';
 import utils from './utils.js';
 
-const _elementaryName = name => {
+const _elementaryName = (name) => {
     /*jshint maxcomplexity:false */
 
     if (name.startsWith('int[')) {
@@ -49,18 +49,18 @@ const _elementaryName = name => {
 };
 
 // Parse N from type<N>
-const _parseTypeN = type => {
+const _parseTypeN = (type) => {
     const typesize = /^\D+(\d+).*$/.exec(type);
     return typesize ? parseInt(typesize[1], 10) : null;
 };
 
 // Parse N from type[<N>]
-const _parseTypeNArray = type => {
+const _parseTypeNArray = (type) => {
     const arraySize = /^\D+\d*\[(\d+)\]$/.exec(type);
     return arraySize ? parseInt(arraySize[1], 10) : null;
 };
 
-const _parseNumber = arg => {
+const _parseNumber = (arg) => {
     const type = typeof arg;
     if (type === 'string') {
         if (utils.isHexStrict(arg)) {
@@ -85,9 +85,7 @@ const _solidityPack = (type, value, arraySize) => {
     let size, num;
     type = _elementaryName(type);
 
-
     if (type === 'bytes') {
-
         if (value.replace(/^0x/i, '').length % 2 !== 0) {
             throw new Error(`Invalid bytes characters ${value.length}`);
         }
@@ -114,7 +112,6 @@ const _solidityPack = (type, value, arraySize) => {
     size = _parseTypeN(type);
 
     if (type.startsWith('bytes')) {
-
         if (!size) {
             throw new Error('bytes[] not yet supported in solidity');
         }
@@ -130,8 +127,7 @@ const _solidityPack = (type, value, arraySize) => {
 
         return utils.rightPad(value, size * 2);
     } else if (type.startsWith('uint')) {
-
-        if ((size % 8) || (size < 8) || (size > 256)) {
+        if (size % 8 || size < 8 || size > 256) {
             throw new Error(`Invalid uint${size} size`);
         }
 
@@ -144,10 +140,9 @@ const _solidityPack = (type, value, arraySize) => {
             throw new Error(`Supplied uint ${num.toString()} is negative`);
         }
 
-        return size ? utils.leftPad(num.toString('hex'), size / 8 * 2) : num;
+        return size ? utils.leftPad(num.toString('hex'), (size / 8) * 2) : num;
     } else if (type.startsWith('int')) {
-
-        if ((size % 8) || (size < 8) || (size > 256)) {
+        if (size % 8 || size < 8 || size > 256) {
             throw new Error(`Invalid int${size} size`);
         }
 
@@ -159,34 +154,38 @@ const _solidityPack = (type, value, arraySize) => {
         if (num.lt(new BN(0))) {
             return num.toTwos(size).toString('hex');
         } else {
-            return size ? utils.leftPad(num.toString('hex'), size / 8 * 2) : num;
+            return size ? utils.leftPad(num.toString('hex'), (size / 8) * 2) : num;
         }
-
     } else {
         // FIXME: support all other types
         throw new Error(`Unsupported or invalid type: ${type}`);
     }
 };
 
-
-const _processSoliditySha3Args = arg => {
+const _processSoliditySha3Args = (arg) => {
     /*jshint maxcomplexity:false */
 
     if (isArray(arg)) {
         throw new Error('Autodetection of array types is not supported.');
     }
 
-    let type, value = '';
+    let type,
+        value = '';
     let hexArg, arraySize;
 
     // if type is given
-    if (isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
+    if (
+        isObject(arg) &&
+        (arg.hasOwnProperty('v') ||
+            arg.hasOwnProperty('t') ||
+            arg.hasOwnProperty('value') ||
+            arg.hasOwnProperty('type'))
+    ) {
         type = arg.hasOwnProperty('t') ? arg.t : arg.type;
         value = arg.hasOwnProperty('v') ? arg.v : arg.value;
 
         // otherwise try to guess the type
     } else {
-
         type = utils.toHex(arg, true);
         value = utils.toHex(arg);
 
@@ -209,17 +208,17 @@ const _processSoliditySha3Args = arg => {
         }
     }
 
-
     if (isArray(value)) {
-        hexArg = value.map(val => {
-            return _solidityPack(type, val, arraySize).toString('hex').replace('0x', '');
+        hexArg = value.map((val) => {
+            return _solidityPack(type, val, arraySize)
+                .toString('hex')
+                .replace('0x', '');
         });
         return hexArg.join('');
     } else {
         hexArg = _solidityPack(type, value, arraySize);
         return hexArg.toString('hex').replace('0x', '');
     }
-
 };
 
 /**
@@ -240,6 +239,5 @@ const soliditySha3 = () => {
 
     return utils.sha3(`0x${hexArgs.join('')}`);
 };
-
 
 export default soliditySha3;

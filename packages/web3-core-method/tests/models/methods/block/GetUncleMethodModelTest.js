@@ -9,28 +9,28 @@ var GetUncleMethodModel = require('../../../../src/models/methods/block/GetUncle
 /**
  * GetUncleMethodModel test
  */
-describe('GetUncleMethodModelTest', function () {
+describe('GetUncleMethodModelTest', function() {
     var model, utilsMock, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         utilsMock = sinon.mock(utils);
         formattersMock = sinon.mock(formatters);
         model = new GetUncleMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
-       sinon.restore();
+    afterEach(function() {
+        sinon.restore();
     });
 
-    it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', function () {
+    it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', function() {
         expect(model.rpcMethod).to.equal('eth_getUncleByBlockNumberAndIndex');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = ['0x0', 100];
 
         formattersMock
@@ -55,7 +55,7 @@ describe('GetUncleMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getUncleByBlockHashAndIndex');
     });
 
-    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = [100, 100];
 
         formattersMock
@@ -80,7 +80,7 @@ describe('GetUncleMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getUncleByBlockNumberAndIndex');
     });
 
-    it('afterExecution should map the response', function () {
+    it('afterExecution should map the response', function() {
         formattersMock
             .expects('outputBlockFormatter')
             .withArgs({})

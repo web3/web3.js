@@ -109,8 +109,8 @@ var tests = [
     }
 ];
 
-describe('GenericShhMethodModelsTest', function () {
-    it('all models should have the correct properties set', function () {
+describe('GenericShhMethodModelsTest', function() {
+    it('all models should have the correct properties set', function() {
         var model, testModel;
         tests.forEach(function(test) {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
@@ -118,5 +118,5 @@ describe('GenericShhMethodModelsTest', function () {
             expect(model.rpcMethod).equal(test.rpcMethod);
             expect(model.parametersAmount).equal(test.parametersAmount);
         });
-    })
+    });
 });

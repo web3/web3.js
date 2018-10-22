@@ -8,34 +8,34 @@ var NewAccountMethodModel = require('../../../../src/models/methods/personal/New
 /**
  * NewAccountMethodModel test
  */
-describe('NewAccountMethodModelTest', function () {
+describe('NewAccountMethodModelTest', function() {
     var model, utilsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         utilsMock = sinon.mock(utils);
         model = new NewAccountMethodModel(utils, {});
     });
 
     afterEach(function() {
-       sinon.restore();
+        sinon.restore();
     });
 
-    it('rpcMethod should return personal_newAccount', function () {
+    it('rpcMethod should return personal_newAccount', function() {
         expect(model.rpcMethod).to.equal('personal_newAccount');
     });
 
-    it('parametersAmount should return 0', function () {
+    it('parametersAmount should return 0', function() {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function () {
+    it('beforeExecution should do nothing with the parameters', function() {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         utilsMock
             .expects('toChecksumAddress')
             .withArgs('0x0')

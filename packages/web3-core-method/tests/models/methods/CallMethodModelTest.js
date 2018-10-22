@@ -8,27 +8,27 @@ var CallMethodModel = require('../../../src/models/methods/CallMethodModel');
 /**
  * CallMethodModel test
  */
-describe('CallMethodModelTest', function () {
+describe('CallMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new CallMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_call', function () {
+    it('rpcMethod should return eth_call', function() {
         expect(model.rpcMethod).to.equal('eth_call');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', function () {
+    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', function() {
         model.parameters = [{}, 100];
 
         formattersMock
@@ -51,7 +51,7 @@ describe('CallMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         var object = {};
 
         expect(model.afterExecution(object)).to.equal(object);

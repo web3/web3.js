@@ -28,7 +28,6 @@ try {
 }
 
 export default class ProviderDetector {
-
     /**
      * Detects which provider is given with web3.currentProvider
      *
@@ -42,7 +41,6 @@ export default class ProviderDetector {
         }
 
         if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-
             if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
                 global.web3.currentProvider = this.addSubscriptionsToIpcProviderWrapper(global.web3.currentProvider);
             }
@@ -61,9 +59,11 @@ export default class ProviderDetector {
      * @returns {Boolean}
      */
     isIpcProviderWrapper(currentProvider) {
-        return !currentProvider.on &&
-                currentProvider.connection &&
-                currentProvider.connection.constructor.name === 'ipcProviderWrapper';
+        return (
+            !currentProvider.on &&
+            currentProvider.connection &&
+            currentProvider.connection.constructor.name === 'ipcProviderWrapper'
+        );
     }
 
     /**
@@ -83,7 +83,7 @@ export default class ProviderDetector {
 
             switch (type) {
                 case 'data':
-                    this.connection.on('data', data => {
+                    this.connection.on('data', (data) => {
                         let result = '';
 
                         data = data.toString();
@@ -98,7 +98,6 @@ export default class ProviderDetector {
                         if (!result.id && result.method.indexOf('_subscription') !== -1) {
                             callback(null, result);
                         }
-
                     });
                     break;
                 default:

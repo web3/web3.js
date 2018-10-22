@@ -23,7 +23,6 @@
 import {CallMethodModel} from 'web3-core-method';
 
 export default class CallContractMethodModel extends CallMethodModel {
-
     /**
      * @param {ABIItemModel} abiItemModel
      * @param {CallMethodResponseDecoder} callMethodResponseDecoder
@@ -33,10 +32,7 @@ export default class CallContractMethodModel extends CallMethodModel {
      * @constructor
      */
     constructor(abiItemModel, callMethodResponseDecoder, utils, formatters) {
-        super(
-            utils,
-            formatters
-        );
+        super(utils, formatters);
 
         this.callMethodResponseDecoder = callMethodResponseDecoder;
         this.abiItemModel = abiItemModel;

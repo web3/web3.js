@@ -23,7 +23,6 @@
 import ABICoder from '../ABICoder';
 
 export default class ABIModuleFactory {
-
     /**
      * Returns an object of type ABICoder
      *

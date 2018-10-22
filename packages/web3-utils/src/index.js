@@ -59,11 +59,8 @@ const _fireError = (error, emitter, reject, callback) => {
     if (isFunction(reject)) {
         // suppress uncatched error if an error listener is present
         // OR suppress uncatched error if an callback listener is present
-        if (emitter &&
-            (isFunction(emitter.listeners) &&
-                emitter.listeners('error').length) || isFunction(callback)) {
-            emitter.catch(() => {
-            });
+        if ((emitter && (isFunction(emitter.listeners) && emitter.listeners('error').length)) || isFunction(callback)) {
+            emitter.catch(() => {});
         }
         // reject later, to be able to return emitter
         setTimeout(() => {
@@ -89,7 +86,7 @@ const _fireError = (error, emitter, reject, callback) => {
  * @param {Object} json
  * @return {String} full function/event name
  */
-const _jsonInterfaceMethodToString = json => {
+const _jsonInterfaceMethodToString = (json) => {
     if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
@@ -109,7 +106,7 @@ const _flattenTypes = (includeTuple, puts) => {
     // console.log("entered _flattenTypes. inputs/outputs: " + puts)
     const types = [];
 
-    puts.forEach(param => {
+    puts.forEach((param) => {
         if (typeof param.components === 'object') {
             if (param.type.substring(0, 5) !== 'tuple') {
                 throw new Error('components found but type is not tuple; report on GitHub');
@@ -124,12 +121,10 @@ const _flattenTypes = (includeTuple, puts) => {
             if (isArray(result) && includeTuple) {
                 // console.log("include tuple word, and its an array. joining...: " + result.types)
                 types.push(`tuple(${result.join(',')})${suffix}`);
-            }
-            else if (!includeTuple) {
+            } else if (!includeTuple) {
                 // console.log("don't include tuple, but its an array. joining...: " + result)
                 types.push(`(${result.join(',')})${suffix}`);
-            }
-            else {
+            } else {
                 // console.log("its a single type within a tuple: " + result.types)
                 types.push(`(${result})`);
             }
@@ -149,11 +144,11 @@ const _flattenTypes = (includeTuple, puts) => {
  * @param {String} hex
  * @returns {String} ascii string representation of hex value
  */
-const hexToAscii = hex => {
-    if (!utils.isHexStrict(hex))
-        throw new Error('The parameter must be a valid HEX string.');
+const hexToAscii = (hex) => {
+    if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
-    let str = "", i = 0;
+    let str = '',
+        i = 0;
     const l = hex.length;
 
     if (hex.substring(0, 2) === '0x') {
@@ -174,10 +169,9 @@ const hexToAscii = hex => {
  * @param {String} str
  * @returns {String} hex representation of input string
  */
-const asciiToHex = str => {
-    if (!str)
-        return "0x00";
-    let hex = "";
+const asciiToHex = (str) => {
+    if (!str) return '0x00';
+    let hex = '';
     for (let i = 0; i < str.length; i++) {
         const code = str.charCodeAt(i);
         const n = code.toString(16);
@@ -195,10 +189,16 @@ const asciiToHex = str => {
  * @returns {BN} value of the unit (in Wei)
  * @throws error if the unit is not correct:w
  */
-const getUnitValue = unit => {
+const getUnitValue = (unit) => {
     unit = unit ? unit.toLowerCase() : 'ether';
     if (!ethjsUnit.unitMap[unit]) {
-        throw new Error(`This unit "${unit}" doesn't exist, please use the one of the following units${JSON.stringify(ethjsUnit.unitMap, null, 2)}`);
+        throw new Error(
+            `This unit "${unit}" doesn't exist, please use the one of the following units${JSON.stringify(
+                ethjsUnit.unitMap,
+                null,
+                2
+            )}`
+        );
     }
     return unit;
 };
@@ -266,7 +266,6 @@ const toWei = (number, unit) => {
     return utils.isBN(number) ? ethjsUnit.toWei(number, unit) : ethjsUnit.toWei(number, unit).toString(10);
 };
 
-
 /**
  * Converts to a checksum address
  *
@@ -274,12 +273,11 @@ const toWei = (number, unit) => {
  * @param {String} address the given HEX address
  * @return {String}
  */
-const toChecksumAddress = address => {
+const toChecksumAddress = (address) => {
     if (typeof address === 'undefined') return '';
 
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
         throw new Error(`Given address "${address}" is not a valid Ethereum address.`);
-
 
     address = address.toLowerCase().replace(/^0x/i, '');
     const addressHash = utils.sha3(address).replace(/^0x/i, '');
@@ -295,7 +293,6 @@ const toChecksumAddress = address => {
     }
     return checksumAddress;
 };
-
 
 export default {
     _fireError,
@@ -353,4 +350,3 @@ export default {
     rightPad: utils.rightPad,
     toTwosComplement: utils.toTwosComplement
 };
-

@@ -24,7 +24,6 @@ import {SocketProviderAdapter} from 'web3-providers';
 import EventEmitter from 'eventemitter3';
 
 export default class NewHeadsWatcher extends EventEmitter {
-
     /**
      * @param {SubscriptionsFactory} subscriptionsFactory
      *
@@ -60,7 +59,7 @@ export default class NewHeadsWatcher extends EventEmitter {
 
         this.isPolling = true;
         this.confirmationInterval = setInterval(() => {
-            this.emit('newHead')
+            this.emit('newHead');
         }, 1000);
 
         return this;

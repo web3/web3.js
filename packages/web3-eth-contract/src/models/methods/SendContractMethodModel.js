@@ -24,7 +24,6 @@ import _ from 'underscore';
 import {SendTransactionMethodModel} from 'web3-core-method';
 
 export default class SendContractMethodModel extends SendTransactionMethodModel {
-
     /**
      * @param {ABIItemModel} abiItemModel
      * @param {AllEventsLogDecoder} allEventsLogDecoder
@@ -35,11 +34,7 @@ export default class SendContractMethodModel extends SendTransactionMethodModel 
      * @constructor
      */
     constructor(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
-        super(
-            utils,
-            formatters,
-            accounts
-        );
+        super(utils, formatters, accounts);
 
         this.abiItemModel = abiItemModel;
         this.allEventsLogDecoder = allEventsLogDecoder;
@@ -58,7 +53,7 @@ export default class SendContractMethodModel extends SendTransactionMethodModel 
         if (_.isArray(response.logs)) {
             response.events = {};
 
-            response.logs.map(function (log) {
+            response.logs.map(function(log) {
                 return this.allEventsLogDecoder.decode(null, log);
             });
 

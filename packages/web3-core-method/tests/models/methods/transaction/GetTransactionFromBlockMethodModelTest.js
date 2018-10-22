@@ -9,30 +9,31 @@ var GetTransactionFromBlockMethodModel = require('../../../../src/models/methods
 /**
  * GetStorageAtMethodModel test
  */
-describe('GetStorageAtMethodModelTest', function () {
+describe('GetStorageAtMethodModelTest', function() {
     var model, formattersMock, utilsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetTransactionFromBlockMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', function () {
+    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', function() {
         expect(model.rpcMethod).to.equal('eth_getTransactionByBlockNumberAndIndex');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('should call beforeExecution with block hash as parameter ' +
-        'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        function () {
+    it(
+        'should call beforeExecution with block hash as parameter ' +
+            'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
+        function() {
             model.parameters = ['0x0', 100];
 
             formattersMock
@@ -59,9 +60,10 @@ describe('GetStorageAtMethodModelTest', function () {
         }
     );
 
-    it('should call beforeExecution with block number as parameter  ' +
-        'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        function () {
+    it(
+        'should call beforeExecution with block number as parameter  ' +
+            'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
+        function() {
             model.parameters = [100, 100];
 
             formattersMock
@@ -88,7 +90,7 @@ describe('GetStorageAtMethodModelTest', function () {
         }
     );
 
-    it('afterExecution should map the response', function () {
+    it('afterExecution should map the response', function() {
         formattersMock
             .expects('outputTransactionFormatter')
             .withArgs({})

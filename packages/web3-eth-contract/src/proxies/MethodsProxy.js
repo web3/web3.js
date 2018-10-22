@@ -21,7 +21,6 @@
  */
 
 export default class MethodsProxy {
-
     /**
      * @param {Contract} contract
      * @param {ABIModel} abiModel
@@ -138,11 +137,7 @@ export default class MethodsProxy {
             return this.handleValidationError(rpcMethodModel.error, rpcMethodModel.callback);
         }
 
-        return this.methodController.execute(
-            rpcMethodModel,
-            this.contract.accounts,
-            this.contract
-        );
+        return this.methodController.execute(rpcMethodModel, this.contract.accounts, this.contract);
     }
 
     /**
@@ -162,7 +157,7 @@ export default class MethodsProxy {
             let isContractMethodParametersLengthValid = false;
 
             // Check if one of the AbiItemModel in this array does match the arguments length
-            abiItemModel.some(method => {
+            abiItemModel.some((method) => {
                 // Get correct rpc method model
                 rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(method, this.contract);
                 rpcMethodModel.methodArguments = methodArguments;
@@ -183,7 +178,6 @@ export default class MethodsProxy {
             rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
             rpcMethodModel.methodArguments = methodArguments;
         }
-
 
         // Validate contract method parameters length
         const contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();

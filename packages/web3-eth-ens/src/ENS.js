@@ -18,7 +18,6 @@
  */
 
 export default class ENS {
-
     /**
      * @param {Registry} registry
      * @param {ResolverMethodHandler} resolverMethodHandler

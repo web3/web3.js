@@ -23,7 +23,8 @@
 
 export default {
     ErrorResponse(result) {
-        const message = !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
+        const message =
+            !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
         return new Error(`Returned error: ${message}`);
     },
     InvalidNumberOfParams(got, expected, method) {
@@ -36,7 +37,10 @@ export default {
         return new Error('Provider not set or invalid');
     },
     InvalidResponse(result) {
-        const message = !!result && !!result.error && !!result.error.message ? result.error.message : `Invalid JSON RPC response: ${JSON.stringify(result)}`;
+        const message =
+            !!result && !!result.error && !!result.error.message
+                ? result.error.message
+                : `Invalid JSON RPC response: ${JSON.stringify(result)}`;
         return new Error(message);
     },
     ConnectionTimeout(ms) {

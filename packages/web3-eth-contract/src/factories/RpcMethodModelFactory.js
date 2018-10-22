@@ -27,7 +27,6 @@ import SendContractMethodModel from '../models/methods/SendContractMethodModel';
 import {EstimateGasMethodModel} from 'web3-core-method';
 
 export default class RpcMethodModelFactory {
-
     /**
      * @param {CallMethodResponseDecoder} callMethodResponseDecoder
      * @param {Accounts} accounts
@@ -60,7 +59,7 @@ export default class RpcMethodModelFactory {
             case 'call':
                 rpcMethod = this.createCallContractMethodModel(abiItemModel);
                 break;
-            case 'send' :
+            case 'send':
                 rpcMethod = this.createSendContractMethodModel(abiItemModel);
                 break;
             case 'estimate':
@@ -101,12 +100,7 @@ export default class RpcMethodModelFactory {
      * @returns {CallContractMethodModel}
      */
     createCallContractMethodModel(abiItemModel) {
-        return new CallContractMethodModel(
-            abiItemModel,
-            this.callMethodResponseDecoder,
-            this.utils,
-            this.formatters
-        );
+        return new CallContractMethodModel(abiItemModel, this.callMethodResponseDecoder, this.utils, this.formatters);
     }
 
     /**
@@ -149,6 +143,6 @@ export default class RpcMethodModelFactory {
      * @returns {EstimateGasMethodModel}
      */
     createEstimateGasMethodModel() {
-        return new EstimateGasMethodModel(this.utils, this.formatters)
+        return new EstimateGasMethodModel(this.utils, this.formatters);
     }
 }

@@ -9,16 +9,10 @@ var MessageSigner = require('../../src/signers/MessageSigner');
 /**
  * MessageSigner test
  */
-describe('MessageSignerTest', function () {
-    var messageSigner,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        accounts,
-        accountsMock;
+describe('MessageSignerTest', function() {
+    var messageSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -31,19 +25,19 @@ describe('MessageSignerTest', function () {
         messageSigner = new MessageSigner();
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls sign and throws error', function () {
+    it('calls sign and throws error', function() {
         try {
-            messageSigner.sign('string', 0, accounts)
+            messageSigner.sign('string', 0, accounts);
         } catch (error) {
             expect(error.message).equal('Wallet or privateKey in wallet is not set!');
         }
     });
 
-    it('calls sign and returns signed message', function () {
+    it('calls sign and returns signed message', function() {
         accounts.wallet[0] = {privateKey: '0x0'};
 
         accountsMock

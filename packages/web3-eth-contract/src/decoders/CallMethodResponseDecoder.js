@@ -21,7 +21,6 @@
  */
 
 export default class CallMethodResponseDecoder {
-
     /**
      * @param {ABICoder} abiCoder
      *

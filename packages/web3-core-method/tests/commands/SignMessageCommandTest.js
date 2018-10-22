@@ -7,15 +7,10 @@ import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 /**
  * SignMessageCommand test
  */
-describe('SignMessageCommandTest', function () {
-    var signMessageCommand,
-        methodModel,
-        methodModelCallbackSpy,
-        methodModelMock,
-        messageSigner,
-        messageSignerMock;
+describe('SignMessageCommandTest', function() {
+    var signMessageCommand, methodModel, methodModelCallbackSpy, methodModelMock, messageSigner, messageSignerMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
         methodModel.callback = methodModelCallbackSpy;
@@ -27,11 +22,11 @@ describe('SignMessageCommandTest', function () {
         signMessageCommand = new SignMessageCommand(messageSigner);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls execute and returns signed message', function () {
+    it('calls execute and returns signed message', function() {
         methodModel.parameters = ['string', '0x0'];
 
         methodModelMock
@@ -61,7 +56,7 @@ describe('SignMessageCommandTest', function () {
         messageSignerMock.verify();
     });
 
-    it('calls execute and throws error', function () {
+    it('calls execute and throws error', function() {
         methodModel.parameters = ['string', '0x0'];
         var error = new Error('PANIC');
 
@@ -78,7 +73,7 @@ describe('SignMessageCommandTest', function () {
 
         try {
             signMessageCommand.execute({}, methodModel, {});
-        } catch(error) {
+        } catch (error) {
             expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
             expect(methodModelCallbackSpy.calledWith(error, null)).toBeTruthy();
             expect(error).toBeInstanceOf(Error);
@@ -87,6 +82,5 @@ describe('SignMessageCommandTest', function () {
             methodModelMock.verify();
             messageSignerMock.verify();
         }
-
     });
 });

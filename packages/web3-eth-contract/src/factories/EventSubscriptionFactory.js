@@ -26,7 +26,6 @@ import EventLogSubscription from '../models/subscriptions/EventLogSubscription';
 import AllEventsLogSubscription from '../models/subscriptions/AllEventsLogSubscription';
 
 export default class EventSubscriptionFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -49,7 +48,8 @@ export default class EventSubscriptionFactory {
      * @returns {Subscription}
      */
     createEventLogSubscription(eventLogDecoder, abiItemModel, moduleInstance, options) {
-        return new Subscription(moduleInstance,
+        return new Subscription(
+            moduleInstance,
             new EventLogSubscription(
                 abiItemModel,
                 options,
@@ -72,7 +72,8 @@ export default class EventSubscriptionFactory {
      * @returns {Subscription}
      */
     createAllEventLogSubscription(allEventsLogDecoder, moduleInstance, options) {
-        return new Subscription(moduleInstance,
+        return new Subscription(
+            moduleInstance,
             new AllEventsLogSubscription(
                 options,
                 this.utils,

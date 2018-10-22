@@ -30,12 +30,7 @@ export default class UnlockAccountMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'personal_unlockAccount',
-            3,
-            utils,
-            formatters
-        );
+        super('personal_unlockAccount', 3, utils, formatters);
     }
 
     /**

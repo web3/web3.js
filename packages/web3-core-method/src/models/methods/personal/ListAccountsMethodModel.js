@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class ListAccountsMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class ListAccountsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'personal_listAccounts',
-            0,
-            utils,
-            formatters
-        );
+        super('personal_listAccounts', 0, utils, formatters);
     }
 
     /**
@@ -49,7 +43,7 @@ export default class ListAccountsMethodModel extends AbstractMethodModel {
      * @returns {Array}
      */
     afterExecution(response) {
-        return response.map(responseItem => {
+        return response.map((responseItem) => {
             return this.utils.toChecksumAddress(responseItem);
         });
     }

@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class MarkTrustedPeerMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,11 +30,6 @@ export default class MarkTrustedPeerMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'shh_markTrustedPeer',
-            1,
-            utils,
-            formatters
-        );
+        super('shh_markTrustedPeer', 1, utils, formatters);
     }
 }

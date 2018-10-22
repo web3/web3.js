@@ -8,27 +8,27 @@ var GetBlockMethodModel = require('../../../../src/models/methods/block/GetBlock
 /**
  * GetBlockMethodModel test
  */
-describe('GetBlockMethodModelTest', function () {
+describe('GetBlockMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new GetBlockMethodModel({}, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getBlockByNumber', function () {
+    it('rpcMethod should return eth_getBlockByNumber', function() {
         expect(model.rpcMethod).to.equal('eth_getBlockByNumber');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = ['0x0', true];
 
         formattersMock
@@ -47,7 +47,7 @@ describe('GetBlockMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getBlockByHash');
     });
 
-    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function () {
+    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function() {
         model.parameters = [100, true];
 
         formattersMock
@@ -66,7 +66,7 @@ describe('GetBlockMethodModelTest', function () {
         expect(model.rpcMethod).equal('eth_getBlockByNumber');
     });
 
-    it('afterExecution should map the response', function () {
+    it('afterExecution should map the response', function() {
         formattersMock
             .expects('outputBlockFormatter')
             .withArgs({})

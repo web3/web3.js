@@ -9,28 +9,28 @@ var GetTransactionCountMethodModel = require('../../../../src/models/methods/acc
 /**
  * GetTransactionCountMethodModel test
  */
-describe('GetTransactionCountMethodModelTest', function () {
+describe('GetTransactionCountMethodModelTest', function() {
     var model, formattersMock, utilsMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetTransactionCountMethodModel(utils, formatters);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionCount', function () {
+    it('rpcMethod should return eth_getTransactionCount', function() {
         expect(model.rpcMethod).to.equal('eth_getTransactionCount');
     });
 
-    it('parametersAmount should return 2', function () {
+    it('parametersAmount should return 2', function() {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function () {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -53,7 +53,7 @@ describe('GetTransactionCountMethodModelTest', function () {
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber on the response and return it', function () {
+    it('afterExecution should call hexToNumber on the response and return it', function() {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

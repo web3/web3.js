@@ -23,7 +23,6 @@
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Eth extends AbstractWeb3Module {
-
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -84,7 +83,7 @@ export default class Eth extends AbstractWeb3Module {
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
         this.initiatedContracts = [];
-        this._defaultAccount = null ;
+        this._defaultAccount = null;
         this._defaultBlock = 'latest';
 
         /**
@@ -123,7 +122,7 @@ export default class Eth extends AbstractWeb3Module {
      * @property defaultAccount
      */
     set defaultAccount(value) {
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultAccount = value;
         });
 
@@ -152,7 +151,7 @@ export default class Eth extends AbstractWeb3Module {
     set defaultBlock(value) {
         this._defaultBlock = value;
 
-        this.initiatedContracts.forEach(contract => {
+        this.initiatedContracts.forEach((contract) => {
             contract.defaultBlock = value;
         });
 
@@ -174,27 +173,23 @@ export default class Eth extends AbstractWeb3Module {
     subscribe(type, options, callback) {
         switch (type) {
             case 'logs':
-                return this.subscriptionsFactory.createLogSubscription(
-                    this,
-                    options,
-                    this.methodModelFactory.createMethodModel('getPastLogs'),
-                    this.methodController
-                ).subscribe(callback);
+                return this.subscriptionsFactory
+                    .createLogSubscription(
+                        this,
+                        options,
+                        this.methodModelFactory.createMethodModel('getPastLogs'),
+                        this.methodController
+                    )
+                    .subscribe(callback);
 
             case 'newBlockHeaders':
-                return this.subscriptionsFactory.createNewHeadsSubscription(
-                    this
-                ).subscribe(callback);
+                return this.subscriptionsFactory.createNewHeadsSubscription(this).subscribe(callback);
 
             case 'pendingTransactions':
-                return this.subscriptionsFactory.createNewPendingTransactionsSubscription(
-                    this
-                ).subscribe(callback);
+                return this.subscriptionsFactory.createNewPendingTransactionsSubscription(this).subscribe(callback);
 
             case 'syncing':
-                return this.subscriptionsFactory.createSyncingSubscriptionModel(
-                    this
-                ).subscribe(callback);
+                return this.subscriptionsFactory.createSyncingSubscriptionModel(this).subscribe(callback);
 
             default:
                 throw Error(`Unknown subscription: ${type}`);
@@ -211,7 +206,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        const setContractProviders = this.initiatedContracts.every(contract => {
+        const setContractProviders = this.initiatedContracts.every((contract) => {
             return contract.setProvider(provider, net);
         });
 

@@ -60,6 +60,6 @@ export const Eth = (provider) => {
         Iban,
         new ABICoder(Utils),
         new ENS(provider),
-        new SubscriptionsFactory(),
+        new SubscriptionsFactory()
     );
 };

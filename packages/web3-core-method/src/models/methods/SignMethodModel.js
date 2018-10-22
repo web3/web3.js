@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
 export default class SignMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -32,22 +31,17 @@ export default class SignMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters, accounts) {
-        super(
-            'eth_sign',
-            2,
-            utils,
-            formatters
-        );
+        super('eth_sign', 2, utils, formatters);
         this.accounts = accounts;
     }
 
     /**
-    * This method will be executed before the RPC request.
-    *
-    * @method beforeExecution
-    *
-    * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-    */
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
     beforeExecution(moduleInstance) {
         this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
         this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);

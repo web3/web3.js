@@ -21,7 +21,6 @@
  */
 
 export default class ABIModel {
-
     /**
      * @param {Object} mappedAbi
      *
@@ -86,7 +85,7 @@ export default class ABIModel {
      * @returns {ABIItemModel}
      */
     getEventBySignature(signature) {
-        return this.abi.events.find(event => {
+        return this.abi.events.find((event) => {
             return event.signature === signature;
         });
     }

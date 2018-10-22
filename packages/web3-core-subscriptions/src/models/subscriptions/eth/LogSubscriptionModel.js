@@ -23,7 +23,6 @@
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class LogSubscriptionModel extends AbstractSubscriptionModel {
-
     /**
      * @param {Object} options
      * @param {Object} utils
@@ -34,13 +33,7 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
      * @constructor
      */
     constructor(options, utils, formatters, getPastLogsMethodModel, methodController) {
-        super(
-            'eth_subscribe',
-            'logs',
-            options,
-            utils,
-            formatters
-        );
+        super('eth_subscribe', 'logs', options, utils, formatters);
         this.getPastLogsMethodModel = getPastLogsMethodModel;
         this.methodController = methodController;
     }
@@ -59,22 +52,20 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
         this.options = this.formatters.inputLogFormatter(this.options);
         this.getPastLogsMethodModel.parameters = [options];
 
-        this.methodController.execute(
-            this.getPastLogsMethodModel,
-            moduleInstance.currentProvider,
-            null,
-            moduleInstance
-        ).then(logs => {
-            logs.forEach(log => {
-                callback(false, log);
-                subscription.emit('data', log);
-            });
+        this.methodController
+            .execute(this.getPastLogsMethodModel, moduleInstance.currentProvider, null, moduleInstance)
+            .then((logs) => {
+                logs.forEach((log) => {
+                    callback(false, log);
+                    subscription.emit('data', log);
+                });
 
-            delete self.options.fromBlock;
-        }).catch(error => {
-            subscription.emit('error', error);
-            callback(error, null);
-        });
+                delete self.options.fromBlock;
+            })
+            .catch((error) => {
+                subscription.emit('error', error);
+                callback(error, null);
+            });
     }
 
     /**

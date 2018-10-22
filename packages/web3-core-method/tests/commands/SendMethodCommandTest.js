@@ -12,7 +12,7 @@ var PromiEvent = require('web3-core-promievent').PromiEvent;
 /**
  * SendMethodCommand test
  */
-describe('SendMethodCommandTest', function () {
+describe('SendMethodCommandTest', function() {
     var sendMethodCommand,
         provider,
         providerMock,
@@ -28,7 +28,7 @@ describe('SendMethodCommandTest', function () {
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -50,11 +50,11 @@ describe('SendMethodCommandTest', function () {
         sendMethodCommand = new SendMethodCommand(transactionConfirmationWorkflow);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls execute with gasPrice defined', function () {
+    it('calls execute with gasPrice defined', function() {
         methodModel.parameters = [{gasPrice: 100}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -66,11 +66,11 @@ describe('SendMethodCommandTest', function () {
         providerAdapterMock
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
-            .returns(new Promise(
-                function (resolve) {
+            .returns(
+                new Promise(function(resolve) {
                     resolve('response');
-                }
-            ))
+                })
+            )
             .once();
 
         transactionConfirmationWorkflowMock
@@ -82,14 +82,14 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('transactionHash', function () {
+        promiEvent.on('transactionHash', function() {
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
             methodModelMock.verify();
         });
     });
 
-    it('calls execute without gasPrice defined', function () {
+    it('calls execute without gasPrice defined', function() {
         methodModel.parameters = [{}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -101,21 +101,21 @@ describe('SendMethodCommandTest', function () {
         providerAdapterMock
             .expects('send')
             .withArgs('eth_gasPrice', [])
-            .returns(new Promise(
-                function (resolve) {
+            .returns(
+                new Promise(function(resolve) {
                     resolve(100);
-                }
-            ))
+                })
+            )
             .once();
 
         providerAdapterMock
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
-            .returns(new Promise(
-                function (resolve) {
+            .returns(
+                new Promise(function(resolve) {
                     resolve('response');
-                }
-            ))
+                })
+            )
             .once();
 
         transactionConfirmationWorkflowMock
@@ -127,7 +127,7 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('transactionHash', function (response) {
+        promiEvent.on('transactionHash', function(response) {
             expect(response).equal('response');
             expect(methodModel.parameters[0].gasPrice).equal(100);
 
@@ -137,7 +137,7 @@ describe('SendMethodCommandTest', function () {
         });
     });
 
-    it('calls execute and throws error', function () {
+    it('calls execute and throws error', function() {
         methodModel.parameters = [{gasPrice: 100}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -149,11 +149,11 @@ describe('SendMethodCommandTest', function () {
         providerAdapterMock
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
-            .returns(new Promise(
-                function (resolve, reject) {
+            .returns(
+                new Promise(function(resolve, reject) {
                     reject('error');
-                }
-            ))
+                })
+            )
             .once();
 
         promiEventMock
@@ -165,7 +165,7 @@ describe('SendMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('error', function (error) {
+        promiEvent.on('error', function(error) {
             expect(error).equal('error');
 
             providerAdapterMock.verify();

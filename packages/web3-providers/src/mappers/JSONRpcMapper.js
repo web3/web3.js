@@ -23,7 +23,6 @@
 let messageId = 0;
 
 export default class JSONRpcMapper {
-
     /**
      * Creates a valid json payload object
      *
@@ -47,7 +46,7 @@ export default class JSONRpcMapper {
             method,
             params: params || []
         };
-    };
+    }
 
     /**
      * Creates a batch payload object
@@ -59,10 +58,10 @@ export default class JSONRpcMapper {
      * @returns {Array} batch payload
      */
     static toBatchPayload(requests) {
-        return requests.map(request => {
+        return requests.map((request) => {
             request.beforeExecution();
 
             return JSONRpcMapper.toPayload(request.rpcMethod, request.parameters);
         });
-    };
+    }
 }

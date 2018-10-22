@@ -23,7 +23,6 @@
 import SubscriptionsFactory from './SubscriptionsFactory';
 
 export default class SubscriptionsModuleFactory {
-
     /**
      * Returns an object of type SubscriptionsFactory
      *

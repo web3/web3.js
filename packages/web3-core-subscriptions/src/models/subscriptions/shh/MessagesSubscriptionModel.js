@@ -23,7 +23,6 @@
 import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
 
 export default class MessagesSubscriptionModel extends AbstractSubscriptionModel {
-
     /**
      * @param {Object} options
      * @param {Object} utils
@@ -32,12 +31,6 @@ export default class MessagesSubscriptionModel extends AbstractSubscriptionModel
      * @constructor
      */
     constructor(options, utils, formatters) {
-        super(
-            'shh_subscribe',
-            'messages',
-            options,
-            utils,
-            formatters
-        );
+        super('shh_subscribe', 'messages', options, utils, formatters);
     }
 }

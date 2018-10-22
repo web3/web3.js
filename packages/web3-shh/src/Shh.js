@@ -23,7 +23,6 @@
 import {AbstractWeb3Module} from 'web3-core';
 
 export default class Shh extends AbstractWeb3Module {
-
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -92,9 +91,6 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(
-            super.setProvider(provider, net) &&
-            this.net.setProvider(provider, net)
-        );
+        return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
     }
 }

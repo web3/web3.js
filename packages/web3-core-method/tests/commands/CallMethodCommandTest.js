@@ -8,7 +8,7 @@ import AbstractWeb3Module from 'web3-core';
 /**
  * CallMethodCommand test
  */
-describe('CallMethodCommandTest', function () {
+describe('CallMethodCommandTest', function() {
     var callMethodCommand,
         provider,
         providerMock,
@@ -19,7 +19,7 @@ describe('CallMethodCommandTest', function () {
         methodModelCallbackSpy,
         methodModelMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -36,11 +36,11 @@ describe('CallMethodCommandTest', function () {
         callMethodCommand = new CallMethodCommand();
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls execute', async function () {
+    it('calls execute', async function() {
         methodModelMock
             .expects('beforeExecution')
             .withArgs(moduleInstance)
@@ -48,11 +48,11 @@ describe('CallMethodCommandTest', function () {
 
         providerAdapterMock
             .expects('send')
-            .returns(new Promise(
-                function (resolve) {
-                    resolve('response')
-                }
-            ))
+            .returns(
+                new Promise(function(resolve) {
+                    resolve('response');
+                })
+            )
             .once();
 
         methodModelMock
@@ -71,7 +71,7 @@ describe('CallMethodCommandTest', function () {
         providerAdapterMock.verify();
     });
 
-    it('calls execute and throws error', async function () {
+    it('calls execute and throws error', async function() {
         methodModelMock
             .expects('beforeExecution')
             .withArgs(moduleInstance)
@@ -79,11 +79,11 @@ describe('CallMethodCommandTest', function () {
 
         providerAdapterMock
             .expects('send')
-            .returns(new Promise(
-                function (resolve, reject) {
-                    reject('error')
-                }
-            ))
+            .returns(
+                new Promise(function(resolve, reject) {
+                    reject('error');
+                })
+            )
             .once();
 
         try {

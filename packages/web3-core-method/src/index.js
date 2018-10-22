@@ -35,11 +35,7 @@ import {formatters} from 'web3-core-helpers';
  * @returns {MethodController}
  */
 export const MethodController = () => {
-    return new MethodModuleFactory().createMethodController(
-        PromiEvent,
-        new SubscriptionsFactory(),
-        formatters
-    );
+    return new MethodModuleFactory().createMethodController(PromiEvent, new SubscriptionsFactory(), formatters);
 };
 
 export AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';

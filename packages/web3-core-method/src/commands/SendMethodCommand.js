@@ -23,7 +23,6 @@
 import {isObject} from 'underscore';
 
 export default class SendMethodCommand {
-
     /**
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      *
@@ -54,7 +53,7 @@ export default class SendMethodCommand {
             return promiEvent;
         }
 
-        this.getGasPrice(moduleInstance.currentProvider).then(gasPrice => {
+        this.getGasPrice(moduleInstance.currentProvider).then((gasPrice) => {
             if (isObject(methodModel.parameters[0])) {
                 methodModel.parameters[0].gasPrice = gasPrice;
             }
@@ -77,31 +76,26 @@ export default class SendMethodCommand {
      * @returns {PromiEvent}
      */
     send(methodModel, promiEvent, moduleInstance) {
-        moduleInstance.currentProvider.send(
-            methodModel.rpcMethod,
-            methodModel.parameters
-        ).then(response => {
-            this.transactionConfirmationWorkflow.execute(
-                methodModel,
-                moduleInstance,
-                response,
-                promiEvent
-            );
+        moduleInstance.currentProvider
+            .send(methodModel.rpcMethod, methodModel.parameters)
+            .then((response) => {
+                this.transactionConfirmationWorkflow.execute(methodModel, moduleInstance, response, promiEvent);
 
-            promiEvent.emit('transactionHash', response);
+                promiEvent.emit('transactionHash', response);
 
-            if (methodModel.callback) {
-                methodModel.callback(false, response);
-            }
-        }).catch(error => {
-            promiEvent.reject(error);
-            promiEvent.emit('error', error);
-            promiEvent.removeAllListeners();
+                if (methodModel.callback) {
+                    methodModel.callback(false, response);
+                }
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
 
-            if (methodModel.callback) {
-                methodModel.callback(error, null);
-            }
-        });
+                if (methodModel.callback) {
+                    methodModel.callback(error, null);
+                }
+            });
 
         return promiEvent;
     }

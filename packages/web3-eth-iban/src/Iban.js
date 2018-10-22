@@ -23,7 +23,7 @@
  * @date 2015
  */
 
-"use strict";
+'use strict';
 
 import Utils from 'web3-utils';
 import BigNumber from 'bn.js';
@@ -44,22 +44,25 @@ const leftPad = (string, bytes) => {
  * @param {String} iban the IBAN
  * @returns {String} the prepared IBAN
  */
-const iso13616Prepare = iban => {
+const iso13616Prepare = (iban) => {
     const A = 'A'.charCodeAt(0);
     const Z = 'Z'.charCodeAt(0);
 
     iban = iban.toUpperCase();
     iban = iban.substr(4) + iban.substr(0, 4);
 
-    return iban.split('').map(n => {
-        const code = n.charCodeAt(0);
-        if (code >= A && code <= Z) {
-            // A = 10, B = 11, ... Z = 35
-            return code - A + 10;
-        } else {
-            return n;
-        }
-    }).join('');
+    return iban
+        .split('')
+        .map((n) => {
+            const code = n.charCodeAt(0);
+            if (code >= A && code <= Z) {
+                // A = 10, B = 11, ... Z = 35
+                return code - A + 10;
+            } else {
+                return n;
+            }
+        })
+        .join('');
 };
 
 /**
@@ -69,19 +72,19 @@ const iso13616Prepare = iban => {
  * @param {String} iban
  * @returns {Number}
  */
-const mod9710 = iban => {
-    let remainder = iban, block;
+const mod9710 = (iban) => {
+    let remainder = iban,
+        block;
 
     while (remainder.length > 2) {
         block = remainder.slice(0, 9);
-        remainder = parseInt(block, 10) % 97 + remainder.slice(block.length);
+        remainder = (parseInt(block, 10) % 97) + remainder.slice(block.length);
     }
 
     return parseInt(remainder, 10) % 97;
 };
 
 export default class Iban {
-
     /**
      * @param {String} iban
      *
@@ -104,7 +107,7 @@ export default class Iban {
         ib = new Iban(ib);
 
         if (!ib.isDirect()) {
-            throw new Error('IBAN is indirect and can\'t be converted');
+            throw new Error("IBAN is indirect and can't be converted");
         }
 
         return ib.toAddress();
@@ -160,7 +163,7 @@ export default class Iban {
         const countryCode = 'XE';
 
         const remainder = mod9710(iso13616Prepare(`${countryCode}00${bban}`));
-        const checkDigit = (`0${98 - remainder}`).slice(-2);
+        const checkDigit = `0${98 - remainder}`.slice(-2);
 
         return new Iban(countryCode + checkDigit + bban);
     }
@@ -200,8 +203,10 @@ export default class Iban {
      * @returns {Boolean} true if it is, otherwise false
      */
     isValid() {
-        return /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
-            mod9710(iso13616Prepare(this._iban)) === 1;
+        return (
+            /^XE[0-9]{2}(ETH[0-9A-Z]{13}|[0-9A-Z]{30,31})$/.test(this._iban) &&
+            mod9710(iso13616Prepare(this._iban)) === 1
+        );
     }
 
     /**

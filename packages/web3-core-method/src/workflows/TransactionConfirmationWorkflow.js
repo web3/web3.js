@@ -23,7 +23,6 @@
 import {ContractDeployMethodModel} from 'web3-eth-contract';
 
 export default class TransactionConfirmationWorkflow {
-
     /**
      * @param {TransactionConfirmationModel} transactionConfirmationModel
      * @param {TransactionReceiptValidator} transactionReceiptValidator
@@ -32,12 +31,7 @@ export default class TransactionConfirmationWorkflow {
      *
      * @constructor
      */
-    constructor(
-        transactionConfirmationModel,
-        transactionReceiptValidator,
-        newHeadsWatcher,
-        formatters
-    ) {
+    constructor(transactionConfirmationModel, transactionReceiptValidator, newHeadsWatcher, formatters) {
         this.transactionConfirmationModel = transactionConfirmationModel;
         this.transactionReceiptValidator = transactionReceiptValidator;
         this.newHeadsWatcher = newHeadsWatcher;
@@ -57,7 +51,7 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     execute(methodModel, moduleInstance, transactionHash, promiEvent) {
-        this.getTransactionReceipt(moduleInstance, transactionHash).then(receipt => {
+        this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
             if (receipt && receipt.blockHash) {
                 const validationResult = this.transactionReceiptValidator.validate(receipt);
                 if (validationResult === true) {
@@ -74,8 +68,11 @@ export default class TransactionConfirmationWorkflow {
             this.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
                 this.transactionConfirmationModel.timeoutCounter++;
                 if (!this.transactionConfirmationModel.isTimeoutTimeExceeded()) {
-                    this.getTransactionReceipt(transactionHash).then(receipt => {
-                        const validationResult = this.transactionReceiptValidator.validate(receipt, methodModel.parameters);
+                    this.getTransactionReceipt(transactionHash).then((receipt) => {
+                        const validationResult = this.transactionReceiptValidator.validate(
+                            receipt,
+                            methodModel.parameters
+                        );
 
                         if (validationResult === true) {
                             this.transactionConfirmationModel.addConfirmation(receipt);
@@ -104,10 +101,18 @@ export default class TransactionConfirmationWorkflow {
                     return;
                 }
 
-                let error = new Error(`Transaction was not mined within ${this.transactionConfirmationModel.TIMEOUTBLOCK} blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`);
+                let error = new Error(
+                    `Transaction was not mined within ${
+                        this.transactionConfirmationModel.TIMEOUTBLOCK
+                    } blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`
+                );
 
                 if (this.newHeadsWatcher.isPolling) {
-                    error = new Error(`Transaction was not mined within${this.transactionConfirmationModel.POLLINGTIMEOUT} seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`)
+                    error = new Error(
+                        `Transaction was not mined within${
+                            this.transactionConfirmationModel.POLLINGTIMEOUT
+                        } seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`
+                    );
                 }
 
                 this.handleErrorState(error, methodModel, promiEvent);
@@ -126,11 +131,9 @@ export default class TransactionConfirmationWorkflow {
      * @returns {Promise<Object>}
      */
     getTransactionReceipt(moduleInstance, transactionHash) {
-        return moduleInstance.currentProvider
-            .send('eth_getTransactionReceipt', [transactionHash])
-            .then(receipt => {
-                return this.formatters.outputTransactionReceiptFormatter(receipt);
-            });
+        return moduleInstance.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then((receipt) => {
+            return this.formatters.outputTransactionReceiptFormatter(receipt);
+        });
     }
 
     /**

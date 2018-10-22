@@ -24,7 +24,6 @@ import {isObject, isString} from 'underscore';
 import swarm from 'swarm-js';
 
 export default class Bzz {
-
     /**
      * @param {Object|String} provider
      *

@@ -23,7 +23,6 @@
 import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
 
 export default class PersonalSendTransactionMethodModel extends AbstractMethodModel {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -31,12 +30,7 @@ export default class PersonalSendTransactionMethodModel extends AbstractMethodMo
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'personal_sendTransaction',
-            2,
-            utils,
-            formatters
-        );
+        super('personal_sendTransaction', 2, utils, formatters);
     }
 
     /**

@@ -24,7 +24,6 @@ import Personal from '../Personal';
 import MethodModelFactory from './MethodModelFactory';
 
 export default class PersonalModuleFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters

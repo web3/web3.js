@@ -23,7 +23,6 @@
 import {SendTransactionMethodModel} from 'web3-core-method';
 
 export default class ContractDeployMethodModel extends SendTransactionMethodModel {
-
     /**
      * @param {Contract} contract
      * @param {Object} utils
@@ -33,11 +32,7 @@ export default class ContractDeployMethodModel extends SendTransactionMethodMode
      * @constructor
      */
     constructor(contract, utils, formatters, accounts) {
-        super(
-            utils,
-            formatters,
-            accounts
-        );
+        super(utils, formatters, accounts);
 
         this.contract = contract;
     }

@@ -34,7 +34,6 @@ import {
 } from 'web3-core-method';
 
 export default class MethodModelFactory extends AbstractMethodModelFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters

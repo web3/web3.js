@@ -8,27 +8,27 @@ var EcRecoverMethodModel = require('../../../../src/models/methods/personal/EcRe
 /**
  * EcRecoverMethodModel test
  */
-describe('EcRecoverMethodModelTest', function () {
+describe('EcRecoverMethodModelTest', function() {
     var model, formattersMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         formattersMock = sinon.mock(formatters);
         model = new EcRecoverMethodModel({}, formatters);
     });
 
     afterEach(function() {
-       sinon.restore();
+        sinon.restore();
     });
 
-    it('rpcMethod should return personal_ecRecover', function () {
+    it('rpcMethod should return personal_ecRecover', function() {
         expect(model.rpcMethod).to.equal('personal_ecRecover');
     });
 
-    it('parametersAmount should return 3', function () {
+    it('parametersAmount should return 3', function() {
         expect(model.parametersAmount).to.equal(3);
     });
 
-    it('beforeExecution should do nothing with the parameters', function () {
+    it('beforeExecution should do nothing with the parameters', function() {
         model.parameters = [{}, '0x0'];
 
         formattersMock
@@ -49,10 +49,9 @@ describe('EcRecoverMethodModelTest', function () {
         expect(model.parameters[1]).equal('0x0');
 
         formattersMock.verify();
-
     });
 
-    it('afterExecution should just return the response', function () {
+    it('afterExecution should just return the response', function() {
         expect(model.afterExecution('submitWork')).equal('submitWork');
     });
 });

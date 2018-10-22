@@ -24,7 +24,6 @@ import {isArray, isFunction} from 'underscore';
 import EventEmitter from 'eventemitter3';
 
 export default class Subscription extends EventEmitter {
-
     /**
      * @param {AbstractSubscriptionModel} subscriptionModel
      * @param {AbstractWeb3Module} moduleInstance
@@ -51,31 +50,31 @@ export default class Subscription extends EventEmitter {
     subscribe(callback) {
         this.subscriptionModel.beforeSubscription(this, this.moduleInstance, callback);
 
-        this.moduleInstance.currentProvider.subscribe(
-            this.subscriptionModel.subscriptionType,
-            this.subscriptionModel.subscriptionMethod,
-            [this.subscriptionModel.options]
-        ).then(subscriptionId => {
-            this.subscriptionId = subscriptionId;
+        this.moduleInstance.currentProvider
+            .subscribe(this.subscriptionModel.subscriptionType, this.subscriptionModel.subscriptionMethod, [
+                this.subscriptionModel.options
+            ])
+            .then((subscriptionId) => {
+                this.subscriptionId = subscriptionId;
 
-            this.moduleInstance.currentProvider.on(this.subscriptionId, (error, response) => {
-                if (!error) {
-                    this.handleSubscriptionResponse(response, callback);
+                this.moduleInstance.currentProvider.on(this.subscriptionId, (error, response) => {
+                    if (!error) {
+                        this.handleSubscriptionResponse(response, callback);
 
-                    return;
-                }
+                        return;
+                    }
 
-                if (self.moduleInstance.currentProvider.once) {
-                    this.reconnect(callback);
-                }
+                    if (self.moduleInstance.currentProvider.once) {
+                        this.reconnect(callback);
+                    }
 
-                if (isFunction(callback)) {
-                    callback(error, null);
-                }
+                    if (isFunction(callback)) {
+                        callback(error, null);
+                    }
 
-                this.emit('error', error);
+                    this.emit('error', error);
+                });
             });
-        });
 
         return this;
     }
@@ -96,7 +95,7 @@ export default class Subscription extends EventEmitter {
             response = [response];
         }
 
-        response.forEach(function (item) {
+        response.forEach(function(item) {
             const formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
 
             this.emit('data', formattedOutput);
@@ -126,15 +125,17 @@ export default class Subscription extends EventEmitter {
 
         this.moduleInstance.currentProvider.once('connect', () => {
             clearInterval(interval);
-            this.unsubscribe().then(() => {
-                this.subscribe(callback);
-            }).catch(error => {
-                this.emit('error', error);
+            this.unsubscribe()
+                .then(() => {
+                    this.subscribe(callback);
+                })
+                .catch((error) => {
+                    this.emit('error', error);
 
-                if (isFunction(callback)) {
-                    callback(error, null);
-                }
-            });
+                    if (isFunction(callback)) {
+                        callback(error, null);
+                    }
+                });
         });
     }
 
@@ -149,28 +150,27 @@ export default class Subscription extends EventEmitter {
      * @returns {Promise<boolean>}
      */
     unsubscribe(callback) {
-        return this.moduleInstance.currentProvider.unsubscribe(
-            this.subscriptionId,
-            this.subscriptionModel.subscriptionType
-        ).then(response => {
-            this.removeAllListeners('data');
-            this.removeAllListeners('error');
+        return this.moduleInstance.currentProvider
+            .unsubscribe(this.subscriptionId, this.subscriptionModel.subscriptionType)
+            .then((response) => {
+                this.removeAllListeners('data');
+                this.removeAllListeners('error');
 
-            if (!response) {
-                this.subscriptionId = null;
+                if (!response) {
+                    this.subscriptionId = null;
 
-                if (isFunction(callback)) {
-                    callback(true, false);
+                    if (isFunction(callback)) {
+                        callback(true, false);
+                    }
+
+                    return true;
                 }
 
-                return true;
-            }
+                if (isFunction(callback)) {
+                    callback(false, true);
+                }
 
-            if (isFunction(callback)) {
-                callback(false, true);
-            }
-
-            return false;
-        });
+                return false;
+            });
     }
 }

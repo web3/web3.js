@@ -31,12 +31,7 @@ export default class SendTransactionMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters, accounts) {
-        super(
-            'eth_sendTransaction',
-            1,
-            utils,
-            formatters
-        );
+        super('eth_sendTransaction', 1, utils, formatters);
         this.accounts = accounts;
     }
 

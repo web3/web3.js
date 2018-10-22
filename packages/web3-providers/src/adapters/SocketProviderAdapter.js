@@ -23,7 +23,6 @@
 import AbstractProviderAdapter from '../../lib/adapters/AbstractProviderAdapter';
 
 export default class SocketProviderAdapter extends AbstractProviderAdapter {
-
     /**
      * @param {Object} provider
      *
@@ -70,9 +69,9 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      * @returns {Promise<Boolean|Error>}
      */
     unsubscribe(subscriptionId, subscriptionType) {
-        return this.send(subscriptionType, [subscriptionId]).then(function (result) {
+        return this.send(subscriptionType, [subscriptionId]).then(function(result) {
             if (result) {
-                this.subscriptions = this.subscriptions.filter(subscription => {
+                this.subscriptions = this.subscriptions.filter((subscription) => {
                     return subscription !== subscriptionId;
                 });
 
@@ -121,7 +120,7 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
     clearSubscriptions() {
         const unsubscribePromises = [];
 
-        this.subscriptions.forEach(subscriptionId => {
+        this.subscriptions.forEach((subscriptionId) => {
             unsubscribePromises.push(this.unsubscribe(subscriptionId));
         });
 

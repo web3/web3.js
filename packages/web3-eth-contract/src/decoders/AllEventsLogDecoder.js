@@ -23,7 +23,6 @@
 import EventLogDecoder from './EventLogDecoder';
 
 export default class AllEventsLogDecoder extends EventLogDecoder {
-
     /**
      * @param {ABIModel} abiModel
      * @param {ABICoder} abiCoder
@@ -32,10 +31,7 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
      * @constructor
      */
     constructor(abiModel, abiCoder, formatters) {
-        super(
-            abiCoder,
-            formatters
-        );
+        super(abiCoder, formatters);
 
         this.abiModel = abiModel;
     }

@@ -21,7 +21,6 @@
  */
 
 export default class ABIMapper {
-
     /**
      * @param {ContractModuleFactory} contractPackageFactory
      * @param {ABICoder} abiCoder
@@ -49,7 +48,7 @@ export default class ABIMapper {
             events: {}
         };
 
-        abi.forEach(abiItem => {
+        abi.forEach((abiItem) => {
             abiItem.constant = self.isConstant(abiItem);
             abiItem.payable = self.isPayable(abiItem);
 
@@ -72,10 +71,7 @@ export default class ABIMapper {
                     if (_.isArray(mappedAbiItems.methods[abiItem.name])) {
                         mappedAbiItems.methods[abiItem.name].push(abiItemModel);
                     } else {
-                        mappedAbiItems.methods[abiItem.name] = [
-                            mappedAbiItems.methods[abiItem.name],
-                            abiItemModel
-                        ];
+                        mappedAbiItems.methods[abiItem.name] = [mappedAbiItems.methods[abiItem.name], abiItemModel];
                     }
                 }
 
@@ -117,7 +113,7 @@ export default class ABIMapper {
      * @returns {Boolean}
      */
     isConstant(abiItem) {
-        return (abiItem.stateMutability === "view" || abiItem.stateMutability === "pure" || abiItem.constant);
+        return abiItem.stateMutability === 'view' || abiItem.stateMutability === 'pure' || abiItem.constant;
     }
 
     /**
@@ -130,6 +126,6 @@ export default class ABIMapper {
      * @returns {Boolean}
      */
     isPayable(abiItem) {
-        return (abiItem.stateMutability === "payable" || abiItem.payable);
+        return abiItem.stateMutability === 'payable' || abiItem.payable;
     }
 }

@@ -33,7 +33,6 @@ import {Personal} from 'web3-eth-personal';
 import {version} from '../package.json';
 
 export default class Web3 extends AbstractWeb3Module {
-
     /**
      * @param {Object|String} provider
      * @param {Net} net
@@ -41,9 +40,9 @@ export default class Web3 extends AbstractWeb3Module {
      * @constructor
      */
     constructor(provider, net) {
-        var providersModuleFactory = new ProvidersModuleFactory();
-        var providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
-        var providerDetector = providersModuleFactory.createProviderDetector();
+        const providersModuleFactory = new ProvidersModuleFactory(),
+              providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver(),
+              providerDetector = providersModuleFactory.createProviderDetector();
 
         provider = providerAdapterResolver.resolve(provider, net);
 
@@ -73,7 +72,7 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Boolean}
      */
     setProvider(provider, net) {
-        return !!(
+        return (
             super.setProvider(provider, net) &&
             this.eth.setProvider(provider, net) &&
             this.shh.setProvider(provider, net) &&

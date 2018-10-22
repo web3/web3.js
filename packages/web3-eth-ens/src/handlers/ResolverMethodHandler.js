@@ -21,7 +21,6 @@ import _ from 'underscore';
 import namehash from 'eth-ens-namehash';
 
 export default class ResolverMethodHandler {
-
     /**
      * @param {Registry} registry
      * @param {PromiEventPackage} promiEventPackage
@@ -72,13 +71,16 @@ export default class ResolverMethodHandler {
      */
     call(callback) {
         const promiEvent = new this.promiEventPackage.PromiEvent(),
-              preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+            preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
-        this.parent.registry.resolver(this.ensName).then(resolver => {
-            this.parent.handleCall(promiEvent, resolver.methods[this.methodName], preparedArguments, callback);
-        }).catch(error => {
-            promiEvent.reject(error);
-        });
+        this.parent.registry
+            .resolver(this.ensName)
+            .then((resolver) => {
+                this.parent.handleCall(promiEvent, resolver.methods[this.methodName], preparedArguments, callback);
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
+            });
 
         return promiEvent;
     }
@@ -96,13 +98,22 @@ export default class ResolverMethodHandler {
      */
     send(sendOptions, callback) {
         const promiEvent = new this.promiEventPackage.PromiEvent(),
-              preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
+            preparedArguments = this.parent.prepareArguments(this.ensName, this.methodArguments);
 
-        this.parent.registry.resolver(this.ensName).then(resolver => {
-            this.parent.handleSend(promiEvent, resolver.methods[this.methodName], preparedArguments, sendOptions, callback);
-        }).catch(error => {
-            promiEvent.reject(error);
-        });
+        this.parent.registry
+            .resolver(this.ensName)
+            .then((resolver) => {
+                this.parent.handleSend(
+                    promiEvent,
+                    resolver.methods[this.methodName],
+                    preparedArguments,
+                    sendOptions,
+                    callback
+                );
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
+            });
 
         return promiEvent;
     }
@@ -121,20 +132,23 @@ export default class ResolverMethodHandler {
      * @returns {PromiEvent}
      */
     handleCall(promiEvent, method, preparedArguments, callback) {
-        method.apply(this, preparedArguments).call()
-            .then(receipt => {
+        method
+            .apply(this, preparedArguments)
+            .call()
+            .then((receipt) => {
                 promiEvent.resolve(receipt);
 
                 if (_.isFunction(callback)) {
                     callback(receipt);
                 }
-            }).catch(error => {
-            promiEvent.reject(error);
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
 
-            if (_.isFunction(callback)) {
-                callback(error);
-            }
-        });
+                if (_.isFunction(callback)) {
+                    callback(error);
+                }
+            });
 
         return promiEvent;
     }
@@ -154,14 +168,16 @@ export default class ResolverMethodHandler {
      * @returns {PromiEvent}
      */
     handleSend(promiEvent, method, preparedArguments, sendOptions, callback) {
-        method.apply(this, preparedArguments).send(sendOptions)
-            .on('transactionHash', hash => {
+        method
+            .apply(this, preparedArguments)
+            .send(sendOptions)
+            .on('transactionHash', (hash) => {
                 promiEvent.emit('transactionHash', hash);
             })
             .on('confirmation', (confirmationNumber, receipt) => {
                 promiEvent.emit('confirmation', confirmationNumber, receipt);
             })
-            .on('receipt', receipt => {
+            .on('receipt', (receipt) => {
                 promiEvent.emit('receipt', receipt);
                 promiEvent.resolve(receipt);
 
@@ -169,7 +185,7 @@ export default class ResolverMethodHandler {
                     callback(receipt);
                 }
             })
-            .on('error', error => {
+            .on('error', (error) => {
                 promiEvent.emit('error', error);
                 promiEvent.reject(error);
 

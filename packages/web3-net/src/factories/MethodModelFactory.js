@@ -29,7 +29,6 @@ import {
 } from 'web3-core-method';
 
 export default class MethodModelFactory extends AbstractMethodModelFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -42,7 +41,7 @@ export default class MethodModelFactory extends AbstractMethodModelFactory {
                 getId: VersionMethodModel,
                 getBlock: GetBlockMethodModel,
                 isListening: ListeningMethodModel,
-                getPeerCount: PeerCountMethodModel,
+                getPeerCount: PeerCountMethodModel
             },
             utils,
             formatters

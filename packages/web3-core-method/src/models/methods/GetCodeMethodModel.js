@@ -30,12 +30,7 @@ export default class GetCodeMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super(
-            'eth_getCode',
-            2,
-            utils,
-            formatters
-        );
+        super('eth_getCode', 2, utils, formatters);
     }
 
     /**

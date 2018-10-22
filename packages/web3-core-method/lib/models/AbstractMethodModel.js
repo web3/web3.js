@@ -23,7 +23,6 @@
 import _ from 'underscore';
 
 export default class AbstractMethodModel {
-
     /**
      * @param {String|Function} rpcMethod
      * @param {Number} parametersAmount
@@ -63,7 +62,7 @@ export default class AbstractMethodModel {
      *
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    beforeExecution(moduleInstance) { }
+    beforeExecution(moduleInstance) {}
 
     /**
      * This method will be executed after the RPC request.
@@ -101,7 +100,8 @@ export default class AbstractMethodModel {
      * @returns {Object}
      */
     mapFunctionArguments(args) {
-        let parameters = args, callback = false;
+        let parameters = args,
+            callback = false;
 
         if (args.length < this.parametersAmount) {
             throw new Error(
@@ -112,9 +112,7 @@ export default class AbstractMethodModel {
         if (args.length > this.parametersAmount) {
             callback = args.slice(-1);
             if (!_.isFunction(callback)) {
-                throw new Error(
-                    'The latest parameter should be a function otherwise it can not be used as callback'
-                );
+                throw new Error('The latest parameter should be a function otherwise it can not be used as callback');
             }
             parameters = args.slice(0, -1);
         }

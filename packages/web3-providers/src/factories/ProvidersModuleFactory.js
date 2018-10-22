@@ -33,7 +33,6 @@ import JSONRpcMapper from '../mappers/JSONRpcMapper';
 import BatchRequest from '../batch-request/BatchRequest';
 
 export default class ProvidersModuleFactory {
-
     /**
      * Returns an BatchRequest object
      *
@@ -132,7 +131,7 @@ export default class ProvidersModuleFactory {
      * @returns {SocketProviderAdapter}
      */
     createSocketProviderAdapter(provider) {
-        return new SocketProviderAdapter(provider)
+        return new SocketProviderAdapter(provider);
     }
 
     /**
@@ -145,7 +144,7 @@ export default class ProvidersModuleFactory {
      * @returns {InpageProviderAdapter}
      */
     createInpageProviderAdapter(provider) {
-        return new InpageProviderAdapter(provider)
+        return new InpageProviderAdapter(provider);
     }
 
     /**

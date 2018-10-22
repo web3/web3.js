@@ -13,7 +13,7 @@ var PromiEvent = require('web3-core-promievent').PromiEvent;
 /**
  * SendAndSignMethodCommand test
  */
-describe('SendAndSignMethodCommandTest', function () {
+describe('SendAndSignMethodCommandTest', function() {
     var signAndSendMethodCommand,
         provider,
         providerMock,
@@ -33,7 +33,7 @@ describe('SendAndSignMethodCommandTest', function () {
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
-    beforeEach(function () {
+    beforeEach(function() {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -66,11 +66,11 @@ describe('SendAndSignMethodCommandTest', function () {
         signAndSendMethodCommand = new SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner);
     });
 
-    afterEach(function () {
+    afterEach(function() {
         sinon.restore();
     });
 
-    it('calls execute', function () {
+    it('calls execute', function() {
         methodModel.parameters = [];
 
         methodModelMock
@@ -81,21 +81,24 @@ describe('SendAndSignMethodCommandTest', function () {
         transactionSignerMock
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
-            .returns(new Promise(function (resolve) {
-                resolve({
-                    rawTransaction: ''
+            .returns(
+                new Promise(function(resolve) {
+                    resolve({
+                        rawTransaction: ''
+                    });
                 })
-            }))
+            )
             .once();
 
         providerAdapterMock
             .expects('send')
             .withArgs('eth_sendRawTransaction', [''])
-            .returns(new Promise(
-                function (resolve) {
+            .returns(
+                new Promise(function(resolve) {
                     resolve('response');
-                }
-            )).once();
+                })
+            )
+            .once();
 
         transactionConfirmationWorkflowMock
             .expects('execute')
@@ -106,7 +109,7 @@ describe('SendAndSignMethodCommandTest', function () {
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.then(function () {
+        promiEvent.then(function() {
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
 
@@ -122,7 +125,7 @@ describe('SendAndSignMethodCommandTest', function () {
         });
     });
 
-    it('calls execute and throws error', function () {
+    it('calls execute and throws error', function() {
         methodModel.parameters = [{gasPrice: 100}];
 
         methodModelMock
@@ -133,16 +136,18 @@ describe('SendAndSignMethodCommandTest', function () {
         transactionSignerMock
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
-            .returns(new Promise(function (resolve, reject) {
-                reject('error')
-            }))
+            .returns(
+                new Promise(function(resolve, reject) {
+                    reject('error');
+                })
+            )
             .once();
 
         var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.catch(function (error) {
+        promiEvent.catch(function(error) {
             expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;

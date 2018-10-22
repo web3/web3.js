@@ -24,7 +24,6 @@ import MethodModelFactory from './MethodModelFactory';
 import Accounts from '../Accounts';
 
 export default class AccountsModuleFactory {
-
     /**
      * @param {Object} utils
      * @param {Object} formatters
