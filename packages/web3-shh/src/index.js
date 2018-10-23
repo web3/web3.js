@@ -38,11 +38,9 @@ import ShhModuleFactory from './factories/ShhModuleFactory';
  * @returns {Shh}
  */
 export const Shh = (provider) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
     return new ShhModuleFactory(Utils, formatters).createShhModule(
         provider,
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController(),
         new SubscriptionsFactory(),

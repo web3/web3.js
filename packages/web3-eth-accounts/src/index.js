@@ -36,11 +36,9 @@ import AccountsModuleFactory from './factories/AccountsModuleFactory';
  * @returns {Accounts}
  */
 export const Accounts = (provider) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
     return new AccountsModuleFactory(Utils, formatters).createAccounts(
         provider,
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController()
     );

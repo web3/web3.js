@@ -37,11 +37,9 @@ import NetworkModuleFactory from './factories/NetworkModuleFactory';
  * @returns {Network}
  */
 export const Network = (provider) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
     return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
         provider,
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController()
     );

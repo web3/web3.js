@@ -37,11 +37,9 @@ import PersonalModuleFactory from './factories/PersonalModuleFactory';
  * @returns {Personal}
  */
 export const Personal = (provider) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController(),
         new Network(provider)
