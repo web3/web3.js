@@ -127,10 +127,10 @@ Example
         encrypt: function(password){...}
     }
 
-    web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
+    web3.eth.accounts.privateKeyToAccount('0x5e25365d6d26ab4bb00bcf5d43db24f8302a8189d449e042a90162c8e0cdf0d5');
     > {
-        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
-        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
+        address: '0x266325c22663380f14891466451ceae2a96e24fb',
+        privateKey: '0x5e25365d6d26ab4bb00bcf5d43db24f8302a8189d449e042a90162c8e0cdf0d5',
         signTransaction: function(tx){...},
         sign: function(data){...},
         encrypt: function(password){...}
