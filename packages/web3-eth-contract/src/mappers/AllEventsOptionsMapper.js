@@ -44,6 +44,8 @@ export default class AllEventsOptionsMapper {
 
         if (typeof options.fromBlock !== 'undefined') {
             options.fromBlock = this.formatters.inputBlockNumberFormatter(options.fromBlock);
+        } else if (contract.defaultBlock !== null) {
+            options.fromBlock = contract.defaultBlock;
         }
 
         if (typeof options.toBlock !== 'undefined') {
@@ -55,7 +57,7 @@ export default class AllEventsOptionsMapper {
         }
 
         if (!options.address) {
-            options.address = contract.options.address;
+            options.address = contract.address;
         }
 
         return options;

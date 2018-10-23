@@ -54,8 +54,8 @@ export default class RpcMethodOptionsMapper {
         options.data = options.data || contract.options.data;
 
         options.from = from || contract.defaultAccount;
-        options.gasPrice = gasPrice || contract.options.gasPrice;
-        options.gas = options.gas || options.gasLimit || contract.options.gas;
+        options.gasPrice = gasPrice || contract.defaultGasPrice;
+        options.gas = options.gas || options.gasLimit || contract.defaultGas;
 
         delete options.gasLimit;
 
