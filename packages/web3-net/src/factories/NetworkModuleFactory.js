@@ -44,6 +44,7 @@ export default class NetworkModuleFactory {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
+     * @param {Object} options
      *
      * @returns {Network}
      */
@@ -51,7 +52,8 @@ export default class NetworkModuleFactory {
         provider,
         providersModuleFactory,
         providers,
-        methodController
+        methodController,
+        options
     ) {
         return new Network(
             provider,
@@ -60,7 +62,8 @@ export default class NetworkModuleFactory {
             methodController,
             this.createMethodModelFactory(),
             this.formatters,
-            this.utils
+            this.utils,
+            options
         );
     }
 

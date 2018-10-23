@@ -64,7 +64,8 @@ export default class AbstractContract extends AbstractWeb3Module {
             providersModuleFactory,
             providers,
             methodController,
-            null
+            null,
+            options
         );
 
         if (!(this instanceof AbstractContract)) {
@@ -86,32 +87,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.options = options;
         this.PromiEvent = PromiEvent;
         this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
-        this._defaultAccount = null;
-        this._defaultBlock = 'latest';
         this.abiModel = abiMapper.map(abi);
-        this.options.address = address;
-
-        Object.defineProperty(this.options, 'jsonInterface', {
-            get: () => {
-                return this.abiModel;
-            },
-            set: (value) => {
-                this.abiModel = this.abiMapper.map(value);
-                this.methods.abiModel = this.abiModel;
-                this.events.abiModel = this.abiModel;
-            },
-            enumerable: true
-        });
-
-        Object.defineProperty(this.options, 'address', {
-            get: () => {
-                return this._address;
-            },
-            set: (value) => {
-                this._address = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-            },
-            enumerable: true
-        });
 
         this.methods = contractModuleFactory.createMethodsProxy(
             this,
@@ -126,48 +102,6 @@ export default class AbstractContract extends AbstractWeb3Module {
             this.methodController,
             this.PromiEvent
         );
-    }
-
-    /**
-     * Getter for the defaultAccount property
-     *
-     * @property defaultAccount
-     *
-     * @returns {null|String}
-     */
-    get defaultAccount() {
-        return this._defaultAccount;
-    }
-
-    /**
-     * Setter for the defaultAccount property
-     *
-     * @property defaultAccount
-     */
-    set defaultAccount(value) {
-        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-    }
-
-    /**
-     * Getter for the defaultBlock property
-     *
-     * @property defaultBlock
-     *
-     * @returns {String}
-     */
-    get defaultBlock() {
-        return this._defaultBlock;
-    }
-
-    /**
-     * Setter for the defaultBlock property
-     *
-     * @property defaultBlock
-     *
-     * @param value
-     */
-    set defaultBlock(value) {
-        this._defaultBlock = value;
     }
 
     /**
@@ -282,5 +216,112 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     setProvider(provider, net) {
         return !!(super.setProvider(provider, net) && this.accounts.setProvider(provider, net));
+    }
+
+    /**
+     * Returns the jsonInterface
+     *
+     * @returns {AbiModel}
+     */
+    get jsonInterface() {
+        return this.abiModel;
+    }
+
+    /**
+     * Sets the jsonInterface property
+     *
+     * @property jsonInterface
+     *
+     * @param {Object} value
+     */
+    set jsonInterface(value) {
+        this.abiModel = this.abiMapper.map(value);
+        this.methods.abiModel = this.abiModel;
+        this.events.abiModel = this.abiModel;
+    }
+
+    /**
+     * Sets the defaultGasPrice property on the current object and the accounts module
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String} value
+     */
+    set defaultGasPrice(value) {
+        super.defaultGasPrice = value;
+        this.accounts.defaultGasPrice = value;
+    }
+
+    /**
+     * Sets the defaultGas property on the current object and the accounts module
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        super.defaultGas = value;
+        this.accounts.defaultGas = value;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on the current object and the accounts module
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
+        this.accounts.transactionBlockTimeout = value;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on the current object and the accounts module
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
+        this.accounts.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on the current object and the accounts module
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
+        this.accounts.transactionPollingTimeout = value;
+    }
+
+
+    /**
+     * Sets the defaultAccount property on the current object and the accounts module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        super.defaultAccount = value;
+        this.accounts.defaultAccount = value;
+    }
+
+    /**
+     * Sets the defaultBlock property on the current object and the accounts module
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        super.defaultBlock = value;
+        this.accounts.defaultBlock = value;
     }
 }

@@ -34,16 +34,18 @@ import ShhModuleFactory from './factories/ShhModuleFactory';
  * @method Shh
  *
  * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object} options
  *
  * @returns {Shh}
  */
-export const Shh = (provider) => {
+export const Shh = (provider, options) => {
     return new ShhModuleFactory(Utils, formatters).createShhModule(
         provider,
         new ProvidersModuleFactory(),
         providers,
         new MethodController(),
         new SubscriptionsFactory(),
-        new Network(provider)
+        new Network(provider, options),
+        options
     );
 };

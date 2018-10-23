@@ -42,6 +42,7 @@ export default class AccountsModuleFactory {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
+     * @param {Object} options
      *
      * @returns {Accounts}
      */
@@ -49,7 +50,8 @@ export default class AccountsModuleFactory {
         provider,
         providersModuleFactory,
         providers,
-        methodController
+        methodController,
+        options
     ) {
         return new Accounts(
             provider,
@@ -58,7 +60,8 @@ export default class AccountsModuleFactory {
             methodController,
             this.createMethodModelFactory(),
             this.utils,
-            this.formatters
+            this.formatters,
+            options
         );
     }
 

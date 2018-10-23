@@ -32,14 +32,16 @@ import AccountsModuleFactory from './factories/AccountsModuleFactory';
  * @method Accounts
  *
  * @params {AbstractProviderAdapter|EthereumProvider} provider
+ * @params {Object} options
  *
  * @returns {Accounts}
  */
-export const Accounts = (provider) => {
+export const Accounts = (provider, options) => {
     return new AccountsModuleFactory(Utils, formatters).createAccounts(
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController()
+        new MethodController(),
+        options
     );
 };

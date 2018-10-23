@@ -34,6 +34,7 @@ export default class Personal extends AbstractWeb3Module {
      * @param {Network} net
      * @param {Object} utils
      * @param {Object} formatters
+     * @param {Object} options
      *
      * @constructor
      */
@@ -45,63 +46,21 @@ export default class Personal extends AbstractWeb3Module {
         methodModelFactory,
         net,
         utils,
-        formatters
+        formatters,
+        options
     ) {
         super(
             provider,
             providersModuleFactory,
             providers,
             methodController,
-            methodModelFactory
+            methodModelFactory,
+            options
         );
 
         this.utils = utils;
         this.formatters = formatters;
         this.net = net;
-        this._defaultAccount = null;
-        this._defaultBlock = 'latest';
-    }
-
-    /**
-     * Getter for the defaultAccount property
-     *
-     * @property defaultAccount
-     *
-     * @returns {null|String}
-     */
-    get defaultAccount() {
-        return this._defaultAccount;
-    }
-
-    /**
-     * Setter for the defaultAccount property
-     *
-     * @property defaultAccount
-     */
-    set defaultAccount(value) {
-        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-    }
-
-    /**
-     * Getter for the defaultBlock property
-     *
-     * @property defaultBlock
-     *
-     * @returns {String}
-     */
-    get defaultBlock() {
-        return this._defaultBlock;
-    }
-
-    /**
-     * Setter for the defaultBlock property
-     *
-     * @property defaultBlock
-     *
-     * @param value
-     */
-    set defaultBlock(value) {
-        this._defaultBlock = value;
     }
 
     /**
@@ -116,5 +75,90 @@ export default class Personal extends AbstractWeb3Module {
      */
     setProvider(provider, net) {
         return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
+    }
+
+    /**
+     * Sets the defaultGasPrice property on the current object and the network module
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String} value
+     */
+    set defaultGasPrice(value) {
+        super.defaultGasPrice = value;
+        this.net.defaultGasPrice = value;
+    }
+
+    /**
+     * Sets the defaultGas property on the current object and the network module
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        super.defaultGas = value;
+        this.net.defaultGas = value;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on the current object and the network module
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
+        this.net.transactionBlockTimeout = value;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on the current object and the network module
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
+        this.net.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on the current object and the network module
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
+        this.net.transactionPollingTimeout = value;
+    }
+
+
+    /**
+     * Sets the defaultAccount property on the current object and the network module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        super.defaultAccount = value;
+        this.net.defaultAccount = value;
+    }
+
+    /**
+     * Sets the defaultBlock property on the current object and the network module
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        super.defaultBlock = value;
+        this.net.defaultBlock = value;
     }
 }

@@ -33,6 +33,7 @@ export default class Network extends AbstractWeb3Module {
      * @param {MethodModelFactory} methodModelFactory
      * @param {Object} formatters
      * @param {Object} utils
+     * @param {Object} options
      *
      * @constructor
      */
@@ -43,14 +44,16 @@ export default class Network extends AbstractWeb3Module {
         methodController,
         methodModelFactory,
         formatters,
-        utils
+        utils,
+        options
     ) {
         super(
             provider,
             providersModuleFactory,
             providers,
             methodController,
-            methodModelFactory
+            methodModelFactory,
+            options
         );
 
         this.formatters = formatters;

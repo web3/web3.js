@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class Eth extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {EthModuleFactory} ethModuleFactory
@@ -41,6 +39,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {MethodModelFactory} methodModelFactory
      * @param {MethodController} methodController
+     * @param {Object} options
      *
      * @constructor
      */
@@ -60,13 +59,15 @@ export default class Eth extends AbstractWeb3Module {
         utils,
         formatters,
         subscriptionsFactory,
+        options
     ) {
         super(
             provider,
             providersModuleFactory,
             providers,
             methodController,
-            methodModelFactory
+            methodModelFactory,
+            options
         );
 
         this.ethModuleFactory = ethModuleFactory;
@@ -80,8 +81,6 @@ export default class Eth extends AbstractWeb3Module {
         this.formatters = formatters;
         this.subscriptionsFactory = subscriptionsFactory;
         this.initiatedContracts = [];
-        this._defaultAccount = null;
-        this._defaultBlock = 'latest';
 
         /**
          * This wrapper function is required for the "new web3.eth.Contract(...)" call.
@@ -104,39 +103,105 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
-     * Getter for the defaultAccount property
+     * Sets the defaultGasPrice property on all contracts and on the personal module
      *
-     * @property defaultAccount
+     * @property defaultGasPrice
      *
-     * @returns {null|String}
+     * @param {String} value
      */
-    get defaultAccount() {
-        return this._defaultAccount;
+    set defaultGasPrice(value) {
+        super.defaultGasPrice = value;
+        this.initiatedContracts.forEach((contract) => {
+            contract.defaultGasPrice = value;
+        });
+
+        this.net.defaultGasPrice = value;
+        this.personal.defaultGasPrice = value;
     }
 
     /**
-     * Setter for the defaultAccount property
+     * Sets the defaultGas property on all contracts and on the personal module
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        super.defaultGas = value;
+        this.initiatedContracts.forEach((contract) => {
+            contract.defaultGas = value;
+        });
+
+        this.net.defaultGas = value;
+        this.personal.defaultGas = value;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on all contracts and on the personal module
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
+        this.initiatedContracts.forEach((contract) => {
+            contract.transactionBlockTimeout = value;
+        });
+
+        this.net.transactionBlockTimeout = value;
+        this.personal.transactionBlockTimeout = value;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on all contracts and on the personal module
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
+        this.initiatedContracts.forEach((contract) => {
+            contract.transactionConfirmationBlocks = value;
+        });
+
+        this.net.transactionConfirmationBlocks = value;
+        this.personal.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on all contracts and on the personal module
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
+        this.initiatedContracts.forEach((contract) => {
+            contract.transactionPollingTimeout = value;
+        });
+
+        this.net.transactionPollingTimeout = value;
+        this.personal.transactionPollingTimeout = value;
+    }
+
+    /**
+     * Sets the defaultAccount property on all contracts and on the personal module
      *
      * @property defaultAccount
+     *
+     * @param {String} value
      */
     set defaultAccount(value) {
+        super.defaultAccount = value;
         this.initiatedContracts.forEach((contract) => {
             contract.defaultAccount = value;
         });
 
+        this.net.defaultAccount = value;
         this.personal.defaultAccount = value;
-        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-    }
-
-    /**
-     * Getter for the defaultBlock property
-     *
-     * @property defaultBlock
-     *
-     * @returns {String}
-     */
-    get defaultBlock() {
-        return this._defaultBlock;
     }
 
     /**
@@ -147,13 +212,13 @@ export default class Eth extends AbstractWeb3Module {
      * @param value
      */
     set defaultBlock(value) {
-        this._defaultBlock = value;
-
+        super.defaultBlock = value;
         this.initiatedContracts.forEach((contract) => {
             contract.defaultBlock = value;
         });
 
-        this.personal.defaultBlock = this._defaultBlock;
+        this.net.defaultBlock = value;
+        this.personal.defaultBlock = value;
     }
 
     /**

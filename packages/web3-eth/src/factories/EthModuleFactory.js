@@ -108,6 +108,7 @@ export default class EthModuleFactory {
      * @param {Iban} iban
      * @param {Ens} ens
      * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} options
      *
      * @returns {Eth}
      */
@@ -116,7 +117,8 @@ export default class EthModuleFactory {
         personal,
         iban,
         ens,
-        subscriptionsFactory
+        subscriptionsFactory,
+        options
     ) {
         return new Eth(
             this.provider,
@@ -133,7 +135,8 @@ export default class EthModuleFactory {
             ens,
             this.utils,
             this.formatters,
-            subscriptionsFactory
+            subscriptionsFactory,
+            options
         );
     }
 

@@ -30,6 +30,7 @@ export default class AbstractWeb3Module {
      * @param {Object} providers
      * @param {MethodController} methodController
      * @param {AbstractMethodModelFactory} methodModelFactory
+     * @param {Object} options
      *
      * @constructor
      */
@@ -38,16 +39,24 @@ export default class AbstractWeb3Module {
         providersModuleFactory = this.throwIfMissing('providersModuleFactory'),
         providers = this.throwIfMissing('providers'),
         methodController = this.throwIfMissing('methodController'),
-        methodModelFactory = null
+        methodModelFactory = null,
+        options = {}
     ) {
+        this._currentProvider = provider;
+        this.providersModuleFactory = providersModuleFactory;
+        this.providers = providers;
         this.methodController = methodController;
-        this.extendedPackages = [];
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
-        this.providersModuleFactory = providersModuleFactory;
+        this._defaultAccount = options.defaultAccount || null;
+        this._defaultBlock = options.defaultBlock || null;
+        this._transactionBlockTimeout = options.timeoutBlock || 50;
+        this._transactionConfirmationBlocks = options.confirmationBlock || 24;
+        this._transactionPollingTimeout = options.pollingTimeout || 15;
+        this._defaultGasPrice = options.defaultGasPrice || null;
+        this._defaultGas = options.defaultGas || null;
+        this.extendedPackages = [];
         this.givenProvider = this.providerDetector.detect();
-        this._currentProvider = provider;
-        this.providers = providers;
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
@@ -58,6 +67,193 @@ export default class AbstractWeb3Module {
 
             return new Proxy(this, {
                 get: this.proxyHandler
+            });
+        }
+    }
+
+    /**
+     * Getter for the defaultGasPrice property
+     *
+     * @property defaultGasPrice
+     *
+     * @returns {String}
+     */
+    get defaultGasPrice() {
+        return this._defaultGasPrice;
+    }
+
+    /**
+     * Sets the defaultGasPrice property on the current object and his extended objects
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String} value
+     */
+    set defaultGasPrice(value) {
+        this._defaultGasPrice = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage.defaultGasPrice = value;
+            });
+        }
+    }
+
+    /**
+     * Sets the defaultGas property on the current object and his extended objects
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        this._defaultGas = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage.defaultGas = value;
+            });
+        }
+    }
+
+    /**
+     * Getter for the defaultGas property
+     *
+     * @property defaultGas
+     *
+     * @returns {Number}
+     */
+    get defaultGas() {
+        return this._defaultGas;
+    }
+
+    /**
+     * Getter for the pollingTimeout property
+     *
+     * @property transactionPollingTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionPollingTimeout() {
+        return this._transactionPollingTimeout;
+    }
+
+    /**
+     * Sets the pollingTimeout for the current object and his extended objects
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        this._transactionPollingTimeout = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage._transactionPollingTimeout = value;
+            });
+        }
+    }
+
+    /**
+     * Getter for the confirmationBlock property
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @returns {Number}
+     */
+    get transactionConfirmationBlocks() {
+        return this._transactionConfirmationBlocks;
+    }
+
+    /**
+     * Sets the confirmationBlock on the current object and his extended objects
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        this._transactionConfirmationBlocks = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage._transactionConfirmationBlocks = value;
+            });
+        }
+    }
+
+    /**
+     * Getter for the timeoutBlock property
+     *
+     * @property transactionBlockTimeout
+     *
+     * @returns {Number}
+     */
+    get transactionBlockTimeout() {
+        return this._transactionBlockTimeout;
+    }
+
+    /**
+     * Sets the timeoutBlock property on the current object and his extended objects
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        this._transactionBlockTimeout = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage._transactionBlockTimeout = value;
+            });
+        }
+    }
+
+    /**
+     * Getter for the defaultBlock property
+     *
+     * @returns {String|Number}
+     */
+    get defaultBlock() {
+        return this._defaultBlock;
+    }
+
+    /**
+     * Sets the defaultBlock on the current object and his extended objects
+     *
+     * @property defaultBlock
+     *
+     * @param {String|Number} value
+     */
+    set defaultBlock(value) {
+        this._defaultBlock = value;
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage.defaultBlock = value;
+            });
+        }
+    }
+
+    /**
+     * Getter for the defaultAccount property
+     *
+     * @property defaultAccount
+     *
+     * @returns {null|String}
+     */
+    get defaultAccount() {
+        return this._defaultAccount;
+    }
+
+    /**
+     * Sets the defaultAccount of the current object and extended objects
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+        if (this.extendedPackages.length > 0) {
+            this.extendedPackages.forEach((extendedPackage) => {
+                extendedPackage.defaultAccount = value;
             });
         }
     }
@@ -79,7 +275,7 @@ export default class AbstractWeb3Module {
      * @property currentProvider
      */
     set currentProvider(value) {
-        throw new Error('The property currentProvider read-only!');
+        throw new Error('The property currentProvider is read-only!');
     }
 
     /**
@@ -157,15 +353,27 @@ export default class AbstractWeb3Module {
         let object;
 
         if (namespace) {
-            object = this[namespace] = new this.constructor(
-                this.currentProvider,
-                this.providersPackage,
-                this.methodController,
-                new this.methodModelFactory.constructor(
+            let methodModelFactory = null;
+
+            if (this.methodModelFactory !== null) {
+                methodModelFactory = new this.methodModelFactory.constructor(
                     {},
                     this.methodModelFactory.utils,
                     this.methodModelFactory.formatters
-                )
+                );
+            }
+
+            object = this[namespace] = new this.constructor(
+                this.currentProvider,
+                this.providersModuleFactory,
+                this.providers,
+                this.methodController,
+                methodModelFactory,
+                this.defaultAccount,
+                this.defaultBlock,
+                this.timeoutBlock,
+                this.confirmationBlock,
+                this.pollingTimeout
             );
 
             this.extendedPackages.push(object);

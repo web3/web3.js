@@ -45,6 +45,7 @@ export default class PersonalModuleFactory {
      * @param {Object} providers
      * @param {MethodController} methodController
      * @param {Network} net
+     * @param {Object} options
      *
      * @returns {Personal}
      */
@@ -53,7 +54,8 @@ export default class PersonalModuleFactory {
         providersModuleFactory,
         providers,
         methodController,
-        net
+        net,
+        options
     ) {
         return new Personal(
             provider,
@@ -63,7 +65,8 @@ export default class PersonalModuleFactory {
             this.createMethodModelFactory(),
             net,
             this.utils,
-            this.formatters
+            this.formatters,
+            options,
         );
     }
 

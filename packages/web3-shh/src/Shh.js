@@ -31,6 +31,7 @@ export default class Shh extends AbstractWeb3Module {
      * @param {MethodModelFactory} methodModelFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
+     * @param {Object} options
      *
      * @constructor
      */
@@ -41,14 +42,16 @@ export default class Shh extends AbstractWeb3Module {
         methodController,
         methodModelFactory,
         subscriptionsFactory,
-        net
+        net,
+        options
     ) {
         super(
             provider,
             providersModuleFactory,
             providers,
             methodController,
-            methodModelFactory
+            methodModelFactory,
+            options
         );
 
         this.subscriptionsFactory = subscriptionsFactory;
@@ -86,5 +89,90 @@ export default class Shh extends AbstractWeb3Module {
      */
     setProvider(provider, net) {
         return !!(super.setProvider(provider, net) && this.net.setProvider(provider, net));
+    }
+
+    /**
+     * Sets the defaultGasPrice property on the current object and the network module
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String} value
+     */
+    set defaultGasPrice(value) {
+        super.defaultGasPrice = value;
+        this.net.defaultGasPrice = value;
+    }
+
+    /**
+     * Sets the defaultGas property on the current object and the network module
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        super.defaultGas = value;
+        this.net.defaultGas = value;
+    }
+
+    /**
+     * Sets the transactionBlockTimeout property on the current object and the network module
+     *
+     * @property transactionBlockTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionBlockTimeout(value) {
+        super.transactionBlockTimeout = value;
+        this.net.transactionBlockTimeout = value;
+    }
+
+    /**
+     * Sets the transactionConfirmationBlocks property on the current object and the network module
+     *
+     * @property transactionConfirmationBlocks
+     *
+     * @param {Number} value
+     */
+    set transactionConfirmationBlocks(value) {
+        super.transactionConfirmationBlocks = value;
+        this.net.transactionConfirmationBlocks = value;
+    }
+
+    /**
+     * Sets the transactionPollingTimeout property on the current object and the network module
+     *
+     * @property transactionPollingTimeout
+     *
+     * @param {Number} value
+     */
+    set transactionPollingTimeout(value) {
+        super.transactionPollingTimeout = value;
+        this.net.transactionPollingTimeout = value;
+    }
+
+
+    /**
+     * Sets the defaultAccount property on the current object and the network module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        super.defaultAccount = value;
+        this.net.defaultAccount = value;
+    }
+
+    /**
+     * Sets the defaultBlock property on the current object and the network module
+     *
+     * @property defaultBlock
+     *
+     * @param value
+     */
+    set defaultBlock(value) {
+        super.defaultBlock = value;
+        this.net.defaultBlock = value;
     }
 }

@@ -41,11 +41,12 @@ export default class ShhModuleFactory {
      * @method createShhModule
      *
      * @param {AbstractProviderAdapter} provider
-     * @param providersModuleFactory
-     * @param providers
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
+     * @param {Object} options
      *
      * @returns {Shh}
      */
@@ -55,7 +56,8 @@ export default class ShhModuleFactory {
         providers,
         methodController,
         subscriptionsFactory,
-        net
+        net,
+        options
     ) {
         return new Shh(
             provider,
@@ -64,7 +66,8 @@ export default class ShhModuleFactory {
             methodController,
             this.createMethodModelFactory(),
             subscriptionsFactory,
-            net
+            net,
+            options
         );
     }
 

@@ -22,7 +22,7 @@
 
 import {MethodController} from 'web3-core-method';
 import {Network} from 'web3-net';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {providers, ProvidersModuleFactory} from 'web3-providers';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import PersonalModuleFactory from './factories/PersonalModuleFactory';
@@ -33,15 +33,17 @@ import PersonalModuleFactory from './factories/PersonalModuleFactory';
  * @method Personal
  *
  * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object} options
  *
  * @returns {Personal}
  */
-export const Personal = (provider) => {
+export const Personal = (provider, options) => {
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
         new ProvidersModuleFactory(),
         providers,
         new MethodController(),
-        new Network(provider)
+        new Network(provider, options),
+        options
     );
 };

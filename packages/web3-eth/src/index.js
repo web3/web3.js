@@ -41,10 +41,11 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @method Eth
  *
  * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object} options
  *
  * @returns {Eth}
  */
-export const Eth = (provider) => {
+export const Eth = (provider, options) => {
     const accounts = new Accounts(provider),
           abiCoder = new AbiCoder();
 
@@ -64,6 +65,7 @@ export const Eth = (provider) => {
         new Personal(provider),
         Iban,
         new Ens(provider),
-        new SubscriptionsFactory()
+        new SubscriptionsFactory(),
+        options
     );
 };

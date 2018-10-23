@@ -36,31 +36,117 @@ export default class Web3 extends AbstractWeb3Module {
     /**
      * @param {Object|String} provider
      * @param {Net} net
+     * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, net) {
+    constructor(provider, net, options) {
         const providersModuleFactory = new ProvidersModuleFactory();
-
-        const providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
-
-        const providerDetector = providersModuleFactory.createProviderDetector();
-
-        provider = providerAdapterResolver.resolve(provider, net);
+        provider = providersModuleFactory.createProviderAdapterResolver().resolve(provider, net);
 
         super(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             new MethodController(),
-            new AbstractMethodModelFactory({}, Utils, formatters)
+            new AbstractMethodModelFactory({}, Utils, formatters),
+            options
         );
 
-        this.eth = new Eth(provider);
-        this.shh = new Shh(provider);
+        this.eth = new Eth(provider, options);
+        this.shh = new Shh(provider, options);
         this.bzz = new Bzz(provider);
+    }
+
+    /**
+     * Sets the defaultAccount property on the eth module and also on the shh module
+     *
+     * @property defaultAccount
+     *
+     * @param {String} value
+     */
+    set defaultAccount(value) {
+        super.defaultAccount = value;
+        this.eth.defaultAccount = value;
+        this.shh.defaultAccount = value;
+    }
+
+    /**
+     * Sets the defaultBlock property on the eth module and also on the shh module
+     *
+     * @property defaultBlock
+     *
+     * @param {Number|String} value
+     */
+    set defaultBlock(value) {
+        super.defaultBlock = value;
+        this.eth.defaultBlock = value;
+        this.shh.defaultBlock = value;
+    }
+
+    /**
+     * Sets the defaultGasPrice property on the eth module and also on the shh module
+     *
+     * @property defaultGasPrice
+     *
+     * @param {String} value
+     */
+    set defaultGasPrice(value) {
+        super.defaultGasPrice = value;
+        this.eth.defaultGasPrice = value;
+        this.shh.defaultGasPrice = value;
+    }
+
+    /**
+     * Sets the defaultGas property on the eth module and also on the shh module
+     *
+     * @property defaultGas
+     *
+     * @param {Number} value
+     */
+    set defaultGas(value) {
+        super.defaultGas = value;
+        this.eth.defaultGas = value;
+        this.shh.defaultGas = value;
+    }
+
+    /**
+     * Sets the timeoutBlock property on the eth module and also on the shh module
+     *
+     * @property timeoutBlock
+     *
+     * @param {Number} value
+     */
+    set timeoutBlock(value) {
+        super.timeoutBlock = value;
+        this.eth.timeoutBlock = value;
+        this.shh.timeoutBlock = value;
+    }
+
+    /**
+     * Sets the confirmationBlock property on the eth module and also on the shh module
+     *
+     * @property confirmationBlock
+     *
+     * @param {Number} value
+     */
+    set confirmationBlock(value) {
+        super.confirmationBlock = value;
+        this.eth.confirmationBlock = value;
+        this.shh.confirmationBlock = value;
+    }
+
+    /**
+     * Sets the pollingTimeout property on the eth module and also on the shh module
+     *
+     * @property pollingTimeout
+     *
+     * @param {Number} value
+     */
+    set pollingTimeout(value) {
+        super.pollingTimeout = value;
+        this.eth.pollingTimeout = value;
+        this.shh.pollingTimeout = value;
     }
 
     /**

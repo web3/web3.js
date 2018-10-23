@@ -33,14 +33,16 @@ import NetworkModuleFactory from './factories/NetworkModuleFactory';
  * @method Network
  *
  * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object} options
  *
  * @returns {Network}
  */
-export const Network = (provider) => {
+export const Network = (provider, options) => {
     return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController()
+        new MethodController(),
+        options
     );
 };
