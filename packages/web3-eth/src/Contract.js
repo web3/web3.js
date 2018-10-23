@@ -15,10 +15,11 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file Contract.js
+ * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export AbstractContract from 'web3-eth-contract/AbstractContract';
-export ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';
+import AbstractContract from 'web3-eth-contract/AbstractContract';
+
+export default class Contract extends AbstractContract { }

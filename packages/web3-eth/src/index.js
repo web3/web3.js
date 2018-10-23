@@ -27,11 +27,12 @@ import {ProvidersModuleFactory, providers} from 'web3-providers';
 import Utils from 'web3-utils';
 import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
-import {ENS} from 'web3-eth-ens';
+import {Ens} from 'web3-eth-ens';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbiCoder} from 'web3-eth-abi';
 import {Iban} from 'web3-eth-iban';
-import {Contract} from 'web3-eth-contract';
+import {ContractModuleFactory} from 'web3-eth-contract';
+import {PromiEvent} from 'web3-core-promievent';
 import EthModuleFactory from './factories/EthModuleFactory';
 
 /**
@@ -44,22 +45,22 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
-    return new EthModuleFactory(Utils, formatters).createEthModule(
+    return new EthModuleFactory(
         provider,
-        providersModuleFactory.createProviderDetector(),
-        providersModuleFactory.createProviderAdapterResolver(),
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController(),
-        new Network(),
-        Contract,
         new Accounts(provider),
+        PromiEvent,
+        Utils,
+        formatters,
+        new ContractModuleFactory(),
+        new AbiCoder()
+    ).createEthModule(
+        new Network(provider),
         new Personal(provider),
         Iban,
-        new AbiCoder(Utils),
-        new ENS(provider),
+        new Ens(provider),
         new SubscriptionsFactory()
     );
 };

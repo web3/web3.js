@@ -22,17 +22,80 @@
 
 import MethodModelFactory from './MethodModelFactory';
 import Eth from '../Eth';
+import Contract from '../Contract';
 
 export default class EthModuleFactory {
     /**
+     * @param {AbstractProviderAdapter} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
+     * @param {MethodController} methodController
+     * @param {Accounts} accounts
+     * @param {PromiEvent} PromiEvent
      * @param {Object} utils
      * @param {Object} formatters
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {AbiCoder} abiCoder
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(
+        provider,
+        providersModuleFactory,
+        providers,
+        methodController,
+        accounts,
+        PromiEvent,
+        utils,
+        formatters,
+        contractModuleFactory,
+        abiCoder,
+    ) {
+        this.provider = provider;
+        this.providersModuleFactory = providersModuleFactory;
+        this.providers = providers;
+        this.methodController = methodController;
+        this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
+        this.contractModuleFactory = contractModuleFactory;
+        this.PromiEvent = PromiEvent;
+        this.abiCoder = abiCoder;
+        this.abiMapper = contractModuleFactory.createAbiMapper();
+    }
+
+    /**
+     * Returns an object of type Contract
+     *
+     * @method createContract
+     *
+     * @param abi
+     * @param address
+     * @param options
+     *
+     * @returns {Contract}
+     */
+    createContract(
+        abi,
+        address,
+        options
+    ) {
+        return new Contract(
+            this.provider,
+            this.providersModuleFactory,
+            this.providers,
+            this.methodController,
+            this.contractModuleFactory,
+            this.PromiEvent,
+            this.abiCoder,
+            this.utils,
+            this.formatters,
+            this.accounts,
+            this.abiMapper,
+            abi,
+            address,
+            options
+        )
     }
 
     /**
@@ -40,53 +103,33 @@ export default class EthModuleFactory {
      *
      * @method createEthModule
      *
-     * @param {AbstractProviderAdapter} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {Network} net
-     * @param {ContractPackage} contractPackage
-     * @param {Accounts} accounts
      * @param {Personal} personal
      * @param {Iban} iban
-     * @param {Abi} abi
      * @param {Ens} ens
      * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {MethodController} methodController
      *
      * @returns {Eth}
      */
     createEthModule(
-        provider,
-        providerDetector,
-        providerAdapterResolver,
-        providersModuleFactory,
-        providers,
-        methodController,
         net,
-        contractPackage,
-        accounts,
         personal,
         iban,
-        abi,
         ens,
         subscriptionsFactory
     ) {
         return new Eth(
-            provider,
-            providerDetector,
-            providerAdapterResolver,
-            providersModuleFactory,
-            providers,
-            methodController,
-            this.createMethodModelFactory(accounts),
+            this.provider,
+            this.providersModuleFactory,
+            this.providers,
+            this.methodController,
+            this.createMethodModelFactory(this.accounts),
+            this,
             net,
-            contractPackage,
-            accounts,
+            this.accounts,
             personal,
             iban,
-            abi,
+            this.abiCoder,
             ens,
             this.utils,
             this.formatters,

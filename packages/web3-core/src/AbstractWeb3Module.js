@@ -26,8 +26,6 @@ import {AbstractMethodModel} from 'web3-core-method';
 export default class AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -37,8 +35,6 @@ export default class AbstractWeb3Module {
      */
     constructor(
         provider = this.throwIfMissing('provider'),
-        providerDetector = this.throwIfMissing('providerDetector'),
-        providerAdapterResolver = this.throwIfMissing('providerAdapterResolver'),
         providersModuleFactory = this.throwIfMissing('providersModuleFactory'),
         providers = this.throwIfMissing('providers'),
         methodController = this.throwIfMissing('methodController'),
@@ -46,8 +42,8 @@ export default class AbstractWeb3Module {
     ) {
         this.methodController = methodController;
         this.extendedPackages = [];
-        this.providerDetector = providerDetector;
-        this.providerAdapterResolver = providerAdapterResolver;
+        this.providerDetector = providersModuleFactory.createProviderDetector();
+        this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
         this.providersModuleFactory = providersModuleFactory;
         this.givenProvider = this.providerDetector.detect();
         this._currentProvider = provider;

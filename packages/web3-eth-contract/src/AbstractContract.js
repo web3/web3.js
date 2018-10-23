@@ -15,14 +15,14 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file Contract.js
+ * @file AbstractContract.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import {AbstractWeb3Module} from 'web3-core';
 
-export default class Contract extends AbstractWeb3Module {
+export default class AbstractContract extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProviderDetector} providerDetector
@@ -45,8 +45,6 @@ export default class Contract extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController,
@@ -63,15 +61,13 @@ export default class Contract extends AbstractWeb3Module {
     ) {
         super(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,
             null
         );
 
-        if (!(this instanceof Contract)) {
+        if (!(this instanceof AbstractContract)) {
             throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
         }
 

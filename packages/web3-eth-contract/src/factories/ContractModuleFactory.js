@@ -37,7 +37,7 @@ import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
 import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
-import Contract from '../Contract';
+import Contract from '../AbstractContract';
 
 export default class ContractModuleFactory {
     /**
@@ -53,56 +53,6 @@ export default class ContractModuleFactory {
         this.formatters = formatters;
         this.abiCoder = abiCoder;
         this.accounts = accounts;
-    }
-
-    /**
-     * Returns an object of type Contract
-     *
-     * @method createContract
-     *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
-     * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {PromiEvent} PromiEvent
-     * @param {Object} abi
-     * @param {String} address
-     * @param {Object} options
-     *
-     * @returns {Contract}
-     */
-    createContract(
-        provider,
-        providerDetector,
-        providerAdapterResolver,
-        providersModuleFactory,
-        providers,
-        methodController,
-        PromiEvent,
-        abi,
-        address,
-        options
-    ) {
-        return new Contract(
-            provider,
-            providerDetector,
-            providerAdapterResolver,
-            providersModuleFactory,
-            providers,
-            methodController,
-            this,
-            PromiEvent,
-            this.abiCoder,
-            this.utils,
-            this.formatters,
-            this.accounts,
-            this.createABIMapper(),
-            abi,
-            address,
-            options
-        );
     }
 
     /**

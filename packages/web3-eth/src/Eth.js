@@ -29,8 +29,8 @@ export default class Eth extends AbstractWeb3Module {
      * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
+     * @param {EthModuleFactory} ethModuleFactory
      * @param {Network} net
-     * @param {Contract} Contract
      * @param {Accounts} accounts
      * @param {Personal} personal
      * @param {Iban} Iban
@@ -46,14 +46,12 @@ export default class Eth extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController,
         methodModelFactory,
+        ethModuleFactory,
         net,
-        Contract,
         accounts,
         personal,
         Iban,
@@ -61,18 +59,17 @@ export default class Eth extends AbstractWeb3Module {
         ens,
         utils,
         formatters,
-        subscriptionsFactory
+        subscriptionsFactory,
     ) {
         super(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,
             methodModelFactory
         );
 
+        this.ethModuleFactory = ethModuleFactory;
         this.net = net;
         this.accounts = accounts;
         this.personal = personal;
@@ -98,10 +95,11 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
-            const contractObject = new Contract(this.currentProvider, this.accounts, abi, address, options);
-            this.initiatedContracts.push(contractObject);
+            const contract = this.ethModuleFactory.createContract(abi, address, options);
 
-            return contractObject;
+            this.initiatedContracts.push(contract);
+
+            return contract;
         };
     }
 
