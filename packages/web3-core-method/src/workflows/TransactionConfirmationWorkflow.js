@@ -24,18 +24,18 @@ import {ContractDeployMethodModel} from 'web3-eth-contract';
 
 export default class TransactionConfirmationWorkflow {
     /**
-     * @param {TransactionConfirmationModel} transactionConfirmationModel
      * @param {TransactionReceiptValidator} transactionReceiptValidator
      * @param {NewHeadsWatcher} newHeadsWatcher
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(transactionConfirmationModel, transactionReceiptValidator, newHeadsWatcher, formatters) {
-        this.transactionConfirmationModel = transactionConfirmationModel;
+    constructor(transactionReceiptValidator, newHeadsWatcher, formatters) {
         this.transactionReceiptValidator = transactionReceiptValidator;
         this.newHeadsWatcher = newHeadsWatcher;
         this.formatters = formatters;
+        this.timeoutCounter = 0;
+        this.confirmationsCounter = 0;
     }
 
     /**
@@ -66,23 +66,23 @@ export default class TransactionConfirmationWorkflow {
             }
 
             this.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
-                this.transactionConfirmationModel.timeoutCounter++;
-                if (!this.transactionConfirmationModel.isTimeoutTimeExceeded()) {
-                    this.getTransactionReceipt(transactionHash).then((receipt) => {
+                this.timeoutCounter++;
+                if (!this.isTimeoutTimeExceeded(moduleInstance, this.newHeadsWatcher.isPolling)) {
+                    this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
                         const validationResult = this.transactionReceiptValidator.validate(
                             receipt,
                             methodModel.parameters
                         );
 
                         if (validationResult === true) {
-                            this.transactionConfirmationModel.addConfirmation(receipt);
+                            this.confirmationsCounter++;
                             promiEvent.emit(
                                 'confirmation',
-                                this.transactionConfirmationModel.confirmationsCount,
+                                this.confirmationsCounter,
                                 receipt
                             );
 
-                            if (this.transactionConfirmationModel.isConfirmed()) {
+                            if (this.isConfirmed(moduleInstance)) {
                                 this.handleSuccessState(receipt, methodModel, promiEvent);
                             }
 
@@ -103,14 +103,14 @@ export default class TransactionConfirmationWorkflow {
 
                 let error = new Error(
                     `Transaction was not mined within ${
-                        this.transactionConfirmationModel.TIMEOUTBLOCK
+                        moduleInstance.transactionBlockTimeout
                     } blocks, please make sure your transaction was properly sent. Be aware that it might still be mined!`
                 );
 
                 if (this.newHeadsWatcher.isPolling) {
                     error = new Error(
                         `Transaction was not mined within${
-                            this.transactionConfirmationModel.POLLINGTIMEOUT
+                            moduleInstance.transactionPollingTimeout
                         } seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`
                     );
                 }
@@ -118,6 +118,38 @@ export default class TransactionConfirmationWorkflow {
                 this.handleErrorState(error, methodModel, promiEvent);
             });
         });
+    }
+
+    /**
+     * Checks if the transaction has enough confirmations
+     *
+     * @method isConfirmed
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    isConfirmed(moduleInstance) {
+        return this.confirmationsCounter === moduleInstance.transactionConfirmationBlocks + 1;
+    }
+
+    /**
+     * Checks if the timeout time is reached
+     *
+     * @method isTimeoutTimeExceeded
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Boolean} watcherIsPolling
+     *
+     * @returns {Boolean}
+     */
+    isTimeoutTimeExceeded(moduleInstance, watcherIsPolling) {
+        let timeout = moduleInstance.transactionBlockTimeout;
+        if (watcherIsPolling) {
+            timeout = moduleInstance.transactionPollingTimeout;
+        }
+
+        return this.timeoutCounter - 1 >= timeout;
     }
 
     /**
@@ -148,6 +180,8 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     handleSuccessState(receipt, methodModel, promiEvent) {
+        this.timeoutCounter = 0;
+        this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
 
         if (methodModel instanceof ContractDeployMethodModel) {
@@ -185,6 +219,8 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     handleErrorState(error, methodModel, promiEvent) {
+        this.timeoutCounter = 0;
+        this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
 
         promiEvent.reject(error);

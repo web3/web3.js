@@ -47,17 +47,27 @@ export default class SendMethodCommand {
     execute(moduleInstance, methodModel, promiEvent) {
         methodModel.beforeExecution(moduleInstance);
 
+        if (!this.isGasLimitDefined(methodModel.parameters)) {
+            if (this.hasDefaultGasLimit(moduleInstance)) {
+                methodModel.parameters[0].gas = moduleInstance.defaultGas;
+            }
+        }
+
         if (this.isGasPriceDefined(methodModel.parameters)) {
             this.send(methodModel, promiEvent, moduleInstance);
 
             return promiEvent;
         }
 
-        this.getGasPrice(moduleInstance.currentProvider).then((gasPrice) => {
-            if (isObject(methodModel.parameters[0])) {
-                methodModel.parameters[0].gasPrice = gasPrice;
-            }
+        if (this.hasDefaultGasPrice(moduleInstance)) {
+            methodModel.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
+            this.send(methodModel, promiEvent, moduleInstance);
 
+            return promiEvent;
+        }
+
+        this.getGasPrice(moduleInstance.currentProvider).then((gasPrice) => {
+            methodModel.parameters[0].gasPrice = gasPrice;
             this.send(methodModel, promiEvent, moduleInstance);
         });
 
@@ -101,6 +111,19 @@ export default class SendMethodCommand {
     }
 
     /**
+     * Checks if the given Web3Module has an default gasPrice defined
+     *
+     * @method hasDefaultGasPrice
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasDefaultGasPrice(moduleInstance) {
+        return moduleInstance.defaultGasPrice !== null;
+    }
+
+    /**
      * Checks if gasPrice is defined in the method options
      *
      * @method isGasPriceDefined
@@ -111,6 +134,32 @@ export default class SendMethodCommand {
      */
     isGasPriceDefined(parameters) {
         return isObject(parameters[0]) && typeof parameters[0].gasPrice !== 'undefined';
+    }
+
+    /**
+     * Checks if the given Web3Module has an default gas limit defined
+     *
+     * @method hasDefaultGasLimit
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Boolean}
+     */
+    hasDefaultGasLimit(moduleInstance) {
+        return moduleInstance.defaultGas !== null;
+    }
+
+    /**
+     * Checks if a gas limit is defined
+     *
+     * @method isGasLimitDefined
+     *
+     * @param {Array} parameters
+     *
+     * @returns {Boolean}
+     */
+    isGasLimitDefined(parameters) {
+        return isObject(parameters[0]) && typeof parameters[0].gas !== 'undefined';
     }
 
     /**

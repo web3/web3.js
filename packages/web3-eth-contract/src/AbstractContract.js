@@ -88,6 +88,8 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.PromiEvent = PromiEvent;
         this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
         this.abiModel = abiMapper.map(abi);
+        this.address = address;
+        this.options = options;
 
         this.methods = contractModuleFactory.createMethodsProxy(
             this,
@@ -177,13 +179,11 @@ export default class AbstractContract extends AbstractWeb3Module {
      *
      * @method clone
      *
-     * @returns {Contract}
+     * @returns {AbstractContract}
      */
     clone() {
         const contract = new this.constructor(
             this.currentProvider,
-            this.providerDetector,
-            this.providerAdapterResolver,
             this.providersModuleFactory,
             this.providers,
             this.methodController,
@@ -195,7 +195,7 @@ export default class AbstractContract extends AbstractWeb3Module {
             this.accounts,
             this.abiMapper,
             {},
-            this.options.address,
+            this.address,
             this.options
         );
 
@@ -221,6 +221,8 @@ export default class AbstractContract extends AbstractWeb3Module {
     /**
      * Returns the jsonInterface
      *
+     * @property abiModel
+     *
      * @returns {AbiModel}
      */
     get jsonInterface() {
@@ -228,9 +230,9 @@ export default class AbstractContract extends AbstractWeb3Module {
     }
 
     /**
-     * Sets the jsonInterface property
+     * Sets the abiModel property
      *
-     * @property jsonInterface
+     * @property abiModel
      *
      * @param {Object} value
      */
