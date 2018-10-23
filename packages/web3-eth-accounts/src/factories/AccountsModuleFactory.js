@@ -39,8 +39,6 @@ export default class AccountsModuleFactory {
      * Returns an object of type Accounts
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -49,16 +47,12 @@ export default class AccountsModuleFactory {
      */
     createAccounts(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController
     ) {
         return new Accounts(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,

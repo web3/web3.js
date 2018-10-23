@@ -27,8 +27,6 @@ export default class Personal extends AbstractWeb3Module {
      * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -41,8 +39,6 @@ export default class Personal extends AbstractWeb3Module {
      */
     constructor(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController,
@@ -53,8 +49,6 @@ export default class Personal extends AbstractWeb3Module {
     ) {
         super(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,

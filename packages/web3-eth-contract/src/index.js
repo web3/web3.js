@@ -22,3 +22,4 @@
 
 export AbstractContract from 'web3-eth-contract/AbstractContract';
 export ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';
+export ContractModuleFactory from './factories/ContractModuleFactory';

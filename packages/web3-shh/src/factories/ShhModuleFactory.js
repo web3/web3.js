@@ -41,8 +41,6 @@ export default class ShhModuleFactory {
      * @method createShhModule
      *
      * @param {AbstractProviderAdapter} provider
-     * @param providerDetector
-     * @param providerAdapterResolver
      * @param providersModuleFactory
      * @param providers
      * @param {MethodController} methodController
@@ -53,8 +51,6 @@ export default class ShhModuleFactory {
      */
     createShhModule(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController,
@@ -63,8 +59,6 @@ export default class ShhModuleFactory {
     ) {
         return new Shh(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,

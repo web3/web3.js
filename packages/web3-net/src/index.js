@@ -41,8 +41,6 @@ export const Network = (provider) => {
 
     return new NetworkModuleFactory(Utils, formatters).createNetworkModule(
         provider,
-        providersModuleFactory.createProviderDetector(),
-        providersModuleFactory.createProviderAdapterResolver(),
         providersModuleFactory,
         providers,
         new MethodController()

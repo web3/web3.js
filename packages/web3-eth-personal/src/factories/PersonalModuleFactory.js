@@ -41,8 +41,6 @@ export default class PersonalModuleFactory {
      * @method createPersonal
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -52,8 +50,6 @@ export default class PersonalModuleFactory {
      */
     createPersonal(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController,
@@ -61,8 +57,6 @@ export default class PersonalModuleFactory {
     ) {
         return new Personal(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,

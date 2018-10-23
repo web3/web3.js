@@ -41,8 +41,6 @@ export const Personal = (provider) => {
 
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
-        providersModuleFactory.createProviderDetector(),
-        providersModuleFactory.createProviderAdapterResolver(),
         providersModuleFactory,
         providers,
         new MethodController(),

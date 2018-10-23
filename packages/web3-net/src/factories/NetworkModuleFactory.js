@@ -41,8 +41,6 @@ export default class NetworkModuleFactory {
      * @method createNetworkModule
      *
      * @param {AbstractProviderAdapter} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -51,16 +49,12 @@ export default class NetworkModuleFactory {
      */
     createNetworkModule(
         provider,
-        providerDetector,
-        providerAdapterResolver,
         providersModuleFactory,
         providers,
         methodController
     ) {
         return new Network(
             provider,
-            providerDetector,
-            providerAdapterResolver,
             providersModuleFactory,
             providers,
             methodController,

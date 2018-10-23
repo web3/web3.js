@@ -42,8 +42,6 @@ export const Shh = (provider) => {
 
     return new ShhModuleFactory(Utils, formatters).createShhModule(
         provider,
-        providersModuleFactory.createProviderDetector(),
-        providersModuleFactory.createProviderAdapterResolver(),
         providersModuleFactory,
         providers,
         new MethodController(),

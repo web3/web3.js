@@ -40,8 +40,6 @@ export const Accounts = (provider) => {
 
     return new AccountsModuleFactory(Utils, formatters).createAccounts(
         provider,
-        providersModuleFactory.createProviderDetector(),
-        providersModuleFactory.createProviderAdapterResolver(),
         providersModuleFactory,
         providers,
         new MethodController()
