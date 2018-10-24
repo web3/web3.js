@@ -45,11 +45,14 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @returns {AbstractContract}
  */
 export const Contract = (provider, abi, address, options) => {
-    const providersModuleFactory = new ProvidersModuleFactory();
-
-    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), new Accounts(provider, options)).createContract(
+    return new ContractModuleFactory(
+        Utils,
+        formatters,
+        new AbiCoder(),
+        new Accounts(provider, options)
+    ).createContract(
         provider,
-        providersModuleFactory,
+        new ProvidersModuleFactory(),
         providers,
         new MethodController(),
         PromiEvent,

@@ -84,7 +84,6 @@ export default class ContractModuleFactory {
             this.utils,
             this.formatters,
             this.accounts,
-            this.createAbiMapper(),
             abi,
             address,
             options

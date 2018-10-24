@@ -61,7 +61,6 @@ export default class EthModuleFactory {
         this.contractModuleFactory = contractModuleFactory;
         this.PromiEvent = PromiEvent;
         this.abiCoder = abiCoder;
-        this.abiMapper = contractModuleFactory.createAbiMapper();
     }
 
     /**
@@ -91,7 +90,6 @@ export default class EthModuleFactory {
             this.utils,
             this.formatters,
             this.accounts,
-            this.abiMapper,
             abi,
             address,
             options

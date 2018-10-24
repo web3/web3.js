@@ -25,8 +25,6 @@ import {AbstractWeb3Module} from 'web3-core';
 export default class AbstractContract extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
-     * @param {ProviderDetector} providerDetector
-     * @param {ProviderAdapterResolver} providerAdapterResolver
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
@@ -36,7 +34,6 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {Object} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
-     * @param {AbiMapper} abiMapper
      * @param {Object} abi
      * @param {String} address
      * @param {Object} options
@@ -54,7 +51,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         utils,
         formatters,
         accounts,
-        abiMapper,
         abi,
         address,
         options
@@ -83,7 +79,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.utils = utils;
         this.formatters = formatters;
         this.accounts = accounts;
-        this.abiMapper = abiMapper;
+        this.abiMapper = contractModuleFactory.createAbiMapper();
         this.options = options;
         this.PromiEvent = PromiEvent;
         this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
