@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isFunction} from 'underscore';
+import {isFunction, isUndefined} from 'underscore';
 
 export default class EventSubscriptionsProxy {
     /**
@@ -99,7 +99,7 @@ export default class EventSubscriptionsProxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribe(abiItemModel, options, callback) {
-        if (typeof options.filters !== 'undefined' && typeof options.topics !== 'undefined') {
+        if (!isUndefined(options.filters) && !isUndefined(options.topics)) {
             return this.handleValidationError(
                 'Invalid subscription options: Only filter or topics are allowed and not both',
                 callback
@@ -127,7 +127,7 @@ export default class EventSubscriptionsProxy {
      * @returns {Subscription|PromiEvent}
      */
     subscribeAll(options, callback) {
-        if (typeof options.topics !== 'undefined') {
+        if (!isUndefined(options.topics)) {
             return this.handleValidationError(
                 'Invalid subscription options: Topics are not allowed for the "allEvents" subscription',
                 callback

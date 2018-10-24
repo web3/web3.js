@@ -38,6 +38,18 @@ export default class ContractDeployMethodModel extends SendTransactionMethodMode
     }
 
     /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The module where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        super.beforeExecution(moduleInstance);
+        delete this.parameters[0].to;
+    }
+
+    /**
      * This method will be executed after the RPC request.
      *
      * @method afterExecution

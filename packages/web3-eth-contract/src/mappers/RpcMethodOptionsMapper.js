@@ -51,8 +51,7 @@ export default class RpcMethodOptionsMapper {
             from = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(options.from));
         }
 
-        options.data = options.data || contract.options.data;
-
+        options.to = contract.address;
         options.from = from || contract.defaultAccount;
         options.gasPrice = gasPrice || contract.defaultGasPrice;
         options.gas = options.gas || options.gasLimit || contract.defaultGas;

@@ -153,23 +153,23 @@ export default class MethodsProxy {
     createRpcMethodModel(abiItemModel, methodArguments) {
         let rpcMethodModel, encodedContractMethod;
 
-        // If it is an array than check which AbiItemModel should be used.
-        // This will be used if two methods with the same name exists but with different arguments.
+        // If the abiItemModel variable is an array than check which AbiItemModel should be used.
+        // This is required if two methods with the same name exists but with different arguments.
         if (isArray(abiItemModel)) {
             let parameterValidationError;
 
             // Check if one of the AbiItemModel in this array does match the arguments length
             const correctAbiItemModelFound = abiItemModel.some((method) => {
-                rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(method, this.contract);
-                rpcMethodModel.methodArguments = methodArguments;
-
                 try {
-                    abiItemModel.givenParametersLengthIsValid();
+                    method.givenParametersLengthIsValid();
                 } catch(error) {
                     parameterValidationError = error;
 
                     return false;
                 }
+
+                rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(method, this.contract);
+                rpcMethodModel.methodArguments = methodArguments;
 
                 return true;
             });
@@ -178,11 +178,12 @@ export default class MethodsProxy {
                 throw parameterValidationError;
             }
         } else {
+            // Validate contract method parameters length
+            abiItemModel.givenParametersLengthIsValid();
+
             rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
             rpcMethodModel.methodArguments = methodArguments;
 
-            // Validate contract method parameters length
-            abiItemModel.givenParametersLengthIsValid();
         }
 
         // Encode contract method
@@ -190,7 +191,7 @@ export default class MethodsProxy {
         rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
 
         // Set default options in the TxObject if required
-        rpcMethodModel.parameters = this.rpcMethodOptionsMapper.map(this.contract, rpcMethodModel.parameters[0]);
+        rpcMethodModel.parameters[0] = this.rpcMethodOptionsMapper.map(this.contract, rpcMethodModel.parameters[0]);
 
         // Validate TxObject
         this.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
