@@ -91,6 +91,7 @@ export default class MethodsProxy {
                     }
                 }
 
+                // TODO: Find a better solution for the handling of the contractMethodParameters
                 // If there exists more than one method with this name then find the correct abiItemModel
                 if(isArray(abiItemModel)) {
                     const abiItemModelFound = abiItemModel.some((model) => {
@@ -170,19 +171,17 @@ export default class MethodsProxy {
      * @param {AbiItemModel} abiItemModel
      * @param {IArguments} methodArguments
      *
-     * @returns {AbstractMethodModel|Object}
+     * @returns {AbstractMethodModel}
      */
     createRpcMethodModel(abiItemModel, methodArguments) {
-        let rpcMethodModel, encodedContractMethod;
-        // Validate contract method parameters length
         abiItemModel.givenParametersLengthIsValid();
 
-        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        // Get correct rpc method model
+        const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
         rpcMethodModel.methodArguments = methodArguments;
 
         // Encode contract method
-        encodedContractMethod = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
-        rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
+        rpcMethodModel.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
 
         // Set default options in the TxObject if required
         rpcMethodModel.parameters[0] = this.rpcMethodOptionsMapper.map(this.contract, rpcMethodModel.parameters[0]);
@@ -205,8 +204,8 @@ export default class MethodsProxy {
      * @returns {PromiEvent}
      */
     handleValidationError(error, methodArguments) {
-        const promiEvent = new this.PromiEvent();
-        const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        const promiEvent = new this.PromiEvent(),
+              rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
         rpcMethodModel.methodArguments = methodArguments;
 
         promiEvent.resolve(null);
