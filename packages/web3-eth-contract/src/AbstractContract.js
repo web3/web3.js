@@ -83,7 +83,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.options = options;
         this.PromiEvent = PromiEvent;
         this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
-        this.abiModel = abiMapper.map(abi);
+        this.abiModel = this.abiMapper.map(abi);
         this.address = address;
         this.options = options;
 

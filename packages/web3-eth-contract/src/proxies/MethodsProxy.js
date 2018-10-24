@@ -113,6 +113,8 @@ export default class MethodsProxy {
             anonymousFunction.encodeAbi = () => {
                 return target.methodEncoder.encode(abiItemModel, target.contract.options.data);
             };
+
+            return anonymousFunction;
         }
 
         if (target[name]) {
