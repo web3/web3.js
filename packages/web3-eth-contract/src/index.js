@@ -20,6 +20,41 @@
  * @date 2018
  */
 
+import Utils from 'web3-utils';
+import {AbiCoder} from 'web3-eth-abi';
+import {MethodController} from 'web3-core-method';
+import PromiEvent from 'web3-core-promievent/PromiEvent';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
+import ContractModuleFactory from './factories/ContractModuleFactory';
+
 export AbstractContract from 'web3-eth-contract/AbstractContract';
 export ContractDeployMethodModel from './models/methods/ContractDeployMethodModel';
 export ContractModuleFactory from './factories/ContractModuleFactory';
+
+/**
+ * Returns an object of type Contract
+ *
+ * @method Contract
+ *
+ * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {Object} abi
+ * @param {String} address
+ * @param {Object} options
+ *
+ * @returns {AbstractContract}
+ */
+export const Contract = (provider, abi, address, options) => {
+    const providersModuleFactory = new ProvidersModuleFactory();
+
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), new Accounts(provider, options)).createContract(
+        provider,
+        providersModuleFactory,
+        providers,
+        new MethodController(),
+        PromiEvent,
+        abi,
+        address,
+        options
+    );
+};

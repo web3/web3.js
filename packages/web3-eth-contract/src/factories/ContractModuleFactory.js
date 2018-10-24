@@ -38,6 +38,7 @@ import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
 import Contract from '../AbstractContract';
+import AbstractContract from 'web3-eth-contract/AbstractContract';
 
 export default class ContractModuleFactory {
     /**
@@ -53,6 +54,41 @@ export default class ContractModuleFactory {
         this.formatters = formatters;
         this.abiCoder = abiCoder;
         this.accounts = accounts;
+    }
+
+    /**
+     * Returns an object of type AbstractContract
+     *
+     * @method createContract
+     *
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
+     * @param {MethodController} methodController
+     * @param {PromiEvent} PromiEvent
+     * @param {Object} abi
+     * @param {String} address
+     * @param {Object} options
+     *
+     * @returns {AbstractContract}
+     */
+    createContract(provider, providersModuleFactory, providers, methodController, PromiEvent, abi, address, options) {
+        return new AbstractContract(
+            provider,
+            providersModuleFactory,
+            providers,
+            methodController,
+            this,
+            PromiEvent,
+            this.abiCoder,
+            this.utils,
+            this.formatters,
+            this.accounts,
+            this.createAbiMapper(),
+            abi,
+            address,
+            options
+        )
     }
 
     /**
@@ -117,11 +153,11 @@ export default class ContractModuleFactory {
     /**
      * Returns an object oftype AbiMapper
      *
-     * @method createABIMapper
+     * @method createAbiMapper
      *
      * @returns {AbiMapper}
      */
-    createABIMapper() {
+    createAbiMapper() {
         return new AbiMapper(this, this.abiCoder, this.utils);
     }
 

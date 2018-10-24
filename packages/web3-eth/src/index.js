@@ -54,7 +54,7 @@ export const Eth = (provider, options) => {
         new ProvidersModuleFactory(),
         providers,
         new MethodController(),
-        new Accounts(provider),
+        new Accounts(provider, options),
         PromiEvent,
         Utils,
         formatters,
