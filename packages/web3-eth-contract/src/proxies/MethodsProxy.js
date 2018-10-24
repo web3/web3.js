@@ -70,7 +70,7 @@ export default class MethodsProxy {
      * @returns {Function|Error}
      */
     proxyHandler(target, name) {
-        const abiItemModel = this.abiModel.getMethod(name);
+        let abiItemModel = this.abiModel.getMethod(name);
 
         if (abiItemModel) {
             let requestType = abiItemModel.requestType;
@@ -91,7 +91,27 @@ export default class MethodsProxy {
                     }
                 }
 
-                abiItemModel.contractMethodParameters = methodArguments;
+                // If there exists more than one method with this name then find the correct abiItemModel
+                if(isArray(abiItemModel)) {
+                    const abiItemModelFound = abiItemModel.some((model) => {
+                        model.contractMethodParameters = methodArguments;
+
+                        try {
+                            model.givenParametersLengthIsValid();
+                        } catch(error) {
+                            return false;
+                        }
+
+                        abiItemModel = model;
+                        return true;
+                    });
+
+                    if (!abiItemModelFound) {
+                        throw new Error(`Methods with name "${name}" found but the given parameter length is wrong`);
+                    }
+                } else {
+                    abiItemModel.contractMethodParameters = methodArguments;
+                }
 
                 return anonymousFunction;
             };
@@ -147,46 +167,18 @@ export default class MethodsProxy {
     /**
      * Creates the rpc method, encodes the contract method and validate the objects.
      *
-     * @param {AbiItemModel|Array} abiItemModel
+     * @param {AbiItemModel} abiItemModel
      * @param {IArguments} methodArguments
      *
      * @returns {AbstractMethodModel|Object}
      */
     createRpcMethodModel(abiItemModel, methodArguments) {
         let rpcMethodModel, encodedContractMethod;
+        // Validate contract method parameters length
+        abiItemModel.givenParametersLengthIsValid();
 
-        // If the abiItemModel variable is an array than check which AbiItemModel should be used.
-        // This is required if two methods with the same name exists but with different arguments.
-        if (isArray(abiItemModel)) {
-            let parameterValidationError;
-
-            // Check if one of the AbiItemModel in this array does match the arguments length
-            const correctAbiItemModelFound = abiItemModel.some((method) => {
-                try {
-                    method.givenParametersLengthIsValid();
-                } catch(error) {
-                    parameterValidationError = error;
-
-                    return false;
-                }
-
-                rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(method, this.contract);
-                rpcMethodModel.methodArguments = methodArguments;
-
-                return true;
-            });
-
-            if (!correctAbiItemModelFound) {
-                throw parameterValidationError;
-            }
-        } else {
-            // Validate contract method parameters length
-            abiItemModel.givenParametersLengthIsValid();
-
-            rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
-            rpcMethodModel.methodArguments = methodArguments;
-
-        }
+        rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        rpcMethodModel.methodArguments = methodArguments;
 
         // Encode contract method
         encodedContractMethod = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
