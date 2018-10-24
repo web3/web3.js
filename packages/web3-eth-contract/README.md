@@ -28,17 +28,15 @@ This will expose the `Web3EthContract` object on the window object.
 ## Usage
 
 ```js
-import {resolve} from 'web3-providers';
-import {Accounts} from 'web3-eth-accounts';
+import {ProvidersModuleFactory} from 'web3-providers';
 import {Contract} from 'web3-eth-contract';
 
-const provider = resolve('ws://localhost:8546');
+const provider = new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546');
 const contract = new Contract(
     provider,
-    new Accounts(provider),
-    jsonInterface,
+    abi,
     address,
-    contractOptions
+    options
 );
 
 contract.methods.somFunc().send({from: ....})

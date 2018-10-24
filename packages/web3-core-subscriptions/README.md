@@ -3,6 +3,8 @@
 This is a sub package of [web3.js][repo].
 The subscriptions package is used within some [web3.js][repo] packages.
 
+If you would like to know all supported subscriptions please have a look in the ```src/models/subscriptions``` folder.
+
 ## Installation
 
 ### Node.js
@@ -29,26 +31,35 @@ This will expose the `Web3Subscriptions` object on the window object.
 // in node.js
 
 // Dependencies
-import * as ProvidersPackage from 'web3-providers';
-import AbstractWeb3Module from 'web3-package';
-import SubscriptionsFactory from 'web3-core-subscriptions';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {AbstractWeb3Module} from 'web3-core';
+import {MethodController} from 'web3-core-method';
+import {SubscriptionsFactory} from 'web3-core-subscriptions';
 
 // Create an object of type AbstractWeb3Module
 class Module extends AbstractWeb3Module{
-    
     /**
-     * @param {Object|String} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
+     * @param {MethodController} methodController
      * @param {SubscriptionsFactory} subscriptionsFactory
      * 
      * @constructor
      */
-    constructor (
+    constructor(
         provider,
-        providersPackage,
+        providersModuleFactory,
+        providers,
+        methodController, 
         subscriptionsFactory
     ) {
-        super(provider, providersPackage);
+        super(
+            provider,
+            providersModuleFactory,
+            providers,
+            methodController
+        );
         this.subscriptionsFactory = subscriptionsFactory;
     }
     
@@ -80,9 +91,12 @@ class Module extends AbstractWeb3Module{
 }
 
 // Instantiate anything
+const providersModuleFactory = new ProvidersModuleFactory();
 const module = new Module(
-    ProvidersPackage.detect(),
-    ProvidersPackage,
+    providersModuleFactory.createProviderDetector().detect(), 
+    providersModuleFactory, 
+    providers,
+    new MethodController(), 
     new SubscriptionsFactory()
 );
 

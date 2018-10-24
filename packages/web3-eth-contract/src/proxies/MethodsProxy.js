@@ -108,7 +108,7 @@ export default class MethodsProxy {
                     });
 
                     if (!abiItemModelFound) {
-                        throw new Error(`Methods with name "${name}" found but the given parameter length is wrong`);
+                        throw new Error(`Methods with name "${name}" found but the given parameters are wrong`);
                     }
                 } else {
                     abiItemModel.contractMethodParameters = methodArguments;

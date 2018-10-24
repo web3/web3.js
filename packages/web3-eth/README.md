@@ -28,10 +28,13 @@ This will expose the `Web3Eth` object on the window object.
 ## Usage
 
 ```js
-import {resolve} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import {Eth} from 'web3-eth';
 
-const eth = new Eth(resolve('http://127.0.0.1:4546'));
+const eth = new Eth(
+    new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546'),
+    options
+);
 ```
 
 

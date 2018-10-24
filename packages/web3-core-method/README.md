@@ -10,7 +10,7 @@ The Method module abstracts the JSON-RPC method and is used within most [web3.js
 
 ##### execute
  ```js 
-    execute(
+    MethodController.execute(
         methodModel: AbstractMethodModel,
         accounts: Accounts,
         moduleInstance: AbstractWeb3Module
@@ -40,44 +40,46 @@ This will expose the `Web3Method` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-
 // Dependencies
-import {AbstractWeb3Module} from 'web3-package';
+import {AbstractWeb3Module} from 'web3-core';
 import Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import {MethodController} from 'web3-core-method';
-import * as ProvidersPackage from 'web3-providers';
+import {MethodController, AbstractMethodModelFactory, SendTransactionMethodModel} from 'web3-core-method';
+import {ProvidersModuleFactory, providers} from 'web3-providers';
 
-// Create an object/package like Eth
+// Create an module class
 class Module extends AbstractWeb3Module {
-    
     /**
-     * @param {Object|String} provider
-     * @param {ProvidersPackage} providersPackage
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
      * @param {MethodController} methodController
      * @param {AbstractMethodModelFactory} methodModelFactory
+     * @param {Object} options
      * 
      * @constructor
      */
-    constructor (
+    constructor(
         provider,
-        providersPackage,
-        methodController,
-        methodModelFactory
+        providersModuleFactory,
+        providers,
+        methodController, 
+        methodModelFactory, // optional
+        options // optional
     ) {
         super(
             provider,
-            providersPackage,
-            methodController,
-            methodModelFactory
+            providersModuleFactory,
+            providers,
+            methodController, 
+            methodModelFactory, // optional
+            options // optional
         );
     }
 }
 
-// Create the MyMethoModelFactory object
+// Create the MethodModelFactory class
 class MethodModelFactory extends AbstractMethodModelFactory {
-    
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -85,7 +87,10 @@ class MethodModelFactory extends AbstractMethodModelFactory {
      * @constructor
      */
     constructor (utils, formatters) {
-        super({sendTransaction: MethodPackage.SendTransactionMethodModel},
+        super(
+            {
+                sendTransaction: SendTransactionMethodModel
+            },
             utils,
             formatters
         );
@@ -93,11 +98,14 @@ class MethodModelFactory extends AbstractMethodModelFactory {
 }
 
 // Instantiate anything
+const providersModuleFactory = new ProvidersModuleFactory();
 const module = new Module(
-    ProvidersPackage.detect(), 
-    ProvidersPackage, 
+    providersModuleFactory.createProviderDetector().detect(), 
+    providersModuleFactory, 
+    providers,
     new MethodController(), 
-    new MethodModelFactory(Utils, formatters)
+    new MethodModelFactory(Utils, formatters),
+    {defaultAccount: '0x', ...}
 );
 
 module.sendTransaction({...}, function(){ ... });

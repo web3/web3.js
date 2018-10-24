@@ -28,11 +28,13 @@ This will expose the `Web3Net` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-import {resolve} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import {Network} from 'web3-net';
 
-const net = new Network(resolve('ws://localhost:8546'));
+const net = new Network(
+    new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546'),
+    options
+);
 ```
 
 

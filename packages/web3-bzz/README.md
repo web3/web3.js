@@ -28,9 +28,9 @@ This will expose the `Web3Bzz` object on the window object.
 
 ```js
 // in node.js
-var Bzz = require('web3-bzz').Bzz;
+import {Bzz} from 'web3-bzz';
 
-var bzz = new Bzz('http://swarm-gateways.net');
+const bzz = new Bzz('http://swarm-gateways.net');
 ```
 
 

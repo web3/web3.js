@@ -50,9 +50,9 @@ export default class AbstractWeb3Module {
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
         this._defaultAccount = options.defaultAccount || null;
         this._defaultBlock = options.defaultBlock || null;
-        this._transactionBlockTimeout = options.timeoutBlock || 50;
-        this._transactionConfirmationBlocks = options.confirmationBlock || 24;
-        this._transactionPollingTimeout = options.pollingTimeout || 15;
+        this._transactionBlockTimeout = options.transactionPollingTimeout || 50;
+        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
         this._defaultGasPrice = options.defaultGasPrice || null;
         this._defaultGas = options.defaultGas || null;
         this.extendedPackages = [];
@@ -61,7 +61,7 @@ export default class AbstractWeb3Module {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
 
-        if (methodModelFactory !== null && typeof methodModelFactory !== 'undefined') {
+        if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
             this.methodModelFactory = methodModelFactory;
             this.extend.formatters = this.methodModelFactory.formatters;
 
