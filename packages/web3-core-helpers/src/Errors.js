@@ -16,34 +16,12 @@
 */
 /**
  * @file Errors.js
- * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @author Marek Kotewicz <marek@parity.io>
- * @date 2017
+ * @author Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
-export default {
-    ErrorResponse(result) {
-        const message =
-            !!result && !!result.error && !!result.error.message ? result.error.message : JSON.stringify(result);
-        return new Error(`Returned error: ${message}`);
-    },
-    InvalidNumberOfParams(got, expected, method) {
-        return new Error(`Invalid number of parameters for "${method}". Got ${got} expected ${expected}!`);
-    },
-    InvalidConnection(host) {
-        return new Error(`CONNECTION ERROR: Couldn't connect to node ${host}.`);
-    },
-    InvalidProvider() {
-        return new Error('Provider not set or invalid');
-    },
-    InvalidResponse(result) {
-        const message =
-            !!result && !!result.error && !!result.error.message
-                ? result.error.message
-                : `Invalid JSON RPC response: ${JSON.stringify(result)}`;
-        return new Error(message);
-    },
-    ConnectionTimeout(ms) {
-        return new Error(`CONNECTION TIMEOUT: timeout of ${ms} ms achived`);
-    }
-};
+export JsonRpcResponseError from 'web3-core-helpers/errors/JsonRpcResponseError';
+export NoConnectionError from 'web3-core-helpers/errors/NoConnectionError';
+export NodeConnectionTimeoutError from 'web3-core-helpers/errors/NodeConnectionTimeoutError';
+export InvalidProviderError from 'web3-core-helpers/errors/InvalidProviderError';
+export InvalidParametersLengthError from 'web3-core-helpers/errors/InvalidParametersLengthError';

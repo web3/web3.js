@@ -20,5 +20,5 @@
  * @date 2017
  */
 
-export errors from './Errors';
-export formatters from './Formatters';
+export * as errors from 'Errors';
+export * as formatters from './Formatters';//TODO: Most formatters could be removed with a web3-core-types module.
