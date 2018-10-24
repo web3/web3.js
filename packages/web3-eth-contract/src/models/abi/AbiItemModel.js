@@ -44,10 +44,6 @@ export default class AbiItemModel {
 
                     return 'send';
                 }
-
-                if (abiItem.type === 'constructor') {
-                    return 'contract-deployment';
-                }
             }
         });
     }

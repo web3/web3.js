@@ -81,7 +81,7 @@ export default class MethodsProxy {
                 // Because of the possibility to overwrite the contract data if I call contract.deploy() have I to check
                 // here if it is a contract deployment. If this call is a contract deployment then I have to set the right
                 // contract data and to map the arguments. TODO: Change API or improve this
-                if (requestType === 'contract-deployment') {
+                if (!isArray(abiItemModel) && abiItemModel.isOfType('constructor')) {
                     if (arguments[0]['data']) {
                         target.contract.options.data = arguments[0]['data'] || target.contract.options.data;
                     }
@@ -89,11 +89,11 @@ export default class MethodsProxy {
                     if (arguments[0]['arguments']) {
                         methodArguments = arguments[0]['arguments'];
                     }
-
-                    requestType = 'send';
                 }
 
                 abiItemModel.contractMethodParameters = methodArguments;
+
+                return anonymousFunction;
             };
 
             anonymousFunction[requestType] = () => {

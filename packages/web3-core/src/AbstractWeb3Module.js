@@ -447,9 +447,10 @@ export default class AbstractWeb3Module {
 
                 if (methodModel.parameters.length !== methodModel.parametersAmount) {
                     throw new Error(
-                        `Invalid parameters length the expected length would be ${
-                            methodModel.parametersAmount
-                        } and not ${methodModel.parameters.length}`
+                        `Invalid parameters length the expected length would be 
+                        ${methodModel.parametersAmount}
+                         and not 
+                        ${methodModel.parameters.length}`
                     );
                 }
 
