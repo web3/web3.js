@@ -98,7 +98,7 @@ export default class AbiItemModel {
             return true;
         }
 
-        return new Error(
+        throw new Error(
             `The number of arguments is not matching the methods required number. You need to pass ${inputLength} arguments.`
         );
     }

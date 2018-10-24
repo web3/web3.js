@@ -61,8 +61,8 @@ export const Eth = (provider, options) => {
         new ContractModuleFactory(Utils, formatters, abiCoder, accounts),
         abiCoder
     ).createEthModule(
-        new Network(provider),
-        new Personal(provider),
+        new Network(provider, options),
+        new Personal(provider, options),
         Iban,
         new Ens(provider),
         new SubscriptionsFactory(),

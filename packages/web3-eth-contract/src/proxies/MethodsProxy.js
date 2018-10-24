@@ -75,10 +75,6 @@ export default class MethodsProxy {
         if (abiItemModel) {
             let requestType = abiItemModel.requestType;
 
-            if (requestType === 'contract-deployment') {
-                requestType = 'send';
-            }
-
             const anonymousFunction = () => {
                 let methodArguments = arguments;
 
@@ -87,12 +83,14 @@ export default class MethodsProxy {
                 // contract data and to map the arguments. TODO: Change API or improve this
                 if (requestType === 'contract-deployment') {
                     if (arguments[0]['data']) {
-                        target.contract.options.data = target.contract.options.data || arguments[0]['data'];
+                        target.contract.options.data = arguments[0]['data'] || target.contract.options.data;
                     }
 
                     if (arguments[0]['arguments']) {
                         methodArguments = arguments[0]['arguments'];
                     }
+
+                    requestType = 'send';
                 }
 
                 abiItemModel.contractMethodParameters = methodArguments;
@@ -133,10 +131,12 @@ export default class MethodsProxy {
      * @returns {Promise|PromiEvent|String|Boolean}
      */
     executeMethod(abiItemModel, methodArguments) {
-        const rpcMethodModel = this.createRpcMethodModel(abiItemModel, methodArguments);
+        let rpcMethodModel;
 
-        if (typeof rpcMethodModel.error !== 'undefined') {
-            return this.handleValidationError(rpcMethodModel.error, rpcMethodModel.callback);
+        try {
+            rpcMethodModel = this.createRpcMethodModel(abiItemModel, methodArguments);
+        } catch (error) {
+            return this.handleValidationError(error, methodArguments);
         }
 
         return this.methodController.execute(rpcMethodModel, this.contract.accounts, this.contract);
@@ -151,68 +151,49 @@ export default class MethodsProxy {
      * @returns {AbstractMethodModel|Object}
      */
     createRpcMethodModel(abiItemModel, methodArguments) {
-        let rpcMethodModel;
+        let rpcMethodModel, encodedContractMethod;
 
         // If it is an array than check which AbiItemModel should be used.
         // This will be used if two methods with the same name exists but with different arguments.
         if (isArray(abiItemModel)) {
-            let isContractMethodParametersLengthValid = false;
+            let parameterValidationError;
 
             // Check if one of the AbiItemModel in this array does match the arguments length
-            abiItemModel.some((method) => {
-                // Get correct rpc method model
+            const correctAbiItemModelFound = abiItemModel.some((method) => {
                 rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(method, this.contract);
                 rpcMethodModel.methodArguments = methodArguments;
-                isContractMethodParametersLengthValid = abiItemModel.givenParametersLengthIsValid();
 
-                return isContractMethodParametersLengthValid === true;
+                try {
+                    abiItemModel.givenParametersLengthIsValid();
+                } catch(error) {
+                    parameterValidationError = error;
+
+                    return false;
+                }
+
+                return true;
             });
 
-            // Return error if no AbiItemModel found with the correct arguments length
-            if (isContractMethodParametersLengthValid !== true) {
-                return {
-                    error: isContractMethodParametersLengthValid,
-                    callback: rpcMethodModel.callback
-                };
+            if (!correctAbiItemModelFound) {
+                throw parameterValidationError;
             }
         } else {
-            // Get correct rpc method model
             rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
             rpcMethodModel.methodArguments = methodArguments;
+
+            // Validate contract method parameters length
+            abiItemModel.givenParametersLengthIsValid();
         }
 
-        // Validate contract method parameters length
-        const contractMethodParametersLengthIsValid = abiItemModel.givenParametersLengthIsValid();
-        if (contractMethodParametersLengthIsValid instanceof Error) {
-            return {
-                error: contractMethodParametersLengthIsValid,
-                callback: rpcMethodModel.callback
-            };
-        }
-
-        // Encode contract method and check if there was an error
-        const encodedContractMethod = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
-        if (encodedContractMethod instanceof Error) {
-            return {
-                error: encodedContractMethod,
-                callback: rpcMethodModel.callback
-            };
-        }
-
-        // Set encoded contractMethod as data property of the transaction or call
+        // Encode contract method
+        encodedContractMethod = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
         rpcMethodModel.parameters[0]['data'] = encodedContractMethod;
 
         // Set default options in the TxObject if required
         rpcMethodModel.parameters = this.rpcMethodOptionsMapper.map(this.contract, rpcMethodModel.parameters[0]);
 
         // Validate TxObject
-        const rpcMethodOptionsValidationResult = this.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
-        if (rpcMethodOptionsValidationResult instanceof Error) {
-            return {
-                error: rpcMethodOptionsValidationResult,
-                callback: rpcMethodModel.callback
-            };
-        }
+        this.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
 
         return rpcMethodModel;
     }
@@ -223,20 +204,22 @@ export default class MethodsProxy {
      * @method handleValidationError
      *
      * @param {Error} error
-     * @param {Function} callback
+     * @param {IArguments} methodArguments
      *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    handleValidationError(error, callback) {
+    handleValidationError(error, methodArguments) {
         const promiEvent = new this.PromiEvent();
+        const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        rpcMethodModel.methodArguments = methodArguments;
 
         promiEvent.resolve(null);
         promiEvent.reject(error);
         promiEvent.emit('error', error);
 
-        if (isFunction(callback)) {
-            callback(error, null);
+        if (isFunction(rpcMethodModel.callback)) {
+            rpcMethodModel.callback(error, null);
         }
 
         return promiEvent;

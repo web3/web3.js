@@ -41,20 +41,14 @@ export default class MethodEncoder {
      * @returns {String|Error}
      */
     encode(abiItemModel, deployData) {
-        let encodedParameters;
-
-        try {
-            encodedParameters = this.abiCoder.encodeParameters(
-                abiItemModel.getInputs(),
-                abiItemModel.contractMethodParameters
-            ).replace('0x', '');
-        } catch (error) {
-            return error;
-        }
+        let encodedParameters = this.abiCoder.encodeParameters(
+            abiItemModel.getInputs(),
+            abiItemModel.contractMethodParameters
+        ).replace('0x', '');
 
         if (abiItemModel.signature === 'constructor') {
             if (!deployData) {
-                return new Error(
+                throw new Error(
                     'The contract has no contract data option set. This is necessary to append the constructor parameters.'
                 );
             }

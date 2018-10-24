@@ -42,15 +42,15 @@ export default class RpcMethodOptionsValidator {
      */
     validate(abiItemModel, rpcMethodModel) {
         if (this.isToSet(abiItemModel, rpcMethodModel)) {
-            return new Error("This contract object doesn't have address set yet, please set an address first.");
+            throw new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
         if (this.isFromSet(rpcMethodModel)) {
-            return new Error('No "from" address specified in neither the given options, nor the default options.');
+            throw new Error('No "from" address specified in neither the given options, nor the default options.');
         }
 
         if (this.isValueValid(abiItemModel, rpcMethodModel)) {
-            return new Error('Can not send value to non-payable contract method or constructor');
+            throw new Error('Can not send value to non-payable contract method or constructor');
         }
 
         return true;
