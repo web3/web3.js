@@ -231,7 +231,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {eventifiedPromise | Subscription}
+     * @returns {Subscription}
      */
     subscribe(type, options, callback) {
         switch (type) {

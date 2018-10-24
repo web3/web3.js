@@ -21,8 +21,6 @@
  */
 
 import {isNull, isUndefined, isBoolean, isString, isNumber, isObject} from 'underscore';
-
-import BN from 'bn.js';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';
@@ -31,10 +29,12 @@ import Hash from 'eth-lib/lib/hash';
  * Returns true if object is BN, otherwise false
  *
  * @method isBN
+ *
  * @param {Object} object
- * @return {Boolean}
+ *
+ * @returns {Boolean}
  */
-const isBN = (object) => {
+export const isBN = (object) => {
     return object instanceof BN || (object && object.constructor && object.constructor.name === 'BN');
 };
 
@@ -42,10 +42,12 @@ const isBN = (object) => {
  * Returns true if object is BigNumber, otherwise false
  *
  * @method isBigNumber
+ *
  * @param {Object} object
- * @return {Boolean}
+ *
+ * @returns {Boolean}
  */
-const isBigNumber = (object) => {
+export const isBigNumber = (object) => {
     return object && object.constructor && object.constructor.name === 'BigNumber';
 };
 
@@ -53,10 +55,12 @@ const isBigNumber = (object) => {
  * Takes an input and transforms it into an BN
  *
  * @method toBN
+ *
  * @param {Number|String|BN} number, string, HEX string or BN
- * @return {BN} BN
+ *
+ * @returns {BN} BN
  */
-const toBN = (number) => {
+export const toBN = (number) => {
     try {
         return numberToBN(number);
     } catch (error) {
@@ -68,10 +72,12 @@ const toBN = (number) => {
  * Takes and input transforms it into BN and if it is negative value, into two's complement
  *
  * @method toTwosComplement
+ *
  * @param {Number|String|BN} number
- * @return {String}
+ *
+ * @returns {String}
  */
-const toTwosComplement = (number) => {
+export const toTwosComplement = (number) => {
     return `0x${toBN(number)
         .toTwos(256)
         .toString(16, 64)}`;
@@ -81,10 +87,12 @@ const toTwosComplement = (number) => {
  * Checks if the given string is an address
  *
  * @method isAddress
+ *
  * @param {String} address the given HEX address
- * @return {Boolean}
+ *
+ * @returns {Boolean}
  */
-const isAddress = (address) => {
+export const isAddress = (address) => {
     // check if it has the basic requirements of an address
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
         return false;
@@ -101,10 +109,12 @@ const isAddress = (address) => {
  * Checks if the given string is a checksummed address
  *
  * @method checkAddressChecksum
+ *
  * @param {String} address the given HEX address
- * @return {Boolean}
+ *
+ * @returns {Boolean}
  */
-const checkAddressChecksum = (address) => {
+export const checkAddressChecksum = (address) => {
     // Check each case
     address = address.replace(/^0x/i, '');
     const addressHash = sha3(address.toLowerCase()).replace(/^0x/i, '');
@@ -125,12 +135,14 @@ const checkAddressChecksum = (address) => {
  * Should be called to pad string to expected length
  *
  * @method leftPad
+ *
  * @param {String} string to be padded
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
+ *
  * @returns {String} right aligned string
  */
-const leftPad = (string, chars, sign) => {
+export const leftPad = (string, chars, sign) => {
     const hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i, '');
 
@@ -143,12 +155,14 @@ const leftPad = (string, chars, sign) => {
  * Should be called to pad string to expected length
  *
  * @method rightPad
+ *
  * @param {String} string to be padded
  * @param {Number} chars that result string should have
  * @param {String} sign, by default 0
+ *
  * @returns {String} right aligned string
  */
-const rightPad = (string, chars, sign) => {
+export const rightPad = (string, chars, sign) => {
     const hasPrefix = /^0x/i.test(string) || typeof string === 'number';
     string = string.toString(16).replace(/^0x/i, '');
 
@@ -161,10 +175,12 @@ const rightPad = (string, chars, sign) => {
  * Should be called to get hex representation (prefixed by 0x) of utf8 string
  *
  * @method utf8ToHex
+ *
  * @param {String} str
+ *
  * @returns {String} hex representation of input string
  */
-const utf8ToHex = (str) => {
+export const utf8ToHex = (str) => {
     str = utf8.encode(str);
     let hex = '';
 
@@ -197,10 +213,12 @@ const utf8ToHex = (str) => {
  * Should be called to get utf8 from it's hex representation
  *
  * @method hexToUtf8
+ *
  * @param {String} hex
+ *
  * @returns {String} ascii string representation of hex value
  */
-const hexToUtf8 = (hex) => {
+export const hexToUtf8 = (hex) => {
     if (!isHexStrict(hex)) throw new Error(`The parameter "${hex}" must be a valid HEX string.`);
 
     let str = '';
@@ -235,10 +253,12 @@ const hexToUtf8 = (hex) => {
  * Converts value to it's number representation
  *
  * @method hexToNumber
+ *
  * @param {String|Number|BN} value
- * @return {String}
+ *
+ * @returns {String}
  */
-const hexToNumber = (value) => {
+export const hexToNumber = (value) => {
     if (!value) {
         return value;
     }
@@ -250,10 +270,12 @@ const hexToNumber = (value) => {
  * Converts value to it's decimal representation in string
  *
  * @method hexToNumberString
+ *
  * @param {String|Number|BN} value
- * @return {String}
+ *
+ * @returns {String}
  */
-const hexToNumberString = (value) => {
+export const hexToNumberString = (value) => {
     if (!value) return value;
 
     return toBN(value).toString(10);
@@ -263,10 +285,12 @@ const hexToNumberString = (value) => {
  * Converts value to it's hex representation
  *
  * @method numberToHex
+ *
  * @param {String|Number|BN} value
- * @return {String}
+ *
+ * @returns {String}
  */
-const numberToHex = (value) => {
+export const numberToHex = (value) => {
     if (isNull(value) || isUndefined(value)) {
         return value;
     }
@@ -287,10 +311,12 @@ const numberToHex = (value) => {
  * Note: Implementation from crypto-js
  *
  * @method bytesToHex
+ *
  * @param {Array} bytes
- * @return {String} the hex string
+ *
+ * @returns {String} the hex string
  */
-const bytesToHex = (bytes) => {
+export const bytesToHex = (bytes) => {
     let hex = [];
 
     for (let i = 0; i < bytes.length; i++) {
@@ -307,10 +333,12 @@ const bytesToHex = (bytes) => {
  * Note: Implementation from crypto-js
  *
  * @method hexToBytes
+ *
  * @param {String} hex
- * @return {Array} the byte array
+ *
+ * @returns {Array} the byte array
  */
-const hexToBytes = (hex) => {
+export const hexToBytes = (hex) => {
     hex = hex.toString(16);
 
     if (!isHexStrict(hex)) {
@@ -329,15 +357,16 @@ const hexToBytes = (hex) => {
 
 /**
  * Auto converts any given value into it's hex representation.
- *
  * And even stringifys objects before.
  *
  * @method toHex
+ *
  * @param {String|Number|BN|Object} value
  * @param {Boolean} returnType
- * @return {String}
+ *
+ * @returns {String}
  */
-const toHex = (value, returnType) => {
+export const toHex = (value, returnType) => {
     if (isAddress(value)) {
         return returnType ? 'address' : `0x${value.toLowerCase().replace(/^0x/i, '')}`;
     }
@@ -368,10 +397,12 @@ const toHex = (value, returnType) => {
  * Check if string is HEX, requires a 0x in front
  *
  * @method isHexStrict
+ *
  * @param {String} hex to be checked
+ *
  * @returns {Boolean}
  */
-const isHexStrict = (hex) => {
+export const isHexStrict = (hex) => {
     return (isString(hex) || isNumber(hex)) && /^(-)?0x[0-9a-f]*$/i.test(hex);
 };
 
@@ -379,10 +410,12 @@ const isHexStrict = (hex) => {
  * Check if string is HEX
  *
  * @method isHex
+ *
  * @param {String} hex to be checked
+ *
  * @returns {Boolean}
  */
-const isHex = (hex) => {
+export const isHex = (hex) => {
     return (isString(hex) || isNumber(hex)) && /^(-0x|0x)?[0-9a-f]*$/i.test(hex);
 };
 
@@ -392,10 +425,12 @@ const isHex = (hex) => {
  * TODO UNDOCUMENTED
  *
  * @method isBloom
- * @param {String} hex encoded bloom filter
- * @return {Boolean}
+ *
+ * @param {String} bloom encoded bloom filter
+ *
+ * @returns {Boolean}
  */
-const isBloom = (bloom) => {
+export const isBloom = (bloom) => {
     if (!/^(0x)?[0-9a-f]{512}$/i.test(bloom)) {
         return false;
     } else if (/^(0x)?[0-9a-f]{512}$/.test(bloom) || /^(0x)?[0-9A-F]{512}$/.test(bloom)) {
@@ -410,10 +445,12 @@ const isBloom = (bloom) => {
  * TODO UNDOCUMENTED
  *
  * @method isTopic
- * @param {String} hex encoded topic
- * @return {Boolean}
+ *
+ * @param {String} topic encoded topic
+ *
+ * @returns {Boolean}
  */
-const isTopic = (topic) => {
+export const isTopic = (topic) => {
     if (!/^(0x)?[0-9a-f]{64}$/i.test(topic)) {
         return false;
     } else if (/^(0x)?[0-9a-f]{64}$/.test(topic) || /^(0x)?[0-9A-F]{64}$/.test(topic)) {
@@ -432,7 +469,7 @@ const isTopic = (topic) => {
  */
 const SHA3_NULL_S = '0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470';
 
-const sha3 = (value) => {
+export const sha3 = (value) => {
     if (isHexStrict(value) && /^0x/i.test(value.toString())) {
         value = hexToBytes(value);
     }
@@ -447,28 +484,3 @@ const sha3 = (value) => {
 };
 // expose the under the hood keccak256
 sha3._Hash = Hash;
-
-export default {
-    BN,
-    isBN,
-    isBigNumber,
-    toBN,
-    isAddress,
-    isBloom, // TODO UNDOCUMENTED
-    isTopic, // TODO UNDOCUMENTED
-    checkAddressChecksum,
-    utf8ToHex,
-    hexToUtf8,
-    hexToNumber,
-    hexToNumberString,
-    numberToHex,
-    toHex,
-    hexToBytes,
-    bytesToHex,
-    isHex,
-    isHexStrict,
-    leftPad,
-    rightPad,
-    toTwosComplement,
-    sha3
-};

@@ -21,9 +21,8 @@
  */
 
 import {isArray, isObject, map} from 'underscore';
-
 import BN from 'bn.js';
-import utils from './Utils.js';
+import * as utils from './Utils.js';
 
 const _elementaryName = (name) => {
     if (name.startsWith('int[')) {
@@ -237,12 +236,10 @@ const _processSoliditySha3Args = (arg) => {
  * @method soliditySha3
  * @return {Object} the sha3
  */
-const soliditySha3 = function() {
+export const soliditySha3 = function() {
     const args = Array.prototype.slice.call(arguments);
 
     const hexArgs = map(args, _processSoliditySha3Args);
 
     return utils.sha3(`0x${hexArgs.join('')}`);
 };
-
-export default soliditySha3;

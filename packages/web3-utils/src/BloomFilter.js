@@ -16,18 +16,13 @@
  */
 
 /**
+ * TODO: Extend the documentation with the bloom filter method.
  * @file bloom.js
  * @author Bas van Kervel <bas@ethereum.org>
  * @date 2017
  */
 
-/**
- * Ethereum bloom filter support.
- *
- * TODO UNDOCUMENTED
- */
-
-import utils from './Utils.js';
+import * as utils from './Utils.js';
 
 /**
  * @method codePointToInt
@@ -93,7 +88,7 @@ function testBytes(bloom, bytes) {
  *
  * @returns {Boolean} topic is (probably) part of the block
  */
-const testAddress = (bloom, address) => {
+export const testAddress = (bloom, address) => {
     if (!utils.isBloom(bloom)) {
         throw new Error('Invalid bloom given');
     }
@@ -115,7 +110,7 @@ const testAddress = (bloom, address) => {
  *
  * @returns {Boolean} topic is (probably) part of the block
  */
-const testTopic = (bloom, topic) => {
+export const testTopic = (bloom, topic) => {
     if (!utils.isBloom(bloom)) {
         throw new Error('invalid bloom');
     }
@@ -127,7 +122,3 @@ const testTopic = (bloom, topic) => {
     return testBytes(bloom, topic);
 };
 
-export default {
-    testAddress,
-    testTopic
-};

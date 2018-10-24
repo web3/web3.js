@@ -22,22 +22,55 @@
  */
 
 import {isObject, isString, isArray, isFunction} from 'underscore';
-import ethjsUnit from 'ethjs-unit';
-import utils from './Utils.js';
-import soliditySha3 from './SoliditySha3.js';
-import randomHex from 'randomhex';
+import * as utils from './Utils';
+
+export soliditySha3 from './SoliditySha3';
+export randomHex from 'randomhex';
+export * from './Utils';
+
+export const unitMap = {
+    noether: '0',
+    wei: '1',
+    kwei: '1000',
+    Kwei: '1000',
+    babbage: '1000',
+    femtoether: '1000',
+    mwei: '1000000',
+    Mwei: '1000000',
+    lovelace: '1000000',
+    picoether: '1000000',
+    gwei: '1000000000',
+    Gwei: '1000000000',
+    shannon: '1000000000',
+    nanoether: '1000000000',
+    nano: '1000000000',
+    szabo: '1000000000000',
+    microether: '1000000000000',
+    micro: '1000000000000',
+    finney: '1000000000000000',
+    milliether: '1000000000000000',
+    milli: '1000000000000000',
+    ether: '1000000000000000000',
+    kether: '1000000000000000000000',
+    grand: '1000000000000000000000',
+    mether: '1000000000000000000000000',
+    gether: '1000000000000000000000000000',
+    tether: '1000000000000000000000000000000'
+};
 
 /**
  * Fires an error in an event emitter and callback and returns the eventemitter
  *
  * @method _fireError
+ *
  * @param {Object} error a string, a error, or an object with {message, data}
  * @param {Object} emitter
  * @param {Function} reject
  * @param {Function} callback
- * @return {Object} the emitter
+ *
+ * @returns {Object} the emitter
  */
-const _fireError = (error, emitter, reject, callback) => {
+export const _fireError = (error, emitter, reject, callback) => {
     // add data if given
     if (isObject(error) && !(error instanceof Error) && error.data) {
         if (isObject(error.data) || isArray(error.data)) {
@@ -84,10 +117,12 @@ const _fireError = (error, emitter, reject, callback) => {
  * Should be used to create full function/event name from json abi
  *
  * @method _jsonInterfaceMethodToString
+ *
  * @param {Object} json
- * @return {String} full function/event name
+ *
+ * @returns {String} full function/event name
  */
-const _jsonInterfaceMethodToString = (json) => {
+export const _jsonInterfaceMethodToString = (json) => {
     if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
@@ -99,11 +134,13 @@ const _jsonInterfaceMethodToString = (json) => {
  * Should be used to flatten json abi inputs/outputs into an array of type-representing-strings
  *
  * @method _flattenTypes
- * @param {bool} includeTuple
+ *
+ * @param {Boolean} includeTuple
  * @param {Object} puts
- * @return {Array} parameters as strings
+ *
+ * @returns {Array} parameters as strings
  */
-const _flattenTypes = (includeTuple, puts) => {
+export const _flattenTypes = (includeTuple, puts) => {
     // console.log("entered _flattenTypes. inputs/outputs: " + puts)
     const types = [];
 
@@ -142,10 +179,12 @@ const _flattenTypes = (includeTuple, puts) => {
  * Should be called to get ascii from it's hex representation
  *
  * @method hexToAscii
+ *
  * @param {String} hex
+ *
  * @returns {String} ascii string representation of hex value
  */
-const hexToAscii = (hex) => {
+export const hexToAscii = (hex) => {
     if (!utils.isHexStrict(hex)) throw new Error('The parameter must be a valid HEX string.');
 
     let str = '';
@@ -168,10 +207,12 @@ const hexToAscii = (hex) => {
  * Should be called to get hex representation (prefixed by 0x) of ascii string
  *
  * @method asciiToHex
+ *
  * @param {String} str
+ *
  * @returns {String} hex representation of input string
  */
-const asciiToHex = (str) => {
+export const asciiToHex = (str) => {
     if (!str) return '0x00';
     let hex = '';
     for (let i = 0; i < str.length; i++) {
@@ -187,11 +228,13 @@ const asciiToHex = (str) => {
  * Returns value of unit in Wei
  *
  * @method getUnitValue
+ *
  * @param {String} unit the unit to convert to, default ether
+ *
  * @returns {BN} value of the unit (in Wei)
- * @throws error if the unit is not correct:w
+ * @throws error if the unit is not correct
  */
-const getUnitValue = (unit) => {
+export const getUnitValue = (unit) => {
     unit = unit ? unit.toLowerCase() : 'ether';
     if (!ethjsUnit.unitMap[unit]) {
         throw new Error(
@@ -222,11 +265,13 @@ const getUnitValue = (unit) => {
  * - tether
  *
  * @method fromWei
+ *
  * @param {Number|String} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert to, default ether
- * @return {String|Object} When given a BN object it returns one as well, otherwise a number
+ *
+ * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
  */
-const fromWei = (number, unit) => {
+export const fromWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
@@ -254,11 +299,13 @@ const fromWei = (number, unit) => {
  * - tether
  *
  * @method toWei
+ *
  * @param {Number|String|BN} number can be a number, number string or a HEX of a decimal
  * @param {String} unit the unit to convert from, default ether
- * @return {String|Object} When given a BN object it returns one as well, otherwise a number
+ *
+ * @returns {String|Object} When given a BN object it returns one as well, otherwise a number
  */
-const toWei = (number, unit) => {
+export const toWei = (number, unit) => {
     unit = getUnitValue(unit);
 
     if (!utils.isBN(number) && !isString(number)) {
@@ -272,10 +319,12 @@ const toWei = (number, unit) => {
  * Converts to a checksum address
  *
  * @method toChecksumAddress
+ *
  * @param {String} address the given HEX address
- * @return {String}
+ *
+ * @returns {String}
  */
-const toChecksumAddress = (address) => {
+export const toChecksumAddress = (address) => {
     if (typeof address === 'undefined') return '';
 
     if (!/^(0x)?[0-9a-f]{40}$/i.test(address))
@@ -293,61 +342,19 @@ const toChecksumAddress = (address) => {
             checksumAddress += address[i];
         }
     }
+
     return checksumAddress;
 };
 
-export default {
-    _fireError,
-    _jsonInterfaceMethodToString,
-    _flattenTypes,
-    // extractDisplayName: extractDisplayName,
-    // extractTypeName: extractTypeName,
-    randomHex,
-    BN: utils.BN,
-    isBN: utils.isBN,
-    isBigNumber: utils.isBigNumber,
-    isHex: utils.isHex,
-    isHexStrict: utils.isHexStrict,
-    sha3: utils.sha3,
-    keccak256: utils.sha3,
-    soliditySha3,
-    isAddress: utils.isAddress,
-    checkAddressChecksum: utils.checkAddressChecksum,
-    toChecksumAddress,
-    toHex: utils.toHex,
-    toBN: utils.toBN,
-
-    bytesToHex: utils.bytesToHex,
-    hexToBytes: utils.hexToBytes,
-
-    hexToNumberString: utils.hexToNumberString,
-
-    hexToNumber: utils.hexToNumber,
-    toDecimal: utils.hexToNumber, // alias
-
-    numberToHex: utils.numberToHex,
-    fromDecimal: utils.numberToHex, // alias
-
-    hexToUtf8: utils.hexToUtf8,
-    hexToString: utils.hexToUtf8,
-    toUtf8: utils.hexToUtf8,
-
-    utf8ToHex: utils.utf8ToHex,
-    stringToHex: utils.utf8ToHex,
-    fromUtf8: utils.utf8ToHex,
-
-    hexToAscii,
-    toAscii: hexToAscii,
-    asciiToHex,
-    fromAscii: asciiToHex,
-
-    unitMap: ethjsUnit.unitMap,
-    toWei,
-    fromWei,
-
-    padLeft: utils.leftPad,
-    leftPad: utils.leftPad,
-    padRight: utils.rightPad,
-    rightPad: utils.rightPad,
-    toTwosComplement: utils.toTwosComplement
-};
+// aliases
+export const keccak256 = utils.sha3;
+export const toDecimal = utils.hexToNumber;
+export const fromDecimal = utils.numberToHex;
+export const hexToString = utils.hexToUtf8;
+export const toUtf8 = utils.hexToUtf8;
+export const stringToHex = utils.utf8ToHex;
+export const fromUtf8 = utils.utf8ToHex;
+export const toAscii = hexToAscii;
+export const fromAscii = asciiToHex;
+export const padLeft = utils.leftPad;
+export const padRight = utils.rightPad;
