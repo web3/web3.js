@@ -24,7 +24,7 @@ import {isFunction, isUndefined} from 'underscore';
 
 export default class EventSubscriptionsProxy {
     /**
-     * @param {Contract} contract
+     * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
      * @param {EventSubscriptionFactory} eventSubscriptionFactory
      * @param {EventOptionsMapper} eventOptionsMapper

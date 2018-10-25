@@ -41,10 +41,9 @@ export default class MethodEncoder {
      * @returns {String|Error}
      */
     encode(abiItemModel, deployData) {
-        let encodedParameters = this.abiCoder.encodeParameters(
-            abiItemModel.getInputs(),
-            abiItemModel.contractMethodParameters
-        ).replace('0x', '');
+        let encodedParameters = this.abiCoder
+            .encodeParameters(abiItemModel.getInputs(), abiItemModel.contractMethodParameters)
+            .replace('0x', '');
 
         if (abiItemModel.signature === 'constructor') {
             if (!deployData) {

@@ -31,7 +31,7 @@ try {
 
 export default class ProviderDetector {
     /**
-     * Detects which provider is given with web3.currentProvider
+     * Detects which provider is given in the current environment
      *
      * @method detect
      *
@@ -52,7 +52,7 @@ export default class ProviderDetector {
     }
 
     /**
-     * Checks if the given provider it is of type ipcProviderWrapper
+     * Checks if the given provider is of type ipcProviderWrapper
      *
      * @method isIpcProviderWrapper
      *

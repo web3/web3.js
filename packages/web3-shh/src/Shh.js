@@ -16,7 +16,7 @@
 */
 /**
  * @file Shh.js
- * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2017
  */
 

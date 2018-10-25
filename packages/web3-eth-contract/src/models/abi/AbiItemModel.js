@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isArray} from 'underscore';
 
 export default class AbiItemModel {
     /**
@@ -56,7 +56,7 @@ export default class AbiItemModel {
      * @returns {Number}
      */
     getInputLength() {
-        if (_.isArray(this.abiItem.inputs)) {
+        if (isArray(this.abiItem.inputs)) {
             return this.abiItem.inputs.length;
         }
 
@@ -73,7 +73,7 @@ export default class AbiItemModel {
     getInputs() {
         let inputs = [];
 
-        if (_.isArray(this.abiItem.inputs)) {
+        if (isArray(this.abiItem.inputs)) {
             inputs = this.abiItem.inputs;
         }
 

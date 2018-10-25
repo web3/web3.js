@@ -28,10 +28,10 @@ export default class JsonRpcMapper {
      *
      * @method toPayload
      *
-     * @param {String} method of jsonrpc call, required
-     * @param {Array} params, an Array of method params, optional
+     * @param {String} method
+     * @param {Array} params
      *
-     * @returns {Object} valid jsonrpc payload object
+     * @returns {Object}
      */
     static toPayload(method, params) {
         if (!method) {
@@ -53,9 +53,9 @@ export default class JsonRpcMapper {
      *
      * @method toBatchPayload
      *
-     * @param {Array} requests, an array of objects with method (required) and params (optional) fields
+     * @param {Array} requests
      *
-     * @returns {Array} batch payload
+     * @returns {Array}
      */
     static toBatchPayload(requests) {
         return requests.map((request) => {

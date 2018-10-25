@@ -95,7 +95,7 @@ export default class AbiModel {
      *
      * @method hasMethod
      *
-     * @param name
+     * @param {String} name
      *
      * @returns {Boolean}
      */
@@ -108,7 +108,7 @@ export default class AbiModel {
      *
      * @method hasEvent
      *
-     * @param name
+     * @param {String} name
      *
      * @returns {Boolean}
      */

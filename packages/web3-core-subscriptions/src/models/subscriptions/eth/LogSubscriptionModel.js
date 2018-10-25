@@ -48,7 +48,6 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
      * @param {Function} callback
      */
     beforeSubscription(subscription, moduleInstance, callback) {
-        const self = this;
         this.options = this.formatters.inputLogFormatter(this.options);
         this.getPastLogsMethodModel.parameters = [this.options];
 
@@ -60,7 +59,7 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
                     subscription.emit('data', log);
                 });
 
-                delete self.options.fromBlock;
+                delete this.options.fromBlock;
             })
             .catch((error) => {
                 subscription.emit('error', error);

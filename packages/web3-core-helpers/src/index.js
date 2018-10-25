@@ -19,6 +19,6 @@
  * @author Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2017
  */
-
+x
 export * as errors from 'Errors';
-export * as formatters from './Formatters';//TODO: Most formatters could be removed with a web3-core-types module.
+export * as formatters from './Formatters'; // TODO: Most formatters could be removed with a web3-core-types module.

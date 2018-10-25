@@ -60,6 +60,6 @@ export default class AbstractSubscriptionModel {
      * @returns {*}
      */
     onNewSubscriptionItem(subscription, subscriptionItem) {
-        return this.formatters.outputLogFormatter(subscriptionItem);
+        return subscriptionItem;
     }
 }

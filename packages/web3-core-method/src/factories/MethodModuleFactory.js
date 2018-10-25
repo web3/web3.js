@@ -23,7 +23,6 @@
 import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../signers/TransactionSigner';
 import MessageSigner from '../signers/MessageSigner';
-import TransactionConfirmationModel from '../models/TransactionConfirmationModel';
 import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
 import MethodController from '../controllers/MethodController';
@@ -145,17 +144,6 @@ export default class MethodModuleFactory {
      */
     createMessageSigner() {
         return new MessageSigner();
-    }
-
-    /**
-     * Returns the TransactionConfirmationModel object
-     *
-     * @method createTransactionConfirmationModel
-     *
-     * @returns {TransactionConfirmationModel}
-     */
-    createTransactionConfirmationModel() {
-        return new TransactionConfirmationModel();
     }
 
     /**

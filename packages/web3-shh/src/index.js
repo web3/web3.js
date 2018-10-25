@@ -24,7 +24,7 @@ import {ProvidersModuleFactory, providers} from 'web3-providers';
 import {MethodController} from 'web3-core-method';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import ShhModuleFactory from './factories/ShhModuleFactory';
 

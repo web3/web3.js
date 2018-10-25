@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isFunction, isString} from 'underscore';
 
 export default class AbstractMethodModel {
     /**
@@ -112,7 +112,7 @@ export default class AbstractMethodModel {
 
         if (args.length > this.parametersAmount) {
             callback = args.slice(-1);
-            if (!_.isFunction(callback)) {
+            if (!isFunction(callback)) {
                 throw new TypeError(
                     'The latest parameter should be a function otherwise it can not be used as callback'
                 );
@@ -169,6 +169,6 @@ export default class AbstractMethodModel {
      * @returns {Boolean}
      */
     isHash(parameter) {
-        return _.isString(parameter) && parameter.indexOf('0x') === 0;
+        return isString(parameter) && parameter.indexOf('0x') === 0;
     }
 }

@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {MethodController} from 'web3-core-method';
 import PromiEvent from 'web3-core-promievent/PromiEvent';

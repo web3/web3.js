@@ -25,7 +25,7 @@
 
 'use strict';
 
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import BigNumber from 'bn.js';
 
 const leftPad = (string, bytes) => {

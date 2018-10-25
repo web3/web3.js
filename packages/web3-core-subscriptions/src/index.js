@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
 

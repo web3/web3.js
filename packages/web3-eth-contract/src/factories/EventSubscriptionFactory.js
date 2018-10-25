@@ -34,6 +34,8 @@ export default class EventSubscriptionFactory {
      * @constructor
      */
     constructor(utils, formatters, methodController) {
+        this.utils = utils;
+        this.formatters = formatters;
         this.methodController = methodController;
     }
 
@@ -49,7 +51,6 @@ export default class EventSubscriptionFactory {
      */
     createEventLogSubscription(eventLogDecoder, abiItemModel, moduleInstance, options) {
         return new Subscription(
-            moduleInstance,
             new EventLogSubscription(
                 abiItemModel,
                 options,
@@ -58,7 +59,8 @@ export default class EventSubscriptionFactory {
                 new GetPastLogsMethodModel(this.utils, this.formatters),
                 this.methodController,
                 eventLogDecoder
-            )
+            ),
+            moduleInstance
         );
     }
 
@@ -73,7 +75,6 @@ export default class EventSubscriptionFactory {
      */
     createAllEventLogSubscription(allEventsLogDecoder, moduleInstance, options) {
         return new Subscription(
-            moduleInstance,
             new AllEventsLogSubscription(
                 options,
                 this.utils,
@@ -81,7 +82,8 @@ export default class EventSubscriptionFactory {
                 new GetPastLogsMethodModel(this.utils, this.formatters),
                 this.methodController,
                 allEventsLogDecoder
-            )
+            ),
+            moduleInstance
         );
     }
 }

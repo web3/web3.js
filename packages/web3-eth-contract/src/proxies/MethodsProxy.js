@@ -24,7 +24,7 @@ import {isArray, isFunction} from 'underscore';
 
 export default class MethodsProxy {
     /**
-     * @param {Contract} contract
+     * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
      * @param {RpcMethodModelFactory} rpcMethodModelFactory
      * @param {MethodController} methodController

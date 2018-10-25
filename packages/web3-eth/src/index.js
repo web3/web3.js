@@ -24,7 +24,7 @@ import {MethodController} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
 import {Ens} from 'web3-eth-ens';
@@ -46,8 +46,8 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider),
-          abiCoder = new AbiCoder();
+    const accounts = new Accounts(provider);
+    const abiCoder = new AbiCoder();
 
     return new EthModuleFactory(
         provider,

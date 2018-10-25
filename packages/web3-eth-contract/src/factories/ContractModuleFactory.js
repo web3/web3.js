@@ -37,7 +37,6 @@ import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
 import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
-import Contract from '../AbstractContract';
 import AbstractContract from 'web3-eth-contract/AbstractContract';
 
 export default class ContractModuleFactory {
@@ -245,7 +244,13 @@ export default class ContractModuleFactory {
      * @returns {RpcMethodModelFactory}
      */
     createRpcMethodModelFactory() {
-        return new RpcMethodFactory(this.createCallMethodResponseDecoder(), this.accounts, this.utils, this.formatters);
+        return new RpcMethodFactory(
+            this.createCallMethodResponseDecoder(),
+            this.accounts,
+            this.utils,
+            this.formatters,
+            this.createAllEventsLogDecoder()
+        );
     }
 
     /**

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isNumber, isObject} from 'underscore';
 
 export default class AbstractSigner {
     /**
@@ -33,12 +33,12 @@ export default class AbstractSigner {
      */
     getWallet(from, accounts) {
         // is index given
-        if (_.isNumber(from)) {
+        if (isNumber(from)) {
             return accounts.wallet[from];
         }
 
         // is account given
-        if (_.isObject(from) && from.address && from.privateKey) {
+        if (isObject(from) && from.address && from.privateKey) {
             return from;
         }
 

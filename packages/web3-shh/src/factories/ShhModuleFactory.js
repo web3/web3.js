@@ -50,15 +50,7 @@ export default class ShhModuleFactory {
      *
      * @returns {Shh}
      */
-    createShhModule(
-        provider,
-        providersModuleFactory,
-        providers,
-        methodController,
-        subscriptionsFactory,
-        net,
-        options
-    ) {
+    createShhModule(provider, providersModuleFactory, providers, methodController, subscriptionsFactory, net, options) {
         return new Shh(
             provider,
             providersModuleFactory,

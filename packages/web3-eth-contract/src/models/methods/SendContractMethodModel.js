@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import {isArray} from 'underscore';
 import {SendTransactionMethodModel} from 'web3-core-method';
 
 export default class SendContractMethodModel extends SendTransactionMethodModel {
@@ -50,17 +50,17 @@ export default class SendContractMethodModel extends SendTransactionMethodModel 
      * @returns {*}
      */
     afterExecution(response) {
-        if (_.isArray(response.logs)) {
+        if (isArray(response.logs)) {
             response.events = {};
 
-            response.logs.map(function(log) {
+            response.logs.map((log) => {
                 return this.allEventsLogDecoder.decode(null, log);
             });
 
             response.logs.forEach((log, index) => {
                 if (log.event) {
                     if (response.events[log.event]) {
-                        if (_.isArray(response.events[log.event])) {
+                        if (isArray(response.events[log.event])) {
                             response.events[log.event].push(log);
 
                             return;

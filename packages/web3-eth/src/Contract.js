@@ -20,6 +20,6 @@
  * @date 2018
  */
 
-import AbstractContract from 'web3-eth-contract/AbstractContract';
+import {AbstractContract} from 'web3-eth-contract';
 
-export default class Contract extends AbstractContract { }
+export default class Contract extends AbstractContract {}

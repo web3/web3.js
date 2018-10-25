@@ -22,7 +22,7 @@
 
 import {MethodController} from 'web3-core-method';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AccountsModuleFactory from './factories/AccountsModuleFactory';
 

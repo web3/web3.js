@@ -16,8 +16,9 @@
 */
 /**
  * @file index.js
+ * @author Samuel Furter <samuel@ethereum.org>
  * @author Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @date 2018
  */
 
 import {AbstractWeb3Module} from 'web3-core';

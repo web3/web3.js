@@ -32,14 +32,16 @@ export default class RpcMethodModelFactory {
      * @param {Accounts} accounts
      * @param {Object} utils
      * @param {Object} formatters
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
      *
      * @constructor
      */
-    constructor(callMethodResponseDecoder, accounts, utils, formatters) {
+    constructor(callMethodResponseDecoder, accounts, utils, formatters, allEventsLogDecoder) {
         this.utils = utils;
         this.formatters = formatters;
         this.callMethodResponseDecoder = callMethodResponseDecoder;
         this.accounts = accounts;
+        this.allEventsLogDecoder = allEventsLogDecoder;
     }
 
     /**
@@ -71,7 +73,7 @@ export default class RpcMethodModelFactory {
         }
 
         if (typeof rpcMethod === 'undefined') {
-            throw new TypeError(`Unknown RPC call with requestType "${abiItemModel.requestType}"`);
+            throw new TypeError(`RPC call not found with requestType "${abiItemModel.requestType}"`);
         }
 
         return rpcMethod;
