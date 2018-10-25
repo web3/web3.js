@@ -35,7 +35,7 @@ export default class ProviderDetector {
      *
      * @method detect
      *
-     * @returns {Object} provider
+     * @returns {Object|Undefined} provider
      */
     detect() {
         if (typeof global.ethereumProvider !== 'undefined') {
