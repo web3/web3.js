@@ -35,7 +35,8 @@ const accounts = new Accounts(
     new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546'),
     options
 );
-accounts.create();
+
+console.log(accounts.create());
 > {
   address: '0x2c7536E3605D9C16a7a3D7b1898e529396a65c23',
   privateKey: '0x4c0883a69102937d6231471b5dbb6204fe5129617082792ae468d01a3f362318',

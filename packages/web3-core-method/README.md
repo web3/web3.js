@@ -6,16 +6,17 @@ The Method module abstracts the JSON-RPC method and is used within most [web3.js
 
 
 ##### MethodController
-> Excecutes the JSON-RPC method with an ```MethodModel```
+> Excecutes the JSON-RPC method with an ```MethodModel```.
 
-##### execute
- ```js 
-    MethodController.execute(
-        methodModel: AbstractMethodModel,
-        accounts: Accounts,
-        moduleInstance: AbstractWeb3Module
-    ): {Promise<Object|String>|PromiEvent|String} 
- ```
+```js 
+import {MethodController} from 'web3-core-method'
+
+const response = new MethodController().execute(
+    methodModel, // AbstractMethodModel
+    accounts, // Accounts
+    moduleInstance // AbstractWeb3Module
+); 
+```
 
 ## Installation
 
@@ -40,9 +41,8 @@ This will expose the `Web3Method` object on the window object.
 ## Usage
 
 ```js
-// Dependencies
 import {AbstractWeb3Module} from 'web3-core';
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import {MethodController, AbstractMethodModelFactory, SendTransactionMethodModel} from 'web3-core-method';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
@@ -108,7 +108,7 @@ const module = new Module(
     {defaultAccount: '0x', ...}
 );
 
-module.sendTransaction({...}, function(){ ... });
+module.sendTransaction({...}, (error, result) => {});
 ```
 
 

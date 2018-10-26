@@ -32,7 +32,7 @@ This will expose the `Web3EthIban` object on the window object.
 import {Iban} from 'web3-eth-iban';
 
 const iban = new Iban('XE75JRZCTTLBSYEQBGAS7GID8DKR7QY0QA3');
-iban.toAddress()
+console.log(iban.toAddress());
 > '0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B'
 ```
 

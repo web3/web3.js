@@ -20,7 +20,6 @@ import {errors, formatters} from 'web3-core-helpers';
 
 console.dir(errors);
 console.dir(formatters);
-...
 ```
 
 

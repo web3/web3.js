@@ -236,10 +236,10 @@ export const asciiToHex = (str) => {
  */
 export const getUnitValue = (unit) => {
     unit = unit ? unit.toLowerCase() : 'ether';
-    if (!ethjsUnit.unitMap[unit]) {
+    if (!unitMap[unit]) {
         throw new Error(
             `This unit "${unit}" doesn't exist, please use the one of the following units${JSON.stringify(
-                ethjsUnit.unitMap,
+                unitMap,
                 null,
                 2
             )}`

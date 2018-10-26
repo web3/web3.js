@@ -39,10 +39,7 @@ const contract = new Contract(
     options
 );
 
-contract.methods.somFunc().send({from: ....})
-.on('receipt', function(){
-    ...
-});
+contract.methods.someFunc().send({...}).on('receipt', (receipt) => {});
 ```
 
 

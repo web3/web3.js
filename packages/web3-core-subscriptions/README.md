@@ -28,9 +28,6 @@ This will expose the `Web3Subscriptions` object on the window object.
 ## Usage
 
 ```js
-// in node.js
-
-// Dependencies
 import {ProvidersModuleFactory, providers} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import {MethodController} from 'web3-core-method';
@@ -100,8 +97,7 @@ const module = new Module(
     new SubscriptionsFactory()
 );
 
-// Subscribe
-module.subscribe('newBlockHeaders', function(){ ... });
+module.subscribe('newBlockHeaders', (error, result) => {});
 ```
 
 [docs]: http://web3js.readthedocs.io/en/1.0/

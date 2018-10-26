@@ -30,10 +30,10 @@ This will expose the `Web3PromiEvent` object on the window object.
 ```js
 import PromiEvent from 'web3-core-promievent';
 
-const myFunc = function(){
-    var promiEvent = new PromiEvent();
+const myFunc = () => {
+    const promiEvent = new PromiEvent();
     
-    setTimeout(function() {
+    setTimeout(() => {
         promiEvent.emit('done', 'Hello!');
         promiEvent.resolve('Hello!');
     }, 10);
@@ -42,10 +42,11 @@ const myFunc = function(){
 };
 
 
-// and run it
-myFunc()
-.then(console.log);
-.on('done', console.log);
+myFunc().then(console.log)
+> Hello!
+
+myFunc().on(console.log)
+> Hello!
 ```
 
 

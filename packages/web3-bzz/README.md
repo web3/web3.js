@@ -27,7 +27,6 @@ This will expose the `Web3Bzz` object on the window object.
 ## Usage
 
 ```js
-// in node.js
 import {Bzz} from 'web3-bzz';
 
 const bzz = new Bzz('http://swarm-gateways.net');

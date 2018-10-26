@@ -28,13 +28,13 @@ This will expose the `Web3Utils` object on the window object.
 ## Usage
 
 ```js
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 
 console.log(Utils);
 > {
-    sha3: function(){},
-    soliditySha3: function(){},
-    isAddress: function(){},
+    sha3: Function,
+    soliditySha3: Function,
+    isAddress: Function,
     ...
 }
 ```
