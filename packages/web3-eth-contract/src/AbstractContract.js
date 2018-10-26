@@ -55,14 +55,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         address,
         options
     ) {
-        super(
-            provider,
-            providersModuleFactory,
-            providers,
-            methodController,
-            null,
-            options
-        );
+        super(provider, providersModuleFactory, providers, methodController, null, options);
 
         if (!(this instanceof AbstractContract)) {
             throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
@@ -297,7 +290,6 @@ export default class AbstractContract extends AbstractWeb3Module {
         super.transactionPollingTimeout = value;
         this.accounts.transactionPollingTimeout = value;
     }
-
 
     /**
      * Sets the defaultAccount property on the current object and the accounts module

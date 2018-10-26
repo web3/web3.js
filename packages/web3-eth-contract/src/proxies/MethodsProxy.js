@@ -93,13 +93,13 @@ export default class MethodsProxy {
 
                 // TODO: Find a better solution for the handling of the contractMethodParameters
                 // If there exists more than one method with this name then find the correct abiItemModel
-                if(isArray(abiItemModel)) {
+                if (isArray(abiItemModel)) {
                     const abiItemModelFound = abiItemModel.some((model) => {
                         model.contractMethodParameters = methodArguments;
 
                         try {
                             model.givenParametersLengthIsValid();
-                        } catch(error) {
+                        } catch (error) {
                             return false;
                         }
 
@@ -204,8 +204,9 @@ export default class MethodsProxy {
      * @returns {PromiEvent}
      */
     handleValidationError(error, methodArguments) {
-        const promiEvent = new this.PromiEvent(),
-              rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        const promiEvent = new this.PromiEvent();
+
+        const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
         rpcMethodModel.methodArguments = methodArguments;
 
         promiEvent.resolve(null);

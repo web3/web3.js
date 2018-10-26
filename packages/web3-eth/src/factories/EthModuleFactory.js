@@ -49,7 +49,7 @@ export default class EthModuleFactory {
         utils,
         formatters,
         contractModuleFactory,
-        abiCoder,
+        abiCoder
     ) {
         this.provider = provider;
         this.providersModuleFactory = providersModuleFactory;
@@ -74,11 +74,7 @@ export default class EthModuleFactory {
      *
      * @returns {Contract}
      */
-    createContract(
-        abi,
-        address,
-        options
-    ) {
+    createContract(abi, address, options) {
         return new Contract(
             this.provider,
             this.providersModuleFactory,
@@ -93,7 +89,7 @@ export default class EthModuleFactory {
             abi,
             address,
             options
-        )
+        );
     }
 
     /**
@@ -110,14 +106,7 @@ export default class EthModuleFactory {
      *
      * @returns {Eth}
      */
-    createEthModule(
-        net,
-        personal,
-        iban,
-        ens,
-        subscriptionsFactory,
-        options
-    ) {
+    createEthModule(net, personal, iban, ens, subscriptionsFactory, options) {
         return new Eth(
             this.provider,
             this.providersModuleFactory,

@@ -50,14 +50,7 @@ export default class Personal extends AbstractWeb3Module {
         formatters,
         options
     ) {
-        super(
-            provider,
-            providersModuleFactory,
-            providers,
-            methodController,
-            methodModelFactory,
-            options
-        );
+        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;
@@ -137,7 +130,6 @@ export default class Personal extends AbstractWeb3Module {
         super.transactionPollingTimeout = value;
         this.net.transactionPollingTimeout = value;
     }
-
 
     /**
      * Sets the defaultAccount property on the current object and the network module

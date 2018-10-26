@@ -34,8 +34,8 @@ import EnsModuleFactory from './factories/EnsModuleFactory';
  * @param {Network} net
  * @param {Accounts} accounts
  *
- * @returns {ENS}
+ * @returns {Ens}
  */
-export const ENS = (provider, net, accounts) => {
+export const Ens = (provider, net, accounts) => {
     return new EnsModuleFactory().createENS(provider, net, accounts, Contract, REGISTRY_ABI, RESOLVER_ABI, PromiEvent);
 };

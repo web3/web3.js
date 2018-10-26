@@ -86,7 +86,7 @@ export default class ContractModuleFactory {
             abi,
             address,
             options
-        )
+        );
     }
 
     /**

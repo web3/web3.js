@@ -22,7 +22,7 @@
  */
 
 import {isString, isObject, isNumber, isArray} from 'underscore';
-import Utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 
 /**
@@ -87,8 +87,8 @@ export const inputBlockNumberFormatter = (blockNumber) => {
     }
 
     if (Utils.isHexStrict(blockNumber)) {
-        if(isString(blockNumber)) {
-           return  blockNumber.toLowerCase();
+        if (isString(blockNumber)) {
+            return blockNumber.toLowerCase();
         }
 
         return blockNumber;
@@ -366,16 +366,12 @@ export const outputLogFormatter = (log) => {
         typeof log.logIndex === 'string'
     ) {
         const shaId = Utils.sha3(
-            log.blockHash.replace('0x', '') +
-            log.transactionHash.replace('0x', '') +
-            log.logIndex.replace('0x', '')
+            log.blockHash.replace('0x', '') + log.transactionHash.replace('0x', '') + log.logIndex.replace('0x', '')
         );
 
-        shaId.replace('0x', '')
-             .substr(0, 8);
+        shaId.replace('0x', '').substr(0, 8);
 
         log.id = `log_${shaId}`;
-
     } else if (!log.id) {
         log.id = null;
     }

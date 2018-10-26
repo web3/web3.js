@@ -3,7 +3,6 @@ var DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack-p
 var BabelMinify = require('babel-minify-webpack-plugin');
 
 module.exports = {
-    mode: 'production',
     entry: './packages/web3/src/index.js',
     output: {
         filename: 'web3.min.js',
@@ -68,7 +67,10 @@ module.exports = {
                             }
                         ]
                     ],
-                    plugins: ['@babel/plugin-proposal-export-default-from']
+                    plugins: [
+                        '@babel/plugin-proposal-export-default-from',
+                        '@babel/plugin-proposal-export-namespace-from'
+                    ]
                 }
             }
         ]

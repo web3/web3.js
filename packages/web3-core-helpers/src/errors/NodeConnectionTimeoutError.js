@@ -30,4 +30,3 @@ export default class NodeConnectionTimeoutError extends Error {
         super(`CONNECTION TIMEOUT: timeout of ${ms} ms achived`);
     }
 }
-

@@ -48,13 +48,7 @@ export default class NetworkModuleFactory {
      *
      * @returns {Network}
      */
-    createNetworkModule(
-        provider,
-        providersModuleFactory,
-        providers,
-        methodController,
-        options
-    ) {
+    createNetworkModule(provider, providersModuleFactory, providers, methodController, options) {
         return new Network(
             provider,
             providersModuleFactory,

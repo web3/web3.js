@@ -76,11 +76,7 @@ export default class TransactionConfirmationWorkflow {
 
                         if (validationResult === true) {
                             this.confirmationsCounter++;
-                            promiEvent.emit(
-                                'confirmation',
-                                this.confirmationsCounter,
-                                receipt
-                            );
+                            promiEvent.emit('confirmation', this.confirmationsCounter, receipt);
 
                             if (this.isConfirmed(moduleInstance)) {
                                 this.handleSuccessState(receipt, methodModel, promiEvent);

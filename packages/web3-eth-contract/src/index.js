@@ -46,12 +46,7 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  * @returns {AbstractContract}
  */
 export const Contract = (provider, abi, address, options) => {
-    return new ContractModuleFactory(
-        Utils,
-        formatters,
-        new AbiCoder(),
-        new Accounts(provider, options)
-    ).createContract(
+    return new ContractModuleFactory(Utils, formatters, new AbiCoder(), new Accounts(provider, options)).createContract(
         provider,
         new ProvidersModuleFactory(),
         providers,

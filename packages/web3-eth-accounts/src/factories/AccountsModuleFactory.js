@@ -46,13 +46,7 @@ export default class AccountsModuleFactory {
      *
      * @returns {Accounts}
      */
-    createAccounts(
-        provider,
-        providersModuleFactory,
-        providers,
-        methodController,
-        options
-    ) {
+    createAccounts(provider, providersModuleFactory, providers, methodController, options) {
         return new Accounts(
             provider,
             providersModuleFactory,

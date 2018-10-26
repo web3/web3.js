@@ -121,4 +121,3 @@ export const testTopic = (bloom, topic) => {
 
     return testBytes(bloom, topic);
 };
-

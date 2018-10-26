@@ -30,4 +30,3 @@ export default class JsonRpcResponseError extends Error {
         super(`Invalid JSON RPC response: ${JSON.stringify(result)}`);
     }
 }
-

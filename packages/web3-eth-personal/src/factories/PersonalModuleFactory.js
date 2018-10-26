@@ -49,14 +49,7 @@ export default class PersonalModuleFactory {
      *
      * @returns {Personal}
      */
-    createPersonal(
-        provider,
-        providersModuleFactory,
-        providers,
-        methodController,
-        net,
-        options
-    ) {
+    createPersonal(provider, providersModuleFactory, providers, methodController, net, options) {
         return new Personal(
             provider,
             providersModuleFactory,
@@ -66,7 +59,7 @@ export default class PersonalModuleFactory {
             net,
             this.utils,
             this.formatters,
-            options,
+            options
         );
     }
 

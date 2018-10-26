@@ -30,4 +30,3 @@ export default class NoConnectionError extends Error {
         super(`CONNECTION ERROR: Couldn't connect to node ${host}.`);
     }
 }
-

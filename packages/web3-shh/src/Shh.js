@@ -45,14 +45,7 @@ export default class Shh extends AbstractWeb3Module {
         net,
         options
     ) {
-        super(
-            provider,
-            providersModuleFactory,
-            providers,
-            methodController,
-            methodModelFactory,
-            options
-        );
+        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
 
         this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;
@@ -150,7 +143,6 @@ export default class Shh extends AbstractWeb3Module {
         super.transactionPollingTimeout = value;
         this.net.transactionPollingTimeout = value;
     }
-
 
     /**
      * Sets the defaultAccount property on the current object and the network module

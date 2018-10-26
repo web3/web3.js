@@ -38,6 +38,7 @@ export const MethodController = () => {
     return new MethodModuleFactory().createMethodController(PromiEvent, new SubscriptionsFactory(), formatters);
 };
 
+export AbstractMethodModel from '../lib/models/AbstractMethodModel';
 export AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';
 
 // Network

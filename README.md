@@ -1,6 +1,6 @@
 **PREVIEW RELEASE** This is a beta preview release with breaking changes! The current stable version is 0.20.0 
 
-<img src="https://github.com/ethereum/web3.js/raw/1.0/web3js.jpg" width=200 />
+<img src="https://github.com/ethereum/web3.js/raw/1.0/assets/web3js.jpg" width=200 />
 
 # web3.js - Ethereum JavaScript API
 

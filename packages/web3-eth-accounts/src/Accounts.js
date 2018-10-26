@@ -73,14 +73,7 @@ export default class Accounts extends AbstractWeb3Module {
         formatters,
         options
     ) {
-        super(
-            provider,
-            providersModuleFactory,
-            providers,
-            methodController,
-            methodModelFactory,
-            options
-        );
+        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;
