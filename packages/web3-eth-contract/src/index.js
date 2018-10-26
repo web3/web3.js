@@ -41,6 +41,29 @@ var errors = require('web3-core-helpers').errors;
 var promiEvent = require('web3-core-promievent');
 var abi = require('web3-eth-abi');
 
+var REVERT_CODE = '08c379a0000000000000000000000000000000000000000000000000000000000000'; // + 4 signs for message size size + then message size + then message
+var REVERT_MESSAGE_SIZE_INDEX = 72;
+var REVERT_MESSAGE_SIZE_SIZE = 4;
+
+function hex2n(hex) {
+  return parseInt(hex, 16);
+}
+
+function hex2a(hex) {
+    var str = '';
+    for (var i = 0; (i < hex.length && hex.substr(i, 2) !== '00'); i += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return str;
+}
+
+function extractRevertMessage(value) {
+    var sizeSize = hex2n(value.slice(REVERT_MESSAGE_SIZE_INDEX - REVERT_MESSAGE_SIZE_SIZE, REVERT_MESSAGE_SIZE_INDEX));
+    var messageStartIndex = REVERT_MESSAGE_SIZE_INDEX + sizeSize * 2;
+    var size = hex2n(value.slice(REVERT_MESSAGE_SIZE_INDEX, messageStartIndex));
+    var message = value.slice(messageStartIndex, messageStartIndex + size * 2);
+    return hex2a(message);
+}
 
 /**
  * Should be called to create new contract instance
@@ -462,6 +485,11 @@ Contract.prototype._decodeMethodReturn = function (outputs, returnValues) {
     }
 
     returnValues = returnValues.length >= 2 ? returnValues.slice(2) : returnValues;
+
+    if (returnValues.indexOf(REVERT_CODE) === 0) {
+        throw new Error(extractRevertMessage(returnValues));
+    }
+
     var result = abi.decodeParameters(outputs, returnValues);
 
     if (result.__length__ === 1) {
