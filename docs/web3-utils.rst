@@ -1052,7 +1052,7 @@ Parameters
 ----------
 
 1. ``number`` - ``String|Number|BN``: The value in wei.
-1. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert to. Possible units are:
+2. ``unit`` - ``String`` (optional, defaults to ``"ether"``): The ether to convert to. Possible units are:
     - ``noether``: '0'
     - ``wei``: '1'
     - ``kwei``: '1000'
