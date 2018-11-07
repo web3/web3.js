@@ -64,20 +64,11 @@
         }
     ],
     "devDependencies": {
-        "@babel/cli": "^7.1.2",
-        "@babel/core": "^7.1.2",
-        "@babel/plugin-proposal-export-default-from": "^7.0.0",
-        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
-        "@babel/preset-env": "^7.1.0",
         "@types/bignumber.js": "^4.0.2",
         "@types/underscore": "^1.8.0",
-        "babel-collect-imports": "^1.1.0",
         "babel-eslint": "^10.0.1",
-        "babel-loader": "^8.0.4",
-        "babel-minify-webpack-plugin": "^0.3.1",
         "bn.js": "4.11.8",
         "coveralls": "^3.0.2",
-        "duplicate-package-checker-webpack-plugin": "^3.0.0",
         "eslint": "^5.7.0",
         "eslint-config-prettier": "^3.1.0",
         "eslint-config-standard": "^12.0.0",
@@ -95,9 +86,6 @@
         "lerna": "^2.5.1",
         "prettier": "1.14.3",
         "underscore": "^1.8.3",
-        "webpack": "^4.21.0",
-        "webpack-bundle-analyzer": "^3.0.3",
-        "webpack-cli": "^3.1.2"
     },
     "dependencies": {
         "@babel/polyfill": "^7.0.0"

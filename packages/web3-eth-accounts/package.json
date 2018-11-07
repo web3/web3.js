@@ -5,16 +5,35 @@
     "description": "Web3 module to generate Ethereum accounts and sign data and transactions.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-eth-accounts",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-eth-accounts.cjs.js",
+    "module": "dist/web3-eth-accounts.esm.js",
+    "browser": "dist/web3-eth-accounts.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w"
+    },
     "dependencies": {
         "crypto-browserify": "3.12.0",
         "eth-lib": "0.2.8",
         "scrypt.js": "0.2.0",
-        "underscore": "1.9.1",
+        "underscore-es": "1.9.8",
         "uuid": "3.3.2",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
-    }
+    },
+    "devDependencies": {
+        "@babel/core": "^7.1.5",
+        "@babel/plugin-proposal-export-default-from": "^7.0.0",
+        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+        "rollup": "^0.67.0",
+        "rollup-plugin-babel": "^4.0.3",
+        "rollup-plugin-commonjs": "^9.1.0",
+        "rollup-plugin-json": "^3.1.0",
+        "rollup-plugin-node-resolve": "^3.4.0"
+    },
+    "files": [
+        "dist"
+    ]
 }

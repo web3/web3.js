@@ -5,12 +5,31 @@
     "description": "Web3 module to interact with the Ethereum nodes networking properties.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-net",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-net.cjs.js",
+    "module": "dist/web3-net.esm.js",
+    "browser": "dist/web3-net.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w"
+    },
     "dependencies": {
         "web3-core": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
-    }
+    },
+    "devDependencies": {
+        "@babel/core": "^7.1.5",
+        "@babel/plugin-proposal-export-default-from": "^7.0.0",
+        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+        "rollup": "^0.67.0",
+        "rollup-plugin-babel": "^4.0.3",
+        "rollup-plugin-commonjs": "^9.1.0",
+        "rollup-plugin-json": "^3.1.0",
+        "rollup-plugin-node-resolve": "^3.4.0"
+    },
+    "files": [
+        "dist"
+    ]
 }
