@@ -38,6 +38,19 @@ var tests = [{
     formattedResult: '0xf',
     call: 'eth_newFilter'
 },{
+    args: [{
+        blockHash: '0x4932a21c2d34f941498532310b205aa7b98451d91e33a1e9abcf75e888b3241e',
+        address: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855'
+    }],
+    formattedArgs: [{
+        blockHash: '0x4932a21c2d34f941498532310b205aa7b98451d91e33a1e9abcf75e888b3241e',
+        address: '0x47d33b27bb249a2dbab4c0612bf9caf4c1950855',
+        topics: []
+    }],
+    result: '0xf',
+    formattedResult: '0xf',
+    call: 'eth_newFilter'
+},{
     args: ['latest'],
     formattedArgs: [],
     result: '0xf',
