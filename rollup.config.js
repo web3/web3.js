@@ -10,7 +10,7 @@ const config = [
         input: 'src/index.js',
         output: {
             name: 'Web3',
-            file: pkg.browser,
+            file: '',
             format: 'umd'
         },
         plugins: [
@@ -32,11 +32,11 @@ const config = [
         input: 'src/index.js',
         output: [
             {
-                file: pkg.main,
+                file: '',
                 format: 'cjs',
             },
             {
-                file: pkg.module,
+                file: '',
                 format: 'es',
             }
         ],
@@ -47,11 +47,11 @@ const config = [
     }
 ];
 
-export default rollupConfig = (name, outputFileName) => {
+export default (name, outputFileName) => {
     config[0].output.name = name;
-    config[0].output.file = outputFileName + '.umd.js';
-    config[1].output[0].file = outputFileName + '.cjs.js';
-    config[1].output[1].file = outputFileName + '.esm.js';
+    config[0].output.file = 'dist/' + outputFileName + '.umd.js';
+    config[1].output[0].file = 'dist/' + outputFileName + '.cjs.js';
+    config[1].output[1].file = 'dist/' + outputFileName + '.esm.js';
 
     return config;
 };
