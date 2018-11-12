@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isNumber, isObject} from 'underscore';
+import isNumber from 'underscore-es/isNumber';
+import isObject from 'underscore-es/isObject';
 
 export default class AbstractSigner {
     /**

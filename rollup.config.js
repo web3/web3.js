@@ -4,9 +4,8 @@ import json from 'rollup-plugin-json';
 import autoExternal from 'rollup-plugin-auto-external';
 import commonjs from 'rollup-plugin-commonjs';
 import builtins from 'rollup-plugin-node-builtins';
-import pkg from './package.json';
 
-export default [
+const config = [
     {
         input: 'src/index.js',
         output: {
@@ -47,3 +46,12 @@ export default [
         ]
     }
 ];
+
+export default rollupConfig = (name, outputFileName) => {
+    config[0].output.name = name;
+    config[0].output.file = outputFileName + '.umd.js';
+    config[1].output[0].file = outputFileName + '.cjs.js';
+    config[1].output[1].file = outputFileName + '.esm.js';
+
+    return config;
+};

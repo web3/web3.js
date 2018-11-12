@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isArray, isObject} from 'underscore';
+import isArray from 'underscore-es/isArray';
+import isObject from 'underscore-es/isObject';
 import {AbstractMethodModel} from 'web3-core-method';
 
 export default class AbstractWeb3Module {

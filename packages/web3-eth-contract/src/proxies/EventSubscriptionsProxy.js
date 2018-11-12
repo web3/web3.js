@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isFunction, isUndefined} from 'underscore';
+import isFunction from 'underscore-es/isFunction';
+import isUndefined from 'underscore-es/isUndefined';
 
 export default class EventSubscriptionsProxy {
     /**

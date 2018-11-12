@@ -21,7 +21,10 @@
  * @date 2017
  */
 
-import {isString, isObject, isNumber, isArray} from 'underscore';
+import isString from 'underscore-es/isString';
+import isArray from 'underscore-es/isArray';
+import isObject from 'underscore-es/isObject';
+import isNumber from 'underscore-es/isNumber';
 import * as Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 

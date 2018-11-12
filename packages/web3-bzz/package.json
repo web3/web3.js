@@ -13,19 +13,8 @@
         "dev": "rollup -c -w"
     },
     "dependencies": {
-        "got": "7.1.0",
-        "swarm-js": "0.1.37",
-        "underscore-es": "1.9.8"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.1.5",
-        "@babel/plugin-proposal-export-default-from": "^7.0.0",
-        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
-        "rollup": "^0.67.0",
-        "rollup-plugin-babel": "^4.0.3",
-        "rollup-plugin-commonjs": "^9.1.0",
-        "rollup-plugin-json": "^3.1.0",
-        "rollup-plugin-node-resolve": "^3.4.0"
+        "swarm-js": "^0.1.39",
+        "underscore-es": "^1.9.8"
     },
     "files": [
         "dist"

@@ -20,7 +20,9 @@
  * @date 2017
  */
 
-import {isArray, isObject, map} from 'underscore';
+import isArray from 'underscore-es/isArray';
+import isObject from 'underscore-es/isObject';
+import map from 'underscore-es/map';
 import BN from 'bn.js';
 import * as utils from './Utils.js';
 

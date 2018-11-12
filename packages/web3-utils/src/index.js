@@ -21,7 +21,10 @@
  * @date 2017
  */
 
-import {isObject, isString, isArray, isFunction} from 'underscore';
+import isObject from 'underscore-es/isObject';
+import isString from 'underscore-es/isString';
+import isArray from 'underscore-es/isArray';
+import isFunction from 'underscore-es/isFunction';
 import * as utils from './Utils';
 
 export {soliditySha3} from './SoliditySha3';

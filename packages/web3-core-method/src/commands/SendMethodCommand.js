@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isObject} from 'underscore';
+import isObject from 'underscore-es/isObject';
 
 export default class SendMethodCommand {
     /**

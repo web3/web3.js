@@ -20,7 +20,12 @@
  * @date 2017
  */
 
-import {isNull, isUndefined, isBoolean, isString, isNumber, isObject} from 'underscore';
+import isNull from 'underscore-es/isNull';
+import isUndefined from 'underscore-es/isUndefined';
+import isBoolean from 'underscore-es/isBoolean';
+import isString from 'underscore-es/isString';
+import isNumber from 'underscore-es/isNumber';
+import isObject from 'underscore-es/isObject';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';

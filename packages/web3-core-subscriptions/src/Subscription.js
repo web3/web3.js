@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isArray, isFunction} from 'underscore';
+import isArray from 'underscore-es/isArray';
+import isFunction from 'underscore-es/isFunction';
 import EventEmitter from 'eventemitter3';
 
 export default class Subscription extends EventEmitter {

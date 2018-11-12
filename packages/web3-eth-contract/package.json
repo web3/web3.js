@@ -13,24 +13,17 @@
         "dev": "rollup -c -w"
     },
     "dependencies": {
-        "underscore-es": "1.9.8",
+        "underscore-es": "^1.9.8",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
         "web3-core-promievent": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-eth-abi": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.1.5",
-        "@babel/plugin-proposal-export-default-from": "^7.0.0",
-        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
-        "rollup": "^0.67.0",
-        "rollup-plugin-babel": "^4.0.3",
-        "rollup-plugin-commonjs": "^9.1.0",
-        "rollup-plugin-json": "^3.1.0",
-        "rollup-plugin-node-resolve": "^3.4.0"
+        "web3-eth-accounts": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36",
+        "web3-eth-iban": "1.0.0-beta.36",
+        "web3-providers": "1.0.0-beta.36"
     },
     "files": [
         "dist"
