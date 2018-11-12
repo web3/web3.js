@@ -9,9 +9,11 @@ const config = [
     {
         input: 'src/index.js',
         output: {
-            name: 'Web3',
+            name: '',
             file: '',
-            format: 'umd'
+            format: 'umd',
+            sourcemap: true,
+            globals: {}
         },
         plugins: [
             autoExternal(),
@@ -47,9 +49,10 @@ const config = [
     }
 ];
 
-export default (name, outputFileName) => {
+export default (name, outputFileName, globals) => {
     config[0].output.name = name;
     config[0].output.file = 'dist/' + outputFileName + '.umd.js';
+    config[0].output.globals = globals;
     config[1].output[0].file = 'dist/' + outputFileName + '.cjs.js';
     config[1].output[1].file = 'dist/' + outputFileName + '.esm.js';
 
