@@ -16,18 +16,15 @@ const config = [
             globals: {}
         },
         plugins: [
+            babel({
+                exclude: 'node_modules/**',
+                plugins: ['@babel/plugin-proposal-export-default-from', '@babel/plugin-proposal-export-namespace-from']
+            }),
             autoExternal(),
             commonjs(),
             builtins(),
             resolve(),
-            json(),
-            babel({
-                exclude: 'node_modules/**',
-                plugins: [
-                    '@babel/plugin-proposal-export-default-from',
-                    '@babel/plugin-proposal-export-namespace-from'
-                ]
-            }),
+            json()
         ]
     },
     {
@@ -35,14 +32,18 @@ const config = [
         output: [
             {
                 file: '',
-                format: 'cjs',
+                format: 'cjs'
             },
             {
                 file: '',
-                format: 'es',
+                format: 'es'
             }
         ],
         plugins: [
+            babel({
+                exclude: 'node_modules/**',
+                plugins: ['@babel/plugin-proposal-export-default-from', '@babel/plugin-proposal-export-namespace-from']
+            }),
             json(),
             autoExternal()
         ]

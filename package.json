@@ -12,8 +12,8 @@
     "scripts": {
         "postinstall": "lerna bootstrap",
         "link": "lerna link",
-        "build": "npm run lint && webpack --mode development",
-        "build-prod": "webpack --mode production",
+        "bootstrap": "lerna bootstrap",
+        "build": "lerna run build",
         "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
         "docs": "cd docs; make html;",
         "format": "prettier --config ./.prettierrc --write ./packages/**/*.js",
@@ -78,6 +78,16 @@
         "eslint-plugin-standard": "^4.0.0",
         "eslint-plugin-unicorn": "^6.0.1",
         "lerna": "^2.5.1",
-        "prettier": "1.14.3"
+        "prettier": "1.14.3",
+        "@babel/core": "^7.1.5",
+        "@babel/plugin-proposal-export-default-from": "^7.0.0",
+        "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+        "rollup": "^0.67.0",
+        "rollup-plugin-babel": "^4.0.3",
+        "rollup-plugin-commonjs": "^9.1.0",
+        "rollup-plugin-json": "^3.1.0",
+        "rollup-plugin-node-resolve": "^3.4.0",
+        "rollup-plugin-node-builtins": "^2.1.2",
+        "rollup-plugin-auto-external": "^2.0.0"
     }
 }

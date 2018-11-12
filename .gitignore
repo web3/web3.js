@@ -16,4 +16,4 @@ bower_components
 coverage/
 lerna-debug.log
 dist/
-!./dist/web3.min.js
+.eslintcache

@@ -1,6 +1,4 @@
-'use strict';
-
-var REGISTRY = [
+export const REGISTRY_ABI = [
     {
         constant: true,
         inputs: [

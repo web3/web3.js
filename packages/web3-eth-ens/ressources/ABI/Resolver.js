@@ -1,6 +1,4 @@
-'use strict';
-
-var RESOLVER = [
+export const RESOLVER_ABI = [
     {
         constant: true,
         inputs: [
