@@ -30,7 +30,11 @@ var _btoa = null;
 var parseURL = null;
 if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
     Ws = function(url, protocols) {
-      return new window.WebSocket(url, protocols);
+      if (protocols) {
+        return new window.WebSocket(url, protocols);
+      } else {
+        return new window.WebSocket(url); 
+      }
     };
     _btoa = btoa;
     parseURL = function(url) {
