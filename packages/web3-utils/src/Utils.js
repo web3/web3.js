@@ -256,7 +256,7 @@ export const hexToUtf8 = (hex) => {
  *
  * @param {String|Number|BN} value
  *
- * @returns {String}
+ * @returns {Number}
  */
 export const hexToNumber = (value) => {
     if (!value) {
