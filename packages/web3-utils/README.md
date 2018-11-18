@@ -39,6 +39,10 @@ console.log(Utils);
 }
 ```
 
+## Types 
+
+If you are using TypeScript all the types are defined in `src > types` - please use them :)
+
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
