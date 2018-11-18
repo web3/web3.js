@@ -25,7 +25,7 @@ import {isObject, isString, isArray, isFunction} from 'underscore';
 import * as utils from './Utils';
 
 export {soliditySha3} from './SoliditySha3';
-export randomHex from 'randomhex';
+export {randomHex} from 'randomhex';
 export * from './Utils';
 
 export const unitMap = {
