@@ -6,6 +6,7 @@
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-utils",
     "license": "LGPL-3.0",
     "main": "src/index.js",
+    "types": "src/types/utils.d.ts",
     "dependencies": {
         "bn.js": "4.11.8",
         "eth-lib": "0.2.8",
