@@ -22,8 +22,8 @@ before_script:
 install:
     - npm install
 script:
-    - npm run-script build
-    - npm run-script test-coveralls
+    - npm run build
+    - npm run test
 after_script:
     - cd test/node && npm install && node app.js
 
