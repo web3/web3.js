@@ -30,33 +30,12 @@ npm install web3
 yarn add web3
 ```
 
-### Meteor
-
-*Note*: works only in the Browser for now. (PR welcome).
-
-```bash
-meteor add ethereum:web3
-```
-
-### In the Browser
-
-Use the prebuild ``dist/web3.min.js``, or
-build using the [web3.js][repo] repository:
-
-```bash
-npm run-script build
-```
-
-Then include `dist/web3.js` in your html file.
-This will expose `Web3` on the window object.
-
 ## Usage
 
 ```js
-// in node.js
-var Web3 = require('web3');
+import Web3 from 'web3';
 
-var web3 = new Web3('ws://localhost:8546');
+const web3 = new Web3('ws://localhost:8546');
 console.log(web3);
 > {
     eth: ... ,
@@ -104,7 +83,6 @@ const web3 = new Web3("ws://localhost:8546");
 
 Documentation can be found at [read the docs][docs]
 
-
 ## Building
 
 ### Requirements
@@ -112,38 +90,29 @@ Documentation can be found at [read the docs][docs]
 * [Node.js](https://nodejs.org)
 * npm
 
+### Building
+
 ```bash
-sudo apt-get update
-sudo apt-get install nodejs
-sudo apt-get install npm
+npm run build // Bundle all packages
+
+// Or
+
+cd packages/web3-eth
+npm run build // Bundle for example web3-eth
+
+cd packages/web3-eth
+npm run dev // This package will be bundled on each change of a file
 ```
 
-### Building (gulp)
-
-Build only the web3.js package
+### Testing
 
 ```bash
-npm run-script build
-```
-
-Or build all sub packages as well
-
-```bash
-npm run-script build-all
-```
-
-This will put all the browser build files into the `dist` folder.
-
-
-### Testing (mocha)
-
-```bash
-npm test
+npm run test
 ```
 
 ### Contributing
 
-- All contributions have to go into develop, or the 1.0 branch
+- All contributions have to go into develop (0.20.x), or the 1.0 branch
 - Please follow the code style of the other files, we use 4 spaces as tabs.
 
 ### Community
