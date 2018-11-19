@@ -96,7 +96,7 @@ npm run build // Bundle all packages
 // Or
 
 cd packages/web3-eth
-npm run build // This will bundle just the web3-eth module
+npm run build // This will just bundle the web3-eth module
 
 cd packages/web3-eth
 npm run dev // This module will be bundled each time a file has changed
