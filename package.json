@@ -24,7 +24,7 @@
     "coveralls": "^3.0.2",
     "del": ">=2.0.2",
     "exorcist": "^0.4.0",
-    "gulp": ">=3.9.0",
+    "gulp": "^4.0.0",
     "gulp-jshint": ">=1.5.0",
     "gulp-rename": ">=1.2.0",
     "gulp-replace": "^0.5.3",
@@ -34,7 +34,7 @@
     "jshint": "^2.9.6",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
     "build": "gulp",
