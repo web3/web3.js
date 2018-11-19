@@ -91,7 +91,7 @@ Documentation can be found at [read the docs][docs]
 ### Building
 
 ```bash
-npm run build // Bundle all packages
+npm run build // Bundle all modules
 
 // Or
 

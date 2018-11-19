@@ -74,7 +74,7 @@ const config = [
  */
 export default (name, outputFileName, globals) => {
     //CJS
-    config[0].output[0].file = 'dist/' + outputFileName + '.umd.js';
+    config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
     //UMD
     config[0].output[1].name = name;
@@ -82,7 +82,7 @@ export default (name, outputFileName, globals) => {
     config[0].output[1].globals = globals;
 
     //ESM
-    config[1].output[0].file = 'dist/' + outputFileName + '.cjs.js';
+    config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
 
     return config;
 };
