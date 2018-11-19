@@ -15,4 +15,3 @@ node_modules
 coverage/
 lerna-debug.log
 .eslintcache
-package-lock.json
