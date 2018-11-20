@@ -20,11 +20,11 @@ describe('GetPastLogsMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getLogs', () => {
-        expect(model.rpcMethod).to.equal('eth_getLogs');
+        expect(model.rpcMethod).toBe('eth_getLogs');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
@@ -38,7 +38,7 @@ describe('GetPastLogsMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).toHaveProperty('empty', true);
 
         formattersMock.verify();
     });
@@ -50,7 +50,7 @@ describe('GetPastLogsMethodModelTest', () => {
             .returns({formatted: true})
             .once();
 
-        expect(model.afterExecution([{}])[0]).to.have.property('formatted', true);
+        expect(model.afterExecution([{}])[0]).toHaveProperty('formatted', true);
 
         formattersMock.verify();
     });

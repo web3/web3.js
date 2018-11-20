@@ -20,11 +20,11 @@ describe('CallMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_call', () => {
-        expect(model.rpcMethod).to.equal('eth_call');
+        expect(model.rpcMethod).toBe('eth_call');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -44,8 +44,8 @@ describe('CallMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toHaveProperty('empty', true);
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
@@ -53,6 +53,6 @@ describe('CallMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

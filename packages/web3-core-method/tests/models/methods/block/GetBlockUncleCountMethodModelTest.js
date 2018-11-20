@@ -23,11 +23,11 @@ describe('GetBlockUncleCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {
-        expect(model.rpcMethod).to.equal('eth_getUncleCountByBlockNumber');
+        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockNumber');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -41,11 +41,11 @@ describe('GetBlockUncleCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getUncleCountByBlockHash');
+        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -59,11 +59,11 @@ describe('GetBlockUncleCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getUncleCountByBlockNumber');
+        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockNumber');
     });
 
     it('afterExecution should map the hex string to a number', () => {
@@ -73,7 +73,7 @@ describe('GetBlockUncleCountMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

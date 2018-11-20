@@ -20,11 +20,11 @@ describe('GetBlockMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getBlockByNumber', () => {
-        expect(model.rpcMethod).to.equal('eth_getBlockByNumber');
+        expect(model.rpcMethod).toBe('eth_getBlockByNumber');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -38,12 +38,12 @@ describe('GetBlockMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).to.be.true;
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBeTruthy();
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getBlockByHash');
+        expect(model.rpcMethod).toBe('eth_getBlockByHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -57,12 +57,12 @@ describe('GetBlockMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).to.be.true;
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBeTruthy();
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getBlockByNumber');
+        expect(model.rpcMethod).toBe('eth_getBlockByNumber');
     });
 
     it('afterExecution should map the response', () => {
@@ -72,7 +72,7 @@ describe('GetBlockMethodModelTest', () => {
             .returns({empty: false})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('empty', false);
+        expect(model.afterExecution({})).toHaveProperty('empty', false);
 
         formattersMock.verify();
     });

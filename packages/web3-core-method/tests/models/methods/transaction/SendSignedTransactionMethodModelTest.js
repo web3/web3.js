@@ -11,11 +11,11 @@ describe('SendSignedTransactionMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_sendRawTransaction', () => {
-        expect(model.rpcMethod).to.equal('eth_sendRawTransaction');
+        expect(model.rpcMethod).toBe('eth_sendRawTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -23,10 +23,10 @@ describe('SendSignedTransactionMethodModelTest', () => {
 
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendSignedTransaction')).equal('sendSignedTransaction');
+        expect(model.afterExecution('sendSignedTransaction')).toBe('sendSignedTransaction');
     });
 });

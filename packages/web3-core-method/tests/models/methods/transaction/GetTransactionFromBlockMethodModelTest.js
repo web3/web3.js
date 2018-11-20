@@ -22,11 +22,11 @@ describe('GetStorageAtMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).to.equal('eth_getTransactionByBlockNumberAndIndex');
+        expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it(
@@ -49,13 +49,13 @@ describe('GetStorageAtMethodModelTest', () => {
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).equal('0x0');
-            expect(model.parameters[1]).equal('0x0');
+            expect(model.parameters[0]).toBe('0x0');
+            expect(model.parameters[1]).toBe('0x0');
 
             formattersMock.verify();
             utilsMock.verify();
 
-            expect(model.rpcMethod).equal('eth_getTransactionByBlockHashAndIndex');
+            expect(model.rpcMethod).toBe('eth_getTransactionByBlockHashAndIndex');
         }
     );
 
@@ -79,13 +79,13 @@ describe('GetStorageAtMethodModelTest', () => {
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).equal('0x0');
-            expect(model.parameters[1]).equal('0x0');
+            expect(model.parameters[0]).toBe('0x0');
+            expect(model.parameters[1]).toBe('0x0');
 
             formattersMock.verify();
             utilsMock.verify();
 
-            expect(model.rpcMethod).equal('eth_getTransactionByBlockNumberAndIndex');
+            expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
         }
     );
 
@@ -96,7 +96,7 @@ describe('GetStorageAtMethodModelTest', () => {
             .returns({empty: false})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('empty', false);
+        expect(model.afterExecution({})).toHaveProperty('empty', false);
 
         formattersMock.verify();
     });

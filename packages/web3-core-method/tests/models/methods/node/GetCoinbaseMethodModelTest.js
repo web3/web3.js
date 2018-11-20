@@ -8,10 +8,9 @@ const sinon = sinonLib.createSandbox();
  * GetCoinbaseMethodModel test
  */
 describe('GetCoinbaseMethodModelTest', () => {
-    let model, utilsMock;
+    let model;
 
     beforeEach(() => {
-        utilsMock = sinon.mock(utils);
         model = new GetCoinbaseMethodModel(utils, {});
     });
 
@@ -20,21 +19,21 @@ describe('GetCoinbaseMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_coinbase', () => {
-        expect(model.rpcMethod).to.equal('eth_coinbase');
+        expect(model.rpcMethod).toBe('eth_coinbase');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).to.equal(0);
+        expect(model.parametersAmount).toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('coinbase')).equal('coinbase');
+        expect(model.afterExecution('coinbase')).toBe('coinbase');
     });
 });

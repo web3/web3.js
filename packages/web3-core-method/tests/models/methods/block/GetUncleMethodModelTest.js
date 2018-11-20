@@ -22,11 +22,11 @@ describe('GetUncleMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).to.equal('eth_getUncleByBlockNumberAndIndex');
+        expect(model.rpcMethod).toBe('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -46,12 +46,12 @@ describe('GetUncleMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getUncleByBlockHashAndIndex');
+        expect(model.rpcMethod).toBe('eth_getUncleByBlockHashAndIndex');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -71,12 +71,12 @@ describe('GetUncleMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getUncleByBlockNumberAndIndex');
+        expect(model.rpcMethod).toBe('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('afterExecution should map the response', () => {
@@ -86,7 +86,7 @@ describe('GetUncleMethodModelTest', () => {
             .returns({block: true})
             .once();
 
-        expect(model.afterExecution({})).to.be.property('block', true);
+        expect(model.afterExecution({})).toHaveProperty('block', true);
 
         formattersMock.verify();
     });

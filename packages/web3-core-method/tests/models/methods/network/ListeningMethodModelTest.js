@@ -11,21 +11,21 @@ describe('ListeningMethodModelTest', () => {
     });
 
     it('rpcMethod should return net_listening', () => {
-        expect(model.rpcMethod).to.equal('net_listening');
+        expect(model.rpcMethod).toBe('net_listening');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).to.equal(0);
+        expect(model.parametersAmount).toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('version')).equal('version');
+        expect(model.afterExecution('version')).toBe('version');
     });
 });

@@ -1,7 +1,7 @@
 import * as sinonLib from 'sinon';
 import {AbstractWeb3Module} from 'web3-core';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
-import ProvidersPackage from 'web3-providers';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
 import {PromiEvent} from 'web3-core-promievent';
 import {formatters} from 'web3-core-helpers';
 import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
@@ -48,13 +48,13 @@ describe('TransactionConfirmationWorkflowTest', () => {
         methodModel.callback = methodModelCallbackSpy;
         methodModelMock = sinon.mock(methodModel);
 
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
+        providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
         promiEvent = new PromiEvent();
 

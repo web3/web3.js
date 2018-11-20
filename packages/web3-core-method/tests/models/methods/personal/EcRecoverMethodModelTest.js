@@ -20,11 +20,11 @@ describe('EcRecoverMethodModelTest', () => {
     });
 
     it('rpcMethod should return personal_ecRecover', () => {
-        expect(model.rpcMethod).to.equal('personal_ecRecover');
+        expect(model.rpcMethod).toBe('personal_ecRecover');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).to.equal(3);
+        expect(model.parametersAmount).toBe(3);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -44,13 +44,13 @@ describe('EcRecoverMethodModelTest', () => {
 
         model.beforeExecution();
 
-        expect(model.parameters[0]).to.be.property('sign', true);
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toHaveProperty('sign', true);
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('submitWork')).equal('submitWork');
+        expect(model.afterExecution('submitWork')).toBe('submitWork');
     });
 });

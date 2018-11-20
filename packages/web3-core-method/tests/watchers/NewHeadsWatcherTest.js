@@ -1,7 +1,7 @@
 import * as sinonLib from 'sinon';
-import SubscriptionsPackage from 'web3-core-subscriptions';
+import {Subscription, SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbstractWeb3Module} from 'web3-core';
-import ProvidersPackage from 'web3-providers';
+import {HttpProviderAdapter, HttpProvider, SocketProviderAdapter, WebsocketProvider} from 'web3-providers';
 import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
 const sinon = sinonLib.createSandbox();
@@ -12,18 +12,15 @@ const sinon = sinonLib.createSandbox();
 describe('NewHeadsWatcherTest', () => {
     let newHeadsWatcher,
         provider,
-        providerMock,
         providerAdapter,
-        providerAdapterMock,
         moduleInstance,
-        moduleInstanceMock,
         subscriptionsFactory,
         subscriptionsFactoryMock,
         subscription,
         subscriptionMock;
 
     beforeEach(() => {
-        subscriptionsFactory = new SubscriptionsPackage.createSubscriptionsFactory();
+        subscriptionsFactory = new SubscriptionsFactory();
         subscriptionsFactoryMock = sinon.mock(subscriptionsFactory);
 
         newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactory);
@@ -34,43 +31,37 @@ describe('NewHeadsWatcherTest', () => {
     });
 
     it('constructor check', () => {
-        expect(newHeadsWatcher.subscriptionsFactory).to.be.an.instanceof(subscriptionsFactory.constructor);
-        expect(newHeadsWatcher.confirmationSubscription).to.be.null;
-        expect(newHeadsWatcher.isPolling).to.be.false;
-        expect(newHeadsWatcher.confirmationInterval).to.be.null;
+        expect(newHeadsWatcher.subscriptionsFactory).toBeInstanceOf(subscriptionsFactory.constructor);
+        expect(newHeadsWatcher.confirmationSubscription).toBeNull();
+        expect(newHeadsWatcher.isPolling).toBeFalsy();
+        expect(newHeadsWatcher.confirmationInterval).toBeNull();
     });
 
     it('calls watch and stop with HttpProviderAdapter', () => {
-        provider = new ProvidersPackage.HttpProvider('http://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+        provider = new HttpProvider('http://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.HttpProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new HttpProviderAdapter(provider);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
-        moduleInstanceMock = sinon.mock(moduleInstance);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
         const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstance);
 
-        expect(newHeadsWatcherObject.isPolling).to.be.true;
-        expect(newHeadsWatcherObject.confirmationInterval).to.be.instanceof(Object);
+        expect(newHeadsWatcherObject.isPolling).toBeTruthy();
+        expect(newHeadsWatcherObject.confirmationInterval).toBeInstanceOf(Object);
 
         newHeadsWatcher.stop();
 
-        expect(newHeadsWatcher.listeners('newHead').length).equal(0);
+        expect(newHeadsWatcher.listeners('newHead')).toHaveLength(0);
     });
 
     it('calls watch and stop with SocketProviderAdapter', () => {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new SocketProviderAdapter(provider);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
-        moduleInstanceMock = sinon.mock(moduleInstance);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
-        subscription = new SubscriptionsPackage.Subscription({}, moduleInstance);
+        subscription = new Subscription({}, moduleInstance);
         subscriptionMock = sinon.mock(subscription);
 
         subscriptionMock
@@ -89,7 +80,7 @@ describe('NewHeadsWatcherTest', () => {
         newHeadsWatcher.watch(moduleInstance);
         newHeadsWatcher.stop();
 
-        expect(newHeadsWatcher.listeners('newHead').length).equal(0);
+        expect(newHeadsWatcher.listeners('newHead')).toHaveLength(0);
 
         subscriptionMock.verify();
         subscriptionsFactoryMock.verify();

@@ -20,18 +20,18 @@ describe('VersionMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {
-        expect(model.rpcMethod).to.equal('eth_protocolVersion');
+        expect(model.rpcMethod).toBe('eth_protocolVersion');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).to.equal(0);
+        expect(model.parametersAmount).toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should map the response', () => {
@@ -41,7 +41,7 @@ describe('VersionMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

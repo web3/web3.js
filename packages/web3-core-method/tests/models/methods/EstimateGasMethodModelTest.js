@@ -22,11 +22,11 @@ describe('EstimateGasMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_estimateGas', () => {
-        expect(model.rpcMethod).to.equal('eth_estimateGas');
+        expect(model.rpcMethod).toBe('eth_estimateGas');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should call the inputCallFormatter', () => {
@@ -40,7 +40,7 @@ describe('EstimateGasMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).toHaveProperty('empty', true);
 
         formattersMock.verify();
     });
@@ -52,7 +52,7 @@ describe('EstimateGasMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution({})).equal(100);
+        expect(model.afterExecution({})).toBe(100);
 
         utilsMock.verify();
     });

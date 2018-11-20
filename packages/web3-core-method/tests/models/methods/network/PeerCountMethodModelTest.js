@@ -20,18 +20,18 @@ describe('PeerCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return net_peerCount', () => {
-        expect(model.rpcMethod).to.equal('net_peerCount');
+        expect(model.rpcMethod).toBe('net_peerCount');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).to.equal(0);
+        expect(model.parametersAmount).toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should map the response', () => {
@@ -41,7 +41,7 @@ describe('PeerCountMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

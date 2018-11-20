@@ -20,11 +20,11 @@ describe('UnlockAccountMethodModelTest', () => {
     });
 
     it('rpcMethod should return personal_unlockAccount', () => {
-        expect(model.rpcMethod).to.equal('personal_unlockAccount');
+        expect(model.rpcMethod).toBe('personal_unlockAccount');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).to.equal(3);
+        expect(model.parametersAmount).toBe(3);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
@@ -40,10 +40,10 @@ describe('UnlockAccountMethodModelTest', () => {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).equal('0x00');
+        expect(model.parameters[0]).toBe('0x00');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('unlockAccount')).equal('unlockAccount');
+        expect(model.afterExecution('unlockAccount')).toBe('unlockAccount');
     });
 });

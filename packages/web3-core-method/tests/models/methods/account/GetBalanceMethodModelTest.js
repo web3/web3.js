@@ -20,11 +20,11 @@ describe('GetBalanceMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getBalance', () => {
-        expect(model.rpcMethod).to.equal('eth_getBalance');
+        expect(model.rpcMethod).toBe('eth_getBalance');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -44,8 +44,8 @@ describe('GetBalanceMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
@@ -59,7 +59,7 @@ describe('GetBalanceMethodModelTest', () => {
             .returns({bigNumber: true})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('bigNumber', true);
+        expect(model.afterExecution({})).toHaveProperty('bigNumber', true);
 
         formattersMock.verify();
     });

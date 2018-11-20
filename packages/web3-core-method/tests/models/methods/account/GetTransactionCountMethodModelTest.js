@@ -22,11 +22,11 @@ describe('GetTransactionCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getTransactionCount', () => {
-        expect(model.rpcMethod).to.equal('eth_getTransactionCount');
+        expect(model.rpcMethod).toBe('eth_getTransactionCount');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -46,8 +46,8 @@ describe('GetTransactionCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
@@ -59,7 +59,7 @@ describe('GetTransactionCountMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

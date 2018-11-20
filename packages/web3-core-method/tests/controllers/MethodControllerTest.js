@@ -13,18 +13,17 @@ const sinon = sinonLib.createSandbox();
  * MethodController test
  */
 describe('MethodControllerTest', () => {
-    let methodController;
-    let methodModel;
-    let methodModelMock;
-    let callMethodCommandMock;
-    let sendMethodCommandMock;
-    let signAndSendMethodCommandMock;
-    let signMessageCommandMock;
-    let promiEventPackageMock;
-    let callMethodCommand;
-    let sendMethodCommand;
-    let signAndSendMethodCommand;
-    let signMessageCommand;
+    let methodController,
+        methodModel,
+        methodModelMock,
+        callMethodCommandMock,
+        sendMethodCommandMock,
+        signAndSendMethodCommandMock,
+        signMessageCommandMock,
+        callMethodCommand,
+        sendMethodCommand,
+        signAndSendMethodCommand,
+        signMessageCommand;
 
     beforeEach(() => {
         callMethodCommand = new CallMethodCommand();
@@ -37,7 +36,6 @@ describe('MethodControllerTest', () => {
         sendMethodCommandMock = sinon.mock(sendMethodCommand);
         signAndSendMethodCommandMock = sinon.mock(signAndSendMethodCommand);
         signMessageCommandMock = sinon.mock(signMessageCommand);
-        promiEventPackageMock = sinon.mock(PromiEventPackage);
         methodModelMock = sinon.mock(methodModel);
 
         methodController = new MethodController(
@@ -54,11 +52,11 @@ describe('MethodControllerTest', () => {
     });
 
     it('constructor is setting all the dependencies correctly', () => {
-        expect(methodController.callMethodCommand).to.be.an.instanceof(CallMethodCommand);
-        expect(methodController.sendMethodCommand).to.be.an.instanceof(SendMethodCommand);
-        expect(methodController.signAndSendMethodCommand).to.be.an.instanceof(SignAndSendMethodCommand);
-        expect(methodController.signMessageCommand).to.be.an.instanceof(SignMessageCommand);
-        expect(methodController.promiEventPackage).to.be.an.instanceof(Object);
+        expect(methodController.callMethodCommand).toBeInstanceOf(CallMethodCommand);
+        expect(methodController.sendMethodCommand).toBeInstanceOf(SendMethodCommand);
+        expect(methodController.signAndSendMethodCommand).toBeInstanceOf(SignAndSendMethodCommand);
+        expect(methodController.signMessageCommand).toBeInstanceOf(SignMessageCommand);
+        expect(methodController.promiEventPackage).toBeInstanceOf(Object);
     });
 
     it('execute calls signMessageCommand', () => {
@@ -75,7 +73,7 @@ describe('MethodControllerTest', () => {
             .returns(true)
             .once();
 
-        expect(methodController.execute(methodModel, accounts, {})).to.be.true;
+        expect(methodController.execute(methodModel, accounts, {})).toBeTruthy();
 
         methodModelMock.verify();
         signMessageCommandMock.verify();
@@ -95,7 +93,7 @@ describe('MethodControllerTest', () => {
             .returns(true)
             .once();
 
-        expect(methodController.execute(methodModel, accounts, {})).to.be.true;
+        expect(methodController.execute(methodModel, accounts, {})).toBeTruthy();
 
         methodModelMock.verify();
         signAndSendMethodCommandMock.verify();
@@ -113,7 +111,7 @@ describe('MethodControllerTest', () => {
             .returns(true)
             .once();
 
-        expect(methodController.execute(methodModel, null, {})).to.be.true;
+        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
 
         methodModelMock.verify();
         signAndSendMethodCommandMock.verify();
@@ -136,7 +134,7 @@ describe('MethodControllerTest', () => {
             .returns(true)
             .once();
 
-        expect(methodController.execute(methodModel, null, {})).to.be.true;
+        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
 
         methodModelMock.verify();
         signAndSendMethodCommandMock.verify();
@@ -159,7 +157,7 @@ describe('MethodControllerTest', () => {
             .returns(true)
             .once();
 
-        expect(methodController.execute(methodModel, null, {})).to.be.true;
+        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
 
         methodModelMock.verify();
         signAndSendMethodCommandMock.verify();

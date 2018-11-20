@@ -20,11 +20,11 @@ describe('GetCodeMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getCode', () => {
-        expect(model.rpcMethod).to.equal('eth_getCode');
+        expect(model.rpcMethod).toBe('eth_getCode');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
@@ -44,8 +44,8 @@ describe('GetCodeMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
@@ -53,6 +53,6 @@ describe('GetCodeMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

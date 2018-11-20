@@ -9,12 +9,7 @@ const sinon = sinonLib.createSandbox();
  * SignMessageCommand test
  */
 describe('SignMessageCommandTest', () => {
-    let signMessageCommand;
-    let methodModel;
-    let methodModelCallbackSpy;
-    let methodModelMock;
-    let messageSigner;
-    let messageSignerMock;
+    let signMessageCommand, methodModel, methodModelCallbackSpy, methodModelMock, messageSigner, messageSignerMock;
 
     beforeEach(() => {
         methodModel = new AbstractMethodModel('', 0, {}, {});
@@ -79,11 +74,11 @@ describe('SignMessageCommandTest', () => {
 
         try {
             signMessageCommand.execute({}, methodModel, {});
-        } catch (error) {
+        } catch (error2) {
             expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-            expect(methodModelCallbackSpy.calledWith(error, null)).toBeTruthy();
-            expect(error).toBeInstanceOf(Error);
-            expect(error.message).toBe('PANIC');
+            expect(methodModelCallbackSpy.calledWith(error2, null)).toBeTruthy();
+            expect(error2).toBeInstanceOf(Error);
+            expect(error2.message).toBe('PANIC');
 
             methodModelMock.verify();
             messageSignerMock.verify();

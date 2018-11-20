@@ -20,11 +20,11 @@ describe('SendTransactionMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_signTransaction', () => {
-        expect(model.rpcMethod).to.equal('eth_signTransaction');
+        expect(model.rpcMethod).toBe('eth_signTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -38,10 +38,10 @@ describe('SendTransactionMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.be.property('empty', false);
+        expect(model.parameters[0]).toHaveProperty('empty', false);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendTransaction')).equal('sendTransaction');
+        expect(model.afterExecution('sendTransaction')).toBe('sendTransaction');
     });
 });

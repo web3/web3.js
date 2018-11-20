@@ -22,54 +22,48 @@ describe('MethodPackageFactoryTest', () => {
     });
 
     it('calls createMethodController and should return an instance of MethodController', () => {
-        expect(methodPackageFactory.createMethodController({}, {}, {})).to.be.an.instanceof(MethodController);
+        expect(methodPackageFactory.createMethodController({}, {}, {})).toBeInstanceOf(MethodController);
     });
 
     it('calls createCallMethodCommand and should return an instance of CallMethodCommand', () => {
-        expect(methodPackageFactory.createCallMethodCommand()).to.be.an.instanceof(CallMethodCommand);
+        expect(methodPackageFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
     });
 
     it('calls createSendMethodCommand and should return an instance of SendMethodCommand', () => {
-        expect(methodPackageFactory.createSendMethodCommand({}, {})).to.be.an.instanceof(SendMethodCommand);
+        expect(methodPackageFactory.createSendMethodCommand({}, {})).toBeInstanceOf(SendMethodCommand);
     });
 
     it('calls createSignAndSendMethodCommand and should return an instance of SignAndSendMethodCommand', () => {
-        expect(methodPackageFactory.createSignAndSendMethodCommand({}, {})).to.be.an.instanceof(
-            SignAndSendMethodCommand
-        );
+        expect(methodPackageFactory.createSignAndSendMethodCommand({}, {})).toBeInstanceOf(SignAndSendMethodCommand);
     });
 
     it('calls createSignMessageCommand and should return an instance of SignMessageCommand', () => {
-        expect(methodPackageFactory.createSignMessageCommand()).to.be.an.instanceof(SignMessageCommand);
+        expect(methodPackageFactory.createSignMessageCommand()).toBeInstanceOf(SignMessageCommand);
     });
 
     it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', () => {
-        expect(methodPackageFactory.createTransactionConfirmationWorkflow({}, {})).to.be.an.instanceof(
+        expect(methodPackageFactory.createTransactionConfirmationWorkflow({}, {})).toBeInstanceOf(
             TransactionConfirmationWorkflow
         );
     });
 
     it('calls createTransactionSigner and should return an instance of TransactionSigner', () => {
-        expect(methodPackageFactory.createTransactionSigner()).to.be.an.instanceof(TransactionSigner);
+        expect(methodPackageFactory.createTransactionSigner()).toBeInstanceOf(TransactionSigner);
     });
 
     it('calls createMessageSigner and should return an instance of MessageSigner', () => {
-        expect(methodPackageFactory.createMessageSigner()).to.be.an.instanceof(MessageSigner);
+        expect(methodPackageFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
     });
 
     it('calls createTransactionConfirmationModel and should return an instance of TransactionConfirmationModel', () => {
-        expect(methodPackageFactory.createTransactionConfirmationModel()).to.be.an.instanceof(
-            TransactionConfirmationModel
-        );
+        expect(methodPackageFactory.createTransactionConfirmationModel()).toBeInstanceOf(TransactionConfirmationModel);
     });
 
     it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', () => {
-        expect(methodPackageFactory.createTransactionReceiptValidator()).to.be.an.instanceof(
-            TransactionReceiptValidator
-        );
+        expect(methodPackageFactory.createTransactionReceiptValidator()).toBeInstanceOf(TransactionReceiptValidator);
     });
 
     it('calls createNewHeadsWatcher and should return an instance of NewHeadsWatcher', () => {
-        expect(methodPackageFactory.createNewHeadsWatcher({})).to.be.an.instanceof(NewHeadsWatcher);
+        expect(methodPackageFactory.createNewHeadsWatcher({})).toBeInstanceOf(NewHeadsWatcher);
     });
 });

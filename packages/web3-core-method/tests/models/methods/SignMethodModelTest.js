@@ -20,15 +20,15 @@ describe('SignMethodModelTest', () => {
     });
 
     it('accounts should be defined', () => {
-        expect(model.accounts.test).to.be.true;
+        expect(model.accounts.test).toBeTruthy();
     });
 
     it('rpcMethod should return eth_sign', () => {
-        expect(model.rpcMethod).to.equal('eth_sign');
+        expect(model.rpcMethod).toBe('eth_sign');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call the inputSignFormatter and inputAddressFormatter', () => {
@@ -48,8 +48,8 @@ describe('SignMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('string');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('string');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
@@ -57,6 +57,6 @@ describe('SignMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

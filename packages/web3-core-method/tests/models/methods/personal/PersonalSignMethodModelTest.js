@@ -20,11 +20,11 @@ describe('PersonalSignMethodModelTest', () => {
     });
 
     it('rpcMethod should return personal_sign', () => {
-        expect(model.rpcMethod).to.equal('personal_sign');
+        expect(model.rpcMethod).toBe('personal_sign');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).to.equal(3);
+        expect(model.parametersAmount).toBe(3);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
@@ -46,11 +46,11 @@ describe('PersonalSignMethodModelTest', () => {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).equal('signed');
-        expect(model.parameters[1]).equal('0x00');
+        expect(model.parameters[0]).toBe('signed');
+        expect(model.parameters[1]).toBe('0x00');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('personalSign')).equal('personalSign');
+        expect(model.afterExecution('personalSign')).toBe('personalSign');
     });
 });

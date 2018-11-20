@@ -1,4 +1,3 @@
-import * as sinonLib from 'sinon';
 import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
 
 /**
@@ -25,7 +24,7 @@ describe('TransactionReceiptValidatorTest', () => {
                     }
                 ]
             )
-        ).to.be.true;
+        ).toBeTruthy();
     });
 
     it('calls validate and returns error because if invalid gasUsage', () => {
@@ -42,8 +41,8 @@ describe('TransactionReceiptValidatorTest', () => {
             ]
         );
 
-        expect(error).to.be.an.instanceof(Error);
-        expect(error.message).to.have.string('Transaction ran out of gas. Please provide more gas:');
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe('Transaction ran out of gas. Please provide more gas:');
     });
 
     it('calls validate and returns error because the EVM has reverted it', () => {
@@ -60,7 +59,7 @@ describe('TransactionReceiptValidatorTest', () => {
             ]
         );
 
-        expect(error).to.be.an.instanceof(Error);
-        expect(error.message).to.have.string('Transaction has been reverted by the EVM:');
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe('Transaction has been reverted by the EVM:');
     });
 });

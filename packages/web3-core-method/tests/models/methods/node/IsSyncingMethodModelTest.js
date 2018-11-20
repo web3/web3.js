@@ -20,18 +20,18 @@ describe('IsSyncingMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_syncing', () => {
-        expect(model.rpcMethod).to.equal('eth_syncing');
+        expect(model.rpcMethod).toBe('eth_syncing');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).to.equal(0);
+        expect(model.parametersAmount).toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should map the response', () => {
@@ -41,7 +41,7 @@ describe('IsSyncingMethodModelTest', () => {
             .returns({isSyncing: true})
             .once();
 
-        expect(model.afterExecution({})).to.be.property('isSyncing', true);
+        expect(model.afterExecution({})).toHaveProperty('isSyncing', true);
 
         formattersMock.verify();
     });

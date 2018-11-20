@@ -20,11 +20,11 @@ describe('LockAccountMethodModelTest', () => {
     });
 
     it('rpcMethod should return personal_lockAccount', () => {
-        expect(model.rpcMethod).to.equal('personal_lockAccount');
+        expect(model.rpcMethod).toBe('personal_lockAccount');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should call inputAddressFormatter', () => {
@@ -40,10 +40,10 @@ describe('LockAccountMethodModelTest', () => {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('lockAccount')).equal('lockAccount');
+        expect(model.afterExecution('lockAccount')).toBe('lockAccount');
     });
 });

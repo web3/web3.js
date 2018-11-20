@@ -20,11 +20,11 @@ describe('GetTransactionReceiptMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getTransactionReceipt', () => {
-        expect(model.rpcMethod).to.equal('eth_getTransactionReceipt');
+        expect(model.rpcMethod).toBe('eth_getTransactionReceipt');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -32,7 +32,7 @@ describe('GetTransactionReceiptMethodModelTest', () => {
 
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
     it('afterExecution should map the response', () => {
@@ -42,7 +42,7 @@ describe('GetTransactionReceiptMethodModelTest', () => {
             .returns({empty: false})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('empty', false);
+        expect(model.afterExecution({})).toHaveProperty('empty', false);
 
         formattersMock.verify();
     });

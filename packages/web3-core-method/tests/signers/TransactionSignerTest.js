@@ -1,6 +1,6 @@
 import * as sinonLib from 'sinon';
-import ProvidersPackage from 'web3-providers';
-import AccountsPackage from 'web3-eth-accounts';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 
 const sinon = sinonLib.createSandbox();
@@ -9,16 +9,14 @@ const sinon = sinonLib.createSandbox();
  * TransactionSigner test
  */
 describe('TransactionSignerTest', () => {
-    let transactionSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
+    let transactionSigner, provider, providerAdapter, accounts, accountsMock;
 
     beforeEach(() => {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new SocketProviderAdapter(provider);
 
-        accounts = AccountsPackage.createAccounts(provider);
+        accounts = new Accounts(providerAdapter, {});
         accountsMock = sinon.mock(accounts);
 
         transactionSigner = new TransactionSigner();
@@ -52,8 +50,8 @@ describe('TransactionSignerTest', () => {
 
         const returnValue = await transactionSigner.sign(transaction, accounts);
 
-        expect(returnValue).equal('0x0');
-        expect(transaction.from).equal(undefined);
+        expect(returnValue).toBe('0x0');
+        expect(transaction.from).toBe(undefined);
 
         accountsMock.verify();
     });

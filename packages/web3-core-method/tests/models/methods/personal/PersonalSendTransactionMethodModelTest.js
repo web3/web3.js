@@ -20,11 +20,11 @@ describe('PersonalSendTransactionMethodModelTest', () => {
     });
 
     it('rpcMethod should return personal_sendTransaction', () => {
-        expect(model.rpcMethod).to.equal('personal_sendTransaction');
+        expect(model.rpcMethod).toBe('personal_sendTransaction');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).to.equal(2);
+        expect(model.parametersAmount).toBe(2);
     });
 
     it('beforeExecution should call inputTransactionFormatter', () => {
@@ -40,10 +40,10 @@ describe('PersonalSendTransactionMethodModelTest', () => {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).to.be.property('send', true);
+        expect(model.parameters[0]).toHaveProperty('send', true);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('personalSend')).equal('personalSend');
+        expect(model.afterExecution('personalSend')).toBe('personalSend');
     });
 });

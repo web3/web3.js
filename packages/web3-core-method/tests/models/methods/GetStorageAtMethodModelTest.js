@@ -1,3 +1,4 @@
+import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import utils from 'web3-utils';
 import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethodModel';
@@ -21,11 +22,11 @@ describe('GetStorageAtMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {
-        expect(model.rpcMethod).to.equal('eth_getStorageAt');
+        expect(model.rpcMethod).toBe('eth_getStorageAt');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).to.equal(3);
+        expect(model.parametersAmount).toBe(3);
     });
 
     it(
@@ -54,9 +55,9 @@ describe('GetStorageAtMethodModelTest', () => {
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).equal('0x0');
-            expect(model.parameters[1]).equal('0x0');
-            expect(model.parameters[2]).equal('0x0');
+            expect(model.parameters[0]).toBe('0x0');
+            expect(model.parameters[1]).toBe('0x0');
+            expect(model.parameters[2]).toBe('0x0');
 
             formattersMock.verify();
         }
@@ -65,6 +66,6 @@ describe('GetStorageAtMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

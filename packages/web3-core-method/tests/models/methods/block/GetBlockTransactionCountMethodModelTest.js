@@ -22,11 +22,11 @@ describe('GetBlockTransactionCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).to.equal('eth_getTransactionByBlockNumberAndIndex');
+        expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should call method with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -40,11 +40,11 @@ describe('GetBlockTransactionCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getTransactionByBlockHashAndIndex');
+        expect(model.rpcMethod).toBe('eth_getTransactionByBlockHashAndIndex');
     });
 
     it('beforeExecution should call method with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -58,11 +58,11 @@ describe('GetBlockTransactionCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
 
         formattersMock.verify();
 
-        expect(model.rpcMethod).equal('eth_getTransactionByBlockNumberAndIndex');
+        expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('afterExecution should map the hex string to a number', () => {
@@ -72,7 +72,7 @@ describe('GetBlockTransactionCountMethodModelTest', () => {
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

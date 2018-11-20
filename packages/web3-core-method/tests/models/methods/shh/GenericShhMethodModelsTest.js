@@ -112,8 +112,8 @@ describe('GenericShhMethodModelsTest', () => {
         tests.forEach((test) => {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
             model = new testModel({}, {});
-            expect(model.rpcMethod).equal(test.rpcMethod);
-            expect(model.parametersAmount).equal(test.parametersAmount);
+            expect(model.rpcMethod).toBe(test.rpcMethod);
+            expect(model.parametersAmount).toBe(test.parametersAmount);
         });
     });
 });

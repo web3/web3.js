@@ -1,6 +1,6 @@
 import * as sinonLib from 'sinon';
-import ProvidersPackage from 'web3-providers';
-import AccountsPackage from 'web3-eth-accounts';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
 import MessageSigner from '../../src/signers/MessageSigner';
 
 const sinon = sinonLib.createSandbox();
@@ -9,16 +9,14 @@ const sinon = sinonLib.createSandbox();
  * MessageSigner test
  */
 describe('MessageSignerTest', () => {
-    let messageSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
+    let messageSigner, provider, providerAdapter, accounts, accountsMock;
 
     beforeEach(() => {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new SocketProviderAdapter(provider);
 
-        accounts = AccountsPackage.createAccounts(provider);
+        accounts = new Accounts(providerAdapter, {});
         accountsMock = sinon.mock(accounts);
 
         messageSigner = new MessageSigner();
@@ -32,7 +30,7 @@ describe('MessageSignerTest', () => {
         try {
             messageSigner.sign('string', 0, accounts);
         } catch (error) {
-            expect(error.message).equal('Wallet or privateKey in wallet is not set!');
+            expect(error.message).toBe('Wallet or privateKey in wallet is not set!');
         }
     });
 
@@ -45,7 +43,7 @@ describe('MessageSignerTest', () => {
             .returns({signature: '0x00'})
             .once();
 
-        expect(messageSigner.sign('string', 0, accounts)).equal('0x00');
+        expect(messageSigner.sign('string', 0, accounts)).toBe('0x00');
 
         accountsMock.verify();
     });

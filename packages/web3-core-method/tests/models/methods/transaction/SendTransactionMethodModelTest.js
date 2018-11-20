@@ -20,15 +20,15 @@ describe('SendTransactionMethodModelTest', () => {
     });
 
     it('accounts is set', () => {
-        expect(model.accounts).to.be.property('accounts', true);
+        expect(model.accounts).toHaveProperty('accounts', true);
     });
 
     it('rpcMethod should return eth_sendTransaction', () => {
-        expect(model.rpcMethod).to.equal('eth_sendTransaction');
+        expect(model.rpcMethod).toBe('eth_sendTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).to.equal(1);
+        expect(model.parametersAmount).toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -42,10 +42,10 @@ describe('SendTransactionMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.be.property('empty', false);
+        expect(model.parameters[0]).toHaveProperty('empty', false);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendTransaction')).equal('sendTransaction');
+        expect(model.afterExecution('sendTransaction')).toBe('sendTransaction');
     });
 });

@@ -12,30 +12,25 @@ const sinon = sinonLib.createSandbox();
  * SendMethodCommand test
  */
 describe('SendMethodCommandTest', () => {
-    let sendMethodCommand;
-    let provider;
-    let providerMock;
-    let providerAdapter;
-    let providerAdapterMock;
-    let moduleInstance;
-    let moduleInstanceMock;
-    let methodModel;
-    let methodModelCallbackSpy;
-    let methodModelMock;
-    let promiEvent;
-    let promiEventMock;
-    let transactionConfirmationWorkflow;
-    let transactionConfirmationWorkflowMock;
+    let sendMethodCommand,
+        provider,
+        providerAdapter,
+        providerAdapterMock,
+        moduleInstance,
+        methodModel,
+        methodModelMock,
+        promiEvent,
+        promiEventMock,
+        transactionConfirmationWorkflow,
+        transactionConfirmationWorkflowMock;
 
     beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
 
         providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
         moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
-        moduleInstanceMock = sinon.mock(moduleInstance);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelMock = sinon.mock(methodModel);
@@ -79,7 +74,7 @@ describe('SendMethodCommandTest', () => {
 
         const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
-        expect(returnedPromiEvent).equal(promiEvent);
+        expect(returnedPromiEvent).toEqual(promiEvent);
 
         promiEvent.on('transactionHash', () => {
             transactionConfirmationWorkflowMock.verify();
@@ -124,11 +119,11 @@ describe('SendMethodCommandTest', () => {
 
         const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
-        expect(returnedPromiEvent).equal(promiEvent);
+        expect(returnedPromiEvent).toEqual(promiEvent);
 
         promiEvent.on('transactionHash', (response) => {
-            expect(response).equal('response');
-            expect(methodModel.parameters[0].gasPrice).equal(100);
+            expect(response).toBe('response');
+            expect(methodModel.parameters[0].gasPrice).toBe(100);
 
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
@@ -150,7 +145,7 @@ describe('SendMethodCommandTest', () => {
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
             .returns(
                 new Promise((resolve, reject) => {
-                    reject('error');
+                    reject(new Error('error'));
                 })
             )
             .once();
@@ -162,10 +157,10 @@ describe('SendMethodCommandTest', () => {
 
         const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
-        expect(returnedPromiEvent).equal(promiEvent);
+        expect(returnedPromiEvent).toEqual(promiEvent);
 
         promiEvent.on('error', (error) => {
-            expect(error).equal('error');
+            expect(error).toBeInstanceOf(Error);
 
             providerAdapterMock.verify();
             methodModelMock.verify();
