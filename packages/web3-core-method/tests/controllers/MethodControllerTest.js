@@ -13,18 +13,18 @@ const sinon = sinonLib.createSandbox();
  * MethodController test
  */
 describe('MethodControllerTest', () => {
-    let methodController,
-        methodModel,
-        methodModelMock,
-        callMethodCommandMock,
-        sendMethodCommandMock,
-        signAndSendMethodCommandMock,
-        signMessageCommandMock,
-        promiEventPackageMock,
-        callMethodCommand,
-        sendMethodCommand,
-        signAndSendMethodCommand,
-        signMessageCommand;
+    let methodController;
+    let methodModel;
+    let methodModelMock;
+    let callMethodCommandMock;
+    let sendMethodCommandMock;
+    let signAndSendMethodCommandMock;
+    let signMessageCommandMock;
+    let promiEventPackageMock;
+    let callMethodCommand;
+    let sendMethodCommand;
+    let signAndSendMethodCommand;
+    let signMessageCommand;
 
     beforeEach(() => {
         callMethodCommand = new CallMethodCommand();

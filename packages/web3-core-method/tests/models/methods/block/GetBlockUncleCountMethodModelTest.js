@@ -1,37 +1,39 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var utils = require('web3-utils');
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const utils = require('web3-utils');
+const formatters = require('web3-core-helpers').formatters;
 
-var GetBlockUncleCountMethodModel = require('../../../../src/models/methods/block/GetBlockUncleCountMethodModel');
+const GetBlockUncleCountMethodModel = require('../../../../src/models/methods/block/GetBlockUncleCountMethodModel');
 
 /**
  * GetBlockUncleCountMethodModel test
  */
-describe('GetBlockUncleCountMethodModelTest', function() {
-    var model, utilsMock, formattersMock;
+describe('GetBlockUncleCountMethodModelTest', () => {
+    let model;
+    let utilsMock;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         formattersMock = sinon.mock(formatters);
 
         model = new GetBlockUncleCountMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getUncleCountByBlockNumber', function() {
+    it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {
         expect(model.rpcMethod).to.equal('eth_getUncleCountByBlockNumber');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', function() {
+    it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -49,7 +51,7 @@ describe('GetBlockUncleCountMethodModelTest', function() {
         expect(model.rpcMethod).equal('eth_getUncleCountByBlockHash');
     });
 
-    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', function() {
+    it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = [100];
 
         formattersMock
@@ -67,7 +69,7 @@ describe('GetBlockUncleCountMethodModelTest', function() {
         expect(model.rpcMethod).equal('eth_getUncleCountByBlockNumber');
     });
 
-    it('afterExecution should map the hex string to a number', function() {
+    it('afterExecution should map the hex string to a number', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

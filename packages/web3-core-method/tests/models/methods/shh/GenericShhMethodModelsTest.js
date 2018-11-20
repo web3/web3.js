@@ -1,7 +1,7 @@
-var chai = require('chai');
-var expect = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 
-var tests = [
+const tests = [
     {
         model: 'AddPrivateKeyMethodModel',
         rpcMethod: 'shh_addPrivateKey',
@@ -109,10 +109,11 @@ var tests = [
     }
 ];
 
-describe('GenericShhMethodModelsTest', function() {
-    it('all models should have the correct properties set', function() {
-        var model, testModel;
-        tests.forEach(function(test) {
+describe('GenericShhMethodModelsTest', () => {
+    it('all models should have the correct properties set', () => {
+        let model;
+        let testModel;
+        tests.forEach(test => {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
             model = new testModel({}, {});
             expect(model.rpcMethod).equal(test.rpcMethod);

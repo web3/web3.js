@@ -1,36 +1,38 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
+const utils = require('web3-utils');
 
-var EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMethodModel');
+const EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMethodModel');
 
 /**
  * EstimateGasMethodModel test
  */
-describe('EstimateGasMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('EstimateGasMethodModelTest', () => {
+    let model;
+    let formattersMock;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new EstimateGasMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_estimateGas', function() {
+    it('rpcMethod should return eth_estimateGas', () => {
         expect(model.rpcMethod).to.equal('eth_estimateGas');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call the inputCallFormatter', function() {
+    it('beforeExecution should call the inputCallFormatter', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -46,7 +48,7 @@ describe('EstimateGasMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber and return the response', function() {
+    it('afterExecution should call hexToNumber and return the response', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs({})

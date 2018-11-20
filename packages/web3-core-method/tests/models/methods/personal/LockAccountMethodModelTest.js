@@ -1,34 +1,35 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const formatters = require('web3-core-helpers').formatters;
 
-var LockAccountMethodModel = require('../../../../src/models/methods/personal/LockAccountMethodModel');
+const LockAccountMethodModel = require('../../../../src/models/methods/personal/LockAccountMethodModel');
 
 /**
  * LockAccountMethodModel test
  */
-describe('LockAccountMethodModelTest', function() {
-    var model, formattersMock;
+describe('LockAccountMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new LockAccountMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_lockAccount', function() {
+    it('rpcMethod should return personal_lockAccount', () => {
         expect(model.rpcMethod).to.equal('personal_lockAccount');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call inputAddressFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter', () => {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -44,7 +45,7 @@ describe('LockAccountMethodModelTest', function() {
         expect(model.parameters[0]).equal('0x0');
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('lockAccount')).equal('lockAccount');
     });
 });

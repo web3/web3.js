@@ -1,41 +1,42 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var utils = require('web3-utils');
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const utils = require('web3-utils');
 
-var NewAccountMethodModel = require('../../../../src/models/methods/personal/NewAccountMethodModel');
+const NewAccountMethodModel = require('../../../../src/models/methods/personal/NewAccountMethodModel');
 
 /**
  * NewAccountMethodModel test
  */
-describe('NewAccountMethodModelTest', function() {
-    var model, utilsMock;
+describe('NewAccountMethodModelTest', () => {
+    let model;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new NewAccountMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_newAccount', function() {
+    it('rpcMethod should return personal_newAccount', () => {
         expect(model.rpcMethod).to.equal('personal_newAccount');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         utilsMock
             .expects('toChecksumAddress')
             .withArgs('0x0')

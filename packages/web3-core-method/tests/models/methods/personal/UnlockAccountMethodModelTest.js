@@ -1,34 +1,35 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const formatters = require('web3-core-helpers').formatters;
 
-var UnlockAccountMethodModel = require('../../../../src/models/methods/personal/UnlockAccountMethodModel');
+const UnlockAccountMethodModel = require('../../../../src/models/methods/personal/UnlockAccountMethodModel');
 
 /**
  * UnlockAccountMethodModel test
  */
-describe('UnlockAccountMethodModelTest', function() {
-    var model, formattersMock;
+describe('UnlockAccountMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new UnlockAccountMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_unlockAccount', function() {
+    it('rpcMethod should return personal_unlockAccount', () => {
         expect(model.rpcMethod).to.equal('personal_unlockAccount');
     });
 
-    it('parametersAmount should return 3', function() {
+    it('parametersAmount should return 3', () => {
         expect(model.parametersAmount).to.equal(3);
     });
 
-    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', function() {
+    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -44,7 +45,7 @@ describe('UnlockAccountMethodModelTest', function() {
         expect(model.parameters[0]).equal('0x00');
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('unlockAccount')).equal('unlockAccount');
     });
 });

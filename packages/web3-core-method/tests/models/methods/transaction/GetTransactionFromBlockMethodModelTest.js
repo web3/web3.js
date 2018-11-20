@@ -1,39 +1,41 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
+const utils = require('web3-utils');
 
-var GetTransactionFromBlockMethodModel = require('../../../../src/models/methods/transaction/GetTransactionFromBlockMethodModel');
+const GetTransactionFromBlockMethodModel = require('../../../../src/models/methods/transaction/GetTransactionFromBlockMethodModel');
 
 /**
  * GetStorageAtMethodModel test
  */
-describe('GetStorageAtMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('GetStorageAtMethodModelTest', () => {
+    let model;
+    let formattersMock;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetTransactionFromBlockMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', function() {
+    it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
         expect(model.rpcMethod).to.equal('eth_getTransactionByBlockNumberAndIndex');
     });
 
-    it('parametersAmount should return 2', function() {
+    it('parametersAmount should return 2', () => {
         expect(model.parametersAmount).to.equal(2);
     });
 
     it(
         'should call beforeExecution with block hash as parameter ' +
             'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        function() {
+        () => {
             model.parameters = ['0x0', 100];
 
             formattersMock
@@ -63,7 +65,7 @@ describe('GetStorageAtMethodModelTest', function() {
     it(
         'should call beforeExecution with block number as parameter  ' +
             'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
-        function() {
+        () => {
             model.parameters = [100, 100];
 
             formattersMock
@@ -90,7 +92,7 @@ describe('GetStorageAtMethodModelTest', function() {
         }
     );
 
-    it('afterExecution should map the response', function() {
+    it('afterExecution should map the response', () => {
         formattersMock
             .expects('outputTransactionFormatter')
             .withArgs({})

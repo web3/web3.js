@@ -1,18 +1,24 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
 
-var ProvidersPackage = require('web3-providers');
-var AccountsPackage = require('web3-eth-accounts');
-var MessageSigner = require('../../src/signers/MessageSigner');
+const ProvidersPackage = require('web3-providers');
+const AccountsPackage = require('web3-eth-accounts');
+const MessageSigner = require('../../src/signers/MessageSigner');
 
 /**
  * MessageSigner test
  */
-describe('MessageSignerTest', function() {
-    var messageSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
+describe('MessageSignerTest', () => {
+    let messageSigner;
+    let provider;
+    let providerMock;
+    let providerAdapter;
+    let providerAdapterMock;
+    let accounts;
+    let accountsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -25,11 +31,11 @@ describe('MessageSignerTest', function() {
         messageSigner = new MessageSigner();
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls sign and throws error', function() {
+    it('calls sign and throws error', () => {
         try {
             messageSigner.sign('string', 0, accounts);
         } catch (error) {
@@ -37,7 +43,7 @@ describe('MessageSignerTest', function() {
         }
     });
 
-    it('calls sign and returns signed message', function() {
+    it('calls sign and returns signed message', () => {
         accounts.wallet[0] = {privateKey: '0x0'};
 
         accountsMock

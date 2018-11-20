@@ -1,39 +1,41 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
+const utils = require('web3-utils');
 
-var GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtMethodModel');
+const GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtMethodModel');
 
 /**
  * GetStorageAtMethodModel test
  */
-describe('GetStorageAtMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('GetStorageAtMethodModelTest', () => {
+    let model;
+    let formattersMock;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetStorageAtMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getStorageAt', function() {
+    it('rpcMethod should return eth_getStorageAt', () => {
         expect(model.rpcMethod).to.equal('eth_getStorageAt');
     });
 
-    it('parametersAmount should return 3', function() {
+    it('parametersAmount should return 3', () => {
         expect(model.parametersAmount).to.equal(3);
     });
 
     it(
         'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter ' +
             'and utils.numberToHex method',
-        function() {
+        () => {
             model.parameters = ['string', 100, 100];
 
             formattersMock
@@ -64,8 +66,8 @@ describe('GetStorageAtMethodModelTest', function() {
         }
     );
 
-    it('afterExecution should just return the response', function() {
-        var object = {};
+    it('afterExecution should just return the response', () => {
+        const object = {};
 
         expect(model.afterExecution(object)).to.equal(object);
     });

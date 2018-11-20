@@ -1,41 +1,42 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const formatters = require('web3-core-helpers').formatters;
 
-var GetGasPriceMethodModel = require('../../../../src/models/methods/node/GetGasPriceMethodModel');
+const GetGasPriceMethodModel = require('../../../../src/models/methods/node/GetGasPriceMethodModel');
 
 /**
  * GetGasPriceMethodModel test
  */
-describe('GetGasPriceMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetGasPriceMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetGasPriceMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_gasPrice', function() {
+    it('rpcMethod should return eth_gasPrice', () => {
         expect(model.rpcMethod).to.equal('eth_gasPrice');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should map the response', function() {
+    it('afterExecution should map the response', () => {
         formattersMock
             .expects('outputBigNumberFormatter')
             .withArgs('1000')

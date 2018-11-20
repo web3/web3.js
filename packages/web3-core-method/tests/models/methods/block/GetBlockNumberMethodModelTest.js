@@ -1,41 +1,42 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const utils = require('web3-utils');
 
-var GetBlockNumberMethodModel = require('../../../../src/models/methods/block/GetBlockNumberMethodModel');
+const GetBlockNumberMethodModel = require('../../../../src/models/methods/block/GetBlockNumberMethodModel');
 
 /**
  * GetBlockNumberMethodModel test
  */
-describe('GetBlockNumberMethodModelTest', function() {
-    var model, utilsMock;
+describe('GetBlockNumberMethodModelTest', () => {
+    let model;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new GetBlockNumberMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_blockNumber', function() {
+    it('rpcMethod should return eth_blockNumber', () => {
         expect(model.rpcMethod).to.equal('eth_blockNumber');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should map theresponse', function() {
+    it('afterExecution should map theresponse', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

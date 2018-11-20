@@ -1,47 +1,47 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
 
-var SubscriptionsPackage = require('web3-core-subscriptions');
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-var ProvidersPackage = require('web3-providers');
-var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
+const SubscriptionsPackage = require('web3-core-subscriptions');
+const AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+const ProvidersPackage = require('web3-providers');
+const NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
 
 /**
  * NewHeadsWatcher test
  */
-describe('NewHeadsWatcherTest', function() {
-    var newHeadsWatcher,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        moduleInstance,
-        moduleInstanceMock,
-        subscriptionsFactory,
-        subscriptionsFactoryMock,
-        subscription,
-        subscriptionMock;
+describe('NewHeadsWatcherTest', () => {
+    let newHeadsWatcher;
+    let provider;
+    let providerMock;
+    let providerAdapter;
+    let providerAdapterMock;
+    let moduleInstance;
+    let moduleInstanceMock;
+    let subscriptionsFactory;
+    let subscriptionsFactoryMock;
+    let subscription;
+    let subscriptionMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         subscriptionsFactory = new SubscriptionsPackage.createSubscriptionsFactory();
         subscriptionsFactoryMock = sinon.mock(subscriptionsFactory);
 
         newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactory);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('constructor check', function() {
+    it('constructor check', () => {
         expect(newHeadsWatcher.subscriptionsFactory).to.be.an.instanceof(subscriptionsFactory.constructor);
         expect(newHeadsWatcher.confirmationSubscription).to.be.null;
         expect(newHeadsWatcher.isPolling).to.be.false;
         expect(newHeadsWatcher.confirmationInterval).to.be.null;
     });
 
-    it('calls watch and stop with HttpProviderAdapter', function() {
+    it('calls watch and stop with HttpProviderAdapter', () => {
         provider = new ProvidersPackage.HttpProvider('http://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -51,7 +51,7 @@ describe('NewHeadsWatcherTest', function() {
         moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
         moduleInstanceMock = sinon.mock(moduleInstance);
 
-        var newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstance);
+        const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstance);
 
         expect(newHeadsWatcherObject.isPolling).to.be.true;
         expect(newHeadsWatcherObject.confirmationInterval).to.be.instanceof(Object);
@@ -61,7 +61,7 @@ describe('NewHeadsWatcherTest', function() {
         expect(newHeadsWatcher.listeners('newHead').length).equal(0);
     });
 
-    it('calls watch and stop with SocketProviderAdapter', function() {
+    it('calls watch and stop with SocketProviderAdapter', () => {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 

@@ -1,34 +1,34 @@
-var chai = require('chai');
-var expect = chai.expect;
+const chai = require('chai');
+const expect = chai.expect;
 
-var IsMiningMethodModel = require('../../../../src/models/methods/node/IsMiningMethodModel');
+const IsMiningMethodModel = require('../../../../src/models/methods/node/IsMiningMethodModel');
 
 /**
  * IsMiningMethodModel test
  */
-describe('IsMiningMethodModelTest', function() {
-    var model;
+describe('IsMiningMethodModelTest', () => {
+    let model;
 
-    beforeEach(function() {
+    beforeEach(() => {
         model = new IsMiningMethodModel({}, {});
     });
 
-    it('rpcMethod should return eth_mining', function() {
+    it('rpcMethod should return eth_mining', () => {
         expect(model.rpcMethod).to.equal('eth_mining');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('version')).equal('version');
     });
 });

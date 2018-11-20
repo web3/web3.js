@@ -1,34 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
 
-var SignTransactionMethodModel = require('../../../../src/models/methods/transaction/SignTransactionMethodModel');
+const SignTransactionMethodModel = require('../../../../src/models/methods/transaction/SignTransactionMethodModel');
 
 /**
  * SendTransactionMethodModel test
  */
-describe('SendTransactionMethodModelTest', function() {
-    var model, formattersMock;
+describe('SendTransactionMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new SignTransactionMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_signTransaction', function() {
+    it('rpcMethod should return eth_signTransaction', () => {
         expect(model.rpcMethod).to.equal('eth_signTransaction');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -42,7 +43,7 @@ describe('SendTransactionMethodModelTest', function() {
         expect(model.parameters[0]).to.be.property('empty', false);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('sendTransaction')).equal('sendTransaction');
     });
 });

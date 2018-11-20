@@ -1,41 +1,42 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var utils = require('web3-utils');
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const utils = require('web3-utils');
 
-var GetCoinbaseMethodModel = require('../../../../src/models/methods/node/GetCoinbaseMethodModel');
+const GetCoinbaseMethodModel = require('../../../../src/models/methods/node/GetCoinbaseMethodModel');
 
 /**
  * GetCoinbaseMethodModel test
  */
-describe('GetCoinbaseMethodModelTest', function() {
-    var model, utilsMock;
+describe('GetCoinbaseMethodModelTest', () => {
+    let model;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new GetCoinbaseMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_coinbase', function() {
+    it('rpcMethod should return eth_coinbase', () => {
         expect(model.rpcMethod).to.equal('eth_coinbase');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('coinbase')).equal('coinbase');
     });
 });

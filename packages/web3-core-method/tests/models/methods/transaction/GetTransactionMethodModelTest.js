@@ -1,34 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
 
-var GetTransactionMethodModel = require('../../../../src/models/methods/transaction/GetTransactionMethodModel');
+const GetTransactionMethodModel = require('../../../../src/models/methods/transaction/GetTransactionMethodModel');
 
 /**
  * GetTransactionMethodModel test
  */
-describe('GetTransactionMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetTransactionMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetTransactionMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionByHash', function() {
+    it('rpcMethod should return eth_getTransactionByHash', () => {
         expect(model.rpcMethod).to.equal('eth_getTransactionByHash');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
 
         model.beforeExecution();
@@ -36,7 +37,7 @@ describe('GetTransactionMethodModelTest', function() {
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should map the response', function() {
+    it('afterExecution should map the response', () => {
         formattersMock
             .expects('outputTransactionFormatter')
             .withArgs({})

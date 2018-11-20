@@ -1,34 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
 
-var GetBalanceMethodModel = require('../../../../src/models/methods/account/GetBalanceMethodModel');
+const GetBalanceMethodModel = require('../../../../src/models/methods/account/GetBalanceMethodModel');
 
 /**
  * GetBalanceMethodModel test
  */
-describe('GetBalanceMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetBalanceMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetBalanceMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getBalance', function() {
+    it('rpcMethod should return eth_getBalance', () => {
         expect(model.rpcMethod).to.equal('eth_getBalance');
     });
 
-    it('parametersAmount should return 2', function() {
+    it('parametersAmount should return 2', () => {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -51,8 +52,8 @@ describe('GetBalanceMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should call outputBigNumberFormatter on the response and return it', function() {
-        var response = {};
+    it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
+        const response = {};
 
         formattersMock
             .expects('outputBigNumberFormatter')

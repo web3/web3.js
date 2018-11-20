@@ -1,41 +1,42 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const utils = require('web3-utils');
 
-var GetAccountsMethodModel = require('../../../../src/models/methods/account/GetAccountsMethodModel');
+const GetAccountsMethodModel = require('../../../../src/models/methods/account/GetAccountsMethodModel');
 
 /**
  * GetAccountsMethodModel test
  */
-describe('GetAccountsMethodModelTest', function() {
-    var model, utilsMock;
+describe('GetAccountsMethodModelTest', () => {
+    let model;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new GetAccountsMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_accounts', function() {
+    it('rpcMethod should return eth_accounts', () => {
         expect(model.rpcMethod).to.equal('eth_accounts');
     });
 
-    it('parametersAmount should return 0', function() {
+    it('parametersAmount should return 0', () => {
         expect(model.parametersAmount).to.equal(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
         expect(model.parameters[0]).equal(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         utilsMock
             .expects('toChecksumAddress')
             .withArgs({})

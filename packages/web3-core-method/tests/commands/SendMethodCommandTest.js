@@ -12,20 +12,20 @@ const sinon = sinonLib.createSandbox();
  * SendMethodCommand test
  */
 describe('SendMethodCommandTest', () => {
-    let sendMethodCommand,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        moduleInstance,
-        moduleInstanceMock,
-        methodModel,
-        methodModelCallbackSpy,
-        methodModelMock,
-        promiEvent,
-        promiEventMock,
-        transactionConfirmationWorkflow,
-        transactionConfirmationWorkflowMock;
+    let sendMethodCommand;
+    let provider;
+    let providerMock;
+    let providerAdapter;
+    let providerAdapterMock;
+    let moduleInstance;
+    let moduleInstanceMock;
+    let methodModel;
+    let methodModelCallbackSpy;
+    let methodModelMock;
+    let promiEvent;
+    let promiEventMock;
+    let transactionConfirmationWorkflow;
+    let transactionConfirmationWorkflowMock;
 
     beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});

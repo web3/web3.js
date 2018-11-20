@@ -10,14 +10,14 @@ const sinon = sinonLib.createSandbox(); // Check if the sandbox is still needed 
  * CallMethodCommand test
  */
 describe('CallMethodCommandTest', () => {
-    let callMethodCommand,
-        provider,
-        providerAdapter,
-        providerAdapterMock,
-        moduleInstance,
-        methodModel,
-        methodModelCallbackSpy,
-        methodModelMock;
+    let callMethodCommand;
+    let provider;
+    let providerAdapter;
+    let providerAdapterMock;
+    let moduleInstance;
+    let methodModel;
+    let methodModelCallbackSpy;
+    let methodModelMock;
 
     beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});

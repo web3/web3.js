@@ -1,36 +1,38 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
+const utils = require('web3-utils');
 
-var GetTransactionCountMethodModel = require('../../../../src/models/methods/account/GetTransactionCountMethodModel');
+const GetTransactionCountMethodModel = require('../../../../src/models/methods/account/GetTransactionCountMethodModel');
 
 /**
  * GetTransactionCountMethodModel test
  */
-describe('GetTransactionCountMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('GetTransactionCountMethodModelTest', () => {
+    let model;
+    let formattersMock;
+    let utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetTransactionCountMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionCount', function() {
+    it('rpcMethod should return eth_getTransactionCount', () => {
         expect(model.rpcMethod).to.equal('eth_getTransactionCount');
     });
 
-    it('parametersAmount should return 2', function() {
+    it('parametersAmount should return 2', () => {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -53,7 +55,7 @@ describe('GetTransactionCountMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber on the response and return it', function() {
+    it('afterExecution should call hexToNumber on the response and return it', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')

@@ -1,34 +1,35 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const formatters = require('web3-core-helpers').formatters;
 
-var PersonalSignMethodModel = require('../../../../src/models/methods/personal/PersonalSignMethodModel');
+const PersonalSignMethodModel = require('../../../../src/models/methods/personal/PersonalSignMethodModel');
 
 /**
  * PersonalSignMethodModel test
  */
-describe('PersonalSignMethodModelTest', function() {
-    var model, formattersMock;
+describe('PersonalSignMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new PersonalSignMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_sign', function() {
+    it('rpcMethod should return personal_sign', () => {
         expect(model.rpcMethod).to.equal('personal_sign');
     });
 
-    it('parametersAmount should return 3', function() {
+    it('parametersAmount should return 3', () => {
         expect(model.parametersAmount).to.equal(3);
     });
 
-    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', function() {
+    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
         model.parameters = ['sign', '0x0'];
 
         formattersMock
@@ -51,7 +52,7 @@ describe('PersonalSignMethodModelTest', function() {
         expect(model.parameters[1]).equal('0x00');
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('personalSign')).equal('personalSign');
     });
 });

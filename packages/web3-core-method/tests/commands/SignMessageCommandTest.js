@@ -9,12 +9,12 @@ const sinon = sinonLib.createSandbox();
  * SignMessageCommand test
  */
 describe('SignMessageCommandTest', () => {
-    let signMessageCommand,
-        methodModel,
-        methodModelCallbackSpy,
-        methodModelMock,
-        messageSigner,
-        messageSignerMock;
+    let signMessageCommand;
+    let methodModel;
+    let methodModelCallbackSpy;
+    let methodModelMock;
+    let messageSigner;
+    let messageSignerMock;
 
     beforeEach(() => {
         methodModel = new AbstractMethodModel('', 0, {}, {});

@@ -1,42 +1,42 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
 
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-providers');
-var PromiEvent = require('web3-core-promievent').PromiEvent;
-var formatters = require('web3-core-helpers').formatters;
-var TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
-var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
-var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
-var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
+const AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
+const AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
+const ProvidersPackage = require('web3-providers');
+const PromiEvent = require('web3-core-promievent').PromiEvent;
+const formatters = require('web3-core-helpers').formatters;
+const TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
+const TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
+const NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
+const TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
 
 /**
  * TransactionConfirmationWorkflow test
  */
-describe('TransactionConfirmationWorkflowTest', function() {
-    var transactionConfirmationWorkflow,
-        transactionConfirmationModel,
-        transactionConfirmationModelMock,
-        transactionReceiptValidator,
-        transactionReceiptValidatorMock,
-        newHeadsWatcher,
-        newHeadsWatcherMock,
-        formattersMock,
-        methodModel,
-        methodModelMock,
-        methodModelCallbackSpy,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        moduleInstance,
-        moduleInstanceMock,
-        promiEvent,
-        promiEventMock;
+describe('TransactionConfirmationWorkflowTest', () => {
+    let transactionConfirmationWorkflow;
+    let transactionConfirmationModel;
+    let transactionConfirmationModelMock;
+    let transactionReceiptValidator;
+    let transactionReceiptValidatorMock;
+    let newHeadsWatcher;
+    let newHeadsWatcherMock;
+    let formattersMock;
+    let methodModel;
+    let methodModelMock;
+    let methodModelCallbackSpy;
+    let provider;
+    let providerMock;
+    let providerAdapter;
+    let providerAdapterMock;
+    let moduleInstance;
+    let moduleInstanceMock;
+    let promiEvent;
+    let promiEventMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         transactionConfirmationModel = new TransactionConfirmationModel();
         transactionConfirmationModelMock = sinon.mock(transactionConfirmationModel);
 
@@ -73,16 +73,16 @@ describe('TransactionConfirmationWorkflowTest', function() {
         );
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls executes and receipt does already exists', function() {
+    it('calls executes and receipt does already exists', () => {
         providerAdapterMock
             .expects('send')
             .withArgs('eth_getTransactionReceipt', ['0x0'])
             .returns(
-                new Promise(function(resolve) {
+                new Promise(resolve => {
                     resolve({});
                 })
             )
@@ -111,10 +111,10 @@ describe('TransactionConfirmationWorkflowTest', function() {
         transactionConfirmationWorkflow.execute(methodModel, moduleInstance, '0x0', promiEvent);
 
         promiEvent
-            .on('receipt', function(receipt) {
+            .on('receipt', receipt => {
                 expect(receipt).to.has.an.property('blockHash', '0x00');
             })
-            .then(function(response) {
+            .then(response => {
                 expect(methodModelCallbackSpy.calledOnce).to.be.true;
                 expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'}));
                 expect(response).to.has.an.property('blockHash', '0x00');

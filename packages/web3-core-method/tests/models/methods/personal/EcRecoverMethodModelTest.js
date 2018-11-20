@@ -1,34 +1,35 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon').createSandbox();
+const formatters = require('web3-core-helpers').formatters;
 
-var EcRecoverMethodModel = require('../../../../src/models/methods/personal/EcRecoverMethodModel');
+const EcRecoverMethodModel = require('../../../../src/models/methods/personal/EcRecoverMethodModel');
 
 /**
  * EcRecoverMethodModel test
  */
-describe('EcRecoverMethodModelTest', function() {
-    var model, formattersMock;
+describe('EcRecoverMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new EcRecoverMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_ecRecover', function() {
+    it('rpcMethod should return personal_ecRecover', () => {
         expect(model.rpcMethod).to.equal('personal_ecRecover');
     });
 
-    it('parametersAmount should return 3', function() {
+    it('parametersAmount should return 3', () => {
         expect(model.parametersAmount).to.equal(3);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [{}, '0x0'];
 
         formattersMock
@@ -51,7 +52,7 @@ describe('EcRecoverMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         expect(model.afterExecution('submitWork')).equal('submitWork');
     });
 });

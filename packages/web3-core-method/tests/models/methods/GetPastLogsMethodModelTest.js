@@ -1,34 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
 
-var GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMethodModel');
+const GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMethodModel');
 
 /**
  * GetPastLogsMethodModel test
  */
-describe('GetPastLogsMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetPastLogsMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetPastLogsMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getLogs', function() {
+    it('rpcMethod should return eth_getLogs', () => {
         expect(model.rpcMethod).to.equal('eth_getLogs');
     });
 
-    it('parametersAmount should return 1', function() {
+    it('parametersAmount should return 1', () => {
         expect(model.parametersAmount).to.equal(1);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function() {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -44,7 +45,7 @@ describe('GetPastLogsMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         formattersMock
             .expects('outputLogFormatter')
             .withArgs({})

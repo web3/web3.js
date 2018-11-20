@@ -1,34 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+const chai = require('chai');
+const sinon = require('sinon').createSandbox();
+const expect = chai.expect;
+const formatters = require('web3-core-helpers').formatters;
 
-var GetCodeMethodModel = require('../../../src/models/methods/GetCodeMethodModel');
+const GetCodeMethodModel = require('../../../src/models/methods/GetCodeMethodModel');
 
 /**
  * GetCodeMethodModel test
  */
-describe('GetCodeMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetCodeMethodModelTest', () => {
+    let model;
+    let formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetCodeMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getCode', function() {
+    it('rpcMethod should return eth_getCode', () => {
         expect(model.rpcMethod).to.equal('eth_getCode');
     });
 
-    it('parametersAmount should return 2', function() {
+    it('parametersAmount should return 2', () => {
         expect(model.parametersAmount).to.equal(2);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function() {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -51,8 +52,8 @@ describe('GetCodeMethodModelTest', function() {
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
-        var object = {};
+    it('afterExecution should just return the response', () => {
+        const object = {};
 
         expect(model.afterExecution(object)).to.equal(object);
     });

@@ -13,24 +13,24 @@ const sinon = sinonLib.createSandbox();
  * SendAndSignMethodCommand test
  */
 describe('SendAndSignMethodCommandTest', () => {
-    let signAndSendMethodCommand,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        moduleInstance,
-        moduleInstanceMock,
-        methodModel,
-        methodModelCallbackSpy,
-        methodModelMock,
-        promiEvent,
-        promiEventMock,
-        promiEventEmitSpy,
-        promiEventRemoveListenersSpy,
-        transactionSigner,
-        transactionSignerMock,
-        transactionConfirmationWorkflow,
-        transactionConfirmationWorkflowMock;
+    let signAndSendMethodCommand;
+    let provider;
+    let providerMock;
+    let providerAdapter;
+    let providerAdapterMock;
+    let moduleInstance;
+    let moduleInstanceMock;
+    let methodModel;
+    let methodModelCallbackSpy;
+    let methodModelMock;
+    let promiEvent;
+    let promiEventMock;
+    let promiEventEmitSpy;
+    let promiEventRemoveListenersSpy;
+    let transactionSigner;
+    let transactionSignerMock;
+    let transactionConfirmationWorkflow;
+    let transactionConfirmationWorkflowMock;
 
     beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
