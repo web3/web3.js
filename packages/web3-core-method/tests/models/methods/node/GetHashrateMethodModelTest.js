@@ -1,16 +1,15 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon').createSandbox();
-const utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import GetHashrateMethodModel from '../../../../src/models/methods/node/GetHashrateMethodModel';
 
-const GetHashrateMethodModel = require('../../../../src/models/methods/node/GetHashrateMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetHashrateMethodModel test
  */
 describe('GetHashrateMethodModelTest', () => {
-    let model;
-    let utilsMock;
+    let model,
+        utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

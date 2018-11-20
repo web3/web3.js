@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const SendSignedTransactionMethodModel = require('../../../../src/models/methods/transaction/SendSignedTransactionMethodModel');
+import SendSignedTransactionMethodModel from '../../../../src/models/methods/transaction/SendSignedTransactionMethodModel';
 
 /**
  * SendSignedTransactionMethodModel test

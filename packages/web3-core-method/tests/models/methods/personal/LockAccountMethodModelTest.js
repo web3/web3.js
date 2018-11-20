@@ -1,16 +1,15 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon').createSandbox();
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import LockAccountMethodModel from '../../../../src/models/methods/personal/LockAccountMethodModel';
 
-const LockAccountMethodModel = require('../../../../src/models/methods/personal/LockAccountMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * LockAccountMethodModel test
  */
 describe('LockAccountMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

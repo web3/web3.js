@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const SubmitWorkMethodModel = require('../../../../src/models/methods/node/SubmitWorkMethodModel');
+import SubmitWorkMethodModel from '../../../../src/models/methods/node/SubmitWorkMethodModel';
 
 /**
  * SubmitWorkMethodModel test

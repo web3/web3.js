@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const ListeningMethodModel = require('../../../../src/models/methods/network/ListeningMethodModel');
+import ListeningMethodModel from '../../../../src/models/methods/network/ListeningMethodModel';
 
 /**
  * ListeningMethodModel test

@@ -1,16 +1,15 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetBlockMethodModel from '../../../../src/models/methods/block/GetBlockMethodModel';
 
-const GetBlockMethodModel = require('../../../../src/models/methods/block/GetBlockMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetBlockMethodModel test
  */
 describe('GetBlockMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

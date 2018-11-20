@@ -1,5 +1,4 @@
-const assert = require('chai').assert;
-const TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
+import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
 
 /**
  * TransactionConfirmationModel test

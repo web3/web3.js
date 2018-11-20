@@ -1,18 +1,17 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const utils = require('web3-utils');
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import GetUncleMethodModel from '../../../../src/models/methods/block/GetUncleMethodModel';
 
-const GetUncleMethodModel = require('../../../../src/models/methods/block/GetUncleMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetUncleMethodModel test
  */
 describe('GetUncleMethodModelTest', () => {
-    let model;
-    let utilsMock;
-    let formattersMock;
+    let model,
+        utilsMock,
+        formattersMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

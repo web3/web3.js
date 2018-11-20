@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const GetNodeInfoMethodModel = require('../../../../src/models/methods/node/GetNodeInfoMethodModel');
+import GetNodeInfoMethodModel from '../../../../src/models/methods/node/GetNodeInfoMethodModel';
 
 /**
  * GetNodeInfoMethodModel test

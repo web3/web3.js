@@ -1,40 +1,39 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
+import * as sinonLib from 'sinon';
+import {AbstractWeb3Module} from 'web3-core';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import ProvidersPackage from 'web3-providers';
+import {PromiEvent} from 'web3-core-promievent';
+import {formatters} from 'web3-core-helpers';
+import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
 
-const AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-const AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-const ProvidersPackage = require('web3-providers');
-const PromiEvent = require('web3-core-promievent').PromiEvent;
-const formatters = require('web3-core-helpers').formatters;
-const TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
-const TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
-const NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
-const TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
+const sinon = sinonLib.createSandbox();
 
 /**
  * TransactionConfirmationWorkflow test
  */
 describe('TransactionConfirmationWorkflowTest', () => {
-    let transactionConfirmationWorkflow;
-    let transactionConfirmationModel;
-    let transactionConfirmationModelMock;
-    let transactionReceiptValidator;
-    let transactionReceiptValidatorMock;
-    let newHeadsWatcher;
-    let newHeadsWatcherMock;
-    let formattersMock;
-    let methodModel;
-    let methodModelMock;
-    let methodModelCallbackSpy;
-    let provider;
-    let providerMock;
-    let providerAdapter;
-    let providerAdapterMock;
-    let moduleInstance;
-    let moduleInstanceMock;
-    let promiEvent;
-    let promiEventMock;
+    let transactionConfirmationWorkflow,
+        transactionConfirmationModel,
+        transactionConfirmationModelMock,
+        transactionReceiptValidator,
+        transactionReceiptValidatorMock,
+        newHeadsWatcher,
+        newHeadsWatcherMock,
+        formattersMock,
+        methodModel,
+        methodModelMock,
+        methodModelCallbackSpy,
+        provider,
+        providerMock,
+        providerAdapter,
+        providerAdapterMock,
+        moduleInstance,
+        moduleInstanceMock,
+        promiEvent,
+        promiEventMock;
 
     beforeEach(() => {
         transactionConfirmationModel = new TransactionConfirmationModel();

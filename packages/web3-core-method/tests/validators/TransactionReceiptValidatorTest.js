@@ -1,7 +1,5 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
+import * as sinonLib from 'sinon';
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
 
 /**
  * TransactionReceiptValidator test

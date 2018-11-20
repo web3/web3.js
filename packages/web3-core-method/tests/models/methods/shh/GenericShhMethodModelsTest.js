@@ -1,6 +1,3 @@
-const chai = require('chai');
-const expect = chai.expect;
-
 const tests = [
     {
         model: 'AddPrivateKeyMethodModel',
@@ -111,8 +108,8 @@ const tests = [
 
 describe('GenericShhMethodModelsTest', () => {
     it('all models should have the correct properties set', () => {
-        let model;
-        let testModel;
+        let model,
+            testModel;
         tests.forEach(test => {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
             model = new testModel({}, {});

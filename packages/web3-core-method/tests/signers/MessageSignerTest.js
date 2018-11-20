@@ -1,22 +1,21 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
+import * as sinonLib from 'sinon';
+import ProvidersPackage from 'web3-providers';
+import AccountsPackage from 'web3-eth-accounts';
+import MessageSigner from '../../src/signers/MessageSigner';
 
-const ProvidersPackage = require('web3-providers');
-const AccountsPackage = require('web3-eth-accounts');
-const MessageSigner = require('../../src/signers/MessageSigner');
+const sinon = sinonLib.createSandbox();
 
 /**
  * MessageSigner test
  */
 describe('MessageSignerTest', () => {
-    let messageSigner;
-    let provider;
-    let providerMock;
-    let providerAdapter;
-    let providerAdapterMock;
-    let accounts;
-    let accountsMock;
+    let messageSigner,
+        provider,
+        providerMock,
+        providerAdapter,
+        providerAdapterMock,
+        accounts,
+        accountsMock;
 
     beforeEach(() => {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});

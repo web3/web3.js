@@ -1,16 +1,15 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import SignMethodModel from '../../../src/models/methods/SignMethodModel';
 
-const SignMethodModel = require('../../../src/models/methods/SignMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetStorageAtMethodModel test
  */
 describe('SignMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

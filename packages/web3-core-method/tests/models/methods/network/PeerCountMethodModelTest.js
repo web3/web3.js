@@ -1,16 +1,15 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon').createSandbox();
-const utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import PeerCountMethodModel from '../../../../src/models/methods/network/PeerCountMethodModel';
 
-const PeerCountMethodModel = require('../../../../src/models/methods/network/PeerCountMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * PeerCountMethodModel test
  */
 describe('PeerCountMethodModelTest', () => {
-    let model;
-    let utilsMock;
+    let model,
+        utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

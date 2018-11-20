@@ -1,16 +1,14 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const utils = require('web3-utils');
-
-const GetBlockNumberMethodModel = require('../../../../src/models/methods/block/GetBlockNumberMethodModel');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import GetBlockNumberMethodModel from '../../../../src/models/methods/block/GetBlockNumberMethodModel';
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetBlockNumberMethodModel test
  */
 describe('GetBlockNumberMethodModelTest', () => {
-    let model;
-    let utilsMock;
+    let model,
+        utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

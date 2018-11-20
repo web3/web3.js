@@ -1,16 +1,15 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import GetAccountsMethodModel from '../../../../src/models/methods/account/GetAccountsMethodModel';
 
-const GetAccountsMethodModel = require('../../../../src/models/methods/account/GetAccountsMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetAccountsMethodModel test
  */
 describe('GetAccountsMethodModelTest', () => {
-    let model;
-    let utilsMock;
+    let model,
+        utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

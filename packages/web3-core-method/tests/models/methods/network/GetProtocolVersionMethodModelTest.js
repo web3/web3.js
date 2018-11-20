@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const GetProtocolVersionMethodModel = require('../../../../src/models/methods/network/GetProtocolVersionMethodModel');
+import GetProtocolVersionMethodModel from '../../../../src/models/methods/network/GetProtocolVersionMethodModel';
 
 /**
  * GetProtocolVersionMethodModel test

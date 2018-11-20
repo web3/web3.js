@@ -1,18 +1,17 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
-const utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import EstimateGasMethodModel from '../../../src/models/methods/EstimateGasMethodModel';
 
-const EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * EstimateGasMethodModel test
  */
 describe('EstimateGasMethodModelTest', () => {
-    let model;
-    let formattersMock;
-    let utilsMock;
+    let model,
+        formattersMock,
+        utilsMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const IsMiningMethodModel = require('../../../../src/models/methods/node/IsMiningMethodModel');
+import IsMiningMethodModel from '../../../../src/models/methods/node/IsMiningMethodModel';
 
 /**
  * IsMiningMethodModel test

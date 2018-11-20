@@ -1,16 +1,15 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon').createSandbox();
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import PersonalSendTransactionMethodModel from '../../../../src/models/methods/personal/PersonalSendTransactionMethodModel';
 
-const PersonalSendTransactionMethodModel = require('../../../../src/models/methods/personal/PersonalSendTransactionMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * PersonalSendTransactionMethodModel test
  */
 describe('PersonalSendTransactionMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

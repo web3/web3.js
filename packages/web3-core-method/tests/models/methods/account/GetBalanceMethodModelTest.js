@@ -1,16 +1,15 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetBalanceMethodModel from '../../../../src/models/methods/account/GetBalanceMethodModel';
 
-const GetBalanceMethodModel = require('../../../../src/models/methods/account/GetBalanceMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetBalanceMethodModel test
  */
 describe('GetBalanceMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

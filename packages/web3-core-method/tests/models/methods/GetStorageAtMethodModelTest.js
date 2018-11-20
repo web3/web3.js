@@ -1,18 +1,16 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
-const utils = require('web3-utils');
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethodModel';
 
-const GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetStorageAtMethodModel test
  */
 describe('GetStorageAtMethodModelTest', () => {
-    let model;
-    let formattersMock;
-    let utilsMock;
+    let model,
+        formattersMock,
+        utilsMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

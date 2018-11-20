@@ -1,16 +1,15 @@
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon').createSandbox();
-const utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import VersionMethodModel from '../../../../src/models/methods/network/VersionMethodModel';
 
-const VersionMethodModel = require('../../../../src/models/methods/network/VersionMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * VersionMethodModel test
  */
 describe('VersionMethodModelTest', () => {
-    let model;
-    let utilsMock;
+    let model,
+        utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

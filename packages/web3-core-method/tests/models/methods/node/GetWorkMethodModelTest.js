@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const GetWorkMethodModel = require('../../../../src/models/methods/node/GetWorkMethodModel');
+import GetWorkMethodModel from '../../../../src/models/methods/node/GetWorkMethodModel';
 
 /**
  * GetWorkMethodModel test

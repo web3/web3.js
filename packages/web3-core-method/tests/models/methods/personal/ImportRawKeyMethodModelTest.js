@@ -1,7 +1,4 @@
-const chai = require('chai');
-const expect = chai.expect;
-
-const ImportRawKeyMethodModel = require('../../../../src/models/methods/personal/ImportRawKeyMethodModel');
+import ImportRawKeyMethodModel from '../../../../src/models/methods/personal/ImportRawKeyMethodModel';
 
 /**
  * ImportRawKeyMethodModel test

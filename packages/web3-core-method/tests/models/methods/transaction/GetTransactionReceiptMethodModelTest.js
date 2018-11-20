@@ -1,16 +1,15 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
-const formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetTransactionReceiptMethodModel from '../../../../src/models/methods/transaction/GetTransactionReceiptMethodModel';
 
-const GetTransactionReceiptMethodModel = require('../../../../src/models/methods/transaction/GetTransactionReceiptMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetTransactionReceiptMethodModel test
  */
 describe('GetTransactionReceiptMethodModelTest', () => {
-    let model;
-    let formattersMock;
+    let model,
+        formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

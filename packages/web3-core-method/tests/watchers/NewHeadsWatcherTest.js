@@ -1,27 +1,26 @@
-const chai = require('chai');
-const sinon = require('sinon').createSandbox();
-const expect = chai.expect;
+import * as sinonLib from 'sinon';
+import SubscriptionsPackage from 'web3-core-subscriptions';
+import {AbstractWeb3Module} from 'web3-core';
+import ProvidersPackage from 'web3-providers';
+import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
-const SubscriptionsPackage = require('web3-core-subscriptions');
-const AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-const ProvidersPackage = require('web3-providers');
-const NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
+const sinon = sinonLib.createSandbox();
 
 /**
  * NewHeadsWatcher test
  */
 describe('NewHeadsWatcherTest', () => {
-    let newHeadsWatcher;
-    let provider;
-    let providerMock;
-    let providerAdapter;
-    let providerAdapterMock;
-    let moduleInstance;
-    let moduleInstanceMock;
-    let subscriptionsFactory;
-    let subscriptionsFactoryMock;
-    let subscription;
-    let subscriptionMock;
+    let newHeadsWatcher,
+        provider,
+        providerMock,
+        providerAdapter,
+        providerAdapterMock,
+        moduleInstance,
+        moduleInstanceMock,
+        subscriptionsFactory,
+        subscriptionsFactoryMock,
+        subscription,
+        subscriptionMock;
 
     beforeEach(() => {
         subscriptionsFactory = new SubscriptionsPackage.createSubscriptionsFactory();
