@@ -73,15 +73,15 @@ const config = [
  * @returns {Array}
  */
 export default (name, outputFileName, globals) => {
-    //CJS
+    // CJS
     config[0].output[0].file = 'dist/' + outputFileName + '.cjs.js';
 
-    //UMD
+    // UMD
     config[0].output[1].name = name;
     config[0].output[1].file = 'dist/' + outputFileName + '.umd.js';
     config[0].output[1].globals = globals;
 
-    //ESM
+    // ESM
     config[1].output[0].file = 'dist/' + outputFileName + '.esm.js';
 
     return config;

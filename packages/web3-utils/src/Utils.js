@@ -29,6 +29,7 @@ import isObject from 'underscore-es/isObject';
 import numberToBN from 'number-to-bn';
 import utf8 from 'utf8';
 import Hash from 'eth-lib/lib/hash';
+import BN from 'bn.js';
 
 /**
  * Returns true if object is BN, otherwise false
