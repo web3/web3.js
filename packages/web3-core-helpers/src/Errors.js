@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-// TODO: Create a simple Logger class to handle logs. Maybe the winston project would be good for it.
+// TODO: Implement Winston logger
 export JsonRpcResponseError from './errors/JsonRpcResponseError';
 export NoConnectionError from './errors/NoConnectionError';
 export NodeConnectionTimeoutError from './errors/NodeConnectionTimeoutError';

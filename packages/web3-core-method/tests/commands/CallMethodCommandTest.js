@@ -3,7 +3,8 @@ import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
 import AbstractWeb3Module from 'web3-core';
-const sinon = sinonLib.createSandbox();
+
+const sinon = sinonLib.createSandbox(); // Check if the sandbox is still needed (jest has his own sandbox handling implemented)
 
 /**
  * CallMethodCommand test
@@ -11,7 +12,6 @@ const sinon = sinonLib.createSandbox();
 describe('CallMethodCommandTest', function() {
     var callMethodCommand,
         provider,
-        providerMock,
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
@@ -21,12 +21,11 @@ describe('CallMethodCommandTest', function() {
 
     beforeEach(function() {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
 
         providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
@@ -81,7 +80,7 @@ describe('CallMethodCommandTest', function() {
             .expects('send')
             .returns(
                 new Promise(function(resolve, reject) {
-                    reject('error');
+                    reject(new Error('error'));
                 })
             )
             .once();

@@ -1,13 +1,11 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-
-var SendMethodCommand = require('../../src/commands/SendMethodCommand');
-var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Module = require('web3-package').AbstractWeb3Module;
-var PromiEvent = require('web3-core-promievent').PromiEvent;
+import * as sinonLib from 'sinon';
+import SendMethodCommand from '../../src/commands/SendMethodCommand';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {AbstractWeb3Module} from 'web3-core';
+import {PromiEvent} from 'web3-core-promievent';
+const sinon = sinonLib.createSandbox();
 
 /**
  * SendMethodCommand test
@@ -29,13 +27,13 @@ describe('SendMethodCommandTest', function() {
         transactionConfirmationWorkflowMock;
 
     beforeEach(function() {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
+        providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
         moduleInstanceMock = sinon.mock(moduleInstance);
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
