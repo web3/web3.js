@@ -199,5 +199,3 @@ export const REGISTRY_ABI = [
         type: 'event'
     }
 ];
-
-module.exports = REGISTRY;

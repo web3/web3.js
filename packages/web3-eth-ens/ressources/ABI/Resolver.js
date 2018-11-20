@@ -350,5 +350,3 @@ export const RESOLVER_ABI = [
         type: 'event'
     }
 ];
-
-module.exports = RESOLVER;

@@ -111,6 +111,7 @@ describe('GenericShhMethodModelsTest', () => {
         let model, testModel;
         tests.forEach((test) => {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
+            // eslint-disable-next-line new-cap
             model = new testModel({}, {});
             expect(model.rpcMethod).toBe(test.rpcMethod);
             expect(model.parametersAmount).toBe(test.parametersAmount);
