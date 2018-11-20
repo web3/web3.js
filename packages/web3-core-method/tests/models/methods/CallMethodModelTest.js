@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * CallMethodModel test
  */
 describe('CallMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

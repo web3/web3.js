@@ -9,13 +9,7 @@ const sinon = sinonLib.createSandbox();
  * TransactionSigner test
  */
 describe('TransactionSignerTest', () => {
-    let transactionSigner,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        accounts,
-        accountsMock;
+    let transactionSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
 
     beforeEach(() => {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
@@ -35,7 +29,7 @@ describe('TransactionSignerTest', () => {
     });
 
     it('calls sign and throws error', () => {
-        transactionSigner.sign({from: 0}, accounts).catch(error => {
+        transactionSigner.sign({from: 0}, accounts).catch((error) => {
             expect(error.message).equal('Wallet or privateKey in wallet is not set!');
         });
     });
@@ -50,7 +44,7 @@ describe('TransactionSignerTest', () => {
             .expects('signTransaction')
             .withArgs(transaction, '0x0')
             .returns(
-                new Promise(resolve => {
+                new Promise((resolve) => {
                     resolve('0x0');
                 })
             )

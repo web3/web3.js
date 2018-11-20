@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetStorageAtMethodModel test
  */
 describe('SignMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

@@ -9,13 +9,7 @@ const sinon = sinonLib.createSandbox();
  * MessageSigner test
  */
 describe('MessageSignerTest', () => {
-    let messageSigner,
-        provider,
-        providerMock,
-        providerAdapter,
-        providerAdapterMock,
-        accounts,
-        accountsMock;
+    let messageSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
 
     beforeEach(() => {
         provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});

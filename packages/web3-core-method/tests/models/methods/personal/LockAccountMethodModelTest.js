@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * LockAccountMethodModel test
  */
 describe('LockAccountMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

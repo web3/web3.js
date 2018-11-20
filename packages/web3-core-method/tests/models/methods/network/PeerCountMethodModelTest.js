@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * PeerCountMethodModel test
  */
 describe('PeerCountMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

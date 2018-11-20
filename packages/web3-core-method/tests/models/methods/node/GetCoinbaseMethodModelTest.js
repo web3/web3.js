@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetCoinbaseMethodModel test
  */
 describe('GetCoinbaseMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

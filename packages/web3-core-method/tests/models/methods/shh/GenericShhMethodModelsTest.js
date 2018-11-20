@@ -108,9 +108,8 @@ const tests = [
 
 describe('GenericShhMethodModelsTest', () => {
     it('all models should have the correct properties set', () => {
-        let model,
-            testModel;
-        tests.forEach(test => {
+        let model, testModel;
+        tests.forEach((test) => {
             testModel = require('../../../../src/models/methods/shh/' + test.model);
             model = new testModel({}, {});
             expect(model.rpcMethod).equal(test.rpcMethod);

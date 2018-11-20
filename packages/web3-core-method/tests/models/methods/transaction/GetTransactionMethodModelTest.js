@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetTransactionMethodModel test
  */
 describe('GetTransactionMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

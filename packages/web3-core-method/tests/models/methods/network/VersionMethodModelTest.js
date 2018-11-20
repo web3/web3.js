@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * VersionMethodModel test
  */
 describe('VersionMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

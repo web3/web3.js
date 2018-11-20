@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * IsSyncingMethodModel test
  */
 describe('IsSyncingMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

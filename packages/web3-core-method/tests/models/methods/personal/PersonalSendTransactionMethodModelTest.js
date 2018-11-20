@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * PersonalSendTransactionMethodModel test
  */
 describe('PersonalSendTransactionMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

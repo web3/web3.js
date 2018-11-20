@@ -7,8 +7,7 @@ const sinon = sinonLib.createSandbox();
  * GetBlockNumberMethodModel test
  */
 describe('GetBlockNumberMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

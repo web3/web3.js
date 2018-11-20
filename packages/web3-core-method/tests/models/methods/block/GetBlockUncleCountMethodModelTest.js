@@ -9,9 +9,7 @@ const sinon = sinonLib.createSandbox();
  * GetBlockUncleCountMethodModel test
  */
 describe('GetBlockUncleCountMethodModelTest', () => {
-    let model,
-        utilsMock,
-        formattersMock;
+    let model, utilsMock, formattersMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

@@ -9,9 +9,7 @@ const sinon = sinonLib.createSandbox();
  * EstimateGasMethodModel test
  */
 describe('EstimateGasMethodModelTest', () => {
-    let model,
-        formattersMock,
-        utilsMock;
+    let model, formattersMock, utilsMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);

@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetAccountsMethodModel test
  */
 describe('GetAccountsMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

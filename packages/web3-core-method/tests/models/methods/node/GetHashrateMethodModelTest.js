@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetHashrateMethodModel test
  */
 describe('GetHashrateMethodModelTest', () => {
-    let model,
-        utilsMock;
+    let model, utilsMock;
 
     beforeEach(() => {
         utilsMock = sinon.mock(utils);

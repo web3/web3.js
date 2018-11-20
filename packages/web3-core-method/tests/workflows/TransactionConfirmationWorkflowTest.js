@@ -17,7 +17,6 @@ const sinon = sinonLib.createSandbox();
 describe('TransactionConfirmationWorkflowTest', () => {
     let transactionConfirmationWorkflow,
         transactionConfirmationModel,
-        transactionConfirmationModelMock,
         transactionReceiptValidator,
         transactionReceiptValidatorMock,
         newHeadsWatcher,
@@ -31,13 +30,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
-        moduleInstanceMock,
-        promiEvent,
-        promiEventMock;
+        promiEvent;
 
     beforeEach(() => {
         transactionConfirmationModel = new TransactionConfirmationModel();
-        transactionConfirmationModelMock = sinon.mock(transactionConfirmationModel);
 
         transactionReceiptValidator = new TransactionReceiptValidator();
         transactionReceiptValidatorMock = sinon.mock(transactionReceiptValidator);
@@ -59,10 +55,8 @@ describe('TransactionConfirmationWorkflowTest', () => {
         providerAdapterMock = sinon.mock(providerAdapter);
 
         moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
-        moduleInstanceMock = sinon.mock(moduleInstance);
 
         promiEvent = new PromiEvent();
-        promiEventMock = sinon.mock(promiEvent);
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow(
             transactionConfirmationModel,
@@ -81,7 +75,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
             .expects('send')
             .withArgs('eth_getTransactionReceipt', ['0x0'])
             .returns(
-                new Promise(resolve => {
+                new Promise((resolve) => {
                     resolve({});
                 })
             )
@@ -110,13 +104,13 @@ describe('TransactionConfirmationWorkflowTest', () => {
         transactionConfirmationWorkflow.execute(methodModel, moduleInstance, '0x0', promiEvent);
 
         promiEvent
-            .on('receipt', receipt => {
-                expect(receipt).to.has.an.property('blockHash', '0x00');
+            .on('receipt', (receipt) => {
+                expect(receipt).toHaveProperty('blockHash', '0x00');
             })
-            .then(response => {
-                expect(methodModelCallbackSpy.calledOnce).to.be.true;
-                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'}));
-                expect(response).to.has.an.property('blockHash', '0x00');
+            .then((response) => {
+                expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'})).toBeTruthy();
+                expect(response).toHaveProperty('blockHash', '0x00');
 
                 providerMock.verify();
                 formattersMock.verify();

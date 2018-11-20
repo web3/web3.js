@@ -8,8 +8,7 @@ const sinon = sinonLib.createSandbox();
  * GetBalanceMethodModel test
  */
 describe('GetBalanceMethodModelTest', () => {
-    let model,
-        formattersMock;
+    let model, formattersMock;
 
     beforeEach(() => {
         formattersMock = sinon.mock(formatters);
