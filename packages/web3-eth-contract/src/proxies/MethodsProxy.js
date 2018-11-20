@@ -160,7 +160,20 @@ export default class MethodsProxy {
         try {
             rpcMethodModel = this.createRpcMethodModel(abiItemModel, methodArguments);
         } catch (error) {
-            return this.handleValidationError(error, methodArguments);
+            const promiEvent = new this.PromiEvent();
+
+            const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+            rpcMethodModel.methodArguments = methodArguments;
+
+            promiEvent.resolve(null);
+            promiEvent.reject(error);
+            promiEvent.emit('error', error);
+
+            if (isFunction(rpcMethodModel.callback)) {
+                rpcMethodModel.callback(error, null);
+            }
+
+            return promiEvent;
         }
 
         return this.methodController.execute(rpcMethodModel, this.contract.accounts, this.contract);
@@ -191,33 +204,5 @@ export default class MethodsProxy {
         this.rpcMethodOptionsValidator.validate(abiItemModel, rpcMethodModel);
 
         return rpcMethodModel;
-    }
-
-    /**
-     * Creates an PromiEvent object and rejects it with an error
-     *
-     * @method handleValidationError
-     *
-     * @param {Error} error
-     * @param {IArguments} methodArguments
-     *
-     * @callback callback callback(error, result)
-     * @returns {PromiEvent}
-     */
-    handleValidationError(error, methodArguments) {
-        const promiEvent = new this.PromiEvent();
-
-        const rpcMethodModel = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
-        rpcMethodModel.methodArguments = methodArguments;
-
-        promiEvent.resolve(null);
-        promiEvent.reject(error);
-        promiEvent.emit('error', error);
-
-        if (isFunction(rpcMethodModel.callback)) {
-            rpcMethodModel.callback(error, null);
-        }
-
-        return promiEvent;
     }
 }
