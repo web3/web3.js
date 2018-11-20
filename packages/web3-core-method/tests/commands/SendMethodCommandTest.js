@@ -5,13 +5,14 @@ import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
 import {PromiEvent} from 'web3-core-promievent';
+
 const sinon = sinonLib.createSandbox();
 
 /**
  * SendMethodCommand test
  */
-describe('SendMethodCommandTest', function() {
-    var sendMethodCommand,
+describe('SendMethodCommandTest', () => {
+    let sendMethodCommand,
         provider,
         providerMock,
         providerAdapter,
@@ -26,7 +27,7 @@ describe('SendMethodCommandTest', function() {
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -48,11 +49,11 @@ describe('SendMethodCommandTest', function() {
         sendMethodCommand = new SendMethodCommand(transactionConfirmationWorkflow);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls execute with gasPrice defined', function() {
+    it('calls execute with gasPrice defined', () => {
         methodModel.parameters = [{gasPrice: 100}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -65,7 +66,7 @@ describe('SendMethodCommandTest', function() {
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('response');
                 })
             )
@@ -76,18 +77,18 @@ describe('SendMethodCommandTest', function() {
             .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('transactionHash', function() {
+        promiEvent.on('transactionHash', () => {
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
             methodModelMock.verify();
         });
     });
 
-    it('calls execute without gasPrice defined', function() {
+    it('calls execute without gasPrice defined', () => {
         methodModel.parameters = [{}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -100,7 +101,7 @@ describe('SendMethodCommandTest', function() {
             .expects('send')
             .withArgs('eth_gasPrice', [])
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve(100);
                 })
             )
@@ -110,7 +111,7 @@ describe('SendMethodCommandTest', function() {
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('response');
                 })
             )
@@ -121,11 +122,11 @@ describe('SendMethodCommandTest', function() {
             .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('transactionHash', function(response) {
+        promiEvent.on('transactionHash', (response) => {
             expect(response).equal('response');
             expect(methodModel.parameters[0].gasPrice).equal(100);
 
@@ -135,7 +136,7 @@ describe('SendMethodCommandTest', function() {
         });
     });
 
-    it('calls execute and throws error', function() {
+    it('calls execute and throws error', () => {
         methodModel.parameters = [{gasPrice: 100}];
         methodModel.rpcMethod = 'eth_sendTransaction';
 
@@ -148,7 +149,7 @@ describe('SendMethodCommandTest', function() {
             .expects('send')
             .withArgs(methodModel.rpcMethod, methodModel.parameters)
             .returns(
-                new Promise(function(resolve, reject) {
+                new Promise((resolve, reject) => {
                     reject('error');
                 })
             )
@@ -159,11 +160,11 @@ describe('SendMethodCommandTest', function() {
             .withArgs('error')
             .once();
 
-        var returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.on('error', function(error) {
+        promiEvent.on('error', (error) => {
             expect(error).equal('error');
 
             providerAdapterMock.verify();

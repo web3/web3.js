@@ -12,8 +12,8 @@ const sinon = sinonLib.createSandbox();
 /**
  * SendAndSignMethodCommand test
  */
-describe('SendAndSignMethodCommandTest', function() {
-    var signAndSendMethodCommand,
+describe('SendAndSignMethodCommandTest', () => {
+    let signAndSendMethodCommand,
         provider,
         providerMock,
         providerAdapter,
@@ -32,7 +32,7 @@ describe('SendAndSignMethodCommandTest', function() {
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
@@ -65,11 +65,11 @@ describe('SendAndSignMethodCommandTest', function() {
         signAndSendMethodCommand = new SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls execute', function() {
+    it('calls execute', () => {
         methodModel.parameters = [];
 
         methodModelMock
@@ -81,7 +81,7 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve({
                         rawTransaction: ''
                     });
@@ -93,7 +93,7 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('send')
             .withArgs('eth_sendRawTransaction', [''])
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('response');
                 })
             )
@@ -104,11 +104,11 @@ describe('SendAndSignMethodCommandTest', function() {
             .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
+        const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.then(function() {
+        promiEvent.then(() => {
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
 
@@ -124,7 +124,7 @@ describe('SendAndSignMethodCommandTest', function() {
         });
     });
 
-    it('calls execute and throws error', function() {
+    it('calls execute and throws error', () => {
         methodModel.parameters = [{gasPrice: 100}];
 
         methodModelMock
@@ -136,17 +136,17 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
             .returns(
-                new Promise(function(resolve, reject) {
+                new Promise((resolve, reject) => {
                     reject('error');
                 })
             )
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
+        const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
         expect(returnedPromiEvent).equal(promiEvent);
 
-        promiEvent.catch(function(error) {
+        promiEvent.catch((error) => {
             expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledOnce).to.be.true;
             expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;

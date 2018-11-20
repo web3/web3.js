@@ -1,20 +1,19 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+import * as sinonLib from 'sinon';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import CallMethodCommand from '../../src/commands/CallMethodCommand';
+import SendMethodCommand from '../../src/commands/SendMethodCommand';
+import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
+import SignMessageCommand from '../../src/commands/SignMessageCommand';
+import {PromiEvent} from 'web3-core-promievent';
+import MethodController from '../../src/controllers/MethodController';
 
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var CallMethodCommand = require('../../src/commands/CallMethodCommand');
-var SendMethodCommand = require('../../src/commands/SendMethodCommand');
-var SignAndSendMethodCommand = require('../../src/commands/SignAndSendMethodCommand');
-var SignMessageCommand = require('../../src/commands/SignMessageCommand');
-var PromiEventPackage = require('web3-core-promievent');
-var MethodController = require('../../src/controllers/MethodController');
+const sinon = sinonLib.createSandbox();
 
 /**
  * MethodController test
  */
-describe('MethodControllerTest', function() {
-    var methodController,
+describe('MethodControllerTest', () => {
+    let methodController,
         methodModel,
         methodModelMock,
         callMethodCommandMock,
@@ -27,7 +26,7 @@ describe('MethodControllerTest', function() {
         signAndSendMethodCommand,
         signMessageCommand;
 
-    beforeEach(function() {
+    beforeEach(() => {
         callMethodCommand = new CallMethodCommand();
         sendMethodCommand = new SendMethodCommand({});
         signAndSendMethodCommand = new SignAndSendMethodCommand({}, {});
@@ -46,15 +45,15 @@ describe('MethodControllerTest', function() {
             sendMethodCommand,
             signAndSendMethodCommand,
             signMessageCommand,
-            PromiEventPackage
+            PromiEvent
         );
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('constructor is setting all the dependencies correctly', function() {
+    it('constructor is setting all the dependencies correctly', () => {
         expect(methodController.callMethodCommand).to.be.an.instanceof(CallMethodCommand);
         expect(methodController.sendMethodCommand).to.be.an.instanceof(SendMethodCommand);
         expect(methodController.signAndSendMethodCommand).to.be.an.instanceof(SignAndSendMethodCommand);
@@ -62,8 +61,8 @@ describe('MethodControllerTest', function() {
         expect(methodController.promiEventPackage).to.be.an.instanceof(Object);
     });
 
-    it('execute calls signMessageCommand', function() {
-        var accounts = {wallet: [0]};
+    it('execute calls signMessageCommand', () => {
+        const accounts = {wallet: [0]};
 
         methodModelMock
             .expects('isSign')
@@ -82,8 +81,8 @@ describe('MethodControllerTest', function() {
         signMessageCommandMock.verify();
     });
 
-    it('execute calls signAndSendMethodCommand', function() {
-        var accounts = {wallet: [0]};
+    it('execute calls signAndSendMethodCommand', () => {
+        const accounts = {wallet: [0]};
 
         methodModelMock
             .expects('isSendTransaction')
@@ -102,7 +101,7 @@ describe('MethodControllerTest', function() {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls sendMethodCommand with sendTransaction rpc method', function() {
+    it('execute calls sendMethodCommand with sendTransaction rpc method', () => {
         methodModelMock
             .expects('isSendTransaction')
             .returns(true)
@@ -120,7 +119,7 @@ describe('MethodControllerTest', function() {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls sendMethodCommand with sendRawTransaction rpc method', function() {
+    it('execute calls sendMethodCommand with sendRawTransaction rpc method', () => {
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)
@@ -143,7 +142,7 @@ describe('MethodControllerTest', function() {
         signAndSendMethodCommandMock.verify();
     });
 
-    it('execute calls callMethodCommand', function() {
+    it('execute calls callMethodCommand', () => {
         methodModelMock
             .expects('isSendTransaction')
             .returns(false)

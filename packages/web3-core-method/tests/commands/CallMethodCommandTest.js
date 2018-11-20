@@ -9,8 +9,8 @@ const sinon = sinonLib.createSandbox(); // Check if the sandbox is still needed 
 /**
  * CallMethodCommand test
  */
-describe('CallMethodCommandTest', function() {
-    var callMethodCommand,
+describe('CallMethodCommandTest', () => {
+    let callMethodCommand,
         provider,
         providerAdapter,
         providerAdapterMock,
@@ -19,7 +19,7 @@ describe('CallMethodCommandTest', function() {
         methodModelCallbackSpy,
         methodModelMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         provider = new WebsocketProvider('ws://127.0.0.1', {});
 
         providerAdapter = new SocketProviderAdapter(provider);
@@ -35,11 +35,11 @@ describe('CallMethodCommandTest', function() {
         callMethodCommand = new CallMethodCommand();
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls execute', async function() {
+    it('calls execute', async () => {
         methodModelMock
             .expects('beforeExecution')
             .withArgs(moduleInstance)
@@ -48,7 +48,7 @@ describe('CallMethodCommandTest', function() {
         providerAdapterMock
             .expects('send')
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('response');
                 })
             )
@@ -60,7 +60,7 @@ describe('CallMethodCommandTest', function() {
             .returns('0x0')
             .once();
 
-        var returnValue = await callMethodCommand.execute(moduleInstance, methodModel);
+        const returnValue = await callMethodCommand.execute(moduleInstance, methodModel);
         expect(returnValue).toBe('0x0');
 
         expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
@@ -70,7 +70,7 @@ describe('CallMethodCommandTest', function() {
         providerAdapterMock.verify();
     });
 
-    it('calls execute and throws error', async function() {
+    it('calls execute and throws error', async () => {
         methodModelMock
             .expects('beforeExecution')
             .withArgs(moduleInstance)
@@ -79,7 +79,7 @@ describe('CallMethodCommandTest', function() {
         providerAdapterMock
             .expects('send')
             .returns(
-                new Promise(function(resolve, reject) {
+                new Promise((resolve, reject) => {
                     reject(new Error('error'));
                 })
             )
