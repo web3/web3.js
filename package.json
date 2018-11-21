@@ -1,7 +1,8 @@
 {
   "name": "web3",
+  "private": true,
   "namespace": "ethereum",
-  "version": "1.0.0-beta.35",
+  "version": "1.0.0-beta.36",
   "description": "Ethereum JavaScript API wrapper repository",
   "license": "LGPL-3.0",
   "main": "./packages/web3/src/index.js",
@@ -84,7 +85,7 @@
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^3.0.0",
     "istanbul": "^0.4.4",
-    "jshint": ">=2.5.0",
+    "jshint": "^2.9.6",
     "lerna": "^2.5.1",
     "mocha": ">=2.3.3",
     "sandboxed-module": "^2.0.2",
