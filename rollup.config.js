@@ -1,11 +1,6 @@
 import babel from 'rollup-plugin-babel';
-import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import autoExternal from 'rollup-plugin-auto-external';
-import commonjs from 'rollup-plugin-commonjs';
-import builtins from 'rollup-plugin-node-builtins';
-import {uglify} from 'rollup-plugin-uglify';
-import minify from 'rollup-plugin-babel-minify';
 
 const config = [
     {
