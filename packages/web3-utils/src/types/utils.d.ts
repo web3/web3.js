@@ -100,7 +100,6 @@ export default interface Utils {
     _flattenTypes(includeTuple: boolean, puts: Object): string[];
     getUnitValue(unit: string): string;
     soliditySha3(...val: Mixed[]): string;
-
 }
 
 export default interface BloomFilter {
