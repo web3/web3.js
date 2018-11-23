@@ -41,7 +41,7 @@ console.log(Utils);
 
 ## Types 
 
-If you are using TypeScript all the types are defined in `src > types` - please use them :)
+If you are using TypeScript all the types are defined in the `index.d.ts` - please use them :)
 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
