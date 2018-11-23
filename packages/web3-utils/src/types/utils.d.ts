@@ -1,7 +1,7 @@
 import BigNumber from "bn.js";
 import us from "underscore";
 
-type Unit =
+export type Unit =
     | "noether"
     | "wei"
     | "kwei"
@@ -30,7 +30,7 @@ type Unit =
     | "gether"
     | "tether";
 
-type Mixed =
+export type Mixed =
     | string
     | number
     | BigNumber
@@ -43,66 +43,96 @@ type Mixed =
         v: string;
     };
 
-type Hex = string | number;
+export type Hex = string | number;
 
-export default interface Utils {
-    BN: BigNumber;
-    isBN(any: any): boolean;
-    isBigNumber(any: any): boolean;
-    toBN(number: number | string | BigNumber): BigNumber;
-    toTwosComplement(number: number | string | BigNumber): string;
-    isAddress(address: string): boolean;
-    isHex(hex: Hex): boolean;
-    isHexStrict(hex: Hex): boolean;
-    _: us.UnderscoreStatic;
-    asciiToHex(str: string): string;
-    hexToAscii(val: string): string;
-    bytesToHex(bytes: number[]): string;
-    numberToHex(value: number | string | BigNumber): string;
-    checkAddressChecksum(address: string): boolean;
-    fromAscii(value: string): string;
-    fromDecimal(value: string | number | BigNumber): string;
-    fromUtf8(value: string): string;
-    fromWei(value: BigNumber, unit?: Unit): BigNumber;
-    fromWei(value: string | number, unit?: Unit): string;
-    hexToBytes(hex: string): number[];
-    hexToNumber(value: string | number | BigNumber): number;
-    hexToNumberString(value: string | number | BigNumber): string;
-    hexToString(value: string): string;
-    hexToUtf8(hex: string): string;
-    keccak256(value: string): string;
-    leftPad(string: string, chars: number, sign: string): string;
-    padLeft(string: string, chars: number, sign: string): string;
-    rightPad(string: string, chars: number, sign: string): string;
-    padRight(string: string, chars: number, sign: string): string;
-    sha3(
-        val: string,
-        val2?: string,
-        val3?: string,
-        val4?: string,
-        val5?: string
-    ): string;
-    randomHex(bytes: number): string;
-    stringToHex(val: string): string;
-    toAscii(hex: string): string;
-    toChecksumAddress(address: string): string;
-    toDecimal(val: any): number;
-    toHex(value: any, returnType: boolean): string;
-    toUtf8(val: any): string;
-    toWei(val: string | number, unit?: Unit): string;
-    toWei(val: BigNumber, unit?: Unit): BigNumber;
-    unitMap: any;
-    utf8ToHex(str: string): string;
-    isBloom(bloom: string): boolean;
-    isTopic(topic: string): boolean;
-    _fireError(error: Object, emitter: Object, reject: Function, callback: Function): Object;
-    _jsonInterfaceMethodToString(json: Object): string;
-    _flattenTypes(includeTuple: boolean, puts: Object): string[];
-    getUnitValue(unit: string): string;
-    soliditySha3(...val: Mixed[]): string;
-}
+export declare class BN extends BigNumber {
+    constructor(
+        number: number | string | number[] | Buffer | BN,
+        base?: number | 'hex',
+        endian?: Endianness
+    ) {
+        super(number, base, endian);
+    }
+ }
 
-export default interface BloomFilter {
-    testAddress(bloom: string, address: string): boolean;
-    testTopic(bloom: string, topic: string): boolean;
+export interface _ extends us.UnderscoreStatic { }
+
+// utils types
+export declare function isBN(value: string | number): boolean;
+export declare function isBigNumber(value: BigNumber): boolean;
+export declare function toBN(number: number | string): BigNumber;
+export declare function toTwosComplement(number: number | string | BigNumber): string;
+export declare function isAddress(address: string): boolean;
+export declare function isHex(hex: Hex): boolean;
+export declare function isHexStrict(hex: Hex): boolean;
+export declare function asciiToHex(string: string): string;
+export declare function hexToAscii(string: string): string;
+export declare function toAscii(string: string): string;
+export declare function bytesToHex(bytes: number[]): string;
+export declare function numberToHex(value: number | string | BigNumber): string;
+export declare function checkAddressChecksum(address: string): boolean;
+export declare function fromAscii(string: string): string;
+export declare function fromDecimal(value: string | number | BigNumber): string;
+export declare function fromUtf8(string: string): string;
+export declare function fromWei(value: BigNumber, unit?: Unit): BigNumber | string;
+export declare function hexToBytes(hex: Hex): number[];
+export declare function hexToNumber(hex: Hex): number;
+export declare function hexToNumberString(hex: Hex): string;
+export declare function hexToString(hex: Hex): string;
+export declare function hexToUtf8(string: string): string;
+export declare function keccak256(string: string): string;
+export declare function padLeft(string: string, characterAmount: number, sign?: string): string;
+export declare function leftPad(string: string, characterAmount: number, sign?: string): string;
+export declare function rightPad(string: string, characterAmount: number, sign?: string): string;
+export declare function padRight(string: string, characterAmount: number, sign?: string): string;
+export declare function sha3(value: Mixed): string;
+export declare function randomHex(bytesSize: number): string;
+export declare function utf8ToHex(string: string): string;
+export declare function stringToHex(string: string): string;
+export declare function toChecksumAddress(address: string): string;
+export declare function toDecimal(hex: Hex): number;
+export declare function toHex(value: Mixed): string;
+export declare function toUtf8(string: string): string;
+export declare function toWei(value: number | string | BigNumber, unit?: Unit): BigNumber | string;
+export declare function isBloom(bloom: string): boolean;
+export declare function isTopic(topic: string): boolean;
+export declare function _fireError(error: Object, emitter: Object, reject: Function, callback: Function): Object;
+export declare function _jsonInterfaceMethodToString(json: Object): string;
+export declare function _flattenTypes(includeTuple: boolean, puts: Object): string[];
+export declare function soliditySha3(...val: Mixed[]): string;
+export declare function getUnitValue(unit: string): string;
+export declare function unitMap(): IUnits;
+
+// bloom types
+export declare function testAddress(bloom: string, address: string): boolean;
+export declare function testTopic(bloom: string, topic: string): boolean;
+
+export interface IUnits {
+    noether: string;
+    wei: string;
+    kwei: string;
+    Kwei: string;
+    babbage: string;
+    femtoether: string;
+    mwei: string;
+    Mwei: string;
+    lovelace: string;
+    picoether: string;
+    gwei: string;
+    Gwei: string;
+    shannon: string;
+    nanoether: string;
+    nano: string;
+    szabo: string;
+    microether: string;
+    micro: string;
+    finney: string;
+    milliether: string;
+    milli: string;
+    ether: string;
+    kether: string;
+    grand: string;
+    mether: string;
+    gether: string;
+    tether: string;
 }
