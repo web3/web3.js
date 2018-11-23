@@ -12,7 +12,6 @@
         "build": "rollup -c",
         "dev": "rollup -c -w"
     },
-    "types": "src/types/utils.d.ts",
     "dependencies": {
         "bn.js": "4.11.8",
         "eth-lib": "0.2.8",
