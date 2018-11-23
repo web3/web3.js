@@ -536,8 +536,10 @@ Method.prototype.buildCall = function() {
                         return method.accounts.signTransaction(_.omit(tx, 'from'), wallet.privateKey)
                             .then(sendSignedTx)
                             .catch(function (err) {
-                                if (defer.eventEmitter.emit) {
+                                if (_.isFunction(defer.eventEmitter.listeners) && defer.eventEmitter.listeners('error').length) {
                                     defer.eventEmitter.emit('error', err);
+                                    defer.eventEmitter.removeAllListeners();
+                                    defer.eventEmitter.catch(function () {});
                                 }
                                 defer.reject(err);
                             });
