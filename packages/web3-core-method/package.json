@@ -25,7 +25,11 @@
         "web3-providers": "1.0.0-beta.36"
     },
     "devDependencies": {
-        "jest": "^23.6.0"
+        "@babel/core": "^7.1.6",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-jest": "^23.6.0",
+        "jest": "^23.6.0",
+        "regenerator-runtime": "^0.13.1",
     },
     "files": [
         "dist"
@@ -36,6 +40,12 @@
         "clearMocks": true,
         "testMatch": [
             "/**/**Test.js"
+        ],
+        "transform": {
+            "^.+\\.js?$": "<rootDir>/node_modules/babel-jest"
+        },
+        "transformIgnorePatterns": [
+            "/node_modules/(?!underscore-es).+\\.js$"
         ],
         "bail": true
     }
