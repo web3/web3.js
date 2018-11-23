@@ -113,6 +113,13 @@ npm run test
 - All contributions have to go into develop (0.20.x), or the 1.0 branch
 - Please follow the code style of the other files, we use 4 spaces as tabs.
 
+### Support
+
+![chrome](https://img.shields.io/badge/chrome-latest%202%20versions-green.svg)
+![firefox](https://img.shields.io/badge/firefox-latest%202%20versions-green.svg)
+![opera](https://img.shields.io/badge/opera-latest%202%20versions-green.svg)
+![node](https://img.shields.io/badge/node->=6-green.svg)
+
 ### Community
  - [Gitter](https://gitter.im/ethereum/web3.js?source=orgpage)
  - [Forum](https://forum.ethereum.org/categories/ethereum-js)
