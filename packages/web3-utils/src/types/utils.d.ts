@@ -49,10 +49,9 @@ export declare class BN extends BigNumber {
     constructor(
         number: number | string | number[] | Buffer | BN,
         base?: number | 'hex',
-        endian?: Endianness
-    ) {
-        super(number, base, endian);
-    }
+        endian?: 'le' | 'be'
+    )
+    super(number, base, endian);
  }
 
 export interface _ extends us.UnderscoreStatic { }
