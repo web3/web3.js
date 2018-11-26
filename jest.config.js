@@ -12,7 +12,7 @@ const config = {
         '^.+\\.js$': '<rootDir>/../../jest.preprocessor.js'
     },
     transformIgnorePatterns: [
-        'node_modules/(?!(underscore-es|web3-providers)/)'
+        'node_modules/(?!(underscore-es)/)'
     ],
     bail: true
 };
