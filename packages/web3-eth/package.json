@@ -10,22 +10,23 @@
     "browser": "dist/web3-eth.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
-        "web3-eth-contract": "1.0.0-beta.36",
-        "web3-eth-accounts": "1.0.0-beta.36",
-        "web3-eth-personal": "1.0.0-beta.36",
-        "web3-eth-iban": "1.0.0-beta.36",
-        "web3-eth-abi": "1.0.0-beta.36",
-        "web3-eth-ens": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
-        "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
+        "web3-core-subscriptions": "1.0.0-beta.36",
+        "web3-eth-abi": "1.0.0-beta.36",
+        "web3-eth-accounts": "1.0.0-beta.36",
+        "web3-eth-contract": "1.0.0-beta.36",
+        "web3-eth-ens": "1.0.0-beta.36",
+        "web3-eth-iban": "1.0.0-beta.36",
+        "web3-eth-personal": "1.0.0-beta.36",
+        "web3-net": "1.0.0-beta.36",
         "web3-providers": "1.0.0-beta.36",
-        "web3-net": "1.0.0-beta.36"
+        "web3-utils": "1.0.0-beta.36"
     },
     "files": [
         "dist"

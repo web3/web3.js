@@ -10,9 +10,11 @@
         "test": "./test"
     },
     "scripts": {
-        "postinstall": "lerna bootstrap",
+        "clean": "lerna clean",
         "link": "lerna link",
         "bootstrap": "lerna bootstrap",
+        "install:all": "lerna add",
+        "remove:all": "lerna exec npm uninstall",
         "build": "lerna run build",
         "release": "lerna bootstrap; lerna publish; gulp version; gulp; gulp publishTag; git push --tags",
         "docs": "cd docs; make html;",
@@ -69,6 +71,10 @@
         "@babel/plugin-proposal-export-default-from": "^7.0.0",
         "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
         "@babel/preset-env": "^7.1.5",
+        "@babel/runtime": "^7.1.5",
+        "@babel/plugin-transform-runtime": "^7.0.0-beta.36",
+        "babel-core": "^7.0.0-bridge.0",
+        "babel-jest": "^23.6.0",
         "babel-eslint": "^10.0.1",
         "eslint": "^5.7.0",
         "eslint-config-prettier": "^3.1.0",
@@ -85,6 +91,11 @@
         "rollup": "^0.67.0",
         "rollup-plugin-auto-external": "^2.0.0",
         "rollup-plugin-babel": "^4.0.3",
-        "rollup-plugin-json": "^3.1.0"
+        "rollup-plugin-json": "^3.1.0",
+        "jest": "^23.6.0",
+        "regenerator-runtime": "^0.13.1"
+    },
+    "dependencies": {
+        "@babel/polyfill": "^7.0.0"
     }
 }

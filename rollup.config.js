@@ -27,13 +27,16 @@ const config = [
                         {
                             modules: false,
                             targets: {
-                                node: '5',
+                                node: '6',
                                 browsers: 'last 2 versions'
                             }
                         }
                     ]
                 ],
-                plugins: ['@babel/plugin-proposal-export-default-from', '@babel/plugin-proposal-export-namespace-from']
+                plugins: [
+                    '@babel/plugin-proposal-export-default-from',
+                    '@babel/plugin-proposal-export-namespace-from'
+                ]
             }),
             json(),
             autoExternal()
@@ -50,7 +53,10 @@ const config = [
         plugins: [
             babel({
                 exclude: 'node_modules/**',
-                plugins: ['@babel/plugin-proposal-export-default-from', '@babel/plugin-proposal-export-namespace-from']
+                plugins: [
+                    '@babel/plugin-proposal-export-default-from',
+                    '@babel/plugin-proposal-export-namespace-from'
+                ]
             }),
             json(),
             autoExternal()

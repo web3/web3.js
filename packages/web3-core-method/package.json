@@ -20,33 +20,10 @@
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-promievent": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
-        "web3-eth-accounts": "1.0.0-beta.36",
         "web3-eth-contract": "1.0.0-beta.36",
         "web3-providers": "1.0.0-beta.36"
     },
-    "devDependencies": {
-        "@babel/core": "^7.1.6",
-        "babel-core": "^7.0.0-bridge.0",
-        "babel-jest": "^23.6.0",
-        "jest": "^23.6.0",
-        "regenerator-runtime": "^0.13.1",
-    },
     "files": [
         "dist"
-    ],
-    "jest": {
-        "notifyMode": "success-change",
-        "notify": true,
-        "clearMocks": true,
-        "testMatch": [
-            "/**/**Test.js"
-        ],
-        "transform": {
-            "^.+\\.js?$": "<rootDir>/node_modules/babel-jest"
-        },
-        "transformIgnorePatterns": [
-            "/node_modules/(?!underscore-es).+\\.js$"
-        ],
-        "bail": true
-    }
+    ]
 }

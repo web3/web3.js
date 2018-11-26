@@ -10,7 +10,8 @@
     "browser": "dist/web3-bzz.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "swarm-js": "^0.1.39",

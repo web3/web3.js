@@ -50,24 +50,26 @@
     ],
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "web3-bzz": "1.0.0-beta.36",
-        "web3-eth": "1.0.0-beta.36",
-        "web3-eth-personal": "1.0.0-beta.36",
-        "web3-shh": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-net": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
-        "web3-core-method": "1.0.0-beta.36"
+        "web3-core-method": "1.0.0-beta.36",
+        "web3-eth": "1.0.0-beta.36",
+        "web3-eth-personal": "1.0.0-beta.36",
+        "web3-net": "1.0.0-beta.36",
+        "web3-providers": "1.0.0-beta.36",
+        "web3-shh": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "devDependencies": {
         "@babel/core": "^7.1.5",
         "@babel/plugin-proposal-export-default-from": "^7.0.0",
         "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+        "@babel/runtime": "^7.1.5",
         "rollup": "^0.67.0",
         "rollup-plugin-auto-external": "^2.0.0",
         "rollup-plugin-babel": "^4.0.3",

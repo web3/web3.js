@@ -9,13 +9,14 @@
     "browser": "dist/web3-eth-ens.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "eth-ens-namehash": "2.0.8",
         "underscore-es": "1.9.8",
-        "web3-eth-contract": "1.0.0-beta.36",
-        "web3-core-promievent": "1.0.0-beta.36"
+        "web3-core-promievent": "1.0.0-beta.36",
+        "web3-eth-contract": "1.0.0-beta.36"
     },
     "files": [
         "dist"

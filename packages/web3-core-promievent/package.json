@@ -10,7 +10,8 @@
     "browser": "dist/web3-core-promievent.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "eventemitter3": "^3.1.0"

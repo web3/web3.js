@@ -20,7 +20,13 @@
  * @date 2017
  */
 
-import {isUndefined, isNull, extend, isObject, isBoolean, isString, has} from 'underscore';
+import isUndefined from 'underscore-es/isUndefined';
+import isNull from 'underscore-es/isNull';
+import extend from 'underscore-es/extend';
+import isObject from 'underscore-es/isObject';
+import isBoolean from 'underscore-es/isBoolean';
+import isString from 'underscore-es/isString';
+import has from 'underscore-es/has';
 import Account from 'eth-lib/lib/account';
 import Hash from 'eth-lib/lib/hash';
 import RLP from 'eth-lib/lib/rlp';

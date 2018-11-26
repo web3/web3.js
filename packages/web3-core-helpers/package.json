@@ -10,7 +10,8 @@
     "browser": "dist/web3-core-helpers.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "underscore-es": "^1.9.8",

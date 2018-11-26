@@ -10,7 +10,8 @@
     "browser": "dist/web3-eth-abi.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "ethers": "4.0.0-beta.1",

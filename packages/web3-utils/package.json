@@ -10,7 +10,8 @@
     "browser": "dist/web3-utils.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
         "bn.js": "4.11.8",

@@ -10,15 +10,16 @@
     "browser": "dist/web3-shh.umd.js",
     "scripts": {
         "build": "rollup -c",
-        "dev": "rollup -c -w"
+        "dev": "rollup -c -w",
+        "test": "jest"
     },
     "dependencies": {
+        "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-net": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-core-helpers": "1.0.0-beta.36"
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "files": [
         "dist"
