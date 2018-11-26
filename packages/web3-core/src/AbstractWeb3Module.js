@@ -20,9 +20,7 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
 import isObject from 'underscore-es/isObject';
-import {AbstractMethodModel} from 'web3-core-method';
 
 export default class AbstractWeb3Module {
     /**
@@ -51,12 +49,11 @@ export default class AbstractWeb3Module {
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
         this._defaultAccount = options.defaultAccount || null;
         this._defaultBlock = options.defaultBlock || null;
-        this._transactionBlockTimeout = options.transactionPollingTimeout || 50;
+        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
         this._defaultGasPrice = options.defaultGasPrice || null;
         this._defaultGas = options.defaultGas || null;
-        this.extendedPackages = [];
         this.givenProvider = this.providerDetector.detect();
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
@@ -64,7 +61,6 @@ export default class AbstractWeb3Module {
 
         if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
             this.methodModelFactory = methodModelFactory;
-            this.extend.formatters = this.methodModelFactory.formatters;
 
             return new Proxy(this, {
                 get: this.proxyHandler
@@ -84,7 +80,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultGasPrice property on the current object and his extended objects
+     * Sets the defaultGasPrice property on the current object
      *
      * @property defaultGasPrice
      *
@@ -92,15 +88,10 @@ export default class AbstractWeb3Module {
      */
     set defaultGasPrice(value) {
         this._defaultGasPrice = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage.defaultGasPrice = value;
-            });
-        }
     }
 
     /**
-     * Sets the defaultGas property on the current object and his extended objects
+     * Sets the defaultGas property on the current object
      *
      * @property defaultGas
      *
@@ -108,11 +99,6 @@ export default class AbstractWeb3Module {
      */
     set defaultGas(value) {
         this._defaultGas = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage.defaultGas = value;
-            });
-        }
     }
 
     /**
@@ -138,7 +124,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the pollingTimeout for the current object and his extended objects
+     * Sets the pollingTimeout for the current object
      *
      * @property transactionPollingTimeout
      *
@@ -146,11 +132,6 @@ export default class AbstractWeb3Module {
      */
     set transactionPollingTimeout(value) {
         this._transactionPollingTimeout = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage._transactionPollingTimeout = value;
-            });
-        }
     }
 
     /**
@@ -165,7 +146,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the confirmationBlock on the current object and his extended objects
+     * Sets the confirmationBlock on the current object
      *
      * @property transactionConfirmationBlocks
      *
@@ -173,11 +154,6 @@ export default class AbstractWeb3Module {
      */
     set transactionConfirmationBlocks(value) {
         this._transactionConfirmationBlocks = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage._transactionConfirmationBlocks = value;
-            });
-        }
     }
 
     /**
@@ -192,7 +168,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the timeoutBlock property on the current object and his extended objects
+     * Sets the timeoutBlock property on the current object
      *
      * @property transactionBlockTimeout
      *
@@ -200,11 +176,6 @@ export default class AbstractWeb3Module {
      */
     set transactionBlockTimeout(value) {
         this._transactionBlockTimeout = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage._transactionBlockTimeout = value;
-            });
-        }
     }
 
     /**
@@ -217,7 +188,7 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultBlock on the current object and his extended objects
+     * Sets the defaultBlock on the current object
      *
      * @property defaultBlock
      *
@@ -225,11 +196,6 @@ export default class AbstractWeb3Module {
      */
     set defaultBlock(value) {
         this._defaultBlock = value;
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage.defaultBlock = value;
-            });
-        }
     }
 
     /**
@@ -244,7 +210,10 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Sets the defaultAccount of the current object and extended objects
+     * TODO: Add utils and formatters as dependency or create the core-types module and pass the factory to the
+     * TODO: AbstractWeb3Module (factory.createAddress())
+     *
+     * Sets the defaultAccount of the current object
      *
      * @property defaultAccount
      *
@@ -252,11 +221,6 @@ export default class AbstractWeb3Module {
      */
     set defaultAccount(value) {
         this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
-        if (this.extendedPackages.length > 0) {
-            this.extendedPackages.forEach((extendedPackage) => {
-                extendedPackage.defaultAccount = value;
-            });
-        }
     }
 
     /**
@@ -294,14 +258,7 @@ export default class AbstractWeb3Module {
             this.clearSubscriptions();
             this._currentProvider = this.providerAdapterResolver.resolve(provider, net);
 
-            var setExtendedPackagesProvider = true;
-            if (this.extendedPackages.length > 0) {
-                setExtendedPackagesProvider = this.extendedPackages.every((extendedPackage) => {
-                    return extendedPackage.setProvider(provider, net);
-                });
-            }
-
-            return !!(setExtendedPackagesProvider && this._currentProvider);
+            return !!this._currentProvider;
         }
 
         return false;
@@ -343,87 +300,8 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * Extends the current object with JSON-RPC methods
+     * TODO: Move this as a MethodProxy object in to the core-method module
      *
-     * @method extend
-     *
-     * @param {Object} extension
-     */
-    extend(extension) {
-        const namespace = extension.property || false;
-        let object;
-
-        if (namespace) {
-            let methodModelFactory = null;
-
-            if (this.methodModelFactory !== null) {
-                methodModelFactory = new this.methodModelFactory.constructor(
-                    {},
-                    this.methodModelFactory.utils,
-                    this.methodModelFactory.formatters
-                );
-            }
-
-            object = this[namespace] = new this.constructor(
-                this.currentProvider,
-                this.providersModuleFactory,
-                this.providers,
-                this.methodController,
-                methodModelFactory,
-                this.defaultAccount,
-                this.defaultBlock,
-                this.timeoutBlock,
-                this.confirmationBlock,
-                this.pollingTimeout
-            );
-
-            this.extendedPackages.push(object);
-        } else {
-            object = this;
-        }
-
-        if (extension.methods) {
-            extension.methods.forEach((method) => {
-                class ExtensionMethodModel extends AbstractMethodModel {
-                    constructor(utils, formatters) {
-                        super(method.call, method.params, utils, formatters);
-                    }
-
-                    beforeExecution(parameters, moduleInstance) {
-                        method.inputFormatters.forEach((formatter, key) => {
-                            if (formatter) {
-                                parameters[key] = formatter(parameters[key], moduleInstance);
-                            }
-                        });
-                    }
-
-                    afterExecution(response) {
-                        if (isArray(response)) {
-                            response = response.map((responseItem) => {
-                                if (method.outputFormatter && responseItem) {
-                                    return method.outputFormatter(responseItem);
-                                }
-
-                                return responseItem;
-                            });
-
-                            return response;
-                        }
-
-                        if (method.outputFormatter && response) {
-                            response = method.outputFormatter(response);
-                        }
-
-                        return response;
-                    }
-                }
-
-                object.methodModelFactory.methodModels[method.name] = ExtensionMethodModel;
-            });
-        }
-    }
-
-    /**
      * Handles method execution
      *
      * @method proxyHandler
