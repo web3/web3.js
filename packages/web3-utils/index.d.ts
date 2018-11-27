@@ -1,5 +1,4 @@
 import BigNumber from "bn.js";
-import us from "underscore";
 
 export type Unit =
     | "noether"
@@ -53,8 +52,6 @@ export declare class BN extends BigNumber {
     )
     super(number, base, endian);
  }
-
-export interface _ extends us.UnderscoreStatic { }
 
 // utils types
 export declare function isBN(value: string | number): boolean;
