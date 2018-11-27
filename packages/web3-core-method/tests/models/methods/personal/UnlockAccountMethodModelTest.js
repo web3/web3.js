@@ -1,34 +1,33 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import UnlockAccountMethodModel from '../../../../src/models/methods/personal/UnlockAccountMethodModel';
 
-var UnlockAccountMethodModel = require('../../../../src/models/methods/personal/UnlockAccountMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * UnlockAccountMethodModel test
  */
-describe('UnlockAccountMethodModelTest', function() {
-    var model, formattersMock;
+describe('UnlockAccountMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new UnlockAccountMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_unlockAccount', function() {
-        expect(model.rpcMethod).to.equal('personal_unlockAccount');
+    it('rpcMethod should return personal_unlockAccount', () => {
+        expect(model.rpcMethod).toBe('personal_unlockAccount');
     });
 
-    it('parametersAmount should return 3', function() {
-        expect(model.parametersAmount).to.equal(3);
+    it('parametersAmount should return 3', () => {
+        expect(model.parametersAmount).toBe(3);
     });
 
-    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', function() {
+    it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -41,10 +40,10 @@ describe('UnlockAccountMethodModelTest', function() {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).equal('0x00');
+        expect(model.parameters[0]).toBe('0x00');
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('unlockAccount')).equal('unlockAccount');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('unlockAccount')).toBe('unlockAccount');
     });
 });

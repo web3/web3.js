@@ -1,39 +1,38 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethodModel';
 
-var GetStorageAtMethodModel = require('../../../src/models/methods/GetStorageAtMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetStorageAtMethodModel test
  */
-describe('GetStorageAtMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('GetStorageAtMethodModelTest', () => {
+    let model, formattersMock, utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetStorageAtMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getStorageAt', function() {
-        expect(model.rpcMethod).to.equal('eth_getStorageAt');
+    it('rpcMethod should return eth_getStorageAt', () => {
+        expect(model.rpcMethod).toBe('eth_getStorageAt');
     });
 
-    it('parametersAmount should return 3', function() {
-        expect(model.parametersAmount).to.equal(3);
+    it('parametersAmount should return 3', () => {
+        expect(model.parametersAmount).toBe(3);
     });
 
     it(
         'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter ' +
             'and utils.numberToHex method',
-        function() {
+        () => {
             model.parameters = ['string', 100, 100];
 
             formattersMock
@@ -56,17 +55,17 @@ describe('GetStorageAtMethodModelTest', function() {
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).equal('0x0');
-            expect(model.parameters[1]).equal('0x0');
-            expect(model.parameters[2]).equal('0x0');
+            expect(model.parameters[0]).toBe('0x0');
+            expect(model.parameters[1]).toBe('0x0');
+            expect(model.parameters[2]).toBe('0x0');
 
             formattersMock.verify();
         }
     );
 
-    it('afterExecution should just return the response', function() {
-        var object = {};
+    it('afterExecution should just return the response', () => {
+        const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

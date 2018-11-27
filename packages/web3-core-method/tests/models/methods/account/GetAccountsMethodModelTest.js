@@ -1,48 +1,47 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import GetAccountsMethodModel from '../../../../src/models/methods/account/GetAccountsMethodModel';
 
-var GetAccountsMethodModel = require('../../../../src/models/methods/account/GetAccountsMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetAccountsMethodModel test
  */
-describe('GetAccountsMethodModelTest', function() {
-    var model, utilsMock;
+describe('GetAccountsMethodModelTest', () => {
+    let model, utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new GetAccountsMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_accounts', function() {
-        expect(model.rpcMethod).to.equal('eth_accounts');
+    it('rpcMethod should return eth_accounts', () => {
+        expect(model.rpcMethod).toBe('eth_accounts');
     });
 
-    it('parametersAmount should return 0', function() {
-        expect(model.parametersAmount).to.equal(0);
+    it('parametersAmount should return 0', () => {
+        expect(model.parametersAmount).toBe(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         utilsMock
             .expects('toChecksumAddress')
             .withArgs({})
             .returns('0x0')
             .once();
 
-        expect(model.afterExecution([{}])[0]).equal('0x0');
+        expect(model.afterExecution([{}])[0]).toBe('0x0');
 
         utilsMock.verify();
     });

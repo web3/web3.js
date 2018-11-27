@@ -21,7 +21,9 @@
  */
 
 import {errors} from 'web3-core-helpers';
-import {isFunction, isObject, isArray} from 'underscore';
+import isFunction from 'underscore-es/isFunction';
+import isObject from 'underscore-es/isObject';
+import isArray from 'underscore-es/isArray';
 
 export default class BatchRequest {
     /**

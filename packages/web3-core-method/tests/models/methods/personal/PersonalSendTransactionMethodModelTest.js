@@ -1,34 +1,33 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import PersonalSendTransactionMethodModel from '../../../../src/models/methods/personal/PersonalSendTransactionMethodModel';
 
-var PersonalSendTransactionMethodModel = require('../../../../src/models/methods/personal/PersonalSendTransactionMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * PersonalSendTransactionMethodModel test
  */
-describe('PersonalSendTransactionMethodModelTest', function() {
-    var model, formattersMock;
+describe('PersonalSendTransactionMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new PersonalSendTransactionMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_sendTransaction', function() {
-        expect(model.rpcMethod).to.equal('personal_sendTransaction');
+    it('rpcMethod should return personal_sendTransaction', () => {
+        expect(model.rpcMethod).toBe('personal_sendTransaction');
     });
 
-    it('parametersAmount should return 2', function() {
-        expect(model.parametersAmount).to.equal(2);
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount).toBe(2);
     });
 
-    it('beforeExecution should call inputTransactionFormatter', function() {
+    it('beforeExecution should call inputTransactionFormatter', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -41,10 +40,10 @@ describe('PersonalSendTransactionMethodModelTest', function() {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).to.be.property('send', true);
+        expect(model.parameters[0]).toHaveProperty('send', true);
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('personalSend')).equal('personalSend');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('personalSend')).toBe('personalSend');
     });
 });

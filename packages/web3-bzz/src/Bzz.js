@@ -20,8 +20,9 @@
  * @date 2017
  */
 
-import {isObject, isString} from 'underscore';
-import swarm from 'swarm-js';
+import isObject from 'underscore-es/isObject';
+import isString from 'underscore-es/isString';
+import * as swarm from 'swarm-js';
 
 export default class Bzz {
     /**

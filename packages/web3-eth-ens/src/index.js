@@ -19,8 +19,8 @@
 
 import {Contract} from 'web3-eth-contract';
 import {PromiEvent} from 'web3-core-promievent';
-import REGISTRY_ABI from '../ressources/ABI/Registry';
-import RESOLVER_ABI from '../ressources/ABI/Resolver';
+import {REGISTRY_ABI} from '../ressources/ABI/Registry';
+import {RESOLVER_ABI} from '../ressources/ABI/Resolver';
 import EnsModuleFactory from './factories/EnsModuleFactory';
 
 /**

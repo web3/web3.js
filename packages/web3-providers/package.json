@@ -5,13 +5,23 @@
     "description": "Web3 module to handle requests to external providers.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-core-requestmanager",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-providers.cjs.js",
+    "module": "dist/web3-providers.esm.js",
+    "browser": "dist/web3-providers.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest"
+    },
     "dependencies": {
         "eventemitter3": "3.1.0",
-        "xhr2-cookies": "1.1.0",
         "oboe": "2.1.4",
-        "underscore": "1.9.1",
+        "underscore-es": "^1.9.8",
+        "web3-core-helpers": "1.0.0-beta.36",
         "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
-        "web3-core-helpers": "1.0.0-beta.36"
-    }
+        "xhr2-cookies": "1.1.0"
+    },
+    "files": [
+        "dist"
+    ]
 }

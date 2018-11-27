@@ -1,78 +1,69 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var MethodPackageFactory = require('../../src/factories/MethodModuleFactory');
-var MethodController = require('../../src/controllers/MethodController');
-var CallMethodCommand = require('../../src/commands/CallMethodCommand');
-var SignAndSendMethodCommand = require('../../src/commands/SignAndSendMethodCommand');
-var SendMethodCommand = require('../../src/commands/SendMethodCommand');
-var SignMessageCommand = require('../../src/commands/SignMessageCommand');
-var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
-var TransactionSigner = require('../../src/signers/TransactionSigner');
-var MessageSigner = require('../../src/signers/MessageSigner');
-var TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
-var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
-var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
+import MethodPackageFactory from '../../src/factories/MethodModuleFactory';
+import MethodController from '../../src/controllers/MethodController';
+import CallMethodCommand from '../../src/commands/CallMethodCommand';
+import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
+import SendMethodCommand from '../../src/commands/SendMethodCommand';
+import SignMessageCommand from '../../src/commands/SignMessageCommand';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import TransactionSigner from '../../src/signers/TransactionSigner';
+import MessageSigner from '../../src/signers/MessageSigner';
+import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
 /**
  * MethodModuleFactory test
  */
-describe('MethodPackageFactoryTest', function() {
-    var methodPackageFactory;
+describe('MethodPackageFactoryTest', () => {
+    let methodPackageFactory;
 
-    beforeEach(function() {
+    beforeEach(() => {
         methodPackageFactory = new MethodPackageFactory();
     });
 
-    it('calls createMethodController and should return an instance of MethodController', function() {
-        expect(methodPackageFactory.createMethodController({}, {}, {})).to.be.an.instanceof(MethodController);
+    it('calls createMethodController and should return an instance of MethodController', () => {
+        expect(methodPackageFactory.createMethodController({}, {}, {})).toBeInstanceOf(MethodController);
     });
 
-    it('calls createCallMethodCommand and should return an instance of CallMethodCommand', function() {
-        expect(methodPackageFactory.createCallMethodCommand()).to.be.an.instanceof(CallMethodCommand);
+    it('calls createCallMethodCommand and should return an instance of CallMethodCommand', () => {
+        expect(methodPackageFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
     });
 
-    it('calls createSendMethodCommand and should return an instance of SendMethodCommand', function() {
-        expect(methodPackageFactory.createSendMethodCommand({}, {})).to.be.an.instanceof(SendMethodCommand);
+    it('calls createSendMethodCommand and should return an instance of SendMethodCommand', () => {
+        expect(methodPackageFactory.createSendMethodCommand({}, {})).toBeInstanceOf(SendMethodCommand);
     });
 
-    it('calls createSignAndSendMethodCommand and should return an instance of SignAndSendMethodCommand', function() {
-        expect(methodPackageFactory.createSignAndSendMethodCommand({}, {})).to.be.an.instanceof(
-            SignAndSendMethodCommand
-        );
+    it('calls createSignAndSendMethodCommand and should return an instance of SignAndSendMethodCommand', () => {
+        expect(methodPackageFactory.createSignAndSendMethodCommand({}, {})).toBeInstanceOf(SignAndSendMethodCommand);
     });
 
-    it('calls createSignMessageCommand and should return an instance of SignMessageCommand', function() {
-        expect(methodPackageFactory.createSignMessageCommand()).to.be.an.instanceof(SignMessageCommand);
+    it('calls createSignMessageCommand and should return an instance of SignMessageCommand', () => {
+        expect(methodPackageFactory.createSignMessageCommand()).toBeInstanceOf(SignMessageCommand);
     });
 
-    it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', function() {
-        expect(methodPackageFactory.createTransactionConfirmationWorkflow({}, {})).to.be.an.instanceof(
+    it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', () => {
+        expect(methodPackageFactory.createTransactionConfirmationWorkflow({}, {})).toBeInstanceOf(
             TransactionConfirmationWorkflow
         );
     });
 
-    it('calls createTransactionSigner and should return an instance of TransactionSigner', function() {
-        expect(methodPackageFactory.createTransactionSigner()).to.be.an.instanceof(TransactionSigner);
+    it('calls createTransactionSigner and should return an instance of TransactionSigner', () => {
+        expect(methodPackageFactory.createTransactionSigner()).toBeInstanceOf(TransactionSigner);
     });
 
-    it('calls createMessageSigner and should return an instance of MessageSigner', function() {
-        expect(methodPackageFactory.createMessageSigner()).to.be.an.instanceof(MessageSigner);
+    it('calls createMessageSigner and should return an instance of MessageSigner', () => {
+        expect(methodPackageFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
     });
 
-    it('calls createTransactionConfirmationModel and should return an instance of TransactionConfirmationModel', function() {
-        expect(methodPackageFactory.createTransactionConfirmationModel()).to.be.an.instanceof(
-            TransactionConfirmationModel
-        );
+    it('calls createTransactionConfirmationModel and should return an instance of TransactionConfirmationModel', () => {
+        expect(methodPackageFactory.createTransactionConfirmationModel()).toBeInstanceOf(TransactionConfirmationModel);
     });
 
-    it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', function() {
-        expect(methodPackageFactory.createTransactionReceiptValidator()).to.be.an.instanceof(
-            TransactionReceiptValidator
-        );
+    it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', () => {
+        expect(methodPackageFactory.createTransactionReceiptValidator()).toBeInstanceOf(TransactionReceiptValidator);
     });
 
-    it('calls createNewHeadsWatcher and should return an instance of NewHeadsWatcher', function() {
-        expect(methodPackageFactory.createNewHeadsWatcher({})).to.be.an.instanceof(NewHeadsWatcher);
+    it('calls createNewHeadsWatcher and should return an instance of NewHeadsWatcher', () => {
+        expect(methodPackageFactory.createNewHeadsWatcher({})).toBeInstanceOf(NewHeadsWatcher);
     });
 });

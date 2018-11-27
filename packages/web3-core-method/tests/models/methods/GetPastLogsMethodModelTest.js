@@ -1,34 +1,33 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetPastLogsMethodModel from '../../../src/models/methods/GetPastLogsMethodModel';
 
-var GetPastLogsMethodModel = require('../../../src/models/methods/GetPastLogsMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetPastLogsMethodModel test
  */
-describe('GetPastLogsMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetPastLogsMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetPastLogsMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getLogs', function() {
-        expect(model.rpcMethod).to.equal('eth_getLogs');
+    it('rpcMethod should return eth_getLogs', () => {
+        expect(model.rpcMethod).toBe('eth_getLogs');
     });
 
-    it('parametersAmount should return 1', function() {
-        expect(model.parametersAmount).to.equal(1);
+    it('parametersAmount should return 1', () => {
+        expect(model.parametersAmount).toBe(1);
     });
 
-    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', function() {
+    it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -39,19 +38,19 @@ describe('GetPastLogsMethodModelTest', function() {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).toHaveProperty('empty', true);
 
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
+    it('afterExecution should just return the response', () => {
         formattersMock
             .expects('outputLogFormatter')
             .withArgs({})
             .returns({formatted: true})
             .once();
 
-        expect(model.afterExecution([{}])[0]).to.have.property('formatted', true);
+        expect(model.afterExecution([{}])[0]).toHaveProperty('formatted', true);
 
         formattersMock.verify();
     });

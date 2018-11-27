@@ -21,7 +21,8 @@
  * @date 2018
  */
 
-import {isArray, isObject} from 'underscore';
+import isObject from 'underscore-es/isObject';
+import isArray from 'underscore-es/isArray';
 import {AbiCoder as EthersAbi} from 'ethers/utils/abi-coder';
 
 const ethersAbiCoder = new EthersAbi((type, value) => {

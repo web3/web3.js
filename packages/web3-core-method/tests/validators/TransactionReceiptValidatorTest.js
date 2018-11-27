@@ -1,19 +1,16 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
 
 /**
  * TransactionReceiptValidator test
  */
-describe('TransactionReceiptValidatorTest', function() {
-    var transactionReceiptValidator;
+describe('TransactionReceiptValidatorTest', () => {
+    let transactionReceiptValidator;
 
-    beforeEach(function() {
+    beforeEach(() => {
         transactionReceiptValidator = new TransactionReceiptValidator();
     });
 
-    it('calls validate and returns true', function() {
+    it('calls validate and returns true', () => {
         expect(
             transactionReceiptValidator.validate(
                 {
@@ -27,11 +24,11 @@ describe('TransactionReceiptValidatorTest', function() {
                     }
                 ]
             )
-        ).to.be.true;
+        ).toBeTruthy();
     });
 
-    it('calls validate and returns error because if invalid gasUsage', function() {
-        var error = transactionReceiptValidator.validate(
+    it('calls validate and returns error because if invalid gasUsage', () => {
+        const error = transactionReceiptValidator.validate(
             {
                 status: true,
                 outOfGas: false,
@@ -44,12 +41,12 @@ describe('TransactionReceiptValidatorTest', function() {
             ]
         );
 
-        expect(error).to.be.an.instanceof(Error);
-        expect(error.message).to.have.string('Transaction ran out of gas. Please provide more gas:');
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe('Transaction ran out of gas. Please provide more gas:');
     });
 
-    it('calls validate and returns error because the EVM has reverted it', function() {
-        var error = transactionReceiptValidator.validate(
+    it('calls validate and returns error because the EVM has reverted it', () => {
+        const error = transactionReceiptValidator.validate(
             {
                 status: false,
                 outOfGas: false,
@@ -62,7 +59,7 @@ describe('TransactionReceiptValidatorTest', function() {
             ]
         );
 
-        expect(error).to.be.an.instanceof(Error);
-        expect(error.message).to.have.string('Transaction has been reverted by the EVM:');
+        expect(error).toBeInstanceOf(Error);
+        expect(error.message).toBe('Transaction has been reverted by the EVM:');
     });
 });

@@ -5,13 +5,23 @@
     "description": "Web3 module to interact with the Whisper messaging protocol.",
     "repository": "https://github.com/ethereum/web3.js/tree/master/packages/web3-shh",
     "license": "LGPL-3.0",
-    "main": "src/index.js",
+    "main": "dist/web3-shh.cjs.js",
+    "module": "dist/web3-shh.esm.js",
+    "browser": "dist/web3-shh.umd.js",
+    "scripts": {
+        "build": "rollup -c",
+        "dev": "rollup -c -w",
+        "test": "jest"
+    },
     "dependencies": {
+        "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
-        "web3-providers": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-net": "1.0.0-beta.36",
-        "web3-utils": "1.0.0-beta.36",
-        "web3-core-helpers": "1.0.0-beta.36"
-    }
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
+    },
+    "files": [
+        "dist"
+    ]
 }

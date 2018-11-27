@@ -20,7 +20,8 @@
  * @date 2018
  */
 
-import {isFunction, isString} from 'underscore';
+import isString from 'underscore-es/isString';
+import isFunction from 'underscore-es/isFunction';
 
 export default class AbstractMethodModel {
     /**

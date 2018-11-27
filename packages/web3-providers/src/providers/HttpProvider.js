@@ -24,7 +24,7 @@
  */
 
 import {errors} from 'web3-core-helpers';
-import {XMLHttpRequest as XHR2} from 'xhr2-cookies'; // jshint ignore: line
+import {XMLHttpRequest} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
 
@@ -58,7 +58,7 @@ export default class HttpProvider {
      * @returns {FakeXHR2}
      */
     _prepareRequest() {
-        const request = new XHR2();
+        const request = new XMLHttpRequest();
         request.nodejsSet({
             httpsAgent: this.httpsAgent,
             httpAgent: this.httpAgent

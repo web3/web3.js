@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {isArray} from 'underscore';
+import isArray from 'underscore-es/isArray';
 
 export default class EventFilterEncoder {
     /**

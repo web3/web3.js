@@ -27,6 +27,6 @@ export default class JsonRpcResponseError extends Error {
      * @constructor
      */
     constructor(response) {
-        super(`Invalid JSON RPC response: ${JSON.stringify(result)}`);
+        super(`Invalid JSON RPC response: ${JSON.stringify(response)}`);
     }
 }

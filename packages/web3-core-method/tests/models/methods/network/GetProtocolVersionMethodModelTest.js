@@ -1,34 +1,31 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var GetProtocolVersionMethodModel = require('../../../../src/models/methods/network/GetProtocolVersionMethodModel');
+import GetProtocolVersionMethodModel from '../../../../src/models/methods/network/GetProtocolVersionMethodModel';
 
 /**
  * GetProtocolVersionMethodModel test
  */
-describe('GetProtocolVersionMethodModelTest', function() {
-    var model;
+describe('GetProtocolVersionMethodModelTest', () => {
+    let model;
 
-    beforeEach(function() {
+    beforeEach(() => {
         model = new GetProtocolVersionMethodModel({}, {});
     });
 
-    it('rpcMethod should return eth_protocolVersion', function() {
-        expect(model.rpcMethod).to.equal('eth_protocolVersion');
+    it('rpcMethod should return eth_protocolVersion', () => {
+        expect(model.rpcMethod).toBe('eth_protocolVersion');
     });
 
-    it('parametersAmount should return 0', function() {
-        expect(model.parametersAmount).to.equal(0);
+    it('parametersAmount should return 0', () => {
+        expect(model.parametersAmount).toBe(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('version')).equal('version');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('version')).toBe('version');
     });
 });

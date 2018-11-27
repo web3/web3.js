@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-// TODO: Create a simple Logger class to handle logs. Maybe the winston project would be good for it.
-export JsonRpcResponseError from 'web3-core-helpers/errors/JsonRpcResponseError';
-export NoConnectionError from 'web3-core-helpers/errors/NoConnectionError';
-export NodeConnectionTimeoutError from 'web3-core-helpers/errors/NodeConnectionTimeoutError';
-export InvalidProviderError from 'web3-core-helpers/errors/InvalidProviderError';
-export InvalidParametersLengthError from 'web3-core-helpers/errors/InvalidParametersLengthError';
+// TODO: Implement Winston logger
+export JsonRpcResponseError from './errors/JsonRpcResponseError';
+export NoConnectionError from './errors/NoConnectionError';
+export NodeConnectionTimeoutError from './errors/NodeConnectionTimeoutError';
+export InvalidProviderError from './errors/InvalidProviderError';
+export InvalidParametersLengthError from './errors/InvalidParametersLengthError';

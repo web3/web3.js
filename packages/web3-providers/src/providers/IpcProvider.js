@@ -20,7 +20,8 @@
  * @date 2017
  */
 
-import {isArray, isFunction} from 'underscore';
+import isArray from 'underscore-es/isArray';
+import isFunction from 'underscore-es/isObject';
 import {errors} from 'web3-core-helpers';
 import oboe from 'oboe';
 

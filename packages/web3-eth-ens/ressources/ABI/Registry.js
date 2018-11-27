@@ -1,6 +1,4 @@
-'use strict';
-
-var REGISTRY = [
+export const REGISTRY_ABI = [
     {
         constant: true,
         inputs: [
@@ -201,5 +199,3 @@ var REGISTRY = [
         type: 'event'
     }
 ];
-
-module.exports = REGISTRY;

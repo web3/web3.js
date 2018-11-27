@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import _ from 'underscore';
+import isFunction from 'underscore-es/isFunction';
 import namehash from 'eth-ens-namehash';
 
 export default class ResolverMethodHandler {
@@ -140,14 +140,14 @@ export default class ResolverMethodHandler {
             .then((receipt) => {
                 promiEvent.resolve(receipt);
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(receipt);
                 }
             })
             .catch((error) => {
                 promiEvent.reject(error);
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(error);
                 }
             });
@@ -183,7 +183,7 @@ export default class ResolverMethodHandler {
                 promiEvent.emit('receipt', receipt);
                 promiEvent.resolve(receipt);
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(receipt);
                 }
             })
@@ -191,7 +191,7 @@ export default class ResolverMethodHandler {
                 promiEvent.emit('error', error);
                 promiEvent.reject(error);
 
-                if (_.isFunction(callback)) {
+                if (isFunction(callback)) {
                     callback(error);
                 }
             });

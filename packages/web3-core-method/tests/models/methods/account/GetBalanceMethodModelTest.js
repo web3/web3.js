@@ -1,34 +1,33 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetBalanceMethodModel from '../../../../src/models/methods/account/GetBalanceMethodModel';
 
-var GetBalanceMethodModel = require('../../../../src/models/methods/account/GetBalanceMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetBalanceMethodModel test
  */
-describe('GetBalanceMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetBalanceMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetBalanceMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getBalance', function() {
-        expect(model.rpcMethod).to.equal('eth_getBalance');
+    it('rpcMethod should return eth_getBalance', () => {
+        expect(model.rpcMethod).toBe('eth_getBalance');
     });
 
-    it('parametersAmount should return 2', function() {
-        expect(model.parametersAmount).to.equal(2);
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount).toBe(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -45,14 +44,14 @@ describe('GetBalanceMethodModelTest', function() {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
 
-    it('afterExecution should call outputBigNumberFormatter on the response and return it', function() {
-        var response = {};
+    it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
+        const response = {};
 
         formattersMock
             .expects('outputBigNumberFormatter')
@@ -60,7 +59,7 @@ describe('GetBalanceMethodModelTest', function() {
             .returns({bigNumber: true})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('bigNumber', true);
+        expect(model.afterExecution({})).toHaveProperty('bigNumber', true);
 
         formattersMock.verify();
     });

@@ -1,36 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import EstimateGasMethodModel from '../../../src/models/methods/EstimateGasMethodModel';
 
-var EstimateGasMethodModel = require('../../../src/models/methods/EstimateGasMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * EstimateGasMethodModel test
  */
-describe('EstimateGasMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('EstimateGasMethodModelTest', () => {
+    let model, formattersMock, utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new EstimateGasMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_estimateGas', function() {
-        expect(model.rpcMethod).to.equal('eth_estimateGas');
+    it('rpcMethod should return eth_estimateGas', () => {
+        expect(model.rpcMethod).toBe('eth_estimateGas');
     });
 
-    it('parametersAmount should return 1', function() {
-        expect(model.parametersAmount).to.equal(1);
+    it('parametersAmount should return 1', () => {
+        expect(model.parametersAmount).toBe(1);
     });
 
-    it('beforeExecution should call the inputCallFormatter', function() {
+    it('beforeExecution should call the inputCallFormatter', () => {
         model.parameters = [{}];
 
         formattersMock
@@ -41,19 +40,19 @@ describe('EstimateGasMethodModelTest', function() {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
+        expect(model.parameters[0]).toHaveProperty('empty', true);
 
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber and return the response', function() {
+    it('afterExecution should call hexToNumber and return the response', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs({})
             .returns(100)
             .once();
 
-        expect(model.afterExecution({})).equal(100);
+        expect(model.afterExecution({})).toBe(100);
 
         utilsMock.verify();
     });

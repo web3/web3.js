@@ -1,34 +1,33 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import EcRecoverMethodModel from '../../../../src/models/methods/personal/EcRecoverMethodModel';
 
-var EcRecoverMethodModel = require('../../../../src/models/methods/personal/EcRecoverMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * EcRecoverMethodModel test
  */
-describe('EcRecoverMethodModelTest', function() {
-    var model, formattersMock;
+describe('EcRecoverMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new EcRecoverMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_ecRecover', function() {
-        expect(model.rpcMethod).to.equal('personal_ecRecover');
+    it('rpcMethod should return personal_ecRecover', () => {
+        expect(model.rpcMethod).toBe('personal_ecRecover');
     });
 
-    it('parametersAmount should return 3', function() {
-        expect(model.parametersAmount).to.equal(3);
+    it('parametersAmount should return 3', () => {
+        expect(model.parametersAmount).toBe(3);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [{}, '0x0'];
 
         formattersMock
@@ -45,13 +44,13 @@ describe('EcRecoverMethodModelTest', function() {
 
         model.beforeExecution();
 
-        expect(model.parameters[0]).to.be.property('sign', true);
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toHaveProperty('sign', true);
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('submitWork')).equal('submitWork');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('submitWork')).toBe('submitWork');
     });
 });

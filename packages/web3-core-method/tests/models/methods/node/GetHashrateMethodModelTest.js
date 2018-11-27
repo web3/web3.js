@@ -1,48 +1,47 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import utils from 'web3-utils';
+import GetHashrateMethodModel from '../../../../src/models/methods/node/GetHashrateMethodModel';
 
-var GetHashrateMethodModel = require('../../../../src/models/methods/node/GetHashrateMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetHashrateMethodModel test
  */
-describe('GetHashrateMethodModelTest', function() {
-    var model, utilsMock;
+describe('GetHashrateMethodModelTest', () => {
+    let model, utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         utilsMock = sinon.mock(utils);
         model = new GetHashrateMethodModel(utils, {});
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_hashrate', function() {
-        expect(model.rpcMethod).to.equal('eth_hashrate');
+    it('rpcMethod should return eth_hashrate', () => {
+        expect(model.rpcMethod).toBe('eth_hashrate');
     });
 
-    it('parametersAmount should return 0', function() {
-        expect(model.parametersAmount).to.equal(0);
+    it('parametersAmount should return 0', () => {
+        expect(model.parametersAmount).toBe(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should map the response', function() {
+    it('afterExecution should map the response', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

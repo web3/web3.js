@@ -1,49 +1,48 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import GetTransactionReceiptMethodModel from '../../../../src/models/methods/transaction/GetTransactionReceiptMethodModel';
 
-var GetTransactionReceiptMethodModel = require('../../../../src/models/methods/transaction/GetTransactionReceiptMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetTransactionReceiptMethodModel test
  */
-describe('GetTransactionReceiptMethodModelTest', function() {
-    var model, formattersMock;
+describe('GetTransactionReceiptMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new GetTransactionReceiptMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionReceipt', function() {
-        expect(model.rpcMethod).to.equal('eth_getTransactionReceipt');
+    it('rpcMethod should return eth_getTransactionReceipt', () => {
+        expect(model.rpcMethod).toBe('eth_getTransactionReceipt');
     });
 
-    it('parametersAmount should return 1', function() {
-        expect(model.parametersAmount).to.equal(1);
+    it('parametersAmount should return 1', () => {
+        expect(model.parametersAmount).toBe(1);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
 
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should map the response', function() {
+    it('afterExecution should map the response', () => {
         formattersMock
             .expects('outputTransactionFormatter')
             .withArgs({})
             .returns({empty: false})
             .once();
 
-        expect(model.afterExecution({})).to.have.property('empty', false);
+        expect(model.afterExecution({})).toHaveProperty('empty', false);
 
         formattersMock.verify();
     });

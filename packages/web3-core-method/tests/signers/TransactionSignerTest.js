@@ -1,43 +1,40 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+import * as sinonLib from 'sinon';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
+import TransactionSigner from '../../src/signers/TransactionSigner';
 
-var ProvidersPackage = require('web3-providers');
-var AccountsPackage = require('web3-eth-accounts');
-var TransactionSigner = require('../../src/signers/TransactionSigner');
+const sinon = sinonLib.createSandbox();
 
 /**
  * TransactionSigner test
  */
-describe('TransactionSignerTest', function() {
-    var transactionSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
+describe('TransactionSignerTest', () => {
+    let transactionSigner, provider, providerAdapter, accounts, accountsMock;
 
-    beforeEach(function() {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+    beforeEach(() => {
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new SocketProviderAdapter(provider);
 
-        accounts = AccountsPackage.createAccounts(provider);
+        accounts = new Accounts(providerAdapter, {});
         accountsMock = sinon.mock(accounts);
 
         transactionSigner = new TransactionSigner();
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls sign and throws error', function() {
-        transactionSigner.sign({from: 0}, accounts).catch(function(error) {
+    it('calls sign and throws error', () => {
+        transactionSigner.sign({from: 0}, accounts).catch((error) => {
             expect(error.message).equal('Wallet or privateKey in wallet is not set!');
         });
     });
 
-    it('calls sign and returns signed transaction', async function() {
+    it('calls sign and returns signed transaction', async () => {
         accounts.wallet[0] = {privateKey: '0x0'};
-        var transaction = {
+        const transaction = {
             from: 0
         };
 
@@ -45,16 +42,16 @@ describe('TransactionSignerTest', function() {
             .expects('signTransaction')
             .withArgs(transaction, '0x0')
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('0x0');
                 })
             )
             .once();
 
-        var returnValue = await transactionSigner.sign(transaction, accounts);
+        const returnValue = await transactionSigner.sign(transaction, accounts);
 
-        expect(returnValue).equal('0x0');
-        expect(transaction.from).equal(undefined);
+        expect(returnValue).toBe('0x0');
+        expect(transaction.from).toBe(undefined);
 
         accountsMock.verify();
     });

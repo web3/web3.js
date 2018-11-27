@@ -1,34 +1,33 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import CallMethodModel from '../../../src/models/methods/CallMethodModel';
 
-var CallMethodModel = require('../../../src/models/methods/CallMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * CallMethodModel test
  */
-describe('CallMethodModelTest', function() {
-    var model, formattersMock;
+describe('CallMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new CallMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_call', function() {
-        expect(model.rpcMethod).to.equal('eth_call');
+    it('rpcMethod should return eth_call', () => {
+        expect(model.rpcMethod).toBe('eth_call');
     });
 
-    it('parametersAmount should return 2', function() {
-        expect(model.parametersAmount).to.equal(2);
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount).toBe(2);
     });
 
-    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', function() {
+    it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = [{}, 100];
 
         formattersMock
@@ -45,15 +44,15 @@ describe('CallMethodModelTest', function() {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).to.have.property('empty', true);
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toHaveProperty('empty', true);
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
 
-    it('afterExecution should just return the response', function() {
-        var object = {};
+    it('afterExecution should just return the response', () => {
+        const object = {};
 
-        expect(model.afterExecution(object)).to.equal(object);
+        expect(model.afterExecution(object)).toBe(object);
     });
 });

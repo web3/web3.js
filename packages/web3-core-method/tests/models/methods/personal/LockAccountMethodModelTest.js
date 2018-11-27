@@ -1,34 +1,33 @@
-var chai = require('chai');
-var expect = chai.expect;
-var sinon = require('sinon').createSandbox();
-var formatters = require('web3-core-helpers').formatters;
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import LockAccountMethodModel from '../../../../src/models/methods/personal/LockAccountMethodModel';
 
-var LockAccountMethodModel = require('../../../../src/models/methods/personal/LockAccountMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * LockAccountMethodModel test
  */
-describe('LockAccountMethodModelTest', function() {
-    var model, formattersMock;
+describe('LockAccountMethodModelTest', () => {
+    let model, formattersMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         model = new LockAccountMethodModel({}, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return personal_lockAccount', function() {
-        expect(model.rpcMethod).to.equal('personal_lockAccount');
+    it('rpcMethod should return personal_lockAccount', () => {
+        expect(model.rpcMethod).toBe('personal_lockAccount');
     });
 
-    it('parametersAmount should return 1', function() {
-        expect(model.parametersAmount).to.equal(1);
+    it('parametersAmount should return 1', () => {
+        expect(model.parametersAmount).toBe(1);
     });
 
-    it('beforeExecution should call inputAddressFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter', () => {
         model.parameters = ['0x0'];
 
         formattersMock
@@ -41,10 +40,10 @@ describe('LockAccountMethodModelTest', function() {
 
         formattersMock.verify();
 
-        expect(model.parameters[0]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('lockAccount')).equal('lockAccount');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('lockAccount')).toBe('lockAccount');
     });
 });

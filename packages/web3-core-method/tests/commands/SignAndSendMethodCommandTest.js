@@ -1,31 +1,27 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+import * as sinonLib from 'sinon';
+import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
+import TransactionSigner from '../../src/signers/TransactionSigner';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {AbstractWeb3Module} from 'web3-core';
+import {PromiEvent} from 'web3-core-promievent';
 
-var SignAndSendMethodCommand = require('../../src/commands/SignAndSendMethodCommand');
-var TransactionSigner = require('../../src/signers/TransactionSigner');
-var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-providers');
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-var PromiEvent = require('web3-core-promievent').PromiEvent;
+const sinon = sinonLib.createSandbox();
 
 /**
  * SendAndSignMethodCommand test
  */
-describe('SendAndSignMethodCommandTest', function() {
-    var signAndSendMethodCommand,
+describe('SendAndSignMethodCommandTest', () => {
+    let signAndSendMethodCommand,
         provider,
-        providerMock,
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
-        moduleInstanceMock,
         methodModel,
         methodModelCallbackSpy,
         methodModelMock,
         promiEvent,
-        promiEventMock,
         promiEventEmitSpy,
         promiEventRemoveListenersSpy,
         transactionSigner,
@@ -33,15 +29,13 @@ describe('SendAndSignMethodCommandTest', function() {
         transactionConfirmationWorkflow,
         transactionConfirmationWorkflowMock;
 
-    beforeEach(function() {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+    beforeEach(() => {
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
+        providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
-        moduleInstanceMock = sinon.mock(moduleInstance);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
@@ -49,7 +43,6 @@ describe('SendAndSignMethodCommandTest', function() {
         methodModelMock = sinon.mock(methodModel);
 
         promiEvent = new PromiEvent();
-        promiEventMock = sinon.mock(promiEvent);
 
         promiEventEmitSpy = sinon.spy();
         promiEvent.emit = promiEventEmitSpy;
@@ -66,11 +59,11 @@ describe('SendAndSignMethodCommandTest', function() {
         signAndSendMethodCommand = new SignAndSendMethodCommand(transactionConfirmationWorkflow, transactionSigner);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls execute', function() {
+    it('calls execute', () => {
         methodModel.parameters = [];
 
         methodModelMock
@@ -82,7 +75,7 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve({
                         rawTransaction: ''
                     });
@@ -94,7 +87,7 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('send')
             .withArgs('eth_sendRawTransaction', [''])
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve('response');
                 })
             )
@@ -105,19 +98,19 @@ describe('SendAndSignMethodCommandTest', function() {
             .withArgs(methodModel, moduleInstance, 'response', promiEvent)
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
+        const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
-        expect(returnedPromiEvent).equal(promiEvent);
+        expect(returnedPromiEvent).toEqual(promiEvent);
 
-        promiEvent.then(function() {
-            expect(promiEventEmitSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).to.be.true;
+        promiEvent.then(() => {
+            expect(promiEventEmitSpy.calledOnce).toBeTruthy();
+            expect(promiEventEmitSpy.calledWith('transactionHash', 'response')).toBeTruthy();
 
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith(false, 'response')).to.be.true;
+            expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+            expect(methodModelCallbackSpy.calledWith(false, 'response')).toBeTruthy();
 
-            expect(methodModel.rpcMethod).equal('eth_sendRawTransaction');
-            expect(methodModel.parameters[0]).equal({rawTransaction: ''});
+            expect(methodModel.rpcMethod).toBe('eth_sendRawTransaction');
+            expect(methodModel.parameters[0]).toEqual({rawTransaction: ''});
 
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();
@@ -125,7 +118,7 @@ describe('SendAndSignMethodCommandTest', function() {
         });
     });
 
-    it('calls execute and throws error', function() {
+    it('calls execute and throws error', () => {
         methodModel.parameters = [{gasPrice: 100}];
 
         methodModelMock
@@ -137,26 +130,26 @@ describe('SendAndSignMethodCommandTest', function() {
             .expects('sign')
             .withArgs(methodModel.parameters[0], {})
             .returns(
-                new Promise(function(resolve, reject) {
-                    reject('error');
+                new Promise((resolve, reject) => {
+                    reject(new Error('error'));
                 })
             )
             .once();
 
-        var returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
+        const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
 
-        expect(returnedPromiEvent).equal(promiEvent);
+        expect(returnedPromiEvent).toEqual(promiEvent);
 
-        promiEvent.catch(function(error) {
-            expect(promiEventRemoveListenersSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledOnce).to.be.true;
-            expect(promiEventEmitSpy.calledWith('error', 'error')).to.be.true;
+        promiEvent.catch((error) => {
+            expect(promiEventRemoveListenersSpy.calledOnce).toBeTruthy();
+            expect(promiEventEmitSpy.calledOnce).toBeTruthy();
+            expect(promiEventEmitSpy.calledWith('error', 'error')).toBeTruthy();
 
-            expect(methodModelCallbackSpy.calledOnce).to.be.true;
-            expect(methodModelCallbackSpy.calledWith('error', null)).to.be.true;
-            expect(error).equal('error');
+            expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+            expect(methodModelCallbackSpy.calledWith('error', null)).toBeTruthy();
+            expect(error).toBeInstanceOf(Error);
 
-            expect(methodModel.rpcMethod).equal('eth_sendRawTransaction');
+            expect(methodModel.rpcMethod).toBe('eth_sendRawTransaction');
 
             transactionConfirmationWorkflowMock.verify();
             providerAdapterMock.verify();

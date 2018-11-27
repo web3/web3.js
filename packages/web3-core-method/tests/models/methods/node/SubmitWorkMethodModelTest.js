@@ -1,34 +1,31 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var SubmitWorkMethodModel = require('../../../../src/models/methods/node/SubmitWorkMethodModel');
+import SubmitWorkMethodModel from '../../../../src/models/methods/node/SubmitWorkMethodModel';
 
 /**
  * SubmitWorkMethodModel test
  */
-describe('SubmitWorkMethodModelTest', function() {
-    var model;
+describe('SubmitWorkMethodModelTest', () => {
+    let model;
 
-    beforeEach(function() {
+    beforeEach(() => {
         model = new SubmitWorkMethodModel({}, {});
     });
 
-    it('rpcMethod should return eth_submitWork', function() {
-        expect(model.rpcMethod).to.equal('eth_submitWork');
+    it('rpcMethod should return eth_submitWork', () => {
+        expect(model.rpcMethod).toBe('eth_submitWork');
     });
 
-    it('parametersAmount should return 3', function() {
-        expect(model.parametersAmount).to.equal(3);
+    it('parametersAmount should return 3', () => {
+        expect(model.parametersAmount).toBe(3);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('submitWork')).equal('submitWork');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('submitWork')).toBe('submitWork');
     });
 });

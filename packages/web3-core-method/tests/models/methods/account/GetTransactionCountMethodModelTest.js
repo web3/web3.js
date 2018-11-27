@@ -1,36 +1,35 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
-var formatters = require('web3-core-helpers').formatters;
-var utils = require('web3-utils');
+import * as sinonLib from 'sinon';
+import {formatters} from 'web3-core-helpers';
+import utils from 'web3-utils';
+import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethodModel';
 
-var GetTransactionCountMethodModel = require('../../../../src/models/methods/account/GetTransactionCountMethodModel');
+const sinon = sinonLib.createSandbox();
 
 /**
  * GetTransactionCountMethodModel test
  */
-describe('GetTransactionCountMethodModelTest', function() {
-    var model, formattersMock, utilsMock;
+describe('GetTransactionCountMethodModelTest', () => {
+    let model, formattersMock, utilsMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         formattersMock = sinon.mock(formatters);
         utilsMock = sinon.mock(utils);
         model = new GetTransactionCountMethodModel(utils, formatters);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('rpcMethod should return eth_getTransactionCount', function() {
-        expect(model.rpcMethod).to.equal('eth_getTransactionCount');
+    it('rpcMethod should return eth_getTransactionCount', () => {
+        expect(model.rpcMethod).toBe('eth_getTransactionCount');
     });
 
-    it('parametersAmount should return 2', function() {
-        expect(model.parametersAmount).to.equal(2);
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount).toBe(2);
     });
 
-    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', function() {
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
         formattersMock
@@ -47,20 +46,20 @@ describe('GetTransactionCountMethodModelTest', function() {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).equal('0x0');
-        expect(model.parameters[1]).equal('0x0');
+        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[1]).toBe('0x0');
 
         formattersMock.verify();
     });
 
-    it('afterExecution should call hexToNumber on the response and return it', function() {
+    it('afterExecution should call hexToNumber on the response and return it', () => {
         utilsMock
             .expects('hexToNumber')
             .withArgs('0x0')
             .returns(100)
             .once();
 
-        expect(model.afterExecution('0x0')).equal(100);
+        expect(model.afterExecution('0x0')).toBe(100);
 
         utilsMock.verify();
     });

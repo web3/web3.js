@@ -1,24 +1,22 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+import * as sinonLib from 'sinon';
+import {AbstractWeb3Module} from 'web3-core';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {PromiEvent} from 'web3-core-promievent';
+import {formatters} from 'web3-core-helpers';
+import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
 
-var AbstractWeb3Module = require('web3-core').AbstractWeb3Module;
-var AbstractMethodModel = require('../../lib/models/AbstractMethodModel');
-var ProvidersPackage = require('web3-providers');
-var PromiEvent = require('web3-core-promievent').PromiEvent;
-var formatters = require('web3-core-helpers').formatters;
-var TransactionConfirmationModel = require('../../src/models/TransactionConfirmationModel');
-var TransactionReceiptValidator = require('../../src/validators/TransactionReceiptValidator');
-var NewHeadsWatcher = require('../../src/watchers/NewHeadsWatcher');
-var TransactionConfirmationWorkflow = require('../../src/workflows/TransactionConfirmationWorkflow');
+const sinon = sinonLib.createSandbox();
 
 /**
  * TransactionConfirmationWorkflow test
  */
-describe('TransactionConfirmationWorkflowTest', function() {
-    var transactionConfirmationWorkflow,
+describe('TransactionConfirmationWorkflowTest', () => {
+    let transactionConfirmationWorkflow,
         transactionConfirmationModel,
-        transactionConfirmationModelMock,
         transactionReceiptValidator,
         transactionReceiptValidatorMock,
         newHeadsWatcher,
@@ -32,13 +30,10 @@ describe('TransactionConfirmationWorkflowTest', function() {
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
-        moduleInstanceMock,
-        promiEvent,
-        promiEventMock;
+        promiEvent;
 
-    beforeEach(function() {
+    beforeEach(() => {
         transactionConfirmationModel = new TransactionConfirmationModel();
-        transactionConfirmationModelMock = sinon.mock(transactionConfirmationModel);
 
         transactionReceiptValidator = new TransactionReceiptValidator();
         transactionReceiptValidatorMock = sinon.mock(transactionReceiptValidator);
@@ -53,17 +48,15 @@ describe('TransactionConfirmationWorkflowTest', function() {
         methodModel.callback = methodModelCallbackSpy;
         methodModelMock = sinon.mock(methodModel);
 
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
         providerMock = sinon.mock(provider);
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
+        providerAdapter = new SocketProviderAdapter(provider);
         providerAdapterMock = sinon.mock(providerAdapter);
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, ProvidersPackage, null, null);
-        moduleInstanceMock = sinon.mock(moduleInstance);
+        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
 
         promiEvent = new PromiEvent();
-        promiEventMock = sinon.mock(promiEvent);
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow(
             transactionConfirmationModel,
@@ -73,16 +66,16 @@ describe('TransactionConfirmationWorkflowTest', function() {
         );
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls executes and receipt does already exists', function() {
+    it('calls executes and receipt does already exists', () => {
         providerAdapterMock
             .expects('send')
             .withArgs('eth_getTransactionReceipt', ['0x0'])
             .returns(
-                new Promise(function(resolve) {
+                new Promise((resolve) => {
                     resolve({});
                 })
             )
@@ -111,13 +104,13 @@ describe('TransactionConfirmationWorkflowTest', function() {
         transactionConfirmationWorkflow.execute(methodModel, moduleInstance, '0x0', promiEvent);
 
         promiEvent
-            .on('receipt', function(receipt) {
-                expect(receipt).to.has.an.property('blockHash', '0x00');
+            .on('receipt', (receipt) => {
+                expect(receipt).toHaveProperty('blockHash', '0x00');
             })
-            .then(function(response) {
-                expect(methodModelCallbackSpy.calledOnce).to.be.true;
-                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'}));
-                expect(response).to.has.an.property('blockHash', '0x00');
+            .then((response) => {
+                expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
+                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'})).toBeTruthy();
+                expect(response).toHaveProperty('blockHash', '0x00');
 
                 providerMock.verify();
                 formattersMock.verify();

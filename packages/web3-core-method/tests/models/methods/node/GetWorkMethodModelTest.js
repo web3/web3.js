@@ -1,34 +1,31 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var GetWorkMethodModel = require('../../../../src/models/methods/node/GetWorkMethodModel');
+import GetWorkMethodModel from '../../../../src/models/methods/node/GetWorkMethodModel';
 
 /**
  * GetWorkMethodModel test
  */
-describe('GetWorkMethodModelTest', function() {
-    var model;
+describe('GetWorkMethodModelTest', () => {
+    let model;
 
-    beforeEach(function() {
+    beforeEach(() => {
         model = new GetWorkMethodModel({}, {});
     });
 
-    it('rpcMethod should return eth_getWork', function() {
-        expect(model.rpcMethod).to.equal('eth_getWork');
+    it('rpcMethod should return eth_getWork', () => {
+        expect(model.rpcMethod).toBe('eth_getWork');
     });
 
-    it('parametersAmount should return 0', function() {
-        expect(model.parametersAmount).to.equal(0);
+    it('parametersAmount should return 0', () => {
+        expect(model.parametersAmount).toBe(0);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('version')).equal('version');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('version')).toBe('version');
     });
 });

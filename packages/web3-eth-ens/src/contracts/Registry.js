@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {isFunction} from 'underscore';
+import isFunction from 'underscore-es/isFunction';
 import namehash from 'eth-ens-namehash';
 
 export default class Registry {

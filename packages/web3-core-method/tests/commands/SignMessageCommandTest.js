@@ -2,15 +2,16 @@ import * as sinonLib from 'sinon';
 import MessageSigner from '../../src/signers/MessageSigner';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+
 const sinon = sinonLib.createSandbox();
 
 /**
  * SignMessageCommand test
  */
-describe('SignMessageCommandTest', function() {
-    var signMessageCommand, methodModel, methodModelCallbackSpy, methodModelMock, messageSigner, messageSignerMock;
+describe('SignMessageCommandTest', () => {
+    let signMessageCommand, methodModel, methodModelCallbackSpy, methodModelMock, messageSigner, messageSignerMock;
 
-    beforeEach(function() {
+    beforeEach(() => {
         methodModel = new AbstractMethodModel('', 0, {}, {});
         methodModelCallbackSpy = sinon.spy();
         methodModel.callback = methodModelCallbackSpy;
@@ -22,11 +23,11 @@ describe('SignMessageCommandTest', function() {
         signMessageCommand = new SignMessageCommand(messageSigner);
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls execute and returns signed message', function() {
+    it('calls execute and returns signed message', () => {
         methodModel.parameters = ['string', '0x0'];
 
         methodModelMock
@@ -46,7 +47,7 @@ describe('SignMessageCommandTest', function() {
             .returns('0x0')
             .once();
 
-        var returnValue = signMessageCommand.execute({}, methodModel, {});
+        const returnValue = signMessageCommand.execute({}, methodModel, {});
         expect(returnValue).toBe('0x0');
 
         expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
@@ -56,9 +57,9 @@ describe('SignMessageCommandTest', function() {
         messageSignerMock.verify();
     });
 
-    it('calls execute and throws error', function() {
+    it('calls execute and throws error', () => {
         methodModel.parameters = ['string', '0x0'];
-        var error = new Error('PANIC');
+        const error = new Error('PANIC');
 
         methodModelMock
             .expects('beforeExecution')
@@ -73,11 +74,11 @@ describe('SignMessageCommandTest', function() {
 
         try {
             signMessageCommand.execute({}, methodModel, {});
-        } catch (error) {
+        } catch (error2) {
             expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-            expect(methodModelCallbackSpy.calledWith(error, null)).toBeTruthy();
-            expect(error).toBeInstanceOf(Error);
-            expect(error.message).toBe('PANIC');
+            expect(methodModelCallbackSpy.calledWith(error2, null)).toBeTruthy();
+            expect(error2).toBeInstanceOf(Error);
+            expect(error2.message).toBe('PANIC');
 
             methodModelMock.verify();
             messageSignerMock.verify();

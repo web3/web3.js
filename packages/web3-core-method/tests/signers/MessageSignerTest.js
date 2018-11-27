@@ -1,43 +1,40 @@
-var chai = require('chai');
-var sinon = require('sinon').createSandbox();
-var expect = chai.expect;
+import * as sinonLib from 'sinon';
+import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {Accounts} from 'web3-eth-accounts';
+import MessageSigner from '../../src/signers/MessageSigner';
 
-var ProvidersPackage = require('web3-providers');
-var AccountsPackage = require('web3-eth-accounts');
-var MessageSigner = require('../../src/signers/MessageSigner');
+const sinon = sinonLib.createSandbox();
 
 /**
  * MessageSigner test
  */
-describe('MessageSignerTest', function() {
-    var messageSigner, provider, providerMock, providerAdapter, providerAdapterMock, accounts, accountsMock;
+describe('MessageSignerTest', () => {
+    let messageSigner, provider, providerAdapter, accounts, accountsMock;
 
-    beforeEach(function() {
-        provider = new ProvidersPackage.WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+    beforeEach(() => {
+        provider = new WebsocketProvider('ws://127.0.0.1', {});
 
-        providerAdapter = new ProvidersPackage.SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
+        providerAdapter = new SocketProviderAdapter(provider);
 
-        accounts = AccountsPackage.createAccounts(provider);
+        accounts = new Accounts(providerAdapter, {});
         accountsMock = sinon.mock(accounts);
 
         messageSigner = new MessageSigner();
     });
 
-    afterEach(function() {
+    afterEach(() => {
         sinon.restore();
     });
 
-    it('calls sign and throws error', function() {
+    it('calls sign and throws error', () => {
         try {
             messageSigner.sign('string', 0, accounts);
         } catch (error) {
-            expect(error.message).equal('Wallet or privateKey in wallet is not set!');
+            expect(error.message).toBe('Wallet or privateKey in wallet is not set!');
         }
     });
 
-    it('calls sign and returns signed message', function() {
+    it('calls sign and returns signed message', () => {
         accounts.wallet[0] = {privateKey: '0x0'};
 
         accountsMock
@@ -46,7 +43,7 @@ describe('MessageSignerTest', function() {
             .returns({signature: '0x00'})
             .once();
 
-        expect(messageSigner.sign('string', 0, accounts)).equal('0x00');
+        expect(messageSigner.sign('string', 0, accounts)).toBe('0x00');
 
         accountsMock.verify();
     });

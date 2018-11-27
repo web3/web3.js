@@ -37,7 +37,7 @@ import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
 import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
 import RpcMethodFactory from '../factories/RpcMethodModelFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
-import AbstractContract from 'web3-eth-contract/AbstractContract';
+import AbstractContract from '../AbstractContract';
 
 export default class ContractModuleFactory {
     /**

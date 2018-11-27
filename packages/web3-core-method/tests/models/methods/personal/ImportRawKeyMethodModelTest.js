@@ -1,34 +1,31 @@
-var chai = require('chai');
-var expect = chai.expect;
-
-var ImportRawKeyMethodModel = require('../../../../src/models/methods/personal/ImportRawKeyMethodModel');
+import ImportRawKeyMethodModel from '../../../../src/models/methods/personal/ImportRawKeyMethodModel';
 
 /**
  * ImportRawKeyMethodModel test
  */
-describe('ImportRawKeyMethodModelTest', function() {
-    var model;
+describe('ImportRawKeyMethodModelTest', () => {
+    let model;
 
-    beforeEach(function() {
+    beforeEach(() => {
         model = new ImportRawKeyMethodModel({}, {});
     });
 
-    it('rpcMethod should return personal_importRawKey', function() {
-        expect(model.rpcMethod).to.equal('personal_importRawKey');
+    it('rpcMethod should return personal_importRawKey', () => {
+        expect(model.rpcMethod).toBe('personal_importRawKey');
     });
 
-    it('parametersAmount should return 2', function() {
-        expect(model.parametersAmount).to.equal(2);
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount).toBe(2);
     });
 
-    it('beforeExecution should do nothing with the parameters', function() {
+    it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).equal(undefined);
+        expect(model.parameters[0]).toBe(undefined);
     });
 
-    it('afterExecution should just return the response', function() {
-        expect(model.afterExecution('version')).equal('version');
+    it('afterExecution should just return the response', () => {
+        expect(model.afterExecution('version')).toBe('version');
     });
 });
