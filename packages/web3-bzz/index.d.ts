@@ -1,6 +1,6 @@
 /**
  * @file index.d.ts
- * @author Josh Stevens <josh.stevens@hotmail.co.uk>
+ * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
 
