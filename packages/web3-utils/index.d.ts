@@ -1,3 +1,9 @@
+/**
+ * @file index.d.ts
+ * @author Josh Stevens <josh.stevens@hotmail.co.uk>
+ * @date 2018
+ */
+
 import BigNumber from "bn.js";
 
 export type Unit =
