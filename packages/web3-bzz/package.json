@@ -18,6 +18,7 @@
         "underscore-es": "^1.9.8"
     },
     "files": [
-        "dist"
+        "dist",
+        "index.d.ts"
     ]
 }
