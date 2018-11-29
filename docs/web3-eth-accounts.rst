@@ -747,7 +747,7 @@ wallet.encrypt
 
     web3.eth.accounts.wallet.encrypt(password);
 
-Encrypts all wallet accounts to and array of encrypted keystore v3 objects.
+Encrypts all wallet accounts to an array of encrypted keystore v3 objects.
 
 ----------
 Parameters
