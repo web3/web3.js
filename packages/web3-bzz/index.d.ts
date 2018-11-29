@@ -18,7 +18,7 @@
  */
 
 export declare class Bzz {
-    constructor(provider: Object | string) { }
+    constructor(provider: Object | string);
     pick(): Object | boolean;
     download(bzzHash: string, localPath: string): Promise<Buffer|Object|string>;
     upload(data: string | Buffer | Uint8Array | Object): Promise<string>;
