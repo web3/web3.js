@@ -17,6 +17,7 @@
         "eventemitter3": "^3.1.0"
     },
     "files": [
-        "dist"
+        "dist",
+        "index.d.ts"
     ]
 }
