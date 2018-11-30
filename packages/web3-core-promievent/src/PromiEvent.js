@@ -54,14 +54,12 @@ export default class PromiEvent {
             return target[name];
         }
 
-        if (this.promise[name]) {
+        if (target.promise[name]) {
             return target.promise[name];
         }
 
-        if (this.eventEmitter[name]) {
+        if (target.eventEmitter[name]) {
             return target.eventEmitter[name];
         }
-
-        throw new Error(`Method with name ${name} not found`);
     }
 }
