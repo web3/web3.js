@@ -11,8 +11,10 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "npm run-script dtslint && jest",
+        "dtslint": "dtslint types"
     },
+    "types": "types",
     "dependencies": {
         "bn.js": "4.11.8",
         "eth-lib": "0.2.8",
@@ -25,5 +27,10 @@
     "files": [
         "dist",
         "index.d.ts"
-    ]
+    ],
+    "devDependencies": {
+        "@types/bn.js": "^4.11.3",
+        "dtslint": "^0.3.0",
+        "typescript": "^3.2.1"
+    }
 }
