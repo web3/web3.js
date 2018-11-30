@@ -29,7 +29,7 @@ import * as utils from './Utils';
 import * as ethjsUnit from 'ethjs-unit';
 
 export {soliditySha3} from './SoliditySha3';
-export randomHex from 'randomhex';
+export {randomHex} from 'randomhex';
 export * from './Utils';
 
 /**
