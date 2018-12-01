@@ -55,7 +55,7 @@ meteor add ethereum:web3
 CDN
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js/dist/web3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
 ```
 
 Bower
@@ -157,6 +157,7 @@ npm test
  - Purescript [purescript-web3](https://github.com/f-o-a-m/purescript-web3)
  - PHP [web3.php](https://github.com/sc0Vu/web3.php)
  - PHP [ethereum-php](https://github.com/digitaldonkey/ethereum-php)
+ - Rust [rust-web3](https://github.com/tomusdrw/rust-web3)
 
 ## License
 

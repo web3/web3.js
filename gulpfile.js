@@ -29,7 +29,7 @@ var browserifyOptions = {
     bundleExternal: true
 };
 
-gulp.task('version', function(){
+gulp.task('version', function(done){
   gulp.src(['./package.json'])
     .pipe(replace(/\"version\"\: \"([\.0-9]*)\"/, '"version": "'+ version.version + '"'))
     .pipe(gulp.dest('./'));
@@ -39,27 +39,32 @@ gulp.task('version', function(){
   gulp.src(['./package.js'])
     .pipe(replace(/version\: \'([\.0-9]*)\'/, "version: '"+ version.version + "'"))
     .pipe(gulp.dest('./'));
+
+  done();
 });
 
-gulp.task('bower', ['version'], function(cb){
+gulp.task('bower', gulp.series(['version'], function(cb, done){
     bower.commands.install().on('end', function (installed){
         console.log(installed);
         cb();
+        done();
     });
-});
+}));
 
-gulp.task('lint', [], function(){
-    return gulp.src(['./*.js', './lib/*.js'])
+gulp.task('lint', function(done){
+    gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
+    
+    done();
 });
 
-gulp.task('clean', ['lint'], function(cb) {
+gulp.task('clean', gulp.series(['lint'], function(cb) {
     del([ DEST ]).then(cb.bind(null, null));
-});
+}));
 
-gulp.task('light', ['clean'], function () {
-    return browserify(browserifyOptions)
+gulp.task('light', gulp.series(['clean'], function (done) {
+    browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .ignore('bignumber.js')
         .require('./lib/utils/browser-bn.js', {expose: 'bignumber.js'}) // fake bignumber.js
@@ -71,10 +76,12 @@ gulp.task('light', ['clean'], function () {
         .pipe(streamify(uglify()))
         .pipe(rename(lightDst + '.min.js'))
         .pipe(gulp.dest( DEST ));
-});
 
-gulp.task('standalone', ['clean'], function () {
-    return browserify(browserifyOptions)
+        done();
+}));
+
+gulp.task('standalone', gulp.series(['clean'], function (done) {
+    browserify(browserifyOptions)
         .require('./' + src + '.js', {expose: 'web3'})
         .require('bignumber.js') // expose it to dapp users
         .add('./' + src + '.js')
@@ -86,11 +93,13 @@ gulp.task('standalone', ['clean'], function () {
         .pipe(streamify(uglify()))
         .pipe(rename(dst + '.min.js'))
         .pipe(gulp.dest( DEST ));
-});
 
-gulp.task('watch', function() {
+    done();
+}));
+
+gulp.task('watch', function(done) {
     gulp.watch(['./lib/*.js'], ['lint', 'build']);
+    done();
 });
 
-gulp.task('default', ['version', 'lint', 'clean', 'light', 'standalone']);
-
+gulp.task('default', gulp.series('version', 'lint', 'clean', 'light', 'standalone'));
