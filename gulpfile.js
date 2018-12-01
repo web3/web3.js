@@ -54,7 +54,11 @@ var packages = [{
     fileName: 'web3-eth-abi',
     expose: 'Web3EthAbi',
     src: './packages/web3-eth-abi/src/index.js'
-}, {
+},{
+    fileName: 'web3-eth-ens',
+    expose: 'EthEns',
+    src: './packages/web3-eth-ens/src/index.js'
+},{
     fileName: 'web3-net',
     expose: 'Web3Net',
     src: './packages/web3-net/src/index.js'
@@ -131,33 +135,33 @@ gulp.task('version', function () {
         './package.js'
     ];
 
-    gulp.src(glob, {base: './'})
+    return gulp.src(glob, {base: './'})
         .pipe(replace(jsonPattern, '"version": "' + version + '"'))
         .pipe(replace(jsPattern, "version: '" + version + "'"))
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bower', ['version'], function (cb) {
+gulp.task('bower', gulp.series('version', function (cb) {
     bower.commands.install().on('end', function (installed) {
         console.log(installed);
         cb();
     });
-});
+}));
 
-gulp.task('lint', [], function () {
+gulp.task('lint', function () {
     return gulp.src(['./*.js', './lib/*.js'])
         .pipe(jshint())
         .pipe(jshint.reporter('default'));
 });
 
-gulp.task('clean', ['lint'], function (cb) {
+gulp.task('clean', gulp.series('lint', function (cb) {
     del([DEST]).then(cb.bind(null, null));
-});
+}));
 
 packages.forEach(function (pckg, i) {
     var prevPckg = (!i) ? 'clean' : packages[i - 1].fileName;
 
-    gulp.task(pckg.fileName, [prevPckg], function () {
+    gulp.task(pckg.fileName, gulp.series(prevPckg, function () {
         browserifyOptions.standalone = pckg.expose;
 
         var pipe = browserify(browserifyOptions)
@@ -187,7 +191,7 @@ packages.forEach(function (pckg, i) {
             .on('error', function (err) { console.error(err); })
             .pipe(rename(pckg.fileName + '.min.js'))
             .pipe(gulp.dest(DEST));
-    });
+    }));
 });
 
 
@@ -196,10 +200,10 @@ gulp.task('publishTag', function () {
 });
 
 gulp.task('watch', function () {
-    gulp.watch(['./packages/web3/src/*.js'], ['lint', 'build']);
+    gulp.watch(['./packages/web3/src/*.js'], gulp.series('lint', 'default'));
 });
 
-gulp.task('all', ['version', 'lint', 'clean', packages[packages.length - 1].fileName]);
+gulp.task('all', gulp.series('version', 'lint', 'clean', packages[packages.length - 1].fileName));
 
-gulp.task('default', ['version', 'lint', 'clean', packages[0].fileName]);
+gulp.task('default', gulp.series('version', 'lint', 'clean', packages[0].fileName));
 
