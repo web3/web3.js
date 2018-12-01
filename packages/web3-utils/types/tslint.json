@@ -2,6 +2,7 @@
     "extends": "dtslint/dtslint.json",
     "rules": {
         "semicolon": false,
-        "no-import-default-of-export-equals": false
+        "no-import-default-of-export-equals": false,
+        "file-name-casing": [true, "kebab-case"]
     }
 }
