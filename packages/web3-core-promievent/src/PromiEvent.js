@@ -55,7 +55,7 @@ export default class PromiEvent {
         }
 
         if (target.promise[name]) {
-            return target.promise[name];
+            return target.promise[name].bind(target.promise);
         }
 
         if (target.eventEmitter[name]) {
