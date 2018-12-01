@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, getUnitValue } from "utils";
+import { BN, getUnitValue } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

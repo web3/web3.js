@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, fromDecimal } from "utils";
+import { BN, fromDecimal } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

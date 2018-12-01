@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, isBloom } from "utils";
+import { BN, isBloom } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, toChecksumAddress } from "utils";
+import { BN, toChecksumAddress } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, sha3 } from "utils";
+import { BN, sha3 } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

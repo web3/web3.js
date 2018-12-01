@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, isTopic } from "utils";
+import { BN, isTopic } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

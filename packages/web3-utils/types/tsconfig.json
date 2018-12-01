@@ -11,7 +11,7 @@
         "allowSyntheticDefaultImports": true,
         "baseUrl": ".",
         "paths": { 
-            "utils": ["."] 
+            "web3-utils": ["."] 
         }
     }
 }

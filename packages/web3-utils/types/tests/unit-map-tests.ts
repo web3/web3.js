@@ -17,6 +17,6 @@
  * @date 2018
  */
 
-import { unitMap } from "utils";
+import { unitMap } from 'web3-utils';
 
 unitMap(); // $ExpectType Units

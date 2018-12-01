@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, toUtf8 } from "utils";
+import { BN, toUtf8 } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

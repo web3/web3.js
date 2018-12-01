@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, isHexStrict } from "utils";
+import { BN, isHexStrict } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

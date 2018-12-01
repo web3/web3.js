@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { toTwosComplement, BN } from 'utils';
+import { toTwosComplement, BN } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

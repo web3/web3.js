@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, randomHex } from "utils";
+import { BN, randomHex } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

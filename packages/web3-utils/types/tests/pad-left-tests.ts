@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, padLeft } from "utils";
+import { BN, padLeft } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

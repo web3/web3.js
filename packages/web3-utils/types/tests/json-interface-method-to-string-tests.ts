@@ -17,6 +17,6 @@
  * @date 2018
  */
 
-import { _jsonInterfaceMethodToString } from "utils";
+import { _jsonInterfaceMethodToString } from 'web3-utils';
 
 _jsonInterfaceMethodToString({}); // $ExpectType string

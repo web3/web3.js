@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, testAddress } from "utils";
+import { BN, testAddress } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, toWei } from "utils";
+import { BN, toWei } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

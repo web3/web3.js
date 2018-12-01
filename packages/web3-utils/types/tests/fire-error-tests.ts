@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { _fireError } from "utils";
+import { _fireError } from 'web3-utils';
 
 _fireError(new Error('error'), {}, (error: Error) => { console.log(error); }, (error: Error) => { console.log(error); }); // $ExpectType {}
 _fireError('error', {}, (error: Error) => { console.log(error); }, (error: Error) => { console.log(error); }); // $ExpectType {}

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, bytesToHex } from "utils";
+import { BN, bytesToHex } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

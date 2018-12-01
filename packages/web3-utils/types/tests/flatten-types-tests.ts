@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, _flattenTypes } from "utils";
+import { BN, _flattenTypes } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { isBN, BN } from 'utils';
+import { isBN, BN } from 'web3-utils';
 
 const bigNumber = new BN(3);
 

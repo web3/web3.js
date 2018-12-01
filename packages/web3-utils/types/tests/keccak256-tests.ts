@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { BN, keccak256 } from "utils";
+import { BN, keccak256 } from 'web3-utils';
 
 const bigNumber = new BN(3);
 
