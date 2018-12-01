@@ -34,7 +34,7 @@ describe('SendAndSignMethodCommandTest', () => {
         providerAdapter = new SocketProviderAdapter({});
         providerAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         methodModel = new AbstractMethodModel('', 0, {}, {});

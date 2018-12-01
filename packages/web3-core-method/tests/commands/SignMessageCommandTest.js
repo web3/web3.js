@@ -1,87 +1,90 @@
-import * as sinonLib from 'sinon';
 import MessageSigner from '../../src/signers/MessageSigner';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import {AbstractWeb3Module} from 'web3-core';
+import {SocketProviderAdapter} from 'web3-providers';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('../../src/signers/MessageSigner');
+jest.mock('../../lib/models/AbstractMethodModel');
+jest.mock('AbstractWeb3Module');
+jest.mock('SocketProviderAdapter');
 
 /**
  * SignMessageCommand test
  */
 describe('SignMessageCommandTest', () => {
-    let signMessageCommand, methodModel, methodModelCallbackSpy, methodModelMock, messageSigner, messageSignerMock;
+    let signMessageCommand,
+        methodModel,
+        methodModelMock,
+        moduleInstance,
+        moduleInstanceMock,
+        providerAdapter,
+        providerAdapterMock,
+        messageSigner,
+        messageSignerMock;
 
     beforeEach(() => {
+        providerAdapter = new SocketProviderAdapter({});
+        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+
         methodModel = new AbstractMethodModel('', 0, {}, {});
-        methodModelCallbackSpy = sinon.spy();
-        methodModel.callback = methodModelCallbackSpy;
-        methodModelMock = sinon.mock(methodModel);
+        methodModelMock = AbstractMethodModel.mock.instances[0];
+
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         messageSigner = new MessageSigner();
-        messageSignerMock = sinon.mock(messageSigner);
+        messageSignerMock =  MessageSigner.mock.instances[0];
 
-        signMessageCommand = new SignMessageCommand(messageSigner);
+        signMessageCommand = new SignMessageCommand(messageSignerMock);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
+    it('calls execute and returns signed message', (done) => {
+        methodModelMock.parameters = ['string', '0x0'];
 
-    it('calls execute and returns signed message', () => {
-        methodModel.parameters = ['string', '0x0'];
+        methodModelMock.callback = (error, response) => {
+            expect(error).toBe(false);
+            expect(response).toBe('0x0');
 
-        methodModelMock
-            .expects('beforeExecution')
-            .withArgs({})
-            .once();
+            done();
+        };
 
-        messageSignerMock
-            .expects('sign')
-            .withArgs(methodModel.parameters[0], methodModel.parameters[1], {})
-            .returns('0x00')
-            .once();
+        messageSignerMock.sign
+            .mockReturnValueOnce('0x00');
 
-        methodModelMock
-            .expects('afterExecution')
-            .withArgs('0x00')
-            .returns('0x0')
-            .once();
+        methodModelMock.afterExecution
+            .mockReturnValueOnce('0x0');
 
-        const returnValue = signMessageCommand.execute({}, methodModel, {});
+        const returnValue = signMessageCommand.execute(moduleInstanceMock, methodModelMock, {});
+
         expect(returnValue).toBe('0x0');
 
-        expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-        expect(methodModelCallbackSpy.calledWith(false, '0x0')).toBeTruthy();
+        expect(methodModelMock.afterExecution)
+            .toHaveBeenCalledWith('0x00');
+        expect(methodModelMock.beforeExecution)
+            .toHaveBeenCalledWith(moduleInstanceMock);
 
-        methodModelMock.verify();
-        messageSignerMock.verify();
+        expect(messageSignerMock.sign)
+            .toHaveBeenCalledWith(methodModelMock.parameters[0], methodModelMock.parameters[1], {})
     });
 
     it('calls execute and throws error', () => {
-        methodModel.parameters = ['string', '0x0'];
-        const error = new Error('PANIC');
+        methodModelMock.parameters = ['string', '0x0'];
 
-        methodModelMock
-            .expects('beforeExecution')
-            .withArgs({})
-            .once();
-
-        messageSignerMock
-            .expects('sign')
-            .withArgs(methodModel.parameters[0], methodModel.parameters[1], {})
-            .throws(error)
-            .once();
+        messageSignerMock.sign
+            .mockReturnValueOnce(new Error());
 
         try {
-            signMessageCommand.execute({}, methodModel, {});
+            signMessageCommand.execute({}, methodModelMock, {});
         } catch (error2) {
-            expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-            expect(methodModelCallbackSpy.calledWith(error2, null)).toBeTruthy();
-            expect(error2).toBeInstanceOf(Error);
-            expect(error2.message).toBe('PANIC');
+            expect(methodModelMock.beforeExecution)
+                .toHaveBeenCalledWith(moduleInstanceMock);
 
-            methodModelMock.verify();
-            messageSignerMock.verify();
+            expect(messageSignerMock.sign)
+                .toHaveBeenCalledWith(methodModelMock.parameters[0], methodModelMock.parameters[1], {});
+
+            expect(error2).toBeInstanceOf(Error);
         }
     });
 });
