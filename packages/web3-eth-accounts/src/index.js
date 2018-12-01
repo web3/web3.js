@@ -162,7 +162,7 @@ Accounts.prototype.signTransaction = function signTransaction(tx, privateKey, ca
 
         if (error) {
             callback(error);
-            return Promise.reject(new Error('"gas" is missing'));
+            return Promise.reject(error);
         }
 
         try {
