@@ -95,7 +95,7 @@ describe('SendAndSignMethodCommandTest', () => {
 
         promiEvent.on('transactionHash', () => {
             expect(methodModelMock.beforeExecution)
-                .toHaveBeenCalledWith(moduleInstance);
+                .toHaveBeenCalledWith(moduleInstanceMock);
 
             expect(transactionSignerMock.sign)
                 .toHaveBeenCalledWith(methodModelMock.parameters[0], {});
@@ -111,42 +111,31 @@ describe('SendAndSignMethodCommandTest', () => {
         });
     });
 
-    // it('calls execute and throws error', () => {
-    //     methodModel.parameters = [{gasPrice: 100}];
-    //
-    //     methodModelMock
-    //         .expects('beforeExecution')
-    //         .withArgs(moduleInstance)
-    //         .once();
-    //
-    //     transactionSignerMock
-    //         .expects('sign')
-    //         .withArgs(methodModel.parameters[0], {})
-    //         .returns(
-    //             new Promise((resolve, reject) => {
-    //                 reject(new Error('error'));
-    //             })
-    //         )
-    //         .once();
-    //
-    //     const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
-    //
-    //     expect(returnedPromiEvent).toEqual(promiEvent);
-    //
-    //     promiEvent.catch((error) => {
-    //         expect(promiEventRemoveListenersSpy.calledOnce).toBeTruthy();
-    //         expect(promiEventEmitSpy.calledOnce).toBeTruthy();
-    //         expect(promiEventEmitSpy.calledWith('error', 'error')).toBeTruthy();
-    //
-    //         expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-    //         expect(methodModelCallbackSpy.calledWith('error', null)).toBeTruthy();
-    //         expect(error).toBeInstanceOf(Error);
-    //
-    //         expect(methodModel.rpcMethod).toBe('eth_sendRawTransaction');
-    //
-    //         transactionConfirmationWorkflowMock.verify();
-    //         providerAdapterMock.verify();
-    //         methodModelMock.verify();
-    //     });
-    // });
+    it('calls execute and throws error', () => {
+        methodModel.parameters = [{gasPrice: 100}];
+
+        transactionSignerMock.sign
+            .mockReturnValueOnce(Promise.reject(new Error('error')));
+
+        signAndSendMethodCommand = new SignAndSendMethodCommand(
+            transactionConfirmationWorkflowMock,
+            transactionSignerMock
+        );
+
+        const returnedPromiEvent = signAndSendMethodCommand.execute(moduleInstance, methodModel, promiEvent, {});
+
+        expect(returnedPromiEvent).toEqual(promiEvent);
+
+        promiEvent.catch((error) => {
+            expect(methodModelMock.beforeExecution)
+                .toHaveBeenCalledWith(moduleInstanceMock);
+
+            expect(transactionSignerMock.sign)
+                .toHaveBeenCalledWith(methodModelMock.parameters[0], {});
+
+            expect(error).toBeInstanceOf(Error);
+
+            expect(methodModel.rpcMethod).toBe('eth_sendRawTransaction');
+        });
+    });
 });
