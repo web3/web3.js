@@ -45,12 +45,18 @@ describe('SendMethodCommandTest', () => {
     });
 
     it('constructor has been called and the properties are aet', () => {
-        expect(sendMethodCommand.transactionConfirmationWorkflow).toEqual(transactionConfirmationWorkflowMock);
+        expect(sendMethodCommand.transactionConfirmationWorkflow)
+            .toEqual(transactionConfirmationWorkflowMock);
     });
 
-    it('calls execute with gasPrice defined', (done) => {
-        methodModelMock.parameters = [{gasPrice: 100}];
+    it('calls execute with gasPrice & gas defined', (done) => {
         methodModelMock.rpcMethod = 'eth_sendTransaction';
+        methodModelMock.parameters = [
+            {
+                gasPrice: 100,
+                gas: 100
+            }
+        ];
 
         providerAdapterMock.send
             .mockReturnValueOnce(Promise.resolve('response'));
@@ -78,91 +84,112 @@ describe('SendMethodCommandTest', () => {
 
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(methodModelMock, moduleInstanceMock, 'response', promiEvent);
-        })
+
+            expect(methodModelMock.parameters[0].gasPrice)
+                .toBe(100);
+
+            expect(methodModelMock.parameters[0].gas)
+                .toBe(100);
+        });
     });
 
-    // it('calls execute without gasPrice defined', () => {
-    //     methodModel.parameters = [{}];
-    //     methodModel.rpcMethod = 'eth_sendTransaction';
-    //
-    //     methodModelMock
-    //         .expects('beforeExecution')
-    //         .withArgs(moduleInstance)
-    //         .once();
-    //
-    //     providerAdapterMock
-    //         .expects('send')
-    //         .withArgs('eth_gasPrice', [])
-    //         .returns(
-    //             new Promise((resolve) => {
-    //                 resolve(100);
-    //             })
-    //         )
-    //         .once();
-    //
-    //     providerAdapterMock
-    //         .expects('send')
-    //         .withArgs(methodModel.rpcMethod, methodModel.parameters)
-    //         .returns(
-    //             new Promise((resolve) => {
-    //                 resolve('response');
-    //             })
-    //         )
-    //         .once();
-    //
-    //     transactionConfirmationWorkflowMock
-    //         .expects('execute')
-    //         .withArgs(methodModel, moduleInstance, 'response', promiEvent)
-    //         .once();
-    //
-    //     const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
-    //
-    //     expect(returnedPromiEvent).toEqual(promiEvent);
-    //
-    //     promiEvent.on('transactionHash', (response) => {
-    //         expect(response).toBe('response');
-    //         expect(methodModel.parameters[0].gasPrice).toBe(100);
-    //
-    //         transactionConfirmationWorkflowMock.verify();
-    //         providerAdapterMock.verify();
-    //         methodModelMock.verify();
-    //     });
-    // });
-    //
-    // it('calls execute and throws error', () => {
-    //     methodModel.parameters = [{gasPrice: 100}];
-    //     methodModel.rpcMethod = 'eth_sendTransaction';
-    //
-    //     methodModelMock
-    //         .expects('beforeExecution')
-    //         .withArgs(moduleInstance)
-    //         .once();
-    //
-    //     providerAdapterMock
-    //         .expects('send')
-    //         .withArgs(methodModel.rpcMethod, methodModel.parameters)
-    //         .returns(
-    //             new Promise((resolve, reject) => {
-    //                 reject(new Error('error'));
-    //             })
-    //         )
-    //         .once();
-    //
-    //     promiEventMock
-    //         .expects('reject')
-    //         .withArgs('error')
-    //         .once();
-    //
-    //     const returnedPromiEvent = sendMethodCommand.execute(moduleInstance, methodModel, promiEvent);
-    //
-    //     expect(returnedPromiEvent).toEqual(promiEvent);
-    //
-    //     promiEvent.on('error', (error) => {
-    //         expect(error).toBeInstanceOf(Error);
-    //
-    //         providerAdapterMock.verify();
-    //         methodModelMock.verify();
-    //         promiEventMock.verify();
-    //     });
-    // });
+    it('calls execute without gasPrice & gas defined but with defaultGasPrice & gasLimit', () => {
+        methodModelMock.parameters = [{}];
+        methodModelMock.rpcMethod = 'eth_sendTransaction';
+
+        providerAdapterMock.send
+            .mockReturnValue(Promise.resolve('response'));
+
+        moduleInstanceMock.currentProvider = providerAdapterMock;
+        moduleInstanceMock.defaultGasPrice = 100;
+        moduleInstanceMock.defaultGas = 100;
+
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstanceMock, methodModelMock, promiEvent);
+
+        expect(returnedPromiEvent).toEqual(promiEvent);
+
+        promiEvent.on('transactionHash', (response) => {
+            expect(methodModelMock.beforeExecution)
+                .toHaveBeenCalledWith(moduleInstanceMock);
+
+            expect(providerAdapterMock.send)
+                .toHaveBeenCalledWith(methodModelMock.rpcMethod, methodModelMock.parameters);
+
+            expect(transactionConfirmationWorkflowMock.execute)
+                .toHaveBeenCalledWith(methodModelMock, moduleInstanceMock, response, promiEvent);
+
+            expect(response)
+                .toBe('response');
+
+            expect(methodModelMock.parameters[0].gasPrice)
+                .toBe(100);
+
+            expect(methodModelMock.parameters[0].gas)
+                .toBe(100);
+        });
+    });
+
+    it('calls execute without gasPrice, gas, defaultGasPrice and defaultGasLimit defined', () => {
+        methodModelMock.parameters = [{}];
+        methodModelMock.rpcMethod = 'eth_sendTransaction';
+
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.resolve(100));
+
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.resolve('response'));
+
+        moduleInstanceMock.currentProvider = providerAdapterMock;
+
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstanceMock, methodModelMock, promiEvent);
+
+        expect(returnedPromiEvent)
+            .toEqual(promiEvent);
+
+        promiEvent.on('transactionHash', (response) => {
+            expect(methodModelMock.beforeExecution)
+                .toHaveBeenCalledWith(moduleInstanceMock);
+
+            expect(providerAdapterMock.send)
+                .toHaveBeenCalledWith('eth_gasPrice', []);
+
+            expect(providerAdapterMock.send)
+                .toHaveBeenCalledWith(methodModelMock.rpcMethod, methodModelMock.parameters);
+
+            expect(transactionConfirmationWorkflowMock.execute)
+                .toHaveBeenCalledWith(methodModelMock, moduleInstanceMock, response, promiEvent);
+
+            expect(response)
+                .toBe('response');
+
+            expect(methodModelMock.parameters[0].gasPrice)
+                .toBe(100);
+        });
+    });
+
+    it('calls execute and throws error', () => {
+        methodModelMock.parameters = [{gasPrice: 100}];
+        methodModelMock.rpcMethod = 'eth_sendTransaction';
+
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.reject(new Error('error')));
+
+        moduleInstanceMock.currentProvider = providerAdapterMock;
+
+        const returnedPromiEvent = sendMethodCommand.execute(moduleInstanceMock, methodModelMock, promiEvent);
+
+        expect(returnedPromiEvent).toEqual(promiEvent);
+
+        returnedPromiEvent.on('error', (error) => {
+            expect(providerAdapterMock.send)
+                .toHaveBeenCalledWith(methodModelMock.rpcMethod, methodModelMock.parameters);
+
+            expect(methodModelMock.beforeExecution)
+                .toHaveBeenCalledWith(moduleInstanceMock);
+
+            expect(error).toBeInstanceOf(Error);
+        });
+
+        return expect(promiEvent).rejects.toThrow('error');
+    });
 });

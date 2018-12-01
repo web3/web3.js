@@ -66,10 +66,12 @@ export default class SendMethodCommand {
             return promiEvent;
         }
 
-        this.getGasPrice(moduleInstance.currentProvider).then((gasPrice) => {
-            methodModel.parameters[0].gasPrice = gasPrice;
-            this.send(methodModel, promiEvent, moduleInstance);
-        });
+        moduleInstance.currentProvider
+            .send('eth_gasPrice', [])
+            .then(gasPrice => {
+                methodModel.parameters[0].gasPrice = gasPrice;
+                this.send(methodModel, promiEvent, moduleInstance);
+            });
 
         return promiEvent;
     }
@@ -120,7 +122,7 @@ export default class SendMethodCommand {
      * @returns {Boolean}
      */
     hasDefaultGasPrice(moduleInstance) {
-        return moduleInstance.defaultGasPrice !== null;
+        return moduleInstance.defaultGasPrice !== null && typeof moduleInstance.defaultGasPrice !== 'undefined';
     }
 
     /**
@@ -146,7 +148,7 @@ export default class SendMethodCommand {
      * @returns {Boolean}
      */
     hasDefaultGasLimit(moduleInstance) {
-        return moduleInstance.defaultGas !== null;
+        return moduleInstance.defaultGas !== null && typeof moduleInstance.defaultGas !== 'undefined';
     }
 
     /**
@@ -160,16 +162,5 @@ export default class SendMethodCommand {
      */
     isGasLimitDefined(parameters) {
         return isObject(parameters[0]) && typeof parameters[0].gas !== 'undefined';
-    }
-
-    /**
-     * Returns the current gasPrice of the connected node
-     *
-     * @param {AbstractProviderAdapter | EthereumProvider} provider
-     *
-     * @returns {Promise<String>}
-     */
-    getGasPrice(provider) {
-        return provider.send('eth_gasPrice', []);
     }
 }
