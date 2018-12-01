@@ -34,6 +34,7 @@ Contents:
     web3-eth-contract
     web3-eth-accounts
     web3-eth-personal
+    web3-eth-ens
     web3-eth-iban
     web3-eth-abi
     web3-net

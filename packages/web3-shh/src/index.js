@@ -42,10 +42,7 @@ var Shh = function Shh() {
         _this.net.setProvider.apply(_this, arguments);
     };
 
-    this.clearSubscriptions = _this._requestManager.clearSubscriptions;
-
     this.net = new Net(this.currentProvider);
-
 
     [
         new Subscriptions({
@@ -167,11 +164,21 @@ var Shh = function Shh() {
             call: 'shh_post',
             params: 1,
             inputFormatter: [null]
+        }),
+
+        new Method({
+            name: 'unsubscribe',
+            call: 'shh_unsubscribe',
+            params: 1
         })
     ].forEach(function(method) {
         method.attachToObject(_this);
         method.setRequestManager(_this._requestManager);
     });
+};
+
+Shh.prototype.clearSubscriptions = function () {
+     this._requestManager.clearSubscriptions();
 };
 
 core.addProviders(Shh);

@@ -197,7 +197,7 @@ Example
         "outputs": [{"name":"b","type":"address"}]
     },{
         "type":"event",
-        "name":"Event"
+        "name":"Event",
         "inputs": [{"name":"a","type":"uint256","indexed":true},{"name":"b","type":"bytes32","indexed":false}],
     }]
 
@@ -481,7 +481,7 @@ Example
     }
 
     // web3.js
-    var MyContract = new web3.eth.contract(abi, address);
+    var MyContract = new web3.eth.Contract(abi, address);
     MyContract.methods.myFunction().call()
     .then(console.log);
     > Result {
@@ -502,7 +502,7 @@ Example
     }
 
     // web3.js
-    var MyContract = new web3.eth.contract(abi, address);
+    var MyContract = new web3.eth.Contract(abi, address);
     MyContract.methods.myFunction().call()
     .then(console.log);
     > "Hello!%"
