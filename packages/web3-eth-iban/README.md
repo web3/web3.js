@@ -36,6 +36,10 @@ console.log(iban.toAddress());
 > '0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B'
 ```
 
+## Types 
+If you are using TypeScript then all types are defined within the package itself so no need
+to install any `@types` libraries. Just import the library and the types should be exposed.  
+
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
