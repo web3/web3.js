@@ -1,21 +1,17 @@
-import * as sinonLib from 'sinon';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import GetBlockNumberMethodModel from '../../../../src/models/methods/block/GetBlockNumberMethodModel';
-const sinon = sinonLib.createSandbox();
+
+// Mocks
+jest.mock('Utils');
 
 /**
  * GetBlockNumberMethodModel test
  */
 describe('GetBlockNumberMethodModelTest', () => {
-    let model, utilsMock;
+    let model;
 
     beforeEach(() => {
-        utilsMock = sinon.mock(utils);
-        model = new GetBlockNumberMethodModel(utils, {});
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetBlockNumberMethodModel(Utils, {});
     });
 
     it('rpcMethod should return eth_blockNumber', () => {
@@ -34,14 +30,12 @@ describe('GetBlockNumberMethodModelTest', () => {
     });
 
     it('afterExecution should map theresponse', () => {
-        utilsMock
-            .expects('hexToNumber')
-            .withArgs('0x0')
-            .returns(100)
-            .once();
+        Utils.hexToNumber
+            .mockReturnValueOnce(100);
 
         expect(model.afterExecution('0x0')).toBe(100);
 
-        utilsMock.verify();
+        expect(Utils.hexToNumber)
+            .toHaveBeenCalledWith('0x0');
     });
 });
