@@ -32,6 +32,12 @@ export default class MethodProxy extends Proxy {
         super(
             target,
             {
+                /**
+                 * @param {AbstractWeb3Module} target
+                 * @param {String|Symbol} name
+                 *
+                 * @returns {Function}
+                 */
                 get: (target, name) => {
                     if (methodModelFactory.hasMethodModel(name)) {
                         if (typeof target[name] !== 'undefined') {
