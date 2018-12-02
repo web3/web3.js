@@ -169,20 +169,20 @@ export interface Units {
 // is in 1 place
 export interface ABIItem {
     constant: boolean;
-    inputs: ABIInputs[];
+    inputs: ABIInput[];
     name: string;
-    outputs: ABIOuputs[];
+    outputs: ABIOuput[];
     payable: boolean;
     stateMutability: string; // could be a enum once we move this to generic place
     type: string // again could be a enum once we move this to generic place
 }
 
-export interface ABIInputs {
+export interface ABIInput {
     name: string;
     type: string;
 }
 
-export interface ABIOuputs {
+export interface ABIOuput {
     name: string;
     type: string;
 }
