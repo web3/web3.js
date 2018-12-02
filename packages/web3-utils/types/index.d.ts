@@ -117,7 +117,7 @@ export function toWei(value: number | string | BN, unit?: Unit): string | BN;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
 export function _fireError(error: fireError | string | Error, emitter: {}, reject: (error: Error) => void, callback: (error: Error) => void): {};
-export function _jsonInterfaceMethodToString(abiItem: AbiItem): string;
+export function _jsonInterfaceMethodToString(abiItem: ABIItem): string;
 export function soliditySha3(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
@@ -167,22 +167,22 @@ export interface Units {
 // should be able to be set in a generic location
 // so we can import and export but the interface code
 // is in 1 place
-export interface AbiItem {
+export interface ABIItem {
     constant: boolean;
-    inputs: AbiInputs[];
+    inputs: ABIInputs[];
     name: string;
-    outputs: AbiOuputs[];
+    outputs: ABIOuputs[];
     payable: boolean;
     stateMutability: string; // could be a enum once we move this to generic place
     type: string // again could be a enum once we move this to generic place
 }
 
-export interface AbiInputs {
+export interface ABIInputs {
     name: string;
     type: string;
 }
 
-export interface AbiOuputs {
+export interface ABIOuputs {
     name: string;
     type: string;
 }

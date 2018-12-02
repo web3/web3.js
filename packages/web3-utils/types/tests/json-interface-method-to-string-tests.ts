@@ -17,9 +17,9 @@
  * @date 2018
  */
 
-import { _jsonInterfaceMethodToString, AbiItem } from 'web3-utils';
+import { _jsonInterfaceMethodToString, ABIItem } from 'web3-utils';
 
-const abiItem: AbiItem = {
+const abiItem: ABIItem = {
     constant: true,
     inputs: [
         {
