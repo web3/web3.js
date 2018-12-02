@@ -1,24 +1,19 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
+jest.mock('Utils');
 
 /**
  * GetTransactionCountMethodModel test
  */
 describe('GetTransactionCountMethodModelTest', () => {
-    let model, formattersMock, utilsMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
-        utilsMock = sinon.mock(utils);
-        model = new GetTransactionCountMethodModel(utils, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetTransactionCountMethodModel(Utils, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionCount', () => {
@@ -32,35 +27,31 @@ describe('GetTransactionCountMethodModelTest', () => {
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
-        formattersMock
-            .expects('inputAddressFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
 
-        formattersMock
-            .expects('inputDefaultBlockNumberFormatter')
-            .withArgs(model.parameters[1], {})
-            .returns('0x0')
-            .once();
+        formatters.inputDefaultBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBe('0x0');
 
-        formattersMock.verify();
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter)
+            .toHaveBeenCalledWith(100, {});
     });
 
     it('afterExecution should call hexToNumber on the response and return it', () => {
-        utilsMock
-            .expects('hexToNumber')
-            .withArgs('0x0')
-            .returns(100)
-            .once();
+        Utils.hexToNumber
+            .mockReturnValueOnce(100);
 
         expect(model.afterExecution('0x0')).toBe(100);
 
-        utilsMock.verify();
+        expect(Utils.hexToNumber)
+            .toHaveBeenCalledWith('0x0');
     });
 });
