@@ -114,7 +114,7 @@ export const _jsonInterfaceMethodToString = (json) => {
  *
  * @returns {Array} parameters as strings
  */
-export const _flattenTypes = (includeTuple, puts) => {
+const _flattenTypes = (includeTuple, puts) => {
     // console.log("entered _flattenTypes. inputs/outputs: " + puts)
     const types = [];
 
