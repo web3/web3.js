@@ -48,8 +48,6 @@ export type Unit =
     | "gether"
     | "tether";
 
-export type ABIType = "function" | "constructor" | "event" | "fallback";
-
 export type Mixed =
     string
     | number
@@ -159,10 +157,10 @@ export interface Units {
     tether: string;
 }
 
-// move this out to a generic place later on
-// should be able to be set in a generic location
-// so we can import and export but the interface code
-// is in 1 place
+/************* move this out to a generic place once we have a place for it on *******************/
+
+export type ABIType = "function" | "constructor" | "event" | "fallback";
+
 export interface ABIItem {
     constant?: boolean;
     inputs?: ABIInput[];
@@ -182,3 +180,4 @@ export interface ABIOuput {
     name: string;
     type: string;
 }
+/****************** End of generic stuff  *****************/
