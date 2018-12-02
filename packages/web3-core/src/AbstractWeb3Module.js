@@ -28,6 +28,7 @@ export default class AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodController} methodController
+     * @param {MethodModuleFacotry} methodModuleFactory
      * @param {AbstractMethodModelFactory} methodModelFactory
      * @param {Object} options
      *
@@ -35,9 +36,10 @@ export default class AbstractWeb3Module {
      */
     constructor(
         provider = this.throwIfMissing('provider'),
-        providersModuleFactory = this.throwIfMissing('providersModuleFactory'),
+        providersModuleFactory = this.throwIfMissing('ProvidersModuleFactory'),
         providers = this.throwIfMissing('providers'),
-        methodController = this.throwIfMissing('methodController'),
+        methodController = this.throwIfMissing('MethodController'),
+        methodModuleFactory = this.throwIfMissing('MethodModuleFacotry'),
         methodModelFactory = null,
         options = {}
     ) {
@@ -64,9 +66,7 @@ export default class AbstractWeb3Module {
         if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
             this.methodModelFactory = methodModelFactory;
 
-            return new Proxy(this, {
-                get: this.proxyHandler
-            });
+            return methodModuleFactory.createMethodProxy(this);
         }
     }
 
@@ -169,52 +169,6 @@ export default class AbstractWeb3Module {
         ) {
             this.currentProvider.clearSubscriptions();
         }
-    }
-
-    /**
-     * TODO: Move this as a MethodProxy object in to the core-method module
-     *
-     * Handles method execution
-     *
-     * @method proxyHandler
-     *
-     * @param {Object} target
-     * @param {String} name
-     *
-     * @returns {*}
-     */
-    proxyHandler(target, name) {
-        if (target.methodModelFactory.hasMethodModel(name)) {
-            if (typeof target[name] !== 'undefined') {
-                throw new TypeError(
-                    `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
-                );
-            }
-
-            const methodModel = target.methodModelFactory.createMethodModel(name);
-
-            const anonymousFunction = () => {
-                methodModel.methodArguments = arguments;
-
-                if (methodModel.parameters.length !== methodModel.parametersAmount) {
-                    throw new Error(
-                        `Invalid parameters length the expected length would be 
-                        ${methodModel.parametersAmount}
-                         and not 
-                        ${methodModel.parameters.length}`
-                    );
-                }
-
-                return target.methodController.execute(methodModel, target.accounts, target);
-            };
-
-            anonymousFunction.methodModel = methodModel;
-            anonymousFunction.request = methodModel.request;
-
-            return anonymousFunction;
-        }
-
-        return target[name];
     }
 
     /**

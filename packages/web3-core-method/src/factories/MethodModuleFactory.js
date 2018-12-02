@@ -30,6 +30,7 @@ import CallMethodCommand from '../commands/CallMethodCommand';
 import SendMethodCommand from '../commands/SendMethodCommand';
 import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../commands/SignMessageCommand';
+import MethodProxy from '../proxy/MethodProxy';
 
 export default class MethodModuleFactory {
     /**
@@ -51,6 +52,17 @@ export default class MethodModuleFactory {
             this.createSignMessageCommand(),
             promiEventObject
         );
+    }
+
+    /**
+     * Returns the MethodProxy object
+     *
+     * @method createMethodProxy
+     *
+     * @param {Object} target
+     */
+    createMethodProxy(target) {
+        new MethodProxy(target);
     }
 
     /**
