@@ -15,11 +15,13 @@ describe('GetBalanceMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getBalance', () => {
-        expect(model.rpcMethod).toBe('eth_getBalance');
+        expect(model.rpcMethod)
+            .toBe('eth_getBalance');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).toBe(2);
+        expect(model.parametersAmount)
+            .toBe(2);
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -33,8 +35,11 @@ describe('GetBalanceMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
-        expect(model.parameters[1]).toBe('0x0');
+        expect(model.parameters[0])
+            .toBe('0x0');
+
+        expect(model.parameters[1])
+            .toBe('0x0');
 
         expect(formatters.inputAddressFormatter)
             .toHaveBeenCalledWith('string');

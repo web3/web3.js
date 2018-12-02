@@ -1,93 +1,85 @@
-import * as sinonLib from 'sinon';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import GetUncleMethodModel from '../../../../src/models/methods/block/GetUncleMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('Utils');
+jest.mock('formatters');
 
 /**
  * GetUncleMethodModel test
  */
 describe('GetUncleMethodModelTest', () => {
-    let model, utilsMock, formattersMock;
+    let model;
 
     beforeEach(() => {
-        utilsMock = sinon.mock(utils);
-        formattersMock = sinon.mock(formatters);
-        model = new GetUncleMethodModel(utils, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetUncleMethodModel(Utils, formatters);
     });
 
     it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).toBe('eth_getUncleByBlockNumberAndIndex');
+        expect(model.rpcMethod)
+            .toBe('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).toBe(2);
+        expect(model.parametersAmount)
+            .toBe(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = ['0x0', 100];
 
-        formattersMock
-            .expects('inputBlockNumberFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
-        utilsMock
-            .expects('numberToHex')
-            .withArgs(model.parameters[1])
-            .returns('0x0')
-            .once();
+        Utils.numberToHex
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBe('0x0');
 
-        formattersMock.verify();
+        expect(formatters.inputBlockNumberFormatter)
+            .toHaveBeenCalledWith('0x0');
 
-        expect(model.rpcMethod).toBe('eth_getUncleByBlockHashAndIndex');
+        expect(Utils.numberToHex)
+            .toHaveBeenCalledWith(100);
+
+        expect(model.rpcMethod)
+            .toBe('eth_getUncleByBlockHashAndIndex');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = [100, 100];
 
-        formattersMock
-            .expects('inputBlockNumberFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
-        utilsMock
-            .expects('numberToHex')
-            .withArgs(model.parameters[1])
-            .returns('0x0')
-            .once();
+        Utils.numberToHex
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBe('0x0');
 
-        formattersMock.verify();
+        expect(formatters.inputBlockNumberFormatter)
+            .toHaveBeenCalledWith(100);
+
+        expect(Utils.numberToHex)
+            .toHaveBeenCalledWith(100);
 
         expect(model.rpcMethod).toBe('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('afterExecution should map the response', () => {
-        formattersMock
-            .expects('outputBlockFormatter')
-            .withArgs({})
-            .returns({block: true})
-            .once();
+        formatters.outputBlockFormatter
+            .mockReturnValueOnce({block: true});
 
         expect(model.afterExecution({})).toHaveProperty('block', true);
 
-        formattersMock.verify();
+        expect(formatters.outputBlockFormatter)
+            .toHaveBeenCalledWith({});
     });
 });

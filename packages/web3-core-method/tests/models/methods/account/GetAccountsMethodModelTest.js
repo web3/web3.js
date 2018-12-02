@@ -15,25 +15,29 @@ describe('GetAccountsMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_accounts', () => {
-        expect(model.rpcMethod).toBe('eth_accounts');
+        expect(model.rpcMethod)
+            .toBe('eth_accounts');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount).toBe(0);
+        expect(model.parametersAmount)
+            .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [];
         model.beforeExecution();
 
-        expect(model.parameters[0]).toBe(undefined);
+        expect(model.parameters[0])
+            .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         Utils.toChecksumAddress
             .mockReturnValueOnce('0x0');
 
-        expect(model.afterExecution([{}])[0]).toBe('0x0');
+        expect(model.afterExecution([{}])[0])
+            .toBe('0x0');
 
         expect(Utils.toChecksumAddress)
             .toHaveBeenCalledWith({});

@@ -17,11 +17,13 @@ describe('GetBlockUncleCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {
-        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockNumber');
+        expect(model.rpcMethod)
+            .toBe('eth_getUncleCountByBlockNumber');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).toBe(1);
+        expect(model.parametersAmount)
+            .toBe(1);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {

@@ -17,11 +17,13 @@ describe('GetBlockTransactionCountMethodModelTest', () => {
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
+        expect(model.rpcMethod)
+            .toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).toBe(1);
+        expect(model.parametersAmount)
+            .toBe(1);
     });
 
     it('beforeExecution should call method with block hash as parameter and call inputBlockNumberFormatter', () => {
