@@ -23,20 +23,24 @@
 export default class MethodProxy extends Proxy {
     /**
      * @param {Object} target
+     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodController} methodController
+     *
+     * @constructor
      */
-    constructor(target) {
+    constructor(target, methodModelFactory, methodController) {
         super(
             target,
             {
                 get: (target, name) => {
-                    if (target.methodModelFactory.hasMethodModel(name)) {
+                    if (methodModelFactory.hasMethodModel(name)) {
                         if (typeof target[name] !== 'undefined') {
                             throw new Error(
                                 `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
                             );
                         }
 
-                        const methodModel = target.methodModelFactory.createMethodModel(name);
+                        const methodModel = methodModelFactory.createMethodModel(name);
 
                         const anonymousFunction = () => {
                             methodModel.methodArguments = arguments;
@@ -50,7 +54,7 @@ export default class MethodProxy extends Proxy {
                                 );
                             }
 
-                            return target.methodController.execute(methodModel, target.accounts, target);
+                            return methodController.execute(methodModel, target.accounts, target);
                         };
 
                         anonymousFunction.methodModel = methodModel;

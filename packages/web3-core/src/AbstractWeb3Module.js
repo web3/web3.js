@@ -66,7 +66,11 @@ export default class AbstractWeb3Module {
         if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
             this.methodModelFactory = methodModelFactory;
 
-            return methodModuleFactory.createMethodProxy(this);
+            return methodModuleFactory.createMethodProxy(
+                this,
+                this.methodModelFactory,
+                this.methodController
+            );
         }
     }
 
