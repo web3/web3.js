@@ -17,6 +17,39 @@
  * @date 2018
  */
 
-import { _jsonInterfaceMethodToString } from 'web3-utils';
+import { _jsonInterfaceMethodToString, AbiItem } from 'web3-utils';
 
-_jsonInterfaceMethodToString({}); // $ExpectType string
+const abiItem: AbiItem = {
+    constant: true,
+    inputs: [
+        {
+            name: 'testMe',
+            type: 'uint256[3]'
+        }
+    ],
+    name: "testName",
+    outputs: [
+        {
+            name: "test",
+            type: "uint256"
+        }
+    ],
+    payable: false,
+    stateMutability: "pure",
+    type: "function"
+};
+
+_jsonInterfaceMethodToString(abiItem); // $ExpectType string
+
+// $ExpectError
+_jsonInterfaceMethodToString(['string']);
+// $ExpectError
+_jsonInterfaceMethodToString(234);
+// $ExpectError
+_jsonInterfaceMethodToString([4]);
+// $ExpectError
+_jsonInterfaceMethodToString(true);
+// $ExpectError
+_jsonInterfaceMethodToString(null);
+// $ExpectError
+_jsonInterfaceMethodToString(undefined);
