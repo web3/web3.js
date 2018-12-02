@@ -21,7 +21,9 @@
  */
 
 export default class MethodProxy extends Proxy {
-
+    /**
+     * @param {Object} target
+     */
     constructor(target) {
         super(
             target,
@@ -42,9 +44,9 @@ export default class MethodProxy extends Proxy {
                             if (methodModel.parameters.length !== methodModel.parametersAmount) {
                                 throw new Error(
                                     `Invalid parameters length the expected length would be 
-                        ${methodModel.parametersAmount}
-                         and not 
-                        ${methodModel.parameters.length}`
+                                    ${methodModel.parametersAmount}
+                                     and not 
+                                    ${methodModel.parameters.length}`
                                 );
                             }
 
