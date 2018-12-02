@@ -162,13 +162,20 @@ export interface Units {
 // so we can import and export but the interface code
 // is in 1 place
 export interface ABIItem {
-    constant: boolean;
-    inputs: ABIInput[];
-    name: string;
-    outputs: ABIOuput[];
-    payable: boolean;
-    stateMutability: string; // could be a enum once we move this to generic place
-    type: string // again could be a enum once we move this to generic place
+    constant?: boolean;
+    inputs?: ABIInput[];
+    name?: string;
+    outputs?: ABIOuput[];
+    payable?: boolean;
+    stateMutability?: string; // could be a enum once we move this to generic place
+    type: ABIType // again could be a enum once we move this to generic place
+}
+
+export enum ABIType {
+    function = 'function',
+    constructor = 'constructor',
+    event = 'event',
+    fallback = 'fallback'
 }
 
 export interface ABIInput {
