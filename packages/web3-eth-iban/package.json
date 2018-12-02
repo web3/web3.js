@@ -20,7 +20,8 @@
         "web3-utils": "1.0.0-beta.36"
     },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ],
     "devDependencies": {
         "dtslint": "^0.3.0"
