@@ -35,13 +35,13 @@ export * from './Utils';
 /**
  * Should be used to create full function/event name from json abi
  *
- * @method _jsonInterfaceMethodToString
+ * @method jsonInterfaceMethodToString
  *
  * @param {Object} json
  *
  * @returns {String} full function/event name
  */
-export const _jsonInterfaceMethodToString = (json) => {
+export const jsonInterfaceMethodToString = (json) => {
     if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }

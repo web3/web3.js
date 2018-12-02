@@ -116,7 +116,7 @@ export function toUtf8(string: string): string;
 export function toWei(value: number | string | BN, unit?: Unit): string | BN;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
-export function _jsonInterfaceMethodToString(abiItem: ABIItem): string;
+export function jsonInterfaceMethodToString(abiItem: ABIItem): string;
 export function soliditySha3(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;

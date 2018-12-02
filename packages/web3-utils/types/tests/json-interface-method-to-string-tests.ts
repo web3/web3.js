@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import { _jsonInterfaceMethodToString, ABIItem } from 'web3-utils';
+import { jsonInterfaceMethodToString, ABIItem } from 'web3-utils';
 
 const abiItem: ABIItem = {
     constant: true,
@@ -39,17 +39,17 @@ const abiItem: ABIItem = {
     type: "function"
 };
 
-_jsonInterfaceMethodToString(abiItem); // $ExpectType string
+jsonInterfaceMethodToString(abiItem); // $ExpectType string
 
 // $ExpectError
-_jsonInterfaceMethodToString(['string']);
+jsonInterfaceMethodToString(['string']);
 // $ExpectError
-_jsonInterfaceMethodToString(234);
+jsonInterfaceMethodToString(234);
 // $ExpectError
-_jsonInterfaceMethodToString([4]);
+jsonInterfaceMethodToString([4]);
 // $ExpectError
-_jsonInterfaceMethodToString(true);
+jsonInterfaceMethodToString(true);
 // $ExpectError
-_jsonInterfaceMethodToString(null);
+jsonInterfaceMethodToString(null);
 // $ExpectError
-_jsonInterfaceMethodToString(undefined);
+jsonInterfaceMethodToString(undefined);
