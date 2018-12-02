@@ -27,6 +27,8 @@ This will expose the `Web3Utils` object on the window object.
 
 ## Usage
 
+Import all of the utils functions
+
 ```js
 import * as Utils from 'web3-utils';
 
@@ -39,12 +41,20 @@ console.log(Utils);
 }
 ```
 
+Import what you need
+
+```js
+import { asciiToHex } from 'web3-utils';
+
+console.log(asciiToHex('I have 100!'));
+> "0x49206861766520313030e282ac"
+```
+
 ## Types 
 
-If you are using TypeScript all the types are defined in the `index.d.ts` file
+If you are using TypeScript then all types are defined within the package itself so no need
+to install any `@types` libraries. Just import the library and the types should be exposed.  
 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
-
-
