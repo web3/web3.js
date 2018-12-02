@@ -26,7 +26,7 @@ checkAddressChecksum('0x8ee7f17bb3f88b01247c21ab6603880b64ae53e811f5e01138822e55
 // $ExpectError
 checkAddressChecksum([4]);
 // $ExpectError
-checkAddressChecksum([ 36 ]);
+checkAddressChecksum(['string']);
 // $ExpectError
 checkAddressChecksum(345);
 // $ExpectError

@@ -21,10 +21,10 @@ import { BN, bytesToHex } from 'web3-utils';
 
 const bigNumber = new BN(3);
 
-bytesToHex([ 72, 101, 108, 108, 111, 33, 36 ]); // $ExpectType string
+bytesToHex([72]); // $ExpectType string
 
 // $ExpectError
-bytesToHex([ '72', 101, 108, 108, 111, 33, 36 ]);
+bytesToHex(['string']);
 // $ExpectError
 bytesToHex(345);
 // $ExpectError
