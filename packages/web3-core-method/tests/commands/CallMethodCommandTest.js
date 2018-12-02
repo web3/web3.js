@@ -63,7 +63,23 @@ describe('CallMethodCommandTest', () => {
             .toHaveBeenCalledWith('response');
     });
 
-    it('calls execute and throws error', async (done) => {
+    it('calls execute and throws error without callback defined', async () => {
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.reject(new Error('ERROR')));
+
+        moduleInstanceMock.currentProvider = providerAdapterMock;
+
+        await expect(callMethodCommand.execute(moduleInstanceMock, methodModelMock))
+            .rejects.toEqual(new Error('ERROR'));
+
+        expect(methodModelMock.beforeExecution)
+            .toHaveBeenCalledWith(moduleInstanceMock);
+
+        expect(providerAdapterMock.send)
+            .toHaveBeenCalledWith(methodModelMock.rpcMethod, methodModelMock.parameters);
+    });
+
+    it('calls execute and throws error with callback defined', async (done) => {
         providerAdapterMock.send
             .mockReturnValueOnce(Promise.reject(new Error('ERROR')));
 
@@ -76,8 +92,7 @@ describe('CallMethodCommandTest', () => {
             done();
         };
 
-        await expect(callMethodCommand.execute(moduleInstanceMock, methodModelMock))
-            .rejects.toEqual(new Error('ERROR'));
+        await callMethodCommand.execute(moduleInstanceMock, methodModelMock);
 
         expect(methodModelMock.beforeExecution)
             .toHaveBeenCalledWith(moduleInstanceMock);

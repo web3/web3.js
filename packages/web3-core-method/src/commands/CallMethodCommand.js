@@ -46,6 +46,8 @@ export default class CallMethodCommand {
         } catch (error) {
             if (methodModel.callback) {
                 methodModel.callback(error, null);
+
+                return;
             }
 
             throw error;
