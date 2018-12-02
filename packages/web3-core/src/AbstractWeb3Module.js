@@ -24,6 +24,7 @@ import isObject from 'underscore-es/isObject';
 
 export default class AbstractWeb3Module {
     /**
+     * // TODO: Ask Brendan or Angular core team what they mean to multiple inheritance with a mixin.
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
