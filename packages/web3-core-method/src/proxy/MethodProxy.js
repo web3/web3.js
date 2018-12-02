@@ -22,7 +22,7 @@
 
 export default class MethodProxy extends Proxy {
     /**
-     * @param {Object} target
+     * @param {AbstractWeb3Module} target
      * @param {MethodModelFactory} methodModelFactory
      * @param {MethodController} methodController
      *
