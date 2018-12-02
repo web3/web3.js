@@ -1,22 +1,17 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import GetBlockMethodModel from '../../../../src/models/methods/block/GetBlockMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * GetBlockMethodModel test
  */
 describe('GetBlockMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new GetBlockMethodModel({}, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
     });
 
     it('rpcMethod should return eth_getBlockByNumber', () => {
@@ -30,18 +25,16 @@ describe('GetBlockMethodModelTest', () => {
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = ['0x0', true];
 
-        formattersMock
-            .expects('inputBlockNumberFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBeTruthy();
 
-        formattersMock.verify();
+        expect(formatters.inputBlockNumberFormatter)
+            .toHaveBeenCalledWith('0x0');
 
         expect(model.rpcMethod).toBe('eth_getBlockByHash');
     });
@@ -49,31 +42,27 @@ describe('GetBlockMethodModelTest', () => {
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
         model.parameters = [100, true];
 
-        formattersMock
-            .expects('inputBlockNumberFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBeTruthy();
 
-        formattersMock.verify();
+        expect(formatters.inputBlockNumberFormatter)
+            .toHaveBeenCalledWith(100);
 
         expect(model.rpcMethod).toBe('eth_getBlockByNumber');
     });
 
     it('afterExecution should map the response', () => {
-        formattersMock
-            .expects('outputBlockFormatter')
-            .withArgs({})
-            .returns({empty: false})
-            .once();
+        formatters.outputBlockFormatter
+            .mockReturnValueOnce({empty: false});
 
         expect(model.afterExecution({})).toHaveProperty('empty', false);
 
-        formattersMock.verify();
+        expect(formatters.outputBlockFormatter)
+            .toHaveBeenCalledWith({});
     });
 });
