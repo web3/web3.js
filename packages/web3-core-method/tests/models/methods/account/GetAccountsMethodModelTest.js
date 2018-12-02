@@ -1,22 +1,17 @@
-import * as sinonLib from 'sinon';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import GetAccountsMethodModel from '../../../../src/models/methods/account/GetAccountsMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('Utils');
 
 /**
  * GetAccountsMethodModel test
  */
 describe('GetAccountsMethodModelTest', () => {
-    let model, utilsMock;
+    let model;
 
     beforeEach(() => {
-        utilsMock = sinon.mock(utils);
-        model = new GetAccountsMethodModel(utils, {});
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetAccountsMethodModel(Utils, {});
     });
 
     it('rpcMethod should return eth_accounts', () => {
@@ -35,14 +30,12 @@ describe('GetAccountsMethodModelTest', () => {
     });
 
     it('afterExecution should just return the response', () => {
-        utilsMock
-            .expects('toChecksumAddress')
-            .withArgs({})
-            .returns('0x0')
-            .once();
+        Utils.toChecksumAddress
+            .mockReturnValueOnce('0x0');
 
         expect(model.afterExecution([{}])[0]).toBe('0x0');
 
-        utilsMock.verify();
+        expect(Utils.toChecksumAddress)
+            .toHaveBeenCalledWith({});
     });
 });

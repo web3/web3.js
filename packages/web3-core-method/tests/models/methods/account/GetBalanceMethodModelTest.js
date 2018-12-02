@@ -1,22 +1,17 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import GetBalanceMethodModel from '../../../../src/models/methods/account/GetBalanceMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * GetBalanceMethodModel test
  */
 describe('GetBalanceMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new GetBalanceMethodModel({}, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
     });
 
     it('rpcMethod should return eth_getBalance', () => {
@@ -30,37 +25,32 @@ describe('GetBalanceMethodModelTest', () => {
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
         model.parameters = ['string', 100];
 
-        formattersMock
-            .expects('inputAddressFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
 
-        formattersMock
-            .expects('inputDefaultBlockNumberFormatter')
-            .withArgs(model.parameters[1], {})
-            .returns('0x0')
-            .once();
+        formatters.inputDefaultBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
         expect(model.parameters[0]).toBe('0x0');
         expect(model.parameters[1]).toBe('0x0');
 
-        formattersMock.verify();
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter)
+            .toHaveBeenCalledWith(100, {});
     });
 
     it('afterExecution should call outputBigNumberFormatter on the response and return it', () => {
-        const response = {};
+        formatters.outputBigNumberFormatter
+            .mockReturnValueOnce({bigNumber: true});
 
-        formattersMock
-            .expects('outputBigNumberFormatter')
-            .withArgs(response)
-            .returns({bigNumber: true})
-            .once();
+        expect(model.afterExecution({}))
+            .toHaveProperty('bigNumber', true);
 
-        expect(model.afterExecution({})).toHaveProperty('bigNumber', true);
-
-        formattersMock.verify();
+        expect(formatters.outputBigNumberFormatter)
+            .toHaveBeenCalledWith({});
     });
 });
