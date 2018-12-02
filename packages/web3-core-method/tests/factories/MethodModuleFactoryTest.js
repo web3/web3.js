@@ -7,14 +7,13 @@ import SignMessageCommand from '../../src/commands/SignMessageCommand';
 import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 import MessageSigner from '../../src/signers/MessageSigner';
-import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
 import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
 /**
  * MethodModuleFactory test
  */
-describe('MethodPackageFactoryTest', () => {
+describe('MethodModuleFactoryTest', () => {
     let methodPackageFactory;
 
     beforeEach(() => {
@@ -53,10 +52,6 @@ describe('MethodPackageFactoryTest', () => {
 
     it('calls createMessageSigner and should return an instance of MessageSigner', () => {
         expect(methodPackageFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
-    });
-
-    it('calls createTransactionConfirmationModel and should return an instance of TransactionConfirmationModel', () => {
-        expect(methodPackageFactory.createTransactionConfirmationModel()).toBeInstanceOf(TransactionConfirmationModel);
     });
 
     it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', () => {
