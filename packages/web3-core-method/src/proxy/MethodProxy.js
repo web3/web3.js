@@ -36,7 +36,7 @@ export default class MethodProxy extends Proxy {
                  * @param {AbstractWeb3Module} target
                  * @param {String|Symbol} name
                  *
-                 * @returns {Function}
+                 * @returns {any}
                  */
                 get: (target, name) => {
                     if (methodModelFactory.hasMethodModel(name)) {
