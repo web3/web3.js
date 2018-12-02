@@ -48,13 +48,13 @@ export default class AbstractWeb3Module {
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
 
         this._currentProvider = provider;
-        this._defaultAccount = options.defaultAccount || null;
-        this.defaultBlock = options.defaultBlock || null;
+        this._defaultAccount = options.defaultAccount;
+        this.defaultBlock = options.defaultBlock;
         this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
         this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
-        this.defaultGasPrice = options.defaultGasPrice || null;
-        this.defaultGas = options.defaultGas || null;
+        this.defaultGasPrice = options.defaultGasPrice;
+        this.defaultGas = options.defaultGas;
         this.givenProvider = this.providerDetector.detect();
 
         this.BatchRequest = () => {
