@@ -45,7 +45,7 @@ export default class PromiEvent {
      * @method proxyHandler
      *
      * @param {PromiEvent} target
-     * @param {String} name
+     * @param {String|Symbol} name
      *
      * @returns {Function}
      */

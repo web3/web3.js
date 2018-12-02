@@ -1,13 +1,21 @@
-import * as sinonLib from 'sinon';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import SendMethodCommand from '../../src/commands/SendMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
-import {PromiEvent} from 'web3-core-promievent';
 import MethodController from '../../src/controllers/MethodController';
+import {PromiEvent} from 'web3-core-promievent';
+import {AbstractWeb3Module} from 'web3-core';
+import {SocketProviderAdapter} from 'web3-providers';
 
-const sinon = sinonLib.createSandbox();
+//Mocks
+jest.mock('../../src/commands/CallMethodCommand');
+jest.mock('../../src/commands/SendMethodCommand');
+jest.mock('../../lib/models/AbstractMethodModel');
+jest.mock('../../src/commands/SignAndSendMethodCommand');
+jest.mock('../../src/commands/SignMessageCommand');
+jest.mock('SocketProviderAdapter');
+jest.mock('AbstractWeb3Module');
 
 /**
  * MethodController test
@@ -23,143 +31,164 @@ describe('MethodControllerTest', () => {
         callMethodCommand,
         sendMethodCommand,
         signAndSendMethodCommand,
-        signMessageCommand;
+        signMessageCommand,
+        providerAdapter,
+        providerAdapterMock,
+        moduleInstance,
+        moduleInstanceMock;
 
     beforeEach(() => {
-        callMethodCommand = new CallMethodCommand();
-        sendMethodCommand = new SendMethodCommand({});
-        signAndSendMethodCommand = new SignAndSendMethodCommand({}, {});
-        signMessageCommand = new SignMessageCommand({});
-        methodModel = new AbstractMethodModel('', 0, {}, {});
+        providerAdapter = new SocketProviderAdapter({});
+        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        callMethodCommandMock = sinon.mock(callMethodCommand);
-        sendMethodCommandMock = sinon.mock(sendMethodCommand);
-        signAndSendMethodCommandMock = sinon.mock(signAndSendMethodCommand);
-        signMessageCommandMock = sinon.mock(signMessageCommand);
-        methodModelMock = sinon.mock(methodModel);
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+
+        callMethodCommand = new CallMethodCommand();
+        callMethodCommandMock = CallMethodCommand.mock.instances[0];
+
+        sendMethodCommand = new SendMethodCommand({});
+        sendMethodCommandMock = SendMethodCommand.mock.instances[0];
+
+        signAndSendMethodCommand = new SignAndSendMethodCommand({}, {});
+        signAndSendMethodCommandMock = SignAndSendMethodCommand.mock.instances[0];
+
+        signMessageCommand = new SignMessageCommand({});
+        signMessageCommandMock = SignMessageCommand.mock.instances[0];
+
+        methodModel = new AbstractMethodModel('', 0, {}, {});
+        methodModelMock = AbstractMethodModel.mock.instances[0];
 
         methodController = new MethodController(
-            callMethodCommand,
-            sendMethodCommand,
-            signAndSendMethodCommand,
-            signMessageCommand,
+            callMethodCommandMock,
+            sendMethodCommandMock,
+            signAndSendMethodCommandMock,
+            signMessageCommandMock,
             PromiEvent
         );
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('constructor is setting all the dependencies correctly', () => {
-        expect(methodController.callMethodCommand).toBeInstanceOf(CallMethodCommand);
-        expect(methodController.sendMethodCommand).toBeInstanceOf(SendMethodCommand);
-        expect(methodController.signAndSendMethodCommand).toBeInstanceOf(SignAndSendMethodCommand);
-        expect(methodController.signMessageCommand).toBeInstanceOf(SignMessageCommand);
-        expect(methodController.promiEventPackage).toBeInstanceOf(Object);
+        expect(methodController.callMethodCommand)
+            .toEqual(callMethodCommandMock);
+
+        expect(methodController.sendMethodCommand)
+            .toEqual(sendMethodCommandMock);
+
+        expect(methodController.signAndSendMethodCommand)
+            .toEqual(signAndSendMethodCommandMock);
+
+        expect(methodController.signMessageCommand)
+            .toEqual(signMessageCommandMock);
+
+        expect(methodController.PromiEvent)
+            .toEqual(PromiEvent);
     });
 
     it('execute calls signMessageCommand', () => {
         const accounts = {wallet: [0]};
 
-        methodModelMock
-            .expects('isSign')
-            .returns(true)
-            .once();
+        methodModelMock.isSign
+            .mockReturnValueOnce(true);
 
-        signMessageCommandMock
-            .expects('execute')
-            .withArgs({}, methodModel, accounts)
-            .returns(true)
-            .once();
+        signMessageCommandMock.execute
+            .mockReturnValueOnce(true);
 
-        expect(methodController.execute(methodModel, accounts, {})).toBeTruthy();
+        expect(methodController.execute(methodModelMock, accounts, moduleInstanceMock))
+            .toBeTruthy();
 
-        methodModelMock.verify();
-        signMessageCommandMock.verify();
+        expect(methodModelMock.isSign)
+            .toBeCalled();
+
+        expect(signMessageCommandMock.execute)
+            .toBeCalled();
     });
 
     it('execute calls signAndSendMethodCommand', () => {
         const accounts = {wallet: [0]};
 
-        methodModelMock
-            .expects('isSendTransaction')
-            .returns(true)
-            .once();
+        methodModelMock.isSign
+            .mockReturnValueOnce(false);
 
-        signAndSendMethodCommandMock
-            .expects('execute')
-            .withArgs(methodModel, {}, accounts, {})
-            .returns(true)
-            .once();
+        methodModelMock.isSendTransaction
+            .mockReturnValueOnce(true);
 
-        expect(methodController.execute(methodModel, accounts, {})).toBeTruthy();
+        signAndSendMethodCommandMock.execute
+            .mockReturnValueOnce(true);
 
-        methodModelMock.verify();
-        signAndSendMethodCommandMock.verify();
+        expect(methodController.execute(methodModelMock, accounts, moduleInstanceMock))
+            .toBeTruthy();
+
+        expect(methodModelMock.isSendTransaction)
+            .toBeCalled();
+
+        // Can't define arguments because the PromiEvent object will be created in the controller.
+        // This is a clear sign of bad architecture.. the PromiEvent object should be removed.
+        expect(signAndSendMethodCommandMock.execute)
+            .toBeCalled();
     });
 
     it('execute calls sendMethodCommand with sendTransaction rpc method', () => {
-        methodModelMock
-            .expects('isSendTransaction')
-            .returns(true)
-            .once();
+        methodModelMock.isSendTransaction
+            .mockReturnValueOnce(true);
 
-        sendMethodCommandMock
-            .expects('execute')
-            .withArgs({}, methodModel, {})
-            .returns(true)
-            .once();
+        sendMethodCommandMock.execute
+            .mockReturnValueOnce(true);
 
-        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
+        expect(methodController.execute(methodModelMock, null, moduleInstanceMock)).toBeTruthy();
 
-        methodModelMock.verify();
-        signAndSendMethodCommandMock.verify();
+        expect(methodModelMock.isSendTransaction)
+            .toBeCalled();
+
+        // Can't define arguments because the PromiEvent object will be created in the controller.
+        // This is a clear sign of bad architecture.. the PromiEvent object should be removed.
+        expect(sendMethodCommandMock.execute)
+            .toBeCalled();
     });
 
     it('execute calls sendMethodCommand with sendRawTransaction rpc method', () => {
-        methodModelMock
-            .expects('isSendTransaction')
-            .returns(false)
-            .once();
+        methodModelMock.isSendTransaction
+            .mockReturnValueOnce(false);
 
-        methodModelMock
-            .expects('isSendRawTransaction')
-            .returns(true)
-            .once();
+        methodModelMock.isSendRawTransaction
+            .mockReturnValueOnce(true);
 
-        sendMethodCommandMock
-            .expects('execute')
-            .withArgs({}, methodModel, {})
-            .returns(true)
-            .once();
+        sendMethodCommandMock.execute
+            .mockReturnValueOnce(true);
 
-        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
+        expect(methodController.execute(methodModelMock, null, moduleInstanceMock)).toBeTruthy();
 
-        methodModelMock.verify();
-        signAndSendMethodCommandMock.verify();
+        expect(methodModelMock.isSendTransaction)
+            .toBeCalled();
+
+        expect(methodModelMock.isSendRawTransaction)
+            .toBeCalled();
+
+        // Can't define arguments because the PromiEvent object will be created in the controller.
+        // This is a clear sign of bad architecture.. the PromiEvent object should be removed.
+        expect(sendMethodCommandMock.execute)
+            .toBeCalled();
     });
 
     it('execute calls callMethodCommand', () => {
-        methodModelMock
-            .expects('isSendTransaction')
-            .returns(false)
-            .once();
+        methodModelMock.isSendTransaction
+            .mockReturnValueOnce(false);
 
-        methodModelMock
-            .expects('isSendRawTransaction')
-            .returns(false)
-            .once();
+        methodModelMock.isSendRawTransaction
+            .mockReturnValueOnce(false);
 
-        callMethodCommandMock
-            .expects('execute')
-            .withArgs({}, methodModel)
-            .returns(true)
-            .once();
+        callMethodCommandMock.execute
+            .mockReturnValueOnce(true);
 
-        expect(methodController.execute(methodModel, null, {})).toBeTruthy();
+        expect(methodController.execute(methodModelMock, null, moduleInstanceMock)).toBeTruthy();
 
-        methodModelMock.verify();
-        signAndSendMethodCommandMock.verify();
+        expect(methodModelMock.isSendTransaction)
+            .toBeCalled();
+
+        expect(methodModelMock.isSendRawTransaction)
+            .toBeCalled();
+
+        expect(callMethodCommandMock.execute)
+            .toHaveBeenCalledWith(moduleInstanceMock, methodModelMock);
     });
 });

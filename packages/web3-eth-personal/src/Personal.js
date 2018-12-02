@@ -25,7 +25,7 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class Personal extends AbstractWeb3Module {
     /**
-     * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
+     * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
