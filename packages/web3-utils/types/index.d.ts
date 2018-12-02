@@ -116,7 +116,6 @@ export function toUtf8(string: string): string;
 export function toWei(value: number | string | BN, unit?: Unit): string | BN;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
-export function _fireError(error: fireError | string | Error, emitter: {}, reject: (error: Error) => void, callback: (error: Error) => void): {};
 export function _jsonInterfaceMethodToString(abiItem: ABIItem): string;
 export function soliditySha3(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
@@ -127,11 +126,6 @@ export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
 
 // interfaces
-
-export interface fireError {
-    message: string;
-    data: string | {} | any[];
-}
 
 export interface Units {
     noether: string;
