@@ -41,20 +41,22 @@ export default class AbstractWeb3Module {
         methodModelFactory = null,
         options = {}
     ) {
-        this._currentProvider = provider;
         this.providersModuleFactory = providersModuleFactory;
         this.providers = providers;
         this.methodController = methodController;
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
+
+        this._currentProvider = provider;
         this._defaultAccount = options.defaultAccount || null;
-        this._defaultBlock = options.defaultBlock || null;
-        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
-        this._defaultGasPrice = options.defaultGasPrice || null;
-        this._defaultGas = options.defaultGas || null;
+        this.defaultBlock = options.defaultBlock || null;
+        this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
+        this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+        this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this.defaultGasPrice = options.defaultGasPrice || null;
+        this.defaultGas = options.defaultGas || null;
         this.givenProvider = this.providerDetector.detect();
+
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
@@ -66,136 +68,6 @@ export default class AbstractWeb3Module {
                 get: this.proxyHandler
             });
         }
-    }
-
-    /**
-     * Getter for the defaultGasPrice property
-     *
-     * @property defaultGasPrice
-     *
-     * @returns {String}
-     */
-    get defaultGasPrice() {
-        return this._defaultGasPrice;
-    }
-
-    /**
-     * Sets the defaultGasPrice property on the current object
-     *
-     * @property defaultGasPrice
-     *
-     * @param {String} value
-     */
-    set defaultGasPrice(value) {
-        this._defaultGasPrice = value;
-    }
-
-    /**
-     * Sets the defaultGas property on the current object
-     *
-     * @property defaultGas
-     *
-     * @param {Number} value
-     */
-    set defaultGas(value) {
-        this._defaultGas = value;
-    }
-
-    /**
-     * Getter for the defaultGas property
-     *
-     * @property defaultGas
-     *
-     * @returns {Number}
-     */
-    get defaultGas() {
-        return this._defaultGas;
-    }
-
-    /**
-     * Getter for the pollingTimeout property
-     *
-     * @property transactionPollingTimeout
-     *
-     * @returns {Number}
-     */
-    get transactionPollingTimeout() {
-        return this._transactionPollingTimeout;
-    }
-
-    /**
-     * Sets the pollingTimeout for the current object
-     *
-     * @property transactionPollingTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionPollingTimeout(value) {
-        this._transactionPollingTimeout = value;
-    }
-
-    /**
-     * Getter for the confirmationBlock property
-     *
-     * @property transactionConfirmationBlocks
-     *
-     * @returns {Number}
-     */
-    get transactionConfirmationBlocks() {
-        return this._transactionConfirmationBlocks;
-    }
-
-    /**
-     * Sets the confirmationBlock on the current object
-     *
-     * @property transactionConfirmationBlocks
-     *
-     * @param {Number} value
-     */
-    set transactionConfirmationBlocks(value) {
-        this._transactionConfirmationBlocks = value;
-    }
-
-    /**
-     * Getter for the timeoutBlock property
-     *
-     * @property transactionBlockTimeout
-     *
-     * @returns {Number}
-     */
-    get transactionBlockTimeout() {
-        return this._transactionBlockTimeout;
-    }
-
-    /**
-     * Sets the timeoutBlock property on the current object
-     *
-     * @property transactionBlockTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionBlockTimeout(value) {
-        this._transactionBlockTimeout = value;
-    }
-
-    /**
-     * Getter for the defaultBlock property
-     *
-     * @returns {String|Number}
-     */
-    get defaultBlock() {
-        return this._defaultBlock;
-    }
-
-    /**
-     * Sets the defaultBlock on the current object
-     *
-     * @property defaultBlock
-     *
-     * @param {String|Number} value
-     */
-    set defaultBlock(value) {
-        this._defaultBlock = value;
     }
 
     /**
