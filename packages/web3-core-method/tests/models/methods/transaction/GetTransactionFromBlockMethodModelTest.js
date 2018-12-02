@@ -1,32 +1,29 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import GetTransactionFromBlockMethodModel from '../../../../src/models/methods/transaction/GetTransactionFromBlockMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
+jest.mock('Utils');
 
 /**
  * GetStorageAtMethodModel test
  */
 describe('GetStorageAtMethodModelTest', () => {
-    let model, formattersMock, utilsMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
-        utilsMock = sinon.mock(utils);
-        model = new GetTransactionFromBlockMethodModel(utils, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetTransactionFromBlockMethodModel(Utils, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
+        expect(model.rpcMethod)
+            .toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).toBe(2);
+        expect(model.parametersAmount)
+            .toBe(2);
     });
 
     it(
@@ -35,27 +32,28 @@ describe('GetStorageAtMethodModelTest', () => {
         () => {
             model.parameters = ['0x0', 100];
 
-            formattersMock
-                .expects('inputBlockNumberFormatter')
-                .withArgs(model.parameters[0])
-                .returns('0x0')
-                .once();
+            formatters.inputBlockNumberFormatter
+                .mockReturnValueOnce('0x0');
 
-            utilsMock
-                .expects('numberToHex')
-                .withArgs(model.parameters[1])
-                .returns('0x0')
-                .once();
+            Utils.numberToHex
+                .mockReturnValueOnce('0x0');
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).toBe('0x0');
-            expect(model.parameters[1]).toBe('0x0');
+            expect(model.parameters[0])
+                .toBe('0x0');
 
-            formattersMock.verify();
-            utilsMock.verify();
+            expect(model.parameters[1])
+                .toBe('0x0');
 
-            expect(model.rpcMethod).toBe('eth_getTransactionByBlockHashAndIndex');
+            expect(formatters.inputBlockNumberFormatter)
+                .toHaveBeenCalledWith('0x0');
+
+            expect(Utils.numberToHex)
+                .toHaveBeenCalledWith(100);
+
+            expect(model.rpcMethod)
+                .toBe('eth_getTransactionByBlockHashAndIndex');
         }
     );
 
@@ -65,39 +63,39 @@ describe('GetStorageAtMethodModelTest', () => {
         () => {
             model.parameters = [100, 100];
 
-            formattersMock
-                .expects('inputBlockNumberFormatter')
-                .withArgs(model.parameters[0])
-                .returns('0x0')
-                .once();
+            formatters.inputBlockNumberFormatter
+                .mockReturnValueOnce('0x0');
 
-            utilsMock
-                .expects('numberToHex')
-                .withArgs(model.parameters[1])
-                .returns('0x0')
-                .once();
+            Utils.numberToHex
+                .mockReturnValueOnce('0x0');
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).toBe('0x0');
-            expect(model.parameters[1]).toBe('0x0');
+            expect(model.parameters[0])
+                .toBe('0x0');
 
-            formattersMock.verify();
-            utilsMock.verify();
+            expect(model.parameters[1])
+                .toBe('0x0');
 
-            expect(model.rpcMethod).toBe('eth_getTransactionByBlockNumberAndIndex');
+            expect(formatters.inputBlockNumberFormatter)
+                .toHaveBeenCalledWith(100);
+
+            expect(Utils.numberToHex)
+                .toHaveBeenCalledWith(100);
+
+            expect(model.rpcMethod)
+                .toBe('eth_getTransactionByBlockNumberAndIndex');
         }
     );
 
     it('afterExecution should map the response', () => {
-        formattersMock
-            .expects('outputTransactionFormatter')
-            .withArgs({})
-            .returns({empty: false})
-            .once();
+        formatters.outputTransactionFormatter
+            .mockReturnValueOnce({empty: false});
 
-        expect(model.afterExecution({})).toHaveProperty('empty', false);
+        expect(model.afterExecution({}))
+            .toHaveProperty('empty', false);
 
-        formattersMock.verify();
+        expect(formatters.outputTransactionFormatter)
+            .toHaveBeenCalledWith({});
     });
 });

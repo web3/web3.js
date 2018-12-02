@@ -1,47 +1,46 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import SignTransactionMethodModel from '../../../../src/models/methods/transaction/SignTransactionMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * SendTransactionMethodModel test
  */
 describe('SendTransactionMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new SignTransactionMethodModel({}, formatters);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('rpcMethod should return eth_signTransaction', () => {
-        expect(model.rpcMethod).toBe('eth_signTransaction');
+        expect(model.rpcMethod)
+            .toBe('eth_signTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).toBe(1);
+        expect(model.parametersAmount)
+            .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
         model.parameters = [{}];
 
-        formattersMock
-            .expects('inputTransactionFormatter')
-            .withArgs({}, {})
-            .returns({empty: false})
-            .once();
+        formatters.inputTransactionFormatter
+            .mockReturnValueOnce({empty: false});
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toHaveProperty('empty', false);
+        expect(model.parameters[0])
+            .toHaveProperty('empty', false);
+
+        expect(formatters.inputTransactionFormatter)
+            .toHaveBeenCalledWith({}, {});
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendTransaction')).toBe('sendTransaction');
+        expect(model.afterExecution('sendTransaction'))
+            .toBe('sendTransaction');
     });
 });

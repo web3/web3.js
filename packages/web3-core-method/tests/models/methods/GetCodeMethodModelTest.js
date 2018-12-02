@@ -1,58 +1,57 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import GetCodeMethodModel from '../../../src/models/methods/GetCodeMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * GetCodeMethodModel test
  */
 describe('GetCodeMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new GetCodeMethodModel({}, formatters);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('rpcMethod should return eth_getCode', () => {
-        expect(model.rpcMethod).toBe('eth_getCode');
+        expect(model.rpcMethod)
+            .toBe('eth_getCode');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount).toBe(2);
+        expect(model.parametersAmount)
+            .toBe(2);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
         model.parameters = ['string', 100];
 
-        formattersMock
-            .expects('inputAddressFormatter')
-            .withArgs(model.parameters[0])
-            .returns('0x0')
-            .once();
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
 
-        formattersMock
-            .expects('inputDefaultBlockNumberFormatter')
-            .withArgs(model.parameters[1], {})
-            .returns('0x0')
-            .once();
+        formatters.inputDefaultBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
-        expect(model.parameters[1]).toBe('0x0');
+        expect(model.parameters[0])
+            .toBe('0x0');
 
-        formattersMock.verify();
+        expect(model.parameters[1])
+            .toBe('0x0');
+
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter)
+            .toHaveBeenCalledWith(100, {});
     });
 
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).toBe(object);
+        expect(model.afterExecution(object))
+            .toBe(object);
     });
 });

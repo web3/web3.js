@@ -1,32 +1,29 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
-import utils from 'web3-utils';
+import * as Utils from 'web3-utils';
 import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
+jest.mock('Utils');
 
 /**
  * GetStorageAtMethodModel test
  */
 describe('GetStorageAtMethodModelTest', () => {
-    let model, formattersMock, utilsMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
-        utilsMock = sinon.mock(utils);
-        model = new GetStorageAtMethodModel(utils, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
+        model = new GetStorageAtMethodModel(Utils, formatters);
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {
-        expect(model.rpcMethod).toBe('eth_getStorageAt');
+        expect(model.rpcMethod)
+            .toBe('eth_getStorageAt');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).toBe(3);
+        expect(model.parametersAmount)
+            .toBe(3);
     });
 
     it(
@@ -35,37 +32,41 @@ describe('GetStorageAtMethodModelTest', () => {
         () => {
             model.parameters = ['string', 100, 100];
 
-            formattersMock
-                .expects('inputAddressFormatter')
-                .withArgs(model.parameters[0])
-                .returns('0x0')
-                .once();
+            formatters.inputAddressFormatter
+                .mockReturnValue('0x0');
 
-            utilsMock
-                .expects('numberToHex')
-                .withArgs(model.parameters[1])
-                .returns('0x0')
-                .once();
+            formatters.inputDefaultBlockNumberFormatter
+                .mockReturnValueOnce('0x0');
 
-            formattersMock
-                .expects('inputDefaultBlockNumberFormatter')
-                .withArgs(model.parameters[2])
-                .returns('0x0')
-                .once();
+            Utils.numberToHex
+                .mockReturnValueOnce('0x0');
 
             model.beforeExecution({});
 
-            expect(model.parameters[0]).toBe('0x0');
-            expect(model.parameters[1]).toBe('0x0');
-            expect(model.parameters[2]).toBe('0x0');
+            expect(model.parameters[0])
+                .toBe('0x0');
 
-            formattersMock.verify();
+            expect(model.parameters[1])
+                .toBe('0x0');
+
+            expect(model.parameters[2])
+                .toBe('0x0');
+
+            expect(formatters.inputAddressFormatter)
+                .toHaveBeenCalledWith('string');
+
+            expect(formatters.inputDefaultBlockNumberFormatter)
+                .toHaveBeenCalledWith(100, {});
+
+            expect(Utils.numberToHex)
+                .toHaveBeenCalledWith(100);
         }
     );
 
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object)).toBe(object);
+        expect(model.afterExecution(object))
+            .toBe(object);
     });
 });

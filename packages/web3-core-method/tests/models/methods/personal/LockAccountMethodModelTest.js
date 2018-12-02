@@ -1,49 +1,46 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import LockAccountMethodModel from '../../../../src/models/methods/personal/LockAccountMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * LockAccountMethodModel test
  */
 describe('LockAccountMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new LockAccountMethodModel({}, formatters);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('rpcMethod should return personal_lockAccount', () => {
-        expect(model.rpcMethod).toBe('personal_lockAccount');
+        expect(model.rpcMethod)
+            .toBe('personal_lockAccount');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount).toBe(1);
+        expect(model.parametersAmount)
+            .toBe(1);
     });
 
     it('beforeExecution should call inputAddressFormatter', () => {
         model.parameters = ['0x0'];
 
-        formattersMock
-            .expects('inputAddressFormatter')
-            .withArgs('0x0')
-            .returns('0x0')
-            .once();
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
 
         model.beforeExecution();
 
-        formattersMock.verify();
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('0x0');
 
-        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[0])
+            .toBe('0x0');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('lockAccount')).toBe('lockAccount');
+        expect(model.afterExecution('lockAccount'))
+            .toBe('lockAccount');
     });
 });

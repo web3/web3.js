@@ -134,8 +134,12 @@ describe('GenericShhMethodModelsTest', () => {
         tests.forEach((test) => {
             // eslint-disable-next-line new-cap
             model = new test.model({}, {});
-            expect(model.rpcMethod).toBe(test.rpcMethod);
-            expect(model.parametersAmount).toBe(test.parametersAmount);
+
+            expect(model.rpcMethod)
+                .toBe(test.rpcMethod);
+
+            expect(model.parametersAmount)
+                .toBe(test.parametersAmount);
         });
     });
 });

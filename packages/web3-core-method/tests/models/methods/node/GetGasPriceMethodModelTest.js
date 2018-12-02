@@ -1,22 +1,17 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import GetGasPriceMethodModel from '../../../../src/models/methods/node/GetGasPriceMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * GetGasPriceMethodModel test
  */
 describe('GetGasPriceMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new GetGasPriceMethodModel({}, formatters);
-    });
-
-    afterEach(() => {
-        sinon.restore();
     });
 
     it('rpcMethod should return eth_gasPrice', () => {
@@ -35,14 +30,12 @@ describe('GetGasPriceMethodModelTest', () => {
     });
 
     it('afterExecution should map the response', () => {
-        formattersMock
-            .expects('outputBigNumberFormatter')
-            .withArgs('1000')
-            .returns({bigNumber: true})
-            .once();
+        formatters.outputBigNumberFormatter
+            .mockReturnValueOnce({bigNumber: true});
 
         expect(model.afterExecution('1000')).toHaveProperty('bigNumber', true);
 
-        formattersMock.verify();
+        expect(formatters.outputBigNumberFormatter)
+            .toHaveBeenCalledWith('1000');
     });
 });

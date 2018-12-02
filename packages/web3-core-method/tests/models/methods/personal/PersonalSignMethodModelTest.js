@@ -1,56 +1,55 @@
-import * as sinonLib from 'sinon';
 import {formatters} from 'web3-core-helpers';
 import PersonalSignMethodModel from '../../../../src/models/methods/personal/PersonalSignMethodModel';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('formatters');
 
 /**
  * PersonalSignMethodModel test
  */
 describe('PersonalSignMethodModelTest', () => {
-    let model, formattersMock;
+    let model;
 
     beforeEach(() => {
-        formattersMock = sinon.mock(formatters);
         model = new PersonalSignMethodModel({}, formatters);
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('rpcMethod should return personal_sign', () => {
-        expect(model.rpcMethod).toBe('personal_sign');
+        expect(model.rpcMethod)
+            .toBe('personal_sign');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount).toBe(3);
+        expect(model.parametersAmount)
+            .toBe(3);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
         model.parameters = ['sign', '0x0'];
 
-        formattersMock
-            .expects('inputSignFormatter')
-            .withArgs('sign')
-            .returns('signed')
-            .once();
+        formatters.inputSignFormatter
+            .mockReturnValueOnce('signed');
 
-        formattersMock
-            .expects('inputAddressFormatter')
-            .withArgs('0x0')
-            .returns('0x00')
-            .once();
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x00');
 
         model.beforeExecution();
 
-        formattersMock.verify();
+        expect(model.parameters[0])
+            .toBe('signed');
 
-        expect(model.parameters[0]).toBe('signed');
-        expect(model.parameters[1]).toBe('0x00');
+        expect(model.parameters[1])
+            .toBe('0x00');
+
+        expect(formatters.inputSignFormatter)
+            .toHaveBeenCalledWith('sign');
+
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('0x0');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('personalSign')).toBe('personalSign');
+        expect(model.afterExecution('personalSign'))
+            .toBe('personalSign');
     });
 });

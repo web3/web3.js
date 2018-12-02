@@ -1,7 +1,7 @@
 import * as Utils from 'web3-utils';
 import PeerCountMethodModel from '../../../../src/models/methods/network/PeerCountMethodModel';
 
-// Mock
+// Mocks
 jest.mock('Utils');
 
 /**

@@ -34,12 +34,14 @@ describe('GetBlockUncleCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[0])
+            .toBe('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockHash');
+        expect(model.rpcMethod)
+            .toBe('eth_getUncleCountByBlockHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -50,19 +52,22 @@ describe('GetBlockUncleCountMethodModelTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
+        expect(model.parameters[0])
+            .toBe('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
-            .toHaveBeenCalledWith('0x0');
+            .toHaveBeenCalledWith(100);
 
-        expect(model.rpcMethod).toBe('eth_getUncleCountByBlockNumber');
+        expect(model.rpcMethod)
+            .toBe('eth_getUncleCountByBlockNumber');
     });
 
     it('afterExecution should map the hex string to a number', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution('0x0')).toBe(100);
+        expect(model.afterExecution('0x0'))
+            .toBe(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith('0x0');
