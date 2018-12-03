@@ -24,9 +24,6 @@
         "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
-    "devDependencies": {
-        "web3-eth-accounts": "1.0.0-beta.36"
-    },
     "files": [
         "dist"
     ]
