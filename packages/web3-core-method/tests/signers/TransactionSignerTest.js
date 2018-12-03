@@ -1,7 +1,6 @@
 import Accounts from '../__mocks__/Accounts';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 
-
 /**
  * TransactionSigner test
  */
