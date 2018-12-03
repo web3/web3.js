@@ -43,7 +43,6 @@ export default class AbstractWeb3Module {
     ) {
         this.providersModuleFactory = providersModuleFactory;
         this.providers = providers;
-        this.methodController = methodController;
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
 
