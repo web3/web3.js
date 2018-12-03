@@ -20,8 +20,6 @@
  * @date 2018
  */
 
-import {ContractDeployMethodModel} from 'web3-eth-contract';
-
 export default class TransactionConfirmationWorkflow {
     /**
      * @param {TransactionReceiptValidator} transactionReceiptValidator
@@ -180,7 +178,7 @@ export default class TransactionConfirmationWorkflow {
         this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
 
-        if (methodModel instanceof ContractDeployMethodModel) {
+        if (methodModel.constructor.name === 'ContractDeployMethodModel') {
             promiEvent.resolve(methodModel.afterExecution(receipt));
             promiEvent.emit('receipt', receipt);
             promiEvent.removeAllListeners();
