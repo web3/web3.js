@@ -22,16 +22,23 @@ import { Iban, IndirectOptions } from 'web3-eth-iban';
 const iban = 'XE7338O073KYGTWWZN0F2WZ0R8PX5ZPPZS';
 const address = '0x45cd08334aeedd8a06265b2ae302e3597d8faa28';
 
-const ibanClass = new Iban(iban); // $ExpectType Iban
+// $ExpectType Iban
+const ibanClass = new Iban(iban);
 
-ibanClass.isDirect(); // $ExpectType boolean
-ibanClass.isIndirect(); // $ExpectType boolean
-ibanClass.checksum(); // $ExpectType string
-ibanClass.institution(); // $ExpectType string
-ibanClass.client(); // $ExpectType string
-ibanClass.toAddress(); // $ExpectType string
-
-Iban.toAddress(iban); // $ExpectType string
+// $ExpectType boolean
+ibanClass.isDirect();
+// $ExpectType boolean
+ibanClass.isIndirect();
+// $ExpectType string
+ibanClass.checksum();
+// $ExpectType string
+ibanClass.institution();
+// $ExpectType string
+ibanClass.client();
+// $ExpectType string
+ibanClass.toAddress();
+// $ExpectType string
+Iban.toAddress(iban);
 
 // $ExpectError
 Iban.toAddress(345);
@@ -48,7 +55,8 @@ Iban.toAddress(null);
 // $ExpectError
 Iban.toAddress(undefined);
 
-Iban.toIban(address); // $ExpectType string
+// $ExpectType string
+Iban.toIban(address);
 
 // $ExpectError
 Iban.toIban(345);
@@ -65,7 +73,8 @@ Iban.toIban(null);
 // $ExpectError
 Iban.toIban(undefined);
 
-Iban.fromAddress(address); // $ExpectType Iban
+// $ExpectType Iban
+Iban.fromAddress(address);
 
 // $ExpectError
 Iban.fromAddress(345);
@@ -82,7 +91,8 @@ Iban.fromAddress(null);
 // $ExpectError
 Iban.fromAddress(undefined);
 
-Iban.fromBban('ETHXREGGAVOFYORK'); // $ExpectType Iban
+// $ExpectType Iban
+Iban.fromBban('ETHXREGGAVOFYORK');
 
 // $ExpectError
 Iban.fromBban(345);
@@ -104,7 +114,8 @@ const indirectOptions: IndirectOptions = {
     identifier: "GAVOFYORK"
 }
 
-Iban.createIndirect(indirectOptions); // $ExpectType Iban
+// $ExpectType Iban
+Iban.createIndirect(indirectOptions);
 
 // $ExpectError
 Iban.createIndirect(345);
@@ -121,7 +132,8 @@ Iban.createIndirect(null);
 // $ExpectError
 Iban.createIndirect(undefined);
 
-Iban.isValid(iban); // $ExpectType boolean
+// $ExpectType boolean
+Iban.isValid(iban);
 
 // $ExpectError
 Iban.isValid(345);
