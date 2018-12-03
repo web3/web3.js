@@ -24,6 +24,13 @@ import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class MessageSigner extends AbstractSigner {
     /**
+     * @constructor
+     */
+    constructor() {
+        super();
+    }
+
+    /**
      * Signs a given message
      *
      * @method sign

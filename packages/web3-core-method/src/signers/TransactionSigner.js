@@ -24,6 +24,13 @@ import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class TransactionSigner extends AbstractSigner {
     /**
+     * @constructor
+     */
+    constructor() {
+        super();
+    }
+
+    /**
      * Signs the given transaction
      *
      * @method sign
