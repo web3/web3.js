@@ -1,58 +1,44 @@
-import * as sinonLib from 'sinon';
-import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
-import {Accounts} from 'web3-eth-accounts';
+import Accounts from '../__mocks__/Accounts';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 
-const sinon = sinonLib.createSandbox();
 
 /**
  * TransactionSigner test
  */
 describe('TransactionSignerTest', () => {
-    let transactionSigner, provider, providerAdapter, accounts, accountsMock;
+    let transactionSigner, accountsMock;
 
     beforeEach(() => {
-        provider = new WebsocketProvider('ws://127.0.0.1', {});
-
-        providerAdapter = new SocketProviderAdapter(provider);
-
-        accounts = new Accounts(providerAdapter, {});
-        accountsMock = sinon.mock(accounts);
+        accountsMock = new Accounts();
+        accountsMock.signTransaction = jest.fn();
 
         transactionSigner = new TransactionSigner();
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('calls sign and throws error', () => {
-        transactionSigner.sign({from: 0}, accounts).catch((error) => {
-            expect(error.message).equal('Wallet or privateKey in wallet is not set!');
+        transactionSigner.sign({from: 0}, accountsMock).catch((error) => {
+            expect(error.message).toBe('Wallet or privateKey in wallet is not set!');
         });
     });
 
     it('calls sign and returns signed transaction', async () => {
-        accounts.wallet[0] = {privateKey: '0x0'};
+        accountsMock.wallet[0] = {privateKey: '0x0'};
         const transaction = {
             from: 0
         };
 
-        accountsMock
-            .expects('signTransaction')
-            .withArgs(transaction, '0x0')
-            .returns(
-                new Promise((resolve) => {
-                    resolve('0x0');
-                })
-            )
-            .once();
+        accountsMock.signTransaction
+            .mockReturnValueOnce(Promise.resolve('0x0'));
 
-        const returnValue = await transactionSigner.sign(transaction, accounts);
+        const returnValue = await transactionSigner.sign(transaction, accountsMock);
 
-        expect(returnValue).toBe('0x0');
-        expect(transaction.from).toBe(undefined);
+        expect(returnValue)
+            .toBe('0x0');
 
-        accountsMock.verify();
+        expect(transaction.from)
+            .toBe(undefined);
+
+        expect(accountsMock.signTransaction)
+            .toHaveBeenCalledWith(transaction, '0x0');
     });
 });

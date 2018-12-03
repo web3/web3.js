@@ -1,4 +1,3 @@
-import {SocketProviderAdapter} from 'web3-providers';
 import Accounts from '../__mocks__/Accounts';
 import MessageSigner from '../../src/signers/MessageSigner';
 
@@ -10,14 +9,9 @@ jest.mock('SocketProviderAdapter');
  */
 describe('MessageSignerTest', () => {
     let messageSigner,
-        providerAdapter,
-        providerAdapterMock,
         accountsMock;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
-
         accountsMock = new Accounts();
         accountsMock.sign = jest.fn();
 
