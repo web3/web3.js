@@ -3,6 +3,7 @@
     "rules": {
         "semicolon": false,
         "no-import-default-of-export-equals": false,
-        "file-name-casing": [true, "kebab-case"]
+        "file-name-casing": [true, "kebab-case"],
+        "whitespace": false
     }
 }
