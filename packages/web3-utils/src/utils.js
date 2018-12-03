@@ -429,6 +429,10 @@ var sha3 = function (value) {
         value = hexToBytes(value);
     }
 
+    if (isBN(value)) {
+        value = value.toString(10);
+    }
+
     var returnValue = Hash.keccak256(value); // jshint ignore:line
 
     if(returnValue === SHA3_NULL_S) {
