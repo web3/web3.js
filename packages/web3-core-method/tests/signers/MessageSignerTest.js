@@ -1,50 +1,47 @@
-import * as sinonLib from 'sinon';
-import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
-import {Accounts} from 'web3-eth-accounts';
+import {SocketProviderAdapter} from 'web3-providers';
+import Accounts from '../__mocks__/Accounts';
 import MessageSigner from '../../src/signers/MessageSigner';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('SocketProviderAdapter');
 
 /**
  * MessageSigner test
  */
 describe('MessageSignerTest', () => {
-    let messageSigner, provider, providerAdapter, accounts, accountsMock;
+    let messageSigner,
+        providerAdapter,
+        providerAdapterMock,
+        accountsMock;
 
     beforeEach(() => {
-        provider = new WebsocketProvider('ws://127.0.0.1', {});
+        providerAdapter = new SocketProviderAdapter({});
+        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        providerAdapter = new SocketProviderAdapter(provider);
-
-        accounts = new Accounts(providerAdapter, {});
-        accountsMock = sinon.mock(accounts);
+        accountsMock = new Accounts();
+        accountsMock.sign = jest.fn();
 
         messageSigner = new MessageSigner();
     });
 
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('calls sign and throws error', () => {
         try {
-            messageSigner.sign('string', 0, accounts);
+            messageSigner.sign('string', 0, accountsMock);
         } catch (error) {
-            expect(error.message).toBe('Wallet or privateKey in wallet is not set!');
+            expect(error.message)
+                .toBe('Wallet or privateKey in wallet is not set!');
         }
     });
 
     it('calls sign and returns signed message', () => {
-        accounts.wallet[0] = {privateKey: '0x0'};
+        accountsMock.wallet[0] = {privateKey: '0x0'};
+        accountsMock.sign
+            .mockReturnValueOnce({signature: '0x00'});
 
-        accountsMock
-            .expects('sign')
-            .withArgs('string', '0x0')
-            .returns({signature: '0x00'})
-            .once();
+        expect(messageSigner.sign('string', 0, accountsMock))
+            .toBe('0x00');
 
-        expect(messageSigner.sign('string', 0, accounts)).toBe('0x00');
-
-        accountsMock.verify();
+        expect(accountsMock.sign)
+            .toHaveBeenCalledWith('string', '0x0');
     });
 });
