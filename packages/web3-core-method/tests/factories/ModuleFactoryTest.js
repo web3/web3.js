@@ -1,4 +1,4 @@
-import moduleFactory from '../../src/factories/ModuleFactory';
+import ModuleFactory from '../../src/factories/ModuleFactory';
 import MethodController from '../../src/controllers/MethodController';
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
