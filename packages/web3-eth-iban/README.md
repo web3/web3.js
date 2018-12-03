@@ -37,8 +37,7 @@ console.log(iban.toAddress());
 ```
 
 ## Types 
-If you are using TypeScript then all types are defined within the package itself so no need
-to install any `@types` libraries. Just import the library and the types should be exposed.  
+If you are using TypeScript all the types are defined in the `index.d.ts` file.  
 
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
