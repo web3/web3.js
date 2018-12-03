@@ -22,23 +22,22 @@
  * @date 2018
  */
 
-import MethodModuleFactory from './factories/MethodModuleFactory';
+import ModuleFactory from './factories/ModuleFactory';
 import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
 
 /**
- * Returns the MethodController object
+ * Returns the ModuleFactory of the method module
  *
- * @method MethodController
+ * @returns {ModuleFactory}
  *
- * @returns {MethodController}
+ * @constructor
  */
-export const MethodController = () => {
-    return new MethodModuleFactory().createMethodController(PromiEvent, new SubscriptionsFactory(), formatters);
+export const MethodModuleFactory = () => {
+    return new ModuleFactory(PromiEvent, new SubscriptionsFactory(), formatters);
 };
 
-export MethodModuleFactory from './factories/MethodModuleFactory';
 export AbstractMethodModel from '../lib/models/AbstractMethodModel';
 export AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';
 

@@ -24,12 +24,10 @@ import isObject from 'underscore-es/isObject';
 
 export default class AbstractWeb3Module {
     /**
-     * // TODO: Ask Brendan or Angular core team what they mean to multiple inheritance with a mixin.
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {MethodModuleFacotry} methodModuleFactory
+     * @param {ModuleFactory} methodModuleFactory
      * @param {AbstractMethodModelFactory} methodModelFactory
      * @param {Object} options
      *
@@ -39,8 +37,7 @@ export default class AbstractWeb3Module {
         provider = this.throwIfMissing('provider'),
         providersModuleFactory = this.throwIfMissing('ProvidersModuleFactory'),
         providers = this.throwIfMissing('providers'),
-        methodController = this.throwIfMissing('MethodController'),
-        methodModuleFactory = this.throwIfMissing('MethodModuleFacotry'),
+        methodModuleFactory = this.throwIfMissing('MethodModuleFactory'),
         methodModelFactory = null,
         options = {}
     ) {
@@ -70,7 +67,7 @@ export default class AbstractWeb3Module {
             return methodModuleFactory.createMethodProxy(
                 this,
                 this.methodModelFactory,
-                this.methodController
+                methodModuleFactory.createMethodController()
             );
         }
     }

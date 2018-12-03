@@ -43,18 +43,18 @@ export default class PersonalModuleFactory {
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Network} net
      * @param {Object} options
      *
      * @returns {Personal}
      */
-    createPersonal(provider, providersModuleFactory, providers, methodController, net, options) {
+    createPersonal(provider, providersModuleFactory, providers, methodModuleFactory, net, options) {
         return new Personal(
             provider,
             providersModuleFactory,
             providers,
-            methodController,
+            methodModuleFactory,
             this.createMethodModelFactory(),
             net,
             this.utils,

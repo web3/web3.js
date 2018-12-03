@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {MethodController} from 'web3-core-method';
+import {MethodModuleFactory} from 'web3-core-method';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
@@ -41,7 +41,7 @@ export const Accounts = (provider, options) => {
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController(),
+        new MethodModuleFactory(),
         options
     );
 };

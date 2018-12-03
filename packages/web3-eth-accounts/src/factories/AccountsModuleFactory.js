@@ -41,17 +41,17 @@ export default class AccountsModuleFactory {
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
      *
      * @returns {Accounts}
      */
-    createAccounts(provider, providersModuleFactory, providers, methodController, options) {
+    createAccounts(provider, providersModuleFactory, providers, methodModuleFactory, options) {
         return new Accounts(
             provider,
             providersModuleFactory,
             providers,
-            methodController,
+            methodModuleFactory,
             this.createMethodModelFactory(),
             this.utils,
             this.formatters,

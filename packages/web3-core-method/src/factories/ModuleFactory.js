@@ -15,7 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodModuleFactory.js
+ * @file ModuleFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -32,25 +32,34 @@ import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../commands/SignMessageCommand';
 import MethodProxy from '../proxy/MethodProxy';
 
-export default class MethodModuleFactory {
+export default class ModuleFactory {
+    /**
+     * @param {PromiEvent} promiEventObject
+     * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Object} formatters
+     *
+     * @constructor
+     */
+    constructor(promiEventObject, subscriptionsFactory, formatters) {
+        this.promiEventObject = promiEventObject;
+        this.subscriptionsFactory = subscriptionsFactory;
+        this.formatters = formatters;
+    }
+
     /**
      * Returns the MethodController object
      *
      * @method createMethodController
      *
-     * @param {PromiEvent} promiEventObject
-     * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {Object} formatters
-     *
      * @returns {MethodController}
      */
-    createMethodController(promiEventObject, subscriptionsFactory, formatters) {
+    createMethodController() {
         return new MethodController(
             this.createCallMethodCommand(),
-            this.createSendMethodCommand(subscriptionsFactory, formatters),
-            this.createSignAndSendMethodCommand(subscriptionsFactory, formatters),
+            this.createSendMethodCommand(),
+            this.createSignAndSendMethodCommand(),
             this.createSignMessageCommand(),
-            promiEventObject
+            this.promiEventObject
         );
     }
 
@@ -59,10 +68,11 @@ export default class MethodModuleFactory {
      *
      * @method createMethodProxy
      *
-     * @param {Object} target
+     * @param {AbstractWeb3Module} target
+     * @param {MethodModelFactory} methodModelFactory
      */
-    createMethodProxy(target) {
-        new MethodProxy(target);
+    createMethodProxy(target, methodModelFactory) {
+        new MethodProxy(target, methodModelFactory, this.createMethodController());
     }
 
     /**
@@ -81,13 +91,12 @@ export default class MethodModuleFactory {
      *
      * @method createSendMethodCommand
      *
-     * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {Object} formatters
-     *
      * @returns {SendMethodCommand}
      */
-    createSendMethodCommand(subscriptionsFactory, formatters) {
-        return new SendMethodCommand(this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters));
+    createSendMethodCommand() {
+        return new SendMethodCommand(
+            this.createTransactionConfirmationWorkflow()
+        );
     }
 
     /**
@@ -95,14 +104,11 @@ export default class MethodModuleFactory {
      *
      * @method createSingAndSendMethodCommand
      *
-     * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {Object} formatters
-     *
      * @returns {SignAndSendMethodCommand}
      */
-    createSignAndSendMethodCommand(subscriptionsFactory, formatters) {
+    createSignAndSendMethodCommand() {
         return new SignAndSendMethodCommand(
-            this.createTransactionConfirmationWorkflow(subscriptionsFactory, formatters),
+            this.createTransactionConfirmationWorkflow(),
             this.createTransactionSigner()
         );
     }
@@ -123,16 +129,13 @@ export default class MethodModuleFactory {
      *
      * @method createTransactionConfirmationWorkflow
      *
-     * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {Object} formatters
-     *
      * @returns {TransactionConfirmationWorkflow}
      */
-    createTransactionConfirmationWorkflow(subscriptionsFactory, formatters) {
+    createTransactionConfirmationWorkflow() {
         return new TransactionConfirmationWorkflow(
             this.createTransactionReceiptValidator(),
-            this.createNewHeadsWatcher(subscriptionsFactory),
-            formatters
+            this.createNewHeadsWatcher(),
+            this.formatters
         );
     }
 
@@ -174,11 +177,9 @@ export default class MethodModuleFactory {
      *
      * @method createNewHeadsWatcher
      *
-     * @param {SubscriptionsFactory} subscriptionsFactory
-     *
      * @returns {NewHeadsWatcher}
      */
-    createNewHeadsWatcher(subscriptionsFactory) {
-        return new NewHeadsWatcher(subscriptionsFactory);
+    createNewHeadsWatcher() {
+        return new NewHeadsWatcher(this.subscriptionsFactory);
     }
 }

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {MethodController} from 'web3-core-method';
+import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
@@ -53,7 +53,7 @@ export const Eth = (provider, options) => {
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController(),
+        new MethodModuleFactory(),
         new Accounts(provider, options),
         PromiEvent,
         Utils,

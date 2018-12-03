@@ -29,7 +29,7 @@ export default class EthModuleFactory {
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Accounts} accounts
      * @param {PromiEvent} PromiEvent
      * @param {Object} utils
@@ -43,7 +43,7 @@ export default class EthModuleFactory {
         provider,
         providersModuleFactory,
         providers,
-        methodController,
+        methodModuleFactory,
         accounts,
         PromiEvent,
         utils,
@@ -54,7 +54,7 @@ export default class EthModuleFactory {
         this.provider = provider;
         this.providersModuleFactory = providersModuleFactory;
         this.providers = providers;
-        this.methodController = methodController;
+        this.methodModuleFactory = methodModuleFactory;
         this.accounts = accounts;
         this.utils = utils;
         this.formatters = formatters;
@@ -79,7 +79,7 @@ export default class EthModuleFactory {
             this.provider,
             this.providersModuleFactory,
             this.providers,
-            this.methodController,
+            this.methodModuleFactory,
             this.contractModuleFactory,
             this.PromiEvent,
             this.abiCoder,
@@ -111,7 +111,7 @@ export default class EthModuleFactory {
             this.provider,
             this.providersModuleFactory,
             this.providers,
-            this.methodController,
+            this.methodModuleFactory,
             this.createMethodModelFactory(this.accounts),
             this,
             net,
