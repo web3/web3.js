@@ -61,7 +61,7 @@ module.exports = {
         pkg.givenProvider = requestManager.Manager.givenProvider;
         pkg.providers = requestManager.Manager.providers;
 
-         pkg._provider =  pkg._requestManager.provider;
+        pkg._provider =  pkg._requestManager.provider;
 
         // add SETPROVIDER function (don't overwrite if already existing)
         if (!pkg.setProvider) {
