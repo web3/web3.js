@@ -1,4 +1,4 @@
-import MethodPackageFactory from '../../src/factories/MethodModuleFactory';
+import moduleFactory from '../../src/factories/ModuleFactory';
 import MethodController from '../../src/controllers/MethodController';
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
@@ -11,54 +11,54 @@ import TransactionReceiptValidator from '../../src/validators/TransactionReceipt
 import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
 /**
- * MethodModuleFactory test
+ * ModuleFactory test
  */
-describe('MethodModuleFactoryTest', () => {
-    let methodPackageFactory;
+describe('ModuleFactoryTest', () => {
+    let moduleFactory;
 
     beforeEach(() => {
-        methodPackageFactory = new MethodPackageFactory();
+        moduleFactory = new ModuleFactory();
     });
 
     it('calls createMethodController and should return an instance of MethodController', () => {
-        expect(methodPackageFactory.createMethodController({}, {}, {})).toBeInstanceOf(MethodController);
+        expect(moduleFactory.createMethodController({}, {}, {})).toBeInstanceOf(MethodController);
     });
 
     it('calls createCallMethodCommand and should return an instance of CallMethodCommand', () => {
-        expect(methodPackageFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
+        expect(moduleFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
     });
 
     it('calls createSendMethodCommand and should return an instance of SendMethodCommand', () => {
-        expect(methodPackageFactory.createSendMethodCommand({}, {})).toBeInstanceOf(SendMethodCommand);
+        expect(moduleFactory.createSendMethodCommand({}, {})).toBeInstanceOf(SendMethodCommand);
     });
 
     it('calls createSignAndSendMethodCommand and should return an instance of SignAndSendMethodCommand', () => {
-        expect(methodPackageFactory.createSignAndSendMethodCommand({}, {})).toBeInstanceOf(SignAndSendMethodCommand);
+        expect(moduleFactory.createSignAndSendMethodCommand({}, {})).toBeInstanceOf(SignAndSendMethodCommand);
     });
 
     it('calls createSignMessageCommand and should return an instance of SignMessageCommand', () => {
-        expect(methodPackageFactory.createSignMessageCommand()).toBeInstanceOf(SignMessageCommand);
+        expect(moduleFactory.createSignMessageCommand()).toBeInstanceOf(SignMessageCommand);
     });
 
     it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', () => {
-        expect(methodPackageFactory.createTransactionConfirmationWorkflow({}, {})).toBeInstanceOf(
+        expect(moduleFactory.createTransactionConfirmationWorkflow({}, {})).toBeInstanceOf(
             TransactionConfirmationWorkflow
         );
     });
 
     it('calls createTransactionSigner and should return an instance of TransactionSigner', () => {
-        expect(methodPackageFactory.createTransactionSigner()).toBeInstanceOf(TransactionSigner);
+        expect(moduleFactory.createTransactionSigner()).toBeInstanceOf(TransactionSigner);
     });
 
     it('calls createMessageSigner and should return an instance of MessageSigner', () => {
-        expect(methodPackageFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
+        expect(moduleFactory.createMessageSigner()).toBeInstanceOf(MessageSigner);
     });
 
     it('calls createTransactionReceiptValidator and should return an instance of TransactionReceiptValidator', () => {
-        expect(methodPackageFactory.createTransactionReceiptValidator()).toBeInstanceOf(TransactionReceiptValidator);
+        expect(moduleFactory.createTransactionReceiptValidator()).toBeInstanceOf(TransactionReceiptValidator);
     });
 
     it('calls createNewHeadsWatcher and should return an instance of NewHeadsWatcher', () => {
-        expect(methodPackageFactory.createNewHeadsWatcher({})).toBeInstanceOf(NewHeadsWatcher);
+        expect(moduleFactory.createNewHeadsWatcher({})).toBeInstanceOf(NewHeadsWatcher);
     });
 });
