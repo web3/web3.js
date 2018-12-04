@@ -3130,8 +3130,8 @@ module.exports = ContractFactory;
  */
 
 module.exports = {
-    InvalidNumberOfSolidityArgs: function () {
-        return new Error('Invalid number of arguments to Solidity function');
+    InvalidNumberOfSolidityArgs: function (signature) {
+        return new Error('Invalid number of arguments to Solidity function: ' + signature);
     },
     InvalidNumberOfRPCParams: function () {
         return new Error('Invalid number of input parameters to RPC method');
@@ -4059,7 +4059,7 @@ SolidityFunction.prototype.validateArgs = function (args) {
               );
     });
     if (inputArgs.length !== this._inputTypes.length) {
-        throw errors.InvalidNumberOfSolidityArgs();
+        throw errors.InvalidNumberOfSolidityArgs(this._name);
     }
 };
 
