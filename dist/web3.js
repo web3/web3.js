@@ -3133,8 +3133,8 @@ module.exports = {
     InvalidNumberOfSolidityArgs: function (signature) {
         return new Error('Invalid number of arguments to Solidity function: ' + signature);
     },
-    InvalidNumberOfRPCParams: function () {
-        return new Error('Invalid number of input parameters to RPC method');
+    InvalidNumberOfRPCParams: function (name) {
+        return new Error('Invalid number of input parameters to RPC method: ' + name);
     },
     InvalidConnection: function (host){
         return new Error('CONNECTION ERROR: Couldn\'t connect to node '+ host +'.');
@@ -5038,7 +5038,7 @@ Method.prototype.extractCallback = function (args) {
  */
 Method.prototype.validateArgs = function (args) {
     if (args.length !== this.params) {
-        throw errors.InvalidNumberOfRPCParams();
+        throw errors.InvalidNumberOfRPCParams(this.name);
     }
 };
 
