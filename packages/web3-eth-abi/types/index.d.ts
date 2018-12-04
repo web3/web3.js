@@ -18,42 +18,34 @@
  */
 
 export class AbiCoder {
-    encodeFunctionSignature(functionName: string | ABIItem): string;
-    encodeEventSignature(functionName: string | ABIItem): string;
+    encodeFunctionSignature(functionName: string | AbiItem): string;
+    encodeEventSignature(functionName: string | AbiItem): string;
     encodeParameter(type: string | {}, parameter: any): string;
     encodeParameters(types: Array<string | {}>, paramaters: any[]): string;
-    encodeFunctionCall(abiItem: ABIItem, params: string[]): string;
+    encodeFunctionCall(abiItem: AbiItem, params: string[]): string;
     decodeParameter(type: string | {}, hex: string): { [key: string] : any; };
-    decodeParameters(types: Array<string | {}>, hex: string): EthAbiDecodeParametersResultArray;
-    decodeLog(inputs: ABIInput[], hex: string, topics: string[]): { [key: string] : string; };
+    decodeParameters(types: Array<string | {}>, hex: string): { [key: string] : any; };
+    decodeLog(inputs: AbiInput[], hex: string, topics: string[]): { [key: string] : string; };
 }
-
-export interface EthAbiDecodeParametersResultArray {
-    [index: number]: any;
-}
-
-export type EthAbiDecodeParametersResultObject = EthAbiDecodeParametersResultArray & {
-    [key: string]: any;
-};
 
 /******** These types need moving into a generic codebase to be shared to avoid repeating ***************/
-export type ABIType = "function" | "constructor" | "event" | "fallback";
+export type AbiType = "function" | "constructor" | "event" | "fallback";
 
-export interface ABIItem {
+export interface AbiItem {
     constant?: boolean;
-    inputs?: ABIInput[];
+    inputs?: AbiInput[];
     name?: string;
-    outputs?: ABIOuput[];
+    outputs?: AbiOuput[];
     payable?: boolean;
     stateMutability?: string; // could be a enum once we move this to generic place
-    type: ABIType;
+    type: AbiType;
 }
-export interface ABIInput {
+export interface AbiInput {
     name: string;
     type: string;
     indexed?: boolean;
 }
-export interface ABIOuput {
+export interface AbiOuput {
     name: string;
     type: string;
 }
