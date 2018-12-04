@@ -17,7 +17,7 @@ describe('ModuleFactoryTest', () => {
     let moduleFactory;
 
     beforeEach(() => {
-        moduleFactory = new ModuleFactory();
+        moduleFactory = new ModuleFactory({}, {}, {});
     });
 
     it('calls createMethodController and should return an instance of MethodController', () => {

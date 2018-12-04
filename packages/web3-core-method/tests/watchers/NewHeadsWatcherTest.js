@@ -1,88 +1,109 @@
-import * as sinonLib from 'sinon';
 import {Subscription, SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbstractWeb3Module} from 'web3-core';
-import {HttpProviderAdapter, HttpProvider, SocketProviderAdapter, WebsocketProvider} from 'web3-providers';
+import {HttpProviderAdapter, SocketProviderAdapter} from 'web3-providers';
 import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('HttpProviderAdapter');
+jest.mock('SocketProviderAdapter');
+jest.mock('AbstractWeb3Module');
+jest.mock('Subscription');
+jest.mock('SubscriptionsFactory');
 
 /**
  * NewHeadsWatcher test
  */
 describe('NewHeadsWatcherTest', () => {
     let newHeadsWatcher,
-        provider,
         providerAdapter,
+        providerAdapterMock,
         moduleInstance,
-        subscriptionsFactory,
+        moduleInstanceMock,
         subscriptionsFactoryMock,
         subscription,
         subscriptionMock;
 
-    beforeEach(() => {
-        subscriptionsFactory = new SubscriptionsFactory();
-        subscriptionsFactoryMock = sinon.mock(subscriptionsFactory);
-
-        newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactory);
-    });
-
-    afterEach(() => {
-        sinon.restore();
-    });
-
     it('constructor check', () => {
-        expect(newHeadsWatcher.subscriptionsFactory).toBeInstanceOf(subscriptionsFactory.constructor);
-        expect(newHeadsWatcher.confirmationSubscription).toBeNull();
-        expect(newHeadsWatcher.isPolling).toBeFalsy();
-        expect(newHeadsWatcher.confirmationInterval).toBeNull();
+        subscriptionsFactoryMock = new SubscriptionsFactory();
+        subscriptionsFactoryMock.createNewHeadsSubscription = jest.fn();
+
+        newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactoryMock);
+
+        expect(newHeadsWatcher.subscriptionsFactory)
+            .toEqual(subscriptionsFactoryMock);
+
+        expect(newHeadsWatcher.confirmationSubscription)
+            .toBeNull();
+
+        expect(newHeadsWatcher.isPolling)
+            .toBeFalsy();
+
+        expect(newHeadsWatcher.confirmationInterval)
+            .toBeNull();
     });
 
     it('calls watch and stop with HttpProviderAdapter', () => {
-        provider = new HttpProvider('http://127.0.0.1', {});
+        jest.useFakeTimers();
 
-        providerAdapter = new HttpProviderAdapter(provider);
+        subscriptionsFactoryMock = new SubscriptionsFactory();
+        subscriptionsFactoryMock.createNewHeadsSubscription = jest.fn();
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
+        newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactoryMock);
 
-        const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstance);
+        providerAdapter = new HttpProviderAdapter({});
+        providerAdapterMock = HttpProviderAdapter.mock.instances[0];
 
-        expect(newHeadsWatcherObject.isPolling).toBeTruthy();
-        expect(newHeadsWatcherObject.confirmationInterval).toBeInstanceOf(Object);
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+
+        const newHeadsWatcherObject = newHeadsWatcher.watch(moduleInstanceMock);
+
+        expect(newHeadsWatcherObject.isPolling)
+            .toBeTruthy();
+
+        expect(newHeadsWatcherObject.confirmationInterval)
+            .toBe(1);
+
+        expect(setInterval).toHaveBeenCalledTimes(1);
 
         newHeadsWatcher.stop();
 
-        expect(newHeadsWatcher.listeners('newHead')).toHaveLength(0);
+        expect(newHeadsWatcher.listeners('newHead'))
+            .toHaveLength(0);
     });
 
     it('calls watch and stop with SocketProviderAdapter', () => {
-        provider = new WebsocketProvider('ws://127.0.0.1', {});
+        providerAdapter = new SocketProviderAdapter({});
+        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        providerAdapter = new SocketProviderAdapter(provider);
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstance.currentProvider = providerAdapterMock;
 
-        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
+        subscription = new Subscription({}, moduleInstanceMock);
+        subscriptionMock = Subscription.mock.instances[0];
+        subscriptionMock.subscribe
+            .mockReturnValueOnce(subscriptionMock);
 
-        subscription = new Subscription({}, moduleInstance);
-        subscriptionMock = sinon.mock(subscription);
+        subscriptionsFactoryMock = new SubscriptionsFactory();
+        subscriptionsFactoryMock.createNewHeadsSubscription = jest.fn(() => {
+            return subscriptionMock;
+        });
 
-        subscriptionMock
-            .expects('subscribe')
-            .returns(subscription)
-            .once();
-
-        subscriptionMock.expects('unsubscribe').once();
-
-        subscriptionsFactoryMock
-            .expects('createNewHeadsSubscription')
-            .withArgs(moduleInstance)
-            .returns(subscription)
-            .once();
+        newHeadsWatcher = new NewHeadsWatcher(subscriptionsFactoryMock);
 
         newHeadsWatcher.watch(moduleInstance);
         newHeadsWatcher.stop();
 
         expect(newHeadsWatcher.listeners('newHead')).toHaveLength(0);
 
-        subscriptionMock.verify();
-        subscriptionsFactoryMock.verify();
+        expect(subscriptionsFactoryMock.createNewHeadsSubscription)
+            .toHaveBeenCalledWith(moduleInstanceMock);
+
+        expect(subscriptionMock.subscribe)
+            .toHaveBeenCalled();
+
+        expect(subscriptionMock.unsubscribe)
+            .toHaveBeenCalled();
     });
 });
