@@ -24,6 +24,7 @@
         "dtslint": "^0.3.0"
     },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }
