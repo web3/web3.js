@@ -375,7 +375,7 @@ describe('contract', function () {
             var test = function() {
               var r = contract.balance({from: address, gas: 50000});
             }
-            assert.throws(test, errors.InvalidNumberOfSolidityArgs().message);
+            assert.throws(test, errors.InvalidNumberOfSolidityArgs(signature).message);
 
         });
 
@@ -450,7 +450,7 @@ describe('contract', function () {
               contract.send(address, {from: address, gas: 50000, gasPrice: 3000, value: 10000});
             }
 
-            assert.throws(test, errors.InvalidNumberOfSolidityArgs().message);
+            assert.throws(test, errors.InvalidNumberOfSolidityArgs(signature).message);
 
         });
 
