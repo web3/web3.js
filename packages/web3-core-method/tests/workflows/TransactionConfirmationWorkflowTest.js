@@ -1,122 +1,115 @@
-import * as sinonLib from 'sinon';
 import {AbstractWeb3Module} from 'web3-core';
-import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
-import {WebsocketProvider, SocketProviderAdapter} from 'web3-providers';
+import {SocketProviderAdapter} from 'web3-providers';
 import {PromiEvent} from 'web3-core-promievent';
 import {formatters} from 'web3-core-helpers';
-import TransactionConfirmationModel from '../../src/models/TransactionConfirmationModel';
 import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
 
-const sinon = sinonLib.createSandbox();
+// Mocks
+jest.mock('../../src/validators/TransactionReceiptValidator');
+jest.mock('../../src/watchers/NewHeadsWatcher');
+jest.mock('../../lib/models/AbstractMethodModel');
+jest.mock('SocketProviderAdapter');
+jest.mock('AbstractWeb3Module');
+jest.mock('formatters');
 
 /**
  * TransactionConfirmationWorkflow test
  */
 describe('TransactionConfirmationWorkflowTest', () => {
     let transactionConfirmationWorkflow,
-        transactionConfirmationModel,
         transactionReceiptValidator,
         transactionReceiptValidatorMock,
         newHeadsWatcher,
         newHeadsWatcherMock,
-        formattersMock,
         methodModel,
         methodModelMock,
-        methodModelCallbackSpy,
-        provider,
-        providerMock,
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
+        moduleInstanceMock,
         promiEvent;
 
     beforeEach(() => {
-        transactionConfirmationModel = new TransactionConfirmationModel();
-
         transactionReceiptValidator = new TransactionReceiptValidator();
-        transactionReceiptValidatorMock = sinon.mock(transactionReceiptValidator);
+        transactionReceiptValidatorMock = TransactionReceiptValidator.mock.instances[0];
 
-        newHeadsWatcher = new NewHeadsWatcher();
-        newHeadsWatcherMock = sinon.mock(newHeadsWatcher);
-
-        formattersMock = sinon.mock(formatters);
+        newHeadsWatcher = new NewHeadsWatcher({});
+        newHeadsWatcherMock = NewHeadsWatcher.mock.instances[0];
 
         methodModel = new AbstractMethodModel();
-        methodModelCallbackSpy = sinon.spy();
-        methodModel.callback = methodModelCallbackSpy;
-        methodModelMock = sinon.mock(methodModel);
+        methodModelMock = AbstractMethodModel.mock.instances[0];
 
-        provider = new WebsocketProvider('ws://127.0.0.1', {});
-        providerMock = sinon.mock(provider);
+        providerAdapter = new SocketProviderAdapter({});
+        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        providerAdapter = new SocketProviderAdapter(provider);
-        providerAdapterMock = sinon.mock(providerAdapter);
-
-        moduleInstance = new AbstractWeb3Module(providerAdapter, {}, {}, {});
+        moduleInstance = new AbstractWeb3Module(providerAdapterMock, {}, {}, {});
+        moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
+        moduleInstanceMock.currentProvider = providerAdapterMock;
 
         promiEvent = new PromiEvent();
 
         transactionConfirmationWorkflow = new TransactionConfirmationWorkflow(
-            transactionConfirmationModel,
-            transactionReceiptValidator,
-            newHeadsWatcher,
+            transactionReceiptValidatorMock,
+            newHeadsWatcherMock,
             formatters
         );
     });
 
-    afterEach(() => {
-        sinon.restore();
+    it('constructor check', () => {
+        expect(transactionConfirmationWorkflow.transactionReceiptValidator)
+            .toEqual(transactionReceiptValidatorMock);
+
+        expect(transactionConfirmationWorkflow.newHeadsWatcher)
+            .toEqual(newHeadsWatcherMock);
+
+        expect(transactionConfirmationWorkflow.formatters)
+            .toEqual(formatters);
     });
 
-    it('calls executes and receipt does already exists', () => {
-        providerAdapterMock
-            .expects('send')
-            .withArgs('eth_getTransactionReceipt', ['0x0'])
-            .returns(
-                new Promise((resolve) => {
-                    resolve({});
-                })
-            )
-            .once();
+    it('calls executes and receipt does already exists', (done) => {
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.resolve({}));
 
-        formattersMock
-            .expects('outputTransactionReceiptFormatter')
-            .withArgs({})
-            .returns({blockHash: '0x0'})
-            .once();
+        formatters.outputTransactionReceiptFormatter
+            .mockReturnValueOnce({blockHash: '0x0'});
 
-        transactionReceiptValidatorMock
-            .expects('validate')
-            .withArgs({blockHash: '0x0'})
-            .returns(true)
-            .once();
+        transactionReceiptValidatorMock.validate
+            .mockReturnValueOnce(true);
 
-        newHeadsWatcherMock.expects('stop').once();
+        methodModelMock.afterExecution
+            .mockReturnValueOnce({blockhash: '0x0'});
 
-        methodModelMock
-            .expects('afterExecution')
-            .withArgs({blockHash: '0x0'})
-            .returns({blockHash: '0x00'})
-            .once();
+        methodModelMock.callback = jest.fn((error, response) => {
+            expect(error).toBe(false);
+            expect(response).toEqual({blockhash: '0x0'});
 
-        transactionConfirmationWorkflow.execute(methodModel, moduleInstance, '0x0', promiEvent);
+            done();
+        });
+
+        transactionConfirmationWorkflow.execute(methodModelMock, moduleInstanceMock, '0x0', promiEvent);
 
         promiEvent
             .on('receipt', (receipt) => {
-                expect(receipt).toHaveProperty('blockHash', '0x00');
-            })
-            .then((response) => {
-                expect(methodModelCallbackSpy.calledOnce).toBeTruthy();
-                expect(methodModelCallbackSpy.calledWith(false, {blockHash: '0x00'})).toBeTruthy();
-                expect(response).toHaveProperty('blockHash', '0x00');
+                expect(receipt)
+                    .toEqual({blockhash: '0x0'});
 
-                providerMock.verify();
-                formattersMock.verify();
-                transactionReceiptValidatorMock.verify();
-                newHeadsWatcherMock.verify();
-                methodModelMock.verify();
+                expect(providerAdapterMock.send)
+                    .toHaveBeenCalledWith('eth_getTransactionReceipt', ['0x0']);
+
+                expect(newHeadsWatcherMock.stop)
+                    .toHaveBeenCalled();
+
+                expect(methodModelMock.afterExecution)
+                    .toHaveBeenCalledWith({blockHash: '0x0'});
+
+                expect(transactionReceiptValidatorMock.validate)
+                    .toHaveBeenCalledWith({blockHash: '0x0'});
+
+                expect(formatters.outputTransactionReceiptFormatter)
+                    .toHaveBeenCalledWith({});
             });
     });
 });
