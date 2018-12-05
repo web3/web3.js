@@ -29,12 +29,14 @@ import {formatters} from 'web3-core-helpers';
 /**
  * Returns the ModuleFactory of the method module
  *
+ * @param {Accounts} accounts
+ *
  * @returns {ModuleFactory}
  *
  * @constructor
  */
-export const MethodModuleFactory = () => {
-    return new ModuleFactory(PromiEvent, new SubscriptionsFactory(), formatters);
+export const MethodModuleFactory = (accounts) => {
+    return new ModuleFactory(accounts, new SubscriptionsFactory(), formatters);
 };
 
 export AbstractMethod from '../lib/methods/AbstractMethod';

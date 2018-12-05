@@ -25,11 +25,13 @@ import AbstractCommand from '../../lib/commands/AbstractCommand';
 export default class CallMethodCommand extends AbstractCommand {
     /**
      * @param {Accounts} accounts
+     * @param {MessageSigner} messageSigner
      *
      * @constructor
      */
-    constructor(accounts) {
+    constructor(accounts, messageSigner) {
         super(accounts);
+        this.messageSigner = messageSigner;
     }
 
     /**

@@ -29,12 +29,14 @@ import MethodProxy from '../proxy/MethodProxy';
 
 export default class ModuleFactory {
     /**
+     * @param {Accounts} accounts
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(subscriptionsFactory, formatters) {
+    constructor(accounts, subscriptionsFactory, formatters) {
+        this.accounts = accounts;
         this.subscriptionsFactory = subscriptionsFactory;
         this.formatters = formatters;
     }
@@ -59,7 +61,7 @@ export default class ModuleFactory {
      * @returns {CallMethodCommand}
      */
     createCallMethodCommand() {
-        return new CallMethodCommand();
+        return new CallMethodCommand(this.accounts, this.createMessageSigner());
     }
 
     /**
@@ -71,8 +73,32 @@ export default class ModuleFactory {
      */
     createSendTransactionMethodCommand() {
         return new SendTransactionMethodCommand(
-            this.createTransactionConfirmationWorkflow()
+            this.createTransactionConfirmationWorkflow(),
+            this.createTransactionSigner(),
+            this.accounts
         );
+    }
+
+    /**
+     * Returns the TransactionSigner object
+     *
+     * @method createTransactionSigner
+     *
+     * @returns {TransactionSigner}
+     */
+    createTransactionSigner() {
+        return new TransactionSigner();
+    }
+
+    /**
+     * Returns the MessageSigner object
+     *
+     * @method createMessageSigner
+     *
+     * @returns {MessageSigner}
+     */
+    createMessageSigner() {
+        return new MessageSigner();
     }
 
     /**
