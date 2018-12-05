@@ -21,7 +21,7 @@
  */
 
 import Personal from '../Personal';
-import MethodModelFactory from './MethodModelFactory';
+import MethodFactory from './MethodFactory';
 
 export default class PersonalModuleFactory {
     /**
@@ -55,7 +55,7 @@ export default class PersonalModuleFactory {
             providersModuleFactory,
             providers,
             methodModuleFactory,
-            this.createMethodModelFactory(),
+            this.createMethodFactory(methodModuleFactory),
             net,
             this.utils,
             this.formatters,
@@ -66,11 +66,13 @@ export default class PersonalModuleFactory {
     /**
      * Returns an object of type MethodFactory
      *
-     * @method createMethodModelFactory
+     * @method createMethodFactory
      *
-     * @returns {MethodModelFactory}
+     * @param {MethodModuleFactory} methodModuleFactory
+     *
+     * @returns {MethodFactory}
      */
-    createMethodModelFactory() {
-        return new MethodModelFactory(this.utils, this.formatters);
+    createMethodFactory(methodModuleFactory) {
+        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
     }
 }

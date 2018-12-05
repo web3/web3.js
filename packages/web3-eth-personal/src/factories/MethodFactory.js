@@ -20,38 +20,40 @@
  */
 
 import {
-    AbstractMethodModelFactory,
-    GetAccountsMethodModel,
-    NewAccountMethodModel,
-    UnlockAccountMethodModel,
-    LockAccountMethodModel,
-    ImportRawKeyMethodModel,
-    PersonalSendTransactionMethodModel,
-    PersonalSignTransactionMethodModel,
-    PersonalSignMethodModel,
-    EcRecoverMethodModel
+    AbstractMethodFactory,
+    GetAccountsMethod,
+    NewAccountMethod,
+    UnlockAccountMethod,
+    LockAccountMethod,
+    ImportRawKeyMethod,
+    PersonalSendTransactionMethod,
+    PersonalSignTransactionMethod,
+    PersonalSignMethod,
+    EcRecoverMethod
 } from 'web3-core-method';
 
-export default class MethodModelFactory extends AbstractMethodModelFactory {
+export default class MethodFactory extends AbstractMethodFactory {
     /**
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(methodModuleFactory, utils, formatters) {
         super(
             {
-                getAccounts: GetAccountsMethodModel,
-                newAccount: NewAccountMethodModel,
-                unlockAccount: UnlockAccountMethodModel,
-                lockAccount: LockAccountMethodModel,
-                importRawKey: ImportRawKeyMethodModel,
-                sendTransaction: PersonalSendTransactionMethodModel,
-                signTransaction: PersonalSignTransactionMethodModel,
-                sign: PersonalSignMethodModel,
-                ecRecover: EcRecoverMethodModel
+                getAccounts: GetAccountsMethod,
+                newAccount: NewAccountMethod,
+                unlockAccount: UnlockAccountMethod,
+                lockAccount: LockAccountMethod,
+                importRawKey: ImportRawKeyMethod,
+                sendTransaction: PersonalSendTransactionMethod,
+                signTransaction: PersonalSignTransactionMethod,
+                sign: PersonalSignMethod,
+                ecRecover: EcRecoverMethod
             },
+            methodModuleFactory,
             utils,
             formatters
         );

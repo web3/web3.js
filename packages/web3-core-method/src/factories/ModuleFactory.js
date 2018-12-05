@@ -36,7 +36,7 @@ export default class ModuleFactory {
      * @constructor
      */
     constructor(accounts, subscriptionsFactory, formatters) {
-        this.accounts = accounts;
+        this.accounts = accounts || {};
         this.subscriptionsFactory = subscriptionsFactory;
         this.formatters = formatters;
     }

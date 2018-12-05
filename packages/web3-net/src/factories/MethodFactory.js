@@ -20,28 +20,30 @@
  */
 
 import {
-    AbstractMethodModelFactory,
-    VersionMethodModel,
-    GetBlockMethodModel,
-    ListeningMethodModel,
-    PeerCountMethodModel
+    AbstractMethodFactory,
+    VersionMethod,
+    GetBlockMethod,
+    ListeningMethod,
+    PeerCountMethod
 } from 'web3-core-method';
 
-export default class MethodModelFactory extends AbstractMethodModelFactory {
+export default class MethodFactory extends AbstractMethodFactory {
     /**
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(methodModuleFactory, utils, formatters) {
         super(
             {
-                getId: VersionMethodModel,
-                getBlock: GetBlockMethodModel,
-                isListening: ListeningMethodModel,
-                getPeerCount: PeerCountMethodModel
+                getId: VersionMethod,
+                getBlock: GetBlockMethod,
+                isListening: ListeningMethod,
+                getPeerCount: PeerCountMethod
             },
+            methodModuleFactory,
             utils,
             formatters
         );

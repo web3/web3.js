@@ -31,7 +31,7 @@ export default class Personal extends AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodFactory} methodFactory
      * @param {Network} net
      * @param {Object} utils
      * @param {Object} formatters
@@ -44,13 +44,13 @@ export default class Personal extends AbstractWeb3Module {
         providersModuleFactory,
         providers,
         methodModuleFactory,
-        methodModelFactory,
+        methodFactory,
         net,
         utils,
         formatters,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodModuleFactory, methodModelFactory, options);
+        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;

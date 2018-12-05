@@ -20,62 +20,64 @@
  */
 
 import {
-    AbstractMethodModelFactory,
-    ShhVersionMethodModel,
-    GetInfoMethodModel,
-    SetMaxMessageSizeMethodModel,
-    SetMinPoWMethodModel,
-    MarkTrustedPeerMethodModel,
-    NewKeyPairMethodModel,
-    AddPrivateKeyMethodModel,
-    DeleteKeyPairMethodModel,
-    HasKeyPairMethodModel,
-    GetPublicKeyMethodModel,
-    GetPrivateKeyMethodModel,
-    NewSymKeyMethodModel,
-    AddSymKeyMethodModel,
-    GenerateSymKeyFromPasswordMethodModel,
-    HasSymKeyMethodModel,
-    GetSymKeyMethodModel,
-    DeleteSymKeyMethodModel,
-    NewMessageFilterMethodModel,
-    GetFilterMessagesMethodModel,
-    DeleteMessageFilterMethodModel,
-    PostMethodModel
+    AbstractMethodFactory,
+    ShhVersionMethod,
+    GetInfoMethod,
+    SetMaxMessageSizeMethod,
+    SetMinPoWMethod,
+    MarkTrustedPeerMethod,
+    NewKeyPairMethod,
+    AddPrivateKeyMethod,
+    DeleteKeyPairMethod,
+    HasKeyPairMethod,
+    GetPublicKeyMethod,
+    GetPrivateKeyMethod,
+    NewSymKeyMethod,
+    AddSymKeyMethod,
+    GenerateSymKeyFromPasswordMethod,
+    HasSymKeyMethod,
+    GetSymKeyMethod,
+    DeleteSymKeyMethod,
+    NewMessageFilterMethod,
+    GetFilterMessagesMethod,
+    DeleteMessageFilterMethod,
+    PostMethod
 } from 'web3-core-method';
 
-export default class MethodModelFactory extends AbstractMethodModelFactory {
+export default class MethodFactory extends AbstractMethodFactory {
     /**
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(methodModuleFactory, utils, formatters) {
         super(
             {
-                getVersion: ShhVersionMethodModel,
-                getInfo: GetInfoMethodModel,
-                setMaxMessageSize: SetMaxMessageSizeMethodModel,
-                setMinPoW: SetMinPoWMethodModel,
-                markTrustedPeer: MarkTrustedPeerMethodModel,
-                newKeyPair: NewKeyPairMethodModel,
-                addPrivateKey: AddPrivateKeyMethodModel,
-                deleteKeyPair: DeleteKeyPairMethodModel,
-                hasKeyPair: HasKeyPairMethodModel,
-                getPublicKey: GetPublicKeyMethodModel,
-                getPrivateKey: GetPrivateKeyMethodModel,
-                newSymKey: NewSymKeyMethodModel,
-                addSymKey: AddSymKeyMethodModel,
-                generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethodModel,
-                hasSymKey: HasSymKeyMethodModel,
-                getSymKey: GetSymKeyMethodModel,
-                deleteSymKey: DeleteSymKeyMethodModel,
-                newMessageFilter: NewMessageFilterMethodModel,
-                getFilterMessages: GetFilterMessagesMethodModel,
-                deleteMessageFilter: DeleteMessageFilterMethodModel,
-                post: PostMethodModel
+                getVersion: ShhVersionMethod,
+                getInfo: GetInfoMethod,
+                setMaxMessageSize: SetMaxMessageSizeMethod,
+                setMinPoW: SetMinPoWMethod,
+                markTrustedPeer: MarkTrustedPeerMethod,
+                newKeyPair: NewKeyPairMethod,
+                addPrivateKey: AddPrivateKeyMethod,
+                deleteKeyPair: DeleteKeyPairMethod,
+                hasKeyPair: HasKeyPairMethod,
+                getPublicKey: GetPublicKeyMethod,
+                getPrivateKey: GetPrivateKeyMethod,
+                newSymKey: NewSymKeyMethod,
+                addSymKey: AddSymKeyMethod,
+                generateSymKeyFromPassword: GenerateSymKeyFromPasswordMethod,
+                hasSymKey: HasSymKeyMethod,
+                getSymKey: GetSymKeyMethod,
+                deleteSymKey: DeleteSymKeyMethod,
+                newMessageFilter: NewMessageFilterMethod,
+                getFilterMessages: GetFilterMessagesMethod,
+                deleteMessageFilter: DeleteMessageFilterMethod,
+                post: PostMethod
             },
+            methodModuleFactory,
             utils,
             formatters
         );

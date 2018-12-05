@@ -21,7 +21,7 @@
  */
 
 import Network from '../Network';
-import MethodModelFactory from './MethodModelFactory';
+import MethodFactory from './MethodFactory';
 
 export default class NetworkModuleFactory {
     /**
@@ -54,7 +54,7 @@ export default class NetworkModuleFactory {
             providersModuleFactory,
             providers,
             methodModuleFactory,
-            this.createMethodModelFactory(),
+            this.createMethodFactory(methodModuleFactory),
             this.formatters,
             this.utils,
             options
@@ -64,11 +64,13 @@ export default class NetworkModuleFactory {
     /**
      * Returns an object of MethodFactory
      *
-     * @method createMethodModelFactory
+     * @method createMethodFactory
      *
-     * @returns {MethodModelFactory}
+     * @param {MethodModuleFactory} methodModuleFactory
+     *
+     * @returns {MethodFactory}
      */
-    createMethodModelFactory() {
-        return new MethodModelFactory(this.utils, this.formatters);
+    createMethodFactory(methodModuleFactory) {
+        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
     }
 }

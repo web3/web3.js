@@ -20,7 +20,7 @@
  */
 
 import Shh from '../Shh';
-import MethodModelFactory from './MethodModelFactory';
+import MethodFactory from './MethodFactory';
 
 export default class ShhModuleFactory {
     /**
@@ -54,8 +54,8 @@ export default class ShhModuleFactory {
             provider,
             providersModuleFactory,
             providers,
-            methodController,
-            this.createMethodModelFactory(),
+            methodModuleFactory,
+            this.createMethodFactory(),
             subscriptionsFactory,
             net,
             options
@@ -65,11 +65,11 @@ export default class ShhModuleFactory {
     /**
      * Returns an object of type MethodFactory
      *
-     * @method createMethodModelFactory
+     * @method createMethodFactory
      *
-     * @returns {MethodModelFactory}
+     * @returns {MethodFactory}
      */
-    createMethodModelFactory() {
-        return new MethodModelFactory(this.utils, this.formatters);
+    createMethodFactory() {
+        return new MethodFactory(this.utils, this.formatters);
     }
 }

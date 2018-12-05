@@ -104,7 +104,7 @@ const module = new Module(
     providersModuleFactory, 
     providers,
     new MethodController(), 
-    new MethodModelFactory(Utils,MethodFactory{defaultAccount: '0x', ...}
+    new MethodFactory(Utils,MethodFactory{defaultAccount: '0x', ...}
 );
 
 module.sendTransaction({...}, (error, result) => {});
