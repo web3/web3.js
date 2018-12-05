@@ -48,44 +48,43 @@ export default class CallMethodCommand extends AbstractCommand {
     async execute(moduleInstance, method) {
         method.beforeExecution(moduleInstance);
 
-        if (method.rpcMethod === 'eth_sign' && !this.hasWallets()) {
+        if (method.rpcMethod === 'eth_sign' && this.hasWallets()) {
+            let signedMessage;
+
             try {
-                const response = await moduleInstance.currentProvider.send(method.rpcMethod, method.parameters);
-                const mappedResponse = method.afterExecution(response);
-
-                if (method.callback) {
-                    method.callback(false, mappedResponse);
-                }
-
-                return mappedResponse;
+                signedMessage = method.afterExecution(
+                    this.messageSigner.sign(method.parameters[0], method.parameters[1], this.accounts)
+                );
             } catch (error) {
                 if (method.callback) {
                     method.callback(error, null);
-
-                    return;
                 }
 
                 throw error;
             }
+
+            if (method.callback) {
+                method.callback(false, signedMessage);
+            }
         }
 
-        let signedMessage;
-
         try {
-            signedMessage = method.afterExecution(
-                this.messageSigner.sign(method.parameters[0], method.parameters[1], this.accounts)
-            );
+            const response = await moduleInstance.currentProvider.send(method.rpcMethod, method.parameters);
+            const mappedResponse = method.afterExecution(response);
+
+            if (method.callback) {
+                method.callback(false, mappedResponse);
+            }
+
+            return mappedResponse;
         } catch (error) {
             if (method.callback) {
                 method.callback(error, null);
+
+                return;
             }
 
             throw error;
         }
-
-        if (method.callback) {
-            method.callback(false, signedMessage);
-        }
-
     }
 }
