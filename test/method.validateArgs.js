@@ -25,9 +25,11 @@ describe('lib/web3/method', function () {
         });
 
         it('should return call based on args', function () {
-        
+
             // given
+            var methodName = 'testMethod';
             var method = new Method({
+                name: methodName,
                 params: 2
             });
 
@@ -39,8 +41,8 @@ describe('lib/web3/method', function () {
             var test2 = function () { method.validateArgs(args2); };
             
             // then
-            assert.throws(test, errors.InvalidNumberOfRPCParams().message);
-            assert.throws(test2, errors.InvalidNumberOfRPCParams().message);
+            assert.throws(test, errors.InvalidNumberOfRPCParams(methodName).message);
+            assert.throws(test2, errors.InvalidNumberOfRPCParams(methodName).message);
         });
     });
 });
