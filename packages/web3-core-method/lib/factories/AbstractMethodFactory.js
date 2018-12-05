@@ -64,8 +64,8 @@ export default class AbstractMethodFactory {
             case 'CALL': // This could be removed if web3 would be written with TS because of the interfaces.
                 command = this.methodModuleFactory.createCallMethodCommand();
                 break;
-            case 'SEND':
-                command = this.methodModuleFactory.createSendMethodCommand();
+            case 'TRANSACTION':
+                command = this.methodModuleFactory.createTransactionMethodCommand();
                 break;
         }
 

@@ -24,13 +24,15 @@ import isFunction from 'underscore-es/isFunction';
  */
 export default class AbstractMethod {
     /**
-     * @param {AbstractCommand} command
+     * @param {String} rpcMethod
+     * @param {Number} parametersAmount
+     * @param {Command} command
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(command, utils, formatters) {
+    constructor(rpcMethod, parametersAmount, command, utils, formatters) {
         this.command = command;
         this.utils = utils;
         this.formatters = formatters;

@@ -1,6 +1,6 @@
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
-import SendMethodCommand from '../../src/commands/SendMethodCommand';
+import SendMethodCommand from '../../src/commands/TransactionMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
 import MethodController from '../../src/controllers/MethodController';

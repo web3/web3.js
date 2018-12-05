@@ -59,7 +59,7 @@ export GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
 // Account
 export GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';
 export GetBalanceMethodModel from './models/methods/account/GetBalanceMethodModel';
-export GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethodModel';
+export GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethod';
 
 // Block
 export GetBlockNumberMethodModel from './models/methods/block/GetBlockNumberMethodModel';

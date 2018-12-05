@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/models/AbstractMethodModel';
 
-export default class GetBalanceMethodModel extends AbstractMethodModel {
+export default class GetBalanceMethod extends AbstractMethod {
     /**
+     * @param {Command} command
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getBalance', 2, utils, formatters);
+    constructor(command, utils, formatters) {
+        super('eth_getBalance', 2, command, utils, formatters);
     }
 
     /**

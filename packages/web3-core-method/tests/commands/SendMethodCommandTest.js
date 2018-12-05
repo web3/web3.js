@@ -1,4 +1,4 @@
-import SendMethodCommand from '../../src/commands/SendMethodCommand';
+import SendMethodCommand from '../../src/commands/TransactionMethodCommand';
 import TransactionConfirmationWorkflow from '../../src/methods/transaction/workflows/TransactionConfirmationWorkflow';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import {SocketProviderAdapter} from 'web3-providers';

@@ -20,17 +20,18 @@
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetAccountsMethodModel extends AbstractMethodModel {
+export default class GetAccountsMethod extends AbstractMethod {
     /**
+     * @param {Command} command
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_accounts', 0, utils, formatters);
+    constructor(command, utils, formatters) {
+        super('eth_accounts', 0, command, utils, formatters);
     }
 
     /**

@@ -1,13 +1,13 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethodModel';
+import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethod';
 
 // Mocks
 jest.mock('formatters');
 jest.mock('Utils');
 
 /**
- * GetTransactionCountMethodModel test
+ * GetTransactionCountMethod test
  */
 describe('GetTransactionCountMethodModelTest', () => {
     let model;

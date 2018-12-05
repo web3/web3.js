@@ -24,7 +24,7 @@ import TransactionConfirmationWorkflow from '../methods/transaction/workflows/Tr
 import TransactionReceiptValidator from '../methods/transaction/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../methods/transaction/watchers/NewHeadsWatcher';
 import CallMethodCommand from '../commands/CallMethodCommand';
-import SendMethodCommand from '../commands/SendMethodCommand';
+import TransactionMethodCommand from '../commands/TransactionMethodCommand';
 import MethodProxy from '../proxy/MethodProxy';
 
 export default class ModuleFactory {
@@ -67,10 +67,10 @@ export default class ModuleFactory {
      *
      * @method createSendMethodCommand
      *
-     * @returns {SendMethodCommand}
+     * @returns {TransactionMethodCommand}
      */
-    createSendMethodCommand() {
-        return new SendMethodCommand(
+    createTransactionMethodCommand() {
+        return new TransactionMethodCommand(
             this.createTransactionConfirmationWorkflow()
         );
     }

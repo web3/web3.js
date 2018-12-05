@@ -15,22 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetTransactionCountMethodModel.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file GetTransactionCountMethod.jsauthor Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/models/AbstractMethod';
 
-export default class GetTransactionCountMethodModel extends AbstractMethodModel {
+export default class GetTransactionCountMethod extends AbstractMethod {
     /**
+     * @param {Command} command
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getTransactionCount', 2, utils, formatters);
+    constructor(command, utils, formatters) {
+        super('eth_getTransactionCount', 2, command, utils, formatters);
     }
 
     /**
