@@ -127,16 +127,6 @@ Example
         encrypt: function(password){...}
     }
 
-    web3.eth.accounts.privateKeyToAccount('0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709');
-    > {
-        address: '0xb8CE9ab6943e0eCED004cDe8e3bBed6568B2Fa01',
-        privateKey: '0x348ce564d427a3311b6536bbcff9390d69395b06ed6c486954e971d960fe8709',
-        signTransaction: function(tx){...},
-        sign: function(data){...},
-        encrypt: function(password){...}
-    }
-
-
 ------------------------------------------------------------------------------
 
 .. _eth-accounts-signtransaction:
