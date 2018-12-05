@@ -23,14 +23,14 @@ import AbstractMethod from '../../../lib/models/AbstractMethod';
 
 export default class GetTransactionCountMethod extends AbstractMethod {
     /**
-     * @param {Command} command
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(command, utils, formatters) {
-        super('eth_getTransactionCount', 2, command, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getTransactionCount', 2, callMethodCommand, utils, formatters);
     }
 
     /**

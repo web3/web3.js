@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetBlockUncleCountMethodModel.js
+ * @file GetBlockUncleCountMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/models/AbstractMethod';
 
-export default class GetBlockUncleCountMethodModel extends AbstractMethodModel {
+export default class GetBlockUncleCountMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getUncleCountByBlockNumber', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getUncleCountByBlockNumber', 1, callMethodCommand, utils, formatters);
     }
 
     /**

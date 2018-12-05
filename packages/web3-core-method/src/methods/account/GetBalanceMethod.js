@@ -24,14 +24,14 @@ import AbstractMethod from '../../../lib/models/AbstractMethodModel';
 
 export default class GetBalanceMethod extends AbstractMethod {
     /**
-     * @param {Command} command
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(command, utils, formatters) {
-        super('eth_getBalance', 2, command, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getBalance', 2, callMethodCommand, utils, formatters);
     }
 
     /**

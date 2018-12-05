@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetBlockNumberMethodModel.js
+ * @file GetBlockNumberMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/models/AbstractMethod';
 
-export default class GetBlockNumberMethodModel extends AbstractMethodModel {
+export default class GetBlockNumberMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_blockNumber', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_blockNumber', 0, callMethodCommand, utils, formatters);
     }
 
     /**

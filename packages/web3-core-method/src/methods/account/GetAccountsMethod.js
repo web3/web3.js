@@ -24,14 +24,14 @@ import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetAccountsMethod extends AbstractMethod {
     /**
-     * @param {Command} command
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(command, utils, formatters) {
-        super('eth_accounts', 0, command, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_accounts', 0, callMethodCommand, utils, formatters);
     }
 
     /**

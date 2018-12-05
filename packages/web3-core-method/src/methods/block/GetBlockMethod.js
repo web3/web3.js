@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetUncleMethodModel.js
+ * @file GetBlockMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../../lib/models/AbstractMethod';
 
-export default class GetUncleMethodModel extends AbstractMethodModel {
+export default class GetBlockMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getUncleByBlockNumberAndIndex', 2, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getBlockByNumber', 2, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -38,15 +39,15 @@ export default class GetUncleMethodModel extends AbstractMethodModel {
      *
      * @method beforeExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
         if (this.isHash(this.parameters[0])) {
-            this.rpcMethod = 'eth_getUncleByBlockHashAndIndex';
+            this.rpcMethod = 'eth_getBlockByHash';
         }
 
         this.parameters[0] = this.formatters.inputBlockNumberFormatter(this.parameters[0]);
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+        this.parameters[1] = !!this.parameters[1];
     }
 
     /**
