@@ -15,21 +15,33 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file SendSignedTransactionMethodModel.js
+ * @file SendSignedTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class SendSignedTransactionMethodModel extends AbstractMethodModel {
+export default class SendSignedTransactionMethodModel extends AbstractMethod {
     /**
+     * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_sendRawTransaction', 1, utils, formatters);
+    constructor(sendTransactionMethodCommand, utils, formatters) {
+        super('eth_sendRawTransaction', 1, sendTransactionMethodCommand, utils, formatters);
+    }
+
+    /**
+     * Returns the commandType of this Method
+     *
+     * @property CommandType
+     *
+     * @returns {String}
+     */
+    static get CommandType() {
+        return 'SEND_TRANSACTION';
     }
 }

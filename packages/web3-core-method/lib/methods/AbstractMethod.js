@@ -43,7 +43,7 @@ export default class AbstractMethod {
     }
 
     /**
-     * Returns the commandType of the Method
+     * Returns the commandType of this Method
      *
      * @property CommandType
      *

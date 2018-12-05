@@ -2,13 +2,13 @@ import ModuleFactory from '../../src/factories/ModuleFactory';
 import MethodController from '../../src/controllers/MethodController';
 import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
-import SendMethodCommand from '../../src/commands/TransactionMethodCommand';
+import SendMethodCommand from '../../src/commands/SendTransactionMethodCommand';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
-import TransactionConfirmationWorkflow from '../../src/methods/transaction/workflows/TransactionConfirmationWorkflow';
+import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 import MessageSigner from '../../src/signers/MessageSigner';
-import TransactionReceiptValidator from '../../src/methods/transaction/validators/TransactionReceiptValidator';
-import NewHeadsWatcher from '../../src/methods/transaction/watchers/NewHeadsWatcher';
+import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
 
 /**
  * ModuleFactory test

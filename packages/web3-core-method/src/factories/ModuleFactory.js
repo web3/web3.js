@@ -20,11 +20,11 @@
  * @date 2018
  */
 
-import TransactionConfirmationWorkflow from '../methods/transaction/workflows/TransactionConfirmationWorkflow';
-import TransactionReceiptValidator from '../methods/transaction/validators/TransactionReceiptValidator';
-import NewHeadsWatcher from '../methods/transaction/watchers/NewHeadsWatcher';
+import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
+import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
 import CallMethodCommand from '../commands/CallMethodCommand';
-import TransactionMethodCommand from '../commands/TransactionMethodCommand';
+import SendTransactionMethodCommand from '../commands/SendTransactionMethodCommand';
 import MethodProxy from '../proxy/MethodProxy';
 
 export default class ModuleFactory {
@@ -63,14 +63,14 @@ export default class ModuleFactory {
     }
 
     /**
-     * Returns the SendMethodCommand object
+     * Returns the createSendTransactionMethodCommand object
      *
-     * @method createSendMethodCommand
+     * @method createSendTransactionMethodCommand
      *
-     * @returns {TransactionMethodCommand}
+     * @returns {SendTransactionMethodCommand}
      */
-    createTransactionMethodCommand() {
-        return new TransactionMethodCommand(
+    createSendTransactionMethodCommand() {
+        return new SendTransactionMethodCommand(
             this.createTransactionConfirmationWorkflow()
         );
     }
