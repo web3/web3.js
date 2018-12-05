@@ -28,7 +28,7 @@ export default class AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {ModuleFactory} methodModuleFactory
-     * @param {AbstractMethodModelFactory} methodModelFactory
+     * @param {AbstractMethodFactory} methodFactory
      * @param {Object} options
      *
      * @constructor
@@ -38,7 +38,7 @@ export default class AbstractWeb3Module {
         providersModuleFactory = this.throwIfMissing('ProvidersModuleFactory'),
         providers = this.throwIfMissing('providers'),
         methodModuleFactory = this.throwIfMissing('MethodModuleFactory'),
-        methodModelFactory = null,
+        methodFactory = null,
         options = {}
     ) {
         this.providersModuleFactory = providersModuleFactory;
@@ -60,13 +60,12 @@ export default class AbstractWeb3Module {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
 
-        if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
-            this.methodModelFactory = methodModelFactory;
+        if (methodFactory !== null || typeof v !== 'undefined') {
+            this.methodFactory = methodFactory;
 
             return methodModuleFactory.createMethodProxy(
                 this,
-                this.methodModelFactory,
-                methodModuleFactory.createMethodController()
+                this.methodFactory
             );
         }
     }

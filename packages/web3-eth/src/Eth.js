@@ -37,7 +37,7 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Object} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodFactory} methodFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
      *
@@ -48,7 +48,7 @@ export default class Eth extends AbstractWeb3Module {
         providersModuleFactory,
         providers,
         methodModuleFactory,
-        methodModelFactory,
+        methodFactory,
         ethModuleFactory,
         net,
         accounts,
@@ -61,7 +61,7 @@ export default class Eth extends AbstractWeb3Module {
         subscriptionsFactory,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodModuleFactory, methodModelFactory, options);
+        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
 
         this.ethModuleFactory = ethModuleFactory;
         this.net = net;

@@ -53,7 +53,7 @@ export const Eth = (provider, options) => {
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodModuleFactory(),
+        new MethodModuleFactory(accounts),
         new Accounts(provider, options),
         PromiEvent,
         Utils,

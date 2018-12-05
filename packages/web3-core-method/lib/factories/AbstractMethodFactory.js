@@ -23,7 +23,7 @@
 export default class AbstractMethodFactory {
     /**
      * @param {{name: String, method: AbstractMethod}} methods
-     * @param {AbstractMethodFactory} methodModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *

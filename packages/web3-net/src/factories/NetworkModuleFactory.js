@@ -62,7 +62,7 @@ export default class NetworkModuleFactory {
     }
 
     /**
-     * Returns an object of MethodModelFactory
+     * Returns an object of MethodFactory
      *
      * @method createMethodModelFactory
      *

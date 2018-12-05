@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import MethodModelFactory from './MethodModelFactory';
+import MethodFactory from './MethodFactory';
 import Eth from '../Eth';
 import Contract from '../Contract';
 
@@ -128,15 +128,15 @@ export default class EthModuleFactory {
     }
 
     /**
-     * Returns an object of type MethodModelFactory
+     * Returns an object of type MethodFactory
      *
      * @method createMethodModelFactory
      *
      * @param {Accounts} accounts
      *
-     * @returns {MethodModelFactory}
+     * @returns {MethodFactory}
      */
     createMethodModelFactory(accounts) {
-        return new MethodModelFactory(this.utils, this.formatters, accounts);
+        return new MethodFactory(this.utils, this.formatters, accounts);
     }
 }

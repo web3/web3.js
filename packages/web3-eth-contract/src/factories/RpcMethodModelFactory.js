@@ -138,7 +138,7 @@ export default class RpcMethodModelFactory {
     }
 
     /**
-     * Returns an object of type EstimateGasMethodModel
+     * Returns an object of type EstimateGasMethod
      *
      * @method createEstimateGasMethodModel
      *

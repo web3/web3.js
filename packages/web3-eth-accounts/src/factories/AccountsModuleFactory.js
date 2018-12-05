@@ -60,7 +60,7 @@ export default class AccountsModuleFactory {
     }
 
     /**
-     * Returns an object of type MethodModelFactory
+     * Returns an object of type MethodFactory
      *
      * @method createMethodModelFactory
      *

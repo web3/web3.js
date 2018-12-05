@@ -64,7 +64,7 @@ export default class PersonalModuleFactory {
     }
 
     /**
-     * Returns an object of type MethodModelFactory
+     * Returns an object of type MethodFactory
      *
      * @method createMethodModelFactory
      *

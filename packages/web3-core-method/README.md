@@ -78,8 +78,8 @@ class Module extends AbstractWeb3Module {
     }
 }
 
-// Create the MethodModelFactory class
-class MethodModelFactory extends AbstractMethodModelFactory {
+MethodFactory
+MethodFactoryactory extendMethodFactorydelFactory {
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -104,8 +104,7 @@ const module = new Module(
     providersModuleFactory, 
     providers,
     new MethodController(), 
-    new MethodModelFactory(Utils, formatters),
-    {defaultAccount: '0x', ...}
+    new MethodModelFactory(Utils,MethodFactory{defaultAccount: '0x', ...}
 );
 
 module.sendTransaction({...}, (error, result) => {});

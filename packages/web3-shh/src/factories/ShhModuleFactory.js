@@ -15,8 +15,7 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file MethodModelFactory.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file MethodFactory* @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -64,7 +63,7 @@ export default class ShhModuleFactory {
     }
 
     /**
-     * Returns an object of type MethodModelFactory
+     * Returns an object of type MethodFactory
      *
      * @method createMethodModelFactory
      *
