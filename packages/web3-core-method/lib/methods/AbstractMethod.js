@@ -22,11 +22,12 @@ import isFunction from 'underscore-es/isFunction';
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
+
 export default class AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
-     * @param {Command} command
+     * @param {AbstractCommand} command
      * @param {Utils} utils
      * @param {Object} formatters
      *

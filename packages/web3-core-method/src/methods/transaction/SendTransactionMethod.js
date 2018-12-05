@@ -15,23 +15,25 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file SendSignedTransactionMethod.js
+ * @file SendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class SendSignedTransactionMethodModel extends AbstractMethod {
+export default class SendTransactionMethod extends AbstractMethod {
     /**
      * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
+     * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(sendTransactionMethodCommand, utils, formatters) {
-        super('eth_sendRawTransaction', 1, sendTransactionMethodCommand, utils, formatters);
+    constructor(sendTransactionMethodCommand, utils, formatters, accounts) {
+        super('eth_sendTransaction', 1, sendTransactionMethodCommand, utils, formatters);
+        this.accounts = accounts;
     }
 
     /**
@@ -43,5 +45,16 @@ export default class SendSignedTransactionMethodModel extends AbstractMethod {
      */
     static get CommandType() {
         return 'SEND_TRANSACTION';
+    }
+
+    /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
     }
 }
