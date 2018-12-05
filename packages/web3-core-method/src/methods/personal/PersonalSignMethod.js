@@ -15,34 +15,34 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file NewAccountMethodModel.js
+ * @file PersonalSignMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class NewAccountMethodModel extends AbstractMethodModel {
+export default class PersonalSignMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_newAccount', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('personal_sign', 3, callMethodCommand, utils, formatters);
     }
 
     /**
-     * This method will be executed after the RPC request.
+     * This method will be executed before the RPC request.
      *
-     * @method afterExecution
+     * @method beforeExecution
      *
-     * @param {Object} response
-     *
-     * @returns {String}
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    afterExecution(response) {
-        return this.utils.toChecksumAddress(response);
+    beforeExecution(moduleInstance) {
+        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
     }
 }

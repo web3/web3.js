@@ -1,11 +1,11 @@
 import * as Utils from 'web3-utils';
-import NewAccountMethodModel from '../../../../src/models/methods/personal/NewAccountMethodModel';
+import NewAccountMethodModel from '../../../../src/models/methods/personal/NewAccountMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * NewAccountMethodModel test
+ * NewAccountMethod test
  */
 describe('NewAccountMethodModelTest', () => {
     let model;

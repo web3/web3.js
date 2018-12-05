@@ -15,32 +15,37 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file UnlockAccountMethodModel.js
+ * @file ListAccountsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class UnlockAccountMethodModel extends AbstractMethodModel {
+export default class ListAccountsMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_unlockAccount', 3, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('personal_listAccounts', 0, callMethodCommand, utils, formatters);
     }
 
     /**
-     * This method will be executed before the RPC request.
+     * This method will be executed after the RPC request.
      *
-     * @method beforeExecution
+     * @method afterExecution
      *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     * @param {Object} response
+     *
+     * @returns {Array}
      */
-    beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+    afterExecution(response) {
+        return response.map((responseItem) => {
+            return this.utils.toChecksumAddress(responseItem);
+        });
     }
 }

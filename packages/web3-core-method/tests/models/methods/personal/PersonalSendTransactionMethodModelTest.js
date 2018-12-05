@@ -1,11 +1,11 @@
 import {formatters} from 'web3-core-helpers';
-import PersonalSendTransactionMethodModel from '../../../../src/models/methods/personal/PersonalSendTransactionMethodModel';
+import PersonalSendTransactionMethodModel from '../../../../src/models/methods/personal/PersonalSendTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * PersonalSendTransactionMethodModel test
+ * PersonalSendTransactionMethod test
  */
 describe('PersonalSendTransactionMethodModelTest', () => {
     let model;

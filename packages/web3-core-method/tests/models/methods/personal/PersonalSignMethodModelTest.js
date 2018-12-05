@@ -1,11 +1,11 @@
 import {formatters} from 'web3-core-helpers';
-import PersonalSignMethodModel from '../../../../src/models/methods/personal/PersonalSignMethodModel';
+import PersonalSignMethodModel from '../../../../src/models/methods/personal/PersonalSignMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * PersonalSignMethodModel test
+ * PersonalSignMethod test
  */
 describe('PersonalSignMethodModelTest', () => {
     let model;

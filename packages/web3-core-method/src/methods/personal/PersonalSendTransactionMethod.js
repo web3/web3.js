@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file EcRecoverMethodModel.js
+ * @file PersonalSendTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class EcRecoverMethodModel extends AbstractMethodModel {
+export default class PersonalSendTransactionMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_ecRecover', 3, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('personal_sendTransaction', 2, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -41,7 +42,6 @@ export default class EcRecoverMethodModel extends AbstractMethodModel {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
-        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
+        this.parameters[0] = this.formatters.inputTransactionFormatter(this.parameters[0], moduleInstance);
     }
 }

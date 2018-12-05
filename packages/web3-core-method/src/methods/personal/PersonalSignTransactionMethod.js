@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file PersonalSendTransactionMethodModel.js
+ * @file PersonalSignTransactionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class PersonalSendTransactionMethodModel extends AbstractMethodModel {
+export default class PersonalSignTransactionMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('personal_sendTransaction', 2, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('personal_signTransaction', 2, callMethodCommand, utils, formatters);
     }
 
     /**

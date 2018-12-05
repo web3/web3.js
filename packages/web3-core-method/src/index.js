@@ -89,10 +89,10 @@ export EcRecoverMethodModel from './models/methods/personal/EcRecoverMethodModel
 export ImportRawKeyMethodModel from './models/methods/personal/ImportRawKeyMethodModel';
 export ListAccountsMethodModel from './models/methods/personal/ListAccountsMethodModel';
 export LockAccountMethodModel from './models/methods/personal/LockAccountMethodModel';
-export NewAccountMethodModel from './models/methods/personal/NewAccountMethodModel';
-export PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethodModel';
-export PersonalSignMethodModel from './models/methods/personal/PersonalSignMethodModel';
-export PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethodModel';
+export NewAccountMethodModel from './models/methods/personal/NewAccountMethod';
+export PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethod';
+export PersonalSignMethodModel from './models/methods/personal/PersonalSignMethod';
+export PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethod';
 export UnlockAccountMethodModel from './models/methods/personal/UnlockAccountMethodModel';
 
 // SHH
