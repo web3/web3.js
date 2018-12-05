@@ -30,7 +30,7 @@ export default class AbstractMethodFactory {
      * @constructor
      */
     constructor(methods, methodModuleFactory, utils, formatters) {
-        this.methods = v;
+        this.methods = method;
         this.methodModuleFactory = methodModuleFactory;
         this.utils = utils;
         this.formatters = formatters;
