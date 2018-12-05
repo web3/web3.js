@@ -41,6 +41,15 @@ export default class AbstractMethod {
     }
 
     /**
+     * Returns the commandType of the Method
+     *
+     * @property CommandType
+     */
+    static get CommandType() {
+        throw Error('static property CommandType not defined on Method object!');
+    }
+
+    /**
      * Setter for the rpcMethod property
      *
      * @property rpcMethod

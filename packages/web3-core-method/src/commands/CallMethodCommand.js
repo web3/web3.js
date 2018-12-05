@@ -27,25 +27,25 @@ export default class CallMethodCommand {
      * @method execute
      *
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      *
      * @callback callback callback(error, result)
      * @returns {Promise<Object|String>}
      */
-    async execute(moduleInstance, methodModel) {
+    async execute(moduleInstance, method) {
         try {
-            methodModel.beforeExecution(moduleInstance);
-            const response = await moduleInstance.currentProvider.send(methodModel.rpcMethod, methodModel.parameters);
-            const mappedResponse = methodModel.afterExecution(response);
+            method.beforeExecution(moduleInstance);
+            const response = await moduleInstance.currentProvider.send(method.rpcMethod, method.parameters);
+            const mappedResponse = method.afterExecution(response);
 
-            if (methodModel.callback) {
-                methodModel.callback(false, mappedResponse);
+            if (method.callback) {
+                method.callback(false, mappedResponse);
             }
 
             return mappedResponse;
         } catch (error) {
-            if (methodModel.callback) {
-                methodModel.callback(error, null);
+            if (method.callback) {
+                method.callback(error, null);
 
                 return;
             }

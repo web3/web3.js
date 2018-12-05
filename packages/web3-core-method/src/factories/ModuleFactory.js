@@ -29,7 +29,6 @@ import MethodProxy from '../proxy/MethodProxy';
 
 export default class ModuleFactory {
     /**
-     * @param {PromiEvent} promiEventObject
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Object} formatters
      *

@@ -38,30 +38,30 @@ export default class SendMethodCommand {
      * @method execute
      *
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
      * @returns {PromiEvent}
      */
-    execute(moduleInstance, methodModel, promiEvent) {
-        methodModel.beforeExecution(moduleInstance);
+    execute(moduleInstance, method, promiEvent) {
+        method.beforeExecution(moduleInstance);
 
-        if (!this.isGasLimitDefined(methodModel.parameters)) {
+        if (!this.isGasLimitDefined(method.parameters)) {
             if (this.hasDefaultGasLimit(moduleInstance)) {
-                methodModel.parameters[0].gas = moduleInstance.defaultGas;
+                method.parameters[0].gas = moduleInstance.defaultGas;
             }
         }
 
-        if (this.isGasPriceDefined(methodModel.parameters)) {
-            this.send(methodModel, promiEvent, moduleInstance);
+        if (this.isGasPriceDefined(method.parameters)) {
+            this.send(method, promiEvent, moduleInstance);
 
             return promiEvent;
         }
 
         if (this.hasDefaultGasPrice(moduleInstance)) {
-            methodModel.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
-            this.send(methodModel, promiEvent, moduleInstance);
+            method.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
+            this.send(method, promiEvent, moduleInstance);
 
             return promiEvent;
         }
@@ -69,8 +69,8 @@ export default class SendMethodCommand {
         moduleInstance.currentProvider
             .send('eth_gasPrice', [])
             .then(gasPrice => {
-                methodModel.parameters[0].gasPrice = gasPrice;
-                this.send(methodModel, promiEvent, moduleInstance);
+                method.parameters[0].gasPrice = gasPrice;
+                this.send(method, promiEvent, moduleInstance);
             });
 
         return promiEvent;
@@ -81,22 +81,22 @@ export default class SendMethodCommand {
      *
      * @method send
      *
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      * @param {PromiEvent} promiEvent
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @returns {PromiEvent}
      */
-    send(methodModel, promiEvent, moduleInstance) {
+    send(method, promiEvent, moduleInstance) {
         moduleInstance.currentProvider
-            .send(methodModel.rpcMethod, methodModel.parameters)
+            .send(method.rpcMethod, method.parameters)
             .then((response) => {
-                this.transactionConfirmationWorkflow.execute(methodModel, moduleInstance, response, promiEvent);
+                this.transactionConfirmationWorkflow.execute(method, moduleInstance, response, promiEvent);
 
                 promiEvent.emit('transactionHash', response);
 
-                if (methodModel.callback) {
-                    methodModel.callback(false, response);
+                if (method.callback) {
+                    method.callback(false, response);
                 }
             })
             .catch((error) => {
@@ -104,8 +104,8 @@ export default class SendMethodCommand {
                 promiEvent.emit('error', error);
                 promiEvent.removeAllListeners();
 
-                if (methodModel.callback) {
-                    methodModel.callback(error, null);
+                if (method.callback) {
+                    method.callback(error, null);
                 }
             });
 

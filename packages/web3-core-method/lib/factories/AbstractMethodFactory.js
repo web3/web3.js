@@ -22,16 +22,18 @@
 
 export default class AbstractMethodFactory {
     /**
-     * @param {Object} methodModels
+     * @param {{name: String, method: AbstractMethod}} methods
+     * @param {AbstractMethodFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(methodModels, utils, formatters) {
+    constructor(methods, methodModuleFactory, utils, formatters) {
+        this.methods = v;
+        this.methodModuleFactory = methodModuleFactory;
         this.utils = utils;
         this.formatters = formatters;
-        this.methodModels = methodModels;
     }
 
     /**
@@ -43,19 +45,30 @@ export default class AbstractMethodFactory {
      *
      * @returns {Boolean}
      */
-    hasMethodModel(name) {
-        return typeof this.methodModels[name] !== 'undefined';
+    hasMethod(name) {
+        return typeof this.methods[name] !== 'undefined';
     }
 
     /**
      * Returns an MethodModel
      *
      * @param {String} name
-     * @param {AbstractCommand} command
      *
      * @returns {AbstractMethod}
      */
-    createMethod(command, name) {
-        return new this.methodModels[name](command, this.utils, this.formatters);
+    createMethod(name) {
+        const method = this.methods[name];
+        let command;
+
+        switch (method.CommandType) {
+            case 'CALL': // This could be removed if web3 would be written with TS because of the interfaces.
+                command = this.methodModuleFactory.createCallMethodCommand();
+                break;
+            case 'SEND':
+                command = this.methodModuleFactory.createSendMethodCommand();
+                break;
+        }
+
+        return new method(command, this.utils, this.formatters);
     }
 }
