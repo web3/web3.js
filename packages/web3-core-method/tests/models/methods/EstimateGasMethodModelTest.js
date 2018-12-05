@@ -1,13 +1,13 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import EstimateGasMethodModel from '../../../src/models/methods/EstimateGasMethodModel';
+import EstimateGasMethodModel from '../../../src/models/methods/EstimateGasMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
 
 /**
- * EstimateGasMethodModel test
+ * EstimateGasMethod test
  */
 describe('EstimateGasMethodModelTest', () => {
     let model;

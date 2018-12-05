@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file EstimateGasMethodModel.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file SignMethod.jsauthor Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-export default class EstimateGasMethodModel extends AbstractMethodModel {
+export default class SignMethod extends AbstractMethodModel {
     /**
      * @param {Object} utils
      * @param {Object} formatters
+     * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_estimateGas', 1, utils, formatters);
+    constructor(utils, formatters, accounts) {
+        super('eth_sign', 2, utils, formatters);
+        this.accounts = accounts;
     }
 
     /**
@@ -41,19 +42,7 @@ export default class EstimateGasMethodModel extends AbstractMethodModel {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
-    }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Object} response
-     *
-     * @returns {Number}
-     */
-    afterExecution(response) {
-        return this.utils.hexToNumber(response);
+        this.parameters[0] = this.formatters.inputSignFormatter(this.parameters[0]);
+        this.parameters[1] = this.formatters.inputAddressFormatter(this.parameters[1]);
     }
 }

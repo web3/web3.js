@@ -15,14 +15,13 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file DeleteSymKeyMethodModel.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file DeleteSymKeyMethod* @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class DeleteSymKeyMethodModel extends AbstractMethod {
+export default class DeleteSymKeyMethod extends AbstractMethod {
     /**
      * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils

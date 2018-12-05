@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetStorageAtMethodModel.js
+ * @file CallMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetStorageAtMethodModel extends AbstractMethodModel {
+export default class CallMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getStorageAt', 3, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_call', 2, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -41,8 +42,7 @@ export default class GetStorageAtMethodModel extends AbstractMethodModel {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
-        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
-        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
+        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
+        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
     }
 }

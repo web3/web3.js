@@ -1,11 +1,11 @@
 import {formatters} from 'web3-core-helpers';
-import SignMethodModel from '../../../src/models/methods/SignMethodModel';
+import SignMethodModel from '../../../src/models/methods/SignMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetStorageAtMethodModel test
+ * GetStorageAtMethod test
  */
 describe('SignMethodModelTest', () => {
     let model;

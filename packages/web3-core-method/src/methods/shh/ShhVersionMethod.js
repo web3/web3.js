@@ -20,16 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../../lib/methods/AbstractMethod';
+import AbstractMethod from '/../../../lib/methods/AbstractMethod';
 
 export default class ShhVersionMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_version', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_version', 0, callMethodCommand, utils, formatters);
     }
 }

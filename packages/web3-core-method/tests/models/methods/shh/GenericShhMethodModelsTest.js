@@ -2,10 +2,10 @@ import AddPrivateKeyMethodModel from '../../../../src/models/methods/shh/AddPriv
 import AddSymKeyMethodModel from '../../../../src/models/methods/shh/AddSymKeyMethodModel';
 import DeleteKeyPairMethodModel from '../../../../src/models/methods/shh/DeleteKeyPairMethodModel';
 import DeleteMessageFilterMethodModel from '../../../../src/models/methods/shh/DeleteMessageFilterMethodModel';
-import DeleteSymKeyMethodModel from '../../../../src/models/methods/shh/DeleteSymKeyMethodModel';
+import DeleteSymKeyMethodModel from '../../../../src/models/methods/shh/DeleteSymKeyMethod';
 import GenerateSymKeyFromPasswordMethodModel from '../../../../src/models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
 import GetFilterMessagesMethodModel from '../../../../src/models/methods/shh/GetFilterMessagesMethodModel';
-import GetInfoMethodModel from '../../../../src/models/methods/shh/GetInfoMethodModel';
+import GetInfoMethodModel from '../../../../src/models/methods/shh/GetInfoMethod';
 import GetPrivateKeyMethodModel from '../../../../src/models/methods/shh/GetPrivateKeyMethodModel';
 import GetPublicKeyMethodModel from '../../../../src/models/methods/shh/GetPublicKeyMethodModel';
 import GetSymKeyMethodModel from '../../../../src/models/methods/shh/GetSymKeyMethodModel';

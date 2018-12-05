@@ -7,7 +7,7 @@ jest.mock('formatters');
 jest.mock('Utils');
 
 /**
- * GetStorageAtMethodModel test
+ * GetStorageAtMethod test
  */
 describe('GetStorageAtMethodModelTest', () => {
     let model;

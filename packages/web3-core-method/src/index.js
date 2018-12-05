@@ -78,10 +78,10 @@ export SendTransactionMethodModel from './models/methods/transaction/SendTransac
 
 // Global
 export GetCodeMethodModel from './models/methods/GetCodeMethodModel';
-export SignMethodModel from './models/methods/SignMethodModel';
+export SignMethodModel from './models/methods/SignMethod';
 export CallMethodModel from './models/methods/CallMethodModel';
-export GetStorageAtMethodModel from './models/methods/GetStorageAtMethodModel';
-export EstimateGasMethodModel from './models/methods/EstimateGasMethodModel';
+export GetStorageAtMethodModel from './models/methods/GetStorageAtMethod';
+export EstimateGasMethodModel from './models/methods/EstimateGasMethod';
 export GetPastLogsMethodModel from './models/methods/GetPastLogsMethodModel';
 
 // Personal
@@ -100,10 +100,10 @@ export AddPrivateKeyMethodModel from './models/methods/shh/AddPrivateKeyMethodMo
 export AddSymKeyMethodModel from './models/methods/shh/AddSymKeyMethodModel';
 export DeleteKeyPairMethodModel from './models/methods/shh/DeleteKeyPairMethodModel';
 export DeleteMessageFilterMethodModel from './models/methods/shh/DeleteMessageFilterMethodModel';
-export DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethodModel';
+export DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethod';
 export GenerateSymKeyFromPasswordMethodModel from './models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
 export GetFilterMessagesMethodModel from './models/methods/shh/GetFilterMessagesMethodModel';
-export GetInfoMethodModel from './models/methods/shh/GetInfoMethodModel';
+export GetInfoMethodModel from './models/methods/shh/GetInfoMethod';
 export GetPrivateKeyMethodModel from './models/methods/shh/GetPrivateKeyMethodModel';
 export GetPublicKeyMethodModel from './models/methods/shh/GetPublicKeyMethodModel';
 export GetSymKeyMethodModel from './models/methods/shh/GetSymKeyMethodModel';

@@ -46,9 +46,11 @@ export default class AbstractMethod {
      * Returns the commandType of the Method
      *
      * @property CommandType
+     *
+     * @returns {String}
      */
     static get CommandType() {
-        throw Error('static property CommandType not defined on Method object!');
+        return 'CALL';
     }
 
     /**

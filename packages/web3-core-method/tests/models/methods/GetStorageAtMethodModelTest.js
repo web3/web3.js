@@ -1,13 +1,13 @@
 import {formatters} from 'web3-core-helpers';
 import * as Utils from 'web3-utils';
-import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethodModel';
+import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethod';
 
 // Mocks
 jest.mock('formatters');
 jest.mock('Utils');
 
 /**
- * GetStorageAtMethodModel test
+ * GetStorageAtMethod test
  */
 describe('GetStorageAtMethodModelTest', () => {
     let model;

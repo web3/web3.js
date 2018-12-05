@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetCodeMethodModel.js
+ * @file GetCodeMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetCodeMethodModel extends AbstractMethodModel {
+export default class GetCodeMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getCode', 2, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getCode', 2, callMethodCommand, utils, formatters);
     }
 
     /**

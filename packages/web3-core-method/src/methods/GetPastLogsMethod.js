@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file CallMethodModel.js
+ * @file GetPastLogsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class CallMethodModel extends AbstractMethodModel {
+export default class GetPastLogsMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_call', 2, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getLogs', 1, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -41,7 +42,21 @@ export default class CallMethodModel extends AbstractMethodModel {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputCallFormatter(this.parameters[0], moduleInstance);
-        this.parameters[1] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[1], moduleInstance);
+        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
+    }
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {Array} response
+     *
+     * @returns {Array}
+     */
+    afterExecution(response) {
+        return response.map((responseItem) => {
+            return this.formatters.outputLogFormatter(responseItem);
+        });
     }
 }

@@ -15,14 +15,13 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetPastLogsMethodModel.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file GetStorageAtMethod.jsauthor Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
 
-export default class GetPastLogsMethodModel extends AbstractMethodModel {
+export default class GetStorageAtMethod extends AbstractMethodModel {
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -30,7 +29,7 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_getLogs', 1, utils, formatters);
+        super('eth_getStorageAt', 3, utils, formatters);
     }
 
     /**
@@ -41,21 +40,8 @@ export default class GetPastLogsMethodModel extends AbstractMethodModel {
      * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
     beforeExecution(moduleInstance) {
-        this.parameters[0] = this.formatters.inputLogFormatter(this.parameters[0]);
-    }
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {Array} response
-     *
-     * @returns {Array}
-     */
-    afterExecution(response) {
-        return response.map((responseItem) => {
-            return this.formatters.outputLogFormatter(responseItem);
-        });
+        this.parameters[0] = this.formatters.inputAddressFormatter(this.parameters[0]);
+        this.parameters[1] = this.utils.numberToHex(this.parameters[1]);
+        this.parameters[2] = this.formatters.inputDefaultBlockNumberFormatter(this.parameters[2], moduleInstance);
     }
 }
