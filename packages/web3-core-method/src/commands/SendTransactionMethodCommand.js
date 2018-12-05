@@ -21,8 +21,9 @@
  */
 
 import isObject from 'underscore-es/isObject';
+import AbstractCommand from '../../lib/commands/AbstractCommand';
 
-export default class SendTransactionMethodCommand {
+export default class SendTransactionMethodCommand extends AbstractCommand {
     /**
      * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {TransactionSigner} transactionSigner
@@ -31,8 +32,8 @@ export default class SendTransactionMethodCommand {
      * @constructor
      */
     constructor(transactionConfirmationWorkflow, transactionSigner, accounts) {
+        super(accounts);
         this.transactionConfirmationWorkflow = transactionConfirmationWorkflow;
-        this.accounts = accounts;
         this.transactionSigner = transactionSigner;
     }
 
@@ -192,18 +193,5 @@ export default class SendTransactionMethodCommand {
      */
     isGasLimitDefined(parameters) {
         return isObject(parameters[0]) && typeof parameters[0].gas !== 'undefined';
-    }
-
-    /**
-     * Checks if accounts is defined and if wallet is not empty
-     *
-     * @method hasWallet
-     *
-     * @param {Accounts} accounts
-     *
-     * @returns {Boolean}
-     */
-    hasWallets() {
-        return this.accounts && this.accounts.wallet.length > 0;
     }
 }
