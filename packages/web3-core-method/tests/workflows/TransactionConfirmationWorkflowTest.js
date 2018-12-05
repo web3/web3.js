@@ -2,10 +2,10 @@ import {AbstractWeb3Module} from 'web3-core';
 import {SocketProviderAdapter} from 'web3-providers';
 import {PromiEvent} from 'web3-core-promievent';
 import {formatters} from 'web3-core-helpers';
-import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
-import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import TransactionReceiptValidator from '../../src/methods/transaction/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/methods/transaction/watchers/NewHeadsWatcher';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
-import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import TransactionConfirmationWorkflow from '../../src/methods/transaction/workflows/TransactionConfirmationWorkflow';
 
 // Mocks
 jest.mock('../../src/validators/TransactionReceiptValidator');

@@ -4,11 +4,11 @@ import CallMethodCommand from '../../src/commands/CallMethodCommand';
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
 import SendMethodCommand from '../../src/commands/SendMethodCommand';
 import SignMessageCommand from '../../src/commands/SignMessageCommand';
-import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import TransactionConfirmationWorkflow from '../../src/methods/transaction/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../src/signers/TransactionSigner';
 import MessageSigner from '../../src/signers/MessageSigner';
-import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
-import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import TransactionReceiptValidator from '../../src/methods/transaction/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../../src/methods/transaction/watchers/NewHeadsWatcher';
 
 /**
  * ModuleFactory test

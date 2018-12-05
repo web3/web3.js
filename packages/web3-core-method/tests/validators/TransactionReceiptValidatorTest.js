@@ -1,4 +1,4 @@
-import TransactionReceiptValidator from '../../src/validators/TransactionReceiptValidator';
+import TransactionReceiptValidator from '../../src/methods/transaction/validators/TransactionReceiptValidator';
 
 /**
  * TransactionReceiptValidator test

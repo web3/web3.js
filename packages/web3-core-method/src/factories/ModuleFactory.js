@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
-import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
-import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
+import TransactionConfirmationWorkflow from '../methods/transaction/workflows/TransactionConfirmationWorkflow';
+import TransactionReceiptValidator from '../methods/transaction/validators/TransactionReceiptValidator';
+import NewHeadsWatcher from '../methods/transaction/watchers/NewHeadsWatcher';
 import CallMethodCommand from '../commands/CallMethodCommand';
 import SendMethodCommand from '../commands/SendMethodCommand';
 import MethodProxy from '../proxy/MethodProxy';

@@ -1,7 +1,7 @@
 import {Subscription, SubscriptionsFactory} from 'web3-core-subscriptions';
 import {AbstractWeb3Module} from 'web3-core';
 import {HttpProviderAdapter, SocketProviderAdapter} from 'web3-providers';
-import NewHeadsWatcher from '../../src/watchers/NewHeadsWatcher';
+import NewHeadsWatcher from '../../src/methods/transaction/watchers/NewHeadsWatcher';
 
 // Mocks
 jest.mock('HttpProviderAdapter');

@@ -1,6 +1,6 @@
 import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
 import TransactionSigner from '../../src/signers/TransactionSigner';
-import TransactionConfirmationWorkflow from '../../src/workflows/TransactionConfirmationWorkflow';
+import TransactionConfirmationWorkflow from '../../src/methods/transaction/workflows/TransactionConfirmationWorkflow';
 import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
 import {SocketProviderAdapter} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
