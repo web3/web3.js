@@ -20,26 +20,28 @@
  */
 
 import {
-    AbstractMethodModelFactory,
-    GetGasPriceMethodModel,
-    GetTransactionCountMethodModel,
-    VersionMethodModel
+    AbstractMethodFactory,
+    GetGasPriceMethod,
+    GetTransactionCountMethod,
+    VersionMethod
 } from 'web3-core-method';
 
-export default class MethodModelFactory extends AbstractMethodModelFactory {
+export default class MethodFactory extends AbstractMethodFactory {
     /**
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(methodModuleFactory, utils, formatters) {
         super(
             {
-                getGasPrice: GetGasPriceMethodModel,
-                getTransactionCount: GetTransactionCountMethodModel,
-                getId: VersionMethodModel
+                getGasPrice: GetGasPriceMethod,
+                getTransactionCount: GetTransactionCountMethod,
+                getId: VersionMethod
             },
+            methodModuleFactory,
             utils,
             formatters
         );

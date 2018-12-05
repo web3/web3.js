@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import MethodModelFactory from './MethodModelFactory';
+import MethodFactory from './MethodFactory';
 import Accounts from '../Accounts';
 
 export default class AccountsModuleFactory {
@@ -52,7 +52,7 @@ export default class AccountsModuleFactory {
             providersModuleFactory,
             providers,
             methodModuleFactory,
-            this.createMethodModelFactory(),
+            this.createMethodFactory(methodModuleFactory),
             this.utils,
             this.formatters,
             options
@@ -62,11 +62,12 @@ export default class AccountsModuleFactory {
     /**
      * Returns an object of type MethodFactory
      *
-     * @method createMethodModelFactory
+     * @method createMethodFactory
+     * @param {MethodModuleFactory} methodModuleFactory
      *
-     * @returns {MethodModelFactory}
+     * @returns {MethodFactory}
      */
-    createMethodModelFactory() {
-        return new MethodModelFactory(this.utils, this.formatters);
+    createMethodFactory(methodModuleFactory) {
+        return new MethodFactory(methodModuleFactory, this.utils, this.formatters);
     }
 }

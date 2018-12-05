@@ -41,7 +41,7 @@ export const Accounts = (provider, options) => {
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodModuleFactory(),
+        new MethodModuleFactory({}),
         options
     );
 };

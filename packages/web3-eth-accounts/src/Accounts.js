@@ -62,7 +62,7 @@ export default class Accounts extends AbstractWeb3Module {
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodFactory} methodFactory
      * @param {Object} utils
      * @param {Object} formatters
      * @param {Object} options
@@ -74,7 +74,7 @@ export default class Accounts extends AbstractWeb3Module {
         providersModuleFactory,
         providers,
         methodModuleFactory,
-        methodModelFactory,
+        methodFactory,
         utils,
         formatters,
         options
@@ -84,7 +84,7 @@ export default class Accounts extends AbstractWeb3Module {
             providersModuleFactory,
             providers,
             methodModuleFactory,
-            methodModelFactory,
+            methodFactory,
             options
         );
 
