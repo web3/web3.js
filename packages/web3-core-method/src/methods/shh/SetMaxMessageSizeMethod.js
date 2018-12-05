@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetInfoMethodModel.js
+ * @file SetMaxMessageSizeMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetInfoMethodModel extends AbstractMethodModel {
+export default class SetMaxMessageSizeMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_info', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_setMaxMessageSize', 1, callMethodCommand, utils, formatters);
     }
 }

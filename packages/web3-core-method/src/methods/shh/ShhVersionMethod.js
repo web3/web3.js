@@ -15,14 +15,14 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file HasSymKeyMethodModel.js
+ * @file ShhVersionMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../../lib/methods/AbstractMethod';
 
-export default class HasSymKeyMethodModel extends AbstractMethodModel {
+export default class ShhVersionMethod extends AbstractMethod {
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -30,6 +30,6 @@ export default class HasSymKeyMethodModel extends AbstractMethodModel {
      * @constructor
      */
     constructor(utils, formatters) {
-        super('shh_hasSymKey', 1, utils, formatters);
+        super('shh_version', 0, utils, formatters);
     }
 }

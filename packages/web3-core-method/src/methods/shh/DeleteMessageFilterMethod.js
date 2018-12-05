@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetPrivateKeyMethodModel.js
+ * @file DeleteMessageFilterMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetPrivateKeyMethodModel extends AbstractMethodModel {
+export default class DeleteMessageFilterMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_getPrivateKey', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_deleteMessageFilter', 1, callMethodCommand, utils, formatters);
     }
 }

@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file DeleteSymKeyMethodModel.js
+ * @file NewKeyPairMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class DeleteSymKeyMethodModel extends AbstractMethodModel {
+export default class NewKeyPairMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_deleteSymKey', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_newKeyPair', 1, callMethodCommand, utils, formatters);
     }
 }

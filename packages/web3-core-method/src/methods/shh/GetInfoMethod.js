@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file PostMethodModel.js
+ * @file GetInfoMethodModel.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class PostMethodModel extends AbstractMethodModel {
+export default class GetInfoMethodModel extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_post', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_info', 0, callMethodCommand, utils, formatters);
     }
 }

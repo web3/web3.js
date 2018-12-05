@@ -20,16 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GenerateSymKeyFromPasswordMethodModel extends AbstractMethodModel {
+export default class GenerateSymKeyFromPasswordMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_generateSymKeyFromPassword', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_generateSymKeyFromPassword', 1, callMethodCommand, utils, formatters);
     }
 }

@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file AddSymKeyMethodModel.js
+ * @file GetSymKeyMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class AddSymKeyMethodModel extends AbstractMethodModel {
+export default class GetSymKeyMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('shh_addSymKey', 1, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('shh_getSymKey', 1, callMethodCommand, utils, formatters);
     }
 }
