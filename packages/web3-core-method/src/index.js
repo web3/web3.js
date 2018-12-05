@@ -54,7 +54,7 @@ export GetHashrateMethodModel from './models/methods/node/GetHashrateMethodModel
 export IsSyncingMethodModel from './models/methods/node/IsSyncingMethodModel';
 export GetGasPriceMethodModel from './models/methods/node/GetGasPriceMethodModel';
 export SubmitWorkMethodModel from './models/methods/node/SubmitWorkMethodModel';
-export GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
+export GetWorkMethodModel from './models/methods/node/GetWorkMethod';
 
 // Account
 export GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';

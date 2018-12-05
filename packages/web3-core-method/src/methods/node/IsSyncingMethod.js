@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetGasPriceMethodModel.js
+ * @file IsSyncingMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetGasPriceMethodModel extends AbstractMethodModel {
+export default class IsSyncingMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_gasPrice', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_syncing', 0, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -40,9 +41,9 @@ export default class GetGasPriceMethodModel extends AbstractMethodModel {
      *
      * @param {Object} response
      *
-     * @returns {BigNumber}
+     * @returns {Object}
      */
     afterExecution(response) {
-        return this.formatters.outputBigNumberFormatter(response);
+        return this.formatters.outputSyncingFormatter(response);
     }
 }

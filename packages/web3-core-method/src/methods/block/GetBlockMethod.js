@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../../lib/models/AbstractMethod';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetBlockMethod extends AbstractMethod {
     /**

@@ -1,7 +1,7 @@
-import GetWorkMethodModel from '../../../../src/models/methods/node/GetWorkMethodModel';
+import GetWorkMethodModel from '../../../../src/models/methods/node/GetWorkMethod';
 
 /**
- * GetWorkMethodModel test
+ * GetWorkMethod test
  */
 describe('GetWorkMethodModelTest', () => {
     let model;

@@ -15,22 +15,23 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file IsSyncingMethodModel.js
+ * @file PeerCountMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class IsSyncingMethodModel extends AbstractMethodModel {
+export default class PeerCountMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_syncing', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('net_peerCount', 0, callMethodCommand, utils, formatters);
     }
 
     /**
@@ -38,11 +39,11 @@ export default class IsSyncingMethodModel extends AbstractMethodModel {
      *
      * @method afterExecution
      *
-     * @param {Object} response
+     * @param {String} response
      *
-     * @returns {Object}
+     * @returns {Number}
      */
     afterExecution(response) {
-        return this.formatters.outputSyncingFormatter(response);
+        return this.utils.hexToNumber(response);
     }
 }

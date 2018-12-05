@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetWorkMethodModel.js
+ * @file SubmitWorkMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/models/AbstractMethod';
 
-export default class GetWorkMethodModel extends AbstractMethodModel {
+export default class SubmitWorkMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getWork', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_submitWork', 3, callMethodCommand, utils, formatters);
     }
 }

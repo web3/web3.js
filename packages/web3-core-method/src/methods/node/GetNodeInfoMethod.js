@@ -15,21 +15,22 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetProtocolVersionMethodModel.js
+ * @file GetNodeInfoMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
-export default class GetProtocolVersionMethodModel extends AbstractMethodModel {
+export default class GetNodeInfoMethod extends AbstractMethod {
     /**
+     * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_protocolVersion', 0, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('web3_clientVersion', 0, callMethodCommand, utils, formatters);
     }
 }

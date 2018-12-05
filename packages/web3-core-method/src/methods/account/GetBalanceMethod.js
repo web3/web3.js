@@ -15,12 +15,12 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file GetBalanceMethodModel.js
+ * @file GetBalanceMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 export default class GetBalanceMethod extends AbstractMethod {
     /**
