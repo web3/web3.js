@@ -15,17 +15,17 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file SendContractMethodModel.js
+ * @file SendContractMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import isArray from 'underscore-es/isArray';
-import {SendTransactionMethodModel} from 'web3-core-method';
+import {SendTransactionMethod} from 'web3-core-method';
 
-export default class SendContractMethodModel extends SendTransactionMethodModel {
+export default class SendContractMethod extends SendTransactionMethod {
     /**
-     * @param {AbiItemModel} abiItemModel
+     * @param {AbiItem} abiItem
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {Object} utils
      * @param {Object} formatters
@@ -33,10 +33,10 @@ export default class SendContractMethodModel extends SendTransactionMethodModel 
      *
      * @constructor
      */
-    constructor(abiItemModel, allEventsLogDecoder, utils, formatters, accounts) {
+    constructor(abiItem, allEventsLogDecoder, utils, formatters, accounts) {
         super(utils, formatters, accounts);
 
-        this.abiItemModel = abiItemModel;
+        this.abiItem = abiItem;
         this.allEventsLogDecoder = allEventsLogDecoder;
     }
 

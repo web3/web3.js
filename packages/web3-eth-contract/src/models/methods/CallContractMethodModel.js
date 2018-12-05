@@ -15,27 +15,27 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file CallContractMethodModel.js
+ * @file CallContractMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {CallMethodModel} from 'web3-core-method';
+import {CallMethod} from 'web3-core-method';
 
-export default class CallContractMethodModel extends CallMethodModel {
+export default class CallContractMethod extends CallMethod {
     /**
-     * @param {AbiItemModel} abiItemModel
+     * @param {AbiItem} abiItem
      * @param {CallMethodResponseDecoder} callMethodResponseDecoder
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(abiItemModel, callMethodResponseDecoder, utils, formatters) {
-        super(utils, formatters);
+    constructor(abiItem, callMethodCommand, callMethodResponseDecoder, utils, formatters) {
+        super(callMethodCommand, utils, formatters);
 
         this.callMethodResponseDecoder = callMethodResponseDecoder;
-        this.abiItemModel = abiItemModel;
+        this.abiItem = abiItem;
     }
 
     /**
@@ -48,6 +48,6 @@ export default class CallContractMethodModel extends CallMethodModel {
      * @returns {*}
      */
     afterExecution(response) {
-        return this.callMethodResponseDecoder.decode(this.abiItemModel, response);
+        return this.callMethodResponseDecoder.decode(this.abiItem, response);
     }
 }

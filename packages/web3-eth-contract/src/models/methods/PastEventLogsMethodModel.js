@@ -15,25 +15,25 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file PastEventLogsMethodModel.js
+ * @file PastEventLogsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {GetPastLogsMethodModel} from 'web3-core-method';
+import {GetPastLogsMethod} from 'web3-core-method';
 
-export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
+export default class PastEventLogsMethod extends GetPastLogsMethod {
     /**
-     * @param {AbiItemModel} abiItemModel
+     * @param {AbiItem} abiItem
      * @param {Object} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(abiItemModel, utils, formatters) {
+    constructor(abiItem, utils, formatters) {
         super(utils, formatters);
 
-        this.abiItemModel = abiItemModel;
+        this.abiItem = abiItem;
     }
 
     /**
@@ -49,7 +49,7 @@ export default class PastEventLogsMethodModel extends GetPastLogsMethodModel {
         const formattedLogs = super.afterExecution(response);
 
         formattedLogs.map((logItem) => {
-            return this.eventLogDecoder.decode(self.abiItemModel, logItem);
+            return this.eventLogDecoder.decode(self.abiItem, logItem);
         });
 
         return formattedLogs;

@@ -15,24 +15,25 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file ContractDeployMethodModel.js
+ * @file ContractDeployMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {SendTransactionMethodModel} from 'web3-core-method';
+import {SendTransactionMethod} from 'web3-core-method';
 
-export default class ContractDeployMethodModel extends SendTransactionMethodModel {
+export default class ContractDeployMethod extends SendTransactionMethod {
     /**
      * @param {Contract} contract
+     * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
      * @param {Object} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(contract, utils, formatters, accounts) {
-        super(utils, formatters, accounts);
+    constructor(contract, sendTransactionMethodCommand, utils, formatters, accounts) {
+        super(command, utils, formatters, accounts);
 
         this.contract = contract;
     }

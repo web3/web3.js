@@ -60,7 +60,7 @@ export default class AbstractWeb3Module {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
 
-        if (methodFactory !== null || typeof v !== 'undefined') {
+        if (methodFactory !== null || typeof methodFactory !== 'undefined') {
             this.methodFactory = methodFactory;
 
             return methodModuleFactory.createMethodProxy(
