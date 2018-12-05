@@ -1,9 +1,6 @@
 import Accounts from '../__mocks__/Accounts';
 import MessageSigner from '../../src/signers/MessageSigner';
 
-// Mocks
-jest.mock('SocketProviderAdapter');
-
 /**
  * MessageSigner test
  */

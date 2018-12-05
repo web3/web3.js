@@ -73,10 +73,12 @@ describe('SignMessageCommandTest', () => {
         methodModelMock.parameters = ['string', '0x0'];
 
         messageSignerMock.sign
-            .mockReturnValueOnce(new Error());
+            .mockImplementation(() => {
+                throw new Error();
+            });
 
         try {
-            signMessageCommand.execute({}, methodModelMock, {});
+            signMessageCommand.execute(moduleInstanceMock, methodModelMock, {});
         } catch (error2) {
             expect(methodModelMock.beforeExecution)
                 .toHaveBeenCalledWith(moduleInstanceMock);

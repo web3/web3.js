@@ -40,4 +40,21 @@ describe('TransactionSignerTest', () => {
         expect(accountsMock.signTransaction)
             .toHaveBeenCalledWith(transaction, '0x0');
     });
+
+    it('calls sign and signing with accounts throws an error', async () => {
+        accountsMock.wallet[0] = {privateKey: '0x0'};
+        const transaction = {
+            from: 0
+        };
+
+        accountsMock.signTransaction
+            .mockReturnValueOnce(Promise.reject(new Error()));
+
+        try {
+            await transactionSigner.sign(transaction, accountsMock);
+        } catch (error) {
+            expect(error)
+                .toBeInstanceOf(Error);
+        }
+    });
 });

@@ -37,23 +37,71 @@ export default class AbstractMethodModel {
         this.parametersAmount = parametersAmount;
         this.utils = utils;
         this.formatters = formatters;
-        const methodArguments = {};
+        this._methodArguments = {};
+    }
 
-        /**
-         * Defines accessors for defaultAccount
-         */
-        Object.defineProperty(this, 'methodArguments', {
-            get() {
-                return methodArguments;
-            },
-            set(methodArguments) {
-                methodArguments = this.mapFunctionArguments(methodArguments);
-            },
-            enumerable: true
-        });
+    /**
+     * Getter for methodArguments
+     *
+     * @property methodArguments
+     *
+     * @returns {{callback, parameters}}
+     */
+    get methodArguments() {
+        return this._methodArguments;
+    }
 
-        this.parameters = this.methodArguments.parameters;
-        this.callback = this.methodArguments.callback;
+    /**
+     * Setter for methodArguments
+     *
+     * @propery methodArguments
+     *
+     * @param {Array} value
+     */
+    set methodArguments(value) {
+        this._methodArguments = this.mapFunctionArguments(value);
+    }
+
+    /**
+     * Getter for parameters
+     *
+     * @property parameters
+     *
+     * @returns {Array|undefined}
+     */
+    get parameters() {
+        return this._methodArguments.parameters;
+    }
+
+    /**
+     * Setter for paramters
+     *
+     * @property parameters
+     *
+     * @param {Array} value
+     */
+    set parameters(value) {
+        this._methodArguments.parameters = value;
+    }
+
+    /**
+     * Getter for callback
+     *
+     * @returns {Function|undefined}
+     */
+    get callback() {
+        return this._methodArguments.callback;
+    }
+
+    /**
+     * Setter for callback
+     *
+     * @property callback
+     *
+     * @param {Function} value
+     */
+    set callback(value) {
+        this._methodArguments.callback = value;
     }
 
     /**
@@ -86,9 +134,10 @@ export default class AbstractMethodModel {
      * @returns {AbstractMethodModel}
      */
     request() {
-        this.methodArguments = arguments;
+        const clone = new this.constructor(this.rpcMethod, this.parametersAmount, this.utils, this.formatters);
+        clone.methodArguments = Array.from(arguments);
 
-        return this;
+        return clone;
     }
 
     /**
@@ -101,9 +150,8 @@ export default class AbstractMethodModel {
      * @returns {Object}
      */
     mapFunctionArguments(args) {
-        let parameters = args;
-
-        let callback = false;
+        let parameters = args,
+            callback = null;
 
         if (args.length < this.parametersAmount) {
             throw new Error(
@@ -112,12 +160,14 @@ export default class AbstractMethodModel {
         }
 
         if (args.length > this.parametersAmount) {
-            callback = args.slice(-1);
+            callback = args.slice(-1)[0];
+
             if (!isFunction(callback)) {
                 throw new TypeError(
-                    'The latest parameter should be a function otherwise it can not be used as callback'
+                    'The latest parameter should be a function otherwise it can\'t be used as callback'
                 );
             }
+
             parameters = args.slice(0, -1);
         }
 

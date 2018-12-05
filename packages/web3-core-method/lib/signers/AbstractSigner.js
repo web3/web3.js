@@ -20,32 +20,19 @@
  * @date 2018
  */
 
-import isNumber from 'underscore-es/isNumber';
-import isObject from 'underscore-es/isObject';
-
 export default class AbstractSigner {
     /**
      * Get wallet for address with accounts package
      *
-     * @param {*} from
+     * @param {String} from
      * @param {Accounts} accounts
      *
-     * @returns {*}
+     * @returns {}
      */
     getWallet(from, accounts) {
-        // is index given
-        if (isNumber(from)) {
-            return accounts.wallet[from];
-        }
-
-        // is account given
-        if (isObject(from) && from.address && from.privateKey) {
-            return from;
-        }
-
-        const searchedWalletForAddress = accounts.wallet[from.toLowerCase()];
-        if (searchedWalletForAddress) {
-            return searchedWalletForAddress;
+        const account = accounts.wallet[from];
+        if(account) {
+            return account;
         }
 
         return null;
