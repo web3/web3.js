@@ -41,24 +41,24 @@ export default class TransactionConfirmationWorkflow {
      *
      * @method execute
      *
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      * @param {AbstractWeb3Module} moduleInstance
      * @param {String} transactionHash
      * @param {Object} promiEvent
      *
      * @callback callback callback(error, result)
      */
-    execute(methodModel, moduleInstance, transactionHash, promiEvent) {
+    execute(method, moduleInstance, transactionHash, promiEvent) {
         this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
             if (receipt && receipt.blockHash) {
                 const validationResult = this.transactionReceiptValidator.validate(receipt);
                 if (validationResult === true) {
-                    this.handleSuccessState(receipt, methodModel, promiEvent);
+                    this.handleSuccessState(receipt, method, promiEvent);
 
                     return;
                 }
 
-                this.handleErrorState(validationResult, methodModel, promiEvent);
+                this.handleErrorState(validationResult, method, promiEvent);
 
                 return;
             }
@@ -69,7 +69,7 @@ export default class TransactionConfirmationWorkflow {
                     this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
                         const validationResult = this.transactionReceiptValidator.validate(
                             receipt,
-                            methodModel.parameters
+                            method.parameters
                         );
 
                         if (validationResult === true) {
@@ -77,7 +77,7 @@ export default class TransactionConfirmationWorkflow {
                             promiEvent.emit('confirmation', this.confirmationsCounter, receipt);
 
                             if (this.isConfirmed(moduleInstance)) {
-                                this.handleSuccessState(receipt, methodModel, promiEvent);
+                                this.handleSuccessState(receipt, method, promiEvent);
                             }
 
                             return;
@@ -87,8 +87,8 @@ export default class TransactionConfirmationWorkflow {
                         promiEvent.emit('error', validationResult, receipt);
                         promiEvent.removeAllListeners();
 
-                        if (methodModel.callback) {
-                            methodModel.callback(validationResult, null);
+                        if (method.callback) {
+                            method.callback(validationResult, null);
                         }
                     });
 
@@ -109,7 +109,7 @@ export default class TransactionConfirmationWorkflow {
                     );
                 }
 
-                this.handleErrorState(error, methodModel, promiEvent);
+                this.handleErrorState(error, method, promiEvent);
             });
         });
     }
@@ -168,36 +168,36 @@ export default class TransactionConfirmationWorkflow {
      * @method handleSuccessState
      *
      * @param {Object} receipt
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
      */
-    handleSuccessState(receipt, methodModel, promiEvent) {
+    handleSuccessState(receipt, method, promiEvent) {
         this.timeoutCounter = 0;
         this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
 
-        if (methodModel.constructor.name === 'ContractDeployMethodModel') {
-            promiEvent.resolve(methodModel.afterExecution(receipt));
+        if (method.constructor.name === 'ContractDeployMethod') {
+            promiEvent.resolve(method.afterExecution(receipt));
             promiEvent.emit('receipt', receipt);
             promiEvent.removeAllListeners();
 
-            if (methodModel.callback) {
-                methodModel.callback(false, receipt);
+            if (method.callback) {
+                method.callback(false, receipt);
             }
 
             return;
         }
 
-        const mappedReceipt = methodModel.afterExecution(receipt);
+        const mappedReceipt = method.afterExecution(receipt);
 
         promiEvent.resolve(mappedReceipt);
         promiEvent.emit('receipt', mappedReceipt);
         promiEvent.removeAllListeners();
 
-        if (methodModel.callback) {
-            methodModel.callback(false, mappedReceipt);
+        if (method.callback) {
+            method.callback(false, mappedReceipt);
         }
     }
 
@@ -207,12 +207,12 @@ export default class TransactionConfirmationWorkflow {
      * @method handleErrorState
      *
      * @param {Error} error
-     * @param {AbstractMethodModel} methodModel
+     * @param {AbstractMethod} method
      * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
      */
-    handleErrorState(error, methodModel, promiEvent) {
+    handleErrorState(error, method, promiEvent) {
         this.timeoutCounter = 0;
         this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
@@ -221,8 +221,8 @@ export default class TransactionConfirmationWorkflow {
         promiEvent.emit('error', error);
         promiEvent.removeAllListeners();
 
-        if (methodModel.callback) {
-            methodModel.callback(error, null);
+        if (method.callback) {
+            method.callback(error, null);
         }
     }
 }

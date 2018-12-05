@@ -21,15 +21,10 @@
  */
 
 import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
-import TransactionSigner from '../signers/TransactionSigner';
-import MessageSigner from '../signers/MessageSigner';
 import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
-import MethodController from '../controllers/MethodController';
 import CallMethodCommand from '../commands/CallMethodCommand';
 import SendMethodCommand from '../commands/SendMethodCommand';
-import SignAndSendMethodCommand from '../commands/SignAndSendMethodCommand';
-import SignMessageCommand from '../commands/SignMessageCommand';
 import MethodProxy from '../proxy/MethodProxy';
 
 export default class ModuleFactory {
@@ -40,27 +35,9 @@ export default class ModuleFactory {
      *
      * @constructor
      */
-    constructor(promiEventObject, subscriptionsFactory, formatters) {
-        this.promiEventObject = promiEventObject;
+    constructor(subscriptionsFactory, formatters) {
         this.subscriptionsFactory = subscriptionsFactory;
         this.formatters = formatters;
-    }
-
-    /**
-     * Returns the MethodController object
-     *
-     * @method createMethodController
-     *
-     * @returns {MethodController}
-     */
-    createMethodController() {
-        return new MethodController(
-            this.createCallMethodCommand(),
-            this.createSendMethodCommand(),
-            this.createSignAndSendMethodCommand(),
-            this.createSignMessageCommand(),
-            this.promiEventObject
-        );
     }
 
     /**
@@ -69,10 +46,10 @@ export default class ModuleFactory {
      * @method createMethodProxy
      *
      * @param {AbstractWeb3Module} target
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {AbstractMethodFactory} methodFactory
      */
-    createMethodProxy(target, methodModelFactory) {
-        new MethodProxy(target, methodModelFactory, this.createMethodController());
+    createMethodProxy(target, methodFactory) {
+        new MethodProxy(target, methodFactory);
     }
 
     /**
@@ -100,31 +77,6 @@ export default class ModuleFactory {
     }
 
     /**
-     * Returns the SignAndSendCommand object
-     *
-     * @method createSingAndSendMethodCommand
-     *
-     * @returns {SignAndSendMethodCommand}
-     */
-    createSignAndSendMethodCommand() {
-        return new SignAndSendMethodCommand(
-            this.createTransactionConfirmationWorkflow(),
-            this.createTransactionSigner()
-        );
-    }
-
-    /**
-     * Returns the SignMessageCommand object
-     *
-     * @method createSignMessageCommand
-     *
-     * @returns {SignMessageCommand}
-     */
-    createSignMessageCommand() {
-        return new SignMessageCommand(this.createMessageSigner());
-    }
-
-    /**
      * Returns the TransactionConfirmationWorkflow object
      *
      * @method createTransactionConfirmationWorkflow
@@ -137,28 +89,6 @@ export default class ModuleFactory {
             this.createNewHeadsWatcher(),
             this.formatters
         );
-    }
-
-    /**
-     * Returns the TransactionSigner object
-     *
-     * @method createTransactionSigner
-     *
-     * @returns {TransactionSigner}
-     */
-    createTransactionSigner() {
-        return new TransactionSigner();
-    }
-
-    /**
-     * Returns the MessageSigner object
-     *
-     * @method createMessageSigner
-     *
-     * @returns {MessageSigner}
-     */
-    createMessageSigner() {
-        return new MessageSigner();
     }
 
     /**

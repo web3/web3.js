@@ -23,12 +23,11 @@
 export default class MethodProxy extends Proxy {
     /**
      * @param {AbstractWeb3Module} target
-     * @param {MethodModelFactory} methodModelFactory
-     * @param {MethodController} methodController
+     * @param {AbstractMethodFactory} methodFactory
      *
      * @constructor
      */
-    constructor(target, methodModelFactory, methodController) {
+    constructor(target, methodFactory) {
         super(
             target,
             {
@@ -39,32 +38,32 @@ export default class MethodProxy extends Proxy {
                  * @returns {any}
                  */
                 get: (target, name) => {
-                    if (methodModelFactory.hasMethodModel(name)) {
+                    if (methodFactory.hasMethod(name)) {
                         if (typeof target[name] !== 'undefined') {
                             throw new Error(
                                 `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
                             );
                         }
 
-                        const methodModel = methodModelFactory.createMethodModel(name);
+                        const method = methodFactory.createMethod(name);
 
                         const anonymousFunction = () => {
-                            methodModel.methodArguments = arguments;
+                            method.arguments = arguments;
 
-                            if (methodModel.parameters.length !== methodModel.parametersAmount) {
+                            if (method.parameters.length !== method.parametersAmount) {
                                 throw new Error(
                                     `Invalid parameters length the expected length would be 
-                                    ${methodModel.parametersAmount}
+                                    ${method.parametersAmount}
                                      and not 
-                                    ${methodModel.parameters.length}`
+                                    ${method.parameters.length}`
                                 );
                             }
 
-                            return methodController.execute(methodModel, target.accounts, target);
+                            return method.execute(target, target.accounts);
                         };
 
-                        anonymousFunction.methodModel = methodModel;
-                        anonymousFunction.request = methodModel.request;
+                        anonymousFunction.method = method;
+                        anonymousFunction.request = method.request;
 
                         return anonymousFunction;
                     }

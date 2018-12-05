@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-export default class AbstractMethodModelFactory {
+export default class AbstractMethodFactory {
     /**
      * @param {Object} methodModels
      * @param {Object} utils
@@ -51,10 +51,11 @@ export default class AbstractMethodModelFactory {
      * Returns an MethodModel
      *
      * @param {String} name
+     * @param {AbstractCommand} command
      *
-     * @returns {AbstractMethodModel}
+     * @returns {AbstractMethod}
      */
-    createMethodModel(name) {
-        return new this.methodModels[name](this.utils, this.formatters);
+    createMethod(command, name) {
+        return new this.methodModels[name](command, this.utils, this.formatters);
     }
 }

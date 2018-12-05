@@ -38,7 +38,7 @@ export const MethodModuleFactory = () => {
 };
 
 export AbstractMethodModel from '../lib/models/AbstractMethodModel';
-export AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';
+export AbstractMethodModelFactory from '../lib/factories/AbstractMethodFactory';
 
 // Network
 export GetProtocolVersionMethodModel from './models/methods/network/GetProtocolVersionMethodModel';
