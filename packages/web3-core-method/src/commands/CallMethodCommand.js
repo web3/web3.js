@@ -49,25 +49,23 @@ export default class CallMethodCommand extends AbstractCommand {
         method.beforeExecution(moduleInstance);
 
         if (method.rpcMethod === 'eth_sign' && this.hasWallets()) {
-            let signedMessage;
-
-            try {
-                signedMessage = method.afterExecution(
-                    this.messageSigner.sign(method.parameters[0], method.parameters[1], this.accounts)
-                );
-            } catch (error) {
-                if (method.callback) {
-                    method.callback(error, null);
-                }
-
-                throw error;
-            }
-
-            if (method.callback) {
-                method.callback(false, signedMessage);
-            }
+            return this.signOnClient(method);
         }
 
+        return await this.signOnNode(moduleInstance, method);
+    }
+
+    /**
+     * Signs the message over JSON-RPC on the connected node
+     *
+     * @method signOnNode
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethod} method
+     *
+     * @returns {Promise<String|Error|undefined>}
+     */
+    async signOnNode(moduleInstance, method) {
         try {
             const response = await moduleInstance.currentProvider.send(method.rpcMethod, method.parameters);
             const mappedResponse = method.afterExecution(response);
@@ -86,5 +84,36 @@ export default class CallMethodCommand extends AbstractCommand {
 
             throw error;
         }
+    }
+
+    /**
+     * Signs the message on the client.
+     *
+     * @method signOnClient
+     *
+     * @param {AbstractMethod} method
+     *
+     * @returns {String|undefined}
+     */
+    signOnClient(method) {
+        let signedMessage;
+
+        try {
+            signedMessage = method.afterExecution(
+                this.messageSigner.sign(method.parameters[0], method.parameters[1], this.accounts)
+            );
+        } catch (error) {
+            if (method.callback) {
+                method.callback(error, null);
+            }
+
+            throw error;
+        }
+
+        if (method.callback) {
+            method.callback(false, signedMessage);
+        }
+
+        return signedMessage;
     }
 }

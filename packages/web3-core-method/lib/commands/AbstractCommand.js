@@ -40,8 +40,6 @@ export default class AbstractCommand {
      *
      * @method hasWallet
      *
-     * @param {Accounts} accounts
-     *
      * @returns {Boolean}
      */
     hasWallets() {

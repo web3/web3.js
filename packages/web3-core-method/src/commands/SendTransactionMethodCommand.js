@@ -51,60 +51,91 @@ export default class SendTransactionMethodCommand extends AbstractCommand {
      */
     execute(moduleInstance, method, promiEvent) {
         method.beforeExecution(moduleInstance);
+        if (method.rpcMethod === 'eth_sendTransaction') {
+            if (this.hasWallets()) {
+                return this.signAndSendRawTransaction(moduleInstance, method, promiEvent);
+            }
 
-        if (method.rpcMethod === 'eth_sendTransaction' && !this.hasWallets()) {
-            if (!this.isGasLimitDefined(method.parameters)) {
-                if (this.hasDefaultGasLimit(moduleInstance)) {
-                    method.parameters[0].gas = moduleInstance.defaultGas;
+            if (!this.hasWallets()) {
+                return this.sendTransaction(moduleInstance, method, promiEvent);
+            }
+        }
+
+        this.sendRequest(method, promiEvent, moduleInstance);
+
+        return promiEvent;
+    }
+
+    /**
+     * Sends the transaction and checks the gasPrice and gas property.
+     *
+     * @method sendTransaction
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethod} method
+     * @param {PromiEvent} promiEvent
+     *
+     * @returns {PromiEvent}
+     */
+    sendTransaction(moduleInstance, method, promiEvent) {
+        if (!this.isGasLimitDefined(method.parameters)) {
+            if (this.hasDefaultGasLimit(moduleInstance)) {
+                method.parameters[0].gas = moduleInstance.defaultGas;
+            }
+        }
+
+        if (this.isGasPriceDefined(method.parameters)) {
+            this.sendRequest(method, promiEvent, moduleInstance);
+
+            return promiEvent;
+        }
+
+        if (this.hasDefaultGasPrice(moduleInstance)) {
+            method.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
+            this.sendRequest(method, promiEvent, moduleInstance);
+
+            return promiEvent;
+        }
+
+        moduleInstance.currentProvider
+            .send('eth_gasPrice', [])
+            .then(gasPrice => {
+                method.parameters[0].gasPrice = gasPrice;
+                this.sendRequest(method, promiEvent, moduleInstance);
+            });
+
+        return promiEvent;
+    }
+
+    /**
+     * Signs the transaction and sends it with eth_sendRawTransaction
+     *
+     * @method signAndSendRawTransaction
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractMethod} method
+     * @param {PromiEvent} promiEvent
+     *
+     * @returns {PromiEvent}
+     */
+    signAndSendRawTransaction(moduleInstance, method, promiEvent) {
+        method.rpcMethod = 'eth_sendRawTransaction';
+
+        this.transactionSigner
+            .sign(method.parameters[0], this.accounts)
+            .then((response) => {
+                method.parameters = [response.rawTransaction];
+                this.sendRequest(method, promiEvent, moduleInstance);
+            })
+            .catch((error) => {
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
+
+                if (method.callback) {
+                    method.callback(error, null);
                 }
-            }
-
-            if (this.isGasPriceDefined(method.parameters)) {
-                this.send(method, promiEvent, moduleInstance);
-
-                return promiEvent;
-            }
-
-            if (this.hasDefaultGasPrice(moduleInstance)) {
-                method.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
-                this.send(method, promiEvent, moduleInstance);
-
-                return promiEvent;
-            }
-
-            moduleInstance.currentProvider
-                .send('eth_gasPrice', [])
-                .then(gasPrice => {
-                    method.parameters[0].gasPrice = gasPrice;
-                    this.send(method, promiEvent, moduleInstance);
-                });
-
-            return promiEvent;
-        }
-
-        if(method.rpcMethod === 'eth_sendTransaction' && this.hasWallets()) {
-            method.rpcMethod = 'eth_sendRawTransaction';
-
-            this.transactionSigner
-                .sign(method.parameters[0], accounts)
-                .then((response) => {
-                    method.parameters = [response.rawTransaction];
-                    this.send(method, promiEvent, moduleInstance);
-                })
-                .catch((error) => {
-                    promiEvent.reject(error);
-                    promiEvent.emit('error', error);
-                    promiEvent.removeAllListeners();
-
-                    if (method.callback) {
-                        method.callback(error, null);
-                    }
-                });
-
-            return promiEvent;
-        }
-
-        this.send(method, promiEvent, moduleInstance);
+            });
 
         return promiEvent;
     }
@@ -120,7 +151,7 @@ export default class SendTransactionMethodCommand extends AbstractCommand {
      *
      * @returns {PromiEvent}
      */
-    send(method, promiEvent, moduleInstance) {
+    sendRequest(method, promiEvent, moduleInstance) {
         moduleInstance.currentProvider
             .send(method.rpcMethod, method.parameters)
             .then((response) => {

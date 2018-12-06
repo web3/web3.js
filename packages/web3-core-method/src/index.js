@@ -22,7 +22,6 @@
  */
 
 import ModuleFactory from './factories/ModuleFactory';
-import {PromiEvent} from 'web3-core-promievent';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
 
