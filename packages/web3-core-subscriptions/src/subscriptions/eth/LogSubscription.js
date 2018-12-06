@@ -15,27 +15,26 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file LogSubscriptionModel.js
+ * @file LogSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractSubscriptionModel from '../../../lib/models/AbstractSubscriptionModel';
+import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 
-export default class LogSubscriptionModel extends AbstractSubscriptionModel {
+export default class LogSubscription extends AbstractSubscription {
     /**
      * @param {Object} options
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
-     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
-     * @param {MethodController} methodController
+     * @param {GetPastLogsMethod} getPastLogsMethod
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(options, utils, formatters, getPastLogsMethodModel, methodController) {
-        super('eth_subscribe', 'logs', options, utils, formatters);
-        this.getPastLogsMethodModel = getPastLogsMethodModel;
-        this.methodController = methodController;
+    constructor(options, utils, formatters, moduleInstance, getPastLogsMethod) {
+        super('eth_subscribe', 'logs', options, utils, formatters, moduleInstance);
+        this.getPastLogsMethod = getPastLogsMethod;
     }
 
     /**
@@ -49,10 +48,9 @@ export default class LogSubscriptionModel extends AbstractSubscriptionModel {
      */
     beforeSubscription(subscription, moduleInstance, callback) {
         this.options = this.formatters.inputLogFormatter(this.options);
-        this.getPastLogsMethodModel.parameters = [this.options];
+        this.getPastLogsMethod.parameters = [this.options];
 
-        this.methodController
-            .execute(this.getPastLogsMethodModel, moduleInstance.currentProvider, null, moduleInstance)
+        this.getPastLogsMethod.execute(moduleInstance)
             .then((logs) => {
                 logs.forEach((log) => {
                     callback(false, log);

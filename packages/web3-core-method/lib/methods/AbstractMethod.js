@@ -38,7 +38,7 @@ export default class AbstractMethod {
         this.utils = utils;
         this.formatters = formatters;
         this.promiEvent = new PromiEvent();
-        this._arguments = null;
+        this._arguments = {};
         this._rpcMethod = null;
         this._parametersAmount = null;
     }

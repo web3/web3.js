@@ -15,21 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file NewHeadSubscriptionModel.js
+ * @file MessagesSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractSubscriptionModel from '../../../lib/models/AbstractSubscriptionModel';
+import AbstractSubscription from '../../../lib/s/AbstractSubscription';
 
-export default class NewPendingTransactionsSubscriptionModel extends AbstractSubscriptionModel {
+export default class MessagesSubscription extends AbstractSubscription {
     /**
-     * @param {Object} utils
+     * @param {Object} options
+     * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters);
+    constructor(options, utils, formatters, moduleInstance) {
+        super('shh_subscribe', 'messages', options, utils, formatters, moduleInstance);
     }
 }

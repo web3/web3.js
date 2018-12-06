@@ -15,39 +15,25 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractSubscriptionModel.js
+ * @file SyncingSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class AbstractSubscriptionModel {
+import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
+
+export default class SyncingSubscription extends AbstractSubscription {
     /**
-     * @param {String} subscriptionType
-     * @param {String} subscriptionMethod
-     * @param {Object} options
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(subscriptionType, subscriptionMethod, options, utils, formatters) {
-        this.subscriptionType = subscriptionType;
-        this.subscriptionMethod = subscriptionMethod;
-        this.options = options;
-        this.util = utils;
-        this.formatters = formatters;
+    constructor(utils, formatters, moduleInstance) {
+        super('eth_subscribe', 'syncing', null, utils, formatters, moduleInstance);
+        this.isSyncing = null;
     }
-
-    /**
-     * This method will be executed before the subscription starts.
-     *
-     * @method beforeSubscription
-     *
-     * @param {Subscription} subscription
-     * @param {AbstractWeb3Module} moduleInstance
-     * @param {Function} callback
-     */
-    beforeSubscription(subscription, moduleInstance, callback) {}
 
     /**
      * This method will be executed on each new subscription item.
@@ -57,9 +43,26 @@ export default class AbstractSubscriptionModel {
      * @param {Subscription} subscription
      * @param {*} subscriptionItem
      *
-     * @returns {*}
+     * @returns {Object}
      */
     onNewSubscriptionItem(subscription, subscriptionItem) {
-        return subscriptionItem;
+        const isSyncing = subscriptionItem.result.syncing;
+
+        if (this.isSyncing === null) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        if (this.isSyncing === true && isSyncing === false) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        if (this.isSyncing === false && isSyncing === true) {
+            this.isSyncing = isSyncing;
+            subscription.emit('changed', this.isSyncing);
+        }
+
+        return this.formatters.outputSyncingFormatter(subscriptionItem);
     }
 }
