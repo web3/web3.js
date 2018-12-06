@@ -1,16 +1,16 @@
-import {AbstractWeb3Module} from 'packages/web3-core/dist/web3-core.cjs';
-import {SocketProviderAdapter} from 'packages/web3-providers/dist/web3-providers.cjs';
-import {PromiEvent} from 'packages/web3-core-promievent/dist/web3-core-promievent.cjs';
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
+import {AbstractWeb3Module} from 'web3-core';
+import {SocketProviderAdapter} from 'web3-providers';
+import {PromiEvent} from 'web3-core-promievent';
+import {formatters} from 'web3-core-helpers';
 import TransactionReceiptValidator from '../../../src/validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../../../src/watchers/NewHeadsWatcher';
-import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 import TransactionConfirmationWorkflow from '../../../src/workflows/TransactionConfirmationWorkflow';
 
 // Mocks
-jest.mock('../../src/validators/TransactionReceiptValidator');
-jest.mock('../../src/watchers/NewHeadsWatcher');
-jest.mock('../../lib/models/AbstractMethodModel');
+jest.mock('../../../src/validators/TransactionReceiptValidator');
+jest.mock('../../../src/watchers/NewHeadsWatcher');
+jest.mock('../../../lib/methods/AbstractMethod');
 jest.mock('SocketProviderAdapter');
 jest.mock('AbstractWeb3Module');
 jest.mock('formatters');
@@ -24,8 +24,8 @@ describe('TransactionConfirmationWorkflowTest', () => {
         transactionReceiptValidatorMock,
         newHeadsWatcher,
         newHeadsWatcherMock,
-        methodModel,
-        methodModelMock,
+        method,
+        methodMock,
         providerAdapter,
         providerAdapterMock,
         moduleInstance,
@@ -39,8 +39,8 @@ describe('TransactionConfirmationWorkflowTest', () => {
         newHeadsWatcher = new NewHeadsWatcher({});
         newHeadsWatcherMock = NewHeadsWatcher.mock.instances[0];
 
-        methodModel = new AbstractMethodModel();
-        methodModelMock = AbstractMethodModel.mock.instances[0];
+        method = new AbstractMethod();
+        methodMock = AbstractMethod.mock.instances[0];
 
         providerAdapter = new SocketProviderAdapter({});
         providerAdapterMock = SocketProviderAdapter.mock.instances[0];
@@ -79,17 +79,17 @@ describe('TransactionConfirmationWorkflowTest', () => {
         transactionReceiptValidatorMock.validate
             .mockReturnValueOnce(true);
 
-        methodModelMock.afterExecution
+        methodMock.afterExecution
             .mockReturnValueOnce({blockhash: '0x0'});
 
-        methodModelMock.callback = jest.fn((error, response) => {
+        methodMock.callback = jest.fn((error, response) => {
             expect(error).toBe(false);
             expect(response).toEqual({blockhash: '0x0'});
 
             done();
         });
 
-        transactionConfirmationWorkflow.execute(methodModelMock, moduleInstanceMock, '0x0', promiEvent);
+        transactionConfirmationWorkflow.execute(methodMock, moduleInstanceMock, '0x0', promiEvent);
 
         promiEvent
             .on('receipt', (receipt) => {
@@ -102,7 +102,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
                 expect(newHeadsWatcherMock.stop)
                     .toHaveBeenCalled();
 
-                expect(methodModelMock.afterExecution)
+                expect(methodMock.afterExecution)
                     .toHaveBeenCalledWith({blockHash: '0x0'});
 
                 expect(transactionReceiptValidatorMock.validate)

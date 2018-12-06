@@ -1,6 +1,6 @@
-import {Subscription, SubscriptionsFactory} from 'packages/web3-core-subscriptions/dist/web3-core-subscriptions.cjs';
-import {AbstractWeb3Module} from 'packages/web3-core/dist/web3-core.cjs';
-import {HttpProviderAdapter, SocketProviderAdapter} from 'packages/web3-providers/dist/web3-providers.cjs';
+import {AbstractSubscription, SubscriptionsFactory} from 'web3-core-subscriptions';
+import {AbstractWeb3Module} from 'web3-core';
+import {HttpProviderAdapter, SocketProviderAdapter} from 'web3-providers';
 import NewHeadsWatcher from '../../../src/watchers/NewHeadsWatcher';
 
 // Mocks
@@ -9,6 +9,7 @@ jest.mock('SocketProviderAdapter');
 jest.mock('AbstractWeb3Module');
 jest.mock('Subscription');
 jest.mock('SubscriptionsFactory');
+jest.mock('AbstractSubscription');
 
 /**
  * NewHeadsWatcher test
@@ -80,8 +81,8 @@ describe('NewHeadsWatcherTest', () => {
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
         moduleInstance.currentProvider = providerAdapterMock;
 
-        subscription = new Subscription({}, moduleInstanceMock);
-        subscriptionMock = Subscription.mock.instances[0];
+        subscription = new AbstractSubscription({}, moduleInstanceMock);
+        subscriptionMock = AbstractSubscription.mock.instances[0];
         subscriptionMock.subscribe
             .mockReturnValueOnce(subscriptionMock);
 

@@ -8,6 +8,7 @@ module.exports = jestConfig(
         'Utils': 'web3-utils',
         'formatters': 'web3-core-helpers',
         'Subscription': 'web3-core-subscriptions',
-        'SubscriptionsFactory': 'web3-core-subscriptions'
+        'SubscriptionsFactory': 'web3-core-subscriptions',
+        'AbstractSubscription': 'web3-core-subscriptions'
     }
 );
