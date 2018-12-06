@@ -35,5 +35,5 @@ export const SubscriptionsFactory = () => {
     return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
 };
 
-export LogSubscriptionModel from './models/subscriptions/eth/LogSubscriptionModel';
+export LogSubscriptionModel from './subscriptions/eth/LogSubscriptionModel';
 export Subscription from './Subscription';

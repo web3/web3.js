@@ -21,11 +21,11 @@
  */
 
 import Subscription from '../Subscription';
-import LogSubscriptionModel from '../models/subscriptions/eth/LogSubscriptionModel';
-import NewHeadsSubscriptionModel from '../models/subscriptions/eth/NewHeadsSubscriptionModel';
-import NewPendingTransactionsSubscriptionModel from '../models/subscriptions/eth/NewPendingTransactionsSubscriptionModel';
-import SyncingSubscriptionModel from '../models/subscriptions/eth/SyncingSubscriptionModel';
-import MessagesSubscriptionModel from '../models/subscriptions/shh/MessagesSubscriptionModel';
+import LogSubscriptionModel from '../subscriptions/eth/LogSubscriptionModel';
+import NewHeadsSubscriptionModel from '../subscriptions/eth/NewHeadsSubscriptionModel';
+import NewPendingTransactionsSubscriptionModel from '../subscriptions/eth/NewPendingTransactionsSubscriptionModel';
+import SyncingSubscriptionModel from '../subscriptions/eth/SyncingSubscriptionModel';
+import MessagesSubscriptionModel from '../subscriptions/shh/MessagesSubscriptionModel';
 
 export default class SubscriptionsFactory {
     /**

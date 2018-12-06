@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Subscription.js
+ * @file AbstractSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -24,18 +24,51 @@ import isArray from 'underscore-es/isArray';
 import isFunction from 'underscore-es/isFunction';
 import EventEmitter from 'eventemitter3';
 
-export default class Subscription extends EventEmitter {
+export default class AbstractSubscription extends EventEmitter {
     /**
-     * @param {AbstractSubscriptionModel} subscriptionModel
+     * @param {String} method
+     * @param {String} type
+     * @param {Object} options
+     * @param {Utils} utils
+     * @param {Object} formatters
      * @param {AbstractWeb3Module} moduleInstance
      *
      * @constructor
      */
-    constructor(subscriptionModel, moduleInstance) {
+    constructor(method, type, options, utils, formatters, moduleInstance) {
         super();
-        this.subscriptionModel = subscriptionModel;
+        this.method = method;
+        this.type = type;
+        this.options = options;
+        this.utils = utils;
+        this.formatters = formatters;
         this.moduleInstance = moduleInstance;
-        this.subscriptionId = null;
+        this.id = null;
+    }
+
+    /**
+     * This method will be executed before the subscription starts.
+     *
+     * @method beforeSubscription
+     *
+     * @param {Subscription} subscription
+     * @param {AbstractWeb3Module} moduleInstance
+     * @param {Function} callback
+     */
+    beforeSubscription(subscription, moduleInstance, callback) {}
+
+    /**
+     * This method will be executed on each new subscription item.
+     *
+     * @method onNewSubscriptionItem
+     *
+     * @param {Subscription} subscription
+     * @param {*} subscriptionItem
+     *
+     * @returns {*}
+     */
+    onNewSubscriptionItem(subscription, subscriptionItem) {
+        return subscriptionItem;
     }
 
     /**
@@ -49,16 +82,16 @@ export default class Subscription extends EventEmitter {
      * @returns {Subscription} Subscription
      */
     subscribe(callback) {
-        this.subscriptionModel.beforeSubscription(this, this.moduleInstance, callback);
+        this.beforeSubscription(callback);
 
         this.moduleInstance.currentProvider
-            .subscribe(this.subscriptionModel.subscriptionType, this.subscriptionModel.subscriptionMethod, [
-                this.subscriptionModel.options
+            .subscribe(this.type, this.method, [
+                this.options
             ])
             .then((subscriptionId) => {
-                this.subscriptionId = subscriptionId;
+                this.id = subscriptionId;
 
-                this.moduleInstance.currentProvider.on(this.subscriptionId, (error, response) => {
+                this.moduleInstance.currentProvider.on(this.id, (error, response) => {
                     if (!error) {
                         this.handleSubscriptionResponse(response, callback);
 
@@ -97,7 +130,7 @@ export default class Subscription extends EventEmitter {
         }
 
         response.forEach(function(item) {
-            const formattedOutput = this.subscriptionModel.onNewSubscriptionItem(this, item);
+            const formattedOutput = this.onNewSubscriptionItem(item);
 
             this.emit('data', formattedOutput);
 
@@ -152,13 +185,13 @@ export default class Subscription extends EventEmitter {
      */
     unsubscribe(callback) {
         return this.moduleInstance.currentProvider
-            .unsubscribe(this.subscriptionId, this.subscriptionModel.subscriptionType)
+            .unsubscribe(this.id, this.type)
             .then((response) => {
                 this.removeAllListeners('data');
                 this.removeAllListeners('error');
 
                 if (!response) {
-                    this.subscriptionId = null;
+                    this.id = null;
 
                     if (isFunction(callback)) {
                         callback(true, false);

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
+import AbstractSubscriptionModel from '../../../lib/models/AbstractSubscriptionModel';
 
 export default class SyncingSubscriptionModel extends AbstractSubscriptionModel {
     /**

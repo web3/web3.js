@@ -15,14 +15,14 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file NewHeadsSubscriptionModel.js
+ * @file NewHeadSubscriptionModel.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractSubscriptionModel from '../../../../lib/models/AbstractSubscriptionModel';
+import AbstractSubscriptionModel from '../../../lib/models/AbstractSubscriptionModel';
 
-export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel {
+export default class NewPendingTransactionsSubscriptionModel extends AbstractSubscriptionModel {
     /**
      * @param {Object} utils
      * @param {Object} formatters
@@ -30,20 +30,6 @@ export default class NewHeadsSubscriptionModel extends AbstractSubscriptionModel
      * @constructor
      */
     constructor(utils, formatters) {
-        super('eth_subscribe', 'newHeads', null, utils, formatters);
-    }
-
-    /**
-     * This method will be executed on each new subscription item.
-     *
-     * @method onNewSubscriptionItem
-     *
-     * @param {Subscription} subscription
-     * @param {*} subscriptionItem
-     *
-     * @returns {Object}
-     */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
-        return this.formatters.outputBlockFormatter(subscriptionItem);
+        super('eth_subscribe', 'newPendingTransactions', null, utils, formatters);
     }
 }
