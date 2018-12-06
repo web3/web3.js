@@ -100,7 +100,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider}
+     * @returns {AbstractProviderAdapter}
      */
     get currentProvider() {
         return this._currentProvider;

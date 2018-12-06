@@ -1,0 +1,63 @@
+import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
+import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
+import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethod';
+
+// Mocks
+jest.mock('formatters');
+jest.mock('Utils');
+
+/**
+ * GetTransactionCountMethod test
+ */
+describe('GetTransactionCountMethodModelTest', () => {
+    let model;
+
+    beforeEach(() => {
+        model = new GetTransactionCountMethodModel(Utils, formatters);
+    });
+
+    it('rpcMethod should return eth_getTransactionCount', () => {
+        expect(model.rpcMethod)
+            .toBe('eth_getTransactionCount');
+    });
+
+    it('parametersAmount should return 2', () => {
+        expect(model.parametersAmount)
+            .toBe(2);
+    });
+
+    it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
+        model.parameters = ['string', 100];
+
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
+
+        formatters.inputDefaultBlockNumberFormatter
+            .mockReturnValueOnce('0x0');
+
+        model.beforeExecution({});
+
+        expect(model.parameters[0])
+            .toBe('0x0');
+
+        expect(model.parameters[1])
+            .toBe('0x0');
+
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('string');
+
+        expect(formatters.inputDefaultBlockNumberFormatter)
+            .toHaveBeenCalledWith(100, {});
+    });
+
+    it('afterExecution should call hexToNumber on the response and return it', () => {
+        Utils.hexToNumber
+            .mockReturnValueOnce(100);
+
+        expect(model.afterExecution('0x0'))
+            .toBe(100);
+
+        expect(Utils.hexToNumber)
+            .toHaveBeenCalledWith('0x0');
+    });
+});
