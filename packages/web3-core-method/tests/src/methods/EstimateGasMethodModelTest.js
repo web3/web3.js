@@ -1,6 +1,6 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import EstimateGasMethodModel from '../../../src/models/methods/EstimateGasMethod';
+import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
+import EstimateGasMethod from '../../../src/methods/EstimateGasMethod';
 
 // Mocks
 jest.mock('Utils');
@@ -9,32 +9,32 @@ jest.mock('formatters');
 /**
  * EstimateGasMethod test
  */
-describe('EstimateGasMethodModelTest', () => {
-    let model;
+describe('EstimateGasMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new EstimateGasMethodModel(Utils, formatters);
+        method = new EstimateGasMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_estimateGas', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_estimateGas');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should call the inputCallFormatter', () => {
-        model.parameters = [{}];
+        method.parameters = [{}];
 
         formatters.inputCallFormatter
             .mockReturnValueOnce({empty: true});
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toHaveProperty('empty', true);
 
         expect(formatters.inputCallFormatter)
@@ -45,7 +45,7 @@ describe('EstimateGasMethodModelTest', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution({}))
+        expect(method.afterExecution({}))
             .toBe(100);
 
         expect(Utils.hexToNumber)

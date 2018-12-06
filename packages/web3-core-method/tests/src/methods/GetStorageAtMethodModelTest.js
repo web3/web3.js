@@ -1,6 +1,6 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import GetStorageAtMethodModel from '../../../src/models/methods/GetStorageAtMethod';
+import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
+import GetStorageAtMethod from '../../../src/methods/GetStorageAtMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -9,20 +9,20 @@ jest.mock('Utils');
 /**
  * GetStorageAtMethod test
  */
-describe('GetStorageAtMethodModelTest', () => {
-    let model;
+describe('GetStorageAtMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetStorageAtMethodModel(Utils, formatters);
+        method = new GetStorageAtMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getStorageAt');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(3);
     });
 
@@ -30,7 +30,7 @@ describe('GetStorageAtMethodModelTest', () => {
         'beforeExecution should call the formatters.inputAddressFormatter, formatters.inputDefaultBlockNumberFormatter ' +
             'and utils.numberToHex method',
         () => {
-            model.parameters = ['string', 100, 100];
+            method.parameters = ['string', 100, 100];
 
             formatters.inputAddressFormatter
                 .mockReturnValue('0x0');
@@ -41,15 +41,15 @@ describe('GetStorageAtMethodModelTest', () => {
             Utils.numberToHex
                 .mockReturnValueOnce('0x0');
 
-            model.beforeExecution({});
+            method.beforeExecution({});
 
-            expect(model.parameters[0])
+            expect(method.parameters[0])
                 .toBe('0x0');
 
-            expect(model.parameters[1])
+            expect(method.parameters[1])
                 .toBe('0x0');
 
-            expect(model.parameters[2])
+            expect(method.parameters[2])
                 .toBe('0x0');
 
             expect(formatters.inputAddressFormatter)
@@ -66,7 +66,7 @@ describe('GetStorageAtMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object))
+        expect(method.afterExecution(object))
             .toBe(object);
     });
 });

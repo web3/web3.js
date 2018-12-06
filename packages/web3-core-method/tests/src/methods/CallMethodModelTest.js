@@ -1,31 +1,31 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import CallMethodModel from '../../../src/models/methods/CallMethodModel';
+import {formatters} from 'web3-core-helpers';
+import CallMethod from '../../../src/methods/CallMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * CallMethodModel test
+ * CallMethod test
  */
-describe('CallMethodModelTest', () => {
-    let model;
+describe('CallMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new CallMethodModel({}, formatters);
+        method = new CallMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_call', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_call');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
     it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
-        model.parameters = [{}, 100];
+        method.parameters = [{}, 100];
 
         formatters.inputCallFormatter
             .mockReturnValueOnce({empty: true});
@@ -33,12 +33,12 @@ describe('CallMethodModelTest', () => {
         formatters.inputDefaultBlockNumberFormatter
             .mockReturnValueOnce({empty: true});
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toHaveProperty('empty', true);
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toEqual({empty: true});
 
         expect(formatters.inputDefaultBlockNumberFormatter)
@@ -51,7 +51,7 @@ describe('CallMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object))
+        expect(method.afterExecution(object))
             .toBe(object);
     });
 });

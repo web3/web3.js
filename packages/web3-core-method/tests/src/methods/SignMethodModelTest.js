@@ -1,36 +1,36 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import SignMethodModel from '../../../src/models/methods/SignMethod';
+import {formatters} from 'web3-core-helpers';
+import SignMethod from '../../../src/methods/SignMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetStorageAtMethod test
+ * SignMethod test
  */
-describe('SignMethodModelTest', () => {
-    let model;
+describe('SignMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new SignMethodModel({}, formatters, {test: true});
+        method = new SignMethod({}, {}, formatters, {test: true});
     });
 
     it('accounts should be defined', () => {
-        expect(model.accounts.test)
+        expect(method.accounts.test)
             .toBeTruthy();
     });
 
     it('rpcMethod should return eth_sign', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_sign');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
     it('beforeExecution should call the inputSignFormatter and inputAddressFormatter', () => {
-        model.parameters = ['string', 'string'];
+        method.parameters = ['string', 'string'];
 
         formatters.inputSignFormatter
             .mockReturnValueOnce('string');
@@ -38,12 +38,12 @@ describe('SignMethodModelTest', () => {
         formatters.inputAddressFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('string');
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toBe('0x0');
 
         expect(formatters.inputSignFormatter)
@@ -56,7 +56,7 @@ describe('SignMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object))
+        expect(method.afterExecution(object))
             .toBe(object);
     });
 });

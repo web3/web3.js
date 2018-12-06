@@ -1,31 +1,31 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetCodeMethodModel from '../../../src/models/methods/GetCodeMethodModel';
+import {formatters} from 'web3-core-helpers';
+import GetCodeMethod from '../../../src/methods/GetCodeMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetCodeMethodModel test
+ * GetCodeMethod test
  */
-describe('GetCodeMethodModelTest', () => {
-    let model;
+describe('GetCodeMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetCodeMethodModel({}, formatters);
+        method = new GetCodeMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_getCode', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getCode');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
-        model.parameters = ['string', 100];
+        method.parameters = ['string', 100];
 
         formatters.inputAddressFormatter
             .mockReturnValueOnce('0x0');
@@ -33,12 +33,12 @@ describe('GetCodeMethodModelTest', () => {
         formatters.inputDefaultBlockNumberFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toBe('0x0');
 
         expect(formatters.inputAddressFormatter)
@@ -51,7 +51,7 @@ describe('GetCodeMethodModelTest', () => {
     it('afterExecution should just return the response', () => {
         const object = {};
 
-        expect(model.afterExecution(object))
+        expect(method.afterExecution(object))
             .toBe(object);
     });
 });
