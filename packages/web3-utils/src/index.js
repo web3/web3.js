@@ -33,70 +33,15 @@ export {randomHex} from 'randomhex';
 export * from './Utils';
 
 /**
- * Fires an error in an event emitter and callback and returns the eventemitter
- *
- * @method _fireError
- *
- * @param {Object} error a string, a error, or an object with {message, data}
- * @param {Object} emitter
- * @param {Function} reject
- * @param {Function} callback
- *
- * @returns {Object} the emitter
- */
-export const _fireError = (error, emitter, reject, callback) => {
-    // add data if given
-    if (isObject(error) && !(error instanceof Error) && error.data) {
-        if (isObject(error.data) || isArray(error.data)) {
-            error.data = JSON.stringify(error.data, null, 2);
-        }
-
-        error = `${error.message}\n${error.data}`;
-    }
-
-    if (isString(error)) {
-        error = new Error(error);
-    }
-
-    if (isFunction(callback)) {
-        callback(error);
-    }
-    if (isFunction(reject)) {
-        // suppress uncatched error if an error listener is present
-        // OR suppress uncatched error if an callback listener is present
-        if (
-            (emitter && (isFunction(emitter.listeners) && emitter.listeners('error').length > 0)) ||
-            isFunction(callback)
-        ) {
-            emitter.catch(() => {});
-        }
-        // reject later, to be able to return emitter
-        setTimeout(() => {
-            reject(error);
-        }, 1);
-    }
-
-    if (emitter && isFunction(emitter.emit)) {
-        // emit later, to be able to return emitter
-        setTimeout(() => {
-            emitter.emit('error', error);
-            emitter.removeAllListeners();
-        }, 1);
-    }
-
-    return emitter;
-};
-
-/**
  * Should be used to create full function/event name from json abi
  *
- * @method _jsonInterfaceMethodToString
+ * @method jsonInterfaceMethodToString
  *
  * @param {Object} json
  *
  * @returns {String} full function/event name
  */
-export const _jsonInterfaceMethodToString = (json) => {
+export const jsonInterfaceMethodToString = (json) => {
     if (isObject(json) && json.name && json.name.indexOf('(') !== -1) {
         return json.name;
     }
@@ -114,7 +59,7 @@ export const _jsonInterfaceMethodToString = (json) => {
  *
  * @returns {Array} parameters as strings
  */
-export const _flattenTypes = (includeTuple, puts) => {
+const _flattenTypes = (includeTuple, puts) => {
     // console.log("entered _flattenTypes. inputs/outputs: " + puts)
     const types = [];
 
