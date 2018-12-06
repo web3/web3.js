@@ -1,13 +1,13 @@
-import ListeningMethodModel from '../../../../src/models/methods/network/ListeningMethodModel';
+import ListeningMethod from '../../../../src/methods/network/ListeningMethod';
 
 /**
- * ListeningMethodModel test
+ * ListeningMethod test
  */
-describe('ListeningMethodModelTest', () => {
+describe('ListeningMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new ListeningMethodModel({}, {});
+        model = new ListeningMethod({}, {}, {});
     });
 
     it('rpcMethod should return net_listening', () => {

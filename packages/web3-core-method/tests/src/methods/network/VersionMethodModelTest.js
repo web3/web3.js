@@ -1,34 +1,34 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import VersionMethodModel from '../../../../src/models/methods/network/VersionMethodModel';
+import * as Utils from 'web3-utils';
+import VersionMethod from '../../../../src/methods/network/VersionMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * VersionMethodModel test
+ * VersionMethod test
  */
-describe('VersionMethodModelTest', () => {
-    let model;
+describe('VersionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new VersionMethodModel(Utils, {});
+        method = new VersionMethod({}, Utils, {});
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_protocolVersion');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -36,7 +36,7 @@ describe('VersionMethodModelTest', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution('0x0'))
+        expect(method.afterExecution('0x0'))
             .toBe(100);
 
         expect(Utils.hexToNumber)

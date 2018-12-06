@@ -1,34 +1,34 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import PeerCountMethodModel from '../../../../src/models/methods/network/PeerCountMethodModel';
+import * as Utils from 'web3-utils';
+import PeerCountMethod from '../../../../src/methods/network/PeerCountMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * PeerCountMethodModel test
+ * PeerCountMethod test
  */
-describe('PeerCountMethodModelTest', () => {
-    let model;
+describe('PeerCountMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new PeerCountMethodModel(Utils, {});
+        method = new PeerCountMethod({}, Utils, {});
     });
 
     it('rpcMethod should return net_peerCount', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('net_peerCount');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -36,7 +36,7 @@ describe('PeerCountMethodModelTest', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution('0x0'))
+        expect(method.afterExecution('0x0'))
             .toBe(100);
 
         expect(Utils.hexToNumber)

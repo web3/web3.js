@@ -1,35 +1,35 @@
-import GetProtocolVersionMethodModel from '../../../../src/models/methods/network/GetProtocolVersionMethodModel';
+import GetProtocolVersionMethod from '../../../../src/methods/network/GetProtocolVersionMethod';
 
 /**
- * GetProtocolVersionMethodModel test
+ * GetProtocolVersionMethod test
  */
-describe('GetProtocolVersionMethodModelTest', () => {
-    let model;
+describe('GetProtocolVersionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetProtocolVersionMethodModel({}, {});
+        method = new GetProtocolVersionMethod({}, {}, {});
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_protocolVersion');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('version'))
+        expect(method.afterExecution('version'))
             .toBe('version');
     });
 });
