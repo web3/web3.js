@@ -202,6 +202,28 @@ export default class AbstractMethod {
     }
 
     /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {}
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {*} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        return response;
+    }
+
+    /**
      * Checks which command should be executed
      *
      * @method execute

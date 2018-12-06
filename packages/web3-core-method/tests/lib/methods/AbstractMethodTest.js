@@ -145,4 +145,38 @@ describe('AbsractMethodTest', () => {
         expect(commandMock.execute)
             .toHaveBeenCalledWith({}, abstractMethod);
     });
+
+    it('beforeExecution changes nothing', () => {
+        abstractMethod.beforeExecution();
+
+        expect(AbstractMethod.CommandType)
+            .toBe('CALL');
+
+        expect(abstractMethod.rpcMethod)
+            .toBe('RPC_TEST');
+
+        expect(abstractMethod.parametersAmount)
+            .toBe(0);
+
+        expect(abstractMethod.command)
+            .toEqual(commandMock);
+
+        expect(abstractMethod.utils)
+            .toEqual(Utils);
+
+        expect(abstractMethod.formatters)
+            .toEqual(formatters);
+
+        expect(abstractMethod.parameters)
+            .toBe(undefined);
+
+        expect(abstractMethod.callback)
+            .toBe(undefined);
+
+    });
+
+    it('afterExecution just returns the value', () => {
+        expect(abstractMethod.afterExecution('string'))
+            .toBe('string');
+    });
 });
