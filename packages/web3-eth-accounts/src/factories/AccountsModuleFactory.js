@@ -25,7 +25,7 @@ import Accounts from '../Accounts';
 
 export default class AccountsModuleFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

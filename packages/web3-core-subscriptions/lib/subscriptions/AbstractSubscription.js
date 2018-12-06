@@ -130,7 +130,7 @@ export default class AbstractSubscription extends EventEmitter {
             response = [response];
         }
 
-        response.forEach(function(item) {
+        response.forEach((item) => {
             const formattedOutput = this.onNewSubscriptionItem(item);
 
             this.emit('data', formattedOutput);

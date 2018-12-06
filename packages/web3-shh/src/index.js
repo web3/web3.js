@@ -16,7 +16,7 @@
 */
 /**
  * @file index.js
- * @author Samuel Furer <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 

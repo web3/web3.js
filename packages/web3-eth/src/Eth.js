@@ -207,7 +207,7 @@ export default class Eth extends AbstractWeb3Module {
      *
      * @property defaultBlock
      *
-     * @param value
+     * @param {String|Number}value
      */
     set defaultBlock(value) {
         super.defaultBlock = value;

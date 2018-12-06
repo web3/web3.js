@@ -112,7 +112,7 @@ export default class EthModuleFactory {
             this.providersModuleFactory,
             this.providers,
             this.methodModuleFactory,
-            this.createMethodModelFactory(this.accounts),
+            this.createMethodFactory(this.accounts),
             this,
             net,
             this.accounts,
@@ -130,13 +130,13 @@ export default class EthModuleFactory {
     /**
      * Returns an object of type MethodFactory
      *
-     * @method createMethodModelFactory
+     * @method createMethodFactory
      *
      * @param {Accounts} accounts
      *
      * @returns {MethodFactory}
      */
-    createMethodModelFactory(accounts) {
+    createMethodFactory(accounts) {
         return new MethodFactory(this.utils, this.formatters, accounts);
     }
 }
