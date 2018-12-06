@@ -222,7 +222,7 @@ ABICoder.prototype.decodeParameter = function (type, bytes) {
  * @return {Array} array of plain params
  */
 ABICoder.prototype.decodeParameters = function (outputs, bytes) {
-    if (!bytes || bytes === '0x' || bytes === '0X') {
+    if (outputs.length > 0 && (!bytes || bytes === '0x' || bytes === '0X')) {
         throw new Error('Returned values aren\'t valid, did it run Out of Gas?');
     }
 
