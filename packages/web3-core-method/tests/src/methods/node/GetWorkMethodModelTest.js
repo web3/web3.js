@@ -1,35 +1,35 @@
-import GetWorkMethodModel from '../../../../src/models/methods/node/GetWorkMethod';
+import GetWorkMethod from '../../../../src/methods/node/GetWorkMethod';
 
 /**
  * GetWorkMethod test
  */
-describe('GetWorkMethodModelTest', () => {
-    let model;
+describe('GetWorkMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetWorkMethodModel({}, {});
+        method = new GetWorkMethod({}, {}, {});
     });
 
     it('rpcMethod should return eth_getWork', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getWork');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('version'))
+        expect(method.afterExecution('version'))
             .toBe('version');
     });
 });

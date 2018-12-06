@@ -1,17 +1,17 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import IsSyncingMethodModel from '../../../../src/models/methods/node/IsSyncingMethodModel';
+import {formatters} from 'web3-core-helpers';
+import IsSyncingMethod from '../../../../src/methods/node/IsSyncingMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * IsSyncingMethodModel test
+ * IsSyncingMethod test
  */
-describe('IsSyncingMethodModelTest', () => {
+describe('IsSyncingMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new IsSyncingMethodModel({}, formatters);
+        model = new IsSyncingMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_syncing', () => {

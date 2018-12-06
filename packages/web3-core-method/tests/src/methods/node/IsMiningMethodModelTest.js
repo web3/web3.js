@@ -1,35 +1,35 @@
-import IsMiningMethodModel from '../../../../src/models/methods/node/IsMiningMethodModel';
+import IsMiningMethod from '../../../../src/methods/node/IsMiningMethod';
 
 /**
- * IsMiningMethodModel test
+ * IsMiningMethod test
  */
-describe('IsMiningMethodModelTest', () => {
-    let model;
+describe('IsMiningMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new IsMiningMethodModel({}, {});
+        method = new IsMiningMethod({}, {}, {});
     });
 
     it('rpcMethod should return eth_mining', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_mining');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('version'))
+        expect(method.afterExecution('version'))
             .toBe('version');
     });
 });

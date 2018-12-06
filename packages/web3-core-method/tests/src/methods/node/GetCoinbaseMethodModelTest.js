@@ -1,39 +1,39 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import GetCoinbaseMethodModel from '../../../../src/models/methods/node/GetCoinbaseMethodModel';
+import * as Utils from 'web3-utils';
+import GetCoinbaseMethod from '../../../../src/methods/node/GetCoinbaseMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * GetCoinbaseMethodModel test
+ * GetCoinbaseMethod test
  */
-describe('GetCoinbaseMethodModelTest', () => {
-    let model;
+describe('GetCoinbaseMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetCoinbaseMethodModel(Utils, {});
+        method = new GetCoinbaseMethod({}, Utils, {});
     });
 
     it('rpcMethod should return eth_coinbase', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_coinbase');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('coinbase'))
+        expect(method.afterExecution('coinbase'))
             .toBe('coinbase');
     });
 });

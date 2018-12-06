@@ -1,35 +1,35 @@
-import GetNodeInfoMethodModel from '../../../../src/models/methods/node/GetNodeInfoMethodModel';
+import GetNodeInfoMethod from '../../../../src/methods/node/GetNodeInfoMethod';
 
 /**
- * GetNodeInfoMethodModel test
+ * GetNodeInfoMethod test
  */
-describe('GetNodeInfoMethodModelTest', () => {
-    let model;
+describe('GetNodeInfoMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetNodeInfoMethodModel({}, {});
+        method = new GetNodeInfoMethod({}, {}, {});
     });
 
     it('rpcMethod should return web3_clientVersion', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('web3_clientVersion');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('version'))
+        expect(method.afterExecution('version'))
             .toBe('version');
     });
 });

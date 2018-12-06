@@ -1,35 +1,35 @@
-import SubmitWorkMethodModel from '../../../../src/models/methods/node/SubmitWorkMethodModel';
+import SubmitWorkMethod from '../../../../src/methods/node/SubmitWorkMethod';
 
 /**
- * SubmitWorkMethodModel test
+ * SubmitWorkMethod test
  */
-describe('SubmitWorkMethodModelTest', () => {
-    let model;
+describe('SubmitWorkMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new SubmitWorkMethodModel({}, {});
+        method = new SubmitWorkMethod({}, {}, {});
     });
 
     it('rpcMethod should return eth_submitWork', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_submitWork');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(3);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('submitWork'))
+        expect(method.afterExecution('submitWork'))
             .toBe('submitWork');
     });
 });
