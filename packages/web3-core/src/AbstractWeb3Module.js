@@ -24,7 +24,7 @@ import isObject from 'underscore-es/isObject';
 
 export default class AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
      * @param {ModuleFactory} methodModuleFactory
@@ -45,8 +45,9 @@ export default class AbstractWeb3Module {
         this.providers = providers;
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
+        this.givenProvider = this.providerDetector.detect();
+        this._currentProvider = this.providerAdapterResolver.resolve(provider);
 
-        this._currentProvider = provider;
         this._defaultAccount = options.defaultAccount;
         this.defaultBlock = options.defaultBlock;
         this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
@@ -54,7 +55,6 @@ export default class AbstractWeb3Module {
         this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
         this.defaultGasPrice = options.defaultGasPrice;
         this.defaultGas = options.defaultGas;
-        this.givenProvider = this.providerDetector.detect();
 
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
@@ -100,7 +100,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter|EthereumProvider}
+     * @returns {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider}
      */
     get currentProvider() {
         return this._currentProvider;
@@ -120,7 +120,7 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean}
@@ -141,7 +141,7 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */
