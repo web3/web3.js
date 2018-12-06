@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {SocketProviderAdapter} from 'packages/web3-providers/dist/web3-providers.cjs';
+import {SocketProviderAdapter} from 'web3-providers';
 import EventEmitter from 'eventemitter3';
 
 export default class NewHeadsWatcher extends EventEmitter {

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-export default class MethodProxy extends Proxy {
+export default class MethodProxy {
     /**
      * @param {AbstractWeb3Module} target
      * @param {AbstractMethodFactory} methodFactory
@@ -28,7 +28,7 @@ export default class MethodProxy extends Proxy {
      * @constructor
      */
     constructor(target, methodFactory) {
-        super(
+        return new Proxy(
             target,
             {
                 /**

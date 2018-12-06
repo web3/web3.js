@@ -26,6 +26,8 @@ import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
 import CallMethodCommand from '../commands/CallMethodCommand';
 import SendTransactionMethodCommand from '../commands/SendTransactionMethodCommand';
 import MethodProxy from '../proxy/MethodProxy';
+import MessageSigner from '../signers/MessageSigner';
+import TransactionSigner from '../signers/TransactionSigner';
 
 export default class ModuleFactory {
     /**
@@ -48,9 +50,11 @@ export default class ModuleFactory {
      *
      * @param {AbstractWeb3Module} target
      * @param {AbstractMethodFactory} methodFactory
+     *
+     * @returns {MethodProxy}
      */
     createMethodProxy(target, methodFactory) {
-        new MethodProxy(target, methodFactory);
+        return new MethodProxy(target, methodFactory);
     }
 
     /**

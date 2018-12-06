@@ -1,9 +1,6 @@
 import ModuleFactory from '../../../src/factories/ModuleFactory';
-import MethodController from '../../src/controllers/MethodController';
 import CallMethodCommand from '../../../src/commands/CallMethodCommand';
-import SignAndSendMethodCommand from '../../src/commands/SignAndSendMethodCommand';
-import SendMethodCommand from '../../../src/commands/SendTransactionMethodCommand';
-import SignMessageCommand from '../../src/commands/SignMessageCommand';
+import SendTransactionMethodCommand from '../../../src/commands/SendTransactionMethodCommand';
 import TransactionConfirmationWorkflow from '../../../src/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 import MessageSigner from '../../../src/signers/MessageSigner';
@@ -20,24 +17,12 @@ describe('ModuleFactoryTest', () => {
         moduleFactory = new ModuleFactory({}, {}, {});
     });
 
-    it('calls createMethodController and should return an instance of MethodController', () => {
-        expect(moduleFactory.createMethodController({}, {}, {})).toBeInstanceOf(MethodController);
-    });
-
     it('calls createCallMethodCommand and should return an instance of CallMethodCommand', () => {
         expect(moduleFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
     });
 
-    it('calls createSendMethodCommand and should return an instance of SendMethodCommand', () => {
-        expect(moduleFactory.createSendMethodCommand({}, {})).toBeInstanceOf(SendMethodCommand);
-    });
-
-    it('calls createSignAndSendMethodCommand and should return an instance of SignAndSendMethodCommand', () => {
-        expect(moduleFactory.createSignAndSendMethodCommand({}, {})).toBeInstanceOf(SignAndSendMethodCommand);
-    });
-
-    it('calls createSignMessageCommand and should return an instance of SignMessageCommand', () => {
-        expect(moduleFactory.createSignMessageCommand()).toBeInstanceOf(SignMessageCommand);
+    it('calls createSendMethodCommand and should return an instance of SendTransactionMethodCommand', () => {
+        expect(moduleFactory.createSendTransactionMethodCommand({}, {})).toBeInstanceOf(SendTransactionMethodCommand);
     });
 
     it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', () => {
@@ -60,5 +45,9 @@ describe('ModuleFactoryTest', () => {
 
     it('calls createNewHeadsWatcher and should return an instance of NewHeadsWatcher', () => {
         expect(moduleFactory.createNewHeadsWatcher({})).toBeInstanceOf(NewHeadsWatcher);
+    });
+
+    it('calls createMethodProxy and should return an instance of MethodProxy', () => {
+        expect(moduleFactory.createMethodProxy({}, {hasMethod: () => {}})).toBeInstanceOf(Object);
     });
 });
