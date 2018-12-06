@@ -1,6 +1,6 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import GetTransactionCountMethodModel from '../../../../src/models/methods/account/GetTransactionCountMethod';
+import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
+import GetTransactionCountMethod from '../../../../src/methods/account/GetTransactionCountMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -9,11 +9,11 @@ jest.mock('Utils');
 /**
  * GetTransactionCountMethod test
  */
-describe('GetTransactionCountMethodModelTest', () => {
+describe('GetTransactionCountMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetTransactionCountMethodModel(Utils, formatters);
+        model = new GetTransactionCountMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionCount', () => {
