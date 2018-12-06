@@ -1,67 +1,67 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetBlockMethodModel from '../../../../src/models/methods/block/GetBlockMethodModel';
+import {formatters} from 'web3-core-helpers';
+import GetBlockMethod from '../../../../src/methods/block/GetBlockMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetBlockMethodModel test
+ * GetBlockMethod test
  */
-describe('GetBlockMethodModelTest', () => {
-    let model;
+describe('GetBlockMethod', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetBlockMethodModel({}, formatters);
+        method = new GetBlockMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_getBlockByNumber', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getBlockByNumber');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
-        model.parameters = ['0x0', true];
+        method.parameters = ['0x0', true];
 
         formatters.inputBlockNumberFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toBeTruthy();
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(model.rpcMethod).toBe('eth_getBlockByHash');
+        expect(method.rpcMethod).toBe('eth_getBlockByHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
-        model.parameters = [100, true];
+        method.parameters = [100, true];
 
         formatters.inputBlockNumberFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toBeTruthy();
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith(100);
 
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getBlockByNumber');
     });
 
@@ -69,7 +69,7 @@ describe('GetBlockMethodModelTest', () => {
         formatters.outputBlockFormatter
             .mockReturnValueOnce({empty: false});
 
-        expect(model.afterExecution({}))
+        expect(method.afterExecution({}))
             .toHaveProperty('empty', false);
 
         expect(formatters.outputBlockFormatter)

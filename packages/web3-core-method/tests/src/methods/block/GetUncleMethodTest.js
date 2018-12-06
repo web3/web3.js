@@ -1,19 +1,19 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetUncleMethodModel from '../../../../src/models/methods/block/GetUncleMethodModel';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import GetUncleMethod from '../../../../src/methods/block/GetUncleMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
 
 /**
- * GetUncleMethodModel test
+ * GetUncleMethod test
  */
-describe('GetUncleMethodModelTest', () => {
+describe('GetUncleMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetUncleMethodModel(Utils, formatters);
+        model = new GetUncleMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', () => {

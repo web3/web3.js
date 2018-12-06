@@ -22,6 +22,7 @@
 
 import {PromiEvent} from 'web3-core-promievent';
 import isFunction from 'underscore-es/isFunction';
+import isString from 'underscore-es/isString';
 
 export default class AbstractMethod {
     /**
@@ -186,6 +187,19 @@ export default class AbstractMethod {
      */
     get arguments() {
         return this._arguments;
+    }
+
+    /**
+     * Checks if the given parameter is of type hash
+     *
+     * @method isHash
+     *
+     * @param {*} parameter
+     *
+     * @returns {Boolean}
+     */
+    isHash(parameter) {
+        return isString(parameter) && parameter.indexOf('0x') === 0;
     }
 
     /**

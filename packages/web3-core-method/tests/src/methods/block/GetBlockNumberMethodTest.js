@@ -1,34 +1,34 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import GetBlockNumberMethodModel from '../../../../src/models/methods/block/GetBlockNumberMethodModel';
+import * as Utils from 'web3-utils';
+import GetBlockNumberMethod from '../../../../src/methods/block/GetBlockNumberMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * GetBlockNumberMethodModel test
+ * GetBlockNumberMethod test
  */
-describe('GetBlockNumberMethodModelTest', () => {
-    let model;
+describe('GetBlockNumberMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetBlockNumberMethodModel(Utils, {});
+        method = new GetBlockNumberMethod({}, Utils, {});
     });
 
     it('rpcMethod should return eth_blockNumber', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_blockNumber');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -36,7 +36,7 @@ describe('GetBlockNumberMethodModelTest', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution('0x0'))
+        expect(method.afterExecution('0x0'))
             .toBe(100);
 
         expect(Utils.hexToNumber)

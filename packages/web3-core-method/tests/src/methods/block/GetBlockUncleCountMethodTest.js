@@ -1,64 +1,64 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetBlockUncleCountMethodModel from '../../../../src/models/methods/block/GetBlockUncleCountMethodModel';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import GetBlockUncleCountMethod from '../../../../src/methods/block/GetBlockUncleCountMethod';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
 
 /**
- * GetBlockUncleCountMethodModel test
+ * GetBlockUncleCountMethod test
  */
-describe('GetBlockUncleCountMethodModelTest', () => {
-    let model;
+describe('GetBlockUncleCountMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetBlockUncleCountMethodModel(Utils, formatters);
+        method = new GetBlockUncleCountMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getUncleCountByBlockNumber');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
-        model.parameters = ['0x0'];
+        method.parameters = ['0x0'];
 
         formatters.inputBlockNumberFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getUncleCountByBlockHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
-        model.parameters = [100];
+        method.parameters = [100];
 
         formatters.inputBlockNumberFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith(100);
 
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getUncleCountByBlockNumber');
     });
 
@@ -66,7 +66,7 @@ describe('GetBlockUncleCountMethodModelTest', () => {
         Utils.hexToNumber
             .mockReturnValueOnce(100);
 
-        expect(model.afterExecution('0x0'))
+        expect(method.afterExecution('0x0'))
             .toBe(100);
 
         expect(Utils.hexToNumber)
