@@ -79,7 +79,7 @@ export SendTransactionMethod from './methods/transaction/SendTransactionMethod';
 
 // Global
 export GetCodeMethod from './methods/GetCodeMethod';
-export SignMethod from './methods/signMethod';
+export SignMethod from './methods/SignMethod';
 export CallMethod from './methods/CallMethod';
 export GetStorageAtMethod from './methods/GetStorageAtMethod';
 export EstimateGasMethod from './methods/EstimateGasMethod';

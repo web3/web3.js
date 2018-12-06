@@ -1,126 +1,148 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import AbstractMethodModel from '../../lib/models/AbstractMethodModel';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import CallMethodCommand from '../../../src/commands/CallMethodCommand';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
+jest.mock('../../../src/commands/CallMethodCommand');
 
 /**
- * AbsractMethodModel test
+ * AbsractMethod test
  */
-describe('AbsractMethodModelTest', () => {
-    let abstractMethodModel;
+describe('AbsractMethodTest', () => {
+    let abstractMethod, command, commandMock;
 
     beforeEach(() => {
-        abstractMethodModel = new AbstractMethodModel('RPC_TEST', 0, Utils, formatters);
+        command = new CallMethodCommand({}, {});
+        commandMock = CallMethodCommand.mock.instances[0];
+        abstractMethod = new AbstractMethod('RPC_TEST', 0, commandMock, Utils, formatters);
     });
 
     it('constructor check', () => {
-        expect(abstractMethodModel.rpcMethod)
+        expect(AbstractMethod.CommandType)
+            .toBe('CALL');
+
+        expect(abstractMethod.rpcMethod)
             .toBe('RPC_TEST');
 
-        expect(abstractMethodModel.parametersAmount)
+        expect(abstractMethod.parametersAmount)
             .toBe(0);
 
-        expect(abstractMethodModel.utils)
+        expect(abstractMethod.command)
+            .toEqual(commandMock);
+
+        expect(abstractMethod.utils)
             .toEqual(Utils);
 
-        expect(abstractMethodModel.formatters)
+        expect(abstractMethod.formatters)
             .toEqual(formatters);
 
-        expect(abstractMethodModel.parameters)
+        expect(abstractMethod.parameters)
             .toBe(undefined);
 
-        expect(abstractMethodModel.callback)
+        expect(abstractMethod.callback)
             .toBe(undefined);
     });
 
-    it('set methodArguments throws error on missing arguments', () => {
-        abstractMethodModel.parametersAmount = 3;
+    it('set arguments throws error on missing arguments', () => {
+        abstractMethod.parametersAmount = 3;
 
         try {
-            abstractMethodModel.methodArguments = [];
+            abstractMethod.arguments = [];
         } catch(error) {
             expect(error)
                 .toBeInstanceOf(Error);
         }
     });
 
-    it('set methodArguments throws error if callback is not of type Function', () => {
-        abstractMethodModel.parametersAmount = 1;
+    it('set arguments throws error if callback is not of type Function', () => {
+        abstractMethod.parametersAmount = 1;
 
         try {
-            abstractMethodModel.methodArguments = [true, true];
+            abstractMethod.arguments = [true, true];
         } catch(error) {
             expect(error)
                 .toBeInstanceOf(Error);
         }
     });
 
-    it('set methodsArguments without callback', () => {
-        abstractMethodModel.parametersAmount = 1;
-        abstractMethodModel.methodArguments = [true];
+    it('set arguments without callback', () => {
+        abstractMethod.parametersAmount = 1;
+        abstractMethod.arguments = [true];
 
-        expect(abstractMethodModel.parameters)
+        expect(abstractMethod.parameters)
             .toEqual([true]);
 
-        expect(abstractMethodModel.callback)
+        expect(abstractMethod.callback)
             .toBe(null);
     });
 
-    it('set methodsArguments with callback', () => {
-        abstractMethodModel.parametersAmount = 1;
-        abstractMethodModel.methodArguments = [true, () => {}];
+    it('set arguments with callback', () => {
+        abstractMethod.parametersAmount = 1;
+        abstractMethod.arguments = [true, () => {}];
 
-        expect(abstractMethodModel.parameters)
+        expect(abstractMethod.parameters)
             .toEqual([true]);
 
-        console.log(abstractMethodModel.callback);
 
-        expect(abstractMethodModel.callback)
+        expect(abstractMethod.callback)
             .toBeInstanceOf(Function);
     });
 
-    it('get methodArguments', () => {
-        abstractMethodModel.parametersAmount = 1;
-        abstractMethodModel.methodArguments = [true];
+    it('get arguments', () => {
+        abstractMethod.parametersAmount = 1;
+        abstractMethod.arguments = [true];
 
-        expect(abstractMethodModel.methodArguments)
+        expect(abstractMethod.arguments)
             .toEqual({callback: null, parameters: [true]});
 
     });
 
-    it('execution of request returns AbstractMethodModel with parameters set', () => {
-        abstractMethodModel.parametersAmount = 1;
-        abstractMethodModel.methodArguments = [true];
-        const request = abstractMethodModel.request(true);
+    it('set rpcMethod', () => {
+        abstractMethod.rpcMethod = 'test';
+
+        expect(abstractMethod.rpcMethod)
+            .toBe('test');
+    });
+
+    it('set parameters', () => {
+        abstractMethod.parameters = ['test'];
+
+        expect(abstractMethod.parameters)
+            .toEqual(['test']);
+    });
+
+    it('set callback', () => {
+        abstractMethod.callback = () => {};
+
+        expect(abstractMethod.callback)
+            .toBeInstanceOf(Function);
+    });
+
+    it('execution of request returns AbstractMethod with parameters set', () => {
+        abstractMethod.parametersAmount = 1;
+        abstractMethod.arguments = [true];
+        const request = abstractMethod.request(true);
 
         expect(request)
-            .toBeInstanceOf(AbstractMethodModel);
+            .toBeInstanceOf(AbstractMethod);
 
-        expect(request.parameters)
-            .toEqual([true]);
-    });
-
-    it('execution of isSign returns true', () => {
-        abstractMethodModel.rpcMethod = 'eth_sign';
-
-        expect(abstractMethodModel.isSign())
+        expect(request.parameters[0])
             .toBeTruthy();
     });
 
-    it('execution of isSendTransaction returns true', () => {
-        abstractMethodModel.rpcMethod = 'eth_sendTransaction';
+    it('run execute method', () => {
+        commandMock.execute
+            .mockReturnValueOnce('0x0');
 
-        expect(abstractMethodModel.isSendTransaction())
-            .toBeTruthy();
-    });
+        abstractMethod = new AbstractMethod('RPC_TEST', 0, commandMock, Utils, formatters);
 
-    it('execution of isSendRawTransaction returns true', () => {
-        abstractMethodModel.rpcMethod = 'eth_sendRawTransaction';
+        expect(abstractMethod.execute({}))
+            .toBe('0x0');
 
-        expect(abstractMethodModel.isSendRawTransaction())
-            .toBeTruthy();
+        expect(commandMock.execute)
+            .toHaveBeenCalledWith({}, abstractMethod);
     });
 });

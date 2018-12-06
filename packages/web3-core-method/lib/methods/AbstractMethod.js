@@ -39,8 +39,8 @@ export default class AbstractMethod {
         this.formatters = formatters;
         this.promiEvent = new PromiEvent();
         this._arguments = {};
-        this._rpcMethod = null;
-        this._parametersAmount = null;
+        this._rpcMethod = rpcMethod;
+        this._parametersAmount = parametersAmount;
     }
 
     /**
@@ -147,20 +147,20 @@ export default class AbstractMethod {
      *
      * @property arguments
      *
-     * @param {IArguments} arguments
+     * @param {IArguments} args
      */
-    set arguments(arguments) {
-        let parameters = arguments,
+    set arguments(args) {
+        let parameters = args,
             callback = null;
 
-        if (arguments.length < this.parametersAmount) {
+        if (args.length < this.parametersAmount) {
             throw new Error(
                 `Arguments length is not correct: expected: ${this.parametersAmount}, given: ${arguments.length}`
             );
         }
 
-        if (arguments.length > this.parametersAmount) {
-            callback = arguments.slice(-1)[0];
+        if (args.length > this.parametersAmount) {
+            callback = args.pop();
 
             if (!isFunction(callback)) {
                 throw new TypeError(
@@ -168,7 +168,7 @@ export default class AbstractMethod {
                 );
             }
 
-            parameters = arguments.slice(0, -1);
+            parameters = args;
         }
 
         this._arguments = {
@@ -177,6 +177,29 @@ export default class AbstractMethod {
         };
     }
 
+    /**
+     * Getter for the arguments property
+     *
+     * @property arguments
+     *
+     * @returns {{callback: Function|null, parameters: Array}}
+     */
+    get arguments() {
+        return this._arguments;
+    }
+
+    /**
+     * Returns this Method with the arguments set.
+     *
+     * @method request
+     *
+     * @returns {AbstractMethod}
+     */
+    request() {
+        this.arguments = arguments;
+
+        return this;
+    }
 
     /**
      * Checks which command should be executed
@@ -188,7 +211,7 @@ export default class AbstractMethod {
      * @returns {Promise<Object|String>|PromiEvent|String}
      */
     execute(moduleInstance) {
-        this.command.execute(
+        return this.command.execute(
             moduleInstance,
             this
         );
