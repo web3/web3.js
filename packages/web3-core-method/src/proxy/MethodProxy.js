@@ -51,12 +51,7 @@ export default class MethodProxy {
                             method.arguments = arguments;
 
                             if (method.parameters.length !== method.parametersAmount) {
-                                throw new Error(
-                                    `Invalid parameters length the expected length would be 
-                                    ${method.parametersAmount}
-                                     and not 
-                                    ${method.parameters.length}`
-                                );
+                                throw new Error(`Invalid parameters length the expected length would be ${method.parametersAmount} and not ${method.parameters.length}`);
                             }
 
                             return method.execute(target, target.accounts);
