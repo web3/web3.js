@@ -231,10 +231,9 @@ export default class Eth extends AbstractWeb3Module {
             case 'logs':
                 return this.subscriptionsFactory
                     .createLogSubscription(
-                        this,
                         options,
-                        this.methodModelFactory.createMethodModel('getPastLogs'),
-                        this.methodController
+                        this,
+                        this.methodFactory.createMethod('getPastLogs')
                     )
                     .subscribe(callback);
 

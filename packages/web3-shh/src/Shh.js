@@ -65,7 +65,7 @@ export default class Shh extends AbstractWeb3Module {
      */
     subscribe(method, options, callback) {
         if (method === 'messages') {
-            return this.subscriptionsFactory.createShhMessagesSubscription(this, options).subscribe(callback);
+            return this.subscriptionsFactory.createShhMessagesSubscription(options, this).subscribe(callback);
         }
 
         throw new Error(`Unknown subscription: ${method}`);

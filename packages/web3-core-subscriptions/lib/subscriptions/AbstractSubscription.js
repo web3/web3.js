@@ -24,6 +24,9 @@ import isArray from 'underscore-es/isArray';
 import isFunction from 'underscore-es/isFunction';
 import EventEmitter from 'eventemitter3';
 
+/*
+ * TODO: Implement it with https://github.com/tc39/proposal-observable/blob/master/src/Observable.js
+ */
 export default class AbstractSubscription extends EventEmitter {
     /**
      * @param {String} method
