@@ -55,7 +55,7 @@ export default class AbiMapper {
             abiItem.payable = self.isPayable(abiItem);
 
             if (abiItem.name) {
-                abiItem.funcName = self.utils._jsonInterfaceMethodToString(abiItem);
+                abiItem.funcName = self.utils.jsonInterfaceMethodToString(abiItem);
             }
 
             let abiItemModel;

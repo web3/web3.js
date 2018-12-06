@@ -56,7 +56,7 @@ export default class AbiCoder {
      */
     encodeFunctionSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = this.utils._jsonInterfaceMethodToString(functionName);
+            functionName = this.utils.jsonInterfaceMethodToString(functionName);
         }
 
         return this.utils.sha3(functionName).slice(0, 10);
@@ -73,7 +73,7 @@ export default class AbiCoder {
      */
     encodeEventSignature(functionName) {
         if (isObject(functionName)) {
-            functionName = this.utils._jsonInterfaceMethodToString(functionName);
+            functionName = this.utils.jsonInterfaceMethodToString(functionName);
         }
 
         return this.utils.sha3(functionName);
