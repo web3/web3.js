@@ -55,7 +55,7 @@ describe('CallMethodCommandTest', () => {
     });
 
     it(
-        'calls execute and method has rpcMethod property with ' +
+        'calls execute and method has a rpcMethod property with ' +
         'value "eth_sign" and signs the message on the client',
         async () => {
             methodMock.rpcMethod = 'eth_sign';

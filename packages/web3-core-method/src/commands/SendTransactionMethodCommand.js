@@ -129,13 +129,13 @@ export default class SendTransactionMethodCommand extends AbstractCommand {
                 this.sendRequest(method, promiEvent, moduleInstance);
             })
             .catch((error) => {
-                promiEvent.reject(error);
-                promiEvent.emit('error', error);
-                promiEvent.removeAllListeners();
-
                 if (method.callback) {
                     method.callback(error, null);
                 }
+
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
             });
 
         return promiEvent;
