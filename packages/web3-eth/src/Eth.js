@@ -21,6 +21,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
+import Contract from './Contract';
 
 export default class Eth extends AbstractWeb3Module {
     /**
@@ -87,6 +88,10 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
+            if (!(this instanceof Contract)) {
+                throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+            }
+
             const contract = this.ethModuleFactory.createContract(abi, address, options);
 
             this.initiatedContracts.push(contract);

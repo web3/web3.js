@@ -51,22 +51,11 @@ export default class AbstractContract extends AbstractWeb3Module {
         utils,
         formatters,
         accounts,
-        abi,
+        abi = AbstractWeb3Module.throwIfMissing('abi'),
         address,
         options
     ) {
         super(provider, providersModuleFactory, providers, methodModuleFactory, null, options);
-
-        if (!(this instanceof AbstractContract)) {
-            throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
-        }
-
-        if (!abi || !Array.isArray(abi)) {
-            throw new Error(
-                'You must provide the json interface of the contract when instantiating a contract object.'
-            );
-        }
-
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;
@@ -84,13 +73,13 @@ export default class AbstractContract extends AbstractWeb3Module {
 
         this.options = options;
 
-        contractModuleFactory.createMethodsProxy(
+        this.contractModuleFactory.createMethodsProxy(
             this.methods,
             this.abiModel,
             this.PromiEvent
         );
 
-        this.events = contractModuleFactory.createEventSubscriptionsProxy(
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(
             this,
             this.abiModel,
             this.methodController,

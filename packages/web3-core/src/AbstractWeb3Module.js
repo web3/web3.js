@@ -176,7 +176,7 @@ export default class AbstractWeb3Module {
      *
      * @param {String} name
      */
-    throwIfMissing(name) {
+    static throwIfMissing(name) {
         throw new Error(`Missing parameter: ${name}`);
     }
 }

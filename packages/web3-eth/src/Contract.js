@@ -22,4 +22,53 @@
 
 import {AbstractContract} from 'web3-eth-contract';
 
-export default class Contract extends AbstractContract {}
+export default class Contract extends AbstractContract {
+    /**
+     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {ProvidersModuleFactory} providersModuleFactory
+     * @param {Object} providers
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {ContractModuleFactory} contractModuleFactory
+     * @param {PromiEvent} PromiEvent
+     * @param {AbiCoder} abiCoder
+     * @param {Object} utils
+     * @param {Object} formatters
+     * @param {Accounts} accounts
+     * @param {Object} abi
+     * @param {String} address
+     * @param {Object} options
+     *
+     * @constructor
+     */
+    constructor(
+        provider,
+        providersModuleFactory,
+        providers,
+        methodModuleFactory,
+        contractModuleFactory,
+        PromiEvent,
+        abiCoder,
+        utils,
+        formatters,
+        accounts,
+        abi,
+        address,
+        options
+    ) {
+        super(
+            provider,
+            providersModuleFactory,
+            providers,
+            methodModuleFactory,
+            contractModuleFactory,
+            PromiEvent,
+            abiCoder,
+            utils,
+            formatters,
+            accounts,
+            abi,
+            address,
+            options
+        );
+    }
+}
