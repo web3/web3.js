@@ -49,10 +49,10 @@ export default class CallMethodCommand extends AbstractCommand {
         method.beforeExecution(moduleInstance);
 
         if (method.rpcMethod === 'eth_sign' && this.hasWallets()) {
-            return this.signOnClient(method);
+            return Promise.resolve(this.signOnClient(method));
         }
 
-        return await this.signOnNode(moduleInstance, method);
+        return await this.sendToNode(moduleInstance, method);
     }
 
     /**
@@ -65,7 +65,7 @@ export default class CallMethodCommand extends AbstractCommand {
      *
      * @returns {Promise<String|Error|undefined>}
      */
-    async signOnNode(moduleInstance, method) {
+    async sendToNode(moduleInstance, method) {
         try {
             const response = await moduleInstance.currentProvider.send(method.rpcMethod, method.parameters);
             const mappedResponse = method.afterExecution(response);
