@@ -104,26 +104,26 @@ export default class AbiCoder {
      * @returns {String} encoded list of params
      */
     encodeParameters(types, params) {
-        return ethersAbiCoder.encode(this.mapTypes(types), params);
+        return ethersAbiCoder.encode(this._mapTypes(types), params);
     }
 
     /**
      * Map types if simplified format is used
      *
-     * @method mapTypes
+     * @method _mapTypes
      *
      * @param {Array} types
      *
      * @returns {Array}
      */
-    mapTypes(types) {
+    _mapTypes(types) {
         const mappedTypes = [];
         types.forEach((type) => {
-            if (this.isSimplifiedStructFormat(type)) {
+            if (this._isSimplifiedStructFormat(type)) {
                 const structName = Object.keys(type)[0];
                 mappedTypes.push(
-                    Object.assign(this.mapStructNameAndType(structName), {
-                        components: this.mapStructToCoderFormat(type[structName])
+                    Object.assign(this._mapStructNameAndType(structName), {
+                        components: this._mapStructToCoderFormat(type[structName])
                     })
                 );
 
@@ -139,26 +139,26 @@ export default class AbiCoder {
     /**
      * Check if type is simplified struct format
      *
-     * @method isSimplifiedStructFormat
+     * @method _isSimplifiedStructFormat
      *
      * @param {String | Object} type
      *
      * @returns {Boolean}
      */
-    isSimplifiedStructFormat(type) {
+    _isSimplifiedStructFormat(type) {
         return typeof type === 'object' && typeof type.components === 'undefined' && typeof type.name === 'undefined';
     }
 
     /**
      * Maps the correct tuple type and name when the simplified format in encode/decodeParameter is used
      *
-     * @method mapStructNameAndType
+     * @method _mapStructNameAndType
      *
      * @param {String} structName
      *
      * @returns {{type: string, name: *}}
      */
-    mapStructNameAndType(structName) {
+    _mapStructNameAndType(structName) {
         let type = 'tuple';
 
         if (structName.indexOf('[]') > -1) {
@@ -172,19 +172,19 @@ export default class AbiCoder {
     /**
      * Maps the simplified format in to the expected format of the AbiCoder
      *
-     * @method mapStructToCoderFormat
+     * @method _mapStructToCoderFormat
      *
      * @param {Object} struct
      *
      * @returns {Array}
      */
-    mapStructToCoderFormat(struct) {
+    _mapStructToCoderFormat(struct) {
         const components = [];
         Object.keys(struct).forEach((key) => {
             if (typeof struct[key] === 'object') {
                 components.push(
-                    Object.assign(this.mapStructNameAndType(key), {
-                        components: this.mapStructToCoderFormat(struct[key])
+                    Object.assign(this._mapStructNameAndType(key), {
+                        components: this._mapStructToCoderFormat(struct[key])
                     })
                 );
 
@@ -205,7 +205,7 @@ export default class AbiCoder {
      *
      * @method encodeFunctionCall
      *
-     * @param {Array} jsonInterface
+     * @param {Object} jsonInterface
      * @param {Array} params
      *
      * @returns {String} The encoded ABI for this function call
@@ -246,7 +246,7 @@ export default class AbiCoder {
             throw new Error("Returned values aren't valid, did it run Out of Gas?");
         }
 
-        const res = ethersAbiCoder.decode(this.mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
+        const res = ethersAbiCoder.decode(this._mapTypes(outputs), `0x${bytes.replace(/0x/i, '')}`);
         const returnValue = new Result();
         returnValue.__length__ = 0;
 
