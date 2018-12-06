@@ -179,4 +179,14 @@ describe('AbsractMethodTest', () => {
         expect(abstractMethod.afterExecution('string'))
             .toBe('string');
     });
+
+    it('isHash return true', () =>  {
+       expect(abstractMethod.isHash('0x0'))
+           .toBeTruthy();
+    });
+
+    it('isHash return false', () =>  {
+        expect(abstractMethod.isHash(100))
+            .toBeFalsy();
+    });
 });
