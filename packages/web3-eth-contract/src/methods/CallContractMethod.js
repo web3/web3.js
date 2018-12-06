@@ -15,24 +15,24 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file PastEventLogsMethod.js
+ * @file CallContractMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {GetPastLogsMethod} from 'web3-core-method';
+import {CallMethod} from 'web3-core-method';
 
-export default class PastEventLogsMethod extends GetPastLogsMethod {
+export default class CallContractMethod extends CallMethod {
     /**
-     * @param {AbiItem} abiItem
-     * @param {Object} utils
+     * @param {CallMethodCommand} callMethodCommand
+     * @param {Utils} utils
      * @param {Object} formatters
+     * @param {AbiItem} abiItem
      *
      * @constructor
      */
-    constructor(abiItem, utils, formatters) {
-        super(utils, formatters);
-
+    constructor(callMethodCommand, utils, formatters, abiItem) {
+        super(callMethodCommand, utils, formatters);
         this.abiItem = abiItem;
     }
 
@@ -46,12 +46,20 @@ export default class PastEventLogsMethod extends GetPastLogsMethod {
      * @returns {Array}
      */
     afterExecution(response) {
-        const formattedLogs = super.afterExecution(response);
+        if (!response) {
+            return null;
+        }
 
-        formattedLogs.map((logItem) => {
-            return this.eventLogDecoder.decode(self.abiItem, logItem);
-        });
+        if (response.length >= 2) {
+            response = response.slice(2);
+        }
 
-        return formattedLogs;
+        const result = this.abiCoder.decodeParameters(this.abiItem, response);
+
+        if (result.__length__ === 1) {
+            return result[0];
+        }
+
+        return result;
     }
 }

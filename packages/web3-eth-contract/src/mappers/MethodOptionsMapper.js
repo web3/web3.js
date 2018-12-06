@@ -15,14 +15,14 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file RpcMethodOptionsMapper.js
+ * @file MethodOptionsMapper
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class RpcMethodOptionsMapper {
+export default class MethodOptionsMapper {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
@@ -35,7 +35,7 @@ export default class RpcMethodOptionsMapper {
     /**
      * Sets the default options where it is required
      *
-     * @param {Contract} contract
+     * @param {AbstractContract} contract
      * @param {Object} options
      *
      * @returns {Object}

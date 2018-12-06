@@ -25,17 +25,17 @@ import {SendTransactionMethod} from 'web3-core-method';
 
 export default class SendContractMethod extends SendTransactionMethod {
     /**
-     * @param {AbiItem} abiItem
-     * @param {AllEventsLogDecoder} allEventsLogDecoder
-     * @param {Object} utils
+     * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
+     * @param {AllEventsLogDecoder} allEventsLogDecoder
+     * @param {AbiItem} abiItem
      *
      * @constructor
      */
-    constructor(abiItem, allEventsLogDecoder, utils, formatters, accounts) {
-        super(utils, formatters, accounts);
-
+    constructor(sendTransactionMethodCommand, utils, formatters, accounts, allEventsLogDecoder, abiItem) {
+        super(sendTransactionMethodCommand, utils, formatters, accounts);
         this.abiItem = abiItem;
         this.allEventsLogDecoder = allEventsLogDecoder;
     }
@@ -47,7 +47,7 @@ export default class SendContractMethod extends SendTransactionMethod {
      *
      * @param {Object} response
      *
-     * @returns {*}
+     * @returns {Object}
      */
     afterExecution(response) {
         if (isArray(response.logs)) {

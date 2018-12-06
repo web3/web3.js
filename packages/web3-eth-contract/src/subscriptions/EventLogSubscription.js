@@ -15,28 +15,30 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AllEventsLogSubscription.js
+ * @file EventLogSubscription.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {LogSubscriptionModel} from 'web3-core-subscriptions';
+import {LogSubscription} from 'web3-core-subscriptions';
 
-export default class AllEventsLogSubscription extends LogSubscriptionModel {
+export default class EventLogSubscription extends LogSubscription {
     /**
+     * @param {AbiItem} abiItem
      * @param {Object} options
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
-     * @param {GetPastLogsMethodModel} getPastLogsMethodModel
-     * @param {MethodController} methodController
-     * @param {EventLogDecoder} allEventsLogDecoder
+     * @param {AbstractContract} contract
+     * @param {GetPastLogsMethod} getPastLogsMethod
+     * @param {EventLogDecoder} eventLogDecoder
      *
      * @constructor
      */
-    constructor(options, utils, formatters, getPastLogsMethodModel, methodController, allEventsLogDecoder) {
-        super(options, utils, formatters, getPastLogsMethodModel, methodController);
+    constructor(abiItem, options, utils, formatters, contract, getPastLogsMethod, eventLogDecoder) {
+        super(options, utils, formatters, contract, getPastLogsMethod);
 
-        this.allEventsLogDecoder = allEventsLogDecoder;
+        this.eventLogDecoder = eventLogDecoder;
+        this.abiItem = abiItem;
     }
 
     /**
@@ -50,6 +52,6 @@ export default class AllEventsLogSubscription extends LogSubscriptionModel {
      * @returns {Object}
      */
     onNewSubscriptionItem(subscription, subscriptionItem) {
-        return this.allEventsLogDecoder.decode(null, this.formatters.outputLogFormatter(subscriptionItem));
+        return this.eventLogDecoder.decode(this.abiItem, this.formatters.outputLogFormatter(subscriptionItem));
     }
 }

@@ -25,17 +25,16 @@ import AbiItemModel from '../models/abi/AbiItemModel';
 import MethodEncoder from '../encoders/MethodEncoder';
 import EventFilterEncoder from '../encoders/EventFilterEncoder';
 import AllEventsFilterEncoder from '../encoders/AllEventsFilterEncoder';
-import CallMethodResponseDecoder from '../decoders/CallMethodResponseDecoder';
 import EventLogDecoder from '../decoders/EventLogDecoder';
 import AllEventsLogDecoder from '../decoders/AllEventsLogDecoder';
 import AbiMapper from '../mappers/AbiMapper';
-import RpcMethodOptionsMapper from '../mappers/RpcMethodOptionsMapper';
+import MethodOptionsMapper from '../mappers/MethodOptionsMapper';
 import EventOptionsMapper from '../mappers/EventOptionsMapper';
 import AllEventsOptionsMapper from '../mappers/AllEventsOptionsMapper';
 import MethodsProxy from '../proxies/MethodsProxy';
 import EventSubscriptionsProxy from '../proxies/EventSubscriptionsProxy';
-import RpcMethodOptionsValidator from '../validators/RpcMethodOptionsValidator';
-import RpcMethodFactory from '../factories/RpcMethodModelFactory';
+import MethodOptionsValidator from '../validators/MethodOptionsValidator';
+import MethodFactory from '../factories/MethodFactory';
 import EventSubscriptionFactory from '../factories/EventSubscriptionFactory';
 import AbstractContract from '../AbstractContract';
 
@@ -45,14 +44,16 @@ export default class ContractModuleFactory {
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
+     * @param {MethodModuleFactory} methodModuleFactory
      *
      * @constructor
      */
-    constructor(utils, formatters, abiCoder, accounts) {
+    constructor(utils, formatters, abiCoder, accounts, methodModuleFactory) {
         this.utils = utils;
         this.formatters = formatters;
         this.abiCoder = abiCoder;
         this.accounts = accounts;
+        this.methodModuleFactory = methodModuleFactory;
     }
 
     /**
@@ -63,7 +64,6 @@ export default class ContractModuleFactory {
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {PromiEvent} PromiEvent
      * @param {Object} abi
      * @param {String} address
@@ -71,12 +71,12 @@ export default class ContractModuleFactory {
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, providers, methodModuleFactory, PromiEvent, abi, address, options) {
+    createContract(provider, providersModuleFactory, providers, PromiEvent, abi, address, options) {
         return new AbstractContract(
             provider,
             providersModuleFactory,
             providers,
-            methodModuleFactory,
+            this.methodModuleFactory,
             this,
             PromiEvent,
             this.abiCoder,
@@ -160,17 +160,6 @@ export default class ContractModuleFactory {
     }
 
     /**
-     * Returns an object of type CallMethodResponseDecoder
-     *
-     * @method createCallMethodResponseDecoder
-     *
-     * @returns {CallMethodResponseDecoder}
-     */
-    createCallMethodResponseDecoder() {
-        return new CallMethodResponseDecoder(this.abiCoder);
-    }
-
-    /**
      * Returns an object of type EventLogDecoder
      *
      * @method createEventLogDecoder
@@ -193,25 +182,25 @@ export default class ContractModuleFactory {
     }
 
     /**
-     * Returns an object of type RpcMethodOptionsValidator
+     * Returns an object of type MethodOptionsValidator
      *
-     * @method createRpcMethodOptionsValidator
+     * @method createMethodOptionsValidator
      *
-     * @returns {RpcMethodOptionsValidator}
+     * @returns {MethodOptionsValidator}
      */
-    createRpcMethodOptionsValidator() {
-        return new RpcMethodOptionsValidator(this.utils);
+    createMethodOptionsValidator() {
+        return new MethodOptionsValidator(this.utils);
     }
 
     /**
-     * Returns an object of type RpcMethodOptionsMapper
+     * Returns an object of type MethodOptionsMapper
      *
-     * @method createRpcMethodOptionsMapper
+     * @method createMethodOptionsMapper
      *
-     * @returns {RpcMethodOptionsMapper}
+     * @returns {MethodOptionsMapper}
      */
-    createRpcMethodOptionsMapper() {
-        return new RpcMethodOptionsMapper(this.utils, this.formatters);
+    createMethodOptionsMapper() {
+        return new MethodOptionsMapper(this.utils, this.formatters);
     }
 
     /**
@@ -237,19 +226,19 @@ export default class ContractModuleFactory {
     }
 
     /**
-     * Returns an object of type RpcMethodModelFactory
+     * Returns an object of type MethodFactory
      *
-     * @method createRpcMethodModelFactory
+     * @method createMethodFactory
      *
-     * @returns {RpcMethodModelFactory}
+     * @returns {MethodFactory}
      */
-    createRpcMethodModelFactory() {
-        return new RpcMethodFactory(
-            this.createCallMethodResponseDecoder(),
+    createMethodFactory() {
+        return new MethodFactory(
             this.accounts,
             this.utils,
             this.formatters,
-            this.createAllEventsLogDecoder()
+            this,
+            this.methodModuleFactory
         );
     }
 
@@ -258,22 +247,20 @@ export default class ContractModuleFactory {
      *
      * @method createMethodsProxy
      *
-     * @param {Contract} contract
+     * @param {AbstractContract} target
      * @param {AbiModel} abiModel
-     * @param {MethodController} methodController
      * @param {PromiEvent} PromiEvent
      *
      * @returns {MethodsProxy}
      */
-    createMethodsProxy(contract, abiModel, methodController, PromiEvent) {
+    createMethodsProxy(target, abiModel, PromiEvent) {
         return new MethodsProxy(
-            contract,
+            target,
             abiModel,
-            this.createRpcMethodModelFactory(),
-            methodController,
+            this.createMethodFactory(),
             this.createMethodEncoder(),
-            this.createRpcMethodOptionsValidator(),
-            this.createRpcMethodOptionsMapper(),
+            this.createMethodOptionsValidator(),
+            this.createMethodOptionsMapper(),
             PromiEvent
         );
     }
@@ -285,12 +272,11 @@ export default class ContractModuleFactory {
      *
      * @param {Contract} contract
      * @param {AbiModel} abiModel
-     * @param {MethodController} methodController
      * @param {PromiEvent} PromiEvent
      *
      * @returns {EventSubscriptionsProxy}
      */
-    createEventSubscriptionsProxy(contract, abiModel, methodController, PromiEvent) {
+    createEventSubscriptionsProxy(contract, abiModel, PromiEvent) {
         return new EventSubscriptionsProxy(
             contract,
             abiModel,

@@ -15,27 +15,27 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file CallContractMethod.js
+ * @file PastEventLogsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {CallMethod} from 'web3-core-method';
+import {GetPastLogsMethod} from 'web3-core-method';
 
-export default class CallContractMethod extends CallMethod {
+export default class PastEventLogsMethod extends GetPastLogsMethod {
     /**
-     * @param {AbiItem} abiItem
-     * @param {CallMethodResponseDecoder} callMethodResponseDecoder
-     * @param {Object} utils
+     * @param {CallMethodCommand} callMethodCommand
+     * @param {Utils} utils
      * @param {Object} formatters
+     * @param {EventLogDecoder} eventLogDecoder
+     * @param {AbiItem} abiItem
      *
      * @constructor
      */
-    constructor(abiItem, callMethodCommand, callMethodResponseDecoder, utils, formatters) {
+    constructor(callMethodCommand, utils, formatters, eventLogDecoder, abiItem) {
         super(callMethodCommand, utils, formatters);
-
-        this.callMethodResponseDecoder = callMethodResponseDecoder;
         this.abiItem = abiItem;
+        this.eventLogDecoder = eventLogDecoder;
     }
 
     /**
@@ -45,9 +45,15 @@ export default class CallContractMethod extends CallMethod {
      *
      * @param {Array} response
      *
-     * @returns {*}
+     * @returns {Array}
      */
     afterExecution(response) {
-        return this.callMethodResponseDecoder.decode(this.abiItem, response);
+        const formattedLogs = super.afterExecution(response);
+
+        formattedLogs.map((logItem) => {
+            return this.eventLogDecoder.decode(self.abiItem, logItem);
+        });
+
+        return formattedLogs;
     }
 }

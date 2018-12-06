@@ -26,7 +26,7 @@ export default class AbiMapper {
     /**
      * @param {ContractModuleFactory} contractPackageFactory
      * @param {AbiCoder} abiCoder
-     * @param {Object} utils
+     * @param {Utils} utils
      *
      * @constructor
      */

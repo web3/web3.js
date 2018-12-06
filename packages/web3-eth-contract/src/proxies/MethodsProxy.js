@@ -25,29 +25,27 @@ import isFunction from 'underscore-es/isFunction';
 
 export default class MethodsProxy extends Proxy {
     /**
-     * @param {Object} target
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
      * @param {MethodFactory} methodFactory
      * @param {MethodEncoder} methodEncoder
-     * @param {RpcMethodOptionsValidator} rpcMethodOptionsValidator
-     * @param {RpcMethodOptionsMapper} rpcMethodOptionsMapper
+     * @param {MethodOptionsValidator} methodOptionsValidator
+     * @param {MethodOptionsMapper} methodOptionsMapper
      * @param {PromiEvent} PromiEvent
      *
      * @constructor
      */
     constructor(
-        target,
         contract,
         abiModel,
         methodFactory,
         methodEncoder,
-        rpcMethodOptionsValidator,
-        rpcMethodOptionsMapper,
+        methodOptionsValidator,
+        methodOptionsMapper,
         PromiEvent
     ) {
         super(
-            target,
+            contract,
             {
                 /**
                  * Checks if a contract event exists by the given name and
@@ -139,8 +137,8 @@ export default class MethodsProxy extends Proxy {
         this.abiModel = abiModel;
         this.methodFactory = methodFactory;
         this.methodEncoder = methodEncoder;
-        this.rpcMethodOptionsValidator = rpcMethodOptionsValidator;
-        this.rpcMethodOptionsMapper = rpcMethodOptionsMapper;
+        this.methodOptionsValidator = methodOptionsValidator;
+        this.methodOptionsMapper = methodOptionsMapper;
         this.PromiEvent = PromiEvent;
     }
 
@@ -189,17 +187,17 @@ export default class MethodsProxy extends Proxy {
         abiItemModel.givenParametersLengthIsValid();
 
         // Get correct rpc method model
-        const method = this.rpcMethodModelFactory.createRpcMethodByRequestType(abiItemModel, this.contract);
+        const method = this.methodFactory.createMethodByRequestType(abiItemModel, this.contract);
         method.methodArguments = methodArguments;
 
         // Encode contract method
         method.parameters[0]['data'] = this.methodEncoder.encode(abiItemModel, this.contract.options.data);
 
         // Set default options in the TxObject if required
-        method.parameters[0] = this.rpcMethodOptionsMapper.map(this.contract, method.parameters[0]);
+        method.parameters[0] = this.methodOptionsMapper.map(this.contract, method.parameters[0]);
 
         // Validate TxObject
-        this.rpcMethodOptionsValidator.validate(abiItemModel, method);
+        this.methodOptionsValidator.validate(abiItemModel, method);
 
         return method;
     }

@@ -75,15 +75,18 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.abiMapper = contractModuleFactory.createAbiMapper();
         this.options = options;
         this.PromiEvent = PromiEvent;
-        this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
+        this.methodFactory = contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
-        this.address = address;
+
+        if (address) {
+            this.address = address;
+        }
+
         this.options = options;
 
         contractModuleFactory.createMethodsProxy(
             this.methods,
             this.abiModel,
-            this.methodController,
             this.PromiEvent
         );
 
@@ -140,14 +143,14 @@ export default class AbstractContract extends AbstractWeb3Module {
             throw new Error(`Event with name "${eventName}does not exists.`);
         }
 
-        const pastEventLogsMethodModel = this.rpcMethodModelFactory.createPastEventLogsMethodModel(
+        const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
             this.options.jsonInterface.getEvent(eventName)
         );
 
-        pastEventLogsMethodModel.parameters = [options];
-        pastEventLogsMethodModel.callback = callback;
+        pastEventLogsMethod.parameters = [options];
+        pastEventLogsMethod.callback = callback;
 
-        return this.methodController.execute(pastEventLogsMethodModel, this.accounts, this);
+        return pastEventLogsMethod.execute(this);
     }
 
     /**
@@ -172,19 +175,18 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     clone() {
         const contract = new this.constructor(
-            this.currentProvider,
+            this.provider,
             this.providersModuleFactory,
             this.providers,
-            this.methodController,
+            this.methodModuleFactory,
             this.contractModuleFactory,
             this.PromiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,
             this.accounts,
-            this.abiMapper,
-            {},
-            this.address,
+            this.abi,
+            null,
             this.options
         );
 

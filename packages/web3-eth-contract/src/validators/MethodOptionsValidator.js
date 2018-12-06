@@ -15,12 +15,12 @@
  along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
- * @file RpcMethodOptionsValidator.js
+ * @file MethodOptionsValidator.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class RpcMethodOptionsValidator {
+export default class MethodOptionsValidator {
     /**
      * @param {Object} utils
      *
@@ -36,20 +36,20 @@ export default class RpcMethodOptionsValidator {
      * @method validate
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethodModel} rpcMethodModel
+     * @param {AbstractMethod} method
      *
      * @returns {Error|Boolean}
      */
-    validate(abiItemModel, rpcMethodModel) {
-        if (!this.isToSet(abiItemModel, rpcMethodModel)) {
+    validate(abiItemModel, method) {
+        if (!this.isToSet(abiItemModel, method)) {
             throw new Error("This contract object doesn't have address set yet, please set an address first.");
         }
 
-        if (!this.isFromSet(rpcMethodModel)) {
+        if (!this.isFromSet(method)) {
             throw new Error('No "from" address specified in neither the given options, nor the default options.');
         }
 
-        if (!this.isValueValid(abiItemModel, rpcMethodModel)) {
+        if (!this.isValueValid(abiItemModel, method)) {
             throw new Error('Can not send value to non-payable contract method or constructor');
         }
 
@@ -62,16 +62,16 @@ export default class RpcMethodOptionsValidator {
      * @method isToSet
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethodModel} rpcMethodModel
+     * @param {AbstractMethod} method
      *
      * @returns {Boolean}
      */
-    isToSet(abiItemModel, rpcMethodModel) {
+    isToSet(abiItemModel, method) {
         if (abiItemModel.signature === 'constructor') {
             return true;
         }
 
-        return this.utils.isAddress(rpcMethodModel.parameters[0].to);
+        return this.utils.isAddress(method.parameters[0].to);
     }
 
     /**
@@ -79,12 +79,12 @@ export default class RpcMethodOptionsValidator {
      *
      * @method isFromSet
      *
-     * @param {AbstractMethodModel} rpcMethodModel
+     * @param {AbstractMethod} method
      *
      * @returns {Boolean}
      */
-    isFromSet(rpcMethodModel) {
-        return this.utils.isAddress(rpcMethodModel.parameters[0].from);
+    isFromSet(method) {
+        return this.utils.isAddress(method.parameters[0].from);
     }
 
     /**
@@ -93,11 +93,11 @@ export default class RpcMethodOptionsValidator {
      * @method isValueValid
      *
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractMethodModel} rpcMethodModel
+     * @param {AbstractMethod} method
      *
      * @returns {Boolean}
      */
-    isValueValid(abiItemModel, rpcMethodModel) {
-        return !(!abiItemModel.payable && rpcMethodModel.parameters[0].value && rpcMethodModel.parameters[0].value > 0);
+    isValueValid(abiItemModel, method) {
+        return !(!abiItemModel.payable && method.parameters[0].value && method.parameters[0].value > 0);
     }
 }

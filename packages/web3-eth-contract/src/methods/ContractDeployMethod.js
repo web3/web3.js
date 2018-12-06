@@ -24,15 +24,15 @@ import {SendTransactionMethod} from 'web3-core-method';
 
 export default class ContractDeployMethod extends SendTransactionMethod {
     /**
-     * @param {Contract} contract
      * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
+     * @param {AbstractContract} contract
      *
      * @constructor
      */
-    constructor(contract, sendTransactionMethodCommand, utils, formatters, accounts) {
+    constructor(sendTransactionMethodCommand, utils, formatters, accounts, contract) {
         super(command, utils, formatters, accounts);
 
         this.contract = contract;
@@ -57,7 +57,7 @@ export default class ContractDeployMethod extends SendTransactionMethod {
      *
      * @param {Object} response
      *
-     * @returns {*}
+     * @returns {AbstractContract}
      */
     afterExecution(response) {
         const clonedContract = this.contract.clone();

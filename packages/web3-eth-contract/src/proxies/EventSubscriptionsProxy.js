@@ -23,7 +23,7 @@
 import isFunction from 'underscore-es/isFunction';
 import isUndefined from 'underscore-es/isUndefined';
 
-export default class EventSubscriptionsProxy {
+export default class EventSubscriptionsProxy extends Proxy {
     /**
      * @param {AbstractContract} contract
      * @param {AbiModel} abiModel
@@ -46,6 +46,36 @@ export default class EventSubscriptionsProxy {
         allEventsOptionsMapper,
         PromiEvent
     ) {
+        super(contract, {
+            /**
+             * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
+             *
+             * @param {EventSubscriptionsProxy} target
+             * @param {String} name
+             *
+             * @returns {Function|Error}
+             */
+            get: (target, name) => {
+                if (this.abiModel.hasEvent(name)) {
+                    return (options, callback) => {
+                        return target.subscribe(target.abiModel.getEvent(name), options, callback);
+                    };
+                }
+
+                if (name === 'allEvents') {
+                    return (options, callback) => {
+                        return target.subscribeAll(options, callback);
+                    };
+                }
+
+                if (target[name]) {
+                    return target[name];
+                }
+
+                throw new Error(`Event with name "${name}" not found`);
+            }
+        });
+
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
         this.abiModel = abiModel;
@@ -54,40 +84,6 @@ export default class EventSubscriptionsProxy {
         this.allEventsLogDecoder = allEventsLogDecoder;
         this.allEventsOptionsMapper = allEventsOptionsMapper;
         this.PromiEvent = PromiEvent;
-
-        return new Proxy(this, {
-            get: this.proxyHandler
-        });
-    }
-
-    /**
-     * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
-     *
-     * @method proxyHandler
-     *
-     * @param {EventSubscriptionsProxy} target
-     * @param {String} name
-     *
-     * @returns {Function|Error}
-     */
-    proxyHandler(target, name) {
-        if (this.abiModel.hasEvent(name)) {
-            return (options, callback) => {
-                return target.subscribe(target.abiModel.getEvent(name), options, callback);
-            };
-        }
-
-        if (name === 'allEvents') {
-            return (options, callback) => {
-                return target.subscribeAll(options, callback);
-            };
-        }
-
-        if (target[name]) {
-            return target[name];
-        }
-
-        throw new Error(`Event with name "${name}" not found`);
     }
 
     /**
