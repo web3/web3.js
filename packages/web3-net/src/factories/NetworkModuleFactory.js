@@ -25,7 +25,7 @@ import MethodFactory from './MethodFactory';
 
 export default class NetworkModuleFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

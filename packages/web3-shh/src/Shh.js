@@ -61,7 +61,8 @@ export default class Shh extends AbstractWeb3Module {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Subscription}
+     * @returns {AbstractSubscription}
+     * @throws {Error}
      */
     subscribe(method, options, callback) {
         if (method === 'messages') {

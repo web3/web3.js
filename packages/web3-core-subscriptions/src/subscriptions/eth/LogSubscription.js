@@ -42,11 +42,10 @@ export default class LogSubscription extends AbstractSubscription {
      *
      * @method beforeSubscription
      *
-     * @param {Subscription} subscription
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Function} callback
      */
-    beforeSubscription(subscription, moduleInstance, callback) {
+    beforeSubscription(moduleInstance, callback) {
         this.options = this.formatters.inputLogFormatter(this.options);
         this.getPastLogsMethod.parameters = [this.options];
 
@@ -54,13 +53,13 @@ export default class LogSubscription extends AbstractSubscription {
             .then((logs) => {
                 logs.forEach((log) => {
                     callback(false, log);
-                    subscription.emit('data', log);
+                    this.subscription.emit('data', log);
                 });
 
                 delete this.options.fromBlock;
             })
             .catch((error) => {
-                subscription.emit('error', error);
+                this.subscription.emit('error', error);
                 callback(error, null);
             });
     }
@@ -71,7 +70,7 @@ export default class LogSubscription extends AbstractSubscription {
      * @method onNewSubscriptionItem
      *
      * @param {Subscription} subscription
-     * @param {*} subscriptionItem
+     * @param {any} subscriptionItem
      *
      * @returns {Object}
      */

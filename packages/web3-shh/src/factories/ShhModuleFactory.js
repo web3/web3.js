@@ -24,7 +24,7 @@ import MethodFactory from './MethodFactory';
 
 export default class ShhModuleFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

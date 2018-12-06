@@ -28,7 +28,7 @@ import MessagesSubscription from '../subscriptions/shh/MessagesSubscription';
 
 export default class SubscriptionsFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

@@ -34,5 +34,3 @@ import SubscriptionsModuleFactory from './factories/SubscriptionsModuleFactory';
 export const SubscriptionsFactory = () => {
     return new SubscriptionsModuleFactory().createSubscriptionsFactory(Utils, formatters);
 };
-
-export LogSubscriptionModel from './subscriptions/eth/LogSubscription';

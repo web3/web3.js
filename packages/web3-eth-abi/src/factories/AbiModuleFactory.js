@@ -28,7 +28,7 @@ export default class AbiModuleFactory {
      *
      * @method createAbiCoder
      *
-     * @param {Object} utils
+     * @param {Utils} utils
      *
      * @returns {AbiCoder}
      */

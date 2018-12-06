@@ -39,12 +39,11 @@ export default class NewHeadsSubscription extends AbstractSubscription {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {Subscription} subscription
-     * @param {*} subscriptionItem
+     * @param {any} subscriptionItem
      *
      * @returns {Object}
      */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
+    onNewSubscriptionItem(subscriptionItem) {
         return this.formatters.outputBlockFormatter(subscriptionItem);
     }
 }

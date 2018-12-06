@@ -54,23 +54,21 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @method beforeSubscription
      *
-     * @param {Subscription} subscription
      * @param {AbstractWeb3Module} moduleInstance
      * @param {Function} callback
      */
-    beforeSubscription(subscription, moduleInstance, callback) {}
+    beforeSubscription(moduleInstance, callback) {}
 
     /**
      * This method will be executed on each new subscription item.
      *
      * @method onNewSubscriptionItem
      *
-     * @param {Subscription} subscription
      * @param {*} subscriptionItem
      *
      * @returns {*}
      */
-    onNewSubscriptionItem(subscription, subscriptionItem) {
+    onNewSubscriptionItem(subscriptionItem) {
         return subscriptionItem;
     }
 

@@ -27,7 +27,6 @@ export HttpProviderAdapter from './adapters/HttpProviderAdapter';
 export HttpProvider from './providers/HttpProvider';
 export IpcProvider from './providers/IpcProvider';
 export WebsocketProvider from './providers/WebsocketProvider';
-export JsonRpcResponseValidator from './validators/JsonRpcResponseValidator';
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
 
 export const providers = {

@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import AbstractSubscription from '../../../lib/s/AbstractSubscription';
+import AbstractSubscription from '../../../lib/subscriptions/AbstractSubscription';
 
 export default class MessagesSubscription extends AbstractSubscription {
     /**

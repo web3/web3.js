@@ -32,7 +32,7 @@ export default class EthModuleFactory {
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Accounts} accounts
      * @param {PromiEvent} PromiEvent
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {AbiCoder} abiCoder
@@ -68,9 +68,9 @@ export default class EthModuleFactory {
      *
      * @method createContract
      *
-     * @param abi
-     * @param address
-     * @param options
+     * @param {Object} abi
+     * @param {String} address
+     * @param {Object} options
      *
      * @returns {Contract}
      */

@@ -31,7 +31,7 @@ export default class Contract extends AbstractContract {
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} PromiEvent
      * @param {AbiCoder} abiCoder
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
      * @param {Object} abi

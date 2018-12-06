@@ -55,7 +55,7 @@ import {
 export default class MethodFactory extends AbstractMethodFactory {
     /**
      * @param {MethodModuleFactory} methodModuleFactory
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

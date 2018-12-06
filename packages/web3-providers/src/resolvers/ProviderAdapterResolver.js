@@ -73,10 +73,10 @@ export default class ProviderAdapterResolver {
         switch (provider.constructor.name) {
             case 'HttpProvider':
                 return this.providersPackageFactory.createHttpProviderAdapter(provider);
+            case 'EthereumProvider':
             case 'WebsocketProvider':
             case 'IpcProvider':
                 return this.providersPackageFactory.createSocketProviderAdapter(provider);
-            case 'EthereumProvider':
             case 'HttpProviderAdapter':
             case 'SocketProviderAdapter':
             case 'InpageProviderAdapter':
