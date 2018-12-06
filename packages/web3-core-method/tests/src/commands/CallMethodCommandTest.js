@@ -54,62 +54,70 @@ describe('CallMethodCommandTest', () => {
             .toEqual(messageSignerMock);
     });
 
-    it('calls execute and method has rpcMethod property with value "eth_sign" and signs the message on the client', async () => {
-        methodMock.rpcMethod = 'eth_sign';
-        methodMock.callback = jest.fn();
-        methodMock.parameters = ['0x00'];
+    it(
+        'calls execute and method has rpcMethod property with ' +
+        'value "eth_sign" and signs the message on the client',
+        async () => {
+            methodMock.rpcMethod = 'eth_sign';
+            methodMock.callback = jest.fn();
+            methodMock.parameters = ['0x00'];
 
-        accountsMock.wallet[0] = {privateKey: '0x0'};
+            accountsMock.wallet[0] = {privateKey: '0x0'};
 
-        messageSignerMock.sign
-            .mockReturnValueOnce('0x00');
+            messageSignerMock.sign
+                .mockReturnValueOnce('0x00');
 
-        methodMock.afterExecution
-            .mockReturnValueOnce('0x0');
+            methodMock.afterExecution
+                .mockReturnValueOnce('0x0');
 
-        callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
-        const response = await callMethodCommand.execute(moduleInstanceMock, methodMock);
+            callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
+            const response = await callMethodCommand.execute(moduleInstanceMock, methodMock);
 
-        expect(response)
-            .toBe('0x0');
-
-        expect(methodMock.beforeExecution)
-            .toHaveBeenCalledWith(moduleInstanceMock);
-
-        expect(methodMock.afterExecution)
-            .toHaveBeenCalledWith('0x00');
-
-        expect(methodMock.callback)
-            .toHaveBeenCalledWith(false, '0x0');
-    });
-
-    it('method has rpcMethod property with value "eth_sign" and signs the message on the client but the signer throws an error', async () => {
-        methodMock.rpcMethod = 'eth_sign';
-        methodMock.callback = jest.fn();
-        methodMock.parameters = ['0x00'];
-
-        accountsMock.wallet[0] = {privateKey: '0x0'};
-
-        const error = new Error('SIGN ERROR');
-        messageSignerMock.sign = jest.fn(() => {
-            throw error;
-        });
-
-        callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
-
-        try {
-            await callMethodCommand.execute(moduleInstanceMock, methodMock)
-        } catch(error) {
-            expect(error)
-                .toBeInstanceOf(Error);
+            expect(response)
+                .toBe('0x0');
 
             expect(methodMock.beforeExecution)
                 .toHaveBeenCalledWith(moduleInstanceMock);
 
+            expect(methodMock.afterExecution)
+                .toHaveBeenCalledWith('0x00');
+
             expect(methodMock.callback)
-                .toHaveBeenCalledWith(error, null);
+                .toHaveBeenCalledWith(false, '0x0');
         }
-    });
+    );
+
+    it(
+        'method has rpcMethod property with value "eth_sign" and signs the' +
+        ' message on the client but the signer throws an error',
+        async () => {
+            methodMock.rpcMethod = 'eth_sign';
+            methodMock.callback = jest.fn();
+            methodMock.parameters = ['0x00'];
+
+            accountsMock.wallet[0] = {privateKey: '0x0'};
+
+            const error = new Error('SIGN ERROR');
+            messageSignerMock.sign = jest.fn(() => {
+                throw error;
+            });
+
+            callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
+
+            try {
+                await callMethodCommand.execute(moduleInstanceMock, methodMock)
+            } catch(error) {
+                expect(error)
+                    .toBeInstanceOf(Error);
+
+                expect(methodMock.beforeExecution)
+                    .toHaveBeenCalledWith(moduleInstanceMock);
+
+                expect(methodMock.callback)
+                    .toHaveBeenCalledWith(error, null);
+            }
+        }
+    );
 
     it('method is not of type "eth_sign" and will just send the request to the connected node', async () => {
         methodMock.callback = jest.fn();
@@ -144,34 +152,38 @@ describe('CallMethodCommandTest', () => {
             .toHaveBeenCalledWith(false, '0x0');
     });
 
-    it('method is not of type "eth_sign" and will throw an Error on sending the request to the connected node', async () => {
-        methodMock.callback = jest.fn();
+    it(
+        'method is not of type "eth_sign" and will throw an Error on' +
+        ' sending the request to the connected node',
+        async () => {
+            methodMock.callback = jest.fn();
 
-        const error = new Error('ERROR ON SEND');
-        providerAdapterMock.send = jest.fn(() => {
-            throw error;
-        });
+            const error = new Error('ERROR ON SEND');
+            providerAdapterMock.send = jest.fn(() => {
+                throw error;
+            });
 
-        moduleInstanceMock.currentProvider = providerAdapterMock;
+            moduleInstanceMock.currentProvider = providerAdapterMock;
 
-        callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
+            callMethodCommand = new CallMethodCommand(accountsMock, messageSignerMock);
 
-        try {
-            await callMethodCommand.execute(moduleInstanceMock, methodMock);
-        } catch (error2) {
-            expect(error2)
-                .toEqual(error);
+            try {
+                await callMethodCommand.execute(moduleInstanceMock, methodMock);
+            } catch (error2) {
+                expect(error2)
+                    .toEqual(error);
 
-            expect(methodMock.beforeExecution)
-                .toHaveBeenCalledWith(moduleInstanceMock);
+                expect(methodMock.beforeExecution)
+                    .toHaveBeenCalledWith(moduleInstanceMock);
 
-            expect(providerAdapterMock.send)
-                .toHaveBeenCalledWith(methodMock.rpcMethod, methodMock.parameters);
+                expect(providerAdapterMock.send)
+                    .toHaveBeenCalledWith(methodMock.rpcMethod, methodMock.parameters);
 
-            expect(methodMock.callback)
-                .toHaveBeenCalledWith(error, null);
+                expect(methodMock.callback)
+                    .toHaveBeenCalledWith(error, null);
+            }
         }
-    });
+    );
 
     it(
         'method is not of type "eth_sign" and will throw an Error on ' +
