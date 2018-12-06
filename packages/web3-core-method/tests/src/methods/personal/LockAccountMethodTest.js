@@ -1,46 +1,46 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import LockAccountMethodModel from '../../../../src/models/methods/personal/LockAccountMethodModel';
+import {formatters} from 'web3-core-helpers';
+import LockAccountMethod from '../../../../src/methods/personal/LockAccountMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * LockAccountMethodModel test
+ * LockAccountMethod test
  */
-describe('LockAccountMethodModelTest', () => {
-    let model;
+describe('LockAccountMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new LockAccountMethodModel({}, formatters);
+        method = new LockAccountMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return personal_lockAccount', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('personal_lockAccount');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should call inputAddressFormatter', () => {
-        model.parameters = ['0x0'];
+        method.parameters = ['0x0'];
 
         formatters.inputAddressFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution();
+        method.beforeExecution();
 
         expect(formatters.inputAddressFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe('0x0');
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('lockAccount'))
+        expect(method.afterExecution('lockAccount'))
             .toBe('lockAccount');
     });
 });

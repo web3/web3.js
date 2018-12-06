@@ -1,34 +1,34 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import ListAccountsMethodModel from '../../../../src/models/methods/personal/ListAccountsMethodModel';
+import * as Utils from 'web3-utils';
+import ListAccountsMethod from '../../../../src/methods/personal/ListAccountsMethod';
 
 // Mocks
 jest.mock('Utils');
 
 /**
- * ListAccountsMethodModel test
+ * ListAccountsMethod test
  */
-describe('ListAccountsMethodModelTest', () => {
-    let model;
+describe('ListAccountsMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new ListAccountsMethodModel(Utils, {});
+        method = new ListAccountsMethod({}, Utils, {});
     });
 
     it('rpcMethod should return personal_listAccounts', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('personal_listAccounts');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -36,7 +36,7 @@ describe('ListAccountsMethodModelTest', () => {
         Utils.toChecksumAddress
             .mockReturnValueOnce('0x0');
 
-        expect(model.afterExecution(['0x0'])[0]).toBe('0x0');
+        expect(method.afterExecution(['0x0'])[0]).toBe('0x0');
 
         expect(Utils.toChecksumAddress)
             .toHaveBeenCalledWith('0x0')

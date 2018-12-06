@@ -1,31 +1,31 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import EcRecoverMethodModel from '../../../../src/models/methods/personal/EcRecoverMethodModel';
+import {formatters} from 'web3-core-helpers';
+import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * EcRecoverMethodModel test
+ * EcRecoverMethod test
  */
-describe('EcRecoverMethodModelTest', () => {
-    let model;
+describe('EcRecoverMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new EcRecoverMethodModel({}, formatters);
+        method = new EcRecoverMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return personal_ecRecover', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('personal_ecRecover');
     });
 
     it('parametersAmount should return 3', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(3);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [{}, '0x0'];
+        method.parameters = [{}, '0x0'];
 
         formatters.inputSignFormatter
             .mockReturnValueOnce({sign: true});
@@ -33,12 +33,12 @@ describe('EcRecoverMethodModelTest', () => {
         formatters.inputAddressFormatter
             .mockReturnValueOnce('0x0');
 
-        model.beforeExecution();
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toHaveProperty('sign', true);
 
-        expect(model.parameters[1])
+        expect(method.parameters[1])
             .toBe('0x0');
 
         expect(formatters.inputSignFormatter)
@@ -49,7 +49,7 @@ describe('EcRecoverMethodModelTest', () => {
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('submitWork'))
+        expect(method.afterExecution('submitWork'))
             .toBe('submitWork');
     });
 });

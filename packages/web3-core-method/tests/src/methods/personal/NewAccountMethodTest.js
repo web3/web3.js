@@ -1,5 +1,5 @@
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import NewAccountMethodModel from '../../../../src/models/methods/personal/NewAccountMethod';
+import * as Utils from 'web3-utils';
+import NewAccountMethod from '../../../../src/methods/personal/NewAccountMethod';
 
 // Mocks
 jest.mock('Utils');
@@ -7,28 +7,28 @@ jest.mock('Utils');
 /**
  * NewAccountMethod test
  */
-describe('NewAccountMethodModelTest', () => {
-    let model;
+describe('NewAccountMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new NewAccountMethodModel(Utils, {});
+        method = new NewAccountMethod({}, Utils, {});
     });
 
     it('rpcMethod should return personal_newAccount', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('personal_newAccount');
     });
 
     it('parametersAmount should return 0', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
-        model.beforeExecution();
+        method.parameters = [];
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -36,7 +36,7 @@ describe('NewAccountMethodModelTest', () => {
         Utils.toChecksumAddress
             .mockReturnValueOnce('0x0');
 
-        expect(model.afterExecution('0x0'))
+        expect(method.afterExecution('0x0'))
             .toBe('0x0');
 
         expect(Utils.toChecksumAddress)

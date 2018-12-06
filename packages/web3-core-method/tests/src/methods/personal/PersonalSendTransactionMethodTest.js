@@ -1,5 +1,5 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import PersonalSendTransactionMethodModel from '../../../../src/models/methods/personal/PersonalSendTransactionMethod';
+import {formatters} from 'web3-core-helpers';
+import PersonalSendTransactionMethod from '../../../../src/methods/personal/PersonalSendTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
@@ -7,39 +7,39 @@ jest.mock('formatters');
 /**
  * PersonalSendTransactionMethod test
  */
-describe('PersonalSendTransactionMethodModelTest', () => {
-    let model;
+describe('PersonalSendTransactionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new PersonalSendTransactionMethodModel({}, formatters);
+        method = new PersonalSendTransactionMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return personal_sendTransaction', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('personal_sendTransaction');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
     it('beforeExecution should call inputTransactionFormatter', () => {
-        model.parameters = [{}];
+        method.parameters = [{}];
 
         formatters.inputTransactionFormatter
             .mockReturnValueOnce({send: true});
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
         expect(formatters.inputTransactionFormatter)
             .toHaveBeenCalledWith({}, {});
 
-        expect(model.parameters[0]).toHaveProperty('send', true);
+        expect(method.parameters[0]).toHaveProperty('send', true);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('personalSend'))
+        expect(method.afterExecution('personalSend'))
             .toBe('personalSend');
     });
 });
