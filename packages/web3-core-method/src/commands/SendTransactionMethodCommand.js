@@ -51,6 +51,7 @@ export default class SendTransactionMethodCommand extends AbstractCommand {
      */
     execute(moduleInstance, method, promiEvent) {
         method.beforeExecution(moduleInstance);
+
         if (method.rpcMethod === 'eth_sendTransaction') {
             if (this.hasWallets()) {
                 return this.signAndSendRawTransaction(moduleInstance, method, promiEvent);

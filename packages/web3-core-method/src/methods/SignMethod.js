@@ -15,22 +15,24 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SignMethod.jsauthor Samuel Furter <samuel@ethereum.org>
+ * @file SignMethod.js
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class SignMethod extends AbstractMethodModel {
+export default class SignMethod extends AbstractMethod {
     /**
-     * @param {Object} utils
+     * @param {CallMethodCommand} callMethodCommand
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
      *
      * @constructor
      */
-    constructor(utils, formatters, accounts) {
-        super('eth_sign', 2, utils, formatters);
+    constructor(callMethodCommand, utils, formatters, accounts) {
+        super('eth_sign', 2, callMethodCommand, utils, formatters);
         this.accounts = accounts;
     }
 

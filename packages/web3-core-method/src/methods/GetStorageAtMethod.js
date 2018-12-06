@@ -15,21 +15,23 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetStorageAtMethod.jsauthor Samuel Furter <samuel@ethereum.org>
+ * @file GetStorageAtMethod.js
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethodModel from '../../../lib/models/AbstractMethodModel';
+import AbstractMethod from '../../lib/methods/AbstractMethod';
 
-export default class GetStorageAtMethod extends AbstractMethodModel {
+export default class GetStorageAtMethod extends AbstractMethod {
     /**
-     * @param {Object} utils
+     * @param {CallMethodCommand} callMethodCommand
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(utils, formatters) {
-        super('eth_getStorageAt', 3, utils, formatters);
+    constructor(callMethodCommand, utils, formatters) {
+        super('eth_getStorageAt', 3, callMethodCommand, utils, formatters);
     }
 
     /**
