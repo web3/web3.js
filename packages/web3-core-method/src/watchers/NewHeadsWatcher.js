@@ -44,7 +44,7 @@ export default class NewHeadsWatcher extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      *
-     * @returns {this}
+     * @returns {NewHeadsWatcher}
      */
     watch(moduleInstance) {
         if (moduleInstance.currentProvider instanceof SocketProviderAdapter) {
