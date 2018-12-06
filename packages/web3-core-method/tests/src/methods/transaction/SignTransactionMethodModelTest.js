@@ -1,38 +1,38 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import SignTransactionMethodModel from '../../../../src/models/methods/transaction/SignTransactionMethodModel';
+import {formatters} from 'web3-core-helpers';
+import SignTransactionMethod from '../../../../src/methods/transaction/SignTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * SendTransactionMethodModel test
+ * SignTransactionMethod test
  */
-describe('SendTransactionMethodModelTest', () => {
-    let model;
+describe('SignTransactionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new SignTransactionMethodModel({}, formatters);
+        method = new SignTransactionMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_signTransaction', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_signTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [{}];
+        method.parameters = [{}];
 
         formatters.inputTransactionFormatter
             .mockReturnValueOnce({empty: false});
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toHaveProperty('empty', false);
 
         expect(formatters.inputTransactionFormatter)
@@ -40,7 +40,7 @@ describe('SendTransactionMethodModelTest', () => {
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendTransaction'))
+        expect(method.afterExecution('sendTransaction'))
             .toBe('sendTransaction');
     });
 });

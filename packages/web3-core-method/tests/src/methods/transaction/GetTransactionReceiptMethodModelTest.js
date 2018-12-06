@@ -1,35 +1,35 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetTransactionReceiptMethodModel from '../../../../src/models/methods/transaction/GetTransactionReceiptMethodModel';
+import {formatters} from 'web3-core-helpers';
+import GetTransactionReceiptMethod from '../../../../src/methods/transaction/GetTransactionReceiptMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetTransactionReceiptMethodModel test
+ * GetTransactionReceiptMethod test
  */
-describe('GetTransactionReceiptMethodModelTest', () => {
-    let model;
+describe('GetTransactionReceiptMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetTransactionReceiptMethodModel({}, formatters);
+        method = new GetTransactionReceiptMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionReceipt', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getTransactionReceipt');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
+        method.parameters = [];
 
-        model.beforeExecution();
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -37,7 +37,7 @@ describe('GetTransactionReceiptMethodModelTest', () => {
         formatters.outputTransactionFormatter
             .mockReturnValueOnce({empty: false});
 
-        expect(model.afterExecution({})).toHaveProperty('empty', false);
+        expect(method.afterExecution({})).toHaveProperty('empty', false);
 
         expect(formatters.outputTransactionFormatter)
             .toHaveBeenCalledWith({});

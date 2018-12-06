@@ -1,43 +1,48 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import SendTransactionMethodModel from '../../../../src/models/methods/transaction/SendTransactionMethodModel';
+import {formatters} from 'web3-core-helpers';
+import SendTransactionMethod from '../../../../src/methods/transaction/SendTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * SendTransactionMethodModel test
+ * SendTransactionMethod test
  */
-describe('SendTransactionMethodModelTest', () => {
-    let model;
+describe('SendTransactionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new SendTransactionMethodModel({}, formatters, {accounts: true});
+        method = new SendTransactionMethod({}, {}, formatters, {accounts: true});
+    });
+
+    it('static CommandType property return "SEND_TRANSACTION', () => {
+        expect(SendTransactionMethod.CommandType)
+            .toBe('SEND_TRANSACTION');
     });
 
     it('accounts is set', () => {
-        expect(model.accounts)
+        expect(method.accounts)
             .toHaveProperty('accounts', true);
     });
 
     it('rpcMethod should return eth_sendTransaction', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_sendTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [{}];
+        method.parameters = [{}];
 
         formatters.inputTransactionFormatter
             .mockReturnValueOnce({empty: false});
 
-        model.beforeExecution({});
+        method.beforeExecution({});
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toHaveProperty('empty', false);
 
         expect(formatters.inputTransactionFormatter)
@@ -45,7 +50,7 @@ describe('SendTransactionMethodModelTest', () => {
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendTransaction'))
+        expect(method.afterExecution('sendTransaction'))
             .toBe('sendTransaction');
     });
 });

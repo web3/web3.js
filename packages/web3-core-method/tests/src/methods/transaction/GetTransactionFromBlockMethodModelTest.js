@@ -1,28 +1,28 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import * as Utils from 'packages/web3-utils/dist/web3-utils.cjs';
-import GetTransactionFromBlockMethodModel from '../../../../src/models/methods/transaction/GetTransactionFromBlockMethodModel';
+import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
+import GetTransactionFromBlockMethod from '../../../../src/methods/transaction/GetTransactionFromBlockMethod';
 
 // Mocks
 jest.mock('formatters');
 jest.mock('Utils');
 
 /**
- * GetStorageAtMethod test
+ * GetTransactionFromBlockMethod test
  */
-describe('GetStorageAtMethodModelTest', () => {
-    let model;
+describe('GetTransactionFromBlockMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetTransactionFromBlockMethodModel(Utils, formatters);
+        method = new GetTransactionFromBlockMethod({}, Utils, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(2);
     });
 
@@ -30,7 +30,7 @@ describe('GetStorageAtMethodModelTest', () => {
         'should call beforeExecution with block hash as parameter ' +
             'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
         () => {
-            model.parameters = ['0x0', 100];
+            method.parameters = ['0x0', 100];
 
             formatters.inputBlockNumberFormatter
                 .mockReturnValueOnce('0x0');
@@ -38,12 +38,12 @@ describe('GetStorageAtMethodModelTest', () => {
             Utils.numberToHex
                 .mockReturnValueOnce('0x0');
 
-            model.beforeExecution({});
+            method.beforeExecution({});
 
-            expect(model.parameters[0])
+            expect(method.parameters[0])
                 .toBe('0x0');
 
-            expect(model.parameters[1])
+            expect(method.parameters[1])
                 .toBe('0x0');
 
             expect(formatters.inputBlockNumberFormatter)
@@ -52,7 +52,7 @@ describe('GetStorageAtMethodModelTest', () => {
             expect(Utils.numberToHex)
                 .toHaveBeenCalledWith(100);
 
-            expect(model.rpcMethod)
+            expect(method.rpcMethod)
                 .toBe('eth_getTransactionByBlockHashAndIndex');
         }
     );
@@ -61,7 +61,7 @@ describe('GetStorageAtMethodModelTest', () => {
         'should call beforeExecution with block number as parameter  ' +
             'and should call formatters.inputBlockNumberFormatter and utils.numberToHex',
         () => {
-            model.parameters = [100, 100];
+            method.parameters = [100, 100];
 
             formatters.inputBlockNumberFormatter
                 .mockReturnValueOnce('0x0');
@@ -69,12 +69,12 @@ describe('GetStorageAtMethodModelTest', () => {
             Utils.numberToHex
                 .mockReturnValueOnce('0x0');
 
-            model.beforeExecution({});
+            method.beforeExecution({});
 
-            expect(model.parameters[0])
+            expect(method.parameters[0])
                 .toBe('0x0');
 
-            expect(model.parameters[1])
+            expect(method.parameters[1])
                 .toBe('0x0');
 
             expect(formatters.inputBlockNumberFormatter)
@@ -83,7 +83,7 @@ describe('GetStorageAtMethodModelTest', () => {
             expect(Utils.numberToHex)
                 .toHaveBeenCalledWith(100);
 
-            expect(model.rpcMethod)
+            expect(method.rpcMethod)
                 .toBe('eth_getTransactionByBlockNumberAndIndex');
         }
     );
@@ -92,7 +92,7 @@ describe('GetStorageAtMethodModelTest', () => {
         formatters.outputTransactionFormatter
             .mockReturnValueOnce({empty: false});
 
-        expect(model.afterExecution({}))
+        expect(method.afterExecution({}))
             .toHaveProperty('empty', false);
 
         expect(formatters.outputTransactionFormatter)

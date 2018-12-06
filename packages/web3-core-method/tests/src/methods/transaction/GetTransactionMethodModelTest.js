@@ -1,35 +1,35 @@
-import {formatters} from 'packages/web3-core-helpers/dist/web3-core-helpers.cjs';
-import GetTransactionMethodModel from '../../../../src/models/methods/transaction/GetTransactionMethodModel';
+import {formatters} from 'web3-core-helpers';
+import GetTransactionMethod from '../../../../src/methods/transaction/GetTransactionMethod';
 
 // Mocks
 jest.mock('formatters');
 
 /**
- * GetTransactionMethodModel test
+ * GetTransactionMethod test
  */
-describe('GetTransactionMethodModelTest', () => {
-    let model;
+describe('GetTransactionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new GetTransactionMethodModel({}, formatters);
+        method = new GetTransactionMethod({}, {}, formatters);
     });
 
     it('rpcMethod should return eth_getTransactionByHash', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_getTransactionByHash');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
+        method.parameters = [];
 
-        model.beforeExecution();
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
@@ -37,7 +37,7 @@ describe('GetTransactionMethodModelTest', () => {
         formatters.outputTransactionFormatter
             .mockReturnValueOnce({empty: false});
 
-        expect(model.afterExecution({})).toHaveProperty('empty', false);
+        expect(method.afterExecution({})).toHaveProperty('empty', false);
 
         expect(formatters.outputTransactionFormatter)
             .toHaveBeenCalledWith({});

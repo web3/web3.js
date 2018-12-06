@@ -1,36 +1,41 @@
-import SendSignedTransactionMethodModel from '../../../../src/models/methods/transaction/SendSignedTransactionMethodModel';
+import SendSignedTransactionMethod from '../../../../src/methods/transaction/SendSignedTransactionMethod';
 
 /**
- * SendSignedTransactionMethodModel test
+ * SendSignedTransactionMethod test
  */
-describe('SendSignedTransactionMethodModelTest', () => {
-    let model;
+describe('SendSignedTransactionMethodTest', () => {
+    let method;
 
     beforeEach(() => {
-        model = new SendSignedTransactionMethodModel({}, {});
+        method = new SendSignedTransactionMethod({}, {}, {});
+    });
+
+    it('static CommandType property return "SEND_TRANSACTION', () => {
+        expect(SendSignedTransactionMethod.CommandType)
+            .toBe('SEND_TRANSACTION');
     });
 
     it('rpcMethod should return eth_sendRawTransaction', () => {
-        expect(model.rpcMethod)
+        expect(method.rpcMethod)
             .toBe('eth_sendRawTransaction');
     });
 
     it('parametersAmount should return 1', () => {
-        expect(model.parametersAmount)
+        expect(method.parametersAmount)
             .toBe(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
-        model.parameters = [];
+        method.parameters = [];
 
-        model.beforeExecution();
+        method.beforeExecution();
 
-        expect(model.parameters[0])
+        expect(method.parameters[0])
             .toBe(undefined);
     });
 
     it('afterExecution should just return the response', () => {
-        expect(model.afterExecution('sendSignedTransaction'))
+        expect(method.afterExecution('sendSignedTransaction'))
             .toBe('sendSignedTransaction');
     });
 });
