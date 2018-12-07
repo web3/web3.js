@@ -65,7 +65,11 @@ describe('NewHeadsWatcherTest', () => {
         expect(newHeadsWatcherObject.confirmationInterval)
             .toBe(1);
 
-        expect(setInterval).toHaveBeenCalledTimes(1);
+        expect(setInterval)
+            .toHaveBeenCalledTimes(1);
+
+        expect(setInterval)
+            .toHaveBeenLastCalledWith(expect.any(Function), 1000);
 
         newHeadsWatcher.stop();
 
@@ -102,7 +106,7 @@ describe('NewHeadsWatcherTest', () => {
             .toHaveBeenCalledWith(moduleInstanceMock);
 
         expect(subscriptionMock.subscribe)
-            .toHaveBeenCalled();
+            .toHaveBeenCalledWith(expect.any(Function));
 
         expect(subscriptionMock.unsubscribe)
             .toHaveBeenCalled();
