@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file AbstractMethodModelFactory.js
+ * @file AbstractMethodFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -30,7 +30,7 @@ export default class AbstractMethodFactory {
      * @constructor
      */
     constructor(methods, methodModuleFactory, utils, formatters) {
-        this.methods = method;
+        this.methods = methods;
         this.methodModuleFactory = methodModuleFactory;
         this.utils = utils;
         this.formatters = formatters;
@@ -65,7 +65,7 @@ export default class AbstractMethodFactory {
                 command = this.methodModuleFactory.createCallMethodCommand();
                 break;
             case 'SEND_TRANSACTION':
-                command = this.methodModuleFactory.createTransactionMethodCommand();
+                command = this.methodModuleFactory.createSendTransactionMethodCommand();
                 break;
         }
 
