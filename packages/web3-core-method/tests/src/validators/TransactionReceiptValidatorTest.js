@@ -29,7 +29,7 @@ describe('TransactionReceiptValidatorTest', () => {
         ).toBeTruthy();
     });
 
-    it('calls validate and returns error because if invalid gasUsage', () => {
+    it('calls validate and returns error because of invalid gasUsage', () => {
         const error = transactionReceiptValidator.validate(
             receipt,
             [
@@ -63,5 +63,22 @@ describe('TransactionReceiptValidatorTest', () => {
 
         expect(error.message)
             .toBe(`Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`);
+    });
+
+    it('calls validate with lower gas usage as gas provided and valid receipt status', () => {
+        receipt = {
+            status: undefined,
+            outOfGas: false,
+            gasUsed: 90
+        };
+
+        const error = transactionReceiptValidator.validate(
+            receipt,
+            [
+                {
+                    gas: 100
+                }
+            ]
+        );
     });
 });
