@@ -606,7 +606,7 @@ toBN
 
     web3.utils.toBN(number)
 
-Will safly convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instances) into a `BN.js <https://github.com/indutny/bn.js/>`_ instance, for handling big numbers in JavaScript.
+Will safely convert any given value (including `BigNumber.js <http://mikemcl.github.io/bignumber.js/>`_ instances) into a `BN.js <https://github.com/indutny/bn.js/>`_ instance, for handling big numbers in JavaScript.
 
 .. note:: For just the `BN.js <https://github.com/indutny/bn.js/>`_ class use :ref:`utils.BN <utils-bn>`
 
