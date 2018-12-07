@@ -112,4 +112,48 @@ describe('TransactionConfirmationWorkflowTest', () => {
                     .toHaveBeenCalledWith({});
             });
     });
+
+    it('calls executes and receipt does already exists but is invalid', (done) => {
+        providerAdapterMock.send
+            .mockReturnValueOnce(Promise.resolve({}));
+
+        formatters.outputTransactionReceiptFormatter
+            .mockReturnValueOnce({blockHash: '0x0'});
+
+        transactionReceiptValidatorMock.validate
+            .mockReturnValueOnce(true);
+
+        methodMock.afterExecution
+            .mockReturnValueOnce({blockhash: '0x0'});
+
+        methodMock.callback = jest.fn((error, response) => {
+            expect(error).toBe(false);
+            expect(response).toEqual({blockhash: '0x0'});
+
+            done();
+        });
+
+        transactionConfirmationWorkflow.execute(methodMock, moduleInstanceMock, '0x0', promiEvent);
+
+        promiEvent
+            .on('receipt', (receipt) => {
+                expect(receipt)
+                    .toEqual({blockhash: '0x0'});
+
+                expect(providerAdapterMock.send)
+                    .toHaveBeenCalledWith('eth_getTransactionReceipt', ['0x0']);
+
+                expect(newHeadsWatcherMock.stop)
+                    .toHaveBeenCalled();
+
+                expect(methodMock.afterExecution)
+                    .toHaveBeenCalledWith({blockHash: '0x0'});
+
+                expect(transactionReceiptValidatorMock.validate)
+                    .toHaveBeenCalledWith({blockHash: '0x0'});
+
+                expect(formatters.outputTransactionReceiptFormatter)
+                    .toHaveBeenCalledWith({});
+            });
+    });
 });

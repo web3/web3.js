@@ -24,6 +24,7 @@
 import ModuleFactory from './factories/ModuleFactory';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
 
 /**
  * Returns the ModuleFactory of the method module
@@ -35,7 +36,7 @@ import {formatters} from 'web3-core-helpers';
  * @constructor
  */
 export const MethodModuleFactory = (accounts) => {
-    return new ModuleFactory(accounts, new SubscriptionsFactory(), formatters);
+    return new ModuleFactory(accounts, new SubscriptionsFactory(), Utils, formatters);
 };
 
 export AbstractMethod from '../lib/methods/AbstractMethod';

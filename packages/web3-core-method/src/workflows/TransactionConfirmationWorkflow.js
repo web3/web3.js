@@ -25,15 +25,17 @@ export default class TransactionConfirmationWorkflow {
      * @param {TransactionReceiptValidator} transactionReceiptValidator
      * @param {NewHeadsWatcher} newHeadsWatcher
      * @param {Object} formatters
+     * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      *
      * @constructor
      */
-    constructor(transactionReceiptValidator, newHeadsWatcher, formatters) {
+    constructor(transactionReceiptValidator, newHeadsWatcher, formatters, getTransactionReceiptMethod) {
         this.transactionReceiptValidator = transactionReceiptValidator;
         this.newHeadsWatcher = newHeadsWatcher;
         this.formatters = formatters;
         this.timeoutCounter = 0;
         this.confirmationsCounter = 0;
+        this.getTransactionReceiptMethod = getTransactionReceiptMethod;
     }
 
     /**
@@ -49,7 +51,9 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     execute(method, moduleInstance, transactionHash, promiEvent) {
-        this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
+        this.getTransactionReceiptMethod.parameters = [transactionHash];
+
+        this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
             if (receipt && receipt.blockHash) {
                 const validationResult = this.transactionReceiptValidator.validate(receipt);
                 if (validationResult === true) {
@@ -66,7 +70,7 @@ export default class TransactionConfirmationWorkflow {
             this.newHeadsWatcher.watch(moduleInstance).on('newHead', () => {
                 this.timeoutCounter++;
                 if (!this.isTimeoutTimeExceeded(moduleInstance, this.newHeadsWatcher.isPolling)) {
-                    this.getTransactionReceipt(moduleInstance, transactionHash).then((receipt) => {
+                    this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
                         const validationResult = this.transactionReceiptValidator.validate(
                             receipt,
                             method.parameters
@@ -144,22 +148,6 @@ export default class TransactionConfirmationWorkflow {
         }
 
         return this.timeoutCounter - 1 >= timeout;
-    }
-
-    /**
-     * Get receipt by transaction hash
-     *
-     * @method execute
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     * @param {String} transactionHash
-     *
-     * @returns {Promise<Object>}
-     */
-    getTransactionReceipt(moduleInstance, transactionHash) {
-        return moduleInstance.currentProvider.send('eth_getTransactionReceipt', [transactionHash]).then((receipt) => {
-            return this.formatters.outputTransactionReceiptFormatter(receipt);
-        });
     }
 
     /**

@@ -28,19 +28,22 @@ import SendTransactionMethodCommand from '../commands/SendTransactionMethodComma
 import MethodProxy from '../proxy/MethodProxy';
 import MessageSigner from '../signers/MessageSigner';
 import TransactionSigner from '../signers/TransactionSigner';
+import GetTransactionReceiptMethod from '../methods/transaction/GetTransactionReceiptMethod';
 
 export default class ModuleFactory {
     /**
      * @param {Accounts} accounts
      * @param {SubscriptionsFactory} subscriptionsFactory
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(accounts, subscriptionsFactory, formatters) {
+    constructor(accounts, subscriptionsFactory, utils, formatters) {
         this.accounts = accounts || {};
         this.subscriptionsFactory = subscriptionsFactory;
         this.formatters = formatters;
+        this.utils = utils;
     }
 
     /**
@@ -116,7 +119,8 @@ export default class ModuleFactory {
         return new TransactionConfirmationWorkflow(
             this.createTransactionReceiptValidator(),
             this.createNewHeadsWatcher(),
-            this.formatters
+            this.formatters,
+            new GetTransactionReceiptMethod(this.createCallMethodCommand(), this.utils, this.formatters)
         );
     }
 
