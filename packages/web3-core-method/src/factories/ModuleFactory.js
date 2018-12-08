@@ -119,7 +119,6 @@ export default class ModuleFactory {
         return new TransactionConfirmationWorkflow(
             this.createTransactionReceiptValidator(),
             this.createNewHeadsWatcher(),
-            this.formatters,
             new GetTransactionReceiptMethod(this.createCallMethodCommand(), this.utils, this.formatters)
         );
     }

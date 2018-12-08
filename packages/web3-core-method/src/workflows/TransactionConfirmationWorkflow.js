@@ -24,15 +24,13 @@ export default class TransactionConfirmationWorkflow {
     /**
      * @param {TransactionReceiptValidator} transactionReceiptValidator
      * @param {NewHeadsWatcher} newHeadsWatcher
-     * @param {Object} formatters
      * @param {GetTransactionReceiptMethod} getTransactionReceiptMethod
      *
      * @constructor
      */
-    constructor(transactionReceiptValidator, newHeadsWatcher, formatters, getTransactionReceiptMethod) {
+    constructor(transactionReceiptValidator, newHeadsWatcher, getTransactionReceiptMethod) {
         this.transactionReceiptValidator = transactionReceiptValidator;
         this.newHeadsWatcher = newHeadsWatcher;
-        this.formatters = formatters;
         this.timeoutCounter = 0;
         this.confirmationsCounter = 0;
         this.getTransactionReceiptMethod = getTransactionReceiptMethod;
@@ -51,7 +49,7 @@ export default class TransactionConfirmationWorkflow {
      * @callback callback callback(error, result)
      */
     execute(method, moduleInstance, transactionHash, promiEvent) {
-        this.getTransactionReceiptMethod.parameters = [transactionHash];
+        this.getTransactionReceiptMethod.arguments = [transactionHash];
 
         this.getTransactionReceiptMethod.execute(moduleInstance).then((receipt) => {
             if (receipt && receipt.blockHash) {
@@ -87,13 +85,7 @@ export default class TransactionConfirmationWorkflow {
                             return;
                         }
 
-                        promiEvent.reject(validationResult);
-                        promiEvent.emit('error', validationResult, receipt);
-                        promiEvent.removeAllListeners();
-
-                        if (method.callback) {
-                            method.callback(validationResult, null);
-                        }
+                        this.handleErrorState(validationResult, method, promiEvent);
                     });
 
                     return;
@@ -167,26 +159,26 @@ export default class TransactionConfirmationWorkflow {
         this.newHeadsWatcher.stop();
 
         if (method.constructor.name === 'ContractDeployMethod') {
-            promiEvent.resolve(method.afterExecution(receipt));
-            promiEvent.emit('receipt', receipt);
-            promiEvent.removeAllListeners();
-
             if (method.callback) {
                 method.callback(false, receipt);
             }
+
+            promiEvent.resolve(method.afterExecution(receipt));
+            promiEvent.emit('receipt', receipt);
+            promiEvent.removeAllListeners();
 
             return;
         }
 
         const mappedReceipt = method.afterExecution(receipt);
 
-        promiEvent.resolve(mappedReceipt);
-        promiEvent.emit('receipt', mappedReceipt);
-        promiEvent.removeAllListeners();
-
         if (method.callback) {
             method.callback(false, mappedReceipt);
         }
+
+        promiEvent.resolve(mappedReceipt);
+        promiEvent.emit('receipt', mappedReceipt);
+        promiEvent.removeAllListeners();
     }
 
     /**
@@ -205,12 +197,13 @@ export default class TransactionConfirmationWorkflow {
         this.confirmationsCounter = 0;
         this.newHeadsWatcher.stop();
 
+        if (method.callback) {
+            method.callback(error, null);
+        }
+
         promiEvent.reject(error);
         promiEvent.emit('error', error);
         promiEvent.removeAllListeners();
 
-        if (method.callback) {
-            method.callback(error, null);
-        }
     }
 }
