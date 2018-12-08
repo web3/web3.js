@@ -149,8 +149,6 @@ export default class SendTransactionMethodCommand extends AbstractCommand {
      * @param {AbstractMethod} method
      * @param {PromiEvent} promiEvent
      * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {PromiEvent}
      */
     sendRequest(method, promiEvent, moduleInstance) {
         moduleInstance.currentProvider
