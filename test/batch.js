@@ -341,5 +341,52 @@ describe('lib/web3/batch', function() {
             batch.add(web3.eth.getBalance.request('0x0000000000000000000000000000000000000005', 'latest', callback2));
             batch.execute();
         });
+
+        it('should return a promise', function(done) {
+            var provider = new FakeIpcProvider();
+            var web3 = new Web3(provider);
+
+            var result = [];
+            var result2 = '0xb';
+            provider.injectBatchResults([result, result2]);
+
+            var counter = 0;
+            var callback = function(err, r) {
+                counter++;
+                assert.isArray(result, r);
+            };
+
+            var callback2 = function(err, r) {
+                assert.equal(counter, 1);
+                assert.equal(r, 11);
+                done();
+            };
+
+            provider.injectValidation(function(payload) {
+                var first = payload[0];
+                var second = payload[1];
+
+                assert.equal(first.method, 'eth_accounts');
+                assert.deepEqual(first.params, []);
+                assert.equal(second.method, 'shh_post');
+                assert.deepEqual(second.params, [{}]);
+            });
+
+            var batch = new web3.BatchRequest();
+            batch.add(web3.eth.getAccounts.request(callback));
+            batch.add(web3.shh.post.request({}, callback2));
+            let batchExec = batch.execute();
+
+            assert.typeOf(batchExec, 'Promise');
+            expect(batchExec).to.eventually.equal([
+                0,
+                1
+            ])
+
+            // TODO
+            // test catch()
+            // test only one req of a batch resolving
+            // test timeout (?)
+        })
     });
 });
