@@ -24,178 +24,50 @@ import isObject from 'underscore-es/isObject';
 
 export default class AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {AbstractMethodModelFactory} methodModelFactory
+     * @param {ModuleFactory} methodModuleFactory
+     * @param {AbstractMethodFactory} methodFactory
      * @param {Object} options
      *
      * @constructor
      */
     constructor(
-        provider = this._throwIfMissing('provider'),
-        providersModuleFactory = this._throwIfMissing('providersModuleFactory'),
-        providers = this._throwIfMissing('providers'),
-        methodController = this._throwIfMissing('methodController'),
-        methodModelFactory = null,
+        provider = this.throwIfMissing('provider'),
+        providersModuleFactory = this.throwIfMissing('ProvidersModuleFactory'),
+        providers = this.throwIfMissing('providers'),
+        methodModuleFactory = this.throwIfMissing('MethodModuleFactory'),
+        methodFactory = null,
         options = {}
     ) {
-        this._currentProvider = provider;
         this.providersModuleFactory = providersModuleFactory;
         this.providers = providers;
-        this.methodController = methodController;
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
-        this._defaultAccount = options.defaultAccount || null;
-        this._defaultBlock = options.defaultBlock || null;
-        this._transactionBlockTimeout = options.transactionBlockTimeout || 50;
-        this._transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
-        this._transactionPollingTimeout = options.transactionPollingTimeout || 15;
-        this._defaultGasPrice = options.defaultGasPrice || null;
-        this._defaultGas = options.defaultGas || null;
         this.givenProvider = this.providerDetector.detect();
+        this._currentProvider = this.providerAdapterResolver.resolve(provider);
+
+        this._defaultAccount = options.defaultAccount;
+        this.defaultBlock = options.defaultBlock;
+        this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
+        this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
+        this.transactionPollingTimeout = options.transactionPollingTimeout || 15;
+        this.defaultGasPrice = options.defaultGasPrice;
+        this.defaultGas = options.defaultGas;
+
         this.BatchRequest = () => {
             return this.providersModuleFactory.createBatchRequest(this.currentProvider);
         };
 
-        if (methodModelFactory !== null || typeof methodModelFactory !== 'undefined') {
-            this.methodModelFactory = methodModelFactory;
+        if (methodFactory !== null || typeof methodFactory !== 'undefined') {
+            this.methodFactory = methodFactory;
 
-            return new Proxy(this, {
-                get: this.proxyHandler
-            });
+            return methodModuleFactory.createMethodProxy(
+                this,
+                this.methodFactory
+            );
         }
-    }
-
-    /**
-     * Getter for the defaultGasPrice property
-     *
-     * @property defaultGasPrice
-     *
-     * @returns {String}
-     */
-    get defaultGasPrice() {
-        return this._defaultGasPrice;
-    }
-
-    /**
-     * Sets the defaultGasPrice property on the current object
-     *
-     * @property defaultGasPrice
-     *
-     * @param {String} value
-     */
-    set defaultGasPrice(value) {
-        this._defaultGasPrice = value;
-    }
-
-    /**
-     * Sets the defaultGas property on the current object
-     *
-     * @property defaultGas
-     *
-     * @param {Number} value
-     */
-    set defaultGas(value) {
-        this._defaultGas = value;
-    }
-
-    /**
-     * Getter for the defaultGas property
-     *
-     * @property defaultGas
-     *
-     * @returns {Number}
-     */
-    get defaultGas() {
-        return this._defaultGas;
-    }
-
-    /**
-     * Getter for the pollingTimeout property
-     *
-     * @property transactionPollingTimeout
-     *
-     * @returns {Number}
-     */
-    get transactionPollingTimeout() {
-        return this._transactionPollingTimeout;
-    }
-
-    /**
-     * Sets the pollingTimeout for the current object
-     *
-     * @property transactionPollingTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionPollingTimeout(value) {
-        this._transactionPollingTimeout = value;
-    }
-
-    /**
-     * Getter for the confirmationBlock property
-     *
-     * @property transactionConfirmationBlocks
-     *
-     * @returns {Number}
-     */
-    get transactionConfirmationBlocks() {
-        return this._transactionConfirmationBlocks;
-    }
-
-    /**
-     * Sets the confirmationBlock on the current object
-     *
-     * @property transactionConfirmationBlocks
-     *
-     * @param {Number} value
-     */
-    set transactionConfirmationBlocks(value) {
-        this._transactionConfirmationBlocks = value;
-    }
-
-    /**
-     * Getter for the timeoutBlock property
-     *
-     * @property transactionBlockTimeout
-     *
-     * @returns {Number}
-     */
-    get transactionBlockTimeout() {
-        return this._transactionBlockTimeout;
-    }
-
-    /**
-     * Sets the timeoutBlock property on the current object
-     *
-     * @property transactionBlockTimeout
-     *
-     * @param {Number} value
-     */
-    set transactionBlockTimeout(value) {
-        this._transactionBlockTimeout = value;
-    }
-
-    /**
-     * Getter for the defaultBlock property
-     *
-     * @returns {String|Number}
-     */
-    get defaultBlock() {
-        return this._defaultBlock;
-    }
-
-    /**
-     * Sets the defaultBlock on the current object
-     *
-     * @property defaultBlock
-     *
-     * @param {String|Number} value
-     */
-    set defaultBlock(value) {
-        this._defaultBlock = value;
     }
 
     /**
@@ -228,7 +100,7 @@ export default class AbstractWeb3Module {
      *
      * @property currentProvider
      *
-     * @returns {AbstractProviderAdapter|EthereumProvider}
+     * @returns {AbstractProviderAdapter}
      */
     get currentProvider() {
         return this._currentProvider;
@@ -248,7 +120,7 @@ export default class AbstractWeb3Module {
      *
      * @method setProvider
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {Boolean}
@@ -269,7 +141,7 @@ export default class AbstractWeb3Module {
      *
      * @method isSameProvider
      *
-     * @param {Object|String} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {Boolean}
      */
@@ -300,57 +172,11 @@ export default class AbstractWeb3Module {
     }
 
     /**
-     * TODO: Move this as a MethodProxy object in to the core-method module
-     *
-     * Handles method execution
-     *
-     * @method proxyHandler
-     *
-     * @param {Object} target
-     * @param {String} name
-     *
-     * @returns {*}
-     */
-    proxyHandler(target, name) {
-        if (target.methodModelFactory.hasMethodModel(name)) {
-            if (typeof target[name] !== 'undefined') {
-                throw new TypeError(
-                    `Duplicated method ${name}. This method is defined as RPC call and as Object method.`
-                );
-            }
-
-            const methodModel = target.methodModelFactory.createMethodModel(name);
-
-            const anonymousFunction = () => {
-                methodModel.methodArguments = arguments;
-
-                if (methodModel.parameters.length !== methodModel.parametersAmount) {
-                    throw new Error(
-                        `Invalid parameters length the expected length would be 
-                        ${methodModel.parametersAmount}
-                         and not 
-                        ${methodModel.parameters.length}`
-                    );
-                }
-
-                return target.methodController.execute(methodModel, target.accounts, target);
-            };
-
-            anonymousFunction.methodModel = methodModel;
-            anonymousFunction.request = methodModel.request;
-
-            return anonymousFunction;
-        }
-
-        return target[name];
-    }
-
-    /**
      * Throws an error if the parameter is missing
      *
      * @param {String} name
      */
-    _throwIfMissing(name) {
+    static throwIfMissing(name) {
         throw new Error(`Missing parameter: ${name}`);
     }
 }
