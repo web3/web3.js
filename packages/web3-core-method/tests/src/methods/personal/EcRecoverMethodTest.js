@@ -1,0 +1,55 @@
+import {formatters} from 'web3-core-helpers';
+import EcRecoverMethod from '../../../../src/methods/personal/EcRecoverMethod';
+
+// Mocks
+jest.mock('formatters');
+
+/**
+ * EcRecoverMethod test
+ */
+describe('EcRecoverMethodTest', () => {
+    let method;
+
+    beforeEach(() => {
+        method = new EcRecoverMethod({}, {}, formatters);
+    });
+
+    it('rpcMethod should return personal_ecRecover', () => {
+        expect(method.rpcMethod)
+            .toBe('personal_ecRecover');
+    });
+
+    it('parametersAmount should return 3', () => {
+        expect(method.parametersAmount)
+            .toBe(3);
+    });
+
+    it('beforeExecution should do nothing with the parameters', () => {
+        method.parameters = [{}, '0x0'];
+
+        formatters.inputSignFormatter
+            .mockReturnValueOnce({sign: true});
+
+        formatters.inputAddressFormatter
+            .mockReturnValueOnce('0x0');
+
+        method.beforeExecution();
+
+        expect(method.parameters[0])
+            .toHaveProperty('sign', true);
+
+        expect(method.parameters[1])
+            .toBe('0x0');
+
+        expect(formatters.inputSignFormatter)
+            .toHaveBeenCalledWith({});
+
+        expect(formatters.inputAddressFormatter)
+            .toHaveBeenCalledWith('0x0');
+    });
+
+    it('afterExecution should just return the response', () => {
+        expect(method.afterExecution('submitWork'))
+            .toBe('submitWork');
+    });
+});

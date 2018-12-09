@@ -11,7 +11,8 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "test:watch": "jest --watchAll"
     },
     "dependencies": {
         "eventemitter3": "3.1.0",
@@ -21,6 +22,8 @@
         "web3-core-promievent": "1.0.0-beta.36",
         "web3-core-subscriptions": "1.0.0-beta.36",
         "web3-eth-contract": "1.0.0-beta.36"
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "files": [
         "dist"

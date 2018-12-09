@@ -25,15 +25,14 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class Personal extends AbstractWeb3Module {
     /**
-     * TODO: Add missing documentation for getAccounts, lockAccount, importRawKey and sendTransaction!
-     *
+     * TODO: Add missing documentation for getAccounts, lockAccount and sendTransaction!
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {MethodFactory} methodFactory
      * @param {Network} net
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Object} options
      *
@@ -43,14 +42,14 @@ export default class Personal extends AbstractWeb3Module {
         provider,
         providersModuleFactory,
         providers,
-        methodController,
-        methodModelFactory,
+        methodModuleFactory,
+        methodFactory,
         net,
         utils,
         formatters,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
+        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
 
         this.utils = utils;
         this.formatters = formatters;

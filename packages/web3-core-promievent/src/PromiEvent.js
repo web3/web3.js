@@ -1,19 +1,19 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * @file PromiEvent.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -45,7 +45,7 @@ export default class PromiEvent {
      * @method proxyHandler
      *
      * @param {PromiEvent} target
-     * @param {String} name
+     * @param {String|Symbol} name
      *
      * @returns {Function}
      */
@@ -54,14 +54,12 @@ export default class PromiEvent {
             return target[name];
         }
 
-        if (this.promise[name]) {
-            return target.promise[name];
+        if (target.promise[name]) {
+            return target.promise[name].bind(target.promise);
         }
 
-        if (this.eventEmitter[name]) {
+        if (target.eventEmitter[name]) {
             return target.eventEmitter[name];
         }
-
-        throw new Error(`Method with name ${name} not found`);
     }
 }

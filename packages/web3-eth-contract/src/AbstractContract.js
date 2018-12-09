@@ -1,19 +1,19 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * @file AbstractContract.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -27,7 +27,7 @@ export default class AbstractContract extends AbstractWeb3Module {
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} PromiEvent
      * @param {AbiCoder} abiCoder
@@ -44,29 +44,18 @@ export default class AbstractContract extends AbstractWeb3Module {
         provider,
         providersModuleFactory,
         providers,
-        methodController,
+        methodModuleFactory,
         contractModuleFactory,
         PromiEvent,
         abiCoder,
         utils,
         formatters,
         accounts,
-        abi,
+        abi = AbstractWeb3Module.throwIfMissing('abi'),
         address,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodController, null, options);
-
-        if (!(this instanceof AbstractContract)) {
-            throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
-        }
-
-        if (!abi || !Array.isArray(abi)) {
-            throw new Error(
-                'You must provide the json interface of the contract when instantiating a contract object.'
-            );
-        }
-
+        super(provider, providersModuleFactory, providers, methodModuleFactory, null, options);
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;
@@ -75,19 +64,22 @@ export default class AbstractContract extends AbstractWeb3Module {
         this.abiMapper = contractModuleFactory.createAbiMapper();
         this.options = options;
         this.PromiEvent = PromiEvent;
-        this.rpcMethodModelFactory = contractModuleFactory.createRpcMethodModelFactory();
+        this.methodFactory = contractModuleFactory.createMethodFactory();
         this.abiModel = this.abiMapper.map(abi);
-        this.address = address;
+
+        if (address) {
+            this.address = address;
+        }
+
         this.options = options;
 
-        this.methods = contractModuleFactory.createMethodsProxy(
-            this,
+        this.contractModuleFactory.createMethodsProxy(
+            this.methods,
             this.abiModel,
-            this.methodController,
             this.PromiEvent
         );
 
-        this.events = contractModuleFactory.createEventSubscriptionsProxy(
+        this.events = this.contractModuleFactory.createEventSubscriptionsProxy(
             this,
             this.abiModel,
             this.methodController,
@@ -140,14 +132,14 @@ export default class AbstractContract extends AbstractWeb3Module {
             throw new Error(`Event with name "${eventName}does not exists.`);
         }
 
-        const pastEventLogsMethodModel = this.rpcMethodModelFactory.createPastEventLogsMethodModel(
+        const pastEventLogsMethod = this.methodFactory.createPastEventLogsMethod(
             this.options.jsonInterface.getEvent(eventName)
         );
 
-        pastEventLogsMethodModel.parameters = [options];
-        pastEventLogsMethodModel.callback = callback;
+        pastEventLogsMethod.parameters = [options];
+        pastEventLogsMethod.callback = callback;
 
-        return this.methodController.execute(pastEventLogsMethodModel, this.accounts, this);
+        return pastEventLogsMethod.execute(this);
     }
 
     /**
@@ -172,19 +164,18 @@ export default class AbstractContract extends AbstractWeb3Module {
      */
     clone() {
         const contract = new this.constructor(
-            this.currentProvider,
+            this.provider,
             this.providersModuleFactory,
             this.providers,
-            this.methodController,
+            this.methodModuleFactory,
             this.contractModuleFactory,
             this.PromiEvent,
             this.abiCoder,
             this.utils,
             this.formatters,
             this.accounts,
-            this.abiMapper,
-            {},
-            this.address,
+            this.abi,
+            null,
             this.options
         );
 

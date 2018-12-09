@@ -1,19 +1,19 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * @file Eth.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -21,6 +21,7 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
+import Contract from './Contract';
 
 export default class Eth extends AbstractWeb3Module {
     /**
@@ -34,11 +35,11 @@ export default class Eth extends AbstractWeb3Module {
      * @param {Iban} Iban
      * @param {AbiCoder} abiCoder
      * @param {Ens} ens
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {SubscriptionsFactory} subscriptionsFactory
-     * @param {MethodModelFactory} methodModelFactory
-     * @param {MethodController} methodController
+     * @param {MethodFactory} methodFactory
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
      *
      * @constructor
@@ -47,8 +48,8 @@ export default class Eth extends AbstractWeb3Module {
         provider,
         providersModuleFactory,
         providers,
-        methodController,
-        methodModelFactory,
+        methodModuleFactory,
+        methodFactory,
         ethModuleFactory,
         net,
         accounts,
@@ -61,7 +62,7 @@ export default class Eth extends AbstractWeb3Module {
         subscriptionsFactory,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
+        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
 
         this.ethModuleFactory = ethModuleFactory;
         this.net = net;
@@ -87,6 +88,10 @@ export default class Eth extends AbstractWeb3Module {
          * @constructor
          */
         this.Contract = (abi, address, options) => {
+            if (!(this instanceof Contract)) {
+                throw new TypeError('Please use the "new" keyword to instantiate a web3.eth.contract() object!');
+            }
+
             const contract = this.ethModuleFactory.createContract(abi, address, options);
 
             this.initiatedContracts.push(contract);
@@ -202,7 +207,7 @@ export default class Eth extends AbstractWeb3Module {
      *
      * @property defaultBlock
      *
-     * @param value
+     * @param {String|Number}value
      */
     set defaultBlock(value) {
         super.defaultBlock = value;
@@ -231,10 +236,9 @@ export default class Eth extends AbstractWeb3Module {
             case 'logs':
                 return this.subscriptionsFactory
                     .createLogSubscription(
-                        this,
                         options,
-                        this.methodModelFactory.createMethodModel('getPastLogs'),
-                        this.methodController
+                        this,
+                        this.methodFactory.createMethod('getPastLogs')
                     )
                     .subscribe(callback);
 
