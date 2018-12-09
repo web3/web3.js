@@ -34,10 +34,10 @@ export default class AbstractWeb3Module {
      * @constructor
      */
     constructor(
-        provider = this.throwIfMissing('provider'),
-        providersModuleFactory = this.throwIfMissing('providersModuleFactory'),
-        providers = this.throwIfMissing('providers'),
-        methodController = this.throwIfMissing('methodController'),
+        provider = this._throwIfMissing('provider'),
+        providersModuleFactory = this._throwIfMissing('providersModuleFactory'),
+        providers = this._throwIfMissing('providers'),
+        methodController = this._throwIfMissing('methodController'),
         methodModelFactory = null,
         options = {}
     ) {
@@ -350,7 +350,7 @@ export default class AbstractWeb3Module {
      *
      * @param {String} name
      */
-    throwIfMissing(name) {
+    _throwIfMissing(name) {
         throw new Error(`Missing parameter: ${name}`);
     }
 }
