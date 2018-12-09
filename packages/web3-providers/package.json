@@ -11,7 +11,7 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "dtslint && jest",
+        "test": "dtslint types && jest",
         "dtslint": "dtslint types"
     },
     "types": "types",
