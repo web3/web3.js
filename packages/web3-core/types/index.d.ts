@@ -23,9 +23,7 @@ export class AbstractWeb3Module {
     constructor(
         provider: AbstractProviderAdapter | provider | string,
         providersModuleFactory: ProvidersModuleFactory,
-        // not sure what the below needs
-        // if you can make this strongly typed
-        // great :) (stick it in the web3-providers)
+        // not sure what the below object structure is
         providers: {},
         // dont have type yet
         // as this is in web3-core-method
@@ -47,8 +45,7 @@ export class AbstractWeb3Module {
     readonly defaultBlock: string | number;
     readonly defaultAccount: string | null;
     readonly currentProvider: AbstractProviderAdapter | provider;
-    // if we can get a strongly typed object for net that would be
-    // great
+    // if we can get a strongly typed object for `net` that would be great
     setProvider(provider: AbstractProviderAdapter | provider | string, net: any): boolean;
     isSameProvider(provider: AbstractProviderAdapter | provider | string): boolean;
     clearSubscriptions(): void;
