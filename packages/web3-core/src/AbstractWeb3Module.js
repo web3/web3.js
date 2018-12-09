@@ -34,10 +34,10 @@ export default class AbstractWeb3Module {
      * @constructor
      */
     constructor(
-        provider = this._throwIfMissing('provider'),
-        providersModuleFactory = this._throwIfMissing('ProvidersModuleFactory'),
-        providers = this._throwIfMissing('providers'),
-        methodModuleFactory = this._throwIfMissing('MethodModuleFactory'),
+        provider = AbstractWeb3Module._throwIfMissing('provider'),
+        providersModuleFactory = AbstractWeb3Module._throwIfMissing('ProvidersModuleFactory'),
+        providers = AbstractWeb3Module._throwIfMissing('providers'),
+        methodModuleFactory = AbstractWeb3Module._throwIfMissing('MethodModuleFactory'),
         methodFactory = null,
         options = {}
     ) {
