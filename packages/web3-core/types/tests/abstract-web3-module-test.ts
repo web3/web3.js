@@ -67,7 +67,7 @@ abstractWeb3Module.defaultBlock;
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
-// $ExpectType provider
+// $ExpectType AbstractProviderAdapter | HttpProvider | IpcProvider | WebsocketProvider
 abstractWeb3Module.currentProvider;
 
 // $ExpectType boolean

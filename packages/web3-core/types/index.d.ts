@@ -17,11 +17,11 @@
  * @date 2018
  */
 
-import {ProvidersModuleFactory, provider} from 'web3-providers';
+import {AbstractProviderAdapter, ProvidersModuleFactory, provider} from 'web3-providers';
 
 export class AbstractWeb3Module {
     constructor(
-        provider: provider,
+        provider: AbstractProviderAdapter | provider | string,
         providersModuleFactory: ProvidersModuleFactory,
         // not sure what the below needs
         // if you can make this strongly typed
@@ -46,11 +46,11 @@ export class AbstractWeb3Module {
     readonly transactionBlockTimeout: number;
     readonly defaultBlock: string | number;
     readonly defaultAccount: string | null;
-    readonly currentProvider: provider;
+    readonly currentProvider: AbstractProviderAdapter | provider;
     // if we can get a strongly typed object for net that would be
     // great
-    setProvider(provider: provider | string, net: any): boolean;
-    isSameProvider(provider: provider | string): boolean;
+    setProvider(provider: AbstractProviderAdapter | provider | string, net: any): boolean;
+    isSameProvider(provider: AbstractProviderAdapter | provider | string): boolean;
     clearSubscriptions(): void;
 }
 
