@@ -11,8 +11,10 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "dtslint && jest",
+        "dtslint": "dtslint types"
     },
+    "types": "types",
     "dependencies": {
         "eventemitter3": "3.1.0",
         "oboe": "2.1.4",
@@ -21,7 +23,11 @@
         "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
         "xhr2-cookies": "1.1.0"
     },
+    "devDependencies": {
+        "dtslint": "^0.3.0"
+    },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }
