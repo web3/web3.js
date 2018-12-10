@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
 
-export default class GetStorageAtMethod extends AbstractMethod {
+export default class GetStorageAtMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('eth_getStorageAt', 3, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('eth_getStorageAt', 3, utils, formatters);
     }
 
     /**

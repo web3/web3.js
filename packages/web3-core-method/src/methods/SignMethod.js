@@ -20,20 +20,21 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../lib/methods/AbstractCallMethod';
 
-export default class SignMethod extends AbstractMethod {
+export default class SignMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {Accounts} accounts
+     * @param {MessageSigner} messageSigner
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters, accounts) {
-        super('eth_sign', 2, callMethodCommand, utils, formatters);
+    constructor(utils, formatters, accounts, messageSigner) {
+        super('eth_sign', 2, utils, formatters);
         this.accounts = accounts;
+        this.messageSigner = messageSigner;
     }
 
     /**
