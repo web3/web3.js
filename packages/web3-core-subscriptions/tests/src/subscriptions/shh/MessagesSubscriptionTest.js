@@ -1,7 +1,4 @@
-// Mocks
 import MessagesSubscription from '../../../../src/subscriptions/shh/MessagesSubscription';
-
-jest.mock('');
 
 /**
  * MessagesSubscription test
