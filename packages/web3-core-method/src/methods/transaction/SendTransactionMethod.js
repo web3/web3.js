@@ -84,7 +84,7 @@ export default class SendTransactionMethod extends AbstractSendMethod {
             this.rpcMethod = 'eth_sendRawTransaction';
 
             this.transactionSigner
-                .sign(this.parameters[0], this.accounts)
+                .sign(this.parameters[0])
                 .then(response => {
                     this.parameters = [response.rawTransaction];
                     super.execute(moduleInstance, promiEvent);

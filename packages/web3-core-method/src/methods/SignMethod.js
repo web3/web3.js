@@ -69,7 +69,7 @@ export default class SignMethod extends AbstractCallMethod {
 
         try {
             signedMessage = this.afterExecution(
-                this.messageSigner.sign(this.parameters[0], this.parameters[1], this.accounts)
+                this.messageSigner.sign(this.parameters[0], this.parameters[1])
             );
         } catch (error) {
             if (this.callback) {
