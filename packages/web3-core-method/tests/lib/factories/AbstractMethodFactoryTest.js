@@ -44,6 +44,15 @@ describe('AbstractMethodFactoryTest', () => {
     it('createMethod returns method with call command', () => {
         AbstractMethod.Type = 'CALL';
 
+        abstractMethodFactory = new AbstractMethodFactory(
+            {
+                test: AbstractMethod
+            },
+            methodModuleFactoryMock,
+            {},
+            {}
+        );
+
         expect(abstractMethodFactory.hasMethod('test'))
             .toBeTruthy();
 
