@@ -1,8 +1,5 @@
 import NewPendingTransactionsSubscription from '../../../../src/subscriptions/eth/NewPendingTransactionsSubscription';
 
-// Mocks
-jest.mock('');
-
 /**
  * NewPendingTransactionsSubscription test
  */
@@ -15,7 +12,7 @@ describe('NewPendingTransactionsSubscriptionTest', () => {
 
     it('constructor check', () => {
         expect(newPendingTransactionsSubscription.method)
-            .toEqual('newPendingTransactions');
+            .toEqual('syncing');
 
         expect(newPendingTransactionsSubscription.type)
             .toEqual('eth_subscribe');
