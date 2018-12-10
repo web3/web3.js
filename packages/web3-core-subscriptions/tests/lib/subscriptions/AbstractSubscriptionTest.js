@@ -46,7 +46,8 @@ describe('AbstractSubscriptionTest', () => {
     });
 
     it('calls onNewSubscriptionItem and returns just the given value', () => {
-
+        expect(abstractSubscription.onNewSubscriptionItem('string'))
+            .toEqual('string');
     });
 
     it('calls subscribe and returns with Subscription object', () => {
