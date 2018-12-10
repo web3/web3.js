@@ -1,7 +1,5 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
-import AbstractWeb3Module from '../../../__mocks__/AbstractWeb3Module';
-import GetPastLogsMethod from '../../../__mocks__/GetPastLogsMethod';
 import NewHeadsSubscription from '../../../../src/subscriptions/eth/NewHeadsSubscription';
 
 // Mocks
@@ -12,24 +10,18 @@ jest.mock('formatters');
  * NewHeadsSubscription test
  */
 describe('NewHeadsSubscriptionTest', () => {
-    let newHeadsSubscription,
-        moduleInstanceMock,
-        getPastLogsMethodMock;
+    let newHeadsSubscription;
 
     beforeEach(() => {
-        moduleInstanceMock = new AbstractWeb3Module();
-
-        getPastLogsMethodMock = new GetPastLogsMethod();
-
-        newHeadsSubscription = new NewHeadsSubscription(Utils, formatters, moduleInstanceMock);
+        newHeadsSubscription = new NewHeadsSubscription(Utils, formatters, {});
     });
 
     it('constructor check', () => {
         expect(newHeadsSubscription.method)
-            .toBe('logs');
+            .toEqual('newHeads');
 
         expect(newHeadsSubscription.type)
-            .toBe('eth_subscribe');
+            .toEqual('eth_subscribe');
 
         expect(newHeadsSubscription.options)
             .toEqual(null);
@@ -38,7 +30,7 @@ describe('NewHeadsSubscriptionTest', () => {
             .toEqual(Utils);
 
         expect(newHeadsSubscription.moduleInstance)
-            .toEqual(moduleInstanceMock);
+            .toEqual({});
     });
 
 

@@ -28,10 +28,10 @@ describe('LogSubscriptionTest', () => {
 
     it('constructor check', () => {
         expect(logSubscription.method)
-            .toBe('logs');
+            .toEqual('logs');
 
         expect(logSubscription.type)
-            .toBe('eth_subscribe');
+            .toEqual('eth_subscribe');
 
         expect(logSubscription.options)
             .toEqual({});
