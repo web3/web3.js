@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class VersionMethod extends AbstractMethod {
+export default class VersionMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommnd
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommnd, utils, formatters) {
-        super('eth_protocolVersion', 0, callMethodCommnd, utils, formatters);
+    constructor(utils, formatters) {
+        super('eth_protocolVersion', 0, utils, formatters);
     }
 
     /**
