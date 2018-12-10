@@ -137,13 +137,13 @@ describe('GenericShhMethodsTest', () => {
             method = new test.method({}, {});
 
             expect(test.method.Type)
-                .toBe('CALL');
+                .toEqual('CALL');
 
             expect(method.rpcMethod)
-                .toBe(test.rpcMethod);
+                .toEqual(test.rpcMethod);
 
             expect(method.parametersAmount)
-                .toBe(test.parametersAmount);
+                .toEqual(test.parametersAmount);
         });
     });
 });

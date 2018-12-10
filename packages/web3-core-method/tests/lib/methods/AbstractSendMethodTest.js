@@ -57,13 +57,13 @@ describe('AbstractSendMethodTest', () => {
 
     it('constructor check', () => {
         expect(AbstractSendMethod.Type)
-            .toBe('SEND');
+            .toEqual('SEND');
 
         expect(abstractSendMethod.rpcMethod)
-            .toBe('RPC_METHOD');
+            .toEqual('RPC_METHOD');
 
         expect(abstractSendMethod.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
 
         expect(abstractSendMethod.utils)
             .toEqual(Utils);
@@ -83,7 +83,7 @@ describe('AbstractSendMethodTest', () => {
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(abstractSendMethod.beforeExecution)
                 .toHaveBeenCalledWith(moduleInstanceMock);
@@ -100,7 +100,7 @@ describe('AbstractSendMethodTest', () => {
         const response = await abstractSendMethod.execute(moduleInstanceMock, promiEvent);
 
         expect(response)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(abstractSendMethod.callback)
             .toHaveBeenCalledWith(false, '0x0');

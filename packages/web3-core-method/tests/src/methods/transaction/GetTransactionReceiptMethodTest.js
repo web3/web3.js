@@ -16,17 +16,17 @@ describe('GetTransactionReceiptMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetTransactionReceiptMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionReceipt', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getTransactionReceipt');
+            .toEqual('eth_getTransactionReceipt');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -35,7 +35,7 @@ describe('GetTransactionReceiptMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should map the response', () => {

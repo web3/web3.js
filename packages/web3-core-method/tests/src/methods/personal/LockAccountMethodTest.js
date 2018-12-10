@@ -16,17 +16,17 @@ describe('LockAccountMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(LockAccountMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_lockAccount', () => {
         expect(method.rpcMethod)
-            .toBe('personal_lockAccount');
+            .toEqual('personal_lockAccount');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should call inputAddressFormatter', () => {
@@ -41,11 +41,11 @@ describe('LockAccountMethodTest', () => {
             .toHaveBeenCalledWith('0x0');
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('lockAccount'))
-            .toBe('lockAccount');
+            .toEqual('lockAccount');
     });
 });

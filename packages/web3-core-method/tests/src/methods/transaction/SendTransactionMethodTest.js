@@ -62,13 +62,13 @@ describe('SendTransactionMethodTest', () => {
 
     it('constructor check', () => {
         expect(SendTransactionMethod.Type)
-            .toBe('SEND');
+            .toEqual('SEND');
 
         expect(method.rpcMethod)
-            .toBe('eth_sendTransaction');
+            .toEqual('eth_sendTransaction');
 
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
 
         expect(method.accounts)
             .toEqual(accountsMock);
@@ -95,7 +95,7 @@ describe('SendTransactionMethodTest', () => {
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
@@ -104,7 +104,7 @@ describe('SendTransactionMethodTest', () => {
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)
-                .toBe('eth_sendRawTransaction');
+                .toEqual('eth_sendRawTransaction');
 
             expect(transactionSignerMock.sign)
                 .toHaveBeenCalledWith({'gasPrice': '0x0'});
@@ -115,7 +115,7 @@ describe('SendTransactionMethodTest', () => {
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
         expect(response)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.callback)
             .toHaveBeenCalledWith(false, '0x0');
@@ -138,7 +138,7 @@ describe('SendTransactionMethodTest', () => {
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
@@ -147,7 +147,7 @@ describe('SendTransactionMethodTest', () => {
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)
-                .toBe('eth_sendRawTransaction');
+                .toEqual('eth_sendRawTransaction');
 
             expect(transactionSignerMock.sign)
                 .toHaveBeenCalledWith({gasPrice: 100, gas: 100});
@@ -158,16 +158,16 @@ describe('SendTransactionMethodTest', () => {
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
         expect(response)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.callback)
             .toHaveBeenCalledWith(false, '0x0');
 
         expect(method.parameters[0].gas)
-            .toBe(100);
+            .toEqual(100);
 
         expect(method.parameters[0].gasPrice)
-            .toBe(100);
+            .toEqual(100);
 
     });
 
@@ -195,7 +195,7 @@ describe('SendTransactionMethodTest', () => {
                 .toHaveBeenCalledWith('eth_gasPrice', []);
 
             expect(method.rpcMethod)
-                .toBe('eth_sendRawTransaction');
+                .toEqual('eth_sendRawTransaction');
 
             expect(transactionSignerMock.sign)
                 .toHaveBeenCalledWith({'gasPrice': '0x0'});
@@ -225,7 +225,7 @@ describe('SendTransactionMethodTest', () => {
 
         promiEvent.on('transactionHash', (response) => {
             expect(response)
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(transactionConfirmationWorkflowMock.execute)
                 .toHaveBeenCalledWith(method, moduleInstanceMock, '0x0', promiEvent);
@@ -234,7 +234,7 @@ describe('SendTransactionMethodTest', () => {
                 .toHaveBeenCalledWith(method.rpcMethod, method.parameters);
 
             expect(method.rpcMethod)
-                .toBe('eth_sendTransaction');
+                .toEqual('eth_sendTransaction');
 
             done();
         });
@@ -242,27 +242,9 @@ describe('SendTransactionMethodTest', () => {
         const response = await method.execute(moduleInstanceMock, promiEvent);
 
         expect(response)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.callback)
             .toHaveBeenCalledWith(false, '0x0');
     });
-    //
-    // it('beforeExecution should call the inputTransactionFormatter on the parameters', () => {
-    //     formatters.inputTransactionFormatter
-    //         .mockReturnValueOnce({empty: false});
-    //
-    //     method.beforeExecution({});
-    //
-    //     expect(method.parameters[0])
-    //         .toHaveProperty('empty', false);
-    //
-    //     expect(formatters.inputTransactionFormatter)
-    //         .toHaveBeenCalledWith({}, {});
-    // });
-    //
-    // it('afterExecution should just return the response', () => {
-    //     expect(method.afterExecution('sendTransaction'))
-    //         .toBe('sendTransaction');
-    // });
 });

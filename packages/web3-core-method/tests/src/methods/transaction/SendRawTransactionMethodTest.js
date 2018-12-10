@@ -13,17 +13,17 @@ describe('SendRawTransactionMethodTest', () => {
 
     it('static Type property returns "SEND_TRANSACTION', () => {
         expect(SendRawTransactionMethod.Type)
-            .toBe('SEND');
+            .toEqual('SEND');
     });
 
     it('rpcMethod should return eth_sendRawTransaction', () => {
         expect(method.rpcMethod)
-            .toBe('eth_sendRawTransaction');
+            .toEqual('eth_sendRawTransaction');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -32,11 +32,11 @@ describe('SendRawTransactionMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('sendSignedTransaction'))
-            .toBe('sendSignedTransaction');
+            .toEqual('sendSignedTransaction');
     });
 });

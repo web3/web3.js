@@ -42,13 +42,13 @@ describe('SignMethodTest', () => {
 
     it('contructor check', () => {
         expect(SignMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
 
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
 
         expect(method.rpcMethod)
-            .toBe('eth_sign');
+            .toEqual('eth_sign');
 
        expect(method.utils)
            .toEqual({});
@@ -80,16 +80,16 @@ describe('SignMethodTest', () => {
         const response = await method.execute(moduleInstanceMock);
 
         expect(response)
-            .toBe('0x00');
+            .toEqual('0x00');
 
         expect(method.callback)
             .toHaveBeenCalledWith(false, '0x00');
 
         expect(method.parameters[0])
-            .toBe('string');
+            .toEqual('string');
 
         expect(method.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputSignFormatter)
             .toHaveBeenCalledWith('nope');
@@ -139,16 +139,16 @@ describe('SignMethodTest', () => {
         const response = await method.execute(moduleInstanceMock);
 
         expect(response)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.callback)
             .toHaveBeenCalledWith(false, '0x0');
 
         expect(method.parameters[0])
-            .toBe('string');
+            .toEqual('string');
 
         expect(method.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputSignFormatter)
             .toHaveBeenCalledWith('nope');
@@ -169,10 +169,10 @@ describe('SignMethodTest', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('string');
+            .toEqual('string');
 
         expect(method.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputSignFormatter)
             .toHaveBeenCalledWith('string');
@@ -185,6 +185,6 @@ describe('SignMethodTest', () => {
         const object = {};
 
         expect(method.afterExecution(object))
-            .toBe(object);
+            .toEqual(object);
     });
 });

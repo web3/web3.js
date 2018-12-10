@@ -16,17 +16,17 @@ describe('PeerCountMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(PeerCountMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return net_peerCount', () => {
         expect(method.rpcMethod)
-            .toBe('net_peerCount');
+            .toEqual('net_peerCount');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -34,7 +34,7 @@ describe('PeerCountMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should map the response', () => {
@@ -42,7 +42,7 @@ describe('PeerCountMethodTest', () => {
             .mockReturnValueOnce(100);
 
         expect(method.afterExecution('0x0'))
-            .toBe(100);
+            .toEqual(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith('0x0');

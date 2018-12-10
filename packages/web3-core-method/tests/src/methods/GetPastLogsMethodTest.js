@@ -16,17 +16,17 @@ describe('GetPastLogsMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetPastLogsMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getLogs', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getLogs');
+            .toEqual('eth_getLogs');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {

@@ -18,17 +18,17 @@ describe('GetTransactionFromBlockMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetTransactionFromBlockMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getTransactionByBlockNumberAndIndex');
+            .toEqual('eth_getTransactionByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it(
@@ -46,10 +46,10 @@ describe('GetTransactionFromBlockMethodTest', () => {
             method.beforeExecution({});
 
             expect(method.parameters[0])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(method.parameters[1])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(formatters.inputBlockNumberFormatter)
                 .toHaveBeenCalledWith('0x0');
@@ -58,7 +58,7 @@ describe('GetTransactionFromBlockMethodTest', () => {
                 .toHaveBeenCalledWith(100);
 
             expect(method.rpcMethod)
-                .toBe('eth_getTransactionByBlockHashAndIndex');
+                .toEqual('eth_getTransactionByBlockHashAndIndex');
         }
     );
 
@@ -77,10 +77,10 @@ describe('GetTransactionFromBlockMethodTest', () => {
             method.beforeExecution({});
 
             expect(method.parameters[0])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(method.parameters[1])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(formatters.inputBlockNumberFormatter)
                 .toHaveBeenCalledWith(100);
@@ -89,7 +89,7 @@ describe('GetTransactionFromBlockMethodTest', () => {
                 .toHaveBeenCalledWith(100);
 
             expect(method.rpcMethod)
-                .toBe('eth_getTransactionByBlockNumberAndIndex');
+                .toEqual('eth_getTransactionByBlockNumberAndIndex');
         }
     );
 

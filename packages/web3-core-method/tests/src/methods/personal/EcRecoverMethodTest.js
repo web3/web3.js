@@ -16,17 +16,17 @@ describe('EcRecoverMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(EcRecoverMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_ecRecover', () => {
         expect(method.rpcMethod)
-            .toBe('personal_ecRecover');
+            .toEqual('personal_ecRecover');
     });
 
     it('parametersAmount should return 3', () => {
         expect(method.parametersAmount)
-            .toBe(3);
+            .toEqual(3);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -44,7 +44,7 @@ describe('EcRecoverMethodTest', () => {
             .toHaveProperty('sign', true);
 
         expect(method.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputSignFormatter)
             .toHaveBeenCalledWith({});
@@ -55,6 +55,6 @@ describe('EcRecoverMethodTest', () => {
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('submitWork'))
-            .toBe('submitWork');
+            .toEqual('submitWork');
     });
 });

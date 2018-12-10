@@ -16,17 +16,17 @@ describe('GetBlockNumberMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetBlockNumberMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_blockNumber', () => {
         expect(method.rpcMethod)
-            .toBe('eth_blockNumber');
+            .toEqual('eth_blockNumber');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -34,7 +34,7 @@ describe('GetBlockNumberMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should map theresponse', () => {
@@ -42,7 +42,7 @@ describe('GetBlockNumberMethodTest', () => {
             .mockReturnValueOnce(100);
 
         expect(method.afterExecution('0x0'))
-            .toBe(100);
+            .toEqual(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith('0x0');

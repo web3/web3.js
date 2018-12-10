@@ -16,17 +16,17 @@ describe('PersonalSignMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(PersonalSignMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_sign', () => {
         expect(method.rpcMethod)
-            .toBe('personal_sign');
+            .toEqual('personal_sign');
     });
 
     it('parametersAmount should return 3', () => {
         expect(method.parametersAmount)
-            .toBe(3);
+            .toEqual(3);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
@@ -41,10 +41,10 @@ describe('PersonalSignMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe('signed');
+            .toEqual('signed');
 
         expect(method.parameters[1])
-            .toBe('0x00');
+            .toEqual('0x00');
 
         expect(formatters.inputSignFormatter)
             .toHaveBeenCalledWith('sign');
@@ -55,6 +55,6 @@ describe('PersonalSignMethodTest', () => {
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('personalSign'))
-            .toBe('personalSign');
+            .toEqual('personalSign');
     });
 });

@@ -16,17 +16,17 @@ describe('GetCodeMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetCodeMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getCode', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getCode');
+            .toEqual('eth_getCode');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('beforeExecution should call the inputAddressFormatter and inputDefaultBlockNumberFormatter method', () => {
@@ -41,10 +41,10 @@ describe('GetCodeMethodTest', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputAddressFormatter)
             .toHaveBeenCalledWith('string');
@@ -57,6 +57,6 @@ describe('GetCodeMethodTest', () => {
         const object = {};
 
         expect(method.afterExecution(object))
-            .toBe(object);
+            .toEqual(object);
     });
 });

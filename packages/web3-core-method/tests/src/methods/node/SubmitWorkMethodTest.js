@@ -12,17 +12,17 @@ describe('SubmitWorkMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(SubmitWorkMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_submitWork', () => {
         expect(method.rpcMethod)
-            .toBe('eth_submitWork');
+            .toEqual('eth_submitWork');
     });
 
     it('parametersAmount should return 3', () => {
         expect(method.parametersAmount)
-            .toBe(3);
+            .toEqual(3);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -30,11 +30,11 @@ describe('SubmitWorkMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('submitWork'))
-            .toBe('submitWork');
+            .toEqual('submitWork');
     });
 });

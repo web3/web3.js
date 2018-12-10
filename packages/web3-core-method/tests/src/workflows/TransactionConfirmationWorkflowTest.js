@@ -86,7 +86,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         promiEvent.catch((error) => {
             expect(error)
-                .toBe(false);
+                .toEqual(false);
 
             expect(getTransactionReceiptMethodMock.arguments)
                 .toEqual(['0x0']);
@@ -98,10 +98,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
                 .toHaveBeenCalledWith({blockHash: true});
 
             expect(transactionConfirmationWorkflow.timeoutCounter)
-                .toBe(0);
+                .toEqual(0);
 
             expect(transactionConfirmationWorkflow.confirmationsCounter)
-                .toBe(0);
+                .toEqual(0);
 
             expect(newHeadsWatcherMock.stop)
                 .toHaveBeenCalled();
@@ -218,7 +218,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         newHeadsWatcherMock.on = jest.fn((name, method) => {
             expect(name)
-                .toBe('newHead');
+                .toEqual('newHead');
 
             method();
         });
@@ -248,10 +248,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         promiEvent.on('confirmation', (confirmationsCounter, receipt) => {
             expect(transactionConfirmationWorkflow.timeoutCounter)
-                .toBe(1);
+                .toEqual(1);
 
             expect(confirmationsCounter)
-                .toBe(1);
+                .toEqual(1);
 
             expect(receipt)
                 .toEqual({blockHash: '0x0'});
@@ -262,7 +262,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
                 .toEqual({blockHash: '0x0'});
 
             expect(promiEvent.listeners().length)
-                .toBe(0);
+                .toEqual(0);
 
             expect(methodMock.callback)
                 .toHaveBeenCalledWith(false, {blockHash: '0x0'});
@@ -289,7 +289,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         newHeadsWatcherMock.on = jest.fn((name, method) => {
             expect(name)
-                .toBe('newHead');
+                .toEqual('newHead');
 
             method();
         });
@@ -314,10 +314,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         promiEvent.on('error', error => {
             expect(error)
-                .toBe(false);
+                .toEqual(false);
 
             expect(promiEvent.listeners().length)
-                .toBe(0);
+                .toEqual(0);
 
             expect(methodMock.callback)
                 .toHaveBeenCalledWith(false, null);
@@ -341,7 +341,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
             await promiEvent;
         } catch (e) {
             expect(e)
-                .toBe(false);
+                .toEqual(false);
         }
 
     });
@@ -355,7 +355,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         newHeadsWatcherMock.on = jest.fn((name, method) => {
             expect(name)
-                .toBe('newHead');
+                .toEqual('newHead');
 
             method();
         });
@@ -376,10 +376,10 @@ describe('TransactionConfirmationWorkflowTest', () => {
 
         promiEvent.on('error', error => {
             expect(error.message)
-                .toBe('Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!');
+                .toEqual('Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!');
 
             expect(promiEvent.listeners().length)
-                .toBe(0);
+                .toEqual(0);
 
             expect(methodMock.callback)
                 .toHaveBeenCalledWith(
@@ -397,7 +397,7 @@ describe('TransactionConfirmationWorkflowTest', () => {
             await promiEvent;
         } catch (e) {
             expect(e.message)
-                .toBe('Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!');
+                .toEqual('Transaction was not mined within 0 seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!');
         }
     });
 });

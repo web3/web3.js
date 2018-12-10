@@ -18,17 +18,17 @@ describe('GetStorageAtMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetStorageAtMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getStorageAt');
+            .toEqual('eth_getStorageAt');
     });
 
     it('parametersAmount should return 3', () => {
         expect(method.parametersAmount)
-            .toBe(3);
+            .toEqual(3);
     });
 
     it(
@@ -49,13 +49,13 @@ describe('GetStorageAtMethodTest', () => {
             method.beforeExecution({});
 
             expect(method.parameters[0])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(method.parameters[1])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(method.parameters[2])
-                .toBe('0x0');
+                .toEqual('0x0');
 
             expect(formatters.inputAddressFormatter)
                 .toHaveBeenCalledWith('string');
@@ -72,6 +72,6 @@ describe('GetStorageAtMethodTest', () => {
         const object = {};
 
         expect(method.afterExecution(object))
-            .toBe(object);
+            .toEqual(object);
     });
 });

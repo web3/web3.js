@@ -16,17 +16,17 @@ describe('GetAccountsMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(GetAccountsMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_accounts', () => {
         expect(method.rpcMethod)
-            .toBe('eth_accounts');
+            .toEqual('eth_accounts');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -34,7 +34,7 @@ describe('GetAccountsMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
@@ -42,7 +42,7 @@ describe('GetAccountsMethodTest', () => {
             .mockReturnValueOnce('0x0');
 
         expect(method.afterExecution([{}])[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(Utils.toChecksumAddress)
             .toHaveBeenCalledWith({});

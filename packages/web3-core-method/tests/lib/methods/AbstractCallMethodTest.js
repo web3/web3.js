@@ -34,13 +34,13 @@ describe('AbstractCallMethodTest', () => {
 
     it('constructor check', () => {
         expect(AbstractCallMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
 
         expect(abstractCallMethod.rpcMethod)
-            .toBe('RPC_METHOD');
+            .toEqual('RPC_METHOD');
 
         expect(abstractCallMethod.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
 
         expect(abstractCallMethod.utils)
             .toEqual(Utils);
@@ -62,7 +62,7 @@ describe('AbstractCallMethodTest', () => {
         const response = await abstractCallMethod.execute(moduleInstanceMock);
 
         expect(response)
-            .toBe('0x00');
+            .toEqual('0x00');
 
         expect(providerAdapterMock.send)
             .toHaveBeenCalledWith(abstractCallMethod.rpcMethod, abstractCallMethod.parameters);

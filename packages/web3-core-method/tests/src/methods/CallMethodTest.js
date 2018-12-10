@@ -16,17 +16,17 @@ describe('CallMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(CallMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_call', () => {
         expect(method.rpcMethod)
-            .toBe('eth_call');
+            .toEqual('eth_call');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('beforeExecution should call inputCallFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -57,6 +57,6 @@ describe('CallMethodTest', () => {
         const object = {};
 
         expect(method.afterExecution(object))
-            .toBe(object);
+            .toEqual(object);
     });
 });

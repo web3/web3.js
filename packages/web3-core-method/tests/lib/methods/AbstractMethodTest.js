@@ -18,13 +18,13 @@ describe('AbstractMethodTest', () => {
 
     it('constructor check', () => {
         expect(AbstractMethod.Type)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.rpcMethod)
-            .toBe('RPC_TEST');
+            .toEqual('RPC_TEST');
 
         expect(abstractMethod.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
 
         expect(abstractMethod.utils)
             .toEqual(Utils);
@@ -33,10 +33,10 @@ describe('AbstractMethodTest', () => {
             .toEqual(formatters);
 
         expect(abstractMethod.parameters)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.callback)
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('set arguments throws error on missing arguments', () => {
@@ -69,7 +69,7 @@ describe('AbstractMethodTest', () => {
             .toEqual([true]);
 
         expect(abstractMethod.callback)
-            .toBe(null);
+            .toEqual(null);
     });
 
     it('set arguments with callback', () => {
@@ -97,7 +97,7 @@ describe('AbstractMethodTest', () => {
         abstractMethod.rpcMethod = 'test';
 
         expect(abstractMethod.rpcMethod)
-            .toBe('test');
+            .toEqual('test');
     });
 
     it('set parameters', () => {
@@ -135,13 +135,13 @@ describe('AbstractMethodTest', () => {
         abstractMethod.beforeExecution();
 
         expect(AbstractMethod.Type)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.rpcMethod)
-            .toBe('RPC_TEST');
+            .toEqual('RPC_TEST');
 
         expect(abstractMethod.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
 
         expect(abstractMethod.utils)
             .toEqual(Utils);
@@ -150,15 +150,15 @@ describe('AbstractMethodTest', () => {
             .toEqual(formatters);
 
         expect(abstractMethod.parameters)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.callback)
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution just returns the value', () => {
         expect(abstractMethod.afterExecution('string'))
-            .toBe('string');
+            .toEqual('string');
     });
 
     it('isHash returns true', () =>  {

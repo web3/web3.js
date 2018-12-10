@@ -40,7 +40,7 @@ describe('MethodProxyTest', () => {
         methodProxy = new MethodProxy(moduleInstanceMock, methodFactoryMock);
 
         expect(methodProxy.defaultGasPrice)
-            .toBe(100);
+            .toEqual(100);
 
         expect(methodFactoryMock.hasMethod)
             .toHaveBeenCalledWith('defaultGasPrice');
@@ -61,7 +61,7 @@ describe('MethodProxyTest', () => {
                 .toHaveBeenCalledWith('myMethod');
 
             expect(error.message)
-                .toBe('Duplicated method myMethod. This method is defined as RPC call and as Object method.');
+                .toEqual('Duplicated method myMethod. This method is defined as RPC call and as Object method.');
         }
     });
 
@@ -83,7 +83,7 @@ describe('MethodProxyTest', () => {
         const response = methodProxy.myMethod();
 
         expect(response)
-            .toBe(100);
+            .toEqual(100);
 
         expect(methodFactoryMock.hasMethod)
             .toHaveBeenCalledWith('myMethod');
@@ -120,7 +120,7 @@ describe('MethodProxyTest', () => {
                 .toHaveBeenCalledWith('myMethod');
 
             expect(error.message)
-                .toBe('Invalid parameters length the expected length would be 2 and not 0');
+                .toEqual('Invalid parameters length the expected length would be 2 and not 0');
         }
     })
 });

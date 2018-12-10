@@ -16,17 +16,17 @@ describe('SignTransactionMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(SignTransactionMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_signTransaction', () => {
         expect(method.rpcMethod)
-            .toBe('eth_signTransaction');
+            .toEqual('eth_signTransaction');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -46,6 +46,6 @@ describe('SignTransactionMethodTest', () => {
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('sendTransaction'))
-            .toBe('sendTransaction');
+            .toEqual('sendTransaction');
     });
 });

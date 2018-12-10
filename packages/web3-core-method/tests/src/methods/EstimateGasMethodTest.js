@@ -18,17 +18,17 @@ describe('EstimateGasMethodTest', () => {
 
     it('static Type property returns "CALL"', () => {
         expect(EstimateGasMethod.Type)
-            .toBe('CALL');
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_estimateGas', () => {
         expect(method.rpcMethod)
-            .toBe('eth_estimateGas');
+            .toEqual('eth_estimateGas');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('beforeExecution should call the inputCallFormatter', () => {
@@ -51,7 +51,7 @@ describe('EstimateGasMethodTest', () => {
             .mockReturnValueOnce(100);
 
         expect(method.afterExecution({}))
-            .toBe(100);
+            .toEqual(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith({});
