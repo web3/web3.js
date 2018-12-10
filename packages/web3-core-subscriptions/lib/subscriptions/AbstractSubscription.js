@@ -83,7 +83,7 @@ export default class AbstractSubscription extends EventEmitter {
      * @returns {Subscription} Subscription
      */
     subscribe(callback) {
-        this.beforeSubscription(callback);
+        this.beforeSubscription(this.moduleInstance, callback);
 
         this.moduleInstance.currentProvider
             .subscribe(this.type, this.method, [

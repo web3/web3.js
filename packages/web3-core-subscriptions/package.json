@@ -11,7 +11,8 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "test:watch": "jest --watchAll"
     },
     "dependencies": {
         "eventemitter3": "^3.1.0",
