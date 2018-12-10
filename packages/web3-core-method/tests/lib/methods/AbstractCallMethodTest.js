@@ -24,6 +24,8 @@ describe('AbstractCallMethodTest', () => {
         moduleInstanceMock = AbstractWeb3Module.mock.instances[0];
 
         abstractCallMethod = new AbstractCallMethod('RPC_METHOD', 0, Utils, formatters);
+        abstractCallMethod.callback = jest.fn();
+        abstractCallMethod.beforeExecution = jest.fn();
     });
 
     it('constructor check', () => {
@@ -41,8 +43,6 @@ describe('AbstractCallMethodTest', () => {
     });
 
     it('Send the request to the connected node', async () => {
-        abstractCallMethod.callback = jest.fn();
-        abstractCallMethod.beforeExecution = jest.fn();
         abstractCallMethod.afterExecution = jest.fn(() => {
             return '0x00';
         });
@@ -71,9 +71,6 @@ describe('AbstractCallMethodTest', () => {
     });
 
     it('Will throw an error on sending the request to the connected node', async () => {
-        abstractCallMethod.callback = jest.fn();
-        abstractCallMethod.beforeExecution = jest.fn();
-
         const error = new Error('ERROR ON SEND');
         providerAdapterMock.send = jest.fn(() => {
             throw error;
