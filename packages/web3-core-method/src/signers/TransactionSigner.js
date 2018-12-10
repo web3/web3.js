@@ -24,10 +24,12 @@ import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class TransactionSigner extends AbstractSigner {
     /**
+     * @param {Accounts} accounts
+     *
      * @constructor
      */
-    constructor() {
-        super();
+    constructor(accounts) {
+        super(accounts);
     }
 
     /**
@@ -36,17 +38,16 @@ export default class TransactionSigner extends AbstractSigner {
      * @method sign
      *
      * @param {Object} transaction
-     * @param {Accounts} accounts
      *
      * @returns {Promise<Boolean|String|Error>}
      */
-    async sign(transaction, accounts) {
-        const wallet = this.getWallet(transaction.from, accounts);
+    async sign(transaction) {
+        const wallet = this.getWallet(transaction.from);
 
         if (wallet && wallet.privateKey) {
             delete transaction.from;
             try {
-                return await accounts.signTransaction(transaction, wallet.privateKey);
+                return await this.accounts.signTransaction(transaction, wallet.privateKey);
             } catch (error) {
                 throw error;
             }

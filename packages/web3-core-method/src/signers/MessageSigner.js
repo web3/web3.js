@@ -24,10 +24,12 @@ import AbstractSigner from '../../lib/signers/AbstractSigner';
 
 export default class MessageSigner extends AbstractSigner {
     /**
+     * @param {Accounts} accounts
+     *
      * @constructor
      */
-    constructor() {
-        super();
+    constructor(accounts) {
+        super(accounts);
     }
 
     /**
@@ -37,14 +39,13 @@ export default class MessageSigner extends AbstractSigner {
      *
      * @param {String} data
      * @param {String} address
-     * @param {Accounts} accounts
      *
      * @returns {String|Error}
      */
-    sign(data, address, accounts) {
-        const wallet = this.getWallet(address, accounts);
+    sign(data, address) {
+        const wallet = this.getWallet(address);
         if (wallet && wallet.privateKey) {
-            return accounts.sign(data, wallet.privateKey).signature;
+            return this.accounts.sign(data, wallet.privateKey).signature;
         }
 
         throw new Error('Wallet or privateKey in wallet is not set!');
