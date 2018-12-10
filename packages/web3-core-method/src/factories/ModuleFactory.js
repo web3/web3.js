@@ -60,31 +60,6 @@ export default class ModuleFactory {
         return new MethodProxy(target, methodFactory);
     }
 
-    /**
-     * Returns the CallMethodCommand object
-     *
-     * @method createCallMethodCommand
-     *
-     * @returns {CallMethodCommand}
-     */
-    createCallMethodCommand() {
-        return new CallMethodCommand(this.accounts, this.createMessageSigner());
-    }
-
-    /**
-     * Returns the createSendTransactionMethodCommand object
-     *
-     * @method createSendTransactionMethodCommand
-     *
-     * @returns {SendTransactionMethodCommand}
-     */
-    createSendTransactionMethodCommand() {
-        return new SendTransactionMethodCommand(
-            this.createTransactionConfirmationWorkflow(),
-            this.createTransactionSigner(),
-            this.accounts
-        );
-    }
 
     /**
      * Returns the TransactionSigner object

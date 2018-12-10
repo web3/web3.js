@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class GetBalanceMethod extends AbstractMethod {
+export default class GetBalanceMethod extends AbstractCallMethod {
     /**
      * @param {CallMethodCommand} callMethodCommand
      * @param {Object} utils

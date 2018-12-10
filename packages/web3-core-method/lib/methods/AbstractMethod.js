@@ -28,14 +28,12 @@ export default class AbstractMethod {
     /**
      * @param {String} rpcMethod
      * @param {Number} parametersAmount
-     * @param {AbstractCommand} command
      * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(rpcMethod, parametersAmount, command, utils, formatters) {
-        this.command = command;
+    constructor(rpcMethod, parametersAmount, utils, formatters) {
         this.utils = utils;
         this.formatters = formatters;
         this.promiEvent = new PromiEvent();
@@ -51,7 +49,7 @@ export default class AbstractMethod {
      *
      * @returns {String}
      */
-    static get CommandType() {
+    static get Type() {
         return 'CALL';
     }
 
@@ -238,6 +236,17 @@ export default class AbstractMethod {
     }
 
     /**
+     * Checks if accounts is defined and if wallet is not empty
+     *
+     * @method hasWallet
+     *
+     * @returns {Boolean}
+     */
+    hasWallets() {
+        return this.accounts && this.accounts.wallet.length > 0;
+    }
+
+    /**
      * Checks which command should be executed
      *
      * @method execute
@@ -246,10 +255,5 @@ export default class AbstractMethod {
      *
      * @returns {Promise<Object|String>|PromiEvent|String}
      */
-    execute(moduleInstance) {
-        return this.command.execute(
-            moduleInstance,
-            this
-        );
-    }
+    execute(moduleInstance) { }
 }

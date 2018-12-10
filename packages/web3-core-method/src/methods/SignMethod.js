@@ -37,6 +37,55 @@ export default class SignMethod extends AbstractMethod {
     }
 
     /**
+     * Sends a JSON-RPC call request
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @callback callback callback(error, result)
+     * @returns {Promise<Object|String>}
+     */
+    execute(moduleInstance) {
+        if (this.hasWallets()) {
+            this.beforeExecution(moduleInstance);
+
+            return this.signOnClient();
+        }
+
+        return super.execute(moduleInstance);
+    }
+
+    /**
+     * Signs the message on the client.
+     *
+     * @method signOnClient
+     *
+     * @returns {Promise<String>}
+     */
+    signOnClient() {
+        let signedMessage;
+
+        try {
+            signedMessage = this.afterExecution(
+                this.messageSigner.sign(this.parameters[0], this.parameters[1], this.accounts)
+            );
+        } catch (error) {
+            if (this.callback) {
+                this.callback(error, null);
+            }
+
+            throw error;
+        }
+
+        if (this.callback) {
+            this.callback(false, signedMessage);
+        }
+
+        return Promise.resolve(signedMessage);
+    }
+
+    /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
