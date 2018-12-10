@@ -1,20 +1,19 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
-
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection
  * @file index.js
@@ -22,99 +21,101 @@
  * @date 2018
  */
 
-import MethodModuleFactory from './factories/MethodModuleFactory';
-import {PromiEvent} from 'web3-core-promievent';
+import ModuleFactory from './factories/ModuleFactory';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {formatters} from 'web3-core-helpers';
+import * as Utils from 'web3-utils';
 
 /**
- * Returns the MethodController object
+ * Returns the ModuleFactory of the method module
  *
- * @method MethodController
+ * @param {Accounts} accounts
  *
- * @returns {MethodController}
+ * @returns {ModuleFactory}
+ *
+ * @constructor
  */
-export const MethodController = () => {
-    return new MethodModuleFactory().createMethodController(PromiEvent, new SubscriptionsFactory(), formatters);
+export const MethodModuleFactory = (accounts) => {
+    return new ModuleFactory(accounts, new SubscriptionsFactory(), Utils, formatters);
 };
 
-export AbstractMethodModel from '../lib/models/AbstractMethodModel';
-export AbstractMethodModelFactory from '../lib/factories/AbstractMethodModelFactory';
+export AbstractMethod from '../lib/methods/AbstractMethod';
+export AbstractMethodFactory from '../lib/factories/AbstractMethodFactory';
 
 // Network
-export GetProtocolVersionMethodModel from './models/methods/network/GetProtocolVersionMethodModel';
-export VersionMethodModel from './models/methods/network/VersionMethodModel';
-export ListeningMethodModel from './models/methods/network/ListeningMethodModel';
-export PeerCountMethodModel from './models/methods/network/PeerCountMethodModel';
+export GetProtocolVersionMethod from './methods/network/GetProtocolVersionMethod';
+export VersionMethod from './methods/network/VersionMethod';
+export ListeningMethod from './methods/network/ListeningMethod';
+export PeerCountMethod from './methods/network/PeerCountMethod';
 
 // Node
-export GetNodeInfoMethodModel from './models/methods/node/GetNodeInfoMethodModel';
-export GetCoinbaseMethodModel from './models/methods/node/GetCoinbaseMethodModel';
-export IsMiningMethodModel from './models/methods/node/IsMiningMethodModel';
-export GetHashrateMethodModel from './models/methods/node/GetHashrateMethodModel';
-export IsSyncingMethodModel from './models/methods/node/IsSyncingMethodModel';
-export GetGasPriceMethodModel from './models/methods/node/GetGasPriceMethodModel';
-export SubmitWorkMethodModel from './models/methods/node/SubmitWorkMethodModel';
-export GetWorkMethodModel from './models/methods/node/GetWorkMethodModel';
+export GetNodeInfoMethod from './methods/node/GetNodeInfoMethod';
+export GetCoinbaseMethod from './methods/node/GetCoinbaseMethod';
+export IsMiningMethod from './methods/node/IsMiningMethod';
+export GetHashrateMethod from './methods/node/GetHashrateMethod';
+export IsSyncingMethod from './methods/node/IsSyncingMethod';
+export GetGasPriceMethod from './methods/node/GetGasPriceMethod';
+export SubmitWorkMethod from './methods/node/SubmitWorkMethod';
+export GetWorkMethod from './methods/node/GetWorkMethod';
 
 // Account
-export GetAccountsMethodModel from './models/methods/account/GetAccountsMethodModel';
-export GetBalanceMethodModel from './models/methods/account/GetBalanceMethodModel';
-export GetTransactionCountMethodModel from './models/methods/account/GetTransactionCountMethodModel';
+export GetAccountsMethod from './methods/account/GetAccountsMethod';
+export GetBalanceMethod from './methods/account/GetBalanceMethod';
+export GetTransactionCountMethod from './methods/account/GetTransactionCountMethod';
 
 // Block
-export GetBlockNumberMethodModel from './models/methods/block/GetBlockNumberMethodModel';
-export GetBlockMethodModel from './models/methods/block/GetBlockMethodModel';
-export GetUncleMethodModel from './models/methods/block/GetUncleMethodModel';
-export GetBlockTransactionCountMethodModel from './models/methods/block/GetBlockTransactionCountMethodModel';
-export GetBlockUncleCountMethodModel from './models/methods/block/GetBlockUncleCountMethodModel';
+export GetBlockNumberMethod from './methods/block/GetBlockNumberMethod';
+export GetBlockMethod from './methods/block/GetBlockMethod';
+export GetUncleMethod from './methods/block/GetUncleMethod';
+export GetBlockTransactionCountMethod from './methods/block/GetBlockTransactionCountMethod';
+export GetBlockUncleCountMethod from './methods/block/GetBlockUncleCountMethod';
 
 // Transaction
-export GetTransactionMethodModel from './models/methods/transaction/GetTransactionMethodModel';
-export GetTransactionFromBlockMethodModel from './models/methods/transaction/GetTransactionFromBlockMethodModel';
-export GetTransactionReceipt from './models/methods/transaction/GetTransactionReceiptMethodModel';
-export SendSignedTransactionMethodModel from './models/methods/transaction/SendSignedTransactionMethodModel';
-export SignTransactionMethodModel from './models/methods/transaction/SignTransactionMethodModel';
-export SendTransactionMethodModel from './models/methods/transaction/SendTransactionMethodModel';
+export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
+export GetTransactionFromBlockMethod from './methods/transaction/GetTransactionFromBlockMethod';
+export GetTransactionReceipt from './methods/transaction/GetTransactionReceiptMethod';
+export SendSignedTransactionMethod from './methods/transaction/SendSignedTransactionMethod';
+export SignTransactionMethod from './methods/transaction/SignTransactionMethod';
+export SendTransactionMethod from './methods/transaction/SendTransactionMethod';
 
 // Global
-export GetCodeMethodModel from './models/methods/GetCodeMethodModel';
-export SignMethodModel from './models/methods/SignMethodModel';
-export CallMethodModel from './models/methods/CallMethodModel';
-export GetStorageAtMethodModel from './models/methods/GetStorageAtMethodModel';
-export EstimateGasMethodModel from './models/methods/EstimateGasMethodModel';
-export GetPastLogsMethodModel from './models/methods/GetPastLogsMethodModel';
+export GetCodeMethod from './methods/GetCodeMethod';
+export SignMethod from './methods/SignMethod';
+export CallMethod from './methods/CallMethod';
+export GetStorageAtMethod from './methods/GetStorageAtMethod';
+export EstimateGasMethod from './methods/EstimateGasMethod';
+export GetPastLogsMethod from './methods/GetPastLogsMethod';
 
 // Personal
-export EcRecoverMethodModel from './models/methods/personal/EcRecoverMethodModel';
-export ImportRawKeyMethodModel from './models/methods/personal/ImportRawKeyMethodModel';
-export ListAccountsMethodModel from './models/methods/personal/ListAccountsMethodModel';
-export LockAccountMethodModel from './models/methods/personal/LockAccountMethodModel';
-export NewAccountMethodModel from './models/methods/personal/NewAccountMethodModel';
-export PersonalSendTransactionMethodModel from './models/methods/personal/PersonalSendTransactionMethodModel';
-export PersonalSignMethodModel from './models/methods/personal/PersonalSignMethodModel';
-export PersonalSignTransactionMethodModel from './models/methods/personal/PersonalSignTransactionMethodModel';
-export UnlockAccountMethodModel from './models/methods/personal/UnlockAccountMethodModel';
+export EcRecoverMethod from './methods/personal/EcRecoverMethod';
+export ImportRawKeyMethod from './methods/personal/ImportRawKeyMethod';
+export ListAccountsMethod from './methods/personal/ListAccountsMethod';
+export LockAccountMethod from './methods/personal/LockAccountMethod';
+export NewAccountMethod from './methods/personal/NewAccountMethod';
+export PersonalSendTransactionMethod from './methods/personal/PersonalSendTransactionMethod';
+export PersonalSignMethod from './methods/personal/PersonalSignMethod';
+export PersonalSignTransactionMethod from './methods/personal/PersonalSignTransactionMethod';
+export UnlockAccountMethod from './methods/personal/UnlockAccountMethod';
 
 // SHH
-export AddPrivateKeyMethodModel from './models/methods/shh/AddPrivateKeyMethodModel';
-export AddSymKeyMethodModel from './models/methods/shh/AddSymKeyMethodModel';
-export DeleteKeyPairMethodModel from './models/methods/shh/DeleteKeyPairMethodModel';
-export DeleteMessageFilterMethodModel from './models/methods/shh/DeleteMessageFilterMethodModel';
-export DeleteSymKeyMethodModel from './models/methods/shh/DeleteSymKeyMethodModel';
-export GenerateSymKeyFromPasswordMethodModel from './models/methods/shh/GenerateSymKeyFromPasswordMethodModel';
-export GetFilterMessagesMethodModel from './models/methods/shh/GetFilterMessagesMethodModel';
-export GetInfoMethodModel from './models/methods/shh/GetInfoMethodModel';
-export GetPrivateKeyMethodModel from './models/methods/shh/GetPrivateKeyMethodModel';
-export GetPublicKeyMethodModel from './models/methods/shh/GetPublicKeyMethodModel';
-export GetSymKeyMethodModel from './models/methods/shh/GetSymKeyMethodModel';
-export HasKeyPairMethodModel from './models/methods/shh/HasKeyPairMethodModel';
-export HasSymKeyMethodModel from './models/methods/shh/HasSymKeyMethodModel';
-export MarkTrustedPeerMethodModel from './models/methods/shh/MarkTrustedPeerMethodModel';
-export NewKeyPairMethodModel from './models/methods/shh/NewKeyPairMethodModel';
-export NewMessageFilterMethodModel from './models/methods/shh/NewMessageFilterMethodModel';
-export NewSymKeyMethodModel from './models/methods/shh/NewSymKeyMethodModel';
-export PostMethodModel from './models/methods/shh/PostMethodModel';
-export SetMaxMessageSizeMethodModel from './models/methods/shh/SetMaxMessageSizeMethodModel';
-export SetMinPoWMethodModel from './models/methods/shh/SetMinPoWMethodModel';
-export ShhVersionMethodModel from './models/methods/shh/ShhVersionMethodModel';
+export AddPrivateKeyMethod from './methods/shh/AddPrivateKeyMethod';
+export AddSymKeyMethod from './methods/shh/AddSymKeyMethod';
+export DeleteKeyPairMethod from './methods/shh/DeleteKeyPairMethod';
+export DeleteMessageFilterMethod from './methods/shh/DeleteMessageFilterMethod';
+export DeleteSymKeyMethod from './methods/shh/DeleteSymKeyMethod';
+export GenerateSymKeyFromPasswordMethod from './methods/shh/GenerateSymKeyFromPasswordMethod';
+export GetFilterMessagesMethod from './methods/shh/GetFilterMessagesMethod';
+export GetInfoMethod from './methods/shh/GetInfoMethod';
+export GetPrivateKeyMethod from './methods/shh/GetPrivateKeyMethod';
+export GetPublicKeyMethod from './methods/shh/GetPublicKeyMethod';
+export GetSymKeyMethod from './methods/shh/GetSymKeyMethod';
+export HasKeyPairMethod from './methods/shh/HasKeyPairMethod';
+export HasSymKeyMethod from './methods/shh/HasSymKeyMethod';
+export MarkTrustedPeerMethod from './methods/shh/MarkTrustedPeerMethod';
+export NewKeyPairMethod from './methods/shh/NewKeyPairMethod';
+export NewMessageFilterMethod from './methods/shh/NewMessageFilterMethod';
+export NewSymKeyMethod from './methods/shh/NewSymKeyMethod';
+export PostMethod from './methods/shh/PostMethod';
+export SetMaxMessageSizeMethod from './methods/shh/SetMaxMessageSizeMethod';
+export SetMinPoWMethod from './methods/shh/SetMinPoWMethod';
+export ShhVersionMethod from './methods/shh/ShhVersionMethod';

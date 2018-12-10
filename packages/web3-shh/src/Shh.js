@@ -27,8 +27,8 @@ export default class Shh extends AbstractWeb3Module {
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {MethodController} methodController
-     * @param {MethodModelFactory} methodModelFactory
+     * @param {MethodModuleFactory} methodModuleFactory
+     * @param {MethodFactory} methodFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
      * @param {Object} options
@@ -39,13 +39,13 @@ export default class Shh extends AbstractWeb3Module {
         provider,
         providersModuleFactory,
         providers,
-        methodController,
-        methodModelFactory,
+        methodModuleFactory,
+        methodFactory,
         subscriptionsFactory,
         net,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodController, methodModelFactory, options);
+        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
 
         this.subscriptionsFactory = subscriptionsFactory;
         this.net = net;
@@ -61,11 +61,12 @@ export default class Shh extends AbstractWeb3Module {
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
-     * @returns {Subscription}
+     * @returns {AbstractSubscription}
+     * @throws {Error}
      */
     subscribe(method, options, callback) {
         if (method === 'messages') {
-            return this.subscriptionsFactory.createShhMessagesSubscription(this, options).subscribe(callback);
+            return this.subscriptionsFactory.createShhMessagesSubscription(options, this).subscribe(callback);
         }
 
         throw new Error(`Unknown subscription: ${method}`);

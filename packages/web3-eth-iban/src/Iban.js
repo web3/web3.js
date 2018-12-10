@@ -100,18 +100,18 @@ export default class Iban {
      *
      * @method toAddress
      *
-     * @param {String} ib
+     * @param {String} iban
      *
      * @returns {String}
      */
-    static toAddress(ib) {
-        ib = new Iban(ib);
+    static toAddress(iban) {
+        iban = new Iban(iban);
 
-        if (!ib.isDirect()) {
+        if (!iban.isDirect()) {
             throw new Error("IBAN is indirect and can't be converted");
         }
 
-        return ib.toAddress();
+        return iban.toAddress();
     }
 
     /**

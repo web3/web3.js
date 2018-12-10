@@ -16,12 +16,12 @@
 */
 /**
  * @file index.js
- * @author Samuel Furer <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import {ProvidersModuleFactory, providers} from 'web3-providers';
-import {MethodController} from 'web3-core-method';
+import {MethodModuleFactory} from 'web3-core-method';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
 import * as Utils from 'web3-utils';
@@ -43,7 +43,7 @@ export const Shh = (provider, options) => {
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController(),
+        new MethodModuleFactory(),
         new SubscriptionsFactory(),
         new Network(provider, options),
         options

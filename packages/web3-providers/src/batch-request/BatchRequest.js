@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file Batch.js
+ * @file BatchRequest.js
  * @author Samuel Furter <samuel@ethereum.org>, Marek Kotewicz <marek@ethdev.com>
  * @date 2018
  */

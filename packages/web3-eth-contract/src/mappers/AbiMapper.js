@@ -13,7 +13,7 @@
 
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
+*/
 /**
  * @file AbiMapper.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -26,7 +26,7 @@ export default class AbiMapper {
     /**
      * @param {ContractModuleFactory} contractPackageFactory
      * @param {AbiCoder} abiCoder
-     * @param {Object} utils
+     * @param {Utils} utils
      *
      * @constructor
      */
@@ -55,7 +55,7 @@ export default class AbiMapper {
             abiItem.payable = self.isPayable(abiItem);
 
             if (abiItem.name) {
-                abiItem.funcName = self.utils._jsonInterfaceMethodToString(abiItem);
+                abiItem.funcName = self.utils.jsonInterfaceMethodToString(abiItem);
             }
 
             let abiItemModel;

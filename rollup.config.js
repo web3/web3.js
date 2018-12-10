@@ -1,6 +1,7 @@
 import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
 import autoExternal from 'rollup-plugin-auto-external';
+import cleanup from 'rollup-plugin-cleanup';
 
 const config = [
     {
@@ -39,7 +40,8 @@ const config = [
                 ]
             }),
             json(),
-            autoExternal()
+            autoExternal(),
+            cleanup()
         ]
     },
     {
@@ -59,7 +61,8 @@ const config = [
                 ]
             }),
             json(),
-            autoExternal()
+            autoExternal(),
+            cleanup()
         ]
     }
 ];

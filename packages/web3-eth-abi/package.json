@@ -11,14 +11,20 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "npm run-script dtslint && jest",
+        "dtslint": "dtslint types"
     },
+    "types": "types",
     "dependencies": {
         "ethers": "4.0.0-beta.1",
         "underscore-es": "1.9.8",
         "web3-utils": "1.0.0-beta.36"
     },
+    "devDependencies": {
+        "dtslint": "^0.3.0"
+    },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }

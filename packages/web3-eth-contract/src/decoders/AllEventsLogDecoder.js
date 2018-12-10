@@ -41,12 +41,11 @@ export default class AllEventsLogDecoder extends EventLogDecoder {
      *
      * @method decoder
      *
-     * @param {AbiItemModel} abiItemModel
      * @param {Object} response
      *
      * @returns {Object}
      */
-    decode(abiItemModel, response) {
+    decode(response) {
         return super.decode(this.abiModel.getEventBySignature(response.topics[0]), response);
     }
 }

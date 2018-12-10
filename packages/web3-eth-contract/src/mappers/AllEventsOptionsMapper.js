@@ -34,7 +34,7 @@ export default class AllEventsOptionsMapper {
 
     /**
      * @param {AbiModel} abiModel
-     * @param {Contract} contract
+     * @param {AbstractContract} contract
      * @param {Object} options
      *
      * @returns {Object}

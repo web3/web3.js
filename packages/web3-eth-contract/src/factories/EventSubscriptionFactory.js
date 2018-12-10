@@ -1,42 +1,39 @@
 /*
- This file is part of web3.js.
+    This file is part of web3.js.
 
- web3.js is free software: you can redistribute it and/or modify
- it under the terms of the GNU Lesser General Public License as published by
- the Free Software Foundation, either version 3 of the License, or
- (at your option) any later version.
+    web3.js is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
- web3.js is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    web3.js is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public License
- along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
- */
+    You should have received a copy of the GNU Lesser General Public License
+    along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
+*/
 /**
  * @file SubscriptionFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {Subscription} from 'web3-core-subscriptions';
-import {GetPastLogsMethodModel} from 'web3-core-method';
-import EventLogSubscription from '../models/subscriptions/EventLogSubscription';
-import AllEventsLogSubscription from '../models/subscriptions/AllEventsLogSubscription';
+import {GetPastLogsMethod} from 'web3-core-method';
+import EventLogSubscription from '../subscriptions/EventLogSubscription';
+import AllEventsLogSubscription from '../subscriptions/AllEventsLogSubscription';
 
 export default class EventSubscriptionFactory {
     /**
      * @param {Object} utils
      * @param {Object} formatters
-     * @param {MethodController} methodController
      *
      * @constructor
      */
-    constructor(utils, formatters, methodController) {
+    constructor(utils, formatters, ) {
         this.utils = utils;
         this.formatters = formatters;
-        this.methodController = methodController;
     }
 
     /**
@@ -44,23 +41,20 @@ export default class EventSubscriptionFactory {
      *
      * @param {EventLogDecoder} eventLogDecoder
      * @param {AbiItemModel} abiItemModel
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractContract} contract
      * @param {Object} options
      *
-     * @returns {Subscription}
+     * @returns {EventLogSubscription}
      */
-    createEventLogSubscription(eventLogDecoder, abiItemModel, moduleInstance, options) {
-        return new Subscription(
-            new EventLogSubscription(
-                abiItemModel,
-                options,
-                this.utils,
-                this.formatters,
-                new GetPastLogsMethodModel(this.utils, this.formatters),
-                this.methodController,
-                eventLogDecoder
-            ),
-            moduleInstance
+    createEventLogSubscription(eventLogDecoder, abiItemModel, contract, options) {
+        return new EventLogSubscription(
+            abiItemModel,
+            options,
+            this.utils,
+            this.formatters,
+            contract,
+            new GetPastLogsMethod(this.utils, this.formatters),
+            eventLogDecoder
         );
     }
 
@@ -68,22 +62,19 @@ export default class EventSubscriptionFactory {
      * Returns an log subscription for all events
      *
      * @param {AllEventsLogDecoder} allEventsLogDecoder
-     * @param {AbstractWeb3Module} moduleInstance
+     * @param {AbstractContract} contract
      * @param {Object} options
      *
-     * @returns {Subscription}
+     * @returns {AllEventsLogSubscription}
      */
-    createAllEventLogSubscription(allEventsLogDecoder, moduleInstance, options) {
-        return new Subscription(
-            new AllEventsLogSubscription(
-                options,
-                this.utils,
-                this.formatters,
-                new GetPastLogsMethodModel(this.utils, this.formatters),
-                this.methodController,
-                allEventsLogDecoder
-            ),
-            moduleInstance
+    createAllEventLogSubscription(allEventsLogDecoder, contract, options) {
+        return new AllEventsLogSubscription(
+            options,
+            this.utils,
+            this.formatters,
+            contract,
+            new GetPastLogsMethod(this.utils, this.formatters),
+            allEventsLogDecoder
         );
     }
 }

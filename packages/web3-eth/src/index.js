@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {MethodController} from 'web3-core-method';
+import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
 import {ProvidersModuleFactory, providers} from 'web3-providers';
@@ -46,14 +46,14 @@ import EthModuleFactory from './factories/EthModuleFactory';
  * @returns {Eth}
  */
 export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider);
-    const abiCoder = new AbiCoder();
+    const accounts = new Accounts(provider),
+          abiCoder = new AbiCoder();
 
     return new EthModuleFactory(
         provider,
         new ProvidersModuleFactory(),
         providers,
-        new MethodController(),
+        new MethodModuleFactory(accounts),
         new Accounts(provider, options),
         PromiEvent,
         Utils,

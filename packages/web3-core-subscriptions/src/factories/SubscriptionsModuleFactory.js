@@ -28,7 +28,7 @@ export default class SubscriptionsModuleFactory {
      *
      * @method createSubscriptionsFactory
      *
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @returns {SubscriptionsFactory}
