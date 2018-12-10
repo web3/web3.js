@@ -26,13 +26,11 @@ export default class GetAccountsMethod extends AbstractCallMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
-     * @param {Accounts} accounts
-     * @param {MessageSigner} messageSigner
      *
      * @constructor
      */
-    constructor(utils, formatters, accounts, messageSigner) {
-        super('eth_accounts', 0, utils, formatters, accounts, messageSigner);
+    constructor(utils, formatters) {
+        super('eth_accounts', 0, utils, formatters);
     }
 
     /**
