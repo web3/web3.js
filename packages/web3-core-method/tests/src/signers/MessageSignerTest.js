@@ -12,7 +12,7 @@ describe('MessageSignerTest', () => {
         accountsMock = new Accounts();
         accountsMock.sign = jest.fn();
 
-        messageSigner = new MessageSigner();
+        messageSigner = new MessageSigner(accountsMock);
     });
 
     it('calls sign and throws error', () => {

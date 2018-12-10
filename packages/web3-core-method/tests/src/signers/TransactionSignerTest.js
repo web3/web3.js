@@ -11,7 +11,7 @@ describe('TransactionSignerTest', () => {
         accountsMock = new Accounts();
         accountsMock.signTransaction = jest.fn();
 
-        transactionSigner = new TransactionSigner();
+        transactionSigner = new TransactionSigner(accountsMock);
     });
 
     it('calls sign and throws error', () => {

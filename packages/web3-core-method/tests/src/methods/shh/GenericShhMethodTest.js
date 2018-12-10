@@ -136,7 +136,7 @@ describe('GenericShhMethodsTest', () => {
             // eslint-disable-next-line new-cap
             method = new test.method({}, {});
 
-            expect(test.Type)
+            expect(test.method.Type)
                 .toBe('CALL');
 
             expect(method.rpcMethod)

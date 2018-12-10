@@ -17,6 +17,15 @@ describe('AbstractMethodFactoryTest', () => {
     beforeEach(() => {
         methodModuleFactory = new MethodModuleFactory({});
         methodModuleFactoryMock = MethodModuleFactory.mock.instances[0];
+
+        abstractMethodFactory = new AbstractMethodFactory(
+            {
+                test: AbstractMethod
+            },
+            methodModuleFactoryMock,
+            {},
+            {}
+        );
     });
 
     it('hasMethod returns true', () => {
@@ -33,35 +42,17 @@ describe('AbstractMethodFactoryTest', () => {
     });
 
     it('createMethod returns method with call command', () => {
-        AbstractMethod.CommandType = 'CALL';
-
-        methodModuleFactoryMock.createCallMethodCommand
-            .mockReturnValueOnce({});
-
-        abstractMethodFactory = new AbstractMethodFactory(
-            {
-                test: AbstractMethod
-            },
-            methodModuleFactoryMock,
-            {},
-            {}
-        );
+        AbstractMethod.Type = 'CALL';
 
         expect(abstractMethodFactory.hasMethod('test'))
             .toBeTruthy();
 
         expect(abstractMethodFactory.createMethod('test'))
             .toBeInstanceOf(AbstractMethod);
-
-        expect(methodModuleFactoryMock.createCallMethodCommand)
-            .toHaveBeenCalled();
     });
 
     it('createMethod returns method with send command', () => {
-        AbstractMethod.CommandType = 'SEND_TRANSACTION';
-
-        methodModuleFactoryMock.createSendTransactionMethodCommand
-            .mockReturnValueOnce({});
+        AbstractMethod.Type = 'SEND';
 
         abstractMethodFactory = new AbstractMethodFactory(
             {
@@ -77,8 +68,5 @@ describe('AbstractMethodFactoryTest', () => {
 
         expect(abstractMethodFactory.createMethod('test'))
             .toBeInstanceOf(AbstractMethod);
-
-        expect(methodModuleFactoryMock.createSendTransactionMethodCommand)
-            .toHaveBeenCalled();
     });
 });
