@@ -11,7 +11,12 @@ describe('GetAccountsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetAccountsMethod({}, Utils, {});
+        method = new GetAccountsMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetAccountsMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_accounts', () => {

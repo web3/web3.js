@@ -11,7 +11,12 @@ describe('GetGasPriceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetGasPriceMethod({}, {}, formatters);
+        method = new GetGasPriceMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetGasPriceMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_gasPrice', () => {

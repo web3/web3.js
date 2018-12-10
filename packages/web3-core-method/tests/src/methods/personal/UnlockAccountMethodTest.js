@@ -11,7 +11,12 @@ describe('UnlockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new UnlockAccountMethod({}, {}, formatters);
+        method = new UnlockAccountMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(UnlockAccountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_unlockAccount', () => {

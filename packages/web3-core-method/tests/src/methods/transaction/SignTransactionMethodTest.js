@@ -11,7 +11,12 @@ describe('SignTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SignTransactionMethod({}, {}, formatters);
+        method = new SignTransactionMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(SignTransactionMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_signTransaction', () => {

@@ -11,7 +11,12 @@ describe('IsSyncingMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new IsSyncingMethod({}, {}, formatters);
+        model = new IsSyncingMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(IsSyncingMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_syncing', () => {

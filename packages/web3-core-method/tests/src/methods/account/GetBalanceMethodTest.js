@@ -11,7 +11,12 @@ describe('GetBalanceMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBalanceMethod({}, {}, formatters);
+        method = new GetBalanceMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBalanceMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getBalance', () => {

@@ -13,7 +13,12 @@ describe('GetTransactionCountMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetTransactionCountMethod({}, Utils, formatters);
+        model = new GetTransactionCountMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetTransactionCountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionCount', () => {

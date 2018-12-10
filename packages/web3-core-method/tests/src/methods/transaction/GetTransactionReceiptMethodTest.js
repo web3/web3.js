@@ -11,7 +11,12 @@ describe('GetTransactionReceiptMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionReceiptMethod({}, {}, formatters);
+        method = new GetTransactionReceiptMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetTransactionReceiptMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionReceipt', () => {

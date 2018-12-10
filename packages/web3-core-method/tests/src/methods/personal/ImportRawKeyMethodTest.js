@@ -7,7 +7,12 @@ describe('ImportRawKeyMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ImportRawKeyMethod({}, {}, {});
+        method = new ImportRawKeyMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ImportRawKeyMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_importRawKey', () => {

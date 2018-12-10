@@ -13,7 +13,12 @@ describe('EstimateGasMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EstimateGasMethod({}, Utils, formatters);
+        method = new EstimateGasMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(EstimateGasMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_estimateGas', () => {

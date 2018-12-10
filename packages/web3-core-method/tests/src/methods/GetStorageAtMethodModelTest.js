@@ -13,7 +13,12 @@ describe('GetStorageAtMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetStorageAtMethod({}, Utils, formatters);
+        method = new GetStorageAtMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetStorageAtMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getStorageAt', () => {

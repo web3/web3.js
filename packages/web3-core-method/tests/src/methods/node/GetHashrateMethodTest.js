@@ -11,7 +11,12 @@ describe('GetHashrateMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetHashrateMethod({}, Utils, {});
+        method = new GetHashrateMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetHashrateMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_hashrate', () => {

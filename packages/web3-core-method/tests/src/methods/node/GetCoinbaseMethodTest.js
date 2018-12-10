@@ -11,7 +11,12 @@ describe('GetCoinbaseMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetCoinbaseMethod({}, Utils, {});
+        method = new GetCoinbaseMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetCoinbaseMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_coinbase', () => {

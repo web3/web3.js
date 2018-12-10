@@ -11,7 +11,12 @@ describe('GetBlockNumberMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockNumberMethod({}, Utils, {});
+        method = new GetBlockNumberMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBlockNumberMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_blockNumber', () => {

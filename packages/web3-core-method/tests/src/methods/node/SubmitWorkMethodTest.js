@@ -7,7 +7,12 @@ describe('SubmitWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SubmitWorkMethod({}, {}, {});
+        method = new SubmitWorkMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(SubmitWorkMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_submitWork', () => {

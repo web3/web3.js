@@ -7,7 +7,12 @@ describe('GetWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetWorkMethod({}, {}, {});
+        method = new GetWorkMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetWorkMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getWork', () => {

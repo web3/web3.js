@@ -11,7 +11,12 @@ describe('GetPastLogsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetPastLogsMethod({}, {}, formatters);
+        method = new GetPastLogsMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetPastLogsMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getLogs', () => {

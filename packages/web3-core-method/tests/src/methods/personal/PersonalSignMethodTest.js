@@ -11,7 +11,12 @@ describe('PersonalSignMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSignMethod({}, {}, formatters);
+        method = new PersonalSignMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(PersonalSignMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_sign', () => {

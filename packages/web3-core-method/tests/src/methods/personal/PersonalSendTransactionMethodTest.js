@@ -11,7 +11,12 @@ describe('PersonalSendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSendTransactionMethod({}, {}, formatters);
+        method = new PersonalSendTransactionMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(PersonalSendTransactionMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_sendTransaction', () => {

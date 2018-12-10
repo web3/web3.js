@@ -11,7 +11,12 @@ describe('PeerCountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PeerCountMethod({}, Utils, {});
+        method = new PeerCountMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(PeerCountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return net_peerCount', () => {

@@ -11,7 +11,12 @@ describe('ListAccountsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListAccountsMethod({}, Utils, {});
+        method = new ListAccountsMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ListAccountsMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_listAccounts', () => {

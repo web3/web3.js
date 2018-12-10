@@ -7,7 +7,12 @@ describe('ListeningMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new ListeningMethod({}, {}, {});
+        model = new ListeningMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ListeningMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return net_listening', () => {

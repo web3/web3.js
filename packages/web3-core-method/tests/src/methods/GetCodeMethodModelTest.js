@@ -11,7 +11,12 @@ describe('GetCodeMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetCodeMethod({}, {}, formatters);
+        method = new GetCodeMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetCodeMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getCode', () => {

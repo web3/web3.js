@@ -11,7 +11,13 @@ describe('SignMethodTest', () => {
     let method;
 
     beforeEach(() => {
+        // TODO: Add CallMethodCommand test cases and dependencies
         method = new SignMethod({}, {}, formatters, {test: true});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(SignMethod.Type)
+            .toBe('CALL');
     });
 
     it('accounts should be defined', () => {

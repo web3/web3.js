@@ -19,6 +19,7 @@ import PostMethod from '../../../../src/methods/shh/PostMethod';
 import SetMaxMessageSizeMethod from '../../../../src/methods/shh/SetMaxMessageSizeMethod';
 import SetMinPoWMethod from '../../../../src/methods/shh/SetMinPoWMethod';
 import ShhVersionMethod from '../../../../src/methods/shh/ShhVersionMethod';
+import UnlockAccountMethod from '../../../../src/methods/personal/UnlockAccountMethod';
 
 const tests = [
     {
@@ -134,6 +135,9 @@ describe('GenericShhMethodsTest', () => {
         tests.forEach((test) => {
             // eslint-disable-next-line new-cap
             method = new test.method({}, {});
+
+            expect(test.Type)
+                .toBe('CALL');
 
             expect(method.rpcMethod)
                 .toBe(test.rpcMethod);

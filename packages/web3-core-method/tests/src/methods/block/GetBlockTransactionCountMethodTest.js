@@ -13,7 +13,12 @@ describe('GetBlockTransactionCountMethod', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockTransactionCountMethod({}, Utils, formatters);
+        method = new GetBlockTransactionCountMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBlockTransactionCountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {

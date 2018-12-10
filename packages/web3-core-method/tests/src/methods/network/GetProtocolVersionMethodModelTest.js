@@ -7,7 +7,12 @@ describe('GetProtocolVersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetProtocolVersionMethod({}, {}, {});
+        method = new GetProtocolVersionMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetProtocolVersionMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {

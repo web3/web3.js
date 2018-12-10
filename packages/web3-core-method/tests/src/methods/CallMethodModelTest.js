@@ -11,7 +11,12 @@ describe('CallMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new CallMethod({}, {}, formatters);
+        method = new CallMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(CallMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_call', () => {

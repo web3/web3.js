@@ -74,7 +74,7 @@ export GetBlockUncleCountMethod from './methods/block/GetBlockUncleCountMethod';
 export GetTransactionMethod from './methods/transaction/GetTransactionMethod';
 export GetTransactionFromBlockMethod from './methods/transaction/GetTransactionFromBlockMethod';
 export GetTransactionReceipt from './methods/transaction/GetTransactionReceiptMethod';
-export SendSignedTransactionMethod from './methods/transaction/SendSignedTransactionMethod';
+export SendRawTransactionMethod from './methods/transaction/SendRawTransactionMethod';
 export SignTransactionMethod from './methods/transaction/SignTransactionMethod';
 export SendTransactionMethod from './methods/transaction/SendTransactionMethod';
 

@@ -13,7 +13,12 @@ describe('GetBlockUncleCountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockUncleCountMethod({}, Utils, formatters);
+        method = new GetBlockUncleCountMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBlockUncleCountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {

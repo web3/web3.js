@@ -7,7 +7,12 @@ describe('GetNodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetNodeInfoMethod({}, {}, {});
+        method = new GetNodeInfoMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetNodeInfoMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return web3_clientVersion', () => {

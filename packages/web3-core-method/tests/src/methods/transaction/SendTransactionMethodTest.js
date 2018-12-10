@@ -11,12 +11,13 @@ describe('SendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SendTransactionMethod({}, {}, formatters, {accounts: true});
+        // TODO: Add SendTransactionCommand test cases and dependencies
+        method = new SendTransactionMethod({}, formatters, {accounts: true});
     });
 
-    it('static CommandType property return "SEND_TRANSACTION', () => {
-        expect(SendTransactionMethod.CommandType)
-            .toBe('SEND_TRANSACTION');
+    it('static Type property returns "SEND_TRANSACTION', () => {
+        expect(SendTransactionMethod.Type)
+            .toBe('SEND');
     });
 
     it('accounts is set', () => {

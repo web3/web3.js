@@ -13,7 +13,12 @@ describe('GetUncleMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetUncleMethod({}, Utils, formatters);
+        model = new GetUncleMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetUncleMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', () => {

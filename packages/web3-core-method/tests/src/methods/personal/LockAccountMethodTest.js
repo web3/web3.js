@@ -11,7 +11,12 @@ describe('LockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new LockAccountMethod({}, {}, formatters);
+        method = new LockAccountMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(LockAccountMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_lockAccount', () => {

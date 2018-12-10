@@ -15,14 +15,13 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file SendSignedTransactionMethod.js
- * @author Samuel Furter <samuel@ethereum.org>
+ * @file SendRawTransactionMethod.js @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
-export default class SendSignedTransactionMethod extends AbstractSendMethod {
+export default class SendRawTransactionMethod extends AbstractSendMethod {
     /**
      * @param {Utils} utils
      * @param {Object} formatters

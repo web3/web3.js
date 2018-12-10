@@ -1,18 +1,19 @@
-import SendSignedTransactionMethod from '../../../../src/methods/transaction/SendSignedTransactionMethod';
+import SendRawTransactionMethod from '../../../../src/methods/transaction/SendRawTransactionMethod';
 
 /**
- * SendSignedTransactionMethod test
+ * SendRawTransactionMethod test
  */
-describe('SendSignedTransactionMethodTest', () => {
+describe('SendRawTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new SendSignedTransactionMethod({}, {}, {});
+        // TODO: Add sendMethodCommand test cases and dependencies
+        method = new SendRawTransactionMethod({}, {});
     });
 
-    it('static CommandType property return "SEND_TRANSACTION', () => {
-        expect(SendSignedTransactionMethod.CommandType)
-            .toBe('SEND_TRANSACTION');
+    it('static Type property returns "SEND_TRANSACTION', () => {
+        expect(SendRawTransactionMethod.Type)
+            .toBe('SEND');
     });
 
     it('rpcMethod should return eth_sendRawTransaction', () => {

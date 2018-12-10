@@ -7,7 +7,12 @@ describe('IsMiningMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new IsMiningMethod({}, {}, {});
+        method = new IsMiningMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(IsMiningMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_mining', () => {

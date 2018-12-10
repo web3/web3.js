@@ -11,7 +11,12 @@ describe('VersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new VersionMethod({}, Utils, {});
+        method = new VersionMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(VersionMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {

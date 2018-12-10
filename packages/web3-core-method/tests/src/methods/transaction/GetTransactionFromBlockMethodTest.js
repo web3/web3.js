@@ -13,7 +13,12 @@ describe('GetTransactionFromBlockMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetTransactionFromBlockMethod({}, Utils, formatters);
+        method = new GetTransactionFromBlockMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetTransactionFromBlockMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionByBlockNumberAndIndex', () => {

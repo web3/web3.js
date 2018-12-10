@@ -11,7 +11,12 @@ describe('EcRecoverMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new EcRecoverMethod({}, {}, formatters);
+        method = new EcRecoverMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(EcRecoverMethod.Type)
+            .toBe('CALL');
     });
 
     it('rpcMethod should return personal_ecRecover', () => {
