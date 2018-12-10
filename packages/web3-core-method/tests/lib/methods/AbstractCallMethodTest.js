@@ -1,10 +1,14 @@
 import {SocketProviderAdapter} from 'web3-providers';
 import {AbstractWeb3Module} from 'web3-core';
+import * as Utils from 'web3-utils';
+import {formatters} from 'web3-core-helpers';
 import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
 // Mocks
 jest.mock('SocketProviderAdapter');
 jest.mock('AbstractWeb3Module');
+jest.mock('Utils');
+jest.mock('formatters');
 
 /**
  * CallMethodCommand test
@@ -29,6 +33,9 @@ describe('AbstractCallMethodTest', () => {
     });
 
     it('constructor check', () => {
+        expect(AbstractCallMethod.Type)
+            .toBe('CALL');
+
         expect(abstractCallMethod.rpcMethod)
             .toBe('RPC_METHOD');
 
@@ -73,7 +80,7 @@ describe('AbstractCallMethodTest', () => {
     it('Will throw an error on sending the request to the connected node', async () => {
         const error = new Error('ERROR ON SEND');
         providerAdapterMock.send = jest.fn(() => {
-            throw error;
+            return Promise.reject(error);
         });
 
         moduleInstanceMock.currentProvider = providerAdapterMock;

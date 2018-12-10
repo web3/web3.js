@@ -43,17 +43,6 @@ export default class AbstractMethod {
     }
 
     /**
-     * Returns the commandType of this Method
-     *
-     * @property CommandType
-     *
-     * @returns {String}
-     */
-    static get Type() {
-        return undefined;
-    }
-
-    /**
      * Setter for the rpcMethod property
      *
      * @property rpcMethod

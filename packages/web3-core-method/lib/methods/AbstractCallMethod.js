@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractMethod} from './AbstractMethod';
+import AbstractMethod from './AbstractMethod';
 
 export default class AbstractCallMethod extends AbstractMethod {
     /**
@@ -73,8 +73,6 @@ export default class AbstractCallMethod extends AbstractMethod {
         } catch (error) {
             if (this.callback) {
                 this.callback(error, null);
-
-                return;
             }
 
             throw error;
