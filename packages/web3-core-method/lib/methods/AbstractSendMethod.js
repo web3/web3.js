@@ -44,6 +44,17 @@ export default class AbstractSendMethod extends AbstractMethod {
     }
 
     /**
+     * Returns the commandType of this Method
+     *
+     * @property CommandType
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'SEND';
+    }
+
+    /**
      * Sends the request and returns a PromiEvent Object
      *
      * @method execute

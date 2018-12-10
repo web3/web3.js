@@ -33,15 +33,4 @@ export default class SendSignedTransactionMethod extends AbstractMethod {
     constructor(sendTransactionMethodCommand, utils, formatters) {
         super('eth_sendRawTransaction', 1, sendTransactionMethodCommand, utils, formatters);
     }
-
-    /**
-     * Returns the commandType of this Method
-     *
-     * @property CommandType
-     *
-     * @returns {String}
-     */
-    static get CommandType() {
-        return 'SEND_TRANSACTION';
-    }
 }

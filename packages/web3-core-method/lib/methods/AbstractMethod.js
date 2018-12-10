@@ -50,7 +50,7 @@ export default class AbstractMethod {
      * @returns {String}
      */
     static get Type() {
-        return 'CALL';
+        return undefined;
     }
 
     /**

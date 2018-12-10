@@ -34,6 +34,19 @@ export default class AbstractCallMethod extends AbstractMethod {
     }
 
     /**
+     * TODO: Implementing of a custom 'instanceof' with an JS reflection would remove this type and we could do:
+     * TODO: ConcreteCallMethod instanceof AbstractCallMethod
+     * Returns the commandType of this Method
+     *
+     * @property CommandType
+     *
+     * @returns {String}
+     */
+    static get Type() {
+        return 'CALL';
+    }
+
+    /**
      * Sends a JSON-RPC call request
      *
      * @method execute

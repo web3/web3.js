@@ -37,17 +37,6 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     }
 
     /**
-     * Returns the commandType of this Method
-     *
-     * @property CommandType
-     *
-     * @returns {String}
-     */
-    static get CommandType() {
-        return 'SEND_TRANSACTION';
-    }
-
-    /**
      * This method will be executed before the RPC request.
      *
      * @method beforeExecution
