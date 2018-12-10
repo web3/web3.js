@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import isObject from 'underscore-es/isObject';
 import AbstractSendMethod from '../../../lib/methods/AbstractSendMethod';
 
 export default class SendTransactionMethod extends AbstractSendMethod {
@@ -63,19 +64,19 @@ export default class SendTransactionMethod extends AbstractSendMethod {
     execute(moduleInstance, promiEvent) {
         if (!this.isGasLimitDefined()) {
             if (this.hasDefaultGasLimit(moduleInstance)) {
-                this.parameters[0].gas = moduleInstance.defaultGas;
+                this.parameters[0]['gas'] = moduleInstance.defaultGas;
             }
         }
 
         if (!this.isGasPriceDefined() && this.hasDefaultGasPrice(moduleInstance)) {
-            this.parameters[0].gasPrice = moduleInstance.defaultGasPrice;
+            this.parameters[0]['gasPrice'] = moduleInstance.defaultGasPrice;
         }
 
         if (!this.isGasPriceDefined() && !this.hasDefaultGasPrice(moduleInstance)) {
             moduleInstance.currentProvider
                 .send('eth_gasPrice', [])
                 .then(gasPrice => {
-                    this.parameters[0].gasPrice = gasPrice;
+                    this.parameters[0]['gasPrice'] = gasPrice;
                     this.execute(moduleInstance, promiEvent);
                 });
         }
