@@ -51,18 +51,18 @@ export default class LogSubscription extends AbstractSubscription {
         this.options = this.formatters.inputLogFormatter(this.options);
 
         this.getPastLogsMethod.parameters = [this.options];
-        this.getPastLogsMethod.execute(moduleInstance)
-            .then((logs) => {
+        this.getPastLogsMethod.execute(this.moduleInstance)
+            .then(logs => {
                 logs.forEach((log) => {
                     callback(false, log);
-                    this.subscription.emit('data', log);
+                    this.emit('data', log);
                 });
-                super.subscribe(callback);
 
                 delete this.options.fromBlock;
+                super.subscribe(callback);
             })
-            .catch((error) => {
-                this.subscription.emit('error', error);
+            .catch(error => {
+                this.emit('error', error);
                 callback(error, null);
             });
 
