@@ -69,7 +69,7 @@ export default class ModuleFactory {
      * @returns {TransactionSigner}
      */
     createTransactionSigner() {
-        return new TransactionSigner();
+        return new TransactionSigner(this.accounts);
     }
 
     /**
@@ -80,7 +80,7 @@ export default class ModuleFactory {
      * @returns {MessageSigner}
      */
     createMessageSigner() {
-        return new MessageSigner();
+        return new MessageSigner(this.accounts);
     }
 
     /**
@@ -94,7 +94,7 @@ export default class ModuleFactory {
         return new TransactionConfirmationWorkflow(
             this.createTransactionReceiptValidator(),
             this.createNewHeadsWatcher(),
-            new GetTransactionReceiptMethod(this.createCallMethodCommand(), this.utils, this.formatters)
+            new GetTransactionReceiptMethod(this.utils, this.formatters)
         );
     }
 

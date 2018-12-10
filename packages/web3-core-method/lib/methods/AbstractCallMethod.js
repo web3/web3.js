@@ -28,6 +28,8 @@ export default class AbstractCallMethod extends AbstractMethod {
      * @param {Number} parametersAmount
      * @param {Utils} utils
      * @param {Object} formatters
+     *
+     * @constructor
      */
     constructor(rpcMethod, parametersAmount, utils, formatters) {
         super(rpcMethod, parametersAmount, utils, formatters);
