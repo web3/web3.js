@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {AbstractMethod} from './AbstractMethod';
+import AbstractMethod from './AbstractMethod';
 
 export default class AbstractSendMethod extends AbstractMethod {
     /**
@@ -73,20 +73,20 @@ export default class AbstractSendMethod extends AbstractMethod {
             .then(response => {
                 this.transactionConfirmationWorkflow.execute(this, moduleInstance, response, promiEvent);
 
-                promiEvent.emit('transactionHash', response);
-
                 if (this.callback) {
                     this.callback(false, response);
                 }
+
+                promiEvent.emit('transactionHash', response);
             })
             .catch(error => {
-                promiEvent.reject(error);
-                promiEvent.emit('error', error);
-                promiEvent.removeAllListeners();
-
                 if (this.callback) {
                     this.callback(error, null);
                 }
+
+                promiEvent.reject(error);
+                promiEvent.emit('error', error);
+                promiEvent.removeAllListeners();
             });
 
         return promiEvent;
