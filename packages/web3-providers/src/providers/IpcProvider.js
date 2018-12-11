@@ -92,7 +92,7 @@ export default class IpcProvider {
             this.connected = false;
         });
 
-        this.connection.on('error', () => {
+        this.connection.on('error', () => {// TODO: Check error types and handling
             this._timeout();
         });
 

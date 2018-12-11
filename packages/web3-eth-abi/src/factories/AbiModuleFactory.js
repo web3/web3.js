@@ -16,7 +16,7 @@
 */
 /**
  * @file AbiModuleFactory.js
- * @author Samuel Furter<samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
