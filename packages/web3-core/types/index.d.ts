@@ -17,19 +17,14 @@
  * @date 2018
  */
 
-import {AbstractProviderAdapter, ProvidersModuleFactory, provider} from 'web3-providers';
+import * as net from "net";
+import {AbstractProviderAdapter, ProvidersModuleFactory, provider, HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
 
 export class AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider | string,
+        provider: AbstractProviderAdapter | provider,
         providersModuleFactory: ProvidersModuleFactory,
-        // not sure what the below object structure is
-        providers: {},
-        // dont have type yet
-        // as this is in web3-core-method
-        // can be sorted later once dependencies
-        // are cleaned up
-        methodController: any,
+        providers: Providers,
         // dont have type yet
         // as this is in web3-core-method
         // can be sorted later once dependencies
@@ -44,10 +39,9 @@ export class AbstractWeb3Module {
     readonly transactionBlockTimeout: number;
     readonly defaultBlock: string | number;
     readonly defaultAccount: string | null;
-    readonly currentProvider: AbstractProviderAdapter | provider;
-    // if we can get a strongly typed object for `net` that would be great
-    setProvider(provider: AbstractProviderAdapter | provider | string, net: any): boolean;
-    isSameProvider(provider: AbstractProviderAdapter | provider | string): boolean;
+    readonly currentProvider: AbstractProviderAdapter;
+    setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
+    isSameProvider(provider: AbstractProviderAdapter | provider): boolean;
     clearSubscriptions(): void;
 }
 
@@ -59,4 +53,10 @@ export interface Web3ModuleOptions {
     transactionPollingTimeout?: number;
     defaultGasPrice?: string;
     defaultGas?: number;
+}
+
+export interface Providers {
+    HttpProvider: HttpProvider;
+    WebsocketProvider: WebsocketProvider;
+    IpcProvider: IpcProvider;
 }

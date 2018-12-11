@@ -16,8 +16,8 @@
  * @author Josh Stevens <joshstevens19@hotmail.co.uk>
  * @date 2018
  */
-
-import {ProvidersModuleFactory, HttpProvider} from 'web3-providers';
+import * as net from 'net';
+import {ProvidersModuleFactory, HttpProvider, IpcProvider, WebsocketProvider} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 
 const options = {
@@ -29,6 +29,9 @@ const options = {
     ]
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
+const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
+const websocketProvider = new WebsocketProvider('ws://localhost:8546');
+
 const providersModuleFactory = new ProvidersModuleFactory();
 const web3ModuleOption: Web3ModuleOptions = {
     defaultBlock: '1',
@@ -40,10 +43,11 @@ const web3ModuleOption: Web3ModuleOptions = {
 const abstractWeb3Module = new AbstractWeb3Module(
     httpProvider,
     providersModuleFactory,
-    {},
-    {},
-    null,
-    web3ModuleOption
+    {
+        HttpProvider: httpProvider,
+        WebsocketProvider: websocketProvider,
+        IpcProvider: ipcProvider
+    }
 );
 
 // $ExpectType string
@@ -67,14 +71,14 @@ abstractWeb3Module.defaultBlock;
 // $ExpectType string | null
 abstractWeb3Module.defaultAccount;
 
-// $ExpectType AbstractProviderAdapter | HttpProvider | IpcProvider | WebsocketProvider
+// $ExpectType AbstractProviderAdapter
 abstractWeb3Module.currentProvider;
 
 // $ExpectType boolean
-abstractWeb3Module.setProvider(httpProvider, {});
+abstractWeb3Module.setProvider(httpProvider);
 
 // $ExpectType boolean
-abstractWeb3Module.setProvider('http://localhost:8545', {});
+abstractWeb3Module.setProvider('http://localhost:8545');
 
 // $ExpectType boolean
 abstractWeb3Module.isSameProvider('http://localhost:8545');
