@@ -31,6 +31,7 @@ const options = {
     ]
 };
 const httpProvider = new HttpProvider('http://localhost:8545', options);
+
 // $ExpectType HttpProviderAdapter
 new HttpProviderAdapter(httpProvider);
 

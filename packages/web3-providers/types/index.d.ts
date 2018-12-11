@@ -26,11 +26,11 @@ import EventEmitter from 'eventemitter3';
 export class AbstractProviderAdapter extends EventEmitter {
     constructor(provider: provider);
     send(method: string, params: any[]): Promise<any>;
-    sendBatch(payload: any, callback: () => void): void;
+    sendBatch(payload: JsonRPCPayload, callback: () => void): void;
     // TS does not support overloading so we have to do it this way for now
     subscribe(subscriptionType?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string | Error>;
     unsubscribe(subscriptionId?: string, subscriptionType?: string): Promise<boolean | Error>;
-    handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: any): void;
+    handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: JsonRPCPayload): void;
     isConnected(): boolean;
 }
 
@@ -82,7 +82,7 @@ export class ProvidersModuleFactory {
 
 export class HttpProvider {
     constructor(host: string, options: HttpProviderOptions);
-    send(payload: any, callback: () => void): void;
+    send(payload: JsonRPCPayload, callback: () => void): void;
     disconnect(): void;
 }
 
@@ -90,7 +90,7 @@ export class IpcProvider {
     constructor(path: string, net: net.Server);
     addDefaultEvents(): void;
     reconnect(): void;
-    send(payload: any, callback: () => void): void;
+    send(payload: JsonRPCPayload, callback: () => void): void;
     on(type: string, callback: () => void): void;
     once(type: string, callback: () => void): void;
     removeListener(type: string, callback: () => void): void;
@@ -101,7 +101,7 @@ export class IpcProvider {
 export class WebsocketProvider {
     constructor(host: string, options: WebsocketProviderOptions);
     addDefaultEvents(): void;
-    send(payload: any, callback: () => void): void;
+    send(payload: JsonRPCPayload, callback: () => void): void;
     on(type: string, callback: () => void): void;
     removeListener(type: string, callback: () => void): void;
     removeAllListeners(type: string): void;
@@ -124,7 +124,14 @@ export class JsonRpcResponseValidator {
     static isResponseItemValid(response: JsonRpcMappersPayload): boolean;
 }
 
-export type provider = HttpProvider | IpcProvider | WebsocketProvider;
+export type provider = HttpProvider | IpcProvider | WebsocketProvider | string;
+
+export interface JsonRPCPayload {
+    jsonrpc: string;
+    method: string;
+    params: any[];
+    id?: string | number;
+}
 
 export interface HttpProviderOptions {
     host?: string;
