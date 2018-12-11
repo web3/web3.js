@@ -26,11 +26,11 @@ import EventEmitter from 'eventemitter3';
 export class AbstractProviderAdapter extends EventEmitter {
     constructor(provider: provider);
     send(method: string, params: any[]): Promise<any>;
-    sendBatch(payload: JsonRPCPayload, callback: () => void): void;
+    sendBatch(payload: JsonRpcPayload, callback: () => void): void;
     // TS does not support overloading so we have to do it this way for now
     subscribe(subscriptionType?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string | Error>;
     unsubscribe(subscriptionId?: string, subscriptionType?: string): Promise<boolean | Error>;
-    handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: JsonRPCPayload): void;
+    handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: JsonRpcPayload): void;
     isConnected(): boolean;
 }
 
@@ -82,7 +82,7 @@ export class ProvidersModuleFactory {
 
 export class HttpProvider {
     constructor(host: string, options: HttpProviderOptions);
-    send(payload: JsonRPCPayload, callback: () => void): void;
+    send(payload: JsonRpcPayload, callback: () => void): void;
     disconnect(): void;
 }
 
@@ -90,7 +90,7 @@ export class IpcProvider {
     constructor(path: string, net: net.Server);
     addDefaultEvents(): void;
     reconnect(): void;
-    send(payload: JsonRPCPayload, callback: () => void): void;
+    send(payload: JsonRpcPayload, callback: () => void): void;
     on(type: string, callback: () => void): void;
     once(type: string, callback: () => void): void;
     removeListener(type: string, callback: () => void): void;
@@ -101,7 +101,7 @@ export class IpcProvider {
 export class WebsocketProvider {
     constructor(host: string, options: WebsocketProviderOptions);
     addDefaultEvents(): void;
-    send(payload: JsonRPCPayload, callback: () => void): void;
+    send(payload: JsonRpcPayload, callback: () => void): void;
     on(type: string, callback: () => void): void;
     removeListener(type: string, callback: () => void): void;
     removeAllListeners(type: string): void;
@@ -110,8 +110,8 @@ export class WebsocketProvider {
 }
 
 export class JsonRpcMapper {
-    static toPayload(method: string, params: any[]): JsonRpcMappersPayload;
-    static toBatchPayload(requests: any[]): JsonRpcMappersPayload[];
+    static toPayload(method: string, params: any[]): JsonRpcPayload;
+    static toBatchPayload(requests: any[]): JsonRpcPayload[];
 }
 
 export class ProviderAdapterResolver {
@@ -120,13 +120,13 @@ export class ProviderAdapterResolver {
 }
 
 export class JsonRpcResponseValidator {
-    static isValid(response: JsonRpcMappersPayload[] | JsonRpcMappersPayload): boolean;
-    static isResponseItemValid(response: JsonRpcMappersPayload): boolean;
+    static isValid(response: JsonRpcPayload[] | JsonRpcPayload): boolean;
+    static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 
 export type provider = HttpProvider | IpcProvider | WebsocketProvider | string;
 
-export interface JsonRPCPayload {
+export interface JsonRpcPayload {
     jsonrpc: string;
     method: string;
     params: any[];
@@ -145,11 +145,4 @@ export interface WebsocketProviderOptions {
     headers?: {};
     protocol?: string;
     clientConfig?: string;
-}
-
-export interface JsonRpcMappersPayload {
-    jsonrpc: string;
-    id: number;
-    method: string;
-    params: any[];
 }
