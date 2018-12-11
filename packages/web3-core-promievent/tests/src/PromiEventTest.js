@@ -10,28 +10,34 @@ describe('PromiEventTest', () => {
         promiEvent = new PromiEvent();
     });
 
-    it('method resolve resolves the Promise', () => {
+    it('method resolve resolves the Promise', done => {
         promiEvent.then(response => {
             expect(response)
                 .toEqual(true);
+            
+            done();
         })
 
         promiEvent.resolve(true);
     });
 
-    it('method reject rejects the Promise', () => {
+    it('method reject rejects the Promise', done => {
         promiEvent.catch(response => {
             expect(response)
                 .toEqual(false);
+
+            done();
         })
 
         promiEvent.reject(false);
     });
 
-    it('method emit emitts an event', () => {
+    it('method emit emitts an event', done => {
         promiEvent.on('test', response => {
             expect(response)
                 .toEqual(false);
+
+            done();
         })
 
         promiEvent.emit('test', false);

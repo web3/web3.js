@@ -480,7 +480,9 @@ export const inputAddressFormatter = (address) => {
 
     if (iban.isValid() && iban.isDirect()) {
         return iban.toAddress().toLowerCase();
-    } else if (Utils.isAddress(address)) {
+    }
+
+    if (Utils.isAddress(address)) {
         return `0x${address.toLowerCase().replace('0x', '')}`;
     }
 

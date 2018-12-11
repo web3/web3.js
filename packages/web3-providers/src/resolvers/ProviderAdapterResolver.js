@@ -38,7 +38,7 @@ export default class ProviderAdapterResolver {
      *
      * @method resolve
      *
-     * @param {*} provider
+     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
      * @returns {AbstractProviderAdapter|Error}

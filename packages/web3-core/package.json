@@ -15,7 +15,8 @@
     },
     "dependencies": {
         "underscore-es": "^1.9.8",
-        "web3-providers": "1.0.0-beta.36"
+        "web3-providers": "1.0.0-beta.36",
+        "web3-utils": "1.0.0-beta.36"
     },
     "files": [
         "dist"

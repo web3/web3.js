@@ -21,23 +21,24 @@
  */
 
 import isObject from 'underscore-es/isObject';
+import {toChecksumAddress} from 'web3-utils'; // TODO: Maybe this could be removed with a web3-core-types module
 
 export default class AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {Object} providers
-     * @param {ModuleFactory} methodModuleFactory
+     * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory
      * @param {Object} options
      *
      * @constructor
      */
     constructor(
-        provider = this.throwIfMissing('provider'),
-        providersModuleFactory = this.throwIfMissing('ProvidersModuleFactory'),
-        providers = this.throwIfMissing('providers'),
-        methodModuleFactory = this.throwIfMissing('MethodModuleFactory'),
+        provider = AbstractWeb3Module.throwIfMissing('provider'),
+        providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
+        providers = AbstractWeb3Module.throwIfMissing('providers'),
+        methodModuleFactory = AbstractWeb3Module.throwIfMissing('MethodModuleFactory'),
         methodFactory = null,
         options = {}
     ) {
@@ -48,7 +49,7 @@ export default class AbstractWeb3Module {
         this.givenProvider = this.providerDetector.detect();
         this._currentProvider = this.providerAdapterResolver.resolve(provider);
 
-        this._defaultAccount = options.defaultAccount;
+        this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this.defaultBlock = options.defaultBlock;
         this.transactionBlockTimeout = options.transactionBlockTimeout || 50;
         this.transactionConfirmationBlocks = options.transactionConfirmationBlocks || 24;
@@ -92,7 +93,7 @@ export default class AbstractWeb3Module {
      * @param {String} value
      */
     set defaultAccount(value) {
-        this._defaultAccount = this.utils.toChecksumAddress(this.formatters.inputAddressFormatter(value));
+        this._defaultAccount = toChecksumAddress(value);
     }
 
     /**
@@ -123,14 +124,15 @@ export default class AbstractWeb3Module {
      * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
-     * @returns {Boolean}
+     * @returns {Boolean|Error}
      */
     setProvider(provider, net) {
         if (!this.isSameProvider(provider)) {
+            const resolvedProvider = this.providerAdapterResolver.resolve(provider, net);
             this.clearSubscriptions();
-            this._currentProvider = this.providerAdapterResolver.resolve(provider, net);
+            this._currentProvider = resolvedProvider;
 
-            return !!this._currentProvider;
+            return true;
         }
 
         return false;
