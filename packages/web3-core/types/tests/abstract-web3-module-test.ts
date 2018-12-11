@@ -33,12 +33,6 @@ const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', n
 const websocketProvider = new WebsocketProvider('ws://localhost:8546');
 
 const providersModuleFactory = new ProvidersModuleFactory();
-const web3ModuleOption: Web3ModuleOptions = {
-    defaultBlock: '1',
-    transactionBlockTimeout: 2000,
-    transactionConfirmationBlocks: 1,
-    transactionPollingTimeout: 2000,
-};
 
 const abstractWeb3Module = new AbstractWeb3Module(
     httpProvider,
@@ -47,7 +41,8 @@ const abstractWeb3Module = new AbstractWeb3Module(
         HttpProvider: httpProvider,
         WebsocketProvider: websocketProvider,
         IpcProvider: ipcProvider
-    }
+    },
+    {}
 );
 
 // $ExpectType string

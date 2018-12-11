@@ -25,11 +25,8 @@ export class AbstractWeb3Module {
         provider: AbstractProviderAdapter | provider,
         providersModuleFactory: ProvidersModuleFactory,
         providers: Providers,
-        // dont have type yet
-        // as this is in web3-core-method
-        // can be sorted later once dependencies
-        // are cleaned up
-        AbstractMethodModelFactory?: any,
+        methodModuleFactory: any,
+        methodFactory?: any,
         options?: Web3ModuleOptions
     );
     readonly defaultGasPrice: string;
