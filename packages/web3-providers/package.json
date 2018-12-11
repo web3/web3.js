@@ -12,6 +12,7 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "dtslint types && jest",
+        "jest": "jest",
         "dtslint": "dtslint types"
     },
     "types": "types",
