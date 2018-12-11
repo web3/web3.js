@@ -81,7 +81,7 @@ export class ProvidersModuleFactory {
 }
 
 export class HttpProvider {
-    constructor(host: string, options: HttpProviderOptions);
+    constructor(host: string, options?: HttpProviderOptions);
     send(payload: JsonRpcPayload, callback: () => void): void;
     disconnect(): void;
 }
@@ -99,7 +99,7 @@ export class IpcProvider {
 }
 
 export class WebsocketProvider {
-    constructor(host: string, options: WebsocketProviderOptions);
+    constructor(host: string, options?: WebsocketProviderOptions);
     addDefaultEvents(): void;
     send(payload: JsonRpcPayload, callback: () => void): void;
     on(type: string, callback: () => void): void;
