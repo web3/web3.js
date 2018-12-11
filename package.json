@@ -99,6 +99,7 @@
         "typescript": "^3.2.1"
     },
     "dependencies": {
-        "@babel/polyfill": "^7.0.0"
+        "@babel/polyfill": "^7.0.0",
+        "@types/node": "^10.12.12"
     }
 }

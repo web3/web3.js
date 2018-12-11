@@ -40,8 +40,8 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      *
      * @method subscribe
      *
-     * @param {String} subscriptionMethod
      * @param {String} subscriptionType
+     * @param {String} subscriptionMethod
      * @param {Array} parameters
      *
      * @returns {Promise<String|Error>}
