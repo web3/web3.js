@@ -13,17 +13,22 @@ describe('GetBlockUncleCountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockUncleCountMethod({}, Utils, formatters);
+        method = new GetBlockUncleCountMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBlockUncleCountMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getUncleCountByBlockNumber', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getUncleCountByBlockNumber');
+            .toEqual('eth_getUncleCountByBlockNumber');
     });
 
     it('parametersAmount should return 1', () => {
         expect(method.parametersAmount)
-            .toBe(1);
+            .toEqual(1);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -35,13 +40,13 @@ describe('GetBlockUncleCountMethodTest', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
 
         expect(method.rpcMethod)
-            .toBe('eth_getUncleCountByBlockHash');
+            .toEqual('eth_getUncleCountByBlockHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -53,13 +58,13 @@ describe('GetBlockUncleCountMethodTest', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith(100);
 
         expect(method.rpcMethod)
-            .toBe('eth_getUncleCountByBlockNumber');
+            .toEqual('eth_getUncleCountByBlockNumber');
     });
 
     it('afterExecution should map the hex string to a number', () => {
@@ -67,7 +72,7 @@ describe('GetBlockUncleCountMethodTest', () => {
             .mockReturnValueOnce(100);
 
         expect(method.afterExecution('0x0'))
-            .toBe(100);
+            .toEqual(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith('0x0');

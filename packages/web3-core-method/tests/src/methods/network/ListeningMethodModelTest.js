@@ -7,17 +7,22 @@ describe('ListeningMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new ListeningMethod({}, {}, {});
+        model = new ListeningMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ListeningMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return net_listening', () => {
         expect(model.rpcMethod)
-            .toBe('net_listening');
+            .toEqual('net_listening');
     });
 
     it('parametersAmount should return 0', () => {
         expect(model.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -25,11 +30,11 @@ describe('ListeningMethodTest', () => {
         model.beforeExecution();
 
         expect(model.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(model.afterExecution('version'))
-            .toBe('version');
+            .toEqual('version');
     });
 });

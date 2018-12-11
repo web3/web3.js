@@ -7,17 +7,22 @@ describe('GetProtocolVersionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetProtocolVersionMethod({}, {}, {});
+        method = new GetProtocolVersionMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetProtocolVersionMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_protocolVersion', () => {
         expect(method.rpcMethod)
-            .toBe('eth_protocolVersion');
+            .toEqual('eth_protocolVersion');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -25,11 +30,11 @@ describe('GetProtocolVersionMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('version'))
-            .toBe('version');
+            .toEqual('version');
     });
 });

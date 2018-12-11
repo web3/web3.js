@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class PeerCountMethod extends AbstractMethod {
+export default class PeerCountMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('net_peerCount', 0, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('net_peerCount', 0, utils, formatters);
     }
 
     /**

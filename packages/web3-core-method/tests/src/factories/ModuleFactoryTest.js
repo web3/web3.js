@@ -1,6 +1,4 @@
 import ModuleFactory from '../../../src/factories/ModuleFactory';
-import CallMethodCommand from '../../../src/commands/CallMethodCommand';
-import SendTransactionMethodCommand from '../../../src/commands/SendTransactionMethodCommand';
 import TransactionConfirmationWorkflow from '../../../src/workflows/TransactionConfirmationWorkflow';
 import TransactionSigner from '../../../src/signers/TransactionSigner';
 import MessageSigner from '../../../src/signers/MessageSigner';
@@ -15,14 +13,6 @@ describe('ModuleFactoryTest', () => {
 
     beforeEach(() => {
         moduleFactory = new ModuleFactory({}, {}, {});
-    });
-
-    it('calls createCallMethodCommand and should return an instance of CallMethodCommand', () => {
-        expect(moduleFactory.createCallMethodCommand()).toBeInstanceOf(CallMethodCommand);
-    });
-
-    it('calls createSendMethodCommand and should return an instance of SendTransactionMethodCommand', () => {
-        expect(moduleFactory.createSendTransactionMethodCommand({}, {})).toBeInstanceOf(SendTransactionMethodCommand);
     });
 
     it('calls createTransactionConfirmationWorkflow and should return an instance of TransactionConfirmationWorkflow', () => {

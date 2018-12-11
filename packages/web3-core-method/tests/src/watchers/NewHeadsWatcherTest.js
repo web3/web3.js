@@ -63,7 +63,7 @@ describe('NewHeadsWatcherTest', () => {
             .toBeTruthy();
 
         expect(newHeadsWatcherObject.confirmationInterval)
-            .toBe(1);
+            .toEqual(1);
 
         expect(setInterval)
             .toHaveBeenCalledTimes(1);

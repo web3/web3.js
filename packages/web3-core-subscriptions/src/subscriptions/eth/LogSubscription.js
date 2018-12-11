@@ -38,30 +38,35 @@ export default class LogSubscription extends AbstractSubscription {
     }
 
     /**
-     * This method will be executed before the subscription starts.
+     * Sends the JSON-RPC request, emits the required events and executes the callback method.
      *
-     * @method beforeSubscription
+     * @method subscribe
      *
-     * @param {AbstractWeb3Module} moduleInstance
      * @param {Function} callback
+     *
+     * @callback callback callback(error, result)
+     * @returns {Subscription} Subscription
      */
-    beforeSubscription(moduleInstance, callback) {
+    subscribe(callback) {
         this.options = this.formatters.inputLogFormatter(this.options);
-        this.getPastLogsMethod.parameters = [this.options];
 
-        this.getPastLogsMethod.execute(moduleInstance)
-            .then((logs) => {
+        this.getPastLogsMethod.parameters = [this.options];
+        this.getPastLogsMethod.execute(this.moduleInstance)
+            .then(logs => {
                 logs.forEach((log) => {
                     callback(false, log);
-                    this.subscription.emit('data', log);
+                    this.emit('data', log);
                 });
 
                 delete this.options.fromBlock;
+                super.subscribe(callback);
             })
-            .catch((error) => {
-                this.subscription.emit('error', error);
+            .catch(error => {
+                this.emit('error', error);
                 callback(error, null);
             });
+
+        return this;
     }
 
     /**

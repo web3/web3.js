@@ -7,17 +7,22 @@ describe('GetNodeInfoMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetNodeInfoMethod({}, {}, {});
+        method = new GetNodeInfoMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetNodeInfoMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return web3_clientVersion', () => {
         expect(method.rpcMethod)
-            .toBe('web3_clientVersion');
+            .toEqual('web3_clientVersion');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -25,11 +30,11 @@ describe('GetNodeInfoMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('version'))
-            .toBe('version');
+            .toEqual('version');
     });
 });

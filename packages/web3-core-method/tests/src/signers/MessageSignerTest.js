@@ -12,7 +12,7 @@ describe('MessageSignerTest', () => {
         accountsMock = new Accounts();
         accountsMock.sign = jest.fn();
 
-        messageSigner = new MessageSigner();
+        messageSigner = new MessageSigner(accountsMock);
     });
 
     it('calls sign and throws error', () => {
@@ -20,7 +20,7 @@ describe('MessageSignerTest', () => {
             messageSigner.sign('string', 0, accountsMock);
         } catch (error) {
             expect(error.message)
-                .toBe('Wallet or privateKey in wallet is not set!');
+                .toEqual('Wallet or privateKey in wallet is not set!');
         }
     });
 
@@ -30,7 +30,7 @@ describe('MessageSignerTest', () => {
             .mockReturnValueOnce({signature: '0x00'});
 
         expect(messageSigner.sign('string', 0, accountsMock))
-            .toBe('0x00');
+            .toEqual('0x00');
 
         expect(accountsMock.sign)
             .toHaveBeenCalledWith('string', '0x0');

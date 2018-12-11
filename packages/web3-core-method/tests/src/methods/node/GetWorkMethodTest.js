@@ -7,17 +7,22 @@ describe('GetWorkMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetWorkMethod({}, {}, {});
+        method = new GetWorkMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetWorkMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getWork', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getWork');
+            .toEqual('eth_getWork');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -25,11 +30,11 @@ describe('GetWorkMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('version'))
-            .toBe('version');
+            .toEqual('version');
     });
 });

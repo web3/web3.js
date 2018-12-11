@@ -13,17 +13,22 @@ describe('GetUncleMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetUncleMethod({}, Utils, formatters);
+        model = new GetUncleMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetUncleMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getUncleByBlockNumberAndIndex', () => {
         expect(model.rpcMethod)
-            .toBe('eth_getUncleByBlockNumberAndIndex');
+            .toEqual('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('parametersAmount should return 2', () => {
         expect(model.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -37,8 +42,8 @@ describe('GetUncleMethodTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
-        expect(model.parameters[1]).toBe('0x0');
+        expect(model.parameters[0]).toEqual('0x0');
+        expect(model.parameters[1]).toEqual('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
@@ -47,7 +52,7 @@ describe('GetUncleMethodTest', () => {
             .toHaveBeenCalledWith(100);
 
         expect(model.rpcMethod)
-            .toBe('eth_getUncleByBlockHashAndIndex');
+            .toEqual('eth_getUncleByBlockHashAndIndex');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -61,8 +66,8 @@ describe('GetUncleMethodTest', () => {
 
         model.beforeExecution({});
 
-        expect(model.parameters[0]).toBe('0x0');
-        expect(model.parameters[1]).toBe('0x0');
+        expect(model.parameters[0]).toEqual('0x0');
+        expect(model.parameters[1]).toEqual('0x0');
 
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith(100);
@@ -70,7 +75,7 @@ describe('GetUncleMethodTest', () => {
         expect(Utils.numberToHex)
             .toHaveBeenCalledWith(100);
 
-        expect(model.rpcMethod).toBe('eth_getUncleByBlockNumberAndIndex');
+        expect(model.rpcMethod).toEqual('eth_getUncleByBlockNumberAndIndex');
     });
 
     it('afterExecution should map the response', () => {

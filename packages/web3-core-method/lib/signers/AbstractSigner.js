@@ -22,16 +22,22 @@
 
 export default class AbstractSigner {
     /**
+     * @param {Accounts} accounts
+     */
+    constructor(accounts) {
+        this.accounts = accounts;
+    };
+
+    /**
      * Get wallet for address with accounts package
      *
      * @param {String} from
-     * @param {Accounts} accounts
      *
      * @returns {Account}
      */
-    getWallet(from, accounts) {
-        const account = accounts.wallet[from];
-        if(account) {
+    getWallet(from) {
+        const account = this.accounts.wallet[from];
+        if (account) {
             return account;
         }
 

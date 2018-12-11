@@ -43,7 +43,7 @@ describe('TransactionReceiptValidatorTest', () => {
             .toBeInstanceOf(Error);
 
         expect(error.message)
-            .toBe(`Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(receipt, null, 2)}`);
+            .toEqual(`Transaction ran out of gas. Please provide more gas:\n${JSON.stringify(receipt, null, 2)}`);
     });
 
     it('calls validate and returns error because the EVM has reverted it', () => {
@@ -62,7 +62,7 @@ describe('TransactionReceiptValidatorTest', () => {
             .toBeInstanceOf(Error);
 
         expect(error.message)
-            .toBe(`Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`);
+            .toEqual(`Transaction has been reverted by the EVM:\n${JSON.stringify(receipt, null, 2)}`);
     });
 
     it('calls validate with lower gas usage as gas provided and valid receipt status', () => {

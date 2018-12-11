@@ -11,17 +11,22 @@ describe('ListAccountsMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ListAccountsMethod({}, Utils, {});
+        method = new ListAccountsMethod(Utils, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ListAccountsMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_listAccounts', () => {
         expect(method.rpcMethod)
-            .toBe('personal_listAccounts');
+            .toEqual('personal_listAccounts');
     });
 
     it('parametersAmount should return 0', () => {
         expect(method.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -29,14 +34,14 @@ describe('ListAccountsMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         Utils.toChecksumAddress
             .mockReturnValueOnce('0x0');
 
-        expect(method.afterExecution(['0x0'])[0]).toBe('0x0');
+        expect(method.afterExecution(['0x0'])[0]).toEqual('0x0');
 
         expect(Utils.toChecksumAddress)
             .toHaveBeenCalledWith('0x0')

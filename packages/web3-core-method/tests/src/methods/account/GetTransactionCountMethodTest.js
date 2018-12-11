@@ -13,17 +13,22 @@ describe('GetTransactionCountMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new GetTransactionCountMethod({}, Utils, formatters);
+        model = new GetTransactionCountMethod(Utils, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetTransactionCountMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getTransactionCount', () => {
         expect(model.rpcMethod)
-            .toBe('eth_getTransactionCount');
+            .toEqual('eth_getTransactionCount');
     });
 
     it('parametersAmount should return 2', () => {
         expect(model.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('beforeExecution should call inputAddressFormatter and inputDefaultBlockNumberFormatter', () => {
@@ -38,10 +43,10 @@ describe('GetTransactionCountMethodTest', () => {
         model.beforeExecution({});
 
         expect(model.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(model.parameters[1])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(formatters.inputAddressFormatter)
             .toHaveBeenCalledWith('string');
@@ -55,7 +60,7 @@ describe('GetTransactionCountMethodTest', () => {
             .mockReturnValueOnce(100);
 
         expect(model.afterExecution('0x0'))
-            .toBe(100);
+            .toEqual(100);
 
         expect(Utils.hexToNumber)
             .toHaveBeenCalledWith('0x0');

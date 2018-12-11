@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class PersonalSendTransactionMethod extends AbstractMethod {
+export default class PersonalSendTransactionMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('personal_sendTransaction', 2, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('personal_sendTransaction', 2, utils, formatters);
     }
 
     /**

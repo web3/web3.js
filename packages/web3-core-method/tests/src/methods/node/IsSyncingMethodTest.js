@@ -11,17 +11,22 @@ describe('IsSyncingMethodTest', () => {
     let model;
 
     beforeEach(() => {
-        model = new IsSyncingMethod({}, {}, formatters);
+        model = new IsSyncingMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(IsSyncingMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_syncing', () => {
         expect(model.rpcMethod)
-            .toBe('eth_syncing');
+            .toEqual('eth_syncing');
     });
 
     it('parametersAmount should return 0', () => {
         expect(model.parametersAmount)
-            .toBe(0);
+            .toEqual(0);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -29,7 +34,7 @@ describe('IsSyncingMethodTest', () => {
         model.beforeExecution();
 
         expect(model.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should map the response', () => {

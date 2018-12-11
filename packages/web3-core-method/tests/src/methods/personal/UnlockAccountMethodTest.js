@@ -11,17 +11,22 @@ describe('UnlockAccountMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new UnlockAccountMethod({}, {}, formatters);
+        method = new UnlockAccountMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(UnlockAccountMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_unlockAccount', () => {
         expect(method.rpcMethod)
-            .toBe('personal_unlockAccount');
+            .toEqual('personal_unlockAccount');
     });
 
     it('parametersAmount should return 3', () => {
         expect(method.parametersAmount)
-            .toBe(3);
+            .toEqual(3);
     });
 
     it('beforeExecution should call inputSignFormatter and inputAddressFormatter', () => {
@@ -35,11 +40,11 @@ describe('UnlockAccountMethodTest', () => {
         expect(formatters.inputAddressFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(method.parameters[0]).toBe('0x00');
+        expect(method.parameters[0]).toEqual('0x00');
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('unlockAccount'))
-            .toBe('unlockAccount');
+            .toEqual('unlockAccount');
     });
 });

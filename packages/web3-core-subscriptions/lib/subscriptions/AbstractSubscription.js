@@ -29,8 +29,8 @@ import EventEmitter from 'eventemitter3';
  */
 export default class AbstractSubscription extends EventEmitter {
     /**
-     * @param {String} method
      * @param {String} type
+     * @param {String} method
      * @param {Object} options
      * @param {Utils} utils
      * @param {Object} formatters
@@ -38,10 +38,10 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @constructor
      */
-    constructor(method, type, options, utils, formatters, moduleInstance) {
+    constructor(type, method, options, utils, formatters, moduleInstance) {
         super();
-        this.method = method;
         this.type = type;
+        this.method = method;
         this.options = options;
         this.utils = utils;
         this.formatters = formatters;
@@ -64,9 +64,9 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @method onNewSubscriptionItem
      *
-     * @param {*} subscriptionItem
+     * @param {any} subscriptionItem
      *
-     * @returns {*}
+     * @returns {any}
      */
     onNewSubscriptionItem(subscriptionItem) {
         return subscriptionItem;
@@ -83,32 +83,33 @@ export default class AbstractSubscription extends EventEmitter {
      * @returns {Subscription} Subscription
      */
     subscribe(callback) {
-        this.beforeSubscription(callback);
+        this.beforeSubscription(this.moduleInstance, callback);
 
         this.moduleInstance.currentProvider
-            .subscribe(this.type, this.method, [
-                this.options
-            ])
-            .then((subscriptionId) => {
+            .subscribe(this.type, this.method, [this.options])
+            .then(subscriptionId => {
                 this.id = subscriptionId;
 
-                this.moduleInstance.currentProvider.on(this.id, (error, response) => {
-                    if (!error) {
-                        this.handleSubscriptionResponse(response, callback);
+                this.moduleInstance.currentProvider.on(
+                    this.id,
+                    (error, response) => {
+                        if (!error) {
+                            this.handleSubscriptionResponse(response, callback);
 
-                        return;
+                            return;
+                        }
+
+                        if (self.moduleInstance.currentProvider.once) {
+                            this.reconnect(callback);
+                        }
+
+                        if (isFunction(callback)) {
+                            callback(error, null);
+                        }
+
+                        this.emit('error', error);
                     }
-
-                    if (self.moduleInstance.currentProvider.once) {
-                        this.reconnect(callback);
-                    }
-
-                    if (isFunction(callback)) {
-                        callback(error, null);
-                    }
-
-                    this.emit('error', error);
-                });
+                );
             });
 
         return this;

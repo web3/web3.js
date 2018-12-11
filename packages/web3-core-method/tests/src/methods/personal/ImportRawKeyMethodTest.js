@@ -7,17 +7,22 @@ describe('ImportRawKeyMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new ImportRawKeyMethod({}, {}, {});
+        method = new ImportRawKeyMethod({}, {});
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(ImportRawKeyMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_importRawKey', () => {
         expect(method.rpcMethod)
-            .toBe('personal_importRawKey');
+            .toEqual('personal_importRawKey');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('beforeExecution should do nothing with the parameters', () => {
@@ -25,11 +30,11 @@ describe('ImportRawKeyMethodTest', () => {
         method.beforeExecution();
 
         expect(method.parameters[0])
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('version'))
-            .toBe('version');
+            .toEqual('version');
     });
 });

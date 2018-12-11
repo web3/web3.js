@@ -11,17 +11,22 @@ describe('PersonalSendTransactionMethodTest', () => {
     let method;
 
     beforeEach(() => {
-        method = new PersonalSendTransactionMethod({}, {}, formatters);
+        method = new PersonalSendTransactionMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(PersonalSendTransactionMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return personal_sendTransaction', () => {
         expect(method.rpcMethod)
-            .toBe('personal_sendTransaction');
+            .toEqual('personal_sendTransaction');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('beforeExecution should call inputTransactionFormatter', () => {
@@ -40,6 +45,6 @@ describe('PersonalSendTransactionMethodTest', () => {
 
     it('afterExecution should just return the response', () => {
         expect(method.afterExecution('personalSend'))
-            .toBe('personalSend');
+            .toEqual('personalSend');
     });
 });

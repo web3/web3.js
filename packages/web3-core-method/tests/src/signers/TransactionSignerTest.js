@@ -11,12 +11,12 @@ describe('TransactionSignerTest', () => {
         accountsMock = new Accounts();
         accountsMock.signTransaction = jest.fn();
 
-        transactionSigner = new TransactionSigner();
+        transactionSigner = new TransactionSigner(accountsMock);
     });
 
     it('calls sign and throws error', () => {
         transactionSigner.sign({from: 0}, accountsMock).catch((error) => {
-            expect(error.message).toBe('Wallet or privateKey in wallet is not set!');
+            expect(error.message).toEqual('Wallet or privateKey in wallet is not set!');
         });
     });
 
@@ -32,10 +32,10 @@ describe('TransactionSignerTest', () => {
         const returnValue = await transactionSigner.sign(transaction, accountsMock);
 
         expect(returnValue)
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(transaction.from)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(accountsMock.signTransaction)
             .toHaveBeenCalledWith(transaction, '0x0');

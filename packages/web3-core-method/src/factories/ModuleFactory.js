@@ -23,8 +23,6 @@
 import TransactionConfirmationWorkflow from '../workflows/TransactionConfirmationWorkflow';
 import TransactionReceiptValidator from '../validators/TransactionReceiptValidator';
 import NewHeadsWatcher from '../watchers/NewHeadsWatcher';
-import CallMethodCommand from '../commands/CallMethodCommand';
-import SendTransactionMethodCommand from '../commands/SendTransactionMethodCommand';
 import MethodProxy from '../proxy/MethodProxy';
 import MessageSigner from '../signers/MessageSigner';
 import TransactionSigner from '../signers/TransactionSigner';
@@ -60,31 +58,6 @@ export default class ModuleFactory {
         return new MethodProxy(target, methodFactory);
     }
 
-    /**
-     * Returns the CallMethodCommand object
-     *
-     * @method createCallMethodCommand
-     *
-     * @returns {CallMethodCommand}
-     */
-    createCallMethodCommand() {
-        return new CallMethodCommand(this.accounts, this.createMessageSigner());
-    }
-
-    /**
-     * Returns the createSendTransactionMethodCommand object
-     *
-     * @method createSendTransactionMethodCommand
-     *
-     * @returns {SendTransactionMethodCommand}
-     */
-    createSendTransactionMethodCommand() {
-        return new SendTransactionMethodCommand(
-            this.createTransactionConfirmationWorkflow(),
-            this.createTransactionSigner(),
-            this.accounts
-        );
-    }
 
     /**
      * Returns the TransactionSigner object
@@ -94,7 +67,7 @@ export default class ModuleFactory {
      * @returns {TransactionSigner}
      */
     createTransactionSigner() {
-        return new TransactionSigner();
+        return new TransactionSigner(this.accounts);
     }
 
     /**
@@ -105,7 +78,7 @@ export default class ModuleFactory {
      * @returns {MessageSigner}
      */
     createMessageSigner() {
-        return new MessageSigner();
+        return new MessageSigner(this.accounts);
     }
 
     /**
@@ -119,7 +92,7 @@ export default class ModuleFactory {
         return new TransactionConfirmationWorkflow(
             this.createTransactionReceiptValidator(),
             this.createNewHeadsWatcher(),
-            new GetTransactionReceiptMethod(this.createCallMethodCommand(), this.utils, this.formatters)
+            new GetTransactionReceiptMethod(this.utils, this.formatters)
         );
     }
 

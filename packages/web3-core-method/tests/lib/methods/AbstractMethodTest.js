@@ -1,37 +1,30 @@
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AbstractMethod from '../../../lib/methods/AbstractMethod';
-import CallMethodCommand from '../../../src/commands/CallMethodCommand';
 
 // Mocks
 jest.mock('Utils');
 jest.mock('formatters');
-jest.mock('../../../src/commands/CallMethodCommand');
 
 /**
- * AbsractMethod test
+ * AbstractMethod test
  */
-describe('AbsractMethodTest', () => {
-    let abstractMethod, command, commandMock;
+describe('AbstractMethodTest', () => {
+    let abstractMethod;
 
     beforeEach(() => {
-        command = new CallMethodCommand({}, {});
-        commandMock = CallMethodCommand.mock.instances[0];
-        abstractMethod = new AbstractMethod('RPC_TEST', 0, commandMock, Utils, formatters);
+        abstractMethod = new AbstractMethod('RPC_TEST', 0, Utils, formatters);
     });
 
     it('constructor check', () => {
-        expect(AbstractMethod.CommandType)
-            .toBe('CALL');
+        expect(AbstractMethod.Type)
+            .toEqual(undefined);
 
         expect(abstractMethod.rpcMethod)
-            .toBe('RPC_TEST');
+            .toEqual('RPC_TEST');
 
         expect(abstractMethod.parametersAmount)
-            .toBe(0);
-
-        expect(abstractMethod.command)
-            .toEqual(commandMock);
+            .toEqual(0);
 
         expect(abstractMethod.utils)
             .toEqual(Utils);
@@ -40,10 +33,10 @@ describe('AbsractMethodTest', () => {
             .toEqual(formatters);
 
         expect(abstractMethod.parameters)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.callback)
-            .toBe(undefined);
+            .toEqual(undefined);
     });
 
     it('set arguments throws error on missing arguments', () => {
@@ -76,7 +69,7 @@ describe('AbsractMethodTest', () => {
             .toEqual([true]);
 
         expect(abstractMethod.callback)
-            .toBe(null);
+            .toEqual(null);
     });
 
     it('set arguments with callback', () => {
@@ -104,7 +97,7 @@ describe('AbsractMethodTest', () => {
         abstractMethod.rpcMethod = 'test';
 
         expect(abstractMethod.rpcMethod)
-            .toBe('test');
+            .toEqual('test');
     });
 
     it('set parameters', () => {
@@ -133,33 +126,22 @@ describe('AbsractMethodTest', () => {
             .toBeTruthy();
     });
 
-    it('run execute method', () => {
-        commandMock.execute
-            .mockReturnValueOnce('0x0');
-
-        abstractMethod = new AbstractMethod('RPC_TEST', 0, commandMock, Utils, formatters);
-
-        expect(abstractMethod.execute({}))
-            .toBe('0x0');
-
-        expect(commandMock.execute)
-            .toHaveBeenCalledWith({}, abstractMethod);
+    it('check if execute method exists', () => {
+        expect(abstractMethod.execute)
+            .toBeInstanceOf(Function);
     });
 
     it('beforeExecution changes nothing', () => {
         abstractMethod.beforeExecution();
 
-        expect(AbstractMethod.CommandType)
-            .toBe('CALL');
+        expect(AbstractMethod.Type)
+            .toEqual(undefined);
 
         expect(abstractMethod.rpcMethod)
-            .toBe('RPC_TEST');
+            .toEqual('RPC_TEST');
 
         expect(abstractMethod.parametersAmount)
-            .toBe(0);
-
-        expect(abstractMethod.command)
-            .toEqual(commandMock);
+            .toEqual(0);
 
         expect(abstractMethod.utils)
             .toEqual(Utils);
@@ -168,25 +150,35 @@ describe('AbsractMethodTest', () => {
             .toEqual(formatters);
 
         expect(abstractMethod.parameters)
-            .toBe(undefined);
+            .toEqual(undefined);
 
         expect(abstractMethod.callback)
-            .toBe(undefined);
-
+            .toEqual(undefined);
     });
 
     it('afterExecution just returns the value', () => {
         expect(abstractMethod.afterExecution('string'))
-            .toBe('string');
+            .toEqual('string');
     });
 
-    it('isHash return true', () =>  {
+    it('isHash returns true', () =>  {
        expect(abstractMethod.isHash('0x0'))
            .toBeTruthy();
     });
 
-    it('isHash return false', () =>  {
+    it('isHash returns false', () =>  {
         expect(abstractMethod.isHash(100))
+            .toBeFalsy();
+    });
+
+    it('hasWallets returns true', () =>  {
+        abstractMethod.accounts = {wallet: [0]};
+        expect(abstractMethod.hasWallets())
+            .toBeTruthy();
+    });
+
+    it('hasWallets returns false', () =>  {
+        expect(abstractMethod.hasWallets())
             .toBeFalsy();
     });
 });

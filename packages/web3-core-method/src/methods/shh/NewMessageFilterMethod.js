@@ -20,17 +20,16 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class NewMessageFilterMethod extends AbstractMethod {
+export default class NewMessageFilterMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('shh_newMessageFilter', 1, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('shh_newMessageFilter', 1, utils, formatters);
     }
 }

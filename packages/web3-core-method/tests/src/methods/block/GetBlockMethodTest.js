@@ -11,17 +11,22 @@ describe('GetBlockMethod', () => {
     let method;
 
     beforeEach(() => {
-        method = new GetBlockMethod({}, {}, formatters);
+        method = new GetBlockMethod({}, formatters);
+    });
+
+    it('static Type property returns "CALL"', () => {
+        expect(GetBlockMethod.Type)
+            .toEqual('CALL');
     });
 
     it('rpcMethod should return eth_getBlockByNumber', () => {
         expect(method.rpcMethod)
-            .toBe('eth_getBlockByNumber');
+            .toEqual('eth_getBlockByNumber');
     });
 
     it('parametersAmount should return 2', () => {
         expect(method.parametersAmount)
-            .toBe(2);
+            .toEqual(2);
     });
 
     it('should call beforeExecution with block hash as parameter and call inputBlockNumberFormatter', () => {
@@ -33,7 +38,7 @@ describe('GetBlockMethod', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.parameters[1])
             .toBeTruthy();
@@ -41,7 +46,7 @@ describe('GetBlockMethod', () => {
         expect(formatters.inputBlockNumberFormatter)
             .toHaveBeenCalledWith('0x0');
 
-        expect(method.rpcMethod).toBe('eth_getBlockByHash');
+        expect(method.rpcMethod).toEqual('eth_getBlockByHash');
     });
 
     it('should call beforeExecution with block number as parameter and call inputBlockNumberFormatter', () => {
@@ -53,7 +58,7 @@ describe('GetBlockMethod', () => {
         method.beforeExecution({});
 
         expect(method.parameters[0])
-            .toBe('0x0');
+            .toEqual('0x0');
 
         expect(method.parameters[1])
             .toBeTruthy();
@@ -62,7 +67,7 @@ describe('GetBlockMethod', () => {
             .toHaveBeenCalledWith(100);
 
         expect(method.rpcMethod)
-            .toBe('eth_getBlockByNumber');
+            .toEqual('eth_getBlockByNumber');
     });
 
     it('afterExecution should map the response', () => {

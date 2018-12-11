@@ -99,7 +99,7 @@ export default class TransactionConfirmationWorkflow {
 
                 if (this.newHeadsWatcher.isPolling) {
                     error = new Error(
-                        `Transaction was not mined within${
+                        `Transaction was not mined within ${
                             moduleInstance.transactionPollingTimeout
                         } seconds, please make sure your transaction was properly sent. Be aware that it might still be mined!`
                     );
@@ -120,7 +120,7 @@ export default class TransactionConfirmationWorkflow {
      * @returns {Boolean}
      */
     isConfirmed(moduleInstance) {
-        return this.confirmationsCounter === moduleInstance.transactionConfirmationBlocks + 1;
+        return this.confirmationsCounter === moduleInstance.transactionConfirmationBlocks;
     }
 
     /**
@@ -139,7 +139,7 @@ export default class TransactionConfirmationWorkflow {
             timeout = moduleInstance.transactionPollingTimeout;
         }
 
-        return this.timeoutCounter - 1 >= timeout;
+        return this.timeoutCounter > timeout;
     }
 
     /**

@@ -15,21 +15,21 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file GetInfoMethod* @author Samuel Furter <samuel@ethereum.org>
+ * @file GetInfoMethod.js
+ * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class GetInfoMethod extends AbstractMethod {
+export default class GetInfoMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('shh_info', 0, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('shh_info', 0, utils, formatters);
     }
 }

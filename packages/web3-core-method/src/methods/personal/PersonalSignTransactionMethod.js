@@ -20,18 +20,17 @@
  * @date 2018
  */
 
-import AbstractMethod from '../../../lib/methods/AbstractMethod';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class PersonalSignTransactionMethod extends AbstractMethod {
+export default class PersonalSignTransactionMethod extends AbstractCallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters) {
-        super('personal_signTransaction', 2, callMethodCommand, utils, formatters);
+    constructor(utils, formatters) {
+        super('personal_signTransaction', 2, utils, formatters);
     }
 
     /**

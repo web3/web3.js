@@ -14,6 +14,8 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import SendTransactionMethod from '../../src/methods/transaction/SendTransactionMethod';
+
 /**
  * @file AbstractMethodFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -50,6 +52,8 @@ export default class AbstractMethodFactory {
     }
 
     /**
+     * TODO: Find a cleaner way for the dependency resolution here.
+     *
      * Returns an MethodModel
      *
      * @param {String} name
@@ -58,17 +62,35 @@ export default class AbstractMethodFactory {
      */
     createMethod(name) {
         const method = this.methods[name];
-        let command;
 
-        switch (method.CommandType) {
-            case 'CALL': // This could be removed if web3 would be written with TS because of the interfaces.
-                command = this.methodModuleFactory.createCallMethodCommand();
-                break;
-            case 'SEND_TRANSACTION':
-                command = this.methodModuleFactory.createSendTransactionMethodCommand();
-                break;
+        switch (method.Type) {
+            case 'CALL':
+                if (method.name === 'SignMethod') {
+                    return new method(
+                        this.utils,
+                        this.formatters,
+                        this.methodModuleFactory.accounts,
+                        this.methodModuleFactory.createMessageSigner()
+                    )
+                }
+
+                return new method(this.utils, this.formatters);
+            case 'SEND':
+                if (method.name === 'SendTransactionMethod') {
+                    return new method(
+                        this.utils,
+                        this.formatters,
+                        this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+                        this.methodModuleFactory.accounts,
+                        this.methodModuleFactory.createTransactionSigner()
+                    );
+                }
+
+                return new method(
+                    this.utils,
+                    this.formatters,
+                    this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+                );
         }
-
-        return new method(command, this.utils, this.formatters);
     }
 }
