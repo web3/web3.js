@@ -22,8 +22,8 @@
 
 import {JsonRpcMapper} from 'web3-providers';
 
-// $ExpectType JsonRpcMappersPayload
+// $ExpectType JsonRpcPayload
 JsonRpcMapper.toPayload('method', [3]);
 
-// $ExpectType JsonRpcMappersPayload[]
+// $ExpectType JsonRpcPayload[]
 JsonRpcMapper.toBatchPayload([{}]);

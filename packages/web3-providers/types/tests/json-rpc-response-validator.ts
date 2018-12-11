@@ -20,9 +20,9 @@
  * @date 2018
  */
 
-import {JsonRpcResponseValidator, JsonRpcMappersPayload} from 'web3-providers';
+import {JsonRpcResponseValidator, JsonRpcPayload} from 'web3-providers';
 
-const jsonRpcMappersPayload: JsonRpcMappersPayload = {
+const jsonRpcPayload: JsonRpcPayload = {
     jsonrpc: 'test',
     id: 1,
     method: 'test',
@@ -30,6 +30,6 @@ const jsonRpcMappersPayload: JsonRpcMappersPayload = {
 };
 
 // $ExpectType boolean
-JsonRpcResponseValidator.isValid(jsonRpcMappersPayload);
+JsonRpcResponseValidator.isValid(jsonRpcPayload);
 // $ExpectType boolean
-JsonRpcResponseValidator.isResponseItemValid(jsonRpcMappersPayload);
+JsonRpcResponseValidator.isResponseItemValid(jsonRpcPayload);
