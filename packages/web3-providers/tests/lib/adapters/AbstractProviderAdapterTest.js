@@ -57,6 +57,9 @@ describe('AbstractProviderAdapterTest', () => {
 
         expect(response)
             .toEqual('RESULT');
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an invalid payload id', async () => {
@@ -77,6 +80,9 @@ describe('AbstractProviderAdapterTest', () => {
 
         await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
             .toBeInstanceOf(Error);
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an provider error', async () => {
@@ -89,6 +95,9 @@ describe('AbstractProviderAdapterTest', () => {
 
         await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
             .toEqual('PROVIDER ERROR');
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an node error (any)', async () => {
@@ -107,6 +116,9 @@ describe('AbstractProviderAdapterTest', () => {
 
         await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
             .toBeInstanceOf(Error);
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an node error (error object)', async () => {
@@ -125,6 +137,9 @@ describe('AbstractProviderAdapterTest', () => {
 
         await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
             .toBeInstanceOf(Error);
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
     });
 
 
@@ -144,6 +159,40 @@ describe('AbstractProviderAdapterTest', () => {
         });
 
         await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toBeInstanceOf(Error);
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
+    });
+
+    it('sendBatch should just be a wrapper of the provider.send method', () => {
+        httpProviderMock.send = jest.fn((payload, callback) => {
+            expect(payload)
+                .toEqual(true);
+
+            expect(callback)
+                .toBeInstanceOf(Function);
+        });
+
+        abstractProviderAdapter.sendBatch(true, () => {});
+
+        expect(httpProviderMock.send)
+            .toHaveBeenCalled();
+    });
+
+    it('isConnected returns the connected property of the provider', () => {
+        httpProviderMock.connected = 'CONNECTED';
+        expect(abstractProviderAdapter.isConnected())
+            .toEqual('CONNECTED');
+    });
+
+    it('subscribe returns a rejected promise', async () => {
+        await expect(abstractProviderAdapter.subscribe()).rejects
+            .toBeInstanceOf(Error);
+    });
+
+    it('unsubscribe returns a rejected promise', async () => {
+        await expect(abstractProviderAdapter.unsubscribe()).rejects
             .toBeInstanceOf(Error);
     });
 });

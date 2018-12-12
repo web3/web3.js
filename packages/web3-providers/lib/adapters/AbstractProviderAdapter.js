@@ -22,7 +22,6 @@
 
 import JsonRpcMapper from '../../src/mappers/JsonRpcMapper.js';
 import JsonRpcResponseValidator from '../../src/validators/JsonRpcResponseValidator.js';
-import {errors} from 'web3-core-helpers';
 import EventEmitter from 'eventemitter3';
 
 export default class AbstractProviderAdapter extends EventEmitter {
