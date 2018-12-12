@@ -73,7 +73,7 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
         if (typeof unsubscribeMethod === 'undefined') {
             unsubscribeMethod = 'eth_unsubscribe';
         }
-        
+
         const result = await this.send(unsubscribeMethod, [subscriptionId]);
 
         if (result) {

@@ -38,11 +38,12 @@ export default class JsonRpcMapper {
             throw new Error(`JSONRPC method should be specified for params: "${JSON.stringify(params)}"!`);
         }
 
+        const id = messageId;
         messageId++;
 
         return {
             jsonrpc: '2.0',
-            id: messageId,
+            id,
             method,
             params: params || []
         };
@@ -53,15 +54,15 @@ export default class JsonRpcMapper {
      *
      * @method toBatchPayload
      *
-     * @param {Array} requests
+     * @param {AbstractMethod[]} methods
      *
      * @returns {Array}
      */
-    static toBatchPayload(requests) {
-        return requests.map((request) => {
-            request.beforeExecution();
+    static toBatchPayload(methods) {
+        return methods.map(method => {
+            method.beforeExecution();
 
-            return JsonRpcMapper.toPayload(request.rpcMethod, request.parameters);
+            return JsonRpcMapper.toPayload(method.rpcMethod, method.parameters);
         });
     }
 }
