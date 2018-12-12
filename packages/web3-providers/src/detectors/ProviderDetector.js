@@ -38,76 +38,14 @@ export default class ProviderDetector {
      * @returns {Object|Undefined} provider
      */
     detect() {
-        if (typeof global.ethereumProvider !== 'undefined') {
+        if (typeof global.ethereumProvider !== 'undefined'
+            && global.ethereumProvider.constructor.name === 'EthereumProvider'
+        ) {
             return global.ethereumProvider;
         }
 
         if (typeof global.web3 !== 'undefined' && global.web3.currentProvider) {
-            if (this.isIpcProviderWrapper(global.web3.currentProvider)) {
-                global.web3.currentProvider = this.addSubscriptionsToIpcProviderWrapper(global.web3.currentProvider);
-            }
-
             return global.web3.currentProvider;
         }
-    }
-
-    /**
-     * Checks if the given provider is of type ipcProviderWrapper
-     *
-     * @method isIpcProviderWrapper
-     *
-     * @param {Object} currentProvider
-     *
-     * @returns {Boolean}
-     */
-    isIpcProviderWrapper(currentProvider) {
-        return (
-            !currentProvider.on &&
-            currentProvider.connection &&
-            currentProvider.connection.constructor.name === 'ipcProviderWrapper'
-        );
-    }
-
-    /**
-     * Adds the on method for the subscriptions to the ipcProviderWrapper
-     *
-     * @method addSubscriptionsToIpcProviderWrapper
-     *
-     * @param {Object} provider
-     *
-     * @returns {Object}
-     */
-    addSubscriptionsToIpcProviderWrapper(provider) {
-        provider.on = (type, callback) => {
-            if (typeof callback !== 'function') {
-                throw new TypeError('The second parameter callback must be a function.');
-            }
-
-            switch (type) {
-                case 'data':
-                    this.connection.on('data', (data) => {
-                        let result = '';
-
-                        data = data.toString();
-
-                        try {
-                            result = JSON.parse(data);
-                        } catch (error) {
-                            return callback(new Error(`Couldn't parse response data${data}`));
-                        }
-
-                        // notification
-                        if (!result.id && result.method.indexOf('_subscription') !== -1) {
-                            callback(null, result);
-                        }
-                    });
-                    break;
-                default:
-                    this.connection.on(type, callback);
-                    break;
-            }
-        };
-
-        return provider;
     }
 }

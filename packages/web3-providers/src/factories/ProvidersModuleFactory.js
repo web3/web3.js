@@ -135,19 +135,6 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an InpageProviderAdapter object
-     *
-     * @method createInpageProviderAdapter
-     *
-     * @param {Object} provider
-     *
-     * @returns {InpageProviderAdapter}
-     */
-    createInpageProviderAdapter(provider) {
-        return new InpageProviderAdapter(provider);
-    }
-
-    /**
      * Returns an JsonRpcResponseValidator object
      *
      * @method createJSONRpcResponseValidator

@@ -79,7 +79,6 @@ export default class ProviderAdapterResolver {
                 return this.providersPackageFactory.createSocketProviderAdapter(provider);
             case 'HttpProviderAdapter':
             case 'SocketProviderAdapter':
-            case 'InpageProviderAdapter':
                 return provider;
         }
 
