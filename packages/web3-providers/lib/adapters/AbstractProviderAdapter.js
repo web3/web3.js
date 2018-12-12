@@ -130,7 +130,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
                 return;
             }
 
-            if (!JsonRpcResponseValidator.isValid(response)) {
+            if (!JsonRpcResponseValidator.validate(response)) {
                 reject(new Error(`Invalid JSON RPC response: ${JSON.stringify(response)}`));
 
                 return;

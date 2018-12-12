@@ -30,7 +30,7 @@ export default class JsonRpcResponseValidator {
      *
      * @returns {Boolean}
      */
-    static isValid(response) {
+    static validate(response) {
         if (Array.isArray(response)) {
             return response.every(this.isResponseItemValid);
         }

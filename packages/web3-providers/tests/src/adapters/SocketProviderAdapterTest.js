@@ -45,7 +45,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls subscribe and returns the subscriptionId', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
            return true;
         });
 
@@ -85,7 +85,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual('SUBSCRIPTION_ID');
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -129,7 +129,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls unsubscribe and returns true', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -169,7 +169,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual(undefined);
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -177,7 +177,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls unsubscribe and returns false', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -217,7 +217,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual('ID');
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -225,7 +225,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls clearSubscriptions and returns true', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -267,7 +267,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual(undefined);
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -279,7 +279,7 @@ describe('SocketProviderAdapterTest', () => {
 
 
     it('calls clearSubscriptions and it throws an error', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -320,7 +320,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual('ID');
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -328,7 +328,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls removeSubscription and returns true', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -371,7 +371,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual(undefined);
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -379,7 +379,7 @@ describe('SocketProviderAdapterTest', () => {
     });
 
     it('calls removeSubscription and throws an error', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -420,7 +420,7 @@ describe('SocketProviderAdapterTest', () => {
         expect(socketProviderAdapter.subscriptions[0])
             .toEqual('ID');
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)

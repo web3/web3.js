@@ -43,7 +43,7 @@ describe('AbstractProviderAdapterTest', () => {
     });
 
     it('calls send and returns a resolved promise', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return true;
         });
 
@@ -70,7 +70,7 @@ describe('AbstractProviderAdapterTest', () => {
         expect(httpProviderMock.send)
             .toHaveBeenCalled();
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
@@ -162,7 +162,7 @@ describe('AbstractProviderAdapterTest', () => {
 
 
     it('calls send and returns a rejected promise because of an invalid JSON-RPC response', async () => {
-        JsonRpcResponseValidator.isValid = jest.fn(() => {
+        JsonRpcResponseValidator.validate = jest.fn(() => {
             return false;
         });
 
@@ -186,7 +186,7 @@ describe('AbstractProviderAdapterTest', () => {
         expect(httpProviderMock.send)
             .toHaveBeenCalled();
 
-        expect(JsonRpcResponseValidator.isValid)
+        expect(JsonRpcResponseValidator.validate)
             .toHaveBeenCalled();
 
         expect(JsonRpcMapper.toPayload)
