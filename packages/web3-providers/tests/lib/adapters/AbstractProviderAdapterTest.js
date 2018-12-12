@@ -2,9 +2,12 @@ import EventEmitter from 'eventemitter3';
 import AbstractProviderAdapter from '../../../lib/adapters/AbstractProviderAdapter';
 import HttpProvider from '../../../src/providers/HttpProvider';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
 
 // Mocks
 jest.mock('../../../src/providers/HttpProvider');
+jest.mock('../../../src/mappers/JsonRpcMapper');
+jest.mock('../../../src/validators/JsonRpcResponseValidator');
 
 /**
  * AbstractProviderAdapter test
@@ -12,18 +15,20 @@ jest.mock('../../../src/providers/HttpProvider');
 describe('AbstractProviderAdapterTest', () => {
     let abstractProviderAdapter,
         httpProvider,
-        httpProviderMock;
+        httpProviderMock,
+        payload;
 
     beforeEach(() => {
         httpProvider = new HttpProvider('localhost', {});
         httpProviderMock = HttpProvider.mock.instances[0];
+        payload = {
+            id: 0,
+            error: undefined,
+            jsonrpc: '2.0'
+        };
 
         JsonRpcMapper.toPayload = jest.fn(() => {
-            return {
-                id: 0,
-                error: undefined,
-                jsonrpc: '2.0'
-            };
+            return payload;
         });
 
         abstractProviderAdapter = new AbstractProviderAdapter(httpProviderMock);
@@ -38,9 +43,13 @@ describe('AbstractProviderAdapterTest', () => {
     });
 
     it('calls send and returns a resolved promise', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload());
+        JsonRpcResponseValidator.isValid = jest.fn(() => {
+            return true;
+        });
+
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback(
                 false,
@@ -60,12 +69,18 @@ describe('AbstractProviderAdapterTest', () => {
 
         expect(httpProviderMock.send)
             .toHaveBeenCalled();
+
+        expect(JsonRpcResponseValidator.isValid)
+            .toHaveBeenCalled();
+
+        expect(JsonRpcMapper.toPayload)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an invalid payload id', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload());
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback(
                 false,
@@ -83,12 +98,15 @@ describe('AbstractProviderAdapterTest', () => {
 
         expect(httpProviderMock.send)
             .toHaveBeenCalled();
+
+        expect(JsonRpcMapper.toPayload)
+            .toHaveBeenCalled();
     });
 
     it('calls send and returns a rejected promise because of an provider error', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback('PROVIDER ERROR', null);
         });
@@ -101,14 +119,14 @@ describe('AbstractProviderAdapterTest', () => {
     });
 
     it('calls send and returns a rejected promise because of an node error (any)', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback(
                 false,
                 {
-                    id: payload.id,
+                    id: returnedPayload.id,
                     error: 'ERROR',
                 }
             );
@@ -122,14 +140,14 @@ describe('AbstractProviderAdapterTest', () => {
     });
 
     it('calls send and returns a rejected promise because of an node error (error object)', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback(
                 false,
                 {
-                    id: payload.id,
+                    id: returnedPayload.id,
                     error: new Error('ERROR'),
                 }
             );
@@ -144,14 +162,18 @@ describe('AbstractProviderAdapterTest', () => {
 
 
     it('calls send and returns a rejected promise because of an invalid JSON-RPC response', async () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
-                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+        JsonRpcResponseValidator.isValid = jest.fn(() => {
+            return false;
+        });
+
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
+                .toEqual(payload);
 
             callback(
                 false,
                 {
-                    id: payload.id,
+                    id: returnedPayload.id,
                     error: undefined,
                     jsonrpc: '2.0'
                 }
@@ -163,11 +185,17 @@ describe('AbstractProviderAdapterTest', () => {
 
         expect(httpProviderMock.send)
             .toHaveBeenCalled();
+
+        expect(JsonRpcResponseValidator.isValid)
+            .toHaveBeenCalled();
+
+        expect(JsonRpcMapper.toPayload)
+            .toHaveBeenCalled();
     });
 
     it('sendBatch should just be a wrapper of the provider.send method', () => {
-        httpProviderMock.send = jest.fn((payload, callback) => {
-            expect(payload)
+        httpProviderMock.send = jest.fn((returnedPayload, callback) => {
+            expect(returnedPayload)
                 .toEqual(true);
 
             expect(callback)

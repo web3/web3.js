@@ -40,22 +40,23 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      *
      * @method subscribe
      *
-     * @param {String} subscriptionType
+     * @param {String} subscribeMethod
      * @param {String} subscriptionMethod
      * @param {Array} parameters
      *
      * @returns {Promise<String|Error>}
      */
-    subscribe(subscriptionType, subscriptionMethod, parameters) {
-        return this.send(subscriptionType, parameters.unshift(subscriptionMethod)).then((error, subscriptionId) => {
-            if (!error) {
+    subscribe(subscribeMethod, subscriptionMethod, parameters) {
+        parameters.unshift(subscriptionMethod);
+
+        return this.send(subscribeMethod, parameters)
+            .then(subscriptionId => {
                 this.subscriptions.push(subscriptionId);
 
                 return subscriptionId;
-            }
-
-            throw new Error(`Provider error: ${error}`);
-        });
+            }).catch(error => {
+                throw new Error(`Provider error: ${error}`);
+            });
     }
 
     /**
@@ -64,22 +65,26 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      * @method unsubscribe
      *
      * @param {String} subscriptionId
-     * @param {String} subscriptionType
+     * @param {String} unsubscribeMethod
      *
      * @returns {Promise<Boolean|Error>}
      */
-    unsubscribe(subscriptionId, subscriptionType) {
-        return this.send(subscriptionType, [subscriptionId]).then(function(result) {
-            if (result) {
-                this.subscriptions = this.subscriptions.filter((subscription) => {
-                    return subscription !== subscriptionId;
-                });
+    async unsubscribe(subscriptionId, unsubscribeMethod) {
+        if (typeof unsubscribeMethod === 'undefined') {
+            unsubscribeMethod = 'eth_unsubscribe';
+        }
+        
+        const result = await this.send(unsubscribeMethod, [subscriptionId]);
 
-                return true;
-            }
+        if (result) {
+            this.subscriptions = this.subscriptions.filter(subscription => {
+                return subscription !== subscriptionId;
+            });
 
-            return false;
-        });
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -88,14 +93,8 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      * @method registerSubscriptionListener
      */
     registerSubscriptionListener() {
-        this.provider.on('data', (response, deprecatedResponse) => {
-            // this is for possible old providers, which may had the error first handler
-            response = response || deprecatedResponse;
-
-            // check for result.method, to prevent old providers errors to pass as result
-            if (response.method && this.hasSubscription(response.params.subscription)) {
-                this.emit(response.params.subscription, response.params.result);
-            }
+        this.provider.on('data', response => {
+            this.emit(response.params.subscription, response.params.result);
         });
     }
 
@@ -116,17 +115,24 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      * Clears all subscriptions and listeners
      *
      * @method clearSubscriptions
+     *
+     * @returns {Promise<Boolean|Error>}
      */
-    clearSubscriptions() {
+    clearSubscriptions(unsubscribeMethod) {
         const unsubscribePromises = [];
-
-        this.subscriptions.forEach((subscriptionId) => {
-            unsubscribePromises.push(this.unsubscribe(subscriptionId));
+        this.subscriptions.forEach(subscriptionId => {
+            unsubscribePromises.push(this.unsubscribe(subscriptionId, unsubscribeMethod));
         });
 
-        Promise.all(unsubscribePromises).then(() => {
+        return Promise.all(unsubscribePromises).then(results => {
+            if (results.includes(false)) {
+                throw Error('Could not unsubscribe all subscriptions. Don\'t forget to call this method twice if you have whisper subscriptions.');
+            }
+
             this.provider.reset();
             this.subscriptions = [];
+
+            return true;
         });
     }
 
@@ -138,7 +144,7 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      * @param {String} subscriptionId
      * @param {String} subscriptionType
      *
-     * @returns {Promise<Boolean>}
+     * @returns {Promise<Boolean|Error>}
      */
     removeSubscription(subscriptionId, subscriptionType) {
         return this.unsubscribe(subscriptionId, subscriptionType).then((result) => {
@@ -148,7 +154,7 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
                 return true;
             }
 
-            return false;
+            throw Error('Could not unsubscribe. Don\'t forget to call this method twice if you have whisper subscriptions.');
         });
     }
 }

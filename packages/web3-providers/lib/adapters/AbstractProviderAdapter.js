@@ -121,7 +121,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
             if (response.error) {
                 let errorMessage = `Returned error: ${JSON.stringify(response)}`;
 
-                if (response.error.message ) {
+                if (response.error.message) {
                     errorMessage = `Returned error: ${response.error.message}`;
                 }
 
@@ -135,15 +135,15 @@ export default class AbstractProviderAdapter extends EventEmitter {
 
                 return;
             }
-        }
 
-        if (error) {
-            reject(error);
+            resolve(response.result);
 
             return;
         }
 
-        resolve(response.result);
+        if (error) {
+            reject(error);
+        }
     }
 
     /**

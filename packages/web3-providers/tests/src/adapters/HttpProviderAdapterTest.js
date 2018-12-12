@@ -1,5 +1,6 @@
 import HttpProvider from '../../../src/providers/HttpProvider';
 import HttpProviderAdapter from '../../../src/adapters/HttpProviderAdapter';
+import AbstractProviderAdapter from '../../../lib/adapters/AbstractProviderAdapter';
 
 // Mocks
 jest.mock('../../../src/providers/HttpProvider');
@@ -23,5 +24,8 @@ describe('HttpProviderAdapterTest', () => {
     it('constructor check', () => {
         expect(httpProviderAdapter.host)
             .toEqual(httpProviderMock.host);
+
+        expect(httpProviderAdapter)
+            .toBeInstanceOf(AbstractProviderAdapter);
     });
 });
