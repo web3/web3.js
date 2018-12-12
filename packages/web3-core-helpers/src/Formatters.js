@@ -29,6 +29,8 @@ import * as Utils from 'web3-utils';
 import {Iban} from 'web3-eth-iban';
 
 /**
+ * TODO: This method could be removed because it is just a wrapper for the toBN method of Utils
+ *
  * Should format the output to a object of type BigNumber
  *
  * @method outputBigNumberFormatter
@@ -53,8 +55,7 @@ export const isPredefinedBlockNumber = (blockNumber) => {
 };
 
 /**
- * Determines if it should use the default block by the given package or not,
- * will map 'genesis' and 'earlist' to '0x0' and runs the inputBlockNumberFormatter.
+ * Determines if it should use the default block by the given package or not.
  *
  * @param {String|Number} blockNumber
  * @param {AbstractWeb3Module} moduleInstance
@@ -64,10 +65,6 @@ export const isPredefinedBlockNumber = (blockNumber) => {
 export const inputDefaultBlockNumberFormatter = (blockNumber, moduleInstance) => {
     if (blockNumber === undefined || blockNumber === null) {
         return moduleInstance.defaultBlock;
-    }
-
-    if (blockNumber === 'genesis' || blockNumber === 'earliest') {
-        return '0x0';
     }
 
     return inputBlockNumberFormatter(blockNumber);
@@ -81,15 +78,12 @@ export const inputDefaultBlockNumberFormatter = (blockNumber, moduleInstance) =>
  * @returns {undefined|Number|String}
  */
 export const inputBlockNumberFormatter = (blockNumber) => {
-    if (blockNumber === undefined) {
-        return undefined;
-    }
-
-    if (isPredefinedBlockNumber(blockNumber)) {
+    if (blockNumber === undefined || blockNumber === null || isPredefinedBlockNumber(blockNumber)) {
         return blockNumber;
     }
 
     if (Utils.isHexStrict(blockNumber)) {
+        console.log(blockNumber);
         if (isString(blockNumber)) {
             return blockNumber.toLowerCase();
         }
@@ -103,13 +97,13 @@ export const inputBlockNumberFormatter = (blockNumber) => {
 /**
  * Formats the input of a transaction and converts all values to HEX
  *
- * @method _txInputFormatter
+ * @method txInputFormatter
  *
  * @param {Object} txObject
  *
  * @returns {Object}
  */
-export const _txInputFormatter = (txObject) => {
+export const txInputFormatter = (txObject) => {
     if (txObject.to) {
         // it might be contract creation
         txObject.to = inputAddressFormatter(txObject.to);
@@ -157,7 +151,7 @@ export const _txInputFormatter = (txObject) => {
  * @returns object
  */
 export const inputCallFormatter = (options, moduleInstance) => {
-    options = _txInputFormatter(options);
+    options = txInputFormatter(options);
     let from = moduleInstance.defaultAccount;
 
     if (options.from) {
@@ -182,7 +176,7 @@ export const inputCallFormatter = (options, moduleInstance) => {
  * @returns object
  */
 export const inputTransactionFormatter = (options, moduleInstance) => {
-    options = _txInputFormatter(options);
+    options = txInputFormatter(options);
 
     if (!isNumber(options.from) && !isObject(options.from)) {
         if (!options.from) {
