@@ -172,7 +172,7 @@ export const inputCallFormatter = (options, moduleInstance) => {
  * @param {Object} options
  * @param {AbstractWeb3Module} moduleInstance
  *
- * @returns object
+ * @returns {Object}
  */
 export const inputTransactionFormatter = (options, moduleInstance) => {
     options = txInputFormatter(options);

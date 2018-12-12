@@ -42,7 +42,7 @@ describe('InputCallFormatterTest', () => {
             from: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         };
 
-        expect(inputCallFormatter(tx, {})).toEqual( {
+        expect(inputCallFormatter(tx, {})).toEqual({
             to: undefined,
             input: undefined,
             data: '0x0',

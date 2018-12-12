@@ -1,4 +1,5 @@
 import {inputDefaultBlockNumberFormatter} from '../../../src/Formatters';
+
 /**
  * inputDefaultBlockNumberFormatter test
  */
