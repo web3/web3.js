@@ -21,6 +21,9 @@ import {Network} from 'web3-net';
 
 const network = new Network('http://localhost:5000');
 
+// $ExpectType Promise<string>
+network.getNetworkType((error, returnValue) => { console.log(returnValue) });
+
 // $ExpectType Promise<number>
 network.getId();
 // $ExpectType Promise<number>

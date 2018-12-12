@@ -25,6 +25,7 @@ export class Network extends AbstractWeb3Module {
         provider: AbstractProviderAdapter | provider,
         options?: Web3ModuleOptions
     );
+    getNetworkType(callback?: (error: Error, returnValue: string) => void): Promise<string>;
     getId(callback?: (error: Error, id: number) => void): Promise<number>;
     isListening(callback?: (error: Error, listening: boolean) => void): Promise<boolean>;
     getPeerCount(callback?: (error: Error, peerCount: number) => void): Promise<number>;
