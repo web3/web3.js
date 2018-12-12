@@ -8,10 +8,12 @@
     "main": "dist/web3-net.cjs.js",
     "module": "dist/web3-net.esm.js",
     "browser": "dist/web3-net.umd.js",
+    "types": "types",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "dtslint": "dtslint types"
     },
     "dependencies": {
         "web3-core": "1.0.0-beta.36",
@@ -20,7 +22,11 @@
         "web3-providers": "1.0.0-beta.36",
         "web3-utils": "1.0.0-beta.36"
     },
+    "devDependencies": {
+        "dtslint": "^0.3.0"
+    },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }

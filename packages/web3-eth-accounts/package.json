@@ -8,10 +8,12 @@
     "main": "dist/web3-eth-accounts.cjs.js",
     "module": "dist/web3-eth-accounts.esm.js",
     "browser": "dist/web3-eth-accounts.umd.js",
+    "types": "types",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "dtslint": "dtslint types"
     },
     "dependencies": {
         "crypto-browserify": "3.12.0",
@@ -25,7 +27,11 @@
         "web3-utils": "1.0.0-beta.36",
         "web3-providers": "1.0.0-beta.36"
     },
+    "devDependencies": {
+        "dtslint": "^0.3.0"
+    },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }
