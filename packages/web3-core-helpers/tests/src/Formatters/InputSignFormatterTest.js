@@ -1,4 +1,5 @@
 import {inputSignFormatter} from '../../../src/Formatters';
+
 /**
  * inputSignFormatter test
  */

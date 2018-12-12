@@ -210,30 +210,36 @@ export const inputSignFormatter = (data) => {
  *
  * @method outputTransactionFormatter
  *
- * @param {Object} tx
+ * @param {Object} receipt
  *
  * @returns {Object}
  */
-export const outputTransactionFormatter = (tx) => {
-    if (tx.blockNumber !== null) tx.blockNumber = Utils.hexToNumber(tx.blockNumber);
-    if (tx.transactionIndex !== null) tx.transactionIndex = Utils.hexToNumber(tx.transactionIndex);
-    tx.nonce = Utils.hexToNumber(tx.nonce);
-    tx.gas = Utils.hexToNumber(tx.gas);
-    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice);
-    tx.value = outputBigNumberFormatter(tx.value);
+export const outputTransactionFormatter = (receipt) => {
+    if (receipt.blockNumber !== null) {
+        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+    }
 
-    if (tx.to && Utils.isAddress(tx.to)) {
+    if (receipt.transactionIndex !== null) {
+        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+    }
+
+    receipt.nonce = Utils.hexToNumber(receipt.nonce);
+    receipt.gas = Utils.hexToNumber(receipt.gas);
+    receipt.gasPrice = outputBigNumberFormatter(receipt.gasPrice);
+    receipt.value = outputBigNumberFormatter(receipt.value);
+
+    if (receipt.to && Utils.isAddress(receipt.to)) {
         // tx.to could be `0x0` or `null` while contract creation
-        tx.to = Utils.toChecksumAddress(tx.to);
+        receipt.to = Utils.toChecksumAddress(receipt.to);
     } else {
-        tx.to = null; // set to `null` if invalid address
+        receipt.to = null; // set to `null` if invalid address
     }
 
-    if (tx.from) {
-        tx.from = Utils.toChecksumAddress(tx.from);
+    if (receipt.from) {
+        receipt.from = Utils.toChecksumAddress(receipt.from);
     }
 
-    return tx;
+    return receipt;
 };
 
 /**
