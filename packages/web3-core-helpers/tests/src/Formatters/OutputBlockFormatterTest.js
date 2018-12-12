@@ -5,7 +5,7 @@ import {outputBlockFormatter} from '../../../src/Formatters';
  */
 describe('OutputBlockFormatterTest', () => {
     it('call outputBlockFormatter with a valid block', () => {
-        const receipt = {
+        const block = {
             gasLimit: 0x0,
             gasUsed: 0x0,
             size: 0x0,
@@ -26,7 +26,7 @@ describe('OutputBlockFormatterTest', () => {
             miner: '0x03c9a938ff7f54090d0d99e2c6f80380510ea078'
         };
 
-        expect(outputBlockFormatter(receipt))
+        expect(outputBlockFormatter(block))
             .toEqual(
                 {
                     gasLimit: 0x0,
