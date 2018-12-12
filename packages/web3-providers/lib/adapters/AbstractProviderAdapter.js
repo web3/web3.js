@@ -120,19 +120,19 @@ export default class AbstractProviderAdapter extends EventEmitter {
             }
 
             if (response.error) {
-                let error = new Error(`Returned error: ${JSON.stringify(response)}`);
+                let errorMessage = `Returned error: ${JSON.stringify(response)}`;
 
                 if (response.error.message ) {
-                    error = new Error(`Returned error: ${result.error.message}`);
+                    errorMessage = `Returned error: ${response.error.message}`;
                 }
 
-                reject(error);
+                reject(new Error(errorMessage));
 
                 return;
             }
 
-            if (!JsonRpcResponseValidator.isValid(response.result)) {
-                reject(new Error(`Invalid JSON RPC response: ${JSON.stringify(result)}`));
+            if (!JsonRpcResponseValidator.isValid(response)) {
+                reject(new Error(`Invalid JSON RPC response: ${JSON.stringify(response)}`));
 
                 return;
             }

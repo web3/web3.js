@@ -18,6 +18,14 @@ describe('AbstractProviderAdapterTest', () => {
         httpProvider = new HttpProvider('localhost', {});
         httpProviderMock = HttpProvider.mock.instances[0];
 
+        JsonRpcMapper.toPayload = jest.fn(() => {
+            return {
+                id: 0,
+                error: undefined,
+                jsonrpc: '2.0'
+            };
+        });
+
         abstractProviderAdapter = new AbstractProviderAdapter(httpProviderMock);
     });
 
@@ -29,15 +37,15 @@ describe('AbstractProviderAdapterTest', () => {
             .toBeInstanceOf(EventEmitter);
     });
 
-    it('calls send and get a resoled promise returned ', async () => {
+    it('calls send and returns a resolved promise', async () => {
         httpProviderMock.send = jest.fn((payload, callback) => {
             expect(payload)
-                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+                .toEqual(JsonRpcMapper.toPayload());
 
             callback(
                 false,
                 {
-                    id: payload.id,
+                    id: 0,
                     error: undefined,
                     result: 'RESULT',
                     jsonrpc: '2.0'
@@ -49,13 +57,29 @@ describe('AbstractProviderAdapterTest', () => {
 
         expect(response)
             .toEqual('RESULT');
-
-        expect(httpProviderMock.send)
-            .toHaveBeenCalledWith(payload, Function)
     });
 
+    it('calls send and returns a rejected promise because of an invalid payload id', async () => {
+        httpProviderMock.send = jest.fn((payload, callback) => {
+            expect(payload)
+                .toEqual(JsonRpcMapper.toPayload());
 
-    it('calls send and get a rejected promise returned because of an provider error', async () => {
+            callback(
+                false,
+                {
+                    id: 2,
+                    error: undefined,
+                    result: 'RESULT',
+                    jsonrpc: '2.0'
+                }
+            );
+        });
+
+        await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toBeInstanceOf(Error);
+    });
+
+    it('calls send and returns a rejected promise because of an provider error', async () => {
         httpProviderMock.send = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
@@ -63,15 +87,48 @@ describe('AbstractProviderAdapterTest', () => {
             callback('PROVIDER ERROR', null);
         });
 
-        expect(
-            await abstractProviderAdapter.send('rpc_method', [])
-        ).rejects.toThrow('PROVIDER ERROR').then(() => {
-            expect(httpProviderMock.send)
-                .toHaveBeenCalledWith(payload, Function)
-        });
+        await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toEqual('PROVIDER ERROR');
     });
 
-    it('calls send and get a rejected promise returned because of an node error', async () => {
+    it('calls send and returns a rejected promise because of an node error (any)', async () => {
+        httpProviderMock.send = jest.fn((payload, callback) => {
+            expect(payload)
+                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+
+            callback(
+                false,
+                {
+                    id: payload.id,
+                    error: 'ERROR',
+                }
+            );
+        });
+
+        await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toBeInstanceOf(Error);
+    });
+
+    it('calls send and returns a rejected promise because of an node error (error object)', async () => {
+        httpProviderMock.send = jest.fn((payload, callback) => {
+            expect(payload)
+                .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
+
+            callback(
+                false,
+                {
+                    id: payload.id,
+                    error: new Error('ERROR'),
+                }
+            );
+        });
+
+        await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toBeInstanceOf(Error);
+    });
+
+
+    it('calls send and returns a rejected promise because of an invalid JSON-RPC response', async () => {
         httpProviderMock.send = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(JsonRpcMapper.toPayload('rpc_method', []));
@@ -81,18 +138,12 @@ describe('AbstractProviderAdapterTest', () => {
                 {
                     id: payload.id,
                     error: undefined,
-                    result: 'RESULT',
                     jsonrpc: '2.0'
                 }
             );
         });
 
-        const response = await abstractProviderAdapter.send('rpc_method', []);
-
-        expect(response)
-            .toEqual('RESULT');
-
-        expect(httpProviderMock.send)
-            .toHaveBeenCalledWith(payload, Function)
+        await expect(abstractProviderAdapter.send('rpc_method', [])).rejects
+            .toBeInstanceOf(Error);
     });
 });
