@@ -292,15 +292,22 @@ export const outputTransactionReceiptFormatter = (receipt) => {
  * @returns {Object}
  */
 export const outputBlockFormatter = (block) => {
-    // transform to number
     block.gasLimit = Utils.hexToNumber(block.gasLimit);
     block.gasUsed = Utils.hexToNumber(block.gasUsed);
     block.size = Utils.hexToNumber(block.size);
     block.timestamp = Utils.hexToNumber(block.timestamp);
-    if (block.number !== null) block.number = Utils.hexToNumber(block.number);
 
-    if (block.difficulty) block.difficulty = outputBigNumberFormatter(block.difficulty);
-    if (block.totalDifficulty) block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+    if (block.number !== null)  {
+        block.number = Utils.hexToNumber(block.number);
+    }
+
+    if (block.difficulty) {
+        block.difficulty = outputBigNumberFormatter(block.difficulty);
+    }
+
+    if (block.totalDifficulty) {
+        block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty);
+    }
 
     if (isArray(block.transactions)) {
         block.transactions.forEach((item) => {
@@ -308,7 +315,9 @@ export const outputBlockFormatter = (block) => {
         });
     }
 
-    if (block.miner) block.miner = Utils.toChecksumAddress(block.miner);
+    if (block.miner) {
+        block.miner = Utils.toChecksumAddress(block.miner);
+    }
 
     return block;
 };
