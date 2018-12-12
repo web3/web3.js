@@ -256,8 +256,14 @@ export const outputTransactionReceiptFormatter = (receipt) => {
         throw new TypeError(`Received receipt is invalid: ${receipt}`);
     }
 
-    if (receipt.blockNumber !== null) receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
-    if (receipt.transactionIndex !== null) receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+    if (receipt.blockNumber !== null)  {
+        receipt.blockNumber = Utils.hexToNumber(receipt.blockNumber);
+    }
+
+    if (receipt.transactionIndex !== null) {
+        receipt.transactionIndex = Utils.hexToNumber(receipt.transactionIndex);
+    }
+
     receipt.cumulativeGasUsed = Utils.hexToNumber(receipt.cumulativeGasUsed);
     receipt.gasUsed = Utils.hexToNumber(receipt.gasUsed);
 
