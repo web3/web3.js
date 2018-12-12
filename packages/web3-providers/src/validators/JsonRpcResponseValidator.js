@@ -48,12 +48,8 @@ export default class JsonRpcResponseValidator {
      * @returns {Boolean}
      */
     static isResponseItemValid(response) {
-        return (
-            !!response &&
-            !response.error &&
-            response.jsonrpc === '2.0' &&
-            (typeof response.id === 'number' || typeof response.id === 'string') &&
-            response.result !== undefined
-        );
+        return response.jsonrpc === '2.0'
+               && (typeof response.id === 'number' || typeof response.id === 'string')
+               && response.result !== undefined;
     }
 }

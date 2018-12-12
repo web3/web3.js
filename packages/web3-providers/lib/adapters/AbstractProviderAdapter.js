@@ -108,35 +108,43 @@ export default class AbstractProviderAdapter extends EventEmitter {
      * @param {Object} payload
      */
     handleResponse(reject, resolve, error, response, payload) {
-        if (response && response.id && payload.id !== response.id) {
-            reject(
-                new Error(
-                    `Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`
-                )
-            );
+        if(response) {
+            if (response.id && payload.id !== response.id) {
+                reject(
+                    new Error(
+                        `Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`
+                    )
+                );
+
+                return;
+            }
+
+            if (response.error) {
+                if (response.error.message ) {
+                    reject(new Error(`Returned error: ${result.error.message}`));
+
+                    return;
+                }
+
+                reject(new Error(`Returned error: ${JSON.stringify(response)}`));
+
+                return;
+            }
+
+            if (!JsonRpcResponseValidator.isValid(response.result)) {
+                reject(new Error(`Invalid JSON RPC response: ${JSON.stringify(result)}`));
+
+                return;
+            }
+        }
+
+        if (error) {
+            reject(error);
 
             return;
         }
 
-        if (response && response.error) {
-            reject(errors.ErrorResponse(response));
-
-            return;
-        }
-
-        if (!JsonRpcResponseValidator.isValid(response.result)) {
-            reject(errors.InvalidResponse(response));
-
-            return;
-        }
-
-        if (!error) {
-            resolve(response.result);
-
-            return;
-        }
-
-        reject(error);
+        resolve(response.result);
     }
 
     /**
