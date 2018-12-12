@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ProviderAdapterResolver.js
+ * @file ProviderAdapterResolverTest.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -25,12 +25,12 @@ import isFunction from 'underscore-es/isFunction';
 
 export default class ProviderAdapterResolver {
     /**
-     * @param {ProvidersModuleFactory} providersPackageFactory
+     * @param {ProvidersModuleFactory} providersModuleFactory
      *
      * @constructor
      */
-    constructor(providersPackageFactory) {
-        this.providersPackageFactory = providersPackageFactory;
+    constructor(providersModuleFactory) {
+        this.providersModuleFactory = providersModuleFactory;
     }
 
     /**
@@ -47,36 +47,32 @@ export default class ProviderAdapterResolver {
         if (typeof provider === 'string') {
             // HTTP
             if (/^http(s)?:\/\//i.test(provider)) {
-                return this.providersPackageFactory.createHttpProviderAdapter(
-                    this.providersPackageFactory.createHttpProvider(provider)
+                return this.providersModuleFactory.createHttpProviderAdapter(
+                    this.providersModuleFactory.createHttpProvider(provider)
                 );
             }
             // WS
             if (/^ws(s)?:\/\//i.test(provider)) {
-                return this.providersPackageFactory.createSocketProviderAdapter(
-                    this.providersPackageFactory.createWebsocketProvider(provider)
+                return this.providersModuleFactory.createSocketProviderAdapter(
+                    this.providersModuleFactory.createWebsocketProvider(provider)
                 );
             }
 
             // IPC
             if (provider && isObject(net) && isFunction(net.connect)) {
-                return this.providersPackageFactory.createSocketProviderAdapter(
-                    this.providersPackageFactory.createIpcProvider(provider, net)
+                return this.providersModuleFactory.createSocketProviderAdapter(
+                    this.providersModuleFactory.createIpcProvider(provider, net)
                 );
             }
         }
 
-        if (isFunction(provider.sendAsync)) {
-            return this.providersPackageFactory.createInpageProviderAdapter(provider);
-        }
-
         switch (provider.constructor.name) {
             case 'HttpProvider':
-                return this.providersPackageFactory.createHttpProviderAdapter(provider);
+                return this.providersModuleFactory.createHttpProviderAdapter(provider);
             case 'EthereumProvider':
             case 'WebsocketProvider':
             case 'IpcProvider':
-                return this.providersPackageFactory.createSocketProviderAdapter(provider);
+                return this.providersModuleFactory.createSocketProviderAdapter(provider);
             case 'HttpProviderAdapter':
             case 'SocketProviderAdapter':
                 return provider;
