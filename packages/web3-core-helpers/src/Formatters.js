@@ -333,17 +333,26 @@ export const outputBlockFormatter = (block) => {
  */
 export const inputLogFormatter = (options) => {
     let toTopic = (value) => {
-        if (value === null || typeof value === 'undefined') return null;
+        if (value === null || typeof value === 'undefined') {
+            return null;
+        }
 
         value = String(value);
 
-        if (value.indexOf('0x') === 0) return value;
-        else return Utils.fromUtf8(value);
+        if (value.indexOf('0x') === 0) {
+            return value;
+        }
+
+        return Utils.fromUtf8(value);
     };
 
-    if (options.fromBlock) options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+    if (options.fromBlock) {
+        options.fromBlock = inputBlockNumberFormatter(options.fromBlock);
+    }
 
-    if (options.toBlock) options.toBlock = inputBlockNumberFormatter(options.toBlock);
+    if (options.toBlock) {
+        options.toBlock = inputBlockNumberFormatter(options.toBlock);
+    }
 
     // make sure topics, get converted to hex
     options.topics = options.topics || [];

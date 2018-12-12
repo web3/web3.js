@@ -4,7 +4,7 @@ import {outputBlockFormatter} from '../../../src/Formatters';
  * outputBlockFormatter test
  */
 describe('OutputBlockFormatterTest', () => {
-    it('call outputBlockFormatter with a valid receipt', () => {
+    it('call outputBlockFormatter with a valid block', () => {
         const receipt = {
             gasLimit: 0x0,
             gasUsed: 0x0,
