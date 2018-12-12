@@ -37,7 +37,7 @@ import {Iban} from 'web3-eth-iban';
  *
  * @param {String|Number|BigNumber} number
  *
- * @returns {BigNumber} object
+ * @returns {String} number
  */
 export const outputBigNumberFormatter = (number) => {
     return Utils.toBN(number).toString(10);
@@ -83,7 +83,6 @@ export const inputBlockNumberFormatter = (blockNumber) => {
     }
 
     if (Utils.isHexStrict(blockNumber)) {
-        console.log(blockNumber);
         if (isString(blockNumber)) {
             return blockNumber.toLowerCase();
         }

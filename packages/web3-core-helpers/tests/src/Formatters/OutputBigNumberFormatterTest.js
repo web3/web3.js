@@ -7,6 +7,6 @@ import {outputBigNumberFormatter} from '../../../src/Formatters';
 describe('OutputBigNumberFormatterTest', () => {
     it('outputBigNumberFormatter returns BigNumber', () => {
         expect(outputBigNumberFormatter(100))
-            .toBeInstanceOf(BigNumber);
+            .toBe('100');
     })
 });

@@ -16,10 +16,10 @@ describe('IsPredefinedBlockNumberTest', () => {
     it('isPredefinedBlockNumber returns true if its called with "pending"', () => {
         expect(isPredefinedBlockNumber('earliest'))
             .toEqual(true);
-    })
+    });
 
     it('isPredefinedBlockNumber returns false if its called with "genesis"', () => {
         expect(isPredefinedBlockNumber('genesis'))
-            .toEqual(true);
+            .toEqual(false);
     })
 });
