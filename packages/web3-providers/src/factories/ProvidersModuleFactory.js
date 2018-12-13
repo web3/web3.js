@@ -27,8 +27,6 @@ import HttpProviderAdapter from '../adapters/HttpProviderAdapter';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import BatchRequest from '../batch-request/BatchRequest';
 
 export default class ProvidersModuleFactory {
@@ -42,7 +40,7 @@ export default class ProvidersModuleFactory {
      * @returns {BatchRequest}
      */
     createBatchRequest(provider) {
-        return new BatchRequest(provider, JsonRpcMapper, JsonRpcResponseValidator);
+        return new BatchRequest(provider);
     }
 
     /**

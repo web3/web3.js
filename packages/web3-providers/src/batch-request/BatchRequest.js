@@ -24,19 +24,17 @@ import {errors} from 'web3-core-helpers';
 import isFunction from 'underscore-es/isFunction';
 import isObject from 'underscore-es/isObject';
 import isArray from 'underscore-es/isArray';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {
     /**
      * @param {AbstractProviderAdapter} provider
-     * @param {JsonRpcMapper} jsonRpcMapper
-     * @param {JsonRpcResponseValidator} jsonRpcResponseValidator
      *
      * @constructor
      */
-    constructor(provider, jsonRpcMapper, jsonRpcResponseValidator) {
+    constructor(provider) {
         this.provider = provider;
-        this.jsonRpcMapper = jsonRpcMapper;
-        this.jsonRpcResponseValidator = jsonRpcResponseValidator;
         this.requests = [];
     }
 
@@ -57,52 +55,54 @@ export default class BatchRequest {
      * @method execute
      */
     execute() {
-        this.provider.sendBatch(this.jsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
-            this.requests.forEach(function(request, index) {
-                if (!error) {
-                    if (!isArray(results)) {
-                        request.callback(errors.InvalidResponse(results));
+        this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
+            let noCallback = [];
+            this.requests.forEach((request, index) => {
+                if (error) {
+                    if (isFunction(request.callback)) {
+                        request.callback(error);
 
                         return;
                     }
 
-                    const result = results[index] || null;
+                    noCallback.push(request);
 
-                    if (isFunction(request.callback)) {
-                        if (isObject(result) && result.error) {
-                            request.callback(errors.ErrorResponse(result));
-                        }
+                    return;
+                }
 
-                        if (!this.jsonRpcResponseValidator.isValid(result)) {
-                            request.callback(errors.InvalidResponse(result));
-                        }
+                if (!isArray(results)) {
+                    request.callback(errors.InvalidResponse(results));
 
-                        try {
-                            const mappedResult = request.afterExecution(result.result);
-                            request.callback(null, mappedResult);
-                        } catch (error) {
-                            request.callback(error, null);
-                        }
+                    return;
+                }
+
+                const result = results[index] || null;
+
+                if (isFunction(request.callback)) {
+                    if (isObject(result) && result.error) {
+                        request.callback(errors.ErrorResponse(result));
+                    }
+
+                    if (!JsonRpcResponseValidator.validate(result)) {
+                        request.callback(errors.InvalidResponse(result));
+                    }
+
+                    try {
+                        const mappedResult = request.afterExecution(result.result);
+                        request.callback(null, mappedResult);
+                    } catch (error) {
+                        request.callback(error, null);
                     }
 
                     return;
                 }
 
-                request.callback(error);
+                noCallback.push(request);
             });
-        });
-    }
 
-    /**
-     * Checks if the method has an outputFormatter defined
-     *
-     * @method hasOutputFormatter
-     *
-     * @param {Object} request
-     *
-     * @returns {Boolean}
-     */
-    hasOutputFormatter(request) {
-        return isFunction(request.methodModel.outputFormatter);
+            if (noCallback.length > 0) {
+                throw new Error(`Missing callbacks: ${JSON.stringify(noCallback)}`);
+            }
+        });
     }
 }
