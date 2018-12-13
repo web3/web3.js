@@ -75,7 +75,9 @@ export default class BatchRequest {
                     }
 
                     if (!isArray(response)) {
-                        const responseError = new Error(`Invalid response: ${JSON.stringify(response)}`);
+                        const responseError = new Error(
+                            `Response should be of type Array but is: ${typeof response}`
+                        );
 
                         method.callback(responseError);
                         errors.push(responseError);
@@ -87,7 +89,7 @@ export default class BatchRequest {
 
                     if (isFunction(method.callback)) {
                         if (isObject(responseItem) && responseItem.error) {
-                            const nodeError = new Error(`Returned error: ${responseItem.error}`);
+                            const nodeError = new Error(`Returned node error: ${responseItem.error}`);
 
                             method.callback(nodeError);
                             errors.push(nodeError);
@@ -116,7 +118,10 @@ export default class BatchRequest {
                     reject(errors);
                 }
 
-                resolve({methods: this.methods, response});
+                resolve({
+                    methods: this.methods,
+                    response
+                });
             });
         });
     }
