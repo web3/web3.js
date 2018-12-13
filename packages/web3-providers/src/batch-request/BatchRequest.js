@@ -53,56 +53,58 @@ export default class BatchRequest {
      * Should be called to execute batch request
      *
      * @method execute
+     *
+     * @returns Promise<Array|Error[]>
      */
     execute() {
-        this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
-            let noCallback = [];
-            this.requests.forEach((request, index) => {
-                if (error) {
-                    if (isFunction(request.callback)) {
-                        request.callback(error);
+        return new Promise((resolve, reject) => {
+            this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
+                const errors = [];
+                this.requests.forEach((request, index) => {
+                    if (error) {
+                        if (isFunction(request.callback)) {
+                            request.callback(error);
+
+                            return;
+                        }
+                    }
+
+                    if (!isArray(results)) {
+                        request.callback(errors.InvalidResponse(results));
 
                         return;
                     }
 
-                    noCallback.push(request);
+                    const result = results[index] || null;
 
-                    return;
+                    if (isFunction(request.callback)) {
+                        if (isObject(result) && result.error) {
+                            request.callback(errors.ErrorResponse(result));
+                            errors.push(result.error);
+                        }
+
+                        if (!JsonRpcResponseValidator.validate(result)) {
+                            request.callback(errors.InvalidResponse(result));
+                            errors.push(`Invalid Response: ${result}`);
+                        }
+
+                        try {
+                            const mappedResult = request.afterExecution(result.result);
+                            result.result = mappedResult;
+                            request.callback(null, mappedResult);
+                        } catch (error) {
+                            errors.push(error);
+                            request.callback(error, null);
+                        }
+                    }
+                });
+
+                if (errors.length > 0) {
+                    reject(errors);
                 }
 
-                if (!isArray(results)) {
-                    request.callback(errors.InvalidResponse(results));
-
-                    return;
-                }
-
-                const result = results[index] || null;
-
-                if (isFunction(request.callback)) {
-                    if (isObject(result) && result.error) {
-                        request.callback(errors.ErrorResponse(result));
-                    }
-
-                    if (!JsonRpcResponseValidator.validate(result)) {
-                        request.callback(errors.InvalidResponse(result));
-                    }
-
-                    try {
-                        const mappedResult = request.afterExecution(result.result);
-                        request.callback(null, mappedResult);
-                    } catch (error) {
-                        request.callback(error, null);
-                    }
-
-                    return;
-                }
-
-                noCallback.push(request);
+                resolve(results);
             });
-
-            if (noCallback.length > 0) {
-                throw new Error(`Missing callbacks: ${JSON.stringify(noCallback)}`);
-            }
         });
     }
 }
