@@ -43,12 +43,13 @@ export const providers = {
  *
  * @method BatchRequest
  *
+ * @param {AbstractWeb3Module} moduleInstance
  * @param {AbstractProviderAdapter|EthereumProvider} provider
  *
  * @returns {BatchRequest}
  */
-export const BatchRequest = (provider) => {
-    return new ProvidersModuleFactory().createBatchRequest(provider);
+export const BatchRequest = (moduleInstance, provider) => {
+    return new ProvidersModuleFactory().createBatchRequest(moduleInstance, provider);
 };
 
 /**

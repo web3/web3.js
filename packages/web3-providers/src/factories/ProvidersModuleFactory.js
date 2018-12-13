@@ -36,12 +36,13 @@ export default class ProvidersModuleFactory {
      *
      * @method createBatchRequest
      *
+     * @param {AbstractWeb3Module} moduleInstance
      * @param {AbstractProviderAdapter} provider
      *
      * @returns {BatchRequest}
      */
-    createBatchRequest(provider) {
-        return new BatchRequest(provider);
+    createBatchRequest(moduleInstance, provider) {
+        return new BatchRequest(moduleInstance, provider);
     }
 
     /**
