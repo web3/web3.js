@@ -34,7 +34,7 @@ export default class BatchRequest {
      */
     constructor(provider) {
         this.provider = provider;
-        this.requests = [];
+        this.methods = [];
     }
 
     /**
@@ -42,10 +42,10 @@ export default class BatchRequest {
      *
      * @method add
      *
-     * @param {Object} request
+     * @param {AbstractMethod} method
      */
-    add(request) {
-        this.requests.push(request);
+    add(method) {
+        this.methods.push(method);
     }
 
     /**
@@ -57,7 +57,7 @@ export default class BatchRequest {
      */
     execute() {
         return new Promise((resolve, reject) => {
-            this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
+            this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.methods), (error, results) => {
                 if (error) {
                     reject(error);
 
@@ -65,41 +65,41 @@ export default class BatchRequest {
                 }
 
                 const errors = [];
-                this.requests.forEach((request, index) => {
+                this.methods.forEach((method, index) => {
                     if (error) {
-                        if (isFunction(request.callback)) {
-                            request.callback(error);
+                        if (isFunction(method.callback)) {
+                            method.callback(error);
 
                             return;
                         }
                     }
 
                     if (!isArray(results)) {
-                        request.callback(errors.InvalidResponse(results));
+                        method.callback(errors.InvalidResponse(results));
 
                         return;
                     }
 
                     const result = results[index] || null;
 
-                    if (isFunction(request.callback)) {
+                    if (isFunction(method.callback)) {
                         if (isObject(result) && result.error) {
-                            request.callback(new Error(`Returned error: ${result.error}`));
+                            method.callback(new Error(`Returned error: ${result.error}`));
                             errors.push(result.error);
                         }
 
                         if (!JsonRpcResponseValidator.validate(result)) {
-                            request.callback(new Error(`Invalid JSON RPC response: ${JSON.stringify(result)}`));
+                            method.callback(new Error(`Invalid JSON RPC response: ${JSON.stringify(result)}`));
                             errors.push(`Invalid JSON RPC response: ${JSON.stringify(result)}`);
                         }
 
                         try {
-                            const mappedResult = request.afterExecution(result.result);
+                            const mappedResult = method.afterExecution(result.result);
                             result.result = mappedResult;
-                            request.callback(null, mappedResult);
+                            method.callback(null, mappedResult);
                         } catch (error) {
                             errors.push(error);
-                            request.callback(error, null);
+                            method.callback(error, null);
                         }
                     }
                 });
@@ -108,7 +108,7 @@ export default class BatchRequest {
                     reject(errors);
                 }
 
-                resolve({requests, results});
+                resolve({methods, results});
             });
         });
     }
