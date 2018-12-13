@@ -108,7 +108,7 @@ export default class Eth extends AbstractWeb3Module {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions() {
-        super.clearSubscriptions('eth_unsubscribe');
+        return super.clearSubscriptions('eth_unsubscribe');
     }
 
     /**

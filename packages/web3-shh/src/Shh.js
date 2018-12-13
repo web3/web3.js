@@ -80,7 +80,7 @@ export default class Shh extends AbstractWeb3Module {
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions() {
-        super.clearSubscriptions('shh_unsubscribe');
+        return super.clearSubscriptions('shh_unsubscribe');
     }
 
     /**
