@@ -53,7 +53,7 @@ export default class BatchRequest {
      *
      * @method execute
      *
-     * @returns Promise<Array|Error[]>
+     * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
     execute() {
         return new Promise((resolve, reject) => {
