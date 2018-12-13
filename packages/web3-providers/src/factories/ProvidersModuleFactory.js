@@ -132,15 +132,4 @@ export default class ProvidersModuleFactory {
     createSocketProviderAdapter(provider) {
         return new SocketProviderAdapter(provider);
     }
-
-    /**
-     * Returns an JsonRpcResponseValidator object
-     *
-     * @method createJSONRpcResponseValidator
-     *
-     * @returns {JsonRpcResponseValidator}
-     */
-    createJSONRpcResponseValidator() {
-        return new JsonRpcResponseValidator();
-    }
 }
