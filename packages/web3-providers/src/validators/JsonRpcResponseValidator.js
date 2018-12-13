@@ -26,16 +26,19 @@ export default class JsonRpcResponseValidator {
      *
      * @method isValid
      *
-     * @param {Object} response
+     * @param {Object|Array} response
+     * @param {Object|Array} payload
      *
      * @returns {Boolean}
      */
-    static validate(response) {
+    static validate(response, payload = false) {
         if (Array.isArray(response)) {
-            return response.every(this.isResponseItemValid);
+            return response.every((responseItem, index) => {
+                this.isResponseItemValid(responseItem, payload[index])
+            });
         }
 
-        return this.isResponseItemValid(response);
+        return this.isResponseItemValid(response, payload);
     }
 
     /**
@@ -44,12 +47,34 @@ export default class JsonRpcResponseValidator {
      * @method isResponseItemValid
      *
      * @param {Object} response
+     * @param {Object} payload
      *
-     * @returns {Boolean}
+     * @returns {Boolean|Error}
      */
-    static isResponseItemValid(response) {
-        return response.jsonrpc === '2.0'
-               && (typeof response.id === 'number' || typeof response.id === 'string')
-               && response.result !== undefined;
+    static isResponseItemValid(response, payload = false) {
+        if (isObject(response)) {
+            if (response.error) {
+                if(response.error instanceof Error) {
+                    return new Error(`Node error: ${response.error.message}`);
+                }
+
+                return new Error(`Node error: ${response.error}`);
+            }
+
+            if (payload && response.id !== payload.id) {
+                return new Error(`Invalid JSON-RPC response ID: request: ${payload.id}/ response: ${response.id}`)
+            }
+
+            if (typeof response.id !== 'number' || typeof response.id !== 'string') {
+                return new Error(`Invalid type of the JSON-RPC ID: current: ${typeof response.id} expected: String|Number`);
+            }
+
+            if(response.result === undefined) {
+                return new Error('Undefined JSON-RPC result');
+            }
+
+        }
+
+        return true;
     }
 }

@@ -12,6 +12,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 import SocketProviderAdapter from './SocketProviderAdapter';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 /**
  * @file EthereumProviderAdapter
@@ -40,7 +41,14 @@ export default class EthereumProviderAdapter extends SocketProviderAdapter {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.provider.send(method, parameters);
+        return this.provider.send(method, parameters).then(response => {
+            const validationResult = JsonRpcResponseValidator.validate(response);
+            if (validationResult) {
+                return response;
+            }
+
+            throw validationResult;
+        });
     }
 
     /**

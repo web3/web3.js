@@ -47,10 +47,22 @@ export default class AbstractProviderAdapter extends EventEmitter {
      */
     send(method, parameters) {
         const payload = JsonRpcMapper.toPayload(method, parameters);
-
         return new Promise((resolve, reject) => {
             this.provider.send(payload, (error, response) => {
-                this.handleResponse(reject, resolve, error, response, payload);
+                if (error) {
+                    reject(new Error(`Node error: ${JSON.stringify(error)}`));
+
+                    return;
+                }
+
+                const validationResult = JsonRpcResponseValidator.validate(response, payload);
+                if (validationResult) {
+                    resolve(response);
+
+                    return;
+                }
+
+                reject(validationResult);
             });
         });
     }
@@ -109,58 +121,6 @@ export default class AbstractProviderAdapter extends EventEmitter {
         return new Promise((resolve, reject) => {
             reject(new Error(`The current provider does not support subscriptions: ${this.provider.constructor.name}`));
         });
-    }
-
-    /**
-     * Handles the JSON-RPC response
-     *
-     * @method handleResponse
-     *
-     * @param {Function} reject
-     * @param {Function} resolve
-     * @param {Object} error
-     * @param {Object} response
-     * @param {Object} payload
-     */
-    handleResponse(reject, resolve, error, response, payload) {
-        // TODO: this should be moved to the validator
-        if (response) {
-            if (response.id && payload.id !== response.id) {
-                reject(
-                    new Error(
-                        `Wrong response id "${response.id}" (expected: "${payload.id}") in ${JSON.stringify(payload)}`
-                    )
-                );
-
-                return;
-            }
-
-            if (response.error) {
-                let errorMessage = `Returned error: ${JSON.stringify(response)}`;
-
-                if (response.error.message) {
-                    errorMessage = `Returned error: ${response.error.message}`;
-                }
-
-                reject(new Error(errorMessage));
-
-                return;
-            }
-
-            if (!JsonRpcResponseValidator.validate(response)) {
-                reject(new Error(`Invalid JSON RPC response: ${JSON.stringify(response)}`));
-
-                return;
-            }
-
-            resolve(response.result);
-
-            return;
-        }
-
-        if (error) {
-            reject(error);
-        }
     }
 
     /**
