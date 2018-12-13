@@ -23,7 +23,6 @@
 import isFunction from 'underscore-es/isFunction';
 import isObject from 'underscore-es/isObject';
 import isArray from 'underscore-es/isArray';
-import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class BatchRequest {
@@ -57,26 +56,22 @@ export default class BatchRequest {
      *
      * @method execute
      *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
-    execute() {
-        return new Promise((resolve, reject) => {
-            this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.methods), (error, response) => {
-                if (error) {
-                    reject(error);
-
-                    return;
-                }
-
+    execute(moduleInstance) {
+        return this.provider.sendBatch(this.methods, moduleInstance)
+            .then(response => {
                 let errors = [];
                 this.methods.forEach((method, index) => {
                     if (!isArray(response)) {
-                        const responseError = new Error(
-                            `Response should be of type Array but is: ${typeof response}`
+                        method.callback(
+                            new Error(`Response should be of type Array but is: ${typeof response}`),
+                            null
                         );
 
-                        method.callback(responseError, null);
-                        errors.push(responseError);
+                        errors.push(`Response should be of type Array but is: ${typeof response}`);
 
                         return;
                     }
@@ -85,19 +80,23 @@ export default class BatchRequest {
 
                     if (isFunction(method.callback)) {
                         if (isObject(responseItem) && responseItem.error) {
-                            const nodeError = new Error(`Returned node error: ${responseItem.error}`);
+                            method.callback(
+                                new Error(`Returned node error: ${responseItem.error}`),
+                                null
+                            );
 
-                            method.callback(nodeError, null);
-                            errors.push(nodeError);
+                            errors.push(`Returned node error: ${responseItem.error}`);
 
                             return;
                         }
 
                         if (!JsonRpcResponseValidator.validate(responseItem)) {
-                            const responseError = new Error(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`);
+                            method.callback(
+                                new Error(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`),
+                                null
+                            );
 
-                            method.callback(responseError, null);
-                            errors.push(responseError);
+                            errors.push(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`);
 
                             return;
                         }
@@ -115,14 +114,13 @@ export default class BatchRequest {
                 });
 
                 if (errors.length > 0) {
-                    reject(errors);
+                    throw new Error(`BatchRequest error: ${JSON.stringify(errors)}`);
                 }
 
-                resolve({
+                return {
                     methods: this.methods,
                     response
-                });
+                };
             });
-        });
     }
 }

@@ -277,7 +277,7 @@ export default class IpcProvider {
      */
     once(type, callback) {
         if (typeof callback !== 'function') {
-            throw new TypeError('The second parameter callback must be a function.');
+            throw new TypeError('The second parameter "callback" must be of type Function.');
         }
 
         this.connection.once(type, callback);

@@ -48,25 +48,4 @@ export default class JsonRpcMapper {
             params: params || []
         };
     }
-
-    /**
-     * Creates a batch payload object
-     *
-     * @method toBatchPayload
-     *
-     * @param {AbstractMethod[]} methods
-     *
-     * @returns {Array}
-     */
-    static toBatchPayload(methods) {
-        let batchPayload = [];
-
-        methods.forEach(method => {
-            method.beforeExecution();
-
-            batchPayload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
-
-        return batchPayload;
-    }
 }

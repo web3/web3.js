@@ -131,7 +131,10 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
                 throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
             }
 
-            this.provider.reset();
+            if (this.provider.reset) {
+                this.provider.reset();
+            }
+
             this.subscriptions = [];
 
             return true;

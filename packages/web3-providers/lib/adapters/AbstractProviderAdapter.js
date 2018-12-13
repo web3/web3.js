@@ -60,13 +60,29 @@ export default class AbstractProviderAdapter extends EventEmitter {
      *
      * @method sendBatch
      *
-     * @param {Array} payload
-     * @param {Function} callback
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
      *
-     * @callback callback callback(error, result)
+     * @returns Promise<Object|Error>
      */
-    sendBatch(payload, callback) {
-        this.provider.send(payload, callback);
+    sendBatch(methods, moduleInstance) {
+        return new Promise((resolve, reject) => {
+            let payload = [];
+
+            methods.forEach(method => {
+                method.beforeExecution(moduleInstance);
+
+                payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+            });
+
+            this.provider.send(payload, (error, response) => {
+                if (error) {
+                    reject(error);
+                }
+
+                resolve(response);
+            });
+        });
     }
 
     /**
@@ -107,7 +123,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
      * @param {Object} payload
      */
     handleResponse(reject, resolve, error, response, payload) {
-        if(response) {
+        if (response) {
             if (response.id && payload.id !== response.id) {
                 reject(
                     new Error(
