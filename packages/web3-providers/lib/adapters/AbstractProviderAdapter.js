@@ -123,6 +123,7 @@ export default class AbstractProviderAdapter extends EventEmitter {
      * @param {Object} payload
      */
     handleResponse(reject, resolve, error, response, payload) {
+        // TODO: this should be moved to the validator
         if (response) {
             if (response.id && payload.id !== response.id) {
                 reject(
