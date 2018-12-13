@@ -56,7 +56,7 @@ export default class Shh extends AbstractWeb3Module {
      *
      * @method subscribe
      *
-     * @param {string} method
+     * @param {String} method
      * @param {Object} options
      * @param {Function} callback
      *
