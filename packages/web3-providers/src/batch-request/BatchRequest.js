@@ -108,7 +108,7 @@ export default class BatchRequest {
                     reject(errors);
                 }
 
-                resolve(results);
+                resolve({requests, results});
             });
         });
     }
