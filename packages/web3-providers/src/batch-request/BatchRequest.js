@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import {errors} from 'web3-core-helpers';
 import isFunction from 'underscore-es/isFunction';
 import isObject from 'underscore-es/isObject';
 import isArray from 'underscore-es/isArray';
@@ -59,6 +58,12 @@ export default class BatchRequest {
     execute() {
         return new Promise((resolve, reject) => {
             this.provider.sendBatch(JsonRpcMapper.toBatchPayload(this.requests), (error, results) => {
+                if (error) {
+                    reject(error);
+
+                    return;
+                }
+
                 const errors = [];
                 this.requests.forEach((request, index) => {
                     if (error) {
@@ -79,13 +84,13 @@ export default class BatchRequest {
 
                     if (isFunction(request.callback)) {
                         if (isObject(result) && result.error) {
-                            request.callback(errors.ErrorResponse(result));
+                            request.callback(new Error(`Returned error: ${result.error}`));
                             errors.push(result.error);
                         }
 
                         if (!JsonRpcResponseValidator.validate(result)) {
-                            request.callback(errors.InvalidResponse(result));
-                            errors.push(`Invalid Response: ${result}`);
+                            request.callback(new Error(`Invalid JSON RPC response: ${JSON.stringify(result)}`));
+                            errors.push(`Invalid JSON RPC response: ${JSON.stringify(result)}`);
                         }
 
                         try {
