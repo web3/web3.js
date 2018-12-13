@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import isFunction from 'underscore-es/isFunction';
 import isObject from 'underscore-es/isObject';
 import isArray from 'underscore-es/isArray';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
@@ -77,30 +76,9 @@ export default class BatchRequest {
                     }
 
                     const responseItem = response[index] || null;
+                    const validationResult = JsonRpcResponseValidator.validate(responseItem);
 
-                    if (isFunction(method.callback)) {
-                        if (isObject(responseItem) && responseItem.error) {
-                            method.callback(
-                                new Error(`Returned node error: ${responseItem.error}`),
-                                null
-                            );
-
-                            errors.push(`Returned node error: ${responseItem.error}`);
-
-                            return;
-                        }
-
-                        if (!JsonRpcResponseValidator.validate(responseItem)) {
-                            method.callback(
-                                new Error(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`),
-                                null
-                            );
-
-                            errors.push(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`);
-
-                            return;
-                        }
-
+                    if (validationResult) {
                         try {
                             const mappedResult = method.afterExecution(responseItem.result);
 
@@ -110,7 +88,12 @@ export default class BatchRequest {
                             errors.push(error);
                             method.callback(error, null);
                         }
+
+                        return;
                     }
+
+                    errors.push(validationResult);
+                    method.callback(validationResult, null);
                 });
 
                 if (errors.length > 0) {
