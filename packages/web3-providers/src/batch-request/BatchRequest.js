@@ -45,6 +45,10 @@ export default class BatchRequest {
      * @param {AbstractMethod} method
      */
     add(method) {
+        if (!isObject(method)) {
+            throw new Error('Please provide a object of type AbstractMethod.');
+        }
+
         this.methods.push(method);
     }
 
@@ -66,20 +70,12 @@ export default class BatchRequest {
 
                 let errors = [];
                 this.methods.forEach((method, index) => {
-                    if (error) {
-                        if (isFunction(method.callback)) {
-                            method.callback(error);
-
-                            return;
-                        }
-                    }
-
                     if (!isArray(response)) {
                         const responseError = new Error(
                             `Response should be of type Array but is: ${typeof response}`
                         );
 
-                        method.callback(responseError);
+                        method.callback(responseError, null);
                         errors.push(responseError);
 
                         return;
@@ -91,22 +87,26 @@ export default class BatchRequest {
                         if (isObject(responseItem) && responseItem.error) {
                             const nodeError = new Error(`Returned node error: ${responseItem.error}`);
 
-                            method.callback(nodeError);
+                            method.callback(nodeError, null);
                             errors.push(nodeError);
+
+                            return;
                         }
 
                         if (!JsonRpcResponseValidator.validate(responseItem)) {
                             const responseError = new Error(`Invalid JSON RPC response: ${JSON.stringify(responseItem)}`);
 
-                            method.callback(responseError);
+                            method.callback(responseError, null);
                             errors.push(responseError);
+
+                            return;
                         }
 
                         try {
                             const mappedResult = method.afterExecution(responseItem.result);
 
-                            responseItem.result = mappedResult;
-                            method.callback(null, mappedResult);
+                            response[index] = mappedResult;
+                            method.callback(false, mappedResult);
                         } catch (error) {
                             errors.push(error);
                             method.callback(error, null);

@@ -59,10 +59,14 @@ export default class JsonRpcMapper {
      * @returns {Array}
      */
     static toBatchPayload(methods) {
-        return methods.map(method => {
+        let batchPayload = [];
+
+        methods.forEach(method => {
             method.beforeExecution();
 
-            return JsonRpcMapper.toPayload(method.rpcMethod, method.parameters);
+            batchPayload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
+
+        return batchPayload;
     }
 }
