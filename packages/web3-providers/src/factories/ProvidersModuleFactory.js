@@ -23,7 +23,6 @@
 import ProviderAdapterResolver from '../resolvers/ProviderAdapterResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
 import SocketProviderAdapter from '../adapters/SocketProviderAdapter';
-import InpageProviderAdapter from '../adapters/InpageProviderAdapter';
 import HttpProviderAdapter from '../adapters/HttpProviderAdapter';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';

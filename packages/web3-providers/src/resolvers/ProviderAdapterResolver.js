@@ -66,16 +66,18 @@ export default class ProviderAdapterResolver {
             }
         }
 
-        switch (provider.constructor.name) {
-            case 'HttpProvider':
-                return this.providersModuleFactory.createHttpProviderAdapter(provider);
-            case 'EthereumProvider':
-            case 'WebsocketProvider':
-            case 'IpcProvider':
-                return this.providersModuleFactory.createSocketProviderAdapter(provider);
-            case 'HttpProviderAdapter':
-            case 'SocketProviderAdapter':
-                return provider;
+        if (provider.constructor) {
+            switch (provider.constructor.name) {
+                case 'HttpProvider':
+                    return this.providersModuleFactory.createHttpProviderAdapter(provider);
+                case 'EthereumProvider':
+                case 'WebsocketProvider':
+                case 'IpcProvider':
+                    return this.providersModuleFactory.createSocketProviderAdapter(provider);
+                case 'HttpProviderAdapter':
+                case 'SocketProviderAdapter':
+                    return provider;
+            }
         }
 
         throw new Error('Please provide an valid Web3 provider or the EthereumProvider');
