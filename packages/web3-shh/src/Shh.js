@@ -73,6 +73,17 @@ export default class Shh extends AbstractWeb3Module {
     }
 
     /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    clearSubscriptions() {
+        super.clearSubscriptions('shh_unsubscribe');
+    }
+
+    /**
      * Extends setProvider method from AbstractWeb3Module.
      * This is required for updating the provider also in the sub package Net.
      *

@@ -101,6 +101,17 @@ export default class Eth extends AbstractWeb3Module {
     }
 
     /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    clearSubscriptions() {
+        super.clearSubscriptions('eth_unsubscribe');
+    }
+
+    /**
      * Sets the defaultGasPrice property on all contracts and on the personal module
      *
      * @property defaultGasPrice

@@ -116,6 +116,8 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
      *
      * @method clearSubscriptions
      *
+     * @param {String} unsubscribeMethod
+     *
      * @returns {Promise<Boolean|Error>}
      */
     clearSubscriptions(unsubscribeMethod) {
@@ -126,7 +128,7 @@ export default class SocketProviderAdapter extends AbstractProviderAdapter {
 
         return Promise.all(unsubscribePromises).then(results => {
             if (results.includes(false)) {
-                throw Error('Could not unsubscribe all subscriptions. Don\'t forget to call this method twice if you have whisper subscriptions.');
+                throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
             }
 
             this.provider.reset();

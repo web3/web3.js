@@ -159,18 +159,25 @@ export default class AbstractWeb3Module {
         return this.currentProvider.host === provider;
     }
 
+
     /**
-     * Clears all subscriptions and listeners of the provider if it has any subscriptions
+     * Clears all subscriptions and listeners
      *
      * @method clearSubscriptions
+     *
+     * @param {String} unsubscribeMethod
+     *
+     * @returns {Promise<Boolean|Error>}
      */
-    clearSubscriptions() {
+    clearSubscriptions(unsubscribeMethod) {
         if (
             typeof this.currentProvider.clearSubscriptions !== 'undefined' &&
             this.currentProvider.subscriptions.length > 0
         ) {
-            this.currentProvider.clearSubscriptions();
+            return this.currentProvider.clearSubscriptions(unsubscribeMethod);
         }
+
+        return Promise.resolve(true);
     }
 
     /**
