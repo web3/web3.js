@@ -31,6 +31,7 @@ import https from 'https';
 
 export default class HttpProvider {
     /**
+     * TODO: Be sure the fix of the PR #2105 is included!
      * @param {String} host
      * @param {Object} options
      *
@@ -114,7 +115,7 @@ export default class HttpProvider {
         request.ontimeout = () => {
             this.connected = false;
             callback(
-                new Error(`CONNECTION TIMEOUT: timeout exceeded after ${this.timeout}ms`),
+                new Error(`CONNECTION: Timeout exceeded after ${this.timeout}ms`),
                 null
             );
         };
