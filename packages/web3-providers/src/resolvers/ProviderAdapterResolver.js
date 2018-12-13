@@ -71,6 +71,7 @@ export default class ProviderAdapterResolver {
                 case 'HttpProvider':
                     return this.providersModuleFactory.createHttpProviderAdapter(provider);
                 case 'EthereumProvider':
+                    return this.providersModuleFactory.createEthereumProviderAdapter(provider);
                 case 'WebsocketProvider':
                 case 'IpcProvider':
                     return this.providersModuleFactory.createSocketProviderAdapter(provider);

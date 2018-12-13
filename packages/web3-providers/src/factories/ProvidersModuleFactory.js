@@ -28,6 +28,7 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
+import EthereumProviderAdapter from '../adapters/EthereumProviderAdapter';
 
 export default class ProvidersModuleFactory {
     /**
@@ -129,5 +130,18 @@ export default class ProvidersModuleFactory {
      */
     createSocketProviderAdapter(provider) {
         return new SocketProviderAdapter(provider);
+    }
+
+    /**
+     * Returns an EthereumProviderAdapter object
+     *
+     * @method createEthereumProviderAdapter
+     *
+     * @param {EthereumProvider} provider
+     *
+     * @returns {EthereumProviderAdapter}
+     */
+    createEthereumProviderAdapter(provider) {
+        return new EthereumProviderAdapter(provider);
     }
 }
