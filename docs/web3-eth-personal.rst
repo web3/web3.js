@@ -261,6 +261,47 @@ Example
     .then(console.log('Account unlocked!'));
     > "Account unlocked!"
 
+------------------------------------------------------------------------------
+
+.. _personal-getaccounts:
+
+getAccounts
+=====================
+
+.. code-block:: javascript
+
+    web3.eth.personal.getAccounts([callback])
+
+Returns a list of accounts the node controls by using the provider and calling
+the RPC method ``personal_listAccounts``. Using :ref:`web3.eth.accounts.create() <accounts-create>`
+will not add accounts into this list. For that use
+:ref:`web3.eth.personal.newAccount() <personal-newaccount>`.
+
+The results are the same as :ref:`web3.eth.getAccounts() <eth-getaccounts>` except that calls
+the RPC method ``eth_accounts``.
+
+-------
+Returns
+-------
+
+
+``Promise`` returns ``Array`` - An array of addresses controlled by node.
+
+-------
+Example
+-------
+
+
+.. code-block:: javascript
+
+    web3.eth.getAccounts()
+    .then(console.log);
+    > ["0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "0xDCc6960376d6C6dEa93647383FfB245CfCed97Cf"]
+
+
+------------------------------------------------------------------------------
+
+
 // TODO
 
-getAccounts, lockAccount, sendTransaction
+lockAccount, sendTransaction

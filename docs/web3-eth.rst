@@ -424,6 +424,9 @@ the RPC method ``eth_accounts``. Using :ref:`web3.eth.accounts.create() <account
 will not add accounts into this list. For that use
 :ref:`web3.eth.personal.newAccount() <personal-newaccount>`.
 
+The results are the same as :ref:`web3.eth.personal.getAccounts() <personal-getaccounts>` except that calls
+the RPC method ``personal_listAccounts``.
+
 -------
 Returns
 -------
