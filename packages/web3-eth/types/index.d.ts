@@ -181,7 +181,7 @@ export interface Subscribe<T> {
         id: string
         subscribe(callback?: (error: Error, result: Subscribe<T>) => void): Subscribe<T>
         unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
-        arguments: object
+        options: {}
     }
     on(type: 'data', handler: (data: T) => void): void
     on(type: 'changed', handler: (data: T) => void): void
