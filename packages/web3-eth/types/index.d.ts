@@ -147,11 +147,6 @@ export interface Block extends BlockHeader {
     uncles: string[];
 }
 
-export interface SignedTransaction {
-    raw: string;
-    tx: Transaction;
-}
-
 export interface PastLogsOptions {
     fromBlock?: number | string;
     toBlock?: number | string;
@@ -223,6 +218,7 @@ export interface Transaction {
     v?: string;
     r?: string;
     s?: string;
+    hash?: string;
 }
 
 export interface SignedTransaction {
