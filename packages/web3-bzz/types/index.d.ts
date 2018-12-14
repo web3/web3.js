@@ -17,13 +17,20 @@
  * @date 2018
  */
 
-export declare class Bzz {
-    constructor(provider: Object | string);
-    pick(): Object | boolean;
-    download(bzzHash: string, localPath: string): Promise<Buffer|Object|string>;
-    upload(data: string | Buffer | Uint8Array | Object): Promise<string>;
-    isAvailable(): Promise<boolean>;
-    hasProvider(): boolean;
-    throwProviderError();
-    setProvider(provider: Object | string): boolean;
+// once dependency tree is sorted we can reuse web3-providers types here
+// for now we keep them loosely typed.
+export class Bzz {
+    constructor(provider: string);
+    setProvider(provider: string): boolean;
+    givenProvider: {};
+    currentProvider: string | null;
+    upload(data: string | Buffer | Uint8Array | {}): Promise<string>;
+    download(bzzHash: string, localPath?: string): Promise<Buffer | {} | string>;
+    pick: Pick;
+}
+
+export interface Pick {
+    file: () => Promise<any>;
+    directory: () => Promise<any>;
+    data: () => Promise<any>;
 }
