@@ -80,23 +80,6 @@ eth.givenProvider;
 // $ExpectType BatchRequest
 eth.BatchRequest();
 
-// $ExpectType any
-eth.extend({
-    property: 'myModule',
-    methods: [{
-        name: 'getBalance',
-        call: 'eth_getBalance',
-        params: 2,
-        inputFormatter: [() => {}],
-        outputFormatter: () => {}
-    },{
-        name: 'getGasPriceSuperFunction',
-        call: 'eth_gasPriceSuper',
-        params: 2,
-        inputFormatter: [null, () => {}]
-    }]
-});
-
 // $ExpectType string | null
 eth.defaultAccount
 
