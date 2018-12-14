@@ -21,8 +21,8 @@ import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
 import {Utils} from 'web3-utils';
 import * as net from 'net';
 import {provider, AbstractProviderAdapter, BatchRequest} from 'web3-providers';
-import {Eth} from "web3-eth";
-import {Network} from "web3-net";
+import {Eth} from 'web3-eth';
+import {Network} from 'web3-net';
 
 export class Web3 extends AbstractWeb3Module {
     constructor(
