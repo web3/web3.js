@@ -47,7 +47,7 @@ export class Eth extends AbstractWeb3Module {
     subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
     readonly providers: Providers;
-    readonly givenProvider: AbstractProviderAdapter | provider | null;
+    readonly givenProvider: provider | null;
     BatchRequest(): BatchRequest;
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
     isSyncing(callback?: (error: Error, syncing: Syncing) => void): Promise<Syncing | boolean>;
