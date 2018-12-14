@@ -22,9 +22,9 @@ import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
 import {Contract} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
-import {Accounts} from "web3-eth-accounts";
-import {AbiCoder} from "web3-eth-abi";
-import {Network} from "web3-net";
+import {Accounts} from 'web3-eth-accounts';
+import {AbiCoder} from 'web3-eth-abi';
+import {Network} from 'web3-net';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
@@ -39,12 +39,12 @@ export class Eth extends AbstractWeb3Module {
     abi: AbiCoder;
     net: Network;
     clearSubscriptions(): boolean
-    subscribe(type: "logs", options?: Logs): Promise<Subscribe<Log>>;
-    subscribe(type: "logs", callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
-    subscribe(type: "logs", options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
-    subscribe(type: "syncing", callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
-    subscribe(type: "newBlockHeaders", callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
-    subscribe(type: "pendingTransactions", callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
+    subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
+    subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
+    subscribe(type: 'logs', options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
+    subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
+    subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
+    subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
     readonly providers: Providers;
     readonly givenProvider: AbstractProviderAdapter | provider | null;
@@ -184,9 +184,9 @@ export interface Subscribe<T> {
         unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
         arguments: object
     }
-    on(type: "data", handler: (data: T) => void): void
-    on(type: "changed", handler: (data: T) => void): void
-    on(type: "error", handler: (data: Error) => void): void
+    on(type: 'data', handler: (data: T) => void): void
+    on(type: 'changed', handler: (data: T) => void): void
+    on(type: 'error', handler: (data: Error) => void): void
 }
 
 /** DELETE ONCE personal is complete */
@@ -200,16 +200,16 @@ export class Personal {
 /**            MOVE ALL BELOW TO WEB3-CORE ONCE TYPES COMPLETE FOR CLEAR UP    !!! */
 
 export interface PromiEvent<T> extends Promise<T> {
-    once(type: "transactionHash", handler: (receipt: string) => void): PromiEvent<T>
-    once(type: "receipt", handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
-    once(type: "confirmation", handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
-    once(type: "error", handler: (error: Error) => void): PromiEvent<T>
-    once(type: "error" | "confirmation" | "receipt" | "transactionHash", handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
-    on(type: "transactionHash", handler: (receipt: string) => void): PromiEvent<T>
-    on(type: "receipt", handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
-    on(type: "confirmation", handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
-    on(type: "error", handler: (error: Error) => void): PromiEvent<T>
-    on(type: "error" | "confirmation" | "receipt" | "transactionHash", handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
 }
 
 export interface Transaction {
