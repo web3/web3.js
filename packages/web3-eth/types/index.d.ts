@@ -233,10 +233,6 @@ export interface SignedTransaction {
     rawTransaction?: string;
 }
 
-export interface Sign extends SignedTransaction {
-    message: string;
-}
-
 export interface TransactionReceipt {
     transactionHash: string
     transactionIndex: number
