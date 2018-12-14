@@ -37,7 +37,7 @@ The ``web3-eth-personal`` package allows you to interact with the Ethereum node'
 
 ------------------------------------------------------------------------------
 
-
+.. _personal-newaccount:
 
 newAccount
 =========
@@ -46,7 +46,10 @@ newAccount
 
     web3.eth.personal.newAccount(password, [callback])
 
-Creates a new account.
+Create a new account on the node that Web3 is connected to with its provider.
+The RPC method used is ``personal_newAccount``. It differs from
+:ref:`web3.eth.accounts.create() <accounts-create>` where the key pair is
+created only on client and it's up to the developer to manage it.
 
 .. note:: Never call this function over a unsecured Websocket or HTTP provider, as your password will be send in plain text!
 
