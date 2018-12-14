@@ -83,14 +83,13 @@ export interface EncryptedKeystoreV3Json {
     }
 }
 
-/**            MOVE ALL BELOW TO WEB3-CORE     !!! */
+/**            MOVE ALL BELOW TO WEB3-CORE ONCE TYPES COMPLETE FOR CLEAR UP     !!! */
 export interface Transaction {
     from?: string | number;
-    to: string;
+    to?: string;
     gasPrice?: string;
-    gas: number;
-    // value: number | string | BN | BigNumber; should be this
-    value: number | string;
+    gas?: number | string;
+    value?: number | string;
     chainId?: number;
     data?: string;
     nonce?: number;
