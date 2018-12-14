@@ -48,7 +48,7 @@ export class Eth extends AbstractWeb3Module {
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
     readonly providers: Providers;
     readonly givenProvider: provider | null;
-    BatchRequest(): BatchRequest;
+    BatchRequest: new () => BatchRequest;
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
     isSyncing(callback?: (error: Error, syncing: Syncing) => void): Promise<Syncing | boolean>;
     getCoinbase(callback?: (error: Error, coinbaseAddress: string) => void): Promise<string>;
