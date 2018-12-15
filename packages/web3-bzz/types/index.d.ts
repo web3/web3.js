@@ -20,8 +20,8 @@
 // once dependency tree is sorted we can reuse web3-providers types here
 // for now we keep them loosely typed.
 export class Bzz {
-    constructor(provider: string);
-    setProvider(provider: string): boolean;
+    constructor(provider: string | {});
+    setProvider(provider: string | {}): boolean;
     givenProvider: {};
     currentProvider: string | null;
     upload(data: string | Buffer | Uint8Array | {}): Promise<string>;

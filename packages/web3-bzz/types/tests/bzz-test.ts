@@ -24,6 +24,9 @@ const bzz = new Bzz('http://swarm-gateways.net');
 // $ExpectType boolean
 bzz.setProvider('test.com');
 
+// $ExpectType boolean
+bzz.setProvider({});
+
 // $ExpectType {}
 bzz.givenProvider;
 
