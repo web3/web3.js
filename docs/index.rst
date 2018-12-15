@@ -38,7 +38,6 @@ Contents:
     web3-eth-iban
     web3-eth-abi
     web3-net
-    web3-bzz
     web3-shh
     web3-utils
     web3-admin
