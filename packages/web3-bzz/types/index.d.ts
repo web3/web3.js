@@ -19,6 +19,8 @@
 
 // once dependency tree is sorted we can reuse web3-providers types here
 // for now we keep them loosely typed.
+// should really have a dependency on `web3-providers` as its using all
+// the providers objects within the class
 export class Bzz {
     constructor(provider: string | {});
     setProvider(provider: string | {}): boolean;
@@ -27,6 +29,7 @@ export class Bzz {
     upload(data: string | Buffer | Uint8Array | {}): Promise<string>;
     download(bzzHash: string, localPath?: string): Promise<Buffer | {} | string>;
     pick: Pick;
+    BatchRequest: new () => any;
 }
 
 export interface Pick {

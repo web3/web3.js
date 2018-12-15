@@ -63,3 +63,6 @@ bzz.pick.directory();
 
 // $ExpectType Promise<any>
 bzz.pick.data();
+
+// $ExpectType any
+new bzz.BatchRequest();
