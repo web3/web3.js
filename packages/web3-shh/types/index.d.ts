@@ -54,7 +54,7 @@ export class Shh extends AbstractWeb3Module {
     clearSubscriptions(): boolean;
     newMessageFilter(options?: SubscriptionOptions): Promise<string>; // update docs
     deleteMessageFilter(id: string): Promise<boolean>; // update docs
-    getFilterMessages(id: string): Promise<Notification>; // update docs
+    getFilterMessages(id: string): Promise<Notification[]>; // update docs
 }
 
 export interface Info {

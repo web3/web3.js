@@ -189,5 +189,5 @@ shh.newMessageFilter();
 // $ExpectType Promise<boolean>
 shh.deleteMessageFilter('2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326');
 
-// $ExpectType Promise<Notification>
+// $ExpectType Promise<Notification[]>
 shh.getFilterMessages('2b47fbafb3cce24570812a82e6e93cd9e2551bbc4823f6548ff0d82d2206b326');
