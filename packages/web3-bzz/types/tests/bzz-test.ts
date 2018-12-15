@@ -27,7 +27,7 @@ bzz.setProvider('test.com');
 // $ExpectType boolean
 bzz.setProvider({});
 
-// $ExpectType {}
+// $ExpectType {} | string | null
 bzz.givenProvider;
 
 // $ExpectType string | null

@@ -24,7 +24,7 @@
 export class Bzz {
     constructor(provider: string | {});
     setProvider(provider: string | {}): boolean;
-    givenProvider: {};
+    givenProvider: {} | string | null;
     currentProvider: string | null;
     upload(data: string | Buffer | Uint8Array | {}): Promise<string>;
     download(bzzHash: string, localPath?: string): Promise<Buffer | {} | string>;
