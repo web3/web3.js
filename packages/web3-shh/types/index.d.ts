@@ -32,29 +32,29 @@ export class Shh extends AbstractWeb3Module {
     readonly givenProvider: provider | null;
     BatchRequest: new() => BatchRequest;
     net: Network;
-    getVersion(callback?: (error: Error, version: string) => void): Promise<string>; // update docs
-    getInfo(callback?: (error: Error, info: Info) => void): Promise<Info>; // update docs
-    setMaxMessageSize(size: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>; // update docs
-    setMinPoW(pow: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>; // update docs
-    markTrustedPeer(enode: string, callback?: (error: Error, result: boolean) => void): Promise<boolean> // update docs
-    newKeyPair(callback?: (error: Error, key: string) => void): Promise<string>; // update docs
-    addPrivateKey(privateKey: string, callback?: (error: Error, privateKey: string) => void): Promise<string>; // update docs
-    deleteKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>; // update docs
-    hasKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>; // update docs
-    getPublicKey(id: string, callback?: (error: Error, publicKey: string) => void): Promise<string>; // update docs
-    getPrivateKey(id: string, callback?: (error: Error, privateKey: string) => void): Promise<string>; // update docs
-    newSymKey(callback?: (error: Error, key: string) => void): Promise<string>; // update docs
-    addSymKey(symKey: string, callback?: (error: Error, key: string) => void): Promise<string>; // update docs
-    generateSymKeyFromPassword(password: string, callback?: (error: Error, key: string) => void): Promise<string>; // update docs
-    hasSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>; // update docs
-    getSymKey(id: string, callback?: (error: Error, key: string) => void): Promise<string>; // update docs
-    deleteSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean> // update docs
+    getVersion(callback?: (error: Error, version: string) => void): Promise<string>;
+    getInfo(callback?: (error: Error, info: Info) => void): Promise<Info>;
+    setMaxMessageSize(size: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    setMinPoW(pow: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    markTrustedPeer(enode: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>
+    newKeyPair(callback?: (error: Error, key: string) => void): Promise<string>;
+    addPrivateKey(privateKey: string, callback?: (error: Error, privateKey: string) => void): Promise<string>;
+    deleteKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    hasKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    getPublicKey(id: string, callback?: (error: Error, publicKey: string) => void): Promise<string>;
+    getPrivateKey(id: string, callback?: (error: Error, privateKey: string) => void): Promise<string>;
+    newSymKey(callback?: (error: Error, key: string) => void): Promise<string>;
+    addSymKey(symKey: string, callback?: (error: Error, key: string) => void): Promise<string>;
+    generateSymKeyFromPassword(password: string, callback?: (error: Error, key: string) => void): Promise<string>;
+    hasSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+    getSymKey(id: string, callback?: (error: Error, key: string) => void): Promise<string>;
+    deleteSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>
     post(object: PostWithSymKey | PostWithPubKey, callback?: (error: Error, result: string) => void): Promise<string>;
     subscribe(string: 'messages', options: SubscriptionOptions, callback?: (error: Error, message: Notification, subscription: any) => void): Subscribe;
     clearSubscriptions(): boolean;
-    newMessageFilter(options?: SubscriptionOptions): Promise<string>; // update docs
-    deleteMessageFilter(id: string): Promise<boolean>; // update docs
-    getFilterMessages(id: string): Promise<Notification[]>; // update docs
+    newMessageFilter(options?: SubscriptionOptions): Promise<string>;
+    deleteMessageFilter(id: string): Promise<boolean>;
+    getFilterMessages(id: string): Promise<Notification[]>;
 }
 
 export interface Info {
