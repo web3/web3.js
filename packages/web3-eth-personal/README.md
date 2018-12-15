@@ -37,6 +37,10 @@ const personal = new Personal(
 );
 ```
 
+## Types
+
+If you are using TypeScript all the types are defined in the `index.d.ts` file.
+
 
 [docs]: http://web3js.readthedocs.io/en/1.0/
 [repo]: https://github.com/ethereum/web3.js
