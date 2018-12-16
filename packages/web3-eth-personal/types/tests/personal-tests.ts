@@ -42,7 +42,7 @@ personal.setProvider(httpProvider)
 // $ExpectType Providers
 personal.providers;
 
-// $ExpectType AbstractProviderAdapter
+// $ExpectType AbstractProviderAdapter | null
 personal.givenProvider;
 
 // $ExpectType AbstractProviderAdapter

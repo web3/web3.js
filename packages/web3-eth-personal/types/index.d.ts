@@ -27,14 +27,14 @@ export class Personal extends AbstractWeb3Module {
         options?: Web3ModuleOptions
     );
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
-    givenProvider: AbstractProviderAdapter;
+    givenProvider: AbstractProviderAdapter | null;
     BatchRequest: new() => BatchRequest;
     providers: Providers;
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
     sign(dataToSign: string, address: string, password: string, callback?: (error: Error, signature: string) => void): Promise<string>;
     ecRecover(dataThatWasSigned: string, signature: string, callback?: (error: Error, address: string) => void): Promise<string>;
     signTransaction(transation: Transaction, password: string, callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
-    unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): void;
+    unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): Promise<void>;
 }
 
 // Josh to move to web3-core

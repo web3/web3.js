@@ -248,6 +248,13 @@ Parameters
 3. ``unlockDuration`` - ``Number`` - The duration for the account to remain unlocked.
 
 -------
+Returns
+-------
+
+
+``Promise`` returns ``void``
+
+-------
 Example
 -------
 
