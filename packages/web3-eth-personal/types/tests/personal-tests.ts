@@ -19,7 +19,6 @@
 
 import {Personal, RLPEncodedTransaction} from 'web3-eth-personal';
 import {HttpProvider} from 'web3-providers';
-import {Network} from 'web3-net';
 
 const options = {
     timeout: 20000,
