@@ -53,15 +53,7 @@ export interface Transaction {
     hash?: string;
 }
 
-export interface SignedTransaction {
-    messageHash?: string;
-    r: string;
-    s: string;
-    v: string;
-    rawTransaction?: string;
-}
-
 export interface RLPEncodedTransaction {
     raw: string,
-    tx: SignedTransaction
+    tx: Transaction
 }
