@@ -18,7 +18,7 @@
  */
 
 import * as net from 'net';
-import {AbstractProviderAdapter, ProvidersModuleFactory, provider, BatchRequest} from 'web3-providers';
+import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
 import {Network} from 'web3-net';
 export class Personal extends AbstractWeb3Module {
