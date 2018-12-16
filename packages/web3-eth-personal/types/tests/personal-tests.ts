@@ -66,31 +66,31 @@ personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test
 // $ExpectType Promise<string>
 personal.ecRecover(
     'Hello world',
-    '0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400'
+    '0x30755ed65396facf86c53e6217c52b4daebe72aa'
 );
 
 // $ExpectType Promise<string>
 personal.ecRecover(
     'Hello world',
-    '0x30755ed65396facf86c53e6217c52b4daebe72aa4941d89635409de4c9c7f9466d4e9aaec7977f05e923889b33c0d0dd27d7226b6e6f56ce737465c5cfd04be400',
+    '0x30755ed65396facf86c53e6217c52b4daebe72aa',
     (error: Error, address: string) => {}
 );
 
 // $ExpectType Promise<RLPEncodedTransaction>
 personal.signTransaction(
     {
-        from: "0xEB014f8c8B418Db6b45774c326A0E64C78914dC0",
-        gasPrice: "20000000000",
-        gas: "21000",
+        from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+        gasPrice: '20000000000',
+        gas: '21000',
         to: '0x3535353535353535353535353535353535353535',
-        value: "1000000000000000000",
-        data: ""
+        value: '1000000000000000000',
+        data: ''
     },
     'test password'
 );
 
 // $ExpectType void
-personal.unlockAccount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!", 600);
+personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600);
 
 // $ExpectType void
-personal.unlockAccount("0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe", "test password!", 600, (error: Error) => {});
+personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600, (error: Error) => {});
