@@ -62,16 +62,9 @@ personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test
 personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', (error: Error, signature: string) => {});
 
 // $ExpectType Promise<string>
-personal.ecRecover(
-    'Hello world',
-    '0x30755ed65396facf86c53e6217c52b4daebe72aa'
-);
+personal.ecRecover('Hello world', '0x30755ed65396facf86c53e6217c52b4daebe72aa');
 // $ExpectType Promise<string>
-personal.ecRecover(
-    'Hello world',
-    '0x30755ed65396facf86c53e6217c52b4daebe72aa',
-    (error: Error, address: string) => {}
-);
+personal.ecRecover('Hello world', '0x30755ed65396facf86c53e6217c52b4daebe72aa', (error: Error, address: string) => {});
 
 // $ExpectType Promise<RLPEncodedTransaction>
 personal.signTransaction(
