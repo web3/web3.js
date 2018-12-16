@@ -16,7 +16,6 @@
     },
     "types": "types",
     "dependencies": {
-        "typescript": "^3.3.0-dev.20181213",
         "web3-core": "1.0.0-beta.36",
         "web3-core-helpers": "1.0.0-beta.36",
         "web3-core-method": "1.0.0-beta.36",
