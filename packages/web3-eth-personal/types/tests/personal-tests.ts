@@ -17,9 +17,8 @@
  * @date 2018
  */
 
-import * as net from 'net';
-import { Personal } from 'web3-eth-personal';
-import {ProvidersModuleFactory, HttpProvider, IpcProvider, WebsocketProvider, BatchRequest, JsonRpcMapper, JsonRpcResponseValidator} from 'web3-providers';
+import {Personal} from 'web3-eth-personal';
+import {HttpProvider, BatchRequest, JsonRpcMapper, JsonRpcResponseValidator} from 'web3-providers';
 import {Network} from 'web3-net';
 
 const options = {
@@ -31,34 +30,12 @@ const options = {
     ]
 };
 
-const networkOptions = {
-    defaultAccount: '0x5680b9a5b3f1614c5b8edf1c4e7aba991394bf6d',
-    defaultBlock: 600123,
-    transactionBlockTimeout: 50,
-    transactionConfirmationBlocks: 24,
-    transactionPollingTimeout: 15,
-    defaultGasPrice: '2',
-    defaultGas: 50000
-}
-
-const providersModuleFactory = new ProvidersModuleFactory();
 const httpProvider = new HttpProvider('http://localhost:8545', options);
-const ipcProvider = new IpcProvider('/Users/myuser/Library/Ethereum/geth.ipc', new net.Server());
-const websocketProvider = new WebsocketProvider('ws://localhost:8546');
 
 const batchRequest = new BatchRequest(httpProvider, JsonRpcMapper, JsonRpcResponseValidator);
 
 const PersonalClass = new Personal(
     httpProvider,
-    providersModuleFactory,
-    {
-        HttpProvider: httpProvider,
-        WebsocketProvider: websocketProvider,
-        IpcProvider: ipcProvider
-    },
-    {},
-    {},
-    new Network(httpProvider, networkOptions)
 )
 
 // $ExpectType boolean

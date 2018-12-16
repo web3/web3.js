@@ -20,29 +20,12 @@
 import * as net from 'net';
 import {AbstractProviderAdapter, ProvidersModuleFactory, provider, BatchRequest} from 'web3-providers';
 import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
-import { Transaction, SignedTransaction } from 'web3-eth'
-import { Network } from 'web3-net';
+import {Network} from 'web3-net';
 export class Personal extends AbstractWeb3Module {
     constructor(
         provider: AbstractProviderAdapter | provider,
-        providersModuleFactory: ProvidersModuleFactory,
-        providers: Providers,
-        // dont have type yet
-        // as this is in web3-core-helpers
-        // can be sorted later once dependencies
-        // are cleaned up
-        methodModuleFactory: any,
-        // dont have type yet
-        // as this is in web3-core-method
-        // can be sorted later once dependencies
-        // are cleaned up
-        methodFactory: any,
-        net: Network,
-        formatters?: any,
-        utils?: any,
         options?: Web3ModuleOptions
-    )
-
+    );
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
     givenProvider: AbstractProviderAdapter;
     BatchRequest: new() => BatchRequest;
@@ -52,6 +35,30 @@ export class Personal extends AbstractWeb3Module {
     ecRecover(dataThatWasSigned: string, signature: string, callback?: (error: Error, address: string) => void): Promise<string>;
     signTransaction(transation: Transaction, password: string, callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
     unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): void;
+}
+
+// Josh to move to web3-core
+export interface Transaction {
+    from?: string | number;
+    to?: string;
+    gasPrice?: string;
+    gas?: number | string;
+    value?: number | string;
+    chainId?: number;
+    data?: string;
+    nonce?: number;
+    v?: string;
+    r?: string;
+    s?: string;
+    hash?: string;
+}
+
+export interface SignedTransaction {
+    messageHash?: string;
+    r: string;
+    s: string;
+    v: string;
+    rawTransaction?: string;
 }
 
 export interface RLPEncodedTransaction {
