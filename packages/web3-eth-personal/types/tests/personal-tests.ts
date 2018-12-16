@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {Personal} from 'web3-eth-personal';
+import {Personal, RLPEncodedTransaction} from 'web3-eth-personal';
 import {HttpProvider} from 'web3-providers';
 import {Network} from 'web3-net';
 
@@ -53,13 +53,11 @@ new personal.BatchRequest();
 
 // $ExpectType Promise<string>
 personal.newAccount('test password');
-
 // $ExpectType Promise<string>
 personal.newAccount('test password', (error: Error, address: string) => {});
 
 // $ExpectType Promise<string>
 personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!');
-
 // $ExpectType Promise<string>
 personal.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', (error: Error, signature: string) => {});
 
@@ -68,7 +66,6 @@ personal.ecRecover(
     'Hello world',
     '0x30755ed65396facf86c53e6217c52b4daebe72aa'
 );
-
 // $ExpectType Promise<string>
 personal.ecRecover(
     'Hello world',
@@ -88,9 +85,21 @@ personal.signTransaction(
     },
     'test password'
 );
+// $ExpectType Promise<RLPEncodedTransaction>
+personal.signTransaction(
+    {
+        from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
+        gasPrice: '20000000000',
+        gas: '21000',
+        to: '0x3535353535353535353535353535353535353535',
+        value: '1000000000000000000',
+        data: ''
+    },
+    'test password',
+    (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => {}
+)
 
-// $ExpectType void
+// $ExpectType Promise<void>
 personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600);
-
-// $ExpectType void
+// $ExpectType Promise<void>
 personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600, (error: Error) => {});
