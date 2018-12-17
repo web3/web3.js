@@ -24,8 +24,6 @@ import EventEmitter from 'eventemitter3';
 
 export default class WebsocketProvider extends EventEmitter {
     /**
-     * Default connection ws://localhost:8546
-     *
      * @param {WsReconnector} connection
      * @param {Number} timeout
      *
@@ -71,21 +69,17 @@ export default class WebsocketProvider extends EventEmitter {
      */
     onMessage(messageEvent) {
         this.parseResponse(messageEvent.data).forEach(result => {
-            if (result.method && result.method.indexOf('_subscription') !== -1) {
-                this.emit(result.params.subscription, result);
-
-                return;
-            }
-
             let id = null;
             if (isArray(result)) {
                 id = result[0].id;
+            } else if (result.method && result.method.indexOf('_subscription') !== -1) {
+                id = result.params.subscription;
             } else {
                 id = result.id;
             }
 
-            this.emit(`response_${id}`, result);
-            this.removeAllListeners(`response_${id}`);
+            this.emit(id, result);
+            this.removeAllListeners(id);
         });
     }
 
@@ -129,7 +123,7 @@ export default class WebsocketProvider extends EventEmitter {
      */
     parseResponse(data) {
         const returnValues = [],
-            dechunkedData = data
+              dechunkedData = data
                 .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
                 .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
                 .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
