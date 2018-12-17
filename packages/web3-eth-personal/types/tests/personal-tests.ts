@@ -91,7 +91,7 @@ personal.signTransaction(
     (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => {}
 )
 
-// $ExpectType Promise<void>
+// $ExpectType Promise<boolean>
 personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600);
-// $ExpectType Promise<void>
+// $ExpectType Promise<boolean>
 personal.unlockAccount('0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', 'test password!', 600, (error: Error) => {});
