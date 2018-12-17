@@ -16,8 +16,8 @@
 */
 /**
  * @file WebsocketProvider.js
- * @authors: Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2017
+ * @authors: Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @date 2018
  */
 
 import EventEmitter from 'eventemitter3';
@@ -26,53 +26,24 @@ export default class WebsocketProvider extends EventEmitter {
     /**
      * Default connection ws://localhost:8546
      *
-     * @param {String} url
-     * @param {Object} options
+     * @param {WsReconnector} connection
+     * @param {Number} timeout
      *
      * @constructor
      */
-    constructor(url, options) {
+    constructor(connection, timeout) {
         super();
-        this.options = options || {};
-        this.url = url;
-        this._customTimeout = this.options.timeout || undefined;
-        this.connect(this.url, this.options);
+        this.connection = connection;
+        this.timeout = timeout;
+        this.registerEventListeners();
     }
 
     /**
-     * Note: The w3cwebsocket implementation does not support Basic Auth
-     * username/password in the URL. So generate the basic auth header, and
-     * pass through with any additional headers supplied in constructor
+     * Registers all the required listeners.
      *
-     * Returns a connected WebSocket instance from the given url
-     *
-     * @method connect
-     *
-     * @param {String} url
-     * @param {Object} options
-     *
-     * @returns {Ws}
+     * @method registerEventListeners
      */
-    connect(url, options) {
-        const parsedURL = parseURL(url),
-              headers = options.headers || {},
-              protocol = options.protocol,
-              clientConfig = options.clientConfig;
-
-        let authToken;
-        if (parsedURL.username && parsedURL.password) {
-            authToken = Buffer.from(`${parsedURL.username}:${parsedURL.password}`, 'base64');
-            headers.authorization = `Basic ${authToken}`;
-        }
-
-
-        if (parsedURL.auth) {
-            authToken = Buffer.from(parsedURL.auth, 'base64');
-        }
-
-        headers.authorization = authToken;
-
-        this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
+    registerEventListeners() {
         this.connection.addEventListener('open', this.onOpen);
         this.connection.addEventListener('message', this.onMessage);
         this.connection.addEventListener('error', this.onError);
@@ -214,18 +185,31 @@ export default class WebsocketProvider extends EventEmitter {
                     return resolve(response);
                 });
 
+                if(this.timeout) {
+                    setTimeout(() => {
+                        if (this.listeners(`response_${payload.id}`).length !== 0) {
+                            reject(new Error('Connection error: Timeout exceeded'));
+                        }
+                    }, this.timeout);
+                }
+
                 return;
             }
 
             setTimeout(() => {
                 if (!this.isConnecting()) {
-                    this.connection.send(JSON.stringify(payload));
+                    this.send(payload)
+                        .then(response => {
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
 
-                    this.on(`response_${payload.id}`, response => {
-                        this.removeAllListeners(`response_${payload.id}`);
-                        return resolve(response);
-                    });
+                    return;
                 }
+
+                this.send(payload);
             }, 500);
         });
     }

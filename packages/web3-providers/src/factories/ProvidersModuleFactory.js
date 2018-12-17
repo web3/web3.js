@@ -20,6 +20,9 @@
  * @date 2018
  */
 
+import {w3cwebsocket}from 'websocket';
+import {WsReconnector} from 'websocket-reconnector';
+import URL from 'url-parse';
 import ProviderAdapterResolver from '../resolvers/ProviderAdapterResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
 import SocketProviderAdapter from '../adapters/SocketProviderAdapter';
@@ -73,11 +76,12 @@ export default class ProvidersModuleFactory {
      * @method createHttpProvider
      *
      * @param {String} url
+     * @param {Object} options
      *
      * @returns {HttpProvider}
      */
-    createHttpProvider(url) {
-        return new HttpProvider(url);
+    createHttpProvider(url, options = {}) {
+        return new HttpProvider(url, options);
     }
 
     /**
@@ -86,40 +90,37 @@ export default class ProvidersModuleFactory {
      * @method createWebsocketProvider
      *
      * @param {String} url
+     * @param {Object} options
      *
      * @returns {WebsocketProvider}
      */
-    createWebsocketProvider(url) {
-        // TODO: check in the factory if its node or browser to initiate the right object.
-        //
-        // TODO: This checks if the current runtime is nodejs:
-        // TODO: typeof process !== 'undefined' && process.versions != null && process.versions.node != null
+    createWebsocketProvider(url, options = {}) {
+        let connection = '';
+        // runtime is of type node
+        if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
+            let authToken;
+            const headers = options.headers || {},
+                  protocol = options.protocol,
+                  clientConfig = options.clientConfig,
+                  urlObject = new URL(url);
 
-        // let Ws = null;
-        // let parseURL = null;
-        // if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-        //     Ws = (url, protocols) => {
-        //         return new window.WebSocket(url, protocols);
-        //     };
-        //     parseURL = (url) => {
-        //         return new URL(url);
-        //     };
-        // } else {
-        //     Ws = require('websocket').w3cwebsocket;
-        //     // TODO: give this as dependency in the factory and remove nodejs 5 fallback.
-        //     const url = require('url');
-        //     if (url.URL) {
-        //         // Use the new Node 6+ API for parsing URLs that supports username/password
-        //         const NewURL = url.URL;
-        //         parseURL = (url) => {
-        //             return new NewURL(url);
-        //         };
-        //     } else {
-        //         // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
-        //         parseURL = require('url').parse;
-        //     }
-        // }
-        return new WebsocketProvider(url);
+            if (urlObject.username && urlObject.password) {
+                authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
+                headers.authorization = `Basic ${authToken}`;
+            }
+
+            if (urlObject.auth) {
+                authToken = Buffer.from(parsedURL.auth, 'base64');
+            }
+
+            headers.authorization = authToken;
+
+            connection = new w3cwebsocket(url, protocol, undefined, headers, undefined, clientConfig);
+        } else {
+            connection = new window.WebSocket(url, options.protocol);
+        }
+
+        return new WebsocketProvider(new WsReconnector(connection), options.timeout);
     }
 
     /**
