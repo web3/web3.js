@@ -78,7 +78,7 @@ eth.providers;
 eth.givenProvider;
 
 // $ExpectType BatchRequest
-eth.BatchRequest();
+new eth.BatchRequest();
 
 // $ExpectType string | null
 eth.defaultAccount

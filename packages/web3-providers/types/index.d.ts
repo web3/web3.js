@@ -55,6 +55,7 @@ export class SocketProviderAdapter extends AbstractProviderAdapter {
 }
 
 export class BatchRequest {
+    constructor();
     constructor(provider: provider, jsonRpcMapper: JsonRpcMapper, jsonRpcResponseValidator: JsonRpcResponseValidator);
     add(request: any): void;
     execute(): void;
