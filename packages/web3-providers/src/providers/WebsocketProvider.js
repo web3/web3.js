@@ -36,8 +36,6 @@ export default class WebsocketProvider extends EventEmitter {
         this.options = options || {};
         this.url = url;
         this._customTimeout = this.options.timeout || undefined;
-        this.responseCallbacks = {};
-        this.notificationCallbacks = [];
         this.connect(this.url, this.options);
     }
 
@@ -103,8 +101,7 @@ export default class WebsocketProvider extends EventEmitter {
     onMessage(messageEvent) {
         this.parseResponse(messageEvent.data).forEach(result => {
             if (result.method && result.method.indexOf('_subscription') !== -1) {
-                this.emit(result.method, result);
-                this.removeAllListeners(result.method);
+                this.emit(result.params.subscription, result);
 
                 return;
             }
