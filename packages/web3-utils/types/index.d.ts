@@ -123,12 +123,59 @@ export function jsonInterfaceMethodToString(abiItem: ABIItem): string;
 export function soliditySha3(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
-
 // bloom types
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
 
 // interfaces
+
+export interface Utils {
+    isBN(value: string | number): boolean;
+    isBigNumber(value: BN): boolean;
+    toBN(value: number | string): BN;
+    toTwosComplement(value: number | string | BN): string;
+    isAddress(address: string): boolean;
+    isHex(hex: Hex): boolean;
+    isHexStrict(hex: Hex): boolean;
+    asciiToHex(string: string): string;
+    hexToAscii(string: string): string;
+    toAscii(string: string): string;
+    bytesToHex(bytes: number[]): string;
+    numberToHex(value: number | string | BN): string;
+    checkAddressChecksum(address: string): boolean;
+    fromAscii(string: string): string;
+    fromDecimal(value: string | number): string;
+    fromUtf8(string: string): string;
+    fromWei(value: BN, unit?: Unit): BN | string;
+    hexToBytes(hex: Hex): number[];
+    hexToNumber(hex: Hex): number;
+    hexToNumberString(hex: Hex): string;
+    hexToString(hex: Hex): string;
+    hexToUtf8(string: string): string;
+    keccak256(value: string | BN): string;
+    padLeft(value: string | number, characterAmount: number, sign?: string): string;
+    leftPad(string: string | number, characterAmount: number, sign?: string): string;
+    rightPad(string: string | number, characterAmount: number, sign?: string): string;
+    padRight(string: string | number, characterAmount: number, sign?: string): string;
+    sha3(value: string | BN): string;
+    randomHex(bytesSize: number): string;
+    utf8ToHex(string: string): string;
+    stringToHex(string: string): string;
+    toChecksumAddress(address: string): string;
+    toDecimal(hex: Hex): number;
+    toHex(value: number | string | BN): string;
+    toUtf8(string: string): string;
+    toWei(value: number | string | BN, unit?: Unit): string | BN;
+    isBloom(bloom: string): boolean;
+    isTopic(topic: string): boolean;
+    jsonInterfaceMethodToString(abiItem: ABIItem): string;
+    soliditySha3(...val: Mixed[]): string;
+    getUnitValue(unit: Unit): string;
+    unitMap(): Units;
+    // bloom types
+    testAddress(bloom: string, address: string): boolean;
+    testTopic(bloom: string, topic: string): boolean;
+}
 
 export interface Units {
     noether: string;

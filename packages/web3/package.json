@@ -51,8 +51,10 @@
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",
-        "test": "jest"
+        "test": "jest",
+        "dtslint": "dtslint types"
     },
+    "types": "types",
     "dependencies": {
         "web3-bzz": "1.0.0-beta.36",
         "web3-core": "1.0.0-beta.36",
@@ -76,9 +78,11 @@
         "rollup-plugin-commonjs": "^9.1.0",
         "rollup-plugin-json": "^3.1.0",
         "rollup-plugin-node-builtins": "^2.1.2",
-        "rollup-plugin-node-resolve": "^3.4.0"
+        "rollup-plugin-node-resolve": "^3.4.0",
+        "dtslint": "^0.3.0"
     },
     "files": [
-        "dist"
+        "dist",
+        "types/index.d.ts"
     ]
 }

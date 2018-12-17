@@ -37,6 +37,8 @@ export class AbstractWeb3Module {
     readonly defaultBlock: string | number;
     readonly defaultAccount: string | null;
     readonly currentProvider: AbstractProviderAdapter;
+    readonly providers: Providers;
+    readonly givenProvider: provider | null;
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
     isSameProvider(provider: AbstractProviderAdapter | provider): boolean;
     clearSubscriptions(): void;
