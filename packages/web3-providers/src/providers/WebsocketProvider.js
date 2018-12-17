@@ -129,7 +129,7 @@ export default class WebsocketProvider extends EventEmitter {
      */
     parseResponse(data) {
         const returnValues = [],
-              dechunkedData = data
+            dechunkedData = data
                 .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
                 .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
                 .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
@@ -180,18 +180,23 @@ export default class WebsocketProvider extends EventEmitter {
             if (!this.isConnecting()) {
                 this.connection.send(JSON.stringify(payload));
 
+                let timeout;
+                if (this.timeout) {
+                    timeout = setTimeout(() => {
+                        reject(new Error('Connection error: Timeout exceeded'));
+                    }, this.timeout);
+                }
+
                 this.on(`response_${payload.id}`, response => {
                     this.removeAllListeners(`response_${payload.id}`);
+
+                    if (this.timeout) {
+                        clearTimeout(timeout);
+                    }
+
                     return resolve(response);
                 });
 
-                if(this.timeout) {
-                    setTimeout(() => {
-                        if (this.listeners(`response_${payload.id}`).length !== 0) {
-                            reject(new Error('Connection error: Timeout exceeded'));
-                        }
-                    }, this.timeout);
-                }
 
                 return;
             }
