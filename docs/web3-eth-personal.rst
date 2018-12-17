@@ -252,7 +252,7 @@ Returns
 -------
 
 
-``Promise`` returns ``void``
+``Promise`` returns ``Boolean``
 
 -------
 Example
