@@ -54,6 +54,7 @@ export default class JsonRpcResponseValidator {
     static isResponseItemValid(response, payload = false) {
         if (isObject(response)) {
             if (response.error) {
+                // TODO: Check where and why this is the case.
                 if(response.error instanceof Error) {
                     return new Error(`Node error: ${response.error.message}`);
                 }

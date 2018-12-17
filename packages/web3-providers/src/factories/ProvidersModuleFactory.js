@@ -90,6 +90,35 @@ export default class ProvidersModuleFactory {
      * @returns {WebsocketProvider}
      */
     createWebsocketProvider(url) {
+        // TODO: check in the factory if its node or browser to initiate the right object.
+        //
+        // TODO: This checks if the current runtime is nodejs:
+        // TODO: typeof process !== 'undefined' && process.versions != null && process.versions.node != null
+
+        // let Ws = null;
+        // let parseURL = null;
+        // if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
+        //     Ws = (url, protocols) => {
+        //         return new window.WebSocket(url, protocols);
+        //     };
+        //     parseURL = (url) => {
+        //         return new URL(url);
+        //     };
+        // } else {
+        //     Ws = require('websocket').w3cwebsocket;
+        //     // TODO: give this as dependency in the factory and remove nodejs 5 fallback.
+        //     const url = require('url');
+        //     if (url.URL) {
+        //         // Use the new Node 6+ API for parsing URLs that supports username/password
+        //         const NewURL = url.URL;
+        //         parseURL = (url) => {
+        //             return new NewURL(url);
+        //         };
+        //     } else {
+        //         // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
+        //         parseURL = require('url').parse;
+        //     }
+        // }
         return new WebsocketProvider(url);
     }
 

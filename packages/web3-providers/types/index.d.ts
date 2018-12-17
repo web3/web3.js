@@ -26,10 +26,10 @@ import EventEmitter from 'eventemitter3';
 export class AbstractProviderAdapter extends EventEmitter {
     constructor(provider: provider);
     send(method: string, params: any[]): Promise<any>;
-    sendBatch(payload: JsonRpcPayload, callback: () => void): void;
+    sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Error|any[]>;
     // TS does not support overloading so we have to do it this way for now
-    subscribe(subscriptionType?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string | Error>;
-    unsubscribe(subscriptionId?: string, subscriptionType?: string): Promise<boolean | Error>;
+    subscribe(subscribeMethod?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string | Error>;
+    unsubscribe(subscribeMethod?: string, subscriptionType?: string): Promise<boolean | Error>;
     handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: JsonRpcPayload): void;
     isConnected(): boolean;
 }
@@ -38,27 +38,23 @@ export class HttpProviderAdapter extends AbstractProviderAdapter {
     constructor(provider: HttpProvider);
 }
 
-export class InpageProviderAdapter extends AbstractProviderAdapter {
-    constructor(provider: provider);
-    isConnected(): boolean;
-}
-
 export class SocketProviderAdapter extends AbstractProviderAdapter {
     constructor(provider: provider);
-    subscribe(subscriptionType: string, subscriptionMethod: string, parameters: any[]): Promise<string | Error>;
     isConnected(): boolean;
-    unsubscribe(subscriptionId: string, subscriptionType: string): Promise<boolean|Error>;
     registerSubscriptionListener(): void;
     hasSubscription(subscriptionId: string): boolean;
     clearSubscriptions(): void;
     removeSubscription(subscriptionId: string, subscriptionType: string): Promise<boolean>;
 }
 
+export class EthereumProviderAdapter extends SocketProviderAdapter {
+    constructor(provider: provider);
+}
+
 export class BatchRequest {
-    constructor(provider: provider, jsonRpcMapper: JsonRpcMapper, jsonRpcResponseValidator: JsonRpcResponseValidator);
+    constructor(moduleInstance: AbstractWeb3Module, provider: provider);
     add(request: any): void;
     execute(): void;
-    hasOutputFormatter(request: any): boolean;
 }
 
 export class ProviderDetector {
@@ -68,7 +64,7 @@ export class ProviderDetector {
 }
 
 export class ProvidersModuleFactory {
-    createBatchRequest(provider: provider): BatchRequest;
+    createBatchRequest(moduleInstance: AbstractWeb3Module, provider: provider): BatchRequest;
     createProviderAdapterResolver(): ProviderAdapterResolver;
     createProviderDetector(): ProviderDetector;
     createHttpProvider(url: string): HttpProvider;
@@ -76,8 +72,7 @@ export class ProvidersModuleFactory {
     createIpcProvider(path: string, net: net.Server): IpcProvider;
     createHttpProviderAdapter(provider: provider): HttpProviderAdapter;
     createSocketProviderAdapter(provider: provider): SocketProviderAdapter;
-    createInpageProviderAdapter(provider: provider): InpageProviderAdapter;
-    createJSONRpcResponseValidator(): JsonRpcResponseValidator;
+    createEthereumProviderAdapter(provider: provider): EthereumProviderAdapter;
 }
 
 export class HttpProvider {
@@ -111,7 +106,6 @@ export class WebsocketProvider {
 
 export class JsonRpcMapper {
     static toPayload(method: string, params: any[]): JsonRpcPayload;
-    static toBatchPayload(requests: any[]): JsonRpcPayload[];
 }
 
 export class ProviderAdapterResolver {
@@ -120,7 +114,7 @@ export class ProviderAdapterResolver {
 }
 
 export class JsonRpcResponseValidator {
-    static isValid(response: JsonRpcPayload[] | JsonRpcPayload): boolean;
+    static validate(response: JsonRpcPayload[] | JsonRpcPayload, payload?: Object): boolean;
     static isResponseItemValid(response: JsonRpcPayload): boolean;
 }
 

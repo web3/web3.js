@@ -20,40 +20,9 @@
  * @date 2017
  */
 
-import isArray from 'underscore-es/isArray';
-import isFunction from 'underscore-es/isFunction';
-import {errors} from 'web3-core-helpers';
+import EventEmitter from 'eventemitter3';
 
-let Ws = null;
-let _btoa = null;
-let parseURL = null;
-if (typeof window !== 'undefined' && typeof window.WebSocket !== 'undefined') {
-    Ws = (url, protocols) => {
-        return new window.WebSocket(url, protocols);
-    };
-    _btoa = btoa;
-    parseURL = (url) => {
-        return new URL(url);
-    };
-} else {
-    Ws = require('websocket').w3cwebsocket;
-    _btoa = (str) => {
-        return Buffer.from(str, 'base64');
-    };
-    const url = require('url');
-    if (url.URL) {
-        // Use the new Node 6+ API for parsing URLs that supports username/password
-        const NewURL = url.URL;
-        parseURL = (url) => {
-            return new NewURL(url);
-        };
-    } else {
-        // Web3 supports Node.js 5, so fall back to the legacy URL API if necessary
-        parseURL = require('url').parse;
-    }
-}
-
-export default class WebsocketProvider {
+export default class WebsocketProvider extends EventEmitter {
     /**
      * Default connection ws://localhost:8546
      *
@@ -63,186 +32,166 @@ export default class WebsocketProvider {
      * @constructor
      */
     constructor(url, options) {
+        super();
+        this.options = options || {};
+        this.url = url;
+        this._customTimeout = this.options.timeout || undefined;
         this.responseCallbacks = {};
         this.notificationCallbacks = [];
-        this.path = url;
+        this.connect(this.url, this.options);
+    }
 
-        options = options || {};
-        this._customTimeout = options.timeout;
+    /**
+     * Note: The w3cwebsocket implementation does not support Basic Auth
+     * username/password in the URL. So generate the basic auth header, and
+     * pass through with any additional headers supplied in constructor
+     *
+     * Returns a connected WebSocket instance from the given url
+     *
+     * @method connect
+     *
+     * @param {String} url
+     * @param {Object} options
+     *
+     * @returns {Ws}
+     */
+    connect(url, options) {
+        const parsedURL = parseURL(url),
+              headers = options.headers || {},
+              protocol = options.protocol,
+              clientConfig = options.clientConfig;
 
-        // The w3cwebsocket implementation does not support Basic Auth
-        // username/password in the URL. So generate the basic auth header, and
-        // pass through with any additional headers supplied in constructor
-        const parsedURL = parseURL(url);
-        const headers = options.headers || {};
-        const protocol = options.protocol || undefined;
+        let authToken;
         if (parsedURL.username && parsedURL.password) {
-            headers.authorization = `Basic ${_btoa(`${parsedURL.username}:${parsedURL.password}`)}`;
+            authToken = Buffer.from(`${parsedURL.username}:${parsedURL.password}`, 'base64');
+            headers.authorization = `Basic ${authToken}`;
         }
 
-        // Allow a custom client configuration
-        const clientConfig = options.clientConfig || undefined;
 
-        // When all node core implementations that do not have the
-        // WHATWG compatible URL parser go out of service this line can be removed.
         if (parsedURL.auth) {
-            headers.authorization = `Basic ${_btoa(parsedURL.auth)}`;
+            authToken = Buffer.from(parsedURL.auth, 'base64');
         }
+
+        headers.authorization = authToken;
+
         this.connection = new Ws(url, protocol, undefined, headers, undefined, clientConfig);
+        this.connection.addEventListener('open', this.onOpen);
+        this.connection.addEventListener('message', this.onMessage);
+        this.connection.addEventListener('error', this.onError);
+        this.connection.addEventListener('close', this.onClose);
+        this.connection.addEventListener('connect', this.onConnect);
+    }
 
-        this.addDefaultEvents();
+    /**
+     * Emits the open event with the event the provider got from the WebSocket connection.
+     *
+     * @method onOpen
+     *
+     * @param {Event} event
+     */
+    onOpen(event) {
+        this.emit('open', event);
+    }
 
-        // LISTEN FOR CONNECTION RESPONSES
-        this.connection.addEventListener('message', (e) => {
-            const data = typeof e.data === 'string' ? e.data : '';
+    /**
+     * This is the listener for the 'message' event from the WebSocket connection.
+     *
+     * @method onMessage
+     *
+     * @param {MessageEvent} messageEvent
+     */
+    onMessage(messageEvent) {
+        this.parseResponse(messageEvent.data).forEach(result => {
+            if (result.method && result.method.indexOf('_subscription') !== -1) {
+                this.emit(result.method, result);
+                this.removeAllListeners(result.method);
 
-            this._parseResponse(data).forEach((result) => {
-                let id = null;
+                return;
+            }
 
-                // get the id which matches the returned id
-                if (isArray(result)) {
-                    result.forEach((load) => {
-                        if (this.responseCallbacks[load.id]) id = load.id;
-                    });
-                } else {
-                    id = result.id;
-                }
+            let id = null;
+            if (isArray(result)) {
+                id = result[0].id;
+            } else {
+                id = result.id;
+            }
 
-                // notification
-                if (!id && result && result.method && result.method.indexOf('_subscription') !== -1) {
-                    this.notificationCallbacks.forEach((callback) => {
-                        if (isFunction(callback)) callback(result);
-                    });
-
-                    // fire the callback
-                } else if (this.responseCallbacks[id]) {
-                    this.responseCallbacks[id](null, result);
-                    delete this.responseCallbacks[id];
-                }
-            });
-        });
-
-        // make property `connected` which will return the current connection status
-        Object.defineProperty(this, 'connected', {
-            get() {
-                return this.connection && this.connection.readyState === this.connection.OPEN;
-            },
-            enumerable: true
+            this.emit(`response_${id}`, result);
+            this.removeAllListeners(`response_${id}`);
         });
     }
 
     /**
-     * Will add the error and end event to timeout existing calls
+     * Emits the error event and clears the connection before.
      *
-     * @method addDefaultEvents
+     * @method onError
+     *
+     * @param {Event} error
      */
-    addDefaultEvents() {
-        this.connection.addEventListener('error', () => {
-            this._timeout();
-        });
+    onError(error) {
+        this.clear();
+        this.emit('error', error);
+    }
 
-        this.connection.onclose = () => {
-            this._timeout();
+    /**
+     * Emits the close event and clears the connection before.
+     *
+     * @method onClose
+     */
+    onClose() {
+        this.clear();
+        this.emit('close');
+    }
 
-            // reset all requests and callbacks
-            this.reset();
-        };
-
-        // this.connection.on('timeout', function(){
-        //     this._timeout();
-        // });
+    /**
+     * Emits the connect event.
+     *
+     * @method onConnect
+     */
+    onConnect() {
+        this.emit('connect');
     }
 
     /**
      * Will parse the response and make an array out of it.
      *
-     * @method _parseResponse
+     * @method parseResponse
      *
      * @param {String} data
      */
-    _parseResponse(data) {
-        const returnValues = [];
+    parseResponse(data) {
+        const returnValues = [],
+              dechunkedData = data
+                .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+                .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+                .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+                .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+                .split('|--|');
 
-        // DE-CHUNKER
-        const dechunkedData = data
-            .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-            .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-            .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-            .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-            .split('|--|');
-
-        dechunkedData.forEach((data) => {
-            // prepend the last chunk
-            if (this.lastChunk) data = this.lastChunk + data;
-
+        dechunkedData.forEach(data => {
             let result = null;
+
+            // prepend the last chunk
+            if (this.lastChunk) {
+                data = this.lastChunk + data;
+            }
 
             try {
                 result = JSON.parse(data);
             } catch (error) {
                 this.lastChunk = data;
 
-                // start timeout to cancel all requests
-                clearTimeout(this.lastChunkTimeout);
-                this.lastChunkTimeout = setTimeout(() => {
-                    this._timeout();
-                    throw errors.InvalidResponse(data);
-                }, 1000 * 15);
-
                 return;
             }
 
-            // cancel timeout and set chunk to null
-            clearTimeout(this.lastChunkTimeout);
             this.lastChunk = null;
 
-            if (result) returnValues.push(result);
+            if (result) {
+                returnValues.push(result);
+            }
         });
 
         return returnValues;
-    }
-
-    /**
-     * Adds a callback to the responseCallbacks object,
-     * which will be called if a response matching the response Id will arrive.
-     *
-     * @method _addResponseCallback
-     *
-     * @param {Object} payload
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    _addResponseCallback(payload, callback) {
-        const id = payload.id || payload[0].id;
-        const method = payload.method || payload[0].method;
-
-        this.responseCallbacks[id] = callback;
-        this.responseCallbacks[id].method = method;
-
-        // schedule triggering the error response if a custom timeout is set
-        if (this._customTimeout) {
-            setTimeout(() => {
-                if (this.responseCallbacks[id]) {
-                    this.responseCallbacks[id](errors.ConnectionTimeout(this._customTimeout));
-                    delete this.responseCallbacks[id];
-                }
-            }, this._customTimeout);
-        }
-    }
-
-    /**
-     * Timeout all requests when the end/error event is fired
-     *
-     * @method _timeout
-     */
-    _timeout() {
-        for (const key in this.responseCallbacks) {
-            if (this.responseCallbacks.hasOwnProperty(key)) {
-                this.responseCallbacks[key](errors.InvalidConnection('on WS'));
-                delete this.responseCallbacks[key];
-            }
-        }
     }
 
     /**
@@ -251,128 +200,37 @@ export default class WebsocketProvider {
      * @method send
      *
      * @param {Object} payload
-     * @param {Function} callback
      *
-     * @callback callback callback(error, result)
+     * @returns {Promise<any>}
      */
-    send(payload, callback) {
-        if (this.connection.readyState === this.connection.CONNECTING) {
-            setTimeout(() => {
-                this.send(payload, callback);
-            }, 10);
-            return;
-        }
-
-        // try reconnect, when connection is gone
-        // if(!this.connection.writable)
-        //     this.connection.connect({url: this.url});
-        if (this.connection.readyState !== this.connection.OPEN) {
-            console.error('connection not open on send()');
-            if (typeof this.connection.onerror === 'function') {
-                this.connection.onerror(new Error('connection not open'));
-            } else {
-                console.error('no error callback');
+    send(payload) {
+        return new Promise((resolve, reject) => {
+            if (this.connection.readyState !== this.connection.OPEN) {
+                reject('Connection error: Connection is not open on send()');
             }
-            callback(new Error('connection not open'));
-            return;
-        }
 
-        this.connection.send(JSON.stringify(payload));
-        this._addResponseCallback(payload, callback);
-    }
+            if (!this.isConnecting()) {
+                this.connection.send(JSON.stringify(payload));
 
-    /**
-     * Subscribes to provider events.provider
-     *
-     * @method on
-     *
-     * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    on(type, callback) {
-        if (typeof callback !== 'function') throw new Error('The second parameter callback must be a function.');
-
-        switch (type) {
-            case 'data':
-                this.notificationCallbacks.push(callback);
-                break;
-
-            case 'connect':
-                this.connection.addEventListener('open', callback);
-                break;
-
-            case 'end':
-                this.connection.onclose = callback;
-                break;
-
-            case 'error':
-                this.connection.addEventListener('error', callback);
-                break;
-
-            // default:
-            //     this.connection.on(type, callback);
-            //     break;
-        }
-    }
-
-    // TODO: add once
-
-    /**
-     * Removes event listener
-     *
-     * @method removeListener
-     *
-     * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    removeListener(type, callback) {
-        switch (type) {
-            case 'data':
-                this.notificationCallbacks.forEach((cb, index) => {
-                    if (cb === callback) this.notificationCallbacks.splice(index, 1);
+                this.on(`response_${payload.id}`, response => {
+                    this.removeAllListeners(`response_${payload.id}`);
+                    return resolve(response);
                 });
-                break;
 
-            // TODO remvoving connect missing
+                return;
+            }
 
-            // default:
-            //     this.connection.removeListener(type, callback);
-            //     break;
-        }
-    }
+            setTimeout(() => {
+                if (!this.isConnecting()) {
+                    this.connection.send(JSON.stringify(payload));
 
-    /**
-     * Removes all event listeners
-     *
-     * @method removeAllListeners
-     *
-     * @param {String} type 'notifcation', 'connect', 'error', 'end' or 'data'
-     *
-     * @callback callback callback(error, result)
-     */
-    removeAllListeners(type) {
-        // TODO remvoving connect properly missing
-        switch (type) {
-            case 'data':
-                this.notificationCallbacks = [];
-                break;
-            case 'connect':
-                this.connection.addEventListener('open', null);
-                break;
-            case 'end':
-                this.connection.onclose = null;
-                break;
-            case 'error':
-                this.connection.addEventListener('error', null);
-                break;
-            default:
-                // this.connection.removeAllListeners(type);
-                break;
-        }
+                    this.on(`response_${payload.id}`, response => {
+                        this.removeAllListeners(`response_${payload.id}`);
+                        return resolve(response);
+                    });
+                }
+            }, 500);
+        });
     }
 
     /**
@@ -383,24 +241,68 @@ export default class WebsocketProvider {
      * @callback callback callback(error, result)
      */
     reset() {
-        this._timeout();
-        this.notificationCallbacks = [];
-
-        // this.connection.removeAllListeners('error');
-        // this.connection.removeAllListeners('end');
-        // this.connection.removeAllListeners('timeout');
-
-        this.addDefaultEvents();
+        this.clear();
+        this.connect(this.url, this.options);
     }
 
     /**
-     * Will close the socket connection
+     * Removes all listeners on the EventEmitter and the WebSocket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        this.connection.removeAllListeners(event);
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Removes all listeners, notificationCallbacks and responseCallbacks
+     *
+     * @method clear
+     */
+    clear() {
+        this.removeAllListeners('error');
+        this.removeAllListeners('end');
+        this.removeAllListeners('data');
+    }
+
+    /**
+     * Will close the WebSocket connection with a error code and reason.
+     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
+     * for further information.
      *
      * @method disconnect
+     *
+     * @param {Number} code
+     * @param {String} reason
      */
-    disconnect() {
+    disconnect(code, reason) {
         if (this.connection) {
-            this.connection.close();
+            this.connection.close(code, reason);
         }
+    }
+
+    /**
+     * Returns true if the socket connection state is OPEN
+     *
+     * @property connected
+     *
+     * @returns {Boolean}
+     */
+    get connected() {
+        return this.connection && this.connection.readyState === this.connection.OPEN;
+    }
+
+    /**
+     * Returns if the socket connection is in the connecting state.
+     *
+     * @method isConnecting
+     *
+     * @returns {Boolean}
+     */
+    isConnecting() {
+        return this.connection.readyState === this.connection.CONNECTING;
     }
 }

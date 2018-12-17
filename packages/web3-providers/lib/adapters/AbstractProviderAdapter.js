@@ -102,9 +102,13 @@ export default class AbstractProviderAdapter extends EventEmitter {
      *
      * @method subscribe
      *
+     * @param {String} subscribeMethod
+     * @param {String} subscriptionMethod
+     * @param {Array} parameters
+     *
      * @returns {Promise<Error>}
      */
-    subscribe() {
+    subscribe(subscribeMethod = null, subscriptionMethod = null, parameters = null) {
         return new Promise((resolve, reject) => {
             reject(new Error(`The current provider does not support subscriptions: ${this.provider.constructor.name}`));
         });
@@ -115,9 +119,13 @@ export default class AbstractProviderAdapter extends EventEmitter {
      *
      * @method unsubscribe
      *
+     * @param {String} subscribeMethod
+     * @param {String} subscriptionMethod
+     * @param {Array} parameters
+     *
      * @returns {Promise<Error>}
      */
-    unsubscribe() {
+    unsubscribe(subscribeMethod = null, subscriptionMethod = null, parameters = null) {
         return new Promise((resolve, reject) => {
             reject(new Error(`The current provider does not support subscriptions: ${this.provider.constructor.name}`));
         });
