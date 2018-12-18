@@ -21,6 +21,7 @@
  */
 
 import EventEmitter from 'eventemitter3';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 
 export default class WebsocketProvider extends EventEmitter {
     /**
@@ -33,6 +34,7 @@ export default class WebsocketProvider extends EventEmitter {
         super();
         this.connection = connection;
         this.timeout = timeout;
+        this.subscriptions = [];
         this.registerEventListeners();
     }
 
@@ -42,26 +44,15 @@ export default class WebsocketProvider extends EventEmitter {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.addEventListener('open', this.onOpen);
         this.connection.addEventListener('message', this.onMessage);
+        this.connection.addEventListener('open', this.onOpen);
         this.connection.addEventListener('error', this.onError);
         this.connection.addEventListener('close', this.onClose);
         this.connection.addEventListener('connect', this.onConnect);
     }
 
     /**
-     * Emits the open event with the event the provider got from the WebSocket connection.
-     *
-     * @method onOpen
-     *
-     * @param {Event} event
-     */
-    onOpen(event) {
-        this.emit('open', event);
-    }
-
-    /**
-     * This is the listener for the 'message' event from the WebSocket connection.
+     * This is the listener for the 'message' events of the current WebSocket connection.
      *
      * @method onMessage
      *
@@ -74,34 +65,96 @@ export default class WebsocketProvider extends EventEmitter {
                 id = result[0].id;
             } else if (result.method && result.method.indexOf('_subscription') !== -1) {
                 id = result.params.subscription;
+                result = result.params.result;
             } else {
                 id = result.id;
             }
 
             this.emit(id, result);
-            this.removeAllListeners(id);
         });
     }
 
     /**
-     * Emits the error event and clears the connection before.
+     * Will parse the response and make an array out of it.
+     *
+     * @method parseResponse
+     *
+     * @param {String} data
+     */
+    parseResponse(data) {
+        let result = null,
+            lastChunk;
+
+        const returnValues = [],
+            dechunkedData = data
+                .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+                .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+                .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+                .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+                .split('|--|');
+
+        dechunkedData.forEach(data => {
+            // prepend the last chunk
+            if (lastChunk) {
+                data = lastChunk + data;
+            }
+
+            try {
+                result = JSON.parse(data);
+            } catch (e) {
+                lastChunk = data;
+
+                let lastChunkTimeout = setTimeout(() => {
+                    _this._timeout();
+                    throw errors.InvalidResponse(data);
+                }, 1000 * 15);
+
+                return;
+            }
+
+            // cancel timeout and set chunk to null
+            clearTimeout(lastChunkTimeout);
+            lastChunk = null;
+
+            if (result) {
+                returnValues.push(result);
+            }
+
+        });
+
+        return returnValues;
+    }
+
+    /**
+     * Emits the open event with the event the provider got of the current WebSocket connection.
+     *
+     * @method onOpen
+     *
+     * @param {Event} event
+     */
+    onOpen(event) {
+        this.emit('open', event);
+    }
+
+    /**
+     * Emits the error event and removes all listeners.
      *
      * @method onError
      *
      * @param {Event} error
      */
     onError(error) {
-        this.clear();
+        this.removeAllListeners();
         this.emit('error', error);
     }
 
     /**
-     * Emits the close event and clears the connection before.
+     * Emits the close event and removes all listeners.
      *
      * @method onClose
      */
     onClose() {
-        this.clear();
+        this.removeAllListeners();
         this.emit('close');
     }
 
@@ -115,105 +168,6 @@ export default class WebsocketProvider extends EventEmitter {
     }
 
     /**
-     * Will parse the response and make an array out of it.
-     *
-     * @method parseResponse
-     *
-     * @param {String} data
-     */
-    parseResponse(data) {
-        const returnValues = [],
-              dechunkedData = data
-                .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-                .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-                .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-                .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-                .split('|--|');
-
-        dechunkedData.forEach(data => {
-            let result = null;
-
-            // prepend the last chunk
-            if (this.lastChunk) {
-                data = this.lastChunk + data;
-            }
-
-            try {
-                result = JSON.parse(data);
-            } catch (error) {
-                this.lastChunk = data;
-
-                return;
-            }
-
-            this.lastChunk = null;
-
-            if (result) {
-                returnValues.push(result);
-            }
-        });
-
-        return returnValues;
-    }
-
-    /**
-     * Sends the JSON-RPC request
-     *
-     * @method send
-     *
-     * @param {Object} payload
-     *
-     * @returns {Promise<any>}
-     */
-    send(payload) {
-        return new Promise((resolve, reject) => {
-            if (this.connection.readyState !== this.connection.OPEN) {
-                reject('Connection error: Connection is not open on send()');
-            }
-
-            if (!this.isConnecting()) {
-                this.connection.send(JSON.stringify(payload));
-
-                let timeout;
-                if (this.timeout) {
-                    timeout = setTimeout(() => {
-                        reject(new Error('Connection error: Timeout exceeded'));
-                    }, this.timeout);
-                }
-
-                this.on(`response_${payload.id}`, response => {
-                    this.removeAllListeners(`response_${payload.id}`);
-
-                    if (this.timeout) {
-                        clearTimeout(timeout);
-                    }
-
-                    return resolve(response);
-                });
-
-
-                return;
-            }
-
-            setTimeout(() => {
-                if (!this.isConnecting()) {
-                    this.send(payload)
-                        .then(response => {
-                            resolve(response);
-                        })
-                        .catch(error => {
-                            reject(error);
-                        });
-
-                    return;
-                }
-
-                this.send(payload);
-            }, 500);
-        });
-    }
-
-    /**
      * Resets the providers, clears all callbacks
      *
      * @method reset
@@ -221,7 +175,7 @@ export default class WebsocketProvider extends EventEmitter {
      * @callback callback callback(error, result)
      */
     reset() {
-        this.clear();
+        this.removeAllListeners();
         this.connect(this.url, this.options);
     }
 
@@ -235,17 +189,6 @@ export default class WebsocketProvider extends EventEmitter {
     removeAllListeners(event) {
         this.connection.removeAllListeners(event);
         super.removeAllListeners(event);
-    }
-
-    /**
-     * Removes all listeners, notificationCallbacks and responseCallbacks
-     *
-     * @method clear
-     */
-    clear() {
-        this.removeAllListeners('error');
-        this.removeAllListeners('end');
-        this.removeAllListeners('data');
     }
 
     /**
@@ -284,5 +227,137 @@ export default class WebsocketProvider extends EventEmitter {
      */
     isConnecting() {
         return this.connection.readyState === this.connection.CONNECTING;
+    }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method send
+     *
+     * @param {String} method
+     * @param {Array} parameters
+     *
+     * @returns {Promise<any>}
+     */
+    send(method, parameters) {
+        return new Promise((resolve, reject) => {
+            if (this.connection.readyState !== this.connection.OPEN) {
+                reject('Connection error: Connection is not open on send()');
+            }
+
+            if (!this.isConnecting()) {
+                const payload = JsonRpcMapper.toPayload(method, parameters);
+                this.connection.send(JSON.stringify(payload));
+
+                let timeout;
+                if (this.timeout) {
+                    timeout = setTimeout(() => {
+                        reject(new Error('Connection error: Timeout exceeded'));
+                    }, this.timeout);
+                }
+
+                this.on(payload.id, response => {
+                    this.removeAllListeners(payload.id);
+
+                    if (this.timeout) {
+                        clearTimeout(timeout);
+                    }
+
+                    return resolve(response);
+                });
+
+
+                return;
+            }
+
+            setTimeout(() => {
+                if (!this.isConnecting()) {
+                    this.send(method, parameters)
+                        .then(response => {
+                            resolve(response);
+                        })
+                        .catch(error => {
+                            reject(error);
+                        });
+
+                    return;
+                }
+
+                this.send(method, parameters);
+            }, 500);
+        });
+    }
+
+    /**
+     * Subscribes to a given subscriptionType
+     *
+     * @method subscribe
+     *
+     * @param {String} subscribeMethod
+     * @param {String} subscriptionMethod
+     * @param {Array} parameters
+     *
+     * @returns {Promise<String|Error>}
+     */
+    subscribe(subscribeMethod = 'eth_subscribe', subscriptionMethod, parameters) {
+        parameters.unshift(subscriptionMethod);
+
+        return this.send(subscribeMethod, parameters)
+            .then(subscriptionId => {
+                this.subscriptions.push(subscriptionId);
+
+                return subscriptionId;
+            }).catch(error => {
+                throw new Error(`Provider error: ${error}`);
+            });
+    }
+
+    /**
+     * Unsubscribes the subscription by his id
+     *
+     * @method unsubscribe
+     *
+     * @param {String} subscriptionId
+     * @param {String} unsubscribeMethod
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    async unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
+        return this.send(unsubscribeMethod, [subscriptionId])
+            .then(response => {
+                if (response) {
+                    this.removeAllListeners(subscriptionId);
+                    delete this.subscriptons[this.subscriptions.indexOf(subscriptionId)];
+                }
+                
+                return response;
+            });
+    }
+
+    /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     *
+     * @param {String} unsubscribeMethod
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
+        let unsubscribePromises = [];
+
+        this.subscriptions.forEach(subscriptionId => {
+            unsubscribePromises.push(this.unsubscribe(subscriptionId, unsubscribeMethod));
+        });
+
+        return Promise.all(unsubscribePromises).then(results => {
+            if (results.includes(false)) {
+                throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
+            }
+
+            this.subscriptions = [];
+
+            return true;
+        });
     }
 }
