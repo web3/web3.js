@@ -60,22 +60,14 @@ web3.eth.getAccounts()
 
 ### Usage with TypeScript
 
-Type definitions are maintained at [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) by others. You can install them with
+We do support types within the repo itself. Please open an issue here if you find any wrong types.
 
-```bash
-npm install --dev @types/web3.js
-```
-
-You might need to install type definitions for `bignumber.js` and `lodash` too.
-
-And then use `web3.js` as follows:
+You can then use `web3.js` as follows:
 
 ```typescript
-import Web3 = require("web3"); // Note the special syntax! Copy this line when in doubt!
+import Web3 from 'web3';
 const web3 = new Web3("ws://localhost:8546");
 ```
-
-**Please note:** We do not support TypeScript ourselves. If you have any issue with TypeScript and `web3.js` do not create an issue here. Go over to DefinitelyTyped and do it there.
 
 ## Documentation
 
