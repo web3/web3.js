@@ -16,7 +16,7 @@
 */
 /**
  * @file WebsocketProvider.js
- * @authors: Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -32,6 +32,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     constructor(connection, timeout) {
         super(connection, timeout);
+        this.host = this.connection.url;
     }
 
     /**

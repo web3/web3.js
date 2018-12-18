@@ -23,7 +23,7 @@
 import isObject from 'underscore-es/isObject';
 import isFunction from 'underscore-es/isFunction';
 
-export default class ProviderAdapterResolver {
+export default class ProviderResolver {
     /**
      * @param {ProvidersModuleFactory} providersModuleFactory
      *
@@ -38,49 +38,39 @@ export default class ProviderAdapterResolver {
      *
      * @method resolve
      *
-     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {AbstractSocketProvider|EthereumProvider|HttpProvider|String} provider
      * @param {Net} net
      *
-     * @returns {AbstractProviderAdapter|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|EthereumProviderAdapter|Error}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
             // HTTP
             if (/^http(s)?:\/\//i.test(provider)) {
-                return this.providersModuleFactory.createHttpProviderAdapter(
-                    this.providersModuleFactory.createHttpProvider(provider)
-                );
+                return this.providersModuleFactory.createHttpProvider(provider);
             }
             // WS
             if (/^ws(s)?:\/\//i.test(provider)) {
-                return this.providersModuleFactory.createSocketProviderAdapter(
-                    this.providersModuleFactory.createWebsocketProvider(provider)
-                );
+                return this.providersModuleFactory.createWebsocketProvider(provider);
             }
 
             // IPC
             if (provider && isObject(net) && isFunction(net.connect)) {
-                return this.providersModuleFactory.createSocketProviderAdapter(
-                    this.providersModuleFactory.createIpcProvider(provider, net)
-                );
+                return this.providersModuleFactory.createIpcProvider(provider, net);
             }
         }
 
         if (provider.constructor) {
             switch (provider.constructor.name) {
-                case 'HttpProvider':
-                    return this.providersModuleFactory.createHttpProviderAdapter(provider);
                 case 'EthereumProvider':
                     return this.providersModuleFactory.createEthereumProviderAdapter(provider);
+                case 'HttpProvider':
                 case 'WebsocketProvider':
                 case 'IpcProvider':
-                    return this.providersModuleFactory.createSocketProviderAdapter(provider);
-                case 'HttpProviderAdapter':
-                case 'SocketProviderAdapter':
                     return provider;
             }
         }
 
-        throw new Error('Please provide an valid Web3 provider or the EthereumProvider');
+        throw new Error('Please provide an valid Web3 provider');
     }
 }

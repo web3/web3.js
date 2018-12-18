@@ -13,7 +13,7 @@
 */
 /**
  * @file AbstractSocketProvider
- * @author Samuel Furter <samuel@ethereum.org>
+ * @author Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
  * @date 2018
  */
 

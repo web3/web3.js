@@ -28,10 +28,10 @@ import {errors} from 'web3-core-helpers';
 import {XMLHttpRequest} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 
 export default class HttpProvider {
     /**
-     * TODO: Be sure the fix of the PR #2105 is included!
      * @param {String} host
      * @param {Object} options
      *
@@ -80,59 +80,67 @@ export default class HttpProvider {
     }
 
     /**
-     * Should be used to make async request
+     * Sends the JSON-RPC request
      *
      * @method send
      *
-     * @param {Object} payload
-     * @param {Function} callback
+     * @param {String} method
+     * @param {Array} parameters
      *
-     * @callback callback callback(error, result)
+     * @returns {Promise<any>}
      */
-    send(payload, callback) {
-        const request = this.prepareRequest();
+    send(method, parameters) {
+        return new Promise((resolve, reject) => {
+            const request = this.prepareRequest();
 
-        request.onreadystatechange = () => {
-            if (request.readyState !== 0 && request.readyState !== 1) {
-                this.connected = true;
-            }
-
-            if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
-                try {
-                    callback(
-                        false,
-                        JSON.parse(request.responseText)
-                    );
-                } catch (error) {
-                    callback(
-                        new Error(`Invalid JSON as response: ${request.responseText}`),
-                        false
-                    );
+            request.onreadystatechange = () => {
+                if (request.readyState !== 0 && request.readyState !== 1) {
+                    this.connected = true;
                 }
-            }
-        };
 
-        request.ontimeout = () => {
-            this.connected = false;
-            callback(
-                new Error(`CONNECTION: Timeout exceeded after ${this.timeout}ms`),
-                null
-            );
-        };
+                if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
+                    try {
+                        resolve(JSON.parse(request.responseText));
+                    } catch (error) {
+                        reject(new Error(`Invalid JSON as response: ${request.responseText}`));
+                    }
+                }
+            };
 
-        try {
-            request.send(JSON.stringify(payload));
-        } catch (error) {
-            if (error.constructor.name === 'NetworkError') {
+            request.ontimeout = () => {
                 this.connected = false;
-            }
+                reject(new Error(`CONNECTION: Timeout exceeded after ${this.timeout}ms`));
+            };
 
-            callback(error, null);
-        }
+            try {
+                const payload = JsonRpcMapper.toPayload(method, parameters);
+                request.send(JSON.stringify(payload));
+            } catch (error) {
+                if (error.constructor.name === 'NetworkError') {
+                    this.connected = false;
+                }
+
+                reject(error);
+            }
+        });
     }
 
     /**
-     * If this method does not exist it will throw en error.
+     * Added this method to have a better error message if someone is trying to create a subscription with this provider.
+     */
+    subscribe() {
+        throw Error('Subscriptions are not supported with the HttpProvider.');
+    }
+
+    /**
+     * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
+     */
+    unsubscribe() {
+        throw Error('Subscriptions are not supported with the HttpProvider.');
+    }
+
+    /**
+     * This method has to exists to have the same interface as the socket providers.
      */
     disconnect() {
         return true;

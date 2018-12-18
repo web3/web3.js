@@ -53,14 +53,14 @@ export const BatchRequest = (moduleInstance, provider) => {
 };
 
 /**
- * Creates the ProviderAdapterResolver object
+ * Creates the ProviderResolver object
  *
- * @method ProviderAdapterResolver
+ * @method ProviderResolver
  *
  * @returns {ProviderAdapterResolver}
  */
 export const ProviderAdapterResolver = () => {
-    return new ProvidersModuleFactory().createProviderAdapterResolver();
+    return new ProvidersModuleFactory().createProviderResolver();
 };
 
 /**

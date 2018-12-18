@@ -28,14 +28,14 @@ export default class IpcProvider extends AbstractSocketProvider {
     /**
      * TODO: Add timeout to constructor
      *
+     * @param {Socket} connection
      * @param {String} path
-     * @param {Net} net
      *
      * @constructor
      */
-    constructor(path, net) {
-        super(net.connect({path: path}), null);
-        this.net = net;
+    constructor(connection, path) {
+        super(connection, null);
+        this.host = path;
     }
 
     /**
@@ -44,7 +44,7 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        if (this.net.constructor.name === 'Socket') {
+        if (this.connection.constructor.name === 'Socket') {
             oboe(this.connection).done(this.onMessage);
         } else {
             this.connection.addListener('data', message =>  {

@@ -100,8 +100,8 @@ const providerDetector = new ProvidersModuleFactory.createProviderDetector();
 const givenProvider = providerDetector.detect();
 ```
 
-#### ProviderAdapterResolver
-The ProviderAdapterResolver resolves an url or an given provider object to the correct adapter. 
+#### ProviderResolver
+The ProviderResolver resolves an url or an given provider object to the correct adapter. 
 This way we use internally in web3 just one provider interface and we have no direct dependency to third parties providers.
 
 ```js 

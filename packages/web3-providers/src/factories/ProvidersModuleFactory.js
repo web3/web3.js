@@ -23,10 +23,8 @@
 import {w3cwebsocket}from 'websocket';
 import {WsReconnector} from 'websocket-reconnector';
 import URL from 'url-parse';
-import ProviderAdapterResolver from '../resolvers/ProviderAdapterResolver';
+import ProviderResolver from '../resolvers/ProviderResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
-import SocketProviderAdapter from '../adapters/SocketProviderAdapter';
-import HttpProviderAdapter from '../adapters/HttpProviderAdapter';
 import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
@@ -49,14 +47,14 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an ProviderAdapterResolver object
+     * Returns an ProviderResolver object
      *
-     * @method createProviderAdapterResolver
+     * @method createProviderResolver
      *
-     * @returns {ProviderAdapterResolver}
+     * @returns {ProviderResolver}
      */
-    createProviderAdapterResolver() {
-        return new ProviderAdapterResolver(this);
+    createProviderResolver() {
+        return new ProviderResolver(this);
     }
 
     /**
@@ -124,6 +122,8 @@ export default class ProvidersModuleFactory {
     }
 
     /**
+     * TODO: Create factory methods for the external API to have the same interface.
+     *
      * Returns an IpcProvider object
      *
      * @method createIpcProvider
@@ -134,33 +134,7 @@ export default class ProvidersModuleFactory {
      * @returns {IpcProvider}
      */
     createIpcProvider(path, net) {
-        return new IpcProvider(path, net);
-    }
-
-    /**
-     * Returns an HttpProviderAdapter object
-     *
-     * @method createHttpProviderAdapter
-     *
-     * @param {HttpProvider} provider
-     *
-     * @returns {HttpProviderAdapter}
-     */
-    createHttpProviderAdapter(provider) {
-        return new HttpProviderAdapter(provider);
-    }
-
-    /**
-     * Returns an SocketProviderAdapter object
-     *
-     * @method createSocketProviderAdapter
-     *
-     * @param {WebsocketProvider|IpcProvider} provider
-     *
-     * @returns {SocketProviderAdapter}
-     */
-    createSocketProviderAdapter(provider) {
-        return new SocketProviderAdapter(provider);
+        return new IpcProvider(net.connect({path: path}), path);
     }
 
     /**

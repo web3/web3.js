@@ -1,4 +1,4 @@
-import ProviderAdapterResolver from '../../../src/resolvers/ProviderAdapterResolver';
+import ProviderAdapterResolver from '../../../src/resolvers/ProviderResolver';
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import HttpProviderAdapter from '../../../src/adapters/HttpProviderAdapter';
 import SocketProviderAdapter from '../../../src/adapters/SocketProviderAdapter';
@@ -15,7 +15,7 @@ jest.mock('../../../src/adapters/HttpProviderAdapter');
 jest.mock('../../../src/adapters/SocketProviderAdapter');
 
 /**
- * ProviderAdapterResolver test
+ * ProviderResolver test
  */
 describe('ProviderAdapterResolverTest', () => {
     let providerAdapterResolver,
