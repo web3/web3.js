@@ -77,10 +77,10 @@ abstractProviderAdapter.sendBatch('test', [3]);
 // $ExpectError
 abstractProviderAdapter.sendBatch('test', ['test']);
 
-// $ExpectType Promise<string | Error>
+// $ExpectType Promise<string>
 abstractProviderAdapter.subscribe();
 
-// $ExpectType Promise<boolean | Error>
+// $ExpectType Promise<boolean>
 abstractProviderAdapter.unsubscribe();
 
 // $ExpectType void

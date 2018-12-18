@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import * as net from "net";
+import * as net from 'net';
 import EventEmitter from 'eventemitter3';
 
 export class AbstractProviderAdapter extends EventEmitter {
@@ -28,8 +28,8 @@ export class AbstractProviderAdapter extends EventEmitter {
     send(method: string, params: any[]): Promise<any>;
     sendBatch(methods: AbstractMethod[], moduleInstance: AbstractWeb3Module): Promise<Error|any[]>;
     // TS does not support overloading so we have to do it this way for now
-    subscribe(subscribeMethod?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string | Error>;
-    unsubscribe(subscribeMethod?: string, subscriptionType?: string): Promise<boolean | Error>;
+    subscribe(subscribeMethod?: string, subscriptionMethod?: string, parameters?: any[]): Promise<string>;
+    unsubscribe(subscribeMethod?: string, subscriptionType?: string): Promise<boolean>;
     handleResponse(reject: () => void, resolve: () => void, error: Error, response: any, payload: JsonRpcPayload): void;
     isConnected(): boolean;
 }
@@ -110,7 +110,7 @@ export class JsonRpcMapper {
 
 export class ProviderAdapterResolver {
     constructor(providersPackageFactory: ProvidersModuleFactory);
-    resolve(provider: provider, net: net.Server): provider | Error;
+    resolve(provider: provider, net: net.Server): provider;
 }
 
 export class JsonRpcResponseValidator {

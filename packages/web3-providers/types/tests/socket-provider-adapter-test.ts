@@ -33,13 +33,13 @@ const options = {
 const httpProvider = new HttpProvider('http://localhost:8545', options);
 const sockerProvider = new SocketProviderAdapter(httpProvider);
 
-// $ExpectType Promise<string | Error>
+// $ExpectType Promise<string>
 sockerProvider.subscribe('type', 'method', [123]);
 
 // $ExpectType boolean
 sockerProvider.isConnected();
 
-// $ExpectType Promise<boolean | Error>
+// $ExpectType Promise<boolean>
 sockerProvider.unsubscribe('3', 'type');
 
 // $ExpectType void
