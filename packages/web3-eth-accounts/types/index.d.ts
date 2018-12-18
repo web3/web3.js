@@ -17,7 +17,7 @@
  * @date 2018
  */
 
- import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
+ import {AbstractWeb3Module, Web3ModuleOptions, Transaction} from 'web3-core';
  import {AbstractProviderAdapter, provider} from 'web3-providers';
 
  export class Accounts extends AbstractWeb3Module {
@@ -83,20 +83,7 @@ export interface EncryptedKeystoreV3Json {
     }
 }
 
-/**            MOVE ALL BELOW TO WEB3-CORE ONCE TYPES COMPLETE FOR CLEAR UP     !!! */
-export interface Transaction {
-    from?: string | number;
-    to?: string;
-    gasPrice?: string;
-    gas?: number | string;
-    value?: number | string;
-    chainId?: number;
-    data?: string;
-    nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-}
+/** TODO - MOVE ALL BELOW TO WEB3-CORE ONCE FIXED CONFUSING WITH RETURN TYPES !!! */
 
 export interface SignedTransaction {
     messageHash?: string;
@@ -110,4 +97,4 @@ export interface Sign extends SignedTransaction {
     message: string;
 }
 
-/**    END      !!! */
+/** END !!! */
