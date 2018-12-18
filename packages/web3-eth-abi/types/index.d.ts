@@ -17,6 +17,8 @@
  * @date 2018
  */
 
+ import {AbiItem, AbiInput} from 'web3-utils';
+
 export class AbiCoder {
     encodeFunctionSignature(functionName: string | AbiItem): string;
     encodeEventSignature(functionName: string | AbiItem): string;
@@ -26,26 +28,4 @@ export class AbiCoder {
     decodeParameter(type: string | {}, hex: string): { [key: string] : any; };
     decodeParameters(types: Array<string | {}>, hex: string): { [key: string] : any; };
     decodeLog(inputs: AbiInput[], hex: string, topics: string[]): { [key: string] : string; };
-}
-
-/******** These types need moving into a generic codebase to be shared to avoid repeating ***************/
-export type AbiType = "function" | "constructor" | "event" | "fallback";
-
-export interface AbiItem {
-    constant?: boolean;
-    inputs?: AbiInput[];
-    name?: string;
-    outputs?: AbiOuput[];
-    payable?: boolean;
-    stateMutability?: string; // could be a enum once we move this to generic place
-    type: AbiType;
-}
-export interface AbiInput {
-    name: string;
-    type: string;
-    indexed?: boolean;
-}
-export interface AbiOuput {
-    name: string;
-    type: string;
 }
