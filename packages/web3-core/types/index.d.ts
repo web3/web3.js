@@ -59,3 +59,75 @@ export interface Providers {
     WebsocketProvider: WebsocketProvider;
     IpcProvider: IpcProvider;
 }
+
+export interface PromiEvent<T> extends Promise<T> {
+    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+    on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+}
+
+export interface Transaction {
+    from?: string | number;
+    to?: string;
+    gasPrice?: string;
+    gas?: number | string;
+    value?: number | string;
+    chainId?: number;
+    data?: string;
+    nonce?: number;
+    v?: string;
+    r?: string;
+    s?: string;
+    hash?: string;
+}
+
+export interface RLPEncodedTransaction {
+    raw: string,
+    tx: Transaction
+}
+
+export interface TransactionReceipt {
+    transactionHash: string
+    transactionIndex: number
+    blockHash: string
+    blockNumber: number
+    from: string
+    to: string
+    contractAddress: string
+    cumulativeGasUsed: number
+    gasUsed: number
+    logs?: Log[]
+    events?: {
+        [eventName: string]: EventLog
+    }
+}
+
+export interface EventLog {
+    event: string
+    address: string
+    returnValues: object
+    logIndex: number
+    transactionIndex: number
+    transactionHash: string
+    blockHash: string
+    blockNumber: number
+    raw?: { data: string, topics: any[] }
+}
+
+export interface Log {
+    address: string;
+    data: string;
+    topics: Array<string | string[]>;
+    logIndex: number;
+    transactionIndex: number;
+    transactionHash: string;
+    blockHash: string;
+    blockNumber: number;
+}
