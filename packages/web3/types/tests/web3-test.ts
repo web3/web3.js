@@ -17,7 +17,7 @@
  * @date 2018
  */
 
-import {Web3} from 'web3';
+import Web3 from 'web3';
 import {HttpProvider} from 'web3-providers';
 
 // $ExpectType Utils

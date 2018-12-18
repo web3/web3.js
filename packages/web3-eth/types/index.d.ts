@@ -19,21 +19,23 @@
 
 import * as net from 'net';
 import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
-import {Contract} from 'web3-eth-contract';
+import {AbstractWeb3Module, Web3ModuleOptions, Providers, Log, Transaction, TransactionReceipt, PromiEvent, RLPEncodedTransaction} from 'web3-core';
+import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
 import {AbiCoder} from 'web3-eth-abi';
 import {Network} from 'web3-net';
+import {Personal} from 'web3-eth-personal';
+import {AbiItem} from 'web3-utils';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
         provider: AbstractProviderAdapter | provider,
         options?: Web3ModuleOptions
     );
-    Contract: Contract;
-    Iban: Iban;
-    personal: Personal; // change one personal types are written
+    Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
+    Iban: new(iban: string) => Iban;
+    personal: Personal;
     accounts: Accounts;
     ens: any; // change once ens types as written
     abi: AbiCoder;
@@ -88,9 +90,12 @@ export class Eth extends AbstractWeb3Module {
     sendTransaction(transaction: Transaction, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
     sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
-    signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: SignedTransaction) => void): Promise<SignedTransaction>;
-    signTransaction(transaction: Transaction, address: string): Promise<SignedTransaction>;
-    signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: SignedTransaction) => void): Promise<SignedTransaction>;
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
+    // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
+    signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
     call(transaction: Transaction): Promise<string>;
     call(transaction: Transaction, defaultBlock?: number | string): Promise<string>;
     call(transaction: Transaction, callback?: (error: Error, data: string) => void): Promise<string>;
@@ -160,17 +165,6 @@ export interface Logs {
     topics?: Array<string | string[]>
 }
 
-export interface Log {
-    address: string;
-    data: string;
-    topics: Array<string | string[]>;
-    logIndex: number;
-    transactionIndex: number;
-    transactionHash: string;
-    blockHash: string;
-    blockNumber: number;
-}
-
 export interface Subscribe<T> {
     subscription: {
         id: string
@@ -182,78 +176,3 @@ export interface Subscribe<T> {
     on(type: 'changed', handler: (data: T) => void): void
     on(type: 'error', handler: (data: Error) => void): void
 }
-
-/** DELETE ONCE personal is complete */
-
-export class Personal {
-    newAccount(password: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>
-    getAccounts(callback?: (error: Error, result: string[]) => void): Promise<string[]>
-}
-/** END */
-
-/**            MOVE ALL BELOW TO WEB3-CORE ONCE TYPES COMPLETE FOR CLEAR UP    !!! */
-
-export interface PromiEvent<T> extends Promise<T> {
-    once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
-    once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
-    once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
-    once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
-    once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
-    on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
-    on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
-    on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
-    on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
-    on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
-}
-
-export interface Transaction {
-    from?: string | number;
-    to?: string;
-    gasPrice?: string;
-    gas?: number | string;
-    value?: number | string;
-    chainId?: number;
-    data?: string;
-    nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
-}
-
-export interface SignedTransaction {
-    messageHash?: string;
-    r: string;
-    s: string;
-    v: string;
-    rawTransaction?: string;
-}
-
-export interface TransactionReceipt {
-    transactionHash: string
-    transactionIndex: number
-    blockHash: string
-    blockNumber: number
-    from: string
-    to: string
-    contractAddress: string
-    cumulativeGasUsed: number
-    gasUsed: number
-    logs?: Log[]
-    events?: {
-        [eventName: string]: EventLog
-    }
-}
-
-export interface EventLog {
-    event: string
-    address: string
-    returnValues: object
-    logIndex: number
-    transactionIndex: number
-    transactionHash: string
-    blockHash: string
-    blockNumber: number
-    raw?: { data: string, topics: any[] }
-}
-/**    END      !!! */

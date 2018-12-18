@@ -17,14 +17,15 @@
  * @date 2018
  */
 
-import {Eth, Log, Subscribe, BlockHeader, Transaction, Syncing, Block, TransactionReceipt, SignedTransaction} from 'web3-eth';
+import {Log, Transaction, TransactionReceipt, RLPEncodedTransaction} from 'web3-core';
+import {Eth, Subscribe, BlockHeader, Syncing, Block} from 'web3-eth';
 
 const eth = new Eth('http://localhost:8545');
 
-// $ExpectType Contract
+// $ExpectType new (jsonInterface: AbiItem | AbiItem[], address?: string | undefined, options?: ContractOptions | undefined) => Contract
 eth.Contract;
 
-// $ExpectType Iban
+// $ExpectType new (iban: string) => Iban
 eth.Iban;
 
 // $ExpectType Personal
@@ -43,7 +44,7 @@ eth.abi;
 eth.net;
 
 // $ExpectType boolean
-eth.clearSubscriptions;
+eth.clearSubscriptions();
 
 // $ExpectType Promise<Subscribe<Log>>
 eth.subscribe('logs');
@@ -66,15 +67,15 @@ eth.subscribe('newBlockHeaders');
 // $ExpectType Promise<Subscribe<BlockHeader>>
 eth.subscribe('newBlockHeaders', (error: Error, result: Subscribe<BlockHeader>) => {});
 
-// $ExpectType Promise<Subscribe<BlockHeader>>
+// $ExpectType Promise<Subscribe<Transaction>>
 eth.subscribe('pendingTransactions');
-// $ExpectType Promise<Subscribe<BlockHeader>>
+// $ExpectType Promise<Subscribe<Transaction>>
 eth.subscribe('pendingTransactions', (error: Error, result: Subscribe<Transaction>) => {});
 
 // $ExpectType Providers
 eth.providers;
 
-// $ExpectType provider | null
+// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
 eth.givenProvider;
 
 // $ExpectType BatchRequest
@@ -91,9 +92,9 @@ eth.getProtocolVersion();
 // $ExpectType Promise<string>
 eth.getProtocolVersion((error: Error, protocolVersion: string) => {});
 
-// $ExpectType Promise<Syncing | boolean>
+// $ExpectType Promise<boolean | Syncing>
 eth.isSyncing();
-// $ExpectType Promise<Syncing | boolean>
+// $ExpectType Promise<boolean | Syncing>
 eth.isSyncing((error: Error, syncing: Syncing) => {});
 
 // $ExpectType Promise<string>
@@ -186,13 +187,13 @@ eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', true, (error: Error, 
 // $ExpectType Promise<Block>
 eth.getBlock('0x407d73d8a49eeb85d32cf465507dd71d507100c1', false, (error: Error, block: Block) => {});
 
-// $ExpectType  Promise<number>
+// $ExpectType Promise<number>
 eth.getBlockTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, numberOfTransactions: number) => {});
-// $ExpectType  Promise<number>
+// $ExpectType Promise<number>
 eth.getBlockTransactionCount(345);
-// $ExpectType  Promise<number>
+// $ExpectType Promise<number>
 eth.getBlockTransactionCount('0x407d73d8a49eeb85d32cf465507dd71d507100c1', (error: Error, numberOfTransactions: number) => {});
-// $ExpectType  Promise<number>
+// $ExpectType Promise<number>
 eth.getBlockTransactionCount(345);
 
 // $ExpectType Promise<Block>
@@ -281,7 +282,7 @@ eth.sign('Hello world', '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe', (error: Er
 // $ExpectType Promise<string>
 eth.sign('Hello world', 3, (error: Error, signature: string) => {});
 
-// $ExpectType Promise<SignedTransaction>
+// $ExpectType Promise<RLPEncodedTransaction>
 eth.signTransaction({
     from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
     gasPrice: '20000000000',
@@ -290,7 +291,7 @@ eth.signTransaction({
     value: '1000000000000000000',
     data: ''
 });
-// $ExpectType Promise<SignedTransaction>
+// $ExpectType Promise<RLPEncodedTransaction>
 eth.signTransaction({
     from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
     gasPrice: '20000000000',
@@ -299,7 +300,7 @@ eth.signTransaction({
     value: '1000000000000000000',
     data: ''
 }, '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0');
-// $ExpectType Promise<SignedTransaction>
+// $ExpectType Promise<RLPEncodedTransaction>
 eth.signTransaction({
     from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
     gasPrice: '20000000000',
@@ -307,8 +308,8 @@ eth.signTransaction({
     to: '0x3535353535353535353535353535353535353535',
     value: '1000000000000000000',
     data: ''
-}, (error: Error, signedTransaction: SignedTransaction) => {});
-// $ExpectType Promise<SignedTransaction>
+}, (error: Error, signedTransaction: RLPEncodedTransaction) => {});
+// $ExpectType Promise<RLPEncodedTransaction>
 eth.signTransaction({
     from: '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0',
     gasPrice: '20000000000',
@@ -316,7 +317,7 @@ eth.signTransaction({
     to: '0x3535353535353535353535353535353535353535',
     value: '1000000000000000000',
     data: ''
-}, '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0', (error: Error, signedTransaction: SignedTransaction) => {});
+}, '0xEB014f8c8B418Db6b45774c326A0E64C78914dC0', (error: Error, signedTransaction: RLPEncodedTransaction) => {});
 
 // $ExpectType Promise<string>
 eth.call({

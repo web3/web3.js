@@ -20,36 +20,36 @@
  * @date 2018
  */
 
-import BigNumber from "bn.js";
+import BigNumber from 'bn.js';
 
 export type Unit =
-    "noether"
-    | "wei"
-    | "kwei"
-    | "Kwei"
-    | "babbage"
-    | "femtoether"
-    | "mwei"
-    | "Mwei"
-    | "lovelace"
-    | "picoether"
-    | "gwei"
-    | "Gwei"
-    | "shannon"
-    | "nanoether"
-    | "nano"
-    | "szabo"
-    | "microether"
-    | "micro"
-    | "finney"
-    | "milliether"
-    | "milli"
-    | "ether"
-    | "kether"
-    | "grand"
-    | "mether"
-    | "gether"
-    | "tether";
+    'noether'
+    | 'wei'
+    | 'kwei'
+    | 'Kwei'
+    | 'babbage'
+    | 'femtoether'
+    | 'mwei'
+    | 'Mwei'
+    | 'lovelace'
+    | 'picoether'
+    | 'gwei'
+    | 'Gwei'
+    | 'shannon'
+    | 'nanoether'
+    | 'nano'
+    | 'szabo'
+    | 'microether'
+    | 'micro'
+    | 'finney'
+    | 'milliether'
+    | 'milli'
+    | 'ether'
+    | 'kether'
+    | 'grand'
+    | 'mether'
+    | 'gether'
+    | 'tether';
 
 export type Mixed =
     string
@@ -119,11 +119,10 @@ export function toUtf8(string: string): string;
 export function toWei(value: number | string | BN, unit?: Unit): string | BN;
 export function isBloom(bloom: string): boolean;
 export function isTopic(topic: string): boolean;
-export function jsonInterfaceMethodToString(abiItem: ABIItem): string;
+export function jsonInterfaceMethodToString(abiItem: AbiItem): string;
 export function soliditySha3(...val: Mixed[]): string;
 export function getUnitValue(unit: Unit): string;
 export function unitMap(): Units;
-// bloom types
 export function testAddress(bloom: string, address: string): boolean;
 export function testTopic(bloom: string, topic: string): boolean;
 
@@ -168,11 +167,10 @@ export interface Utils {
     toWei(value: number | string | BN, unit?: Unit): string | BN;
     isBloom(bloom: string): boolean;
     isTopic(topic: string): boolean;
-    jsonInterfaceMethodToString(abiItem: ABIItem): string;
+    jsonInterfaceMethodToString(abiItem: AbiItem): string;
     soliditySha3(...val: Mixed[]): string;
     getUnitValue(unit: Unit): string;
     unitMap(): Units;
-    // bloom types
     testAddress(bloom: string, address: string): boolean;
     testTopic(bloom: string, topic: string): boolean;
 }
@@ -207,27 +205,26 @@ export interface Units {
     tether: string;
 }
 
-/************* move this out to a generic place once we have a place for it on *******************/
+export type AbiType = 'function' | 'constructor' | 'event' | 'fallback';
+export type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable';
 
-export type ABIType = "function" | "constructor" | "event" | "fallback";
-
-export interface ABIItem {
+export interface AbiItem {
     constant?: boolean;
-    inputs?: ABIInput[];
+    inputs?: AbiInput[];
     name?: string;
-    outputs?: ABIOuput[];
+    outputs?: AbiOuput[];
     payable?: boolean;
-    stateMutability?: string; // could be a enum once we move this to generic place
-    type: ABIType;
+    stateMutability?: StateMutabilityType;
+    type: AbiType;
 }
 
-export interface ABIInput {
+export interface AbiInput {
+    name: string;
+    type: string;
+    indexed?: boolean;
+}
+
+export interface AbiOuput {
     name: string;
     type: string;
 }
-
-export interface ABIOuput {
-    name: string;
-    type: string;
-}
-/****************** End of generic stuff  *****************/

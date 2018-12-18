@@ -36,5 +36,5 @@ const provider = new HttpProvider('http://localhost:8545', options);
 const providersModuleFactory = new ProvidersModuleFactory();
 const providerAdapterResolver = new ProviderAdapterResolver(providersModuleFactory);
 
-// $ExpectType HttpProvider | IpcProvider | WebsocketProvider | Error
+// $ExpectType HttpProvider | IpcProvider | WebsocketProvider
 providerAdapterResolver.resolve(provider, new net.Server());
