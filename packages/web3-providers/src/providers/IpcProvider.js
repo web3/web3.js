@@ -16,7 +16,7 @@
 */
 /**
  * @file index.js
- * @authors: Samuel Furter <samuel@ethereum.org>, Fabian Vogelsteller <fabian@ethereum.org>
+ * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
@@ -25,6 +25,8 @@ import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
+     * TODO: Add timeout to constructor
+     *
      * @param {String} path
      * @param {Net} net
      *
@@ -44,22 +46,56 @@ export default class IpcProvider extends AbstractSocketProvider {
         if (this.net.constructor.name === 'Socket') {
             oboe(this.connection).done(this.onMessage);
         } else {
-            this.connection.addEventListener('data', message =>  {
+            this.connection.addListener('data', message =>  {
                 this.onMessage(message.toString());
             });
         }
-        super.registerEventListeners();
+
+        this.connection.addListener('connect', this.onConnect);
+        this.connection.addListener('error', this.onError);
+        this.connection.addListener('close', this.onClose);
+        this.connection.addListener('ready', this.onOpen);
+    }
+
+    /**
+     * Removes all listeners on the EventEmitter and the socket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        this.connection.removeAllListeners(event);
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Will close the socket connection.
+     *
+     * @method disconnect
+     */
+    disconnect() {
+        this.connection.destroy();
+    }
+
+    /**
+     * Returns true if the socket connection state is OPEN
+     *
+     * @property connected
+     *
+     * @returns {Boolean}
+     */
+    get connected() {
+        return !this.connection.pending;
     }
 
     /**
      * Try to reconnect
      *
-     * TODO: create reconnect method also for the websocket provider
-     *
      * @method reconnect
      */
     reconnect() {
-        // this.connection.connect({path: this.path});
+        this.connection.connect({path: this.path});
     }
 
     /**

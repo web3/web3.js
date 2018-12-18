@@ -11,8 +11,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
-
 /**
  * @file AbstractSocketProvider
  * @author Samuel Furter <samuel@ethereum.org>
@@ -20,6 +18,7 @@ import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
  */
 
 import EventEmitter from 'eventemitter3';
+import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
@@ -42,9 +41,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.addEventListener('error', this.onError);
-        this.connection.addEventListener('close', this.onClose);
-        this.connection.addEventListener('connect', this.onConnect);
+        throw new Error('registerEventListener is not implemented!');
     }
 
     /**
@@ -140,8 +137,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Event} error
      */
     onError(error) {
-        this.removeAllListeners();
         this.emit('error', error);
+        this.removeAllListeners();
     }
 
     /**
@@ -150,8 +147,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @method onClose
      */
     onClose() {
-        this.removeAllListeners();
         this.emit('close');
+        this.removeAllListeners();
     }
 
     /**
@@ -174,19 +171,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Removes all listeners on the EventEmitter and the WebSocket object.
-     *
-     * @method removeAllListeners
-     *
-     * @param {String} event
-     */
-    removeAllListeners(event) {
-        this.connection.removeAllListeners(event);
-        super.removeAllListeners(event);
-    }
-
-    /**
-     * Will close the WebSocket connection with a error code and reason.
+     * Will close the socket connection with a error code and reason.
      * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
      * for further information.
      *
@@ -196,9 +181,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {String} reason
      */
     disconnect(code, reason) {
-        if (this.connection) {
-            this.connection.close(code, reason);
-        }
+        throw new Error('Method disconnect is not implemented');
     }
 
     /**
@@ -209,18 +192,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Boolean}
      */
     get connected() {
-        return this.connection && this.connection.readyState === this.connection.OPEN;
-    }
-
-    /**
-     * Returns if the socket connection is in the connecting state.
-     *
-     * @method isConnecting
-     *
-     * @returns {Boolean}
-     */
-    isConnecting() {
-        return this.connection.readyState === this.connection.CONNECTING;
+        throw new Error('Accessors for property connected are not implemented');
     }
 
     /**
@@ -340,6 +312,6 @@ export default class AbstractSocketProvider extends EventEmitter {
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
 
-        return this.provider.send(payload);
+        return this.send(payload);
     }
 }
