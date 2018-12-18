@@ -52,7 +52,7 @@
         "build": "rollup -c",
         "dev": "rollup -c -w",
         "test": "jest",
-        "dtslint": "dtslint types"
+        "dtslint": "dtslint types --onlyTestTsNext"
     },
     "types": "types",
     "dependencies": {

@@ -18,11 +18,12 @@
  */
 
 import {AbstractProviderAdapter, provider} from 'web3-providers';
+import {AbiItem, BN} from 'web3-utils';
 
 export class Contract {
     constructor(
         provider: AbstractProviderAdapter | provider,
-        jsonInterface: {},
+        jsonInterface: AbiItem[] | AbiItem,
         address?: string,
         options?: ContractOptions
     )
@@ -41,7 +42,7 @@ export class Contract {
 
 export interface Options {
     address: string;
-    jsonInterface: any[]; // strongly type this
+    jsonInterface: AbiItem[];
     data: string;
     from: string;
     gasPrice: string;
@@ -56,7 +57,10 @@ export interface DeployOptions {
 export interface DeployTransactionResponse {
     array: any[];
     send(options: SendOptions): () => Promise<Contract>;
-    estimateGas(_function: (err: Error, gas: number) => void): void;
+    estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): void;
+    estimateGas(callback: (err: Error, gas: number) => void): void;
+    estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): void;
+    estimateGas(options: EstimateGasOptions): void;
     encodeABI(): string;
 }
 
@@ -64,10 +68,21 @@ export interface SendOptions {
     from: string;
     gasPrice?: string;
     gas: number;
-    value?: any;
+    value?: number | string | BN;
 }
 
-export interface ContractOptions extends SendOptions {}
+export interface EstimateGasOptions {
+    from?: string;
+    gas: number;
+    value?: number | string | BN;
+}
+
+export interface ContractOptions {
+    from: string;
+    gasPrice: string;
+    gas: number;
+    data: string;
+}
 
 export interface EventOptions {
     filter: {};

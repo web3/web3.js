@@ -23,11 +23,13 @@ import * as net from 'net';
 import {provider, AbstractProviderAdapter, BatchRequest} from 'web3-providers';
 import {Eth} from 'web3-eth';
 import {Network} from 'web3-net';
+import {Shh} from 'web3-shh';
+import {Bzz} from 'web3-bzz';
+import {Personal} from 'web3-eth-personal';
 
-export class Web3 extends AbstractWeb3Module {
+export default class Web3 extends AbstractWeb3Module {
     constructor(
         provider: AbstractProviderAdapter | provider,
-        net?: net.Server,
         options?: Web3ModuleOptions
     );
     static utils: Utils;
@@ -40,14 +42,14 @@ export class Web3 extends AbstractWeb3Module {
     setProvider(provider: provider, net?: net.Server): boolean;
     BatchRequest: new () => BatchRequest;
     eth: Eth;
-    shh: any; // coming when shh types are written;
-    bzz: any; // coming when bzz types are written;
+    shh: Shh;
+    bzz: Bzz;
 }
 
 export interface Modules {
-    Eth: Eth;
-    Net: Network;
-    Personal: any; // coming when personal types are written
-    Shh: any; // coming when shh types are written;
-    Bzz: any; // coming when bzz types are written;
+    Eth: new (provider: provider) => Eth;
+    Net: new (provider: provider) => Network;
+    Personal: new (provider: provider) => Personal;
+    Shh: new (provider: provider) => Shh;
+    Bzz: new (provider: provider) => Bzz;
 }
