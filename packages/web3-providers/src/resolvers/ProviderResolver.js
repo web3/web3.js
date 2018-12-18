@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file ProviderAdapterResolverTest.js
+ * @file ProviderResolverTest.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */

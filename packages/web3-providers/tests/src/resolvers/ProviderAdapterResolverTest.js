@@ -1,4 +1,4 @@
-import ProviderAdapterResolver from '../../../src/resolvers/ProviderResolver';
+import ProviderResolver from '../../../src/resolvers/ProviderResolver';
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import HttpProviderAdapter from '../../../src/adapters/HttpProviderAdapter';
 import SocketProviderAdapter from '../../../src/adapters/SocketProviderAdapter';
@@ -17,8 +17,8 @@ jest.mock('../../../src/adapters/SocketProviderAdapter');
 /**
  * ProviderResolver test
  */
-describe('ProviderAdapterResolverTest', () => {
-    let providerAdapterResolver,
+describe('ProviderResolverTest', () => {
+    let ProviderResolver,
         providersModuleFactory,
         providersModuleFactoryMock;
 
@@ -26,7 +26,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactory = new ProvidersModuleFactory();
         providersModuleFactoryMock = ProvidersModuleFactory.mock.instances[0];
 
-        providerAdapterResolver = new ProviderAdapterResolver(providersModuleFactory);
+        ProviderResolver = new ProviderResolver(providersModuleFactory);
     });
 
     it('calls resolve with HTTP url', () => {
@@ -42,7 +42,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createHttpProviderAdapter
             .mockReturnValueOnce(httpProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve('http://localhost:8545'))
+        expect(ProviderResolver.resolve('http://localhost:8545'))
             .toBeInstanceOf(HttpProviderAdapter);
 
         expect(providersModuleFactoryMock.createHttpProviderAdapter)
@@ -65,7 +65,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createSocketProviderAdapter
             .mockReturnValueOnce(socketProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve('ws://127.0.0.1:8545'))
+        expect(ProviderResolver.resolve('ws://127.0.0.1:8545'))
             .toBeInstanceOf(SocketProviderAdapter);
 
         expect(providersModuleFactoryMock.createSocketProviderAdapter)
@@ -90,7 +90,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createSocketProviderAdapter
             .mockReturnValueOnce(socketProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve('/path/to/the/socket', net))
+        expect(ProviderResolver.resolve('/path/to/the/socket', net))
             .toBeInstanceOf(SocketProviderAdapter);
 
         expect(providersModuleFactoryMock.createSocketProviderAdapter)
@@ -110,7 +110,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createHttpProviderAdapter
             .mockReturnValueOnce(httpProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve(httpProviderMock))
+        expect(ProviderResolver.resolve(httpProviderMock))
             .toBeInstanceOf(HttpProviderAdapter);
 
         expect(providersModuleFactoryMock.createHttpProviderAdapter)
@@ -126,7 +126,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createSocketProviderAdapter
             .mockReturnValueOnce(socketProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve(new EthereumProvider()))
+        expect(ProviderResolver.resolve(new EthereumProvider()))
             .toBeInstanceOf(SocketProviderAdapter);
 
         expect(providersModuleFactoryMock.createSocketProviderAdapter)
@@ -143,7 +143,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createSocketProviderAdapter
             .mockReturnValueOnce(socketProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve(websocketProviderMock))
+        expect(ProviderResolver.resolve(websocketProviderMock))
             .toBeInstanceOf(SocketProviderAdapter);
 
         expect(providersModuleFactoryMock.createSocketProviderAdapter)
@@ -160,7 +160,7 @@ describe('ProviderAdapterResolverTest', () => {
         providersModuleFactoryMock.createSocketProviderAdapter
             .mockReturnValueOnce(socketProviderAdapterMock);
 
-        expect(providerAdapterResolver.resolve(ipcProviderMock))
+        expect(ProviderResolver.resolve(ipcProviderMock))
             .toBeInstanceOf(SocketProviderAdapter);
 
         expect(providersModuleFactoryMock.createSocketProviderAdapter)
@@ -171,7 +171,7 @@ describe('ProviderAdapterResolverTest', () => {
         new HttpProviderAdapter({});
         const httpProviderAdapterMock = HttpProviderAdapter.mock.instances[0];
 
-        expect(providerAdapterResolver.resolve(httpProviderAdapterMock))
+        expect(ProviderResolver.resolve(httpProviderAdapterMock))
             .toBeInstanceOf(HttpProviderAdapter);
     });
 
@@ -179,13 +179,13 @@ describe('ProviderAdapterResolverTest', () => {
         new SocketProviderAdapter({});
         const socketProviderAdapterMock = SocketProviderAdapter.mock.instances[0];
 
-        expect(providerAdapterResolver.resolve(socketProviderAdapterMock))
+        expect(ProviderResolver.resolve(socketProviderAdapterMock))
             .toBeInstanceOf(SocketProviderAdapter);
     });
 
     it('calls resolve with a provider that isn\'t supported', () => {
         expect(() => {
-            providerAdapterResolver.resolve('LALALA')
+            ProviderResolver.resolve('LALALA')
         }).toThrow(Error)
     });
 });

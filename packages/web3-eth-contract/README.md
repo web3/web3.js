@@ -31,7 +31,7 @@ This will expose the `Web3EthContract` object on the window object.
 import {ProvidersModuleFactory} from 'web3-providers';
 import {Contract} from 'web3-eth-contract';
 
-const provider = new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546');
+const provider = new ProvidersModuleFactory().createProviderResolver().resolve('http://127.0.0.1:4546');
 const contract = new Contract(
     provider,
     abi,

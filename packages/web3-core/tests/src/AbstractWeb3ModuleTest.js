@@ -1,7 +1,7 @@
 import {
     ProvidersModuleFactory,
     ProviderDetector,
-    ProviderAdapterResolver,
+    ProviderResolver,
     BatchRequest,
     SocketProviderAdapter
 } from 'web3-providers';
@@ -24,8 +24,8 @@ describe('AbstractWeb3ModuleTest', () => {
     let abstractWeb3Module,
         providerDetector,
         providerDetectorMock,
-        providerAdapterResolver,
-        providerAdapterResolverMock,
+        ProviderResolver,
+        ProviderResolverMock,
         providersModuleFactory,
         providersModuleFactoryMock,
         providerAdapter,
@@ -49,10 +49,10 @@ describe('AbstractWeb3ModuleTest', () => {
         providerDetector = new ProviderDetector();
         providerDetectorMock = ProviderDetector.mock.instances[0];
 
-        providerAdapterResolver = new ProviderAdapterResolver();
-        providerAdapterResolverMock = ProviderAdapterResolver.mock.instances[0];
+        ProviderResolver = new ProviderResolver();
+        ProviderResolverMock = ProviderResolver.mock.instances[0];
 
-        providerAdapterResolverMock.resolve = jest.fn(() => {
+        ProviderResolverMock.resolve = jest.fn(() => {
             return providerAdapterMock;
         });
 
@@ -60,8 +60,8 @@ describe('AbstractWeb3ModuleTest', () => {
             return false;
         });
 
-        providersModuleFactory.createProviderAdapterResolver
-            .mockReturnValueOnce(providerAdapterResolverMock);
+        providersModuleFactory.createProviderResolver
+            .mockReturnValueOnce(ProviderResolverMock);
 
         providersModuleFactory.createProviderDetector
             .mockReturnValueOnce(providerDetectorMock);
@@ -144,7 +144,7 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(methodModuleFactoryMock.createMethodProxy)
             .toHaveBeenCalledWith(abstractWeb3Module, methodFactoryMock);
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenCalledWith('HTTP');
     });
 
@@ -189,10 +189,10 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER'))
             .toEqual(true);
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenNthCalledWith(1, 'HTTP');
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
 
         expect(abstractWeb3Module.currentProvider)
@@ -206,10 +206,10 @@ describe('AbstractWeb3ModuleTest', () => {
         expect(abstractWeb3Module.setProvider('SOCKET_PROVIDER'))
             .toEqual(true);
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenNthCalledWith(1, 'HTTP');
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenNthCalledWith(2, 'SOCKET_PROVIDER', undefined);
 
         expect(providerAdapterMock.clearSubscriptions)
@@ -220,7 +220,7 @@ describe('AbstractWeb3ModuleTest', () => {
     });
 
     it('setProvider throws error because of the resolver', () => {
-        providerAdapterResolverMock.resolve = jest.fn(() => {
+        ProviderResolverMock.resolve = jest.fn(() => {
             throw new Error('Invalid provider');
         });
 
@@ -237,7 +237,7 @@ describe('AbstractWeb3ModuleTest', () => {
             abstractWeb3Module.setProvider(provider);
         }).toThrow('Invalid provider');
 
-        expect(providerAdapterResolverMock.resolve)
+        expect(ProviderResolverMock.resolve)
             .toHaveBeenCalledWith(provider, undefined);
     });
 

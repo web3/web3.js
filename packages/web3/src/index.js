@@ -42,7 +42,7 @@ export default class Web3 extends AbstractWeb3Module {
      */
     constructor(provider, net, options) {
         const providersModuleFactory = new ProvidersModuleFactory();
-        provider = providersModuleFactory.createProviderAdapterResolver().resolve(provider, net);
+        provider = providersModuleFactory.createProviderResolver().resolve(provider, net);
 
         super(
             provider,
@@ -200,23 +200,23 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get modules() {
-        const providerAdapterResolver = new ProvidersModuleFactory().createProviderAdapterResolver();
+        const providerResolver = new ProvidersModuleFactory().createProviderResolver();
 
         return {
             Eth: (provider, net) => {
-                return new Eth(providerAdapterResolver.resolve(provider, net));
+                return new Eth(providerResolver.resolve(provider, net));
             },
             Net: (provider, net) => {
-                return new Network(providerAdapterResolver.resolve(provider, net));
+                return new Network(providerResolver.resolve(provider, net));
             },
             Personal: (provider, net) => {
-                return new Personal(providerAdapterResolver.resolve(provider, net));
+                return new Personal(providerResolver.resolve(provider, net));
             },
             Shh: (provider, net) => {
-                return new Shh(providerAdapterResolver.resolve(provider, net));
+                return new Shh(providerResolver.resolve(provider, net));
             },
             Bzz: (provider, net) => {
-                return new Bzz(providerAdapterResolver.resolve(provider, net));
+                return new Bzz(providerResolver.resolve(provider, net));
             }
         };
     }

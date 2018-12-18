@@ -27,7 +27,6 @@ export default class AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory
      * @param {Object} options
@@ -43,9 +42,9 @@ export default class AbstractWeb3Module {
     ) {
         this.providersModuleFactory = providersModuleFactory;
         this.providerDetector = providersModuleFactory.createProviderDetector();
-        this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
+        this.providerResolver = providersModuleFactory.createProviderResolver();
         this.givenProvider = this.providerDetector.detect();
-        this._currentProvider = this.providerAdapterResolver.resolve(provider);
+        this._currentProvider = this.providerResolver.resolve(provider);
 
         this._defaultAccount = options.defaultAccount ? toChecksumAddress(options.defaultAccount) : undefined;
         this.defaultBlock = options.defaultBlock;
@@ -147,7 +146,7 @@ export default class AbstractWeb3Module {
      */
     setProvider(provider, net) {
         if (!this.isSameProvider(provider)) {
-            const resolvedProvider = this.providerAdapterResolver.resolve(provider, net);
+            const resolvedProvider = this.ProviderResolver.resolve(provider, net);
             this.clearSubscriptions();
             this._currentProvider = resolvedProvider;
 

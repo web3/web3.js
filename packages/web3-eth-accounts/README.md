@@ -32,7 +32,7 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {Accounts} from 'web3-eth-accounts';
 
 const accounts = new Accounts(
-    new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546'),
+    new ProvidersModuleFactory().createProviderResolver().resolve('http://127.0.0.1:4546'),
     options
 );
 

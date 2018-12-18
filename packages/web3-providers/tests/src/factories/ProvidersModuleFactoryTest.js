@@ -1,6 +1,6 @@
 import ProvidersModuleFactory from '../../../src/factories/ProvidersModuleFactory';
 import BatchRequest from '../../../src/batch-request/BatchRequest';
-import ProviderAdapterResolver from '../../../src/resolvers/ProviderResolver';
+import ProviderResolver from '../../../src/resolvers/ProviderResolver';
 import ProviderDetector from '../../../src/detectors/ProviderDetector';
 import HttpProvider from '../../../src/providers/HttpProvider';
 import WebsocketProvider from '../../../src/providers/WebsocketProvider';
@@ -34,8 +34,8 @@ describe('ProvidersModuleFactoryTest', () => {
     });
 
     it('createProviderResolver returns instance of ProviderResolver', () => {
-        expect(providersModuleFactory.createProviderAdapterResolver())
-            .toBeInstanceOf(ProviderAdapterResolver);
+        expect(providersModuleFactory.createProviderResolver())
+            .toBeInstanceOf(ProviderResolver);
     });
 
     it('createProviderDetector returns instance of ProviderDetector', () => {

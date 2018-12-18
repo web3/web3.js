@@ -31,7 +31,7 @@ import {ProvidersModuleFactory} from 'web3-providers';
 import {Shh} from 'web3-shh';
 
 const shh = new Shh(
-    new ProvidersModuleFactory().createProviderAdapterResolver().resolve('http://127.0.0.1:4546'),
+    new ProvidersModuleFactory().createProviderResolver().resolve('http://127.0.0.1:4546'),
     options
 );
 ```

@@ -75,7 +75,7 @@ Please read the [documentation][docs] for more.
 import {ProvidersModuleFactory, BatchRequest} 'web3-providers;
 
 const provider = new ProvidersModuleFactory()
-                        .createProviderAdapterResolver
+                        .createProviderResolver
                         .resolve('ws://localhost:8546');
 
 const batchRequest = new BatchRequest(provider);
@@ -108,7 +108,7 @@ This way we use internally in web3 just one provider interface and we have no di
 import {ProvidersModuleFactory} 'web3-providers;
 
 const socketProviderAdapter = new ProvidersModuleFactory()
-                        .createProviderAdapterResolver
+                        .createProviderResolver
                         .resolve('ws://localhost:8546');
 ```
 
