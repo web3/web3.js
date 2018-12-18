@@ -327,9 +327,9 @@ export default class WebsocketProvider extends EventEmitter {
             .then(response => {
                 if (response) {
                     this.removeAllListeners(subscriptionId);
-                    delete this.subscriptons[this.subscriptions.indexOf(subscriptionId)];
+                    delete this.subscriptions[this.subscriptions.indexOf(subscriptionId)];
                 }
-                
+
                 return response;
             });
     }
@@ -359,5 +359,40 @@ export default class WebsocketProvider extends EventEmitter {
 
             return true;
         });
+    }
+
+    /**
+     * Checks if the given subscription id exists
+     *
+     * @method hasSubscription
+     *
+     * @param {String} subscriptionId
+     *
+     * @returns {Boolean}
+     */
+    hasSubscription(subscriptionId) {
+        return this.subscriptions.indexOf(subscriptionId) > -1;
+    }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach(method => {
+            method.beforeExecution(moduleInstance);
+
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.provider.send(payload);
     }
 }
