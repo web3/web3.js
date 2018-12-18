@@ -21,20 +21,47 @@
  */
 
 import ProvidersModuleFactory from './factories/ProvidersModuleFactory';
-import HttpProvider from './providers/HttpProvider';
-import IpcProvider from './providers/IpcProvider';
-import WebsocketProvider from './providers/WebsocketProvider';
 
-export HttpProvider from './providers/HttpProvider';
-export IpcProvider from './providers/IpcProvider';
-export WebsocketProvider from './providers/WebsocketProvider';
-export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
+/**
+ * Creates the HttpProvider object.
+ *
+ * @param {String} url
+ * @param {Object} options
+ *
+ * @returns {HttpProvider}
+ *
+ * @constructor
+ */
+export const HttpProvider = (url, options) => {
+    return new ProvidersModuleFactory().createHttpProvider(url, options);
+};
 
-//TODO: Create factory methods for them to provide the same API.
-export const providers = {
-    HttpProvider,
-    WebsocketProvider,
-    IpcProvider
+/**
+ * Creates the WebsocketProvider object
+ *
+ * @param {String} url
+ * @param {Object} options
+ *
+ * @returns {WebsocketProvider}
+ *
+ * @constructor
+ */
+export const WebsocketProvider = (url, options) => {
+    return new ProvidersModuleFactory().createWebsocketProvider(url, options);
+};
+
+/**
+ * Creates the IpcProvider object
+ *
+ * @param {string} path
+ * @param {Net} net
+ *
+ * @returns {IpcProvider}
+ *
+ * @constructor
+ */
+export const IpcProvider = (path, net) => {
+    return new ProvidersModuleFactory().createIpcProvider(path, net);
 };
 
 /**
@@ -46,6 +73,8 @@ export const providers = {
  * @param {AbstractProviderAdapter|EthereumProvider} provider
  *
  * @returns {BatchRequest}
+ *
+ * @constructor
  */
 export const BatchRequest = (moduleInstance, provider) => {
     return new ProvidersModuleFactory().createBatchRequest(moduleInstance, provider);
@@ -57,6 +86,8 @@ export const BatchRequest = (moduleInstance, provider) => {
  * @method ProviderResolver
  *
  * @returns {ProviderResolver}
+ *
+ * @constructor
  */
 export const ProviderResolver = () => {
     return new ProvidersModuleFactory().createProviderResolver();
@@ -68,6 +99,8 @@ export const ProviderResolver = () => {
  * @method detect
  *
  * @returns {Object}
+ *
+ * @constructor
  */
 export const ProviderDetector = () => {
     return new ProvidersModuleFactory().createProviderDetector();

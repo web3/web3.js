@@ -87,6 +87,47 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     sendBatch(methods, moduleInstance) { }
 
+    /**
+     * Emits the open event with the event the provider got of the current WebSocket connection.
+     *
+     * @method onOpen
+     *
+     * @param {Event} event
+     */
+    onOpen(event) {
+        this.emit('open', event);
+    }
+
+    /**
+     * Emits the error event and removes all listeners.
+     *
+     * @method onError
+     *
+     * @param {Event} error
+     */
+    onError(error) {
+        this.emit('error', error);
+        this.removeAllListeners();
+    }
+
+    /**
+     * Emits the close event and removes all listeners.
+     *
+     * @method onClose
+     */
+    onClose() {
+        this.emit('close');
+        this.removeAllListeners();
+    }
+
+    /**
+     * Emits the connect event.
+     *
+     * @method onConnect
+     */
+    onConnect() {
+        this.emit('connect');
+    }
 
     /**
      * This is the listener for the 'message' events of the current WebSocket connection.
@@ -163,48 +204,6 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Emits the open event with the event the provider got of the current WebSocket connection.
-     *
-     * @method onOpen
-     *
-     * @param {Event} event
-     */
-    onOpen(event) {
-        this.emit('open', event);
-    }
-
-    /**
-     * Emits the error event and removes all listeners.
-     *
-     * @method onError
-     *
-     * @param {Event} error
-     */
-    onError(error) {
-        this.emit('error', error);
-        this.removeAllListeners();
-    }
-
-    /**
-     * Emits the close event and removes all listeners.
-     *
-     * @method onClose
-     */
-    onClose() {
-        this.emit('close');
-        this.removeAllListeners();
-    }
-
-    /**
-     * Emits the connect event.
-     *
-     * @method onConnect
-     */
-    onConnect() {
-        this.emit('connect');
-    }
-
-    /**
      * Resets the providers, clears all callbacks
      *
      * @method reset
@@ -248,7 +247,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<Boolean|Error>}
      */
-    async unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
+    unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
         return this.send(unsubscribeMethod, [subscriptionId])
             .then(response => {
                 if (response) {

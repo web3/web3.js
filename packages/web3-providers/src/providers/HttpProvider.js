@@ -24,7 +24,6 @@
  * @date 2015
  */
 
-import {errors} from 'web3-core-helpers';
 import {XMLHttpRequest} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
