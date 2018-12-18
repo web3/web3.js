@@ -58,30 +58,25 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     removeAllListeners(event) {
         if (event) {
             switch (event) {
-                case 'message':
+                case 'ws_message':
                     this.connection.removeEventListener('message', this.onMessage);
                     break;
-                case 'close':
+                case 'ws_open':
+                    this.connection.removeEventListener('open', this.onOpen);
+                    break;
+                case 'ws_close':
                     this.connection.removeEventListener('close', this.onClose);
                     break;
-                case 'error':
+                case 'ws_error':
                     this.connection.removeEventListener('error', this.onError);
                     break;
-                case 'connect':
+                case 'ws_connect':
                     this.connection.removeEventListener('connect', this.onConnect);
                     break;
             }
-
-            super.removeAllListeners(event);
-
-            return;
         }
 
-        this.connection.removeEventListener('open', this.onOpen);
-        this.connection.removeEventListener('close', this.onClose);
-        this.connection.removeEventListener('error', this.onError);
-        this.connection.removeEventListener('connect', this.onConnect);
-        super.removeAllListeners();
+        super.removeAllListeners(event);
     }
 
     /**
@@ -117,13 +112,46 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+    }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach(method => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
+    }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method sendPayload
+     *
+     * @param {Object} payload
+     *
+     * @returns {Promise<any>}
+     */
+    sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.readyState !== this.connection.OPEN) {
                 reject('Connection error: Connection is not open on send()');
             }
 
             if (!this.isConnecting()) {
-                const payload = JsonRpcMapper.toPayload(method, parameters);
                 this.connection.send(JSON.stringify(payload));
 
                 let timeout;
@@ -136,7 +164,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 this.on(payload.id, response => {
                     this.removeAllListeners(payload.id);
 
-                    if (this.timeout) {
+                    if (timeout) {
                         clearTimeout(timeout);
                     }
 
@@ -147,21 +175,17 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 return;
             }
 
-            setTimeout(() => {
-                if (!this.isConnecting()) {
-                    this.send(method, parameters)
-                        .then(response => {
-                            resolve(response);
-                        })
-                        .catch(error => {
-                            reject(error);
-                        });
+            this.on('open', () => {
+                this.sendPayload(payload)
+                    .then(response => {
+                        resolve(response);
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
 
-                    return;
-                }
-
-                this.send(method, parameters);
-            }, 500);
+                this.removeAllListeners('open');
+            });
         });
     }
 }

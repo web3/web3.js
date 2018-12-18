@@ -110,21 +110,60 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
+        return this.semdPayload(JsonRpcMapper.toPayload(method, parameters));
+    }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach(method => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.semdPayload(payload);
+    }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method send
+     *
+     * @param {Object} payload
+     *
+     * @returns {Promise<any>}
+     */
+    semdPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.pending) {
                 reject(new Error('Connection error: The socket is still trying to connect'));
             }
 
-            // try reconnect, when connection is gone
             if (!this.connection.writable) {
                 this.connection.connect({path: this.path});
             }
 
-            const payload = JsonRpcMapper.toPayload(method, parameters);
-
             if (this.connection.write(JSON.stringify(payload))) {
-                this.on(payload.id, response => {
-                    this.removeAllListeners(payload.id);
+                let id;
+
+                if (isArray(payload)) {
+                    id = payload[0].id;
+                } else {
+                    id = payload.id;
+                }
+
+                this.on(id, response => {
+                    this.removeAllListeners(id);
 
                     return resolve(response);
                 });

@@ -64,7 +64,6 @@ export default class EthereumProviderAdapter extends SocketProviderAdapter {
 
         method.forEach(method => {
             method.beforeExecution(moduleInstance);
-
             methodCalls.push(this.provider.send(method.rpcMethod, method.parameters));
         });
 

@@ -40,9 +40,53 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {
-        throw new Error('registerEventListener is not implemented!');
-    }
+    registerEventListeners() { }
+
+    /**
+     * Will close the socket connection with a error code and reason.
+     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
+     * for further information.
+     *
+     * @method disconnect
+     *
+     * @param {Number} code
+     * @param {String} reason
+     */
+    disconnect(code, reason) { }
+
+    /**
+     * Returns true if the socket connection state is OPEN
+     *
+     * @property connected
+     *
+     * @returns {Boolean}
+     */
+    get connected() { }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method send
+     *
+     * @param {String} method
+     * @param {Array} parameters
+     *
+     * @returns {Promise<any>}
+     */
+    send(method, parameters) { }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) { }
+
 
     /**
      * This is the listener for the 'message' events of the current WebSocket connection.
@@ -171,43 +215,6 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Will close the socket connection with a error code and reason.
-     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
-     * for further information.
-     *
-     * @method disconnect
-     *
-     * @param {Number} code
-     * @param {String} reason
-     */
-    disconnect(code, reason) {
-        throw new Error('Method disconnect is not implemented');
-    }
-
-    /**
-     * Returns true if the socket connection state is OPEN
-     *
-     * @property connected
-     *
-     * @returns {Boolean}
-     */
-    get connected() {
-        throw new Error('Accessors for property connected are not implemented');
-    }
-
-    /**
-     * Sends the JSON-RPC request
-     *
-     * @method send
-     *
-     * @param {String} method
-     * @param {Array} parameters
-     *
-     * @returns {Promise<any>}
-     */
-    send(method, parameters) { }
-
-    /**
      * Subscribes to a given subscriptionType
      *
      * @method subscribe
@@ -291,27 +298,5 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     hasSubscription(subscriptionId) {
         return this.subscriptions.indexOf(subscriptionId) > -1;
-    }
-
-    /**
-     * Sends batch payload
-     *
-     * @method sendBatch
-     *
-     * @param {AbstractMethod[]} methods
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns Promise<Object|Error>
-     */
-    sendBatch(methods, moduleInstance) {
-        let payload = [];
-
-        methods.forEach(method => {
-            method.beforeExecution(moduleInstance);
-
-            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
-        });
-
-        return this.send(payload);
     }
 }

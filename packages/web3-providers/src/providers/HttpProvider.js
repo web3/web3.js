@@ -52,6 +52,27 @@ export default class HttpProvider {
     }
 
     /**
+     * Added this method to have a better error message if someone is trying to create a subscription with this provider.
+     */
+    subscribe() {
+        throw Error('Subscriptions are not supported with the HttpProvider.');
+    }
+
+    /**
+     * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
+     */
+    unsubscribe() {
+        throw Error('Subscriptions are not supported with the HttpProvider.');
+    }
+
+    /**
+     * This method has to exists to have the same interface as the socket providers.
+     */
+    disconnect() {
+        return true;
+    }
+
+    /**
      * Prepares the HTTP request
      *
      * @method prepareRequest
@@ -90,6 +111,40 @@ export default class HttpProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+    }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach(method => {
+            method.beforeExecution(moduleInstance);
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.sendPayload(payload);
+    }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method sendPayload
+     *
+     * @param {Object} payload
+     *
+     * @returns {Promise<any>}
+     */
+    sendPayload(payload) {
         return new Promise((resolve, reject) => {
             const request = this.prepareRequest();
 
@@ -109,11 +164,10 @@ export default class HttpProvider {
 
             request.ontimeout = () => {
                 this.connected = false;
-                reject(new Error(`CONNECTION: Timeout exceeded after ${this.timeout}ms`));
+                reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
             };
 
             try {
-                const payload = JsonRpcMapper.toPayload(method, parameters);
                 request.send(JSON.stringify(payload));
             } catch (error) {
                 if (error.constructor.name === 'NetworkError') {
@@ -123,26 +177,5 @@ export default class HttpProvider {
                 reject(error);
             }
         });
-    }
-
-    /**
-     * Added this method to have a better error message if someone is trying to create a subscription with this provider.
-     */
-    subscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
-    }
-
-    /**
-     * Added this method to have a better error message if someone is trying to unsubscribe with this provider.
-     */
-    unsubscribe() {
-        throw Error('Subscriptions are not supported with the HttpProvider.');
-    }
-
-    /**
-     * This method has to exists to have the same interface as the socket providers.
-     */
-    disconnect() {
-        return true;
     }
 }
