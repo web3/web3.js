@@ -11,15 +11,335 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
+import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
+
 /**
  * @file AbstractSocketProvider
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class AbstractSocketProvider {
+import EventEmitter from 'eventemitter3';
 
-    constructor() {
+export default class AbstractSocketProvider extends EventEmitter {
+    /**
+     * @param {WsReconnector} connection
+     * @param {Number} timeout
+     *
+     * @constructor
+     */
+    constructor(connection, timeout) {
+        super();
+        this.connection = connection;
+        this.timeout = timeout;
+        this.subscriptions = [];
+        this.registerEventListeners();
+    }
 
+    /**
+     * Registers all the required listeners.
+     *
+     * @method registerEventListeners
+     */
+    registerEventListeners() {
+        this.connection.addEventListener('error', this.onError);
+        this.connection.addEventListener('close', this.onClose);
+        this.connection.addEventListener('connect', this.onConnect);
+    }
+
+    /**
+     * This is the listener for the 'message' events of the current WebSocket connection.
+     *
+     * @method onMessage
+     *
+     * @param {MessageEvent} messageEvent
+     */
+    onMessage(messageEvent) {
+        this.parseResponse(messageEvent.data).forEach(result => {
+            let id = null;
+            if (isArray(result)) {
+                id = result[0].id;
+            } else if (result.method && result.method.indexOf('_subscription') !== -1) {
+                id = result.params.subscription;
+                result = result.params.result;
+            } else {
+                id = result.id;
+            }
+
+            this.emit(id, result);
+        });
+    }
+
+    /**
+     * Will parse the response and make an array out of it.
+     *
+     * @method parseResponse
+     *
+     * @param {String} data
+     */
+    parseResponse(data) {
+        let result = null,
+            lastChunk;
+
+        const returnValues = [],
+            dechunkedData = data
+                .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
+                .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
+                .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
+                .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
+                .split('|--|');
+
+        dechunkedData.forEach(data => {
+            // prepend the last chunk
+            if (lastChunk) {
+                data = lastChunk + data;
+            }
+
+            try {
+                result = JSON.parse(data);
+            } catch (e) {
+                lastChunk = data;
+
+                let lastChunkTimeout = setTimeout(() => {
+                    _this._timeout();
+                    throw errors.InvalidResponse(data);
+                }, 1000 * 15);
+
+                return;
+            }
+
+            // cancel timeout and set chunk to null
+            clearTimeout(lastChunkTimeout);
+            lastChunk = null;
+
+            if (result) {
+                returnValues.push(result);
+            }
+
+        });
+
+        return returnValues;
+    }
+
+    /**
+     * Emits the open event with the event the provider got of the current WebSocket connection.
+     *
+     * @method onOpen
+     *
+     * @param {Event} event
+     */
+    onOpen(event) {
+        this.emit('open', event);
+    }
+
+    /**
+     * Emits the error event and removes all listeners.
+     *
+     * @method onError
+     *
+     * @param {Event} error
+     */
+    onError(error) {
+        this.removeAllListeners();
+        this.emit('error', error);
+    }
+
+    /**
+     * Emits the close event and removes all listeners.
+     *
+     * @method onClose
+     */
+    onClose() {
+        this.removeAllListeners();
+        this.emit('close');
+    }
+
+    /**
+     * Emits the connect event.
+     *
+     * @method onConnect
+     */
+    onConnect() {
+        this.emit('connect');
+    }
+
+    /**
+     * Resets the providers, clears all callbacks
+     *
+     * @method reset
+     */
+    reset() {
+        this.removeAllListeners();
+        this.registerEventListeners();
+    }
+
+    /**
+     * Removes all listeners on the EventEmitter and the WebSocket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        this.connection.removeAllListeners(event);
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Will close the WebSocket connection with a error code and reason.
+     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
+     * for further information.
+     *
+     * @method disconnect
+     *
+     * @param {Number} code
+     * @param {String} reason
+     */
+    disconnect(code, reason) {
+        if (this.connection) {
+            this.connection.close(code, reason);
+        }
+    }
+
+    /**
+     * Returns true if the socket connection state is OPEN
+     *
+     * @property connected
+     *
+     * @returns {Boolean}
+     */
+    get connected() {
+        return this.connection && this.connection.readyState === this.connection.OPEN;
+    }
+
+    /**
+     * Returns if the socket connection is in the connecting state.
+     *
+     * @method isConnecting
+     *
+     * @returns {Boolean}
+     */
+    isConnecting() {
+        return this.connection.readyState === this.connection.CONNECTING;
+    }
+
+    /**
+     * Sends the JSON-RPC request
+     *
+     * @method send
+     *
+     * @param {String} method
+     * @param {Array} parameters
+     *
+     * @returns {Promise<any>}
+     */
+    send(method, parameters) { }
+
+    /**
+     * Subscribes to a given subscriptionType
+     *
+     * @method subscribe
+     *
+     * @param {String} subscribeMethod
+     * @param {String} subscriptionMethod
+     * @param {Array} parameters
+     *
+     * @returns {Promise<String|Error>}
+     */
+    subscribe(subscribeMethod = 'eth_subscribe', subscriptionMethod, parameters) {
+        parameters.unshift(subscriptionMethod);
+
+        return this.send(subscribeMethod, parameters)
+            .then(subscriptionId => {
+                this.subscriptions.push(subscriptionId);
+
+                return subscriptionId;
+            }).catch(error => {
+                throw new Error(`Provider error: ${error}`);
+            });
+    }
+
+    /**
+     * Unsubscribes the subscription by his id
+     *
+     * @method unsubscribe
+     *
+     * @param {String} subscriptionId
+     * @param {String} unsubscribeMethod
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    async unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
+        return this.send(unsubscribeMethod, [subscriptionId])
+            .then(response => {
+                if (response) {
+                    this.removeAllListeners(subscriptionId);
+                    delete this.subscriptions[this.subscriptions.indexOf(subscriptionId)];
+                }
+
+                return response;
+            });
+    }
+
+    /**
+     * Clears all subscriptions and listeners
+     *
+     * @method clearSubscriptions
+     *
+     * @param {String} unsubscribeMethod
+     *
+     * @returns {Promise<Boolean|Error>}
+     */
+    clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
+        let unsubscribePromises = [];
+
+        this.subscriptions.forEach(subscriptionId => {
+            unsubscribePromises.push(this.unsubscribe(subscriptionId, unsubscribeMethod));
+        });
+
+        return Promise.all(unsubscribePromises).then(results => {
+            if (results.includes(false)) {
+                throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
+            }
+
+            this.subscriptions = [];
+
+            return true;
+        });
+    }
+
+    /**
+     * Checks if the given subscription id exists
+     *
+     * @method hasSubscription
+     *
+     * @param {String} subscriptionId
+     *
+     * @returns {Boolean}
+     */
+    hasSubscription(subscriptionId) {
+        return this.subscriptions.indexOf(subscriptionId) > -1;
+    }
+
+    /**
+     * Sends batch payload
+     *
+     * @method sendBatch
+     *
+     * @param {AbstractMethod[]} methods
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns Promise<Object|Error>
+     */
+    sendBatch(methods, moduleInstance) {
+        let payload = [];
+
+        methods.forEach(method => {
+            method.beforeExecution(moduleInstance);
+
+            payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
+        });
+
+        return this.provider.send(payload);
     }
 }
