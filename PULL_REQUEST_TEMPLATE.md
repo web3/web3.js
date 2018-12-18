@@ -22,7 +22,9 @@ Fixes #(issue)
 - [ ] I have commented my code, particularly in hard-to-understand areas.
 - [ ] I have made corresponding changes to the documentation.
 - [ ] My changes generate no warnings.
+- [ ] I have wrote/edited any new types for any modules i have changed
 - [ ] Any dependent changes have been merged and published in downstream modules.
 - [ ] I ran ```npm run test``` with success and extended the tests if necessary.
 - [ ] I ran ```npm run build``` and tested it in the browser and with node.
+- [ ] I ran ```npm run-script dtslint``` and tested that all my types compile
 - [ ] I have tested my code on the live network.
