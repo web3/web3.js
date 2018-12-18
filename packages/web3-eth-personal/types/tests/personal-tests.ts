@@ -17,7 +17,8 @@
  * @date 2018
  */
 
-import {Personal, RLPEncodedTransaction} from 'web3-eth-personal';
+import {RLPEncodedTransaction} from 'web3-core';
+import {Personal} from 'web3-eth-personal';
 import {HttpProvider} from 'web3-providers';
 
 const options = {
@@ -40,9 +41,6 @@ personal.setProvider(httpProvider)
 
 // $ExpectType Providers
 personal.providers;
-
-// $ExpectType AbstractProviderAdapter | null
-personal.givenProvider;
 
 // $ExpectType AbstractProviderAdapter
 personal.currentProvider;

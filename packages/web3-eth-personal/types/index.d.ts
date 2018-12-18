@@ -19,14 +19,13 @@
 
 import * as net from 'net';
 import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
+import {AbstractWeb3Module, Web3ModuleOptions, Providers, Transaction, RLPEncodedTransaction} from 'web3-core';
 export class Personal extends AbstractWeb3Module {
     constructor(
         provider: AbstractProviderAdapter | provider,
         options?: Web3ModuleOptions
     );
     setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
-    givenProvider: AbstractProviderAdapter | null;
     BatchRequest: new() => BatchRequest;
     providers: Providers;
     newAccount(password: string, callback?: (error: Error, address: string) => void): Promise<string>;
@@ -34,25 +33,4 @@ export class Personal extends AbstractWeb3Module {
     ecRecover(dataThatWasSigned: string, signature: string, callback?: (error: Error, address: string) => void): Promise<string>;
     signTransaction(transation: Transaction, password: string, callback?: (error: Error, RLPEncodedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
     unlockAccount(address: string, password: string, unlockDuration: number, callback?: (error: Error) => void): Promise<boolean>;
-}
-
-// Josh to move to web3-core
-export interface Transaction {
-    from?: string | number;
-    to?: string;
-    gasPrice?: string;
-    gas?: number | string;
-    value?: number | string;
-    chainId?: number;
-    data?: string;
-    nonce?: number;
-    v?: string;
-    r?: string;
-    s?: string;
-    hash?: string;
-}
-
-export interface RLPEncodedTransaction {
-    raw: string,
-    tx: Transaction
 }
