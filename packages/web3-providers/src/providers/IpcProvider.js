@@ -22,6 +22,7 @@
 
 import oboe from 'oboe';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
+import JsonRpcMapper from '../mappers/JsonRpcMapper';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
@@ -103,18 +104,35 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @method send
      *
-     * @param {Object} payload
-     * @param {Function} callback
+     * @param {String} method
+     * @param {Array} parameters
      *
-     * @callback callback callback(error, result)
+     * @returns {Promise<any>}
      */
-    send(payload, callback) {
-        // // try reconnect, when connection is gone
-        // if (!this.connection.writable) {
-        //     this.connection.connect({path: this.path});
-        // }
-        //
-        // this.connection.write(JSON.stringify(payload));
-        // this.addResponseCallback(payload, callback);
+    send(method, parameters) {
+        return new Promise((resolve, reject) => {
+            if (this.connection.pending) {
+                reject(new Error('Connection error: The socket is still trying to connect'));
+            }
+
+            // try reconnect, when connection is gone
+            if (!this.connection.writable) {
+                this.connection.connect({path: this.path});
+            }
+
+            const payload = JsonRpcMapper.toPayload(method, parameters);
+
+            if (this.connection.write(JSON.stringify(payload))) {
+                this.on(payload.id, response => {
+                    this.removeAllListeners(payload.id);
+
+                    return resolve(response);
+                });
+
+                return;
+            }
+
+            return reject(new Error('Connection error: Couldn\'t write on the socket with Socket.write(payload)'));
+        });
     }
 }
