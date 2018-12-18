@@ -20,7 +20,7 @@
  * @date 2018
  */
 
-import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import {MethodModuleFactory} from 'web3-core-method';
 import {SubscriptionsFactory} from 'web3-core-subscriptions';
 import {Network} from 'web3-net';
@@ -42,7 +42,6 @@ export const Shh = (provider, options) => {
     return new ShhModuleFactory(Utils, formatters).createShhModule(
         provider,
         new ProvidersModuleFactory(),
-        providers,
         new MethodModuleFactory(),
         new SubscriptionsFactory(),
         new Network(provider, options),

@@ -4,6 +4,7 @@ import {AbstractWeb3Module} from 'web3-core';
 import SignMethod from '../../../src/methods/SignMethod';
 import Accounts from '../../__mocks__/Accounts';
 import MessageSigner from '../../../src/signers/MessageSigner';
+import AbstractMethod from '../../../lib/methods/AbstractMethod';
 
 // Mocks
 jest.mock('SocketProviderAdapter');
@@ -41,6 +42,9 @@ describe('SignMethodTest', () => {
     });
 
     it('contructor check', () => {
+        expect(method)
+            .toBeInstanceOf(AbstractMethod);
+
         expect(SignMethod.Type)
             .toEqual('CALL');
 

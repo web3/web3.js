@@ -28,7 +28,6 @@ export default class EthModuleFactory {
     /**
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Accounts} accounts
      * @param {PromiEvent} PromiEvent
@@ -42,7 +41,6 @@ export default class EthModuleFactory {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         accounts,
         PromiEvent,
@@ -53,7 +51,6 @@ export default class EthModuleFactory {
     ) {
         this.provider = provider;
         this.providersModuleFactory = providersModuleFactory;
-        this.providers = providers;
         this.methodModuleFactory = methodModuleFactory;
         this.accounts = accounts;
         this.utils = utils;
@@ -78,7 +75,6 @@ export default class EthModuleFactory {
         return new Contract(
             this.provider,
             this.providersModuleFactory,
-            this.providers,
             this.methodModuleFactory,
             this.contractModuleFactory,
             this.PromiEvent,
@@ -110,7 +106,6 @@ export default class EthModuleFactory {
         return new Eth(
             this.provider,
             this.providersModuleFactory,
-            this.providers,
             this.methodModuleFactory,
             this.createMethodFactory(this.accounts),
             this,

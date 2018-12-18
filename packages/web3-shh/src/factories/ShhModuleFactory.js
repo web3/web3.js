@@ -42,7 +42,6 @@ export default class ShhModuleFactory {
      *
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
@@ -50,11 +49,10 @@ export default class ShhModuleFactory {
      *
      * @returns {Shh}
      */
-    createShhModule(provider, providersModuleFactory, providers, methodModuleFactory, subscriptionsFactory, net, options) {
+    createShhModule(provider, providersModuleFactory, methodModuleFactory, subscriptionsFactory, net, options) {
         return new Shh(
             provider,
             providersModuleFactory,
-            providers,
             methodModuleFactory,
             this.createMethodFactory(),
             subscriptionsFactory,

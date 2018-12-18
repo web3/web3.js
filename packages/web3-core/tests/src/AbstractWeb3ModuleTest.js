@@ -14,7 +14,7 @@ import MethodFactory from '../__mocks__/MethodFactory';
 jest.mock('BatchRequest');
 jest.mock('ProviderDetector');
 jest.mock('ProvidersModuleFactory');
-jest.mock('ProviderAdapterResolver');
+jest.mock('ProviderResolver');
 jest.mock('SocketProviderAdapter');
 
 /**

@@ -27,7 +27,6 @@ export default class Network extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
      * @param {Object} formatters
@@ -39,14 +38,13 @@ export default class Network extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         methodFactory,
         formatters,
         utils,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.formatters = formatters;
         this.utils = utils;

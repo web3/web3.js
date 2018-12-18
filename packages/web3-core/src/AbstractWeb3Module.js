@@ -37,13 +37,11 @@ export default class AbstractWeb3Module {
     constructor(
         provider = AbstractWeb3Module.throwIfMissing('provider'),
         providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
-        providers = AbstractWeb3Module.throwIfMissing('providers'),
         methodModuleFactory = AbstractWeb3Module.throwIfMissing('MethodModuleFactory'),
         methodFactory = null,
         options = {}
     ) {
         this.providersModuleFactory = providersModuleFactory;
-        this.providers = providers;
         this.providerDetector = providersModuleFactory.createProviderDetector();
         this.providerAdapterResolver = providersModuleFactory.createProviderAdapterResolver();
         this.givenProvider = this.providerDetector.detect();
@@ -58,7 +56,7 @@ export default class AbstractWeb3Module {
         this.defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            return this.providersModuleFactory.createBatchRequest(this.currentProvider);
+            return this.providersModuleFactory.createBatchRequest(this, this.currentProvider);
         };
 
         if (methodFactory !== null || typeof methodFactory !== 'undefined') {
@@ -69,6 +67,27 @@ export default class AbstractWeb3Module {
                 this.methodFactory
             );
         }
+    }
+
+    /**
+     * Returns a object with factory methods for the Web3 providers.
+     *
+     * @property providers
+     *
+     * @returns {Object}
+     */
+    get providers() {
+        return {
+            HttpProvider: (url, options) => {
+                return this.providersModuleFactory.createHttpProvider(url, options);
+            },
+            WebsocketProvider: (url, options) => {
+                return this.providersModuleFactory.createWebsocketProvider(url, options);
+            },
+            IpcProvider: (path, net) => {
+                return this.providersModuleFactory.createIpcProvider(path, net);
+            }
+        };
     }
 
     /**

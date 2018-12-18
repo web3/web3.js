@@ -63,7 +63,6 @@ export default class ContractModuleFactory {
      *
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {PromiEvent} PromiEvent
      * @param {Object} abi
      * @param {String} address
@@ -71,7 +70,7 @@ export default class ContractModuleFactory {
      *
      * @returns {AbstractContract}
      */
-    createContract(provider, providersModuleFactory, providers, PromiEvent, abi, address, options) {
+    createContract(provider, providersModuleFactory, PromiEvent, abi, address, options) {
         return new AbstractContract(
             provider,
             providersModuleFactory,

@@ -27,7 +27,6 @@ export default class Eth extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {EthModuleFactory} ethModuleFactory
      * @param {Network} net
      * @param {Accounts} accounts
@@ -47,7 +46,6 @@ export default class Eth extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         methodFactory,
         ethModuleFactory,
@@ -62,7 +60,7 @@ export default class Eth extends AbstractWeb3Module {
         subscriptionsFactory,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodModuleFactory, methodFactory, options);
+        super(provider, providersModuleFactory, methodModuleFactory, methodFactory, options);
 
         this.ethModuleFactory = ethModuleFactory;
         this.net = net;

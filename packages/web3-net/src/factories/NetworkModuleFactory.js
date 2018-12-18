@@ -42,17 +42,15 @@ export default class NetworkModuleFactory {
      *
      * @param {AbstractProviderAdapter} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
      *
      * @returns {Network}
      */
-    createNetworkModule(provider, providersModuleFactory, providers, methodModuleFactory, options) {
+    createNetworkModule(provider, providersModuleFactory, methodModuleFactory, options) {
         return new Network(
             provider,
             providersModuleFactory,
-            providers,
             methodModuleFactory,
             this.createMethodFactory(methodModuleFactory),
             this.formatters,

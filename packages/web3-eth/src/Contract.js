@@ -26,7 +26,6 @@ export default class Contract extends AbstractContract {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} PromiEvent
@@ -43,7 +42,6 @@ export default class Contract extends AbstractContract {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         contractModuleFactory,
         PromiEvent,
@@ -58,7 +56,6 @@ export default class Contract extends AbstractContract {
         super(
             provider,
             providersModuleFactory,
-            providers,
             methodModuleFactory,
             contractModuleFactory,
             PromiEvent,

@@ -26,7 +26,6 @@ export default class AbstractContract extends AbstractWeb3Module {
     /**
      * @param {AbstractProviderAdapter|EthereumProvider} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {PromiEvent} PromiEvent
@@ -43,7 +42,6 @@ export default class AbstractContract extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         contractModuleFactory,
         PromiEvent,
@@ -55,7 +53,7 @@ export default class AbstractContract extends AbstractWeb3Module {
         address,
         options
     ) {
-        super(provider, providersModuleFactory, providers, methodModuleFactory, null, options);
+        super(provider, providersModuleFactory, methodModuleFactory, null, options);
         this.contractModuleFactory = contractModuleFactory;
         this.abiCoder = abiCoder;
         this.utils = utils;

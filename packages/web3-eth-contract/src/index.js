@@ -25,7 +25,6 @@ import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {MethodModuleFactory} from 'web3-core-method';
 import {PromiEvent} from 'web3-core-promievent';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
 import {Accounts} from 'web3-eth-accounts';
 import ContractModuleFactory from './factories/ContractModuleFactory';
 
@@ -54,7 +53,6 @@ export const Contract = (provider, abi, address, options) => {
     ).createContract(
         provider,
         new ProvidersModuleFactory(),
-        providers,
         PromiEvent,
         abi,
         address,

@@ -23,7 +23,7 @@
 import {MethodModuleFactory} from 'web3-core-method';
 import {formatters} from 'web3-core-helpers';
 import {Network} from 'web3-net';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Accounts} from 'web3-eth-accounts';
 import {Personal} from 'web3-eth-personal';
@@ -52,7 +52,6 @@ export const Eth = (provider, options) => {
     return new EthModuleFactory(
         provider,
         new ProvidersModuleFactory(),
-        providers,
         new MethodModuleFactory(accounts),
         new Accounts(provider, options),
         PromiEvent,

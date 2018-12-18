@@ -23,7 +23,7 @@
 import {AbstractWeb3Module} from 'web3-core';
 import {formatters} from 'web3-core-helpers';
 import {AbstractMethodModelFactory, MethodController} from 'web3-core-method';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {ProvidersModuleFactory, HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
 import {Shh} from 'web3-shh';
@@ -47,7 +47,6 @@ export default class Web3 extends AbstractWeb3Module {
         super(
             provider,
             providersModuleFactory,
-            providers,
             new MethodController(),
             new AbstractMethodModelFactory({}, Utils, formatters),
             options
@@ -228,6 +227,10 @@ export default class Web3 extends AbstractWeb3Module {
      * @returns {Object}
      */
     static get providers() {
-        return providers;
+        return {
+            HttpProvider,
+            WebsocketProvider,
+            IpcProvider
+        };
     }
 }

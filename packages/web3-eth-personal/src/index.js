@@ -22,7 +22,7 @@
 
 import {MethodModuleFactory} from 'web3-core-method';
 import {Network} from 'web3-net';
-import {providers, ProvidersModuleFactory} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import PersonalModuleFactory from './factories/PersonalModuleFactory';
@@ -41,7 +41,6 @@ export const Personal = (provider, options) => {
     return new PersonalModuleFactory(Utils, formatters).createPersonalModule(
         provider,
         new ProvidersModuleFactory(),
-        providers,
         new MethodModuleFactory(),
         new Network(provider, options),
         options
