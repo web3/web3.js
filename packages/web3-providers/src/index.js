@@ -25,13 +25,12 @@ import HttpProvider from './providers/HttpProvider';
 import IpcProvider from './providers/IpcProvider';
 import WebsocketProvider from './providers/WebsocketProvider';
 
-export SocketProviderAdapter from './adapters/SocketProviderAdapter';
-export HttpProviderAdapter from './adapters/HttpProviderAdapter';
 export HttpProvider from './providers/HttpProvider';
 export IpcProvider from './providers/IpcProvider';
 export WebsocketProvider from './providers/WebsocketProvider';
 export ProvidersModuleFactory from './factories/ProvidersModuleFactory';
 
+//TODO: Create factory methods for them to provide the same API.
 export const providers = {
     HttpProvider,
     WebsocketProvider,
@@ -57,9 +56,9 @@ export const BatchRequest = (moduleInstance, provider) => {
  *
  * @method ProviderResolver
  *
- * @returns {ProviderAdapterResolver}
+ * @returns {ProviderResolver}
  */
-export const ProviderAdapterResolver = () => {
+export const ProviderResolver = () => {
     return new ProvidersModuleFactory().createProviderResolver();
 };
 
