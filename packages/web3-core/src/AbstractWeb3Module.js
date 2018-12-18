@@ -25,7 +25,7 @@ import {toChecksumAddress} from 'web3-utils'; // TODO: Maybe this could be remov
 
 export default class AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {EthereumProviderAdapter|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory

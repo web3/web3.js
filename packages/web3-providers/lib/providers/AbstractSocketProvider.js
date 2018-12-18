@@ -22,7 +22,7 @@ import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
-     * @param {WsReconnector} connection
+     * @param {WsReconnector|EthereumProvider} connection
      * @param {Number} timeout
      *
      * @constructor
@@ -88,7 +88,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     sendBatch(methods, moduleInstance) { }
 
     /**
-     * Emits the open event with the event the provider got of the current WebSocket connection.
+     * Emits the open event with the event the provider got of the current socket connection.
      *
      * @method onOpen
      *
@@ -130,14 +130,14 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * This is the listener for the 'message' events of the current WebSocket connection.
+     * This is the listener for the 'message' events of the current socket connection.
      *
      * @method onMessage
      *
-     * @param {MessageEvent} messageEvent
+     * @param {String} response
      */
-    onMessage(messageEvent) {
-        this.parseResponse(messageEvent.data).forEach(result => {
+    onMessage(response) {
+        this.parseResponse(response).forEach(result => {
             let id = null;
             if (isArray(result)) {
                 id = result[0].id;

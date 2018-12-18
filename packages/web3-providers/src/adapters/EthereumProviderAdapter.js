@@ -11,23 +11,23 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import SocketProviderAdapter from './SocketProviderAdapter';
-import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
-
 /**
  * @file EthereumProviderAdapter
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-export default class EthereumProviderAdapter extends SocketProviderAdapter {
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
+
+export default class EthereumProviderAdapter extends AbstractSocketProvider {
     /**
-     * @param {EthereumProvider} provider
+     * @param {EthereumProvider} connection
      *
      * @constructor
      */
-    constructor(provider) {
-        super(provider);
+    constructor(connection) {
+        super(connection, null);
     }
 
     /**
@@ -41,7 +41,7 @@ export default class EthereumProviderAdapter extends SocketProviderAdapter {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.provider.send(method, parameters).then(response => {
+        return this.connection.send(method, parameters).then(response => {
             const validationResult = JsonRpcResponseValidator.validate(response);
             if (validationResult) {
                 return response;
@@ -64,20 +64,39 @@ export default class EthereumProviderAdapter extends SocketProviderAdapter {
 
         method.forEach(method => {
             method.beforeExecution(moduleInstance);
-            methodCalls.push(this.provider.send(method.rpcMethod, method.parameters));
+            methodCalls.push(this.connection.send(method.rpcMethod, method.parameters));
         });
 
         return Promise.all(methodCalls);
     }
 
     /**
-     * Emits an event with the subscription id
+     * Registers all the required listeners.
      *
-     * @method registerSubscriptionListener
+     * @method registerEventListeners
      */
-    registerSubscriptionListener() {
-        this.provider.on('notification', response => {
-            this.emit(response.params.subscription, response.params.result);
+    registerEventListeners() {
+        this.connection.on('notification', this.onMessage);
+        this.connection.on('connect', this.onConnect);
+        this.connection.on('close', this.onClose);
+
+        this.connection.on('networkChanged', networkId => {
+            this.emit('networkChanged', networkId);
         });
+
+        this.connection.on('accountsChanged', accountsChanged => {
+            this.emit('accountsChanged', accountsChanged);
+        }
+    }
+
+    /**
+     * This is the listener for the 'message' events of the current EthereumProvider connection.
+     *
+     * @method onMessage
+     *
+     * @param {Object} response
+     */
+    onMessage(response) {
+        this.emit(response.id, response);
     }
 }

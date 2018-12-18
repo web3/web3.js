@@ -94,6 +94,7 @@ export default class ProvidersModuleFactory {
      */
     createWebsocketProvider(url, options = {}) {
         let connection = '';
+
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
             let authToken;
