@@ -445,6 +445,29 @@ var sha3 = function (value) {
 sha3._Hash = Hash;
 
 
+/**
+ * Gets the r,s,v values from a signature
+ *
+ * @method getSignatureParameters
+ * @param {String} ECDSA signature
+ * @return {Object} with r,s,v values
+ */
+var getSignatureParameters = function(signature) {
+    const r = signature.slice( 0, 66 );
+    const s = `0x${signature.slice( 66, 130 )}`;
+    let v = `0x${signature.slice( 130, 132 )}`;
+    v = this.hexToNumber(v);
+
+    if ( ![ 27, 28 ].includes( v ) ) v += 27;
+
+    return {
+        r,
+        s,
+        v
+    };
+};
+
+
 module.exports = {
     BN: BN,
     isBN: isBN,
@@ -467,5 +490,6 @@ module.exports = {
     leftPad: leftPad,
     rightPad: rightPad,
     toTwosComplement: toTwosComplement,
-    sha3: sha3
+    sha3: sha3,
+    getSignatureParameters: getSignatureParameters
 };

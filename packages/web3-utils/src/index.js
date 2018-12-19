@@ -326,6 +326,7 @@ module.exports = {
     toChecksumAddress: toChecksumAddress,
     toHex: utils.toHex,
     toBN: utils.toBN,
+    getSignatureParameters: utils.getSignatureParameters,
 
     bytesToHex: utils.bytesToHex,
     hexToBytes: utils.hexToBytes,
