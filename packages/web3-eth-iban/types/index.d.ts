@@ -26,18 +26,30 @@ export class Iban {
     )
 
     static toAddress(iban: string): string;
+
     static toIban(address: string): string;
+
     static fromAddress(address: string): Iban;
+
     static fromBban(bban: string): Iban;
+
     static createIndirect(options: IndirectOptions): Iban;
+
     static isValid(iban: string): boolean;
     isValid(): boolean;
+
     isDirect(): boolean;
+
     isIndirect(): boolean;
+
     checksum(): string;
+
     institution(): string;
+
     client(): string;
+
     toAddress(): string;
+
     toString(): string;
 }
 

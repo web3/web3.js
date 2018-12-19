@@ -32,7 +32,7 @@ import PersonalModuleFactory from './factories/PersonalModuleFactory';
  *
  * @method Personal
  *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
  *
  * @returns {Personal}

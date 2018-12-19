@@ -15,7 +15,9 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection
+ * TODO: Overthink the handling of PromiEvent its just wrong to do it over injection.
+ * TODO: Watching transactions with an Observable would solve it.
+ *
  * @file index.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018

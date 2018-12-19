@@ -17,41 +17,59 @@
  * @date 2018
  */
 
- import {AbstractWeb3Module, Web3ModuleOptions, Transaction} from 'web3-core';
- import {AbstractProviderAdapter, provider} from 'web3-providers';
+import {AbstractWeb3Module, Transaction, Web3ModuleOptions} from 'web3-core';
+import {provider} from 'web3-providers';
 
- export class Accounts extends AbstractWeb3Module {
+export class Accounts extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         options?: Web3ModuleOptions
     );
+
     create(entropy?: string): Account;
+
     privateKeyToAccount(privateKey: string): Account;
+
     signTransaction(tx: Transaction, privateKey: string, callback?: () => void): SignedTransaction;
+
     recoverTransaction(signature: string): string;
+
     hashMessage(message: string): string;
+
     sign(data: string, privateKey: string): string | Sign;
+
     recover(message: SignedTransaction): string;
     recover(message: string | SignedTransaction, signature: string, preFixed?: boolean): string;
     recover(message: string, v: string, r: string, s: string, preFixed?: boolean): string;
+
     encrypt(privateKey: string, password: string): EncryptedKeystoreV3Json;
+
     decrypt(keystoreJsonV3: EncryptedKeystoreV3Json, password: string): Account;
+
     wallet: Wallet;
- }
+}
 
- export class Wallet {
+export class Wallet {
     constructor(accounts: Accounts);
-    create(numberOfAccounts: number, entropy?: string): Wallet;
-    add(account: string | Account): AddedAccount;
-    remove(account: string | number): boolean;
-    clear(): Wallet;
-    encrypt(password: string): EncryptedKeystoreV3Json[];
-    decrypt(keystoreArray: EncryptedKeystoreV3Json[], password: string): Wallet;
-    save(password: string, keyName?: string): boolean;
-    load(password: string, keyName?: string): Wallet;
- }
 
- export interface Account {
+    create(numberOfAccounts: number, entropy?: string): Wallet;
+
+    add(account: string | Account): AddedAccount;
+
+    remove(account: string | number): boolean;
+
+    clear(): Wallet;
+
+    encrypt(password: string): EncryptedKeystoreV3Json[];
+
+    decrypt(keystoreArray: EncryptedKeystoreV3Json[], password: string): Wallet;
+
+    save(password: string, keyName?: string): boolean;
+
+    load(password: string, keyName?: string): Wallet;
+}
+
+export interface Account {
     address: string;
     privateKey: string;
     signTransaction?: (tx: Transaction) => {};
@@ -69,7 +87,7 @@ export interface EncryptedKeystoreV3Json {
     address: string,
     crypto: {
         ciphertext: string,
-        cipherparams: { iv: string },
+        cipherparams: {iv: string},
         cipher: string,
         kdf: string,
         kdfparams: {

@@ -24,7 +24,7 @@ import {AbstractContract} from 'web3-eth-contract';
 
 export default class Contract extends AbstractContract {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {ContractModuleFactory} contractModuleFactory

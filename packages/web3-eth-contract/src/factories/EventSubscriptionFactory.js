@@ -26,7 +26,7 @@ import AllEventsLogSubscription from '../subscriptions/AllEventsLogSubscription'
 
 export default class EventSubscriptionFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor

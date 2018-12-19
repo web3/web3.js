@@ -21,6 +21,7 @@
  */
 
 import * as Utils from 'web3-utils';
+import {ProvidersModuleFactory} from 'web3-providers';
 import {formatters} from 'web3-core-helpers';
 import {AbiCoder} from 'web3-eth-abi';
 import {MethodModuleFactory} from 'web3-core-method';
@@ -36,7 +37,7 @@ export ContractModuleFactory from './factories/ContractModuleFactory';
  *
  * @method Contract
  *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} abi
  * @param {String} address
  * @param {Object} options

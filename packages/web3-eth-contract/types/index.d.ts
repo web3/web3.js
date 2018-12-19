@@ -17,23 +17,30 @@
  * @date 2018
  */
 
-import {AbstractProviderAdapter, provider} from 'web3-providers';
+import {provider} from 'web3-providers';
 import {AbiItem, BN} from 'web3-utils';
 
 export class Contract {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         jsonInterface: AbiItem[] | AbiItem,
         address?: string,
         options?: ContractOptions
     )
+
     options: Options;
+
     clone(): Contract;
+
     deploy(options: DeployOptions): DeployTransactionResponse;
+
     methods: any;
+
     once(event: string, callback: (error: Error, event: EventData) => void): void;
     once(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): void;
+
     events: any;
+
     getPastEvents(event: string): Promise<EventData[]>;
     getPastEvents(event: string, options: EventOptions, callback: (error: Error, event: EventData) => void): Promise<EventData[]>;
     getPastEvents(event: string, options: EventOptions): Promise<EventData[]>;
@@ -56,11 +63,17 @@ export interface DeployOptions {
 
 export interface DeployTransactionResponse {
     array: any[];
+
     send(options: SendOptions): () => Promise<Contract>;
+
     estimateGas(options: EstimateGasOptions, callback?: (err: Error, gas: number) => void): void;
+
     estimateGas(callback: (err: Error, gas: number) => void): void;
+
     estimateGas(options: EstimateGasOptions, callback: (err: Error, gas: number) => void): void;
+
     estimateGas(options: EstimateGasOptions): void;
+
     encodeABI(): string;
 }
 

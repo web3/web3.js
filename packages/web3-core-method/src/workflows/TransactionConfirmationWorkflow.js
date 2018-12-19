@@ -37,6 +37,8 @@ export default class TransactionConfirmationWorkflow {
     }
 
     /**
+     * TODO: Remove callback method here and do it with a promise.
+     *
      * Executes the transaction confirmation workflow
      *
      * @method execute
@@ -44,7 +46,7 @@ export default class TransactionConfirmationWorkflow {
      * @param {AbstractMethod} method
      * @param {AbstractWeb3Module} moduleInstance
      * @param {String} transactionHash
-     * @param {Object} promiEvent
+     * @param {PromiEvent} promiEvent
      *
      * @callback callback callback(error, result)
      */

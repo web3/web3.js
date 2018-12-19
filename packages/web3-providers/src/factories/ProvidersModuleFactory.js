@@ -38,7 +38,7 @@ export default class ProvidersModuleFactory {
      * @method createBatchRequest
      *
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {AbstractProviderAdapter} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      *
      * @returns {BatchRequest}
      */

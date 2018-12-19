@@ -29,8 +29,8 @@ This will expose the `Web3Providers` object on the window object.
 - ```socket_close```   -  This event will be fired when the connection get closed.
 - ```socket_error```   -  This event will be fired when an error occurs.
 - ```socket_connect``` -  This event will be fired when the connection is established.
-- ```socket_networkChanged``` -  This event will be fired when the network is changing and does only exist with the EthereumProvider.
-- ```socket_accountsChanged``` -  This event will be fired when the accounts are changing and does only exist with the EthereumProvider.
+- ```socket_networkChanged``` -  This event will be fired when the network is changing and exist only on the EthereumProvider.
+- ```socket_accountsChanged``` -  This event will be fired when the accounts are changing and exist only on the EthereumProvider.
 
 ## Usage examples
 

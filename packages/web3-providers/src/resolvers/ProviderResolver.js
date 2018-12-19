@@ -38,10 +38,10 @@ export default class ProviderResolver {
      *
      * @method resolve
      *
-     * @param {AbstractSocketProvider|EthereumProvider|HttpProvider|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      *
-     * @returns {AbstractSocketProvider|HttpProvider|EthereumProvider|Error}
+     * @returns {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|Error}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {

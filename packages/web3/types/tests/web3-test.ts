@@ -70,22 +70,22 @@ web3.shh.providers;
 // $ExpectType any
 web3.bzz.providers;
 
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
+// $ExpectType string | EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | null
 web3.givenProvider;
-// $ExpectType string | HttpProvider | IpcProvider | WebsocketProvider | null
+// $ExpectType string | EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider | null
 web3.eth.givenProvider;
 // $ExpectType any
 web3.shh.givenProvider;
 // $ExpectType any
 web3.bzz.givenProvider;
 
-// $ExpectType AbstractProviderAdapter
+// $ExpectType EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider
 web3.currentProvider;
-// $ExpectType AbstractProviderAdapter
+// $ExpectType EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider
 web3.eth.currentProvider;
-// $ExpectType any
+// $ExpectType EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider
 web3.shh.currentProvider;
-// $ExpectType any
+// $ExpectType EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider
 web3.bzz.currentProvider;
 
 // $ExpectType BatchRequest

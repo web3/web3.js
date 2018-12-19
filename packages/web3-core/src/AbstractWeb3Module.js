@@ -36,7 +36,7 @@ export default class AbstractWeb3Module {
     constructor(
         provider = AbstractWeb3Module.throwIfMissing('provider'),
         providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
-        methodModuleFactory = AbstractWeb3Module.throwIfMissing('MethodModuleFactory'),
+        methodModuleFactory = null,
         methodFactory = null,
         options = {}
     ) {

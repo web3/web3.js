@@ -46,35 +46,38 @@ export default class EventSubscriptionsProxy extends Proxy {
         allEventsOptionsMapper,
         PromiEvent
     ) {
-        super(contract, {
-            /**
-             * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
-             *
-             * @param {EventSubscriptionsProxy} target
-             * @param {String} name
-             *
-             * @returns {Function|Error}
-             */
-            get: (target, name) => {
-                if (this.abiModel.hasEvent(name)) {
-                    return (options, callback) => {
-                        return target.subscribe(target.abiModel.getEvent(name), options, callback);
-                    };
-                }
+        super(
+            contract,
+            {
+                /**
+                 * Checks if a contract event exists by the given name and returns the subscription otherwise it throws an error
+                 *
+                 * @param {EventSubscriptionsProxy} target
+                 * @param {String} name
+                 *
+                 * @returns {Function|Error}
+                 */
+                get: (target, name) => {
+                    if (this.abiModel.hasEvent(name)) {
+                        return (options, callback) => {
+                            return target.subscribe(target.abiModel.getEvent(name), options, callback);
+                        };
+                    }
 
-                if (name === 'allEvents') {
-                    return (options, callback) => {
-                        return target.subscribeAll(options, callback);
-                    };
-                }
+                    if (name === 'allEvents') {
+                        return (options, callback) => {
+                            return target.subscribeAll(options, callback);
+                        };
+                    }
 
-                if (target[name]) {
-                    return target[name];
-                }
+                    if (target[name]) {
+                        return target[name];
+                    }
 
-                throw new Error(`Event with name "${name}" not found`);
+                    throw new Error(`Event with name "${name}" not found`);
+                }
             }
-        });
+        );
 
         this.contract = contract;
         this.eventSubscriptionFactory = eventSubscriptionFactory;
@@ -93,6 +96,7 @@ export default class EventSubscriptionsProxy extends Proxy {
      * @param {Object} options
      * @param {Function} callback
      *
+     * @callback callback callback(error, result)
      * @returns {Subscription|PromiEvent}
      */
     subscribe(abiItemModel, options, callback) {
@@ -121,6 +125,7 @@ export default class EventSubscriptionsProxy extends Proxy {
      * @param {Object} options
      * @param {Function} callback
      *
+     * @callback callback callback(error, result)
      * @returns {Subscription|PromiEvent}
      */
     subscribeAll(options, callback) {

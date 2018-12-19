@@ -24,7 +24,7 @@ import {AbstractWeb3Module} from 'web3-core';
 
 export default class Shh extends AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory

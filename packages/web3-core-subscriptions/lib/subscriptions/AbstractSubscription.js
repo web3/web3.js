@@ -126,7 +126,7 @@ export default class AbstractSubscription extends EventEmitter {
             response = [response];
         }
 
-        response.forEach((item) => {
+        response.forEach(item => {
             const formattedOutput = this.onNewSubscriptionItem(item);
 
             this.emit('data', formattedOutput);
@@ -160,7 +160,7 @@ export default class AbstractSubscription extends EventEmitter {
                 .then(() => {
                     this.subscribe(callback);
                 })
-                .catch((error) => {
+                .catch(error => {
                     this.emit('error', error);
                 });
         });

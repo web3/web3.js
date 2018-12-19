@@ -26,7 +26,7 @@ import Contract from '../Contract';
 
 export default class EthModuleFactory {
     /**
-     * @param {AbstractProviderAdapter} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Accounts} accounts
@@ -107,7 +107,7 @@ export default class EthModuleFactory {
             this.provider,
             this.providersModuleFactory,
             this.methodModuleFactory,
-            this.createMethodFactory(this.accounts),
+            this.createMethodFactory(),
             this,
             net,
             this.accounts,
@@ -127,11 +127,9 @@ export default class EthModuleFactory {
      *
      * @method createMethodFactory
      *
-     * @param {Accounts} accounts
-     *
      * @returns {MethodFactory}
      */
-    createMethodFactory(accounts) {
-        return new MethodFactory(this.utils, this.formatters, accounts);
+    createMethodFactory() {
+        return new MethodFactory(this.utils, this.formatters, this.accounts);
     }
 }

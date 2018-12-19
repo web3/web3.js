@@ -18,8 +18,17 @@
  */
 
 import * as net from 'net';
-import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions, Providers, Log, Transaction, TransactionReceipt, PromiEvent, RLPEncodedTransaction} from 'web3-core';
+import {BatchRequest, provider} from 'web3-providers';
+import {
+    AbstractWeb3Module,
+    Log,
+    PromiEvent,
+    Providers,
+    RLPEncodedTransaction,
+    Transaction,
+    TransactionReceipt,
+    Web3ModuleOptions
+} from 'web3-core';
 import {Contract, ContractOptions} from 'web3-eth-contract';
 import {Iban} from 'web3-eth-iban';
 import {Accounts} from 'web3-eth-accounts';
@@ -30,9 +39,10 @@ import {AbiItem} from 'web3-utils';
 
 export class Eth extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         options?: Web3ModuleOptions
     );
+
     Contract: new (jsonInterface: AbiItem[] | AbiItem, address?: string, options?: ContractOptions) => Contract;
     Iban: new(iban: string) => Iban;
     personal: Personal;
@@ -40,69 +50,100 @@ export class Eth extends AbstractWeb3Module {
     ens: any; // change once ens types as written
     abi: AbiCoder;
     net: Network;
-    clearSubscriptions(): boolean
+
+    clearSubscriptions(): Promise<boolean | Error>
+
     subscribe(type: 'logs', options?: Logs): Promise<Subscribe<Log>>;
     subscribe(type: 'logs', callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>
     subscribe(type: 'logs', options?: Logs, callback?: (error: Error, result: Subscribe<Log>) => void): Promise<Subscribe<Log>>;
     subscribe(type: 'syncing', callback?: (error: Error, result: Subscribe<any>) => void): Promise<Subscribe<any>>
     subscribe(type: 'newBlockHeaders', callback?: (error: Error, result: Subscribe<BlockHeader>) => void): Promise<Subscribe<BlockHeader>>
     subscribe(type: 'pendingTransactions', callback?: (error: Error, result: Subscribe<Transaction>) => void): Promise<Subscribe<Transaction>>
-    setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
+
+    setProvider(provider: provider, net?: net.Server): boolean;
+
     readonly providers: Providers;
     readonly givenProvider: provider | null;
     BatchRequest: new () => BatchRequest;
+
     getProtocolVersion(callback?: (error: Error, protocolVersion: string) => void): Promise<string>;
+
     isSyncing(callback?: (error: Error, syncing: Syncing) => void): Promise<Syncing | boolean>;
+
     getCoinbase(callback?: (error: Error, coinbaseAddress: string) => void): Promise<string>;
+
     isMining(callback?: (error: Error, mining: boolean) => void): Promise<boolean>;
+
     getHashrate(callback?: (error: Error, hashes: number) => void): Promise<number>;
+
     getGasPrice(callback?: (error: Error, gasPrice: string) => void): Promise<string>;
+
     getAccounts(callback?: (error: Error, accounts: string[]) => void): Promise<string[]>;
+
     getBlockNumber(callback?: (error: Error, blockNumber: number) => void): Promise<number>;
+
     getBalance(address: string): Promise<string>;
     getBalance(address: string, defaultBlock: string | number): Promise<string>;
     getBalance(address: string, callback?: (error: Error, balance: string) => void): Promise<string>;
     getBalance(address: string, defaultBlock: string | number, callback?: (error: Error, balance: string) => void): Promise<string>;
+
     getStorageAt(address: string, position: number): Promise<string>;
     getStorageAt(address: string, position: number, defaultBlock: number | string): Promise<string>;
     getStorageAt(address: string, position: number, callback?: (error: Error, storageAt: string) => void): Promise<string>;
     getStorageAt(address: string, position: number, defaultBlock: number | string, callback?: (error: Error, storageAt: string) => void): Promise<string>;
+
     getCode(address: string): Promise<string>;
     getCode(address: string, defaultBlock: string | number): Promise<string>;
     getCode(address: string, callback?: (error: Error, code: string) => void): Promise<string>;
     getCode(address: string, defaultBlock: string | number, callback?: (error: Error, code: string) => void): Promise<string>;
+
     getBlock(blockHashOrBlockNumber: string | number): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, callback?: (error: Error, block: Block) => void): Promise<Block>;
     getBlock(blockHashOrBlockNumber: string | number, returnTransactionObjects: boolean, callback?: (error: Error, block: Block) => void): Promise<Block>;
+
     getBlockTransactionCount(blockHashOrBlockNumber: string | number, callback?: (error: Error, numberOfTransactions: number) => void): Promise<number>;
+
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number): Promise<Block>
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean): Promise<Block>
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, callback?: (error: Error, uncle: {}) => void): Promise<Block>
     getUncle(blockHashOrBlockNumber: string | number, uncleIndex: number, returnTransactionObjects: boolean, callback?: (error: Error, uncle: {}) => void): Promise<Block>
+
     getTransaction(transactionHash: string, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+
     getTransactionFromBlock(hashStringOrNumber: string | number, indexNumber: number, callback?: (error: Error, transaction: Transaction) => void): Promise<Transaction>;
+
     getTransactionReceipt(hash: string, callback?: (error: Error, transactionReceipt: TransactionReceipt) => void): Promise<TransactionReceipt>;
+
     getTransactionCount(address: string): Promise<number>;
     getTransactionCount(address: string, defaultBlock: number | string): Promise<number>;
     getTransactionCount(address: string, callback?: (error: Error, count: number) => void): Promise<number>;
     getTransactionCount(address: string, defaultBlock: number | string, callback?: (error: Error, count: number) => void): Promise<number>;
+
     sendTransaction(transaction: Transaction, callback?: (error: Error, hash: string) => void): PromiEvent<TransactionReceipt>;
+
     sendSignedTransaction(signedTransactionData: string, callback?: (error: Error, gas: string) => void): PromiEvent<TransactionReceipt>
+
     sign(dataToSign: string, address: string | number, callback?: (error: Error, signature: string) => void): Promise<string>;
+
     // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, callback?: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
     // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, address: string): Promise<RLPEncodedTransaction>;
     // TODO - WRITE CORRECT TYPES ONCE INVESTIGATE WHY web3.accounts.signTransaction RETURNS A DIFFERENT OBJECT
     signTransaction(transaction: Transaction, address: string, callback: (error: Error, signedTransaction: RLPEncodedTransaction) => void): Promise<RLPEncodedTransaction>;
+
     call(transaction: Transaction): Promise<string>;
     call(transaction: Transaction, defaultBlock?: number | string): Promise<string>;
     call(transaction: Transaction, callback?: (error: Error, data: string) => void): Promise<string>;
     call(transaction: Transaction, defaultBlock: number | string, callback: (error: Error, data: string) => void): Promise<string>;
+
     estimateGas(transaction: Transaction, callback?: (error: Error, gas: number) => void): Promise<number>;
+
     getPastLogs(options: PastLogsOptions, callback?: (error: Error, logs: Log[]) => void): Promise<Log[]>;
+
     getWork(callback?: (error: Error, result: string[]) => void): Promise<string[]>;
+
     submitWork(data: [string, string, string], callback?: (error: Error, result: boolean) => void): Promise<boolean>;
 }
 
@@ -172,7 +213,10 @@ export interface Subscribe<T> {
         unsubscribe(callback?: (error: Error, result: boolean) => void): void | boolean
         options: {}
     }
+
     on(type: 'data', handler: (data: T) => void): void
+
     on(type: 'changed', handler: (data: T) => void): void
+
     on(type: 'error', handler: (data: Error) => void): void
 }

@@ -40,7 +40,7 @@ export default class NetworkModuleFactory {
      *
      * @method createNetworkModule
      *
-     * @param {AbstractProviderAdapter} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options

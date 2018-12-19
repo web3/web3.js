@@ -22,7 +22,7 @@
 
 export default class MethodOptionsValidator {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      *
      * @constructor
      */

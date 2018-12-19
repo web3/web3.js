@@ -25,7 +25,7 @@ import Contract from './Contract';
 
 export default class Eth extends AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {EthModuleFactory} ethModuleFactory
      * @param {Network} net

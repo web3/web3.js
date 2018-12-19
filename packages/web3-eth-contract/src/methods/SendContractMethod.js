@@ -25,17 +25,26 @@ import {SendTransactionMethod} from 'web3-core-method';
 
 export default class SendContractMethod extends SendTransactionMethod {
     /**
-     * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {Accounts} accounts
+     * @param {TransactionSigner} transactionSigner
      * @param {AllEventsLogDecoder} allEventsLogDecoder
      * @param {AbiItem} abiItem
      *
      * @constructor
      */
-    constructor(sendTransactionMethodCommand, utils, formatters, accounts, allEventsLogDecoder, abiItem) {
-        super(sendTransactionMethodCommand, utils, formatters, accounts);
+    constructor(
+        utils,
+        formatters,
+        transactionConfirmationWorkflow,
+        accounts,
+        transactionSigner,
+        allEventsLogDecoder,
+        abiItem
+    ) {
+        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
         this.abiItem = abiItem;
         this.allEventsLogDecoder = allEventsLogDecoder;
     }
@@ -53,7 +62,7 @@ export default class SendContractMethod extends SendTransactionMethod {
         if (isArray(response.logs)) {
             response.events = {};
 
-            response.logs.map((log) => {
+            response.logs.map(log => {
                 return this.allEventsLogDecoder.decode(null, log);
             });
 

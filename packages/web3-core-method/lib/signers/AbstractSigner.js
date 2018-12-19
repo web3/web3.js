@@ -31,6 +31,8 @@ export default class AbstractSigner {
     /**
      * Get wallet for address with accounts package
      *
+     * @method getWallet
+     *
      * @param {String} from
      *
      * @returns {Account}

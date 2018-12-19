@@ -18,7 +18,6 @@
  */
 
 import EventEmitter from 'eventemitter3';
-import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**

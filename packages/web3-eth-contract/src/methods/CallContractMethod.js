@@ -24,15 +24,14 @@ import {CallMethod} from 'web3-core-method';
 
 export default class CallContractMethod extends CallMethod {
     /**
-     * @param {CallMethodCommand} callMethodCommand
      * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiItem} abiItem
      *
      * @constructor
      */
-    constructor(callMethodCommand, utils, formatters, abiItem) {
-        super(callMethodCommand, utils, formatters);
+    constructor(utils, formatters, abiItem) {
+        super(utils, formatters);
         this.abiItem = abiItem;
     }
 

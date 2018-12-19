@@ -63,7 +63,7 @@ export default class JsonRpcResponseValidator {
             }
 
             if (payload && response.id !== payload.id) {
-                return new Error(`Invalid JSON-RPC response ID: request: ${payload.id}/ response: ${response.id}`)
+                return new Error(`Invalid JSON-RPC response ID: request: ${payload.id} / response: ${response.id}`)
             }
 
             if (typeof response.id !== 'number' || typeof response.id !== 'string') {

@@ -24,16 +24,17 @@ import {SendTransactionMethod} from 'web3-core-method';
 
 export default class ContractDeployMethod extends SendTransactionMethod {
     /**
-     * @param {SendTransactionMethodCommand} sendTransactionMethodCommand
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {TransactionConfirmationWorkflow} transactionConfirmationWorkflow
      * @param {Accounts} accounts
+     * @param {TransactionSigner} transactionSigner
      * @param {AbstractContract} contract
      *
      * @constructor
      */
-    constructor(sendTransactionMethodCommand, utils, formatters, accounts, contract) {
-        super(command, utils, formatters, accounts);
+    constructor(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner, contract) {
+        super(utils, formatters, transactionConfirmationWorkflow, accounts, transactionSigner);
 
         this.contract = contract;
     }

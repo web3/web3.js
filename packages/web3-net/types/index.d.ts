@@ -17,16 +17,20 @@
  * @date 2018
  */
 
-import {AbstractProviderAdapter, provider} from 'web3-providers';
-import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core'
+import {provider} from 'web3-providers';
+import {AbstractWeb3Module, Web3ModuleOptions} from 'web3-core';
 
 export class Network extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         options?: Web3ModuleOptions
     );
+
     getNetworkType(callback?: (error: Error, returnValue: string) => void): Promise<string>;
+
     getId(callback?: (error: Error, id: number) => void): Promise<number>;
+
     isListening(callback?: (error: Error, listening: boolean) => void): Promise<boolean>;
+
     getPeerCount(callback?: (error: Error, peerCount: number) => void): Promise<number>;
 }
