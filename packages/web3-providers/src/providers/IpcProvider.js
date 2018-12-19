@@ -23,6 +23,7 @@
 import oboe from 'oboe';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
@@ -47,7 +48,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         if (this.connection.constructor.name === 'Socket') {
             oboe(this.connection).done(this.onMessage);
         } else {
-            this.connection.addListener('data', message =>  {
+            this.connection.addListener('data', message => {
                 this.onMessage(message.toString());
             });
         }
@@ -66,7 +67,26 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @param {String} event
      */
     removeAllListeners(event) {
-        this.connection.removeAllListeners(event);
+        if (event) {
+            switch (event) {
+                case 'ipc_message':
+                    this.connection.removeEventListener('data', this.onMessage);
+                    break;
+                case 'ipc_ready':
+                    this.connection.removeEventListener('ready', this.onOpen);
+                    break;
+                case 'ipc_close':
+                    this.connection.removeEventListener('close', this.onClose);
+                    break;
+                case 'ipc_error':
+                    this.connection.removeEventListener('error', this.onError);
+                    break;
+                case 'ipc_connect':
+                    this.connection.removeEventListener('connect', this.onConnect);
+                    break;
+            }
+        }
+
         super.removeAllListeners(event);
     }
 
@@ -110,7 +130,16 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.semdPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
 
     /**
@@ -131,7 +160,7 @@ export default class IpcProvider extends AbstractSocketProvider {
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
 
-        return this.semdPayload(payload);
+        return this.sendPayload(payload);
     }
 
     /**
@@ -143,7 +172,7 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @returns {Promise<any>}
      */
-    semdPayload(payload) {
+    sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.pending) {
                 reject(new Error('Connection error: The socket is still trying to connect'));

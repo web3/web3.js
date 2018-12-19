@@ -41,7 +41,7 @@ export default class ProviderResolver {
      * @param {AbstractSocketProvider|EthereumProvider|HttpProvider|String} provider
      * @param {Net} net
      *
-     * @returns {AbstractSocketProvider|HttpProvider|EthereumProviderAdapter|Error}
+     * @returns {AbstractSocketProvider|HttpProvider|EthereumProvider|Error}
      */
     resolve(provider, net) {
         if (typeof provider === 'string') {
@@ -63,7 +63,7 @@ export default class ProviderResolver {
         if (provider.constructor) {
             switch (provider.constructor.name) {
                 case 'EthereumProvider':
-                    return this.providersModuleFactory.createEthereumProviderAdapter(provider);
+                    return this.providersModuleFactory.createEthereumProvider(provider);
                 case 'HttpProvider':
                 case 'WebsocketProvider':
                 case 'IpcProvider':

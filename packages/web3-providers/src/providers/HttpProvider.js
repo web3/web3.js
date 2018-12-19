@@ -28,6 +28,7 @@ import {XMLHttpRequest} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class HttpProvider {
     /**
@@ -110,8 +111,18 @@ export default class HttpProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
+
 
     /**
      * Sends batch payload
@@ -154,7 +165,7 @@ export default class HttpProvider {
 
                 if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
                     try {
-                        resolve(JSON.parse(request.responseText));
+                        return resolve(JSON.parse(request.responseText));
                     } catch (error) {
                         reject(new Error(`Invalid JSON as response: ${request.responseText}`));
                     }

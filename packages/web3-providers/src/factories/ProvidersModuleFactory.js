@@ -29,7 +29,7 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import EthereumProviderAdapter from '../adapters/EthereumProviderAdapter';
+import EthereumProvider from '../providers/EthereumProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -123,8 +123,6 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * TODO: Create factory methods for the external API to have the same interface.
-     *
      * Returns an IpcProvider object
      *
      * @method createIpcProvider
@@ -139,15 +137,15 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an EthereumProviderAdapter object
+     * Returns an EthereumProvider object
      *
-     * @method createEthereumProviderAdapter
+     * @method createEthereumProvider
      *
-     * @param {EthereumProvider} provider
+     * @param {EthereumProvider} connection
      *
-     * @returns {EthereumProviderAdapter}
+     * @returns {EthereumProvider}
      */
-    createEthereumProviderAdapter(provider) {
-        return new EthereumProviderAdapter(provider);
+    createEthereumProvider(connection) {
+        return new EthereumProvider(provider);
     }
 }

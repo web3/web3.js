@@ -43,6 +43,23 @@ export default class AbstractSocketProvider extends EventEmitter {
     registerEventListeners() { }
 
     /**
+     * Removes all listeners on the EventEmitter and the socket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        if (!event) {
+            this.connection.removeAllListeners();
+
+            return;
+        }
+
+        super.removeAllListeners(event);
+    }
+
+    /**
      * Will close the socket connection with a error code and reason.
      * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
      * for further information.
@@ -117,7 +134,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onClose() {
         this.emit('close');
-        this.removeAllListeners();
+        this.removeAllListeners('close');
     }
 
     /**

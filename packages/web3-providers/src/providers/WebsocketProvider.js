@@ -22,6 +22,7 @@
 
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
@@ -115,7 +116,16 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
 
     /**
