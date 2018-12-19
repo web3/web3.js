@@ -44,26 +44,25 @@ export default class AbiMapper {
      * @returns {AbiModel}
      */
     map(abi) {
-        const self = this;
         const mappedAbiItems = {
             methods: {},
             events: {}
         };
 
-        abi.forEach((abiItem) => {
-            abiItem.constant = self.isConstant(abiItem);
-            abiItem.payable = self.isPayable(abiItem);
+        abi.forEach(abiItem => {
+            abiItem.constant = this.isConstant(abiItem);
+            abiItem.payable = this.isPayable(abiItem);
 
             if (abiItem.name) {
-                abiItem.funcName = self.utils.jsonInterfaceMethodToString(abiItem);
+                abiItem.funcName = this.utils.jsonInterfaceMethodToString(abiItem);
             }
 
             let abiItemModel;
 
             if (abiItem.type === 'function') {
-                abiItem.signature = self.abiCoder.encodeFunctionSignature(abiItem.funcName);
+                abiItem.signature = this.abiCoder.encodeFunctionSignature(abiItem.funcName);
 
-                abiItemModel = self.contractPackageFactory.createAbiItemModel(abiItem);
+                abiItemModel = this.contractPackageFactory.createAbiItemModel(abiItem);
 
                 // Check if an method already exists with this name and if it exists than create an array and push this abiItem
                 // into it. This will be used if there are methods with the same name but with different arguments.
@@ -84,9 +83,9 @@ export default class AbiMapper {
             }
 
             if (abiItem.type === 'event') {
-                abiItem.signature = self.abiCoder.encodeEventSignature(abiItem.funcName);
+                abiItem.signature = this.abiCoder.encodeEventSignature(abiItem.funcName);
 
-                abiItem = self.contractPackageFactory.createAbiItemModel(event);
+                abiItem = this.contractPackageFactory.createAbiItemModel(event);
 
                 if (!mappedAbiItems.events[abiItem.name] || mappedAbiItems.events[abiItem.name].name === 'bound ') {
                     mappedAbiItems.events[abiItem.name] = abiItemModel;
@@ -98,7 +97,7 @@ export default class AbiMapper {
 
             if (abiItem.type === 'constructor') {
                 abiItem.signature = abiItem.type;
-                mappedAbiItems.methods['contractConstructor'] = self.contractPackageFactory.createAbiItemModel(abiItem);
+                mappedAbiItems.methods['contractConstructor'] = this.contractPackageFactory.createAbiItemModel(abiItem);
             }
         });
 
