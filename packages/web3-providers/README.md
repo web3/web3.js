@@ -22,6 +22,16 @@ Then include `dist/web3-providers.js` in your html file.
 This will expose the `Web3Providers` object on the window object.
 
 
+## Events of the socket providers
+
+- ```socket_message``` -  This event will be fired on each message of the socket.
+- ```socket_ready```   -  This event will be fired when the socket is ready.
+- ```socket_close```   -  This event will be fired when the connection get closed.
+- ```socket_error```   -  This event will be fired when an error occurs.
+- ```socket_connect``` -  This event will be fired when the connection is established.
+- ```socket_networkChanged``` -  This event will be fired when the network is changing and does only exist with the EthereumProvider.
+- ```socket_accountsChanged``` -  This event will be fired when the accounts are changing and does only exist with the EthereumProvider.
+
 ## Usage examples
 
 #### HttpProvider
@@ -36,7 +46,7 @@ const options = {
         {
             name: 'Access-Control-Allow-Origin', value: '*'
         },
-        {...}
+        ...
     ]
 };
 
@@ -86,17 +96,16 @@ batchRequest.add(web3.eth.getBalance.request(
     callback
 ));
 
-batchRequest.execute();
+await batchRequest.execute();
 ```
 
 #### ProviderDetector
 Checks if an provider is given from the environment (Mist, metamask) and returns the provider.
 
 ```js
-import {ProvidersModuleFactory} 'web3-providers;
+import {ProvidersModuleFactory} from 'web3-providers;
 
 const providerDetector = new ProvidersModuleFactory.createProviderDetector();
-
 const givenProvider = providerDetector.detect();
 ```
 
