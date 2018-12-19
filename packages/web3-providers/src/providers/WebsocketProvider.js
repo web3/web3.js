@@ -46,7 +46,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             this.onMessage(messageEvent.data);
         });
 
-        this.connection.addEventListener('open', this.onOpen);
+        this.connection.addEventListener('open', this.onReady);
         this.connection.addEventListener('close', this.onClose);
         this.connection.addEventListener('error', this.onError);
         this.connection.addEventListener('connect', this.onConnect);

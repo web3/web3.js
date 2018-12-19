@@ -174,6 +174,7 @@ export default class HttpProvider {
 
             request.ontimeout = () => {
                 this.connected = false;
+
                 reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
             };
 
