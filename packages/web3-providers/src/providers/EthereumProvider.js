@@ -39,14 +39,8 @@ export default class EthereumProvider extends AbstractSocketProvider {
         this.connection.on('notification', this.onMessage);
         this.connection.on('connect', this.onConnect);
         this.connection.on('close', this.onClose);
-
-        this.connection.on('networkChanged', networkId => {
-            this.emit('networkChanged', networkId);
-        });
-
-        this.connection.on('accountsChanged', accountsChanged => {
-            this.emit('accountsChanged', accountsChanged);
-        };
+        this.connection.on('networkChanged', this.onNetworkChanged);
+        this.connection.on('accountsChanged', this.onAccountsChanged);
     }
 
     /**
@@ -58,17 +52,23 @@ export default class EthereumProvider extends AbstractSocketProvider {
      */
     removeAllListeners(event) {
         switch (event) {
+            case 'socket_networkChanged':
+                this.connection.removeListener('networkChanged', this.onNetworkChanged);
+                break;
+            case 'socket_accountsChanged':
+                this.connection.removeListener('accountsChanged', this.onAccountsChanged);
+                break;
             case 'socket_message':
-                this.connection.removeListener('data', this.onMessage);
+                this.connection.removeListener('notification', this.onMessage);
                 break;
             case 'socket_ready':
-                this.connection.removeListener('ready', this.onReady);
+                this.connection.removeListener('connect', this.onReady);
                 break;
             case 'socket_close':
                 this.connection.removeListener('close', this.onClose);
                 break;
             case 'socket_error':
-                this.connection.removeListener('error', this.onError);
+                this.connection.removeListener('close', this.onError);
                 break;
             case 'socket_connect':
                 this.connection.removeListener('connect', this.onConnect);
@@ -76,6 +76,24 @@ export default class EthereumProvider extends AbstractSocketProvider {
         }
 
         super.removeAllListeners(event);
+    }
+
+    /**
+     * This is the listener for the networkChanged event of the EthereumProvider.
+     *
+     * @param {Number} networkId
+     */
+    onNetworkChanged(networkId) {
+        this.emit('networkChanged', networkId);
+    }
+
+    /**
+     * This is the listener for the accountsChanged event of the EthereumProvider.
+     *
+     * @param {Array} accounts
+     */
+    onAccountsChanged(accounts) {
+        this.emit('accountsChanged', accounts);
     }
 
     /**
