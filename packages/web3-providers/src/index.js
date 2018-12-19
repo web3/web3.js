@@ -98,7 +98,7 @@ export const ProviderResolver = () => {
  *
  * @method detect
  *
- * @returns {Object}
+ * @returns {ProviderDetector}
  *
  * @constructor
  */

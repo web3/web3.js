@@ -118,7 +118,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -141,7 +141,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
@@ -162,7 +162,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Sends the JSON-RPC payload to the node.
      *
      * @method send
      *

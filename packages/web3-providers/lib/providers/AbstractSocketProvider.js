@@ -78,7 +78,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     get connected() { }
 
     /**
-     * Sends the JSON-RPC request
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -90,7 +90,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     send(method, parameters) { }
 
     /**
-     * Sends a batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
