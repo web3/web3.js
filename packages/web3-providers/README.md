@@ -54,6 +54,7 @@ const httpProvider = new HttpProvider('http://localhost:8545', options);
 ```
 
 #### WebsocketProvider
+
 Instead of setting a authorization header you could also define the credentials over the URL with:
 ```ws://username:password@localhost:8546```
 
@@ -78,7 +79,7 @@ const ipcProvider = new IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
 ```
 
 #### BatchRequest
-The BatchRequest provides the possibility to send RPC requests as batch.
+The BatchRequest provides the possibility to send JSON-RPC requests as batch.
 Please read the [documentation][docs] for more.
 
 ```js 
@@ -100,18 +101,18 @@ await batchRequest.execute();
 ```
 
 #### ProviderDetector
-Checks if an provider is given from the environment (Mist, metamask) and returns the provider.
+Checks if an provider is given from the environment (Mist, MetaMask) and returns the provider.
 
 ```js
-import {ProvidersModuleFactory} from 'web3-providers;
+import {ProvidersModuleFactory} from 'web3-providers';
 
 const providerDetector = new ProvidersModuleFactory.createProviderDetector();
 const givenProvider = providerDetector.detect();
 ```
 
 #### ProviderResolver
-The ProviderResolver resolves an url or an given provider object to the correct adapter. 
-This way we use internally in web3 just one provider interface and we have no direct dependency to third parties providers.
+The ProviderResolver resolves an url or an given provider object to the correct provider class. 
+Because of the resolves does web3 has internally just one provider interface and we have no direct dependency to third party providers.
 
 ```js 
 import {ProvidersModuleFactory} 'web3-providers;
