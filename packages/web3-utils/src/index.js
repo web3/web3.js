@@ -278,3 +278,4 @@ export const toAscii = hexToAscii;
 export const fromAscii = asciiToHex;
 export const padLeft = utils.leftPad;
 export const padRight = utils.rightPad;
+export const getSignatureParameters = utils.getSignatureParameters;
