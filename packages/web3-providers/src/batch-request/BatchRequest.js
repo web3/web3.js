@@ -75,8 +75,8 @@ export default class BatchRequest {
                         return;
                     }
 
-                    const responseItem = response[index] || null;
-                    const validationResult = JsonRpcResponseValidator.validate(responseItem);
+                    const responseItem = response[index] || null,
+                          validationResult = JsonRpcResponseValidator.validate(responseItem);
 
                     if (validationResult) {
                         try {

@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file IpcProvider.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -40,6 +40,42 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
+     * Will close the socket connection.
+     *
+     * @method disconnect
+     */
+    disconnect() {
+        this.connection.destroy();
+    }
+
+    /**
+     * Returns true if the socket connection state is OPEN
+     *
+     * @property connected
+     *
+     * @returns {Boolean}
+     */
+    get connected() {
+        return !this.connection.pending;
+    }
+
+    /**
+     * Try to reconnect
+     *
+     * @method reconnect
+     */
+    reconnect() {
+        this.connection.connect({path: this.path});
+    }
+
+    /**
+     * @param {String|Buffer} message
+     */
+    onMessage(message) {
+        super.onMessage(message.toString());
+    }
+
+    /**
      * Registers all the required listeners.
      *
      * @method registerEventListeners
@@ -48,9 +84,7 @@ export default class IpcProvider extends AbstractSocketProvider {
         if (this.connection.constructor.name === 'Socket') {
             oboe(this.connection).done(this.onMessage);
         } else {
-            this.connection.addListener('data', message => {
-                this.onMessage(message.toString());
-            });
+            this.connection.addListener('data', this.onMessage);
         }
 
         this.connection.addListener('connect', this.onConnect);
@@ -86,35 +120,6 @@ export default class IpcProvider extends AbstractSocketProvider {
         }
 
         super.removeAllListeners(event);
-    }
-
-    /**
-     * Will close the socket connection.
-     *
-     * @method disconnect
-     */
-    disconnect() {
-        this.connection.destroy();
-    }
-
-    /**
-     * Returns true if the socket connection state is OPEN
-     *
-     * @property connected
-     *
-     * @returns {Boolean}
-     */
-    get connected() {
-        return !this.connection.pending;
-    }
-
-    /**
-     * Try to reconnect
-     *
-     * @method reconnect
-     */
-    reconnect() {
-        this.connection.connect({path: this.path});
     }
 
     /**

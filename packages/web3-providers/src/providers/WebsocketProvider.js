@@ -37,15 +37,23 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
+     * This is the listener for the 'message' events of the current socket connection.
+     *
+     * @method onMessage
+     *
+     * @param {MessageEvent} messageEvent
+     */
+    onMessage(messageEvent) {
+        super.onMessage(messageEvent.data);
+    }
+
+    /**
      * Registers all the required listeners.
      *
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.addEventListener('message', messageEvent => {
-            this.onMessage(messageEvent.data);
-        });
-
+        this.connection.addEventListener('message', this.onMessage);
         this.connection.addEventListener('open', this.onReady);
         this.connection.addEventListener('close', this.onClose);
         this.connection.addEventListener('error', this.onError);
