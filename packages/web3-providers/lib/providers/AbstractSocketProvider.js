@@ -122,7 +122,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onError(error) {
         this.emit('error', error);
-        this.removeAllListeners('socket_error');
+        this.removeAllListeners();
     }
 
     /**
@@ -132,7 +132,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onClose() {
         this.emit('close');
-        this.removeAllListeners('socket_close');
+        this.removeAllListeners();
     }
 
     /**

@@ -57,24 +57,22 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @param {String} event
      */
     removeAllListeners(event) {
-        if (event) {
-            switch (event) {
-                case 'socket_message':
-                    this.connection.removeListener('data', this.onMessage);
-                    break;
-                case 'socket_ready':
-                    this.connection.removeListener('ready', this.onReady);
-                    break;
-                case 'socket_close':
-                    this.connection.removeListener('close', this.onClose);
-                    break;
-                case 'socket_error':
-                    this.connection.removeListener('error', this.onError);
-                    break;
-                case 'socket_connect':
-                    this.connection.removeListener('connect', this.onConnect);
-                    break;
-            }
+        switch (event) {
+            case 'socket_message':
+                this.connection.removeListener('data', this.onMessage);
+                break;
+            case 'socket_ready':
+                this.connection.removeListener('ready', this.onReady);
+                break;
+            case 'socket_close':
+                this.connection.removeListener('close', this.onClose);
+                break;
+            case 'socket_error':
+                this.connection.removeListener('error', this.onError);
+                break;
+            case 'socket_connect':
+                this.connection.removeListener('connect', this.onConnect);
+                break;
         }
 
         super.removeAllListeners(event);

@@ -60,24 +60,22 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {String} event
      */
     removeAllListeners(event) {
-        if (event) {
-            switch (event) {
-                case 'socket_message':
-                    this.connection.removeEventListener('message', this.onMessage);
-                    break;
-                case 'socket_ready':
-                    this.connection.removeEventListener('open', this.onReady);
-                    break;
-                case 'socket_close':
-                    this.connection.removeEventListener('close', this.onClose);
-                    break;
-                case 'socket_error':
-                    this.connection.removeEventListener('error', this.onError);
-                    break;
-                case 'socket_connect':
-                    this.connection.removeEventListener('connect', this.onConnect);
-                    break;
-            }
+        switch (event) {
+            case 'socket_message':
+                this.connection.removeEventListener('message', this.onMessage);
+                break;
+            case 'socket_ready':
+                this.connection.removeEventListener('open', this.onReady);
+                break;
+            case 'socket_close':
+                this.connection.removeEventListener('close', this.onClose);
+                break;
+            case 'socket_error':
+                this.connection.removeEventListener('error', this.onError);
+                break;
+            case 'socket_connect':
+                this.connection.removeEventListener('connect', this.onConnect);
+                break;
         }
 
         super.removeAllListeners(event);
