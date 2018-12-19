@@ -103,14 +103,14 @@ export default class AbstractSocketProvider extends EventEmitter {
     sendBatch(methods, moduleInstance) { }
 
     /**
-     * Emits the open event when the connection is established
+     * Emits the ready event when the connection is established
      *
-     * @method onOpen
+     * @method onReady
      *
      * @param {Event} event
      */
     onReady(event) {
-        this.emit('open', event);
+        this.emit('ready', event);
     }
 
     /**
