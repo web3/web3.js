@@ -18,14 +18,14 @@
     "dependencies": {
         "eventemitter3": "3.1.0",
         "oboe": "2.1.4",
-        "underscore-es": "^1.9.8",
+        "underscore-es": "1.9.8",
         "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
-        "xhr2-cookies": "1.1.0"
+        "xhr2-cookies": "1.1.0",
+        "websocket-reconnector": "1.1.1",
+        "url-parse": "1.4.4"
     },
     "devDependencies": {
-        "dtslint": "^0.3.0",
-        "url-parse": "^1.4.4",
-        "websocket-reconnector": "^1.1.1"
+        "dtslint": "^0.3.0"
     },
     "files": [
         "dist",
