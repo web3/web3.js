@@ -175,13 +175,13 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 }
 
                 this.on(payload.id, response => {
-                    this.removeAllListeners(payload.id);
-
                     if (timeout) {
                         clearTimeout(timeout);
                     }
 
-                    return resolve(response);
+                    resolve(response);
+
+                    this.removeAllListeners(payload.id);
                 });
 
 

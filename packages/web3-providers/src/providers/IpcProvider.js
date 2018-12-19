@@ -192,9 +192,9 @@ export default class IpcProvider extends AbstractSocketProvider {
                 }
 
                 this.on(id, response => {
-                    this.removeAllListeners(id);
+                    resolve(response);
 
-                    return resolve(response);
+                    this.removeAllListeners(id);
                 });
 
                 return;
