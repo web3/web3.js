@@ -62,7 +62,7 @@ web3.eth.getAccounts()
 
 We do support types within the repo itself. Please open an issue here if you find any wrong types.
 
-You can then use `web3.js` as follows:
+You can use `web3.js` as follows:
 
 ```typescript
 import Web3 from 'web3';
