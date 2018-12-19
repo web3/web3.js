@@ -59,19 +59,19 @@ export default class EthereumProvider extends AbstractSocketProvider {
     removeAllListeners(event) {
         if (event) {
             switch (event) {
-                case 'eth_message':
+                case 'socket_message':
                     this.connection.removeListener('data', this.onMessage);
                     break;
-                case 'eth_ready':
-                    this.connection.removeListener('ready', this.onOpen);
+                case 'socket_ready':
+                    this.connection.removeListener('ready', this.onReady);
                     break;
-                case 'eth_close':
+                case 'socket_close':
                     this.connection.removeListener('close', this.onClose);
                     break;
-                case 'eth_error':
+                case 'socket_error':
                     this.connection.removeListener('error', this.onError);
                     break;
-                case 'eth_connect':
+                case 'socket_connect':
                     this.connection.removeListener('connect', this.onConnect);
                     break;
             }

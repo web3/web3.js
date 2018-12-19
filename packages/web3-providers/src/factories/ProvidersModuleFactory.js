@@ -146,6 +146,6 @@ export default class ProvidersModuleFactory {
      * @returns {EthereumProvider}
      */
     createEthereumProvider(connection) {
-        return new EthereumProvider(provider);
+        return new EthereumProvider(connection);
     }
 }

@@ -62,19 +62,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     removeAllListeners(event) {
         if (event) {
             switch (event) {
-                case 'ws_message':
+                case 'socket_message':
                     this.connection.removeEventListener('message', this.onMessage);
                     break;
-                case 'ws_open':
-                    this.connection.removeEventListener('open', this.onOpen);
+                case 'socket_ready':
+                    this.connection.removeEventListener('open', this.onReady);
                     break;
-                case 'ws_close':
+                case 'socket_close':
                     this.connection.removeEventListener('close', this.onClose);
                     break;
-                case 'ws_error':
+                case 'socket_error':
                     this.connection.removeEventListener('error', this.onError);
                     break;
-                case 'ws_connect':
+                case 'socket_connect':
                     this.connection.removeEventListener('connect', this.onConnect);
                     break;
             }

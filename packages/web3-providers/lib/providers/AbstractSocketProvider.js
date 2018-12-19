@@ -52,8 +52,6 @@ export default class AbstractSocketProvider extends EventEmitter {
     removeAllListeners(event) {
         if (!event) {
             this.connection.removeAllListeners();
-
-            return;
         }
 
         super.removeAllListeners(event);
@@ -72,7 +70,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     disconnect(code, reason) { }
 
     /**
-     * Returns true if the socket connection state is OPEN
+     * Returns true if the socket is connected
      *
      * @property connected
      *
@@ -93,7 +91,7 @@ export default class AbstractSocketProvider extends EventEmitter {
     send(method, parameters) { }
 
     /**
-     * Sends batch payload
+     * Sends a batch payload
      *
      * @method sendBatch
      *
@@ -105,13 +103,13 @@ export default class AbstractSocketProvider extends EventEmitter {
     sendBatch(methods, moduleInstance) { }
 
     /**
-     * Emits the open event with the event the provider got of the current socket connection.
+     * Emits the open event when the connection is established
      *
      * @method onOpen
      *
      * @param {Event} event
      */
-    onOpen(event) {
+    onReady(event) {
         this.emit('open', event);
     }
 
@@ -124,7 +122,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onError(error) {
         this.emit('error', error);
-        this.removeAllListeners();
+        this.removeAllListeners('socket_error');
     }
 
     /**
@@ -134,7 +132,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onClose() {
         this.emit('close');
-        this.removeAllListeners('close');
+        this.removeAllListeners('socket_close');
     }
 
     /**
