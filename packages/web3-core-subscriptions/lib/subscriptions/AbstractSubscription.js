@@ -91,18 +91,8 @@ export default class AbstractSubscription extends EventEmitter {
 
                 this.moduleInstance.currentProvider.on(
                     this.id,
-                    (error, response) => {
-                        if (!error) {
-                            this.handleSubscriptionResponse(response, callback);
-
-                            return;
-                        }
-
-                        if (isFunction(callback)) {
-                            callback(error, null);
-                        }
-
-                        this.emit('error', error);
+                    response => {
+                        this.handleSubscriptionResponse(response.result, callback);
                     }
                 );
             });
@@ -116,16 +106,12 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @method handleSubscriptionResponse
      *
-     * @param {*} response
+     * @param {Array} response
      * @param {Function} callback
      *
      * @callback callback callback(error, result)
      */
     handleSubscriptionResponse(response, callback) {
-        if (!isArray(response)) {
-            response = [response];
-        }
-
         response.forEach(item => {
             const formattedOutput = this.onNewSubscriptionItem(item);
 
@@ -152,7 +138,6 @@ export default class AbstractSubscription extends EventEmitter {
             .unsubscribe(this.id, this.type)
             .then(response => {
                 this.removeAllListeners('data');
-                this.removeAllListeners('error');
 
                 if (!response) {
                     this.id = null;

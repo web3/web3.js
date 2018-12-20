@@ -174,6 +174,7 @@ export default class AbstractSocketProvider extends EventEmitter {
                 event = result[0].id;
             } else if (typeof result.id === 'undefined') {
                 event = this.getSubscriptionEvent(result.params.subscription);
+                result = result.params;
             } else {
                 event = result.id;
             }
@@ -188,6 +189,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @method parseResponse
      *
      * @param {String} data
+     *
+     * @returns {Array}
      */
     parseResponse(data) {
         let result = null,
