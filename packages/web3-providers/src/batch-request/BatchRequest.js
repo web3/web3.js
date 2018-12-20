@@ -64,7 +64,7 @@ export default class BatchRequest {
                 this.methods.forEach((method, index) => {
                     if (!isArray(response)) {
                         method.callback(
-                            new Error(`Response should be of type Array but is: ${typeof response}`),
+                            new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
                             null
                         );
 
