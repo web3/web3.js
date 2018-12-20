@@ -29,6 +29,7 @@ import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
+import {XMLHttpRequest} from 'xhr2-cookies/dist/index';
 
 export default class ProvidersModuleFactory {
     /**
@@ -78,7 +79,37 @@ export default class ProvidersModuleFactory {
      * @returns {HttpProvider}
      */
     createHttpProvider(url, options = {}) {
-        return new HttpProvider(url, options);
+        return new HttpProvider(url, options, this);
+    }
+
+    /**
+     * Returns a XMLHttpRequest object
+     *
+     * @method createXMLHttpRequest
+     *
+     * @param {String} host
+     * @param {Number} timeout
+     * @param {Array} headers
+     * @param {Object} agent
+     *
+     * @returns {XMLHttpRequest}
+     */
+    createXMLHttpRequest(host, timeout, headers, agent) {
+        const request = new XMLHttpRequest();
+        request.nodejsSet(agent);
+
+        request.open('POST', host, true);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.timeout = timeout || 0;
+        request.withCredentials = true;
+
+        if (headers) {
+            headers.forEach(header => {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
+
+        return request;
     }
 
     /**

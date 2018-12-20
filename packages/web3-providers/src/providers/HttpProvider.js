@@ -24,9 +24,6 @@
  * @date 2015
  */
 
-import {XMLHttpRequest} from 'xhr2-cookies';
-import http from 'http';
-import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
@@ -34,21 +31,23 @@ export default class HttpProvider {
     /**
      * @param {String} host
      * @param {Object} options
+     * @param {ProvidersModuleFactory} providersModuleFactory
      *
      * @constructor
      */
-    constructor(host, options = {}) {
+    constructor(host, options = {}, providersModuleFactory) {
         this.host = host || 'http://localhost:8545';
-
-        if (this.host.substring(0, 5) === 'https') {
-            this.httpsAgent = new https.Agent({keepAlive: true});
-        } else {
-            this.httpAgent = new http.Agent({keepAlive: true});
-        }
-
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
         this.connected = false;
+        this.providersModuleFactory = providersModuleFactory;
+        this.agent = {};
+
+        if (host.substring(0, 5) === 'https') {
+            this.agent['httpsAgent'] = new https.Agent({keepAlive: true});
+        } else {
+            this.agent['httpAgent'] = new http.Agent({keepAlive: true});
+        }
     }
 
     /**
@@ -70,34 +69,6 @@ export default class HttpProvider {
      */
     disconnect() {
         return true;
-    }
-
-    /**
-     * Prepares the HTTP request
-     *
-     * @method prepareRequest
-     *
-     * @returns {XMLHttpRequest}
-     */
-    prepareRequest() {
-        const request = new XMLHttpRequest();
-        request.nodejsSet({
-            httpsAgent: this.httpsAgent,
-            httpAgent: this.httpAgent
-        });
-
-        request.open('POST', this.host, true);
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.timeout = this.timeout || 0;
-        request.withCredentials = true;
-
-        if (this.headers) {
-            this.headers.forEach((header) => {
-                request.setRequestHeader(header.name, header.value);
-            });
-        }
-
-        return request;
     }
 
     /**
@@ -156,7 +127,12 @@ export default class HttpProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            const request = this.prepareRequest();
+            const request = this.providersModuleFacotry.createXMLHttpRequest(
+                this.host,
+                this.timeout,
+                this.headers,
+                this.agent
+            );
 
             request.onreadystatechange = () => {
                 if (request.readyState !== 0 && request.readyState !== 1) {
