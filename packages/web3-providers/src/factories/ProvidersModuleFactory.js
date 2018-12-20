@@ -20,6 +20,7 @@
  * @date 2018
  */
 
+import {XMLHttpRequest} from 'xhr2-cookies';
 import {w3cwebsocket}from 'websocket';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';

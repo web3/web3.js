@@ -16,14 +16,12 @@
 */
 /**
  * @file HttpProvider.js
- * @authors:
- *   Samuel Furter <samuel@ethereum.org>
- *   Marek Kotewicz <marek@parity.io>
- *   Marian Oancea
- *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2015
+ * @authors: Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
+import http from 'http';
+import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
