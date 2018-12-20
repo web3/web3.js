@@ -99,7 +99,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 ];
             }
 
-            this.connection = new this.constructor(...constructorArgs);
+            this.connection = new this.connection.constructor(...constructorArgs);
             this.registerEventListeners();
         }, 5000);
     }
