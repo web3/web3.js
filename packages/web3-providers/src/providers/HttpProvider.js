@@ -35,8 +35,8 @@ export default class HttpProvider {
      *
      * @constructor
      */
-    constructor(host, options = {}, providersModuleFactory) {
-        this.host = host || 'http://localhost:8545';
+    constructor(host = 'http://localhost:8545', options = {}, providersModuleFactory) {
+        this.host = host;
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
         this.connected = false;
@@ -93,7 +93,6 @@ export default class HttpProvider {
                 return response;
             });
     }
-
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
