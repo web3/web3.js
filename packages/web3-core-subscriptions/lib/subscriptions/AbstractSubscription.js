@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
 import isFunction from 'underscore-es/isFunction';
 import EventEmitter from 'eventemitter3';
 
@@ -56,7 +55,8 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) {}
+    beforeSubscription(moduleInstance) {
+    }
 
     /**
      * This method will be executed on each new subscription item.
@@ -92,35 +92,18 @@ export default class AbstractSubscription extends EventEmitter {
                 this.moduleInstance.currentProvider.on(
                     this.id,
                     response => {
-                        this.handleSubscriptionResponse(response.result, callback);
+                            const formattedOutput = this.onNewSubscriptionItem(response.result);
+
+                            this.emit('data', formattedOutput);
+
+                            if (isFunction(callback)) {
+                                callback(false, formattedOutput);
+                            }
                     }
                 );
             });
 
         return this;
-    }
-
-    /**
-     * Iterates over each item in the response, formats the output, emits required events and
-     * executes the callback method.
-     *
-     * @method handleSubscriptionResponse
-     *
-     * @param {Array} response
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    handleSubscriptionResponse(response, callback) {
-        response.forEach(item => {
-            const formattedOutput = this.onNewSubscriptionItem(item);
-
-            this.emit('data', formattedOutput);
-
-            if (isFunction(callback)) {
-                callback(false, formattedOutput);
-            }
-        });
     }
 
     /**
