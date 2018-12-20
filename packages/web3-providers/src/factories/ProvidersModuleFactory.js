@@ -22,6 +22,7 @@
 
 import {XMLHttpRequest} from 'xhr2-cookies';
 import {w3cwebsocket}from 'websocket';
+import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
@@ -30,7 +31,6 @@ import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
 import EthereumProvider from '../providers/EthereumProvider';
-import {XMLHttpRequest} from 'xhr2-cookies/dist/index';
 
 export default class ProvidersModuleFactory {
     /**
@@ -95,7 +95,7 @@ export default class ProvidersModuleFactory {
      * @returns {XMLHttpRequest}
      */
     createXMLHttpRequest(host, timeout = 0, headers, agent) {
-        const request = new XMLHttpRequest();
+        const request = new XHR();
         request.nodejsSet(agent);
 
         request.open('POST', host, true);
@@ -127,11 +127,10 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken;
-            const headers = options.headers || {},
-                  protocol = options.protocol,
-                  clientConfig = options.clientConfig,
-                  urlObject = new URL(url);
+            let authToken,
+                headers = options.headers || {};
+
+            const urlObject = new URL(url);
 
             if (urlObject.username && urlObject.password) {
                 authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
@@ -139,11 +138,11 @@ export default class ProvidersModuleFactory {
             }
 
             if (urlObject.auth) {
-                authToken = Buffer.from(parsedURL.auth, 'base64');
+                authToken = Buffer.from(urlObject.auth, 'base64');
             }
 
             headers.authorization = authToken;
-            connection = new w3cwebsocket(url, protocol, null, headers, null, clientConfig);
+            connection = new w3cwebsocket(url, options.protocol, null, headers, null, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }
