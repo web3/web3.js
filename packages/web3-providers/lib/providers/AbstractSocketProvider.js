@@ -171,16 +171,16 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onMessage(response) {
         this.parseResponse(response).forEach(result => {
-            let id = null;
+            let event = null;
             if (isArray(result)) {
-                id = result[0].id;
+                event = result[0].id;
             } else if (result.method && result.method.indexOf('_subscription') !== -1) {
-                id = this.getSubscriptionEvent(result.params.subscription);
+                event = this.getSubscriptionEvent(result.params.subscription);
             } else {
-                id = result.id;
+                event = result.id;
             }
 
-            this.emit(id, result);
+            this.emit(event, result);
         });
     }
 

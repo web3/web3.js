@@ -138,35 +138,6 @@ export default class AbstractSubscription extends EventEmitter {
     }
 
     /**
-     * TODO: The reconnecting handling should only be in the provider the subscription should not care about it.
-     * Reconnects provider and restarts subscription
-     *
-     * @method reconnect
-     *
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    reconnect(callback) {
-        const interval = setInterval(() => {
-            if (this.moduleInstance.currentProvider.reconnect) {
-                this.moduleInstance.currentProvider.reconnect();
-            }
-        }, 1000);
-
-        this.moduleInstance.currentProvider.once('connect', () => {
-            clearInterval(interval);
-            this.unsubscribe(callback)
-                .then(() => {
-                    this.subscribe(callback);
-                })
-                .catch(error => {
-                    this.emit('error', error);
-                });
-        });
-    }
-
-    /**
      * Unsubscribes subscription
      *
      * @method unsubscribe
