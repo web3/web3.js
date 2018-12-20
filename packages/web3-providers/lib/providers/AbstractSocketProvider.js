@@ -157,7 +157,7 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 delete this.subscriptions[subscriptionId];
 
-                this.subscriptions[this.getSubscriptionKey(subscription.id)].id = subscriptionId;
+                this.subscriptions[this.getSubscriptionEvent(subscription.id)].id = subscriptionId;
             }
 
             this.emit('connect');
@@ -178,7 +178,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             if (isArray(result)) {
                 id = result[0].id;
             } else if (result.method && result.method.indexOf('_subscription') !== -1) {
-                id = this.getSubscriptionKey(result.params.subscription);
+                id = this.getSubscriptionEvent(result.params.subscription);
             } else {
                 id = result.id;
             }
@@ -291,7 +291,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             return this.send(unsubscribeMethod, [subscriptionId])
                 .then(response => {
                     if (response) {
-                        this.removeAllListeners(this.getSubscriptionKey(subscriptionId));
+                        this.removeAllListeners(this.getSubscriptionEvent(subscriptionId));
 
                         delete this.subscriptions[subscriptionId];
                     }
@@ -329,8 +329,6 @@ export default class AbstractSocketProvider extends EventEmitter {
 
             return true;
         });
-
-        return Promise.resolve(true);
     }
 
     /**
@@ -347,26 +345,26 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Get the subscription by his id.
+     * Returns the event the subscription is listening for.
      *
-     * @method getSubscription
+     * @method getSubscriptionEvent
      *
      * @param {Number} subscriptionId
      *
      * @returns {String}
      */
-    getSubscriptionKey(subscriptionId) {
+    getSubscriptionEvent(subscriptionId) {
         if (this.subscriptions[subscriptionId]) {
             return subscriptionId;
         }
 
-        let subscriptionKey;
+        let event;
         this.subscriptions.keys(key => {
             if(this.subscriptions[key].id === subscriptionId) {
-                subscriptionKey = key;
+                event = key;
             }
         });
 
-        return subscriptionKey;
+        return event;
     }
 }
