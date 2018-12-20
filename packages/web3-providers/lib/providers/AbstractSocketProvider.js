@@ -348,7 +348,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method getSubscriptionEvent
      *
-     * @param {Number} subscriptionId
+     * @param {String} subscriptionId
      *
      * @returns {String}
      */
