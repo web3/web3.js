@@ -21,7 +21,7 @@
  */
 
 import {XMLHttpRequest} from 'xhr2-cookies';
-import {w3cwebsocket}from 'websocket';
+import {w3cwebsocket as W3CWebsocket} from 'websocket';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
@@ -142,7 +142,7 @@ export default class ProvidersModuleFactory {
             }
 
             headers.authorization = authToken;
-            connection = new w3cwebsocket(url, options.protocol, null, headers, null, options.clientConfig);
+            connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }

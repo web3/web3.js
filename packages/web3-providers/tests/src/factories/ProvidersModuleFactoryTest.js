@@ -11,7 +11,7 @@ import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import IpcProvider from '../../../src/providers/IpcProvider';
 import EthereumProvider from '../../../src/providers/EthereumProvider';
 import {XMLHttpRequest as XHR} from 'xhr2-cookies';
-import {w3cwebsocket}from 'websocket';
+import {w3cwebsocket as W3CWebsocket} from 'websocket';
 
 // Mocks
 jest.mock('../../../src/batch-request/BatchRequest');
@@ -90,7 +90,7 @@ describe('ProvidersModuleFactoryTest', () => {
             )
         ).toBeInstanceOf(WebsocketProvider);
 
-        expect(w3cwebsocket)
+        expect(W3CWebsocket)
             .toHaveBeenCalledWith(
                 'ws://username:password@hallo:5544',
                 'string',
