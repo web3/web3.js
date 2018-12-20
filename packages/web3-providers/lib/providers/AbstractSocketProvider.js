@@ -159,9 +159,9 @@ export default class AbstractSocketProvider extends EventEmitter {
 
                 this.subscriptions[this.getSubscriptionEvent(subscription.id)].id = subscriptionId;
             }
-
-            this.emit('connect');
         }
+
+        this.emit('connect');
     }
 
     /**
