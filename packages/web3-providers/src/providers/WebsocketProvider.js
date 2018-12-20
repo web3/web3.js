@@ -54,6 +54,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     onError(error) {
         if (error.code === 'ECONNREFUSED') {
             this.reconnect();
+
+            return;
         }
 
         super.onError(error);
@@ -69,6 +71,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     onClose(error) {
         if (event.code !== 1000) {
             this.reconnect();
+
+            return;
         }
 
         super.onClose();
