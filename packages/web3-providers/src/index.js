@@ -70,14 +70,13 @@ export const IpcProvider = (path, net) => {
  * @method BatchRequest
  *
  * @param {AbstractWeb3Module} moduleInstance
- * @param {AbstractProviderAdapter|EthereumProvider} provider
  *
  * @returns {BatchRequest}
  *
  * @constructor
  */
-export const BatchRequest = (moduleInstance, provider) => {
-    return new ProvidersModuleFactory().createBatchRequest(moduleInstance, provider);
+export const BatchRequest = (moduleInstance) => {
+    return new ProvidersModuleFactory().createBatchRequest(moduleInstance);
 };
 
 /**

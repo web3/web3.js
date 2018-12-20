@@ -1,25 +1,25 @@
 import BatchRequest from '../../../src/batch-request/BatchRequest';
 import JsonRpcMapper from '../../../src/mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../../../src/validators/JsonRpcResponseValidator';
-import SocketProviderAdapter from '../../../src/adapters/SocketProviderAdapter';
+import WebsocketProvider from '../../../src/providers/WebsocketProvider';
 import AbstractMethod from '../../__mocks__/AbstractMethod';
 
 // Mocks
-jest.mock('../../../src/adapters/SocketProviderAdapter');
+jest.mock('../../../src/providers/WebsocketProvider');
 
 /**
  * BatchRequest test
  */
 describe('BatchRequestTest', () => {
     let batchRequest,
-        providerAdapter,
-        providerAdapterMock,
+        provider,
+        providerMock,
         abstractMethodMock,
         batchPayload;
 
     beforeEach(() => {
-        providerAdapter = new SocketProviderAdapter({});
-        providerAdapterMock = SocketProviderAdapter.mock.instances[0];
+        provider = new WebsocketProvider({}, 0);
+        providerMock = WebsocketProvider.mock.instances[0];
 
         abstractMethodMock = new AbstractMethod();
         abstractMethodMock.rpcMethod = 'rpc_method';
@@ -34,7 +34,7 @@ describe('BatchRequestTest', () => {
             params: [true]
         }];
 
-        batchRequest = new BatchRequest(providerAdapterMock);
+        batchRequest = new BatchRequest(moduleInstanceMock, providerMock);
     });
 
     it('calls add with a invalid parameter', () => {
@@ -61,11 +61,11 @@ describe('BatchRequestTest', () => {
            return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((methods) => {
             expect(payload)
                 .toEqual(batchPayload);
 
-            callback(false, [{result: true}]);
+            return Promise.resolve([{result: true}]);
         });
 
         abstractMethodMock.afterExecution
@@ -101,7 +101,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 
@@ -124,7 +124,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 
@@ -150,7 +150,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 
@@ -182,7 +182,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 
@@ -215,7 +215,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 
@@ -255,7 +255,7 @@ describe('BatchRequestTest', () => {
             return batchPayload;
         });
 
-        providerAdapterMock.sendBatch = jest.fn((payload, callback) => {
+        providerMock.sendBatch = jest.fn((payload, callback) => {
             expect(payload)
                 .toEqual(batchPayload);
 

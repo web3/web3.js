@@ -27,13 +27,11 @@ import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 export default class BatchRequest {
     /**
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider} provider
      *
      * @constructor
      */
-    constructor(moduleInstance, provider) {
+    constructor(moduleInstance) {
         this.moduleInstance = moduleInstance;
-        this.provider = provider;
         this.methods = [];
     }
 
@@ -60,7 +58,7 @@ export default class BatchRequest {
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
     execute() {
-        return this.provider.sendBatch(this.methods, this.moduleInstance)
+        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance)
             .then(response => {
                 let errors = [];
                 this.methods.forEach((method, index) => {

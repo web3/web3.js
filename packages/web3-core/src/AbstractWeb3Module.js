@@ -55,7 +55,7 @@ export default class AbstractWeb3Module {
         this.defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            return this.providersModuleFactory.createBatchRequest(this, this.currentProvider);
+            return this.providersModuleFactory.createBatchRequest(this);
         };
 
         if (methodFactory !== null || typeof methodFactory !== 'undefined') {
