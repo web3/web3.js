@@ -21,7 +21,7 @@ import EventEmitter from 'eventemitter3';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
-     * @param {WsReconnector|EthereumProvider} connection
+     * @param {WebSocket|Socket|EthereumProvider} connection
      * @param {Number} timeout
      *
      * @constructor
@@ -144,9 +144,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     async onConnect() {
         if (this.subscriptions.length > 0) {
-            let subscription,
-                reSubscriptions = [],
-                subscriptionId;
+            let subscriptionId;
 
             for (let subscription of this.subscriptions) {
                 subscriptionId = await this.subscribe(
@@ -162,7 +160,6 @@ export default class AbstractSocketProvider extends EventEmitter {
 
             this.emit('connect');
         }
-
     }
 
     /**

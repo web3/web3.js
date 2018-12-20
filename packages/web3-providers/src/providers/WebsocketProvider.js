@@ -78,31 +78,29 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * Removes the listeners and reconnect to the socket.
      */
     reconnect() {
-        this.connection.removeAllListeners();
-
-        let constructorArgs = [];
-
-        if (this.connection.constructor.name === 'W3CWebSocket') {
-            constructorArgs = [
-                this.connection.url,
-                this.connection._client.protocol,
-                null,
-                this.connection._client.headers,
-                this.connection._client.requestOptions,
-                this.connection._client.config
-            ]
-        } else {
-            constructorArgs = [
-                this.connection.url,
-                this.connection.protocol
-            ]
-        }
-
-        this.connection = new this.constructor(...constructorArgs);
-        this.registerEventListeners();
-
         setTimeout(() => {
-            this.reconnect();
+            this.connection.removeAllListeners();
+
+            let constructorArgs = [];
+
+            if (this.connection.constructor.name === 'W3CWebSocket') {
+                constructorArgs = [
+                    this.connection.url,
+                    this.connection._client.protocol,
+                    null,
+                    this.connection._client.headers,
+                    this.connection._client.requestOptions,
+                    this.connection._client.config
+                ];
+            } else {
+                constructorArgs = [
+                    this.connection.url,
+                    this.connection.protocol
+                ];
+            }
+
+            this.connection = new this.constructor(...constructorArgs);
+            this.registerEventListeners();
         }, 5000);
     }
 
