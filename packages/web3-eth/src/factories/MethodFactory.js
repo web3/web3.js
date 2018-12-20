@@ -49,7 +49,8 @@ import {
     EstimateGasMethod,
     SubmitWorkMethod,
     GetWorkMethod,
-    GetPastLogsMethod
+    GetPastLogsMethod,
+    RequestAccountsMethod
 } from 'web3-core-method';
 
 export default class MethodFactory extends AbstractMethodFactory {
@@ -91,7 +92,8 @@ export default class MethodFactory extends AbstractMethodFactory {
                 estimateGas: EstimateGasMethod,
                 submitWork: SubmitWorkMethod,
                 getWork: GetWorkMethod,
-                getPastLogs: GetPastLogsMethod
+                getPastLogs: GetPastLogsMethod,
+                requestAccounts: RequestAccountsMethod,
             },
             methodModuleFactory,
             utils,

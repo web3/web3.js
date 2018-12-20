@@ -64,6 +64,7 @@ export GetWorkMethod from './methods/node/GetWorkMethod';
 export GetAccountsMethod from './methods/account/GetAccountsMethod';
 export GetBalanceMethod from './methods/account/GetBalanceMethod';
 export GetTransactionCountMethod from './methods/account/GetTransactionCountMethod';
+export RequestAccountsMethod from './methods/account/RequestAccountsMethod';
 
 // Block
 export GetBlockNumberMethod from './methods/block/GetBlockNumberMethod';
