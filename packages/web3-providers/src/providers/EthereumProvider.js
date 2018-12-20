@@ -79,7 +79,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
     }
 
     /**
-     * This is the listener for the networkChanged event of the EthereumProvider.
+     * This is the listener for the 'networkChanged' event of the EthereumProvider.
      *
      * @param {Number} networkId
      */
@@ -88,7 +88,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
     }
 
     /**
-     * This is the listener for the accountsChanged event of the EthereumProvider.
+     * This is the listener for the 'accountsChanged' event of the EthereumProvider.
      *
      * @param {Array} accounts
      */
@@ -104,7 +104,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
      * @param {Object} response
      */
     onMessage(response) {
-        this.emit(response.id, response);
+        this.emit(this.getSubscriptionEvent(response.subscription), response);
     }
 
     /**

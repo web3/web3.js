@@ -39,8 +39,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() {
-    }
+    registerEventListeners() { }
 
     /**
      * Removes all listeners on the EventEmitter and the socket object.
@@ -65,8 +64,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) {
-    }
+    disconnect(code, reason) { }
 
     /**
      * Returns true if the socket is connected
@@ -75,8 +73,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() {
-    }
+    get connected() { }
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
@@ -88,8 +85,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) {
-    }
+    send(method, parameters) { }
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
@@ -101,8 +97,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) {
-    }
+    sendBatch(methods, moduleInstance) { }
 
     /**
      * Emits the ready event when the connection is established
@@ -173,10 +168,11 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onMessage(response) {
         this.parseResponse(response).forEach(result => {
-            let event = null;
+            let event;
+
             if (isArray(result)) {
                 event = result[0].id;
-            } else if (result.method && result.method.indexOf('_subscription') !== -1) {
+            } else if (typeof result.id === 'undefined') {
                 event = this.getSubscriptionEvent(result.params.subscription);
             } else {
                 event = result.id;
