@@ -30,7 +30,7 @@ export default class AbstractSocketProvider extends EventEmitter {
         super();
         this.connection = connection;
         this.timeout = timeout;
-        this.subscriptions = [];
+        this.subscriptions = {};
         this.registerEventListeners();
     }
 
@@ -39,7 +39,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() { }
+    registerEventListeners() {
+    }
 
     /**
      * Removes all listeners on the EventEmitter and the socket object.
@@ -57,16 +58,15 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Will close the socket connection with a error code and reason.
-     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
-     * for further information.
+     * Closes the socket connection.
      *
      * @method disconnect
      *
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) { }
+    disconnect(code, reason) {
+    }
 
     /**
      * Returns true if the socket is connected
@@ -75,7 +75,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Boolean}
      */
-    get connected() { }
+    get connected() {
+    }
 
     /**
      * Creates the JSON-RPC payload and sends it to the node.
@@ -87,7 +88,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) { }
+    send(method, parameters) {
+    }
 
     /**
      * Creates the JSON-RPC batch payload and sends it to the node.
@@ -99,7 +101,8 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) { }
+    sendBatch(methods, moduleInstance) {
+    }
 
     /**
      * Emits the ready event when the connection is established
@@ -135,12 +138,31 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Emits the connect event.
+     * Emits the connect event and checks if there are subscriptions defined that should be resubscribed.
      *
      * @method onConnect
      */
-    onConnect() {
-        this.emit('connect');
+    async onConnect() {
+        if (this.subscriptions.length > 0) {
+            let subscription,
+                reSubscriptions = [],
+                subscriptionId;
+
+            for (let subscription of this.subscriptions) {
+                subscriptionId = await this.subscribe(
+                    subscripton.subscribeMethod,
+                    subscripton.parameters[0],
+                    subscripton.parameters.slice(1)
+                );
+
+                delete this.subscriptions[subscriptionId];
+
+                this.subscriptions[this.getSubscriptionKey(subscription.id)].id = subscriptionId;
+            }
+
+            this.emit('connect');
+        }
+
     }
 
     /**
@@ -156,8 +178,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             if (isArray(result)) {
                 id = result[0].id;
             } else if (result.method && result.method.indexOf('_subscription') !== -1) {
-                id = result.params.subscription;
-                result = result.params.result;
+                id = this.getSubscriptionKey(result.params.subscription);
             } else {
                 id = result.id;
             }
@@ -243,7 +264,11 @@ export default class AbstractSocketProvider extends EventEmitter {
 
         return this.send(subscribeMethod, parameters)
             .then(subscriptionId => {
-                this.subscriptions.push(subscriptionId);
+                this.subscriptions[subscriptionId] = {
+                    id: subscriptionId,
+                    subscribeMethod: subscribeMethod,
+                    parameters: parameters
+                };
 
                 return subscriptionId;
             }).catch(error => {
@@ -262,15 +287,20 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Promise<Boolean|Error>}
      */
     unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
-        return this.send(unsubscribeMethod, [subscriptionId])
-            .then(response => {
-                if (response) {
-                    this.removeAllListeners(subscriptionId);
-                    delete this.subscriptions[this.subscriptions.indexOf(subscriptionId)];
-                }
+        if (this.hasSubscription(subscriptionId)) {
+            return this.send(unsubscribeMethod, [subscriptionId])
+                .then(response => {
+                    if (response) {
+                        this.removeAllListeners(this.getSubscriptionKey(subscriptionId));
 
-                return response;
-            });
+                        delete this.subscriptions[subscriptionId];
+                    }
+
+                    return response;
+                });
+        }
+
+        return Promise.reject(new Error(`Provider error: Subscription with ID ${subscriptionId} does not exist.`));
     }
 
     /**
@@ -285,8 +315,9 @@ export default class AbstractSocketProvider extends EventEmitter {
     clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
         let unsubscribePromises = [];
 
-        this.subscriptions.forEach(subscriptionId => {
-            unsubscribePromises.push(this.unsubscribe(subscriptionId, unsubscribeMethod));
+        this.subscriptions.keys().forEach(key => {
+            super.removeAllListeners(key);
+            unsubscribePromises.push(this.unsubscribe(this.subscriptions[key].id, unsubscribeMethod));
         });
 
         return Promise.all(unsubscribePromises).then(results => {
@@ -298,6 +329,8 @@ export default class AbstractSocketProvider extends EventEmitter {
 
             return true;
         });
+
+        return Promise.resolve(true);
     }
 
     /**
@@ -310,6 +343,30 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Boolean}
      */
     hasSubscription(subscriptionId) {
-        return this.subscriptions.indexOf(subscriptionId) > -1;
+        return typeof this.getSubscription(subscriptionId) !== 'undefined';
+    }
+
+    /**
+     * Get the subscription by his id.
+     *
+     * @method getSubscription
+     *
+     * @param {Number} subscriptionId
+     *
+     * @returns {String}
+     */
+    getSubscriptionKey(subscriptionId) {
+        if (this.subscriptions[subscriptionId]) {
+            return subscriptionId;
+        }
+
+        let subscriptionKey;
+        this.subscriptions.keys(key => {
+            if(this.subscriptions[key].id === subscriptionId) {
+                subscriptionKey = key;
+            }
+        });
+
+        return subscriptionKey;
     }
 }

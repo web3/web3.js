@@ -21,7 +21,6 @@
         "underscore-es": "1.9.8",
         "websocket": "git://github.com/frozeman/WebSocket-Node.git#browserifyCompatible",
         "xhr2-cookies": "1.1.0",
-        "websocket-reconnector": "1.1.1",
         "url-parse": "1.4.4"
     },
     "devDependencies": {

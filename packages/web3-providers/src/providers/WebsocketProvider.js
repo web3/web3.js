@@ -26,7 +26,7 @@ import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
-     * @param {WsReconnector} connection
+     * @param {WebSocket} connection
      * @param {Number} timeout
      *
      * @constructor
@@ -45,6 +45,79 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     onMessage(messageEvent) {
         super.onMessage(messageEvent.data);
+    }
+
+    /**
+     * This is the listener for the 'error' event of the current socket connection.
+     * @param error
+     */
+    onError(error) {
+        if (error.code === 'ECONNREFUSED') {
+            this.reconnect();
+        }
+
+        super.onError(error);
+    }
+
+    /**
+     * This ist the listener for the 'close' event of the current socket connection.
+     *
+     * @method onClose
+     *
+     * @param error
+     */
+    onClose(error) {
+        if (event.code !== 1000) {
+            this.reconnect();
+        }
+
+        super.onClose();
+    }
+
+    /**
+     * Removes the listeners and reconnect to the socket.
+     */
+    reconnect() {
+        this.connection.removeAllListeners();
+
+        let constructorArgs = [];
+
+        if (this.connection.constructor.name === 'W3CWebSocket') {
+            constructorArgs = [
+                this.connection.url,
+                this.connection._client.protocol,
+                null,
+                this.connection._client.headers,
+                this.connection._client.requestOptions,
+                this.connection._client.config
+            ]
+        } else {
+            constructorArgs = [
+                this.connection.url,
+                this.connection.protocol
+            ]
+        }
+
+        this.connection = new this.constructor(...constructorArgs);
+        this.registerEventListeners();
+
+        setTimeout(() => {
+            this.reconnect();
+        }, 5000);
+    }
+
+    /**
+     * Will close the socket connection with a error code and reason.
+     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
+     * for further information.
+     *
+     * @method disconnect
+     *
+     * @param {Number} code
+     * @param {String} reason
+     */
+    disconnect(code = null, reason = null) {
+        this.connection.close(code, reason);
     }
 
     /**

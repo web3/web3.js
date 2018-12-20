@@ -21,7 +21,6 @@
  */
 
 import {w3cwebsocket}from 'websocket';
-import {WsReconnector} from 'websocket-reconnector';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
@@ -113,13 +112,12 @@ export default class ProvidersModuleFactory {
             }
 
             headers.authorization = authToken;
-
-            connection = new w3cwebsocket(url, protocol, undefined, headers, undefined, clientConfig);
+            connection = new w3cwebsocket(url, protocol, null, headers, null, clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }
 
-        return new WebsocketProvider(new WsReconnector(connection), options.timeout);
+        return new WebsocketProvider(connection, options.timeout);
     }
 
     /**
