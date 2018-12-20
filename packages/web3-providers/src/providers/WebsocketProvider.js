@@ -49,10 +49,13 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
     /**
      * This is the listener for the 'error' event of the current socket connection.
-     * @param error
+     *
+     * @method onError
+     *
+     * @param {Event} event
      */
-    onError(error) {
-        if (error.code === 'ECONNREFUSED') {
+    onError(event) {
+        if (event.code === 'ECONNREFUSED') {
             this.reconnect();
 
             return;
@@ -66,10 +69,10 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      *
      * @method onClose
      *
-     * @param error
+     * @param {CloseEvent} closeEvent
      */
-    onClose(error) {
-        if (event.code !== 1000) {
+    onClose(closeEvent) {
+        if (closeEvent.code !== 1000) {
             this.reconnect();
 
             return;
@@ -80,6 +83,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
     /**
      * Removes the listeners and reconnect to the socket.
+     *
+     * @method reconnect
      */
     reconnect() {
         setTimeout(() => {

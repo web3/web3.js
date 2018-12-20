@@ -131,9 +131,11 @@ export default class AbstractSocketProvider extends EventEmitter {
      * Emits the close event and removes all listeners.
      *
      * @method onClose
+     *
+     * @param {Event|Error} error
      */
-    onClose() {
-        this.emit('close');
+    onClose(error = null) {
+        this.emit('close', error);
         this.removeAllListeners();
     }
 
