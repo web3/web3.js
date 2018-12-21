@@ -124,6 +124,19 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
+     * Removes all socket listeners
+     *
+     * @method removeAllSocketListeners
+     */
+    removeAllSocketListeners() {
+        this.connection.removeEventListener('data', this.onMessage);
+        this.connection.removeEventListener('ready', this.onReady);
+        this.connection.removeEventListener('close', this.onClose);
+        this.connection.removeEventListener('error', this.onError);
+        this.connection.removeEventListener('connect', this.onConnect);
+    }
+
+    /**
      * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
@@ -179,7 +192,7 @@ export default class IpcProvider extends AbstractSocketProvider {
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.pending) {
-                reject(new Error('Connection error: The socket is still trying to connect'));
+                return reject(new Error('Connection error: The socket is still trying to connect'));
             }
 
             if (!this.connection.writable) {

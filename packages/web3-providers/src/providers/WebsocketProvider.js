@@ -23,6 +23,7 @@
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import isArray from 'underscore-es/isArray';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
@@ -61,7 +62,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
             return;
         }
 
-        super.onError(error);
+        super.onError(event);
     }
 
     /**
@@ -82,19 +83,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Removes the listeners and reconnect to the socket.
+     * Removes the listeners and reconnects to the socket.
      *
      * @method reconnect
      */
     reconnect() {
         setTimeout(() => {
-            this.connection.removeAllListeners();
+            this.removeAllSocketListeners();
 
             let constructorArgs = [];
 
-            if (this.connection.constructor.name === 'W3CWebSocket') {
+            if (this.connection.constructor.name === 'W3CWebsocket') {
                 constructorArgs = [
-                    this.connection.url,
+                    this.host,
                     this.connection._client.protocol,
                     null,
                     this.connection._client.headers,
@@ -103,11 +104,12 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 ];
             } else {
                 constructorArgs = [
-                    this.connection.url,
+                    this.host,
                     this.connection.protocol
                 ];
             }
 
+            // TODO: Pass the module factory for an createW3CWebsocket and createWebSocket method.
             this.connection = new this.connection.constructor(...constructorArgs);
             this.registerEventListeners();
         }, 5000);
@@ -170,6 +172,19 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
+     * Removes all socket listeners
+     *
+     * @method removeAllSocketListeners
+     */
+    removeAllSocketListeners() {
+        this.connection.removeEventListener('message', this.onMessage);
+        this.connection.removeEventListener('open', this.onReady);
+        this.connection.removeEventListener('close', this.onClose);
+        this.connection.removeEventListener('error', this.onError);
+        this.connection.removeEventListener('connect', this.onConnect);
+    }
+
+    /**
      * Returns true if the socket connection state is OPEN
      *
      * @property connected
@@ -177,7 +192,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Boolean}
      */
     get connected() {
-        return this.connection && this.connection.readyState === this.connection.OPEN;
+        return this.connection.readyState === this.connection.OPEN;
     }
 
     /**
@@ -246,28 +261,36 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            if (this.connection.readyState !== this.connection.OPEN) {
-                reject('Connection error: Connection is not open on send()');
-            }
-
             if (!this.isConnecting()) {
+                let timeout,
+                    id;
+
+                if (this.connection.readyState !== this.connection.OPEN) {
+                    return reject(new Error('Connection error: Connection is not open on send()'));
+                }
+
                 this.connection.send(JSON.stringify(payload));
 
-                let timeout;
                 if (this.timeout) {
                     timeout = setTimeout(() => {
                         reject(new Error('Connection error: Timeout exceeded'));
                     }, this.timeout);
                 }
 
-                this.on(payload.id, response => {
+                if (isArray(payload)) {
+                    id = payload[0].id;
+                } else {
+                    id = payload.id;
+                }
+
+                this.on(id, response => {
                     if (timeout) {
                         clearTimeout(timeout);
                     }
 
-                    resolve(response);
+                    this.removeAllListeners(id);
 
-                    this.removeAllListeners(payload.id);
+                    return resolve(response);
                 });
 
 
@@ -276,12 +299,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.on('open', () => {
                 this.sendPayload(payload)
-                    .then(response => {
-                        resolve(response);
-                    })
-                    .catch(error => {
-                        reject(error);
-                    });
+                    .then(resolve)
+                    .catch(reject);
 
                 this.removeAllListeners('open');
             });

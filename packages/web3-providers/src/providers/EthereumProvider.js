@@ -80,6 +80,15 @@ export default class EthereumProvider extends AbstractSocketProvider {
     }
 
     /**
+     * Removes all socket listeners
+     *
+     * @method removeAllSocketListeners
+     */
+    removeAllSocketListeners() {
+        this.connection.removeAllListeners();
+    }
+
+    /**
      * This is the listener for the 'networkChanged' event of the EthereumProvider.
      *
      * @param {Number} networkId

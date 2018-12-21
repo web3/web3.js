@@ -44,18 +44,11 @@ export default class AbstractSocketProvider extends EventEmitter {
     }
 
     /**
-     * Removes all listeners on the EventEmitter and the socket object.
+     * Removes all socket listeners
      *
-     * @method removeAllListeners
-     *
-     * @param {String} event
+     * @method removeAllSocketListeners
      */
-    removeAllListeners(event) {
-        if (!event) {
-            this.connection.removeAllListeners();
-        }
-
-        super.removeAllListeners(event);
+    removeAllSocketListeners() {
     }
 
     /**
@@ -125,6 +118,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onError(error) {
         this.emit('error', error);
+        this.removeAllSocketListeners();
         this.removeAllListeners();
     }
 
@@ -137,6 +131,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      */
     onClose(error = null) {
         this.emit('close', error);
+        this.removeAllSocketListeners();
         this.removeAllListeners();
     }
 
