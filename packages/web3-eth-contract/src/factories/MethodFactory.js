@@ -29,7 +29,7 @@ import {EstimateGasMethod} from 'web3-core-method';
 export default class MethodFactory {
     /**
      * @param {Accounts} accounts
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {ContractModuleFactory} contractModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
@@ -90,7 +90,6 @@ export default class MethodFactory {
      */
     createPastEventLogsMethod(abiItem) {
         return new PastEventLogsMethod(
-            this.methodModuleFactory.createCallMethodCommand(),
             this.utils,
             this.formatters,
             this.contractModuleFactory.createEventLogDecoder(),
@@ -109,7 +108,6 @@ export default class MethodFactory {
      */
     createCallContractMethod(abiItem) {
         return new CallContractMethod(
-            this.methodModuleFactory.createCallMethodCommand(),
             this.utils,
             this.formatters,
             abiItem
@@ -127,10 +125,11 @@ export default class MethodFactory {
      */
     createSendContractMethod(abiItem) {
         return new SendContractMethod(
-            this.methodModuleFactory.createSendTransactionMethodCommand(),
             this.utils,
             this.formatters,
             this.accounts,
+            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.methodModuleFactory.createTransactionSigner(),
             this.contractModuleFactory.createAllEventsLogDecoder(),
             abiItem,
         );
@@ -147,10 +146,11 @@ export default class MethodFactory {
      */
     createContractDeployMethod(contract) {
         return new ContractDeployMethod(
-            this.methodModuleFactory.createSendTransactionMethodCommand(),
             this.utils,
             this.formatters,
             this.accounts,
+            this.methodModuleFactory.createTransactionConfirmationWorkflow(),
+            this.methodModuleFactory.createTransactionSigner(),
             contract
         );
     }
@@ -164,7 +164,6 @@ export default class MethodFactory {
      */
     createEstimateGasMethod() {
         return new EstimateGasMethod(
-            this.methodModuleFactory.createCallMethodCommand(),
             this.utils,
             this.formatters
         );

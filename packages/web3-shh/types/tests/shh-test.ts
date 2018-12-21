@@ -180,7 +180,7 @@ shh.subscribe('messages', {
     minPow: 0.8,
 }, (error: Error, message: Notification, subscription: any) => {});
 
-// $ExpectType boolean
+// $ExpectType Promise<boolean|Error>
 shh.clearSubscriptions();
 
 // $ExpectType Promise<string>

@@ -22,10 +22,11 @@
 
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class WebsocketProvider extends AbstractSocketProvider {
     /**
-     * @param {WsReconnector} connection
+     * @param {WebSocket} connection
      * @param {Number} timeout
      *
      * @constructor
@@ -36,16 +37,104 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
+     * This is the listener for the 'message' events of the current socket connection.
+     *
+     * @method onMessage
+     *
+     * @param {MessageEvent} messageEvent
+     */
+    onMessage(messageEvent) {
+        super.onMessage(messageEvent.data);
+    }
+
+    /**
+     * This is the listener for the 'error' event of the current socket connection.
+     *
+     * @method onError
+     *
+     * @param {Event} event
+     */
+    onError(event) {
+        if (event.code === 'ECONNREFUSED') {
+            this.reconnect();
+
+            return;
+        }
+
+        super.onError(error);
+    }
+
+    /**
+     * This ist the listener for the 'close' event of the current socket connection.
+     *
+     * @method onClose
+     *
+     * @param {CloseEvent} closeEvent
+     */
+    onClose(closeEvent) {
+        if (closeEvent.code !== 1000) {
+            this.reconnect();
+
+            return;
+        }
+
+        super.onClose();
+    }
+
+    /**
+     * Removes the listeners and reconnect to the socket.
+     *
+     * @method reconnect
+     */
+    reconnect() {
+        setTimeout(() => {
+            this.connection.removeAllListeners();
+
+            let constructorArgs = [];
+
+            if (this.connection.constructor.name === 'W3CWebSocket') {
+                constructorArgs = [
+                    this.connection.url,
+                    this.connection._client.protocol,
+                    null,
+                    this.connection._client.headers,
+                    this.connection._client.requestOptions,
+                    this.connection._client.config
+                ];
+            } else {
+                constructorArgs = [
+                    this.connection.url,
+                    this.connection.protocol
+                ];
+            }
+
+            this.connection = new this.connection.constructor(...constructorArgs);
+            this.registerEventListeners();
+        }, 5000);
+    }
+
+    /**
+     * Will close the socket connection with a error code and reason.
+     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
+     * for further information.
+     *
+     * @method disconnect
+     *
+     * @param {Number} code
+     * @param {String} reason
+     */
+    disconnect(code = null, reason = null) {
+        this.connection.close(code, reason);
+    }
+
+    /**
      * Registers all the required listeners.
      *
      * @method registerEventListeners
      */
     registerEventListeners() {
-        this.connection.addEventListener('message', messageEvent => {
-            this.onMessage(messageEvent.data);
-        });
-
-        this.connection.addEventListener('open', this.onOpen);
+        this.connection.addEventListener('message', this.onMessage);
+        this.connection.addEventListener('open', this.onReady);
         this.connection.addEventListener('close', this.onClose);
         this.connection.addEventListener('error', this.onError);
         this.connection.addEventListener('connect', this.onConnect);
@@ -59,24 +148,22 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @param {String} event
      */
     removeAllListeners(event) {
-        if (event) {
-            switch (event) {
-                case 'ws_message':
-                    this.connection.removeEventListener('message', this.onMessage);
-                    break;
-                case 'ws_open':
-                    this.connection.removeEventListener('open', this.onOpen);
-                    break;
-                case 'ws_close':
-                    this.connection.removeEventListener('close', this.onClose);
-                    break;
-                case 'ws_error':
-                    this.connection.removeEventListener('error', this.onError);
-                    break;
-                case 'ws_connect':
-                    this.connection.removeEventListener('connect', this.onConnect);
-                    break;
-            }
+        switch (event) {
+            case 'socket_message':
+                this.connection.removeEventListener('message', this.onMessage);
+                break;
+            case 'socket_ready':
+                this.connection.removeEventListener('open', this.onReady);
+                break;
+            case 'socket_close':
+                this.connection.removeEventListener('close', this.onClose);
+                break;
+            case 'socket_error':
+                this.connection.removeEventListener('error', this.onError);
+                break;
+            case 'socket_connect':
+                this.connection.removeEventListener('connect', this.onConnect);
+                break;
         }
 
         super.removeAllListeners(event);
@@ -105,7 +192,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -115,11 +202,20 @@ export default class WebsocketProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
 
     /**
-     * Sends batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
@@ -140,7 +236,7 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Sends the JSON-RPC payload to the node.
      *
      * @method sendPayload
      *
@@ -165,13 +261,13 @@ export default class WebsocketProvider extends AbstractSocketProvider {
                 }
 
                 this.on(payload.id, response => {
-                    this.removeAllListeners(payload.id);
-
                     if (timeout) {
                         clearTimeout(timeout);
                     }
 
-                    return resolve(response);
+                    resolve(response);
+
+                    this.removeAllListeners(payload.id);
                 });
 
 

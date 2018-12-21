@@ -18,11 +18,11 @@
  */
 
 import EventEmitter from 'eventemitter3';
-import JsonRpcMapper from '../../src/mappers/JsonRpcMapper';
+import isArray from 'underscore-es/isArray';
 
 export default class AbstractSocketProvider extends EventEmitter {
     /**
-     * @param {WsReconnector|EthereumProvider} connection
+     * @param {WebSocket|Socket|EthereumProvider} connection
      * @param {Number} timeout
      *
      * @constructor
@@ -31,7 +31,7 @@ export default class AbstractSocketProvider extends EventEmitter {
         super();
         this.connection = connection;
         this.timeout = timeout;
-        this.subscriptions = [];
+        this.subscriptions = {};
         this.registerEventListeners();
     }
 
@@ -40,31 +40,47 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @method registerEventListeners
      */
-    registerEventListeners() { }
+    registerEventListeners() {
+    }
 
     /**
-     * Will close the socket connection with a error code and reason.
-     * Please have a look at https://developer.mozilla.org/de/docs/Web/API/WebSocket/close
-     * for further information.
+     * Removes all listeners on the EventEmitter and the socket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        if (!event) {
+            this.connection.removeAllListeners();
+        }
+
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Closes the socket connection.
      *
      * @method disconnect
      *
      * @param {Number} code
      * @param {String} reason
      */
-    disconnect(code, reason) { }
+    disconnect(code, reason) {
+    }
 
     /**
-     * Returns true if the socket connection state is OPEN
+     * Returns true if the socket is connected
      *
      * @property connected
      *
      * @returns {Boolean}
      */
-    get connected() { }
+    get connected() {
+    }
 
     /**
-     * Sends the JSON-RPC request
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -73,10 +89,11 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns {Promise<any>}
      */
-    send(method, parameters) { }
+    send(method, parameters) {
+    }
 
     /**
-     * Sends batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
@@ -85,17 +102,18 @@ export default class AbstractSocketProvider extends EventEmitter {
      *
      * @returns Promise<Object|Error>
      */
-    sendBatch(methods, moduleInstance) { }
+    sendBatch(methods, moduleInstance) {
+    }
 
     /**
-     * Emits the open event with the event the provider got of the current socket connection.
+     * Emits the ready event when the connection is established
      *
-     * @method onOpen
+     * @method onReady
      *
      * @param {Event} event
      */
-    onOpen(event) {
-        this.emit('open', event);
+    onReady(event) {
+        this.emit('ready', event);
     }
 
     /**
@@ -114,18 +132,38 @@ export default class AbstractSocketProvider extends EventEmitter {
      * Emits the close event and removes all listeners.
      *
      * @method onClose
+     *
+     * @param {Event|Error} error
      */
-    onClose() {
-        this.emit('close');
+    onClose(error = null) {
+        this.emit('close', error);
         this.removeAllListeners();
     }
 
     /**
-     * Emits the connect event.
+     * Emits the connect event and checks if there are subscriptions defined that should be resubscribed.
      *
      * @method onConnect
      */
-    onConnect() {
+    async onConnect() {
+        const subscriptionKeys = Object.keys(this.subscriptions);
+
+        if (subscriptionKeys.length > 0) {
+            let subscriptionId;
+
+            for (let key of subscriptionKeys) {
+                subscriptionId = await this.subscribe(
+                    this.subscriptions[key].subscribeMethod,
+                    this.subscriptions[key].parameters[0],
+                    this.subscriptions[key].parameters.slice(1)
+                );
+
+                delete this.subscriptions[subscriptionId];
+
+                this.subscriptions[this.getSubscriptionEvent(this.subscriptions[key].id)].id = subscriptionId;
+            }
+        }
+
         this.emit('connect');
     }
 
@@ -137,70 +175,19 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {String} response
      */
     onMessage(response) {
-        this.parseResponse(response).forEach(result => {
-            let id = null;
-            if (isArray(result)) {
-                id = result[0].id;
-            } else if (result.method && result.method.indexOf('_subscription') !== -1) {
-                id = result.params.subscription;
-                result = result.params.result;
-            } else {
-                id = result.id;
-            }
+        let event;
+        response = JSON.parse(response);
 
-            this.emit(id, result);
-        });
-    }
+        if (isArray(response)) {
+            event = response[0].id;
+        } else if (typeof response.id === 'undefined') {
+            event = this.getSubscriptionEvent(response.params.subscription);
+            response = response.params;
+        } else {
+            event = response.id;
+        }
 
-    /**
-     * Will parse the response and make an array out of it.
-     *
-     * @method parseResponse
-     *
-     * @param {String} data
-     */
-    parseResponse(data) {
-        let result = null,
-            lastChunk;
-
-        const returnValues = [],
-            dechunkedData = data
-                .replace(/\}[\n\r]?\{/g, '}|--|{') // }{
-                .replace(/\}\][\n\r]?\[\{/g, '}]|--|[{') // }][{
-                .replace(/\}[\n\r]?\[\{/g, '}|--|[{') // }[{
-                .replace(/\}\][\n\r]?\{/g, '}]|--|{') // }]{
-                .split('|--|');
-
-        dechunkedData.forEach(data => {
-            // prepend the last chunk
-            if (lastChunk) {
-                data = lastChunk + data;
-            }
-
-            try {
-                result = JSON.parse(data);
-            } catch (e) {
-                lastChunk = data;
-
-                let lastChunkTimeout = setTimeout(() => {
-                    _this._timeout();
-                    throw errors.InvalidResponse(data);
-                }, 1000 * 15);
-
-                return;
-            }
-
-            // cancel timeout and set chunk to null
-            clearTimeout(lastChunkTimeout);
-            lastChunk = null;
-
-            if (result) {
-                returnValues.push(result);
-            }
-
-        });
-
-        return returnValues;
+        this.emit(event, response);
     }
 
     /**
@@ -229,7 +216,11 @@ export default class AbstractSocketProvider extends EventEmitter {
 
         return this.send(subscribeMethod, parameters)
             .then(subscriptionId => {
-                this.subscriptions.push(subscriptionId);
+                this.subscriptions[subscriptionId] = {
+                    id: subscriptionId,
+                    subscribeMethod: subscribeMethod,
+                    parameters: parameters
+                };
 
                 return subscriptionId;
             }).catch(error => {
@@ -248,15 +239,20 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Promise<Boolean|Error>}
      */
     unsubscribe(subscriptionId, unsubscribeMethod = 'eth_unsubscribe') {
-        return this.send(unsubscribeMethod, [subscriptionId])
-            .then(response => {
-                if (response) {
-                    this.removeAllListeners(subscriptionId);
-                    delete this.subscriptions[this.subscriptions.indexOf(subscriptionId)];
-                }
+        if (this.hasSubscription(subscriptionId)) {
+            return this.send(unsubscribeMethod, [subscriptionId])
+                .then(response => {
+                    if (response) {
+                        this.removeAllListeners(this.getSubscriptionEvent(subscriptionId));
 
-                return response;
-            });
+                        delete this.subscriptions[subscriptionId];
+                    }
+
+                    return response;
+                });
+        }
+
+        return Promise.reject(new Error(`Provider error: Subscription with ID ${subscriptionId} does not exist.`));
     }
 
     /**
@@ -271,16 +267,15 @@ export default class AbstractSocketProvider extends EventEmitter {
     clearSubscriptions(unsubscribeMethod = 'eth_unsubscribe') {
         let unsubscribePromises = [];
 
-        this.subscriptions.forEach(subscriptionId => {
-            unsubscribePromises.push(this.unsubscribe(subscriptionId, unsubscribeMethod));
+        Object.keys(this.subscriptions).forEach(key => {
+            this.removeAllListeners(key);
+            unsubscribePromises.push(this.unsubscribe(this.subscriptions[key].id, unsubscribeMethod));
         });
 
         return Promise.all(unsubscribePromises).then(results => {
             if (results.includes(false)) {
                 throw Error(`Could not unsubscribe all subscriptions: ${JSON.stringify(results)}`);
             }
-
-            this.subscriptions = [];
 
             return true;
         });
@@ -296,6 +291,30 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @returns {Boolean}
      */
     hasSubscription(subscriptionId) {
-        return this.subscriptions.indexOf(subscriptionId) > -1;
+        return typeof this.getSubscriptionEvent(subscriptionId) !== 'undefined';
+    }
+
+    /**
+     * Returns the event the subscription is listening for.
+     *
+     * @method getSubscriptionEvent
+     *
+     * @param {String} subscriptionId
+     *
+     * @returns {String}
+     */
+    getSubscriptionEvent(subscriptionId) {
+        if (this.subscriptions[subscriptionId]) {
+            return subscriptionId;
+        }
+
+        let event;
+        Object.keys(this.subscriptions).forEach(key => {
+            if (this.subscriptions[key].id === subscriptionId) {
+                event = key;
+            }
+        });
+
+        return event;
     }
 }

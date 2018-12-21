@@ -35,7 +35,7 @@ export default class ProviderDetector {
      *
      * @method detect
      *
-     * @returns {Object|Undefined} provider
+     * @returns {Object|undefined} provider
      */
     detect() {
         if (

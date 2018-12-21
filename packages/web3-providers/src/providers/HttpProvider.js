@@ -15,39 +15,37 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file httpprovider.js
- * @authors:
- *   Samuel Furter <samuel@ethereum.org>
- *   Marek Kotewicz <marek@parity.io>
- *   Marian Oancea
- *   Fabian Vogelsteller <fabian@ethereum.org>
- * @date 2015
+ * @file HttpProvider.js
+ * @authors: Samuel Furter <samuel@ethereum.org>
+ * @date 2018
  */
 
-import {XMLHttpRequest} from 'xhr2-cookies';
 import http from 'http';
 import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class HttpProvider {
     /**
      * @param {String} host
      * @param {Object} options
+     * @param {ProvidersModuleFactory} providersModuleFactory
      *
      * @constructor
      */
-    constructor(host, options = {}) {
-        this.host = host || 'http://localhost:8545';
-
-        if (this.host.substring(0, 5) === 'https') {
-            this.httpsAgent = new https.Agent({keepAlive: true});
-        } else {
-            this.httpAgent = new http.Agent({keepAlive: true});
-        }
-
+    constructor(host = 'http://localhost:8545', options = {}, providersModuleFactory) {
+        this.host = host;
         this.timeout = options.timeout || 0;
         this.headers = options.headers;
         this.connected = false;
+        this.providersModuleFactory = providersModuleFactory;
+        this.agent = {};
+
+        if (host.substring(0, 5) === 'https') {
+            this.agent['httpsAgent'] = new https.Agent({keepAlive: true});
+        } else {
+            this.agent['httpAgent'] = new http.Agent({keepAlive: true});
+        }
     }
 
     /**
@@ -72,35 +70,7 @@ export default class HttpProvider {
     }
 
     /**
-     * Prepares the HTTP request
-     *
-     * @method prepareRequest
-     *
-     * @returns {XMLHttpRequest}
-     */
-    prepareRequest() {
-        const request = new XMLHttpRequest();
-        request.nodejsSet({
-            httpsAgent: this.httpsAgent,
-            httpAgent: this.httpAgent
-        });
-
-        request.open('POST', this.host, true);
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.timeout = this.timeout || 0;
-        request.withCredentials = true;
-
-        if (this.headers) {
-            this.headers.forEach((header) => {
-                request.setRequestHeader(header.name, header.value);
-            });
-        }
-
-        return request;
-    }
-
-    /**
-     * Sends the JSON-RPC request
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -110,11 +80,20 @@ export default class HttpProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
 
     /**
-     * Sends batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
@@ -135,7 +114,7 @@ export default class HttpProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Sends the JSON-RPC payload to the node.
      *
      * @method sendPayload
      *
@@ -145,7 +124,12 @@ export default class HttpProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            const request = this.prepareRequest();
+            const request = this.providersModuleFacotry.createXMLHttpRequest(
+                this.host,
+                this.timeout,
+                this.headers,
+                this.agent
+            );
 
             request.onreadystatechange = () => {
                 if (request.readyState !== 0 && request.readyState !== 1) {
@@ -154,7 +138,7 @@ export default class HttpProvider {
 
                 if (request.readyState === XMLHttpRequest.DONE && request.status === 200) {
                     try {
-                        resolve(JSON.parse(request.responseText));
+                        return resolve(JSON.parse(request.responseText));
                     } catch (error) {
                         reject(new Error(`Invalid JSON as response: ${request.responseText}`));
                     }
@@ -163,6 +147,7 @@ export default class HttpProvider {
 
             request.ontimeout = () => {
                 this.connected = false;
+
                 reject(new Error(`Connection error: Timeout exceeded after ${this.timeout}ms`));
             };
 

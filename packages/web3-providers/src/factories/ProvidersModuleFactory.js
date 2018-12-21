@@ -20,8 +20,9 @@
  * @date 2018
  */
 
-import {w3cwebsocket}from 'websocket';
-import {WsReconnector} from 'websocket-reconnector';
+import {XMLHttpRequest} from 'xhr2-cookies';
+import {w3cwebsocket as W3CWebsocket} from 'websocket';
+import {XMLHttpRequest as XHR} from 'xhr2-cookies';
 import URL from 'url-parse';
 import ProviderResolver from '../resolvers/ProviderResolver';
 import ProviderDetector from '../detectors/ProviderDetector';
@@ -29,7 +30,7 @@ import WebsocketProvider from '../providers/WebsocketProvider';
 import IpcProvider from '../providers/IpcProvider';
 import HttpProvider from '../providers/HttpProvider';
 import BatchRequest from '../batch-request/BatchRequest';
-import EthereumProviderAdapter from '../adapters/EthereumProviderAdapter';
+import EthereumProvider from '../providers/EthereumProvider';
 
 export default class ProvidersModuleFactory {
     /**
@@ -38,12 +39,11 @@ export default class ProvidersModuleFactory {
      * @method createBatchRequest
      *
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {AbstractProviderAdapter} provider
      *
      * @returns {BatchRequest}
      */
-    createBatchRequest(moduleInstance, provider) {
-        return new BatchRequest(moduleInstance, provider);
+    createBatchRequest(moduleInstance) {
+        return new BatchRequest(moduleInstance);
     }
 
     /**
@@ -79,7 +79,37 @@ export default class ProvidersModuleFactory {
      * @returns {HttpProvider}
      */
     createHttpProvider(url, options = {}) {
-        return new HttpProvider(url, options);
+        return new HttpProvider(url, options, this);
+    }
+
+    /**
+     * Returns a XMLHttpRequest object
+     *
+     * @method createXMLHttpRequest
+     *
+     * @param {String} host
+     * @param {Number} timeout
+     * @param {Array} headers
+     * @param {Object} agent
+     *
+     * @returns {XMLHttpRequest}
+     */
+    createXMLHttpRequest(host, timeout = 0, headers, agent) {
+        const request = new XHR();
+        request.nodejsSet(agent);
+
+        request.open('POST', host, true);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.timeout = timeout;
+        request.withCredentials = true;
+
+        if (headers) {
+            headers.forEach(header => {
+                request.setRequestHeader(header.name, header.value);
+            });
+        }
+
+        return request;
     }
 
     /**
@@ -97,11 +127,10 @@ export default class ProvidersModuleFactory {
 
         // runtime is of type node
         if (typeof process !== 'undefined' && process.versions != null && process.versions.node != null) {
-            let authToken;
-            const headers = options.headers || {},
-                  protocol = options.protocol,
-                  clientConfig = options.clientConfig,
-                  urlObject = new URL(url);
+            let authToken,
+                headers = options.headers || {};
+
+            const urlObject = new URL(url);
 
             if (urlObject.username && urlObject.password) {
                 authToken = Buffer.from(`${urlObject.username}:${urlObject.password}`, 'base64');
@@ -109,22 +138,19 @@ export default class ProvidersModuleFactory {
             }
 
             if (urlObject.auth) {
-                authToken = Buffer.from(parsedURL.auth, 'base64');
+                authToken = Buffer.from(urlObject.auth, 'base64');
             }
 
             headers.authorization = authToken;
-
-            connection = new w3cwebsocket(url, protocol, undefined, headers, undefined, clientConfig);
+            connection = new W3CWebsocket(url, options.protocol, null, headers, null, options.clientConfig);
         } else {
             connection = new window.WebSocket(url, options.protocol);
         }
 
-        return new WebsocketProvider(new WsReconnector(connection), options.timeout);
+        return new WebsocketProvider(connection, options.timeout);
     }
 
     /**
-     * TODO: Create factory methods for the external API to have the same interface.
-     *
      * Returns an IpcProvider object
      *
      * @method createIpcProvider
@@ -139,15 +165,15 @@ export default class ProvidersModuleFactory {
     }
 
     /**
-     * Returns an EthereumProviderAdapter object
+     * Returns an EthereumProvider object
      *
-     * @method createEthereumProviderAdapter
+     * @method createEthereumProvider
      *
-     * @param {EthereumProvider} provider
+     * @param {EthereumProvider} connection
      *
-     * @returns {EthereumProviderAdapter}
+     * @returns {EthereumProvider}
      */
-    createEthereumProviderAdapter(provider) {
-        return new EthereumProviderAdapter(provider);
+    createEthereumProvider(connection) {
+        return new EthereumProvider(connection);
     }
 }

@@ -25,7 +25,7 @@ import isFunction from 'underscore-es/isFunction';
 
 export default class Network extends AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory

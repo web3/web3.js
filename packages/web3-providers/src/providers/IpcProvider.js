@@ -15,7 +15,7 @@
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file index.js
+ * @file IpcProvider.js
  * @authors: Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
@@ -23,6 +23,7 @@
 import oboe from 'oboe';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
+import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 
 export default class IpcProvider extends AbstractSocketProvider {
     /**
@@ -36,38 +37,6 @@ export default class IpcProvider extends AbstractSocketProvider {
     constructor(connection, path) {
         super(connection, null);
         this.host = path;
-    }
-
-    /**
-     * Registers all the required listeners.
-     *
-     * @method registerEventListeners
-     */
-    registerEventListeners() {
-        if (this.connection.constructor.name === 'Socket') {
-            oboe(this.connection).done(this.onMessage);
-        } else {
-            this.connection.addListener('data', message =>  {
-                this.onMessage(message.toString());
-            });
-        }
-
-        this.connection.addListener('connect', this.onConnect);
-        this.connection.addListener('error', this.onError);
-        this.connection.addListener('close', this.onClose);
-        this.connection.addListener('ready', this.onOpen);
-    }
-
-    /**
-     * Removes all listeners on the EventEmitter and the socket object.
-     *
-     * @method removeAllListeners
-     *
-     * @param {String} event
-     */
-    removeAllListeners(event) {
-        this.connection.removeAllListeners(event);
-        super.removeAllListeners(event);
     }
 
     /**
@@ -100,7 +69,61 @@ export default class IpcProvider extends AbstractSocketProvider {
     }
 
     /**
-     * Sends the JSON-RPC request
+     * @param {String|Buffer} message
+     */
+    onMessage(message) {
+        super.onMessage(message.toString());
+    }
+
+    /**
+     * Registers all the required listeners.
+     *
+     * @method registerEventListeners
+     */
+    registerEventListeners() {
+        if (this.connection.constructor.name === 'Socket') {
+            oboe(this.connection).done(this.onMessage);
+        } else {
+            this.connection.addListener('data', this.onMessage);
+        }
+
+        this.connection.addListener('connect', this.onConnect);
+        this.connection.addListener('error', this.onError);
+        this.connection.addListener('close', this.onClose);
+        this.connection.addListener('ready', this.onReady);
+    }
+
+    /**
+     * Removes all listeners on the EventEmitter and the socket object.
+     *
+     * @method removeAllListeners
+     *
+     * @param {String} event
+     */
+    removeAllListeners(event) {
+        switch (event) {
+            case 'socket_message':
+                this.connection.removeEventListener('data', this.onMessage);
+                break;
+            case 'socket_ready':
+                this.connection.removeEventListener('ready', this.onReady);
+                break;
+            case 'socket_close':
+                this.connection.removeEventListener('close', this.onClose);
+                break;
+            case 'socket_error':
+                this.connection.removeEventListener('error', this.onError);
+                break;
+            case 'socket_connect':
+                this.connection.removeEventListener('connect', this.onConnect);
+                break;
+        }
+
+        super.removeAllListeners(event);
+    }
+
+    /**
+     * Creates the JSON-RPC payload and sends it to the node.
      *
      * @method send
      *
@@ -110,11 +133,20 @@ export default class IpcProvider extends AbstractSocketProvider {
      * @returns {Promise<any>}
      */
     send(method, parameters) {
-        return this.semdPayload(JsonRpcMapper.toPayload(method, parameters));
+        return this.sendPayload(JsonRpcMapper.toPayload(method, parameters))
+            .then(response => {
+                const validationResult = JsonRpcResponseValidator.validate(response);
+
+                if (validationResult instanceof Error) {
+                    throw validationResult;
+                }
+
+                return response;
+            });
     }
 
     /**
-     * Sends batch payload
+     * Creates the JSON-RPC batch payload and sends it to the node.
      *
      * @method sendBatch
      *
@@ -131,11 +163,11 @@ export default class IpcProvider extends AbstractSocketProvider {
             payload.push(JsonRpcMapper.toPayload(method.rpcMethod, method.parameters));
         });
 
-        return this.semdPayload(payload);
+        return this.sendPayload(payload);
     }
 
     /**
-     * Sends the JSON-RPC request
+     * Sends the JSON-RPC payload to the node.
      *
      * @method send
      *
@@ -143,7 +175,7 @@ export default class IpcProvider extends AbstractSocketProvider {
      *
      * @returns {Promise<any>}
      */
-    semdPayload(payload) {
+    sendPayload(payload) {
         return new Promise((resolve, reject) => {
             if (this.connection.pending) {
                 reject(new Error('Connection error: The socket is still trying to connect'));
@@ -163,9 +195,9 @@ export default class IpcProvider extends AbstractSocketProvider {
                 }
 
                 this.on(id, response => {
-                    this.removeAllListeners(id);
+                    resolve(response);
 
-                    return resolve(response);
+                    this.removeAllListeners(id);
                 });
 
                 return;

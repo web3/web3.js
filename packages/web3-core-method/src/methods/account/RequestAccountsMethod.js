@@ -1,64 +1,45 @@
 /*
     This file is part of web3.js.
-
     web3.js is free software: you can redistribute it and/or modify
     it under the terms of the GNU Lesser General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
-
     web3.js is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU Lesser General Public License for more details.
-
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * @file CallContractMethod.js
+ * @file RequestAccountsMethod.js
  * @author Samuel Furter <samuel@ethereum.org>
  * @date 2018
  */
 
-import {CallMethod} from 'web3-core-method';
+import AbstractCallMethod from '../../../lib/methods/AbstractCallMethod';
 
-export default class CallContractMethod extends CallMethod {
+export default class RequestAccountsMethod extends AbstractCallMethod {
     /**
-     * @param {Utils} utils
-     * @param {Object} formatters
-     * @param {AbiItem} abiItem
-     *
      * @constructor
      */
-    constructor(utils, formatters, abiItem) {
-        super(utils, formatters);
-        this.abiItem = abiItem;
+    constructor() {
+        super('eth_requestAccounts', 0, null, null);
     }
 
     /**
-     * This method will be executed after the RPC request.
+     * This method will be executed before the RPC request.
      *
-     * @method afterExecution
+     * @method beforeExecution
      *
-     * @param {Array} response
-     *
-     * @returns {Array}
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
      */
-    afterExecution(response) {
-        if (!response) {
-            return null;
+    beforeExecution(moduleInstance) {
+        if (moduleInstance.currentProvider.constructor.name !== 'EthereumProvider') {
+            const error = new Error('The JSON-RPC method "eth_requestAccounts" is just supported with the EthereumProvider.');
+
+            this.callback(error, null);
+            this.promiEvent.reject(error);
         }
-
-        if (response.length >= 2) {
-            response = response.slice(2);
-        }
-
-        const result = this.abiCoder.decodeParameters(this.abiItem, response);
-
-        if (result.__length__ === 1) {
-            return result[0];
-        }
-
-        return result;
     }
 }

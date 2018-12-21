@@ -37,7 +37,7 @@ function Result() {}
 
 export default class AbiCoder {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      *
      * @constructor
      */

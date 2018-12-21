@@ -58,7 +58,6 @@ export default class ModuleFactory {
         return new MethodProxy(target, methodFactory);
     }
 
-
     /**
      * Returns the TransactionSigner object
      *

@@ -27,13 +27,11 @@ import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
 export default class BatchRequest {
     /**
      * @param {AbstractWeb3Module} moduleInstance
-     * @param {AbstractProviderAdapter} provider
      *
      * @constructor
      */
-    constructor(moduleInstance, provider) {
+    constructor(moduleInstance) {
         this.moduleInstance = moduleInstance;
-        this.provider = provider;
         this.methods = [];
     }
 
@@ -60,13 +58,13 @@ export default class BatchRequest {
      * @returns Promise<{methods: AbstractMethod[], response: Object[]}|Error[]>
      */
     execute() {
-        return this.provider.sendBatch(this.methods, this.moduleInstance)
+        return this.moduleInstance.currentProvider.sendBatch(this.methods, this.moduleInstance)
             .then(response => {
                 let errors = [];
                 this.methods.forEach((method, index) => {
                     if (!isArray(response)) {
                         method.callback(
-                            new Error(`Response should be of type Array but is: ${typeof response}`),
+                            new Error(`BatchRequest error: Response should be of type Array but is: ${typeof response}`),
                             null
                         );
 
@@ -75,8 +73,8 @@ export default class BatchRequest {
                         return;
                     }
 
-                    const responseItem = response[index] || null;
-                    const validationResult = JsonRpcResponseValidator.validate(responseItem);
+                    const responseItem = response[index] || null,
+                          validationResult = JsonRpcResponseValidator.validate(responseItem);
 
                     if (validationResult) {
                         try {

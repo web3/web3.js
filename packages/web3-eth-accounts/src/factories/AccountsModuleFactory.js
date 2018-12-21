@@ -38,19 +38,17 @@ export default class AccountsModuleFactory {
     /**
      * Returns an object of type Accounts
      *
-     * @param {AbstractProviderAdapter} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {Object} options
      *
      * @returns {Accounts}
      */
-    createAccounts(provider, providersModuleFactory, providers, methodModuleFactory, options) {
+    createAccounts(provider, providersModuleFactory, methodModuleFactory, options) {
         return new Accounts(
             provider,
             providersModuleFactory,
-            providers,
             methodModuleFactory,
             this.createMethodFactory(methodModuleFactory),
             this.utils,
@@ -63,6 +61,7 @@ export default class AccountsModuleFactory {
      * Returns an object of type MethodFactory
      *
      * @method createMethodFactory
+     *
      * @param {MethodModuleFactory} methodModuleFactory
      *
      * @returns {MethodFactory}

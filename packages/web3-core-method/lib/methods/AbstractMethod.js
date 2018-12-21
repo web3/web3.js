@@ -43,6 +43,39 @@ export default class AbstractMethod {
     }
 
     /**
+     * This method will be executed before the RPC request.
+     *
+     * @method beforeExecution
+     *
+     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
+     */
+    beforeExecution(moduleInstance) {}
+
+    /**
+     * This method will be executed after the RPC request.
+     *
+     * @method afterExecution
+     *
+     * @param {*} response
+     *
+     * @returns {*}
+     */
+    afterExecution(response) {
+        return response;
+    }
+
+    /**
+     * Checks which command should be executed
+     *
+     * @method execute
+     *
+     * @param {AbstractWeb3Module} moduleInstance
+     *
+     * @returns {Promise<Object|String>|PromiEvent|String}
+     */
+    execute(moduleInstance) { }
+
+    /**
      * Setter for the rpcMethod property
      *
      * @property rpcMethod
@@ -203,28 +236,6 @@ export default class AbstractMethod {
     }
 
     /**
-     * This method will be executed before the RPC request.
-     *
-     * @method beforeExecution
-     *
-     * @param {AbstractWeb3Module} moduleInstance - The package where the method is called from for example Eth.
-     */
-    beforeExecution(moduleInstance) {}
-
-    /**
-     * This method will be executed after the RPC request.
-     *
-     * @method afterExecution
-     *
-     * @param {*} response
-     *
-     * @returns {*}
-     */
-    afterExecution(response) {
-        return response;
-    }
-
-    /**
      * Checks if accounts is defined and if wallet is not empty
      *
      * @method hasWallet
@@ -234,15 +245,4 @@ export default class AbstractMethod {
     hasWallets() {
         return this.accounts && this.accounts.wallet.length > 0;
     }
-
-    /**
-     * Checks which command should be executed
-     *
-     * @method execute
-     *
-     * @param {AbstractWeb3Module} moduleInstance
-     *
-     * @returns {Promise<Object|String>|PromiEvent|String}
-     */
-    execute(moduleInstance) { }
 }

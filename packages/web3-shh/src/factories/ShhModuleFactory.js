@@ -27,12 +27,14 @@ export default class ShhModuleFactory {
     /**
      * @param {Utils} utils
      * @param {Object} formatters
+     * @param {MethodModuleFactory} methodModuleFactory
      *
      * @constructor
      */
-    constructor(utils, formatters) {
+    constructor(utils, formatters, methodModuleFactory) {
         this.utils = utils;
         this.formatters = formatters;
+        this.methodModuleFactory = methodModuleFactory;
     }
 
     /**
@@ -40,20 +42,19 @@ export default class ShhModuleFactory {
      *
      * @method createShhModule
      *
-     * @param {AbstractProviderAdapter} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {MethodModuleFactory} methodModuleFactory
      * @param {SubscriptionsFactory} subscriptionsFactory
      * @param {Network} net
      * @param {Object} options
      *
      * @returns {Shh}
      */
-    createShhModule(provider, providersModuleFactory, methodModuleFactory, subscriptionsFactory, net, options) {
+    createShhModule(provider, providersModuleFactory, subscriptionsFactory, net, options) {
         return new Shh(
             provider,
             providersModuleFactory,
-            methodModuleFactory,
+            this.methodModuleFactory,
             this.createMethodFactory(),
             subscriptionsFactory,
             net,
@@ -69,6 +70,6 @@ export default class ShhModuleFactory {
      * @returns {MethodFactory}
      */
     createMethodFactory() {
-        return new MethodFactory(this.utils, this.formatters);
+        return new MethodFactory(this.methodModuleFactory, this.utils, this.formatters);
     }
 }

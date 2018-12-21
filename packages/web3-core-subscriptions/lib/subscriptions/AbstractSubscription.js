@@ -20,7 +20,6 @@
  * @date 2018
  */
 
-import isArray from 'underscore-es/isArray';
 import isFunction from 'underscore-es/isFunction';
 import EventEmitter from 'eventemitter3';
 
@@ -56,7 +55,7 @@ export default class AbstractSubscription extends EventEmitter {
      *
      * @param {AbstractWeb3Module} moduleInstance
      */
-    beforeSubscription(moduleInstance) {}
+    beforeSubscription(moduleInstance) { }
 
     /**
      * This method will be executed on each new subscription item.
@@ -91,79 +90,19 @@ export default class AbstractSubscription extends EventEmitter {
 
                 this.moduleInstance.currentProvider.on(
                     this.id,
-                    (error, response) => {
-                        if (!error) {
-                            this.handleSubscriptionResponse(response, callback);
+                    response => {
+                        const formattedOutput = this.onNewSubscriptionItem(response.result);
 
-                            return;
-                        }
+                        this.emit('data', formattedOutput);
 
                         if (isFunction(callback)) {
-                            callback(error, null);
+                            callback(false, formattedOutput);
                         }
-
-                        this.emit('error', error);
                     }
                 );
             });
 
         return this;
-    }
-
-    /**
-     * Iterates over each item in the response, formats the output, emits required events and
-     * executes the callback method.
-     *
-     * @method handleSubscriptionResponse
-     *
-     * @param {*} response
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    handleSubscriptionResponse(response, callback) {
-        if (!isArray(response)) {
-            response = [response];
-        }
-
-        response.forEach((item) => {
-            const formattedOutput = this.onNewSubscriptionItem(item);
-
-            this.emit('data', formattedOutput);
-
-            if (isFunction(callback)) {
-                callback(false, formattedOutput);
-            }
-        });
-    }
-
-    /**
-     * TODO: The reconnecting handling should only be in the provider the subscription should not care about it.
-     * Reconnects provider and restarts subscription
-     *
-     * @method reconnect
-     *
-     * @param {Function} callback
-     *
-     * @callback callback callback(error, result)
-     */
-    reconnect(callback) {
-        const interval = setInterval(() => {
-            if (this.moduleInstance.currentProvider.reconnect) {
-                this.moduleInstance.currentProvider.reconnect();
-            }
-        }, 1000);
-
-        this.moduleInstance.currentProvider.once('connect', () => {
-            clearInterval(interval);
-            this.unsubscribe(callback)
-                .then(() => {
-                    this.subscribe(callback);
-                })
-                .catch((error) => {
-                    this.emit('error', error);
-                });
-        });
     }
 
     /**
@@ -181,7 +120,6 @@ export default class AbstractSubscription extends EventEmitter {
             .unsubscribe(this.id, this.type)
             .then(response => {
                 this.removeAllListeners('data');
-                this.removeAllListeners('error');
 
                 if (!response) {
                     this.id = null;

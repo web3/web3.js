@@ -25,7 +25,7 @@ import {toChecksumAddress} from 'web3-utils'; // TODO: Maybe this could be remov
 
 export default class AbstractWeb3Module {
     /**
-     * @param {EthereumProviderAdapter|HttpProvider|WebsocketProvider|IpcProvider|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {AbstractMethodFactory} methodFactory
@@ -36,7 +36,7 @@ export default class AbstractWeb3Module {
     constructor(
         provider = AbstractWeb3Module.throwIfMissing('provider'),
         providersModuleFactory = AbstractWeb3Module.throwIfMissing('ProvidersModuleFactory'),
-        methodModuleFactory = AbstractWeb3Module.throwIfMissing('MethodModuleFactory'),
+        methodModuleFactory = null,
         methodFactory = null,
         options = {}
     ) {
@@ -55,7 +55,7 @@ export default class AbstractWeb3Module {
         this.defaultGas = options.defaultGas;
 
         this.BatchRequest = () => {
-            return this.providersModuleFactory.createBatchRequest(this, this.currentProvider);
+            return this.providersModuleFactory.createBatchRequest(this);
         };
 
         if (methodFactory !== null || typeof methodFactory !== 'undefined') {

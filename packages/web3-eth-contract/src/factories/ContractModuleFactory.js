@@ -40,7 +40,7 @@ import AbstractContract from '../AbstractContract';
 
 export default class ContractModuleFactory {
     /**
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {AbiCoder} abiCoder
      * @param {Accounts} accounts
@@ -61,7 +61,7 @@ export default class ContractModuleFactory {
      *
      * @method createContract
      *
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
      * @param {PromiEvent} PromiEvent
      * @param {Object} abi
@@ -74,7 +74,6 @@ export default class ContractModuleFactory {
         return new AbstractContract(
             provider,
             providersModuleFactory,
-            providers,
             this.methodModuleFactory,
             this,
             PromiEvent,

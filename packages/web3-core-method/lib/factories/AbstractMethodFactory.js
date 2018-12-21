@@ -14,8 +14,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with web3.js.  If not, see <http://www.gnu.org/licenses/>.
 */
-import SendTransactionMethod from '../../src/methods/transaction/SendTransactionMethod';
-
 /**
  * @file AbstractMethodFactory.js
  * @author Samuel Furter <samuel@ethereum.org>
@@ -26,7 +24,7 @@ export default class AbstractMethodFactory {
     /**
      * @param {{name: String, method: AbstractMethod}} methods
      * @param {MethodModuleFactory} methodModuleFactory
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      *
      * @constructor
@@ -65,7 +63,7 @@ export default class AbstractMethodFactory {
 
         switch (method.Type) {
             case 'CALL':
-                if (method.name === 'SignMethod') {
+                if (method.constructor.name === 'SignMethod') {
                     return new method(
                         this.utils,
                         this.formatters,
@@ -76,7 +74,7 @@ export default class AbstractMethodFactory {
 
                 return new method(this.utils, this.formatters);
             case 'SEND':
-                if (method.name === 'SendTransactionMethod') {
+                if (method.constructor.name === 'SendTransactionMethod') {
                     return new method(
                         this.utils,
                         this.formatters,

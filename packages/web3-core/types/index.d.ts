@@ -17,18 +17,25 @@
  * @date 2018
  */
 
-import * as net from "net";
-import {AbstractProviderAdapter, ProvidersModuleFactory, provider, HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
+import * as net from 'net';
+import {
+    EthereumProvider,
+    HttpProvider,
+    IpcProvider,
+    provider,
+    ProvidersModuleFactory,
+    WebsocketProvider
+} from 'web3-providers';
 
 export class AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         providersModuleFactory: ProvidersModuleFactory,
-        providers: Providers,
         methodModuleFactory: any,
         methodFactory?: any,
         options?: Web3ModuleOptions
     );
+
     readonly defaultGasPrice: string;
     readonly defaultGas: number;
     readonly transactionPollingTimeout: number;
@@ -36,12 +43,15 @@ export class AbstractWeb3Module {
     readonly transactionBlockTimeout: number;
     readonly defaultBlock: string | number;
     readonly defaultAccount: string | null;
-    readonly currentProvider: AbstractProviderAdapter;
+    readonly currentProvider: EthereumProvider | HttpProvider | IpcProvider | WebsocketProvider;
     readonly providers: Providers;
     readonly givenProvider: provider | null;
-    setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
-    isSameProvider(provider: AbstractProviderAdapter | provider): boolean;
-    clearSubscriptions(): void;
+
+    setProvider(provider: provider, net?: net.Server): boolean;
+
+    isSameProvider(provider: provider): boolean;
+
+    clearSubscriptions(): Promise<boolean | Error>;
 }
 
 export interface Web3ModuleOptions {
@@ -62,14 +72,23 @@ export interface Providers {
 
 export interface PromiEvent<T> extends Promise<T> {
     once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+
     once(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+
     once(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+
     once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+
     once(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
+
     on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
+
     on(type: 'receipt', handler: (receipt: TransactionReceipt) => void): PromiEvent<T>
+
     on(type: 'confirmation', handler: (confNumber: number, receipt: TransactionReceipt) => void): PromiEvent<T>
+
     on(type: 'error', handler: (error: Error) => void): PromiEvent<T>
+
     on(type: 'error' | 'confirmation' | 'receipt' | 'transactionHash', handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
 }
 
@@ -118,7 +137,7 @@ export interface EventLog {
     transactionHash: string
     blockHash: string
     blockNumber: number
-    raw?: { data: string, topics: any[] }
+    raw?: {data: string, topics: any[]}
 }
 
 export interface Log {

@@ -21,7 +21,7 @@
  */
 
 import {MethodModuleFactory} from 'web3-core-method';
-import {ProvidersModuleFactory, providers} from 'web3-providers';
+import {ProvidersModuleFactory} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {formatters} from 'web3-core-helpers';
 import AccountsModuleFactory from './factories/AccountsModuleFactory';
@@ -31,7 +31,7 @@ import AccountsModuleFactory from './factories/AccountsModuleFactory';
  *
  * @method Accounts
  *
- * @params {AbstractProviderAdapter|EthereumProvider} provider
+ * @params {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @params {Object} options
  *
  * @returns {Accounts}
@@ -40,7 +40,6 @@ export const Accounts = (provider, options) => {
     return new AccountsModuleFactory(Utils, formatters).createAccounts(
         provider,
         new ProvidersModuleFactory(),
-        providers,
         new MethodModuleFactory(),
         options
     );

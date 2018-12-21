@@ -17,10 +17,10 @@
  * @date 2018
  */
 
-import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
+import {AbstractWeb3Module, Providers, Web3ModuleOptions} from 'web3-core';
 import {Utils} from 'web3-utils';
 import * as net from 'net';
-import {provider, AbstractProviderAdapter, BatchRequest} from 'web3-providers';
+import {BatchRequest, provider} from 'web3-providers';
 import {Eth} from 'web3-eth';
 import {Network} from 'web3-net';
 import {Shh} from 'web3-shh';
@@ -29,9 +29,10 @@ import {Personal} from 'web3-eth-personal';
 
 export default class Web3 extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         options?: Web3ModuleOptions
     );
+
     static utils: Utils;
     utils: Utils;
     static version: string;
@@ -39,7 +40,9 @@ export default class Web3 extends AbstractWeb3Module {
     static givenProvider: provider;
     static providers: Providers;
     static modules: Modules;
+
     setProvider(provider: provider, net?: net.Server): boolean;
+
     BatchRequest: new () => BatchRequest;
     eth: Eth;
     shh: Shh;

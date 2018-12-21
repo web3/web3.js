@@ -43,7 +43,7 @@ eth.abi;
 // $ExpectType Network
 eth.net;
 
-// $ExpectType boolean
+// $ExpectType Promise<boolean|Error>
 eth.clearSubscriptions();
 
 // $ExpectType Promise<Subscribe<Log>>

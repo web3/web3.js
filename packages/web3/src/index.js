@@ -21,8 +21,6 @@
  */
 
 import {AbstractWeb3Module} from 'web3-core';
-import {formatters} from 'web3-core-helpers';
-import {AbstractMethodModelFactory, MethodController} from 'web3-core-method';
 import {ProvidersModuleFactory, HttpProvider, WebsocketProvider, IpcProvider} from 'web3-providers';
 import * as Utils from 'web3-utils';
 import {Eth} from 'web3-eth';
@@ -34,21 +32,21 @@ import {version} from '../package.json';
 
 export default class Web3 extends AbstractWeb3Module {
     /**
-     * @param {Object|String} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {Net} net
      * @param {Object} options
      *
      * @constructor
      */
-    constructor(provider, net, options) {
+    constructor(provider, net, options = {}) {
         const providersModuleFactory = new ProvidersModuleFactory();
         provider = providersModuleFactory.createProviderResolver().resolve(provider, net);
 
         super(
             provider,
             providersModuleFactory,
-            new MethodController(),
-            new AbstractMethodModelFactory({}, Utils, formatters),
+            null,
+            null,
             options
         );
 

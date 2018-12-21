@@ -58,12 +58,11 @@ const makeEven = (hex) => {
 
 export default class Accounts extends AbstractWeb3Module {
     /**
-     * @param {AbstractProviderAdapter|EthereumProvider} provider
+     * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
      * @param {ProvidersModuleFactory} providersModuleFactory
-     * @param {Object} providers
      * @param {MethodModuleFactory} methodModuleFactory
      * @param {MethodFactory} methodFactory
-     * @param {Object} utils
+     * @param {Utils} utils
      * @param {Object} formatters
      * @param {Object} options
      *
@@ -72,7 +71,6 @@ export default class Accounts extends AbstractWeb3Module {
     constructor(
         provider,
         providersModuleFactory,
-        providers,
         methodModuleFactory,
         methodFactory,
         utils,
@@ -82,7 +80,6 @@ export default class Accounts extends AbstractWeb3Module {
         super(
             provider,
             providersModuleFactory,
-            providers,
             methodModuleFactory,
             methodFactory,
             options

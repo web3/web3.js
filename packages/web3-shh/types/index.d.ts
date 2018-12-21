@@ -18,42 +18,67 @@
  */
 
 import * as net from 'net';
-import {AbstractWeb3Module, Web3ModuleOptions, Providers} from 'web3-core';
-import {AbstractProviderAdapter, provider, BatchRequest} from 'web3-providers';
+import {AbstractWeb3Module, Providers, Web3ModuleOptions} from 'web3-core';
+import {BatchRequest, provider} from 'web3-providers';
 import {Network} from 'web3-net';
 
 export class Shh extends AbstractWeb3Module {
     constructor(
-        provider: AbstractProviderAdapter | provider,
+        provider: provider,
         options?: Web3ModuleOptions
     );
-    setProvider(provider: AbstractProviderAdapter | provider, net?: net.Server): boolean;
+
+    setProvider(provider: provider, net?: net.Server): boolean;
+
     readonly providers: Providers;
     readonly givenProvider: provider | null;
     BatchRequest: new() => BatchRequest;
     net: Network;
+
     getVersion(callback?: (error: Error, version: string) => void): Promise<string>;
+
     getInfo(callback?: (error: Error, info: Info) => void): Promise<Info>;
+
     setMaxMessageSize(size: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
     setMinPoW(pow: number, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
     markTrustedPeer(enode: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>
+
     newKeyPair(callback?: (error: Error, key: string) => void): Promise<string>;
+
     addPrivateKey(privateKey: string, callback?: (error: Error, privateKey: string) => void): Promise<string>;
+
     deleteKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
     hasKeyPair(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
     getPublicKey(id: string, callback?: (error: Error, publicKey: string) => void): Promise<string>;
+
     getPrivateKey(id: string, callback?: (error: Error, privateKey: string) => void): Promise<string>;
+
     newSymKey(callback?: (error: Error, key: string) => void): Promise<string>;
+
     addSymKey(symKey: string, callback?: (error: Error, key: string) => void): Promise<string>;
+
     generateSymKeyFromPassword(password: string, callback?: (error: Error, key: string) => void): Promise<string>;
+
     hasSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>;
+
     getSymKey(id: string, callback?: (error: Error, key: string) => void): Promise<string>;
+
     deleteSymKey(id: string, callback?: (error: Error, result: boolean) => void): Promise<boolean>
+
     post(object: PostWithSymKey | PostWithPubKey, callback?: (error: Error, result: string) => void): Promise<string>;
+
     subscribe(string: 'messages', options: SubscriptionOptions, callback?: (error: Error, message: Notification, subscription: any) => void): Subscribe;
-    clearSubscriptions(): boolean;
+
+    clearSubscriptions(): Promise<boolean|Error>;
+
     newMessageFilter(options?: SubscriptionOptions): Promise<string>;
+
     deleteMessageFilter(id: string): Promise<boolean>;
+
     getFilterMessages(id: string): Promise<Notification[]>;
 }
 
@@ -107,5 +132,6 @@ export interface Notification {
 
 export interface Subscribe {
     on(type: 'data', handler: (data: Notification) => void): void;
+
     on(type: 'error', handler: (data: Error) => void): void;
 }

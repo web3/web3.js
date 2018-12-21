@@ -40,20 +40,20 @@ import EthModuleFactory from './factories/EthModuleFactory';
  *
  * @method Eth
  *
- * @param {AbstractProviderAdapter|EthereumProvider} provider
+ * @param {EthereumProvider|HttpProvider|WebsocketProvider|IpcProvider|String} provider
  * @param {Object} options
  *
  * @returns {Eth}
  */
 export const Eth = (provider, options) => {
-    const accounts = new Accounts(provider),
+    const accounts = new Accounts(provider, options),
           abiCoder = new AbiCoder();
 
     return new EthModuleFactory(
         provider,
         new ProvidersModuleFactory(),
         new MethodModuleFactory(accounts),
-        new Accounts(provider, options),
+        accounts,
         PromiEvent,
         Utils,
         formatters,

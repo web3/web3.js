@@ -22,6 +22,16 @@ Then include `dist/web3-providers.js` in your html file.
 This will expose the `Web3Providers` object on the window object.
 
 
+## Events of the socket providers
+
+- ```socket_message``` -  This event will be fired on each message of the socket.
+- ```socket_ready```   -  This event will be fired when the socket is ready.
+- ```socket_close```   -  This event will be fired when the connection get closed.
+- ```socket_error```   -  This event will be fired when an error occurs.
+- ```socket_connect``` -  This event will be fired when the connection is established.
+- ```socket_networkChanged``` -  This event will be fired when the network is changing and exist only on the EthereumProvider.
+- ```socket_accountsChanged``` -  This event will be fired when the accounts are changing and exist only on the EthereumProvider.
+
 ## Usage examples
 
 #### HttpProvider
@@ -36,7 +46,7 @@ const options = {
         {
             name: 'Access-Control-Allow-Origin', value: '*'
         },
-        {...}
+        ...
     ]
 };
 
@@ -44,6 +54,7 @@ const httpProvider = new HttpProvider('http://localhost:8545', options);
 ```
 
 #### WebsocketProvider
+
 Instead of setting a authorization header you could also define the credentials over the URL with:
 ```ws://username:password@localhost:8546```
 
@@ -68,7 +79,7 @@ const ipcProvider = new IpcProvider('/Users/me/Library/Ethereum/geth.ipc', net);
 ```
 
 #### BatchRequest
-The BatchRequest provides the possibility to send RPC requests as batch.
+The BatchRequest provides the possibility to send JSON-RPC requests as batch.
 Please read the [documentation][docs] for more.
 
 ```js 
@@ -86,23 +97,22 @@ batchRequest.add(web3.eth.getBalance.request(
     callback
 ));
 
-batchRequest.execute();
+await batchRequest.execute();
 ```
 
 #### ProviderDetector
-Checks if an provider is given from the environment (Mist, metamask) and returns the provider.
+Checks if an provider is given from the environment (Mist, MetaMask) and returns the provider.
 
 ```js
-import {ProvidersModuleFactory} 'web3-providers;
+import {ProvidersModuleFactory} from 'web3-providers';
 
 const providerDetector = new ProvidersModuleFactory.createProviderDetector();
-
 const givenProvider = providerDetector.detect();
 ```
 
 #### ProviderResolver
-The ProviderResolver resolves an url or an given provider object to the correct adapter. 
-This way we use internally in web3 just one provider interface and we have no direct dependency to third parties providers.
+The ProviderResolver resolves an url or an given provider object to the correct provider class. 
+Because of the resolves does web3 has internally just one provider interface and we have no direct dependency to third party providers.
 
 ```js 
 import {ProvidersModuleFactory} 'web3-providers;
