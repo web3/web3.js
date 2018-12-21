@@ -235,17 +235,16 @@ describe('IpcProviderTest', () => {
         }, 1);
 
         await expect(ipcProvider.send('rpc_method', [])).rejects
-            .toThrow('invalid')
-            .then(() => {
-                expect(JsonRpcMapper.toPayload)
-                    .toHaveBeenCalledWith('rpc_method', []);
+            .toThrow('invalid');
 
-                expect(JsonRpcResponseValidator.validate)
-                    .toHaveBeenCalledWith(true);
+        expect(JsonRpcMapper.toPayload)
+            .toHaveBeenCalledWith('rpc_method', []);
 
-                expect(ipcProvider.listenerCount('0x0'))
-                    .toEqual(0);
-            });
+        expect(JsonRpcResponseValidator.validate)
+            .toHaveBeenCalledWith(true);
+
+        expect(ipcProvider.listenerCount('0x0'))
+            .toEqual(0);
 
     });
 

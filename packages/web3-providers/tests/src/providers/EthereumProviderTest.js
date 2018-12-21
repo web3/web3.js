@@ -227,11 +227,10 @@ describe('EthereumProviderTest', () => {
         });
 
         await expect(ethereumProvider.send('method', [])).rejects
-            .toThrow('invalid')
-            .then(() => {
-                expect(JsonRpcResponseValidator.validate)
-                    .toHaveBeenCalled();
-            });
+            .toThrow('invalid');
+
+        expect(JsonRpcResponseValidator.validate)
+            .toHaveBeenCalled();
     });
 
     it('calls sendBatch and returns a resolved promise with the response', async () => {

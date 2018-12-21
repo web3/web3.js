@@ -24,6 +24,7 @@ import http from 'http';
 import https from 'https';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
+import {NetworkError} from 'xhr2-cookies/dist/index';
 
 export default class HttpProvider {
     /**
@@ -124,7 +125,7 @@ export default class HttpProvider {
      */
     sendPayload(payload) {
         return new Promise((resolve, reject) => {
-            const request = this.providersModuleFacotry.createXMLHttpRequest(
+            const request = this.providersModuleFactory.createXMLHttpRequest(
                 this.host,
                 this.timeout,
                 this.headers,
