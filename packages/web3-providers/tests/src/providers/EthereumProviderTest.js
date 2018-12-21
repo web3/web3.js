@@ -152,6 +152,15 @@ describe('EthereumProviderTest', () => {
         ethereumProvider.removeAllListeners('socket_connect');
     });
 
+    it('calls removeAllSocketListeners', () => {
+        socketMock.removeAllListeners = jest.fn();
+
+        ethereumProvider.removeAllSocketListeners();
+
+        expect(socketMock.removeAllListeners)
+            .toHaveBeenCalled();
+    });
+
     it('calls onNetworkChanged and emits the "networkChanged" event', done => {
         ethereumProvider.on('networkChanged', networkId => {
             expect(networkId)

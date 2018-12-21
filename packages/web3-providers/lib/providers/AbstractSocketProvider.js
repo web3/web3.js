@@ -33,6 +33,17 @@ export default class AbstractSocketProvider extends EventEmitter {
         this.timeout = timeout;
         this.subscriptions = {};
         this.registerEventListeners();
+
+        this.READY = 'ready';
+        this.CONNECT = 'connect';
+        this.ERROR = 'error';
+        this.CLOSE = 'close';
+
+        this.SOCKET_MESSAGE = 'socket_message';
+        this.SOCKET_READY = 'socket_ready';
+        this.SOCKET_CLOSE = 'socket_close';
+        this.SOCKET_ERROR = 'socket_error';
+        this.SOCKET_CONNECT = 'socket_connect';
     }
 
     /**
@@ -49,6 +60,11 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @method removeAllSocketListeners
      */
     removeAllSocketListeners() {
+        this.removeAllListeners(this.SOCKET_MESSAGE);
+        this.removeAllListeners(this.SOCKET_READY);
+        this.removeAllListeners(this.SOCKET_CLOSE);
+        this.removeAllListeners(this.SOCKET_ERROR);
+        this.removeAllListeners(this.SOCKET_CONNECT);
     }
 
     /**
@@ -106,7 +122,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Event} event
      */
     onReady(event) {
-        this.emit('ready', event);
+        this.emit(this.READY, event);
     }
 
     /**
@@ -117,7 +133,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Event} error
      */
     onError(error) {
-        this.emit('error', error);
+        this.emit(this.ERROR, error);
         this.removeAllSocketListeners();
         this.removeAllListeners();
     }
@@ -130,7 +146,7 @@ export default class AbstractSocketProvider extends EventEmitter {
      * @param {Event|Error} error
      */
     onClose(error = null) {
-        this.emit('close', error);
+        this.emit(this.CLOSE, error);
         this.removeAllSocketListeners();
         this.removeAllListeners();
     }
@@ -159,7 +175,7 @@ export default class AbstractSocketProvider extends EventEmitter {
             }
         }
 
-        this.emit('connect');
+        this.emit(this.CONNECT);
     }
 
     /**

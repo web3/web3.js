@@ -336,25 +336,6 @@ describe('WebsocketProviderTest', () => {
             .toHaveBeenCalledWith('connect', websocketProvider.onConnect);
     });
 
-    it('calls removeAllSocketListeners', () => {
-        websocketProvider.removeAllSocketListeners();
-
-        expect(socketMock.removeEventListener)
-            .toHaveBeenCalledWith('message', websocketProvider.onMessage);
-
-        expect(socketMock.removeEventListener)
-            .toHaveBeenCalledWith('open', websocketProvider.onReady);
-
-        expect(socketMock.removeEventListener)
-            .toHaveBeenCalledWith('close', websocketProvider.onClose);
-
-        expect(socketMock.removeEventListener)
-            .toHaveBeenCalledWith('error', websocketProvider.onError);
-
-        expect(socketMock.removeEventListener)
-            .toHaveBeenCalledWith('connect', websocketProvider.onConnect);
-    });
-
     it('gets the property connected and return true', () => {
         socketMock.readyState = 4;
         socketMock.OPEN = 4;

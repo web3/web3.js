@@ -32,6 +32,33 @@ describe('AbstractSocketProviderTest', () => {
         expect(abstractSocketProvider.connection)
             .toEqual(socketMock);
 
+        expect(abstractSocketProvider.READY)
+            .toEqual('ready');
+
+        expect(abstractSocketProvider.CONNECT)
+            .toEqual('connect');
+
+        expect(abstractSocketProvider.ERROR)
+            .toEqual('error');
+
+        expect(abstractSocketProvider.CLOSE)
+            .toEqual('close');
+
+        expect(abstractSocketProvider.SOCKET_MESSAGE)
+            .toEqual('socket_message');
+
+        expect(abstractSocketProvider.SOCKET_READY)
+            .toEqual('socket_ready');
+
+        expect(abstractSocketProvider.SOCKET_CLOSE)
+            .toEqual('socket_close');
+
+        expect(abstractSocketProvider.SOCKET_ERROR)
+            .toEqual('socket_error');
+
+        expect(abstractSocketProvider.SOCKET_CONNECT)
+            .toEqual('socket_connect');
+
         expect(abstractSocketProvider.disconnect)
             .toBeInstanceOf(Function);
 

@@ -103,37 +103,24 @@ export default class IpcProvider extends AbstractSocketProvider {
      */
     removeAllListeners(event) {
         switch (event) {
-            case 'socket_message':
+            case this.SOCKET_MESSAGE:
                 this.connection.removeEventListener('data', this.onMessage);
                 break;
-            case 'socket_ready':
+            case this.SOCKET_READY:
                 this.connection.removeEventListener('ready', this.onReady);
                 break;
-            case 'socket_close':
+            case this.SOCKET_CLOSE:
                 this.connection.removeEventListener('close', this.onClose);
                 break;
-            case 'socket_error':
+            case this.SOCKET_ERROR:
                 this.connection.removeEventListener('error', this.onError);
                 break;
-            case 'socket_connect':
+            case this.SOCKET_CONNECT:
                 this.connection.removeEventListener('connect', this.onConnect);
                 break;
         }
 
         super.removeAllListeners(event);
-    }
-
-    /**
-     * Removes all socket listeners
-     *
-     * @method removeAllSocketListeners
-     */
-    removeAllSocketListeners() {
-        this.connection.removeEventListener('data', this.onMessage);
-        this.connection.removeEventListener('ready', this.onReady);
-        this.connection.removeEventListener('close', this.onClose);
-        this.connection.removeEventListener('error', this.onError);
-        this.connection.removeEventListener('connect', this.onConnect);
     }
 
     /**
