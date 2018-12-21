@@ -30,6 +30,9 @@ describe('EthereumProviderTest', () => {
 
         expect(ethereumProvider)
             .toBeInstanceOf(AbstractSocketProvider);
+
+        expect(ethereumProvider.host)
+            .toEqual('EthereumProvider');
     });
 
     it('calls registerEventListeners and the expected listeners will be registered', () => {

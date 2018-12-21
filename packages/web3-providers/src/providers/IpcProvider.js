@@ -21,6 +21,7 @@
  */
 
 import oboe from 'oboe';
+import isArray from 'underscore-es/isArray';
 import AbstractSocketProvider from '../../lib/providers/AbstractSocketProvider';
 import JsonRpcMapper from '../mappers/JsonRpcMapper';
 import JsonRpcResponseValidator from '../validators/JsonRpcResponseValidator';
