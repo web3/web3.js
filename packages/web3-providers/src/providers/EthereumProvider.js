@@ -143,7 +143,7 @@ export default class EthereumProvider extends AbstractSocketProvider {
     sendBatch(methods, moduleInstance) {
         let methodCalls = [];
 
-        method.forEach(method => {
+        methods.forEach(method => {
             method.beforeExecution(moduleInstance);
             methodCalls.push(this.connection.send(method.rpcMethod, method.parameters));
         });
