@@ -78,12 +78,7 @@ describe('AbstractSocketProviderTest', () => {
     it('calls removeAllListeners without event parameter', () => {
         abstractSocketProvider.on('test', () => {});
 
-        socketMock.removeAllListeners = jest.fn();
-
         abstractSocketProvider.removeAllListeners();
-
-        expect(socketMock.removeAllListeners)
-            .toHaveBeenCalled();
 
         expect(abstractSocketProvider.listenerCount('test'))
             .toEqual(0);
@@ -117,11 +112,11 @@ describe('AbstractSocketProviderTest', () => {
             done();
         });
 
-        socketMock.removeAllListeners = jest.fn();
+        abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.onError('not ready!');
 
-        expect(socketMock.removeAllListeners)
+        expect(abstractSocketProvider.removeAllListeners)
             .toHaveBeenCalled();
     });
 
@@ -133,11 +128,11 @@ describe('AbstractSocketProviderTest', () => {
             done();
         });
 
-        socketMock.removeAllListeners = jest.fn();
+        abstractSocketProvider.removeAllListeners = jest.fn();
 
         abstractSocketProvider.onClose('bye');
 
-        expect(socketMock.removeAllListeners)
+        expect(abstractSocketProvider.removeAllListeners)
             .toHaveBeenCalled();
     });
 
@@ -210,15 +205,10 @@ describe('AbstractSocketProviderTest', () => {
     });
 
     it('calls reset', () => {
-        socketMock.removeAllListeners = jest.fn();
-
         abstractSocketProvider.on('test', () => {});
         abstractSocketProvider.registerEventListeners = jest.fn();
 
         abstractSocketProvider.reset();
-
-        expect(socketMock.removeAllListeners)
-            .toHaveBeenCalled();
 
         expect(abstractSocketProvider.registerEventListeners)
             .toHaveBeenCalled();
