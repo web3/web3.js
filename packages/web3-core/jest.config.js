@@ -6,6 +6,8 @@ module.exports = jestConfig(
         'ProviderDetector': 'web3-providers',
         'ProviderResolver': 'web3-providers',
         'BatchRequest': 'web3-providers',
-        'SocketProviderAdapter': 'web3-providers'
+        'WebsocketProvider': 'web3-providers',
+        'HttpProvider': 'web3-providers',
+        'IpcProvider': 'web3-providers'
     }
 );
